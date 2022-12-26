@@ -302,7 +302,7 @@ export const useWorkOrderAwardStats = (workOrderId?: string) => {
   const { data: awardPlansStats, ...rest } = useQuery<Array<WorkOrderAwardStats>>(
     ['changeOrders', workOrderId],
     async () => {
-      const response = await client(`/projects/${workOrderId}/workOrderPlanStat`, {})
+      const response = await client(`projects/${workOrderId}/workOrderPlanStat`, {})
 
       return response?.data
     },

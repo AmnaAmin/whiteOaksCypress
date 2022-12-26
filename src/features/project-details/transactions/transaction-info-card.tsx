@@ -29,7 +29,21 @@ export const TransactionInfoCard: React.FC<{
   const { t } = useTranslation()
 
   return (
-    <Flex py={6} h="74px" w="100%" bg="white" borderRadius="6px" style={boxShadow}>
+    <Flex 
+      py={6} 
+      h="74px" 
+      w="100%" 
+      bg="white" 
+      borderRadius="6px" 
+      style={boxShadow}
+      sx={{
+        '@media only screen and (max-width: 450px)': {
+          height: "auto",
+          flexDirection: "column",
+          marginTop: "25px"
+        }
+      }}
+    >
       <InfoStructureCard title={t('projectID')} isLoading={isLoading}>
         <Text color="gray.500">{projectData?.id}</Text>
       </InfoStructureCard>
