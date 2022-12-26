@@ -207,11 +207,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }, [workOrderId])
 
   const { check, isValidForAwardPlan } = useIsAwardSelect(control)
-
+  
   const showDrawRemainingMsg =
     !heading &&
     transType?.label === 'Draw' &&
-    isValidForAwardPlan &&
+    isValidForAwardPlan && 
     (selectedWorkOrderStats?.drawRemaining === 0 || selectedWorkOrderStats?.drawRemaining === null)
 
   const showMaterialRemainingMsg =
@@ -351,10 +351,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
-      {isLienWaiverRequired && <LienWaiverAlert />}
+      {check && isLienWaiverRequired && <LienWaiverAlert />}
       {!check && isValidForAwardPlan && materialAndDraw ? <ProjectAwardAlert /> : null}
-      {showDrawRemainingMsg && <ProjectTransacrtionRemaingALert msg="DrawRemaining" />}
-      {showMaterialRemainingMsg && <ProjectTransacrtionRemaingALert msg="MaterialRemaining" />}
+      {check && showDrawRemainingMsg && <ProjectTransacrtionRemaingALert msg="DrawRemaining" />}
+      {check && showMaterialRemainingMsg && <ProjectTransacrtionRemaingALert msg="MaterialRemaining" />}
       {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaining" />}
 
       {isFormSubmitLoading && (
