@@ -38,7 +38,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const { mutate: saveDocument, isLoading } = useUploadDocument()
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
   const { data: workOrders } = useProjectWorkOrders(projectId)
-  const [isMobile] = useMediaQuery( "(max-width: 480px)" );
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
 
   //Permit document against vendor dropdown should not show Cancelled WO vendors list.
   const permitWorkOrders = workOrders?.filter(wo => !STATUS.Cancelled.includes(wo?.statusLabel?.toLowerCase()))
@@ -96,13 +96,15 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   })
   const watchPermitOption = watchField?.label === 'Permit'
 
-  const [modalSize, setModalSize] = useState<string>("3xl");
+  const [modalSize, setModalSize] = useState<string>('3xl')
 
-  useEffect( () => {
-    if ( isMobile ){
-      setModalSize("full");
+  useEffect(() => {
+    if (isMobile) {
+      setModalSize('full')
+    } else {
+      setModalSize('3xl')
     }
-  }, [isMobile] );
+  }, [isMobile])
 
   return (
     <Modal
@@ -112,7 +114,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
         onClose()
         reset()
       }}
-      size={ modalSize }
+      size={modalSize}
       variant="custom"
     >
       <ModalOverlay />

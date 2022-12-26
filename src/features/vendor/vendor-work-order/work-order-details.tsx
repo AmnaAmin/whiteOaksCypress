@@ -16,6 +16,7 @@ import {
   Tabs,
   Text,
   useDisclosure,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useCallback, useEffect, useState } from 'react'
@@ -67,6 +68,18 @@ export const WorkOrderDetails = ({
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
   const { projectAwardData } = useProjectAward()
 
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
+
+  const [modalSize, setModalSize] = useState<string>('flexible')
+
+  useEffect(() => {
+    if (isMobile) {
+      setModalSize('full')
+    } else {
+      setModalSize('flexible')
+    }
+  }, [isMobile])
+
   const onClose = useCallback(() => {
     onCloseDisclosure()
     close()
@@ -81,7 +94,7 @@ export const WorkOrderDetails = ({
   }, [onCloseDisclosure, onOpen, workOrder])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="flexible" closeOnOverlayClick={false}>
+    <Modal isOpen={isOpen} onClose={onClose} size={modalSize} closeOnOverlayClick={false}>
       <ModalOverlay />
       {workOrder && (
         <ModalContent rounded={[0]} borderTop="2px solid #345EA6">

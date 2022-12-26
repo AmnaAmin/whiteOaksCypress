@@ -138,24 +138,21 @@ const AlertInfo = () => {
 export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, alert }) => {
   const { t } = useTranslation()
   const [alertResolved, setAlertResolved] = useState(false)
-  const [isMobile] = useMediaQuery( "(max-width: 480px)" );
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
 
-  const [modalSize, setModalSize] = useState<string>("3xl");
+  const [modalSize, setModalSize] = useState<string>('3xl')
 
-  useEffect( () => {
-    if ( isMobile ){
-      setModalSize("full");
+  useEffect(() => {
+    if (isMobile) {
+      setModalSize('full')
+    } else {
+      setModalSize('3xl')
     }
-  }, [isMobile] );
+  }, [isMobile])
   return (
     <>
       {alert && (
-        <Modal 
-          isOpen={isOpen} 
-          onClose={onClose} 
-          variant="custom" 
-          size={modalSize}
-        >
+        <Modal isOpen={isOpen} onClose={onClose} variant="custom" size={modalSize}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>
