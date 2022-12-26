@@ -151,7 +151,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
               columns={tableColumns}
               refetch={refetch}
               isLoading={isExportDataLoading}
-              colorScheme="brand"
               fileName="projects"
             />
             <CustomDivider />

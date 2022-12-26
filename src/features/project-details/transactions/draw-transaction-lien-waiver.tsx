@@ -63,7 +63,7 @@ export const ProjectTransacrtionRemaingALert = ({ msg }) => {
   const { t } = useTranslation()
 
   return (
-    <Alert status="info" variant="custom" size="sm">
+    <Alert mt={2} status="info" variant="custom" size="sm">
       <AlertIcon />
       <AlertDescription>{t(`${msg}`)}</AlertDescription>
       <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />

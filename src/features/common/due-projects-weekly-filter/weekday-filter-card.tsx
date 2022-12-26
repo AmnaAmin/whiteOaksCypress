@@ -14,10 +14,10 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
   return (
     <Flex alignItems="center" cursor={props.count === 0 ? 'not-allowed' : ''} m="0 !important">
       <Button
-        bg={props.selectedDay === props.id ? '#4E87F8' : 'none'}
+        bg={props.selectedDay === props.id ? '#345EA6' : 'none'}
         border="none"
         rounded="20"
-        _hover={{ bg: '#4E87F8', color: 'white', rounded: '20', border: 'none' }}
+        _hover={{ bg: '#345EA6', color: 'white', rounded: '20', border: 'none' }}
         _focus={{ border: 'none' }}
         fontSize="16px"
         fontStyle="normal"
@@ -36,8 +36,8 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
           px="2px"
           rounded="full"
           bg={props.selectedDay === props.id ? 'white' : '#E2E8F0'}
-          color={props.selectedDay === props.id ? '#4E87F8' : '#4A5568'}
-          _hover={{ bg: 'white', color: '#4E87F8', rounded: '50', border: 'none' }}
+          color={props.selectedDay === props.id ? '#345EA6' : '#4A5568'}
+          _hover={{ bg: 'white', color: '#345EA6', rounded: '50', border: 'none' }}
           fontSize="16px"
           fontWeight={600}
           data-testid={`value-of-${props.dayName.toLocaleLowerCase()}`}

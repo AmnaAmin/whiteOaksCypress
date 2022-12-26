@@ -135,6 +135,7 @@ export type TransactionFormProps = {
   selectedTransactionId?: number
   projectId: string
   projectStatus: string
+  heading?: string
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -142,6 +143,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   selectedTransactionId,
   projectId,
   projectStatus,
+  heading,
 }) => {
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
@@ -205,29 +207,28 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }, [workOrderId])
 
   const { check, isValidForAwardPlan } = useIsAwardSelect(control)
-
+  
   const showDrawRemainingMsg =
+    !heading &&
     transType?.label === 'Draw' &&
-    isValidForAwardPlan &&
+    isValidForAwardPlan && 
     (selectedWorkOrderStats?.drawRemaining === 0 || selectedWorkOrderStats?.drawRemaining === null)
 
   const showMaterialRemainingMsg =
+    !heading &&
     transType?.label === 'Material' &&
     isValidForAwardPlan &&
     (selectedWorkOrderStats?.materialRemaining === 0 || selectedWorkOrderStats?.materialRemaining === null)
 
+  const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
+
   const methodForPayment = e => {
-    if (e && selectedWorkOrderStats?.totalAmountRemaining) {
-      if (e <= selectedWorkOrderStats?.totalAmountRemaining && isValidForAwardPlan) {
-        setRemainingAmt(false)
-      } else {
-        setRemainingAmt(true)
-      }
+    if (e > selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw) {
+      setRemainingAmt(true)
+    } else {
+      setRemainingAmt(false)
     }
   }
-
-  // console.log(remainingAmt, 'isValidForAwardPlan -', isValidForAwardPlan)
-  console.log(check)
 
   const {
     isShowChangeOrderSelectField,
@@ -236,9 +237,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowExpectedCompletionDateField,
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
-    isShowPaymentRecievedDateField,
     isShowPaidBackDateField,
     isShowMarkAsField,
+    isShowPaymentRecievedDateField,
   } = useFieldShowHideDecision(control, transaction)
   const isAdminEnabled = isAdmin && isManualTransaction(transaction?.transactionType)
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control, transaction)
@@ -350,11 +351,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
-      {isLienWaiverRequired && <LienWaiverAlert />}
-      {!check && isValidForAwardPlan ? <ProjectAwardAlert /> : null}
-      {showDrawRemainingMsg && <ProjectTransacrtionRemaingALert msg="DrawRemaining" />}
-      {showMaterialRemainingMsg && <ProjectTransacrtionRemaingALert msg="MaterialRemaing" />}
-      {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaing" />}
+      {check && isLienWaiverRequired && <LienWaiverAlert />}
+      {!check && isValidForAwardPlan && materialAndDraw ? <ProjectAwardAlert /> : null}
+      {check && showDrawRemainingMsg && <ProjectTransacrtionRemaingALert msg="DrawRemaining" />}
+      {check && showMaterialRemainingMsg && <ProjectTransacrtionRemaingALert msg="MaterialRemaining" />}
+      {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaining" />}
 
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
@@ -826,7 +827,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-
             isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg}
             colorScheme="darkPrimary"
             onClick={event => {
@@ -850,7 +850,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 disabled={
                   isFormSubmitLoading ||
                   isMaterialsLoading ||
-                  (!check && isValidForAwardPlan) ||
+                  (!check && isValidForAwardPlan && materialAndDraw) ||
                   showDrawRemainingMsg ||
                   showMaterialRemainingMsg ||
                   remainingAmt

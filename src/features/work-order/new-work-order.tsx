@@ -600,10 +600,32 @@ export const NewWorkOrderForm: React.FC<{
                         focusBorderColor="none"
                         {...register('workOrderStartDate', {
                           required: 'This field is required.',
+                          validate: ( date: any ) => {
+
+                            if ( ! projectData?.clientStartDate )
+                              return false;
+
+                            const clientStartDate = new Date( dateFormat(projectData.clientStartDate) );
+
+                            const orderStartDate = new Date( dateFormat( date ) ); 
+
+                            if ( orderStartDate.getTime() === clientStartDate.getTime() )
+                              return true;
+                              
+                            if ( orderStartDate < clientStartDate )
+                              return false;
+
+                            return true;
+
+                          }
                         })}
                       />
+                
                       <FormErrorMessage>
                         {errors.workOrderStartDate && errors.workOrderStartDate.message}
+                        { errors.workOrderStartDate && errors.workOrderStartDate.type === "validate" && (
+                          <span>Earlier then client start date</span>
+                        ) }
                       </FormErrorMessage>
                     </FormControl>
                   </Box>
