@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -15,6 +15,7 @@ import {
   VStack,
   HStack,
   Spacer,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import { RiErrorWarningLine } from 'react-icons/ri'
 import { BiListMinus, BiMapPin, BiWorld, BiUser, BiCalendar } from 'react-icons/bi'
@@ -137,10 +138,24 @@ const AlertInfo = () => {
 export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, alert }) => {
   const { t } = useTranslation()
   const [alertResolved, setAlertResolved] = useState(false)
+  const [isMobile] = useMediaQuery( "(max-width: 480px)" );
+
+  const [modalSize, setModalSize] = useState<string>("3xl");
+
+  useEffect( () => {
+    if ( isMobile ){
+      setModalSize("full");
+    }
+  }, [isMobile] );
   return (
     <>
       {alert && (
-        <Modal isOpen={isOpen} onClose={onClose} variant="custom" size="3xl">
+        <Modal 
+          isOpen={isOpen} 
+          onClose={onClose} 
+          variant="custom" 
+          size={modalSize}
+        >
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>
