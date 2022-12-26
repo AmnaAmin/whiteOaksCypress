@@ -28,6 +28,7 @@ const UpdateTransactionModal: React.FC<Props> = ({
         <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
             <TransactionForm
+              heading={heading}
               onClose={onClose}
               selectedTransactionId={selectedTransactionId}
               projectId={projectId}

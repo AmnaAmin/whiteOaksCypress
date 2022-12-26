@@ -16,7 +16,7 @@ type SelectProps = {
   controlStyle?: any
   elementStyle?: any
   testId?: string
-  disable?: string
+  disable?: boolean
   bg?: string
 }
 
@@ -39,8 +39,9 @@ export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
               data-testid={props.testId}
               fontSize={props.size || 'sm'}
               color="#718096"
-              pointerEvents={props.disable}
               bg={props.bg}
+              disabled={props.disable}
+              _disabled={{ bg: '#EDF2F7' }}
               {...inputBorderLeftStyle}
             >
               <option value={''}>Select..</option>

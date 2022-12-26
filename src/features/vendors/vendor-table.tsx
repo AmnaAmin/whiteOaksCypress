@@ -128,7 +128,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
         />
       )}
 
-      <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6} border='1px solid #CBD5E0'>
+      <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6} border="1px solid #CBD5E0">
         <TableContextProvider data={filterVendors} columns={tableColumns}>
           <Table
             onRowClick={row => setSelectedVendor(row)}
