@@ -48,7 +48,13 @@ const ProjectDetails: React.FC = props => {
         >
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
             <TabList h={'50px'} alignItems="end" border="none">
-              <Flex h={'40px'}>
+              <Flex h={'40px'} sx={{
+                '@media only screen and (max-width: 450px)': {
+                  transform: "scale(0.72)",
+                  position: "relative",
+                  left: "-19%",
+                }
+              }}>
                 <Tab aria-labelledby="transaction-tab">{t('transaction')}</Tab>
 
                 <Tab whiteSpace="nowrap">{t('vendorWorkOrders')}</Tab>
@@ -91,7 +97,7 @@ const ProjectDetails: React.FC = props => {
 
               <TabPanels h="100%">
                 <TabPanel p="0px">
-                    <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
+                  <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
                 </TabPanel>
                 <TabPanel p="0px">
                   <WorkOrdersTable
