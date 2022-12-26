@@ -38,8 +38,7 @@ export const CreateATicket = () => {
     setFileBlob(event.target?.result?.split(',')?.[1])
   }
 
-  const onSubmit = (formValues: SupportFormValues, e: any) => {
-    console.log((e.target.value = ''))
+  const onSubmit = (formValues: SupportFormValues) => {
     const attachment: FileAttachment = {
       newFileName: formValues.attachment?.name ?? '',
       newFileObject: fileBlob as Blob,
@@ -60,7 +59,7 @@ export const CreateATicket = () => {
   )
 }
 
-const CreateATicketForm: React.FC<{ onSubmit: (values, e) => void; readFile?: any; clearField?: boolean }> = ({
+const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any; clearField?: boolean }> = ({
   onSubmit,
   readFile,
   clearField,
