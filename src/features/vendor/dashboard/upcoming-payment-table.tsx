@@ -53,8 +53,8 @@ export const UpcomingPaymentTable = () => {
     },
     {
       header: t(`${DASHBOARD}.address`),
-      accessorKey: 'vendorAddress',
-      accessorFn: row => row.vendorAddress,
+      accessorKey: 'propertyAddress',
+      accessorFn: row => row.propertyAddress,
     },
     {
       header: t(`${DASHBOARD}.trade`),
