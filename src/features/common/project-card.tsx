@@ -28,8 +28,6 @@ export const ProjectCard = ({
 
 }: ProjectCardProps) => {
 
-  console.log(styles);
-
   return (
 
     
