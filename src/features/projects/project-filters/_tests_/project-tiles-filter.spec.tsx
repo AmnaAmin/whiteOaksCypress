@@ -1,8 +1,8 @@
 import { render } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { activeCardValue, newCardValue } from 'mocks/api/projects/data.pc'
+// import userEvent from '@testing-library/user-event'
+// import { activeCardValue, newCardValue } from 'mocks/api/projects/data.pc'
 import { Providers } from 'providers'
-import { waitForLoadingToFinish, screen } from 'utils/test-utils'
+import { waitForLoadingToFinish } from 'utils/test-utils'
 import { ProjectCardProps, ProjectFilters } from '../project-filters'
 
 const renderProjectFileters = async ({ selectedCard, onSelectCard }: ProjectCardProps) => {
