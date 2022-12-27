@@ -1,10 +1,10 @@
 import { Box, Button, Flex, FormLabel, HStack, ModalBody, ModalFooter } from '@chakra-ui/react'
 import { parseProjectAwardValuesToPayload } from 'api/work-order'
-import { t } from 'i18next'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { ProjectAwardCard, TextCard } from './project-award-card'
-// import { useTranslation } from 'react-i18next'
+import { PROJECT_AWARD } from './projectAward.i18n'
+import { useTranslation } from 'react-i18next'
 // import { ProjectAwardCard, TextCard } from './project-award-card'
 
 export const ProjectAwardTab: React.FC<any> = props => {
@@ -15,6 +15,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
   interface FormValues {
     id?: number
   }
+  const { t } = useTranslation()
 
   const { handleSubmit } = useForm<FormValues>()
 
@@ -31,7 +32,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
           <Flex mb={10} w="100%" alignContent="space-between" pos="relative">
             <Box flex="4" minW="59em">
               <FormLabel color={'#4A5568'} fontWeight={600}>
-                Select any one performance:
+                {t(`${PROJECT_AWARD}.selectPerformance`)}
               </FormLabel>
             </Box>
           </Flex>
@@ -54,7 +55,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
           <Box w={'100%'}>
             <FormLabel color={'#4A5568'} fontSize="12px" fontWeight={400}>
-              *Factoring fees to be deducted from initial scope total.{' '}
+            {t(`${PROJECT_AWARD}.factoringFeeMsg`)}
             </FormLabel>
           </Box>
           <HStack spacing="16px" justifyContent="end">

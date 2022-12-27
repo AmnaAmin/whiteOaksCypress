@@ -82,7 +82,7 @@ const Location: React.FC = () => {
         </GridItem>
         <GridItem>
           <FormControl isInvalid={!!errors.lockBoxCode} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="lockBoxCode">
+            <FormLabel variant="strong-label" size="md" htmlFor="lockBoxCode" noOfLines={1}>
               {t(`project.projectDetails.lockBoxCode`)}
             </FormLabel>
             <Input
@@ -97,7 +97,7 @@ const Location: React.FC = () => {
         <GridItem></GridItem>
         <GridItem>
           <FormControl isInvalid={!!errors.hoaContactPhoneNumber} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="hoaContactPhoneNumber">
+            <FormLabel variant="strong-label" size="md" htmlFor="hoaContactPhoneNumber" noOfLines={1}>
               {t(`project.projectDetails.hoaContactPhone`)}
             </FormLabel>
             <Controller
