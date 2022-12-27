@@ -51,7 +51,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
       {children ?? (
         <HStack spacing={1}>
           <Icon as={BiExport} fontSize={'18px'} mb="1px" fontWeight={500} />
-          <Text fontWeight={500}>{t('projects.export')}</Text>
+          <Text fontWeight={500}>{t('export')}</Text>
         </HStack>
       )}
     </Button>
@@ -82,7 +82,7 @@ export const ExportCustomButton: React.FC<ExportCustomButtonProps> = ({
         <HStack spacing={1}>
           <BiExport fontSize={'18px'} />
 
-          <Text fontWeight={500}>{t('projects.export')}</Text>
+          <Text fontWeight={500}>{t('export')}</Text>
         </HStack>
       )}
     </Button>

@@ -4,33 +4,37 @@ import React from 'react'
 import { BiClipboard, BiFile, BiHourglass, BiMessageSquareError } from 'react-icons/bi'
 import { useVendorCards } from 'api/pc-projects'
 import VendorFilterCard from './vendor-filter-card'
+import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
+import { useTranslation } from 'react-i18next'
 
 const useVendorCardJson = cards => {
+  const { t } = useTranslation()
+
   return [
     {
       id: 'active',
-      title: 'Active',
+      title: t(`${VENDOR_MANAGER}.active`),
       number: cards?.find(items => items.status === 12)?.count,
       IconElement: <Icon color="#4A5568" boxSize={7} as={BiFile} />,
       bgColor: '#F9F1DA',
     },
     {
       id: 'inActive',
-      title: 'In Active',
+      title: t(`${VENDOR_MANAGER}.inActive`),
       number: cards?.find(items => items.status === 13)?.count,
       IconElement: <Icon color="#4A5568" boxSize={7} as={BiClipboard} />,
       bgColor: '#E5ECF9',
     },
     {
       id: 'doNotUse',
-      title: 'Do Not Use',
+      title: t(`${VENDOR_MANAGER}.doNotUse`),
       number: cards?.find(items => items.status === 14)?.count,
       IconElement: <Icon color="#4A5568" boxSize={7} as={BiMessageSquareError} />,
       bgColor: '#E6FFFA',
     },
     {
       id: 'expired',
-      title: 'Expired',
+      title: t(`${VENDOR_MANAGER}.expired`),
       number: cards?.find(items => items.status === 15)?.count,
       IconElement: <Icon color="#4A5568" boxSize={7} as={BiHourglass} />,
       bgColor: '#FCE8D8',
