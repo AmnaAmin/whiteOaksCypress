@@ -130,7 +130,7 @@ export const WorkOrderDetails = ({
               index={tabIndex}
               onChange={index => setTabIndex(index)}
             >
-              <TabList pt="12px">
+              <TabList pt="12px" mr="30px">
                 <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
                 {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                 <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
