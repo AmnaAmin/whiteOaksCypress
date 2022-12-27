@@ -6,7 +6,7 @@ import { format, subMonths } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts'
-import { getLastQuarterByDate, getQuarterByDate, getQuarterByMonth, monthOptions, months, monthsShort } from 'utils/date-time-utils'
+import { getLastQuarterByDate, getQuarterByDate, getQuarterByMonth, months, monthsShort } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
 type GraphData = {
