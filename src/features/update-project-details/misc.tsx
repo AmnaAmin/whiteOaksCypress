@@ -140,7 +140,7 @@ const Misc: React.FC = () => {
         </GridItem>
         <GridItem>
           <FormControl isInvalid={!!errors.payDateVariance} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="payDateVariance">
+            <FormLabel variant="strong-label" size="md" htmlFor="payDateVariance" noOfLines={1}>
               {t(`project.projectDetails.payDateVariance`)}
             </FormLabel>
 
