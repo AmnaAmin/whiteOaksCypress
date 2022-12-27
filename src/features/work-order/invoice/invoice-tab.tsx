@@ -46,17 +46,10 @@ export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.
         <Icon as={icons} fontSize="23px" color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="gray.700" mb="1">
+        <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="#2D3748" mb="1">
           {title}
         </Text>
-        <Text
-          data-testid={title}
-          color="gray.600"
-          lineHeight="20px"
-          fontSize="14px"
-          fontStyle="normal"
-          fontWeight={400}
-        >
+        <Text data-testid={title} color="#4A5568" lineHeight="20px" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {value}
         </Text>
       </Box>
