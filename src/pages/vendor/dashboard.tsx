@@ -42,7 +42,7 @@ const Dashboard: React.FC = () => {
           Sorry !
         </Heading>
         <Text fontSize='sm'>
-          Your resolution is reached at a limit, please switch to a better resolution or change your device orientation from vertical to horizontal
+          {t('Your resolution is reached at a limit, please switch to a better resolution or change your device orientation from vertical to horizontal')}.
         </Text>
       </Box>
     );

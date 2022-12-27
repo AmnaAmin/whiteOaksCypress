@@ -15,8 +15,8 @@ import {
 import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 import {
+  FPMManagerTypes,
   useActiveAccountTypes,
-  useAllManagers,
   useCreateUserMutation,
   useDeleteUserDetails,
   useFilteredAvailabelManager,
@@ -41,6 +41,7 @@ import { parseMarketFormValuesToAPIPayload } from 'utils/markets'
 import { PasswordField } from './password-field'
 import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
+import { UserTypes } from 'utils/redux-common-selectors'
 
 type UserManagement = {
   onClose: () => void
@@ -75,7 +76,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { stateSelectOptions: stateOptions } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
   const { options: accountTypeOptions } = useActiveAccountTypes()
-  const { options: availableManagers } = useAllManagers()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
   const {
     register,
@@ -96,6 +96,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   useUserDetails({ form, userInfo })
 
   const formValues = watch()
+
   const accountType: any = formValues?.accountType
   const fpmRole: any = formValues?.fieldProjectManagerRoleId
 
@@ -116,8 +117,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   //TODO - Add enums instead of using actual numerical values
   // 59 is for Area FPM
   // 60 is for Regional FPM
-  const showStates = fpmRole?.value === 59
-  const showRegions = fpmRole?.value === 60
+  const showStates = fpmRole?.value === FPMManagerTypes.Area
+  const showRegions = fpmRole?.value === FPMManagerTypes.Regional
 
   const noMarketsSelected = !validateMarket(formValues?.markets)
   const noStatesSelected = !validateState(formValues?.states)
@@ -138,13 +139,27 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     (showRegions && !validateRegions(formValues?.regions))
 
   const managerRoleOptions = useMemo(() => {
+    // filter for Regional Manager
+    if (showRegions) {
+      return fpmManagerRoleOptions.filter(role =>
+        [UserTypes.directorOfConstruction, UserTypes.operations].includes(role.value),
+      )
+    }
+
     // filter for market FPM
-    if (fpmRole?.value === 221 && showMarkets)
-      return fpmManagerRoleOptions.filter(role => role.value !== 61 && role.value !== 59)
+    if (fpmRole?.value === FPMManagerTypes.Market && showMarkets)
+      return fpmManagerRoleOptions.filter(
+        role => ![FPMManagerTypes.Market, FPMManagerTypes.Regular].includes(role.value),
+      )
+
     // filter for regular FPM
-    if (showMarkets) return fpmManagerRoleOptions.filter(role => role.value !== 61)
+    if (showMarkets) return fpmManagerRoleOptions.filter(role => ![FPMManagerTypes.Regular].includes(role.value))
+
     // filter for area FPM
-    if (showStates) return fpmManagerRoleOptions.filter(role => role.value === 60)
+    if (showStates)
+      return fpmManagerRoleOptions.filter(role =>
+        [UserTypes.directorOfConstruction, UserTypes.operations, FPMManagerTypes.Regional].includes(role.value),
+      )
     return fpmManagerRoleOptions
   }, [fpmManagerRoleOptions])
 
@@ -164,16 +179,25 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           .map(m => m.market.id)
           .toString() || ''
     }
+    if (showRegions && formValues?.regions && formValues.regions?.length > 0) {
+      locations =
+        formValues.regions
+          .filter(regions => regions.checked)
+          .map(r => r.region?.value)
+          .toString() || ''
+    }
     return locations
   }, [formValues])
 
-  const { options: availableManagerOptions } = useFilteredAvailabelManager(formValues?.managerRoleId, selectedLocations)
+  const { options: availableManagerOptions } = useFilteredAvailabelManager(
+    formValues?.fieldProjectManagerRoleId,
+    formValues?.managerRoleId,
+    selectedLocations,
+  )
 
   const managerOptions = useMemo(() => {
-    if (availableManagerOptions?.length > 0) return availableManagerOptions
-    if (availableManagers?.length > 0) return availableManagers
-    return []
-  }, [availableManagerOptions])
+    return availableManagerOptions
+  }, [availableManagerOptions?.length])
   // Clear any input field which is being conditionally rendered when user
   // changes account type
   const handleChangeAccountType = () => {
@@ -207,6 +231,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       'regions',
       formValues.regions?.map(region => ({ ...region, checked: false })),
     )
+    setValue('managerRoleId', null)
+    setValue('parentFieldProjectManagerId', null)
   }
 
   const clearSelectedManager = () => {
@@ -347,7 +373,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 <ReactSelect
                   {...rest}
                   selectProps={{ isBorderLeft: true }}
-                  options={fpmManagerRoleOptions}
+                  options={fpmManagerRoleOptions?.filter(
+                    role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value),
+                  )}
                   onChange={target => {
                     onChange(target)
                     handleChangeFpmRole()

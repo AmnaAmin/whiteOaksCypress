@@ -71,7 +71,8 @@ const WorkOrderDetails = ({
   })
   const {
     workOrderAssignedItems,
-    workOrder: awardPlanScopeAmount,
+    awardPlanScopeAmount,
+    workOrderDetails,
     displayAwardPlan,
     isFetching: isFetchingLineItems,
     isLoading: isLoadingLineItems,
@@ -224,7 +225,7 @@ const WorkOrderDetails = ({
                   {displayAwardPlan && (
                     <TabPanel p={0}>
                       <ProjectAwardTab
-                        workOrder={workOrder}
+                        workOrder={workOrderDetails}
                         onSave={onSave}
                         onClose={onClose}
                         awardPlanScopeAmount={awardPlanScopeAmount}
