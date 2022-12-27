@@ -50,7 +50,7 @@ export const ManageProject: React.FC<{
                       options={fieldProjectManagerByMarketOptions}
                       size="md"
                       value={field.value}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                       onChange={option => {
                         field.onChange(option)
                       }}
@@ -75,7 +75,7 @@ export const ManageProject: React.FC<{
                       options={projectCoordinatorSelectOptions}
                       selected={value}
                       onChange={setPC}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -99,7 +99,7 @@ export const ManageProject: React.FC<{
                       options={clientSelectOptions}
                       selected={value}
                       onChange={setClient}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
