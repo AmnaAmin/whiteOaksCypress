@@ -14,16 +14,18 @@ type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
 
 const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId, projectStatus }) => {
   const { t } = useTranslation()
-  const [isMobile] = useMediaQuery( "(max-width: 480px)" );
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
 
-  const [modalSize, setModalSize] = useState<string>("3xl");
+  const [modalSize, setModalSize] = useState<string>('3xl')
 
-  useEffect( () => {
-    if ( isMobile ){
-      setModalSize("full");
+  useEffect(() => {
+    if (isMobile) {
+      setModalSize('full')
+    } else {
+      setModalSize('3xl')
     }
-  }, [isMobile] );
-  
+  }, [isMobile])
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize} variant="custom">
       <ModalOverlay />
