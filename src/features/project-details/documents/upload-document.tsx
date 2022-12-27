@@ -72,22 +72,37 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const onSubmit = async formValues => {
     const vendorId = formValues?.against?.value?.vendorId?.toString()
     const workOrderId = formValues?.against?.value?.id?.toString()
-    console.log(`formValues - `, formValues.chooseFile);
-    // const documents = formValues.
-    // documents.forEach(async file => {
-    //   const documentPayload = await createDocumentPayload(file, formValues?.documentTypes?.value?.toString())
+    console.log(`formValues - `, formValues)
 
-    //   const doc: Document = {
-    //     ...documentPayload,
-    //     projectId,
-    //     vendorId,
-    //     workOrderId,
-    //   }
-      // saveDocument(doc)
+    // const documents = formValues.documents.forEach(async file => {
+    const documentPayload = await createDocumentPayload(
+      formValues.chooseFile,
+      formValues?.documentTypes?.value?.toString(),
+    )
+
+    const doc: Document = {
+      ...documentPayload,
+      projectId,
+      vendorId,
+      workOrderId,
+    }
+
+    saveDocument(doc, {
+      onSuccess() {
+        onClose()
+        reset()
+      },
+    })
+
+    // saveDocument(doc)
     // })
+
+    console.log(`doc - `, doc)
+
     // onClose()
     // reset()
   }
+
   const watchField = useWatch({
     control,
     name: 'documentTypes',
@@ -227,10 +242,8 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                   name="chooseFile"
                   rules={{
                     validate: files => {
-                      const fileLengthExceeded = files?.some(
-                        (file) => file?.name?.length > 255
-                      );
-                      return fileLengthExceeded ? 'File name length should be less than 255' : true;
+                      const fileLengthExceeded = files?.some(file => file?.name?.length > 255)
+                      return fileLengthExceeded ? 'File name length should be less than 255' : true
                     },
                     required: 'Document file is required',
                   }}
@@ -242,7 +255,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                           testId="choose-document"
                           name={field.name}
                           onUpload={(docs: any) => {
-                            field.onChange(docs);
+                            field.onChange(docs)
                           }}
                         />
                         <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
@@ -252,7 +265,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                 />
               </FormControl>
             </>
-            
           </form>
         </ModalBody>
         <ModalFooter>
