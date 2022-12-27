@@ -17,6 +17,7 @@ import { dashboard } from '../features/vendor/dashboard/dashboard.i18n'
 import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
 import { projectType } from '../features/project-type/project-type.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
+import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -41,6 +42,7 @@ i18n.use(initReactI18next).init({
         ...adminDashboard.en.translation,
         ...projectType.en.translation,
         ...vendorProfile.en.translation,
+        ...projectAwards.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -544,6 +546,7 @@ i18n.use(initReactI18next).init({
         ...adminDashboard.es.translation,
         ...projectType.es.translation,
         ...vendorProfile.es.translation,
+        ...projectAwards.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',

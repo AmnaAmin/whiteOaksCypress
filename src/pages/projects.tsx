@@ -87,7 +87,7 @@ export const Projects = () => {
           {!isFPM && (
             <Button onClick={onNewProjectModalOpen} colorScheme="brand" fontSize="14px" minW={'140px'}>
               <Icon as={BiBookAdd} fontSize="18px" mr={2} />
-              {t('New Project')}
+              {t('projects.newProjects')}
             </Button>
           )}
           {fpmUsers?.length > 0 && isFPM && (
