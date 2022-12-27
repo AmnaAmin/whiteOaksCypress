@@ -1,4 +1,4 @@
-import { Box, Flex, FormLabel, Grid, GridItem, HStack, SimpleGrid } from '@chakra-ui/react'
+import { Box, FormLabel, Grid, GridItem, HStack } from '@chakra-ui/react'
 import { useFPMs } from 'api/pc-projects'
 import { MonthOption } from 'api/performance'
 import ReactSelect from 'components/form/react-select'
@@ -7,7 +7,8 @@ import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { flatten, take, last } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label } from 'recharts'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Label, Tooltip } from 'recharts'
+import { SelectOption } from 'types/transaction.type'
 import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
@@ -158,6 +159,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             contentStyle={{ borderRadius: '6px' }}
             cursor={{ fill: 'transparent' }}
           />
+
           <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]}>
             {vendorData?.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={barColors[index % 20]} />
@@ -234,16 +236,30 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
     if (options?.length > 5) {
       return
     }
-    setFpmOption(options)
 
-    filterGraphData(options, monthOption)
+    // fix fpm names length to keep them within the select bar
+    const selectedFpmOption =
+      options?.map(fpm => ({
+        value: (fpm as SelectOption)?.value,
+        label: (fpm as SelectOption)?.label.substring(0, 8) + '..',
+      })) || []
+
+    setFpmOption(selectedFpmOption)
+
+    filterGraphData(selectedFpmOption, monthOption)
   }
 
   const getMonthValue = monthOption => {
     let selectedFpm = [] as any
 
     if (['Past Quarter', 'Current Quarter', 'All'].includes(monthOption?.label)) {
-      selectedFpm = take(fieldProjectManagerOptions, 5)
+      // fix fpm names length to keep them within the select bar
+      const getFpm = take(fieldProjectManagerOptions, 5)
+      selectedFpm =
+        getFpm?.map(fpm => ({
+          value: (fpm as SelectOption)?.value,
+          label: (fpm as SelectOption)?.label.substring(0, 8) + '..',
+        })) || []
     }
 
     setFpmOption(selectedFpm)
@@ -280,7 +296,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
     )
     setGraphData(finalGraphData)
   }
-    
+
   return (
     <>
       <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
