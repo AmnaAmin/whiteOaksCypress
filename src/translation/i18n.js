@@ -17,6 +17,7 @@ import { dashboard } from '../features/vendor/dashboard/dashboard.i18n'
 import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
 import { projectType } from '../features/project-type/project-type.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
+import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -41,6 +42,7 @@ i18n.use(initReactI18next).init({
         ...adminDashboard.en.translation,
         ...projectType.en.translation,
         ...vendorProfile.en.translation,
+        ...projectAwards.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -242,8 +244,8 @@ i18n.use(initReactI18next).init({
         LWrequired: 'Lien Waiver is required for Draw Transaction.',
         AwardRq: 'You need to select award plan.',
         DrawRemaining: 'You have 0 Draw Remaining',
-        MaterialRemaing: 'You have 0 Material Remaining',
-        PaymentRemaing: 'Remaining payment ammount exceded.',
+        MaterialRemaining: 'You have 0 Material Remaining',
+        PaymentRemaining: 'Remaining payment amount exceeded.',
         nameofClaimant: 'Name of Claimant',
         customerName: 'Customer Name',
         jobLocation: 'Job Location',
@@ -544,6 +546,7 @@ i18n.use(initReactI18next).init({
         ...adminDashboard.es.translation,
         ...projectType.es.translation,
         ...vendorProfile.es.translation,
+        ...projectAwards.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -804,8 +807,8 @@ i18n.use(initReactI18next).init({
         LWrequired: 'Se requiere exención de gravamen para la transacción de giro.',
         AwardRq: 'Debe seleccionar el plan de premios.',
         DrawRemaining: 'Tienes 0 sorteos restantes.',
-        MaterialRemaing: 'Tienes 0 Material Restante.',
-        PaymentRemaing: 'Monto de pago restante excedido.',
+        MaterialRemaining: 'Tienes 0 Material Restante.',
+        PaymentRemaining: 'Monto de pago restante excedido.',
         nameofClaimant: 'Nombre del Reclamante',
         customerName: 'Nombre del Cliente',
         jobLocation: 'Locación de Trabajo',

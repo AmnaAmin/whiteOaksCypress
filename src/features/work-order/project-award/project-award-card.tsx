@@ -1,10 +1,14 @@
 import { Box, Button, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { BiCheckCircle } from 'react-icons/bi'
-import { currencyFormatter } from 'utils/string-formatters'
+import { currencyFormatter, truncateWithEllipsis } from 'utils/string-formatters'
+import { PROJECT_AWARD } from './projectAward.i18n'
 
 export const TextCard = () => {
+  const { t } = useTranslation()
+
   return (
     <Box as="label">
       <Flex
@@ -19,25 +23,25 @@ export const TextCard = () => {
         <VStack w="100%" px={'10px'} alignItems={'Start'} spacing={3}>
           <Box h={'120px'} />
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-            Material draws
+          {t(`${PROJECT_AWARD}.materialDraws`)}
           </Text>
           <Text fontWeight="400" fontSize="14px" color="gray.600">
-            Labor draws
+          {t(`${PROJECT_AWARD}.laborDraws`)}
           </Text>
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-            Total draw amount
+          {t(`${PROJECT_AWARD}.totalDrawAmount`)}
           </Text>
           <Text fontWeight="400" fontSize="14px" color="gray.600">
-            Net final pay terms
+          {(truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayTerms`), 22))}
           </Text>
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-            NTE max
+          {t(`${PROJECT_AWARD}.NTEmax`)}
           </Text>
           <Text fontWeight="400" fontSize="14px" color="gray.600">
-            Factoring fee
+          {t(`${PROJECT_AWARD}.factoringFee`)}
           </Text>
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-            Net final pay amount
+          {(truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayAmount`), 22))}
           </Text>
         </VStack>
       </Flex>
@@ -66,6 +70,7 @@ export const ProjectAwardCard = ({
   awardPlanScopeAmount,
 }) => {
   const [checkIcon, setCheckIcon] = useState(false)
+  const { t } = useTranslation()
 
   const drawAmount = () => {
     if (cardsvalues?.drawLimit === 0) return 0
@@ -169,7 +174,7 @@ export const ProjectAwardCard = ({
             </HStack>
             <Divider border="1px solid" borderColor="gray.300" />
             <Text fontWeight="400" fontSize="12px" color="gray.500">
-              {'Scope amount'}
+            {t(`${PROJECT_AWARD}.scopeAmount`)}
             </Text>
             <Text fontWeight="600" fontSize="16px" color="#4E87F8">
               {currencyFormatter(calculatePercentage(cardsvalues?.factoringFee))}
