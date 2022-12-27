@@ -3,7 +3,7 @@ import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody,
 import IdleTimer from 'react-idle-timer'
 import { useAuth } from 'utils/auth-context'
 
-const USER_INACTIVITY_TIMEOUT = 1000 * 60 * 30 // 30 mins
+const USER_INACTIVITY_TIMEOUT = 1000 * 60 * 240 // 240 mins
 const TIME_TO_LOGOUT = 1000 * 60 * 1.5 // 1 minute 30 seconds = 1.5
 
 export const IdleTimeOutModal = () => {
