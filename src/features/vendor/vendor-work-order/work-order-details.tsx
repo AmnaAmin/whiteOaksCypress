@@ -16,6 +16,7 @@ import {
   Tabs,
   Text,
   useDisclosure,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useCallback, useEffect, useState } from 'react'
@@ -32,6 +33,8 @@ import { WorkOrderNotes } from 'features/work-order/notes/work-order-notes'
 import Status from '../../common/status'
 import { useFetchWorkOrder } from 'api/work-order'
 import { Card } from 'components/card/card'
+import { ProjectAwardTab } from 'features/work-order/project-award/project.award'
+import { useProjectAward } from 'api/project-award'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -54,12 +57,28 @@ export const WorkOrderDetails = ({
   })
   const {
     workOrderAssignedItems,
+    displayAwardPlan,
+    awardPlanScopeAmount,
+    workOrderDetails,
     isFetching: isFetchingLineItems,
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
   const [tabIndex, setTabIndex] = useState(0)
   const [isUpdating, setIsUpdating] = useState()
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
+  const { projectAwardData } = useProjectAward()
+
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
+
+  const [modalSize, setModalSize] = useState<string>('flexible')
+
+  useEffect(() => {
+    if (isMobile) {
+      setModalSize('full')
+    } else {
+      setModalSize('flexible')
+    }
+  }, [isMobile])
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -75,7 +94,7 @@ export const WorkOrderDetails = ({
   }, [onCloseDisclosure, onOpen, workOrder])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="flexible" closeOnOverlayClick={false}>
+    <Modal isOpen={isOpen} onClose={onClose} size={modalSize} closeOnOverlayClick={false}>
       <ModalOverlay />
       {workOrder && (
         <ModalContent rounded={[0]} borderTop="2px solid #345EA6">
@@ -113,6 +132,7 @@ export const WorkOrderDetails = ({
             >
               <TabList pt="12px">
                 <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
+                {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                 <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
                 <Tab data-testid="invoice">{t('invoice')}</Tab>
                 <Tab data-testid="payments">{t('payments')}</Tab>
@@ -132,6 +152,17 @@ export const WorkOrderDetails = ({
                       isLoadingLineItems={isLoadingLineItems}
                     />
                   </TabPanel>
+                  {displayAwardPlan && (
+                    <TabPanel p={0}>
+                      <ProjectAwardTab
+                        workOrder={workOrderDetails}
+                        onSave={null}
+                        onClose={onClose}
+                        awardPlanScopeAmount={awardPlanScopeAmount}
+                        projectAwardData={projectAwardData}
+                      />
+                    </TabPanel>
+                  )}
                   <TabPanel p={0}>
                     {isLoading ? (
                       <BlankSlate />
