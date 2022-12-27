@@ -117,6 +117,7 @@ export const usePayableColumns = (control, register) => {
       {
         header: 'checkbox',
         accessorKey: 'checkbox',
+        accessorFn: () => true,
         cell: cellInfo => {
           const { row } = cellInfo
           const projectId = row.original.id

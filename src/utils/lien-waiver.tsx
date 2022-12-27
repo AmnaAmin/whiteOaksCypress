@@ -41,7 +41,7 @@ export const GetHelpText = () => {
 
   return (
     <>
-      <Text fontSize="14px" fontWeight={500} color="gray.600">
+      <Text fontSize="14px" fontWeight={500} color="#2D3748">
         {t('firstHeading')}
         {/* {headings.first} */}
       </Text>
@@ -50,7 +50,7 @@ export const GetHelpText = () => {
         {noticeText()}
       </Text>
       <br />
-      <Text fontSize="14px" fontWeight={500} color="gray.600">
+      <Text fontSize="14px" fontWeight={500} color="#2D3748">
         {t('thirdHeading')}
       </Text>
       <br />

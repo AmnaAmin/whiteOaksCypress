@@ -365,7 +365,7 @@ const PaymentInfoTab = props => {
                   <Controller
                     control={control}
                     rules={{
-                      max: { value: workOrder?.finalInvoiceAmount, message: 'Amount is greaten than Balance Due.' },
+                      max: { value: workOrder?.finalInvoiceAmount, message: 'Amount is greater than Balance Due.' },
                     }}
                     name="partialPayment"
                     render={({ field, fieldState }) => {

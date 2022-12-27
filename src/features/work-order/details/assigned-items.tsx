@@ -40,7 +40,7 @@ export const CustomCheckBox = props => {
       display="flex"
       alignItems="center"
       gridColumnGap={3}
-      maxW="125px"
+      w="125px"
       h="34px"
       rounded="8px"
       cursor={!state.isDisabled ? 'pointer' : 'default'}

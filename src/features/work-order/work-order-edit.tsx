@@ -36,6 +36,7 @@ import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
 import { useFetchProjectId } from './details/assignedItems.utils'
 import { ProjectAwardTab } from './project-award/project.award'
 import { useProjectAward } from 'api/project-award'
+import { Card } from 'components/card/card'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -124,8 +125,8 @@ const WorkOrderDetails = ({
       <ModalOverlay />
       {workOrder && (
         <>
-          <ModalContent>
-            <ModalHeader>
+          <ModalContent bg="#F2F3F4">
+            <ModalHeader bg="white">
               <HStack spacing={4}>
                 <HStack fontSize="16px" fontWeight={500}>
                   <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
@@ -153,7 +154,7 @@ const WorkOrderDetails = ({
                 onChange={index => setTabIndex(index)}
                 whiteSpace="nowrap"
               >
-                <TabList color="gray.600" mx="32px">
+                <TabList color="gray.600" ml="10px" mr="20px">
                   <Tab>{t('workOrderDetails')}</Tab>
                   {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                   <Tab>{t('lienWaiver')}</Tab>
@@ -204,95 +205,96 @@ const WorkOrderDetails = ({
                       </Center>
                     )}
                 </TabList>
-
-                <TabPanels>
-                  <TabPanel p={0}>
-                    <WorkOrderDetailTab
-                      navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                      workOrder={workOrder}
-                      onClose={onClose}
-                      onSave={onSave}
-                      isWorkOrderUpdating={isWorkOrderUpdating}
-                      swoProject={swoProject}
-                      rejectInvoiceCheck={rejectInvoice}
-                      projectData={projectData}
-                      documentsData={documentsData}
-                      workOrderAssignedItems={workOrderAssignedItems}
-                      isFetchingLineItems={isFetchingLineItems}
-                      isLoadingLineItems={isLoadingLineItems}
-                    />
-                  </TabPanel>
-                  {displayAwardPlan && (
+                <Card mx="10px" mb="10px" roundedTopLeft={0} p={0}>
+                  <TabPanels>
                     <TabPanel p={0}>
-                      <ProjectAwardTab
-                        workOrder={workOrderDetails}
-                        onSave={onSave}
+                      <WorkOrderDetailTab
+                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                        workOrder={workOrder}
                         onClose={onClose}
-                        awardPlanScopeAmount={awardPlanScopeAmount}
-                        projectAwardData={projectAwardData}
+                        onSave={onSave}
+                        isWorkOrderUpdating={isWorkOrderUpdating}
+                        swoProject={swoProject}
+                        rejectInvoiceCheck={rejectInvoice}
+                        projectData={projectData}
+                        documentsData={documentsData}
+                        workOrderAssignedItems={workOrderAssignedItems}
+                        isFetchingLineItems={isFetchingLineItems}
+                        isLoadingLineItems={isLoadingLineItems}
                       />
                     </TabPanel>
-                  )}
-                  <TabPanel p={0}>
-                    {isDocumentsLoading ? (
-                      <BlankSlate />
-                    ) : (
-                      <LienWaiverTab
-                        isUpdating={isUpdating}
-                        setIsUpdating={setIsUpdating}
-                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                        documentsData={documentsData}
-                        workOrder={workOrder}
-                        onClose={onClose}
-                        rejectChecked={!rejectLW}
-                      />
+                    {displayAwardPlan && (
+                      <TabPanel p={0}>
+                        <ProjectAwardTab
+                          workOrder={workOrderDetails}
+                          onSave={onSave}
+                          onClose={onClose}
+                          awardPlanScopeAmount={awardPlanScopeAmount}
+                          projectAwardData={projectAwardData}
+                        />
+                      </TabPanel>
                     )}
-                  </TabPanel>
-                  <TabPanel p={0}>
-                    {isDocumentsLoading || isTransLoading ? (
-                      <BlankSlate />
-                    ) : (
-                      <InvoiceTab
-                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                        rejectInvoiceCheck={rejectInvoice}
-                        transactions={transactions}
-                        documentsData={documentsData}
-                        workOrder={workOrder}
-                        vendorAddress={vendorAddress || []}
-                        isWorkOrderUpdating={isWorkOrderUpdating}
-                        onClose={onClose}
-                        onSave={onSave}
-                        setTabIndex={setTabIndex}
-                        projectData={projectData}
-                      />
-                    )}
-                  </TabPanel>
-                  <TabPanel p={0}>
-                    {isProjectLoading ? (
-                      <BlankSlate />
-                    ) : (
-                      <PaymentInfoTab
-                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                        projectData={projectData}
-                        workOrder={workOrder}
-                        isWorkOrderUpdating={isWorkOrderUpdating}
-                        onClose={onClose}
-                        onSave={onSave}
-                        rejectInvoiceCheck={rejectInvoice}
-                      />
-                    )}
-                  </TabPanel>
+                    <TabPanel p={0}>
+                      {isDocumentsLoading ? (
+                        <BlankSlate />
+                      ) : (
+                        <LienWaiverTab
+                          isUpdating={isUpdating}
+                          setIsUpdating={setIsUpdating}
+                          navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                          documentsData={documentsData}
+                          workOrder={workOrder}
+                          onClose={onClose}
+                          rejectChecked={!rejectLW}
+                        />
+                      )}
+                    </TabPanel>
+                    <TabPanel p={0}>
+                      {isDocumentsLoading || isTransLoading ? (
+                        <BlankSlate />
+                      ) : (
+                        <InvoiceTab
+                          navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                          rejectInvoiceCheck={rejectInvoice}
+                          transactions={transactions}
+                          documentsData={documentsData}
+                          workOrder={workOrder}
+                          vendorAddress={vendorAddress || []}
+                          isWorkOrderUpdating={isWorkOrderUpdating}
+                          onClose={onClose}
+                          onSave={onSave}
+                          setTabIndex={setTabIndex}
+                          projectData={projectData}
+                        />
+                      )}
+                    </TabPanel>
+                    <TabPanel p={0}>
+                      {isProjectLoading ? (
+                        <BlankSlate />
+                      ) : (
+                        <PaymentInfoTab
+                          navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                          projectData={projectData}
+                          workOrder={workOrder}
+                          isWorkOrderUpdating={isWorkOrderUpdating}
+                          onClose={onClose}
+                          onSave={onSave}
+                          rejectInvoiceCheck={rejectInvoice}
+                        />
+                      )}
+                    </TabPanel>
 
-                  <TabPanel p={0}>
-                    <WorkOrderNotes
-                      navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                      workOrder={workOrder}
-                      onClose={onClose}
-                      // setNotesCount={setNotesCount}
-                      onSave={onSave}
-                    />
-                  </TabPanel>
-                </TabPanels>
+                    <TabPanel p={0}>
+                      <WorkOrderNotes
+                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                        workOrder={workOrder}
+                        onClose={onClose}
+                        // setNotesCount={setNotesCount}
+                        onSave={onSave}
+                      />
+                    </TabPanel>
+                  </TabPanels>
+                </Card>
               </Tabs>
             </Stack>
           </ModalContent>
