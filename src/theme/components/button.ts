@@ -13,6 +13,8 @@ const ButtonVariants = {
         return {
           ...chakraTheme.components.Button.variants.solid(props),
           bg: `${props.colorScheme}.300`,
+          fontWeight: 500,
+          fontSize: '14px',
           color: 'white',
           _hover: {
             bg: `${props.colorScheme}.500`,
@@ -24,6 +26,7 @@ const ButtonVariants = {
           ...chakraTheme.components.Button.variants.outline(props),
           borderColor: `${props.colorScheme}.300`,
           color: `${props.colorScheme}.300`,
+          fontWeight: 500,
           _hover: {
             bg: `${props.colorScheme}.50`,
           },

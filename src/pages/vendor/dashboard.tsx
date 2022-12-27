@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Flex, Spacer, VStack, Text, FormLabel } from '@chakra-ui/react'
+import { Box, Flex, Spacer, VStack, Text, FormLabel, useMediaQuery, Heading } from '@chakra-ui/react'
 import { VendorScore } from 'components/VendorScore/vendor-score'
 import { Card } from 'components/card/card'
 import Overview from 'components/chart/Overview'
@@ -15,9 +15,14 @@ import { ProjectFilters } from 'features/vendor/projects/project-fliters'
 import { useNavigate } from 'react-router-dom'
 import { UpcomingPaymentTable } from 'features/vendor/dashboard/upcoming-payment-table'
 import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
+import { boxShadow } from 'theme/common-style'
 
 const Dashboard: React.FC = () => {
+
   const { vendorId } = useUserProfile() as Account
+
+  const [isMobile] = useMediaQuery( "(max-width: 480px)" );
+  const [isLessThanOrEq320] = useMediaQuery( "(max-width: 320px)" );
 
   // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
   // const { onToggle } = useDisclosure()
@@ -30,8 +35,21 @@ const Dashboard: React.FC = () => {
     navigate('/projects', { state: params })
   }
 
+  if ( isLessThanOrEq320 ) {
+    return (
+      <Box mt="50%">
+        <Heading as='h3' size='sm'>
+          Sorry !
+        </Heading>
+        <Text fontSize='sm'>
+          {t('Your resolution is reached at a limit, please switch to a better resolution or change your device orientation from vertical to horizontal')}.
+        </Text>
+      </Box>
+    );
+  }
+
   return (
-    <VStack w="100%" zIndex={2} spacing="14px">
+    <VStack w="100%" zIndex={2} spacing="11px">
       <Box w={{ base: '100%' }}>
         <VendorScore vendorId={vendorId} />
       </Box>
@@ -48,31 +66,32 @@ const Dashboard: React.FC = () => {
         }}
         justifyContent="stretch"
         w="100%"
-        pb="10px"
       >
-        <Card p={0} rounded="13px" flex={1} bg="#FDFDFF">
+        <Card p={0} borderRadius="6px" flex={1} bg="#FDFDFF" style={boxShadow}>
           <Flex mb="5px" mt="25px">
-            <Text color="gray.600" fontStyle="normal" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
+            <Text color="gray.700" fontStyle="Poppins" fontWeight={500} fontSize="18px" lineHeight="28px" ml="39px">
               {t('WOstatus')}
             </Text>
           </Flex>
+          { isMobile ? <br /> : null }
           <Overview vendorId={vendorId} />
         </Card>
 
         <Card
           p={0}
           pl={3}
-          rounded="13px"
+          borderRadius="6px"
           flex={1}
-          ml={{ base: 0, xl: '15px' }}
+          ml={{ base: 0, xl: '11px' }}
           mt={{ base: '30px', xl: 0 }}
           bg="#FDFDFF"
+          style={boxShadow}
         >
           <Flex mb="20px">
             <Text
               mt="25px"
               ml="25px"
-              color="gray.600"
+              color="gray.700"
               fontStyle="normal"
               fontWeight={500}
               fontSize="18px"
@@ -81,7 +100,7 @@ const Dashboard: React.FC = () => {
               {t('WOpaid')}
             </Text>
             <Spacer />
-            <Box mt="20px" mr="30px" w="140px">
+            <Box mt="20px" mr="30px" w="140px" border={'1px solid #CBD5E0'}>
               <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
@@ -89,14 +108,15 @@ const Dashboard: React.FC = () => {
           <PaidChart filterChart={paidOption} />
         </Card>
       </Flex>
-
-      <Box width="100%" pb="5">
-        <FormLabel variant="strong-lable" size={'lg'}>
-          {t(`${DASHBOARD}.upcomingPayment`)}
-        </FormLabel>
-
-        <UpcomingPaymentTable />
-      </Box>
+      <Card w="100%" style={boxShadow} borderRadius={'6px'}>
+        <Box mt={3} ml={1}>
+          <FormLabel fontSize={'18px'} lineHeight={'28px'} color="gray.700" fontWeight={500}>
+            {t(`${DASHBOARD}.upcomingPayment`)}
+          </FormLabel>
+          <UpcomingPaymentTable />
+        </Box>
+      </Card>
+      <Box></Box>
     </VStack>
   )
 }

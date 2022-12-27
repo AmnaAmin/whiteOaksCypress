@@ -6,8 +6,8 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { flatten, take, last } from 'lodash'
-import React, { useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Cell, Label, Tooltip } from 'recharts'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, Legend } from 'recharts'
 import { SelectOption } from 'types/transaction.type'
 import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
@@ -16,31 +16,35 @@ type GraphData = {
   username: string
   month: any
   Revenue: any
+  Profit: any
 }[]
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck }) => {
-  const barColors = [
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
+  const labels = [
+    { key: 'Profit', color: '#949AC2' },
+    { key: 'Revenue', color: '#68B8EF' },
   ]
+
+  const [barProps, setBarProps] = useState(
+    labels.reduce(
+      (a, { key }) => {
+        a[key] = false
+        return a
+      },
+      { hover: null },
+    ),
+  )
+
+  const selectBar = useCallback(
+    e => {
+      setBarProps({
+        ...barProps,
+        [e.dataKey]: !barProps[e.dataKey],
+        hover: null,
+      })
+    },
+    [barProps],
+  )
 
   let {
     Revenue = undefined,
@@ -144,7 +148,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             }}
             tickFormatter={value => `$${value}`}
             label={{
-              value: 'Revenue',
+              value: '',
               angle: -90,
               position: 'left',
               textAnchor: 'middle',
@@ -159,12 +163,35 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             contentStyle={{ borderRadius: '6px' }}
             cursor={{ fill: 'transparent' }}
           />
-
-          <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]}>
-            {vendorData?.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={barColors[index % 20]} />
-            ))}
-          </Bar>
+          <Bar
+            barSize={50}
+            dataKey="Revenue"
+            fill="#68B8EF"
+            radius={[5, 5, 0, 0]}
+            hide={barProps['Revenue'] === true}
+          />
+          <Bar barSize={50} dataKey="Profit" fill="#949AC2" radius={[5, 5, 0, 0]} hide={barProps['Profit'] === true} />
+          <Legend
+            onClick={selectBar}
+            wrapperStyle={{
+              lineHeight: '31px',
+              position: 'relative',
+              bottom: '50px',
+              left: '40px',
+            }}
+            iconType="circle"
+            iconSize={10}
+            align="center"
+            formatter={value => {
+              return (
+                <Box display="inline-flex" marginInlineEnd="30px">
+                  <Box as="span" color="gray.600" fontSize="12px" fontStyle="normal" fontWeight={400}>
+                    {value}
+                  </Box>
+                </Box>
+              )
+            }}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -198,6 +225,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 userId: Number(last(userId)),
                 quarter: getQuarterByMonth(monthIndex),
                 Revenue: nameMonthData[nameKey]?.revenue,
+                Profit: nameMonthData[nameKey]?.profit,
               }
             })
             let newgraphs = graphs?.map((n, i) => ({

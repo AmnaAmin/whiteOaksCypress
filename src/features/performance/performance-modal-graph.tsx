@@ -161,7 +161,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption
             bottom: 10,
           }}
         >
-          <CartesianGrid stroke="#EFF3F9" />
+          <CartesianGrid stroke="#EFF3F9"/>
           <XAxis
             dataKey={hasUsers ? 'username' : 'month'}
             axisLine={false}
@@ -184,23 +184,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption
                 fontStyle="italic"
               />
             )}
-          </XAxis>
-          {hasUsers && (
-            <XAxis
-              dataKey={'centerMonth'}
-              axisLine={false}
-              tickLine={false}
-              tick={{
-                fill: '#4A5568',
-                fontSize: '14px',
-                fontWeight: 400,
-                fontStyle: 'normal',
-              }}
-              tickMargin={20}
-              interval={0}
-              xAxisId="users"
-            ></XAxis>
-          )}
+          </XAxis>          
           <YAxis
             tickLine={{ stroke: '#4F4F4F' }}
             type="number"

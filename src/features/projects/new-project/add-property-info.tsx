@@ -21,6 +21,7 @@ import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 import { useProjects } from 'api/projects'
 import Select from 'components/form/react-select'
 import { CreatableSelect } from 'components/form/react-select'
+import { createFilter } from "react-select";
 import { useGetAddressVerification, useMarkets, useProperties, useStates } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { AddressVerificationModal } from './address-verification-modal'
@@ -73,10 +74,10 @@ export const AddPropertyInfo: React.FC<{
     setValue('acknowledgeCheck', true)
   }
 
-  // Get all values of Address Info 
+  // Get all values of Address Info
   const watchAddress = useWatch({ name: 'streetAddress', control })
   const watchCity = useWatch({ name: 'city', control })
-  const watchState = useWatch({ name: 'state', control }) 
+  const watchState = useWatch({ name: 'state', control })
   const watchZipCode = useWatch({ name: 'zipCode', control })
 
   // Set all values of Address Info
@@ -166,6 +167,7 @@ export const AddPropertyInfo: React.FC<{
                         onChange={setAddressValues}
                         selectProps={{ isBorderLeft: true }}
                         inputProps={{ autoComplete: 'off', autoCorrect: 'off', spellCheck: 'off' }}
+                        filterOption={ createFilter( { ignoreAccents: false } ) }
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>

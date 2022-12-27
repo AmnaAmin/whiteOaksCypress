@@ -17,7 +17,11 @@ export interface TableProperties<T extends Record<string, unknown>> extends Tabl
 function Filter({ column, table }: { column: Column<any, unknown>; table: TableType<any> }) {
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
-  const columnFilterValue = column.getFilterValue()
+  // We inject meta into certain columns where the filter state can be prefilled either by backend or by UI
+  // In react table, meta key can be added to any column and meta can hold any arbitrary value
+  const metaData: any = column.columnDef?.meta as any
+  const filterInitialState = metaData?.filterInitialState || null
+  const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date' || 'date')
 
   const sortedUniqueValues = React.useMemo(
@@ -42,6 +46,7 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
         list={column.id + 'list'}
         // @ts-ignore
         minW={dateFilter && '127px'}
+        resetValue={!!metaData?.resetFilters}
       />
       <div className="h-1" />
     </>
@@ -51,6 +56,7 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
 // A debounced input react component
 function DebouncedInput({
   value: initialValue,
+  resetValue,
   onChange,
   debounce = 500,
   ...props
@@ -58,12 +64,13 @@ function DebouncedInput({
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
+  resetValue?: boolean
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   const [value, setValue] = React.useState(initialValue)
 
   React.useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
+    setValue(resetValue ? '' : initialValue)
+  }, [initialValue, resetValue])
 
   React.useEffect(() => {
     const timeout = setTimeout(() => {
@@ -85,6 +92,7 @@ function DebouncedInput({
       {...props}
       value={value}
       onChange={e => setValue(e.target.value)}
+      borderColor="gray.300"
     />
   )
 }
@@ -130,11 +138,12 @@ export const Table: React.FC<TableProps> = ({
       display="table"
       minH="calc(100% - 41px)"
       w="100%"
-      bg="white"
       boxShadow="sm"
       rounded="md"
       position="relative"
       zIndex={0}
+      // border="1px solid #CBD5E0"
+      bg="white"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
@@ -155,8 +164,9 @@ export const Table: React.FC<TableProps> = ({
                     position="sticky"
                     top="0"
                     py="3"
-                    bg="#F7FAFC"
+                    bg="#ECEDEE"
                     zIndex={1}
+                    borderBottomColor="gray.300"
                     cursor={isSortable ? 'pointer' : ''}
                     onClick={header.column.getToggleSortingHandler()}
                     {...getColumnMaxMinWidths(header.column)}
@@ -164,11 +174,10 @@ export const Table: React.FC<TableProps> = ({
                     <Flex alignItems="center">
                       <Text
                         fontSize="14px"
-                        color="gray.600"
+                        color="gray.700"
                         fontWeight={500}
                         fontStyle="normal"
                         textTransform="none"
-                        // lineHeight="20px"
                         isTruncated
                         display="inline-block"
                         title={typeof title === 'string' ? t(title as string) : ''}
@@ -193,11 +202,11 @@ export const Table: React.FC<TableProps> = ({
             </Tr>
           ))}
 
-          {/** Header Filter Input Field for each column */}
+          {/** Header Filter Input Field for each column **/}
           {!isHideFilters &&
             getHeaderGroups().map(headerGroup => {
               return (
-                <Tr key={`th_${headerGroup.id}`}>
+                <Tr key={`th_${headerGroup.id}`} position="relative">
                   {headerGroup.headers.map(header => {
                     return (
                       <Th
@@ -206,14 +215,23 @@ export const Table: React.FC<TableProps> = ({
                         position="sticky"
                         zIndex={1}
                         top="38px"
-                        borderTop="1px solid #ddd"
-                        bg="#F7FAFC"
+                        borderBottomColor="gray.300"
+                        bg="#ECEDEE"
                         {...getColumnMaxMinWidths(header.column)}
                       >
                         {header.column.getCanFilter() ? (
-                          <div>
+                          <Box
+                            _after={{
+                              content: '""',
+                              bottom: '0px',
+                              left: '0px',
+                              position: 'absolute',
+                              minW: '100%',
+                              borderBottom: '1px solid #CBD5E0',
+                            }}
+                          >
                             <Filter column={header.column} table={tableInstance} />
-                          </div>
+                          </Box>
                         ) : null}
                       </Th>
                     )
@@ -258,12 +276,12 @@ export const Table: React.FC<TableProps> = ({
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
-                          bg: 'gray.50',
+                          bg: '#F3F8FF',
                         }}
+                        backgroundColor={row.getIsSelected() ? 'gray.50' : ''}
                       >
                         {row.getVisibleCells().map(cell => {
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
-
                           return (
                             <Td
                               key={cell.id}
@@ -340,6 +358,7 @@ const DragDropEnabledRows = ({
                 {(provided, snapshot) => (
                   <>
                     <Tr
+                      h={'40px !important'}
                       key={row.id}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
@@ -350,7 +369,7 @@ const DragDropEnabledRows = ({
                       backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
                       boxShadow={snapshot.isDragging ? '0px 3px 5px 3px rgb(112 144 176 / 12%)' : 'none'}
                       _hover={{
-                        bg: 'gray.50',
+                        bg: '#F3F8FF',
                       }}
                     >
                       {row.getVisibleCells().map(cell => {
@@ -358,6 +377,8 @@ const DragDropEnabledRows = ({
 
                         return (
                           <Td
+                            py={0}
+                            pr={'50px'}
                             key={cell.id}
                             isTruncated
                             title={cell.getContext()?.getValue() as string}

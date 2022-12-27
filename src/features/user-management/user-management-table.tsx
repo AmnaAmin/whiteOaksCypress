@@ -47,6 +47,7 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
       header: `${USER_MANAGEMENT}.table.createdDate`,
       accessorKey: 'createdDate',
       accessorFn: value => dateFormat(value.createdDate),
+      meta: { format: 'date' },
     },
 
     {
@@ -57,6 +58,7 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
       header: `${USER_MANAGEMENT}.table.modifiedDate`,
       accessorKey: 'lastModifiedDate',
       accessorFn: value => dateFormat(value.lastModifiedDate),
+      meta: { format: 'date' },
     },
   ]
 
@@ -72,7 +74,7 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
         />
       )}
 
-      <Box overflow={'auto'} h="calc(100vh - 225px)">
+      <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderRadius="6px">
         <TableContextProvider data={data} columns={columns}>
           <Table
             onRowClick={row => {

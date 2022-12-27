@@ -29,9 +29,9 @@ import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 
 const SummaryCard = props => {
   return (
-    <Flex justifyContent={'left'} pb={'20px'}>
+    <Flex justifyContent={'left'}>
       <Box pr={4}>
-        <Icon as={props.icon} fontSize="23px" color="#718096" />
+        <Icon as={props.icon} fontSize="23px" color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
         <FormLabel variant="strong-label" size="md">
@@ -213,10 +213,10 @@ const WorkOrderDetailTab = ({
         </ModalBody>
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
           <HStack spacing="16px" w="100%" justifyContent="end">
-            <Button variant="outline" colorScheme="brand" onClick={onClose}>
+            <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
               {t('cancel')}
             </Button>
-            <Button type="submit" colorScheme="brand" disabled={isUpdating || isFetchingLineItems}>
+            <Button type="submit" colorScheme="darkPrimary" disabled={isUpdating || isFetchingLineItems}>
               {t('save')}
             </Button>
           </HStack>

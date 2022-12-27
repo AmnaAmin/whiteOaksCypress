@@ -74,6 +74,10 @@ export type SWOProject = {
 export type selectedCell = { id: string; value: string }
 
 export const getRemovedItems = (formValues, workOrderAssignedItems) => {
+  if (formValues?.cancel?.value === 35) {
+    return formValues.assignedItems
+  }
+
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
   const deletedItems = [...workOrderAssignedItems?.filter(items => !formAssignedItemsIds?.includes(items.id))]
@@ -81,6 +85,10 @@ export const getRemovedItems = (formValues, workOrderAssignedItems) => {
 }
 
 export const getUnAssignedItems = (formValues, workOrderAssignedItems) => {
+  /* check if work order is being cancelled we should unassign all line items */
+  if (formValues?.cancel?.value === 35) {
+    return formValues.assignedItems
+  }
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.smartLineItemId)
   const unAssignedItems = [
@@ -556,7 +564,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
           size="sm"
           data-testid={testId}
           onClick={() => inputRef?.current?.click()}
-          colorScheme="brand"
+          colorScheme="darkPrimary"
           variant="outline"
           leftIcon={<BiUpload color="#4E87F8" />}
           display="flex"
@@ -606,7 +614,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.text('Property Address:', startx, 55)
     doc.setFont(summaryFont, 'normal')
     doc.text(projectData?.streetAddress ?? '', startx, 60)
-    doc.text(projectData?.market + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
+    doc.text(projectData?.city + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
 
     doc.setFont(summaryFont, 'bold')
     const centerTextX = 75
@@ -892,27 +900,7 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
-      {
-        header: `${WORK_ORDER}.location`,
-        accessorKey: 'location',
-        cell: ({ row }) => {
-          const index = row?.index
-          return (
-            <Box>
-              <EditableField
-                index={index}
-                selectedCell={selectedCell}
-                setSelectedCell={setSelectedCell}
-                fieldName="location"
-                fieldArray="assignedItems"
-                formControl={formControl}
-                inputType="text"
-                allowEdit={allowEdit}
-              />
-            </Box>
-          )
-        },
-      },
+
       {
         header: `${WORK_ORDER}.sku`,
         accessorKey: 'sku',
@@ -955,6 +943,27 @@ export const useGetLineItemsColumn = ({
           )
         },
         size: 200,
+      },
+      {
+        header: `${WORK_ORDER}.location`,
+        accessorKey: 'location',
+        cell: ({ row }) => {
+          const index = row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                fieldName="location"
+                fieldArray="assignedItems"
+                formControl={formControl}
+                inputType="text"
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
       },
       {
         header: () => {
@@ -1145,20 +1154,20 @@ export const useGetLineItemsColumn = ({
         },
       },
       {
-        header: `${WORK_ORDER}.status`,
+        header: `${WORK_ORDER}.complete`,
         accessorKey: 'isCompleted',
         enableSorting: false,
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
-            <HStack justifyContent={'center'} h="50px">
+            <HStack justifyContent={'center'} h="28px">
               <Controller
                 control={control}
                 name={`assignedItems.${index}.isCompleted`}
                 render={({ field, fieldState }) => (
                   <CustomCheckBox
                     testid={`isCompleted-` + index}
-                    text="Completed"
+                    // text="Completed"
                     isChecked={field.value}
                     disabled={!statusEnabled}
                     onChange={e => {
@@ -1186,8 +1195,8 @@ export const useGetLineItemsColumn = ({
               control={control}
               render={({ field, fieldState }) => {
                 return (
-                  <VStack gap="1px">
-                    <Box>
+                  <VStack spacing="-12px">
+                    <Box py="12px">
                       <UploadImage
                         testId={'upload-' + index}
                         label={`upload`}

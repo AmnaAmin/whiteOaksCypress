@@ -51,13 +51,13 @@ const CalenderCard = props => {
   return (
     <Flex>
       <Box pr={4}>
-        <BiCalendar size={23} color="#718096" />
+        <BiCalendar size={23} color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
+        <Text color="gray.700" fontWeight={500} fontSize="14px" fontStyle="normal" mb="1">
           {props.title}
         </Text>
-        <Text data-testid={props.testId} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text color="gray.600" data-testid={props.testId} fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props?.date || 'mm/dd/yyyy'}
         </Text>
       </Box>
@@ -69,12 +69,12 @@ const InformationCard = props => {
   return (
     <Flex>
       <Box lineHeight="20px">
-        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
+        <Text color="gray.700" fontWeight={500} fontSize="14px" fontStyle="normal" mb="1">
           {props.title}
         </Text>
         <Text
           data-testid={props.testId}
-          color="gray.500"
+          color="gray.600"
           fontSize="14px"
           fontStyle="normal"
           fontWeight={400}
@@ -127,6 +127,7 @@ const WorkOrderDetailTab = props => {
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
   const [uploadedWO, setUploadedWO] = useState<any>(null)
+
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
   const { isAdmin } = useUserRolesSelector()
@@ -246,6 +247,7 @@ const WorkOrderDetailTab = props => {
   const onSubmit = values => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
     const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
+
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrderAssignedItems)
     const removedItems = getRemovedItems(formValues, workOrderAssignedItems)

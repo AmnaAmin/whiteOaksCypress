@@ -189,49 +189,50 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   return (
     <FormProvider {...formReturn}>
       <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
-      <Card pb="8px" pt="18px" px="18px">
-        <form onSubmit={formReturn.handleSubmit(submitForm)}>
-          <Tabs
-            index={tabIndex}
-            size="md"
-            variant="enclosed"
-            colorScheme="brand"
-            onChange={index => setTabIndex(index)}
-          >
-            <TabList>
-              <Tab>{t('details')}</Tab>
-              <Tab
-                _disabled={{ cursor: 'not-allowed' }}
-                isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
-                data-testid="documents"
-              >
-                {t('documents')}
-              </Tab>
-              <Tab
-                _disabled={{ cursor: 'not-allowed' }}
-                isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
-                data-testid="license"
-              >
-                {t('license')}
-              </Tab>
-              <Tab
-                _disabled={{ cursor: 'not-allowed' }}
-                isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
-                data-testid="tradetab"
-              >
-                {t('trade')}
-              </Tab>
-              <Tab
-                _disabled={{ cursor: 'not-allowed' }}
-                isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
-                data-testid="markettab"
-              >
-                {t('market')}
-              </Tab>
-              {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
-              {!isVendor && <Tab>{t('Projects')}</Tab>}
-            </TabList>
 
+      <form onSubmit={formReturn.handleSubmit(submitForm)}>
+        <Tabs
+          index={tabIndex}
+          size="md"
+          variant="enclosed"
+          colorScheme="darkPrimary"
+          onChange={index => setTabIndex(index)}
+        >
+          <TabList>
+            <Tab>{t('details')}</Tab>
+            <Tab
+              _disabled={{ cursor: 'not-allowed' }}
+              isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
+              data-testid="documents"
+            >
+              {t('documents')}
+            </Tab>
+            <Tab
+              _disabled={{ cursor: 'not-allowed' }}
+              isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
+              data-testid="license"
+            >
+              {t('license')}
+            </Tab>
+            <Tab
+              _disabled={{ cursor: 'not-allowed' }}
+              isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
+              data-testid="tradetab"
+            >
+              {t('trade')}
+            </Tab>
+            <Tab
+              _disabled={{ cursor: 'not-allowed' }}
+              isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
+              data-testid="markettab"
+            >
+              {t('market')}
+            </Tab>
+            {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
+            {!isVendor && <Tab>{t('Projects')}</Tab>}
+          </TabList>
+
+          <Card pb="8px" pt="18px" px="18px" roundedTop="0px">
             <TabPanels mt="31px">
               <TabPanel p="0px">
                 {tabIndex === 0 ? (
@@ -316,10 +317,10 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             </TabPanel> */}
               {/* <TabPanel p="0px"></TabPanel> */}
             </TabPanels>
-          </Tabs>
-        </form>
-        <DevTool control={control} />
-      </Card>
+          </Card>
+        </Tabs>
+      </form>
+      <DevTool control={control} />
     </FormProvider>
   )
 }
@@ -330,7 +331,7 @@ const VendorProfilePage: React.FC<Props> = props => {
   const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorId)
 
   return (
-    <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
+    <Stack w={{ sm: "100%", base: '971px', xl: '100%' }} spacing={0}>
       {isLoading ? (
         <BlankSlate width="60px" />
       ) : (

@@ -9,6 +9,7 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   propertyAddress: 'propertyAddress.contains',
   vendorAddress: 'vendorAddress.contains',
   paymentTerm: 'paymentTerm.equals',
+  paymentType: 'paymentType.contains',
   expectedPaymentDate: 'expectedPaymentDate.equals',
   finalInvoiceAmount: 'finalInvoiceAmount.greaterThanOrEqual',
   marketName: 'marketName.contains',
@@ -41,11 +42,16 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'paymentTerm',
   },
   {
+    header: 'paymentType',
+    accessorKey: 'paymentType',
+  },
+  {
     header: 'expectedPayDate',
     accessorKey: 'expectedPaymentDate',
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.expectedPaymentDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'finalInvoice',
@@ -53,6 +59,7 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn: cellInfo => {
       return numeral(cellInfo.finalInvoiceAmount).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'markets',
@@ -64,6 +71,7 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.workOrderStartDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'wOCompletedDate',
@@ -71,6 +79,7 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.workOrderDateCompleted)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'wOIssueDate',
@@ -78,6 +87,7 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.workOrderIssueDate)
     },
+    meta: { format: 'date' },
   },
 ]
 
@@ -104,6 +114,7 @@ export const PAYABLE_OVERPAYMENT_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return numeral(cellInfo.transactionTotal).format('$0,0.00')
     },
+    meta: { format: 'currency' },
   },
   {
     header: 'Transaction Status' as string,
@@ -120,6 +131,7 @@ export const PAYABLE_OVERPAYMENT_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.modifiedDate)
     },
+    meta: { format: 'date' },
   },
   {
     header: 'Approved By' as string,

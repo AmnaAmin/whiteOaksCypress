@@ -25,7 +25,7 @@ export const Sidebar: React.FC<BoxProps> = props => {
         },
       }}
       style={{
-        overflowY: 'auto'
+        overflowY: 'auto',
       }}
     />
   )

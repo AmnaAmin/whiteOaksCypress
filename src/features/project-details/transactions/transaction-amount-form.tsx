@@ -19,16 +19,15 @@ import {
   FormLabel,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
-import { AiOutlinePlus } from 'react-icons/ai'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
-import { useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
+import { isManualTransaction, useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
 import { ChangeOrderType, FormValues, TransactionTypeValues } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
 import { TRANSACTION_FEILD_DEFAULT } from 'features/project-details/transactions/transaction.constants'
 import { MdOutlineCancel } from 'react-icons/md'
 import { useTranslation } from 'react-i18next'
-import { BiDownload, BiFile } from 'react-icons/bi'
+import { BiAddToQueue, BiDownload, BiFile } from 'react-icons/bi'
 import numeral from 'numeral'
 import { TRANSACTION } from './transactions.i18n'
 import {
@@ -39,16 +38,19 @@ import {
 } from 'api/transactions'
 import { useAccountDetails } from 'api/vendor-details'
 import NumberFormat from 'react-number-format'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
   transaction?: ChangeOrderType
   isMaterialsLoading?: boolean
   setMaterialsLoading?: (value) => void
+  onSetTotalRemainingAmount?: any
   selectedTransactionId?: string | number | undefined
 }
 
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
+  onSetTotalRemainingAmount,
   formReturn,
   transaction: changeOrder,
   isMaterialsLoading,
@@ -111,6 +113,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
   const { refundCheckbox } = useFieldShowHideDecision(control)
   const { isApproved } = useFieldDisabledEnabledDecision(control, changeOrder)
+  const { isAdmin } = useUserRolesSelector()
 
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
@@ -120,6 +123,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     !!selectedTransactionId &&
     transaction?.length > 0
   const { formattedAmount: totalAmount } = useTotalAmount(control)
+  const isAdminEnabled = isAdmin && isManualTransaction(changeOrder?.transactionType)
 
   const toggleAllCheckboxes = useCallback(
     event => {
@@ -211,34 +215,33 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               data-testid="add-new-row-button"
               variant="outline"
               size="sm"
-              borderColor="#4E87F8"
-              color="#4E87F8"
+              colorScheme="darkPrimary"
               disabled={isMaterialsLoading}
               onClick={addRow}
-              leftIcon={<AiOutlinePlus color="#4E87F8" />}
+              color="darkPrimary.300"
+              leftIcon={<BiAddToQueue color="darkPrimary.300" />}
             >
-              {t(`${TRANSACTION}.newRow`)}
+              {t(`${TRANSACTION}.addNewRow`)}
             </Button>
             <Button
               data-testid="delete-row-button"
               variant="outline"
               size="sm"
               ml="10px"
-              borderColor="#4E87F8"
-              color="#4E87F8"
+              colorScheme="darkPrimary"
               _hover={{
                 _disabled: {
                   bg: '#EBF8FF',
-                  color: '#4E87F8',
+                  color: 'darkPrimary.300',
                   opacity: 0.5,
                 },
               }}
               _disabled={{
                 bg: '#EBF8FF',
-                color: '#4E87F8',
+                color: 'darkPrimary.300',
                 opacity: 0.5,
               }}
-              leftIcon={<RiDeleteBinLine color="#4E87F8" />}
+              leftIcon={<RiDeleteBinLine color="darkPrimary.300" />}
               onClick={onDeleteConfirmationModalOpen}
               isDisabled={!someChecked}
             >
@@ -261,6 +264,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     variant="link"
                     _focus={{ outline: 'none' }}
                     isChecked={!!value}
+                    colorScheme='darkPrimary'
                     isDisabled={isApproved || isMaterialsLoading}
                     onChange={event => {
                       const isChecked = event.currentTarget.checked
@@ -276,12 +280,20 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           )}
           {values?.lienWaiverDocument?.s3Url && (
             <>
-              <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: '#4E87F8' }}>
+              <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: 'darkPrimary.300' }}>
                 <Flex>
-                  <Box mt="3px">
+                  <Box mt="3px" color="darkPrimary.300">
                     <BiDownload fontSize="sm" />
                   </Box>
-                  <Text ml="5px" fontSize="14px" fontWeight={500} fontStyle="normal" maxW="110px" isTruncated>
+                  <Text
+                    ml="5px"
+                    fontSize="14px"
+                    fontWeight={500}
+                    fontStyle="normal"
+                    color="darkPrimary.300"
+                    maxW="110px"
+                    isTruncated
+                  >
                     {t(`${TRANSACTION}.lienWaiver`)}
                   </Text>
                 </Flex>
@@ -293,9 +305,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
           {values.attachment && values.attachment.s3Url && (
             <>
-              <a href={values?.attachment?.s3Url} download style={{ color: '#4E87F8' }}>
+              <a href={values?.attachment?.s3Url} download style={{ color: 'darkPrimary.300' }}>
                 <Flex>
-                  <Box mt="3px">
+                  <Box mt="3px" color='darkPrimary.300'>
                     <BiDownload fontSize="sm" />
                   </Box>
                   <Text
@@ -305,6 +317,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     fontStyle="normal"
                     maxW="110px"
                     isTruncated
+                    color="darkPrimary.300"
                     title={values?.attachment?.fileType}
                   >
                     {values?.attachment?.fileType}
@@ -346,10 +359,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     }
                   }
                 }}
-                leftIcon={<BiFile />}
+                leftIcon={<BiFile color="darkPrimary.300" />}
                 variant="outline"
                 size="sm"
-                colorScheme="brand"
+                colorScheme="darkPrimary"
+                color="darkPrimary.300"
                 isDisabled={isApproved || !values?.transactionType?.value}
               >
                 {t(`${TRANSACTION}.attachment`)}
@@ -365,7 +379,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         flex="1"
         pos="relative"
         flexDirection="column"
-        roundedTop={6}
+        rounded={6}
       >
         <Grid
           gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
@@ -373,7 +387,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           py="3"
           fontSize="14px"
           color="gray.600"
-          bg="gray.50"
+          bg="bgGlobal.50"
           gap="1rem 4rem"
           borderWidth="0 0 1px 0"
           borderStyle="solid"
@@ -384,6 +398,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             <GridItem id="all-checkbox">
               <Checkbox
                 variant="normal"
+                colorScheme="CustomPrimaryColor"
                 isChecked={allChecked}
                 isDisabled={isApproved}
                 isIndeterminate={isIndeterminate}
@@ -406,6 +421,15 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         ) : (
           <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
             {transactionFields.map((transactionField, index) => {
+              const values = getValues()
+              const defaultNegative = [
+                TransactionTypeValues.draw,
+                TransactionTypeValues.material,
+                TransactionTypeValues.lateFee,
+                TransactionTypeValues.factoring,
+              ].some(id => id === values?.transactionType?.value)
+              const isRefund = values?.refundMaterial || values?.refundLateFee || values?.refundFactoring
+
               return (
                 <Grid
                   className="amount-input-row"
@@ -452,8 +476,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                         size="sm"
                         autoComplete="off"
                         placeholder="Add Description here"
-                        readOnly={isApproved}
-                        variant={isApproved ? 'unstyled' : 'required-field'}
+                        readOnly={isApproved && !isAdminEnabled}
+                        variant={isApproved && !isAdminEnabled ? 'unstyled' : 'required-field'}
                         {...register(`transaction.${index}.description` as const, {
                           required: 'This is required field',
                         })}
@@ -473,39 +497,26 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                         render={({ field, fieldState }) => {
                           return (
                             <>
-                              {!isApproved ? (
+                              {!isApproved || isAdminEnabled ? (
                                 <NumberFormat
                                   data-testid={`transaction-amount-${index}`}
                                   customInput={Input}
                                   value={field.value}
                                   placeholder="Add Amount"
-                                  onChange={e => {
-                                    if (e.currentTarget.value !== '') {
-                                      const transactionTypeId = getValues('transactionType')?.value
-                                      const isRefundMaterial = getValues('refundMaterial')
-                                      const isRefundLateFee = getValues('refundLateFee')
-                                      const isRefundFactoring = getValues('refundFactoring')
-                                      const isRefund = isRefundMaterial || isRefundLateFee || isRefundFactoring
-
-                                      const defaultNegative = [
-                                        TransactionTypeValues.draw,
-                                        TransactionTypeValues.material,
-                                        TransactionTypeValues.lateFee,
-                                        TransactionTypeValues.factoring,
-                                      ].some(id => id === transactionTypeId)
-
-                                      // if by default its a negative transaction, we arent allowing - by user input.
-                                      const inputValue =
-                                        defaultNegative || isRefund
-                                          ? e.currentTarget.value.replace('-', '')
-                                          : e.currentTarget.value
-
-                                      field.onChange(
-                                        defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
-                                      )
-                                    } else {
-                                      field.onChange('')
+                                  onKeyDown={e => {
+                                    if (defaultNegative && e?.code === 'Minus') {
+                                      e.preventDefault()
                                     }
+                                  }}
+                                  onChange={e => {
+                                    onSetTotalRemainingAmount(Math.abs(e?.target?.value))
+
+                                    const inputValue = e.currentTarget.value
+                                    inputValue !== ''
+                                      ? field.onChange(
+                                          defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
+                                        )
+                                      : field.onChange('')
                                   }}
                                   variant={'required-field'}
                                   size="sm"
@@ -544,6 +555,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             borderStyle="solid"
             borderColor="gray.200"
             bg="white"
+            rounded={6}
           >
             {isShowCheckboxes && <GridItem />}
             <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.200" py="4"></GridItem>
