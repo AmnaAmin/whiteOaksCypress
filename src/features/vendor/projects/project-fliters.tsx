@@ -1,6 +1,6 @@
 import { Box, Center, useMediaQuery } from '@chakra-ui/react'
 import { BiFile, BiDetail, BiMessageSquareX, BiCheckCircle, BiCalendarExclamation } from 'react-icons/bi'
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useVendorCards } from 'api/vendor-dashboard'
 import { ProjectCard } from '../../common/project-card'
