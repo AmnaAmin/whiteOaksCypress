@@ -10,6 +10,7 @@ import {
   BiUser,
   BiUserPin,
   BiUserPlus,
+  BiError,
 } from 'react-icons/bi'
 
 import { FaAlignCenter, FaHome } from 'react-icons/fa'
@@ -304,6 +305,12 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
+    },
+    {
+      pathTo: '/alerts',
+      title: `${SIDE_NAV}.alerts`,
+      Icon: BiError,
+      color: '#ED64A6',
     },
   ],
 
