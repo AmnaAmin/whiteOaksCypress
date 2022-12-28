@@ -15,53 +15,50 @@ const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, 
 
 const useVendorCardJson = cards => {
   const { t } = useTranslation()
-  return useMemo(
-    () => [
-      {
-        id: 'active',
-        title: t('activeWO'),
-        value: 'active',
-        number: cards?.find(c => c.label === 'active')?.count,
-        IconElement: <IconElement Icon={BiFile} bg="orange.100" />,
-      },
-      {
-        id: 'pastDue',
-        title: t('pastDue'),
-        value: 'pastDue',
-        number: cards?.find(c => c.label === 'pastDue')?.count,
-        IconElement: <IconElement Icon={BiCalendarExclamation} bg="#E8F0FF" />,
-      },
-      {
-        id: 'completed',
-        title: t('completed'),
-        value: 'completed',
-        number: cards?.find(c => c.label === 'completed')?.count, // HK|WOA-1736
-        IconElement: <IconElement Icon={BiCheckCircle} bg="#E7F8EC" />,
-      },
-      {
-        id: 'invoiced',
-        title: t('completedInvoiced'),
-        value: 'invoiced',
-        number: cards?.find(c => c.label === 'invoiced')?.count,
-        IconElement: <IconElement Icon={BiDetail} bg="#E2EFDF" />,
-      },
-      {
-        id: 'declined',
-        title: t('completednotPaid'),
-        value: 'declined',
-        number: cards?.find(c => c.label === 'declined')?.count,
-        IconElement: <IconElement Icon={BiMessageSquareX} bg="#FAE6E5" />,
-      },
-    ],
-    [cards],
-  )
+  return [
+    {
+      id: 'active',
+      title: t('activeWO'),
+      value: 'active',
+      number: cards?.find(c => c.label === 'active')?.count,
+      IconElement: <IconElement Icon={BiFile} bg="orange.100" />,
+    },
+    {
+      id: 'pastDue',
+      title: t('pastDue'),
+      value: 'pastDue',
+      number: cards?.find(c => c.label === 'pastDue')?.count,
+      IconElement: <IconElement Icon={BiCalendarExclamation} bg="#E8F0FF" />,
+    },
+    {
+      id: 'completed',
+      title: t('completed'),
+      value: 'completed',
+      number: cards?.find(c => c.label === 'completed')?.count, // HK|WOA-1736
+      IconElement: <IconElement Icon={BiCheckCircle} bg="#E7F8EC" />,
+    },
+    {
+      id: 'invoiced',
+      title: t('completedInvoiced'),
+      value: 'invoiced',
+      number: cards?.find(c => c.label === 'invoiced')?.count,
+      IconElement: <IconElement Icon={BiDetail} bg="#E2EFDF" />,
+    },
+    {
+      id: 'declined',
+      title: t('completednotPaid'),
+      value: 'declined',
+      number: cards?.find(c => c.label === 'declined')?.count,
+      IconElement: <IconElement Icon={BiMessageSquareX} bg="#FAE6E5" />,
+    },
+  ]
 }
 
 export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
   const { data: values, isLoading } = useVendorCards()
   const cards = useVendorCardJson(values)
 
-  const [isMobile] = useMediaQuery( "(max-width: 480px)" );
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
 
   return (
     <>
@@ -76,14 +73,15 @@ export const ProjectFilters = ({ onSelectCard, selectedCard }) => {
         }}
         gridGap="11px"
       >
-        {cards.map( (card, idx) => {
-          
-          const isLast = (idx+1 === cards.length) && isMobile;
+        {cards.map((card, idx) => {
+          const isLast = idx + 1 === cards.length && isMobile
 
-          let customStyle = (isLast ? { 
-            gridColumn: "span 2"
-           } : {}); 
-          
+          let customStyle = isLast
+            ? {
+                gridColumn: 'span 2',
+              }
+            : {}
+
           return (
             <ProjectCard
               key={card.id}
