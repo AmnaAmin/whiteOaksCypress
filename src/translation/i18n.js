@@ -325,7 +325,7 @@ i18n.use(initReactI18next).init({
         // VENDOR
         details: 'Details',
         market: 'Market',
-        projects: 'Projects',
+        //projects: 'Projects',
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
