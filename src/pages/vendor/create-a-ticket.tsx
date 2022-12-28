@@ -18,7 +18,7 @@ import {
   ISSUE_TYPE_OPTIONS,
   parseSupportFormValuesToAPIPayload,
   SEVERITY_OPTIONS,
-  STATUS_OPTIONS,
+  // STATUS_OPTIONS,
   useCreateTicketMutation,
 } from 'api/support'
 import { useUserProfile } from 'utils/redux-common-selectors'
@@ -140,7 +140,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({ onClose }) => 
                   />
                 </FormControl>
 
-                <FormControl isInvalid={!!errors.status} w="215px" data-testid="status">
+                {/* <FormControl isInvalid={!!errors.status} w="215px" data-testid="status">
                   <FormLabel htmlFor="status" variant="strong-label" color="gray.600">
                     {t('Status')}
                   </FormLabel>
@@ -160,7 +160,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({ onClose }) => 
                       </>
                     )}
                   />
-                </FormControl>
+                </FormControl> */}
               </HStack>
 
               <FormControl isInvalid={!!errors.title?.message} w="215px">
