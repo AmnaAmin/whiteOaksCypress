@@ -229,7 +229,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {t('market')}
             </Tab>
             {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
-            {!isVendor && <Tab>{t('projects')}</Tab>}
+            {!isVendor && <Tab>{t('project')}</Tab>}
           </TabList>
 
           <Card pb="8px" pt="18px" px="18px" roundedTop="0px">
@@ -331,7 +331,7 @@ const VendorProfilePage: React.FC<Props> = props => {
   const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorId)
 
   return (
-    <Stack w={{ sm: "100%", base: '971px', xl: '100%' }} spacing={0}>
+    <Stack w={{ sm: '100%', base: '971px', xl: '100%' }} spacing={0}>
       {isLoading ? (
         <BlankSlate width="60px" />
       ) : (
