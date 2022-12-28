@@ -161,6 +161,7 @@ const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any; 
                 <FormLabel htmlFor="title" variant="strong-label" color="gray.600">
                   {t('title')}
                 </FormLabel>
+                
                 <Input
                   h="40px"
                   id="Title"
@@ -170,7 +171,12 @@ const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any; 
                     required: 'This is required field',
                   })}
                   data-testid="title-input"
+                  borderLeft={"2px solid #345EA6"}
+                  _hover={{
+                    borderLeft:"2px solid #345EA6 !important"
+                  }}
                 />
+                
                 <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
               </FormControl>
             </Grid>
@@ -190,6 +196,10 @@ const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any; 
                   required: 'This is required field',
                 })}
                 data-testid="descriptions"
+                borderLeft={"2px solid #345EA6"}
+                _hover={{
+                  borderLeft:"2px solid #345EA6 !important"
+                }}
               />
               <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
             </FormControl>
