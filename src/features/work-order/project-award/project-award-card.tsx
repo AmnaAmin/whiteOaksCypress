@@ -3,6 +3,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BiCheckCircle } from 'react-icons/bi'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { currencyFormatter, truncateWithEllipsis } from 'utils/string-formatters'
 import { PROJECT_AWARD } from './projectAward.i18n'
 
@@ -23,25 +24,25 @@ export const TextCard = () => {
         <VStack w="100%" px={'10px'} alignItems={'Start'} spacing={3}>
           <Box h={'120px'} />
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-          {t(`${PROJECT_AWARD}.materialDraws`)}
+            {t(`${PROJECT_AWARD}.materialDraws`)}
           </Text>
           <Text fontWeight="400" fontSize="14px" color="gray.600">
-          {t(`${PROJECT_AWARD}.laborDraws`)}
+            {t(`${PROJECT_AWARD}.laborDraws`)}
           </Text>
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-          {t(`${PROJECT_AWARD}.totalDrawAmount`)}
+            {t(`${PROJECT_AWARD}.totalDrawAmount`)}
           </Text>
           <Text fontWeight="400" fontSize="14px" color="gray.600">
-          {(truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayTerms`), 22))}
+            {truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayTerms`), 22)}
           </Text>
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-          {t(`${PROJECT_AWARD}.NTEmax`)}
+            {t(`${PROJECT_AWARD}.NTEmax`)}
           </Text>
           <Text fontWeight="400" fontSize="14px" color="gray.600">
-          {t(`${PROJECT_AWARD}.factoringFee`)}
+            {t(`${PROJECT_AWARD}.factoringFee`)}
           </Text>
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-          {(truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayAmount`), 22))}
+            {truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayAmount`), 22)}
           </Text>
         </VStack>
       </Flex>
@@ -71,6 +72,7 @@ export const ProjectAwardCard = ({
 }) => {
   const [checkIcon, setCheckIcon] = useState(false)
   const { t } = useTranslation()
+  const { isAdmin } = useUserRolesSelector()
 
   const drawAmount = () => {
     if (cardsvalues?.drawLimit === 0) return 0
@@ -144,7 +146,7 @@ export const ProjectAwardCard = ({
           alignItems="center"
           transition="0.3s all"
           cursor={'pointer'}
-          pointerEvents={awardPlanId ? 'none' : undefined}
+          pointerEvents={!awardPlanId || isAdmin ? undefined : 'none'}
           justifyContent="space-between"
           border="1px solid transparent"
           //   borderTop="4px solid transparent"
@@ -174,7 +176,7 @@ export const ProjectAwardCard = ({
             </HStack>
             <Divider border="1px solid" borderColor="gray.300" />
             <Text fontWeight="400" fontSize="12px" color="gray.500">
-            {t(`${PROJECT_AWARD}.scopeAmount`)}
+              {t(`${PROJECT_AWARD}.scopeAmount`)}
             </Text>
             <Text fontWeight="600" fontSize="16px" color="#4E87F8">
               {currencyFormatter(calculatePercentage(cardsvalues?.factoringFee))}
