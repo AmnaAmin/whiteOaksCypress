@@ -1,5 +1,4 @@
 import { Box } from '@chakra-ui/react'
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ADMIN_DASHBOARD } from './admin-dashboard.i18n'
 import { useAdminCards } from 'api/admin-dashboard'
