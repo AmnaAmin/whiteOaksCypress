@@ -891,7 +891,7 @@ i18n.use(initReactI18next).init({
         // VENDOR-PROFILE
         details: 'Detalles',
         market: 'Mercado',
-        projects: 'Proyectos',
+        // projects: 'Proyectos',
 
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
