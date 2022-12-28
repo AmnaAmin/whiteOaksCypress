@@ -13,9 +13,12 @@ import { fpmCards } from 'features/fpm/fpmCards.i18n'
 import { clients } from 'features/clients/clients.i18n'
 import { accounts } from 'pages/accounts.i18n'
 import { sideNav } from '../components/layout/sideNav.i18n'
+import { dashboard } from '../features/vendor/dashboard/dashboard.i18n'
 import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
 import { projectType } from '../features/project-type/project-type.i18n'
 import { support } from 'features/support/support.i18n'
+import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
+import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -36,9 +39,12 @@ i18n.use(initReactI18next).init({
         ...clients.en.translation,
         ...accounts.en.translation,
         ...sideNav.en.translation,
+        ...dashboard.en.translation,
         ...adminDashboard.en.translation,
         ...projectType.en.translation,
         ...support.en.translation,
+        ...vendorProfile.en.translation,
+        ...projectAwards.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -65,6 +71,7 @@ i18n.use(initReactI18next).init({
         overview: 'Overview',
         WOpaid: 'WO Paid',
         paid: 'Paid',
+        active: 'Active',
         paidSmall: 'Paid',
         January: 'January',
         Februray: 'Februray',
@@ -80,6 +87,13 @@ i18n.use(initReactI18next).init({
         December: 'December',
         export: 'Export',
         setting: 'Setting',
+        electrical: 'Electrical',
+        plumbing: 'Plumbing',
+        generalContractor: 'General Contractor',
+        roofing: 'Roofing',
+        architecture: 'Architecture',
+        mechanical: 'Mechanical',
+        noDataDisplayed: 'No data returned for this view.',
 
         // PROJECTS
         projectsHeading: 'Projects',
@@ -145,7 +159,7 @@ i18n.use(initReactI18next).init({
         alerts: 'Alerts',
         upload: 'Upload',
         uploadDocument: 'Upload Document',
-        contactName: 'Contact Name:',
+        contactName: 'Contact Name',
         projectID: 'Project ID',
         WoID: 'WO ID',
         contactNo: 'Contact No',
@@ -190,6 +204,7 @@ i18n.use(initReactI18next).init({
         // Projects-WorkOrderDetails
         editVendorWorkOrder: 'Edit Vendor Work Order',
         workOrderDetails: 'Work Order Details',
+        projectAward: 'Project Award',
         companyName: 'Company Name',
         ownerName: 'Primary Contact',
         clientApprovedAmount: 'Client Approved Amount',
@@ -229,6 +244,10 @@ i18n.use(initReactI18next).init({
         addSignature: 'Add Signature',
         typeName: 'Type Your Name Here',
         LWrequired: 'Lien Waiver is required for Draw Transaction.',
+        AwardRq: 'You need to select award plan.',
+        DrawRemaining: 'You have 0 Draw Remaining',
+        MaterialRemaining: 'You have 0 Material Remaining',
+        PaymentRemaining: 'Remaining payment amount exceeded.',
         nameofClaimant: 'Name of Claimant',
         customerName: 'Customer Name',
         jobLocation: 'Job Location',
@@ -308,6 +327,7 @@ i18n.use(initReactI18next).init({
         // VENDOR
         details: 'Details',
         market: 'Market',
+        //projects: 'Projects',
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
@@ -328,6 +348,9 @@ i18n.use(initReactI18next).init({
         primaryEmail: 'Primary Email',
         secondaryEmail: 'Secondary Email',
         coiglExpirationDate: 'COI-GL Expiration Date',
+        constructionTrade: 'Construction Trade',
+        totalCapacity: 'Total Capacity',
+        activeDate: 'Active Date',
         statusLabel: 'Status',
         coiWcExpirationDate: 'COI-WC Expiration Date',
         einNumber: 'EIN/SSN',
@@ -355,6 +378,11 @@ i18n.use(initReactI18next).init({
         cancel: 'Cancel',
         insurances: 'Insurances',
         insurance: 'Insurance',
+        W9Document: 'W9 Document',
+        agreementSign: 'Agreement Sign',
+        generalLiability: 'General Liability',
+        workerComp: 'Worker Comp',
+
         // Vendor-profile-license
         license: 'License',
         addLicense: 'Add License',
@@ -419,7 +447,7 @@ i18n.use(initReactI18next).init({
         invoiceBackDate: 'Invoice Back Date',
 
         // work order details
-        cancelWorkOrder: 'cancel Work Order',
+        cancelWorkOrder: 'Cancel Work Order',
         vendorName: 'Vendor Name',
         vendorType: 'Vendor Type',
         phoneNo: 'Phone No',
@@ -520,9 +548,12 @@ i18n.use(initReactI18next).init({
         ...clients.es.translation,
         ...accounts.es.translation,
         ...sideNav.es.translation,
+        ...dashboard.es.translation,
         ...adminDashboard.es.translation,
         ...projectType.es.translation,
         ...support.es.translation,
+        ...vendorProfile.es.translation,
+        ...projectAwards.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -607,6 +638,7 @@ i18n.use(initReactI18next).init({
         overview: 'INFORMACIÓN GENERAL',
         WOpaid: 'WO Pagado',
         paid: 'Pagado',
+        active: 'Activa',
         paidSmall: 'Pagado',
         January: 'Enero',
         Februray: 'Febrero',
@@ -622,6 +654,13 @@ i18n.use(initReactI18next).init({
         December: 'Diciembre',
         export: 'Exportar',
         setting: 'Ajuste',
+        electrical: 'Eléctrico',
+        plumbing: 'Plomería',
+        generalContractor: 'Contratista general',
+        roofing: 'Techumbre',
+        architecture: 'Arquitectura',
+        mechanical: 'Mecánico',
+        noDataDisplayed: 'No se han devuelto datos para esta vista.',
 
         // PROJECTS
         projectsHeading: 'Proyectos',
@@ -734,6 +773,7 @@ i18n.use(initReactI18next).init({
         // Project - WorkOrderDetails
         editVendorWorkOrder: 'Editar Orden de Trabajo de Proveedor',
         workOrderDetails: 'Detalles de la Orden de Trabajo',
+        projectAward: 'Premio Proyecto',
         companyName: 'Nombre de empresa',
         ownerName: 'Contacto Primario',
         clientApprovedAmount: 'Monto aprobado por el cliente',
@@ -772,6 +812,10 @@ i18n.use(initReactI18next).init({
         addSignature: 'Agregar Firma',
         typeName: 'Escribe tu nombre aquí',
         LWrequired: 'Se requiere exención de gravamen para la transacción de giro.',
+        AwardRq: 'Debe seleccionar el plan de premios.',
+        DrawRemaining: 'Tienes 0 sorteos restantes.',
+        MaterialRemaining: 'Tienes 0 Material Restante.',
+        PaymentRemaining: 'Monto de pago restante excedido.',
         nameofClaimant: 'Nombre del Reclamante',
         customerName: 'Nombre del Cliente',
         jobLocation: 'Locación de Trabajo',
@@ -850,6 +894,8 @@ i18n.use(initReactI18next).init({
         // VENDOR-PROFILE
         details: 'Detalles',
         market: 'Mercado',
+        projects: 'Proyectos',
+
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
         score: 'Puntaje',
@@ -871,6 +917,9 @@ i18n.use(initReactI18next).init({
         primaryEmail: 'Correo Electrónico Principal',
         secondaryEmail: 'Email Secundario',
         coiglExpirationDate: 'Fecha de vencimiento de COI-GL',
+        constructionTrade: 'Construcción Comercio',
+        totalCapacity: 'Capacidad total',
+        activeDate: 'Fecha Activa',
         statusLabel: 'Estado',
         coiWcExpirationDate: 'Fecha de vencimiento de COI-WC',
         einNumber: 'EIN/SSN',
@@ -897,7 +946,11 @@ i18n.use(initReactI18next).init({
         back: 'Espalda',
         cancel: 'Cancelar',
         insurances: 'Seguros',
-        insurance: 'seguro',
+        insurance: 'Seguro',
+        W9Document: 'Documento W9',
+        agreementSign: 'Signo de acuerdo',
+        generalLiability: 'Responsabilidad general',
+        workerComp: 'Compensación al trabajador',
 
         // Vendor-profile-license
         license: 'Licencia',
@@ -926,12 +979,14 @@ i18n.use(initReactI18next).init({
         language: 'Idioma',
         profilePicture: 'Foto de perfil',
         changePicture: 'Cambia tu foto de perfil',
+
         // Password Page
         password: 'Clave',
         currentPassword: 'Contraseña actual',
         newPassword: 'Nueva contraseña',
         newPasswordConfirmation: 'Nueva confirmación de contraseña',
         passwordStrength: 'Seguridad de la contraseña',
+
         // Support Page
         createTicket: 'Crear un boleto',
         issueType: 'Tipo de problema',
@@ -942,6 +997,7 @@ i18n.use(initReactI18next).init({
         createTicketTitle: 'Crear Ticket',
         createTicketSuccessMessage: 'Ticket creado con éxito.',
         createTicketErrorMessage: 'Crear ticket api causa algún error.',
+
         // Header
         help: 'Ayudar',
         support: 'Apoyo',

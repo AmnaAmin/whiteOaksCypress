@@ -16,6 +16,7 @@ import {
   Tabs,
   Text,
   useDisclosure,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useCallback, useEffect, useState } from 'react'
@@ -23,7 +24,7 @@ import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Project, ProjectWorkOrderType } from 'types/project.type'
 import { TransactionType } from 'types/transaction.type'
-import { useDocuments } from 'api/vendor-projects'
+import { useDocuments, useVendorAddress } from 'api/vendor-projects'
 import { InvoiceTab } from '../../work-order/invoice/invoice-tab'
 import InvoicingAndPaymentTab from './payment/invoicing-and-payment-tab'
 import { LienWaiverTab } from '../../work-order/lien-waiver/lien-waiver'
@@ -31,6 +32,9 @@ import WorkOrderDetailTab from './details/work-order-detail-tab'
 import { WorkOrderNotes } from 'features/work-order/notes/work-order-notes'
 import Status from '../../common/status'
 import { useFetchWorkOrder } from 'api/work-order'
+import { Card } from 'components/card/card'
+import { ProjectAwardTab } from 'features/work-order/project-award/project.award'
+import { useProjectAward } from 'api/project-award'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -53,11 +57,28 @@ export const WorkOrderDetails = ({
   })
   const {
     workOrderAssignedItems,
+    displayAwardPlan,
+    awardPlanScopeAmount,
+    workOrderDetails,
     isFetching: isFetchingLineItems,
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
   const [tabIndex, setTabIndex] = useState(0)
   const [isUpdating, setIsUpdating] = useState()
+  const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
+  const { projectAwardData } = useProjectAward()
+
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
+
+  const [modalSize, setModalSize] = useState<string>('flexible')
+
+  useEffect(() => {
+    if (isMobile) {
+      setModalSize('full')
+    } else {
+      setModalSize('flexible')
+    }
+  }, [isMobile])
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -73,11 +94,11 @@ export const WorkOrderDetails = ({
   }, [onCloseDisclosure, onOpen, workOrder])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="flexible" closeOnOverlayClick={false}>
+    <Modal isOpen={isOpen} onClose={onClose} size={modalSize} closeOnOverlayClick={false}>
       <ModalOverlay />
       {workOrder && (
-        <ModalContent rounded={[0]} borderTop="2px solid #4E87F8">
-          <ModalHeader h="64px" py={4} display="flex" alignItems="center">
+        <ModalContent rounded={[0]} borderTop="2px solid #345EA6">
+          <ModalHeader borderBottom={'1px solid gray.300'} h="64px" py={4} display="flex" alignItems="center">
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px" color="gray.600">
                 <Text borderRight="2px solid #E2E8F0" lineHeight="22px" h="22px" pr={2} data-testid="work-order-id">
@@ -91,93 +112,115 @@ export const WorkOrderDetails = ({
             </Box>
           </ModalHeader>
 
-          <ModalCloseButton m={3} _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
+          <ModalCloseButton
+            m={3}
+            size={'lg'}
+            color="gray.600"
+            _focus={{ outline: 'none' }}
+            _hover={{ bg: 'blue.50' }}
+          />
           {isUpdating && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
-          <Divider mb={3} />
-          <Stack spacing={5}>
+          <Divider borderColor={'gray.300'} />
+          <Stack bgColor="#F2F3F4" spacing={5}>
             <Tabs
+              mx={'12px'}
               variant="enclosed"
-              colorScheme="brand"
+              colorScheme="darkPrimary"
               size="md"
               index={tabIndex}
               onChange={index => setTabIndex(index)}
             >
-              <TabList mr="30px" ml="30px" color="gray.500">
+              <TabList pt="12px" mr="30px">
                 <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
+                {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                 <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
                 <Tab data-testid="invoice">{t('invoice')}</Tab>
                 <Tab data-testid="payments">{t('payments')}</Tab>
                 <Tab data-testid="notes">{t('notes')}</Tab>
               </TabList>
-              <TabPanels>
-                <TabPanel p={0}>
-                  <WorkOrderDetailTab
-                    setIsUpdating={setIsUpdating}
-                    isUpdating={isUpdating}
-                    projectData={projectData}
-                    workOrder={workOrder}
-                    onClose={onClose}
-                    workOrderAssignedItems={workOrderAssignedItems}
-                    isFetchingLineItems={isFetchingLineItems}
-                    isLoadingLineItems={isLoadingLineItems}
-                  />
-                </TabPanel>
-                <TabPanel p={0}>
-                  {isLoading ? (
-                    <BlankSlate />
-                  ) : (
-                    <LienWaiverTab
-                      documentsData={documentsData}
-                      onProjectTabChange={onProjectTabChange}
-                      workOrder={workOrder}
-                      onClose={onClose}
-                      isUpdating={isUpdating}
+              <Card mb={3} py={0} roundedTop={0} roundedRight={12}>
+                <TabPanels>
+                  <TabPanel p={0}>
+                    <WorkOrderDetailTab
                       setIsUpdating={setIsUpdating}
-                    />
-                  )}
-                </TabPanel>
-                <TabPanel p={0}>
-                  {isLoading ? (
-                    <BlankSlate />
-                  ) : (
-                    <InvoiceTab
-                      documentsData={documentsData}
+                      isUpdating={isUpdating}
                       projectData={projectData}
                       workOrder={workOrder}
-                      transactions={transactions}
                       onClose={onClose}
-                      setTabIndex={setTabIndex}
-                      rejectInvoiceCheck={null}
-                      navigateToProjectDetails={null}
-                      onSave={null}
-                      isWorkOrderUpdating={null}
+                      workOrderAssignedItems={workOrderAssignedItems}
+                      isFetchingLineItems={isFetchingLineItems}
+                      isLoadingLineItems={isLoadingLineItems}
                     />
+                  </TabPanel>
+                  {displayAwardPlan && (
+                    <TabPanel p={0}>
+                      <ProjectAwardTab
+                        workOrder={workOrderDetails}
+                        onSave={null}
+                        onClose={onClose}
+                        awardPlanScopeAmount={awardPlanScopeAmount}
+                        projectAwardData={projectAwardData}
+                      />
+                    </TabPanel>
                   )}
-                </TabPanel>
-                <TabPanel p={0}>
-                  <InvoicingAndPaymentTab
-                    onClose={onClose}
-                    invoiceAndPaymentData={{
-                      dateInvoiceSubmitted: workOrder?.dateInvoiceSubmitted,
-                      paymentTermDate: workOrder?.paymentTermDate,
-                      datePaymentProcessed: workOrder?.datePaymentProcessed ?? '',
-                      expectedPaymentDate: workOrder?.expectedPaymentDate,
-                      paymentTerm: workOrder?.paymentTerm,
-                      workOrderPayDateVariance: workOrder?.workOrderPayDateVariance ?? '',
-                      datePaid: workOrder?.datePaid ?? '',
-                      clientOriginalApprovedAmount: workOrder?.clientOriginalApprovedAmount,
-                      invoiceAmount: workOrder?.invoiceAmount,
-                      finalInvoiceAmount: workOrder?.finalInvoiceAmount,
-                      dateLeanWaiverSubmitted: workOrder?.dateLeanWaiverSubmitted ?? '',
-                      datePermitsPulled: workOrder?.datePermitsPulled ?? '',
-                      status: workOrder?.statusLabel ?? '',
-                    }}
-                  />
-                </TabPanel>
-                <TabPanel p={0}>
-                  <WorkOrderNotes workOrder={workOrder} onClose={onClose} />
-                </TabPanel>
-              </TabPanels>
+                  <TabPanel p={0}>
+                    {isLoading ? (
+                      <BlankSlate />
+                    ) : (
+                      <LienWaiverTab
+                        documentsData={documentsData}
+                        onProjectTabChange={onProjectTabChange}
+                        workOrder={workOrder}
+                        onClose={onClose}
+                        isUpdating={isUpdating}
+                        setIsUpdating={setIsUpdating}
+                      />
+                    )}
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    {isLoading ? (
+                      <BlankSlate />
+                    ) : (
+                      <InvoiceTab
+                        documentsData={documentsData}
+                        projectData={projectData}
+                        workOrder={workOrder}
+                        vendorAddress={vendorAddress}
+                        transactions={transactions}
+                        onClose={onClose}
+                        setTabIndex={setTabIndex}
+                        rejectInvoiceCheck={null}
+                        navigateToProjectDetails={null}
+                        onSave={null}
+                        isWorkOrderUpdating={null}
+                      />
+                    )}
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    <InvoicingAndPaymentTab
+                      onClose={onClose}
+                      invoiceAndPaymentData={{
+                        dateInvoiceSubmitted: workOrder?.dateInvoiceSubmitted,
+                        paymentTermDate: workOrder?.paymentTermDate,
+                        datePaymentProcessed: workOrder?.datePaymentProcessed ?? '',
+                        expectedPaymentDate: workOrder?.expectedPaymentDate,
+                        paymentTerm: workOrder?.paymentTerm,
+                        workOrderPayDateVariance: workOrder?.workOrderPayDateVariance ?? '',
+                        datePaid: workOrder?.datePaid ?? '',
+                        clientOriginalApprovedAmount: workOrder?.clientOriginalApprovedAmount,
+                        invoiceAmount: workOrder?.invoiceAmount,
+                        finalInvoiceAmount: workOrder?.finalInvoiceAmount,
+                        dateLeanWaiverSubmitted: workOrder?.dateLeanWaiverSubmitted ?? '',
+                        datePermitsPulled: workOrder?.datePermitsPulled ?? '',
+                        status: workOrder?.statusLabel ?? '',
+                      }}
+                    />
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    <WorkOrderNotes workOrder={workOrder} onClose={onClose} />
+                  </TabPanel>
+                </TabPanels>
+              </Card>
             </Tabs>
           </Stack>
         </ModalContent>

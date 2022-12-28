@@ -13,14 +13,15 @@ import {
   Flex,
   Box,
 } from '@chakra-ui/react'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { AddressInfo, ProjectFormValues } from 'types/project.type'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 import { useProjects } from 'api/projects'
 import Select from 'components/form/react-select'
 import { CreatableSelect } from 'components/form/react-select'
+import { createFilter } from 'react-select'
 import { useGetAddressVerification, useMarkets, useProperties, useStates } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { AddressVerificationModal } from './address-verification-modal'
@@ -73,6 +74,22 @@ export const AddPropertyInfo: React.FC<{
     setValue('acknowledgeCheck', true)
   }
 
+  // Get all values of Address Info
+  const watchAddress = useWatch({ name: 'streetAddress', control })
+  const watchCity = useWatch({ name: 'city', control })
+  const watchState = useWatch({ name: 'state', control })
+  const watchZipCode = useWatch({ name: 'zipCode', control })
+
+  // Set all values of Address Info
+  useEffect(() => {
+    setAddressInfo({
+      address: watchAddress || '',
+      city: watchCity || '',
+      state: watchState?.label || '',
+      zipCode: watchZipCode || '',
+    })
+  }, [watchAddress, watchCity, watchState, watchZipCode])
+
   // On Street Address change, set values of City, State and Zip
   const setAddressValues = option => {
     const property = option?.property
@@ -85,13 +102,6 @@ export const AddPropertyInfo: React.FC<{
     setValue('property', property)
     setValue('newMarket', { label: market?.metropolitanServiceArea, value: market?.id })
     setValue('state', { label: market?.stateName, value: market?.stateId })
-
-    setAddressInfo({
-      address: property?.streetAddress,
-      city: property?.city,
-      state: market?.state,
-      zipCode: property?.zipCode,
-    })
 
     // Check for duplicate address
     const duplicatedInProjects =
@@ -140,23 +150,22 @@ export const AddPropertyInfo: React.FC<{
           <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
             <GridItem>
               <FormControl>
-                <FormLabel variant="strong-label" size="md">
-                  {t(`${NEW_PROJECT}.address`)}
-                </FormLabel>
+                <FormLabel size="md">{t(`${NEW_PROJECT}.address`)}</FormLabel>
                 <Controller
                   control={control}
                   name={`streetAddress`}
                   rules={{ required: 'This is required field' }}
-                  render={({ field: { value }, fieldState }) => (
+                  render={({ field, fieldState }) => (
                     <>
                       <CreatableSelect
                         id="streetAddress"
                         options={propertySelectOptions}
-                        selected={value}
+                        selected={field.value}
                         placeholder="Type address here.."
                         onChange={setAddressValues}
                         selectProps={{ isBorderLeft: true }}
                         inputProps={{ autoComplete: 'off', autoCorrect: 'off', spellCheck: 'off' }}
+                        filterOption={createFilter({ ignoreAccents: false })}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -174,7 +183,12 @@ export const AddPropertyInfo: React.FC<{
                 <Input
                   id="city"
                   variant="required-field"
-                  {...register('city', { required: 'This is required field.' })}
+                  {...register('city', {
+                    required: true,
+                    onChange: e => {
+                      setAddressInfo({ ...addressInfo, city: e.target.value })
+                    },
+                  })}
                 />
                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
               </FormControl>
@@ -182,9 +196,7 @@ export const AddPropertyInfo: React.FC<{
 
             <GridItem>
               <FormControl>
-                <FormLabel variant="strong-label" size="md">
-                  {t(`${NEW_PROJECT}.state`)}
-                </FormLabel>
+                <FormLabel size="md">{t(`${NEW_PROJECT}.state`)}</FormLabel>
                 <Controller
                   control={control}
                   name={`state`}
@@ -196,7 +208,7 @@ export const AddPropertyInfo: React.FC<{
                         options={stateSelectOptions}
                         size="md"
                         value={field.value}
-                        selectProps={{ isBorderLeft: true }}
+                        selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                         onChange={option => {
                           setAddressInfo({ ...addressInfo, state: option?.value })
                           field.onChange(option)
@@ -245,7 +257,7 @@ export const AddPropertyInfo: React.FC<{
                         options={marketSelectOptions}
                         size="md"
                         value={field.value}
-                        selectProps={{ isBorderLeft: true }}
+                        selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
                         onChange={option => {
                           setValue('projectManager', null)
                           field.onChange(option)

@@ -15,39 +15,38 @@ import {
 } from '@chakra-ui/react'
 import DropdownLanguage from 'translation/DropdownLanguage'
 import React, { useState } from 'react'
-import { FaAngleDown, FaAngleUp, FaBell } from 'react-icons/fa'
+import { FaBell } from 'react-icons/fa'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
-import LogoIcon from 'icons/header-logo'
 import { RouterLink } from '../router-link/router-link'
 import { Notification } from './notification'
 import { useTranslation } from 'react-i18next'
+import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
+import LogoIcon from 'icons/header-logo'
 
 // const Notification = React.lazy(() => import("./notification"));
 
-const UserInfo: React.FC = () => {
+const UserInfo: React.FC<{ show: boolean }> = ({ show }) => {
   const { data } = useAuth()
   const account = data?.user
   const userName = `${account?.firstName} ${account?.lastName}`
 
   return (
     <HStack>
-      <Avatar
-        name={userName}
-        src={account?.imageUrl ?? ''}
-        w={{ base: '30px', md: '42px' }}
-        h={{ base: '30px', md: '42px' }}
-      />
-      <VStack alignItems="start" spacing="0.3" visibility={{ base: 'hidden', md: 'visible' }}>
+      <Avatar name={userName} src={account?.imageUrl ?? ''} w="32px" h="32px" />
+      <VStack alignItems="start" spacing="0px" visibility={{ base: 'hidden', md: 'visible' }}>
         <Flex alignItems="center">
-          <Text fontSize="16px" pr="1" fontWeight={500} fontStyle="normal" color="gray.600">
+          <Text fontSize="12px" pr="1" fontWeight={400} fontStyle="normal" color="white">
             {userName}
           </Text>
         </Flex>
-        <Text fontSize="14px" fontStyle="normal" fontWeight={400} color="gray.600">
+        <Text fontSize="12px" fontStyle="normal" fontWeight={400} color="white">
           {account?.userTypeLabel}
         </Text>
       </VStack>
+      <Box position="relative" bottom=" 8.5px" px="4px" color="white" fontSize="20px">
+        {show ? <HiChevronDown /> : <HiChevronUp />}
+      </Box>
     </HStack>
   )
 }
@@ -57,7 +56,7 @@ type HeaderProps = {
 }
 
 const hoverEffect = {
-  _focus: { background: 'blue.50' },
+  _focus: { background: '#F7FAFC' },
 }
 export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { logout } = useAuth()
@@ -66,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { t } = useTranslation()
 
   return (
-    <Box py="3" px={{ base: '1', md: '5' }} bg={mode('white', 'black')} w="100%">
+    <Box py="8px" pl={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
       <HStack justifyContent="space-between">
         <Flex>
           <Button
@@ -77,6 +76,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
             onClick={toggleMenu}
             display={{ base: 'inline', lg: 'none' }}
           />
+
           <LogoIcon />
         </Flex>
 
@@ -98,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 color="#A0AEC0"
                 _hover={{ color: 'gray.500' }}
               >
-                <FaBell fontSize="1.7rem" />
+                <FaBell fontSize="16px" />
               </MenuButton>
               <Notification />
 
@@ -111,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           </Box>
 
           {/** User Dropdown Menu */}
-          <HStack spacing={4} _hover={{ bg: 'blue.50', rounded: '6px' }} pl="1">
+          <HStack spacing={4} _hover={{ bg: '#14213D' }} pl="1">
             <Menu placement="bottom">
               <MenuButton
                 bgSize="auto"
@@ -120,32 +120,40 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   setShow(!show)
                 }}
               >
-                <UserInfo />
+                <UserInfo show={show} />
               </MenuButton>
-              <MenuList minWidth="279px">
-                <MenuItem sx={hoverEffect}>
+              <MenuList
+                boxShadow=" 0px 4px 6px 1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+                minWidth="230px"
+                position="relative"
+                left={12}
+                roundedTop={0}
+                py={0}
+              >
+                <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/settings">{t('settings')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/password">{t('password')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
-                  <Link
-                    color="gray.600"
-                    fontWeight={400}
-                    fontSize="14px"
-                    target="_blank"
-                    href="https://docs.woaharvest.com/"
-                    title="help"
-                    _hover={{ textDecorationLine: 'none' }}
-                  >
-                    {t('help')}
-                  </Link>
+                <MenuItem
+                  sx={hoverEffect}
+                  as={Link}
+                  color="gray.600"
+                  fontWeight={400}
+                  fontSize="14px"
+                  target="_blank"
+                  href="https://docs.woaharvest.com/"
+                  _hover={{ textDecorationLine: 'none' }}
+                  h="48px"
+                  borderBottom="1px solid #E2E8F0"
+                >
+                  {t('help')}
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/support">{t('support')}</RouterLink>
                 </MenuItem>
-                <MenuItem sx={hoverEffect}>
+                <MenuItem sx={hoverEffect} h="48px">
                   <Box
                     onClick={logout}
                     fontSize="14px"
@@ -159,9 +167,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                   </Box>
                 </MenuItem>
               </MenuList>
-              <Box position="relative" bottom=" 8.5px" right=" 16px" color="#4A5568">
-                {show ? <FaAngleDown color="#4A5568" /> : <FaAngleUp color="#4A5568" />}
-              </Box>
             </Menu>
           </HStack>
         </HStack>

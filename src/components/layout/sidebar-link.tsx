@@ -22,16 +22,18 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
   const { isLinkSelected } = useCheckPathSelected(pathTo)
   const selectedLinkStyle = useMemo(() => {
     return {
-      color: '#4E87F8',
+      color: '#FFFFFF',
+      borderColor: '#68D391',
     }
   }, [])
   const linkState = isLinkSelected
     ? {
         ...selectedLinkStyle,
-        borderLeftColor: '#4E87F8',
-        bgGradient: 'linear-gradient(89.98deg, rgba(230, 241, 255, 0.61) 87.64%, rgba(230, 241, 255, 0) 98.4%)',
+        borderRightColor: '#68D391',
+        // bgGradient: 'linear-gradient(89.98deg, rgba(230, 241, 255, 0.61) 87.64%, rgba(230, 241, 255, 0) 98.4%)',
+        bg: '#22375B',
         boxShadow: '0px 2px 4px -3px gray !important',
-        fontWeight: 600,
+        fontWeight: 500,
       }
     : {}
 
@@ -39,26 +41,30 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
     <Box
       as={Link}
       to={pathTo}
-      color="gray.600"
-      fontSize="sm"
+      color="gray.400"
+      fontSize="12px"
       display="block"
-      px="2"
+      pl="5"
       py="2"
-      borderLeft="4px solid transparent"
+      mx="5px"
+      borderRight="6px solid transparent"
       cursor="pointer"
       _hover={{
-        bgGradient: 'linear-gradient(90deg, #EBF8FF 78.66%, rgba(235, 248, 255, 0) 98.79%)',
+        // bgGradient: 'linear-gradient(90deg, #EBF8FF 78.66%, rgba(235, 248, 255, 0) 98.79%)',
+        bg: '#22375B',
+        borderColor: '#68D391',
       }}
       className="group"
-      fontWeight={500}
+      fontWeight={400}
       {...linkState}
       {...rest}
+      rounded={6}
     >
-      <HStack>
+      <HStack spacing="16px">
         <Box _groupHover={{ opacity: 1 }} fontSize="20px">
           {icon}
         </Box>
-        <Text fontSize="18px" lineHeight="28px" fontStyle="normal">
+        <Text fontSize="14px" lineHeight="28px" fontStyle="normal">
           {title}
         </Text>
       </HStack>

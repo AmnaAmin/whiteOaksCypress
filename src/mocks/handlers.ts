@@ -6,6 +6,9 @@ import { projectDetailHandlers } from './api/projects/project-details-handlers'
 import { workOrderHandlers } from './api/workorder/work-order-handlers'
 import { projectTypeHandlers } from './api/project-type/project-type-handlers'
 import { creatATicketHandlers } from './api/creat-a-ticket/creat-a-ticket-handlers'
+import { vendorProejectTableHandlers } from './api/vendor-project/project-handlers'
+import { projectFilterTilesHandlers } from './api/vendor-project/project-filter-tiles-handlere'
+import { upcomingPaymentTableHandlers } from './api/dashboard/upcoming-payment-handlere'
 
 export const handlers = [
   ...authenticationHandlers,
@@ -16,4 +19,7 @@ export const handlers = [
   ...workOrderHandlers,
   ...projectTypeHandlers,
   ...creatATicketHandlers,
+  ...vendorProejectTableHandlers,
+  ...projectFilterTilesHandlers,
+  ...upcomingPaymentTableHandlers,
 ]

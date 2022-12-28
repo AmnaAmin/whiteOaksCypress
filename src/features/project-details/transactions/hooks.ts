@@ -93,12 +93,22 @@ export const useFieldRequiredDecision = (control: Control<FormValues, any>, tran
   }
 }
 
+export const isManualTransaction = transactionType =>
+  [
+    TransactionTypeValues.changeOrder,
+    TransactionTypeValues.material,
+    TransactionTypeValues.draw,
+    TransactionTypeValues.factoring,
+    TransactionTypeValues.lateFee,
+    TransactionTypeValues.payment,
+  ].includes(transactionType)
+
 export const useFieldDisabledEnabledDecision = (
   control: Control<FormValues, any>,
   transaction?: ChangeOrderType,
   isMaterialsLoading?: boolean,
 ) => {
-  // const { isAdmin } = useUserRolesSelector()
+  const { isAdmin } = useUserRolesSelector()
   const isUpdateForm = !!transaction || isMaterialsLoading
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
@@ -108,7 +118,8 @@ export const useFieldDisabledEnabledDecision = (
     isUpdateForm,
     isApproved: isStatusApproved,
     isPaidDateDisabled: !transaction || isStatusApproved,
-    isStatusDisabled: isStatusApproved || isMaterialsLoading,
+    isStatusDisabled:
+      (isStatusApproved && !(isAdmin && isManualTransaction(transaction.transactionType))) || isMaterialsLoading,
   }
 }
 
@@ -126,6 +137,14 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
     formattedAmount: numeral(totalAmount).format('$0,0.00'),
     amount: totalAmount,
   }
+}
+
+export const useIsAwardSelect = (control: Control<FormValues, any>) => {
+  const against = useWatch({ name: 'against', control })
+  const check = against?.awardStatus
+  const isValidForAwardPlan = against?.isValidForAwardPlan
+
+  return { check, isValidForAwardPlan }
 }
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
@@ -171,7 +190,12 @@ export const useLienWaiverFormValues = (
   }, [totalAmount, selectedWorkOrder, setValue])
 }
 
-export const useAgainstOptions = (againstOptions: SelectOption[], control: Control<FormValues, any>, projectStatus) => {
+export const useAgainstOptions = (
+  againstOptions: SelectOption[],
+  control: Control<FormValues, any>,
+  projectStatus,
+  transaction,
+) => {
   const { isVendor } = useUserRolesSelector()
   const transactionType = useWatch({ name: 'transactionType', control })
 
@@ -182,9 +206,11 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
       return againstOptions.slice(1)
     }
 
-    // If transaction type is draw and project status is invoiced or following state, hide Project SOW againstOption
+    // If the transaction is new and transaction type is draw and project status is invoiced or following state, hide Project SOW againstOption
     if (
       transactionType?.value === TransactionTypeValues.draw &&
+      !isVendor &&
+      !transaction?.id &&
       !['new', 'active', 'punch', 'closed'].includes(projectStatus.toLowerCase())
     ) {
       return againstOptions.slice(1)

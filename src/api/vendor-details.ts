@@ -610,7 +610,30 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   const licensesArray = licenseField?.length > 0 ? licenseField[0] : []
   return {
     disableDetailsNext: detailfields.some(n => !n) || !(ein || ssn),
-    disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl),
+    disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl), //disable logic for next on documents tab.
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
+  }
+}
+
+//vendor projects
+
+export const useFetchVendorWorkOrders = (vendorId: string | number | undefined) => {
+  const client = useClient()
+
+  const { data: vendorProjects, ...rest } = useQuery(
+    ['VendorProjects'],
+    async () => {
+      const response = await client(`vendor/${vendorId}/workorders`, {})
+
+      return response?.data
+    },
+    {
+      enabled: !!vendorId,
+    },
+  )
+
+  return {
+    vendorProjects,
+    ...rest,
   }
 }

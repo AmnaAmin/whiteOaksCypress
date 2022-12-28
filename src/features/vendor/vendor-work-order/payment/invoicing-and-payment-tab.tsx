@@ -37,10 +37,11 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('paymentTermDate')}
               InputElem={
-                invoiceAndPaymentData.paymentTermDate && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                invoiceAndPaymentData.paymentTermDate &&
+                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -51,7 +52,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiFile />}
+              Icon={BiFile}
               label={t('payDateVariance')}
               InputElem={
                 invoiceAndPaymentData.workOrderPayDateVariance ? (
@@ -65,7 +66,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiFile />}
+              Icon={BiFile}
               label={t('paymentTerm')}
               InputElem={
                 invoiceAndPaymentData?.paymentTerm ? (
@@ -80,7 +81,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('paid')}
               InputElem={
                 invoiceAndPaymentData?.datePaid ? (
@@ -97,10 +98,11 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('LWDate')}
               InputElem={
-                invoiceAndPaymentData.dateLeanWaiverSubmitted && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                invoiceAndPaymentData.dateLeanWaiverSubmitted &&
+                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -112,7 +114,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('permitDate')}
               InputElem={
                 invoiceAndPaymentData?.datePermitsPulled ? (
@@ -127,7 +129,7 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('paymentProcessed')}
               InputElem={
                 invoiceAndPaymentData?.datePaymentProcessed ? (
@@ -142,10 +144,11 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('invoiceSubmitted')}
               InputElem={
-                invoiceAndPaymentData.dateInvoiceSubmitted && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                invoiceAndPaymentData.dateInvoiceSubmitted &&
+                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -159,10 +162,11 @@ const InvoicingAndPaymentTab = ({
           <Box w="20%">
             <InputView
               showDivider={false}
-              Icon={<BiCalendar />}
+              Icon={BiCalendar}
               label={t('expectedPay')}
               InputElem={
-                invoiceAndPaymentData.expectedPaymentDate && ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                invoiceAndPaymentData.expectedPaymentDate &&
+                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -216,7 +220,7 @@ const InvoicingAndPaymentTab = ({
       </ModalBody>
       <ModalFooter borderTop="1px solid #E2E8F0" p={5}>
         <Flex w="100%" justifyContent="end">
-          <Button colorScheme="brand" onClick={onClose}>
+          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
             {t('cancel')}
           </Button>
         </Flex>

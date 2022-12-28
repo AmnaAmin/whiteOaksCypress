@@ -33,7 +33,7 @@ export enum STATUS {
 
 const STATUS_COLOR = {
   [STATUS.Paid]: { color: '#C05621', backgroundColor: '#FEEBCB ' },
-  [STATUS.Active]: { color: '#63B3ED', backgroundColor: '#EBF8FF' },
+  [STATUS.Active]: { color: '#4299E1', backgroundColor: '#EBF8FF' },
   [STATUS.Approved]: { color: '#4E87F8', backgroundColor: '#EBF8FF' },
   [STATUS.Completed]: { color: '#ED8936 ', backgroundColor: '#FEEBCB' },
   [STATUS.PastDue]: { color: '#ED8936', backgroundColor: '#FCE8D8' },
@@ -63,10 +63,13 @@ const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
     <Tag
       data-testid="status"
       size="md"
-      rounded="6px"
+      rounded="4px"
       variant="solid"
       backgroundColor={style?.backgroundColor}
       color={style?.color}
+      borderWidth="0.5px"
+      borderStyle="solid"
+      borderColor={style?.color}
     >
       <TagLabel fontSize="14px" fontStyle="normal" fontWeight={400} p="2px 10px 2px 10px" textTransform="capitalize">
         {value?.toLocaleLowerCase()}
@@ -76,3 +79,15 @@ const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
 }
 
 export default Status
+
+export const PROJECT_STATUS = {
+  new: { value: '7', label: 'NEW' },
+  active: { value: '8', label: 'ACTIVE' },
+  punch: { value: '9', label: 'PUNCH' },
+  invoiced: { value: '11', label: 'INVOICED' },
+  paid: { value: '41', label: 'PAID' },
+  closed: { value: '10', label: 'CLOSED' },
+  cancelled: { value: '33', label: 'CANCELLED' },
+  clientPaid: { value: '72', label: 'CLIENT PAID' },
+  overpayment: { value: '109', label: 'Overpayment' },
+}

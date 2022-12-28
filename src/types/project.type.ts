@@ -104,6 +104,7 @@ export type Project = {
   payVariance?: number | null
   collectionDate?: string | null
   documents: any[] | null
+  vendorWODueDate?: string
 }
 
 export type ProjectExtraAttributesType = {
@@ -143,6 +144,7 @@ export type ProjectColumnType = {
 
 export type ProjectWorkOrderType = {
   id: number
+  displayAwardPlan: boolean
   lienWaiverAccepted: boolean
   workOrderCompletionDateVariance: string
   workOrderPayDateVariance?: string
@@ -184,6 +186,7 @@ export type ProjectWorkOrderType = {
   vendorAddress: string
   durationCategory: string
   invoiceNumber: string
+  cancel: string
 }
 
 export type ProjectAlertType = {

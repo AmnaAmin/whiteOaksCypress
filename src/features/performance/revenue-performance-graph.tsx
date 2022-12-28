@@ -1,4 +1,4 @@
-import { Box, Flex, FormLabel, HStack } from '@chakra-ui/react'
+import { Box, FormLabel, Grid, GridItem, HStack } from '@chakra-ui/react'
 import { useFPMs } from 'api/pc-projects'
 import { MonthOption } from 'api/performance'
 import ReactSelect from 'components/form/react-select'
@@ -6,8 +6,9 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { flatten, take, last } from 'lodash'
-import React, { useEffect, useMemo, useState } from 'react'
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell, Label } from 'recharts'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, Legend } from 'recharts'
+import { SelectOption } from 'types/transaction.type'
 import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 
@@ -15,39 +16,50 @@ type GraphData = {
   username: string
   month: any
   Revenue: any
+  Profit: any
 }[]
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck }) => {
-  const barColors = [
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
-    '#F6AD55',
-    '#68B8EF',
-    '#F7685B',
-    '#949AC2',
+  const labels = [
+    { key: 'Profit', color: '#949AC2' },
+    { key: 'Revenue', color: '#68B8EF' },
   ]
 
-  let { Revenue = undefined , Profit = undefined, Bonus = undefined } = vendorData?.length > 0 ? vendorData[0] : {
-    Revenue: undefined,
-    Profit: undefined,
-    Bonus: undefined
-  }
+  const [barProps, setBarProps] = useState(
+    labels.reduce(
+      (a, { key }) => {
+        a[key] = false
+        return a
+      },
+      { hover: null },
+    ),
+  )
+
+  const selectBar = useCallback(
+    e => {
+      setBarProps({
+        ...barProps,
+        [e.dataKey]: !barProps[e.dataKey],
+        hover: null,
+      })
+    },
+    [barProps],
+  )
+
+  let {
+    Revenue = undefined,
+    Profit = undefined,
+    Bonus = undefined,
+  } = vendorData?.length > 0
+    ? vendorData[0]
+    : {
+        Revenue: undefined,
+        Profit: undefined,
+        Bonus: undefined,
+      }
 
   const emptyGraph = [Revenue, Profit, Bonus].every(matrix => matrix === undefined)
+  const currAndLast = ['This Month', 'Last Month'].includes(monthCheck?.label)
 
   return (
     <div>
@@ -94,7 +106,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             }}
           >
             {/* -- If vendorData does not have any data for the specific month, empty graph message will show -- */}
-            {emptyGraph && (
+            {emptyGraph && currAndLast && (
               <Label
                 value="There is currently no data available for the month selected"
                 offset={180}
@@ -136,7 +148,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             }}
             tickFormatter={value => `$${value}`}
             label={{
-              value: 'Revenue',
+              value: '',
               angle: -90,
               position: 'left',
               textAnchor: 'middle',
@@ -151,11 +163,35 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             contentStyle={{ borderRadius: '6px' }}
             cursor={{ fill: 'transparent' }}
           />
-          <Bar barSize={50} dataKey="Revenue" fill="#68B8EF" radius={[10, 10, 0, 0]}>
-            {vendorData?.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={barColors[index % 20]} />
-            ))}
-          </Bar>
+          <Bar
+            barSize={50}
+            dataKey="Revenue"
+            fill="#68B8EF"
+            radius={[5, 5, 0, 0]}
+            hide={barProps['Revenue'] === true}
+          />
+          <Bar barSize={50} dataKey="Profit" fill="#949AC2" radius={[5, 5, 0, 0]} hide={barProps['Profit'] === true} />
+          <Legend
+            onClick={selectBar}
+            wrapperStyle={{
+              lineHeight: '31px',
+              position: 'relative',
+              bottom: '50px',
+              left: '40px',
+            }}
+            iconType="circle"
+            iconSize={10}
+            align="center"
+            formatter={value => {
+              return (
+                <Box display="inline-flex" marginInlineEnd="30px">
+                  <Box as="span" color="gray.600" fontSize="12px" fontStyle="normal" fontWeight={400}>
+                    {value}
+                  </Box>
+                </Box>
+              )
+            }}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -189,6 +225,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
                 userId: Number(last(userId)),
                 quarter: getQuarterByMonth(monthIndex),
                 Revenue: nameMonthData[nameKey]?.revenue,
+                Profit: nameMonthData[nameKey]?.profit,
               }
             })
             let newgraphs = graphs?.map((n, i) => ({
@@ -227,16 +264,30 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
     if (options?.length > 5) {
       return
     }
-    setFpmOption(options)
 
-    filterGraphData(options, monthOption)
+    // fix fpm names length to keep them within the select bar
+    const selectedFpmOption =
+      options?.map(fpm => ({
+        value: (fpm as SelectOption)?.value,
+        label: (fpm as SelectOption)?.label.substring(0, 8) + '..',
+      })) || []
+
+    setFpmOption(selectedFpmOption)
+
+    filterGraphData(selectedFpmOption, monthOption)
   }
 
   const getMonthValue = monthOption => {
     let selectedFpm = [] as any
 
     if (['Past Quarter', 'Current Quarter', 'All'].includes(monthOption?.label)) {
-      selectedFpm = take(fieldProjectManagerOptions, 5)
+      // fix fpm names length to keep them within the select bar
+      const getFpm = take(fieldProjectManagerOptions, 5)
+      selectedFpm =
+        getFpm?.map(fpm => ({
+          value: (fpm as SelectOption)?.value,
+          label: (fpm as SelectOption)?.label.substring(0, 8) + '..',
+        })) || []
     }
 
     setFpmOption(selectedFpm)
@@ -276,53 +327,49 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
 
   return (
     <>
-      <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'} width={'100%'}>
-        <Box mb={15} mt={5} m={2}>
-          <Flex>
-            <Box width={'45%'} ml={5} mt={5}>
-              <HStack>
-                <FormLabel width={'120px'} ml={6} variant="strong-label" size="md">
-                  Filter By Month:
-                </FormLabel>
-                <Box width={'250px'}>
-                  <ReactSelect
-                    name={`monthsDropdown`}
-                    options={MonthOption}
-                    onChange={getMonthValue}
-                    defaultValue={monthOption}
-                    selected={setMonthOption}
-                    variant="light-label"
-                    size="md"
-                  />
-                </Box>
-              </HStack>
-            </Box>
-            <Box width={'55%'} mt={5}>
-              <HStack>
-                <FormLabel width={'60px'} variant="strong-label" size="md">
-                  Filter By:
-                </FormLabel>
-                <Box width={'530px'}>
-                  <ReactSelect
-                    name={`fpmDropdown`}
-                    value={fpmOption}
-                    isDisabled={['This Month', 'Last Month'].includes(monthOption?.label)}
-                    options={fieldProjectManagerOptions}
-                    onChange={onFpmOptionChange}
-                    defaultValue={fpmOption}
-                    isOptionDisabled={() => fpmOption?.length >= 5}
-                    isClearable={false}
-                    multiValueRemove={fpmOption?.length === 1 ? { display: 'none' } : ''}
-                    filterOptions={fpmOption?.length === 1}
-                    variant="light-label"
-                    size="md"
-                    isMulti
-                  />
-                </Box>
-              </HStack>
-            </Box>
-          </Flex>
-        </Box>
+      <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
+        <Grid h="40px" templateColumns="repeat(3, 1fr)" gap={0} m={5}>
+          <GridItem rowSpan={2} colSpan={2} colStart={1} colEnd={2}>
+            <HStack>
+              <FormLabel ml={8} variant="strong-label" size="md">
+                Filter By Month:
+              </FormLabel>
+              <Box width={'50%'}>
+                <ReactSelect
+                  name={`monthsDropdown`}
+                  options={MonthOption}
+                  onChange={getMonthValue}
+                  defaultValue={monthOption}
+                  selected={setMonthOption}
+                  variant="light-label"
+                  size="md"
+                />
+              </Box>
+            </HStack>
+          </GridItem>
+          <GridItem colStart={2} colEnd={6}>
+            <HStack>
+              <FormLabel width={'10%'} variant="strong-label" size="md">
+                Filter By:
+              </FormLabel>
+              <Box width={'90%'} pr={8} minHeight={'40px'}>
+                <ReactSelect
+                  name={`fpmDropdown`}
+                  value={fpmOption}
+                  isDisabled={['This Month', 'Last Month'].includes(monthOption?.label)}
+                  options={fieldProjectManagerOptions}
+                  onChange={onFpmOptionChange}
+                  defaultValue={fpmOption}
+                  isOptionDisabled={() => fpmOption.length >= 5}
+                  isClearable={false}
+                  variant="light-label"
+                  size="md"
+                  isMulti
+                />
+              </Box>
+            </HStack>
+          </GridItem>
+        </Grid>
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (

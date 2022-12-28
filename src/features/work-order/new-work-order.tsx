@@ -215,7 +215,7 @@ export const NewWorkOrderForm: React.FC<{
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
   // const [vendorEmail, setVendorEmail] = useState<string | undefined>()
 
-  const { remainingItems, isLoading } = useRemainingLineItems(swoProject?.id)
+  const { remainingItems, isLoading, isFetching } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>(remainingItems)
 
   const defaultFormValues = () => {
@@ -486,7 +486,7 @@ export const NewWorkOrderForm: React.FC<{
                         control={control}
                         rules={{
                           required: 'This is required',
-                          min: { value: 1, message: 'Enter a valid amount' },
+                          min: { value: 0, message: 'Enter a valid amount' },
                         }}
                         name="clientApprovedAmount"
                         render={({ field, fieldState }) => {
@@ -600,10 +600,27 @@ export const NewWorkOrderForm: React.FC<{
                         focusBorderColor="none"
                         {...register('workOrderStartDate', {
                           required: 'This field is required.',
+                          validate: (date: any) => {
+                            if (!projectData?.clientStartDate) return false
+
+                            const clientStartDate = new Date(dateFormat(projectData.clientStartDate))
+
+                            const orderStartDate = new Date(dateFormat(date))
+
+                            if (orderStartDate.getTime() === clientStartDate.getTime()) return true
+
+                            if (orderStartDate < clientStartDate) return false
+
+                            return true
+                          },
                         })}
                       />
+
                       <FormErrorMessage>
                         {errors.workOrderStartDate && errors.workOrderStartDate.message}
+                        {errors.workOrderStartDate && errors.workOrderStartDate.type === 'validate' && (
+                          <span>Earlier then client start date</span>
+                        )}
                       </FormErrorMessage>
                     </FormControl>
                   </Box>
@@ -748,7 +765,7 @@ export const NewWorkOrderForm: React.FC<{
           onClose={onCloseRemainingItemsModal}
           setAssignedItems={setAssignedItems}
           remainingItems={unassignedItems}
-          isLoading={isLoading}
+          isLoading={isLoading || isFetching}
           swoProject={swoProject}
         />
       )}

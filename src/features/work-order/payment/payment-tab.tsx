@@ -24,7 +24,7 @@ import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecisi
 import { addDays, nextFriday } from 'date-fns'
 import { useEffect } from 'react'
 import { STATUS } from 'features/common/status'
-import { CustomRequiredInput } from 'components/input/input'
+import { CustomInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
 
 const CalenderCard = props => {
@@ -365,7 +365,7 @@ const PaymentInfoTab = props => {
                   <Controller
                     control={control}
                     rules={{
-                      max: { value: workOrder?.finalInvoiceAmount, message: 'Amount is greaten than Balance Due.' },
+                      max: { value: workOrder?.finalInvoiceAmount, message: 'Amount is greater than Balance Due.' },
                     }}
                     name="partialPayment"
                     render={({ field, fieldState }) => {
@@ -374,7 +374,7 @@ const PaymentInfoTab = props => {
                           <NumberFormat
                             value={field.value}
                             thousandSeparator
-                            customInput={CustomRequiredInput}
+                            customInput={CustomInput}
                             prefix={'$'}
                             disabled={!partialPaymentEnabled}
                             onValueChange={e => {

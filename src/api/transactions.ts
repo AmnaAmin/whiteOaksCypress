@@ -12,6 +12,7 @@ import {
   TransactionStatusValues,
   TransactionType,
   TransactionTypeValues,
+  WorkOrderAwardStats,
 } from 'types/transaction.type'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
@@ -188,6 +189,8 @@ export const AGAINST_DEFAULT_VALUE = '0'
 const AGAINST_DEFAULT_OPTION = {
   label: 'Project SOW',
   value: AGAINST_DEFAULT_VALUE,
+  awardStatus: null,
+  isValidForAwardPlan: null,
 }
 
 export const createAgainstLabel = (companyName: string, skillName: string) => {
@@ -216,7 +219,9 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
         })
         .map(workOrder => ({
           label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
+          awardStatus: workOrder?.assignAwardPlan,
           value: `${workOrder.id}`,
+          isValidForAwardPlan: workOrder?.validForAwardPlan,
         })),
     [workOrders],
   )
@@ -290,6 +295,25 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   }
 }
 
+export const useWorkOrderAwardStats = (workOrderId?: string) => {
+  const client = useClient()
+  const enabled = workOrderId !== null && workOrderId !== 'null' && workOrderId !== undefined
+
+  const { data: awardPlansStats, ...rest } = useQuery<Array<WorkOrderAwardStats>>(
+    ['changeOrders', workOrderId],
+    async () => {
+      const response = await client(`projects/${workOrderId}/workOrderPlanStat`, {})
+
+      return response?.data
+    },
+    {
+      enabled,
+    },
+  )
+
+  return { awardPlansStats, ...rest }
+}
+
 export const getFileContents = async (document: any, documentType: number) => {
   if (!document) return Promise.resolve()
 
@@ -336,7 +360,7 @@ export const parseChangeOrderAPIPayload = async (
   projectId?: string,
 ): Promise<ChangeOrderPayload> => {
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
-  const newExpectedCompletionDate = dateISOFormat(formValues.newExpectedCompletionDate as string)
+  const newExpectedCompletionDate = formValues.newExpectedCompletionDate as string
 
   const documents: any = []
 

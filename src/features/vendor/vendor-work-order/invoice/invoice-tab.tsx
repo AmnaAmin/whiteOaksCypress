@@ -33,7 +33,7 @@ import { TransactionStatusValues as TSV, TransactionType, TransactionTypeValues 
 import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
 import { downloadFile } from 'utils/file-utils'
 import { currencyFormatter } from 'utils/string-formatters'
-import { createInvoice } from 'api/vendor-projects'
+import { createInvoice, useVendorAddress } from 'api/vendor-projects'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { STATUS, STATUS as WOstatus, STATUS_CODE } from '../../../common/status'
 
@@ -75,6 +75,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
   const [amountPaid, setAmountPaid] = useState(0)
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
+  const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId)
 
   const {
     isOpen: isGenerateInvoiceOpen,
@@ -191,7 +192,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
   const generateInvoice = async () => {
     let form = new jsPDF()
     const updatedWorkOrder = prepareInvoicePayload()
-    form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid })
+    form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid }, vendorAddress)
     const pdfUri = form.output('datauristring')
     updateWorkOrder(
       {

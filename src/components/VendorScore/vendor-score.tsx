@@ -1,5 +1,16 @@
 import React from 'react'
-import { Text, Flex, Box, CircularProgress, CircularProgressLabel, HStack, Center, Spinner } from '@chakra-ui/react'
+import {
+  Text,
+  Flex,
+  Box,
+  CircularProgress,
+  CircularProgressLabel,
+  HStack,
+  Center,
+  Spinner,
+  VStack,
+  Spacer,
+} from '@chakra-ui/react'
 
 import { Card } from '../card/card'
 import { SimpleSlider } from './SimpleSlider'
@@ -10,6 +21,8 @@ import { LicenseDocument } from 'types/vendor.types'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import Status from 'features/common/status'
 import numeral from 'numeral'
+import { ExpirationAlertMessage } from '../../features/common/expiration-alert-message'
+import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
 
 const LicenseType: { [key: number]: string } = {
   1: 'Electrical',
@@ -37,10 +50,10 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
       title: 'COI GL',
       date: vendorEntity?.coiglExpirationDate,
     },
-    {
-      title: t('agreementSigned'),
-      date: vendorEntity?.agreementSignedDate,
-    },
+    // {
+    //   title: t('agreementSigned'),
+    //   date: vendorEntity?.agreementSignedDate,
+    // },
     {
       title: t('autoInsurance'),
       date: vendorEntity?.autoInsuranceExpirationDate,
@@ -48,72 +61,87 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   ].filter(item => item.date)
 
   return (
-    <>
-      <Box
+    <Box>
+      <ExpirationAlertMessage insurance={defaultData} license={vendorEntity?.licenseDocuments} />
+      <Flex
         justifyContent="space-evenly"
         display="grid"
         gridTemplateColumns={{ base: '1fr', lg: '2fr', xl: '1fr 2fr' }}
         alignItems="center"
+        gridGap="11px"
       >
-        <Card h={156} rounded="2xl">
+        <Card h={156} rounded="6px" marginTop={{ base: '30px', sm: '30px', md: 0, xl: 0, lg: 0 }}>
           <Flex h="99%" w="100%">
-            <>
-              <HStack w="100%">
-                <Flex h="100%" alignItems="end">
-                  <CircularProgress color="#4E87F8" capIsRound value={scoreProgress} size="91px">
+            <HStack w="100%" spacing="0">
+              <VStack spacing="3px" alignItems="start" w="100%">
+                <HStack spacing="-3" h="100%" alignItems="end" w="100%">
+                  <CircularProgress color="#68D391" capIsRound value={scoreProgress} size="95px">
                     <CircularProgressLabel h="57%">
                       {isLoading ? (
                         <Center>
                           <Spinner size="xl" />
                         </Center>
                       ) : (
-                        <Box alignItems="center">
-                          <Text fontSize="18px" fontWeight={700} color="gray.600" data-testid="vendor-score">
+                        <VStack spacing={-1}>
+                          <Text fontSize="20px" fontWeight={500} color="gray.600" data-testid="vendor-score">
                             {vendorEntity?.score}
                           </Text>
-                          <Text color="gray.400" fontWeight={400} fontSize="10px" px="1">
+                          <Text color="gray.500" fontWeight={400} fontSize="12px">
                             {t('outOf')} 5
                           </Text>
-                        </Box>
+                        </VStack>
                       )}
                     </CircularProgressLabel>
-                    <Text textAlign="center" fontSize="12px" fontWeight={500} color="gray.600" fontStyle="normal">
-                      {t('score')}
-                    </Text>
                   </CircularProgress>
-                </Flex>
-                <Box h="100%" w="100%">
-                  <HStack justifyContent="end">
-                    {isLoading ? (
-                      <BlankSlate width="60px" h="15px" />
-                    ) : (
-                      <Status value={vendorEntity?.statusLabel} id={vendorEntity?.statusLabel} />
-                    )}
-                  </HStack>
-                  <Box mt="18px" ml="30px ">
-                    {isLoading ? (
-                      <BlankSlate width="200px" h="20px" />
-                    ) : (
-                      <Text fontSize="18px" color="gray.600" fontWeight={700}>
-                        {ammount}
+                  <HStack>
+                    <Box
+                      mb="20px"
+                      ml={{ base: 0, sm: 0, md: '30px', xl: '30px', lg: '30px' }}
+                      position={{ base: 'relative', md: 'static', lg: 'static', xl: 'static' }}
+                      left={{ base: '15px', md: 0, lg: 0, xl: 0 }}
+                    >
+                      {isLoading ? (
+                        <BlankSlate width="200px" h="20px" />
+                      ) : (
+                        <Text fontSize="20px" color="gray.700" fontWeight={700}>
+                          {ammount}
+                        </Text>
+                      )}
+                      <Text fontSize="16px" color="gray.700" fontWeight={400} whiteSpace="nowrap">
+                        {t('upcomingPayment')}
                       </Text>
-                    )}
-                    <Text fontSize="18px" color="gray.600" fontWeight={500}>
-                      {t('upcomingPayment')}
-                    </Text>
-                  </Box>
-                </Box>
-              </HStack>
-            </>
+                    </Box>
+                  </HStack>
+                </HStack>
+                <Text
+                  textAlign="center"
+                  fontSize="12px"
+                  fontWeight={400}
+                  color="gray.500"
+                  fontStyle="normal"
+                  whiteSpace="nowrap"
+                  pl="12px"
+                >
+                  {t(`${DASHBOARD}.vendorscore`)}
+                </Text>
+              </VStack>
+              <Spacer />
+              <VStack justifyContent="space-between" h="100%" alignItems="end">
+                {isLoading ? (
+                  <BlankSlate width="60px" h="15px" />
+                ) : (
+                  <Status value={vendorEntity?.statusLabel} id={vendorEntity?.statusLabel} />
+                )}
+              </VStack>
+            </HStack>
           </Flex>
         </Card>
 
         <Flex
           pt={{ base: '15px', xl: '0' }}
-          pl={{ base: '0px', xl: '15px' }}
           display="grid"
           gridTemplateColumns="repeat(auto-fit, minmax(300px,1fr))"
-          gridGap="15px"
+          gridGap="11px"
         >
           <SimpleSlider
             heading={t('insuranceExpiration')}
@@ -133,7 +161,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
               .sort((curr: any, pre: any) => (curr.date > pre.date ? 1 : -1))}
           />
         </Flex>
-      </Box>
-    </>
+      </Flex>
+    </Box>
   )
 }

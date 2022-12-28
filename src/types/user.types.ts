@@ -22,6 +22,7 @@ export type UserForm = {
   employeeId?: string
   features?: [string]
   fieldProjectManagerRoleId?: number | null
+  managerRoleId: number | null
   firebaseToken?: null
   hfeWage?: number | null
   id?: number
@@ -30,7 +31,10 @@ export type UserForm = {
   lastModifiedBy?: string
   lastModifiedDate?: string
   login?: string
-  markets?: any[],//TODO - fix type def
+  markets?: any[] //TODO - fix type def
+  states?: any[]
+  regions?: any[]
+  // managerRoleId?: string
   newBonus?: number | null
   newTarget?: number | null
   parentFieldProjectManagerId?: number | null

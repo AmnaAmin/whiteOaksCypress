@@ -21,7 +21,15 @@ const getColumnWidth = (view: ViewMode) => {
 const ProjectScheduleDetails: React.FC<{
   data: Task[]
 }> = ({ data }) => {
-  const [tasks, setTasks] = React.useState<Task[]>(data)
+  const [tasks, setTasks] = React.useState<Task[]>(
+    data.map(t => {
+      if (t.end < t.start) {
+        t.end = t.start
+      }
+
+      return t
+    }),
+  )
 
   const handleExpanderClick = (task: Task) => {
     setTasks(tasks.map(t => (t.id === task.id ? task : t)))
@@ -29,7 +37,15 @@ const ProjectScheduleDetails: React.FC<{
 
   useEffect(() => {
     if (data.length > 0) {
-      setTasks(data)
+      setTasks(
+        data.map(t => {
+          if (t.end < t.start) {
+            t.end = t.start
+          }
+
+          return t
+        }),
+      )
     }
   }, [data])
 

@@ -53,7 +53,7 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
             <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <ButtonsWrapper>
-                <ExportCustomButton columns={[]} data={exportData} colorScheme="brand" fileName="transactions.csv" />
+                <ExportCustomButton columns={[]} data={exportData} colorScheme="brand" fileName="transactions" />
 
                 {settingColumns && (
                   <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
@@ -69,7 +69,7 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
         heading={selectedTransactionName as string}
         selectedTransactionId={selectedTransactionId as number}
         projectId={projectId as string}
-        projectStatus = {''} //TODO need to send project status when overpayment card is visible
+        projectStatus={''} //TODO need to send project status when overpayment card is visible
       />
       <TransactionDetailsModal
         isOpen={isOpenTransactionDetailsModal}

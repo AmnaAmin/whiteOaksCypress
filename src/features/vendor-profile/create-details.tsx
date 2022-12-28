@@ -155,7 +155,6 @@ const CreateVendorDetail: React.FC<{
             <Input
               type="email"
               {...register('secondEmailAddress', {
-                required: isActive,
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                   message: 'Invalid email',
@@ -171,7 +170,7 @@ const CreateVendorDetail: React.FC<{
         <HStack spacing="4" my="30px">
           <Box w="215px">
             <FormControl isInvalid={!!errors.businessPhoneNumber}>
-              <FormLabel variant="strong-label" size="md">
+              <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('businessPhoneNo')}
               </FormLabel>
               <Controller
@@ -209,7 +208,7 @@ const CreateVendorDetail: React.FC<{
           </Flex>
           <Box w="215px">
             <FormControl>
-              <FormLabel variant="strong-label" size="md">
+              <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('secondaryPhoneNo')}
               </FormLabel>
               <Controller
@@ -414,7 +413,7 @@ const CreateVendorDetail: React.FC<{
                       <ReactSelect
                         options={PAYMENT_TERMS_OPTIONS}
                         menuPosition="fixed"
-                        maxMenuHeight={80}
+                        maxMenuHeight="100%"
                         {...field}
                         selectProps={{ isBorderLeft: true }}
                       />

@@ -11,8 +11,9 @@ import {
   Box,
   HStack,
   Button,
+  Divider,
 } from '@chakra-ui/react'
-import { Controller, FormProvider, useForm, useFormContext } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 
 // import { Button } from 'components/button/button'
@@ -31,6 +32,7 @@ import {
   useTransaction,
   useTransactionStatusOptions,
   useTransactionTypes,
+  useWorkOrderAwardStats,
   useWorkOrderChangeOrders,
 } from 'api/transactions'
 import {
@@ -42,11 +44,13 @@ import {
 } from 'types/transaction.type'
 import { dateFormat } from 'utils/date-time-utils'
 import {
+  isManualTransaction,
   useAgainstOptions,
   useCalculatePayDateVariance,
   useFieldDisabledEnabledDecision,
   useFieldRequiredDecision,
   useFieldShowHideDecision,
+  useIsAwardSelect,
   useIsLienWaiverRequired,
   useLienWaiverFormValues,
   useSelectedWorkOrder,
@@ -58,7 +62,12 @@ import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReadOnlyInput } from 'components/input-view/input-view'
-import { DrawLienWaiver, LienWaiverAlert } from './draw-transaction-lien-waiver'
+import {
+  DrawLienWaiver,
+  LienWaiverAlert,
+  ProjectAwardAlert,
+  ProjectTransacrtionRemaingALert,
+} from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
@@ -77,7 +86,6 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
 
   return (
     <Grid
-      // templateColumns="repeat(auto-fit, minmax(120px, 1fr))"
       templateColumns="repeat(4, 1fr)"
       gap={'1rem 20px'}
       borderBottom="1px solid #E2E8F0"
@@ -127,6 +135,7 @@ export type TransactionFormProps = {
   selectedTransactionId?: number
   projectId: string
   projectStatus: string
+  heading?: string
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -134,12 +143,15 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   selectedTransactionId,
   projectId,
   projectStatus,
+  heading,
 }) => {
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
+  const [remainingAmt, setRemainingAmt] = useState(false)
+
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes()
 
@@ -150,9 +162,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     workOrdersKeyValues,
     isLoading: isAgainstLoading,
   } = useProjectWorkOrders(projectId, !!selectedTransactionId)
+
   const transactionStatusOptions = useTransactionStatusOptions()
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
+
+  const { awardPlansStats } = useWorkOrderAwardStats(projectId)
+
   const { mutate: createChangeOrder, isLoading: isChangeOrderSubmitLoading } = useChangeOrderMutation(projectId)
   const { mutate: updateChangeOrder, isLoading: isChangeOrderUpdateLoading } = useChangeOrderUpdateMutation(projectId)
 
@@ -182,6 +198,38 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     reset, //  isTruncated title={label}
   } = formReturn
 
+  const against = useWatch({ name: 'against', control })
+  const transType = useWatch({ name: 'transactionType', control })
+  const workOrderId = against?.value
+
+  const selectedWorkOrderStats = useMemo(() => {
+    return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
+  }, [workOrderId])
+
+  const { check, isValidForAwardPlan } = useIsAwardSelect(control)
+
+  const showDrawRemainingMsg =
+    !heading &&
+    transType?.label === 'Draw' &&
+    isValidForAwardPlan &&
+    (selectedWorkOrderStats?.drawRemaining === 0 || selectedWorkOrderStats?.drawRemaining === null)
+
+  const showMaterialRemainingMsg =
+    !heading &&
+    transType?.label === 'Material' &&
+    isValidForAwardPlan &&
+    (selectedWorkOrderStats?.materialRemaining === 0 || selectedWorkOrderStats?.materialRemaining === null)
+
+  const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
+
+  const methodForPayment = e => {
+    if (e > selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw) {
+      setRemainingAmt(true)
+    } else {
+      setRemainingAmt(false)
+    }
+  }
+
   const {
     isShowChangeOrderSelectField,
     isShowWorkOrderSelectField,
@@ -189,10 +237,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowExpectedCompletionDateField,
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
-    isShowPaymentRecievedDateField,
     isShowPaidBackDateField,
     isShowMarkAsField,
+    isShowPaymentRecievedDateField,
   } = useFieldShowHideDecision(control, transaction)
+  const isAdminEnabled = isAdmin && isManualTransaction(transaction?.transactionType)
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control, transaction)
   const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
     control,
@@ -201,9 +250,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   )
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
+
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
-  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus)
+  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus, transaction)
   const payDateVariance = useCalculatePayDateVariance(control)
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
@@ -301,7 +351,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
-      {isLienWaiverRequired && <LienWaiverAlert />}
+      {check && isLienWaiverRequired && <LienWaiverAlert />}
+      {!check && isValidForAwardPlan && materialAndDraw ? <ProjectAwardAlert /> : null}
+      {check && showDrawRemainingMsg && <ProjectTransacrtionRemaingALert msg="DrawRemaining" />}
+      {check && showMaterialRemainingMsg && <ProjectTransacrtionRemaingALert msg="MaterialRemaining" />}
+      {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaining" />}
 
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
@@ -319,7 +373,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
               <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="20px" pb="4">
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
-                    <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="transactionType">
+                    <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="transactionType">
                       {t(`${TRANSACTION}.transactionType`)}
                     </FormLabel>
                     <Controller
@@ -353,7 +407,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                 <GridItem>
                   <FormControl isInvalid={!!errors.against} data-testid="against-select-field">
-                    <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
+                    <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
                       {t(`${TRANSACTION}.against`)}
                     </FormLabel>
                     <Controller
@@ -382,7 +436,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 {isShowWorkOrderSelectField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.workOrder} data-testid="work-order-select">
-                      <FormLabel htmlFor="workOrder" fontSize="14px" color="gray.600" fontWeight={500}>
+                      <FormLabel htmlFor="workOrder" fontSize="14px" color="gray.700" fontWeight={500}>
                         {t(`${TRANSACTION}.workOrder`)}
                       </FormLabel>
                       <Controller
@@ -412,7 +466,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 {isShowChangeOrderSelectField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.changeOrder} data-testid="change-order-select">
-                      <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="changeOrder">
+                      <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="changeOrder">
                         {t(`${TRANSACTION}.changeOrder`)}
                       </FormLabel>
                       <Controller
@@ -442,7 +496,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         fontSize="14px"
                         fontStyle="normal"
                         fontWeight={500}
-                        color="gray.600"
+                        color="gray.700"
                         htmlFor="expectedCompletionDate"
                         whiteSpace="nowrap"
                       >
@@ -469,7 +523,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         fontSize="14px"
                         fontStyle="normal"
                         fontWeight={500}
-                        color="gray.600"
+                        color="gray.700"
                         htmlFor="newExpectedCompletionDate"
                         whiteSpace="nowrap"
                       >
@@ -495,7 +549,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   <>
                     <GridItem>
                       <FormControl isInvalid={!!errors.paymentTerm} data-testid="payment-term-select">
-                        <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.600" fontWeight={500}>
+                        <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.700" fontWeight={500}>
                           {t(`${TRANSACTION}.paymentTerm`)}
                         </FormLabel>
                         <Controller
@@ -526,7 +580,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
-                          color="gray.600"
+                          color="gray.700"
                           htmlFor="invoicedDate"
                           whiteSpace="nowrap"
                         >
@@ -553,7 +607,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
-                          color="gray.600"
+                          color="gray.700"
                           htmlFor="paidDate"
                           whiteSpace="nowrap"
                         >
@@ -581,7 +635,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
-                          color="gray.600"
+                          color="gray.700"
                           htmlFor="payDateVariance"
                           whiteSpace="nowrap"
                         >
@@ -610,7 +664,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         fontSize="14px"
                         fontStyle="normal"
                         fontWeight={500}
-                        color="gray.600"
+                        color="gray.700"
                         htmlFor="paymentRecievedDate"
                         whiteSpace="nowrap"
                       >
@@ -639,7 +693,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 {isShowMarkAsField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.markAs} data-testid="mark-as-select-field">
-                      <FormLabel fontSize="14px" color="gray.600" fontWeight={500} htmlFor="markAs">
+                      <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="markAs">
                         {t(`${TRANSACTION}.markAs`)}
                       </FormLabel>
                       <Controller
@@ -673,7 +727,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         fontSize="14px"
                         fontStyle="normal"
                         fontWeight={500}
-                        color="gray.600"
+                        color="gray.700"
                         htmlFor="paidBackDate"
                         whiteSpace="nowrap"
                       >
@@ -697,7 +751,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 {isShowStatusField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.status} data-testid="status-select-field">
-                      <FormLabel htmlFor="aginst" fontSize="14px" color="gray.600" fontWeight={500}>
+                      <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
                         {t(`${TRANSACTION}.status`)}
                       </FormLabel>
                       <Controller
@@ -733,9 +787,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
               <TransactionAmountForm
                 formReturn={formReturn}
+                onSetTotalRemainingAmount={methodForPayment}
                 transaction={transaction}
                 isMaterialsLoading={isMaterialsLoading}
                 setMaterialsLoading={setMaterialsLoading}
+                selectedTransactionId={selectedTransactionId}
               />
             </Flex>
           ) : (
@@ -749,16 +805,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         <DevTool control={control} />
       </FormProvider>
 
+      <Divider mt={3}></Divider>
       <HStack alignItems="center" justifyContent="end" mt="16px" spacing="16px">
         {isShowLienWaiver ? (
-          <Button onClick={() => setIsShowLienWaiver(false)} variant="outline" colorScheme="brand">
+          <Button onClick={() => setIsShowLienWaiver(false)} variant="outline" colorScheme="darkPrimary">
             {t(`${TRANSACTION}.back`)}
           </Button>
         ) : (
           <Button
             onClick={onModalClose}
-            variant={!isApproved ? 'outline' : 'solid'}
-            colorScheme="brand"
+            variant={!isApproved || isAdminEnabled ? 'outline' : 'solid'}
+            colorScheme="darkPrimary"
             data-testid="close-transaction-form"
           >
             {t(`${TRANSACTION}.cancel`)}
@@ -770,8 +827,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-            colorScheme="brand"
-            isDisabled={amount === 0}
+            isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg}
+            colorScheme="darkPrimary"
             onClick={event => {
               event.stopPropagation()
               setTimeout(() => {
@@ -782,15 +839,22 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          !isApproved && (
+          (!isApproved || isAdminEnabled) && (
             <>
               <Button
                 type="submit"
                 form="newTransactionForm"
                 data-testid="save-transaction"
-                colorScheme="brand"
+                colorScheme="darkPrimary"
                 variant="solid"
-                disabled={isFormSubmitLoading || isMaterialsLoading}
+                disabled={
+                  isFormSubmitLoading ||
+                  isMaterialsLoading ||
+                  (!check && isValidForAwardPlan && materialAndDraw) ||
+                  showDrawRemainingMsg ||
+                  showMaterialRemainingMsg ||
+                  remainingAmt
+                }
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>

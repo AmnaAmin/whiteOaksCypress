@@ -12,9 +12,10 @@ type UserRoles = {
   isOperations: boolean
   isClientManager: boolean
   isConstructionOperations: boolean
+  isOpsOrAdmin: boolean
 }
 
-enum UserTypes {
+export enum UserTypes {
   admin = 1,
   fieldProjectManager = 5,
   vendor = 6,
@@ -29,7 +30,8 @@ enum UserTypes {
 
 export const useUserRolesSelector = (): UserRoles => {
   const { data } = useAuth()
-  const { userType } = data?.user as Account
+
+  const { userType } = (data?.user as Account) ?? ''
 
   return {
     isAdmin: userType === UserTypes.admin,
@@ -42,6 +44,7 @@ export const useUserRolesSelector = (): UserRoles => {
     isOperations: userType === UserTypes.operations,
     isClientManager: userType === UserTypes.clientManager,
     isConstructionOperations: userType === UserTypes.constructionOperations,
+    isOpsOrAdmin: userType === UserTypes.admin || userType === UserTypes.operations,
   }
 }
 

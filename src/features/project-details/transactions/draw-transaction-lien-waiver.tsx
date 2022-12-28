@@ -47,6 +47,30 @@ export const LienWaiverAlert = () => {
   )
 }
 
+export const ProjectAwardAlert = () => {
+  const { t } = useTranslation()
+
+  return (
+    <Alert status="info" variant="custom" size="sm">
+      <AlertIcon />
+      <AlertDescription>{t('AwardRq')}</AlertDescription>
+      <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
+    </Alert>
+  )
+}
+
+export const ProjectTransacrtionRemaingALert = ({ msg }) => {
+  const { t } = useTranslation()
+
+  return (
+    <Alert mt={2} status="info" variant="custom" size="sm">
+      <AlertIcon />
+      <AlertDescription>{t(`${msg}`)}</AlertDescription>
+      <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
+    </Alert>
+  )
+}
+
 export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   const { t } = useTranslation()
   const [openSignature, setOpenSignature] = useState(false)
@@ -167,6 +191,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
                   _hover: { bg: 'gray.100' },
                   _active: { bg: 'gray.100' },
                 }}
+                onClick={() => setOpenSignature(true)}
               >
                 <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
                 <Image
@@ -182,9 +207,16 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
 
                 <Flex pos={'absolute'} right="10px" top="11px">
                   {formValues?.claimantsSignature && (
-                    <BiTrash className="mr-1" onClick={onRemoveSignature} color="#A0AEC0" />
+                    <BiTrash
+                      className="mr-1"
+                      onClick={e => {
+                        onRemoveSignature()
+                        e.stopPropagation()
+                      }}
+                      color="#A0AEC0"
+                    />
                   )}
-                  <BiBookAdd data-testid="add-signature" onClick={() => setOpenSignature(true)} color="#A0AEC0" />
+                  <BiBookAdd data-testid="add-signature" color="#A0AEC0" />
                 </Flex>
               </Button>
               {errors?.lienWaiver?.claimantsSignature?.message && (

@@ -86,7 +86,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                       id="projectType"
                       options={projectTypeSelectOptions}
                       selected={value}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                       onChange={option => onChange(option)}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -233,7 +233,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
         </Button>
         <Button
           disabled={isProjectInformationNextButtonDisabled}
-          colorScheme="CustomPrimaryColor"
+          colorScheme="brand"
           size="md"
           ml="3"
           onClick={props.setNextTab}

@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
 import { useCallback, useEffect, useState } from 'react'
-import { useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
+import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
@@ -43,18 +43,21 @@ import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { downloadFile } from 'utils/file-utils'
+import ReactSelect from 'components/form/react-select'
+import { CANCEL_WO_OPTIONS } from 'constants/index'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const CalenderCard = props => {
   return (
     <Flex>
       <Box pr={4}>
-        <BiCalendar size={23} color="#718096" />
+        <BiCalendar size={23} color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
+        <Text color="gray.700" fontWeight={500} fontSize="14px" fontStyle="normal" mb="1">
           {props.title}
         </Text>
-        <Text data-testid={props.testId} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text color="gray.600" data-testid={props.testId} fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props?.date || 'mm/dd/yyyy'}
         </Text>
       </Box>
@@ -66,12 +69,12 @@ const InformationCard = props => {
   return (
     <Flex>
       <Box lineHeight="20px">
-        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
+        <Text color="gray.700" fontWeight={500} fontSize="14px" fontStyle="normal" mb="1">
           {props.title}
         </Text>
         <Text
           data-testid={props.testId}
-          color="gray.500"
+          color="gray.600"
           fontSize="14px"
           fontStyle="normal"
           fontWeight={400}
@@ -87,6 +90,7 @@ const InformationCard = props => {
 }
 
 interface FormValues {
+  cancel: any
   workOrderStartDate: string | null
   workOrderDateCompleted: string | null
   workOrderExpectedCompletionDate: string | null
@@ -123,8 +127,10 @@ const WorkOrderDetailTab = props => {
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
   const [uploadedWO, setUploadedWO] = useState<any>(null)
+
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
+  const { isAdmin } = useUserRolesSelector()
 
   const {
     skillName,
@@ -138,7 +144,8 @@ const WorkOrderDetailTab = props => {
   } = props.workOrder
 
   const formValues = useWatch({ control })
-  const { completedByVendor } = useFieldEnableDecisionDetailsTab({ workOrder, formValues })
+  const { completedByVendor, workOrderStartDateEnable, workOrderExpectedCompletionDateEnable } =
+    useFieldEnableDecisionDetailsTab({ workOrder, formValues })
 
   // Remaining Items handles
   const {
@@ -240,6 +247,7 @@ const WorkOrderDetailTab = props => {
   const onSubmit = values => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
     const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
+
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrderAssignedItems)
     const removedItems = getRemovedItems(formValues, workOrderAssignedItems)
@@ -251,11 +259,13 @@ const WorkOrderDetailTab = props => {
     if (workOrder?.id) {
       reset(defaultValuesWODetails(workOrder, workOrderAssignedItems))
     }
-  }, [workOrder, reset, workOrderAssignedItems])
+  }, [workOrder, reset, workOrderAssignedItems?.length])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
+
+  const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
 
   return (
     <Box>
@@ -307,6 +317,28 @@ const WorkOrderDetailTab = props => {
           </Stack>
           <Box mt="32px" mx="32px">
             <HStack spacing="16px">
+              {isAdmin && !isCancelled && (
+                <Box w="215px">
+                  <FormControl zIndex="2">
+                    <FormLabel variant="strong-label" size="md">
+                      {t('cancelWorkOrder')}
+                    </FormLabel>
+                    <Controller
+                      control={control}
+                      name="cancel"
+                      render={({ field }) => (
+                        <>
+                          <ReactSelect
+                            options={CANCEL_WO_OPTIONS}
+                            onChange={option => field.onChange(option)}
+                            isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                          />
+                        </>
+                      )}
+                    />
+                  </FormControl>
+                </Box>
+              )}
               <Box w="215px">
                 <FormControl zIndex="2">
                   <FormLabel variant="strong-label" size="md">
@@ -318,7 +350,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    isDisabled={!workOrderStartDateEnable}
                     variant="required-field"
                     {...register('workOrderStartDate', {
                       required: 'This is required field.',
@@ -338,7 +370,7 @@ const WorkOrderDetailTab = props => {
                     size="md"
                     css={calendarIcon}
                     min={woStartDate as string}
-                    isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                    isDisabled={!workOrderExpectedCompletionDateEnable}
                     variant="required-field"
                     {...register('workOrderExpectedCompletionDate', {
                       required: 'This is required field.',

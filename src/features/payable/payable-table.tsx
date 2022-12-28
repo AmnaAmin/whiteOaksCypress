@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import { useGetAllWorkOrders, usePaginatedAccountPayable } from 'api/account-payable'
 import { ProjectWorkOrderType } from 'types/project.type'
@@ -15,10 +15,15 @@ import {
   GotoLastPage,
   GotoNextPage,
   GotoPreviousPage,
+  SelectPageSize,
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { ExportButton } from 'components/table-refactored/export-button'
+import { generateSettingColumn } from 'components/table-refactored/make-data'
+import { useUserProfile } from 'utils/redux-common-selectors'
+import { Account } from 'types/account.types'
+import UpdateTransactionModal from 'features/project-details/transactions/update-transaction-modal'
 
 type PayablePropsTyep = {
   payableColumns: ColumnDef<any>[]
@@ -44,15 +49,62 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
   }) => {
     const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
-    const { workOrders, isLoading, totalPages, dataCount } = usePaginatedAccountPayable(
-      queryStringWithPagination,
-      pagination.pageSize,
-    )
+    const {
+      isOpen: isOpenTransactionModal,
+      onOpen: onOpenTransactionModal,
+      onClose: onCloseTransactionModal,
+    } = useDisclosure()
+    const [selectedTransaction, setSelectedTransaction] = useState<{
+      transactionId: number
+      transactionName: string
+      projectId: string | number
+    }>()
+    const [paginationInitialized, setPaginationInitialized] = useState(false)
+    const {
+      workOrders,
+      isLoading,
+      totalPages,
+      dataCount,
+      refetch: refetchPayables,
+    } = usePaginatedAccountPayable(queryStringWithPagination, pagination.pageSize)
+    const { email } = useUserProfile() as Account
 
     const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(queryStringWithoutPagination)
 
     const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.payable)
-    const { tableColumns, settingColumns } = useTableColumnSettings(payableColumns, TableNames.payable)
+    const {
+      tableColumns,
+      settingColumns,
+      isFetched: tablePreferenceFetched,
+    } = useTableColumnSettings(payableColumns, TableNames.payable)
+
+    const { paginationRecord, columnsWithoutPaginationRecords } = useMemo(() => {
+      const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
+      const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
+
+      return {
+        paginationRecord: paginationCol ? { ...paginationCol, field: paginationCol?.field || 0 } : null,
+        columnsWithoutPaginationRecords,
+      }
+    }, [settingColumns])
+
+    useEffect(() => {
+      const paginationToBeDefaulted =
+        !paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord
+      const paginationsMismatchFound =
+        !paginationInitialized &&
+        pagination &&
+        paginationRecord &&
+        (paginationRecord.field as Number) !== pagination.pageSize
+
+      if (paginationToBeDefaulted || paginationsMismatchFound) {
+        setPaginationInitialized(true)
+        setPagination(prevState => ({
+          ...prevState,
+          pageSize: paginationToBeDefaulted ? 25 : Number(paginationRecord?.field) || 25,
+        }))
+      }
+    }, [pagination, settingColumns, tablePreferenceFetched])
 
     useEffect(() => {
       if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
@@ -68,12 +120,34 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     }, [workOrders])
 
     const onRowClick = row => {
-      setSelectedWorkOrder(row)
-      onOpen()
+      if (row.paymentType?.toLowerCase() === 'wo draw') {
+        setSelectedTransaction(row)
+        onOpenTransactionModal()
+      } else {
+        setSelectedWorkOrder(row)
+        onOpen()
+      }
     }
 
     const onSave = columns => {
       postGridColumn(columns)
+    }
+
+    const onPageSizeChange = pageSize => {
+      if (paginationRecord) {
+        postGridColumn([...columnsWithoutPaginationRecords, { ...paginationRecord, field: pageSize }] as any)
+      } else {
+        const paginationSettings = generateSettingColumn({
+          field: pageSize,
+          contentKey: 'pagination' as string,
+          order: columnsWithoutPaginationRecords.length,
+          userId: email,
+          type: TableNames.payable,
+          hide: true,
+        })
+        settingColumns.push(paginationSettings)
+        postGridColumn(settingColumns as any)
+      }
     }
 
     return (
@@ -89,8 +163,22 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
             isOpen={isOpen}
           />
         )}
+        {isOpenTransactionModal && (
+          <UpdateTransactionModal
+            isOpen={isOpenTransactionModal}
+            onClose={() => {
+              setSelectedTransaction(undefined)
+              refetchPayables()
+              onCloseTransactionModal()
+            }}
+            heading={selectedTransaction?.transactionName}
+            selectedTransactionId={selectedTransaction?.transactionId as number}
+            projectId={`${selectedTransaction?.projectId}`}
+            projectStatus={''}
+          />
+        )}
 
-        <Box overflow={'auto'} height="calc(100vh - 100px)" roundedTop={6}>
+        <Box overflow={'auto'} height="calc(100vh - 100px)" roundedTop={6} border="1px solid #CBD5E0">
           <TableContextProvider
             data={workOrders}
             columns={tableColumns}
@@ -110,7 +198,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
                   refetch={refetch}
                   isLoading={isExportDataLoading}
                   colorScheme="brand"
-                  fileName="payable.xlsx"
+                  fileName="payable"
                 />
                 {settingColumns && (
                   <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
@@ -122,6 +210,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
                 <GotoPreviousPage />
                 <GotoNextPage />
                 <GotoLastPage />
+                <SelectPageSize dataCount={dataCount} onPageSizeChange={onPageSizeChange} />
               </TablePagination>
             </TableFooter>
           </TableContextProvider>

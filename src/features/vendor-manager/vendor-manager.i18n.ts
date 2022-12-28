@@ -14,6 +14,7 @@ export const vendor_manager = {
         modifiedBy: 'Modified By',
         cancel: 'Cancel',
         save: 'Save',
+        newVendor: 'New Vendor',
 
         //Vendor Skills
         vendorSkills: 'Vendor Skills',
@@ -23,6 +24,12 @@ export const vendor_manager = {
 
         //Markets
         state: 'State',
+
+        //Cards
+        active: 'Active',
+        inActive: 'In Active',
+        doNotUse: 'Do Not Use',
+        expired: 'Expired',
       },
     },
   },
@@ -39,16 +46,22 @@ export const vendor_manager = {
         modifiedBy: 'Modificado Por',
         cancel: 'Cancelar',
         save: 'Ahorrar',
-
+        newVendor: 'Nuevo vendedor',
         //Vendor Skills
         vendorSkills: 'Habilidades del proveedor',
         newVendorSkills: 'Habilidades de nuevos proveedores',
         skills: 'Habilidades',
         modifiedDate: 'Fecha de modificación',
-      },
 
-      //Market
-      state: 'Estado',
+        //Market
+        state: 'Estado',
+
+        //Cards
+        active: 'Activo',
+        inActive: 'En Activo',
+        doNotUse: 'No Utilice',
+        expired: 'Caducado',
+      },
     },
   },
 }

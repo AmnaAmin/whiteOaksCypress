@@ -34,7 +34,7 @@ const InformationCard: React.FC<{
     <HStack h="45px" alignItems="self-start" spacing="16px">
       <Icon as={Icon} fontSize="22px" color="#718096" />
       <Box>
-        <FormLabel variant="strong-lable" size="md" m="0">
+        <FormLabel variant="strong-lable" size="md" m="0" noOfLines={1}>
           {label}
         </FormLabel>
         <Input

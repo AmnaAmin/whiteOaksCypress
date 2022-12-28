@@ -1,12 +1,25 @@
 import { useToast } from '@chakra-ui/react'
+import { BONUS, DURATION } from 'features/user-management/constants'
 import { USER_MANAGEMENT } from 'features/user-management/user-management.i8n'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { isDefined } from 'utils'
 import { useClient } from 'utils/auth-context'
 import { parseMarketAPIDataToFormValues } from 'utils/markets'
-import { useMarkets, useStates } from './pc-projects'
+import { UserTypes } from 'utils/redux-common-selectors'
+import { UserTypes as UserTypeLabel } from 'types/account.types'
+import { parseRegionsAPIDataToFormValues } from 'utils/regions'
+import { parseStatesAPIDataToFormValues } from 'utils/states'
+import { useMarkets, useRegions, useStates } from './pc-projects'
 import { languageOptions } from './vendor-details'
+
+export enum FPMManagerTypes {
+  Area = 59,
+  Regular = 61,
+  Market = 221,
+  Regional = 60,
+}
 
 export const useUserManagement = () => {
   const client = useClient()
@@ -32,20 +45,20 @@ export const useUser = (email?: string) => {
 }
 
 export const useCreateUserMutation = () => {
-  const client = useClient();
-  const toast = useToast();
-  const { t } = useTranslation();
-  const queryClient = useQueryClient();
+  const client = useClient()
+  const toast = useToast()
+  const { t } = useTranslation()
+  const queryClient = useQueryClient()
 
   return useMutation(
     (payload: any) => {
       return client('users', {
         data: {
-          login: payload.email,//TODO - Check why need login and email with backend
-          ...payload
+          login: payload.email, //TODO - Check why need login and email with backend
+          ...payload,
         },
         method: 'POST',
-      });
+      })
     },
     {
       onSuccess() {
@@ -65,7 +78,7 @@ export const useCreateUserMutation = () => {
           isClosable: true,
         })
       },
-    }
+    },
   )
 }
 
@@ -139,17 +152,29 @@ export const useDeleteUserDetails = () => {
 }
 
 export const userMangtPayload = (user: any) => {
+  const getFpmStateId = () => {
+    return user.accountType?.label === 'Field Project Manager' &&
+      user.fieldProjectManagerRoleId.value === FPMManagerTypes.Area //Area Manager
+      ? user.states?.find(state => state.checked === true)?.state?.id
+      : ''
+  }
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
     langKey: user.langKey?.value || '',
-    vendorId: user.vendorId || '',
-    fieldProjectManagerRoleId: user.fieldProjectManagerRoleId || '',
-    parentFieldProjectManagerId: user.parentFieldProjectManagerId || '',
-    markets: user.markets.filter(m => m.checked),
-    stateId: user.state?.id,
+    vendorId: user.vendorId?.value || '',
+    managerRoleId: user.managerRoleId?.value || '',
+    fieldProjectManagerRoleId: user.fieldProjectManagerRoleId?.value || '',
+    parentFieldProjectManagerId: user.parentFieldProjectManagerId?.value || '',
+    markets: user.markets?.filter(market => market.checked) || [],
+    regions: user.regions?.filter(region => region.checked).map(region => region.region.label) || [],
+    stateId: user.state?.id || '',
+    fpmStateId: getFpmStateId(),
     userType: user.accountType?.value,
+    ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
+    newBonus: user.newBonus?.label ? user.newBonus?.value : '',
   }
+  delete userObj.states
   delete userObj.state
   delete userObj.accountType
 
@@ -190,10 +215,10 @@ export const useUsersAuthorities = () => {
   }
 }
 
-export const useAccountTypes = () => {
+export const useActiveAccountTypes = () => {
   const client = useClient()
   const { data, ...rest } = useQuery('account-types', async () => {
-    const response = await client(`lk_value/lookupType/1`, {})
+    const response = await client(`lk_value/lookupType/accountType/active`, {})
     return response?.data
   })
   const options =
@@ -208,6 +233,27 @@ export const useAccountTypes = () => {
     ...rest,
   }
 }
+
+export const useFPMManagerRoles = () => {
+  const client = useClient()
+  const { data, ...rest } = useQuery('fpm-manager-roles', async () => {
+    const response = await client(`lk_value/lookupType/9`, {})
+    return response?.data
+  })
+  const options =
+    data?.map(res => ({
+      value: res?.id,
+      label: res?.value,
+    })) || []
+  options.push({ value: UserTypes.directorOfConstruction, label: UserTypeLabel.doc })
+  options.push({ value: UserTypes.operations, label: UserTypeLabel.operations })
+  return {
+    data,
+    options,
+    ...rest,
+  }
+}
+
 export const useAllManagers = () => {
   const client = useClient()
   const { data, ...rest } = useQuery('users-allAvailableManagers', async () => {
@@ -228,22 +274,70 @@ export const useAllManagers = () => {
   }
 }
 
+export const useFilteredAvailabelManager = (fieldProjectManagerRoleId, managerRoleId, marketIds?: string) => {
+  var managerRoleIdQueryKey = ''
+  if ([FPMManagerTypes.Market, FPMManagerTypes.Regular].includes(Number(fieldProjectManagerRoleId?.value))) {
+    managerRoleIdQueryKey = 'marketIds'
+  } else if (Number(fieldProjectManagerRoleId?.value) === FPMManagerTypes.Area) {
+    managerRoleIdQueryKey = 'fpmStateId'
+  } else {
+    managerRoleIdQueryKey = 'region'
+  }
+  const client = useClient()
+  const { data, ...rest } = useQuery(
+    ['useFilteredAvailableManager', managerRoleId, marketIds],
+    async () => {
+      const response = await client(`users/upstream/${managerRoleId?.value}?${managerRoleIdQueryKey}=${marketIds}`, {})
+      return response?.data
+    },
+    {
+      enabled: !!(fieldProjectManagerRoleId && managerRoleId && marketIds),
+    },
+  )
+  const options =
+    data?.map(res => ({
+      value: res?.id,
+      label: `${res?.firstName} ${res?.lastName}`,
+    })) || []
+
+  return {
+    data,
+    options,
+    ...rest,
+  }
+}
+
 const parseUserFormData = ({
   userInfo,
   stateOptions,
   markets,
+  states,
+  regions,
   allManagersOptions,
   accountTypeOptions,
   viewVendorsOptions,
   languageOptions,
+  fpmManagerRoleOptions,
+  availableManagers,
 }) => {
-
   return {
     ...userInfo,
     markets: markets || [],
+    states: states || [],
+    regions: regions || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
     accountType: accountTypeOptions?.find(a => a.value === userInfo?.userType),
+    vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
     langKey: languageOptions?.find(l => l.value === userInfo?.langKey),
+    newBonus: BONUS.find(bonus => bonus.value === userInfo?.newBonus),
+    ignoreQuota: DURATION.find(quotaDuration => quotaDuration.value === userInfo?.ignoreQuota),
+    fieldProjectManagerRoleId: fpmManagerRoleOptions?.find(
+      fpmManager => fpmManager.value === userInfo?.fieldProjectManagerRoleId,
+    ),
+    managerRoleId: fpmManagerRoleOptions?.find(fpmManager => fpmManager.value === userInfo?.managerRoleId),
+    parentFieldProjectManagerId: availableManagers?.find(
+      manager => manager.value === userInfo?.parentFieldProjectManagerId,
+    ),
   }
 }
 
@@ -251,24 +345,38 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { setValue, reset } = form
   const { stateSelectOptions: stateOptions } = useStates()
   const { markets } = useMarkets()
+  const { regionSelectOptions } = useRegions()
   const { options: allManagersOptions } = useAllManagers()
-  const { options: accountTypeOptions } = useAccountTypes()
+  const { options: accountTypeOptions } = useActiveAccountTypes()
   const { options: viewVendorsOptions } = useViewVendor()
+  const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
+  const { options: availableManagers } = useAllManagers()
+
+  const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
+  const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
+  const formattedStates = parseStatesAPIDataToFormValues(stateOptions, userInfo?.fpmStateId || [])
 
   useEffect(() => {
-    if(!userInfo) {
-      const formattedMarkets = parseMarketAPIDataToFormValues(markets, [])
-        setValue('markets', formattedMarkets)
+    if (!userInfo) {
+      setValue('markets', formattedMarkets)
+      setValue('states', formattedStates)
+      setValue('regions', formattedRegions)
+      setValue('activated', true)
+      setValue('langKey', languageOptions[0])
     } else {
       reset(
         parseUserFormData({
           userInfo,
           stateOptions,
-          markets: parseMarketAPIDataToFormValues(markets, userInfo.markets),
+          markets: formattedMarkets,
+          states: formattedStates,
+          regions: formattedRegions,
           allManagersOptions,
           accountTypeOptions,
           viewVendorsOptions,
           languageOptions,
+          fpmManagerRoleOptions,
+          availableManagers,
         }),
       )
     }
@@ -277,6 +385,7 @@ export const useUserDetails = ({ form, userInfo }) => {
     userInfo,
     stateOptions?.length,
     markets?.length,
+    regionSelectOptions?.length,
     allManagersOptions?.length,
     accountTypeOptions?.length,
     viewVendorsOptions?.length,

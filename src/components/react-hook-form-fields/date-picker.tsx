@@ -27,7 +27,7 @@ type DatePickerProps = {
 
 export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => (
   <FormControl {...props.style} size={props.size || 'lg'} isInvalid={!!props.errorMessage}>
-    <FormLabel htmlFor={props.name} fontSize={props.size || 'sm'} color="#4A5568" fontWeight={500}>
+    <FormLabel htmlFor={props.name} fontSize={props.size || 'sm'} color="#2D3748" fontWeight={500}>
       {props.label}
     </FormLabel>
     <Controller

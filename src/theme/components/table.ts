@@ -24,8 +24,10 @@ const TableVariants = {
           tbody: {
             tr: {
               h: '45px',
-              bg: 'white',
               fontWeight: 400,
+            },
+            td: {
+              borderColor: 'gray.300',
             },
           },
         }

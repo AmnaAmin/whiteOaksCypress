@@ -10,6 +10,14 @@ export const projects = {
         propertyInformation: 'Property Information',
         projectManagement: 'Project Management',
 
+        // Project Table
+        projectID: 'Project ID',
+        WOstatus: 'WO Status',
+        WoID: 'WO ID',
+        trade: 'Trade',
+        dueDateWO: 'Due Date WO',
+        expectedPaymentDate: 'Expected Payment Date',
+
         // Project Information Form
         name: 'Name',
         type: 'Type',
@@ -59,6 +67,14 @@ export const projects = {
         projectInformation: 'Información del Proyecto',
         propertyInformation: 'Información del Inmueble',
         projectManagement: 'Gestión del Proyecto',
+
+        // Project Table
+        projectID: 'Projecto ID',
+        WOstatus: 'Estado de OT',
+        WoID: 'ID de OT',
+        trade: 'Comercio',
+        dueDateWO: 'Fecha de vencimiento OT',
+        expectedPaymentDate: 'Fecha de pago esperada',
 
         // Project Information Form
         name: 'Nombre',
