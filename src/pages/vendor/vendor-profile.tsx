@@ -229,7 +229,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {t('market')}
             </Tab>
             {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
-            {!isVendor && <Tab>{t('project')}</Tab>}
+            {!isVendor && <Tab>{t('prjt')}</Tab>}
           </TabList>
 
           <Card pb="8px" pt="18px" px="18px" roundedTop="0px">
