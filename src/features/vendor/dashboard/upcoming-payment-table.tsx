@@ -58,8 +58,8 @@ export const UpcomingPaymentTable = () => {
     },
     {
       header: t(`${DASHBOARD}.trade`),
-      accessorKey: 'marketName',
-      accessorFn: row => row.marketName,
+      accessorKey: 'skillName',
+      accessorFn: row => row.skillName,
     },
     {
       header: t(`${DASHBOARD}.dueDateWO`),
