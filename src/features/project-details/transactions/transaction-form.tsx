@@ -86,7 +86,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
 
   return (
     <Grid
-      templateColumns="repeat(4, 1fr)"
+      templateColumns={{ base: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' }}
       gap={'1rem 20px'}
       borderBottom="1px solid #E2E8F0"
       borderColor="gray.200"
@@ -207,11 +207,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }, [workOrderId])
 
   const { check, isValidForAwardPlan } = useIsAwardSelect(control)
-  
+
   const showDrawRemainingMsg =
     !heading &&
     transType?.label === 'Draw' &&
-    isValidForAwardPlan && 
+    isValidForAwardPlan &&
     (selectedWorkOrderStats?.drawRemaining === 0 || selectedWorkOrderStats?.drawRemaining === null)
 
   const showMaterialRemainingMsg =
@@ -370,7 +370,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
               <TransactionReadOnlyInfo transaction={transaction} />
 
               {/** Editable form */}
-              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="20px" pb="4">
+              <Grid
+                templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }}
+                gap={'1.5rem 1rem'}
+                pt="20px"
+                pb="4"
+                // outline={'1px solid red'}
+              >
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="transactionType">
