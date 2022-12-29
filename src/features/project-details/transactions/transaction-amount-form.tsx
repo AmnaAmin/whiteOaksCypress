@@ -17,6 +17,7 @@ import {
   VStack,
   Spinner,
   FormLabel,
+  Tooltip,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
@@ -204,7 +205,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     }
     onReplaceMaterialUploadClose()
   }
-  const isShowCheckboxes = (!isApproved && transactionFields?.length > 1 && !isSysFactoringFee)
+  const isShowCheckboxes = !isApproved && transactionFields?.length > 1 && !isSysFactoringFee
 
   return (
     <>
@@ -264,7 +265,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     variant="link"
                     _focus={{ outline: 'none' }}
                     isChecked={!!value}
-                    colorScheme='darkPrimary'
+                    colorScheme="darkPrimary"
                     isDisabled={isApproved || isMaterialsLoading || isSysFactoringFee}
                     onChange={event => {
                       const isChecked = event.currentTarget.checked
@@ -307,7 +308,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             <>
               <a href={values?.attachment?.s3Url} download style={{ color: 'darkPrimary.300' }}>
                 <Flex>
-                  <Box mt="3px" color='darkPrimary.300'>
+                  <Box mt="3px" color="darkPrimary.300">
                     <BiDownload fontSize="sm" />
                   </Box>
                   <Text
@@ -470,19 +471,22 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   )}
                   <GridItem pr="7">
                     <FormControl isInvalid={!!errors.transaction?.[index]?.description}>
-                      <Input
-                        data-testid={`transaction-description-${index}`}
-                        type="text"
-                        size="sm"
-                        autoComplete="off"
-                        placeholder="Add Description here"
-                        readOnly={(isApproved && !isAdminEnabled) || isSysFactoringFee}
-                        variant={(isApproved && !isAdminEnabled) || isSysFactoringFee ? 'unstyled' : 'required-field'}
-                        {...register(`transaction.${index}.description` as const, {
-                          required: 'This is required field',
-                        })}
-                      />
-
+                      <Tooltip label={transaction?.[index]?.description}>
+                        <Input
+                          data-testid={`transaction-description-${index}`}
+                          type="text"
+                          size="sm"
+                          autoComplete="off"
+                          placeholder="Add Description here"
+                          noOfLines={1}
+                          readOnly={(isApproved && !isAdminEnabled) || isSysFactoringFee}
+                          variant={(isApproved && !isAdminEnabled) || isSysFactoringFee ? 'unstyled' : 'required-field'}
+                          {...register(`transaction.${index}.description` as const, {
+                            required: 'This is required field',
+                          })}
+                        />
+                        
+                      </Tooltip>
                       <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
                     </FormControl>
                   </GridItem>
@@ -527,7 +531,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                   data-testid={`transaction-amount-${index}`}
                                   size="sm"
                                   placeholder="Add Amount"
-                                  readOnly={isApproved || isSysFactoringFee }
+                                  readOnly={isApproved || isSysFactoringFee}
                                   variant={'unstyled'}
                                   autoComplete="off"
                                   value={numeral(Number(field.value)).format('$0,0[.]00')}
