@@ -107,11 +107,15 @@ const WorkOrderDetails = ({
 
   const onSave = values => {
     const payload = { ...workOrder, ...values }
-    if (workOrder?.awardPlanId) {
-      setIsError(false)
-    } else {
+    console.log('values', values?.workOrderDateCompleted)
+    console.log('workOrder', workOrder?.awardPlanId)
+
+    if (!workOrder?.awardPlanId && values?.workOrderDateCompleted && tabIndex === 0) {
       setIsError(true)
+    } else {
+      setIsError(false)
     }
+
     updateWorkOrder(payload, {
       onSuccess: res => {
         if (res?.data) {
@@ -167,7 +171,7 @@ const WorkOrderDetails = ({
               >
                 <TabList color="gray.600" ml="10px" mr="20px">
                   <Tab>{t('workOrderDetails')}</Tab>
-                  {displayAwardPlan && <TabCustom isError={isError  && tabIndex !== 1}>{t('projectAward')}</TabCustom>}
+                  {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
                   <Tab>{t('lienWaiver')}</Tab>
                   <Tab>{t('invoice')}</Tab>
                   <Tab>{t('payments')}</Tab>
