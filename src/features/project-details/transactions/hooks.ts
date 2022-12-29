@@ -116,7 +116,7 @@ export const useFieldDisabledEnabledDecision = (
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
     transaction?.status === TransactionStatusValues.cancelled
-  const isFactoringFeeSysGenerated = transaction?.transactionType === TransactionTypeValues.factoring // && transaction?.isSystemGenerated
+  const isFactoringFeeSysGenerated = transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
 
   return {
     isUpdateForm,
