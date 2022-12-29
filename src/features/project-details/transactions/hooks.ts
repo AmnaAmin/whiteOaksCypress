@@ -116,10 +116,12 @@ export const useFieldDisabledEnabledDecision = (
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
     transaction?.status === TransactionStatusValues.cancelled
+  const isFactoringFeeSysGenerated = transaction?.transactionType === TransactionTypeValues.factoring // && transaction?.isSystemGenerated
 
   return {
     isUpdateForm,
     isApproved: isStatusApproved,
+    isSysFactoringFee : isFactoringFeeSysGenerated,
     isPaidDateDisabled: !transaction || isStatusApproved,
     isStatusDisabled:
       (isStatusApproved && !(isAdmin && isManualTransaction(transaction.transactionType))) || isMaterialsLoading,
