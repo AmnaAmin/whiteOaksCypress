@@ -325,6 +325,7 @@ i18n.use(initReactI18next).init({
         // VENDOR
         details: 'Details',
         market: 'Market',
+        prjt: 'Projects',
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
@@ -345,6 +346,9 @@ i18n.use(initReactI18next).init({
         primaryEmail: 'Primary Email',
         secondaryEmail: 'Secondary Email',
         coiglExpirationDate: 'COI-GL Expiration Date',
+        constructionTrade: 'Construction Trade',
+        totalCapacity: 'Total Capacity',
+        activeDate: 'Active Date',
         statusLabel: 'Status',
         coiWcExpirationDate: 'COI-WC Expiration Date',
         einNumber: 'EIN/SSN',
@@ -887,6 +891,8 @@ i18n.use(initReactI18next).init({
         // VENDOR-PROFILE
         details: 'Detalles',
         market: 'Mercado',
+        prjt: 'Proyectos',
+
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
         score: 'Puntaje',
@@ -908,6 +914,9 @@ i18n.use(initReactI18next).init({
         primaryEmail: 'Correo Electrónico Principal',
         secondaryEmail: 'Email Secundario',
         coiglExpirationDate: 'Fecha de vencimiento de COI-GL',
+        constructionTrade: 'Construcción Comercio',
+        totalCapacity: 'Capacidad total',
+        activeDate: 'Fecha Activa',
         statusLabel: 'Estado',
         coiWcExpirationDate: 'Fecha de vencimiento de COI-WC',
         einNumber: 'EIN/SSN',

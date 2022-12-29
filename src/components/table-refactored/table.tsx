@@ -289,7 +289,7 @@ export const Table: React.FC<TableProps> = ({
                               title={cell.getContext()?.getValue() as string}
                               {...getColumnMaxMinWidths(cell.column)}
                             >
-                              {value}
+                              {cell?.renderValue() ? value : '_ _ _'}
                             </Td>
                           )
                         })}
