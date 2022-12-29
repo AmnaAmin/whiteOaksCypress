@@ -480,12 +480,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           size="sm"
                           autoComplete="off"
                           placeholder="Add Description here"
+                          noOfLines={1}
                           readOnly={(isApproved && !isAdminEnabled) || isSysFactoringFee}
                           variant={(isApproved && !isAdminEnabled) || isSysFactoringFee ? 'unstyled' : 'required-field'}
                           {...register(`transaction.${index}.description` as const, {
                             required: 'This is required field',
                           })}
-                        />
+                        />                        
                       </Tooltip>
                       <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
                     </FormControl>
