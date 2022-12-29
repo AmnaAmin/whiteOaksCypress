@@ -202,7 +202,7 @@ const WorkOrderDetails = ({
                       )}
                     </Center>
                       )*/}
-                  {tabIndex === 2 &&
+                  {tabIndex === 3 &&
                     [STATUS.Invoiced, STATUS.Declined].includes(
                       workOrder?.statusLabel?.toLocaleLowerCase() as STATUS,
                     ) && (
