@@ -265,6 +265,7 @@ export const NewWorkOrderForm: React.FC<{
   ])
 
   const watchLineItems = useWatch({ name: 'assignedItems', control })
+  
   // New WO -> Disable dates before client start date
   const clientStart = projectData?.clientStartDate
 
