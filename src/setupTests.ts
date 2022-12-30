@@ -25,6 +25,7 @@ window.matchMedia =
     }
   }
 
+
 // We are using React Virtualized so we need to add offsetHeight and offsetWidth
 const originalOffsetHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight')
 const originalOffsetWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetWidth')
@@ -38,6 +39,13 @@ beforeAll(() => {
     configurable: true,
     value: 50,
   })
+  const mockIntersectionObserver = jest.fn();
+  mockIntersectionObserver.mockReturnValue({
+    observe: () => null,
+    unobserve: () => null,
+    disconnect: () => null
+  });
+  window.IntersectionObserver = mockIntersectionObserver;
 })
 
 afterAll(() => {
