@@ -46,7 +46,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
         />
       )}
 
-      <Box w="100%" position="relative" roundedTop={6} border="1px solid #CBD5E0">
+      <Box w="100%" minH="calc(100vh - 450px)" position="relative" roundedTop={6} border="1px solid #CBD5E0">
         <TableContextProvider data={workOrders} columns={WORK_ORDER_TABLE_COLUMNS}>
           <Table isLoading={isFetching} isEmpty={!isFetching && !workOrders?.length} onRowClick={onRowClick} />
         </TableContextProvider>

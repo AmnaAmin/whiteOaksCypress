@@ -192,7 +192,6 @@ export const Table: React.FC<TableProps> = ({
   return (
     <Stack
       display="table"
-      minH="calc(100% - 41px)"
       w="100%"
       boxShadow="sm"
       rounded="md"
@@ -200,6 +199,8 @@ export const Table: React.FC<TableProps> = ({
       zIndex={0}
       // border="1px solid #CBD5E0"
       bg="white"
+      minH={'inherit'}
+      height="100%"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
