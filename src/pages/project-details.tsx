@@ -121,9 +121,14 @@ export const ProjectDetails: React.FC = props => {
 
               <HStack h="50px" w="100%" justifyContent="end">
                 {tabIndex === 2 &&
-                  ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid, STATUS.Punch, STATUS.ClientPaid].includes(
-                    projectStatus as STATUS,
-                  ) && (
+                  ![
+                    STATUS.Closed,
+                    STATUS.Invoiced,
+                    STATUS.Cancelled,
+                    STATUS.Paid,
+                    STATUS.Punch,
+                    STATUS.ClientPaid,
+                  ].includes(projectStatus as STATUS) && (
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
                       {t('newWorkOrder')}
                     </Button>
