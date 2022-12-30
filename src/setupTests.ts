@@ -40,8 +40,10 @@ beforeAll(() => {
     value: 50,
   });
   
+  /*eslint-disable */
   (window as any).IntersectionObserver = class IntersectionObserver {
-    constructor() {}
+   
+    constructor() {} // eslint-disable-line no-use-before-define
   
     disconnect() {
       return null;
@@ -59,6 +61,7 @@ beforeAll(() => {
       return null;
     }
   };
+  /*eslint-enable */
 
 })
 
