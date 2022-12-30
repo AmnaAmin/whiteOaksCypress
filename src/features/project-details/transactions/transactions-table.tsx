@@ -52,6 +52,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
         position="relative"
         borderRadius="6px"
         border="1px solid #CBD5E0"
+        overflowX="auto"
         roundedRight={{ base: '0px', sm: '6px' }}
       >
         <TableContextProvider data={transactions} columns={tableColumns}>

@@ -134,6 +134,7 @@ const WorkOrderDetails = ({
   const navigateToProjectDetails = () => {
     navigate(`/project-details/${workOrder.projectId}`)
   }
+  const showRejectInvoice = (displayAwardPlan && tabIndex === 3) || (!displayAwardPlan && tabIndex === 2)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'} closeOnOverlayClick={false}>
@@ -202,7 +203,8 @@ const WorkOrderDetails = ({
                       )}
                     </Center>
                       )*/}
-                  {tabIndex === 3 &&
+
+                  {showRejectInvoice &&
                     [STATUS.Invoiced, STATUS.Declined].includes(
                       workOrder?.statusLabel?.toLocaleLowerCase() as STATUS,
                     ) && (

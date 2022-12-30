@@ -86,21 +86,31 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
 
   return (
     <Grid
-      templateColumns="repeat(4, 1fr)"
-      gap={'1rem 20px'}
+      templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(4, 1fr)' }}
+      gap={{ base: '1rem 20px', sm: '4rem' }}
       borderBottom="1px solid #E2E8F0"
       borderColor="gray.200"
       py="5"
     >
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.dateCreated`)}
-          name={'dateCreated'}
-          value={formValues.dateCreated as string}
-          Icon={BiCalendar}
-        />
-      </GridItem>
+      <Flex gap={{ base: '1rem 20px', sm: '4rem' }}>
+        <GridItem>
+          <ReadOnlyInput
+            label={t(`${TRANSACTION}.dateCreated`)}
+            name={'dateCreated'}
+            value={formValues.dateCreated as string}
+            Icon={BiCalendar}
+          />
+        </GridItem>
 
+        <GridItem>
+          <ReadOnlyInput
+            label={t(`${TRANSACTION}.dateModified`)}
+            name={'dateModified'}
+            value={(formValues.modifiedDate as string) || '----'}
+            Icon={BiCalendar}
+          />
+        </GridItem>
+      </Flex>
       <GridItem>
         <ReadOnlyInput
           label={t(`${TRANSACTION}.createdBy`)}
@@ -110,14 +120,6 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
         />
       </GridItem>
 
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.dateModified`)}
-          name={'dateModified'}
-          value={(formValues.modifiedDate as string) || '----'}
-          Icon={BiCalendar}
-        />
-      </GridItem>
       <GridItem>
         <ReadOnlyInput
           label={t(`${TRANSACTION}.modifiedBy`)}
@@ -367,7 +369,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
               <TransactionReadOnlyInfo transaction={transaction} />
 
               {/** Editable form */}
-              <Grid templateColumns="repeat(3, 1fr)" gap={'1.5rem 1rem'} pt="20px" pb="4">
+              <Grid
+                templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }}
+                gap={'1.5rem 1rem'}
+                pt="20px"
+                pb="4"
+                // outline={'1px solid red'}
+              >
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
                     <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="transactionType">

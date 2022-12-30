@@ -30,7 +30,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const onRowClick = row => {}
 
   return (
-    <Box border="1px solid #CBD5E0" borderRadius="6px" roundedRight={{ base: '0px', sm: '6px' }}>
+    <Box border="1px solid #CBD5E0" borderRadius="6px" overflowX="auto" roundedRight={{ base: '0px', sm: '6px' }}>
       <TableContextProvider data={documents} columns={tableColumns}>
         <Table onRowClick={onRowClick} isLoading={isLoading} isEmpty={!isLoading && !documents?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
