@@ -92,6 +92,12 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
     ...filtersConfigurations,
     data: data ?? emptyRows,
     columns,
+    initialState: {
+      pagination: {
+        pageIndex: 0,
+        pageSize: 20,
+      },
+    },
     state: {
       ...paginationState,
       ...columnFilterState,

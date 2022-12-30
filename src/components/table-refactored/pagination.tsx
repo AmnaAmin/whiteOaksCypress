@@ -59,18 +59,18 @@ export const SelectPageSize = ({ onPageSizeChange, dataCount }) => {
   // handle page index change
   const handlePageSizeChange = (event: ChangeEvent<HTMLSelectElement>) => {
     tableInstance.setPageSize(parseInt(event.target.value, 10))
-    onPageSizeChange(event.target.value)
+    onPageSizeChange?.(event.target.value)
   }
 
   return (
     <Flex gap="1" alignItems="center">
       <Select
-        disabled={dataCount <= 25 ? true : false}
+        disabled={dataCount <= 5 ? true : false}
         style={{ color: '#4A5568', border: '1px solid #CBD5E0' }}
         value={pageSize}
         onChange={handlePageSizeChange}
       >
-        {[25, 50, 100].map(pageSize => (
+        {[5, 10, 20].map(pageSize => (
           <option key={pageSize} value={pageSize}>
             Show {pageSize}
           </option>
@@ -149,6 +149,7 @@ export const GotoLastPage: React.FC<ButtonProps> = () => {
 
 export const ShowCurrentRecordsWithTotalRecords = ({ dataCount }) => {
   const tableInstance = useTableInstance()
+  const count = dataCount ? dataCount : tableInstance?.getPrePaginationRowModel().rows?.length
   const { pageIndex, pageSize } = tableInstance.getState().pagination
   const lastRecordCount = pageIndex * pageSize + pageSize
 
@@ -157,9 +158,9 @@ export const ShowCurrentRecordsWithTotalRecords = ({ dataCount }) => {
       {pageIndex !== -1 && (
         <>
           <Text color="blackAlpha.800">
-            {pageIndex * pageSize + 1} -{dataCount < lastRecordCount ? dataCount : lastRecordCount}
+            {pageIndex * pageSize + 1} -{count < lastRecordCount ? count : lastRecordCount}
           </Text>
-          {dataCount && <Text color="blackAlpha.600">of {dataCount}</Text>}
+          {count && <Text color="blackAlpha.600">of {count}</Text>}
         </>
       )}
     </Flex>

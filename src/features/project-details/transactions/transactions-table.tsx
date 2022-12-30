@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { useTransactionsV1 } from 'api/transactions'
@@ -12,6 +12,15 @@ import { TRANSACTION_TABLE_COLUMNS } from 'features/project-details/transactions
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  SelectPageSize,
+  ShowCurrentRecordsWithTotalRecords,
+  TablePagination,
+} from 'components/table-refactored/pagination'
 
 type TransactionProps = {
   projectStatus: string
@@ -23,9 +32,8 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
   const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
-
   const { refetch, transactions, isLoading } = useTransactionsV1(projectId)
-
+  const [totalPages, setTotalPages] = useState(0)
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const {
     isOpen: isOpenTransactionDetailsModal,
@@ -45,34 +53,60 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     postGridColumn(columns)
   }
 
+  const onPageSizeChange = val => {
+    setTotalPages(Math.ceil((transactions?.length ?? 0) / Number(val)))
+  }
+
+  useEffect(() => {
+    setTotalPages(Math.ceil((transactions?.length ?? 0) / 20))
+  }, [transactions])
+
+  console.log(totalPages)
   return (
     <>
-      <Box
-        w="100%"
-        minH="calc(100vh - 450px)"
-        position="relative"
-        borderRadius="6px"
-        border="1px solid #CBD5E0"
-        overflowX="auto"
-        roundedRight={{ base: '0px', sm: '6px' }}
-      >
-        <TableContextProvider data={transactions} columns={tableColumns}>
-          <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
-          <TableFooter position="sticky" bottom="0" left="0" right="0">
-            <ButtonsWrapper>
-              <ExportButton
-                columns={tableColumns}
-                refetch={refetch}
-                isLoading={isLoading}
-                colorScheme="darkPrimary.400"
-                fileName="transactions"
-              />
-              <CustomDivider />
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-            </ButtonsWrapper>
-          </TableFooter>
-        </TableContextProvider>
-      </Box>
+      {transactions && transactions?.length && (
+        <Box
+          w="100%"
+          minH="calc(100vh - 450px)"
+          position="relative"
+          borderRadius="6px"
+          border="1px solid #CBD5E0"
+          overflowX="auto"
+          roundedRight={{ base: '0px', sm: '6px' }}
+        >
+          <TableContextProvider
+            totalPages={transactions?.length ? totalPages : -1}
+            data={transactions}
+            columns={tableColumns}
+            manualPagination={false}
+          >
+            <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
+            <TableFooter position="sticky" bottom="0" left="0" right="0">
+              <ButtonsWrapper>
+                <ExportButton
+                  columns={tableColumns}
+                  refetch={refetch}
+                  isLoading={isLoading}
+                  colorScheme="darkPrimary.400"
+                  fileName="transactions"
+                />
+                <CustomDivider />
+                {settingColumns && (
+                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                )}
+              </ButtonsWrapper>
+              <TablePagination>
+                <ShowCurrentRecordsWithTotalRecords dataCount={null} />
+                <GotoFirstPage />
+                <GotoPreviousPage />
+                <GotoNextPage />
+                <GotoLastPage />
+                <SelectPageSize dataCount={transactions?.length} onPageSizeChange={onPageSizeChange} />
+              </TablePagination>
+            </TableFooter>
+          </TableContextProvider>
+        </Box>
+      )}
 
       <UpdateTransactionModal
         isOpen={isOpenEditModal}
