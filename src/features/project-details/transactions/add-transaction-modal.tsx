@@ -20,7 +20,7 @@ const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId, p
 
   useEffect(() => {
     if (isMobile) {
-      setModalSize('full')
+      setModalSize('sm')
     } else {
       setModalSize('3xl')
     }

@@ -1,26 +1,20 @@
-import React,{ 
-  useState, 
-  useEffect, 
-  useRef } from 'react'
-import { 
-  Column, 
-  Table as TableType, 
-  TableOptions, 
-  flexRender } from '@tanstack/react-table'
-import { 
-  Table as ChakraTable, 
-  Thead, 
-  Tbody, 
-  Tr, 
-  Th, 
-  Td, 
-  Text, 
-  Flex, 
-  Stack, 
-  Box, 
-  Tfoot, 
-  HStack, 
-  Icon } from '@chakra-ui/react'
+import React, { useState, useEffect, useRef } from 'react'
+import { Column, Table as TableType, TableOptions, flexRender } from '@tanstack/react-table'
+import {
+  Table as ChakraTable,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Text,
+  Flex,
+  Stack,
+  Box,
+  Tfoot,
+  HStack,
+  Icon,
+} from '@chakra-ui/react'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -89,9 +83,9 @@ function DebouncedInput({
   resetValue?: boolean
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   const [value, setValue] = useState(initialValue)
-  const [showClearIcon, setShowClearIcon] = useState(false);
-  const [inputWidth, setInputWidth] = useState(0);
-  const inputRef = useRef<any>();
+  const [showClearIcon, setShowClearIcon] = useState(false)
+  const [inputWidth, setInputWidth] = useState(0)
+  const inputRef = useRef<any>()
 
   useEffect(() => {
     setValue(resetValue ? '' : initialValue)
@@ -103,35 +97,27 @@ function DebouncedInput({
     }, debounce)
 
     return () => clearTimeout(timeout)
-  }, [value]);
+  }, [value])
 
-  useLayoutEffect( () => {
-    
-    setInputWidth(inputRef.current.offsetWidth);
+  useLayoutEffect(() => {
+    setInputWidth(inputRef.current.offsetWidth)
 
-    const changeWidth = _.debounce( 
-                            () => setInputWidth(inputRef.current.offsetWidth),
-                            50
-                          );
-    
-    window.addEventListener( "resize", changeWidth );
+    const changeWidth = _.debounce(() => setInputWidth(inputRef.current.offsetWidth), 50)
 
-    return () => window.removeEventListener( "resize", changeWidth );
-    
-  }, [] );
+    window.addEventListener('resize', changeWidth)
 
-  const onInputChange = ( e ) => {
-    setValue(e.target.value);
+    return () => window.removeEventListener('resize', changeWidth)
+  }, [])
 
-    if ( e.target.value.replace(/\s+/g, '') !== "" )
-      setShowClearIcon(true);
-    else
-      setShowClearIcon(false);
+  const onInputChange = e => {
+    setValue(e.target.value)
 
+    if (e.target.value.replace(/\s+/g, '') !== '') setShowClearIcon(true)
+    else setShowClearIcon(false)
   }
 
   return (
-    <HStack position={"relative"}>
+    <HStack position={'relative'}>
       <Input
         bg="white"
         maxW="150px"
@@ -142,28 +128,27 @@ function DebouncedInput({
         paddingX={2}
         {...props}
         value={value}
-        onChange={ onInputChange }
+        onChange={onInputChange}
         borderColor="gray.300"
         ref={inputRef}
-        paddingRight={"13px"}
+        paddingRight={'13px'}
         data-testid="tableFilterInputField"
       />
-      { showClearIcon && props.type !== "date" ? 
-      ( <Icon
+      {showClearIcon && props.type !== 'date' ? (
+        <Icon
           data-testid="tableFilterInputFieldClearIcon"
           cursor="pointer"
-          as={MdClose} 
-          position="absolute" 
-          right={`calc(100% - ${inputWidth-3}px)`} 
-          zIndex={10000} mr="-20px"
-          onClick={ e => {
-            setValue("");
-            setShowClearIcon(false);
-          } }
-        /> )
-      : null
-      }
-      
+          as={MdClose}
+          position="absolute"
+          right={`calc(100% - ${inputWidth - 3}px)`}
+          zIndex={10000}
+          mr="-20px"
+          onClick={e => {
+            setValue('')
+            setShowClearIcon(false)
+          }}
+        />
+      ) : null}
     </HStack>
   )
 }
