@@ -1,7 +1,8 @@
 import React,{ 
   useState, 
   useEffect, 
-  useRef } from 'react'
+  useRef, 
+  useMemo} from 'react'
 import { 
   Column, 
   Table as TableType, 
@@ -75,6 +76,28 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
   )
 }
 
+function useIsInViewport(ref) {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  const observer = useMemo(
+    () =>
+      new IntersectionObserver(([entry]) =>
+        setIsIntersecting(entry.isIntersecting),
+      ),
+    [],
+  );
+
+  useEffect(() => {
+    observer.observe(ref.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref, observer]);
+
+  return isIntersecting;
+}
+
 // A debounced input react component
 function DebouncedInput({
   value: initialValue,
@@ -93,6 +116,8 @@ function DebouncedInput({
   const [inputWidth, setInputWidth] = useState(0);
   const inputRef = useRef<any>();
 
+  const isInputInViewPort = useIsInViewport( inputRef );
+
   useEffect(() => {
     setValue(resetValue ? '' : initialValue)
   }, [initialValue, resetValue])
@@ -109,6 +134,8 @@ function DebouncedInput({
     
     setInputWidth(inputRef.current.offsetWidth);
 
+    console.log( inputRef.current.offsetWidth );
+
     const changeWidth = _.debounce( 
                             () => setInputWidth(inputRef.current.offsetWidth),
                             50
@@ -118,7 +145,7 @@ function DebouncedInput({
 
     return () => window.removeEventListener( "resize", changeWidth );
     
-  }, [] );
+  }, [isInputInViewPort] );
 
   const onInputChange = ( e ) => {
     setValue(e.target.value);
@@ -155,7 +182,8 @@ function DebouncedInput({
           as={MdClose} 
           position="absolute" 
           right={`calc(100% - ${inputWidth-3}px)`} 
-          zIndex={10000} mr="-20px"
+          zIndex={10000} 
+          mr="-20px"
           onClick={ e => {
             setValue("");
             setShowClearIcon(false);
