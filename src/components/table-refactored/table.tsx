@@ -1,7 +1,27 @@
-import React from 'react'
-import { Column, Table as TableType, TableOptions, flexRender } from '@tanstack/react-table'
-
-import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Stack, Box, Tfoot } from '@chakra-ui/react'
+import React,{ 
+  useState, 
+  useEffect, 
+  useRef, 
+  useMemo} from 'react'
+import { 
+  Column, 
+  Table as TableType, 
+  TableOptions, 
+  flexRender } from '@tanstack/react-table'
+import { 
+  Table as ChakraTable, 
+  Thead, 
+  Tbody, 
+  Tr, 
+  Th, 
+  Td, 
+  Text, 
+  Flex, 
+  Stack, 
+  Box, 
+  Tfoot, 
+  HStack, 
+  Icon } from '@chakra-ui/react'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -9,6 +29,9 @@ import { useTranslation } from 'react-i18next'
 import { useTableInstance } from './table-context'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { MdClose } from 'react-icons/md'
+import { useLayoutEffect } from 'react'
+import _ from 'lodash'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
@@ -53,6 +76,28 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
   )
 }
 
+function useIsInViewport(ref) {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  const observer = useMemo(
+    () =>
+      new IntersectionObserver(([entry]) =>
+        setIsIntersecting(entry.isIntersecting),
+      ),
+    [],
+  );
+
+  useEffect(() => {
+    observer.observe(ref.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref, observer]);
+
+  return isIntersecting;
+}
+
 // A debounced input react component
 function DebouncedInput({
   value: initialValue,
@@ -66,34 +111,86 @@ function DebouncedInput({
   debounce?: number
   resetValue?: boolean
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
-  const [value, setValue] = React.useState(initialValue)
+  const [value, setValue] = useState(initialValue)
+  const [showClearIcon, setShowClearIcon] = useState(false);
+  const [inputWidth, setInputWidth] = useState(0);
+  const inputRef = useRef<any>();
 
-  React.useEffect(() => {
+  const isInputInViewPort = useIsInViewport( inputRef );
+
+  useEffect(() => {
     setValue(resetValue ? '' : initialValue)
   }, [initialValue, resetValue])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const timeout = setTimeout(() => {
       onChange(value)
     }, debounce)
 
     return () => clearTimeout(timeout)
-  }, [value])
+  }, [value]);
+
+  useLayoutEffect( () => {
+    
+    setInputWidth(inputRef.current.offsetWidth);
+    
+    const changeWidth = _.debounce( 
+                            () => setInputWidth(inputRef.current.offsetWidth),
+                            50
+                          );
+    
+    window.addEventListener( "resize", changeWidth );
+
+    return () => window.removeEventListener( "resize", changeWidth );
+    
+  }, [isInputInViewPort] );
+
+  const onInputChange = ( e ) => {
+    setValue(e.target.value);
+
+    if ( e.target.value.replace(/\s+/g, '') !== "" )
+      setShowClearIcon(true);
+    else
+      setShowClearIcon(false);
+
+  }
 
   return (
-    <Input
-      bg="white"
-      maxW="150px"
-      // @ts-ignore
-      size={5}
-      borderRadius="4px"
-      height="24px"
-      paddingX={2}
-      {...props}
-      value={value}
-      onChange={e => setValue(e.target.value)}
-      borderColor="gray.300"
-    />
+    <HStack position={"relative"}>
+      <Input
+        bg="white"
+        maxW="150px"
+        // @ts-ignore
+        size={5}
+        borderRadius="4px"
+        height="24px"
+        paddingX={2}
+        {...props}
+        value={value}
+        onChange={ onInputChange }
+        borderColor="gray.300"
+        ref={inputRef}
+        paddingRight={"13px"}
+        data-testid="tableFilterInputField"
+      />
+      { showClearIcon && props.type !== "date" ? 
+      ( <Icon
+          data-testid="tableFilterInputFieldClearIcon"
+          cursor="pointer"
+          as={MdClose} 
+          position="absolute" 
+          right={`calc(100% - ${inputWidth-3}px)`} 
+          zIndex={10000} 
+          mr="-20px"
+          onClick={ e => {
+            setValue("");
+            setShowClearIcon(false);
+          } }
+        /> )
+      : null
+      }
+      
+    </HStack>
   )
 }
 
@@ -289,7 +386,7 @@ export const Table: React.FC<TableProps> = ({
                               title={cell.getContext()?.getValue() as string}
                               {...getColumnMaxMinWidths(cell.column)}
                             >
-                              {value}
+                              {cell?.renderValue() ? value : '_ _ _'}
                             </Td>
                           )
                         })}

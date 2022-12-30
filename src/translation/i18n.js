@@ -17,6 +17,7 @@ import { dashboard } from '../features/vendor/dashboard/dashboard.i18n'
 import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
 import { projectType } from '../features/project-type/project-type.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
+import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -41,6 +42,7 @@ i18n.use(initReactI18next).init({
         ...adminDashboard.en.translation,
         ...projectType.en.translation,
         ...vendorProfile.en.translation,
+        ...projectAwards.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -323,6 +325,7 @@ i18n.use(initReactI18next).init({
         // VENDOR
         details: 'Details',
         market: 'Market',
+        prjt: 'Projects',
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
@@ -343,6 +346,9 @@ i18n.use(initReactI18next).init({
         primaryEmail: 'Primary Email',
         secondaryEmail: 'Secondary Email',
         coiglExpirationDate: 'COI-GL Expiration Date',
+        constructionTrade: 'Construction Trade',
+        totalCapacity: 'Total Capacity',
+        activeDate: 'Active Date',
         statusLabel: 'Status',
         coiWcExpirationDate: 'COI-WC Expiration Date',
         einNumber: 'EIN/SSN',
@@ -544,6 +550,7 @@ i18n.use(initReactI18next).init({
         ...adminDashboard.es.translation,
         ...projectType.es.translation,
         ...vendorProfile.es.translation,
+        ...projectAwards.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -884,6 +891,8 @@ i18n.use(initReactI18next).init({
         // VENDOR-PROFILE
         details: 'Detalles',
         market: 'Mercado',
+        prjt: 'Proyectos',
+
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
         score: 'Puntaje',
@@ -905,6 +914,9 @@ i18n.use(initReactI18next).init({
         primaryEmail: 'Correo Electrónico Principal',
         secondaryEmail: 'Email Secundario',
         coiglExpirationDate: 'Fecha de vencimiento de COI-GL',
+        constructionTrade: 'Construcción Comercio',
+        totalCapacity: 'Capacidad total',
+        activeDate: 'Fecha Activa',
         statusLabel: 'Estado',
         coiWcExpirationDate: 'Fecha de vencimiento de COI-WC',
         einNumber: 'EIN/SSN',

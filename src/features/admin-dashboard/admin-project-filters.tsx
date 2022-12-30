@@ -1,5 +1,4 @@
 import { Box } from '@chakra-ui/react'
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ADMIN_DASHBOARD } from './admin-dashboard.i18n'
 import { useAdminCards } from 'api/admin-dashboard'
@@ -8,59 +7,56 @@ import { AmountsSummaryCard } from 'features/common/amounts-summary-card'
 
 const useMapAdminCards = cards => {
   const { t } = useTranslation()
-  return useMemo(
-    () => [
-      {
-        id: 'workInProgress',
-        title: t(`${ADMIN_DASHBOARD}.wip`),
-        value: 'workInProgress',
-        number: currencyFormatter(cards?.workInProgress),
-        iconColor: '#FEB2B2',
-        enabled: true,
-      },
-      {
-        id: 'receivable',
-        title: t(`${ADMIN_DASHBOARD}.receivable`),
-        value: 'accountReceivable',
-        number: currencyFormatter(cards?.accountReceivable),
-        iconColor: '#FBD38D',
-        enabled: true,
-      },
-      {
-        id: 'payable',
-        title: t(`${ADMIN_DASHBOARD}.payable`),
-        value: 'accountPayable',
-        number: currencyFormatter(cards?.accountPayable),
-        iconColor: '#9AE6B4',
-        enabled: true,
-      },
-      {
-        id: 'material',
-        title: t(`${ADMIN_DASHBOARD}.material`),
-        value: 'material',
-        number: currencyFormatter(cards?.material),
-        iconColor: '#90CDF4',
-        enabled: true,
-      },
-      {
-        id: 'draw',
-        title: t(`${ADMIN_DASHBOARD}.draw`),
-        value: 'draw',
-        number: currencyFormatter(cards?.draw),
-        iconColor: '#D6BCFA',
-        enabled: true,
-      },
-      {
-        id: 'balance',
-        title: t(`${ADMIN_DASHBOARD}.balance`),
-        value: 'balance',
-        number: currencyFormatter(cards?.cashOnHand),
-        iconColor: '#FBB6CE',
-        enabled: false,
-      },
-    ],
-    [cards],
-  )
+  return [
+    {
+      id: 'workInProgress',
+      title: t(`${ADMIN_DASHBOARD}.wip`),
+      value: 'workInProgress',
+      number: currencyFormatter(cards?.workInProgress),
+      iconColor: '#FEB2B2',
+      enabled: true,
+    },
+    {
+      id: 'receivable',
+      title: t(`${ADMIN_DASHBOARD}.receivable`),
+      value: 'accountReceivable',
+      number: currencyFormatter(cards?.accountReceivable),
+      iconColor: '#FBD38D',
+      enabled: true,
+    },
+    {
+      id: 'payable',
+      title: t(`${ADMIN_DASHBOARD}.payable`),
+      value: 'accountPayable',
+      number: currencyFormatter(cards?.accountPayable),
+      iconColor: '#9AE6B4',
+      enabled: true,
+    },
+    {
+      id: 'material',
+      title: t(`${ADMIN_DASHBOARD}.material`),
+      value: 'material',
+      number: currencyFormatter(cards?.material),
+      iconColor: '#90CDF4',
+      enabled: true,
+    },
+    {
+      id: 'draw',
+      title: t(`${ADMIN_DASHBOARD}.draw`),
+      value: 'draw',
+      number: currencyFormatter(cards?.draw),
+      iconColor: '#D6BCFA',
+      enabled: true,
+    },
+    {
+      id: 'balance',
+      title: t(`${ADMIN_DASHBOARD}.balance`),
+      value: 'balance',
+      number: currencyFormatter(cards?.cashOnHand),
+      iconColor: '#FBB6CE',
+      enabled: false,
+    },
+  ]
 }
 
 export const AdminProjectFilters = ({ onSelectCard, selectedCard }) => {

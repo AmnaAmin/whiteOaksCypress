@@ -41,7 +41,7 @@ export const Markets = () => {
               }}
             >
               <Icon as={BiExport} fontSize="16px" mr={1} />
-              {'Export'}
+              {t('export')}
             </Button>
           </Box>
         </Flex>

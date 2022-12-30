@@ -236,7 +236,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   }
 
   const clearSelectedManager = () => {
-    setValue('parentFieldProjectManagerId', undefined)
+    setValue('parentFieldProjectManagerId', null)
   }
 
   const onSubmit = useCallback(
@@ -454,22 +454,15 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   name={`states.${index}`}
                   control={control}
                   key={state.state.id}
-                  render={({ field: { name, value } }) => {
+                  render={({ field: { name, onChange, value } }) => {
                     return (
                       <CheckboxButton
                         name={name}
                         key={value.state.id}
                         isChecked={state?.checked}
                         onChange={event => {
-                          setValue(
-                            'states',
-                            formValues?.states?.map(s => {
-                              if (s.state.id === value.state.id) {
-                                return { ...s, checked: event.target.checked }
-                              }
-                              return { ...s, checked: false }
-                            }),
-                          )
+                          const checked = event.target.checked
+                          onChange({ ...state, checked })
                           clearSelectedManager()
                         }}
                       >

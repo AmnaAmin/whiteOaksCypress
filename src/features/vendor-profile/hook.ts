@@ -5,7 +5,7 @@ import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 export const useDocumentLicenseMessage = ({ data }) => {
   const DocumentDates = [
     // data?.w9DocumentDate,
-    data?.agreementSignedDate,
+    // data?.agreementSignedDate,
     data?.autoInsuranceExpirationDate,
     data?.coiWcExpirationDate,
     data?.coiglExpirationDate,

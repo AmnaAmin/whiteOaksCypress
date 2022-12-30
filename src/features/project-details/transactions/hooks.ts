@@ -83,13 +83,16 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   }
 }
 
-export const useFieldRequiredDecision = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
+export const useFieldRequiredDecision = (control: Control<FormValues, any>) => {
   const status = useWatch({ name: 'status', control })
   const isStatusApproved = status?.value === TransactionStatusValues.approved
+  const against = useWatch({ name: 'against', control })
+  const transactionType = useWatch({ name: 'transactionType', control })
 
   return {
     isPaidDateRequired: isStatusApproved,
-    isInvoicedDateRequired: isStatusApproved,
+    isInvoicedDateRequired:
+      isStatusApproved || (transactionType?.value === TransactionTypeValues?.draw && against?.label === 'Project SOW'),
   }
 }
 
@@ -113,10 +116,13 @@ export const useFieldDisabledEnabledDecision = (
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
     transaction?.status === TransactionStatusValues.cancelled
+  const isFactoringFeeSysGenerated =
+    transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
 
   return {
     isUpdateForm,
     isApproved: isStatusApproved,
+    isSysFactoringFee: isFactoringFeeSysGenerated,
     isPaidDateDisabled: !transaction || isStatusApproved,
     isStatusDisabled:
       (isStatusApproved && !(isAdmin && isManualTransaction(transaction.transactionType))) || isMaterialsLoading,

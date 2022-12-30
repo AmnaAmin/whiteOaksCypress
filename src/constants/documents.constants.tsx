@@ -40,6 +40,7 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: 'vendorGL',
     accessorKey: 'vendorName',
     cell: withPreviewCell,
+    filterFn: 'includesString',
   },
 
   {
@@ -47,6 +48,7 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: 'trade',
     accessorKey: 'workOrderName',
     cell: withPreviewCell,
+    filterFn: 'includesString',
   },
   {
     id: 'fileObjectContentType',

@@ -263,7 +263,11 @@ export const NewWorkOrderForm: React.FC<{
     'uploadWO',
     'workOrderExpectedCompletionDate',
   ])
+
   const watchLineItems = useWatch({ name: 'assignedItems', control })
+  
+  // New WO -> Disable dates before client start date
+  const clientStart = projectData?.clientStartDate
 
   useEffect(() => {
     if (woStartDate! > woExpectedCompletionDate!) {
@@ -598,34 +602,30 @@ export const NewWorkOrderForm: React.FC<{
                         height="40px"
                         borderLeft="2px solid #4E87F8"
                         focusBorderColor="none"
+                        min={woStartDate || clientStart as any}
                         {...register('workOrderStartDate', {
                           required: 'This field is required.',
-                          validate: ( date: any ) => {
+                          validate: (date: any) => {
+                            if (!projectData?.clientStartDate) return false
 
-                            if ( ! projectData?.clientStartDate )
-                              return false;
+                            const clientStartDate = new Date(dateFormat(projectData.clientStartDate))
 
-                            const clientStartDate = new Date( dateFormat(projectData.clientStartDate) );
+                            const orderStartDate = new Date(dateFormat(date))
 
-                            const orderStartDate = new Date( dateFormat( date ) ); 
+                            if (orderStartDate.getTime() === clientStartDate.getTime()) return true
 
-                            if ( orderStartDate.getTime() === clientStartDate.getTime() )
-                              return true;
-                              
-                            if ( orderStartDate < clientStartDate )
-                              return false;
+                            if (orderStartDate < clientStartDate) return false
 
-                            return true;
-
-                          }
+                            return true
+                          },
                         })}
                       />
-                
+
                       <FormErrorMessage>
                         {errors.workOrderStartDate && errors.workOrderStartDate.message}
-                        { errors.workOrderStartDate && errors.workOrderStartDate.type === "validate" && (
+                        {errors.workOrderStartDate && errors.workOrderStartDate.type === 'validate' && (
                           <span>Earlier then client start date</span>
-                        ) }
+                        )}
                       </FormErrorMessage>
                     </FormControl>
                   </Box>
@@ -640,7 +640,7 @@ export const NewWorkOrderForm: React.FC<{
                         height="40px"
                         data-testid="workOrderExpectedCompletionDate"
                         borderLeft="2px solid #4E87F8"
-                        min={woStartDate}
+                        min={woStartDate || clientStart as any}
                         focusBorderColor="none"
                         {...register('workOrderExpectedCompletionDate', {
                           required: 'This field is required.',
