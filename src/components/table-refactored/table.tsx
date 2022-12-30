@@ -132,7 +132,13 @@ function DebouncedInput({
 
   useLayoutEffect( () => {
     
-    setInputWidth(inputRef.current.offsetWidth);
+    setInputWidth(inputRef.current.offsetWidth);  
+    
+    const setW = () => {
+      setInputWidth(inputRef.current.offsetWidth);  
+    }
+    window.addEventListener( "DOMContentLoaded", setW );
+    
     
     const changeWidth = _.debounce( 
                             () => setInputWidth(inputRef.current.offsetWidth),
@@ -141,7 +147,10 @@ function DebouncedInput({
     
     window.addEventListener( "resize", changeWidth );
 
-    return () => window.removeEventListener( "resize", changeWidth );
+    return () =>  {
+      window.removeEventListener( "resize", changeWidth );
+      window.removeEventListener( "DOMContentLoaded", setW );
+    };
     
   }, [isInputInViewPort] );
 
