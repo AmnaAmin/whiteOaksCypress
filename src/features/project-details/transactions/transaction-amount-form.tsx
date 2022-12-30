@@ -208,383 +208,387 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const isShowCheckboxes = !isApproved && transactionFields?.length > 1 && !isSysFactoringFee
 
   return (
-    <>
-      <Flex justifyContent="space-between" w="100%" mt="10px" mb="15px">
-        {!isApproved && (
-          <Box flex="1">
-            <Button
-              data-testid="add-new-row-button"
-              variant="outline"
-              size="sm"
-              colorScheme="darkPrimary"
-              disabled={isMaterialsLoading || isSysFactoringFee}
-              onClick={addRow}
-              color="darkPrimary.300"
-              leftIcon={<BiAddToQueue color="darkPrimary.300" />}
-            >
-              {t(`${TRANSACTION}.addNewRow`)}
-            </Button>
-            <Button
-              data-testid="delete-row-button"
-              variant="outline"
-              size="sm"
-              ml="10px"
-              colorScheme="darkPrimary"
-              _hover={{
-                _disabled: {
-                  bg: '#EBF8FF',
-                  color: 'darkPrimary.300',
-                  opacity: 0.5,
-                },
-              }}
-              _disabled={{
-                bg: '#EBF8FF',
-                color: 'darkPrimary.300',
-                opacity: 0.5,
-              }}
-              leftIcon={<RiDeleteBinLine color="darkPrimary.300" />}
-              onClick={onDeleteConfirmationModalOpen}
-              isDisabled={!someChecked}
-            >
-              {t(`${TRANSACTION}.deleteRow`)}
-            </Button>
-          </Box>
-        )}
-
-        <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
-        <HStack w={!isApproved || !isSysFactoringFee ? 'auto' : '100%'} justifyContent="end">
-          {refundCheckbox.isVisible && (
-            <Controller
-              control={control}
-              name={refundCheckbox.name}
-              render={({ field: { name, value, onChange } }) => {
-                return (
-                  <Checkbox
-                    data-testid={refundCheckbox.id}
-                    name={name}
-                    variant="link"
-                    _focus={{ outline: 'none' }}
-                    isChecked={!!value}
-                    colorScheme="darkPrimary"
-                    isDisabled={isApproved || isMaterialsLoading || isSysFactoringFee}
-                    onChange={event => {
-                      const isChecked = event.currentTarget.checked
-                      onToggleRefundCheckbox(isChecked)
-                      onChange(isChecked)
-                    }}
-                  >
-                    {t(`${TRANSACTION}.refund`)}
-                  </Checkbox>
-                )
-              }}
-            />
-          )}
-          {values?.lienWaiverDocument?.s3Url && (
-            <>
-              <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: 'darkPrimary.300' }}>
-                <Flex>
-                  <Box mt="3px" color="darkPrimary.300">
-                    <BiDownload fontSize="sm" />
-                  </Box>
-                  <Text
-                    ml="5px"
-                    fontSize="14px"
-                    fontWeight={500}
-                    fontStyle="normal"
-                    color="darkPrimary.300"
-                    maxW="110px"
-                    isTruncated
-                  >
-                    {t(`${TRANSACTION}.lienWaiver`)}
-                  </Text>
-                </Flex>
-              </a>
-
-              <Divider orientation="vertical" />
-            </>
-          )}
-
-          {values.attachment && values.attachment.s3Url && (
-            <>
-              <a href={values?.attachment?.s3Url} download style={{ color: 'darkPrimary.300' }}>
-                <Flex>
-                  <Box mt="3px" color="darkPrimary.300">
-                    <BiDownload fontSize="sm" />
-                  </Box>
-                  <Text
-                    ml="5px"
-                    fontSize="14px"
-                    fontWeight={500}
-                    fontStyle="normal"
-                    maxW="110px"
-                    isTruncated
-                    color="darkPrimary.300"
-                    title={values?.attachment?.fileType}
-                  >
-                    {values?.attachment?.fileType}
-                  </Text>
-                </Flex>
-              </a>
-              {!isApproved && <Divider orientation="vertical" />}
-            </>
-          )}
-
-          {(!isApproved || !isSysFactoringFee) &&
-            (document && !document.s3Url ? (
-              <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
-                <HStack spacing="5px" h="31px" padding="10px" align="center">
-                  <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
-                    {document?.name || document.fileType}
-                  </Text>
-                  <MdOutlineCancel
-                    cursor={isMaterialsLoading ? 'default' : 'pointer'}
-                    onClick={() => {
-                      if (isMaterialsLoading) {
-                        return
-                      }
-                      setValue('attachment', null)
-                      setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
-                      if (inputRef.current) inputRef.current.value = ''
-                    }}
-                  />
-                </HStack>
-              </Box>
-            ) : (
+    <Box overflowX="auto" w="100%">
+      <VStack alignItems="start" w="720px">
+        <Flex w="720px" mt="10px" mb="15px">
+          {!isApproved && (
+            <Flex flex="1">
               <Button
-                onClick={e => {
-                  if (isEditMaterialTransaction) {
-                    onReplaceMaterialUploadOpen()
-                  } else {
-                    if (inputRef.current) {
-                      inputRef.current.click()
-                    }
-                  }
-                }}
-                leftIcon={<BiFile color="darkPrimary.300" />}
+                data-testid="add-new-row-button"
                 variant="outline"
                 size="sm"
                 colorScheme="darkPrimary"
+                disabled={isMaterialsLoading || isSysFactoringFee}
+                onClick={addRow}
                 color="darkPrimary.300"
-                isDisabled={isApproved || !values?.transactionType?.value || isSysFactoringFee}
+                leftIcon={<BiAddToQueue color="darkPrimary.300" />}
               >
-                {t(`${TRANSACTION}.attachment`)}
+                {t(`${TRANSACTION}.addNewRow`)}
               </Button>
-            ))}
-        </HStack>
-      </Flex>
+              <Button
+                data-testid="delete-row-button"
+                variant="outline"
+                size="sm"
+                ml="10px"
+                colorScheme="darkPrimary"
+                _hover={{
+                  _disabled: {
+                    bg: '#EBF8FF',
+                    color: 'darkPrimary.300',
+                    opacity: 0.5,
+                  },
+                }}
+                _disabled={{
+                  bg: '#EBF8FF',
+                  color: 'darkPrimary.300',
+                  opacity: 0.5,
+                }}
+                leftIcon={<RiDeleteBinLine color="darkPrimary.300" />}
+                onClick={onDeleteConfirmationModalOpen}
+                isDisabled={!someChecked}
+              >
+                {t(`${TRANSACTION}.deleteRow`)}
+              </Button>
+            </Flex>
+          )}
 
-      <Flex
-        borderStyle="solid"
-        borderColor="gray.200"
-        borderWidth="1px 1px 1px 1px"
-        flex="1"
-        pos="relative"
-        flexDirection="column"
-        rounded={6}
-      >
-        <Grid
-          gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
-          px="4"
-          py="3"
-          fontSize="14px"
-          color="gray.600"
-          bg="bgGlobal.50"
-          gap="1rem 4rem"
-          borderWidth="0 0 1px 0"
+          <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
+          <HStack w={!isApproved || !isSysFactoringFee ? 'auto' : '100%'} justifyContent="end">
+            {refundCheckbox.isVisible && (
+              <Controller
+                control={control}
+                name={refundCheckbox.name}
+                render={({ field: { name, value, onChange } }) => {
+                  return (
+                    <Checkbox
+                      data-testid={refundCheckbox.id}
+                      name={name}
+                      variant="link"
+                      _focus={{ outline: 'none' }}
+                      isChecked={!!value}
+                      colorScheme="darkPrimary"
+                      isDisabled={isApproved || isMaterialsLoading || isSysFactoringFee}
+                      onChange={event => {
+                        const isChecked = event.currentTarget.checked
+                        onToggleRefundCheckbox(isChecked)
+                        onChange(isChecked)
+                      }}
+                    >
+                      {t(`${TRANSACTION}.refund`)}
+                    </Checkbox>
+                  )
+                }}
+              />
+            )}
+            {values?.lienWaiverDocument?.s3Url && (
+              <>
+                <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: 'darkPrimary.300' }}>
+                  <Flex>
+                    <Box mt="3px" color="darkPrimary.300">
+                      <BiDownload fontSize="sm" />
+                    </Box>
+                    <Text
+                      ml="5px"
+                      fontSize="14px"
+                      fontWeight={500}
+                      fontStyle="normal"
+                      color="darkPrimary.300"
+                      maxW="110px"
+                      isTruncated
+                    >
+                      {t(`${TRANSACTION}.lienWaiver`)}
+                    </Text>
+                  </Flex>
+                </a>
+
+                <Divider orientation="vertical" />
+              </>
+            )}
+
+            {values.attachment && values.attachment.s3Url && (
+              <>
+                <a href={values?.attachment?.s3Url} download style={{ color: 'darkPrimary.300' }}>
+                  <Flex>
+                    <Box mt="3px" color="darkPrimary.300">
+                      <BiDownload fontSize="sm" />
+                    </Box>
+                    <Text
+                      ml="5px"
+                      fontSize="14px"
+                      fontWeight={500}
+                      fontStyle="normal"
+                      maxW="110px"
+                      isTruncated
+                      color="darkPrimary.300"
+                      title={values?.attachment?.fileType}
+                    >
+                      {values?.attachment?.fileType}
+                    </Text>
+                  </Flex>
+                </a>
+                {!isApproved && <Divider orientation="vertical" />}
+              </>
+            )}
+
+            {(!isApproved || !isSysFactoringFee) &&
+              (document && !document.s3Url ? (
+                <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+                  <HStack spacing="5px" h="31px" padding="10px" align="center">
+                    <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
+                      {document?.name || document.fileType}
+                    </Text>
+                    <MdOutlineCancel
+                      cursor={isMaterialsLoading ? 'default' : 'pointer'}
+                      onClick={() => {
+                        if (isMaterialsLoading) {
+                          return
+                        }
+                        setValue('attachment', null)
+                        setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
+                        if (inputRef.current) inputRef.current.value = ''
+                      }}
+                    />
+                  </HStack>
+                </Box>
+              ) : (
+                <Button
+                  onClick={e => {
+                    if (isEditMaterialTransaction) {
+                      onReplaceMaterialUploadOpen()
+                    } else {
+                      if (inputRef.current) {
+                        inputRef.current.click()
+                      }
+                    }
+                  }}
+                  leftIcon={<BiFile color="darkPrimary.300" />}
+                  variant="outline"
+                  size="sm"
+                  colorScheme="darkPrimary"
+                  color="darkPrimary.300"
+                  isDisabled={isApproved || !values?.transactionType?.value || isSysFactoringFee}
+                >
+                  {t(`${TRANSACTION}.attachment`)}
+                </Button>
+              ))}
+          </HStack>
+        </Flex>
+
+        <Flex
           borderStyle="solid"
           borderColor="gray.200"
-          roundedTop={6}
+          borderWidth="1px 1px 1px 1px"
+          flex="1"
+          pos="relative"
+          flexDirection="column"
+          rounded={6}
         >
-          {isShowCheckboxes && (
-            <GridItem id="all-checkbox">
-              <Checkbox
-                variant="normal"
-                colorScheme="CustomPrimaryColor"
-                isChecked={allChecked}
-                isDisabled={isApproved || isSysFactoringFee}
-                isIndeterminate={isIndeterminate}
-                onChange={toggleAllCheckboxes}
-              />
-            </GridItem>
-          )}
-          <GridItem> {t(`${TRANSACTION}.description`)}</GridItem>
-          <GridItem>{t(`${TRANSACTION}.amount`)}</GridItem>
-        </Grid>
-        {isMaterialsLoading ? (
-          <Center>
-            <VStack>
-              <Spinner size="lg" />
-              <FormLabel variant={'light-label'} color="brand.300">
-                {t(`${TRANSACTION}.scanningMessage`)}
-              </FormLabel>
-            </VStack>
-          </Center>
-        ) : (
-          <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
-            {transactionFields.map((transactionField, index) => {
-              const values = getValues()
-              const defaultNegative = [
-                TransactionTypeValues.draw,
-                TransactionTypeValues.material,
-                TransactionTypeValues.lateFee,
-                TransactionTypeValues.factoring,
-              ].some(id => id === values?.transactionType?.value)
-              const isRefund = values?.refundMaterial || values?.refundLateFee || values?.refundFactoring
-
-              return (
-                <Grid
-                  className="amount-input-row"
-                  key={transactionField.id}
-                  gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
-                  p="4"
-                  fontSize="14px"
-                  color="gray.600"
-                  gap="2rem 4rem"
-                  borderWidth={'0 0 1px 0'}
-                  borderStyle="solid"
-                  borderColor="gray.200"
-                >
-                  {isShowCheckboxes && (
-                    <GridItem>
-                      <Controller
-                        control={control}
-                        name={`transaction.${index}.checked` as const}
-                        render={({ field: { name, value, onChange } }) => {
-                          return (
-                            <Checkbox
-                              variant="normal"
-                              py="2"
-                              data-testid={`checkbox-${index}`}
-                              key={name}
-                              name={name}
-                              isDisabled={isApproved || isSysFactoringFee}
-                              isChecked={transactionField.checked}
-                              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                                transactionField.checked = event.currentTarget.checked
-                                onChange(event.currentTarget.checked)
-                              }}
-                            />
-                          )
-                        }}
-                      />
-                    </GridItem>
-                  )}
-                  <GridItem pr="7">
-                    <FormControl isInvalid={!!errors.transaction?.[index]?.description}>
-                      <Tooltip
-                        label={transaction?.[index]?.description.length > 60 ? transaction?.[index]?.description : ''}
-                      >
-                        <Input
-                          data-testid={`transaction-description-${index}`}
-                          type="text"
-                          size="sm"
-                          autoComplete="off"
-                          placeholder="Add Description here"
-                          noOfLines={1}
-                          readOnly={(isApproved && !isAdminEnabled) || isSysFactoringFee}
-                          variant={(isApproved && !isAdminEnabled) || isSysFactoringFee ? 'unstyled' : 'required-field'}
-                          {...register(`transaction.${index}.description` as const, {
-                            required: 'This is required field',
-                          })}
-                        />                        
-                      </Tooltip>
-                      <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
-                    </FormControl>
-                  </GridItem>
-                  <GridItem pr="7">
-                    <FormControl isInvalid={!!errors.transaction?.[index]?.amount}>
-                      <Controller
-                        name={`transaction.${index}.amount` as const}
-                        control={control}
-                        rules={{
-                          required: 'This is required field',
-                        }}
-                        render={({ field, fieldState }) => {
-                          return (
-                            <>
-                              {(!isApproved || isAdminEnabled) && !isSysFactoringFee ? (
-                                <NumberFormat
-                                  data-testid={`transaction-amount-${index}`}
-                                  customInput={Input}
-                                  value={field.value}
-                                  placeholder="Add Amount"
-                                  onKeyDown={e => {
-                                    if (defaultNegative && e?.code === 'Minus') {
-                                      e.preventDefault()
-                                    }
-                                  }}
-                                  onChange={e => {
-                                    onSetTotalRemainingAmount(Math.abs(e?.target?.value))
-
-                                    const inputValue = e.currentTarget.value
-                                    inputValue !== ''
-                                      ? field.onChange(
-                                          defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
-                                        )
-                                      : field.onChange('')
-                                  }}
-                                  variant={'required-field'}
-                                  size="sm"
-                                />
-                              ) : (
-                                <Input
-                                  {...field}
-                                  data-testid={`transaction-amount-${index}`}
-                                  size="sm"
-                                  placeholder="Add Amount"
-                                  readOnly={isApproved || isSysFactoringFee}
-                                  variant={'unstyled'}
-                                  autoComplete="off"
-                                  value={numeral(Number(field.value)).format('$0,0[.]00')}
-                                />
-                              )}
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem>
-                </Grid>
-              )
-            })}
-          </Box>
-        )}
-        <Box position="absolute" left="0" right="0" bottom="0" zIndex={1}>
           <Grid
             gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
+            px="4"
+            py="3"
             fontSize="14px"
             color="gray.600"
-            columnGap="4rem"
-            borderWidth="1px 0 0 0"
+            bg="bgGlobal.50"
+            gap="1rem 4rem"
+            borderWidth="0 0 1px 0"
             borderStyle="solid"
             borderColor="gray.200"
-            bg="white"
-            rounded={6}
+            roundedTop={6}
           >
-            {isShowCheckboxes && <GridItem />}
-            <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.200" py="4"></GridItem>
-            <GridItem py="4" fontWeight="bold" data-testid="total-amount">
-              {t('total')}: {totalAmount}
-            </GridItem>
+            {isShowCheckboxes && (
+              <GridItem id="all-checkbox">
+                <Checkbox
+                  variant="normal"
+                  colorScheme="CustomPrimaryColor"
+                  isChecked={allChecked}
+                  isDisabled={isApproved || isSysFactoringFee}
+                  isIndeterminate={isIndeterminate}
+                  onChange={toggleAllCheckboxes}
+                />
+              </GridItem>
+            )}
+            <GridItem> {t(`${TRANSACTION}.description`)}</GridItem>
+            <GridItem>{t(`${TRANSACTION}.amount`)}</GridItem>
           </Grid>
-        </Box>
-      </Flex>
+          {isMaterialsLoading ? (
+            <Center>
+              <VStack>
+                <Spinner size="lg" />
+                <FormLabel variant={'light-label'} color="brand.300">
+                  {t(`${TRANSACTION}.scanningMessage`)}
+                </FormLabel>
+              </VStack>
+            </Center>
+          ) : (
+            <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
+              {transactionFields.map((transactionField, index) => {
+                const values = getValues()
+                const defaultNegative = [
+                  TransactionTypeValues.draw,
+                  TransactionTypeValues.material,
+                  TransactionTypeValues.lateFee,
+                  TransactionTypeValues.factoring,
+                ].some(id => id === values?.transactionType?.value)
+                const isRefund = values?.refundMaterial || values?.refundLateFee || values?.refundFactoring
 
-      <ConfirmationBox
-        title="Are You Sure?"
-        content="Do you really want to delete these items? This process cannot be undone."
-        isOpen={isDeleteConfirmationModalOpen}
-        onClose={onDeleteConfirmationModalClose}
-        onConfirm={deleteRows}
-      />
-      <ConfirmationBox
-        title={t(`${TRANSACTION}.confirmationTitle`)}
-        content={t(`${TRANSACTION}.confirmationMessageMaterialAttachment`)}
-        isOpen={isReplaceMaterialUploadOpen}
-        onClose={onReplaceMaterialUploadClose}
-        onConfirm={openFileDialog}
-      />
-    </>
+                return (
+                  <Grid
+                    className="amount-input-row"
+                    key={transactionField.id}
+                    gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
+                    p="4"
+                    fontSize="14px"
+                    color="gray.600"
+                    gap="2rem 4rem"
+                    borderWidth={'0 0 1px 0'}
+                    borderStyle="solid"
+                    borderColor="gray.200"
+                  >
+                    {isShowCheckboxes && (
+                      <GridItem>
+                        <Controller
+                          control={control}
+                          name={`transaction.${index}.checked` as const}
+                          render={({ field: { name, value, onChange } }) => {
+                            return (
+                              <Checkbox
+                                variant="normal"
+                                py="2"
+                                data-testid={`checkbox-${index}`}
+                                key={name}
+                                name={name}
+                                isDisabled={isApproved || isSysFactoringFee}
+                                isChecked={transactionField.checked}
+                                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                                  transactionField.checked = event.currentTarget.checked
+                                  onChange(event.currentTarget.checked)
+                                }}
+                              />
+                            )
+                          }}
+                        />
+                      </GridItem>
+                    )}
+                    <GridItem pr="7">
+                      <FormControl isInvalid={!!errors.transaction?.[index]?.description}>
+                        <Tooltip label={transaction?.[index]?.description}>
+                          <Input
+                            data-testid={`transaction-description-${index}`}
+                            type="text"
+                            size="sm"
+                            autoComplete="off"
+                            placeholder="Add Description here"
+                            noOfLines={1}
+                            readOnly={(isApproved && !isAdminEnabled) || isSysFactoringFee}
+                            variant={
+                              (isApproved && !isAdminEnabled) || isSysFactoringFee ? 'unstyled' : 'required-field'
+                            }
+                            {...register(`transaction.${index}.description` as const, {
+                              required: 'This is required field',
+                            })}
+                          />
+                        </Tooltip>
+                        <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
+                      </FormControl>
+                    </GridItem>
+                    <GridItem pr="7">
+                      <FormControl isInvalid={!!errors.transaction?.[index]?.amount}>
+                        <Controller
+                          name={`transaction.${index}.amount` as const}
+                          control={control}
+                          rules={{
+                            required: 'This is required field',
+                          }}
+                          render={({ field, fieldState }) => {
+                            return (
+                              <>
+                                {(!isApproved || isAdminEnabled) && !isSysFactoringFee ? (
+                                  <NumberFormat
+                                    data-testid={`transaction-amount-${index}`}
+                                    customInput={Input}
+                                    value={field.value}
+                                    placeholder="Add Amount"
+                                    onKeyDown={e => {
+                                      if (defaultNegative && e?.code === 'Minus') {
+                                        e.preventDefault()
+                                      }
+                                    }}
+                                    onChange={e => {
+                                      onSetTotalRemainingAmount(Math.abs(e?.target?.value))
+
+                                      const inputValue = e.currentTarget.value
+                                      inputValue !== ''
+                                        ? field.onChange(
+                                            defaultNegative && !isRefund
+                                              ? -1 * Math.abs(Number(inputValue))
+                                              : inputValue,
+                                          )
+                                        : field.onChange('')
+                                    }}
+                                    variant={'required-field'}
+                                    size="sm"
+                                  />
+                                ) : (
+                                  <Input
+                                    {...field}
+                                    data-testid={`transaction-amount-${index}`}
+                                    size="sm"
+                                    placeholder="Add Amount"
+                                    readOnly={isApproved || isSysFactoringFee}
+                                    variant={'unstyled'}
+                                    autoComplete="off"
+                                    value={numeral(Number(field.value)).format('$0,0[.]00')}
+                                  />
+                                )}
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </>
+                            )
+                          }}
+                        />
+                      </FormControl>
+                    </GridItem>
+                  </Grid>
+                )
+              })}
+            </Box>
+          )}
+          <Box position="absolute" left="0" right="0" bottom="0" zIndex={1}>
+            <Grid
+              gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
+              fontSize="14px"
+              color="gray.600"
+              columnGap="4rem"
+              borderWidth="1px 0 0 0"
+              borderStyle="solid"
+              borderColor="gray.200"
+              bg="white"
+              rounded={6}
+            >
+              {isShowCheckboxes && <GridItem />}
+              <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.200" py="4"></GridItem>
+              <GridItem py="4" fontWeight="bold" data-testid="total-amount">
+                {t('total')}: {totalAmount}
+              </GridItem>
+            </Grid>
+          </Box>
+        </Flex>
+
+        <ConfirmationBox
+          title="Are You Sure?"
+          content="Do you really want to delete these items? This process cannot be undone."
+          isOpen={isDeleteConfirmationModalOpen}
+          onClose={onDeleteConfirmationModalClose}
+          onConfirm={deleteRows}
+        />
+        <ConfirmationBox
+          title={t(`${TRANSACTION}.confirmationTitle`)}
+          content={t(`${TRANSACTION}.confirmationMessageMaterialAttachment`)}
+          isOpen={isReplaceMaterialUploadOpen}
+          onClose={onReplaceMaterialUploadClose}
+          onConfirm={openFileDialog}
+        />
+      </VStack>
+    </Box>
   )
 }
