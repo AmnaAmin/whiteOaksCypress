@@ -17,7 +17,7 @@ import {
   VStack,
   Spinner,
   FormLabel,
-  Spacer,
+  Tooltip,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
@@ -113,7 +113,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   // useOnRefundMaterialCheckboxChange(control, update)
 
   const { refundCheckbox } = useFieldShowHideDecision(control)
-  const { isApproved } = useFieldDisabledEnabledDecision(control, changeOrder)
+  const { isApproved, isSysFactoringFee } = useFieldDisabledEnabledDecision(control, changeOrder)
   const { isAdmin } = useUserRolesSelector()
 
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
@@ -205,7 +205,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     }
     onReplaceMaterialUploadClose()
   }
-  const isShowCheckboxes = !isApproved && transactionFields?.length > 1
+  const isShowCheckboxes = !isApproved && transactionFields?.length > 1 && !isSysFactoringFee
 
   return (
     <Box overflowX="auto" w="100%">
@@ -218,7 +218,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 variant="outline"
                 size="sm"
                 colorScheme="darkPrimary"
-                disabled={isMaterialsLoading}
+                disabled={isMaterialsLoading || isSysFactoringFee}
                 onClick={addRow}
                 color="darkPrimary.300"
                 leftIcon={<BiAddToQueue color="darkPrimary.300" />}
@@ -251,10 +251,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               </Button>
             </Flex>
           )}
-          <Spacer />
 
           <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
-          <HStack w={!isApproved ? 'auto' : '100%'} justifyContent="end">
+          <HStack w={!isApproved || !isSysFactoringFee ? 'auto' : '100%'} justifyContent="end">
             {refundCheckbox.isVisible && (
               <Controller
                 control={control}
@@ -268,7 +267,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                       _focus={{ outline: 'none' }}
                       isChecked={!!value}
                       colorScheme="darkPrimary"
-                      isDisabled={isApproved || isMaterialsLoading}
+                      isDisabled={isApproved || isMaterialsLoading || isSysFactoringFee}
                       onChange={event => {
                         const isChecked = event.currentTarget.checked
                         onToggleRefundCheckbox(isChecked)
@@ -331,7 +330,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               </>
             )}
 
-            {!isApproved &&
+            {(!isApproved || !isSysFactoringFee) &&
               (document && !document.s3Url ? (
                 <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
                   <HStack spacing="5px" h="31px" padding="10px" align="center">
@@ -367,7 +366,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   size="sm"
                   colorScheme="darkPrimary"
                   color="darkPrimary.300"
-                  isDisabled={isApproved || !values?.transactionType?.value}
+                  isDisabled={isApproved || !values?.transactionType?.value || isSysFactoringFee}
                 >
                   {t(`${TRANSACTION}.attachment`)}
                 </Button>
@@ -403,7 +402,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   variant="normal"
                   colorScheme="CustomPrimaryColor"
                   isChecked={allChecked}
-                  isDisabled={isApproved}
+                  isDisabled={isApproved || isSysFactoringFee}
                   isIndeterminate={isIndeterminate}
                   onChange={toggleAllCheckboxes}
                 />
@@ -459,7 +458,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                 data-testid={`checkbox-${index}`}
                                 key={name}
                                 name={name}
-                                isDisabled={isApproved}
+                                isDisabled={isApproved || isSysFactoringFee}
                                 isChecked={transactionField.checked}
                                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                   transactionField.checked = event.currentTarget.checked
@@ -473,19 +472,23 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     )}
                     <GridItem pr="7">
                       <FormControl isInvalid={!!errors.transaction?.[index]?.description}>
-                        <Input
-                          data-testid={`transaction-description-${index}`}
-                          type="text"
-                          size="sm"
-                          autoComplete="off"
-                          placeholder="Add Description here"
-                          readOnly={isApproved && !isAdminEnabled}
-                          variant={isApproved && !isAdminEnabled ? 'unstyled' : 'required-field'}
-                          {...register(`transaction.${index}.description` as const, {
-                            required: 'This is required field',
-                          })}
-                        />
-
+                        <Tooltip label={transaction?.[index]?.description}>
+                          <Input
+                            data-testid={`transaction-description-${index}`}
+                            type="text"
+                            size="sm"
+                            autoComplete="off"
+                            placeholder="Add Description here"
+                            noOfLines={1}
+                            readOnly={(isApproved && !isAdminEnabled) || isSysFactoringFee}
+                            variant={
+                              (isApproved && !isAdminEnabled) || isSysFactoringFee ? 'unstyled' : 'required-field'
+                            }
+                            {...register(`transaction.${index}.description` as const, {
+                              required: 'This is required field',
+                            })}
+                          />
+                        </Tooltip>
                         <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
@@ -500,7 +503,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           render={({ field, fieldState }) => {
                             return (
                               <>
-                                {!isApproved || isAdminEnabled ? (
+                                {(!isApproved || isAdminEnabled) && !isSysFactoringFee ? (
                                   <NumberFormat
                                     data-testid={`transaction-amount-${index}`}
                                     customInput={Input}
@@ -532,8 +535,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     data-testid={`transaction-amount-${index}`}
                                     size="sm"
                                     placeholder="Add Amount"
-                                    readOnly={isApproved}
-                                    variant={'unstyles'}
+                                    readOnly={isApproved || isSysFactoringFee}
+                                    variant={'unstyled'}
                                     autoComplete="off"
                                     value={numeral(Number(field.value)).format('$0,0[.]00')}
                                   />

@@ -17,6 +17,9 @@ import {
   Checkbox,
   Center,
   Progress,
+  Box,
+  Flex,
+  Icon,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver/lien-waiver'
@@ -37,6 +40,7 @@ import { useFetchProjectId } from './details/assignedItems.utils'
 import { ProjectAwardTab } from './project-award/project.award'
 import { useProjectAward } from 'api/project-award'
 import { Card } from 'components/card/card'
+import { BiErrorCircle } from 'react-icons/bi'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -67,6 +71,8 @@ const WorkOrderDetails = ({
   const { transactions = [], isLoading: isTransLoading } = useTransactionsV1(projId)
 
   const [isUpdating, setIsUpdating] = useState(false)
+  const [isError, setIsError] = useState(false)
+
   const { mutate: updateWorkOrder, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({
     swoProjectId: swoProject?.id,
   })
@@ -101,6 +107,15 @@ const WorkOrderDetails = ({
 
   const onSave = values => {
     const payload = { ...workOrder, ...values }
+    console.log('values', values?.workOrderDateCompleted)
+    console.log('workOrder', workOrder?.awardPlanId)
+
+    if (!workOrder?.awardPlanId && values?.workOrderDateCompleted && tabIndex === 0) {
+      setIsError(true)
+    } else {
+      setIsError(false)
+    }
+
     updateWorkOrder(payload, {
       onSuccess: res => {
         if (res?.data) {
@@ -119,6 +134,7 @@ const WorkOrderDetails = ({
   const navigateToProjectDetails = () => {
     navigate(`/project-details/${workOrder.projectId}`)
   }
+  const showRejectInvoice = (displayAwardPlan && tabIndex === 3) || (!displayAwardPlan && tabIndex === 2)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'} closeOnOverlayClick={false}>
@@ -156,7 +172,7 @@ const WorkOrderDetails = ({
               >
                 <TabList color="gray.600" ml="10px" mr="20px">
                   <Tab>{t('workOrderDetails')}</Tab>
-                  {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
+                  {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
                   <Tab>{t('lienWaiver')}</Tab>
                   <Tab>{t('invoice')}</Tab>
                   <Tab>{t('payments')}</Tab>
@@ -187,7 +203,8 @@ const WorkOrderDetails = ({
                       )}
                     </Center>
                       )*/}
-                  {tabIndex === 2 &&
+
+                  {showRejectInvoice &&
                     [STATUS.Invoiced, STATUS.Declined].includes(
                       workOrder?.statusLabel?.toLocaleLowerCase() as STATUS,
                     ) && (
@@ -301,6 +318,21 @@ const WorkOrderDetails = ({
         </>
       )}
     </Modal>
+  )
+}
+
+const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }) => {
+  return (
+    <Tab>
+      {isError ? (
+        <Flex alignItems="center">
+          <Icon as={BiErrorCircle} size="18px" color="red.400" mr="1" />
+          <Box color="red.400">{children}</Box>
+        </Flex>
+      ) : (
+        children
+      )}
+    </Tab>
   )
 }
 
