@@ -38,14 +38,28 @@ beforeAll(() => {
   Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
     configurable: true,
     value: 50,
-  })
-  const mockIntersectionObserver = jest.fn();
-  mockIntersectionObserver.mockReturnValue({
-    observe: () => null,
-    unobserve: () => null,
-    disconnect: () => null
   });
-  window.IntersectionObserver = mockIntersectionObserver;
+  
+  (window as any).IntersectionObserver = class IntersectionObserver {
+    constructor() {}
+  
+    disconnect() {
+      return null;
+    }
+  
+    observe() {
+      return null;
+    }
+  
+    takeRecords() {
+      return null;
+    }
+  
+    unobserve() {
+      return null;
+    }
+  };
+
 })
 
 afterAll(() => {
