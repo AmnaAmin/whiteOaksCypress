@@ -14,7 +14,7 @@ export const FinancialOverviewTable = React.forwardRef((props: FinancialOverview
   const { tableColumns } = useTableColumnSettings(FINANCIAL_OVERVIEW_TABLE_COLUMNS, TableNames.projectFinancialOverview)
 
   return (
-    <Box overflow={'auto'} w="100%" h="100px">
+    <Box w="100%">
       <TableContextProvider data={financialOveriewTableData} columns={tableColumns}>
         <Table isLoading={isLoading} isEmpty={!isLoading && !financialOveriewTableData?.length} isHideFilters />
       </TableContextProvider>

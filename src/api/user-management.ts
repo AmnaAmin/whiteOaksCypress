@@ -318,7 +318,6 @@ const parseUserFormData = ({
   viewVendorsOptions,
   languageOptions,
   fpmManagerRoleOptions,
-  availableManagers,
 }) => {
   return {
     ...userInfo,
@@ -335,7 +334,7 @@ const parseUserFormData = ({
       fpmManager => fpmManager.value === userInfo?.fieldProjectManagerRoleId,
     ),
     managerRoleId: fpmManagerRoleOptions?.find(fpmManager => fpmManager.value === userInfo?.managerRoleId),
-    parentFieldProjectManagerId: availableManagers?.find(
+    parentFieldProjectManagerId: allManagersOptions?.find(
       manager => manager.value === userInfo?.parentFieldProjectManagerId,
     ),
   }
@@ -350,7 +349,6 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { options: accountTypeOptions } = useActiveAccountTypes()
   const { options: viewVendorsOptions } = useViewVendor()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
-  const { options: availableManagers } = useAllManagers()
 
   const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
   const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
@@ -376,7 +374,6 @@ export const useUserDetails = ({ form, userInfo }) => {
           viewVendorsOptions,
           languageOptions,
           fpmManagerRoleOptions,
-          availableManagers,
         }),
       )
     }

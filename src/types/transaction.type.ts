@@ -262,6 +262,7 @@ export type ChangeOrderType = {
   lineItems: Array<LineItem> | null
   paymentReceived: string | null
   documents: Document[]
+  systemGenerated: boolean
 }
 
 export type TransactionsWithRefundType = {

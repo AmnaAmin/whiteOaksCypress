@@ -207,11 +207,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }, [workOrderId])
 
   const { check, isValidForAwardPlan } = useIsAwardSelect(control)
-  
+
   const showDrawRemainingMsg =
     !heading &&
     transType?.label === 'Draw' &&
-    isValidForAwardPlan && 
+    isValidForAwardPlan &&
     (selectedWorkOrderStats?.drawRemaining === 0 || selectedWorkOrderStats?.drawRemaining === null)
 
   const showMaterialRemainingMsg =
@@ -243,11 +243,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   } = useFieldShowHideDecision(control, transaction)
   const isAdminEnabled = isAdmin && isManualTransaction(transaction?.transactionType)
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control)
-  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
-    control,
-    transaction,
-    isMaterialsLoading,
-  )
+  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled, isSysFactoringFee } =
+    useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
 
@@ -771,7 +768,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             <Select
                               {...field}
                               options={transactionStatusOptions}
-                              isDisabled={isStatusDisabled}
+                              isDisabled={isStatusDisabled || isSysFactoringFee}
                               onChange={statusOption => {
                                 field.onChange(statusOption)
                               }}
@@ -814,7 +811,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         ) : (
           <Button
             onClick={onModalClose}
-            variant={!isApproved || isAdminEnabled ? 'outline' : 'solid'}
+            variant={(!isApproved || isAdminEnabled) && !isSysFactoringFee ? 'outline' : 'solid'}
             colorScheme="darkPrimary"
             data-testid="close-transaction-form"
           >
@@ -839,7 +836,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          (!isApproved || isAdminEnabled) && (
+          (!isApproved || isAdminEnabled) &&
+          !isSysFactoringFee && (
             <>
               <Button
                 type="submit"
