@@ -48,13 +48,16 @@ const ProjectDetails: React.FC = props => {
         >
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
             <TabList h={'50px'} alignItems="end" border="none">
-              <Flex h={'40px'} sx={{
-                '@media only screen and (max-width: 450px)': {
-                  transform: "scale(0.72)",
-                  position: "relative",
-                  left: "-19%",
-                }
-              }}>
+              <Flex
+                h={'40px'}
+                sx={{
+                  '@media only screen and (max-width: 450px)': {
+                    transform: 'scale(0.72)',
+                    position: 'relative',
+                    left: '-19%',
+                  },
+                }}
+              >
                 <Tab aria-labelledby="transaction-tab">{t('transaction')}</Tab>
 
                 <Tab whiteSpace="nowrap">{t('vendorWorkOrders')}</Tab>
