@@ -133,9 +133,7 @@ function DebouncedInput({
   useLayoutEffect( () => {
     
     setInputWidth(inputRef.current.offsetWidth);
-
-    console.log( inputRef.current.offsetWidth );
-
+    
     const changeWidth = _.debounce( 
                             () => setInputWidth(inputRef.current.offsetWidth),
                             50
