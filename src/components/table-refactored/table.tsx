@@ -81,7 +81,7 @@ function useIsInViewport(ref) {
 
   const observer = useMemo(
     () =>
-      new window.IntersectionObserver(([entry]) =>
+      new (window as any).IntersectionObserver(([entry]) =>
         setIsIntersecting(entry.isIntersecting),
       ),
     [],
