@@ -150,7 +150,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
             )
 
             return (
-              <HStack key={license?.id} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
+              <HStack flexDir={{ base: 'column', sm: 'row' }} key={license?.id} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
                 <Box w="2em" color="#345EA6" fontSize="15px">
                   <Center>
                     <Icon
