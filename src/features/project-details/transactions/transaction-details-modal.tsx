@@ -75,7 +75,7 @@ export const TransactionDetailsModal: React.FC<AddNewTransactionProps> = ({
 
   useEffect(() => {
     if (isMobile) {
-      setModalSize('full')
+      setModalSize('sm')
     } else {
       setModalSize('3xl')
     }

@@ -1,7 +1,8 @@
 import React,{ 
   useState, 
   useEffect, 
-  useRef } from 'react'
+  useRef, 
+  useMemo} from 'react'
 import { 
   Column, 
   Table as TableType, 
@@ -75,6 +76,28 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
   )
 }
 
+function useIsInViewport(ref) {
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  const observer = useMemo(
+    () =>
+      new IntersectionObserver(([entry]) =>
+        setIsIntersecting(entry.isIntersecting),
+      ),
+    [],
+  );
+
+  useEffect(() => {
+    observer.observe(ref.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [ref, observer]);
+
+  return isIntersecting;
+}
+
 // A debounced input react component
 function DebouncedInput({
   value: initialValue,
@@ -93,6 +116,8 @@ function DebouncedInput({
   const [inputWidth, setInputWidth] = useState(0);
   const inputRef = useRef<any>();
 
+  const isInputInViewPort = useIsInViewport( inputRef );
+
   useEffect(() => {
     setValue(resetValue ? '' : initialValue)
   }, [initialValue, resetValue])
@@ -107,8 +132,14 @@ function DebouncedInput({
 
   useLayoutEffect( () => {
     
-    setInputWidth(inputRef.current.offsetWidth);
-
+    setInputWidth(inputRef.current.offsetWidth);  
+    
+    const setW = () => {
+      setInputWidth(inputRef.current.offsetWidth);  
+    }
+    window.addEventListener( "DOMContentLoaded", setW );
+    
+    
     const changeWidth = _.debounce( 
                             () => setInputWidth(inputRef.current.offsetWidth),
                             50
@@ -116,9 +147,12 @@ function DebouncedInput({
     
     window.addEventListener( "resize", changeWidth );
 
-    return () => window.removeEventListener( "resize", changeWidth );
+    return () =>  {
+      window.removeEventListener( "resize", changeWidth );
+      window.removeEventListener( "DOMContentLoaded", setW );
+    };
     
-  }, [] );
+  }, [isInputInViewPort] );
 
   const onInputChange = ( e ) => {
     setValue(e.target.value);
@@ -155,7 +189,8 @@ function DebouncedInput({
           as={MdClose} 
           position="absolute" 
           right={`calc(100% - ${inputWidth-3}px)`} 
-          zIndex={10000} mr="-20px"
+          zIndex={10000} 
+          mr="-20px"
           onClick={ e => {
             setValue("");
             setShowClearIcon(false);
@@ -207,7 +242,6 @@ export const Table: React.FC<TableProps> = ({
   return (
     <Stack
       display="table"
-      minH="calc(100% - 41px)"
       w="100%"
       boxShadow="sm"
       rounded="md"
@@ -215,6 +249,8 @@ export const Table: React.FC<TableProps> = ({
       zIndex={0}
       // border="1px solid #CBD5E0"
       bg="white"
+      minH={'inherit'}
+      height="100%"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">

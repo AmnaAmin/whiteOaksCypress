@@ -25,7 +25,7 @@ const UpdateTransactionModal: React.FC<Props> = ({
 
   useEffect(() => {
     if (isMobile) {
-      setModalSize('full')
+      setModalSize('sm')
     } else {
       setModalSize('3xl')
     }
