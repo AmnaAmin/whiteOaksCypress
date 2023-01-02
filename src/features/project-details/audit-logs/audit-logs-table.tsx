@@ -22,7 +22,6 @@ export const AuditLogsTable = React.forwardRef((_, ref) => {
         overflowX="auto"
         roundedRight={{ base: '0px', sm: '6px' }}
       >
-        {/* <Box overflow={'auto'} w="100%" h="calc(100vh - 350px)" position="relative" roundedTop={6}> */}
         <TableContextProvider data={auditLogs} columns={AUDIT_LOGS_COLUMNS}>
           <Table isLoading={isFetching} isEmpty={!isFetching && !auditLogs?.length} onRowClick={onRowClick} />
         </TableContextProvider>
