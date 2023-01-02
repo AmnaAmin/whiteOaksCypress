@@ -102,7 +102,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
           {isLoading ? (
             <BlankSlate size="sm" />
           ) : (
-            <OverviewGraph vendorData={graphData} width="98%" height={350} hasUsers={false} monthOption ={monthOption} />
+            <OverviewGraph vendorData={graphData} width="98%" height={350} hasUsers={false} monthOption={monthOption} />
           )}
         </Box>
       </Box>
@@ -138,11 +138,17 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption
     [barProps],
   )
 
-  let { Revenue = undefined , Profit = undefined, Bonus = undefined } = vendorData?.length > 0 ? vendorData[0] : {
-    Revenue: undefined,
-    Profit: undefined,
-    Bonus: undefined
-  }
+  let {
+    Revenue = undefined,
+    Profit = undefined,
+    Bonus = undefined,
+  } = vendorData?.length > 0
+    ? vendorData[0]
+    : {
+        Revenue: undefined,
+        Profit: undefined,
+        Bonus: undefined,
+      }
 
   const emptyGraph = [Revenue, Profit, Bonus].every(matrix => matrix === undefined)
   const currAndLast = ['This Month', 'Last Month'].includes(monthOption?.label)
@@ -161,7 +167,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption
             bottom: 10,
           }}
         >
-          <CartesianGrid stroke="#EFF3F9"/>
+          <CartesianGrid stroke="#EFF3F9" />
           <XAxis
             dataKey={hasUsers ? 'username' : 'month'}
             axisLine={false}
@@ -184,7 +190,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption
                 fontStyle="italic"
               />
             )}
-          </XAxis>          
+          </XAxis>
           <YAxis
             tickLine={{ stroke: '#4F4F4F' }}
             type="number"

@@ -51,11 +51,14 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
 
   return (
     <Box
-      minH="calc(100vh - 450px)"
+      overflow={'auto'}
+      w="100%"
+      h="auto"
+      position="relative"
       border="1px solid #CBD5E0"
       borderRadius="6px"
-      overflowX="auto"
       roundedRight={{ base: '0px', sm: '6px' }}
+      minH={{ sm: 'auto', md: 'calc(100vh - 450px)' }}
     >
       {documents && documents?.length ? (
         <TableContextProvider
