@@ -8,10 +8,20 @@ import { useGanttChart } from 'api/pc-projects'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { WORK_ORDER_TABLE_COLUMNS } from 'features/vendor/vendor-work-order/work-order.constants'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentRecordsWithTotalRecords,
+  TablePagination,
+} from 'components/table-refactored/pagination'
+import { TableFooter } from 'components/table-refactored/table-footer'
 
 export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  const [totalPages, setTotalPages] = useState(0)
 
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
@@ -32,6 +42,10 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
     onOpen()
   }
 
+  useEffect(() => {
+    setTotalPages(Math.ceil((workOrders?.length ?? 0) / 10))
+  }, [workOrders])
+
   return (
     <Box>
       {isOpen && (
@@ -45,12 +59,36 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           isOpen={isOpen}
         />
       )}
-
-      <Box w="100%" minH="calc(100vh - 450px)" position="relative" roundedTop={6} border="1px solid #CBD5E0">
-        <TableContextProvider data={workOrders} columns={WORK_ORDER_TABLE_COLUMNS}>
-          <Table isLoading={isFetching} isEmpty={!isFetching && !workOrders?.length} onRowClick={onRowClick} />
-        </TableContextProvider>
-      </Box>
+      {workOrders && workOrders?.length && (
+        <Box
+          w="100%"
+          minH="calc(100vh - 450px)"
+          position="relative"
+          borderRadius="6px"
+          border="1px solid #CBD5E0"
+          overflowX="auto"
+          roundedRight={{ base: '0px', sm: '6px' }}
+        >
+          <TableContextProvider
+            totalPages={workOrders?.length ? totalPages : -1}
+            data={workOrders}
+            columns={WORK_ORDER_TABLE_COLUMNS}
+            manualPagination={false}
+          >
+            <Table isLoading={isFetching} isEmpty={!isFetching && !workOrders?.length} onRowClick={onRowClick} />
+            <TableFooter position="sticky" bottom="0" left="0" right="0">
+              <Box />
+              <TablePagination>
+                <ShowCurrentRecordsWithTotalRecords dataCount={null} />
+                <GotoFirstPage />
+                <GotoPreviousPage />
+                <GotoNextPage />
+                <GotoLastPage />
+              </TablePagination>
+            </TableFooter>
+          </TableContextProvider>
+        </Box>
+      )}
     </Box>
   )
 })

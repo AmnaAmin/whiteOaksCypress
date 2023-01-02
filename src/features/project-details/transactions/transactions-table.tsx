@@ -17,7 +17,6 @@ import {
   GotoLastPage,
   GotoNextPage,
   GotoPreviousPage,
-  SelectPageSize,
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
@@ -53,15 +52,10 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     postGridColumn(columns)
   }
 
-  const onPageSizeChange = val => {
-    setTotalPages(Math.ceil((transactions?.length ?? 0) / Number(val)))
-  }
-
   useEffect(() => {
-    setTotalPages(Math.ceil((transactions?.length ?? 0) / 20))
+    setTotalPages(Math.ceil((transactions?.length ?? 0) / 10))
   }, [transactions])
 
-  console.log(totalPages)
   return (
     <>
       {transactions && transactions?.length && (
@@ -101,7 +95,6 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                 <GotoPreviousPage />
                 <GotoNextPage />
                 <GotoLastPage />
-                <SelectPageSize dataCount={transactions?.length} onPageSizeChange={onPageSizeChange} />
               </TablePagination>
             </TableFooter>
           </TableContextProvider>

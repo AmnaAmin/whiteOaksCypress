@@ -70,7 +70,7 @@ export const SelectPageSize = ({ onPageSizeChange, dataCount }) => {
         value={pageSize}
         onChange={handlePageSizeChange}
       >
-        {[5, 10, 20].map(pageSize => (
+        {[25, 50, 100].map(pageSize => (
           <option key={pageSize} value={pageSize}>
             Show {pageSize}
           </option>
