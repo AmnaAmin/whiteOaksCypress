@@ -26,9 +26,7 @@ export const renderRemainingItems = async ({ onClose, setAssignedItems, swoProje
 }
 
 beforeAll(() => {
-
-  setToken('pc');
-
+  setToken('pc')
 })
 
 jest.setTimeout(150000)

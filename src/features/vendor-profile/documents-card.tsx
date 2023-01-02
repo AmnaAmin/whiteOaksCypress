@@ -113,7 +113,12 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   return (
     <>
       <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px">
-        <HStack flexDir={{ base: 'column', sm: 'row' }} spacing="16px" alignItems="flex-start" marginTop={{ base: "20px", md: "0" }}>
+        <HStack
+          flexDir={{ base: 'column', sm: 'row' }}
+          spacing="16px"
+          alignItems="flex-start"
+          marginTop={{ base: '20px', md: '0' }}
+        >
           <Flex w="215px">
             <Box>
               <FormLabel variant="strong-label" size="md" color="#2D3748">
@@ -136,13 +141,13 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               />
             </Box>
           </Flex>
-          <HStack 
-          sx={{
-            '@media screen and (max-width: 480px)': {
-              ms: '0 !important',
-              mt: '20px !important'
-            }
-          }}
+          <HStack
+            sx={{
+              '@media screen and (max-width: 480px)': {
+                ms: '0 !important',
+                mt: '20px !important',
+              },
+            }}
           >
             <FormControl w="215px" isInvalid={!!errors.w9Document?.message}>
               <FormLabel variant="strong-label" size="md" color="#2D3748">
@@ -180,7 +185,12 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           </HStack>
         </HStack>
         <Box>
-          <HStack flexDir={{ base: 'column', sm: 'row' }} alignItems="flex-start" spacing="16px" marginTop={{ base: "20px", md: "0" }}>
+          <HStack
+            flexDir={{ base: 'column', sm: 'row' }}
+            alignItems="flex-start"
+            spacing="16px"
+            marginTop={{ base: '20px', md: '0' }}
+          >
             <Box>
               <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('agreementSignedDate')}
@@ -200,12 +210,14 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <HStack sx={{
-            '@media screen and (max-width: 480px)': {
-              ms: '0 !important',
-              mt: '20px !important'
-            }
-          }}>
+            <HStack
+              sx={{
+                '@media screen and (max-width: 480px)': {
+                  ms: '0 !important',
+                  mt: '20px !important',
+                },
+              }}
+            >
               <FormControl w="215px" isInvalid={!!errors.agreement?.message}>
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
@@ -248,12 +260,17 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           </HStack>
         </Box>
 
-        <HStack w="100%" pb={5} pt={1} sx={{
+        <HStack
+          w="100%"
+          pb={5}
+          pt={1}
+          sx={{
             '@media screen and (max-width: 480px)': {
               ms: '0 !important',
-              mt: '30px !important'
-            }
-          }}>
+              mt: '30px !important',
+            },
+          }}
+        >
           <FormLabel m={0} variant="strong-label" fontSize="18px" color="#2D3748">
             {t('insurance')}
           </FormLabel>
@@ -261,7 +278,12 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           <Divider borderColor="gray.300" />
         </HStack>
         <Box>
-          <HStack flexDir={{ base: 'column', sm: 'row' }} alignItems="flex-start" spacing="16px" marginTop={{ base: "20px", md: "0" }}>
+          <HStack
+            flexDir={{ base: 'column', sm: 'row' }}
+            alignItems="flex-start"
+            spacing="16px"
+            marginTop={{ base: '20px', md: '0' }}
+          >
             <Box>
               <FormLabel
                 variant="strong-label"
@@ -288,12 +310,14 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <HStack sx={{
-            '@media screen and (max-width: 480px)': {
-              ms: '0 !important',
-              mt: '20px !important'
-            }
-          }}>
+            <HStack
+              sx={{
+                '@media screen and (max-width: 480px)': {
+                  ms: '0 !important',
+                  mt: '20px !important',
+                },
+              }}
+            >
               <FormControl w="215px" isInvalid={!!errors.insurance?.message}>
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
@@ -336,7 +360,12 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           </HStack>
         </Box>
         <Box>
-          <HStack flexDir={{ base: 'column', sm: 'row' }} marginTop={{ base: "20px", md: "0" }} alignItems="flex-start" spacing="16px">
+          <HStack
+            flexDir={{ base: 'column', sm: 'row' }}
+            marginTop={{ base: '20px', md: '0' }}
+            alignItems="flex-start"
+            spacing="16px"
+          >
             <Box>
               <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('COIGLExpDate')}
@@ -356,12 +385,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <HStack w="100%" pr="20px" sx={{
-            '@media screen and (max-width: 480px)': {
-              ms: '0 !important',
-              mt: '20px !important'
-            }
-          }}>
+            <HStack
+              w="100%"
+              pr="20px"
+              sx={{
+                '@media screen and (max-width: 480px)': {
+                  ms: '0 !important',
+                  mt: '20px !important',
+                },
+              }}
+            >
               <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message} color="#2D3748">
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
@@ -402,7 +435,12 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           </HStack>
         </Box>
         <Box>
-          <HStack flexDir={{ base: 'column', sm: 'row' }} alignItems="flex-start" spacing="16px" marginTop={{ base: "20px", md: "0" }}>
+          <HStack
+            flexDir={{ base: 'column', sm: 'row' }}
+            alignItems="flex-start"
+            spacing="16px"
+            marginTop={{ base: '20px', md: '0' }}
+          >
             <Box>
               <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('COIWCExpDate')}
@@ -422,12 +460,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </Box>
-            <HStack w="100%" pr="20px" sx={{
-            '@media screen and (max-width: 480px)': {
-              ms: '0 !important',
-              mt: '20px !important'
-            }
-          }}>
+            <HStack
+              w="100%"
+              pr="20px"
+              sx={{
+                '@media screen and (max-width: 480px)': {
+                  ms: '0 !important',
+                  mt: '20px !important',
+                },
+              }}
+            >
               <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message}>
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}

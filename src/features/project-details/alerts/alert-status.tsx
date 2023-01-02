@@ -143,7 +143,7 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
   const [modalSize, setModalSize] = useState<string>('3xl')
 
   useEffect(() => {
-    isMobile ? setModalSize('sm') : setModalSize('3xl');
+    isMobile ? setModalSize('sm') : setModalSize('3xl')
   }, [isMobile])
 
   return (
@@ -158,9 +158,9 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
             <ModalBody>
-              <Box minH="33.6em" boxShadow={ { md: '0px 1px 1px 1px rgba(0, 0, 0, 0.1)', sm: "" } } borderRadius={'12px'}>
+              <Box minH="33.6em" boxShadow={{ md: '0px 1px 1px 1px rgba(0, 0, 0, 0.1)', sm: '' }} borderRadius={'12px'}>
                 <Box>
-                  <Grid templateColumns="repeat(2, 1fr)" gap={6} my="5" mx={ { md: "100px", sm: "0px" } }>
+                  <Grid templateColumns="repeat(2, 1fr)" gap={6} my="5" mx={{ md: '100px', sm: '0px' }}>
                     {<AlertInfo />}
                   </Grid>
                   <Flex justifyContent="center" mt={20}>
@@ -172,7 +172,7 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
             <ModalFooter bg="white" mt={10}>
               <HStack spacing="16px" w="100%">
                 <Button variant="outline" colorScheme="brand" m="0">
-                  { isMobile ? <BiSpreadsheet />: t('seeProjectDetails') }
+                  {isMobile ? <BiSpreadsheet /> : t('seeProjectDetails')}
                 </Button>
                 <Spacer />
                 <Button variant="outline" onClick={onClose} colorScheme="brand">

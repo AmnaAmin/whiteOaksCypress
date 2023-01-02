@@ -99,7 +99,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const [modalSize, setModalSize] = useState<string>('3xl')
 
   useEffect(() => {
-    isMobile ? setModalSize('sm') : setModalSize('3xl');
+    isMobile ? setModalSize('sm') : setModalSize('3xl')
   }, [isMobile])
 
   return (
@@ -124,7 +124,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               <ViewLoader />
             ) : (
               <HStack h="130px">
-                <Grid gridTemplateColumns={ { md: '215px 215px 215px', sm: '' }  } gap="15px">
+                <Grid gridTemplateColumns={{ md: '215px 215px 215px', sm: '' }} gap="15px">
                   <GridItem>
                     <FormControl isInvalid={!!errors?.documentTypes} data-testid="document-type">
                       <FormLabel htmlFor="documentType" variant="strong-label" size="md">
