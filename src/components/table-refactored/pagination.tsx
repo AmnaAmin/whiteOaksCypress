@@ -65,7 +65,7 @@ export const SelectPageSize = ({ onPageSizeChange, dataCount }) => {
   return (
     <Flex gap="1" alignItems="center">
       <Select
-        disabled={dataCount <= 5 ? true : false}
+        disabled={dataCount <= 25 ? true : false}
         style={{ color: '#4A5568', border: '1px solid #CBD5E0' }}
         value={pageSize}
         onChange={handlePageSizeChange}
