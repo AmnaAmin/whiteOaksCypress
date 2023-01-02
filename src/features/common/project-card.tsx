@@ -24,14 +24,9 @@ export const ProjectCard = ({
   number,
   isLoading,
   IconElement,
-  styles
-
+  styles,
 }: ProjectCardProps) => {
-
   return (
-
-    
-
     <Box as="label" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)" {...styles}>
       <Flex
         boxShadow=" 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"

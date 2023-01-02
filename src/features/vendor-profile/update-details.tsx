@@ -76,12 +76,7 @@ export const UpdateDetails: React.FC<{
   return (
     <>
       <Flex direction="column">
-        <Grid 
-          templateColumns={{ md: "repeat(auto-fit, minmax(250px, 1fr))", sm: "" }}
-          gap="20px" 
-          w="90%" 
-          mb="30px"
-        >
+        <Grid templateColumns={{ md: 'repeat(auto-fit, minmax(250px, 1fr))', sm: '' }} gap="20px" w="90%" mb="30px">
           <GridItem>
             <FieldInfoCard
               testid="businessName"
@@ -114,7 +109,7 @@ export const UpdateDetails: React.FC<{
         </Grid>
         <Divider border="1px solid" borderColor="gray.200" mb="27px" />
 
-        <Grid templateColumns={{ md: "repeat(auto-fit, minmax(250px, 1fr))", sm: "" }} gap="20px" w="90%" mb="40px">
+        <Grid templateColumns={{ md: 'repeat(auto-fit, minmax(250px, 1fr))', sm: '' }} gap="20px" w="90%" mb="40px">
           <GridItem>
             <FieldInfoCard
               testid="streetAddress"
@@ -154,7 +149,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
       ) : (
         <Box data-testid="detailForm" id="details">
           <Flex direction="column" h="100%">
-            <VStack alignItems="start" spacing="32px" h={{sm: "", md: "353px"}}>
+            <VStack alignItems="start" spacing="32px" h={{ sm: '', md: '353px' }}>
               <Box>
                 <Stack spacing={4} direction={['column', 'row']}>
                   <FormControl w="215px" isInvalid={!!errors.ownerName}>
@@ -180,7 +175,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
               </Box>
 
               <Box>
-                <Stack direction={ ['column', 'row'] } spacing={4}>
+                <Stack direction={['column', 'row']} spacing={4}>
                   {/* Primary Email => Input */}
 
                   <FormControl isInvalid={!!errors.businessEmailAddress} w="215px">
@@ -210,7 +205,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
               </Box>
 
               <Box>
-                <Stack direction={[ 'column', 'row' ]} spacing={4}>
+                <Stack direction={['column', 'row']} spacing={4}>
                   <FormControl isInvalid={!!errors.businessPhoneNumber} w="215px">
                     <FormLabel isTruncated sx={textStyle}>
                       {t('businessPhoneNo')}
