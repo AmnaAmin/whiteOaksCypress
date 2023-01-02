@@ -48,7 +48,7 @@ export const STATUS_OPTIONS = [
     label: 'Rejected',
   },
 ]
-export const SUPPORT_LIST = 'supportList'
+export const SUPPORT_LIST = 'support_list'
 export const useSupport = () => {
   const client = useClient()
   return useQuery(SUPPORT_LIST, async () => {
