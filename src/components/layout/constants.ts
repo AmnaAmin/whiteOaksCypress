@@ -285,6 +285,12 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiLineChart,
       color: '#68D391',
     },
+    // {
+    //   pathTo: '/support-tickets',
+    //   title: 'Support',
+    //   Icon: FaReact,
+    //   color: '#3182CE',
+    // },
     {
       pathTo: '/userManager',
       title: `${SIDE_NAV}.userMgmt`,

@@ -18,11 +18,10 @@ import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
 import { boxShadow } from 'theme/common-style'
 
 const Dashboard: React.FC = () => {
-
   const { vendorId } = useUserProfile() as Account
 
-  const [isMobile] = useMediaQuery( "(max-width: 480px)" );
-  const [isLessThanOrEq320] = useMediaQuery( "(max-width: 320px)" );
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
+  const [isLessThanOrEq320] = useMediaQuery('(max-width: 320px)')
 
   // const { data: woByVendorsPerMonth } = useWoByVendorsPerMonth(vendorId);
   // const { onToggle } = useDisclosure()
@@ -35,17 +34,20 @@ const Dashboard: React.FC = () => {
     navigate('/projects', { state: params })
   }
 
-  if ( isLessThanOrEq320 ) {
+  if (isLessThanOrEq320) {
     return (
       <Box mt="50%">
-        <Heading as='h3' size='sm'>
+        <Heading as="h3" size="sm">
           Sorry !
         </Heading>
-        <Text fontSize='sm'>
-          {t('Your resolution is reached at a limit, please switch to a better resolution or change your device orientation from vertical to horizontal')}.
+        <Text fontSize="sm">
+          {t(
+            'Your resolution is reached at a limit, please switch to a better resolution or change your device orientation from vertical to horizontal',
+          )}
+          .
         </Text>
       </Box>
-    );
+    )
   }
 
   return (
@@ -73,7 +75,7 @@ const Dashboard: React.FC = () => {
               {t('WOstatus')}
             </Text>
           </Flex>
-          { isMobile ? <br /> : null }
+          {isMobile ? <br /> : null}
           <Overview vendorId={vendorId} />
         </Card>
 

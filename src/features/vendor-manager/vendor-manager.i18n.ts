@@ -27,7 +27,7 @@ export const vendor_manager = {
 
         //Cards
         active: 'Active',
-        inActive:'In Active',
+        inActive: 'In Active',
         doNotUse: 'Do Not Use',
         expired: 'Expired',
       },
@@ -58,7 +58,7 @@ export const vendor_manager = {
 
         //Cards
         active: 'Activo',
-        inActive:'En Activo',
+        inActive: 'En Activo',
         doNotUse: 'No Utilice',
         expired: 'Caducado',
       },

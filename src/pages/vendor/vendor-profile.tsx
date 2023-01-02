@@ -62,7 +62,7 @@ export const validateMarket = markets => {
 }
 
 const tabStyle = {
-  h: { base: '52px', sm: 'unset' }
+  h: { base: '52px', sm: 'unset' },
 }
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
@@ -191,63 +191,49 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
   return (
     <FormProvider {...formReturn}>
-
-      <Stack
-        width={{ base: "100%", lg: "971px" }}
-      >
+      <Stack width={{ base: '100%', lg: '971px' }}>
         <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
 
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
-          <Tabs
-            index={tabIndex}
-            variant="enclosed"
-            colorScheme="darkPrimary"
-            onChange={index => setTabIndex(index)}
-          >
-            
-              <TabList 
-                border="none" 
-                w="100%" 
-                flexDir={{ base: 'column', sm: 'row' }}
+          <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
+            <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
+              <Tab>{t('details')}</Tab>
+              <Tab
+                _disabled={{ cursor: 'not-allowed' }}
+                isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
+                data-testid="documents"
+                {...tabStyle}
               >
-                <Tab>{t('details')}</Tab>
-                <Tab
-                  _disabled={{ cursor: 'not-allowed' }}
-                  isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
-                  data-testid="documents"
-                  {...tabStyle}
-                >
-                  {t('documents')}
-                </Tab>
-                <Tab
-                  _disabled={{ cursor: 'not-allowed' }}
-                  isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
-                  data-testid="license"
-                  {...tabStyle}
-                >
-                  {t('license')}
-                </Tab>
-                <Tab
-                  _disabled={{ cursor: 'not-allowed' }}
-                  isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
-                  data-testid="tradetab"
-                  {...tabStyle}
-                >
-                  {t('trade')}
-                </Tab>
-                <Tab
-                  _disabled={{ cursor: 'not-allowed' }}
-                  isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
-                  data-testid="markettab"
-                  {...tabStyle}
-                >
-                  {t('market')}
-                </Tab>
-                {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
-                {!isVendor && <Tab>{t('prjt')}</Tab>}
-              </TabList>
-            
-            
+                {t('documents')}
+              </Tab>
+              <Tab
+                _disabled={{ cursor: 'not-allowed' }}
+                isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
+                data-testid="license"
+                {...tabStyle}
+              >
+                {t('license')}
+              </Tab>
+              <Tab
+                _disabled={{ cursor: 'not-allowed' }}
+                isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
+                data-testid="tradetab"
+                {...tabStyle}
+              >
+                {t('trade')}
+              </Tab>
+              <Tab
+                _disabled={{ cursor: 'not-allowed' }}
+                isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
+                data-testid="markettab"
+                {...tabStyle}
+              >
+                {t('market')}
+              </Tab>
+              {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
+              {!isVendor && <Tab>{t('prjt')}</Tab>}
+            </TabList>
+
             <Card pb="8px" pt="18px" px="18px" roundedTop="0px">
               <TabPanels mt="31px">
                 <TabPanel p="0px">
