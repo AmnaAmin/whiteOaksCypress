@@ -6,7 +6,7 @@ import routesConfig from './routesConfig'
 import { Suspense } from 'react'
 import { ViewLoader } from 'components/page-level-loader'
 import first from 'lodash/first'
-import { CreateATicket } from './vendor/create-a-ticket'
+import { CreateATicketForm } from './vendor/create-a-ticket'
 
 export default function ProjectCordinatorRoutes() {
   const routes = routesConfig()
@@ -15,7 +15,7 @@ export default function ProjectCordinatorRoutes() {
     <Routes>
       <Route path="/logout" element={<div></div>} />
       <Route path="/password" element={<VendorProfilePassword />} />
-      <Route path="/support" element={<CreateATicket />} />
+      <Route path="/support" element={<CreateATicketForm />} />
       <Route path="/settings" element={<Settings />} />
       {routes.map(page => (
         <Route

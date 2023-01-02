@@ -23,7 +23,7 @@ const Vendors = () => {
         <Spacer />
         <Box pt="4">
           <Button onClick={onNewVendorModalOpen} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
-          {t(`${VENDOR_MANAGER}.newVendor`)}
+            {t(`${VENDOR_MANAGER}.newVendor`)}
           </Button>
         </Box>
       </HStack>

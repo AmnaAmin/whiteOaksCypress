@@ -125,23 +125,25 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
   return (
     <Box>
       <VStack align="start" h="584px" spacing="15px" overflow="auto">
-        <Button
-          ml={'45px'}
-          variant="outline"
-          colorScheme="darkPrimary"
-          data-testid="addLicense"
-          onClick={() =>
-            append({
-              licenseType: '',
-              licenseNumber: '',
-              expiryDate: startDate,
-              expirationFile: null,
-            })
-          }
-          leftIcon={<BiAddToQueue />}
-        >
-          {t('addLicense')}
-        </Button>
+        <Box>
+          <Button
+            ml={'45px'}
+            variant="outline"
+            colorScheme="darkPrimary"
+            data-testid="addLicense"
+            onClick={() =>
+              append({
+                licenseType: '',
+                licenseNumber: '',
+                expiryDate: startDate,
+                expirationFile: null,
+              })
+            }
+            leftIcon={<BiAddToQueue />}
+          >
+            {t('addLicense')}
+          </Button>
+        </Box>
         {licenseFields
           .map((license, index) => {
             const isLicenseChanged = checkIsLicenseChanged(
@@ -150,7 +152,14 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
             )
 
             return (
-              <HStack flexDir={{ base: 'column', sm: 'row' }} key={license?.id} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
+              <HStack
+                flexDir={{ base: 'column', sm: 'row' }}
+                key={license?.id}
+                mt="40px"
+                spacing={4}
+                data-testid="licenseRows"
+                w="100%"
+              >
                 <Box w="2em" color="#345EA6" fontSize="15px">
                   <Center>
                     <Icon
