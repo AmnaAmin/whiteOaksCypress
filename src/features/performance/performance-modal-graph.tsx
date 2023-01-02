@@ -211,7 +211,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption
             formatter={value => currencyFormatter(value)}
             contentStyle={{ borderRadius: '6px' }}
             data-testid="tooltip-overview"
-            // cursor={{ fill: 'transparent' }}
+            cursor={{ fill: 'transparent' }}
           />
 
           <Bar barSize={30} dataKey="Bonus" fill="#FB8832" radius={[10, 10, 0, 0]} hide={barProps['Bonus'] === true} />

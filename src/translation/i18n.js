@@ -327,7 +327,7 @@ i18n.use(initReactI18next).init({
         // VENDOR
         details: 'Details',
         market: 'Market',
-        //projects: 'Projects',
+        prjt: 'Projects',
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
@@ -894,7 +894,7 @@ i18n.use(initReactI18next).init({
         // VENDOR-PROFILE
         details: 'Detalles',
         market: 'Mercado',
-        // projects: 'Proyectos',
+        prjt: 'Proyectos',
 
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',

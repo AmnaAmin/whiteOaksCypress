@@ -48,12 +48,13 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   return (
     <>
       <Box
-        overflow={'auto'}
         w="100%"
-        h="calc(100vh - 300px)"
+        minH="calc(100vh - 450px)"
         position="relative"
         borderRadius="6px"
         border="1px solid #CBD5E0"
+        overflowX="auto"
+        roundedRight={{ base: '0px', sm: '6px' }}
       >
         <TableContextProvider data={transactions} columns={tableColumns}>
           <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />

@@ -76,6 +76,10 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${TRANSACTION}.trade`,
     accessorKey: 'skillName',
+    accessorFn: cellInfo => {
+      return cellInfo.skillName
+    },
+    filterFn: 'includesString',
   },
   {
     header: `${TRANSACTION}.vendorGL`,

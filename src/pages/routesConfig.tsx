@@ -8,7 +8,7 @@ import Clients from './clients'
 import { Receivable } from './receivable'
 import { VendorSkills } from 'pages/vendor-manager/vendor-skills'
 import { Markets } from 'pages/vendor-manager/markets'
-// import Alerts from './alerts'
+import Alerts from './alerts'
 // import { ProjectCoordinatorDashboard } from 'pages/dashboard'
 
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
@@ -94,6 +94,7 @@ export default function useRoutesConfig() {
         { path: 'markets', element: Markets },
         { path: 'performance', element: PerformanceTab },
         { path: 'vendorSkills', element: VendorSkills },
+        { path: 'alerts', element: Alerts },
       ]
 
     case isAccounting:

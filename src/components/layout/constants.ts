@@ -10,6 +10,7 @@ import {
   BiUser,
   BiUserPin,
   BiUserPlus,
+  BiError,
 } from 'react-icons/bi'
 
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
@@ -27,6 +28,9 @@ type Menu = {
 type Menus = {
   [key in UserTypes]: Array<Menu>
 }
+
+// Show tab on preprod only
+const showForPreProd = window.location.href.includes('preprod')
 
 export const MENU_ROLE_BASED: Menus = {
   [UserTypes.vendor]: [
@@ -311,6 +315,16 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiAlignMiddle,
       color: '#4E87F8',
     },
+    ...(showForPreProd
+      ? [
+          {
+            pathTo: '/alerts',
+            title: `${SIDE_NAV}.alerts`,
+            Icon: BiError,
+            color: '#ED64A6',
+          },
+        ]
+      : []),
   ],
 
   [UserTypes.accounting]: [
