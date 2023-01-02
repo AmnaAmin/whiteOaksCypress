@@ -33,6 +33,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
   const { refetch, transactions, isLoading } = useTransactionsV1(projectId)
   const [totalPages, setTotalPages] = useState(0)
+  const [totalRows, setTotalRows] = useState(0)
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const {
     isOpen: isOpenTransactionDetailsModal,
@@ -54,7 +55,13 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
 
   useEffect(() => {
     setTotalPages(Math.ceil((transactions?.length ?? 0) / 10))
+    setTotalRows(transactions?.length ?? 0)
   }, [transactions])
+
+  const setPageCount = rows => {
+    setTotalPages(Math.ceil((rows?.length ?? 0) / 10))
+    setTotalRows(rows?.length)
+  }
 
   return (
     <>
@@ -90,7 +97,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                 )}
               </ButtonsWrapper>
               <TablePagination>
-                <ShowCurrentRecordsWithTotalRecords dataCount={null} />
+                <ShowCurrentRecordsWithTotalRecords dataCount={totalRows} setPageCount={setPageCount} />
                 <GotoFirstPage />
                 <GotoPreviousPage />
                 <GotoNextPage />

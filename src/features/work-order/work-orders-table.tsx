@@ -22,6 +22,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [totalPages, setTotalPages] = useState(0)
+  const [totalRows, setTotalRows] = useState(0)
 
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
@@ -44,7 +45,13 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   useEffect(() => {
     setTotalPages(Math.ceil((workOrders?.length ?? 0) / 10))
+    setTotalRows(workOrders?.length ?? 0)
   }, [workOrders])
+
+  const setPageCount = rows => {
+    setTotalPages(Math.ceil((rows?.length ?? 0) / 10))
+    setTotalRows(rows?.length)
+  }
 
   return (
     <Box>
@@ -78,8 +85,9 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
             <Table isLoading={isFetching} isEmpty={!isFetching && !workOrders?.length} onRowClick={onRowClick} />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <Box />
+
               <TablePagination>
-                <ShowCurrentRecordsWithTotalRecords dataCount={null} />
+                <ShowCurrentRecordsWithTotalRecords dataCount={totalRows} setPageCount={setPageCount} />
                 <GotoFirstPage />
                 <GotoPreviousPage />
                 <GotoNextPage />

@@ -17,6 +17,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
+import { TableFooter } from 'components/table-refactored/table-footer'
 interface PropType {
   onTabChange?: any
   projectData: Project
@@ -26,6 +27,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
   const { transactions = [] } = useTransactions(projectId)
   const [totalPages, setTotalPages] = useState(0)
+  const [totalRows, setTotalRows] = useState(0)
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
   // Do not show WO which have been cancelled
@@ -46,7 +48,13 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
 
   useEffect(() => {
     setTotalPages(Math.ceil((workOrders?.length ?? 0) / 10))
+    setTotalRows(workOrders?.length ?? 0)
   }, [workOrders])
+
+  const setPageCount = rows => {
+    setTotalPages(Math.ceil((rows?.length ?? 0) / 10))
+    setTotalRows(rows?.length)
+  }
 
   return (
     <Box>
@@ -86,13 +94,16 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
               isEmpty={!isLoading && !workOrdersNotCancelled?.length}
               onRowClick={onRowClick}
             />
-            <TablePagination>
-              <ShowCurrentRecordsWithTotalRecords dataCount={null} />
-              <GotoFirstPage />
-              <GotoPreviousPage />
-              <GotoNextPage />
-              <GotoLastPage />
-            </TablePagination>
+            <TableFooter position="sticky" bottom="0" left="0" right="0">
+              <Box />
+              <TablePagination>
+                <ShowCurrentRecordsWithTotalRecords dataCount={totalRows} setPageCount={setPageCount} />
+                <GotoFirstPage />
+                <GotoPreviousPage />
+                <GotoNextPage />
+                <GotoLastPage />
+              </TablePagination>
+            </TableFooter>
           </TableContextProvider>
         </Box>
       )}

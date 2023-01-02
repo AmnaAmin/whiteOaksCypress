@@ -1,7 +1,7 @@
 // React Table Pagination Component
 // ---------------------------------
 
-import React, { ChangeEvent } from 'react'
+import React, { ChangeEvent, useEffect } from 'react'
 
 import { Button, ButtonProps, Flex, HStack, Input, Select, StackProps, Text } from '@chakra-ui/react'
 import { useTableInstance } from './table-context'
@@ -147,20 +147,24 @@ export const GotoLastPage: React.FC<ButtonProps> = () => {
   )
 }
 
-export const ShowCurrentRecordsWithTotalRecords = ({ dataCount }) => {
+export const ShowCurrentRecordsWithTotalRecords = props => {
+  const { dataCount, setPageCount } = props
   const tableInstance = useTableInstance()
-  const count = dataCount ? dataCount : tableInstance?.getPrePaginationRowModel().rows?.length
   const { pageIndex, pageSize } = tableInstance.getState().pagination
   const lastRecordCount = pageIndex * pageSize + pageSize
+
+  useEffect(() => {
+    setPageCount?.(tableInstance?.getPrePaginationRowModel().rows) // setting page count in case of front end pagination. Manual Pagination (false)
+  }, [tableInstance?.getPrePaginationRowModel().rows])
 
   return (
     <Flex gap="1" alignItems="center">
       {pageIndex !== -1 && (
         <>
           <Text color="blackAlpha.800">
-            {pageIndex * pageSize + 1} -{count < lastRecordCount ? count : lastRecordCount}
+            {pageIndex * pageSize + 1} -{dataCount < lastRecordCount ? dataCount : lastRecordCount}
           </Text>
-          {count && <Text color="blackAlpha.600">of {count}</Text>}
+          {dataCount && <Text color="blackAlpha.600">of {dataCount}</Text>}
         </>
       )}
     </Flex>

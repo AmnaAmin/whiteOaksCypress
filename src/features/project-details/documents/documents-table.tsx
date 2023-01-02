@@ -25,6 +25,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
     projectId,
   })
   const [totalPages, setTotalPages] = useState(0)
+  const [totalRows, setTotalRows] = useState(0)
 
   const { mutate: postDocumentColumn } = useTableColumnSettingsUpdateMutation(TableNames.document)
   const { tableColumns, settingColumns, isLoading } = useTableColumnSettings(
@@ -38,7 +39,13 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
 
   useEffect(() => {
     setTotalPages(Math.ceil((documents?.length ?? 0) / 10))
+    setTotalRows(documents?.length ?? 0)
   }, [documents])
+
+  const setPageCount = rows => {
+    setTotalPages(Math.ceil((rows?.length ?? 0) / 10))
+    setTotalRows(rows?.length)
+  }
 
   const onRowClick = row => {}
 
@@ -65,7 +72,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
             <TablePagination>
-              <ShowCurrentRecordsWithTotalRecords dataCount={null} />
+              <ShowCurrentRecordsWithTotalRecords dataCount={totalRows} setPageCount={setPageCount} />
               <GotoFirstPage />
               <GotoPreviousPage />
               <GotoNextPage />
