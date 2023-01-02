@@ -1,7 +1,7 @@
 // Export React Table to excel button component
 // Language: typescript
 
-import { Button, ButtonProps, Flex, HStack, Icon, Text } from '@chakra-ui/react'
+import { Button, ButtonProps, HStack, Icon, Text } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/react-table'
 import { BiExport } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -47,11 +47,11 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   }
 
   return (
-    <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading}>
+    <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading} colorScheme="darkBlue">
       {children ?? (
         <HStack spacing={1}>
-          <Icon as={BiExport} fontSize={'18px'} mb="1px" />
-          <Text>{t('projects.export')}</Text>
+          <Icon as={BiExport} fontSize={'18px'} mb="1px" fontWeight={500} />
+          <Text fontWeight={500}>{t('export')}</Text>
         </HStack>
       )}
     </Button>
@@ -77,12 +77,13 @@ export const ExportCustomButton: React.FC<ExportCustomButtonProps> = ({
   const { t } = useTranslation()
 
   return (
-    <Button variant="ghost" onClick={handleExport} {...rest}>
+    <Button variant="ghost" colorScheme="darkBlue" onClick={handleExport} {...rest}>
       {children ?? (
-        <Flex justifyContent="center">
+        <HStack spacing={1}>
           <BiExport fontSize={'18px'} />
-          <Text ml="2.88">{t('projects.export')}</Text>
-        </Flex>
+
+          <Text fontWeight={500}>{t('export')}</Text>
+        </HStack>
       )}
     </Button>
   )

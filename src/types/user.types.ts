@@ -22,6 +22,7 @@ export type UserForm = {
   employeeId?: string
   features?: [string]
   fieldProjectManagerRoleId?: number | null
+  managerRoleId: number | null
   firebaseToken?: null
   hfeWage?: number | null
   id?: number

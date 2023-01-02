@@ -37,7 +37,7 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
     },
     {
       header: `${USER_MANAGEMENT}.table.status`,
-      accessorKey: 'status',
+      accessorKey: 'activated',
       cell: (row: any) => {
         const value = row?.row.original?.activated
         return <StatusUserMgt id={value} />
@@ -74,7 +74,7 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
         />
       )}
 
-      <Box overflow={'auto'} h="calc(100vh - 225px)">
+      <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderRadius="6px">
         <TableContextProvider data={data} columns={columns}>
           <Table
             onRowClick={row => {

@@ -34,7 +34,7 @@ const InputView = ({ Icon: Icons, label, InputElem, showDivider = true, controlS
           )}
 
           <Box>
-            <Heading color="gray.700" fontSize="14px" fontWeight={500} {...controlStyle} isTruncated title={label}>
+            <Heading color="#2D3748" fontSize="14px" fontWeight={500} {...controlStyle} isTruncated title={label}>
               <Text>{label}</Text>
             </Heading>
             <Text
@@ -42,7 +42,7 @@ const InputView = ({ Icon: Icons, label, InputElem, showDivider = true, controlS
               fontSize="14px"
               fontStyle="normal"
               fontWeight={400}
-              color="gray.600"
+              color="#4A5568"
               {...controlStyle}
               isTruncated
             >
@@ -67,7 +67,7 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
   return (
     <Flex>
       <Box my="1" mr="4">
-        {Icon && <Icon fontSize="18px" color="#718096" />}
+        {Icon && <Icon fontSize="18px" color="#4A5568" />}
       </Box>
       <FormControl>
         <FormLabel htmlFor={name} color="gray.700" fontSize="14px" marginBottom="0.5" whiteSpace="nowrap">

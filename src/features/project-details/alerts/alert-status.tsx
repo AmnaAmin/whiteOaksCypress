@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -15,9 +15,10 @@ import {
   VStack,
   HStack,
   Spacer,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import { RiErrorWarningLine } from 'react-icons/ri'
-import { BiListMinus, BiMapPin, BiWorld, BiUser, BiCalendar } from 'react-icons/bi'
+import { BiListMinus, BiMapPin, BiWorld, BiUser, BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { Button } from 'components/button/button'
 import { useTranslation } from 'react-i18next'
 
@@ -137,10 +138,18 @@ const AlertInfo = () => {
 export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, alert }) => {
   const { t } = useTranslation()
   const [alertResolved, setAlertResolved] = useState(false)
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
+
+  const [modalSize, setModalSize] = useState<string>('3xl')
+
+  useEffect(() => {
+    isMobile ? setModalSize('sm') : setModalSize('3xl');
+  }, [isMobile])
+
   return (
     <>
       {alert && (
-        <Modal isOpen={isOpen} onClose={onClose} variant="custom" size="3xl">
+        <Modal isOpen={isOpen} onClose={onClose} variant="custom" size={modalSize}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>
@@ -149,9 +158,9 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
             <ModalBody>
-              <Box minH="33.6em" boxShadow={'0px 1px 1px 1px rgba(0, 0, 0, 0.1)'} borderRadius={'12px'}>
+              <Box minH="33.6em" boxShadow={ { md: '0px 1px 1px 1px rgba(0, 0, 0, 0.1)', sm: "" } } borderRadius={'12px'}>
                 <Box>
-                  <Grid templateColumns="repeat(2, 1fr)" gap={6} my="5" mx="100px">
+                  <Grid templateColumns="repeat(2, 1fr)" gap={6} my="5" mx={ { md: "100px", sm: "0px" } }>
                     {<AlertInfo />}
                   </Grid>
                   <Flex justifyContent="center" mt={20}>
@@ -163,7 +172,7 @@ export const AlertStatusModal: React.FC<AlertStatusProps> = ({ isOpen, onClose, 
             <ModalFooter bg="white" mt={10}>
               <HStack spacing="16px" w="100%">
                 <Button variant="outline" colorScheme="brand" m="0">
-                  {t('seeProjectDetails')}
+                  { isMobile ? <BiSpreadsheet />: t('seeProjectDetails') }
                 </Button>
                 <Spacer />
                 <Button variant="outline" onClick={onClose} colorScheme="brand">

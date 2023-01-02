@@ -134,6 +134,9 @@ export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undef
     workOrderAssignedItems: sortBy(workOrder?.assignedItems, e => {
       return e.orderNo
     }),
+    awardPlanScopeAmount: workOrder?.awardPlanScopeAmount,
+    displayAwardPlan: workOrder?.displayAwardPlan,
+    workOrderDetails: workOrder,
     ...rest,
   }
 }
@@ -195,7 +198,7 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
     dateInvoiceSubmittedEnabled: defaultStatus || isAdmin,
-    paymentTermEnabled: defaultStatus || invoicedState || isAdmin,
+    paymentTermEnabled: defaultStatus || invoicedState || isAdmin || (workOrder?.assignAwardPlan && isAdmin),
     paymentTermDateEnabled: defaultStatus || isAdmin,
     expectedPaymentDateEnabled: defaultStatus || isAdmin,
     datePaymentProcessedEnabled: defaultStatus || invoicedState || isAdmin,
@@ -219,6 +222,12 @@ export const parsePaymentValuesToPayload = formValues => {
     datePaid: dateISOFormat(formValues?.datePaid),
     partialPayment: formValues?.partialPayment,
     partialPaymentDate: dateISOFormat(formValues?.paymentDate),
+  }
+}
+
+export const parseProjectAwardValuesToPayload = id => {
+  return {
+    awardPlanId: id,
   }
 }
 

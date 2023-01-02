@@ -83,13 +83,16 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   }
 }
 
-export const useFieldRequiredDecision = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
+export const useFieldRequiredDecision = (control: Control<FormValues, any>) => {
   const status = useWatch({ name: 'status', control })
   const isStatusApproved = status?.value === TransactionStatusValues.approved
+  const against = useWatch({ name: 'against', control })
+  const transactionType = useWatch({ name: 'transactionType', control })
 
   return {
     isPaidDateRequired: isStatusApproved,
-    isInvoicedDateRequired: isStatusApproved,
+    isInvoicedDateRequired:
+      isStatusApproved || (transactionType?.value === TransactionTypeValues?.draw && against?.label === 'Project SOW'),
   }
 }
 
@@ -113,10 +116,13 @@ export const useFieldDisabledEnabledDecision = (
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
     transaction?.status === TransactionStatusValues.cancelled
+  const isFactoringFeeSysGenerated =
+    transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
 
   return {
     isUpdateForm,
     isApproved: isStatusApproved,
+    isSysFactoringFee: isFactoringFeeSysGenerated,
     isPaidDateDisabled: !transaction || isStatusApproved,
     isStatusDisabled:
       (isStatusApproved && !(isAdmin && isManualTransaction(transaction.transactionType))) || isMaterialsLoading,
@@ -137,6 +143,14 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
     formattedAmount: numeral(totalAmount).format('$0,0.00'),
     amount: totalAmount,
   }
+}
+
+export const useIsAwardSelect = (control: Control<FormValues, any>) => {
+  const against = useWatch({ name: 'against', control })
+  const check = against?.awardStatus
+  const isValidForAwardPlan = against?.isValidForAwardPlan
+
+  return { check, isValidForAwardPlan }
 }
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
@@ -182,7 +196,12 @@ export const useLienWaiverFormValues = (
   }, [totalAmount, selectedWorkOrder, setValue])
 }
 
-export const useAgainstOptions = (againstOptions: SelectOption[], control: Control<FormValues, any>, projectStatus, transaction) => {
+export const useAgainstOptions = (
+  againstOptions: SelectOption[],
+  control: Control<FormValues, any>,
+  projectStatus,
+  transaction,
+) => {
   const { isVendor } = useUserRolesSelector()
   const transactionType = useWatch({ name: 'transactionType', control })
 
@@ -196,7 +215,8 @@ export const useAgainstOptions = (againstOptions: SelectOption[], control: Contr
     // If the transaction is new and transaction type is draw and project status is invoiced or following state, hide Project SOW againstOption
     if (
       transactionType?.value === TransactionTypeValues.draw &&
-      !isVendor && !transaction?.id &&
+      !isVendor &&
+      !transaction?.id &&
       !['new', 'active', 'punch', 'closed'].includes(projectStatus.toLowerCase())
     ) {
       return againstOptions.slice(1)

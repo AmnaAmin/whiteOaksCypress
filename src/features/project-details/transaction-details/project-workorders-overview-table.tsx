@@ -244,7 +244,7 @@ export const WorkOrderFinancialOverviewTable = React.forwardRef((props: WorkOrde
   )
 
   return (
-    <Box overflow={'auto'} w="100%" maxH="350px" position="relative">
+    <Box w="100%" position="relative">
       <TableContextProvider data={financialOveriewTableData} columns={tableColumns}>
         <Table
           isLoading={isLoading}

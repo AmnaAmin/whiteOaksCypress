@@ -405,6 +405,7 @@ export const EditableField = (props: EditableCellType) => {
         <>
           {selectedCell?.id !== index + '-' + fieldName ? (
             <Box
+              pl="3px"
               minH={'20px'}
               minW={'100px'}
               cursor={allowEdit ? 'pointer' : 'default'}
@@ -560,6 +561,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
       <input ref={inputRef} type="file" style={{ display: 'none', color: 'red' }} onChange={onFileChange} />
       {!value ? (
         <Button
+          ml={1}
           minW={'auto'}
           size="sm"
           data-testid={testId}
@@ -1195,8 +1197,8 @@ export const useGetLineItemsColumn = ({
               control={control}
               render={({ field, fieldState }) => {
                 return (
-                  <VStack gap="1px">
-                    <Box>
+                  <VStack spacing="-12px">
+                    <Box py="12px">
                       <UploadImage
                         testId={'upload-' + index}
                         label={`upload`}

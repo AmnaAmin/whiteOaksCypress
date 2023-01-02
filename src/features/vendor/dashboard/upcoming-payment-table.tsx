@@ -53,13 +53,13 @@ export const UpcomingPaymentTable = () => {
     },
     {
       header: t(`${DASHBOARD}.address`),
-      accessorKey: 'vendorAddress',
-      accessorFn: row => row.vendorAddress,
+      accessorKey: 'propertyAddress',
+      accessorFn: row => row.propertyAddress,
     },
     {
       header: t(`${DASHBOARD}.trade`),
-      accessorKey: 'marketName',
-      accessorFn: row => row.marketName,
+      accessorKey: 'skillName',
+      accessorFn: row => row.skillName,
     },
     {
       header: t(`${DASHBOARD}.dueDateWO`),
@@ -97,7 +97,7 @@ export const UpcomingPaymentTable = () => {
   )
 
   return (
-    <Box overflow={'auto'} h="calc(100vh - 225px)">
+    <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderRadius="6px">
       <TableContextProvider
         data={workOrders}
         columns={tableColumns}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import {
   Box,
   HStack,
@@ -67,6 +67,10 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
 
   const formValues = watch()
 
+  const selectedLicenseType = useMemo(() => {
+    return formValues?.licenses?.map(value => value.licenseType) ?? []
+  }, [formValues])
+
   const { disableLicenseNext } = useVendorNext({ control })
   const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
@@ -106,6 +110,18 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
     })
   }
 
+  const getSelectOptions = useCallback(
+    index => {
+      return licenseTypes.filter(selectedLicense => {
+        return (
+          !selectedLicenseType.includes(selectedLicense.value) ||
+          selectedLicense.value === `${formValues?.licenses?.[index]?.licenseType}`
+        )
+      })
+    },
+    [selectedLicenseType, formValues],
+  )
+
   return (
     <Box>
       <VStack align="start" h="584px" spacing="15px" overflow="auto">
@@ -134,7 +150,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
             )
 
             return (
-              <HStack key={license?.id} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
+              <HStack flexDir={{ base: 'column', sm: 'row' }} key={license?.id} mt="40px" spacing={4} data-testid="licenseRows" w="100%">
                 <Box w="2em" color="#345EA6" fontSize="15px">
                   <Center>
                     <Icon
@@ -149,13 +165,13 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 </Box>
 
                 <FormSelect
-                  disable={license?.expirationFile ? 'none' : ''}
+                  disable={!!license.licenseType}
                   bg={license?.expirationFile ? 'gray.50' : 'white'}
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
                   label={t('licenseType')}
                   name={`licenses.${index}.licenseType`}
                   control={control}
-                  options={licenseTypes}
+                  options={getSelectOptions(index)}
                   rules={{ required: isActive && 'This is required field' }}
                   controlStyle={{ maxW: '215px' }}
                   elementStyle={{
@@ -192,7 +208,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 />
                 <VStack>
                   <FormControl w="215px" h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
-                    <FormLabel variant="strong-label" size="md" color="#2D3748">
+                    <FormLabel size="md" color="#2D3748">
                       File Upload
                     </FormLabel>
                     <Controller
