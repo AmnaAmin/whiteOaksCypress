@@ -1,6 +1,5 @@
 import React from 'react'
 import { Box } from '@chakra-ui/react'
-import { useParams } from 'react-router-dom'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { AUDIT_LOGS_COLUMNS } from './audit-logs.constants'
