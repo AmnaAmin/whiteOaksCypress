@@ -1,4 +1,4 @@
-import { useDisclosure, Text, Flex } from '@chakra-ui/react'
+import { useDisclosure, Text } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
 import { Box, Stack, Button } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -18,6 +18,10 @@ import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 import { TriggeredAlertsTable } from 'features/project-details/alerts/triggered-alerts-table'
 import { Card } from 'components/card/card'
 import { boxShadow } from 'theme/common-style'
+
+const tabesStyle = {
+  h: { base: '52px', sm: 'unset' },
+}
 
 const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -41,36 +45,59 @@ const ProjectDetails: React.FC = props => {
 
   return (
     <>
-      <Stack w="100%" spacing={8} ref={tabsContainerRef} h="calc(100vh - 160px)">
+      <Stack w="100%" spacing="15px" ref={tabsContainerRef} h="calc(100vh - 160px)">
         <TransactionInfoCard projectData={projectData as Project} isLoading={isLoading} />
         <Stack
         //  spacing={5} minH={tabIndex === 0 ? '78%' : '97%'} bg="white" rounded="6px"
         >
-          <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
-            <TabList h={'50px'} alignItems="end" border="none">
-              <Flex h={'40px'}>
-                <Tab aria-labelledby="transaction-tab">{t('transaction')}</Tab>
+          <Tabs
+            index={tabIndex}
+            variant="enclosed"
+            colorScheme="darkPrimary"
+            onChange={index => setTabIndex(index)}
+            w="100%"
+          >
+            <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
+              <Tab aria-labelledby="transaction-tab" {...tabesStyle}>
+                {t('transaction')}
+              </Tab>
 
-                <Tab whiteSpace="nowrap">{t('vendorWorkOrders')}</Tab>
+              <Tab whiteSpace="nowrap" {...tabesStyle}>
+                {t('vendorWorkOrders')}
+              </Tab>
 
-                <Tab aria-labelledby="documents-tab">{t('documents')}</Tab>
+              <Tab aria-labelledby="documents-tab" {...tabesStyle}>
+                {t('documents')}
+              </Tab>
 
-                <Tab>{t('alerts')}</Tab>
-              </Flex>
+              <Tab {...tabesStyle}>{t('alerts')}</Tab>
             </TabList>
-            <Card rounded="0px" roundedBottomLeft="6px" roundedBottomRight="6px" style={boxShadow}>
-              <Box w="100%" display="flex" justifyContent="end" position="relative" top="-6px">
+            <Card
+              rounded="0px"
+              roundedBottomLeft="6px"
+              roundedBottomRight="6px"
+              style={boxShadow}
+              pr={{ base: 0, sm: '15px' }}
+            >
+              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" mb="15px">
                 {tabIndex === 2 && (
                   <Button
                     onClick={onDocumentModalOpen}
                     colorScheme="darkPrimary"
                     leftIcon={<BiUpload fontSize="16px" />}
+                    w={{ base: '100%', sm: 'unset' }}
+                    mr={{ base: '15px', sm: 'unset' }}
                   >
                     {t('upload')}
                   </Button>
                 )}
                 {tabIndex === 3 && (
-                  <Button colorScheme="darkPrimary" onClick={onAlertModalOpen}>
+                  <Button
+                    colorScheme="darkPrimary"
+                    onClick={onAlertModalOpen}
+                    w={{ base: '100%', sm: 'unset' }}
+                    mr={{ base: '15px', sm: 'unset' }}
+                  >
                     <Text fontSize="14px" fontStyle="normal" fontWeight={600}>
                       {t('resolveAll')}
                     </Text>
@@ -83,6 +110,8 @@ const ProjectDetails: React.FC = props => {
                     colorScheme="darkPrimary"
                     leftIcon={<BiAddToQueue />}
                     isDisabled={isNewTransactionAllow}
+                    w={{ base: '100%', sm: 'unset' }}
+                    mr={{ base: '15px', sm: 'unset' }}
                   >
                     {t('newTransaction')}
                   </Button>
@@ -91,9 +120,7 @@ const ProjectDetails: React.FC = props => {
 
               <TabPanels h="100%">
                 <TabPanel p="0px">
-                  <Box h="100%">
-                    <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
-                  </Box>
+                  <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
                 </TabPanel>
                 <TabPanel p="0px">
                   <WorkOrdersTable

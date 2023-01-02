@@ -2,13 +2,15 @@ import { HStack, Box, Icon, Button, Spacer, useDisclosure } from '@chakra-ui/rea
 import { VendorFilters } from 'features/vendors/vendor-filter'
 import { VendorTable } from 'features/vendors/vendor-table'
 import NewVendorModal from 'features/vendor-manager/new-vendor-modal'
-import { t } from 'i18next'
 import { useState } from 'react'
 import { BiBookAdd } from 'react-icons/bi'
+import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
+import { useTranslation } from 'react-i18next'
 
 const Vendors = () => {
   const { isOpen: isOpenNewVendorModal, onOpen: onNewVendorModalOpen, onClose: onNewVendorModalClose } = useDisclosure()
   const [selectedCard, setSelectedCard] = useState<string>('')
+  const { t } = useTranslation()
 
   return (
     <Box mt="5">
@@ -21,7 +23,7 @@ const Vendors = () => {
         <Spacer />
         <Box pt="4">
           <Button onClick={onNewVendorModalOpen} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
-            {t('newVendor')}
+          {t(`${VENDOR_MANAGER}.newVendor`)}
           </Button>
         </Box>
       </HStack>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Flex,
@@ -32,6 +32,7 @@ import ReactSelect from 'components/form/react-select'
 export const CreateATicket = () => {
   const [fileBlob, setFileBlob] = React.useState<Blob>()
   const { mutate: createTicket } = useCreateTicketMutation()
+  const [clearField, setClearField] = useState(false)
 
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
@@ -44,16 +45,25 @@ export const CreateATicket = () => {
     }
 
     const payload = parseSupportFormValuesToAPIPayload(formValues, attachment)
-    createTicket(payload)
+    createTicket(payload, {
+      onSuccess: () => {
+        setClearField(!clearField)
+      },
+    })
   }
+
   return (
     <Box>
-      <CreateATicketForm onSubmit={onSubmit} readFile={readFile} />
+      <CreateATicketForm onSubmit={onSubmit} readFile={readFile} clearField={clearField} />
     </Box>
   )
 }
 
-const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any }> = ({ onSubmit, readFile }) => {
+const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any; clearField?: boolean }> = ({
+  onSubmit,
+  readFile,
+  clearField,
+}) => {
   const { t } = useTranslation()
   const { email } = useUserProfile() as Account
   const defaultValues = React.useMemo(() => {
@@ -73,10 +83,19 @@ const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any }
     control,
     setValue,
     register,
+    resetField,
     handleSubmit,
   } = useForm<SupportFormValues>({
     defaultValues,
   })
+
+  useEffect(() => {
+    resetField('issueType')
+    resetField('severity')
+    resetField('title')
+    resetField('description')
+    resetField('attachment')
+  }, [clearField])
 
   return (
     <Card py="0">
@@ -142,6 +161,7 @@ const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any }
                 <FormLabel htmlFor="title" variant="strong-label" color="gray.600">
                   {t('title')}
                 </FormLabel>
+                
                 <Input
                   h="40px"
                   id="Title"
@@ -151,7 +171,12 @@ const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any }
                     required: 'This is required field',
                   })}
                   data-testid="title-input"
+                  borderLeft={"2px solid #345EA6"}
+                  _hover={{
+                    borderLeft:"2px solid #345EA6 !important"
+                  }}
                 />
+                
                 <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
               </FormControl>
             </Grid>
@@ -171,6 +196,10 @@ const CreateATicketForm: React.FC<{ onSubmit: (values) => void; readFile?: any }
                   required: 'This is required field',
                 })}
                 data-testid="descriptions"
+                borderLeft={"2px solid #345EA6"}
+                _hover={{
+                  borderLeft:"2px solid #345EA6 !important"
+                }}
               />
               <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
             </FormControl>

@@ -123,9 +123,14 @@ export const ProjectDetails: React.FC = props => {
 
               <HStack h="50px" w="100%" justifyContent="end">
                 {tabIndex === 2 &&
-                  ![STATUS.Closed, STATUS.Invoiced, STATUS.Cancelled, STATUS.Paid, STATUS.Punch].includes(
-                    projectStatus as STATUS,
-                  ) && (
+                  ![
+                    STATUS.Closed,
+                    STATUS.Invoiced,
+                    STATUS.Cancelled,
+                    STATUS.Paid,
+                    STATUS.Punch,
+                    STATUS.ClientPaid,
+                  ].includes(projectStatus as STATUS) && (
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
                       {t('newWorkOrder')}
                     </Button>
@@ -151,6 +156,8 @@ export const ProjectDetails: React.FC = props => {
                         <Switch
                           size="sm"
                           id="view-details"
+                          outline="4px solid #F2F3F4"
+                          rounded="full"
                           isChecked={isShowProjectFinancialOverview}
                           onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
                         />

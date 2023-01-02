@@ -4,7 +4,6 @@ import {
   Button,
   Flex,
   HStack,
-  Image,
   Link,
   Menu,
   MenuButton,
@@ -23,6 +22,7 @@ import { RouterLink } from '../router-link/router-link'
 import { Notification } from './notification'
 import { useTranslation } from 'react-i18next'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
+import LogoIcon from 'icons/header-logo'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -77,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
             display={{ base: 'inline', lg: 'none' }}
           />
 
-          <Image src="./WO-Logo.png" />
+          <LogoIcon />
         </Flex>
 
         <HStack spacing="5" px="1">

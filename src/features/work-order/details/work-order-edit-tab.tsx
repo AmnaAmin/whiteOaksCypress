@@ -127,6 +127,7 @@ const WorkOrderDetailTab = props => {
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
   const [uploadedWO, setUploadedWO] = useState<any>(null)
+
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
   const { isAdmin } = useUserRolesSelector()
@@ -246,6 +247,7 @@ const WorkOrderDetailTab = props => {
   const onSubmit = values => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
     const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
+
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrderAssignedItems)
     const removedItems = getRemovedItems(formValues, workOrderAssignedItems)

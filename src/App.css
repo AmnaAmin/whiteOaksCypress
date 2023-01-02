@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 } */
+
+@media screen and (max-width: 480px) {
+  .recharts-legend-wrapper {
+    width: 500px !important;
+    left: -80px !important;
+    transform: scale(0.8) !important;
+  }
+}

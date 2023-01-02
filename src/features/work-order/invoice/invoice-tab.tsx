@@ -19,7 +19,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { currencyFormatter } from 'utils/string-formatters'
-import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
+import { dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useCallback, useEffect, useState } from 'react'
@@ -46,17 +46,10 @@ export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.
         <Icon as={icons} fontSize="23px" color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="gray.700" mb="1">
+        <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="#2D3748" mb="1">
           {title}
         </Text>
-        <Text
-          data-testid={title}
-          color="gray.600"
-          lineHeight="20px"
-          fontSize="14px"
-          fontStyle="normal"
-          fontWeight={400}
-        >
+        <Text data-testid={title} color="#4A5568" lineHeight="20px" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {value}
         </Text>
       </Box>
@@ -162,7 +155,7 @@ export const InvoiceTab = ({
     if (onSave) {
       onSave({
         status: STATUS_CODE.DECLINED,
-        declineDate : new Date(),
+        declineDate: new Date(),
         lienWaiverAccepted: false,
       })
     }
@@ -172,9 +165,9 @@ export const InvoiceTab = ({
     const paymentTermDate = addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)
     const updatedWorkOrder = {
       ...workOrder,
-      dateInvoiceSubmitted: convertDateTimeToServer(invoiceSubmittedDate),
-      expectedPaymentDate: convertDateTimeToServer(nextFriday(paymentTermDate)),
-      paymentTermDate: convertDateTimeToServer(paymentTermDate),
+      dateInvoiceSubmitted: dateISOFormatWithZeroTime(invoiceSubmittedDate),
+      expectedPaymentDate: dateISOFormatWithZeroTime(nextFriday(paymentTermDate)),
+      paymentTermDate: dateISOFormatWithZeroTime(paymentTermDate),
     }
     if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Declined)) {
       updatedWorkOrder.status = STATUS_CODE.INVOICED

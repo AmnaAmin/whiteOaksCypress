@@ -31,6 +31,7 @@ export const theme = extendTheme({
   gray: {
     400: '#A0AEC0',
     500: '#718096',
+    700: '#2D3748',
   },
   blue: {
     500: '#3182CE',
@@ -39,9 +40,10 @@ export const theme = extendTheme({
   colors: {
     gray: {
       200: '#E2E8F0',
+      300: '#CBD5E0',
       500: '#718096',
       600: '#4A5568',
-      700: '2D3748',
+      700: '#2D3748',
       800: '#1A202C',
     },
     lightGray: {
@@ -67,9 +69,11 @@ export const theme = extendTheme({
       50: '#e1eeff',
       100: '#b2cdff',
       200: '#83acfb',
-      300: '#4e87f8',
+      // 300: '#4e87f8',
+      300: '#345EA6',
       400: '#2569f5',
-      500: '#0f50dc',
+      // 500: '#0f50dc',
+      500: '#022c7c',
       600: '#073eac',
       700: '#022c7c',
       800: '#001b4d',
@@ -132,7 +136,10 @@ export const theme = extendTheme({
       900: '#4E87F8',
     },
     darkBlue: {
-      800: '#22375B',
+      50: '#e1eeff',
+      100: '#b2cdff',
+      200: '#83acfb',
+      300: '#22375B',
     },
     PrimaryCheckBox: {
       50: '#345EA6',

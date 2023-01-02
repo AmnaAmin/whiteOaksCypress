@@ -47,7 +47,15 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
 
   return (
     <>
-        <Box overflow={'auto'} w="100%" h="calc(100vh - 300px)" position="relative" roundedTopRight={6}>
+      <Box
+        w="100%"
+        minH="calc(100vh - 450px)"
+        position="relative"
+        borderRadius="6px"
+        border="1px solid #CBD5E0"
+        overflowX="auto"
+        roundedRight={{ base: '0px', sm: '6px' }}
+      >
         <TableContextProvider data={transactions} columns={tableColumns}>
           <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
@@ -56,10 +64,10 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                 columns={tableColumns}
                 refetch={refetch}
                 isLoading={isLoading}
-                colorScheme="darkBlue"
+                colorScheme="darkPrimary.400"
                 fileName="transactions"
               />
-            <CustomDivider />
+              <CustomDivider />
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
           </TableFooter>

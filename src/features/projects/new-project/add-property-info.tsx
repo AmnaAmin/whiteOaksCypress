@@ -21,6 +21,7 @@ import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react'
 import { useProjects } from 'api/projects'
 import Select from 'components/form/react-select'
 import { CreatableSelect } from 'components/form/react-select'
+import { createFilter } from 'react-select'
 import { useGetAddressVerification, useMarkets, useProperties, useStates } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { AddressVerificationModal } from './address-verification-modal'
@@ -149,9 +150,7 @@ export const AddPropertyInfo: React.FC<{
           <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
             <GridItem>
               <FormControl>
-                <FormLabel variant="strong-label" size="md">
-                  {t(`${NEW_PROJECT}.address`)}
-                </FormLabel>
+                <FormLabel size="md">{t(`${NEW_PROJECT}.address`)}</FormLabel>
                 <Controller
                   control={control}
                   name={`streetAddress`}
@@ -166,6 +165,7 @@ export const AddPropertyInfo: React.FC<{
                         onChange={setAddressValues}
                         selectProps={{ isBorderLeft: true }}
                         inputProps={{ autoComplete: 'off', autoCorrect: 'off', spellCheck: 'off' }}
+                        filterOption={createFilter({ ignoreAccents: false })}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -196,9 +196,7 @@ export const AddPropertyInfo: React.FC<{
 
             <GridItem>
               <FormControl>
-                <FormLabel variant="strong-label" size="md">
-                  {t(`${NEW_PROJECT}.state`)}
-                </FormLabel>
+                <FormLabel size="md">{t(`${NEW_PROJECT}.state`)}</FormLabel>
                 <Controller
                   control={control}
                   name={`state`}
@@ -210,7 +208,7 @@ export const AddPropertyInfo: React.FC<{
                         options={stateSelectOptions}
                         size="md"
                         value={field.value}
-                        selectProps={{ isBorderLeft: true }}
+                        selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                         onChange={option => {
                           setAddressInfo({ ...addressInfo, state: option?.value })
                           field.onChange(option)
@@ -259,7 +257,7 @@ export const AddPropertyInfo: React.FC<{
                         options={marketSelectOptions}
                         size="md"
                         value={field.value}
-                        selectProps={{ isBorderLeft: true }}
+                        selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
                         onChange={option => {
                           setValue('projectManager', null)
                           field.onChange(option)
