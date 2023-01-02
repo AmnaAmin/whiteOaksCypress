@@ -164,9 +164,15 @@ const AssignedItems = (props: AssignedItemType) => {
   return (
     <Box>
       <>
-        <Stack mb={'20px'} direction="row" justifyContent="space-between">
-          <HStack alignItems="center" ml={1} mb={2}>
-            <Text fontWeight={500} color="gray.700" fontSize={'18px'}>
+        <Stack
+          mb={'20px'}
+          direction="row"
+          flexWrap="wrap"
+          experimental_spaceY={{ base: 5, md: 'unset' }}
+          justifyContent={{ base: 'center', md: 'space-between' }}
+        >
+          <HStack alignItems={{ base: 'start', sm: 'center' }} ml={1} mb={2} flexWrap="wrap">
+            <Text fontWeight={500} color="gray.700" fontSize={'18px'} whiteSpace="nowrap">
               {t(`${WORK_ORDER}.assignedLineItems`)}
             </Text>
             {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
@@ -203,7 +209,14 @@ const AssignedItems = (props: AssignedItemType) => {
               </>
             )}
           </HStack>
-          <HStack spacing="16px" alignItems="center">
+          <HStack
+            experimental_spaceX={{ base: '5px', lg: '16px' }}
+            experimental_spaceY={{ base: '5px', sm: '0' }}
+            alignItems="center"
+            justifyContent={{ base: 'center', sm: 'space-between', lg: 'end' }}
+            w={{ base: '100%', lg: 'unset' }}
+            flexWrap="wrap"
+          >
             {showPriceCheckBox && (
               <Checkbox variant={'outLineGreen'} data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}
@@ -225,6 +238,7 @@ const AssignedItems = (props: AssignedItemType) => {
                     })
                     setMarkAllVerified(e.target.checked)
                   }}
+                  whiteSpace="nowrap"
                 >
                   {t(`${WORK_ORDER}.markAllVerified`)}
                 </Checkbox>
@@ -247,6 +261,7 @@ const AssignedItems = (props: AssignedItemType) => {
                     setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
                   })
                 }}
+                whiteSpace="nowrap"
               >
                 <Text fontSize="16px">{t(`${WORK_ORDER}.markAllCompleted`)}</Text>
               </Checkbox>

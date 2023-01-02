@@ -113,7 +113,8 @@ export const WorkOrderDetails = ({
           </ModalHeader>
 
           <ModalCloseButton
-            m={3}
+            my={5}
+            mx={3}
             size={'lg'}
             color="gray.600"
             _focus={{ outline: 'none' }}
@@ -130,7 +131,7 @@ export const WorkOrderDetails = ({
               index={tabIndex}
               onChange={index => setTabIndex(index)}
             >
-              <TabList pt="12px" mr="30px">
+              <TabList pt="12px" flexDir={{ base: 'column', md: 'row' }}>
                 <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
                 {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                 <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
