@@ -97,7 +97,11 @@ export const WorkOrderDetails = ({
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize} closeOnOverlayClick={false}>
       <ModalOverlay />
       {workOrder && (
-        <ModalContent rounded={[0]} borderTop="2px solid #345EA6">
+        <ModalContent
+          rounded={[0]}
+          borderTop="2px solid #345EA6"
+          w={{ sm: 'calc(100% - 50px)', md: 'calc(100% - 150px)' }}
+        >
           <ModalHeader borderBottom={'1px solid gray.300'} h="64px" py={4} display="flex" alignItems="center">
             <Box>
               <HStack fontSize="16px" fontWeight={500} h="32px" color="gray.600">
