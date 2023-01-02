@@ -19,28 +19,28 @@ export enum SUPPORT_FIELDS_TYPES {
   Rejected = 70,
 }
 
-const SupportTypes: React.FC<{ Id: number }> = ({ Id }) => {
+const SupportTypes: React.FC<{ id: number }> = ({ id }) => {
   return (
     <>
-      {Id === 4
+      {id === 4
         ? 'bug'
-        : null || Id === SUPPORT_FIELDS_TYPES.bug
+        : null || id === SUPPORT_FIELDS_TYPES.bug
         ? 'Feature Request'
-        : null || Id === SUPPORT_FIELDS_TYPES.FeatureRequest
+        : null || id === SUPPORT_FIELDS_TYPES.FeatureRequest
         ? 'Feature Request'
-        : null || Id === SUPPORT_FIELDS_TYPES.Major
+        : null || id === SUPPORT_FIELDS_TYPES.Major
         ? 'Major'
-        : null || Id === SUPPORT_FIELDS_TYPES.Medium
+        : null || id === SUPPORT_FIELDS_TYPES.Medium
         ? 'Medium'
-        : null || Id === SUPPORT_FIELDS_TYPES.Low
+        : null || id === SUPPORT_FIELDS_TYPES.Low
         ? 'Low'
-        : null || Id === SUPPORT_FIELDS_TYPES.New
+        : null || id === SUPPORT_FIELDS_TYPES.New
         ? 'New'
-        : null || Id === SUPPORT_FIELDS_TYPES.WorkInProgress
+        : null || id === SUPPORT_FIELDS_TYPES.WorkInProgress
         ? 'WorkIn Progress'
-        : null || Id === SUPPORT_FIELDS_TYPES.Resolved
+        : null || id === SUPPORT_FIELDS_TYPES.Resolved
         ? 'Resolved'
-        : null || Id === SUPPORT_FIELDS_TYPES.Rejected
+        : null || id === SUPPORT_FIELDS_TYPES.Rejected
         ? 'Rejected'
         : null}
     </>
@@ -65,7 +65,7 @@ export const SUPPORT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'lkpSupportTypeId',
     cell: (row: any) => {
       const value = row.cell.getValue()
-      return <SupportTypes Id={value} />
+      return <SupportTypes id={value} />
     },
   },
   {
@@ -73,7 +73,7 @@ export const SUPPORT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'lkpSeverityId',
     cell: (row: any) => {
       const value = row.cell.getValue()
-      return <SupportTypes Id={value} />
+      return <SupportTypes id={value} />
     },
   },
   {
@@ -81,7 +81,7 @@ export const SUPPORT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'lkpStatusId',
     cell: (row: any) => {
       const value = row.cell.getValue()
-      return <SupportTypes Id={value} />
+      return <SupportTypes id={value} />
     },
   },
   {
