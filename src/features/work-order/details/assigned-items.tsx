@@ -214,7 +214,7 @@ const AssignedItems = (props: AssignedItemType) => {
             experimental_spaceY={{ base: '5px', sm: '0' }}
             alignItems="center"
             justifyContent={{ base: 'center', sm: 'space-between', lg: 'end' }}
-            w={{ base: '100%', lg: 'unset' }}
+            w={{ base: '100%', md: 'unset' }}
             flexWrap="wrap"
           >
             {showPriceCheckBox && (
