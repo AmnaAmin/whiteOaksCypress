@@ -21,7 +21,7 @@ import {
 
 export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
-  const { documents = [] } = useDocuments({
+  const { documents, isLoading: isLoadingDocuments } = useDocuments({
     projectId,
   })
   const [totalPages, setTotalPages] = useState(0)
@@ -50,44 +50,49 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const onRowClick = row => {}
 
   return (
-    <Box
-      overflow={'auto'}
-      w="100%"
-      h="auto"
-      position="relative"
-      border="1px solid #CBD5E0"
-      borderRadius="6px"
-      roundedRight={{ base: '0px', sm: '6px' }}
-      minH={{ sm: 'auto', md: 'calc(100vh - 450px)' }}
-    >
-      {documents && documents?.length ? (
-        <TableContextProvider
-          totalPages={documents?.length ? totalPages : -1}
-          manualPagination={false}
-          data={documents}
-          columns={tableColumns}
-        >
-          <Table onRowClick={onRowClick} isLoading={isLoading} isEmpty={!isLoading && !documents?.length} />
-          <TableFooter position="sticky" bottom="0" left="0" right="0">
-            <ButtonsWrapper>
-              <ExportCustomButton columns={tableColumns} data={documents} fileName="documents" />
-
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
-            </ButtonsWrapper>
-            <TablePagination>
-              <ShowCurrentRecordsWithTotalRecords dataCount={totalRows} setPageCount={setPageCount} />
-              <GotoFirstPage />
-              <GotoPreviousPage />
-              <GotoNextPage />
-              <GotoLastPage />
-            </TablePagination>
-          </TableFooter>
-        </TableContextProvider>
-      ) : (
-        <Center>
-          <Spinner size="md" />
+    <>
+      {isLoadingDocuments && (
+        <Center minH="calc(100vh - 450px)">
+          <Spinner size="lg" />
         </Center>
       )}
-    </Box>
+      {documents && (
+        <Box
+          overflow={'auto'}
+          w="100%"
+          h="auto"
+          position="relative"
+          border="1px solid #CBD5E0"
+          borderRadius="6px"
+          roundedRight={{ base: '0px', sm: '6px' }}
+          minH={{ sm: 'auto', md: 'calc(100vh - 450px)' }}
+        >
+          <TableContextProvider
+            totalPages={documents?.length ? totalPages : -1}
+            manualPagination={false}
+            data={documents}
+            columns={tableColumns}
+          >
+            <Table onRowClick={onRowClick} isLoading={isLoading} isEmpty={!isLoading && !documents?.length} />
+            <TableFooter position="sticky" bottom="0" left="0" right="0">
+              <ButtonsWrapper>
+                <ExportCustomButton columns={tableColumns} data={documents} fileName="documents" />
+
+                {settingColumns && (
+                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                )}
+              </ButtonsWrapper>
+              <TablePagination>
+                <ShowCurrentRecordsWithTotalRecords dataCount={totalRows} setPageCount={setPageCount} />
+                <GotoFirstPage />
+                <GotoPreviousPage />
+                <GotoNextPage />
+                <GotoLastPage />
+              </TablePagination>
+            </TableFooter>
+          </TableContextProvider>
+        </Box>
+      )}
+    </>
   )
 })
