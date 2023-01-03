@@ -84,7 +84,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           >
             <Table isLoading={isFetching} isEmpty={!isFetching && !workOrders?.length} onRowClick={onRowClick} />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
-              <Box />
+              <Box h="35px" />
 
               <TablePagination>
                 <ShowCurrentRecordsWithTotalRecords dataCount={totalRows} setPageCount={setPageCount} />

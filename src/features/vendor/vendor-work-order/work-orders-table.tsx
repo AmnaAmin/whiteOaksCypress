@@ -95,7 +95,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
               onRowClick={onRowClick}
             />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
-              <Box />
+              <Box h="35px"/>
               <TablePagination>
                 <ShowCurrentRecordsWithTotalRecords dataCount={totalRows} setPageCount={setPageCount} />
                 <GotoFirstPage />
