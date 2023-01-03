@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Box, useDisclosure } from '@chakra-ui/react'
+import { Box, Center, Spinner, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { useTransactionsV1 } from 'api/transactions'
 import { useParams } from 'react-router'
@@ -65,7 +65,12 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
 
   return (
     <>
-      {transactions && transactions?.length && (
+      {isLoading && (
+        <Center minH="calc(100vh - 450px)">
+          <Spinner size="lg" />
+        </Center>
+      )}
+      {transactions && (
         <Box
           w="100%"
           minH="calc(100vh - 450px)"
