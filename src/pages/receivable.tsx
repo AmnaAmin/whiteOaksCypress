@@ -7,7 +7,7 @@ import { ReceivableTable } from 'features/recievable/receivable-table'
 import { t } from 'i18next'
 import { compact } from 'lodash'
 import { useEffect, useState } from 'react'
-import { useBatchProcessingMutation, useCheckBatch } from 'api/account-receivable'
+import { useBatchProcessingMutation, useBatchRun, useCheckBatch } from 'api/account-receivable'
 import { PaginationState, SortingState } from '@tanstack/react-table'
 import { useForm } from 'react-hook-form'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
@@ -40,10 +40,22 @@ export const Receivable = () => {
     sorting,
   })
 
-  const { mutate: batchCall } = useBatchProcessingMutation()
+  const { data: run, mutate: batchCall } = useBatchProcessingMutation()
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
+  const { data: batchRun } = useBatchRun(run?.data?.id || 0)
+  let failedRun
+  const batchSuccess = batchRun?.map(br => {
+    if (br.description !== 'Successful') {
+      failedRun = br
+      return
+    }
+  })
+
   // const { weekDayFilters } = useWeeklyCount()
+
+  console.log('dataaaaa', run?.data?.id)
+  console.log('batchRun...', batchRun)
 
   useEffect(() => {
     if (!loading) {
@@ -138,6 +150,17 @@ export const Receivable = () => {
           yesButtonText={t(`${ACCOUNTS}.close`)}
           showNoButton={false}
         />
+        {/* {batchSuccess && (
+          <ConfirmationBox
+            title={t(`${ACCOUNTS}.batchError`)}
+            content={t(`${ACCOUNTS}.batchUnSuccessFul`)}
+            isOpen={!loading && isBatchClick}
+            onClose={onNotificationClose}
+            onConfirm={onNotificationClose}
+            yesButtonText={t(`${ACCOUNTS}.close`)}
+            showNoButton={false}
+          />
+        )} */}
       </form>
       <DevTool control={control} />
     </>
