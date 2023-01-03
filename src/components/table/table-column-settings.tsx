@@ -138,53 +138,55 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
                     id="column-settings-list"
                     data-testid="column-settings-list"
                   >
-                    {columnRecords.map(({ field, id, hide }, index) => (
-                      <Draggable key={id} draggableId={`${id}_${index}`} index={index} className="draggable-item">
-                        {(provided, snapshot) => (
-                          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <Center>
-                              <ListItem
-                                data-testid={`draggable-item-${index}`}
-                                borderWidth="1.5px"
-                                borderColor="gray.300"
-                                borderRadius="8"
-                                w="485px"
-                                m="1.5"
-                                py="8px"
-                                fontSize="1em"
-                                fontWeight={600}
-                                backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
-                                _hover={{ bg: 'blue.50' }}
-                              >
-                                <HStack spacing="21.83px" ml="21.83px">
-                                  <BiGridVertical
-                                    fontSize="1.4rem"
-                                    color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'}
-                                  />
-                                  <Checkbox
-                                    size="lg"
-                                    marginStart="0.625rem"
-                                    onChange={() => onCheck(index)}
-                                    isChecked={!hide}
-                                    colorScheme="PrimaryCheckBox"
-                                  >
-                                    <Text
-                                      ml="12px"
-                                      color="gray.600"
-                                      fontStyle="normal"
-                                      fontWeight={400}
-                                      fontSize="14px"
+                    {columnRecords
+                      ?.filter(col => col.contentKey !== 'pagination')
+                      .map(({ field, id, hide }, index) => (
+                        <Draggable key={id} draggableId={`${id}_${index}`} index={index} className="draggable-item">
+                          {(provided, snapshot) => (
+                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                              <Center>
+                                <ListItem
+                                  data-testid={`draggable-item-${index}`}
+                                  borderWidth="1.5px"
+                                  borderColor="gray.300"
+                                  borderRadius="8"
+                                  w="485px"
+                                  m="1.5"
+                                  py="8px"
+                                  fontSize="1em"
+                                  fontWeight={600}
+                                  backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
+                                  _hover={{ bg: 'blue.50' }}
+                                >
+                                  <HStack spacing="21.83px" ml="21.83px">
+                                    <BiGridVertical
+                                      fontSize="1.4rem"
+                                      color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'}
+                                    />
+                                    <Checkbox
+                                      size="lg"
+                                      marginStart="0.625rem"
+                                      onChange={() => onCheck(index)}
+                                      isChecked={!hide}
+                                      colorScheme="PrimaryCheckBox"
                                     >
-                                      {t(field)}
-                                    </Text>
-                                  </Checkbox>
-                                </HStack>
-                              </ListItem>
-                            </Center>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
+                                      <Text
+                                        ml="12px"
+                                        color="gray.600"
+                                        fontStyle="normal"
+                                        fontWeight={400}
+                                        fontSize="14px"
+                                      >
+                                        {t(field)}
+                                      </Text>
+                                    </Checkbox>
+                                  </HStack>
+                                </ListItem>
+                              </Center>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
                     {provided.placeholder}
                   </List>
                 )}

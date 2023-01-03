@@ -107,8 +107,6 @@ const WorkOrderDetails = ({
 
   const onSave = values => {
     const payload = { ...workOrder, ...values }
-    console.log('values', values?.workOrderDateCompleted)
-    console.log('workOrder', workOrder?.awardPlanId)
 
     if (!workOrder?.awardPlanId && values?.workOrderDateCompleted && tabIndex === 0) {
       setIsError(true)
@@ -244,6 +242,7 @@ const WorkOrderDetails = ({
                       <TabPanel p={0}>
                         <ProjectAwardTab
                           workOrder={workOrderDetails}
+                          isUpdating={isWorkOrderUpdating}
                           onSave={onSave}
                           onClose={onClose}
                           awardPlanScopeAmount={awardPlanScopeAmount}

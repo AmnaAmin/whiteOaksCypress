@@ -125,23 +125,25 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
   return (
     <Box>
       <VStack align="start" h="584px" spacing="15px" overflow="auto">
-        <Button
-          ml={'45px'}
-          variant="outline"
-          colorScheme="darkPrimary"
-          data-testid="addLicense"
-          onClick={() =>
-            append({
-              licenseType: '',
-              licenseNumber: '',
-              expiryDate: startDate,
-              expirationFile: null,
-            })
-          }
-          leftIcon={<BiAddToQueue />}
-        >
-          {t('addLicense')}
-        </Button>
+        <Box>
+          <Button
+            ml={'45px'}
+            variant="outline"
+            colorScheme="darkPrimary"
+            data-testid="addLicense"
+            onClick={() =>
+              append({
+                licenseType: '',
+                licenseNumber: '',
+                expiryDate: startDate,
+                expirationFile: null,
+              })
+            }
+            leftIcon={<BiAddToQueue />}
+          >
+            {t('addLicense')}
+          </Button>
+        </Box>
         {licenseFields
           .map((license, index) => {
             const isLicenseChanged = checkIsLicenseChanged(
