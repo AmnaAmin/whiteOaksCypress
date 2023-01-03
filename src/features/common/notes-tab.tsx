@@ -9,7 +9,7 @@ import { BiSpreadsheet } from 'react-icons/bi'
 
 export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
-    <Flex mb={4}>
+    <Flex mb={4} flexDir={{ base: 'column', lg: 'row' }} alignItems={{ base: 'center', lg: 'start' }}>
       {otherNote ? (
         <Flex w="150px" flexDir={'column'} mr={5} fontSize="12px" fontWeight={400}>
           <WrapItem justifyContent="center" mb={1}>

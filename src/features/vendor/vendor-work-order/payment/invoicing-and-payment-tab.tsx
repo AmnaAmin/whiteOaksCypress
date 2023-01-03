@@ -1,4 +1,4 @@
-import { Box, HStack, Text, ModalFooter, Divider, ModalBody, Flex } from '@chakra-ui/react'
+import { Box, HStack, Text, ModalFooter, Divider, ModalBody, Flex, Grid, GridItem } from '@chakra-ui/react'
 import { BiFile, BiCalendar } from 'react-icons/bi'
 import InputView from 'components/input-view/input-view'
 import { dateFormat } from 'utils/date-time-utils'
@@ -32,9 +32,9 @@ const InvoicingAndPaymentTab = ({
   const { t } = useTranslation()
   return (
     <Box>
-      <ModalBody ml={30} w="95%" h={'calc(100vh - 300px)'}>
-        <HStack mr={100} pt="35px" spacing="60px" justifyContent={'center'}>
-          <Box w="20%">
+      <ModalBody ml={30} w="95%" h={'calc(100vh - 300px)'} overflow="auto">
+        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap="20px" alignItems={'center'} my="30px">
+          <GridItem>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -48,8 +48,9 @@ const InvoicingAndPaymentTab = ({
                 )
               }
             />
-          </Box>
-          <Box w="20%">
+          </GridItem>
+
+          <GridItem>
             <InputView
               showDivider={false}
               Icon={BiFile}
@@ -62,8 +63,9 @@ const InvoicingAndPaymentTab = ({
                 )
               }
             />
-          </Box>
-          <Box w="20%">
+          </GridItem>
+
+          <GridItem>
             <InputView
               showDivider={false}
               Icon={BiFile}
@@ -76,9 +78,9 @@ const InvoicingAndPaymentTab = ({
                 )
               }
             />
-          </Box>
+          </GridItem>
 
-          <Box w="20%">
+          <GridItem>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -91,11 +93,11 @@ const InvoicingAndPaymentTab = ({
                 )
               }
             />
-          </Box>
-        </HStack>
-        <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" pt={8} />
-        <HStack mr={100} pt={30} spacing="60px" justifyContent={'center'}>
-          <Box w="20%">
+          </GridItem>
+        </Grid>
+        <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" />
+        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap="20px" alignItems={'center'} my="30px">
+          <GridItem>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -109,9 +111,9 @@ const InvoicingAndPaymentTab = ({
                 )
               }
             />
-          </Box>
+          </GridItem>
 
-          <Box w="20%">
+          <GridItem>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -124,9 +126,9 @@ const InvoicingAndPaymentTab = ({
                 )
               }
             />
-          </Box>
+          </GridItem>
 
-          <Box w="20%">
+          <GridItem>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -139,9 +141,9 @@ const InvoicingAndPaymentTab = ({
                 )
               }
             />
-          </Box>
+          </GridItem>
 
-          <Box w="20%">
+          <GridItem>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -155,9 +157,9 @@ const InvoicingAndPaymentTab = ({
                 )
               }
             />
-          </Box>
-        </HStack>
-        <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" pt={8} />
+          </GridItem>
+        </Grid>
+        <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" />
         <HStack mr={100} pt={30} spacing="60px" justifyContent={'center'}>
           <Box w="20%">
             <InputView

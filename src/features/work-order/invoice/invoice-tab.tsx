@@ -46,10 +46,28 @@ export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.
         <Icon as={icons} fontSize="23px" color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="#2D3748" mb="1">
+        <Text
+          fontWeight={500}
+          lineHeight="20px"
+          fontSize="14px"
+          fontStyle="normal"
+          color="#2D3748"
+          mb="1"
+          noOfLines={1}
+          title={title}
+        >
           {title}
         </Text>
-        <Text data-testid={title} color="#4A5568" lineHeight="20px" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text
+          data-testid={title}
+          color="#4A5568"
+          lineHeight="20px"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight={400}
+          noOfLines={1}
+          title={value}
+        >
           {value}
         </Text>
       </Box>
@@ -246,8 +264,8 @@ export const InvoiceTab = ({
 
   return (
     <Box>
-      <ModalBody h={'calc(100vh - 300px)'} mx="25px">
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="100px" alignItems={'center'}>
+      <ModalBody mx={{ base: 0, lg: '25px' }}>
+        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(150px,1fr))" gap="16px" alignItems={'center'} my="24px">
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
             title={t('finalInvoice')}
@@ -282,7 +300,7 @@ export const InvoiceTab = ({
         <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
 
         <Box
-          h="calc(100% - 135px)"
+          h="calc(100vh - 409px)"
           overflow="auto"
           borderRadius={7}
           borderBottom="1px solid #CBD5E0"

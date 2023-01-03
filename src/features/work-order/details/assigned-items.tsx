@@ -168,16 +168,34 @@ const AssignedItems = (props: AssignedItemType) => {
           mb={'20px'}
           direction="row"
           flexWrap="wrap"
-          experimental_spaceY={{ base: 5, md: 'unset' }}
           justifyContent={{ base: 'center', md: 'space-between' }}
+          experimental_spaceY={{ base: '16px', sm: '0px' }}
+          sx={{
+            '@media only screen and (min-width: 415px)': {
+              experimental_spaceY: '0',
+            },
+          }}
         >
-          <HStack alignItems={{ base: 'start', sm: 'center' }} ml={1} mb={2} flexWrap="wrap">
+          <HStack
+            alignItems={{ base: 'start', sm: 'center' }}
+            justifyContent={{ base: 'center', sm: 'space-between' }}
+            experimental_spaceY={{ base: '16px', sm: '0px' }}
+            sx={{
+              '@media only screen and (min-width: 415px)': {
+                experimental_spaceY: '0',
+              },
+            }}
+            ml={1}
+            mb={2}
+            flexWrap="wrap"
+            w={{ base: '100%', lg: 'unset' }}
+          >
             <Text fontWeight={500} color="gray.700" fontSize={'18px'} whiteSpace="nowrap">
               {t(`${WORK_ORDER}.assignedLineItems`)}
             </Text>
             {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
               <>
-                <Box pl="2" pr="1">
+                <Box pl="2" pr="1" display={{ base: 'none', sm: 'unset' }}>
                   <Divider size="lg" orientation="vertical" h="25px" />
                 </Box>
                 <Button
@@ -193,7 +211,7 @@ const AssignedItems = (props: AssignedItemType) => {
 
             {isAssignmentAllowed && (
               <>
-                <Box pl="2" pr="1">
+                <Box pl="2" pr="1" display={{ base: 'none', sm: 'unset' }}>
                   <Divider size="lg" orientation="vertical" h="25px" />
                 </Box>
                 <Button
@@ -211,11 +229,16 @@ const AssignedItems = (props: AssignedItemType) => {
           </HStack>
           <HStack
             experimental_spaceX={{ base: '5px', lg: '16px' }}
-            experimental_spaceY={{ base: '5px', sm: '0' }}
+            experimental_spaceY={{ base: '16px', sm: '0' }}
+            sx={{
+              '@media only screen and (min-width: 415px)': {
+                experimental_spaceY: '0',
+              },
+            }}
             alignItems="center"
             justifyContent={{ base: 'center', sm: 'space-between', lg: 'end' }}
-            w={{ base: '100%', md: 'unset' }}
-            flexWrap="wrap"
+            w={{ base: '100%', lg: 'unset' }}
+            flexWrap={{ base: 'wrap', lg: 'unset' }}
           >
             {showPriceCheckBox && (
               <Checkbox variant={'outLineGreen'} data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
