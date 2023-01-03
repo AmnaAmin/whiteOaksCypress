@@ -10,7 +10,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
   generalLabourName: 'generalLabourName.contains',
   projectManager: 'projectManager.contains',
-  projectStatus: 'projectStatus.equals',
+  projectStatus: 'projectStatus.in',
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
   clientStartDate: 'clientStartDate.equals',
