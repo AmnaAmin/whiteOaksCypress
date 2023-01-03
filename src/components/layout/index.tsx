@@ -122,6 +122,7 @@ export const Layout: React.FC = props => {
           height="calc(100vh - 65px)"
           py="1rem"
           pl="8px"
+          pr={{ base: '6px', sm: '0px' }}
           w="(calc(100% - var(--sidebar-width)"
         >
           {props.children}
