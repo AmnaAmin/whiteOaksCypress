@@ -9,6 +9,15 @@ import { Project } from 'types/project.type'
 import { WORK_ORDER_TABLE_COLUMNS } from './work-order.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentRecordsWithTotalRecords,
+  TablePagination,
+} from 'components/table-refactored/pagination'
+import { TableFooter } from 'components/table-refactored/table-footer'
 interface PropType {
   onTabChange?: any
   projectData: Project
@@ -17,6 +26,8 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
   const { projectId } = useParams<'projectId'>()
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
   const { transactions = [] } = useTransactions(projectId)
+  const [totalPages, setTotalPages] = useState(0)
+  const [totalRows, setTotalRows] = useState(0)
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
   // Do not show WO which have been cancelled
@@ -33,6 +44,16 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
 
   const onRowClick = (row: any) => {
     setSelectedWorkOrder(row)
+  }
+
+  useEffect(() => {
+    setTotalPages(Math.ceil((workOrdersNotCancelled?.length ?? 0) / 10))
+    setTotalRows(workOrdersNotCancelled?.length ?? 0)
+  }, [workOrdersNotCancelled?.length])
+
+  const setPageCount = rows => {
+    setTotalPages(Math.ceil((rows?.length ?? 0) / 10))
+    setTotalRows(rows?.length)
   }
 
   return (
@@ -52,7 +73,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
           <Spinner size="xl" />
         </Center>
       )}
-      {workOrders && (
+      {workOrdersNotCancelled && workOrdersNotCancelled?.length && (
         <Box
           overflow={'auto'}
           w="100%"
@@ -62,12 +83,27 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
           borderRadius="6px"
           roundedRight={{ base: '0px', sm: '6px' }}
         >
-          <TableContextProvider data={workOrdersNotCancelled} columns={WORK_ORDER_TABLE_COLUMNS}>
+          <TableContextProvider
+            totalPages={workOrdersNotCancelled?.length ? totalPages : -1}
+            data={workOrdersNotCancelled}
+            columns={WORK_ORDER_TABLE_COLUMNS}
+            manualPagination={false}
+          >
             <Table
               isLoading={isLoading}
               isEmpty={!isLoading && !workOrdersNotCancelled?.length}
               onRowClick={onRowClick}
             />
+            <TableFooter position="sticky" bottom="0" left="0" right="0">
+              <Box h="35px"/>
+              <TablePagination>
+                <ShowCurrentRecordsWithTotalRecords dataCount={totalRows} setPageCount={setPageCount} />
+                <GotoFirstPage />
+                <GotoPreviousPage />
+                <GotoNextPage />
+                <GotoLastPage />
+              </TablePagination>
+            </TableFooter>
           </TableContextProvider>
         </Box>
       )}
