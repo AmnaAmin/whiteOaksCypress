@@ -29,11 +29,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     if (selectedCard) {
       if (selectedCard === 'past due') {
         const pastDueFilters = [{ id: 'pastDue', value: '1' }]
-        // const multipleStatus =  ['new', 'active', 'punch']
         const projectStatus = [{ id: 'projectStatus', value: 'new,active,punch' }]
-        // const projectStatus1 = [{ id: 'projectStatus', value: 'active' }]
-        // const projectStatus2 = [{ id: 'projectStatus', value: 'punch' }]
-        // const multipleStatus = projectStatus && projectStatus1 && projectStatus2
         finalFilters = [...finalFilters, ...pastDueFilters, ...projectStatus ]
 
         // Account Payable Cards contains 1, 2, 3, 4, 5, 6, which represents
