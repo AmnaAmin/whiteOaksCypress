@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, useDisclosure } from '@chakra-ui/react'
+import { Box, Center, Spinner, useDisclosure } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useProjectWorkOrders } from 'api/projects'
 import { ProjectWorkOrderType } from 'types/project.type'
@@ -17,6 +17,7 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { TableFooter } from 'components/table-refactored/table-footer'
+import { workOrder } from './workOrder.i18n'
 
 export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
@@ -26,7 +27,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
-  const { data: workOrders, isFetching } = useProjectWorkOrders(projectId)
+  const { data: workOrders, isFetching, isLoading } = useProjectWorkOrders(projectId)
   const { refetch: refetchGantt } = useGanttChart(projectId)
 
   useEffect(() => {
@@ -66,7 +67,12 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           isOpen={isOpen}
         />
       )}
-      {workOrders && workOrders?.length && (
+      {isLoading && (
+        <Center minH="calc(100vh - 450px)">
+          <Spinner size="lg" />
+        </Center>
+      )}
+      {workOrders && (
         <Box
           w="100%"
           minH="calc(100vh - 450px)"
