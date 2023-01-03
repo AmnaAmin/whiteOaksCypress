@@ -95,7 +95,6 @@ export const useCheckBatch = (setLoading, loading, paginatedQueryString ) => {
 
           const response = await client(`batch-values/batchType/940`, {})
           setBatchResponse(response?.data)
-          console.log('batchRunResponse .../...', response?.data)
           return response?.data
         }
         return batchResponse
@@ -106,28 +105,23 @@ export const useCheckBatch = (setLoading, loading, paginatedQueryString ) => {
   )
 }
 
-export const useBatchRun = (batchId ) => {
-  // const [isAPIEnabled, setAPIEnabled] = useState(false)
+export const useBatchRun = (batchId, paginatedQueryString) => {
   const client = useClient()
   const queryClient = useQueryClient()
 
   return useQuery(
     ['batchRun'],
     async data => {
-      // setAPIEnabled(true)
       const response = await client(`batch-values/batchType/${batchId}`, {})
       return response?.data
     },
     {
       async onSuccess(isBatchProcessingInProgress) {
         if (!isBatchProcessingInProgress) {
-          // setLoading(false)
-          // setAPIEnabled(false)
-          // queryClient.invalidateQueries([GET_PAGINATED_RECEIVABLE_QUERY_KEY, paginatedQueryString])
+          queryClient.invalidateQueries([GET_PAGINATED_RECEIVABLE_QUERY_KEY, paginatedQueryString])
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },
-      // enabled: loading && isAPIEnabled,
       refetchInterval: 10000,
     },
   )

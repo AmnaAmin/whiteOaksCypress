@@ -43,19 +43,17 @@ export const Receivable = () => {
   const { data: run, mutate: batchCall } = useBatchProcessingMutation()
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
-  const { data: batchRun } = useBatchRun(run?.data?.id || 0)
-  let failedRun
-  const batchSuccess = batchRun?.map(br => {
-    if (br.description !== 'Successful') {
+  const batchId = run?.data?.id || 0
+  const { data: batchRun } = useBatchRun(batchId, queryStringWithPagination)
+  let batch, failedRun
+  batch = batchRun?.map(br => {
+    if (br?.statusId === 2) {
       failedRun = br
-      return
+      return failedRun
     }
   })
 
   // const { weekDayFilters } = useWeeklyCount()
-
-  console.log('dataaaaa', run?.data?.id)
-  console.log('batchRun...', batchRun)
 
   useEffect(() => {
     if (!loading) {
@@ -127,6 +125,9 @@ export const Receivable = () => {
             </Button>
           </Flex>
           <Divider border="2px solid #E2E8F0" />
+
+          {/* {batchRunStatus && <Box>{failedRun?.description}</Box>} */}
+
           <Box mt={2} pb="4">
             {loading && <ViewLoader />}
             <ReceivableTable
@@ -142,25 +143,14 @@ export const Receivable = () => {
           </Box>
         </Box>
         <ConfirmationBox
-          title={t(`${ACCOUNTS}.batchProcess`)}
-          content={t(`${ACCOUNTS}.batchSuccess`)}
+          title={failedRun ? t(`${ACCOUNTS}.batchError`) : t(`${ACCOUNTS}.batchProcess`)}
+          content={failedRun ? t(`${ACCOUNTS}.batchErrorMsg`) + failedRun?.value : t(`${ACCOUNTS}.batchSuccess`)}
           isOpen={!loading && isBatchClick}
           onClose={onNotificationClose}
           onConfirm={onNotificationClose}
           yesButtonText={t(`${ACCOUNTS}.close`)}
           showNoButton={false}
         />
-        {/* {batchSuccess && (
-          <ConfirmationBox
-            title={t(`${ACCOUNTS}.batchError`)}
-            content={t(`${ACCOUNTS}.batchUnSuccessFul`)}
-            isOpen={!loading && isBatchClick}
-            onClose={onNotificationClose}
-            onConfirm={onNotificationClose}
-            yesButtonText={t(`${ACCOUNTS}.close`)}
-            showNoButton={false}
-          />
-        )} */}
       </form>
       <DevTool control={control} />
     </>
