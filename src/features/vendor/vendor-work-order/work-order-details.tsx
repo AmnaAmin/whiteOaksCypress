@@ -31,7 +31,7 @@ import { LienWaiverTab } from '../../work-order/lien-waiver/lien-waiver'
 import WorkOrderDetailTab from './details/work-order-detail-tab'
 import { WorkOrderNotes } from 'features/work-order/notes/work-order-notes'
 import Status from '../../common/status'
-import { useFetchWorkOrder } from 'api/work-order'
+import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
 import { Card } from 'components/card/card'
 import { ProjectAwardTab } from 'features/work-order/project-award/project.award'
 import { useProjectAward } from 'api/project-award'
@@ -64,9 +64,10 @@ export const WorkOrderDetails = ({
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
   const [tabIndex, setTabIndex] = useState(0)
-  const [isUpdating, setIsUpdating] = useState()
+  const [isUpdating, setIsUpdating] = useState<boolean>()
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
   const { projectAwardData } = useProjectAward()
+  const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
 
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
@@ -92,6 +93,19 @@ export const WorkOrderDetails = ({
       onCloseDisclosure()
     }
   }, [onCloseDisclosure, onOpen, workOrder])
+
+  const onSave = updatedValues => {
+    const payload = { ...workOrder, ...updatedValues }
+    setIsUpdating(true)
+    updateWorkOrder(payload, {
+      onSuccess: () => {
+        setIsUpdating(false)
+      },
+      onError: () => {
+        setIsUpdating(false)
+      },
+    })
+  }
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize} closeOnOverlayClick={false}>
@@ -154,10 +168,11 @@ export const WorkOrderDetails = ({
                     <TabPanel p={0}>
                       <ProjectAwardTab
                         workOrder={workOrderDetails}
-                        onSave={null}
+                        onSave={onSave}
                         onClose={onClose}
                         awardPlanScopeAmount={awardPlanScopeAmount}
                         projectAwardData={projectAwardData}
+                        isUpdating={isUpdating}
                       />
                     </TabPanel>
                   )}
