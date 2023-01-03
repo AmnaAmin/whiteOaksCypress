@@ -27,6 +27,7 @@ const formatDocuments = (docs) => {
         id: file.name,
         fileObject: arry[1],
         fileObjectContentType: file.type,
+        fileType: file.type,
         size: file.size,
       };
     };

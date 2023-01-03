@@ -70,15 +70,12 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   } = useForm()
 
   const onSubmit = async formValues => {
-    const vendorId = formValues?.against?.value?.vendorId?.toString()
-    const workOrderId = formValues?.against?.value?.id?.toString()
+    const vendorId = formValues?.against?.value?.vendorId?.toString() || ''
+    const workOrderId = formValues?.against?.value?.id?.toString() || ''
     console.log(`formValues - `, formValues)
 
     // const documents = formValues.documents.forEach(async file => {
-    const documentPayload = await createDocumentPayload(
-      formValues.chooseFile,
-      formValues?.documentTypes?.value?.toString(),
-    )
+    const documentPayload = await createDocumentPayload(formValues.chooseFile, formValues?.documentTypes?.value?.toString())
 
     const doc: Document = {
       ...documentPayload,
