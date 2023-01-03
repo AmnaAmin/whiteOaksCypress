@@ -17,7 +17,6 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { TableFooter } from 'components/table-refactored/table-footer'
-import { workOrder } from './workOrder.i18n'
 
 export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
