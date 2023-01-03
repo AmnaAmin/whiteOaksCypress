@@ -8,8 +8,7 @@ const tabsVariants = {
           // @ts-ignore
           ...chakraTheme.components.Tabs.variants.enclosed(props),
           tab: {
-            roundedTopEnd: '6px',
-            roundedTopStart: '6px',
+            rounded: '6px',
             bg: '#EBF8FF',
             borderColor: '#CBD5E0',
             fontWeight: 500,

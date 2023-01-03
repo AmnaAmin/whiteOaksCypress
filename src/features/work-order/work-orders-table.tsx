@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, useDisclosure } from '@chakra-ui/react'
+import { Box, Center, Flex, FormLabel, Spinner, useDisclosure } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useProjectWorkOrders } from 'api/projects'
 import { ProjectWorkOrderType } from 'types/project.type'
@@ -17,6 +17,8 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { TableFooter } from 'components/table-refactored/table-footer'
+import { t } from 'i18next'
+import { WORK_ORDER } from './workOrder.i18n'
 
 export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
@@ -26,7 +28,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
 
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
-  const { data: workOrders, isFetching } = useProjectWorkOrders(projectId)
+  const { data: workOrders, isFetching, isLoading } = useProjectWorkOrders(projectId)
   const { refetch: refetchGantt } = useGanttChart(projectId)
 
   useEffect(() => {
@@ -66,7 +68,12 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           isOpen={isOpen}
         />
       )}
-      {workOrders && workOrders?.length && (
+      {isLoading && (
+        <Center minH="calc(100vh - 450px)">
+          <Spinner size="lg" />
+        </Center>
+      )}
+      {workOrders && workOrders?.length > 0 ? (
         <Box
           w="100%"
           minH="calc(100vh - 450px)"
@@ -96,6 +103,16 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
             </TableFooter>
           </TableContextProvider>
         </Box>
+      ) : (
+        <>
+          {!isLoading && (
+            <Flex h="calc(100vh - 450px)" bg="#fff" justifyContent={'center'}>
+              <FormLabel display={'flex'} alignItems="center" variant="light-label">
+                {t(`${WORK_ORDER}.emptyWorkOrders`)}
+              </FormLabel>
+            </Flex>
+          )}
+        </>
       )}
     </Box>
   )
