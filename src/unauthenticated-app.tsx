@@ -9,7 +9,7 @@ export default function UnAuthenticatedApp() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route path="*" element={isProduction ? <Navigate to="/" /> : <Navigate to="/login" />} />
+      <Route path="*" element={<Login />} />
     </Routes>
   )
 }
