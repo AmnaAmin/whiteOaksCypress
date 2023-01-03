@@ -1,10 +1,10 @@
 import './App.css'
-import { Route, Routes, Navigate } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import { Login } from 'pages/vendor/login'
 
 export default function UnAuthenticatedApp() {
-  const isProduction = process.env.NODE_ENV === 'production'
+  // const isProduction = process.env.NODE_ENV === 'production'
 
   return (
     <Routes>
