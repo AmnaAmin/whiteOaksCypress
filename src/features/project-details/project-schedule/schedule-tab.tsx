@@ -11,7 +11,7 @@ export const ScheduleTab = ({ data, isLoading }) => {
       ) : (
         <Flex h="calc(100vh - 450px)" bg="#fff" justifyContent={'center'}>
           <FormLabel display={'flex'} alignItems="center" variant="light-label">
-            {t('No data returned for this view.')}
+            {t('noDataDisplayed')}
           </FormLabel>
         </Flex>
       )}

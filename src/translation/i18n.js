@@ -16,6 +16,8 @@ import { sideNav } from '../components/layout/sideNav.i18n'
 import { dashboard } from '../features/vendor/dashboard/dashboard.i18n'
 import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
 import { projectType } from '../features/project-type/project-type.i18n'
+import { auditLogs } from 'features/project-details/audit-logs/auditLogs.i18n'
+import { support } from 'features/support/support.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 
@@ -41,6 +43,8 @@ i18n.use(initReactI18next).init({
         ...dashboard.en.translation,
         ...adminDashboard.en.translation,
         ...projectType.en.translation,
+        ...auditLogs.en.translation,
+        ...support.en.translation,
         ...vendorProfile.en.translation,
         ...projectAwards.en.translation,
 
@@ -549,6 +553,8 @@ i18n.use(initReactI18next).init({
         ...dashboard.es.translation,
         ...adminDashboard.es.translation,
         ...projectType.es.translation,
+        ...auditLogs.es.translation,
+        ...support.es.translation,
         ...vendorProfile.es.translation,
         ...projectAwards.es.translation,
 

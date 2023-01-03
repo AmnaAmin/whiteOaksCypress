@@ -1,27 +1,20 @@
-import React,{ 
-  useState, 
-  useEffect, 
-  useRef, 
-  useMemo} from 'react'
-import { 
-  Column, 
-  Table as TableType, 
-  TableOptions, 
-  flexRender } from '@tanstack/react-table'
-import { 
-  Table as ChakraTable, 
-  Thead, 
-  Tbody, 
-  Tr, 
-  Th, 
-  Td, 
-  Text, 
-  Flex, 
-  Stack, 
-  Box, 
-  Tfoot, 
-  HStack, 
-  Icon } from '@chakra-ui/react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
+import { Column, Table as TableType, TableOptions, flexRender } from '@tanstack/react-table'
+import {
+  Table as ChakraTable,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Text,
+  Flex,
+  Stack,
+  Box,
+  Tfoot,
+  HStack,
+  Icon,
+} from '@chakra-ui/react'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -77,25 +70,19 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
 }
 
 function useIsInViewport(ref) {
-  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [isIntersecting, setIsIntersecting] = useState(false)
 
-  const observer = useMemo(
-    () =>
-      new IntersectionObserver(([entry]) =>
-        setIsIntersecting(entry.isIntersecting),
-      ),
-    [],
-  );
+  const observer = useMemo(() => new IntersectionObserver(([entry]) => setIsIntersecting(entry.isIntersecting)), [])
 
   useEffect(() => {
-    observer.observe(ref.current);
+    observer.observe(ref.current)
 
     return () => {
-      observer.disconnect();
-    };
-  }, [ref, observer]);
+      observer.disconnect()
+    }
+  }, [ref, observer])
 
-  return isIntersecting;
+  return isIntersecting
 }
 
 // A debounced input react component
@@ -112,11 +99,11 @@ function DebouncedInput({
   resetValue?: boolean
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   const [value, setValue] = useState(initialValue)
-  const [showClearIcon, setShowClearIcon] = useState(false);
-  const [inputWidth, setInputWidth] = useState(0);
-  const inputRef = useRef<any>();
+  const [showClearIcon, setShowClearIcon] = useState(false)
+  const [inputWidth, setInputWidth] = useState(0)
+  const inputRef = useRef<any>()
 
-  const isInputInViewPort = useIsInViewport( inputRef );
+  const isInputInViewPort = useIsInViewport(inputRef)
 
   useEffect(() => {
     setValue(resetValue ? '' : initialValue)
@@ -128,35 +115,35 @@ function DebouncedInput({
     }, debounce)
 
     return () => clearTimeout(timeout)
-  }, [value]);
+  }, [value])
 
-  useLayoutEffect( () => {
-    
-    setInputWidth(inputRef.current.offsetWidth);
-    
-    const changeWidth = _.debounce( 
-                            () => setInputWidth(inputRef.current.offsetWidth),
-                            50
-                          );
-    
-    window.addEventListener( "resize", changeWidth );
+  useLayoutEffect(() => {
+    setInputWidth(inputRef.current.offsetWidth)
 
-    return () => window.removeEventListener( "resize", changeWidth );
-    
-  }, [isInputInViewPort] );
+    const setW = () => {
+      setInputWidth(inputRef.current.offsetWidth)
+    }
+    window.addEventListener('DOMContentLoaded', setW)
 
-  const onInputChange = ( e ) => {
-    setValue(e.target.value);
+    const changeWidth = _.debounce(() => setInputWidth(inputRef.current.offsetWidth), 50)
 
-    if ( e.target.value.replace(/\s+/g, '') !== "" )
-      setShowClearIcon(true);
-    else
-      setShowClearIcon(false);
+    window.addEventListener('resize', changeWidth)
 
+    return () => {
+      window.removeEventListener('resize', changeWidth)
+      window.removeEventListener('DOMContentLoaded', setW)
+    }
+  }, [isInputInViewPort])
+
+  const onInputChange = e => {
+    setValue(e.target.value)
+
+    if (e.target.value.replace(/\s+/g, '') !== '') setShowClearIcon(true)
+    else setShowClearIcon(false)
   }
 
   return (
-    <HStack position={"relative"}>
+    <HStack position={'relative'}>
       <Input
         bg="white"
         maxW="150px"
@@ -167,29 +154,27 @@ function DebouncedInput({
         paddingX={2}
         {...props}
         value={value}
-        onChange={ onInputChange }
+        onChange={onInputChange}
         borderColor="gray.300"
         ref={inputRef}
-        paddingRight={"13px"}
+        paddingRight={'13px'}
         data-testid="tableFilterInputField"
       />
-      { showClearIcon && props.type !== "date" ? 
-      ( <Icon
+      {showClearIcon && props.type !== 'date' ? (
+        <Icon
           data-testid="tableFilterInputFieldClearIcon"
           cursor="pointer"
-          as={MdClose} 
-          position="absolute" 
-          right={`calc(100% - ${inputWidth-3}px)`} 
-          zIndex={10000} 
+          as={MdClose}
+          position="absolute"
+          right={`calc(100% - ${inputWidth - 3}px)`}
+          zIndex={10000}
           mr="-20px"
-          onClick={ e => {
-            setValue("");
-            setShowClearIcon(false);
-          } }
-        /> )
-      : null
-      }
-      
+          onClick={e => {
+            setValue('')
+            setShowClearIcon(false)
+          }}
+        />
+      ) : null}
     </HStack>
   )
 }
@@ -233,7 +218,6 @@ export const Table: React.FC<TableProps> = ({
   return (
     <Stack
       display="table"
-      minH="calc(100% - 41px)"
       w="100%"
       boxShadow="sm"
       rounded="md"
@@ -241,6 +225,8 @@ export const Table: React.FC<TableProps> = ({
       zIndex={0}
       // border="1px solid #CBD5E0"
       bg="white"
+      minH={'inherit'}
+      height="100%"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">

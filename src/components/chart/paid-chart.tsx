@@ -64,7 +64,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
             fontStyle: 'Poppins',
           }}
           tickMargin={15}
-          color='#718096'
+          color="#718096"
         >
           {emptyGraphData && (
             <Label

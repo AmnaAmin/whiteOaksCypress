@@ -1,9 +1,10 @@
 import { useClient } from 'utils/auth-context'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { FileAttachment, SupportFormValues, SupportsPayload } from 'types/support.types'
 import { dateISOFormat, getFormattedDate } from 'utils/date-time-utils'
 import { useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import orderBy from 'lodash/orderBy'
 
 export const ISSUE_TYPE_OPTIONS = [
   {
@@ -47,6 +48,14 @@ export const STATUS_OPTIONS = [
     label: 'Rejected',
   },
 ]
+export const SUPPORT_LIST = 'support_list'
+export const useSupport = () => {
+  const client = useClient()
+  return useQuery(SUPPORT_LIST, async () => {
+    const response = await client(`supports`, {})
+    return orderBy(response?.data || [], ['id'], ['desc'])
+  })
+}
 
 export const getSupportFormDefaultValues = (email: string): SupportFormValues => {
   return {
@@ -81,6 +90,7 @@ export const parseSupportFormValuesToAPIPayload = (
 
 export const useCreateTicketMutation = () => {
   const client = useClient()
+  const queryClient = useQueryClient()
   const toast = useToast()
   const { t } = useTranslation()
 
@@ -96,6 +106,7 @@ export const useCreateTicketMutation = () => {
           status: 'success',
           isClosable: true,
         })
+        queryClient.invalidateQueries(SUPPORT_LIST)
       },
       onError: (error: Error) => {
         toast({

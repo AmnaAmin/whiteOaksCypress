@@ -9,6 +9,7 @@ import {
   Button,
   Text,
   Flex,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 
 interface ConfirmationBoxProps {
@@ -32,8 +33,19 @@ export function ConfirmationBox({
   yesButtonText = 'Yes',
   showNoButton = true,
 }: ConfirmationBoxProps) {
+  const modalSize = useBreakpointValue({
+    base: 'xs',
+    sm: 'lg',
+  })
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="lg">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered={true}
+      closeOnEsc={false}
+      closeOnOverlayClick={false}
+      size={modalSize}
+    >
       <ModalOverlay />
       <ModalContent rounded="6">
         <ModalHeader
@@ -71,7 +83,7 @@ export function ConfirmationBox({
               size="md"
               onClick={onConfirm}
               isLoading={isLoading}
-              colorScheme="CustomPrimaryColor"
+              colorScheme="brand"
               rounded="6px"
               fontSize="14px"
               data-testid="confirmation-yes"

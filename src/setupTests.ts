@@ -25,7 +25,6 @@ window.matchMedia =
     }
   }
 
-
 // We are using React Virtualized so we need to add offsetHeight and offsetWidth
 const originalOffsetHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetHeight')
 const originalOffsetWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'offsetWidth')
@@ -38,31 +37,29 @@ beforeAll(() => {
   Object.defineProperty(HTMLElement.prototype, 'offsetWidth', {
     configurable: true,
     value: 50,
-  });
-  
-  /*eslint-disable */
-  (window as any).IntersectionObserver = class IntersectionObserver {
-   
-    constructor() {} // eslint-disable-line no-use-before-define
-  
-    disconnect() {
-      return null;
-    }
-  
-    observe() {
-      return null;
-    }
-  
-    takeRecords() {
-      return null;
-    }
-  
-    unobserve() {
-      return null;
-    }
-  };
-  /*eslint-enable */
+  })
 
+  /*eslint-disable */
+  ;(window as any).IntersectionObserver = class IntersectionObserver {
+    constructor() {} // eslint-disable-line no-use-before-define
+
+    disconnect() {
+      return null
+    }
+
+    observe() {
+      return null
+    }
+
+    takeRecords() {
+      return null
+    }
+
+    unobserve() {
+      return null
+    }
+  }
+  /*eslint-enable */
 })
 
 afterAll(() => {
