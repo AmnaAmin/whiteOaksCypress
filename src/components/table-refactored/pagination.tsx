@@ -158,7 +158,7 @@ export const ShowCurrentRecordsWithTotalRecords = props => {
   }, [tableInstance?.getPrePaginationRowModel().rows])
 
   return (
-    <Flex gap="1" alignItems="center">
+    <Flex gap="1" alignItems="center" whiteSpace="nowrap">
       {pageIndex !== -1 && (
         <>
           <Text color="blackAlpha.800">
