@@ -52,7 +52,6 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.draw
   // YK - PSWOA-1243
   // && isAgainstProjectSOWOptionSelected 
-    selectedTransactionTypeId === TransactionTypeValues.draw
   const refundCheckbox: TransactionsWithRefundType = {
     ...getRefundTransactionType(selectedTransactionTypeId),
     isVisible: [TransactionTypeValues.material, TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
