@@ -1,6 +1,6 @@
 // Revisit, Separate the vendor profile forms from vendor profile page.
 
-import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
+import { Box, Divider, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
@@ -240,6 +240,9 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 {!isVendor && <Tab>{t('prjt')}</Tab>}
               </TabList>
             </Card>
+            <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
+              <Divider borderWidth="1px" color="#E2E8F0" />
+            </Box>
 
             <Card pb="8px" pt="18px" px="18px" roundedTop="0px" mb={{ base: '4', sm: '0' }}>
               <TabPanels mt="31px">
