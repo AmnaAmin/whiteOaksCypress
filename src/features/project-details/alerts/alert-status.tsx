@@ -38,6 +38,7 @@ const AlertCard = props => {
       borderRadius="8px"
       boxShadow="0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"
       outline="1px solid #CBD5E0"
+      rounded="8px"
       mb={{ base: '33px', sm: '64px' }}
       mx="36px"
     >
