@@ -74,6 +74,13 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'transactionTypeLabel',
   },
   {
+    header: `${TRANSACTION}.workOrderIdTransTable`,
+    accessorKey: 'workOrderId',
+    accessorFn: cellInfo => {
+      return cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId : '- - -'
+    },
+  },
+  {
     header: `${TRANSACTION}.trade`,
     accessorKey: 'skillName',
     accessorFn: cellInfo => {
