@@ -111,10 +111,14 @@ export const WorkOrderDetails = ({
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize} closeOnOverlayClick={false}>
       <ModalOverlay />
       {workOrder && (
-        <ModalContent rounded={[0]} borderTop="2px solid #345EA6">
+        <ModalContent
+          rounded={[0]}
+          borderTop="2px solid #345EA6"
+          w={{ base: modalSize, sm: 'calc(100% - 30px)', md: 'calc(100% - 150px)' }}
+        >
           <ModalHeader borderBottom={'1px solid gray.300'} h="64px" py={4} display="flex" alignItems="center">
             <Box>
-              <HStack fontSize="16px" fontWeight={500} h="32px" color="gray.600">
+              <HStack fontSize="16px" fontWeight={500} h="32px" color="gray.600" flexWrap="wrap-reverse">
                 <Text borderRight="2px solid #E2E8F0" lineHeight="22px" h="22px" pr={2} data-testid="work-order-id">
                   WO {workOrder?.id ? workOrder?.id : ''}
                 </Text>
@@ -126,13 +130,7 @@ export const WorkOrderDetails = ({
             </Box>
           </ModalHeader>
 
-          <ModalCloseButton
-            m={3}
-            size={'lg'}
-            color="gray.600"
-            _focus={{ outline: 'none' }}
-            _hover={{ bg: 'blue.50' }}
-          />
+          <ModalCloseButton size={'lg'} color="gray.600" _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
           {isUpdating && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
           <Divider borderColor={'gray.300'} />
           <Stack bgColor="#F2F3F4" spacing={5}>
@@ -144,7 +142,7 @@ export const WorkOrderDetails = ({
               index={tabIndex}
               onChange={index => setTabIndex(index)}
             >
-              <TabList pt="12px" mr="30px">
+              <TabList pt="12px" flexDir={{ base: 'column', md: 'row' }}>
                 <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
                 {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                 <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>

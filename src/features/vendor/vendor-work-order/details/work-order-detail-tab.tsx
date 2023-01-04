@@ -34,10 +34,10 @@ const SummaryCard = props => {
         <Icon as={props.icon} fontSize="23px" color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <FormLabel variant="strong-label" size="md">
+        <FormLabel variant="strong-label" size="md" isTruncated>
           {props.title}
         </FormLabel>
-        <FormLabel data-testid={props.title} variant="light-label" size="md">
+        <FormLabel data-testid={props.title} variant="light-label" size="md" isTruncated>
           {props.value}
         </FormLabel>
       </Box>
@@ -152,13 +152,16 @@ const WorkOrderDetailTab = ({
             </Alert>
           )}
           <SimpleGrid
-            columns={5}
-            spacing={8}
+            templateColumns={{ base: 'unset', sm: 'repeat(auto-fit , minmax(180px , 1fr))' }}
+            spacing={5}
             borderBottom="1px solid  #E2E8F0"
             minH="60px"
-            m="30px"
+            my="30px"
+            mx={{ base: '0', lg: '30px' }}
             mb="20px"
             alignItems={'left'}
+            flexWrap="wrap"
+            display={{ base: 'flex', sm: 'grid' }}
           >
             <SummaryCard
               title={t('WOIssued')}
@@ -190,7 +193,7 @@ const WorkOrderDetailTab = ({
               value={!!projectData?.lockBoxCode ? projectData?.lockBoxCode : '--'}
             />
           </SimpleGrid>
-          <Box mx="32px" mt={8}>
+          <Box mx={{ base: '0', lg: '30px' }} mt={8}>
             {isLoadingLineItems ? (
               <Center>
                 <Spinner size="lg" />

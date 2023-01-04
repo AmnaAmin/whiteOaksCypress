@@ -1,4 +1,4 @@
-import { Text } from '@chakra-ui/react'
+import { Box, Text } from '@chakra-ui/react'
 import { t } from 'i18next'
 import { dateFormat } from './date-time-utils'
 import { useTranslation } from 'react-i18next'
@@ -40,13 +40,13 @@ export const GetHelpText = () => {
   const { t } = useTranslation()
 
   return (
-    <>
+    <Box>
       <Text fontSize="14px" fontWeight={500} color="#2D3748">
         {t('firstHeading')}
         {/* {headings.first} */}
       </Text>
       <br />
-      <Text fontSize="14px" fontWeight="400" color="gray.500" w="700px" whiteSpace="normal">
+      <Text fontSize="14px" fontWeight="400" color="gray.500" flexWrap="wrap">
         {noticeText()}
       </Text>
       <br />
@@ -54,10 +54,10 @@ export const GetHelpText = () => {
         {t('thirdHeading')}
       </Text>
       <br />
-      <Text fontSize="14px" fontWeight="400" color="gray.500" w="700px" whiteSpace="normal">
+      <Text fontSize="14px" fontWeight="400" color="gray.500" flexWrap="wrap">
         {informationSection()}
       </Text>
-    </>
+    </Box>
   )
 }
 
