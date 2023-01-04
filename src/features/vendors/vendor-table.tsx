@@ -25,6 +25,10 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
+    header: 'primaryEmail',
+    accessorKey: 'businessEmailAddress',
+  },
+  {
     header: 'name',
     accessorKey: 'companyName',
   },
@@ -89,6 +93,10 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'market',
     accessorKey: 'market',
+  },
+  {
+    header: 'businessPhoneNumber',
+    accessorKey: 'businessPhoneNumber',
   },
 ]
 

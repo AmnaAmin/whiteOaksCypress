@@ -470,10 +470,10 @@ export const parseProjectDetailsPayloadFromFormData = async (
 }
 
 export const useProjectAuditLogs = () => {
-  const client = useClient()
+  const client = useClient('/audit/api')
 
   return useQuery<AuditLogType[]>('audit-logs', async () => {
-    const response = await client(`audit-trail`, {})
+    const response = await client(`audit-trails`, {})
 
     return response?.data
   })
