@@ -75,9 +75,6 @@ export const createDocumentPayload = (file: File, documentType = 42): Promise<Do
     let filetype = 'text/plain'
 
     if (file.type !== '') filetype = file.type
-    
-    alert('typeee')
-    console.log('reader', reader)
 
     reader.addEventListener('load', (event: any) => {
       res({
@@ -86,10 +83,8 @@ export const createDocumentPayload = (file: File, documentType = 42): Promise<Do
         fileObjectContentType: filetype,
         documentType,
       })
-      console.log('ressss', res)
-
     })
 
-      reader.readAsDataURL(file)
+    reader.readAsDataURL(file)
   })
 }

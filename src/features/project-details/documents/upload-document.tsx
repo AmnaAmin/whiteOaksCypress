@@ -72,12 +72,12 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const onSubmit = async formValues => {
     const vendorId = formValues?.against?.value?.vendorId?.toString() || ''
     const workOrderId = formValues?.against?.value?.id?.toString() || ''
-    console.log(`formValues - `, formValues)
 
     // const documents = formValues.documents.forEach(async file => {
-    const documentPayload = await createDocumentPayload(formValues.chooseFile, formValues?.documentTypes?.value?.toString())
-    
-    console.log(`documentPayload - `, documentPayload)
+    const documentPayload = await createDocumentPayload(
+      formValues.chooseFile[0],
+      formValues?.documentTypes?.value?.toString(),
+    )
 
     const doc: Document = {
       ...documentPayload,
@@ -92,14 +92,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
         reset()
       },
     })
-
-    // saveDocument(doc)
-    // })
-
-    console.log(`doc - `, doc)
-
-    // onClose()
-    // reset()
   }
 
   const watchField = useWatch({
