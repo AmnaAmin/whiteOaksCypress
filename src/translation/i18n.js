@@ -330,6 +330,7 @@ i18n.use(initReactI18next).init({
         details: 'Details',
         market: 'Market',
         prjt: 'Projects',
+        businessPhoneNumber: 'Business Phone Number',
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
@@ -898,6 +899,7 @@ i18n.use(initReactI18next).init({
         details: 'Detalles',
         market: 'Mercado',
         prjt: 'Proyectos',
+        businessPhoneNumber: 'Número de teléfono laboral',
 
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
