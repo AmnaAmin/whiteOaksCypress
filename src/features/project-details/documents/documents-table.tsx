@@ -38,12 +38,12 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   }
 
   useEffect(() => {
-    setTotalPages(Math.ceil((documents?.length ?? 0) / 10))
+    setTotalPages(Math.ceil((documents?.length ?? 0) / 50))
     setTotalRows(documents?.length ?? 0)
   }, [documents])
 
   const setPageCount = rows => {
-    setTotalPages(Math.ceil((rows?.length ?? 0) / 10))
+    setTotalPages(Math.ceil((rows?.length ?? 0) / 50))
     setTotalRows(rows?.length)
   }
 

@@ -47,12 +47,12 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
   }
 
   useEffect(() => {
-    setTotalPages(Math.ceil((workOrdersNotCancelled?.length ?? 0) / 10))
+    setTotalPages(Math.ceil((workOrdersNotCancelled?.length ?? 0) / 50))
     setTotalRows(workOrdersNotCancelled?.length ?? 0)
   }, [workOrdersNotCancelled?.length])
 
   const setPageCount = rows => {
-    setTotalPages(Math.ceil((rows?.length ?? 0) / 10))
+    setTotalPages(Math.ceil((rows?.length ?? 0) / 50))
     setTotalRows(rows?.length)
   }
 

@@ -95,7 +95,7 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
     initialState: {
       pagination: {
         pageIndex: 0,
-        pageSize: 10,
+        pageSize: 50,
       },
     },
     state: {
