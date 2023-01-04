@@ -14,6 +14,8 @@ const getFileSize = (byte) => {
   return numeral(sizeInMB).format('0,0.00')
 }
 
+// might be needed later
+
 // const formatDocuments = (docs) => {
 //   let documents = [...docs];
 
