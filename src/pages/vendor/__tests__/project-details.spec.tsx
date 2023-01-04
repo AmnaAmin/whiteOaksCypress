@@ -11,16 +11,16 @@ const renderDocumentUploadModal = async () => {
   await waitForLoadingToFinish()
 }
 
-const chooseFileByLabel = (inputElement, fileName = 'dummy-file.png') => {
-  // Create dummy file then upload
-  const file = new File(['(⌐□_□)'], fileName, {
-    type: 'image/png',
-  })
+// const chooseFileByLabel = (inputElement, fileName = 'dummy-file.png') => {
+//   // Create dummy file then upload
+//   const file = new File(['(⌐□_□)'], fileName, {
+//     type: 'image/png',
+//   })
 
-  userEvent.upload(inputElement, file)
+//   userEvent.upload(inputElement, file)
 
-  expect(screen.getByText(fileName)).toBeInTheDocument()
-}
+//   expect(screen.getByText(fileName)).toBeInTheDocument()
+// }
 
 jest.setTimeout(150000)
 
