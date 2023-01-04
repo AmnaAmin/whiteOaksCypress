@@ -51,6 +51,7 @@ export const Receivable = () => {
       failedRun = br
       return failedRun
     }
+    return failedRun
   })
 
   // const { weekDayFilters } = useWeeklyCount()
