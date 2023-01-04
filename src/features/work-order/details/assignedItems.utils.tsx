@@ -902,7 +902,27 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
-
+      {
+        header: `${WORK_ORDER}.location`,
+        accessorKey: 'location',
+        cell: ({ row }) => {
+          const index = row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                fieldName="location"
+                fieldArray="assignedItems"
+                formControl={formControl}
+                inputType="text"
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
+      },
       {
         header: `${WORK_ORDER}.sku`,
         accessorKey: 'sku',
@@ -945,27 +965,6 @@ export const useGetLineItemsColumn = ({
           )
         },
         size: 200,
-      },
-      {
-        header: `${WORK_ORDER}.location`,
-        accessorKey: 'location',
-        cell: ({ row }) => {
-          const index = row?.index
-          return (
-            <Box>
-              <EditableField
-                index={index}
-                selectedCell={selectedCell}
-                setSelectedCell={setSelectedCell}
-                fieldName="location"
-                fieldArray="assignedItems"
-                formControl={formControl}
-                inputType="text"
-                allowEdit={allowEdit}
-              />
-            </Box>
-          )
-        },
       },
       {
         header: () => {
