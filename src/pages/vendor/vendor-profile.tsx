@@ -1,6 +1,6 @@
 // Revisit, Separate the vendor profile forms from vendor profile page.
 
-import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
+import { Box, Divider, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
@@ -196,45 +196,55 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
-            <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
-              <Tab>{t('details')}</Tab>
-              <Tab
-                _disabled={{ cursor: 'not-allowed' }}
-                isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
-                data-testid="documents"
-                {...tabStyle}
-              >
-                {t('documents')}
-              </Tab>
-              <Tab
-                _disabled={{ cursor: 'not-allowed' }}
-                isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
-                data-testid="license"
-                {...tabStyle}
-              >
-                {t('license')}
-              </Tab>
-              <Tab
-                _disabled={{ cursor: 'not-allowed' }}
-                isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
-                data-testid="tradetab"
-                {...tabStyle}
-              >
-                {t('trade')}
-              </Tab>
-              <Tab
-                _disabled={{ cursor: 'not-allowed' }}
-                isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
-                data-testid="markettab"
-                {...tabStyle}
-              >
-                {t('market')}
-              </Tab>
-              {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
-              {!isVendor && <Tab>{t('prjt')}</Tab>}
-            </TabList>
+            <Card
+              bg={{ base: 'white', sm: 'transparent' }}
+              p={{ base: '6px', sm: '0px !important' }}
+              rounded="6px 6px 0px 0px"
+              boxShadow={{ sm: 'none' }}
+            >
+              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
+                <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
+                <Tab
+                  _disabled={{ cursor: 'not-allowed' }}
+                  isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
+                  data-testid="documents"
+                  {...tabStyle}
+                >
+                  {t('documents')}
+                </Tab>
+                <Tab
+                  _disabled={{ cursor: 'not-allowed' }}
+                  isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
+                  data-testid="license"
+                  {...tabStyle}
+                >
+                  {t('license')}
+                </Tab>
+                <Tab
+                  _disabled={{ cursor: 'not-allowed' }}
+                  isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
+                  data-testid="tradetab"
+                  {...tabStyle}
+                >
+                  {t('trade')}
+                </Tab>
+                <Tab
+                  _disabled={{ cursor: 'not-allowed' }}
+                  isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
+                  data-testid="markettab"
+                  {...tabStyle}
+                >
+                  {t('market')}
+                </Tab>
+                {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
+                {!isVendor && <Tab>{t('prjt')}</Tab>}
+              </TabList>
+            </Card>
+            <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
+              <Divider borderWidth="1px" color="#E2E8F0" />
+            </Box>
 
-            <Card pb="8px" pt="18px" px="18px" roundedTop="0px">
+            <Card pb="8px" pt="18px" px="18px" roundedTop="0px" mb={{ base: '4', sm: '0' }}>
               <TabPanels mt="31px">
                 <TabPanel p="0px">
                   {tabIndex === 0 ? (

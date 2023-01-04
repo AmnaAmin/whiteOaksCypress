@@ -50,6 +50,7 @@ export const chakraStyles = {
     borderColor: 'gray.200',
     borderRadius: 'md',
     bg: 'white',
+    margin: '2px',
   }),
   menuList: (provided: any, state: any) => {
     const menuHeight = state.selectProps?.selectProps?.menuHeight || ''
