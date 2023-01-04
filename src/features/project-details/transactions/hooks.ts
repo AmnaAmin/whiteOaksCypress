@@ -49,8 +49,9 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
   const isAgainstProjectSOWOptionSelected = selectedAgainstId && selectedAgainstId === AGAINST_DEFAULT_VALUE
-  const isTransactionTypeDrawAgainstProjectSOWSelected =
-    isAgainstProjectSOWOptionSelected && selectedTransactionTypeId === TransactionTypeValues.draw
+  const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.draw
+  // YK - PSWOA-1243
+  // && isAgainstProjectSOWOptionSelected 
   const refundCheckbox: TransactionsWithRefundType = {
     ...getRefundTransactionType(selectedTransactionTypeId),
     isVisible: [TransactionTypeValues.material, TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
