@@ -26,7 +26,7 @@ import { SelectOption } from 'types/transaction.type'
 import { Button } from 'components/button/button'
 import { ViewLoader } from 'components/page-level-loader'
 import { Controller, useForm, useWatch } from 'react-hook-form'
-import ChooseFileField from 'components/choose-file/choose-file'
+import FileDragDrop from 'components/file-drag-drop/file-drag-drop'
 import { createDocumentPayload } from 'utils/file-utils'
 import { useProjectWorkOrders } from 'api/projects'
 import { STATUS } from 'features/common/status'
@@ -69,10 +69,12 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   } = useForm()
 
   const onSubmit = async formValues => {
-    const vendorId = formValues?.against?.value?.vendorId?.toString()
-    const workOrderId = formValues?.against?.value?.id?.toString()
+    const vendorId = formValues?.against?.value?.vendorId?.toString() || ''
+    const workOrderId = formValues?.against?.value?.id?.toString() || ''
+
+    // const documents = formValues.documents.forEach(async file => {
     const documentPayload = await createDocumentPayload(
-      formValues.chooseFile,
+      formValues.chooseFile[0],
       formValues?.documentTypes?.value?.toString(),
     )
 
@@ -90,6 +92,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       },
     })
   }
+
   const watchField = useWatch({
     control,
     name: 'documentTypes',
@@ -180,7 +183,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                     </GridItem>
                   )}
 
-                  <GridItem>
+                  {/* <GridItem>
                     <FormControl isInvalid={!!errors?.chooseFile}>
                       <FormLabel htmlFor="chooseFile" variant="strong-label" size="md">
                         {t('uploadFile')}
@@ -214,10 +217,40 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         }}
                       />
                     </FormControl>
-                  </GridItem>
+                  </GridItem> */}
                 </Grid>
               </HStack>
             )}
+            <>
+              <FormControl isInvalid={!!errors?.chooseFile}>
+                <Controller
+                  control={control}
+                  name="chooseFile"
+                  rules={{
+                    validate: files => {
+                      const fileLengthExceeded = files?.some(file => file?.name?.length > 255)
+                      return fileLengthExceeded ? 'File name length should be less than 255' : true
+                    },
+                    required: 'Document file is required',
+                  }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <FileDragDrop
+                          isRequired
+                          testId="choose-document"
+                          name={field.name}
+                          onUpload={(docs: any) => {
+                            field.onChange(docs)
+                          }}
+                        />
+                        <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </>
           </form>
         </ModalBody>
         <ModalFooter>

@@ -38,6 +38,9 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
     {
       header: `${USER_MANAGEMENT}.table.status`,
       accessorKey: 'activated',
+      accessorFn: row => {
+        return row?.activated ? 'Activated' : 'Deactivate'
+      },
       cell: (row: any) => {
         const value = row?.row.original?.activated
         return <StatusUserMgt id={value} />
