@@ -11,8 +11,8 @@ export const AUDIT_LOGS_COLUMNS: ColumnDef<AuditLogType>[] = [
   {
     header: `${AUDIT_LOGS}.modifiedDate`,
     accessorKey: 'modifiedDate',
-    accessorFn: value => dateFormat(value.modifiedDate),
-      meta: { format: 'date' },
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.modifiedDate),
+    meta: { format: 'date' },
   },
   {
     header: `${AUDIT_LOGS}.parameter`,
@@ -21,9 +21,11 @@ export const AUDIT_LOGS_COLUMNS: ColumnDef<AuditLogType>[] = [
   {
     header: `${AUDIT_LOGS}.oldValue`,
     accessorKey: 'oldValue',
+    filterFn: 'includesString',
   },
   {
     header: `${AUDIT_LOGS}.newValue`,
     accessorKey: 'newValue',
+    filterFn: 'includesString',
   },
 ]
