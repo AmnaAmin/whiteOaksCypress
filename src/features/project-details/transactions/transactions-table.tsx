@@ -54,12 +54,12 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   }
 
   useEffect(() => {
-    setTotalPages(Math.ceil((transactions?.length ?? 0) / 10))
+    setTotalPages(Math.ceil((transactions?.length ?? 0) / 50))
     setTotalRows(transactions?.length ?? 0)
   }, [transactions])
 
   const setPageCount = rows => {
-    setTotalPages(Math.ceil((rows?.length ?? 0) / 10))
+    setTotalPages(Math.ceil((rows?.length ?? 0) / 50))
     setTotalRows(rows?.length)
   }
 
