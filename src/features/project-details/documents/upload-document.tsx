@@ -71,12 +71,38 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const onSubmit = async formValues => {
     const vendorId = formValues?.against?.value?.vendorId?.toString() || ''
     const workOrderId = formValues?.against?.value?.id?.toString() || ''
+    console.log('formValues', formValues)
+
+    let documentPayload
+    let fileDoc
+    const results = await Promise.all(
+      formValues?.chooseFile.map(async (docFile: any, index: number) => {
+        console.log('docFile', docFile)
+        fileDoc = await createDocumentPayload(docFile, formValues?.documentTypes?.value?.toString())
+        console.log('fileDoc', fileDoc)
+        documentPayload.push(fileDoc)
+        console.log('documentPayload', documentPayload)
+      }),
+    )
+    // documentPayload.push(results)
+    // console.log('results', results)
+
+    // let chFile
+    // formValues?.chooseFile &&
+    //   formValues?.chooseFile.forEach((file, index) => {
+
+    //     const chooseF = {
+    //       chooseFile: file?.chooseFile,
+    //     }
+    //     chFile.push(chooseF)
+    //   })
+    // console.log('chFile', chFile)
 
     // const documents = formValues.documents.forEach(async file => {
-    const documentPayload = await createDocumentPayload(
-      formValues.chooseFile[0],
-      formValues?.documentTypes?.value?.toString(),
-    )
+    // const documentPayload = await createDocumentPayload(
+    //   formValues.chooseFile[0],
+    //   formValues?.documentTypes?.value?.toString(),
+    // )
 
     const doc: Document = {
       ...documentPayload,
