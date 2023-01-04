@@ -44,7 +44,7 @@ export default function FileDragDrop({
 
   const handleDrop = (acceptedFiles) => {
     setFiles(acceptedFiles.map((file) => file));
-    const documents = formatDocuments(acceptedFiles);
+    const documents = acceptedFiles//formatDocuments(acceptedFiles);
     onUpload(documents)
   };
 
