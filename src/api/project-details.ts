@@ -469,12 +469,33 @@ export const parseProjectDetailsPayloadFromFormData = async (
   }
 }
 
-export const useProjectAuditLogs = () => {
+export const useProjectAuditLogs = projectId => {
   const client = useClient('/audit/api')
 
-  return useQuery<AuditLogType[]>('audit-logs', async () => {
-    const response = await client(`audit-trails`, {})
+  const { data: auditLogs, ...rest } = useQuery(
+    `audit-logs?type=Project&projectId.equals=${projectId}&sort=modifiedDate,asc`,
+    async () => {
+      const response = await client(`audit-trails`, {})
 
-    return response?.data
+      return response?.data
+    },
+  )
+  let mappedAuditLogs = [] as AuditLogType[]
+  auditLogs?.forEach(log => {
+    log.data?.forEach(data => {
+      mappedAuditLogs.push({
+        id: log.id,
+        modifiedBy: log?.modifiedBy,
+        modifiedDate: log?.modifiedDate,
+        parameter: data?.attribute,
+        oldValue: data.old_value,
+        newValue: data.new_value,
+      })
+    })
   })
+
+  return {
+    auditLogs: mappedAuditLogs,
+    ...rest,
+  }
 }
