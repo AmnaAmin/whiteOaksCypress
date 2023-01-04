@@ -138,7 +138,8 @@ export const ProjectDetails: React.FC = props => {
                     STATUS.Paid,
                     STATUS.Punch,
                     STATUS.ClientPaid,
-                  ].includes(projectStatus as STATUS) && (
+                    STATUS.Overpayment
+                  ].includes( projectStatus as STATUS ) && (
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
                       {t('newWorkOrder')}
                     </Button>
@@ -226,7 +227,7 @@ export const ProjectDetails: React.FC = props => {
                 <ProjectNotes projectId={projectId} />
               </TabPanel>
               <TabPanel p="0px" mt="7px">
-                <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} />
+                <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch = {refetchAudits} />
               </TabPanel>
             </TabPanels>
           </Tabs>
