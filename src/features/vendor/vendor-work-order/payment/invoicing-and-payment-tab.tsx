@@ -33,7 +33,14 @@ const InvoicingAndPaymentTab = ({
   return (
     <Box>
       <ModalBody ml={30} w="95%" h={'calc(100vh - 300px)'} overflow="auto">
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap="20px" alignItems={'center'} my="30px">
+        <Grid
+          templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(170px,1fr))' }}
+          gap={5}
+          alignItems={'center'}
+          my="30px"
+          flexWrap="wrap"
+          display={{ base: 'flex', sm: 'grid' }}
+        >
           <GridItem>
             <InputView
               showDivider={false}
@@ -96,7 +103,14 @@ const InvoicingAndPaymentTab = ({
           </GridItem>
         </Grid>
         <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" />
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap="20px" alignItems={'center'} my="30px">
+        <Grid
+          templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(170px,1fr))' }}
+          gap={5}
+          alignItems={'center'}
+          my="30px"
+          flexWrap="wrap"
+          display={{ base: 'flex', sm: 'grid' }}
+        >
           <GridItem>
             <InputView
               showDivider={false}

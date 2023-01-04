@@ -265,7 +265,14 @@ export const InvoiceTab = ({
   return (
     <Box>
       <ModalBody mx={{ base: 0, lg: '25px' }}>
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(150px,1fr))" gap="16px" alignItems={'center'} my="24px">
+        <Grid
+          templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(150px,1fr))' }}
+          gap={5}
+          alignItems={'center'}
+          my="24px"
+          display={{ base: 'flex', sm: 'grid' }}
+          flexWrap="wrap"
+        >
           <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
           <InvoiceInfo
             title={t('finalInvoice')}
@@ -305,6 +312,7 @@ export const InvoiceTab = ({
           borderRadius={7}
           borderBottom="1px solid #CBD5E0"
           border="1px solid #CBD5E0"
+          mb="16px"
         >
           <Table variant="simple" size="sm">
             <Thead>

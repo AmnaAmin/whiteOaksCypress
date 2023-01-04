@@ -186,7 +186,6 @@ const AssignedItems = (props: AssignedItemType) => {
               },
             }}
             ml={1}
-            mb={2}
             flexWrap="wrap"
             w={{ base: '100%', lg: 'unset' }}
           >

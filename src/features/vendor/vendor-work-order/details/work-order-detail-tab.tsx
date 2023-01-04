@@ -152,7 +152,7 @@ const WorkOrderDetailTab = ({
             </Alert>
           )}
           <SimpleGrid
-            templateColumns="repeat(auto-fit , minmax(195px , 1fr))"
+            templateColumns={{ base: 'unset', sm: 'repeat(auto-fit , minmax(180px , 1fr))' }}
             spacing={5}
             borderBottom="1px solid  #E2E8F0"
             minH="60px"
@@ -160,6 +160,8 @@ const WorkOrderDetailTab = ({
             mx={{ base: '0', lg: '30px' }}
             mb="20px"
             alignItems={'left'}
+            flexWrap="wrap"
+            display={{ base: 'flex', sm: 'grid' }}
           >
             <SummaryCard
               title={t('WOIssued')}

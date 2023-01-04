@@ -258,7 +258,14 @@ export const LienWaiverTab: React.FC<any> = props => {
               </Box>
             </Flex>
             <Box w="100%">
-              <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" gap={5} w={{ base: '100%', lg: '630px' }}>
+              <Grid
+                templateColumns={{
+                  base: 'repeat(auto-fill,minmax(215px ,1fr))',
+                  md: 'repeat(auto-fill,minmax(215px ,0fr))',
+                }}
+                gap={5}
+                w={{ base: '100%', lg: '630px' }}
+              >
                 <GridItem>
                   <InputView
                     label={t('nameofClaimant')}
@@ -285,7 +292,14 @@ export const LienWaiverTab: React.FC<any> = props => {
                 </GridItem>
               </Grid>
               {isVendor ? (
-                <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" gap={5} mt="16px">
+                <Grid
+                  templateColumns={{
+                    base: 'repeat(auto-fill,minmax(215px ,1fr))',
+                    md: 'repeat(auto-fill,minmax(215px ,0fr))',
+                  }}
+                  gap={5}
+                  mt="16px"
+                >
                   <GridItem>
                     <FormInput
                       errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
