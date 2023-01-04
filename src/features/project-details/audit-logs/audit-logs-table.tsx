@@ -21,6 +21,8 @@ export const AuditLogsTable = React.forwardRef((_, ref) => {
     postGridColumn(columns)
   }
 
+  console.log('settingColumns', settingColumns)
+
   return (
     <Box>
       <Box
@@ -32,7 +34,7 @@ export const AuditLogsTable = React.forwardRef((_, ref) => {
         overflowX="auto"
         roundedRight={{ base: '0px', sm: '6px' }}
       >
-        <TableContextProvider data={auditLogs} columns={AUDIT_LOGS_COLUMNS}>
+        <TableContextProvider data={auditLogs} columns={tableColumns}>
           <Table isLoading={isFetching} isEmpty={!isFetching && !auditLogs?.length} onRowClick={onRowClick} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
