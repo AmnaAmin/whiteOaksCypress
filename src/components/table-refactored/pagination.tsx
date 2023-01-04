@@ -153,17 +153,13 @@ export const ShowCurrentRecordsWithTotalRecords = props => {
   const { pageIndex, pageSize } = tableInstance.getState().pagination
   const lastRecordCount = pageIndex * pageSize + pageSize
 
-  useEffect( ()=> {
-    tableInstance.setPageSize(50);
-  }, [] );
-
   useEffect(() => {
     setPageCount?.(tableInstance?.getPrePaginationRowModel().rows) // setting page count in case of front end pagination. Manual Pagination (false)
   }, [tableInstance?.getPrePaginationRowModel().rows])
 
   return (
     <Flex gap="1" alignItems="center" whiteSpace="nowrap">
-      {pageIndex !== -1 && (
+      {pageIndex !== -1 && dataCount > 0 && (
         <>
           <Text color="blackAlpha.800">
             {pageIndex * pageSize + 1} -{dataCount < lastRecordCount ? dataCount : lastRecordCount}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Center, Flex, FormLabel, Spinner, useDisclosure } from '@chakra-ui/react'
+import { Box, Center, Spinner, useDisclosure } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useProjectWorkOrders } from 'api/projects'
 import { ProjectWorkOrderType } from 'types/project.type'
@@ -17,8 +17,6 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { TableFooter } from 'components/table-refactored/table-footer'
-import { t } from 'i18next'
-import { WORK_ORDER } from './workOrder.i18n'
 
 export const WorkOrdersTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
@@ -46,12 +44,17 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
   }
 
   useEffect(() => {
-    setTotalPages(Math.ceil((workOrders?.length ?? 0) / 10))
-    setTotalRows(workOrders?.length ?? 0)
+    if (!workOrders?.length) {
+      setTotalPages(1)
+      setTotalRows(0)
+    } else {
+      setTotalPages(Math.ceil((workOrders?.length ?? 0) / 25))
+      setTotalRows(workOrders?.length ?? 0)
+    }
   }, [workOrders])
 
   const setPageCount = rows => {
-    setTotalPages(Math.ceil((rows?.length ?? 0) / 10))
+    setTotalPages(Math.ceil((rows?.length ?? 0) / 25))
     setTotalRows(rows?.length)
   }
 
@@ -73,7 +76,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           <Spinner size="lg" />
         </Center>
       )}
-      {workOrders && workOrders?.length > 0 ? (
+      {workOrders && (
         <Box
           w="100%"
           minH="calc(100vh - 450px)"
@@ -84,7 +87,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
           roundedRight={{ base: '0px', sm: '6px' }}
         >
           <TableContextProvider
-            totalPages={workOrders?.length ? totalPages : -1}
+            totalPages={totalPages}
             data={workOrders}
             columns={WORK_ORDER_TABLE_COLUMNS}
             manualPagination={false}
@@ -103,16 +106,6 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
             </TableFooter>
           </TableContextProvider>
         </Box>
-      ) : (
-        <>
-          {!isLoading && (
-            <Flex h="calc(100vh - 450px)" bg="#fff" justifyContent={'center'}>
-              <FormLabel display={'flex'} alignItems="center" variant="light-label">
-                {t(`${WORK_ORDER}.emptyWorkOrders`)}
-              </FormLabel>
-            </Flex>
-          )}
-        </>
       )}
     </Box>
   )
