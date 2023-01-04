@@ -131,7 +131,7 @@ export const ProjectDetails: React.FC = props => {
                     STATUS.Punch,
                     STATUS.ClientPaid,
                     STATUS.Overpayment
-                  ].includes(projectStatus as STATUS) && (
+                  ].includes( projectStatus as STATUS ) && (
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
                       {t('newWorkOrder')}
                     </Button>
