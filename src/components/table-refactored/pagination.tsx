@@ -159,7 +159,7 @@ export const ShowCurrentRecordsWithTotalRecords = props => {
 
   return (
     <Flex gap="1" alignItems="center" whiteSpace="nowrap">
-      {pageIndex !== -1 && (
+      {pageIndex !== -1 && dataCount > 0 && (
         <>
           <Text color="blackAlpha.800">
             {pageIndex * pageSize + 1} -{dataCount < lastRecordCount ? dataCount : lastRecordCount}

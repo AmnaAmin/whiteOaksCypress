@@ -607,7 +607,8 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
   doc.setFont(basicFont, 'bold')
   doc.text(heading, startx, 20)
   var img = new Image()
-  img.src = '/vendorportal/wo-logo.png'
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  img.src = isDevelopment ? 'wo-logo-tree.png' : '/vendorportal/wo-logo-tree.png'
   img.onload = function () {
     doc.addImage(img, 'png', 160, 5, 35, 35)
 
@@ -902,7 +903,27 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
-
+      {
+        header: `${WORK_ORDER}.location`,
+        accessorKey: 'location',
+        cell: ({ row }) => {
+          const index = row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                fieldName="location"
+                fieldArray="assignedItems"
+                formControl={formControl}
+                inputType="text"
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
+      },
       {
         header: `${WORK_ORDER}.sku`,
         accessorKey: 'sku',
@@ -945,27 +966,6 @@ export const useGetLineItemsColumn = ({
           )
         },
         size: 200,
-      },
-      {
-        header: `${WORK_ORDER}.location`,
-        accessorKey: 'location',
-        cell: ({ row }) => {
-          const index = row?.index
-          return (
-            <Box>
-              <EditableField
-                index={index}
-                selectedCell={selectedCell}
-                setSelectedCell={setSelectedCell}
-                fieldName="location"
-                fieldArray="assignedItems"
-                formControl={formControl}
-                inputType="text"
-                allowEdit={allowEdit}
-              />
-            </Box>
-          )
-        },
       },
       {
         header: () => {

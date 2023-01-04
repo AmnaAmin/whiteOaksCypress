@@ -28,6 +28,7 @@ import { STATUS } from 'features/common/status'
 import { TransactionDetails } from 'features/project-details/transaction-details/transaction-details'
 import ScheduleTab from 'features/project-details/project-schedule/schedule-tab'
 import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-table'
+import { useProjectAuditLogs } from 'api/project-details'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -58,6 +59,7 @@ export const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
 
   const [isShowProjectFinancialOverview, setIsShowProjectFinancialOverview] = useState(false)
 
@@ -91,6 +93,12 @@ export const ProjectDetails: React.FC = props => {
       ])
     }
   }, [ganttChartData, projectData])
+
+  useEffect(() => {
+    if (tabIndex === 6) {
+      refetchAudits()
+    }
+  }, [tabIndex])
 
   return (
     <>
@@ -130,7 +138,8 @@ export const ProjectDetails: React.FC = props => {
                     STATUS.Paid,
                     STATUS.Punch,
                     STATUS.ClientPaid,
-                  ].includes(projectStatus as STATUS) && (
+                    STATUS.Overpayment
+                  ].includes( projectStatus as STATUS ) && (
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
                       {t('newWorkOrder')}
                     </Button>
@@ -218,7 +227,7 @@ export const ProjectDetails: React.FC = props => {
                 <ProjectNotes projectId={projectId} />
               </TabPanel>
               <TabPanel p="0px" mt="7px">
-                <AuditLogsTable />
+                <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch = {refetchAudits} />
               </TabPanel>
             </TabPanels>
           </Tabs>

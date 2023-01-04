@@ -1,6 +1,6 @@
 import { Control, useWatch } from 'react-hook-form'
 import { DocumentsCardFormValues } from 'types/vendor.types'
-import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { datePickerFormat } from 'utils/date-time-utils'
 
 export const useDocumentLicenseMessage = ({ data }) => {
   const DocumentDates = [
@@ -40,21 +40,21 @@ export const useWatchDocumentFeild = (control: Control<DocumentsCardFormValues>,
   const watchCoiWcExpFile = useWatch({ control, name: 'coiWcExpFile' })
 
   const isW9DocumentDateChanged =
-    watchW9DocumentDate !== dateFormat(vendor?.w9DocumentDate as string) && (watchW9DocumentDate ?? false)
+    watchW9DocumentDate !== datePickerFormat(vendor?.w9DocumentDate as string) && (watchW9DocumentDate ?? false)
 
   const isAgreementSignedDateChanged =
-    watchAgreementSignedDate !== dateFormat(vendor?.agreementSignedDate as string) &&
+    watchAgreementSignedDate !== datePickerFormat(vendor?.agreementSignedDate as string) &&
     (watchAgreementSignedDate ?? false)
 
   const isAutoInsuranceExpDateChanged =
-    watchAutoInsuranceExpDate !== dateFormat(vendor?.autoInsuranceExpirationDate as string) &&
+    watchAutoInsuranceExpDate !== datePickerFormat(vendor?.autoInsuranceExpirationDate as string) &&
     (watchAutoInsuranceExpDate ?? false)
 
   const isCoiGlExpDateChanged =
-    watchCoiGlExpDate !== dateFormat(vendor?.coiglExpirationDate as string) && (watchCoiGlExpDate ?? false)
+    watchCoiGlExpDate !== datePickerFormat(vendor?.coiglExpirationDate as string) && (watchCoiGlExpDate ?? false)
 
   const isCoiWcExpDateChanged =
-    watchCoiWcExpDate !== dateFormat(vendor?.coiWcExpirationDate as string) && (watchCoiWcExpDate ?? false)
+    watchCoiWcExpDate !== datePickerFormat(vendor?.coiWcExpirationDate as string) && (watchCoiWcExpDate ?? false)
 
   const isAllFiledWatch =
     isW9DocumentDateChanged ||
