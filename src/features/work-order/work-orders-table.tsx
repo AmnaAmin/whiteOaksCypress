@@ -48,13 +48,13 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
       setTotalPages(1)
       setTotalRows(0)
     } else {
-      setTotalPages(Math.ceil((workOrders?.length ?? 0) / 25))
+      setTotalPages(Math.ceil((workOrders?.length ?? 0) / 50))
       setTotalRows(workOrders?.length ?? 0)
     }
   }, [workOrders])
 
   const setPageCount = rows => {
-    setTotalPages(Math.ceil((rows?.length ?? 0) / 25))
+    setTotalPages(Math.ceil((rows?.length ?? 0) / 50))
     setTotalRows(rows?.length)
   }
 
