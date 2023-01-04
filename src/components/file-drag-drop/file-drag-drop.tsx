@@ -1,5 +1,4 @@
 import {
-  DefaultIcon,
   Divider,
   Flex,
   Text
@@ -15,26 +14,26 @@ const getFileSize = (byte) => {
   return numeral(sizeInMB).format('0,0.00')
 }
 
-const formatDocuments = (docs) => {
-  let documents = [...docs];
+// const formatDocuments = (docs) => {
+//   let documents = [...docs];
 
-  docs.forEach((file, index) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = (event:any) => {
-      const arry = event.target.result.split(",");    
-      documents[0] = {
-        id: file.name,
-        fileObject: arry[1],
-        fileObjectContentType: file.type,
-        fileType: file.type,
-        size: file.size,
-      };
-    };
-  });
+//   docs.forEach((file, index) => {
+//     const reader = new FileReader();
+//     reader.readAsDataURL(file);
+//     reader.onload = (event:any) => {
+//       const arry = event.target.result.split(",");    
+//       documents[0] = {
+//         id: file.name,
+//         fileObject: arry[1],
+//         fileObjectContentType: file.type,
+//         fileType: file.type,
+//         size: file.size,
+//       };
+//     };
+//   });
 
-  return documents;
-};
+//   return documents;
+// };
 
 export default function FileDragDrop({
   onUpload,
