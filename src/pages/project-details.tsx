@@ -226,7 +226,7 @@ export const ProjectDetails: React.FC = props => {
                 <ProjectNotes projectId={projectId} />
               </TabPanel>
               <TabPanel p="0px" mt="7px">
-                <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} />
+                <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch = {refetchAudits} />
               </TabPanel>
             </TabPanels>
           </Tabs>
