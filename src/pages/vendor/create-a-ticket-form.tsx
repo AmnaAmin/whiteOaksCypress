@@ -12,6 +12,8 @@ import {
   Input,
   Flex,
   Text,
+  Stack,
+  Icon,
 } from '@chakra-ui/react'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { Controller, useForm } from 'react-hook-form'
@@ -33,7 +35,8 @@ import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
 import ReactSelect from 'components/form/react-select'
 import { SUPPORT } from 'features/support/support.i18n'
-import { BiDownload } from 'react-icons/bi'
+import { BiCalendar, BiDetail, BiDownload } from 'react-icons/bi'
+import { dateFormat } from 'utils/date-time-utils'
 
 const downloadDocument = (link, text, testid?) => {
   return (
@@ -45,6 +48,28 @@ const downloadDocument = (link, text, testid?) => {
         </Text>
       </Flex>
     </a>
+  )
+}
+
+const ReadonlyInfoCard: React.FC<{ icon: React.ElementType; value: string; title: string }> = ({
+  icon,
+  value,
+  title,
+}) => {
+  return (
+    <HStack spacing="12px">
+      <Stack h="40px">
+        <Icon as={icon} fontSize="20px" color="gray.500" />
+      </Stack>
+      <Stack spacing={0}>
+        <Text color="gray.600" fontSize="14px" fontWeight={500}>
+          {title}
+        </Text>
+        <Text color="gray.500" fontSize="14px" fontWeight={400}>
+          {value}
+        </Text>
+      </Stack>
+    </HStack>
   )
 }
 
@@ -201,6 +226,8 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
     }
   }
 
+  console.log(supportDetail)
+
   return (
     <Card py="0">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -215,6 +242,16 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
               </FormLabel>
             )}
             <Grid templateColumns="repeat(1, 1fr)" gap={8} maxWidth="700px">
+              {supportDetail && (
+                <HStack spacing="58px" borderBottom="1px solid #E2E8F0" pb="27px">
+                  <ReadonlyInfoCard
+                    icon={BiCalendar}
+                    value={dateFormat(supportDetail?.createdDate)}
+                    title={'Date Created'}
+                  />
+                  <ReadonlyInfoCard icon={BiDetail} value={supportDetail?.createdBy} title={'Created By'} />
+                </HStack>
+              )}
               <HStack spacing={3}>
                 <FormControl isInvalid={!!errors.issueType} w="215px" data-testid="issue-Type">
                   <FormLabel htmlFor="issueType" variant="strong-label" color="gray.600">
