@@ -19,15 +19,21 @@ export const support = {
         modifiedDate: 'Modified Date',
 
         //modal
-        EditTicket: 'Edit Support Ticket',
+        editTicket: 'Edit Support Ticket',
 
         //extra
         createTicket: 'Create a Ticket',
         descriptions: 'Description (1000 Characters)',
+        resolution: 'Resolution (1000 Characters)',
         fileUpload: 'File Upload',
 
         save: 'Save',
         cancel: 'Cancel',
+
+        createTicketTitle: 'Create Ticket',
+        createTicketSuccessMessage: 'Ticket created successfully.',
+        editTicketTitle: 'Edit Ticket',
+        editTicketSuccessMessage: 'Ticket Edit Successfully',
       },
     },
   },
@@ -47,11 +53,17 @@ export const support = {
         createdBy: 'Creado por',
         createdDate: 'Fecha de creación',
         modifiedDate: 'Fecha de modificación',
-
+        descriptions: 'Descripción (1000 Caracteres)',
+        resolution: 'Resolución (1000 Caracteres)',
         // modal
+        editTicket: 'Editar ticket de soporte',
 
         save: 'Ahorrar',
         cancel: 'Cancelar',
+        createTicketTitle: 'Crear Ticket',
+        createTicketSuccessMessage: 'Ticket creado con éxito.',
+        editTicketTitle: 'Editar boleto',
+        editTicketSuccessMessage: 'Edición de entradas con éxito',
       },
     },
   },
