@@ -236,12 +236,14 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
             {!supportPage && !supportDetail && (
               <FormLabel variant="strong-label" size="lg" color="gray.600" mb="8" w="100%">
                 <HStack w="100%">
-                  <Box fontSize="18px">{t(`${SUPPORT}.createTicket`)}</Box>
+                  <Box fontSize="18px" whiteSpace="nowrap">
+                    {t(`${SUPPORT}.createTicket`)}
+                  </Box>
                   <Divider width="90%" />
                 </HStack>
               </FormLabel>
             )}
-            <Grid templateColumns="repeat(1, 1fr)" gap={8} maxWidth="700px">
+            <Grid templateColumns="repeat(1, 1fr)" gap={5} maxWidth="700px">
               {supportDetail && (
                 <HStack spacing="58px" borderBottom="1px solid #E2E8F0" pb="27px">
                   <ReadonlyInfoCard
@@ -390,7 +392,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
             </FormControl>
           </Box>
 
-          <FormControl mt="30px" w="290px" mb="40px">
+          <FormControl mt="30px" w="290px">
             <FormLabel variant="strong-label" color="gray.600" mb={1}>
               {t(`${SUPPORT}.fileUpload`)}
             </FormLabel>
@@ -421,9 +423,11 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
           </FormControl>
         </Box>
         <HStack w="100%" h="100px" mt="20px" justifyContent="end" borderTop="2px solid #E2E8F0">
-          <Button variant="outline" onClick={onClose} colorScheme="green">
-            {t(`${SUPPORT}.cancel`)}
-          </Button>
+          {supportPage && (
+            <Button variant="outline" onClick={onClose} colorScheme="green">
+              {t(`${SUPPORT}.cancel`)}
+            </Button>
+          )}
           <Button type="submit" colorScheme="green" data-testid="save" isDisabled={watchRequiredField || Lodings}>
             {t(`${SUPPORT}.save`)}
           </Button>
