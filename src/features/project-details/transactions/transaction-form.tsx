@@ -78,6 +78,7 @@ import {
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
+import { useFetchWorkOrder } from 'api/work-order'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -208,6 +209,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
   }, [workOrderId])
 
+  const { workOrderDetails } = useFetchWorkOrder({ workOrderId: workOrderId })
+
+  console.log('workOrderDetails', workOrderDetails)
+
   const { check, isValidForAwardPlan } = useIsAwardSelect(control)
 
   const showDrawRemainingMsg =
@@ -257,9 +262,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
+  const paymentTermValue = {
+    value: workOrderDetails?.awardPlanPayTerm,
+    label: workOrderDetails?.awardPlanPayTerm as string,
+    title: workOrderDetails?.awardPlanPayTerm as string,
+  }
+
+  console.log('paymentTermValue', paymentTermValue)
+  const PaymentTermValue = watch('against')
+  console.log('PaymentTermValue', PaymentTermValue)
+
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
-      setValue('paymentTerm', null)
+      setValue('paymentTerm', paymentTermValue)
       setValue('invoicedDate', null)
       setValue('workOrder', null)
       setValue('changeOrder', null)
