@@ -257,14 +257,27 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
+  useEffect(() => {
+    if (selectedWorkOrder?.awardPlanPayTerm) {
+      const paymentTermValue = {
+        value: selectedWorkOrder?.awardPlanPayTerm,
+        label: selectedWorkOrder?.awardPlanPayTerm as string,
+        title: selectedWorkOrder?.awardPlanPayTerm as string,
+      }
+      setValue('paymentTerm', paymentTermValue)
+    } else {
+      setValue('paymentTerm', null)
+    }
+  }, [selectedWorkOrder])
+
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
-      setValue('paymentTerm', null)
       setValue('invoicedDate', null)
       setValue('workOrder', null)
       setValue('changeOrder', null)
     } else {
       setValue('newExpectedCompletionDate', '')
+      setValue('paymentTerm', null)
     }
 
     resetExpectedCompletionDateFields(option)

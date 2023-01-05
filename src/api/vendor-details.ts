@@ -14,7 +14,12 @@ import {
   VendorTradeFormValues,
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
-import { convertDateTimeFromServer, convertDateTimeToServer, customFormat } from 'utils/date-time-utils'
+import {
+  // convertDateTimeFromServer,
+  convertDateTimeToServer,
+  customFormat,
+  datePickerFormat,
+} from 'utils/date-time-utils'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -387,7 +392,7 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
         id: license.id,
         licenseType: license.licenseType,
         licenseNumber: license.licenseNumber,
-        expiryDate: convertDateTimeFromServer(license.licenseExpirationDate),
+        expiryDate: datePickerFormat(license.licenseExpirationDate),
         expirationFile: null,
         downloadableFile: { url: license.s3Url, name: license.fileType },
       }
@@ -447,23 +452,23 @@ export const createVendorPayload = (updatedObj: any, vendor: any) => {
 
 export const documentCardsDefaultValues = (vendor: any) => {
   const documentCards = {
-    agreementSignedDate: convertDateTimeFromServer(vendor.agreementSignedDate),
+    agreementSignedDate: datePickerFormat(vendor.agreementSignedDate),
     agreementUrl: vendor.documents.find(
       (d: any) => d.documentTypelabel === DOCUMENTS_TYPES.AGREEMENT_SIGNED_DOCUMENT.value,
     )?.s3Url,
     agreement: null,
-    w9DocumentDate: convertDateTimeFromServer(vendor.w9DocumentDate),
+    w9DocumentDate: datePickerFormat(vendor.w9DocumentDate),
     w9Document: null,
     w9DocumentUrl: vendor.documents.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.W9_DOCUMENT.value)?.s3Url,
-    autoInsuranceExpDate: convertDateTimeFromServer(vendor.autoInsuranceExpirationDate),
+    autoInsuranceExpDate: datePickerFormat(vendor.autoInsuranceExpirationDate),
     insuranceUrl: vendor.documents.find(
       (d: any) => d.documentTypelabel === DOCUMENTS_TYPES.AUTH_INSURANCE_EXPIRATION.value,
     )?.s3Url,
     insurance: null,
-    coiGlExpDate: convertDateTimeFromServer(vendor.coiglExpirationDate),
+    coiGlExpDate: datePickerFormat(vendor.coiglExpirationDate),
     coiGlExpFile: null,
     coiGLExpUrl: vendor.documents.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_GL.value)?.s3Url,
-    coiWcExpDate: convertDateTimeFromServer(vendor.coiWcExpirationDate),
+    coiWcExpDate: datePickerFormat(vendor.coiWcExpirationDate),
     coiWcExpFile: null,
     coiWcExpUrl: vendor.documents.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_WC.value)?.s3Url,
   }
