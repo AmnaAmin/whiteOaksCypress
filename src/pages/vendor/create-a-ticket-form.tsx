@@ -353,7 +353,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
               <Textarea
                 size="lg"
                 bg="white"
-                h="140px"
+                h="100px"
                 id="description"
                 {...register('description', {
                   required: 'This is required field',
@@ -363,7 +363,8 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                 _hover={{
                   borderLeft: '2px solid #345EA6 !important',
                 }}
-                fontSize="16px"
+                fontSize="12px"
+                color="gray.600"
               />
               <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
             </FormControl>
@@ -379,11 +380,12 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                 _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }}
                 size="lg"
                 bg="white"
-                h="140px"
+                h="100px"
                 id="resolution"
                 {...register('resolution')}
                 data-testid="descriptions"
-                fontSize="16px"
+                fontSize="12px"
+                color="gray.600"
               />
             </FormControl>
           </Box>
