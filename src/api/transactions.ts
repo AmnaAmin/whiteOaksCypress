@@ -37,6 +37,7 @@ import {
   TRANSACTION_MARK_AS_OPTIONS,
   TRANSACTION_STATUS_OPTIONS,
 } from 'features/project-details/transactions/transaction.constants'
+import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 
 export const GET_TRANSACTIONS_API_KEY = 'transactions'
 
@@ -659,9 +660,10 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
-        queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(['changeOrder', projectId])
         queryClient.invalidateQueries(['overpayment', Number(projectId)])
+        queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+        queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
 
         toast({
           title: 'Update Transaction.',

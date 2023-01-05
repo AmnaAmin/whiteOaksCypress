@@ -136,6 +136,7 @@ export const ProjectAwardCard = ({
         <BlankSlate size="sm" width="100%" />
       ) : (
         <Flex
+          flexWrap="nowrap"
           onMouseOver={() => setCheckIcon(true)}
           onMouseOut={() => setCheckIcon(false)}
           //   boxShadow=" 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
@@ -156,9 +157,9 @@ export const ProjectAwardCard = ({
           borderColor={selectedCard === id ? '#4E87F8' : ''}
           _hover={{ bg: 'gray.100' }}
         >
-          <VStack w="100%" px={'10px'} alignItems={'Start'} spacing={3}>
+          <VStack w="195px" px={'10px'} alignItems={'Start'} spacing={3}>
             <HStack w={'100%'} justifyContent={'space-between'}>
-              <Text fontWeight="600" fontSize="16px" color="gray.600">
+              <Text fontWeight="600" fontSize="16px" color="gray.600" whiteSpace="nowrap">
                 {cardsvalues?.name}
               </Text>
               {(checkIcon || selectedCard === id) && (
@@ -175,7 +176,7 @@ export const ProjectAwardCard = ({
               )}
             </HStack>
             <Divider border="1px solid" borderColor="gray.300" />
-            <Text fontWeight="400" fontSize="12px" color="gray.500">
+            <Text fontWeight="400" fontSize="12px" color="gray.500" whiteSpace="nowrap">
               {t(`${PROJECT_AWARD}.scopeAmount`)}
             </Text>
             <Text fontWeight="600" fontSize="16px" color="#4E87F8">

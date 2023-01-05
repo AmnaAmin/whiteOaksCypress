@@ -13,6 +13,8 @@ import {
   ModalBody,
   IconButton,
   useDisclosure,
+  Grid,
+  GridItem,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import { convertImageToDataURL } from 'components/table/util'
@@ -251,47 +253,60 @@ export const LienWaiverTab: React.FC<any> = props => {
               </Alert>
             )}
             <Flex w="100%" alignContent="space-between" pos="relative">
-              <Box flex="4" minW="59em">
+              <Box w={{ base: 'calc(100% -100px)', lg: '44em' }}>
                 <HelpText>{GetHelpText()}</HelpText>
               </Box>
             </Flex>
-            <Box>
-              <VStack alignItems="start">
-                <HStack spacing="4">
+            <Box w="100%">
+              <Grid
+                templateColumns={{
+                  base: 'repeat(auto-fill,minmax(215px ,1fr))',
+                  md: 'repeat(auto-fill,minmax(215px ,0fr))',
+                }}
+                gap={5}
+                w={{ base: '100%', lg: '630px' }}
+              >
+                <GridItem>
                   <InputView
-                    controlStyle={{ w: '16em' }}
                     label={t('nameofClaimant')}
                     InputElem={<Text data-testid="nameOfClaimant">{workOrder.claimantName}</Text>}
                   />
-
+                </GridItem>
+                <GridItem>
                   <InputView
-                    controlStyle={{ w: '16em' }}
                     label={t('jobLocation')}
                     InputElem={<Text data-testid="propertyAddress">{workOrder.propertyAddress}</Text>}
                   />
-                </HStack>
-
-                <HStack pt={'20px'} spacing="4">
+                </GridItem>
+                <GridItem>
                   <InputView
-                    controlStyle={{ w: '16em' }}
                     label={t('makerOfCheck')}
                     InputElem={<Text data-testid="makerOfCheck">{workOrder.makerOfCheck}</Text>}
                   />
+                </GridItem>
+                <GridItem>
                   <InputView
-                    controlStyle={{ w: '16em' }}
                     label={t('amountOfCheck')}
                     InputElem={<Text data-testid="amountOfCheck">${workOrder.finalInvoiceAmount}</Text>}
                   />
-                </HStack>
-                {isVendor ? (
-                  <HStack pt={'20px'} alignItems={'flex-start'} spacing="4">
+                </GridItem>
+              </Grid>
+              {isVendor ? (
+                <Grid
+                  templateColumns={{
+                    base: 'repeat(auto-fill,minmax(215px ,1fr))',
+                    md: 'repeat(auto-fill,minmax(215px ,0fr))',
+                  }}
+                  gap={5}
+                  mt="16px"
+                >
+                  <GridItem>
                     <FormInput
                       errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
                       label={t('claimantsTitle')}
                       placeholder=""
                       variant="required-field"
                       register={register}
-                      controlStyle={{ w: '16em' }}
                       disabled={isFieldsDisabled}
                       elementStyle={{
                         bg: 'white',
@@ -301,7 +316,9 @@ export const LienWaiverTab: React.FC<any> = props => {
                       rules={{ required: 'This is required field' }}
                       name={`claimantTitle`}
                     />
-                    <FormControl isInvalid={!claimantsSignature} width={'16em'}>
+                  </GridItem>
+                  <GridItem>
+                    <FormControl isInvalid={!claimantsSignature}>
                       <FormLabel fontWeight={500} fontSize="14px" color="gray.700">
                         {t('claimantsSignature')}
                       </FormLabel>
@@ -377,7 +394,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                         <FormErrorMessage>This is required field</FormErrorMessage>
                       )}
                     </FormControl>
-
+                  </GridItem>
+                  <GridItem>
                     <FormInput
                       errorMessage={errors?.dateOfSignature?.message}
                       label={t('dateOfSignature')}
@@ -386,7 +404,6 @@ export const LienWaiverTab: React.FC<any> = props => {
                       register={register}
                       name={`dateOfSignature`}
                       value={dateFormat(formValues?.dateOfSignature as string)}
-                      controlStyle={{ w: '16em' }}
                       elementStyle={{
                         bg: 'white',
                         borderWidth: '0 0 1px 0',
@@ -397,9 +414,11 @@ export const LienWaiverTab: React.FC<any> = props => {
                       rules={{ required: 'This is required field' }}
                       readOnly
                     />
-                  </HStack>
-                ) : (
-                  <HStack pt={'20px'} spacing="3">
+                  </GridItem>
+                </Grid>
+              ) : (
+                <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" gap={10}>
+                  <GridItem>
                     <InputView
                       controlStyle={{ w: '16em' }}
                       label="Date of signature"
@@ -411,8 +430,9 @@ export const LienWaiverTab: React.FC<any> = props => {
                         </>
                       }
                     />
+                  </GridItem>
+                  <GridItem>
                     <InputView
-                      controlStyle={{ w: '16em' }}
                       label="Claimant Signature"
                       InputElem={
                         workOrder?.lienWaiverAccepted && claimantsSignature ? (
@@ -422,9 +442,9 @@ export const LienWaiverTab: React.FC<any> = props => {
                         )
                       }
                     />
-                  </HStack>
-                )}
-              </VStack>
+                  </GridItem>
+                </Grid>
+              )}
             </Box>
           </VStack>
         </FormControl>

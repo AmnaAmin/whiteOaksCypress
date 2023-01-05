@@ -164,14 +164,37 @@ const AssignedItems = (props: AssignedItemType) => {
   return (
     <Box>
       <>
-        <Stack mb={'20px'} direction="row" justifyContent="space-between">
-          <HStack alignItems="center" ml={1} mb={2}>
-            <Text fontWeight={500} color="gray.700" fontSize={'18px'}>
+        <Stack
+          mb={'20px'}
+          direction="row"
+          flexWrap="wrap"
+          justifyContent={{ base: 'center', md: 'space-between' }}
+          experimental_spaceY={{ base: '16px', sm: '0px' }}
+          sx={{
+            '@media only screen and (min-width: 415px)': {
+              experimental_spaceY: '0',
+            },
+          }}
+        >
+          <HStack
+            alignItems={{ base: 'start', sm: 'center' }}
+            justifyContent={{ base: 'center', sm: 'space-between' }}
+            experimental_spaceY={{ base: '16px', sm: '0px' }}
+            sx={{
+              '@media only screen and (min-width: 415px)': {
+                experimental_spaceY: '0',
+              },
+            }}
+            ml={1}
+            flexWrap="wrap"
+            w={{ base: '100%', lg: 'unset' }}
+          >
+            <Text fontWeight={500} color="gray.700" fontSize={'18px'} whiteSpace="nowrap">
               {t(`${WORK_ORDER}.assignedLineItems`)}
             </Text>
             {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
               <>
-                <Box pl="2" pr="1">
+                <Box pl="2" pr="1" display={{ base: 'none', sm: 'unset' }}>
                   <Divider size="lg" orientation="vertical" h="25px" />
                 </Box>
                 <Button
@@ -187,7 +210,7 @@ const AssignedItems = (props: AssignedItemType) => {
 
             {isAssignmentAllowed && (
               <>
-                <Box pl="2" pr="1">
+                <Box pl="2" pr="1" display={{ base: 'none', sm: 'unset' }}>
                   <Divider size="lg" orientation="vertical" h="25px" />
                 </Box>
                 <Button
@@ -203,7 +226,19 @@ const AssignedItems = (props: AssignedItemType) => {
               </>
             )}
           </HStack>
-          <HStack spacing="16px" alignItems="center">
+          <HStack
+            experimental_spaceX={{ base: '5px', lg: '16px' }}
+            experimental_spaceY={{ base: '16px', sm: '0' }}
+            sx={{
+              '@media only screen and (min-width: 415px)': {
+                experimental_spaceY: '0',
+              },
+            }}
+            alignItems="center"
+            justifyContent={{ base: 'center', sm: 'space-between', lg: 'end' }}
+            w={{ base: '100%', lg: 'unset' }}
+            flexWrap={{ base: 'wrap', lg: 'unset' }}
+          >
             {showPriceCheckBox && (
               <Checkbox variant={'outLineGreen'} data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}
@@ -225,6 +260,7 @@ const AssignedItems = (props: AssignedItemType) => {
                     })
                     setMarkAllVerified(e.target.checked)
                   }}
+                  whiteSpace="nowrap"
                 >
                   {t(`${WORK_ORDER}.markAllVerified`)}
                 </Checkbox>
@@ -247,6 +283,7 @@ const AssignedItems = (props: AssignedItemType) => {
                     setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
                   })
                 }}
+                whiteSpace="nowrap"
               >
                 <Text fontSize="16px">{t(`${WORK_ORDER}.markAllCompleted`)}</Text>
               </Checkbox>
