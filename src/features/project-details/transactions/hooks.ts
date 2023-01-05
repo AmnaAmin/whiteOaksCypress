@@ -51,7 +51,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const isAgainstProjectSOWOptionSelected = selectedAgainstId && selectedAgainstId === AGAINST_DEFAULT_VALUE
   const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.draw
   // YK - PSWOA-1243
-  // && isAgainstProjectSOWOptionSelected 
+  // && isAgainstProjectSOWOptionSelected
   const refundCheckbox: TransactionsWithRefundType = {
     ...getRefundTransactionType(selectedTransactionTypeId),
     isVisible: [TransactionTypeValues.material, TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
@@ -150,7 +150,6 @@ export const useIsAwardSelect = (control: Control<FormValues, any>) => {
   const against = useWatch({ name: 'against', control })
   const check = against?.awardStatus
   const isValidForAwardPlan = against?.isValidForAwardPlan
-
   return { check, isValidForAwardPlan }
 }
 
