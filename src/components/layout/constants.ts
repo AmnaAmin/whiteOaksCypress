@@ -285,12 +285,7 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiLineChart,
       color: '#68D391',
     },
-    {
-      pathTo: '/support-tickets',
-      title: 'Support',
-      Icon: FaReact,
-      color: '#3182CE',
-    },
+
     {
       pathTo: '/userManager',
       title: `${SIDE_NAV}.userMgmt`,
@@ -314,6 +309,12 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
+    },
+    {
+      pathTo: '/support-tickets',
+      title: 'Support',
+      Icon: FaReact,
+      color: '#3182CE',
     },
     ...(showForPreProd
       ? [

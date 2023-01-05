@@ -385,7 +385,6 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                 h="100px"
                 id="resolution"
                 {...register('resolution')}
-                data-testid="descriptions"
                 fontSize="12px"
                 color="gray.600"
               />
