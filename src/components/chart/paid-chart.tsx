@@ -93,7 +93,6 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
             />
           )}
         </XAxis>
-        <Tooltip content={<CustomTooltip />} />
         <YAxis
           hide={false}
           type="number"
@@ -108,7 +107,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
             fontStyle: 'Poppins',
           }}
         />
-        {!emptyGraphData && <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />}
+        {!emptyGraphData && <Tooltip content={<CustomTooltip />} />}
 
         <Bar dataKey="sum" fill="#68D391" radius={[5, 5, 0, 0]} />
       </BarChart>
