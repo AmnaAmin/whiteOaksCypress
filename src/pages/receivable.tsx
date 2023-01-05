@@ -4,7 +4,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReceivableFilter } from 'features/recievable/receivable-filter'
 import { ReceivableTable } from 'features/recievable/receivable-table'
-import { t } from 'i18next'
+import { reloadResources, t } from 'i18next'
 import { compact } from 'lodash'
 import { useEffect, useState } from 'react'
 import { useBatchProcessingMutation, useBatchRun, useCheckBatch } from 'api/account-receivable'
@@ -21,6 +21,8 @@ export const Receivable = () => {
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay] = useState<string>('')
+  const [batchTitle, setBatchTitle] = useState<string>('')
+  const [batchMsg, setBatchMsg] = useState<string>('')
 
   // const clearAll = () => {
   //   setSelectedCard('')
@@ -44,15 +46,13 @@ export const Receivable = () => {
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
   const batchId = run?.data?.id || 0
-  const { data: batchRun } = useBatchRun(batchId, queryStringWithPagination)
-  let batch, failedRun
-  batch = batchRun?.map(br => {
-    if (br?.statusId === 2) {
-      failedRun = br
-      return failedRun
-    }
-    return failedRun
-  })
+  const { data: batchRun, refetch: refetchBatch } = useBatchRun(batchId, queryStringWithPagination)
+
+  // Get Batch Run Errors
+  const checkBatchRun = batchRun?.filter(br => br?.statusId === 2) || []
+  console.log('checkBatchRun', checkBatchRun)
+  const batchResult = checkBatchRun.map(a => a.value).join(', ')
+  console.log('batchResult', batchResult)
 
   // const { weekDayFilters } = useWeeklyCount()
 
@@ -60,6 +60,18 @@ export const Receivable = () => {
     if (!loading) {
       reset()
     }
+  }, [loading])
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (batchResult) {
+        setBatchTitle(t(`${ACCOUNTS}.batchError`))
+        setBatchMsg(t(`${ACCOUNTS}.batchErrorMsg`) + batchResult)
+      } else {
+        setBatchTitle(t(`${ACCOUNTS}.batchProcess`))
+        setBatchMsg(t(`${ACCOUNTS}.batchSuccess`))
+      }
+    }, 1000)
   }, [loading])
 
   const Submit = formValues => {
@@ -88,6 +100,8 @@ export const Receivable = () => {
 
   const onNotificationClose = () => {
     setIsBatchClick(false)
+    setBatchTitle('')
+    setBatchMsg('')
   }
 
   return (
@@ -143,9 +157,18 @@ export const Receivable = () => {
             />
           </Box>
         </Box>
+
         <ConfirmationBox
-          title={failedRun ? t(`${ACCOUNTS}.batchError`) : t(`${ACCOUNTS}.batchProcess`)}
-          content={failedRun ? t(`${ACCOUNTS}.batchErrorMsg`) + failedRun?.value : t(`${ACCOUNTS}.batchSuccess`)}
+          title={
+            batchTitle
+            //checkBatchRun.length > 0
+            // batchResult ? t(`${ACCOUNTS}.batchError`) : t(`${ACCOUNTS}.batchProcess`)
+          }
+          content={
+            batchMsg
+            // checkBatchRun.length > 0
+            // batchResult ? t(`${ACCOUNTS}.batchErrorMsg`) + batchResult : t(`${ACCOUNTS}.batchSuccess`)
+          }
           isOpen={!loading && isBatchClick}
           onClose={onNotificationClose}
           onConfirm={onNotificationClose}
