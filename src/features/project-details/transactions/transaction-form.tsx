@@ -153,7 +153,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   const [remainingAmt, setRemainingAmt] = useState(false)
-  const [paymentTermValue, setPaymentTermValue] = useState<any>()
 
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes()
