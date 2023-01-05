@@ -52,6 +52,7 @@ export type ProjectWorkOrder = {
   workOrderIssueDate: string
   workOrderPayDateVariance: string | null
   workOrderStartDate: string
+  awardPlanPayTerm: string
 }
 
 export type WorkOrderAwardStats = {

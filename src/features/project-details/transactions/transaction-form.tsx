@@ -78,7 +78,6 @@ import {
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
-import { useFetchWorkOrder } from 'api/work-order'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -154,6 +153,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   const [remainingAmt, setRemainingAmt] = useState(false)
+  const [paymentTermValue, setPaymentTermValue] = useState<any>()
 
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes()
@@ -209,10 +209,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
   }, [workOrderId])
 
-  const { workOrderDetails } = useFetchWorkOrder({ workOrderId: workOrderId })
-
-  console.log('workOrderDetails', workOrderDetails)
-
   const { check, isValidForAwardPlan } = useIsAwardSelect(control)
 
   const showDrawRemainingMsg =
@@ -262,24 +258,27 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
-  const paymentTermValue = {
-    value: workOrderDetails?.awardPlanPayTerm,
-    label: workOrderDetails?.awardPlanPayTerm as string,
-    title: workOrderDetails?.awardPlanPayTerm as string,
-  }
-
-  console.log('paymentTermValue', paymentTermValue)
-  const PaymentTermValue = watch('against')
-  console.log('PaymentTermValue', PaymentTermValue)
+  useEffect(() => {
+    if (selectedWorkOrder?.awardPlanPayTerm) {
+      const paymentTermValue = {
+        value: selectedWorkOrder?.awardPlanPayTerm,
+        label: selectedWorkOrder?.awardPlanPayTerm as string,
+        title: selectedWorkOrder?.awardPlanPayTerm as string,
+      }
+      setValue('paymentTerm', paymentTermValue)
+    } else {
+      setValue('paymentTerm', paymentTermValue)
+    }
+  }, [selectedWorkOrder])
 
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
-      setValue('paymentTerm', paymentTermValue)
       setValue('invoicedDate', null)
       setValue('workOrder', null)
       setValue('changeOrder', null)
     } else {
       setValue('newExpectedCompletionDate', '')
+      setValue('paymentTerm', null)
     }
 
     resetExpectedCompletionDateFields(option)
