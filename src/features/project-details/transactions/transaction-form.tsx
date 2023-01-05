@@ -266,7 +266,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       }
       setValue('paymentTerm', paymentTermValue)
     } else {
-      setValue('paymentTerm', paymentTermValue)
+      setValue('paymentTerm', null)
     }
   }, [selectedWorkOrder])
 
