@@ -163,7 +163,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
             isOpen={isOpen}
           />
         )}
-        {isOpenTransactionModal && (
+        {isOpenTransactionModal && !!selectedTransaction && (
           <UpdateTransactionModal
             isOpen={isOpenTransactionModal}
             onClose={() => {
