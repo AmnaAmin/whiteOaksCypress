@@ -440,22 +440,6 @@ export const useFPMVendor = (marketId?: number[]): any => {
   }
 }
 
-
-// export const useFPMVendor = () => {
-//   const client = useClient()
-
-//   const { data, ...rest } = useQuery<Array<Vendors>>('fpmVendor', async () => {
-//     const response = await client(`view-vendors/v1?marketId.in=9,30&sort=modifiedDate,asc&page=0&size=10000000`, {})
- 
-//     return orderBy(response?.data || [], ['id'], ['desc'])
-//   })
-
-//   return {
-//     fpmVendors: data,
-//     ...rest,
-//   }
-// }
-
 export const useGanttChart = (projectId?: string): any => {
   const client = useClient()
 
