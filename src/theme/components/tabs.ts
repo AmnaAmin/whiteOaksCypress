@@ -8,7 +8,6 @@ const tabsVariants = {
           // @ts-ignore
           ...chakraTheme.components.Tabs.variants.enclosed(props),
           tab: {
-            rounded: '6px',
             bg: '#EBF8FF',
             borderColor: '#CBD5E0',
             fontWeight: 500,
@@ -18,7 +17,6 @@ const tabsVariants = {
               borderTopColor: `${props.colorScheme}.300`,
               borderTopWidth: '3px',
               bg: 'white',
-              borderBottom: '1px solid #CBD5E0',
               color: `${props.colorScheme}.300`,
               fontWeight: 500,
               fontSize: '14px',
