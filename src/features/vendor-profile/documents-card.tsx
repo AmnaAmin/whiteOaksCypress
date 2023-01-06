@@ -155,7 +155,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 control={control}
                 render={({ field, fieldState }) => {
                   return (
-                    <VStack alignItems="baseline">
+                    <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                       <Box>
                         <ChooseFileField
                           name={field.name}
@@ -226,7 +226,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline">
+                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -324,7 +324,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline">
+                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -395,7 +395,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline">
+                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -466,7 +466,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline">
+                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                         <Box >
                           <ChooseFileField
                             name={field.name}

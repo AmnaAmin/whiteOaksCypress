@@ -165,7 +165,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 w="100%"
                 alignItems={{ base: '', md: 'center' }}
               >
-                <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }}>
+                <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }} pointerEvents={isFPM ? 'none' : 'auto'}>
                   <Center>
                     <Icon
                       as={MdOutlineCancel}
@@ -247,7 +247,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                       }
                       render={({ field, fieldState }) => {
                         return (
-                          <VStack alignItems="baseline">
+                          <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                             <Box w="100%">
                               <ChooseFileField
                                 testId={`expirationFile-` + index}
