@@ -8,6 +8,7 @@ import { BiAddToQueue } from 'react-icons/bi'
 export const SupportTickets = () => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const SUPPORT_PAGE = 'support_page'
   return (
     <Box>
       <HStack h="50px" justifyContent="space-between">
@@ -15,13 +16,13 @@ export const SupportTickets = () => {
           {t(`${SUPPORT}.support`)}
         </Text>
 
-        <Button onClick={onOpen} colorScheme="brand" leftIcon={<BiAddToQueue />}>
+        <Button onClick={onOpen} colorScheme="green" leftIcon={<BiAddToQueue />}>
           {t(`${SUPPORT}.newticket`)}
         </Button>
       </HStack>
 
       <SupportTable />
-      <SupportModal onClose={onClose} isOpen={isOpen} />
+      <SupportModal onClose={onClose} isOpen={isOpen} supportPage={SUPPORT_PAGE} />
     </Box>
   )
 }
