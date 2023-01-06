@@ -13,6 +13,7 @@ import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { Vendor as VendorType } from 'types/vendor.types'
 import Vendor from './selected-vendor-modal'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
@@ -104,13 +105,15 @@ type ProjectProps = {
   selectedCard: string
 }
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
-  const { vendors, isLoading } = useVendor()
-  const { fpmVendors } = useFPMVendor()
+  const { vendors : allVendors, isLoading } = useVendor()
+  const { isFPM } = useUserRolesSelector()
 
-  console.log('vendors', vendors)
+  // FPM portal -> Show vendors having same market as the logged in FPM
+  const fpmMarketIds = [9, 30]
+  const { fpmVendors } = useFPMVendor(fpmMarketIds)
+  const vendors = isFPM ? fpmVendors : allVendors
 
   console.log('fpmVendors', fpmVendors)
-
   const [filterVendors, setFilterVendors] = useState(vendors)
 
   useEffect(() => {

@@ -421,20 +421,40 @@ export const useVendor = () => {
   }
 }
 
-export const useFPMVendor = () => {
+
+export const useFPMVendor = (marketId?: number[]): any => {
   const client = useClient()
 
-  const { data, ...rest } = useQuery<Array<Vendors>>(VENDOR_QUERY_KEY, async () => {
-    const response = await client(`view-vendors/v1?marketId.in=16,15,30&sort=modifiedDate,asc&page=0&size=10000000`, {})
- 
-    return orderBy(response?.data || [], ['id'], ['desc'])
-  })
+  const { data, ...rest } = useQuery<ProjectType>(
+    ['fpmVendors', marketId],
+    async () => {
+      const response = await client(`view-vendors/v1?marketId.in=${marketId}&sort=modifiedDate,asc&page=0&size=10000000`, {})
+      return response?.data
+    },
+    { enabled: !!marketId },
+  )
 
   return {
     fpmVendors: data,
     ...rest,
   }
 }
+
+
+// export const useFPMVendor = () => {
+//   const client = useClient()
+
+//   const { data, ...rest } = useQuery<Array<Vendors>>('fpmVendor', async () => {
+//     const response = await client(`view-vendors/v1?marketId.in=9,30&sort=modifiedDate,asc&page=0&size=10000000`, {})
+ 
+//     return orderBy(response?.data || [], ['id'], ['desc'])
+//   })
+
+//   return {
+//     fpmVendors: data,
+//     ...rest,
+//   }
+// }
 
 export const useGanttChart = (projectId?: string): any => {
   const client = useClient()
