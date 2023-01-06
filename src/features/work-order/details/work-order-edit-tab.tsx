@@ -229,11 +229,11 @@ const WorkOrderDetailTab = props => {
 
   // Set Vendor Names
   const defaultVendor = {
-    value: workOrder?.id as number,
+    value: workOrder?.vendorId as number,
     label: workOrder?.claimantName as string,
     title: workOrder?.claimantName as string,
   }
- 
+
   useEffect(() => {
     const option = [] as any
     if (trades && trades?.length > 0) {
@@ -339,103 +339,98 @@ const WorkOrderDetailTab = props => {
                 </Alert>
               )}
             </Box>
-            <SimpleGrid columns={6}>
-              {!isAdmin ? (
+            {!isAdmin ? (
+              <SimpleGrid columns={5}>
                 <>
                   <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
                   <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
+                  <InformationCard testId="email" title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
+                  <InformationCard testId="phone" title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
                 </>
-              ) : (
+              </SimpleGrid>
+            ) : (
+              <>
                 <>
-                  <Box w="215px">
-                    <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('type')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        rules={{ required: 'This is required' }}
-                        name="vendorSkillId"
-                        render={({ field, fieldState }) => {
-                          return (
-                            <>
-                              <Select
-                                {...field}
-                                options={tradeOptions}
-                                size="md"
-                                value={field.value}
-                                onChange={option => {
-                                  setVendorSkillId(option.value)
-                                  setValue('vendorId', null)
-                                  field.onChange(option)
-                                }}
-                                selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
-                              />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
+                  <Box mt="32px" mx="32px">
+                    <HStack spacing="16px">
+                      <Box w="215px" mt={-7}>
+                        <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
+                          <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                            {t('type')}
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            rules={{ required: 'This is required' }}
+                            name="vendorSkillId"
+                            render={({ field, fieldState }) => {
+                              return (
+                                <>
+                                  <Select
+                                    {...field}
+                                    options={tradeOptions}
+                                    size="md"
+                                    value={field.value}
+                                    onChange={option => {
+                                      setVendorSkillId(option.value)
+                                      setValue('vendorId', null)
+                                      field.onChange(option)
+                                    }}
+                                    selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
+                                  />
+                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                </>
+                              )
+                            }}
+                          />
+                        </FormControl>
+                      </Box>
+                      <Box w="215px">
+                        <FormControl isInvalid={!!errors.vendorSkillId} data-testid="vendorId">
+                          <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                            {t('companyName')}
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            rules={{ required: 'This is required' }}
+                            name="vendorId"
+                            render={({ field, fieldState }) => {
+                              return (
+                                <>
+                                  <Select
+                                    {...field}
+                                    options={vendorOptions}
+                                    size="md"
+                                    selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
+                                    onChange={option => {
+                                      setSelectedVendorId(option.value)
+                                      field.onChange(option)
+                                    }}
+                                  />
+                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                </>
+                              )
+                            }}
+                          />
+                        </FormControl>
+                      </Box>
+                      <InformationCard
+                        testId="email"
+                        title={t(`${WORK_ORDER}.email`)}
+                        date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
                       />
-                    </FormControl>
-                  </Box>
-                  <Box w="215px">
-                    <FormControl isInvalid={!!errors.vendorSkillId} data-testid="vendorId">
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('companyName')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        rules={{ required: 'This is required' }}
-                        name="vendorId"
-                        render={({ field, fieldState }) => {
-                          return (
-                            <>
-                              <Select
-                                {...field}
-                                options={vendorOptions}
-                                size="md"
-                                selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
-                                onChange={option => {
-                                  setSelectedVendorId(option.value)
-                                  field.onChange(option)
-                                }}
-                              />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
+                      <InformationCard
+                        testId="phone"
+                        title={t(`${WORK_ORDER}.phone`)}
+                        date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
                       />
-                    </FormControl>
+                    </HStack>
                   </Box>
                 </>
-              )}
-              <InformationCard
-                testId="email"
-                title={t(`${WORK_ORDER}.email`)}
-                date={
-                  isAdmin
-                    ? selectedVendor
-                      ? selectedVendor?.businessEmailAddress
-                      : businessEmailAddress
-                    : businessEmailAddress
-                }
-              />
-              <InformationCard
-                testId="phone"
-                title={t(`${WORK_ORDER}.phone`)}
-                date={
-                  isAdmin
-                    ? selectedVendor
-                      ? selectedVendor?.businessPhoneNumber
-                      : businessPhoneNumber
-                    : businessPhoneNumber
-                }
-              />
-            </SimpleGrid>
+              </>
+            )}
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
-
             <SimpleGrid columns={5}>
               <CalenderCard
                 testId={'woIssued'}

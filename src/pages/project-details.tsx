@@ -29,6 +29,7 @@ import { TransactionDetails } from 'features/project-details/transaction-details
 import ScheduleTab from 'features/project-details/project-schedule/schedule-tab'
 import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-table'
 import { useProjectAuditLogs } from 'api/project-details'
+import { boxShadow } from 'theme/common-style'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -106,9 +107,9 @@ export const ProjectDetails: React.FC = props => {
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
         <AmountDetailsCard projectId={projectId} />
 
-        <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
+        <Stack w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
           <Tabs size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
-            <TabList h={'50px'} alignItems="end">
+            <TabList h={'50px'} alignItems="end" border="none">
               <Flex h={'40px'}>
                 <Tab>{t('projects.projectDetails.transactions')}</Tab>
                 <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
@@ -128,8 +129,16 @@ export const ProjectDetails: React.FC = props => {
                 </Tab>
                 <Tab>{t('projects.projectDetails.auditLogs')}</Tab>
               </Flex>
+            </TabList>
 
-              <HStack h="50px" w="100%" justifyContent="end">
+            <Card
+              rounded="0px"
+              roundedBottomLeft="6px"
+              roundedBottomRight="6px"
+              style={boxShadow}
+              pr={{ base: 0, sm: '15px' }}
+            >
+              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" mb="15px">
                 {tabIndex === 2 &&
                   ![
                     STATUS.Closed,
@@ -138,8 +147,8 @@ export const ProjectDetails: React.FC = props => {
                     STATUS.Paid,
                     STATUS.Punch,
                     STATUS.ClientPaid,
-                    STATUS.Overpayment
-                  ].includes( projectStatus as STATUS ) && (
+                    STATUS.Overpayment,
+                  ].includes(projectStatus as STATUS) && (
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
                       {t('newWorkOrder')}
                     </Button>
@@ -165,7 +174,7 @@ export const ProjectDetails: React.FC = props => {
                         <Switch
                           size="sm"
                           id="view-details"
-                          outline="4px solid #F2F3F4"
+                          outline="4px solid white"
                           rounded="full"
                           isChecked={isShowProjectFinancialOverview}
                           onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
@@ -184,36 +193,34 @@ export const ProjectDetails: React.FC = props => {
                     </Button>
                   </HStack>
                 )}
-              </HStack>
-            </TabList>
+              </Box>
+              <TabPanels h="100%">
+                <TabPanel p="0px" h="100%" mt="7px">
+                  <Box h="100%">
+                    {isShowProjectFinancialOverview ? (
+                      <TransactionDetails ref={tabsContainerRef} />
+                    ) : (
+                      <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
+                    )}
+                  </Box>
+                </TabPanel>
+                <TabPanel p="0px" mt="6px">
+                  <Card rounded="16px" padding="0">
+                    <ProjectDetailsTab projectData={projectData as Project} />
+                  </Card>
+                </TabPanel>
 
-            <TabPanels h="100%">
-              <TabPanel p="0px" h="100%" mt="7px">
-                <Box h="100%">
-                  {isShowProjectFinancialOverview ? (
-                    <TransactionDetails ref={tabsContainerRef} />
-                  ) : (
-                    <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
-                  )}
-                </Box>
-              </TabPanel>
-              <TabPanel p="0px" mt="6px">
-                <Card rounded="16px" padding="0">
-                  <ProjectDetailsTab projectData={projectData as Project} />
-                </Card>
-              </TabPanel>
+                <TabPanel p="0px" h="100%" mt="7px">
+                  <WorkOrdersTable ref={tabsContainerRef} />
+                </TabPanel>
+                <TabPanel p="0px" mt="7px">
+                  <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
+                </TabPanel>
+                <TabPanel p="0px" mt="7px">
+                  <VendorDocumentsTable ref={tabsContainerRef} />
+                </TabPanel>
 
-              <TabPanel p="0px" h="100%" mt="7px">
-                <WorkOrdersTable ref={tabsContainerRef} />
-              </TabPanel>
-              <TabPanel p="0px" mt="7px">
-                <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
-              </TabPanel>
-              <TabPanel p="0px" mt="7px">
-                <VendorDocumentsTable ref={tabsContainerRef} />
-              </TabPanel>
-
-              {/* <TabPanel px="0">
+                {/* <TabPanel px="0">
                 <TriggeredAlertsTable
                   onRowClick={(e, row) => {
                     selectedAlertRow(row.values)
@@ -223,13 +230,14 @@ export const ProjectDetails: React.FC = props => {
                 />
               </TabPanel> */}
 
-              <TabPanel p="0" mt="7px">
-                <ProjectNotes projectId={projectId} />
-              </TabPanel>
-              <TabPanel p="0px" mt="7px">
-                <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch = {refetchAudits} />
-              </TabPanel>
-            </TabPanels>
+                <TabPanel p="0" mt="7px">
+                  <ProjectNotes projectId={projectId} />
+                </TabPanel>
+                <TabPanel p="0px" mt="7px">
+                  <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch={refetchAudits} />
+                </TabPanel>
+              </TabPanels>
+            </Card>
           </Tabs>
         </Stack>
 

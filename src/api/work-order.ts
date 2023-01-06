@@ -290,7 +290,7 @@ export const parseWODetailValuesToPayload = formValues => {
         }),
       ]
     : []
-
+    
   return {
     cancel: formValues?.cancel?.value,
     ...(cancelWorkOrder && { status: 35, cancelledDate: new Date() }),
