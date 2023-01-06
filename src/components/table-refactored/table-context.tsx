@@ -28,6 +28,7 @@ TableContext.displayName = 'TableContext'
 
 // Pagination context state types
 type TableWrapperProps = {
+  id?: string // added to have unique id for sticky filter columns
   data: any
   columns: ColumnDef<any>[]
   pagination?: PaginationState
@@ -43,6 +44,7 @@ type TableWrapperProps = {
 
 export const TableContextProvider: React.FC<TableWrapperProps> = ({
   data,
+  id,
   columns,
   pagination,
   setPagination,
@@ -90,6 +92,7 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
 
   const tableInstance = useReactTable({
     ...filtersConfigurations,
+    meta: { id },
     data: data ?? emptyRows,
     columns,
     initialState: {
