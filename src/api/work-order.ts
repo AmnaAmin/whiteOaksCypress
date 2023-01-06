@@ -299,15 +299,19 @@ export const parseWODetailValuesToPayload = formValues => {
     workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,
     showPricing: formValues.showPrice,
     assignedItems: [...assignedItems],
+    vendorId: formValues.vendorId?.value,
+    vendorSkillId: formValues.vendorSkillId?.value,
   }
 }
 
-export const defaultValuesWODetails = (workOrder, woAssignedItems) => {
+export const defaultValuesWODetails = (workOrder, woAssignedItems, defaultSkill, defaultVendor) => {
   const defaultValues = {
     cancel: {
       value: '',
       label: 'Select',
     },
+    vendorSkillId: defaultSkill,
+    vendorId: defaultVendor,
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
