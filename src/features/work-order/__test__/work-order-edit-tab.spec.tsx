@@ -77,7 +77,7 @@ describe('Work Order modal showing work order specific details for PC(Super set 
 
     expect(screen.getByTestId('showPriceCheckBox')).toBeInTheDocument()
     expect(screen.getByTestId('showMarkAllIsVerified')).toBeInTheDocument()
-    expect(screen.queryByTestId('showMarkAllIsComplete')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('showMarkAllIsComplete')).toBeInTheDocument()
 
     /* Items can only be verified, if they are completed */
     await act(async () => {
