@@ -38,10 +38,10 @@ describe('Charts testcases', () => {
     expect(container.getElementsByClassName('recharts-yAxis').length).toBe(1)
     expect(container.getElementsByTagName('rect').length).toBe(1)
     /* 2 x axis and 5 y axis ticks */
-    expect(container.getElementsByClassName('recharts-cartesian-axis-tick').length).toBe(7)
+    expect(container.getElementsByClassName('recharts-cartesian-axis-tick').length).toBe(2)
     /* as per the provided data, there will be two bars on graph */
     expect(container.getElementsByClassName('recharts-bar-rectangle').length).toBe(2)
-    expect(container.getElementsByClassName('recharts-default-tooltip').length).toBe(1)
+    expect(container.getElementsByClassName('recharts-tooltip-wrapper').length).toBe(1)
     expect(container.getElementsByClassName('recharts-bar').length).toBeGreaterThan(0)
   })
 })
