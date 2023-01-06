@@ -161,6 +161,12 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#4E87F8',
     },
     {
+      pathTo: '/vendors',
+      title: `${SIDE_NAV}.vendors`,
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
+    {
       pathTo: '/performance',
       title: `${SIDE_NAV}.performance`,
       Icon: BiLineChart,

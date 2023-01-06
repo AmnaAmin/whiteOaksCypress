@@ -42,6 +42,7 @@ export default function useRoutesConfig() {
       return [
         { path: 'projects', element: Projects },
         { path: 'project-details/:projectId', element: ProjectDetails },
+        { path: 'vendors', element: Vendors },
         { path: 'performance', element: Performance },
       ]
     case isProjectCoordinator:

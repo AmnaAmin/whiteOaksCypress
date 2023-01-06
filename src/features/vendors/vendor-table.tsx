@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { useVendor } from 'api/pc-projects'
+import { useFPMVendor, useVendor } from 'api/pc-projects'
 import Status from 'features/common/status'
 import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef } from '@tanstack/react-table'
@@ -105,6 +105,11 @@ type ProjectProps = {
 }
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const { vendors, isLoading } = useVendor()
+  const { fpmVendors } = useFPMVendor()
+
+  console.log('vendors', vendors)
+
+  console.log('fpmVendors', fpmVendors)
 
   const [filterVendors, setFilterVendors] = useState(vendors)
 
