@@ -123,7 +123,7 @@ const AssignedItems = (props: AssignedItemType) => {
     }
   }, [lineItems])
 
-  const { showPriceCheckBox, showMarkAllIsVerified, showMarkAllIsComplete } = useActionsShowDecision({ workOrder })
+  const { showPriceCheckBox, showMarkAllIsVerified } = useActionsShowDecision({ workOrder })
   const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, lineItems })
   const { isVendor } = useUserRolesSelector()
   const [markAllVerified, setMarkAllVerified] = useState<boolean>()
@@ -244,6 +244,21 @@ const AssignedItems = (props: AssignedItemType) => {
                 {t(`${WORK_ORDER}.showPrice`)}
               </Checkbox>
             )}
+            <Checkbox
+              data-testid="showMarkAllIsComplete"
+              size="md"
+              disabled={!statusEnabled}
+              isChecked={markAllCompleted}
+              variant={'outLinePrimary'}
+              onChange={e => {
+                assignedItems.forEach((item, index) => {
+                  setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
+                })
+              }}
+              whiteSpace="nowrap"
+            >
+              {t(`${WORK_ORDER}.markAllCompleted`)}
+            </Checkbox>
             {showMarkAllIsVerified && (
               <HStack spacing={'2px'}>
                 <Checkbox
@@ -272,22 +287,7 @@ const AssignedItems = (props: AssignedItemType) => {
                 />
               </HStack>
             )}
-            {showMarkAllIsComplete && (
-              <Checkbox
-                data-testid="showMarkAllIsComplete"
-                disabled={!statusEnabled}
-                isChecked={markAllCompleted}
-                variant={'outLinePrimary'}
-                onChange={e => {
-                  assignedItems.forEach((item, index) => {
-                    setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
-                  })
-                }}
-                whiteSpace="nowrap"
-              >
-                <Text fontSize="16px">{t(`${WORK_ORDER}.markAllCompleted`)}</Text>
-              </Checkbox>
-            )}
+
             {downloadPdf && (
               <Button
                 variant="outline"

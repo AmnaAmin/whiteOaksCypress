@@ -722,7 +722,6 @@ export const useActionsShowDecision = ({ workOrder }) => {
   return {
     showPriceCheckBox: !isVendor,
     showMarkAllIsVerified: !isVendor && workOrder,
-    showMarkAllIsComplete: isVendor,
     showVerification: !!workOrder,
   }
 }
@@ -1255,7 +1254,7 @@ export const useGetLineItemsColumn = ({
         },
       },
     ]
-  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems])
+  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems, verificationEnabled])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
 }
