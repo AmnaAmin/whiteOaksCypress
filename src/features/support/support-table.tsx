@@ -92,8 +92,8 @@ export const SUPPORT_COLUMNS: ColumnDef<any>[] = [
 
 export const SupportTable = () => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-  const [selectedRow, setSelectedRow] = useState()
   const { data: supportList, isLoading } = useSupport()
+  const [selectedRow, setSelectedRow] = useState(supportList)
   return (
     <Box overflow="auto" roundedTop={8}>
       <SupportModal
@@ -105,7 +105,7 @@ export const SupportTable = () => {
         isOpen={isOpen}
       />
 
-      <Box overflow={'auto'} h="calc(100vh - 160px)">
+      <Box overflow={'auto'} h="calc(100vh - 160px)" roundedTop={6} border="1px solid #CBD5E0">
         <TableContextProvider data={supportList} columns={SUPPORT_COLUMNS}>
           <Table
             isLoading={isLoading}

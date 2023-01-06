@@ -382,6 +382,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           pos="relative"
           flexDirection="column"
           rounded={6}
+          w="100%"
+          minH="34vh"
         >
           <Grid
             gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
@@ -400,7 +402,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               <GridItem id="all-checkbox">
                 <Checkbox
                   variant="normal"
-                  colorScheme="CustomPrimaryColor"
+                  colorScheme="PrimaryCheckBox"
                   isChecked={allChecked}
                   isDisabled={isApproved || isSysFactoringFee}
                   isIndeterminate={isIndeterminate}
@@ -413,7 +415,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           </Grid>
           {isMaterialsLoading ? (
             <Center>
-              <VStack>
+              <VStack justifyContent="center" mt="60px">
                 <Spinner size="lg" />
                 <FormLabel variant={'light-label'} color="brand.300">
                   {t(`${TRANSACTION}.scanningMessage`)}
@@ -576,7 +578,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
         <ConfirmationBox
           title="Are You Sure?"
-          content="Do you really want to delete these items? This process cannot be undone."
+          content="Do you want to proceed? This process cannot be undone. "
           isOpen={isDeleteConfirmationModalOpen}
           onClose={onDeleteConfirmationModalClose}
           onConfirm={deleteRows}

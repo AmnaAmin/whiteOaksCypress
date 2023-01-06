@@ -8,6 +8,7 @@ import {
   Divider,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Input,
@@ -26,6 +27,7 @@ import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormat } from 'utils/date-time-utils'
+import Select from 'components/form/react-select'
 import { defaultValuesWODetails, parseWODetailValuesToPayload, useFieldEnableDecisionDetailsTab } from 'api/work-order'
 import AssignedItems from './assigned-items'
 import {
@@ -46,6 +48,8 @@ import { downloadFile } from 'utils/file-utils'
 import ReactSelect from 'components/form/react-select'
 import { CANCEL_WO_OPTIONS } from 'constants/index'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useFilteredVendors } from 'api/pc-projects'
+import { useTrades } from 'api/vendor-details'
 
 const CalenderCard = props => {
   return (
@@ -95,6 +99,8 @@ interface FormValues {
   workOrderDateCompleted: string | null
   workOrderExpectedCompletionDate: string | null
   assignedItems?: LineItems[]
+  vendorSkillId: number | string | null
+  vendorId: number | string | null
 }
 
 const WorkOrderDetailTab = props => {
@@ -113,7 +119,13 @@ const WorkOrderDetailTab = props => {
   } = props
 
   const formReturn = useForm<FormValues>()
-  const { register, control, reset, setValue } = formReturn
+  const {
+    register,
+    control,
+    reset,
+    setValue,
+    formState: { errors },
+  } = formReturn
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
@@ -196,6 +208,52 @@ const WorkOrderDetailTab = props => {
     setUploadedWO(uploadedWO)
   }, [documentsData])
 
+  // Enable Vendor Type and Company Name for Admin User
+  const [tradeOptions, setTradeOptions] = useState([])
+  const [vendorOptions, setVendorOptions] = useState([])
+  const [selectedVendorId, setSelectedVendorId] = useState<any>([])
+
+  const { data: trades } = useTrades()
+  const [vendorSkillId, setVendorSkillId] = useState(null)
+
+  const { vendors } = useFilteredVendors(vendorSkillId)
+
+  const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
+
+  // Set Vendor Type
+  const defaultSkill = {
+    value: workOrder?.vendorSkillId as number,
+    label: workOrder?.skillName as string,
+    title: workOrder?.skillName as string,
+  }
+
+  // Set Vendor Names
+  const defaultVendor = {
+    value: workOrder?.vendorId as number,
+    label: workOrder?.claimantName as string,
+    title: workOrder?.claimantName as string,
+  }
+
+  useEffect(() => {
+    const option = [] as any
+    if (trades && trades?.length > 0) {
+      trades?.forEach(t => {
+        option.push({ label: t.skill as string, value: t.id as number })
+      })
+    }
+    setTradeOptions(option)
+  }, [trades])
+
+  useEffect(() => {
+    const option = [] as any
+    if (vendors && vendors?.length > 0) {
+      vendors?.forEach(v => {
+        option.push({ label: v.companyName as string, value: v.id as number })
+      })
+    }
+    setVendorOptions(option)
+  }, [vendors])
+
   const updateWorkOrderLineItems = (deletedItems, payload) => {
     if (deletedItems?.length > 0) {
       deleteLineItems(
@@ -257,7 +315,7 @@ const WorkOrderDetailTab = props => {
 
   useEffect(() => {
     if (workOrder?.id) {
-      reset(defaultValuesWODetails(workOrder, workOrderAssignedItems))
+      reset(defaultValuesWODetails(workOrder, workOrderAssignedItems, defaultSkill, defaultVendor))
     }
   }, [workOrder, reset, workOrderAssignedItems?.length])
 
@@ -281,16 +339,98 @@ const WorkOrderDetailTab = props => {
                 </Alert>
               )}
             </Box>
-            <SimpleGrid columns={5}>
-              <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
-              <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
-              <InformationCard testId="email" title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
-              <InformationCard testId="phone" title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
-            </SimpleGrid>
+            {!isAdmin ? (
+              <SimpleGrid columns={5}>
+                <>
+                  <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
+                  <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
+                  <InformationCard testId="email" title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
+                  <InformationCard testId="phone" title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
+                </>
+              </SimpleGrid>
+            ) : (
+              <>
+                <>
+                  <Box mt="32px" mx="32px">
+                    <HStack spacing="16px">
+                      <Box w="215px" mt={-7}>
+                        <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
+                          <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                            {t('type')}
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            rules={{ required: 'This is required' }}
+                            name="vendorSkillId"
+                            render={({ field, fieldState }) => {
+                              return (
+                                <>
+                                  <Select
+                                    {...field}
+                                    options={tradeOptions}
+                                    size="md"
+                                    value={field.value}
+                                    onChange={option => {
+                                      setVendorSkillId(option.value)
+                                      setValue('vendorId', null)
+                                      field.onChange(option)
+                                    }}
+                                    selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
+                                  />
+                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                </>
+                              )
+                            }}
+                          />
+                        </FormControl>
+                      </Box>
+                      <Box w="215px">
+                        <FormControl isInvalid={!!errors.vendorSkillId} data-testid="vendorId">
+                          <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                            {t('companyName')}
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            rules={{ required: 'This is required' }}
+                            name="vendorId"
+                            render={({ field, fieldState }) => {
+                              return (
+                                <>
+                                  <Select
+                                    {...field}
+                                    options={vendorOptions}
+                                    size="md"
+                                    selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
+                                    onChange={option => {
+                                      setSelectedVendorId(option.value)
+                                      field.onChange(option)
+                                    }}
+                                  />
+                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                </>
+                              )
+                            }}
+                          />
+                        </FormControl>
+                      </Box>
+                      <InformationCard
+                        testId="email"
+                        title={t(`${WORK_ORDER}.email`)}
+                        date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
+                      />
+                      <InformationCard
+                        testId="phone"
+                        title={t(`${WORK_ORDER}.phone`)}
+                        date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
+                      />
+                    </HStack>
+                  </Box>
+                </>
+              </>
+            )}
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
-
             <SimpleGrid columns={5}>
               <CalenderCard
                 testId={'woIssued'}

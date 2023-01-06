@@ -25,21 +25,34 @@ import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { MdClose } from 'react-icons/md'
 import { useLayoutEffect } from 'react'
 import _ from 'lodash'
+import { useStickyState } from 'utils/hooks'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
 }
 
-function Filter({ column, table }: { column: Column<any, unknown>; table: TableType<any> }) {
+function Filter({
+  column,
+  table,
+  allowStickyFilters = false,
+}: {
+  column: Column<any, unknown>
+  table: TableType<any>
+  allowStickyFilters?: boolean
+}) {
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
   // We inject meta into certain columns where the filter state can be prefilled either by backend or by UI
   // In react table, meta key can be added to any column and meta can hold any arbitrary value
   const metaData: any = column.columnDef?.meta as any
-  const filterInitialState = metaData?.filterInitialState || null
+
+  /* @ts-ignore */
+  const tableId = table?.options?.meta?.id
+  const columnKey = tableId ? tableId + '.' + column.id : column.id
+  const [stickyFilter, setStickyFilter] = useStickyState(null, allowStickyFilters ? columnKey + '.' + column.id : null)
+  const filterInitialState = metaData?.filterInitialState || stickyFilter || null
   const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date' || 'date')
-
   const sortedUniqueValues = React.useMemo(
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
     [column.getFacetedUniqueValues()],
@@ -55,9 +68,15 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
       <DebouncedInput
         type={dateFilter ? 'date' : 'text'}
         value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
-        onChange={value =>
-          dateFilter ? column.setFilterValue(dateFormat(value as string)) : column.setFilterValue(window.encodeURIComponent( value ))
-        }
+        onChange={value => {
+          if (dateFilter) {
+            column.setFilterValue(dateFormat(value as string))
+            setStickyFilter(dateFormat(value as string))
+          } else {
+            column.setFilterValue(window.encodeURIComponent( value ))
+            setStickyFilter(value)
+          }
+        }}
         className="w-36 border shadow rounded"
         list={column.id + 'list'}
         // @ts-ignore
@@ -188,6 +207,7 @@ type TableProps = {
   isShowFooter?: boolean
   handleOnDrag?: (result) => void
   handleOnDragStart?: (result) => void
+  allowStickyFilters?: boolean
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -199,6 +219,7 @@ export const Table: React.FC<TableProps> = ({
   isShowFooter,
   handleOnDrag,
   handleOnDragStart,
+  allowStickyFilters,
   ...restProps
 }) => {
   const { t } = useTranslation()
@@ -313,7 +334,11 @@ export const Table: React.FC<TableProps> = ({
                               borderBottom: '1px solid #CBD5E0',
                             }}
                           >
-                            <Filter column={header.column} table={tableInstance} />
+                            <Filter
+                              allowStickyFilters={allowStickyFilters}
+                              column={header.column}
+                              table={tableInstance}
+                            />
                           </Box>
                         ) : null}
                       </Th>
