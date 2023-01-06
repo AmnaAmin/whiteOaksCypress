@@ -56,7 +56,7 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
         type={dateFilter ? 'date' : 'text'}
         value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
         onChange={value =>
-          dateFilter ? column.setFilterValue(dateFormat(value as string)) : column.setFilterValue(window.encodeURIComponent(value))
+          dateFilter ? column.setFilterValue(dateFormat(value as string)) : column.setFilterValue(window.encodeURIComponent( value ))
         }
         className="w-36 border shadow rounded"
         list={column.id + 'list'}
