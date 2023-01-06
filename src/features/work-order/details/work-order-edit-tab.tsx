@@ -229,7 +229,7 @@ const WorkOrderDetailTab = props => {
 
   // Set Vendor Names
   const defaultVendor = {
-    value: workOrder?.id as number,
+    value: workOrder?.vendorId as number,
     label: workOrder?.claimantName as string,
     title: workOrder?.claimantName as string,
   }
