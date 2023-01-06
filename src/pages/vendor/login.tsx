@@ -16,13 +16,12 @@ export const Login = () => {
       dir="column"
       alignItems="center"
     >
-      <Box width="100%" display="grid" placeItems="center" mx="auto">
+      <Box width="100%" maxW="md" mx="auto">
         <Card
           borderBottomLeftRadius="0px !important"
           borderBottomRightRadius="0px !important"
           bg="#F2F2F2"
           py="20px !important"
-          w={{ base: '350px', sm: '584px' }}
         >
           <VStack spacing={{ base: '10px', sm: '14px' }}>
             <Box w={{ base: '101px', sm: '152px' }} h={{ base: '109px', sm: '164px' }}>
@@ -33,13 +32,7 @@ export const Login = () => {
             </Text>
           </VStack>
         </Card>
-        <Card
-          borderTopRightRadius="0px !important"
-          borderTopLeftRadius="0px !important"
-          bg="#FFFFFF"
-          w={{ base: '350px', sm: '584px' }}
-          px={{ base: '25px', sm: '100px' }}
-        >
+        <Card borderTopRightRadius="0px !important" borderTopLeftRadius="0px !important" bg="#FFFFFF">
           <LoginForm />
         </Card>
         <Text textAlign="center" fontSize="14px" fontWeight="400px" color="#3A3A3A" mt="23px">
