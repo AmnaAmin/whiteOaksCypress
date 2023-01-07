@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react'
 import { Providers } from 'providers'
-import { waitForLoadingToFinish, screen } from 'utils/test-utils'
+import { waitForLoadingToFinish } from 'utils/test-utils'
 import { UpcomingPaymentTable } from './upcoming-payment-table'
 
 const renderProjectType = async () => {
