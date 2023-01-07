@@ -26,6 +26,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { TableNames } from 'types/table-column.types'
 import Status from 'features/common/status'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { currencyFormatter } from 'utils/string-formatters'
 
 export const UpcomingPaymentTable = () => {
   const { t } = useTranslation()
@@ -72,6 +73,18 @@ export const UpcomingPaymentTable = () => {
       accessorKey: 'expectedPaymentDate',
       accessorFn: row => dateFormat(row.expectedPaymentDate),
       meta: { format: 'date' },
+    },
+    {
+      header: t(`${DASHBOARD}.invoiceDate`),
+      accessorKey: 'expectedPaymentDate',
+      accessorFn: row => dateFormat(row.dateInvoiceSubmitted),
+      meta: { format: 'date' },
+    },
+    {
+      header: t(`${DASHBOARD}.finalInvoice`),
+      accessorKey: 'finalInvoiceAmount',
+      accessorFn: row => currencyFormatter(row.finalInvoiceAmount),
+      meta: { format: 'currency' },
     },
   ]
 

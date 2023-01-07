@@ -202,6 +202,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
+  const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
 
   const selectedWorkOrderStats = useMemo(() => {
@@ -845,7 +846,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-            isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg}
+            isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg || !invoicedDate}
             colorScheme="darkPrimary"
             onClick={event => {
               event.stopPropagation()
