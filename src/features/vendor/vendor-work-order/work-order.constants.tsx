@@ -19,6 +19,9 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
   {
     header: 'id',
     accessorKey: 'id',
+    accessorFn: cellInfo => {
+      return cellInfo.id ? cellInfo.id?.toString() : '- - -'
+    },
   },
 
   {
