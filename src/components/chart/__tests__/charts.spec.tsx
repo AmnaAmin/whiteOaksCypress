@@ -7,7 +7,9 @@ import { months, monthsShort } from 'utils/date-time-utils'
 const vendorData = months.map(key => ({
   name: monthsShort[key],
   Active: WO_BY_VENDORS_PER_MONTH?.[key]?.Active || 0,
+  PastDue: WO_BY_VENDORS_PER_MONTH?.[key]?.PastDue || 0,
   Closed: WO_BY_VENDORS_PER_MONTH?.[key]?.Completed || 0,
+  Invoiced: WO_BY_VENDORS_PER_MONTH?.[key]?.Invoiced || 0,
   Paid: WO_BY_VENDORS_PER_MONTH?.[key]?.Paid || 0,
   Canceled: WO_BY_VENDORS_PER_MONTH?.[key]?.Cancelled || 0,
 }))
@@ -17,8 +19,9 @@ describe('Charts testcases', () => {
     const { container } = render(<OverviewGraph width={400} height={300} vendorData={vendorData} />)
     expect(screen.getByTestId('legend-Canceled')).toBeInTheDocument()
     expect(screen.getByTestId('legend-Active')).toBeInTheDocument()
-    // expect(screen.getByTestId('legend-Closed')).toBeInTheDocument()
+    expect(screen.getByTestId('legend-PastDue')).toBeInTheDocument()
     expect(screen.getByTestId('legend-Paid')).toBeInTheDocument()
+    expect(screen.getByTestId('legend-Invoiced')).toBeInTheDocument()
     expect(container.getElementsByClassName('recharts-cartesian-grid').length).toBe(1)
     expect(container.getElementsByClassName('recharts-xAxis').length).toBe(1)
     expect(container.getElementsByClassName('recharts-yAxis').length).toBe(1)
@@ -26,7 +29,7 @@ describe('Charts testcases', () => {
     expect(container.getElementsByClassName('recharts-cartesian-axis-tick').length).toBe(15)
     expect(container.getElementsByClassName('recharts-custom-tooltip').length).toBe(1)
     expect(container.getElementsByClassName('recharts-bar').length).toBeGreaterThan(0)
-    expect(container.getElementsByClassName('recharts-bar-rectangle').length).toBe(vendorData.length * 4)
+    expect(container.getElementsByClassName('recharts-bar-rectangle').length).toBe(vendorData.length * 6)
   })
 
   test('PaidChart graph test case', async () => {
