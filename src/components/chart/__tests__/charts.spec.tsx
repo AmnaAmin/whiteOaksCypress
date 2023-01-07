@@ -7,6 +7,7 @@ import { months, monthsShort } from 'utils/date-time-utils'
 const vendorData = months.map(key => ({
   name: monthsShort[key],
   Active: WO_BY_VENDORS_PER_MONTH?.[key]?.Active || 0,
+  PastDue: WO_BY_VENDORS_PER_MONTH?.[key]?.PastDue || 0,
   Closed: WO_BY_VENDORS_PER_MONTH?.[key]?.Completed || 0,
   Paid: WO_BY_VENDORS_PER_MONTH?.[key]?.Paid || 0,
   Canceled: WO_BY_VENDORS_PER_MONTH?.[key]?.Cancelled || 0,
@@ -17,7 +18,7 @@ describe('Charts testcases', () => {
     const { container } = render(<OverviewGraph width={400} height={300} vendorData={vendorData} />)
     expect(screen.getByTestId('legend-Canceled')).toBeInTheDocument()
     expect(screen.getByTestId('legend-Active')).toBeInTheDocument()
-    // expect(screen.getByTestId('legend-Closed')).toBeInTheDocument()
+    expect(screen.getByTestId('legend-PastDue')).toBeInTheDocument()
     expect(screen.getByTestId('legend-Paid')).toBeInTheDocument()
     expect(container.getElementsByClassName('recharts-cartesian-grid').length).toBe(1)
     expect(container.getElementsByClassName('recharts-xAxis').length).toBe(1)
