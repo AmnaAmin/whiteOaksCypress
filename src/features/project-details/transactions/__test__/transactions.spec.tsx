@@ -244,6 +244,7 @@ describe('Given Project Coordinator create new transaction', () => {
       await userEvent.type(amountField, '400')
 
       expect(totalAmount.textContent).toEqual('Total: -$400.00')
+      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-01-01' } })
 
       // show lien waiver form
       await act(async () => {
