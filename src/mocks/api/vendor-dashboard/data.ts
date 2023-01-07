@@ -422,6 +422,9 @@ export const WO_BY_VENDORS_PER_MONTH = {
   May: {
     PastDue: 4,
   },
+  June: {
+    Invoiced: 1,
+  },
 }
 
 export const PAID_BY_YEAR_AND_MONTH = [

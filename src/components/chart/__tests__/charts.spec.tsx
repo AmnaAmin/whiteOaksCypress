@@ -29,7 +29,7 @@ describe('Charts testcases', () => {
     expect(container.getElementsByClassName('recharts-cartesian-axis-tick').length).toBe(15)
     expect(container.getElementsByClassName('recharts-custom-tooltip').length).toBe(1)
     expect(container.getElementsByClassName('recharts-bar').length).toBeGreaterThan(0)
-    expect(container.getElementsByClassName('recharts-bar-rectangle').length).toBe(vendorData.length * 5)
+    expect(container.getElementsByClassName('recharts-bar-rectangle').length).toBe(vendorData.length * 6)
   })
 
   test('PaidChart graph test case', async () => {
