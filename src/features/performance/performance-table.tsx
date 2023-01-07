@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import { usePerformance } from 'api/performance'
 import numeral from 'numeral'
@@ -10,10 +10,16 @@ import Table from 'components/table-refactored/table'
 import { ColumnDef } from '@tanstack/react-table'
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
-  const { data: performance, isLoading } = usePerformance()
+  const { yearFilter } = props
+  const { data: performance, isLoading, refetch } = usePerformance(yearFilter)
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
 
+  useEffect(() => {
+    if (yearFilter) {
+      refetch()
+    }
+  }, [yearFilter])
   const PERFORMANCE_COLUMNS: ColumnDef<any>[] = [
     {
       header: 'Name' as string,

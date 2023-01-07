@@ -1,8 +1,7 @@
-import { Box, FormLabel, Grid, GridItem, HStack } from '@chakra-ui/react'
+import { Box, Center, FormLabel, Grid, GridItem, HStack, Spinner } from '@chakra-ui/react'
 import { useFPMs } from 'api/pc-projects'
 import { MonthOption } from 'api/performance'
 import ReactSelect from 'components/form/react-select'
-import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { subMonths, format } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import { flatten, take, last } from 'lodash'
@@ -198,15 +197,17 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
   )
 }
 
-export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: boolean }> = ({
-  chartData,
-  isLoading,
-}) => {
+export const PerformanceGraphWithUsers: React.FC<{
+  chartData?: any
+  isLoading: boolean
+  setYearFilter: (value) => void
+  yearFilter: string | number | null
+  isFetching: boolean
+}> = ({ chartData, isLoading, setYearFilter, yearFilter, isFetching }) => {
   const { fieldProjectManagerOptions } = useFPMs()
   const [monthOption, setMonthOption] = useState(MonthOption[0])
   const [fpmOption, setFpmOption] = useState([])
   const [graphData, setGraphData] = useState<GraphData>()
-  const currentMonth = format(new Date(), 'LLL', { locale: enUS })
 
   const data = useMemo(
     () =>
@@ -251,8 +252,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
   )
 
   useEffect(() => {
-    const finalGraphData = data?.filter(a => a?.month === currentMonth)
-    setGraphData(finalGraphData)
+    filterGraphData(fpmOption, monthOption)
   }, [data])
 
   const onFpmOptionChange = options => {
@@ -279,8 +279,12 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
 
   const getMonthValue = monthOption => {
     let selectedFpm = [] as any
+    const currentYear = new Date().getFullYear()
+    const currentMonth = new Date().getMonth()
+    const isCurrentYearData = yearFilter === currentYear || !yearFilter
+    const isPastYearData = yearFilter === currentYear - 1
 
-    if (['Past Quarter', 'Current Quarter', 'All'].includes(monthOption?.label)) {
+    if (!['lastMonth', 'thisMonth'].includes(monthOption?.value)) {
       // fix fpm names length to keep them within the select bar
       const getFpm = take(fieldProjectManagerOptions, 5)
       selectedFpm =
@@ -291,10 +295,33 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
     }
 
     setFpmOption(selectedFpm)
-
     setMonthOption(monthOption)
-    filterGraphData(selectedFpm, monthOption)
+
+    if (
+      ['thisMonth', 'currentQuarter', 'currentYear'].includes(monthOption?.value) ||
+      (monthOption?.label === 'Last Month' && currentMonth !== 0) ||
+      (monthOption?.label === 'Past Quarter' && ![0, 1, 2].includes(currentMonth))
+    ) {
+      if (isCurrentYearData) {
+        filterGraphData(selectedFpm, monthOption)
+      } else {
+        setYearFilter(currentYear)
+      }
+    }
+
+    if (
+      monthOption?.label === 'Last Year' ||
+      (monthOption?.label === 'Last Month' && currentMonth === 0) ||
+      (monthOption?.label === 'Past Quarter' && [0, 1, 2].includes(currentMonth))
+    ) {
+      if (isPastYearData) {
+        filterGraphData(selectedFpm, monthOption)
+      } else {
+        setYearFilter(currentYear - 1)
+      }
+    }
   }
+
   const filterGraphData = (selectedFpm, monthOption) => {
     let selectedMonth, selectedQuater
 
@@ -312,7 +339,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
     }
     // Checks if past quarter is selected, then returns months for that quarter
     if (monthOption?.label === 'Past Quarter') {
-      selectedQuater = getLastQuarterByDate()
+      selectedQuater = getLastQuarterByDate() !== 0 ? getLastQuarterByDate() : 4
     }
 
     selectedFpm = selectedFpm?.map(n => n?.value)
@@ -337,7 +364,7 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
               <Box width={'50%'}>
                 <ReactSelect
                   name={`monthsDropdown`}
-                  options={MonthOption}
+                  options={MonthOption.filter(m => m.value !== 'all')}
                   onChange={getMonthValue}
                   defaultValue={monthOption}
                   selected={setMonthOption}
@@ -370,8 +397,10 @@ export const PerformanceGraphWithUsers: React.FC<{ chartData?: any; isLoading: b
             </HStack>
           </GridItem>
         </Grid>
-        {isLoading ? (
-          <BlankSlate size="sm" />
+        {isFetching ? (
+          <Center height={500}>
+            <Spinner size="xl" />
+          </Center>
         ) : (
           <OverviewGraph vendorData={graphData} width="98%" height={500} hasUsers monthCheck={monthOption} />
         )}

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Center, Flex, FormLabel } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { usePerformance } from 'api/performance'
@@ -19,11 +19,17 @@ const IconElement: React.FC<{ Icon: React.ElementType; isLoading: boolean }> = (
 
 export const PerformanceInfoCards: React.FC<{
   isLoading: boolean
-}> = ({ isLoading }) => {
-  const { data: performance } = usePerformance()
+  yearFilter: number | null | string
+}> = ({ isLoading, yearFilter }) => {
+  const { data: performance, refetch } = usePerformance(yearFilter)
   const revenue = performance?.map(p => p?.revenue).reduce((partialSum, a) => partialSum + a, 0)
   const profit = performance?.map(p => p?.profit).reduce((partialSum, a) => partialSum + a, 0)
   const disqualifiedRevenue = performance?.map(p => p?.disqualifiedRevenue).reduce((partialSum, a) => partialSum + a, 0)
+  useEffect(() => {
+    if (yearFilter) {
+      refetch()
+    }
+  }, [yearFilter])
 
   return (
     <>

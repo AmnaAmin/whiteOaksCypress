@@ -5,20 +5,21 @@ import { ErrorType } from 'types/common.types'
 import { PerformanceType } from 'types/performance.type'
 import { useClient } from 'utils/auth-context'
 
-export const useRevenuePerformance = () => {
+export const useRevenuePerformance = yearFilter => {
   const client = useClient()
 
   return useQuery('performance', async () => {
-    const response = await client(`fpm-quota-chart/revenue-profit`, {})
+    const url = yearFilter ? `fpm-quota-chart/revenue-profit?year=${yearFilter}` : `fpm-quota-chart/revenue-profit`
+    const response = await client(url, {})
     return response?.data
   })
 }
 
-export const usePerformance = () => {
+export const usePerformance = (yearFilter: string | null | number) => {
   const client = useClient()
-
+  const url = yearFilter ? `fpm-quota?year=${yearFilter}` : `fpm-quota`
   return useQuery('performance-list', async () => {
-    const response = await client(`fpm-quota`, {})
+    const response = await client(url, {})
     return response?.data
   })
 }
@@ -135,6 +136,8 @@ export const MonthOptionTypes = {
   thisMonth: 'thisMonth',
   currentQuarter: 'currentQuarter',
   pastQuarter: 'pastQuarter',
+  currentYear: 'currentYear',
+  lastYear: 'lastYear',
 }
 
 export const MonthOption = [
@@ -142,6 +145,8 @@ export const MonthOption = [
   { value: MonthOptionTypes.lastMonth, label: 'Last Month' },
   { value: MonthOptionTypes.currentQuarter, label: 'Current Quarter' },
   { value: MonthOptionTypes.pastQuarter, label: 'Past Quarter' },
+  { value: MonthOptionTypes.currentYear, label: 'Current Year' },
+  { value: MonthOptionTypes.lastYear, label: 'Last Year' },
   { value: MonthOptionTypes.all, label: 'All' },
 ]
 
