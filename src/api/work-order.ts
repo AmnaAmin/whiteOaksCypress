@@ -270,6 +270,7 @@ export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
   const cancelWorkOrder = formValues?.cancel.value === 35
+  // eslint-disable-next-line no-use-before-define
   const assignedItems = !cancelWorkOrder
     ? [
         ...formValues?.assignedItems?.map((a, index) => {
