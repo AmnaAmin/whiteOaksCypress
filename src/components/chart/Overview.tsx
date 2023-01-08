@@ -28,7 +28,6 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
       Active: entityList.find(e => e)?.countActive,
       PastDue: entityList.find(e => e)?.countPastdue,
       Completed: entityList.find(e => e)?.countCompleted,
-      Invoiced: entityList.find(e => e)?.countInvoiced,
       Paid: entityList.find(e => e)?.countPaid,
       Canceled: entityList.find(e => e)?.countCancelled,
     }
@@ -98,7 +97,6 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
           <Bar dataKey="Active" fill="#DEC5FF" radius={[5, 5, 0, 0]} />
           <Bar dataKey="PastDue" fill="#C9C9C9" radius={[5, 5, 0, 0]} />
           <Bar dataKey="Completed" fill="#84ADEF" radius={[5, 5, 0, 0]} />
-          <Bar dataKey="Invoiced" fill="#84ADEF" radius={[5, 5, 0, 0]} />
           <Bar dataKey="Paid" fill="#FDC077" radius={[5, 5, 0, 0]} />
           <Bar dataKey="Canceled" fill="#84DCC6" radius={[5, 5, 0, 0]} />
           <Legend
