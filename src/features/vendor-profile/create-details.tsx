@@ -446,7 +446,7 @@ const CreateVendorDetail: React.FC<{
               <FormControl>
                 <HStack spacing="16px">
                 <Checkbox
-                          {...register('notifyVendor')}
+                          {...register('enableVendorPortal')}
                           colorScheme="brand"
                         >
                           {t('enableVendorPortal')}
