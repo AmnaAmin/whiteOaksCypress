@@ -133,6 +133,7 @@ export type VendorProfilePayload = {
   markets: Array<Market>
   projects: any[]
   paymentOptions: any[]
+  notifyVendor?: boolean
   documents: {
     id?: number
     fileType: string
@@ -228,6 +229,7 @@ export type VendorProfileDetailsFormData = {
   coiWcExpDate?: Date
   trades?: any[]
   markets?: any[]
+  notifyVendor?: boolean
 }
 
 export type VendorTrade = {

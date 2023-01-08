@@ -48,6 +48,7 @@ export const requiredField = {
   documentErrors: ['w9Document'],
   licenseErrors: ['licenses'],
 }
+
 export const useVendorProfile = (vendorId: number) => {
   const client = useClient()
 
@@ -165,6 +166,7 @@ export const parseVendorFormDataToAPIData = (
     markets: vendorProfileData?.markets || [],
     licenseDocuments: vendorProfileData?.licenseDocuments || [],
     paymentOptions: paymentsMethods.filter(payment => formValues[payment.name]),
+    notifyVendor: formValues.notifyVendor
   }
 }
 

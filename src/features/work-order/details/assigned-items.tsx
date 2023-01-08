@@ -239,9 +239,14 @@ const AssignedItems = (props: AssignedItemType) => {
             w={{ base: '100%', lg: 'unset' }}
             flexWrap={{ base: 'wrap', lg: 'unset' }}
           >
-            {showPriceCheckBox && (
+              {showPriceCheckBox && (
               <Checkbox variant={'outLineGreen'} data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}
+              </Checkbox>
+            )}
+            {showPriceCheckBox && (
+              <Checkbox defaultChecked variant={'outLineGreen'} data-testid="showPriceCheckBox" size="md" {...register('notifyVendor')}>
+                {t(`${WORK_ORDER}.sendNotification`)}
               </Checkbox>
             )}
             {showMarkAllIsCompleted && (
