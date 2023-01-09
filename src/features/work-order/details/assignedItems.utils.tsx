@@ -721,6 +721,7 @@ export const useActionsShowDecision = ({ workOrder }) => {
 
   return {
     showPriceCheckBox: !isVendor,
+    notifyVendorCheckBox: !isVendor,
     showMarkAllIsVerified: !isVendor && workOrder,
     showMarkAllIsCompleted: !!workOrder,
     showVerification: !!workOrder,
