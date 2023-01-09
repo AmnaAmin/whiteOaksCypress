@@ -7,7 +7,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { Card } from 'features/login-form-centered/Card'
 import CreateDetails, { useVendorDetails } from 'features/vendor-profile/create-details'
 import { UpdateDetails } from 'features/vendor-profile/update-details'
-import { DocumentsCard } from 'features/vendor-profile/documents-card'
+import { DocumentsCard } from 'features/vendor-profile/documents-card-vendor-portal'
 import { License } from 'features/vendor-profile/license'
 import { MarketList } from 'features/vendor-profile/markets'
 import { TradeList } from 'features/vendor-profile/trades'
@@ -113,9 +113,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             //document
             const documentsPayload = await parseDocumentCardsValues(formData)
             const updatedObject = prepareVendorDocumentObject(documentsPayload, formData)
-
-            console.log( createVendorPayload(updatedObject, vendorProfileData) );
-            
             saveDocuments(createVendorPayload(updatedObject, vendorProfileData))
             break
 

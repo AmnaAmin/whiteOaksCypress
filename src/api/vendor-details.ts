@@ -476,12 +476,20 @@ export const documentCardsDefaultValues = (vendor: any) => {
 }
 
 export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
+
+  console.log( formData.agreementSignCheckBox ? "VERIFIED" : ( formData as any ).agreementSignedStatus );
+
   return {
     documents: vendorProfilePayload,
     agreementSignedDate: convertDateTimeToServer(formData.agreementSignedDate!),
     autoInsuranceExpirationDate: convertDateTimeToServer(formData.autoInsuranceExpDate!),
     coiglExpirationDate: convertDateTimeToServer(formData.coiGlExpDate!),
     coiWcExpirationDate: convertDateTimeToServer(formData.coiWcExpDate!),
+    coiGLStatus: (formData.coiGLExpCheckBox as any) ? "VERIFIED" : ( formData as any ).coiGLStatus,
+    coiWCStatus: (formData.CoiWcExpCheckbox as any) ? "VERIFIED" : ( formData as any ).coiWCStatus,
+    agreementSignedStatus: (formData.agreementSignCheckBox as any) ? "VERIFIED" : ( formData as any ).agreementSignedStatus,
+    autoInsuranceStatus: (formData.autoInsuranceCheckBox as any) ?   "VERIFIED" : ( formData as any ).autoInsuranceStatus,
+    w9Status: (formData.W9DocumentCheckBox as any) ? "VERIFIED" : ( formData as any ).w9Status
   }
 }
 export const parseDocumentCardsValues = async (values: any) => {
