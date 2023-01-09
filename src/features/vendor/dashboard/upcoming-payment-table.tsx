@@ -76,7 +76,7 @@ export const UpcomingPaymentTable = () => {
     },
     {
       header: t(`${DASHBOARD}.invoiceDate`),
-      accessorKey: 'expectedPaymentDate',
+      accessorKey: 'dateInvoiceSubmitted',
       accessorFn: row => dateFormat(row.dateInvoiceSubmitted),
       meta: { format: 'date' },
     },
