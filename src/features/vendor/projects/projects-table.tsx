@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Box, Link } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { SELECTED_CARD_MAP_URL, useGetAllWorkOrders, useWorkOrders } from 'api/projects'
 import Status from '../../common/status'
@@ -22,6 +22,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
+import { Link } from 'react-router-dom'
 
 const PROJECT_TABLE_QUERY_KEYS = {
   projectId: 'projectId.equals',
@@ -40,16 +41,15 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     cell: (row: any) => {
       const value = row.cell.getValue()
       return (
-        <Link
-          href={`${process.env.PUBLIC_URL}/project-details/${value}`}
-          color="#533f03"
-          fontWeight="bold"
+        <Box
+          fontWeight={'600'}
           _hover={{
-            color: '#8d2638',
+            color: 'barColor.50',
           }}
+          color="brand.500"
         >
-          {value}
-        </Link>
+          <Link to={`/project-details/${value}`}>{value}</Link>
+        </Box>
       )
     },
   },
