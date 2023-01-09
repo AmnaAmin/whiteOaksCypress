@@ -71,6 +71,7 @@ const WorkOrderDetailTab = ({
             })
           : [],
       showPrice: workOrder.showPricing,
+     // notifyVendor: workOrder.notifyVendor,
     }
   }
 

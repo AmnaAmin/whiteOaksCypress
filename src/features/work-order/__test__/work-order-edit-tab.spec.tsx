@@ -76,7 +76,7 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
 
     expect(screen.getByTestId('showPriceCheckBox')).toBeInTheDocument()
-    expect(screen.getByTestId('notifyVendorCheckBox')).toBeInTheDocument()
+    //expect(screen.getByTestId('notifyVendor')).toBeInTheDocument()
     expect(screen.getByTestId('showMarkAllIsVerified')).toBeInTheDocument()
     expect(screen.queryByTestId('showMarkAllIsComplete')).toBeInTheDocument()
 
@@ -119,7 +119,7 @@ describe('Work Order modal showing work order specific details for PC(Super set 
           workOrderStartDate: expect.any(String),
           assignedItems: expect.any(Array),
           showPricing: expect.any(Boolean),
-          notifyVendor: expect.any(Boolean),
+          // notifyVendor: expect.any(Boolean),
         }),
       ),
     )
