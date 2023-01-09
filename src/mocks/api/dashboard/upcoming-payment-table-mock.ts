@@ -29,7 +29,7 @@ export const UPCOMING_PAYMENT_TABLE_MOCK = [
     invoiceNumber: 'EL13466',
     datePermitsPulled: null,
     leanWaiverSubmitted: true,
-    dateInvoiceSubmitted: '2022-11-30T19:00:00Z',
+    dateInvoiceSubmitted: '2022-12-01T00:00:00Z',
     dateLeanWaiverSubmitted: '2022-12-01T17:28:34Z',
     lienWaiverAccepted: true,
     datePaymentProcessed: null,
