@@ -24,6 +24,8 @@ export const dashboard = {
 
         // Vendor Score
         vendorscore: 'Vendor Score',
+        invoiceDate: 'Invoice Date',
+        finalInvoice: 'Final Invoice',
       },
     },
   },
@@ -49,6 +51,8 @@ export const dashboard = {
 
         // Vendor Score
         vendorscore: 'Puntuación del proveedor',
+        invoiceDate: 'Fecha de la factura',
+        finalInvoice: 'Factura final',
       },
     },
   },
