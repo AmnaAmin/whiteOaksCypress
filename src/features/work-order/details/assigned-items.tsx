@@ -123,7 +123,8 @@ const AssignedItems = (props: AssignedItemType) => {
     }
   }, [lineItems])
 
-  const { showPriceCheckBox, showMarkAllIsVerified, showMarkAllIsCompleted } = useActionsShowDecision({ workOrder })
+  const { showPriceCheckBox, notifyVendorCheckBox, showMarkAllIsVerified, showMarkAllIsCompleted } = useActionsShowDecision({ workOrder })
+
   const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, lineItems })
   const { isVendor } = useUserRolesSelector()
   const [markAllVerified, setMarkAllVerified] = useState<boolean>()
@@ -244,8 +245,8 @@ const AssignedItems = (props: AssignedItemType) => {
                 {t(`${WORK_ORDER}.showPrice`)}
               </Checkbox>
             )}
-            {showPriceCheckBox && (
-              <Checkbox defaultChecked variant={'outLineGreen'} data-testid="showPriceCheckBox" size="md" {...register('notifyVendor')}>
+            { notifyVendorCheckBox && (
+              <Checkbox defaultChecked variant={'outLineGreen'} data-testid="notifyVendorCheckBox"  size="md" {...register('notifyVendor')}>
                 {t(`${WORK_ORDER}.sendNotification`)}
               </Checkbox>
             )}
