@@ -105,7 +105,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         setValue(`licenses.${index}.licenseType`, value?.licenseType),
         setValue(`licenses.${index}.licenseNumber`, value?.licenseNumber),
         setValue(`licenses.${index}.expiryDate`, value?.expiryDate),
-        setValue(`licenses.${index}.expirationFile`, null)
+        setValue(`licenses.${index}.expirationFile`, null),
       ]
     })
   }

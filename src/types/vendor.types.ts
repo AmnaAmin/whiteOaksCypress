@@ -145,6 +145,7 @@ export type VendorProfilePayload = {
   agreementSignedStatus?: string | boolean
   autoInsuranceStatus?: string | boolean
   w9Status?: string | boolean
+  enableVendorPortal?: boolean
 }
 
 export type LicenseDocument = {

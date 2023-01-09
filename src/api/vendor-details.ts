@@ -433,6 +433,7 @@ export const parseLicenseValues = async (values: any, licensesDocuments: any) =>
           fileObjectContentType: license?.expirationFile?.type,
           fileType: license.expirationFile.name,
           fileObject: fileContents,
+          status: "UNVERIFIED"
         }
       }
       return doc
