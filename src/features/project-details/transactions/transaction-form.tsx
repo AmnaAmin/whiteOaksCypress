@@ -259,7 +259,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   useEffect(() => {
-    if (selectedWorkOrder?.awardPlanPayTerm && !transaction?.id) {
+    if (selectedWorkOrder?.awardPlanPayTerm) {
       const paymentTermValue = {
         value: selectedWorkOrder?.awardPlanPayTerm,
         label: selectedWorkOrder?.awardPlanPayTerm as string,
@@ -267,7 +267,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       }
       setValue('paymentTerm', paymentTermValue)
     } else {
-      setValue('paymentTerm', transaction?.paymentTerm as any)
+      setValue('paymentTerm', null)
     }
   }, [selectedWorkOrder])
 
@@ -284,11 +284,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     resetExpectedCompletionDateFields(option)
   }
 
-  const onPaymentTermChange = (option) => {
-   console.log('paymentTerm', option)
-    setValue('paymentTerm', option)
-  }
-
   const onSubmit = useCallback(
     async (values: FormValues) => {
       const queryOptions = {
@@ -297,7 +292,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           reset()
         },
       }
-      console.log('paymentTerm', values)
 
       // In case of id exists in transaction object it will be update call to save transaction.
       if (transaction?.id) {
@@ -589,7 +583,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 options={PAYMENT_TERMS_OPTIONS}
                                 isDisabled={isUpdateForm}
                                 onChange={paymentTermOption => {
-                                  onPaymentTermChange(paymentTermOption)
                                   field.onChange(paymentTermOption)
                                 }}
                               />
