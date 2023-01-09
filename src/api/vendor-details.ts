@@ -405,6 +405,7 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
 }
 
 export const parseLicenseValues = async (values: any, licensesDocuments: any) => {
+
   const results = await Promise.all(
     values.licenses.map(async (license: any, index: number) => {
       let existingLicense = licensesDocuments?.find(l => l.id === license.id)
@@ -425,6 +426,7 @@ export const parseLicenseValues = async (values: any, licensesDocuments: any) =>
           licenseNumber: license.licenseNumber,
           licenseType: license.licenseType,
           licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
+          status: values[`licenseCheckbox${index}`] ? "VERIFIED" : existingLicense.status
         }
       } else {
         fileContents = await readFileContent(license.expirationFile)
@@ -435,6 +437,7 @@ export const parseLicenseValues = async (values: any, licensesDocuments: any) =>
           fileObjectContentType: license?.expirationFile?.type,
           fileType: license.expirationFile.name,
           fileObject: fileContents,
+          status: values[`licenseCheckbox${index}`] ? "VERIFIED" : "UNVERIFIED"
         }
       }
       return doc
@@ -478,12 +481,24 @@ export const documentCardsDefaultValues = (vendor: any) => {
 }
 
 export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
+
+ /* console.log( formData.coiGLExpCheckBox  ? "VERIFIED" : ( formData as any ).coiGLStatus );
+  console.log( formData.CoiWcExpCheckbox  ? "VERIFIED" : ( formData as any ).coiWCStatus );
+  console.log( formData.agreementSignCheckBox  ? "VERIFIED" : ( formData as any ).agreementSignedStatus );
+  console.log( formData.autoInsuranceCheckBox  ?   "VERIFIED" : ( formData as any ).autoInsuranceStatus );
+  console.log( formData.W9DocumentCheckBox ? "VERIFIED" : ( formData as any ).w9Status );*/
+
   return {
     documents: vendorProfilePayload,
     agreementSignedDate: convertDateTimeToServer(formData.agreementSignedDate!),
     autoInsuranceExpirationDate: convertDateTimeToServer(formData.autoInsuranceExpDate!),
     coiglExpirationDate: convertDateTimeToServer(formData.coiGlExpDate!),
     coiWcExpirationDate: convertDateTimeToServer(formData.coiWcExpDate!),
+    coiGLStatus: formData.coiGLExpCheckBox  ? "VERIFIED" : ( formData as any ).coiGLStatus,
+    coiWCStatus: formData.CoiWcExpCheckbox  ? "VERIFIED" : ( formData as any ).coiWCStatus,
+    agreementSignedStatus: formData.agreementSignCheckBox  ? "VERIFIED" : ( formData as any ).agreementSignedStatus,
+    autoInsuranceStatus: formData.autoInsuranceCheckBox  ?   "VERIFIED" : ( formData as any ).autoInsuranceStatus,
+    w9Status: formData.W9DocumentCheckBox  ? "VERIFIED" : ( formData as any ).w9Status
   }
 }
 export const parseDocumentCardsValues = async (values: any) => {
