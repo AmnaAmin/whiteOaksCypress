@@ -17,7 +17,7 @@ import { useClient } from 'utils/auth-context'
 import {
   // convertDateTimeFromServer,
   convertDateTimeToServer,
-  customFormat,
+  //customFormat,
   datePickerFormat,
 } from 'utils/date-time-utils'
 
@@ -425,13 +425,15 @@ export const parseLicenseValues = async (values: any, licensesDocuments: any) =>
           ...doc,
           licenseNumber: license.licenseNumber,
           licenseType: license.licenseType,
-          licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
-          status: values[`licenseCheckbox${index}`] ? "VERIFIED" : existingLicense.status
+          //licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'), 
+          licenseExpirationDate: convertDateTimeToServer( license.expiryDate ),
+          status: values[`licenseCheckbox${index}`] ? "VERIFIED" : existingLicense?.status
         }
       } else {
         fileContents = await readFileContent(license.expirationFile)
         doc = {
-          licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
+          //licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
+          licenseExpirationDate: convertDateTimeToServer( license.expiryDate ),
           licenseNumber: license.licenseNumber,
           licenseType: license.licenseType,
           fileObjectContentType: license?.expirationFile?.type,
@@ -494,11 +496,11 @@ export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
     autoInsuranceExpirationDate: convertDateTimeToServer(formData.autoInsuranceExpDate!),
     coiglExpirationDate: convertDateTimeToServer(formData.coiGlExpDate!),
     coiWcExpirationDate: convertDateTimeToServer(formData.coiWcExpDate!),
-    coiGLStatus: formData.coiGLExpCheckBox  ? "VERIFIED" : ( formData as any ).coiGLStatus,
-    coiWCStatus: formData.CoiWcExpCheckbox  ? "VERIFIED" : ( formData as any ).coiWCStatus,
-    agreementSignedStatus: formData.agreementSignCheckBox  ? "VERIFIED" : ( formData as any ).agreementSignedStatus,
-    autoInsuranceStatus: formData.autoInsuranceCheckBox  ?   "VERIFIED" : ( formData as any ).autoInsuranceStatus,
-    w9Status: formData.W9DocumentCheckBox  ? "VERIFIED" : ( formData as any ).w9Status
+    coiGLStatus: formData.coiGLExpCheckBox  ? "VERIFIED" : ( formData as any )?.coiGLStatus,
+    coiWCStatus: formData.CoiWcExpCheckbox  ? "VERIFIED" : ( formData as any )?.coiWCStatus,
+    agreementSignedStatus: formData.agreementSignCheckBox  ? "VERIFIED" : ( formData as any )?.agreementSignedStatus,
+    autoInsuranceStatus: formData.autoInsuranceCheckBox  ?   "VERIFIED" : ( formData as any )?.autoInsuranceStatus,
+    w9Status: formData.W9DocumentCheckBox  ? "VERIFIED" : ( formData as any )?.w9Status
   }
 }
 export const parseDocumentCardsValues = async (values: any) => {
