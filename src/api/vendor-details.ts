@@ -477,11 +477,11 @@ export const documentCardsDefaultValues = (vendor: any) => {
 
 export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
 
-  console.log( formData.coiGLExpCheckBox  ? "VERIFIED" : ( formData as any ).coiGLStatus );
+ /* console.log( formData.coiGLExpCheckBox  ? "VERIFIED" : ( formData as any ).coiGLStatus );
   console.log( formData.CoiWcExpCheckbox  ? "VERIFIED" : ( formData as any ).coiWCStatus );
   console.log( formData.agreementSignCheckBox  ? "VERIFIED" : ( formData as any ).agreementSignedStatus );
   console.log( formData.autoInsuranceCheckBox  ?   "VERIFIED" : ( formData as any ).autoInsuranceStatus );
-  console.log( formData.W9DocumentCheckBox ? "VERIFIED" : ( formData as any ).w9Status );
+  console.log( formData.W9DocumentCheckBox ? "VERIFIED" : ( formData as any ).w9Status );*/
 
   return {
     documents: vendorProfilePayload,

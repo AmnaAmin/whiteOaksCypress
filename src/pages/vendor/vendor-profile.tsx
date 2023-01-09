@@ -34,7 +34,6 @@ import {
 } from 'api/vendor-details'
 import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
-import { ExpirationAlertMessage } from 'features/common/expiration-alert-message'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -115,7 +114,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             const updatedObject = prepareVendorDocumentObject(documentsPayload, formData)
 
             console.log( createVendorPayload(updatedObject, vendorProfileData) );
-            
+
             saveDocuments(createVendorPayload(updatedObject, vendorProfileData))
             break
 
@@ -195,7 +194,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   return (
     <FormProvider {...formReturn}>
       <Stack width={{ base: '100%', lg: '971px' }}>
-        <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
 
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
