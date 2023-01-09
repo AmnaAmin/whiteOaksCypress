@@ -27,6 +27,8 @@ import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 import { checkIsLicenseChanged } from './hook'
 import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
+import { VendorPortalVerifyLicense} from "./verify-license";
+
 type LicenseProps = {
   vendor: VendorProfile
   onClose?: () => void
@@ -105,7 +107,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         setValue(`licenses.${index}.licenseType`, value?.licenseType),
         setValue(`licenses.${index}.licenseNumber`, value?.licenseNumber),
         setValue(`licenses.${index}.expiryDate`, value?.expiryDate),
-        setValue(`licenses.${index}.expirationFile`, null),
+        setValue(`licenses.${index}.expirationFile`, null)
       ]
     })
   }
@@ -277,11 +279,14 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                     />
                   </FormControl>
                 </VStack>
+                
                 {isLicenseChanged ? (
                   <>
                     <SaveChangedFieldAlert />
                   </>
-                ) : null}
+                ) : <VendorPortalVerifyLicense 
+                      currStatus={(vendor?.licenseDocuments[index] as any)?.status }
+                    />}
               </HStack>
             )
           })

@@ -405,6 +405,7 @@ export const licenseDefaultFormValues = (vendor: VendorProfile): License[] => {
 }
 
 export const parseLicenseValues = async (values: any, licensesDocuments: any) => {
+
   const results = await Promise.all(
     values.licenses.map(async (license: any, index: number) => {
       let existingLicense = licensesDocuments?.find(l => l.id === license.id)
@@ -425,6 +426,7 @@ export const parseLicenseValues = async (values: any, licensesDocuments: any) =>
           licenseNumber: license.licenseNumber,
           licenseType: license.licenseType,
           licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
+          status: values[`licenseCheckbox${index}`] ? "VERIFIED" : existingLicense.status
         }
       } else {
         fileContents = await readFileContent(license.expirationFile)
@@ -435,7 +437,7 @@ export const parseLicenseValues = async (values: any, licensesDocuments: any) =>
           fileObjectContentType: license?.expirationFile?.type,
           fileType: license.expirationFile.name,
           fileObject: fileContents,
-          status: "UNVERIFIED"
+          status: values[`licenseCheckbox${index}`] ? "VERIFIED" : "UNVERIFIED"
         }
       }
       return doc

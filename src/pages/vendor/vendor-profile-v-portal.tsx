@@ -8,7 +8,7 @@ import { Card } from 'features/login-form-centered/Card'
 import CreateDetails, { useVendorDetails } from 'features/vendor-profile/create-details'
 import { UpdateDetails } from 'features/vendor-profile/update-details'
 import { DocumentsCard } from 'features/vendor-profile/documents-card-vendor-portal'
-import { License } from 'features/vendor-profile/license'
+import { License } from 'features/vendor-profile/license-vendor-portal'
 import { MarketList } from 'features/vendor-profile/markets'
 import { TradeList } from 'features/vendor-profile/trades'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -191,7 +191,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
   return (
     <FormProvider {...formReturn}>
-      <Stack width={{ base: '100%', lg: '971px' }}>
+      <Stack width={{ base: '100%', lg: '1200px' }}>
         <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
 
         <form onSubmit={formReturn.handleSubmit(submitForm)}>

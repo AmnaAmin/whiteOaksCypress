@@ -113,14 +113,13 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             const documentsPayload = await parseDocumentCardsValues(formData)
             const updatedObject = prepareVendorDocumentObject(documentsPayload, formData)
 
-            console.log( createVendorPayload(updatedObject, vendorProfileData) );
-
             saveDocuments(createVendorPayload(updatedObject, vendorProfileData))
             break
 
           case 2:
             //license
             const licensePayload = await parseLicenseValues(formData, vendorProfileData?.licenseDocuments)
+
             saveLicenses(createVendorPayload({ licenseDocuments: licensePayload }, vendorProfileData))
             break
 
