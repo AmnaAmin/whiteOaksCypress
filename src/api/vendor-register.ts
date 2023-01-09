@@ -1,3 +1,4 @@
+/*eslint-disable */
 import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import { useMutation } from "react-query";

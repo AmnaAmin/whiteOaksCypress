@@ -1,3 +1,4 @@
+/*eslint-disable */
 import React, { useEffect, useState } from 'react'
 import {
   Box,
@@ -17,10 +18,8 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, useFormContext } from 'react-hook-form'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import ChooseFileField from 'components/choose-file/choose-file'
-
-import { datePickerFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
-import { useWatchDocumentFeild } from 'features/vendor-profile/hook'
+
 
 type DocumentsProps = {
   isActive: boolean
