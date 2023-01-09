@@ -179,7 +179,7 @@ function DebouncedInput({
         paddingRight={'13px'}
         data-testid="tableFilterInputField"
         _focus={{
-          border: '2px solid #022c7c',
+          border: '1px solid #022c7c',
         }}
       />
       {showClearIcon && props.type !== 'date' ? (

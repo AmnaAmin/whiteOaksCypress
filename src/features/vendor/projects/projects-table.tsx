@@ -42,9 +42,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
       const value = row.cell.getValue()
       return (
         <Box
-          fontWeight={'600'}
+          fontWeight={'500'}
           _hover={{
             color: 'barColor.50',
+            textDecor: 'underline',
           }}
           color="brand.500"
         >

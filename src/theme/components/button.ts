@@ -24,7 +24,7 @@ const ButtonVariants = {
       outline: props => {
         return {
           ...chakraTheme.components.Button.variants.outline(props),
-          borderColor: `${props.colorScheme}.300`,
+          borderColor: props.borderColor ? props.borderColor : `${props.colorScheme}.300`,
           color: `${props.colorScheme}.300`,
           fontWeight: 500,
           _hover: {
