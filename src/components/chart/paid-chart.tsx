@@ -31,7 +31,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
   const emptyGraphData = data?.filter(value => value?.count)?.length === 0
 
   const CustomTooltip = ({ active, payload }: any) => {
-    const countValue = payload.map(e => {
+    const countValue = payload?.map(e => {
       return e.payload
     })
 
