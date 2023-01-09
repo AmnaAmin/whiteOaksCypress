@@ -66,19 +66,19 @@ export const UpcomingPaymentTable = () => {
       header: t(`${DASHBOARD}.dueDateWO`),
       accessorKey: 'workOrderExpectedCompletionDate',
       accessorFn: row => dateFormat(row.workOrderExpectedCompletionDate),
-      meta: { format: 'date' },
+      // meta: { format: 'date' },
     },
     {
       header: t(`${DASHBOARD}.expectedPayment`),
       accessorKey: 'expectedPaymentDate',
       accessorFn: row => dateFormat(row.expectedPaymentDate),
-      meta: { format: 'date' },
+      // meta: { format: 'date' },
     },
     {
       header: t(`${DASHBOARD}.invoiceDate`),
       accessorKey: 'dateInvoiceSubmitted',
       accessorFn: row => dateFormat(row.dateInvoiceSubmitted),
-      meta: { format: 'date' },
+      // meta: { format: 'date' },
     },
     {
       header: t(`${DASHBOARD}.finalInvoice`),

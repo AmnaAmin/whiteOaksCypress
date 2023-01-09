@@ -90,6 +90,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
               position="insideBottom"
               fill="#A0AEC0"
               fontStyle="italic"
+              fontSize={'14px'}
             />
           )}
         </XAxis>
