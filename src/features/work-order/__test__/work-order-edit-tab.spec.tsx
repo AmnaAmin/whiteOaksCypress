@@ -1,3 +1,4 @@
+/*eslint-disable */
 import { fireEvent, render, waitFor } from '@testing-library/react'
 import WorkOrderEditTab from '../../work-order/details/work-order-edit-tab'
 import { Providers } from 'providers'
@@ -166,3 +167,4 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     expect(screen.getByTestId('isVerified-1')).toHaveAttribute('data-checked')
   })
 })
+/*eslint-disable */
