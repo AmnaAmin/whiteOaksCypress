@@ -178,8 +178,15 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </FormControl>
-            {(isW9DocumentDateChanged || watchW9DocumentFile) ? <SaveChangedFieldAlert />:
-            <AdminPortalVerifyDocument vendor={vendor as any} fieldName="W9DocumentCheckBox" registerToFormField={register} />}
+            {isW9DocumentDateChanged || watchW9DocumentFile ? (
+              <SaveChangedFieldAlert />
+            ) : (
+              <AdminPortalVerifyDocument
+                vendor={vendor as any}
+                fieldName="W9DocumentCheckBox"
+                registerToFormField={register}
+              />
+            )}
           </HStack>
         </HStack>
         <Box>
@@ -243,8 +250,15 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(isAgreementSignedDateChanged || watchAgreementFile) ? <SaveChangedFieldAlert />:
-              <AdminPortalVerifyDocument vendor={vendor as any} fieldName="agreementSignCheckBox" registerToFormField={register} />}
+              {isAgreementSignedDateChanged || watchAgreementFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <AdminPortalVerifyDocument
+                  vendor={vendor as any}
+                  fieldName="agreementSignCheckBox"
+                  registerToFormField={register}
+                />
+              )}
             </HStack>
           </HStack>
         </Box>
@@ -336,8 +350,15 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(isAutoInsuranceExpDateChanged || watchInsuranceFile) ? <SaveChangedFieldAlert /> :
-              <AdminPortalVerifyDocument vendor={vendor as any} fieldName="autoInsuranceCheckBox" registerToFormField={register} />}
+              {isAutoInsuranceExpDateChanged || watchInsuranceFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <AdminPortalVerifyDocument
+                  vendor={vendor as any}
+                  fieldName="autoInsuranceCheckBox"
+                  registerToFormField={register}
+                />
+              )}
             </HStack>
           </HStack>
         </Box>
@@ -402,8 +423,15 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(isCoiGlExpDateChanged || watchCoiGlExpFile) ? <SaveChangedFieldAlert /> :
-              <AdminPortalVerifyDocument vendor={vendor as any} fieldName="coiGLExpCheckBox" registerToFormField={register} />}
+              {isCoiGlExpDateChanged || watchCoiGlExpFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <AdminPortalVerifyDocument
+                  vendor={vendor as any}
+                  fieldName="coiGLExpCheckBox"
+                  registerToFormField={register}
+                />
+              )}
             </HStack>
           </HStack>
         </Box>
@@ -468,8 +496,15 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(isCoiWcExpDateChanged || watchCoiWcExpFile) ? <SaveChangedFieldAlert /> : 
-              <AdminPortalVerifyDocument vendor={vendor as any} fieldName="CoiWcExpCheckbox" registerToFormField={register}/>}
+              {isCoiWcExpDateChanged || watchCoiWcExpFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <AdminPortalVerifyDocument
+                  vendor={vendor as any}
+                  fieldName="CoiWcExpCheckbox"
+                  registerToFormField={register}
+                />
+              )}
             </HStack>
           </HStack>
         </Box>
