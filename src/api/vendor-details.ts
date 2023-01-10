@@ -19,6 +19,7 @@ import {
   convertDateTimeToServer,
   customFormat,
   datePickerFormat,
+  convertDateTimeFromServer,
 } from 'utils/date-time-utils'
 
 export const licenseTypes = [
@@ -425,13 +426,15 @@ export const parseLicenseValues = async (values: any, licensesDocuments: any) =>
           ...doc,
           licenseNumber: license.licenseNumber,
           licenseType: license.licenseType,
-          licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
+          // licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
+          licenseExpirationDate:convertDateTimeFromServer(license.expiryDate),
           status: values[`licenseCheckbox${index}`] ? "VERIFIED" : existingLicense.status
         }
       } else {
         fileContents = await readFileContent(license.expirationFile)
         doc = {
-          licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
+          // licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
+          licenseExpirationDate:convertDateTimeFromServer(license.expiryDate),
           licenseNumber: license.licenseNumber,
           licenseType: license.licenseType,
           fileObjectContentType: license?.expirationFile?.type,
@@ -490,7 +493,7 @@ export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
 
   return {
     documents: vendorProfilePayload,
-    agreementSignedDate: convertDateTimeToServer(formData.agreementSignedDate!),
+    agreementSignedDate: formData.agreementSignedDate!,
     autoInsuranceExpirationDate: convertDateTimeToServer(formData.autoInsuranceExpDate!),
     coiglExpirationDate: convertDateTimeToServer(formData.coiGlExpDate!),
     coiWcExpirationDate: convertDateTimeToServer(formData.coiWcExpDate!),
