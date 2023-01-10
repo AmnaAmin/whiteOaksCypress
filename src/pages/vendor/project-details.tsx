@@ -79,7 +79,7 @@ const ProjectDetails: React.FC = props => {
               style={boxShadow}
               pr={{ base: 0, sm: '15px' }}
             >
-              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" mb="15px">
+              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
                 {tabIndex === 2 && (
                   <Button
                     onClick={onDocumentModalOpen}
@@ -87,6 +87,7 @@ const ProjectDetails: React.FC = props => {
                     leftIcon={<BiUpload fontSize="16px" />}
                     w={{ base: '100%', sm: 'unset' }}
                     mr={{ base: '15px', sm: 'unset' }}
+                    mb="15px"
                   >
                     {t('upload')}
                   </Button>
@@ -114,6 +115,7 @@ const ProjectDetails: React.FC = props => {
                     isDisabled={!isNewTransactionAllow}
                     w={{ base: '100%', sm: 'unset' }}
                     mr={{ base: '15px', sm: 'unset' }}
+                    mb="15px"
                   >
                     {t('newTransaction')}
                   </Button>
