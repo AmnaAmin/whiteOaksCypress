@@ -465,7 +465,7 @@ const CreateVendorDetail: React.FC<{
         pt="8px"
         mt="30px"
         id="footer"
-        borderTop="2px solid #E2E8F0"
+        borderTop="1px solid #E2E8F0"
         alignItems="center"
         justifyContent="end"
       >
