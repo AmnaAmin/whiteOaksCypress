@@ -445,18 +445,14 @@ const CreateVendorDetail: React.FC<{
               <Text>{t('portalRegistration')}</Text>
               <FormControl>
                 <HStack spacing="16px">
-                <Checkbox
-                          {...register('enableVendorPortal')}
-                          colorScheme="brand"
-                        >
-                          {t('enableVendorPortal')}
-                        </Checkbox>
+                  <Checkbox {...register('enableVendorPortal')} colorScheme="brand">
+                    {t('enableVendorPortal')}
+                  </Checkbox>
                 </HStack>
                 <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
               </FormControl>
             </VStack>
           </Stack>
-          
         </Box>
       </Box>
 
@@ -486,7 +482,6 @@ const CreateVendorDetail: React.FC<{
       </Flex>
     </Stack>
   )
-  
 }
 
 export const useVendorDetails = ({ form, vendorProfileData }) => {

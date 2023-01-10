@@ -193,7 +193,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   return (
     <FormProvider {...formReturn}>
       <Stack width={{ base: '100%', lg: '971px' }}>
-
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
             <Card
