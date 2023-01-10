@@ -568,18 +568,18 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
           onClick={() => inputRef?.current?.click()}
           colorScheme="darkPrimary"
           variant="outline"
-          leftIcon={<BiUpload color="#4E87F8" />}
+          leftIcon={<BiUpload color="brand.300" />}
           display="flex"
         >
           {t(`${WORK_ORDER}.${label}`)}
         </Button>
       ) : (
-        <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+        <Box color="brand.300" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
           <HStack spacing="5px" h="31px" padding="10px" align="center">
             <Text as="span" maxW="70px" isTruncated title="something">
               {value}
             </Text>
-            <MdOutlineCancel cursor="pointer" onClick={onFileClear} />
+            <MdOutlineCancel color="brand.300" cursor="pointer" onClick={onFileClear} />
           </HStack>
         </Box>
       )}

@@ -109,7 +109,7 @@ const ProjectDetails: React.FC = props => {
                     onClick={onTransactionModalOpen}
                     colorScheme="darkPrimary"
                     leftIcon={<BiAddToQueue />}
-                    isDisabled={isNewTransactionAllow}
+                    isDisabled={!isNewTransactionAllow}
                     w={{ base: '100%', sm: 'unset' }}
                     mr={{ base: '15px', sm: 'unset' }}
                   >
