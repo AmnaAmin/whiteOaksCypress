@@ -43,7 +43,7 @@ export default function FileDragDrop({ onUpload, ...fieldProps }) {
   }
 
   return (
-    <Flex width="100%" direction="column" gap="30px">
+    <Flex width="100%" direction="column" gap="30px" mt={4}>
       <Dropzone onDrop={handleDrop} {...fieldProps}>
         {({ getRootProps, getInputProps, isDragActive, isDragAccept, isDragReject, open }) => {
           const additionalClass = isDragAccept ? 'accept' : isDragReject ? 'reject' : ''
