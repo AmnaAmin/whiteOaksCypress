@@ -7,8 +7,8 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { Card } from 'features/login-form-centered/Card'
 import CreateDetails, { useVendorDetails } from 'features/vendor-profile/create-details'
 import { UpdateDetails } from 'features/vendor-profile/update-details'
-import { DocumentsCard } from 'features/vendor-profile/documents-card'
-import { License } from 'features/vendor-profile/license'
+import { DocumentsCard } from 'features/vendor-profile/documents-card-vendor-portal'
+import { License } from 'features/vendor-profile/license-vendor-portal'
 import { MarketList } from 'features/vendor-profile/markets'
 import { TradeList } from 'features/vendor-profile/trades'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -34,6 +34,7 @@ import {
 } from 'api/vendor-details'
 import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
+import { ExpirationAlertMessage } from 'features/common/expiration-alert-message'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -112,14 +113,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             //document
             const documentsPayload = await parseDocumentCardsValues(formData)
             const updatedObject = prepareVendorDocumentObject(documentsPayload, formData)
-
             saveDocuments(createVendorPayload(updatedObject, vendorProfileData))
             break
 
           case 2:
             //license
             const licensePayload = await parseLicenseValues(formData, vendorProfileData?.licenseDocuments)
-
             saveLicenses(createVendorPayload({ licenseDocuments: licensePayload }, vendorProfileData))
             break
 
@@ -192,7 +191,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
   return (
     <FormProvider {...formReturn}>
-      <Stack width={{ base: '100%', lg: '971px' }}>
+      <Stack width={{ base: '100%', lg: '1200px' }}>
+        <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
 
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
