@@ -102,7 +102,7 @@ const Dashboard: React.FC = () => {
               {t('WOpaid')}
             </Text>
             <Spacer />
-            <Box mt="20px" mr="30px" w="140px" border={'1px solid #CBD5E0'}>
+            <Box mt="20px" mr="30px" w="145px" border={'1px solid #CBD5E0'} borderRadius={'6px'}>
               <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
@@ -111,7 +111,7 @@ const Dashboard: React.FC = () => {
         </Card>
       </Flex>
       <Card w="100%" style={boxShadow} borderRadius={'6px'}>
-        <Box mt={3} ml={1}>
+        <Box mt={1} ml={1} mb={1}>
           <FormLabel fontSize={'18px'} lineHeight={'28px'} color="gray.700" fontWeight={500}>
             {t(`${DASHBOARD}.upcomingPayment`)}
           </FormLabel>

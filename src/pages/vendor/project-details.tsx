@@ -1,4 +1,4 @@
-import { useDisclosure, Text } from '@chakra-ui/react'
+import { useDisclosure } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
 import { Box, Stack, Button } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -70,7 +70,7 @@ const ProjectDetails: React.FC = props => {
                 {t('documents')}
               </Tab>
 
-              <Tab {...tabesStyle}>{t('alerts')}</Tab>
+              {/* <Tab {...tabesStyle}>{t('alerts')}</Tab> */}
             </TabList>
             <Card
               rounded="0px"
@@ -91,7 +91,7 @@ const ProjectDetails: React.FC = props => {
                     {t('upload')}
                   </Button>
                 )}
-                {tabIndex === 3 && (
+                {/* {tabIndex === 3 && (
                   <Button
                     colorScheme="darkPrimary"
                     onClick={onAlertModalOpen}
@@ -102,7 +102,7 @@ const ProjectDetails: React.FC = props => {
                       {t('resolveAll')}
                     </Text>
                   </Button>
-                )}
+                )} */}
                 {tabIndex === 0 && (
                   <Button
                     data-testid="new-transaction-button"
