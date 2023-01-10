@@ -51,7 +51,7 @@ export function ConfirmationBox({
         <ModalHeader
           borderBottom="2px solid #E2E8F0"
           fontWeight={500}
-          color="#2D3748"
+          color="gray.600"
           fontSize="16px"
           fontStyle="normal"
           mb="5"

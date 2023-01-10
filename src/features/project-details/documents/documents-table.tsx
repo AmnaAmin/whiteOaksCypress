@@ -58,9 +58,8 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
       )}
       {documents && (
         <Box
-          overflow={'auto'}
+          overflowX={'auto'}
           w="100%"
-          h="auto"
           position="relative"
           border="1px solid #CBD5E0"
           borderRadius="6px"
