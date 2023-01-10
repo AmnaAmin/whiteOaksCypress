@@ -41,7 +41,7 @@ const InvoicingAndPaymentTab = ({
           flexWrap="wrap"
           display={{ base: 'flex', sm: 'grid' }}
         >
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -57,7 +57,7 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiFile}
@@ -72,7 +72,14 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem
+            flex={{ base: '1', sm: 'unset' }}
+            sx={{
+              '@media only screen and (max-width: 418px)': {
+                mr: 3,
+              },
+            }}
+          >
             <InputView
               showDivider={false}
               Icon={BiFile}
@@ -87,7 +94,7 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -111,7 +118,14 @@ const InvoicingAndPaymentTab = ({
           flexWrap="wrap"
           display={{ base: 'flex', sm: 'grid' }}
         >
-          <GridItem>
+          <GridItem
+            flex={{ base: '1', sm: 'unset' }}
+            sx={{
+              '@media only screen and (max-width: 418px)': {
+                mr: 3,
+              },
+            }}
+          >
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -127,7 +141,7 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -142,7 +156,7 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -157,7 +171,7 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
