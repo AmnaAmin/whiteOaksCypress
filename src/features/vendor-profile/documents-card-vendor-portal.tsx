@@ -178,8 +178,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 }}
               />
             </FormControl>
-            {(isW9DocumentDateChanged || watchW9DocumentFile) ? <SaveChangedFieldAlert />:
-            <VendorPortalVerifyDocument vendor={vendor as any} fieldName="W9Document" />}
+            {isW9DocumentDateChanged || watchW9DocumentFile ? (
+              <SaveChangedFieldAlert />
+            ) : (
+              <VendorPortalVerifyDocument vendor={vendor as any} fieldName="W9Document" />
+            )}
           </HStack>
         </HStack>
         <Box>
@@ -243,8 +246,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(isAgreementSignedDateChanged || watchAgreementFile) ? <SaveChangedFieldAlert />:
-              <VendorPortalVerifyDocument vendor={vendor as any} fieldName="agreementSign" />}
+              {isAgreementSignedDateChanged || watchAgreementFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <VendorPortalVerifyDocument vendor={vendor as any} fieldName="agreementSign" />
+              )}
             </HStack>
           </HStack>
         </Box>
@@ -336,8 +342,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(isAutoInsuranceExpDateChanged || watchInsuranceFile) ? <SaveChangedFieldAlert /> :
-              <VendorPortalVerifyDocument vendor={vendor as any} fieldName="autoInsurance" />}
+              {isAutoInsuranceExpDateChanged || watchInsuranceFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <VendorPortalVerifyDocument vendor={vendor as any} fieldName="autoInsurance" />
+              )}
             </HStack>
           </HStack>
         </Box>
@@ -402,8 +411,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(isCoiGlExpDateChanged || watchCoiGlExpFile) ? <SaveChangedFieldAlert /> :
-              <VendorPortalVerifyDocument vendor={vendor as any} fieldName="coiGLExp" />}
+              {isCoiGlExpDateChanged || watchCoiGlExpFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <VendorPortalVerifyDocument vendor={vendor as any} fieldName="coiGLExp" />
+              )}
             </HStack>
           </HStack>
         </Box>
@@ -468,8 +480,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                 />
               </FormControl>
-              {(isCoiWcExpDateChanged || watchCoiWcExpFile) ? <SaveChangedFieldAlert /> : 
-              <VendorPortalVerifyDocument vendor={vendor as any} fieldName="CoiWcExp" />}
+              {isCoiWcExpDateChanged || watchCoiWcExpFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <VendorPortalVerifyDocument vendor={vendor as any} fieldName="CoiWcExp" />
+              )}
             </HStack>
           </HStack>
         </Box>
