@@ -440,13 +440,14 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     className="amount-input-row"
                     key={transactionField.id}
                     gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
-                    p="4"
+                    p={isApproved ? '3' : '4'}
                     fontSize="14px"
                     color="gray.600"
                     gap="2rem 4rem"
                     borderWidth={'0 0 1px 0'}
                     borderStyle="solid"
                     borderColor="gray.300"
+                    height={isApproved ? '40px' : 'auto'}
                   >
                     {isShowCheckboxes && (
                       <GridItem>
@@ -567,10 +568,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               borderColor="gray.300"
               bg="white"
               rounded={6}
+              height={isApproved ? '40px' : 'auto'}
             >
               {isShowCheckboxes && <GridItem />}
               <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.300" py="4"></GridItem>
-              <GridItem py="4" fontWeight="bold" data-testid="total-amount">
+              <GridItem py={isApproved ? '3' : '4'} fontWeight="bold" data-testid="total-amount">
                 {t('total')}: {totalAmount}
               </GridItem>
             </Grid>
