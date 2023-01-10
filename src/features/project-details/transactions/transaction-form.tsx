@@ -202,6 +202,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
+  const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
 
   const selectedWorkOrderStats = useMemo(() => {
@@ -406,7 +407,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               options={transactionTypeOptions}
                               isDisabled={isUpdateForm}
                               size="md"
-                              selectProps={{ isBorderLeft: true }}
+                              selectProps={{ isBorderLeft: true, menuHeight: '188px' }}
                               onChange={async (option: SelectOption) => {
                                 const formValues = { ...defaultValues, transactionType: option }
 
@@ -845,7 +846,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-            isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg}
+            isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg || !invoicedDate}
             colorScheme="darkPrimary"
             onClick={event => {
               event.stopPropagation()

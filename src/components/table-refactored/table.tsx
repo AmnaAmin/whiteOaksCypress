@@ -73,7 +73,7 @@ function Filter({
             column.setFilterValue(dateFormat(value as string))
             setStickyFilter(dateFormat(value as string))
           } else {
-            column.setFilterValue(value)
+            column.setFilterValue(window.encodeURIComponent(value))
             setStickyFilter(value)
           }
         }}
@@ -178,6 +178,9 @@ function DebouncedInput({
         ref={inputRef}
         paddingRight={'13px'}
         data-testid="tableFilterInputField"
+        _focus={{
+          border: '2px solid #022c7c',
+        }}
       />
       {showClearIcon && props.type !== 'date' ? (
         <Icon

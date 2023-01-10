@@ -51,19 +51,19 @@ export function ConfirmationBox({
         <ModalHeader
           borderBottom="2px solid #E2E8F0"
           fontWeight={500}
-          color="gray.600"
+          color="#2D3748"
           fontSize="16px"
           fontStyle="normal"
           mb="5"
         >
           {title}
         </ModalHeader>
-        <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
+        <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
 
         <ModalBody>
           <Text
             data-testid="confirmation-message"
-            color="gray.500"
+            color="#2D3748"
             fontSize="16px"
             fontWeight={400}
             fontStyle="normal"
@@ -88,6 +88,7 @@ export function ConfirmationBox({
               fontSize="14px"
               data-testid="confirmation-yes"
               fontWeight={500}
+              w="6px"
             >
               {yesButtonText}
             </Button>

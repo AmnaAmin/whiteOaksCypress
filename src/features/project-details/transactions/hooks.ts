@@ -87,13 +87,11 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
 export const useFieldRequiredDecision = (control: Control<FormValues, any>) => {
   const status = useWatch({ name: 'status', control })
   const isStatusApproved = status?.value === TransactionStatusValues.approved
-  const against = useWatch({ name: 'against', control })
+  // const against = useWatch({ name: 'against', control })
   const transactionType = useWatch({ name: 'transactionType', control })
-
   return {
     isPaidDateRequired: isStatusApproved,
-    isInvoicedDateRequired:
-      isStatusApproved || (transactionType?.value === TransactionTypeValues?.draw && against?.label === 'Project SOW'),
+    isInvoicedDateRequired: isStatusApproved || transactionType?.value === TransactionTypeValues?.draw,
   }
 }
 

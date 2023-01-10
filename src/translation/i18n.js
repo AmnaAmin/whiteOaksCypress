@@ -360,6 +360,8 @@ i18n.use(initReactI18next).init({
         einNumber: 'EIN/SSN',
         availableCapacity: 'Available Capacity',
         skills: 'Construction Trade',
+        portalRegistration: 'Portal Registration',
+        enableVendorPortal: 'Enable Vendor Portal',
 
         // Vendor-profile-documents
         agreementSignedDate: 'Document Signed',

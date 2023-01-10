@@ -270,6 +270,7 @@ export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
   const cancelWorkOrder = formValues?.cancel.value === 35
+  /*eslint-disable */
   const assignedItems = !cancelWorkOrder
     ? [
         ...formValues?.assignedItems?.map((a, index) => {
@@ -290,6 +291,7 @@ export const parseWODetailValuesToPayload = formValues => {
         }),
       ]
     : []
+  /*eslint-disable */
 
   return {
     cancel: formValues?.cancel?.value,
@@ -298,7 +300,7 @@ export const parseWODetailValuesToPayload = formValues => {
     workOrderDateCompleted: formValues?.workOrderDateCompleted,
     workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,
     showPricing: formValues.showPrice,
-    assignedItems: [...assignedItems],
+    notifyVendor: formValues.notifyVendor,
     vendorId: formValues.vendorId?.value,
     vendorSkillId: formValues.vendorSkillId?.value,
   }
@@ -316,6 +318,7 @@ export const defaultValuesWODetails = (workOrder, woAssignedItems, defaultSkill,
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
     showPrice: workOrder.showPricing ?? false,
+    notifyVendor: workOrder.notifyVendor ?? false,
     assignedItems:
       woAssignedItems?.length > 0
         ? woAssignedItems?.map(e => {
@@ -401,6 +404,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     documents,
     status: 34,
     showPricing: formValues.showPrice,
+    notifyVendor: formValues.notifyVendor,
     projectId: projectId,
   }
 }
