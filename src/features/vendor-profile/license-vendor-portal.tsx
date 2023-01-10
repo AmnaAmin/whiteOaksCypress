@@ -27,7 +27,7 @@ import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 import { checkIsLicenseChanged } from './hook'
 import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
-import { VendorPortalVerifyLicense} from "./verify-license";
+import { VendorPortalVerifyLicense } from './verify-license'
 
 type LicenseProps = {
   vendor: VendorProfile
@@ -107,7 +107,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         setValue(`licenses.${index}.licenseType`, value?.licenseType),
         setValue(`licenses.${index}.licenseNumber`, value?.licenseNumber),
         setValue(`licenses.${index}.expiryDate`, value?.expiryDate),
-        setValue(`licenses.${index}.expirationFile`, null)
+        setValue(`licenses.${index}.expirationFile`, null),
       ]
     })
   }
@@ -127,9 +127,9 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
   return (
     <Box>
       <VStack align="start" h="584px" spacing="15px" overflow="auto">
-        <Box width={ { base: "100%", md: "auto" } }>
+        <Box width={{ base: '100%', md: 'auto' }}>
           <Button
-            ml={{ sm: "0px", md: "45px" }}
+            ml={{ sm: '0px', md: '45px' }}
             variant="outline"
             colorScheme="darkPrimary"
             data-testid="addLicense"
@@ -142,7 +142,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
               })
             }
             leftIcon={<BiAddToQueue />}
-            width={ { base: "100%", md: "auto" } }
+            width={{ base: '100%', md: 'auto' }}
           >
             {t('addLicense')}
           </Button>
@@ -158,18 +158,13 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
               <HStack
                 flexDir={{ base: 'column', sm: 'row' }}
                 key={license?.id}
-                mt={{ base:"-40px", md:"40px"}}
+                mt={{ base: '-40px', md: '40px' }}
                 spacing={4}
                 data-testid="licenseRows"
                 w="100%"
-                alignItems={{ base: "", md: "center" }}
+                alignItems={{ base: '', md: 'center' }}
               >
-                <Box 
-                  w="2em" 
-                  color="#345EA6" 
-                  fontSize="15px"
-                  m={{ base: "4%", md: 0 }}
-                >
+                <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }}>
                   <Center>
                     <Icon
                       as={MdOutlineCancel}
@@ -191,16 +186,14 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   control={control}
                   options={getSelectOptions(index)}
                   rules={{ required: isActive && 'This is required field' }}
-                  
                   controlStyle={{
-                    maxW: {...{sm: "95%", md: "215px"}}
+                    maxW: { ...{ sm: '95%', md: '215px' } },
                   }}
                   elementStyle={{
                     bg: 'white',
                     borderLeft: '2px solid #345EA6',
                   }}
                   testId={`licenseType-` + index}
-                  
                 />
                 <FormInput
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseNumber?.message}
@@ -208,8 +201,8 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   placeholder=""
                   register={register}
                   controlStyle={{
-                    w: {...{sm: "100%", md: "215px"}},
-                    maxW: {...{sm: "95%", md: "215px"}}
+                    w: { ...{ sm: '100%', md: '215px' } },
+                    maxW: { ...{ sm: '95%', md: '215px' } },
                   }}
                   elementStyle={{
                     bg: 'white',
@@ -225,7 +218,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                       {t('expiryDate')}
                     </FormLabel>
                     <Input
-                      w={{ base:"100%", md: "215px"}}
+                      w={{ base: '100%', md: '215px' }}
                       type="date"
                       variant="required-field"
                       {...register(`licenses.${index}.expiryDate`)}
@@ -234,8 +227,12 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   </FormControl>
                 </Box>
 
-                <VStack alignItems={{ base: "", md: "center" }}>
-                  <FormControl w={{ base:"100%", md: "215px"}} h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
+                <VStack alignItems={{ base: '', md: 'center' }}>
+                  <FormControl
+                    w={{ base: '100%', md: '215px' }}
+                    h="92px"
+                    isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}
+                  >
                     <FormLabel size="md" color="#2D3748">
                       File Upload
                     </FormLabel>
@@ -259,7 +256,6 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                                   field.onChange(file)
                                 }}
                                 onClear={() => setValue(field.name, null)}
-                                
                               ></ChooseFileField>
                               <FormErrorMessage bottom="5px" pos="absolute">
                                 {fieldState.error?.message}
@@ -279,14 +275,14 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                     />
                   </FormControl>
                 </VStack>
-                
+
                 {isLicenseChanged ? (
                   <>
                     <SaveChangedFieldAlert />
                   </>
-                ) : <VendorPortalVerifyLicense 
-                      currStatus={(vendor?.licenseDocuments[index] as any)?.status }
-                    />}
+                ) : (
+                  <VendorPortalVerifyLicense currStatus={(vendor?.licenseDocuments[index] as any)?.status} />
+                )}
               </HStack>
             )
           })
