@@ -193,7 +193,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   return (
     <FormProvider {...formReturn}>
       <Stack width={{ base: '100%', lg: '971px' }}>
-
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
             <Card
@@ -244,7 +243,14 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               <Divider borderWidth="1px" color="#E2E8F0" />
             </Box>
 
-            <Card pb="8px" pt="18px" px="18px" roundedTop="0px" mb={{ base: '4', sm: '0' }}>
+            <Card
+              pb="8px"
+              pt="18px"
+              px="18px"
+              roundedTop="0px"
+              mb={isVendor ? 5 : { base: '4', sm: '0' }}
+              width={isVendor ? '1250px' : '100%'}
+            >
               <TabPanels mt="31px">
                 <TabPanel p="0px">
                   {tabIndex === 0 ? (
