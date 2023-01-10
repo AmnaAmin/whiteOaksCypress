@@ -384,7 +384,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           flexDirection="column"
           rounded={6}
           w="100%"
-          minH="34vh"
+          minH="36vh"
         >
           <Grid
             gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
