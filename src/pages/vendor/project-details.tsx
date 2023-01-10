@@ -104,9 +104,7 @@ const ProjectDetails: React.FC = props => {
                   </Button>
                 )}
               )} */}
-                {tabIndex === 1 && (
-                  <Box h="40px" w={{ base: '100%', sm: 'unset' }} mr={{ base: '15px', sm: 'unset' }}></Box>
-                )}
+
                 {tabIndex === 0 && (
                   <Button
                     data-testid="new-transaction-button"

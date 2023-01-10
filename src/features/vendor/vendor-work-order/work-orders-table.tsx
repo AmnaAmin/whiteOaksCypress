@@ -77,7 +77,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
         <Box
           overflowX="auto"
           w="100%"
-          minH="calc(100vh - 444px)"
+          minH="calc(100vh - 405px)"
           position="relative"
           border="1px solid #CBD5E0"
           borderRadius="6px"
