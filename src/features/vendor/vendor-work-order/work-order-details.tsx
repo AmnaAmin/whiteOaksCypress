@@ -148,7 +148,7 @@ export const WorkOrderDetails = ({
               index={tabIndex}
               onChange={index => setTabIndex(index)}
             >
-              <TabList pt="12px" flexDir={{ base: 'column', md: 'row' }}>
+              <TabList border="none" pt="12px" flexDir={{ base: 'column', md: 'row' }}>
                 <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
                 {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                 <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>

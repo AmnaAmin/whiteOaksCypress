@@ -318,7 +318,14 @@ const AssignedItems = (props: AssignedItemType) => {
           </HStack>
         </Stack>
 
-        <Box width="100%" height={'100%'} overflowX={overflowXVal} overflowY={'hidden'}>
+        <Box
+          width="100%"
+          overflowX={overflowXVal}
+          overflowY={'hidden'}
+          borderRadius={7}
+          borderBottom="1px solid #CBD5E0"
+          border="1px solid #CBD5E0"
+        >
           <TableContextProvider data={values.assignedItems} columns={ASSIGNED_ITEMS_COLUMNS}>
             <Table
               handleOnDrag={handleOnDragEnd}
