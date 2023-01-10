@@ -66,7 +66,7 @@ export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.
           fontSize="14px"
           fontStyle="normal"
           fontWeight={400}
-          noOfLines={1}
+          noOfLines={[0, 1]}
           title={value}
         >
           {value}
@@ -270,7 +270,7 @@ export const InvoiceTab = ({
           templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(150px,1fr))' }}
           gap={5}
           alignItems={'center'}
-          my="24px"
+          py="24px"
           display={{ base: 'flex', sm: 'grid' }}
           flexWrap="wrap"
         >
@@ -291,7 +291,7 @@ export const InvoiceTab = ({
               icons={BiFile}
             />
           </Box>
-          <Divider borderWidth={0} display={{ base: 'block', sm: 'none' }} />
+
           <Box flex={{ base: '1', sm: 'unset' }}>
             <InvoiceInfo
               title={t('invoiceDate')}
