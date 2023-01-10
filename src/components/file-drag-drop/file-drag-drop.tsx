@@ -10,7 +10,7 @@ const getFileSize = byte => {
   return numeral(sizeInMB).format('0,0.00')
 }
 
-// might be needed later
+// might be needed later for multiple upload
 
 // const formatDocuments = (docs) => {
 //   let documents = [...docs];
