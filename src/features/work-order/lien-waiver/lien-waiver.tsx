@@ -39,6 +39,7 @@ import { orderBy } from 'lodash'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { MdOutlineCancel } from 'react-icons/md'
 import { readFileContent } from 'api/vendor-details'
+import { truncateWithEllipsis } from 'utils/string-formatters'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -269,7 +270,9 @@ export const LienWaiverTab: React.FC<any> = props => {
                 <GridItem>
                   <InputView
                     label={t('nameofClaimant')}
-                    InputElem={<Text data-testid="nameOfClaimant">{workOrder.claimantName}</Text>}
+                    InputElem={
+                      <Text data-testid="nameOfClaimant">{truncateWithEllipsis(workOrder.claimantName, 25)}</Text>
+                    }
                   />
                 </GridItem>
                 <GridItem>
