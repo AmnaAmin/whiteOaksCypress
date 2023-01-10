@@ -81,7 +81,7 @@ export type MonthOption = {
   year: string
 }
 
-export const monthOptions: MonthOption[] = range(13).map(n => ({
+export const monthOptions: MonthOption[] = range(12).map(n => ({
   value: n,
   label: format(sub(new Date(), { months: n }), 'MMMM'),
   year: format(sub(new Date(), { months: n }), 'yyyy'),
