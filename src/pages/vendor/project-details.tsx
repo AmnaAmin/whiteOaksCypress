@@ -86,14 +86,15 @@ const ProjectDetails: React.FC = props => {
               pr={{ base: 0, sm: '12px' }}
               py={{ base: '0px', sm: '12px' }}
             >
-              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" mb="15px">
+              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
                 {tabIndex === 2 && (
                   <Button
                     onClick={onDocumentModalOpen}
                     colorScheme="darkPrimary"
                     leftIcon={<BiUpload fontSize="16px" />}
                     w={{ base: '100%', sm: 'unset' }}
-                    mr={{ base: '12px', sm: 'unset' }}
+                    mr={{ base: '15px', sm: 'unset' }}
+                    mb="15px"
                   >
                     {t('upload')}
                   </Button>
@@ -109,7 +110,9 @@ const ProjectDetails: React.FC = props => {
                       {t('resolveAll')}
                     </Text>
                   </Button>
-                )} */}
+                )}
+              )} */}
+
                 {tabIndex === 0 && (
                   <Button
                     data-testid="new-transaction-button"
@@ -118,7 +121,8 @@ const ProjectDetails: React.FC = props => {
                     leftIcon={<BiAddToQueue />}
                     isDisabled={!isNewTransactionAllow}
                     w={{ base: '100%', sm: 'unset' }}
-                    mr={{ base: '12px', sm: 'unset' }}
+                    mr={{ base: '15px', sm: 'unset' }}
+                    mb="15px"
                   >
                     {t('newTransaction')}
                   </Button>
