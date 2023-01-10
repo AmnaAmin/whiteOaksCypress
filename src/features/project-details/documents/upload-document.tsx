@@ -126,7 +126,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
             {isDocumentTypesLoading ? (
               <ViewLoader />
             ) : (
-              <HStack h="130px">
+              <HStack h="90px">
                 <Grid gridTemplateColumns={{ md: '215px 215px 215px', sm: '' }} gap="15px">
                   <GridItem>
                     <FormControl isInvalid={!!errors?.documentTypes} data-testid="document-type">
