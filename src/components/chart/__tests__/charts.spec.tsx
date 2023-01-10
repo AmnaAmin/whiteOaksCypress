@@ -20,7 +20,7 @@ describe('Charts testcases', () => {
     expect(screen.getByTestId('legend-Active')).toBeInTheDocument()
     expect(screen.getByTestId('legend-PastDue')).toBeInTheDocument()
     expect(screen.getByTestId('legend-Paid')).toBeInTheDocument()
-    
+
     expect(container.getElementsByClassName('recharts-cartesian-grid').length).toBe(1)
     expect(container.getElementsByClassName('recharts-xAxis').length).toBe(1)
     expect(container.getElementsByClassName('recharts-yAxis').length).toBe(1)
