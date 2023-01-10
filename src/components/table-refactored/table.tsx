@@ -272,7 +272,7 @@ export const Table: React.FC<TableProps> = ({
                     py="3"
                     bg="#ECEDEE"
                     zIndex={1}
-                    borderBottomColor="gray.300"
+                    borderBottomColor="#ECEDEE"
                     cursor={isSortable ? 'pointer' : ''}
                     onClick={header.column.getToggleSortingHandler()}
                     {...getColumnMaxMinWidths(header.column)}
@@ -287,6 +287,7 @@ export const Table: React.FC<TableProps> = ({
                         isTruncated
                         display="inline-block"
                         title={typeof title === 'string' ? t(title as string) : ''}
+                        py="1px"
                       >
                         {typeof title === 'string' ? t(title as string) : title}
                       </Text>
@@ -321,21 +322,28 @@ export const Table: React.FC<TableProps> = ({
                         position="sticky"
                         zIndex={1}
                         top="38px"
-                        borderBottomColor="gray.300"
+                        // borderBottomColor="gray.300"
                         bg="#ECEDEE"
                         {...getColumnMaxMinWidths(header.column)}
                       >
                         {header.column.getCanFilter() ? (
                           <Box
-                          // Header bottom line -> might be needed later
-                          // _after={{
-                          //   content: '""',
-                          //   bottom: '0px',
-                          //   left: '0px',
-                          //   position: 'absolute',
-                          //   minW: '100%',
-                          //   borderBottom: '1px solid #CBD5E0',
-                          // }}
+                            _after={{
+                              content: '""',
+                              bottom: '0px',
+                              left: '0px',
+                              position: 'absolute',
+                              minW: '100%',
+                              borderBottom: '1px solid #CBD5E0',
+                            }}
+                            _before={{
+                              content: '""',
+                              top: '0px',
+                              left: '0px',
+                              position: 'absolute',
+                              minW: '100%',
+                              borderBottom: '1px solid #CBD5E0',
+                            }}
                           >
                             <Filter
                               allowStickyFilters={allowStickyFilters}
