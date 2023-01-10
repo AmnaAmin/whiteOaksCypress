@@ -6,13 +6,13 @@ import { GenericObjectType } from 'types/common.types'
 import moment from 'moment';
 
 
- const APP_DATE_FORMAT = 'DD/MM/YY HH:mm';
- const APP_TIMESTAMP_FORMAT = 'DD/MM/YY HH:mm:ss';
- const APP_LOCAL_DATE_FORMAT = 'DD/MM/YYYY';
+//  const APP_DATE_FORMAT = 'DD/MM/YY HH:mm';
+//  const APP_TIMESTAMP_FORMAT = 'DD/MM/YY HH:mm:ss';
+//  const APP_LOCAL_DATE_FORMAT = 'DD/MM/YYYY';
  const APP_LOCAL_DATETIME_FORMAT = 'YYYY-MM-DDTHH:mm';
  const APP_LOCAL_DATETIME_FORMAT_Z = 'YYYY-MM-DDTHH:mm Z';
- const APP_WHOLE_NUMBER_FORMAT = '0,0';
- const APP_TWO_DIGITS_AFTER_POINT_NUMBER_FORMAT = '0,0.[00]';
+//  const APP_WHOLE_NUMBER_FORMAT = '0,0';
+//  const APP_TWO_DIGITS_AFTER_POINT_NUMBER_FORMAT = '0,0.[00]';
 
 
 

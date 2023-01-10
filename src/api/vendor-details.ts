@@ -17,7 +17,7 @@ import { useClient } from 'utils/auth-context'
 import {
   // convertDateTimeFromServer,
   convertDateTimeToServer,
-  customFormat,
+  // customFormat,
   datePickerFormat,
   convertDateTimeFromServer,
 } from 'utils/date-time-utils'
