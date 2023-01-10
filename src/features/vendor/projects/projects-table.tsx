@@ -124,7 +124,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
   const filtersInitialValues = {
-    statusLabel: selectedCard !== 'pastDue' ? selectedCard : '',
+    statusLabel: selectedCard !== 'pastDue' ? selectedCard : 'past Due',
   }
 
   const tableColumnsWithFilters = useMemo(() => {
