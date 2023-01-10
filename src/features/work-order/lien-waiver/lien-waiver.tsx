@@ -263,7 +263,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   base: 'repeat(auto-fill,minmax(215px ,1fr))',
                   md: 'repeat(auto-fill,minmax(215px ,0fr))',
                 }}
-                gap={5}
+                gap={10}
                 w={{ base: '100%', lg: '630px' }}
               >
                 <GridItem>
@@ -297,8 +297,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                     base: 'repeat(auto-fill,minmax(215px ,1fr))',
                     md: 'repeat(auto-fill,minmax(215px ,0fr))',
                   }}
-                  gap={5}
-                  mt="16px"
+                  gap={10}
+                  mt={8}
                 >
                   <GridItem>
                     <FormInput
