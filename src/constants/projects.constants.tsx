@@ -61,7 +61,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
             color: 'barColor.50',
             textDecor: 'underline',
           }}
-          color="brand.500"
+          color="brand.300"
         >
           <Link to={`/project-details/${value}`}>{value}</Link>
         </Box>
