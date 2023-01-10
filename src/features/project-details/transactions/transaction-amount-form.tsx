@@ -208,7 +208,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const isShowCheckboxes = !isApproved && transactionFields?.length > 1 && !isSysFactoringFee
 
   return (
-    <Box overflowX="auto" w="100%">
+    <Box overflowX={isApproved ? 'initial' : 'auto'} w="100%">
       <VStack alignItems="start" w="720px">
         <Flex w="720px" mt="10px" mb="15px">
           {!isApproved && (
@@ -571,7 +571,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               height={isApproved ? '40px' : 'auto'}
             >
               {isShowCheckboxes && <GridItem />}
-              <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.300" py="4"></GridItem>
+              <GridItem
+                borderWidth="0 1px 0 0"
+                borderStyle="solid"
+                borderColor="gray.300"
+                py="4"
+                height={isApproved ? '40px' : 'auto'}
+              ></GridItem>
               <GridItem py={isApproved ? '3' : '4'} fontWeight="bold" data-testid="total-amount">
                 {t('total')}: {totalAmount}
               </GridItem>
