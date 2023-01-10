@@ -332,7 +332,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
             {(!isApproved || !isSysFactoringFee) &&
               (document && !document.s3Url ? (
-                <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+                <Box color="#345EA6" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
                   <HStack spacing="5px" h="31px" padding="10px" align="center">
                     <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
                       {document?.name || document.fileType}
@@ -366,6 +366,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   size="sm"
                   colorScheme="darkPrimary"
                   color="darkPrimary.300"
+                  border={'1px solid darkPrimary.300'}
                   isDisabled={isApproved || !values?.transactionType?.value || isSysFactoringFee}
                 >
                   {t(`${TRANSACTION}.attachment`)}
@@ -376,7 +377,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
         <Flex
           borderStyle="solid"
-          borderColor="gray.200"
+          borderColor="gray.300"
           borderWidth="1px 1px 1px 1px"
           flex="1"
           pos="relative"
@@ -395,7 +396,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             gap="1rem 4rem"
             borderWidth="0 0 1px 0"
             borderStyle="solid"
-            borderColor="gray.200"
+            borderColor="gray.300"
             roundedTop={6}
           >
             {isShowCheckboxes && (
@@ -445,7 +446,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     gap="2rem 4rem"
                     borderWidth={'0 0 1px 0'}
                     borderStyle="solid"
-                    borderColor="gray.200"
+                    borderColor="gray.300"
                   >
                     {isShowCheckboxes && (
                       <GridItem>
@@ -563,12 +564,12 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               columnGap="4rem"
               borderWidth="1px 0 0 0"
               borderStyle="solid"
-              borderColor="gray.200"
+              borderColor="gray.300"
               bg="white"
               rounded={6}
             >
               {isShowCheckboxes && <GridItem />}
-              <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.200" py="4"></GridItem>
+              <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.300" py="4"></GridItem>
               <GridItem py="4" fontWeight="bold" data-testid="total-amount">
                 {t('total')}: {totalAmount}
               </GridItem>

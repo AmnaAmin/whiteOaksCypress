@@ -179,7 +179,7 @@ function DebouncedInput({
         paddingRight={'13px'}
         data-testid="tableFilterInputField"
         _focus={{
-          border: '2px solid #022c7c',
+          border: '1px solid #345EA6',
         }}
       />
       {showClearIcon && props.type !== 'date' ? (
@@ -328,14 +328,15 @@ export const Table: React.FC<TableProps> = ({
                       >
                         {header.column.getCanFilter() ? (
                           <Box
-                            _after={{
-                              content: '""',
-                              bottom: '0px',
-                              left: '0px',
-                              position: 'absolute',
-                              minW: '100%',
-                              borderBottom: '1px solid #CBD5E0',
-                            }}
+                          // Header bottom line -> might be needed later
+                          // _after={{
+                          //   content: '""',
+                          //   bottom: '0px',
+                          //   left: '0px',
+                          //   position: 'absolute',
+                          //   minW: '100%',
+                          //   borderBottom: '1px solid #CBD5E0',
+                          // }}
                           >
                             <Filter
                               allowStickyFilters={allowStickyFilters}
@@ -387,7 +388,7 @@ export const Table: React.FC<TableProps> = ({
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
-                          bg: '#F3F8FF',
+                          bg: row.getIsSelected() ? '#F3F8FF' : '',
                         }}
                         backgroundColor={row.getIsSelected() ? 'gray.50' : ''}
                       >
