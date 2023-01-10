@@ -176,30 +176,30 @@ export const AdminPortalVerifyDocument = ( props: AdminVerifyDocumentProps ): JS
 
         if ( props.fieldName === "CoiWcExpCheckbox" ) {
 
-            if ( props.vendor.coiWCStatus === null || props.vendor.coiWCStatus === VERIFICATION_STATUS.UNVERIFIED ) {
+            if ( props.vendor?.coiWCStatus === null || props.vendor?.coiWCStatus === VERIFICATION_STATUS.UNVERIFIED ) {
                 setVerificationStatus( VERIFICATION_STATUS.UNVERIFIED );
             }
 
-            if ( props.vendor.coiWCStatus === VERIFICATION_STATUS.EXPIRED ) {
+            if ( props.vendor?.coiWCStatus === VERIFICATION_STATUS.EXPIRED ) {
                 setVerificationStatus( VERIFICATION_STATUS.EXPIRED );
             }
 
-            if ( props.vendor.coiWCStatus === VERIFICATION_STATUS.VERIFIED ) {
+            if ( props.vendor?.coiWCStatus === VERIFICATION_STATUS.VERIFIED ) {
                 setVerificationStatus( VERIFICATION_STATUS.VERIFIED );
             }
         }
 
         if ( props.fieldName === "coiGLExpCheckBox" ) {
 
-            if ( props.vendor.coiGLStatus === null || props.vendor.coiGLStatus === VERIFICATION_STATUS.UNVERIFIED ) {
+            if ( props.vendor?.coiGLStatus === null || props.vendor?.coiGLStatus === VERIFICATION_STATUS.UNVERIFIED ) {
                 setVerificationStatus( VERIFICATION_STATUS.UNVERIFIED );
             }
 
-            if ( props.vendor.coiGLStatus === VERIFICATION_STATUS.EXPIRED ) {
+            if ( props.vendor?.coiGLStatus === VERIFICATION_STATUS.EXPIRED ) {
                 setVerificationStatus( VERIFICATION_STATUS.EXPIRED );
             }
 
-            if ( props.vendor.coiGLStatus === VERIFICATION_STATUS.VERIFIED ) {
+            if ( props.vendor?.coiGLStatus === VERIFICATION_STATUS.VERIFIED ) {
                 setVerificationStatus( VERIFICATION_STATUS.VERIFIED );
             }
 
@@ -207,15 +207,15 @@ export const AdminPortalVerifyDocument = ( props: AdminVerifyDocumentProps ): JS
 
         if ( props.fieldName === "autoInsuranceCheckBox" ) {
 
-            if ( props.vendor.autoInsuranceStatus === null || props.vendor.autoInsuranceStatus === VERIFICATION_STATUS.UNVERIFIED ) {
+            if ( props.vendor?.autoInsuranceStatus === null || props.vendor?.autoInsuranceStatus === VERIFICATION_STATUS.UNVERIFIED ) {
                 setVerificationStatus( VERIFICATION_STATUS.UNVERIFIED );
             }
 
-            if ( props.vendor.autoInsuranceStatus === VERIFICATION_STATUS.EXPIRED ) {
+            if ( props.vendor?.autoInsuranceStatus === VERIFICATION_STATUS.EXPIRED ) {
                 setVerificationStatus( VERIFICATION_STATUS.EXPIRED );
             }
 
-            if ( props.vendor.autoInsuranceStatus === VERIFICATION_STATUS.VERIFIED ) {
+            if ( props.vendor?.autoInsuranceStatus === VERIFICATION_STATUS.VERIFIED ) {
                 setVerificationStatus( VERIFICATION_STATUS.VERIFIED );
             }
             
@@ -223,15 +223,15 @@ export const AdminPortalVerifyDocument = ( props: AdminVerifyDocumentProps ): JS
 
         if ( props.fieldName === "agreementSignCheckBox" ) {
 
-            if ( props.vendor.agreementSignedStatus === null || props.vendor.agreementSignedStatus === VERIFICATION_STATUS.UNVERIFIED ) {
+            if ( props.vendor?.agreementSignedStatus === null || props.vendor?.agreementSignedStatus === VERIFICATION_STATUS.UNVERIFIED ) {
                 setVerificationStatus( VERIFICATION_STATUS.UNVERIFIED );
             }
 
-            if ( props.vendor.agreementSignedStatus === VERIFICATION_STATUS.EXPIRED ) {
+            if ( props.vendor?.agreementSignedStatus === VERIFICATION_STATUS.EXPIRED ) {
                 setVerificationStatus( VERIFICATION_STATUS.EXPIRED );
             }
 
-            if ( props.vendor.agreementSignedStatus === VERIFICATION_STATUS.VERIFIED ) {
+            if ( props.vendor?.agreementSignedStatus === VERIFICATION_STATUS.VERIFIED ) {
                 setVerificationStatus( VERIFICATION_STATUS.VERIFIED );
             }
             
@@ -239,15 +239,15 @@ export const AdminPortalVerifyDocument = ( props: AdminVerifyDocumentProps ): JS
 
         if ( props.fieldName === "W9DocumentCheckBox" ) {
 
-            if ( props.vendor.w9Status === null || props.vendor.w9Status === VERIFICATION_STATUS.UNVERIFIED ) {
+            if ( props.vendor?.w9Status === null || props.vendor?.w9Status === VERIFICATION_STATUS.UNVERIFIED ) {
                 setVerificationStatus( VERIFICATION_STATUS.UNVERIFIED );
             }
 
-            if ( props.vendor.w9Status === VERIFICATION_STATUS.EXPIRED ) {
+            if ( props.vendor?.w9Status === VERIFICATION_STATUS.EXPIRED ) {
                 setVerificationStatus( VERIFICATION_STATUS.EXPIRED );
             }
 
-            if ( props.vendor.w9Status === VERIFICATION_STATUS.VERIFIED ) {
+            if ( props.vendor?.w9Status === VERIFICATION_STATUS.VERIFIED ) {
                 setVerificationStatus( VERIFICATION_STATUS.VERIFIED );
             }
             
