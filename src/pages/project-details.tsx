@@ -110,7 +110,7 @@ export const ProjectDetails: React.FC = props => {
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
           <Tabs size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
             <TabList h={'50px'} alignItems="end" border="none">
-              <Flex h={'40px'}>
+              <Flex h={'40px'} py={'1px'}>
                 <Tab>{t('projects.projectDetails.transactions')}</Tab>
                 <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
                 <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>

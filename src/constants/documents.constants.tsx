@@ -78,7 +78,7 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
           <Spacer w="90px" />
           <Icon
             as={BiDownArrowCircle}
-            color="#4E87F8"
+            color="#345EA6"
             fontSize={24}
             onClick={() => {
               downloadFileOnly(cellInfo.row.original)
