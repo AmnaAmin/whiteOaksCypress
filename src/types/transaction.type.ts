@@ -1,6 +1,8 @@
 import { Document } from './vendor.types'
 
 export type ProjectWorkOrder = {
+  validForAwardPlan: boolean
+  assignAwardPlan: boolean
   businessEmailAddress: string
   businessPhoneNumber: string
   capacity: number
@@ -50,6 +52,20 @@ export type ProjectWorkOrder = {
   workOrderIssueDate: string
   workOrderPayDateVariance: string | null
   workOrderStartDate: string
+  awardPlanPayTerm: string
+}
+
+export type WorkOrderAwardStats = {
+  statusLabel: string
+  workOrderId: number
+  drawConsume: number
+  drawRemaining: null | number
+  materialConsume: number
+  materialRemaining: null | number
+  drawAmountConsume: number
+  materialAmountConsume: number
+  totalAmountConsume: number
+  totalAmountRemaining: null | number
 }
 
 export type TransactionType = {
@@ -110,6 +126,8 @@ export enum TransactionStatusValues {
 export type SelectOption = {
   label: string
   value: any
+  awardStatus?: any
+  isValidForAwardPlan?: any
 }
 
 export type TransactionFormValues = {
@@ -245,6 +263,7 @@ export type ChangeOrderType = {
   lineItems: Array<LineItem> | null
   paymentReceived: string | null
   documents: Document[]
+  systemGenerated: boolean
 }
 
 export type TransactionsWithRefundType = {

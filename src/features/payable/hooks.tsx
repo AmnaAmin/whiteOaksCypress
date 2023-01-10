@@ -117,13 +117,26 @@ export const usePayableColumns = (control, register) => {
       {
         header: 'checkbox',
         accessorKey: 'checkbox',
+        accessorFn: () => true,
         cell: cellInfo => {
           const { row } = cellInfo
           const projectId = row.original.id
+          const isDraw = row?.original?.paymentType?.toLowerCase() === 'wo draw'
+
+          const onChange = { ...register(`id.${projectId}`) }?.onChange
 
           return (
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
-              <Checkbox value={projectId} {...register(`id.${projectId}`)} isChecked={!!formValues?.id?.[projectId]} />
+              <Checkbox
+                value={projectId}
+                {...register(`id.${projectId}`)}
+                isChecked={!!formValues?.id?.[projectId]}
+                disabled={isDraw}
+                onChange={e => {
+                  onChange(e)
+                  row.toggleSelected()
+                }}
+              />
             </Flex>
           )
         },

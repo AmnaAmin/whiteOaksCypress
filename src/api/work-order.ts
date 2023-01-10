@@ -134,6 +134,9 @@ export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undef
     workOrderAssignedItems: sortBy(workOrder?.assignedItems, e => {
       return e.orderNo
     }),
+    awardPlanScopeAmount: workOrder?.awardPlanScopeAmount,
+    displayAwardPlan: workOrder?.displayAwardPlan,
+    workOrderDetails: workOrder,
     ...rest,
   }
 }
@@ -195,7 +198,7 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
     dateInvoiceSubmittedEnabled: defaultStatus || isAdmin,
-    paymentTermEnabled: defaultStatus || invoicedState || isAdmin,
+    paymentTermEnabled: defaultStatus || invoicedState || isAdmin || (workOrder?.assignAwardPlan && isAdmin),
     paymentTermDateEnabled: defaultStatus || isAdmin,
     expectedPaymentDateEnabled: defaultStatus || isAdmin,
     datePaymentProcessedEnabled: defaultStatus || invoicedState || isAdmin,
@@ -219,6 +222,12 @@ export const parsePaymentValuesToPayload = formValues => {
     datePaid: dateISOFormat(formValues?.datePaid),
     partialPayment: formValues?.partialPayment,
     partialPaymentDate: dateISOFormat(formValues?.paymentDate),
+  }
+}
+
+export const parseProjectAwardValuesToPayload = id => {
+  return {
+    awardPlanId: id,
   }
 }
 
@@ -260,46 +269,56 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
 export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
-  const assignedItems = [
-    ...formValues?.assignedItems?.map((a, index) => {
-      const isNewSmartLineItem = !a.smartLineItemId
-      if (a.document) {
-        delete a?.document?.fileObject
-        delete a?.document?.documentTypelabel
-      }
-      const assignedItem = {
-        ...a,
-        document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
-        id: isNewSmartLineItem ? '' : a.id,
-        smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
-        orderNo: index,
-      }
-      delete assignedItem.uploadedDoc
-      return assignedItem
-    }),
-  ]
+  const cancelWorkOrder = formValues?.cancel.value === 35
+  /*eslint-disable */
+  const assignedItems = !cancelWorkOrder
+    ? [
+        ...formValues?.assignedItems?.map((a, index) => {
+          const isNewSmartLineItem = !a.smartLineItemId
+          if (a.document) {
+            delete a?.document?.fileObject
+            delete a?.document?.documentTypelabel
+          }
+          const assignedItem = {
+            ...a,
+            document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
+            id: isNewSmartLineItem ? '' : a.id,
+            smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
+            orderNo: index,
+          }
+          delete assignedItem.uploadedDoc
+          return assignedItem
+        }),
+      ]
+    : []
+  /*eslint-disable */
 
   return {
     cancel: formValues?.cancel?.value,
-    ...(formValues?.cancel.value === 35 && { status: 35, cancelledDate: new Date() }),
+    ...(cancelWorkOrder && { status: 35, cancelledDate: new Date() }),
     workOrderStartDate: formValues?.workOrderStartDate,
     workOrderDateCompleted: formValues?.workOrderDateCompleted,
     workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,
     showPricing: formValues.showPrice,
-    assignedItems: [...assignedItems],
+    notifyVendor: formValues.notifyVendor,
+    vendorId: formValues.vendorId?.value,
+    vendorSkillId: formValues.vendorSkillId?.value,
   }
 }
 
-export const defaultValuesWODetails = (workOrder, woAssignedItems) => {
+export const defaultValuesWODetails = (workOrder, woAssignedItems, defaultSkill, defaultVendor) => {
   const defaultValues = {
     cancel: {
       value: '',
       label: 'Select',
     },
+    vendorSkillId: defaultSkill,
+    vendorId: defaultVendor,
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
     showPrice: workOrder.showPricing ?? false,
+    notifyVendor: workOrder.notifyVendor ?? false,
     assignedItems:
       woAssignedItems?.length > 0
         ? woAssignedItems?.map(e => {
@@ -385,6 +404,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     documents,
     status: 34,
     showPricing: formValues.showPrice,
+    notifyVendor: formValues.notifyVendor,
     projectId: projectId,
   }
 }

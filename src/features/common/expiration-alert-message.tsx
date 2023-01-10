@@ -30,7 +30,7 @@ const CustomAlert: React.FC<{ title: string; tabs?: number; onClose?: () => void
     navigate('/vendors', { state: params })
   }
   return (
-    <Alert status="error" rounded={6} h="47px" bg="#FFE4E4" pr={1}>
+    <Alert status="error" rounded={6} bg="#FFE4E4" pr={1} mb={3} h={{ sm: 'auto', md: '47px', xl: '47px', lg: '47px' }}>
       <AlertIcon />
       <AlertDescription display="flex" justifyContent="space-between" w="100%">
         <HStack>
@@ -61,7 +61,14 @@ export const ExpirationAlertMessage: React.FC<{
   const { expiredInsuranceDateProfile, expiredLicenseDateProfile } = useDocumentLicenseMessage({ data })
 
   return isVisible ? (
-    <Box width="70%" mb={data ? '0' : ''}>
+    <Box
+      width={{
+        sm: '100%',
+        md: '70%',
+        lg: '70%',
+      }}
+      marginTop={{ base: '30px', sm: '30px', md: 0, xl: 0, lg: 0 }}
+    >
       {expiredInsuranceDate && expiredLicenseDate ? (
         <CustomAlert title={'licenseInsuranceExpirationMessage'} tabs={1} onClose={onClose} />
       ) : null}

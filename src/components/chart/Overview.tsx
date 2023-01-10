@@ -22,12 +22,14 @@ const Overview: React.FC<{ vendorId: number }> = ({ vendorId }) => {
   const vendors = values(vendorEntity).reduce((a, v) => ({ ...a, ...v }), {})
   const vendorData = months.map(key => {
     const entityList = vendors[key] || []
+
     return {
       name: monthsShort[key],
-      Active: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Active)?.statuscount ?? 0,
-      Completed: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Completed)?.statuscount ?? 0,
-      Paid: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Paid)?.statuscount ?? 0,
-      Canceled: entityList.find(entity => entity.status === WORK_ORDER_STATUS.Cancelled)?.statuscount ?? 0,
+      Active: entityList.find(e => e)?.countActive,
+      PastDue: entityList.find(e => e)?.countPastdue,
+      Completed: entityList.find(e => e)?.countCompleted,
+      Paid: entityList.find(e => e)?.countPaid,
+      Canceled: entityList.find(e => e)?.countCancelled,
     }
   })
   return <OverviewGraph vendorData={vendorData} width="98%" height={360} />
@@ -59,9 +61,10 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             bottom: 0,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3"
-          //stroke="#EFF3F9"
-           />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            //stroke="#EFF3F9"
+          />
           <XAxis
             dataKey="name"
             axisLine={false}
@@ -92,6 +95,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
           <Tooltip content={<OverViewCustomTooltip />} data-testid="tooltip-overview" cursor={{ fill: '#EBF8FF' }} />
 
           <Bar dataKey="Active" fill="#DEC5FF" radius={[5, 5, 0, 0]} />
+          <Bar dataKey="PastDue" fill="#C9C9C9" radius={[5, 5, 0, 0]} />
           <Bar dataKey="Completed" fill="#84ADEF" radius={[5, 5, 0, 0]} />
           <Bar dataKey="Paid" fill="#FDC077" radius={[5, 5, 0, 0]} />
           <Bar dataKey="Canceled" fill="#84DCC6" radius={[5, 5, 0, 0]} />
@@ -100,14 +104,14 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
               lineHeight: '31px',
               position: 'relative',
               bottom: 'calc(100% + 35px)',
-              left: '36px',
+              left: '20px',
             }}
             iconType="circle"
             iconSize={10}
             align="right"
             formatter={value => {
               return (
-                <Box display="inline-flex" marginInlineEnd="30px" data-testid={'legend-' + value}>
+                <Box display="inline-flex" marginInlineEnd="10px" data-testid={'legend-' + value}>
                   <Box as="span" color="gray.500" fontSize="12px" fontStyle="Poppins" fontWeight={400}>
                     {value}
                   </Box>

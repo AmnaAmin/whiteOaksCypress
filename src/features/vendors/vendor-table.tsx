@@ -40,7 +40,7 @@ const VENDOR_TABLE_QUERY_KEYS = {
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
-    header: 'Status',
+    header: 'status',
     accessorKey: 'statusLabel',
     cell: cellInfo => {
       const value = cellInfo.getValue() as string
@@ -48,25 +48,28 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
       return <Status value={value} id={cellInfo.row.original.statusLabel} />
     },
   },
-
   {
-    header: 'Name',
+    header: 'primaryEmail',
+    accessorKey: 'businessEmailAddress',
+  },
+  {
+    header: 'name',
     accessorKey: 'companyName',
   },
   {
-    header: 'Region',
+    header: 'region',
     accessorKey: 'region',
   },
   {
-    header: 'Primary Contact',
+    header: 'primaryContact',
     accessorKey: 'ownerName',
   },
   {
-    header: 'State',
+    header: 'state',
     accessorKey: 'state',
   },
   {
-    header: 'Active Date',
+    header: 'activeDate',
     accessorKey: 'createdDate',
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.createdDate)
@@ -74,7 +77,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     meta: { format: 'date' },
   },
   {
-    header: 'COI-GL Expiration Date',
+    header: 'coiglExpirationDate', //'COI-GL Expiration Date',
     accessorKey: 'coiglExpirationDate',
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.coiglExpirationDate)
@@ -82,7 +85,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     meta: { format: 'date' },
   },
   {
-    header: 'COI-WC Expiration Date',
+    header: 'coiWcExpirationDate',
     accessorKey: 'coiWcExpirationDate',
     accessorFn(cellInfo) {
       return dateFormat(cellInfo.coiWcExpirationDate)
@@ -94,20 +97,30 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'einNumber',
   },
   {
-    header: 'Total Capacity',
+    header: 'totalCapacity',
     accessorKey: 'capacity',
+    accessorFn(cellInfo) {
+      return cellInfo?.capacity?.toString()
+    },
   },
   {
-    header: 'Available Capacity',
+    header: 'availableCapacity',
     accessorKey: 'availableCapacity',
+    accessorFn(cellInfo) {
+      return cellInfo?.availableCapacity?.toString()
+    },
   },
   {
-    header: 'Construction Trade',
+    header: 'constructionTrade',
     accessorKey: 'skills',
   },
   {
-    header: 'Market',
+    header: 'market',
     accessorKey: 'market',
+  },
+  {
+    header: 'businessPhoneNumber',
+    accessorKey: 'businessPhoneNumber',
   },
 ]
 
@@ -170,7 +183,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
         />
       )}
 
-      <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6}>
+      <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6} border="1px solid #CBD5E0">
         <TableContextProvider
           data={vendors}
           columns={tableColumns}

@@ -1,6 +1,6 @@
 // Revisit, Separate the vendor profile forms from vendor profile page.
 
-import { Box, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
+import { Box, Divider, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
@@ -34,7 +34,6 @@ import {
 } from 'api/vendor-details'
 import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
-import { ExpirationAlertMessage } from 'features/common/expiration-alert-message'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -61,6 +60,9 @@ export const validateMarket = markets => {
   return true
 }
 
+const tabStyle = {
+  h: { base: '52px', sm: 'unset' },
+}
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
@@ -110,12 +112,14 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             //document
             const documentsPayload = await parseDocumentCardsValues(formData)
             const updatedObject = prepareVendorDocumentObject(documentsPayload, formData)
+
             saveDocuments(createVendorPayload(updatedObject, vendorProfileData))
             break
 
           case 2:
             //license
             const licensePayload = await parseLicenseValues(formData, vendorProfileData?.licenseDocuments)
+
             saveLicenses(createVendorPayload({ licenseDocuments: licensePayload }, vendorProfileData))
             break
 
@@ -188,139 +192,154 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
   return (
     <FormProvider {...formReturn}>
-      <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
+      <Stack width={{ base: '100%', lg: '971px' }}>
+        <form onSubmit={formReturn.handleSubmit(submitForm)}>
+          <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
+            <Card
+              bg={{ base: 'white', sm: 'transparent' }}
+              p={{ base: '6px', sm: '0px !important' }}
+              rounded="6px 6px 0px 0px"
+              boxShadow={{ sm: 'none' }}
+            >
+              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
+                <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
+                <Tab
+                  _disabled={{ cursor: 'not-allowed' }}
+                  isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
+                  data-testid="documents"
+                  {...tabStyle}
+                >
+                  {t('documents')}
+                </Tab>
+                <Tab
+                  _disabled={{ cursor: 'not-allowed' }}
+                  isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
+                  data-testid="license"
+                  {...tabStyle}
+                >
+                  {t('license')}
+                </Tab>
+                <Tab
+                  _disabled={{ cursor: 'not-allowed' }}
+                  isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
+                  data-testid="tradetab"
+                  {...tabStyle}
+                >
+                  {t('trade')}
+                </Tab>
+                <Tab
+                  _disabled={{ cursor: 'not-allowed' }}
+                  isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
+                  data-testid="markettab"
+                  {...tabStyle}
+                >
+                  {t('market')}
+                </Tab>
+                {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
+                {!isVendor && <Tab>{t('prjt')}</Tab>}
+              </TabList>
+            </Card>
+            <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
+              <Divider borderWidth="1px" color="#E2E8F0" />
+            </Box>
 
-      <form onSubmit={formReturn.handleSubmit(submitForm)}>
-        <Tabs
-          index={tabIndex}
-          size="md"
-          variant="enclosed"
-          colorScheme="darkPrimary"
-          onChange={index => setTabIndex(index)}
-        >
-          <TabList>
-            <Tab>{t('details')}</Tab>
-            <Tab
-              _disabled={{ cursor: 'not-allowed' }}
-              isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
-              data-testid="documents"
+            <Card
+              pb="8px"
+              pt="18px"
+              px="18px"
+              roundedTop="0px"
+              mb={isVendor ? 5 : { base: '4', sm: '0' }}
+              width={isVendor ? '1250px' : '100%'}
             >
-              {t('documents')}
-            </Tab>
-            <Tab
-              _disabled={{ cursor: 'not-allowed' }}
-              isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
-              data-testid="license"
-            >
-              {t('license')}
-            </Tab>
-            <Tab
-              _disabled={{ cursor: 'not-allowed' }}
-              isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
-              data-testid="tradetab"
-            >
-              {t('trade')}
-            </Tab>
-            <Tab
-              _disabled={{ cursor: 'not-allowed' }}
-              isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
-              data-testid="markettab"
-            >
-              {t('market')}
-            </Tab>
-            {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
-            {!isVendor && <Tab>{t('Projects')}</Tab>}
-          </TabList>
-
-          <Card pb="8px" pt="18px" px="18px">
-            <TabPanels mt="31px">
-              <TabPanel p="0px">
-                {tabIndex === 0 ? (
-                  VendorType === 'editVendor' ? (
-                    <CreateDetails
-                      isActive={tabIndex === 0}
-                      vendorProfileData={vendorProfileData as VendorProfile}
-                      onClose={props.onClose}
-                    />
-                  ) : (
-                    <UpdateDetails
-                      isActive={tabIndex === 0}
-                      vendorProfileData={vendorProfileData as VendorProfile}
-                      onClose={props.onClose}
-                    />
-                  )
-                ) : null}
-              </TabPanel>
-              <TabPanel p="0px">
-                <Box h="100%" w="100%">
-                  {tabIndex === 1 && (
-                    <DocumentsCard
-                      isActive={tabIndex === 1}
-                      VendorType={VendorType!}
-                      vendor={vendorProfileData as VendorProfile}
-                      onClose={props.onClose}
-                    />
-                  )}
-                </Box>
-              </TabPanel>
-              <TabPanel p="0px">
-                <Box h="100%" w="100%">
-                  {tabIndex === 2 && (
-                    <License
-                      isActive={tabIndex === 2}
-                      vendor={vendorProfileData as VendorProfile}
-                      onClose={props.onClose}
-                    />
-                  )}
-                </Box>
-              </TabPanel>
-              <TabPanel p="0px">
-                {tabIndex === 3 && (
-                  <TradeList
-                    isActive={tabIndex === 3}
-                    vendorProfileData={vendorProfileData as VendorProfile}
-                    onClose={props.onClose}
-                  />
-                )}
-              </TabPanel>
-              <TabPanel p="0px">
-                {tabIndex === 4 && (
-                  <MarketList
-                    isActive={tabIndex === 4}
-                    vendorProfileData={vendorProfileData as VendorProfile}
-                    onClose={props.onClose}
-                  />
-                )}
-              </TabPanel>
-
-              {!isVendor && (
+              <TabPanels mt="31px">
                 <TabPanel p="0px">
-                  {tabIndex === 5 && (
-                    <VendorProjects
-                      isFetching={isProjectsFetching}
-                      isLoading={isProjectsLoading}
-                      vendorProjects={vendorProjects}
+                  {tabIndex === 0 ? (
+                    VendorType === 'editVendor' ? (
+                      <CreateDetails
+                        isActive={tabIndex === 0}
+                        vendorProfileData={vendorProfileData as VendorProfile}
+                        onClose={props.onClose}
+                      />
+                    ) : (
+                      <UpdateDetails
+                        isActive={tabIndex === 0}
+                        vendorProfileData={vendorProfileData as VendorProfile}
+                        onClose={props.onClose}
+                      />
+                    )
+                  ) : null}
+                </TabPanel>
+                <TabPanel p="0px">
+                  <Box h="100%" w="100%">
+                    {tabIndex === 1 && (
+                      <DocumentsCard
+                        isActive={tabIndex === 1}
+                        VendorType={VendorType!}
+                        vendor={vendorProfileData as VendorProfile}
+                        onClose={props.onClose}
+                      />
+                    )}
+                  </Box>
+                </TabPanel>
+                <TabPanel p="0px">
+                  <Box h="100%" w="100%">
+                    {tabIndex === 2 && (
+                      <License
+                        isActive={tabIndex === 2}
+                        vendor={vendorProfileData as VendorProfile}
+                        onClose={props.onClose}
+                      />
+                    )}
+                  </Box>
+                </TabPanel>
+                <TabPanel p="0px">
+                  {tabIndex === 3 && (
+                    <TradeList
+                      isActive={tabIndex === 3}
+                      vendorProfileData={vendorProfileData as VendorProfile}
                       onClose={props.onClose}
                     />
                   )}
                 </TabPanel>
-              )}
-              {/* <TabPanel p="0px">
-              <Box overflow="auto">
-              <AuditLogs
-                  isLoading={isLoading}
-                  onClose={props.onClose}
-                  resizeElementRef={resizeElementRef}
-                  projectColumns={tableColumns}
-                  />
-                  </Box>
-            </TabPanel> */}
-              {/* <TabPanel p="0px"></TabPanel> */}
-            </TabPanels>
-          </Card>
-        </Tabs>
-      </form>
-      <DevTool control={control} />
+                <TabPanel p="0px">
+                  {tabIndex === 4 && (
+                    <MarketList
+                      isActive={tabIndex === 4}
+                      vendorProfileData={vendorProfileData as VendorProfile}
+                      onClose={props.onClose}
+                    />
+                  )}
+                </TabPanel>
+
+                {!isVendor && (
+                  <TabPanel p="0px">
+                    {tabIndex === 5 && (
+                      <VendorProjects
+                        isFetching={isProjectsFetching}
+                        isLoading={isProjectsLoading}
+                        vendorProjects={vendorProjects}
+                        onClose={props.onClose}
+                      />
+                    )}
+                  </TabPanel>
+                )}
+                {/* <TabPanel p="0px">
+                <Box overflow="auto">
+                <AuditLogs
+                    isLoading={isLoading}
+                    onClose={props.onClose}
+                    resizeElementRef={resizeElementRef}
+                    projectColumns={tableColumns}
+                    />
+                    </Box>
+              </TabPanel> */}
+                {/* <TabPanel p="0px"></TabPanel> */}
+              </TabPanels>
+            </Card>
+          </Tabs>
+        </form>
+        <DevTool control={control} />
+      </Stack>
     </FormProvider>
   )
 }
@@ -331,7 +350,7 @@ const VendorProfilePage: React.FC<Props> = props => {
   const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorId)
 
   return (
-    <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
+    <Stack w="100%" spacing={0}>
       {isLoading ? (
         <BlankSlate width="60px" />
       ) : (

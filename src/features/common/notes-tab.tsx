@@ -9,9 +9,9 @@ import { BiSpreadsheet } from 'react-icons/bi'
 
 export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
-    <Flex mb={4}>
+    <Flex mb={4} flexDir={{ base: 'column', lg: 'row' }} alignItems="start" mt="20px">
       {otherNote ? (
-        <Flex w="150px" flexDir={'column'} mr={5} fontSize="12px" fontWeight={400}>
+        <Flex w="150px" flexDir={'column'} mr={5} fontSize="12px" fontWeight={400} mb={{ base: '10px', lg: 'unset' }}>
           <WrapItem justifyContent="center" mb={1}>
             <Avatar size="sm" bg="blackAlpha.200" />
           </WrapItem>
@@ -25,7 +25,7 @@ export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ u
           </Flex>
         </Flex>
       ) : (
-        <Flex w="150px" flexDir={'column'} mr={5} fontSize="12px" fontWeight={400}>
+        <Flex w="150px" flexDir={'column'} mr={5} fontSize="12px" fontWeight={400} mb={{ base: '10px', lg: 'unset' }}>
           <WrapItem justifyContent="center" mb={1}>
             <Avatar size="sm" bg="blackAlpha.200" />
           </WrapItem>

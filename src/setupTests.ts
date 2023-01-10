@@ -38,6 +38,28 @@ beforeAll(() => {
     configurable: true,
     value: 50,
   })
+
+  /*eslint-disable */
+  ;(window as any).IntersectionObserver = class IntersectionObserver {
+    constructor() {} // eslint-disable-line no-use-before-define
+
+    disconnect() {
+      return null
+    }
+
+    observe() {
+      return null
+    }
+
+    takeRecords() {
+      return null
+    }
+
+    unobserve() {
+      return null
+    }
+  }
+  /*eslint-enable */
 })
 
 afterAll(() => {

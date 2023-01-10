@@ -19,6 +19,7 @@ import { createDocumentPayload } from 'utils/file-utils'
 import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { GET_TRANSACTIONS_API_KEY } from './transactions'
+import { AuditLogType } from 'types/common.types'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -465,5 +466,36 @@ export const parseProjectDetailsPayloadFromFormData = async (
 
     // Misc payload
     createdDate: dateISOFormat(formValues?.dateCreated),
+  }
+}
+
+export const useProjectAuditLogs = projectId => {
+  const client = useClient('/audit/api')
+
+  const { data: auditLogs, ...rest } = useQuery('audit-logs', async () => {
+    const response = await client(
+      `audit-trails?type.equals=Project&typeId.equals=${projectId}&sort=modifiedDate,asc`,
+      {},
+    )
+
+    return response?.data
+  })
+  let mappedAuditLogs = [] as AuditLogType[]
+  auditLogs?.forEach(log => {
+    log.data?.forEach(data => {
+      mappedAuditLogs.push({
+        id: log.id,
+        modifiedBy: log?.modifiedBy,
+        modifiedDate: log?.modifiedDate,
+        parameter: data?.attribute,
+        oldValue: data.old_value,
+        newValue: data.new_value,
+      })
+    })
+  })
+
+  return {
+    auditLogs: mappedAuditLogs,
+    ...rest,
   }
 }

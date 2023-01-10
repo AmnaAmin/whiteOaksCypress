@@ -9,6 +9,7 @@ import {
   Button,
   Text,
   Flex,
+  useBreakpointValue,
 } from '@chakra-ui/react'
 
 interface ConfirmationBoxProps {
@@ -32,26 +33,37 @@ export function ConfirmationBox({
   yesButtonText = 'Yes',
   showNoButton = true,
 }: ConfirmationBoxProps) {
+  const modalSize = useBreakpointValue({
+    base: 'xs',
+    sm: 'lg',
+  })
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="lg">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      isCentered={true}
+      closeOnEsc={false}
+      closeOnOverlayClick={false}
+      size={modalSize}
+    >
       <ModalOverlay />
       <ModalContent rounded="6">
         <ModalHeader
           borderBottom="2px solid #E2E8F0"
           fontWeight={500}
-          color="gray.600"
+          color="#2D3748"
           fontSize="16px"
           fontStyle="normal"
           mb="5"
         >
           {title}
         </ModalHeader>
-        <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
+        <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
 
         <ModalBody>
           <Text
             data-testid="confirmation-message"
-            color="gray.500"
+            color="#2D3748"
             fontSize="16px"
             fontWeight={400}
             fontStyle="normal"
@@ -71,11 +83,12 @@ export function ConfirmationBox({
               size="md"
               onClick={onConfirm}
               isLoading={isLoading}
-              colorScheme="CustomPrimaryColor"
+              colorScheme="brand"
               rounded="6px"
               fontSize="14px"
               data-testid="confirmation-yes"
               fontWeight={500}
+              w="6px"
             >
               {yesButtonText}
             </Button>

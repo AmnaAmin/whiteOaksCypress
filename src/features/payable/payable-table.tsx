@@ -23,6 +23,7 @@ import { ExportButton } from 'components/table-refactored/export-button'
 import { generateSettingColumn } from 'components/table-refactored/make-data'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
+import UpdateTransactionModal from 'features/project-details/transactions/update-transaction-modal'
 
 type PayablePropsTyep = {
   payableColumns: ColumnDef<any>[]
@@ -48,11 +49,24 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
   }) => {
     const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+    const {
+      isOpen: isOpenTransactionModal,
+      onOpen: onOpenTransactionModal,
+      onClose: onCloseTransactionModal,
+    } = useDisclosure()
+    const [selectedTransaction, setSelectedTransaction] = useState<{
+      transactionId: number
+      transactionName: string
+      projectId: string | number
+    }>()
     const [paginationInitialized, setPaginationInitialized] = useState(false)
-    const { workOrders, isLoading, totalPages, dataCount } = usePaginatedAccountPayable(
-      queryStringWithPagination,
-      pagination.pageSize,
-    )
+    const {
+      workOrders,
+      isLoading,
+      totalPages,
+      dataCount,
+      refetch: refetchPayables,
+    } = usePaginatedAccountPayable(queryStringWithPagination, pagination.pageSize)
     const { email } = useUserProfile() as Account
 
     const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(queryStringWithoutPagination)
@@ -106,8 +120,13 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     }, [workOrders])
 
     const onRowClick = row => {
-      setSelectedWorkOrder(row)
-      onOpen()
+      if (row.paymentType?.toLowerCase() === 'wo draw') {
+        setSelectedTransaction(row)
+        onOpenTransactionModal()
+      } else {
+        setSelectedWorkOrder(row)
+        onOpen()
+      }
     }
 
     const onSave = columns => {
@@ -144,8 +163,22 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
             isOpen={isOpen}
           />
         )}
+        {isOpenTransactionModal && !!selectedTransaction && (
+          <UpdateTransactionModal
+            isOpen={isOpenTransactionModal}
+            onClose={() => {
+              setSelectedTransaction(undefined)
+              refetchPayables()
+              onCloseTransactionModal()
+            }}
+            heading={selectedTransaction?.transactionName}
+            selectedTransactionId={selectedTransaction?.transactionId as number}
+            projectId={`${selectedTransaction?.projectId}`}
+            projectStatus={''}
+          />
+        )}
 
-        <Box overflow={'auto'} height="calc(100vh - 100px)" roundedTop={6}>
+        <Box overflow={'auto'} height="calc(100vh - 100px)" roundedTop={6} border="1px solid #CBD5E0">
           <TableContextProvider
             data={workOrders}
             columns={tableColumns}

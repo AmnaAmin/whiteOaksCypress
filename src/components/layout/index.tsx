@@ -27,7 +27,7 @@ export const Layout: React.FC = props => {
           position="fixed"
           top="51px"
           bottom="0"
-          left={isOpen ? '0' : 'calc((var(--sidebar-width)+100) * -1)'}
+          left={isOpen ? '0' : 'calc((var(--sidebar-width)) * -1)'}
           transition="left 0.5s ease-in-out"
           zIndex="dropdown"
         >
@@ -122,6 +122,7 @@ export const Layout: React.FC = props => {
           height="calc(100vh - 65px)"
           py="1rem"
           pl="8px"
+          pr={{ base: '6px', sm: '0px' }}
           w="(calc(100% - var(--sidebar-width)"
         >
           {props.children}

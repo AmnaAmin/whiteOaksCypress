@@ -10,9 +10,10 @@ import {
   BiUser,
   BiUserPin,
   BiUserPlus,
+  BiError,
 } from 'react-icons/bi'
 
-import { FaAlignCenter, FaHome } from 'react-icons/fa'
+import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
 import { SIDE_NAV } from './sideNav.i18n'
@@ -27,6 +28,9 @@ type Menu = {
 type Menus = {
   [key in UserTypes]: Array<Menu>
 }
+
+// Show tab on preprod only
+const showForPreProd = window.location.href.includes('preprod')
 
 export const MENU_ROLE_BASED: Menus = {
   [UserTypes.vendor]: [
@@ -281,6 +285,7 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiLineChart,
       color: '#68D391',
     },
+
     {
       pathTo: '/userManager',
       title: `${SIDE_NAV}.userMgmt`,
@@ -305,6 +310,22 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiAlignMiddle,
       color: '#4E87F8',
     },
+    {
+      pathTo: '/support-tickets',
+      title: 'Support',
+      Icon: FaReact,
+      color: '#3182CE',
+    },
+    ...(showForPreProd
+      ? [
+          {
+            pathTo: '/alerts',
+            title: `${SIDE_NAV}.alerts`,
+            Icon: BiError,
+            color: '#ED64A6',
+          },
+        ]
+      : []),
   ],
 
   [UserTypes.accounting]: [

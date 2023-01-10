@@ -12,6 +12,7 @@ import {
   TransactionStatusValues,
   TransactionType,
   TransactionTypeValues,
+  WorkOrderAwardStats,
 } from 'types/transaction.type'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
@@ -36,6 +37,7 @@ import {
   TRANSACTION_MARK_AS_OPTIONS,
   TRANSACTION_STATUS_OPTIONS,
 } from 'features/project-details/transactions/transaction.constants'
+import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 
 export const GET_TRANSACTIONS_API_KEY = 'transactions'
 
@@ -188,6 +190,8 @@ export const AGAINST_DEFAULT_VALUE = '0'
 const AGAINST_DEFAULT_OPTION = {
   label: 'Project SOW',
   value: AGAINST_DEFAULT_VALUE,
+  awardStatus: null,
+  isValidForAwardPlan: null,
 }
 
 export const createAgainstLabel = (companyName: string, skillName: string) => {
@@ -216,7 +220,9 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
         })
         .map(workOrder => ({
           label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
+          awardStatus: workOrder?.assignAwardPlan,
           value: `${workOrder.id}`,
+          isValidForAwardPlan: workOrder?.validForAwardPlan,
         })),
     [workOrders],
   )
@@ -288,6 +294,25 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
       : [CHANGE_ORDER_DEFAULT_OPTION],
     ...rest,
   }
+}
+
+export const useWorkOrderAwardStats = (workOrderId?: string) => {
+  const client = useClient()
+  const enabled = workOrderId !== null && workOrderId !== 'null' && workOrderId !== undefined
+
+  const { data: awardPlansStats, ...rest } = useQuery<Array<WorkOrderAwardStats>>(
+    ['changeOrders', workOrderId],
+    async () => {
+      const response = await client(`projects/${workOrderId}/workOrderPlanStat`, {})
+
+      return response?.data
+    },
+    {
+      enabled,
+    },
+  )
+
+  return { awardPlansStats, ...rest }
 }
 
 export const getFileContents = async (document: any, documentType: number) => {
@@ -635,9 +660,10 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['GetProjectWorkOrders', projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
-        queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(['changeOrder', projectId])
         queryClient.invalidateQueries(['overpayment', Number(projectId)])
+        queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+        queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
 
         toast({
           title: 'Update Transaction.',

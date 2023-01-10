@@ -1,9 +1,11 @@
 import { useClient } from 'utils/auth-context'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { FileAttachment, SupportFormValues, SupportsPayload } from 'types/support.types'
 import { dateISOFormat, getFormattedDate } from 'utils/date-time-utils'
 import { useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
+import orderBy from 'lodash/orderBy'
+import { SUPPORT } from 'features/support/support.i18n'
 
 export const ISSUE_TYPE_OPTIONS = [
   {
@@ -47,6 +49,14 @@ export const STATUS_OPTIONS = [
     label: 'Rejected',
   },
 ]
+export const SUPPORT_LIST = 'support_list'
+export const useSupport = () => {
+  const client = useClient()
+  return useQuery(SUPPORT_LIST, async () => {
+    const response = await client(`supports`, {})
+    return orderBy(response?.data || [], ['id'], ['desc'])
+  })
+}
 
 export const getSupportFormDefaultValues = (email: string): SupportFormValues => {
   return {
@@ -79,8 +89,28 @@ export const parseSupportFormValuesToAPIPayload = (
   }
 }
 
+export const parseSupportFormValuesToAPIEditPayload = (
+  formValues: SupportFormValues,
+  supportDetail,
+  attachment: FileAttachment,
+): SupportsPayload => {
+  return {
+    ...attachment,
+    id: supportDetail?.id,
+    lkpStatusId: formValues.status?.value,
+    lkpSeverityId: formValues.severity?.value,
+    createdBy: formValues.createdBy,
+    createdDate: dateISOFormat(formValues.createdDate) as string,
+    lkpSupportTypeId: formValues.issueType?.value,
+    title: formValues.title,
+    description: formValues.description,
+    resolution: formValues.resolution,
+  }
+}
+
 export const useCreateTicketMutation = () => {
   const client = useClient()
+  const queryClient = useQueryClient()
   const toast = useToast()
   const { t } = useTranslation()
 
@@ -91,15 +121,48 @@ export const useCreateTicketMutation = () => {
     {
       onSuccess: () => {
         toast({
-          title: t('createTicketTitle'),
-          description: t('createTicketSuccessMessage'),
+          title: t(`${SUPPORT}.createTicketTitle`),
+          description: t(`${SUPPORT}.createTicketSuccessMessage`),
           status: 'success',
           isClosable: true,
         })
+        queryClient.invalidateQueries(SUPPORT_LIST)
       },
       onError: (error: Error) => {
         toast({
-          title: t('createTicketTitle'),
+          title: t(`${SUPPORT}.createTicketTitle`),
+          description: error.message,
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
+export const useEditTicketMutation = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+  const { t } = useTranslation()
+
+  return useMutation(
+    (payload: SupportsPayload) => {
+      return client('supports', { data: payload, method: 'PUT' })
+    },
+    {
+      onSuccess: () => {
+        toast({
+          title: t(`${SUPPORT}.editTicketTitle`),
+          description: t(`${SUPPORT}.editTicketSuccessMessage`),
+          status: 'success',
+          isClosable: true,
+        })
+        queryClient.invalidateQueries(SUPPORT_LIST)
+      },
+      onError: (error: Error) => {
+        toast({
+          title: t(`${SUPPORT}.editTicketTitle`),
           description: error.message,
           status: 'error',
           isClosable: true,

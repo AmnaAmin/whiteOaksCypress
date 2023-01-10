@@ -1,10 +1,10 @@
 import userEvent from '@testing-library/user-event'
 import { Providers } from 'providers'
-import { render, waitForLoadingToFinish, screen, selectOption, act, waitFor } from 'utils/test-utils'
-import CreateATicketForm from '../create-a-ticket'
+import { render, waitForLoadingToFinish, screen, selectOption, waitFor, fireEvent } from 'utils/test-utils'
+import CreateATicketForm from '../create-a-ticket-form'
 
-const renderCreateATicketForm = async ({ onSubmit }) => {
-  render(<CreateATicketForm onSubmit={onSubmit} />, { wrapper: Providers })
+const renderCreateATicketForm = async () => {
+  render(<CreateATicketForm />, { wrapper: Providers })
 
   await waitForLoadingToFinish()
 }
@@ -19,8 +19,7 @@ const chooseFileByLabel = (inputElement, fileName = 'dummy-file.png') => {
 }
 
 test('Open Support page with form', async () => {
-  const onSubmit = jest.fn()
-  await renderCreateATicketForm({ onSubmit })
+  await renderCreateATicketForm()
   expect(screen.getByText('Create a Ticket')).toBeInTheDocument()
   expect(screen.getByText('Issue Type')).toBeInTheDocument()
   expect(screen.getByText('Severity')).toBeInTheDocument()
@@ -30,13 +29,12 @@ test('Open Support page with form', async () => {
 })
 
 test('Create a ticket happy flow', async () => {
-  const onSubmit = jest.fn()
-  await renderCreateATicketForm({ onSubmit })
-
+  await renderCreateATicketForm()
   await selectOption(screen.getByTestId('issue-Type'), 'Bug')
   await selectOption(screen.getByTestId('severity'), 'Low')
 
   userEvent.type(screen.getByTestId('title-input'), 'hello')
+
   await waitFor(() => {
     expect(screen.getByTestId('title-input')).toHaveValue('hello')
   })
@@ -48,9 +46,8 @@ test('Create a ticket happy flow', async () => {
 
   chooseFileByLabel(screen.getByTestId('file-Upload'))
 
-  await act(async () => {
-    await userEvent.click(screen.getByText(/Save/i))
-  })
+  fireEvent.submit(screen.getByTestId('save'))
 
-  await waitFor(() => expect(onSubmit).toBeCalled())
+  expect(await screen.findByText('Ticket created successfully.')).toBeInTheDocument()
+  screen.debug(undefined, 1000000)
 })

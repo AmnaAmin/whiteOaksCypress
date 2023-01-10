@@ -8,8 +8,6 @@ const tabsVariants = {
           // @ts-ignore
           ...chakraTheme.components.Tabs.variants.enclosed(props),
           tab: {
-            roundedTopEnd: '6px',
-            roundedTopStart: '6px',
             bg: '#EBF8FF',
             borderColor: '#CBD5E0',
             fontWeight: 500,
@@ -19,8 +17,7 @@ const tabsVariants = {
               borderTopColor: `${props.colorScheme}.300`,
               borderTopWidth: '3px',
               bg: 'white',
-              // borderBottom: '1px solid #CBD5E0',
-              color: '#345EA6',
+              color: `${props.colorScheme}.300`,
               fontWeight: 500,
               fontSize: '14px',
             },
@@ -46,7 +43,7 @@ const tabsVariants = {
             color: 'gray.500',
             _selected: {
               borderBottomColor: `${props.colorScheme}.300`,
-              color: `${props.colorScheme}.400`,
+              color: `${props.colorScheme}.300`,
               _hover: {
                 bg: `${props.colorScheme}.50`,
               },

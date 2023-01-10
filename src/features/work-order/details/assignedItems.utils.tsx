@@ -74,6 +74,10 @@ export type SWOProject = {
 export type selectedCell = { id: string; value: string }
 
 export const getRemovedItems = (formValues, workOrderAssignedItems) => {
+  if (formValues?.cancel?.value === 35) {
+    return formValues.assignedItems
+  }
+
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.id)
   const deletedItems = [...workOrderAssignedItems?.filter(items => !formAssignedItemsIds?.includes(items.id))]
@@ -81,6 +85,10 @@ export const getRemovedItems = (formValues, workOrderAssignedItems) => {
 }
 
 export const getUnAssignedItems = (formValues, workOrderAssignedItems) => {
+  /* check if work order is being cancelled we should unassign all line items */
+  if (formValues?.cancel?.value === 35) {
+    return formValues.assignedItems
+  }
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.smartLineItemId)
   const unAssignedItems = [
@@ -397,6 +405,7 @@ export const EditableField = (props: EditableCellType) => {
         <>
           {selectedCell?.id !== index + '-' + fieldName ? (
             <Box
+              pl="3px"
               minH={'20px'}
               minW={'100px'}
               cursor={allowEdit ? 'pointer' : 'default'}
@@ -552,24 +561,25 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
       <input ref={inputRef} type="file" style={{ display: 'none', color: 'red' }} onChange={onFileChange} />
       {!value ? (
         <Button
+          ml={1}
           minW={'auto'}
           size="sm"
           data-testid={testId}
           onClick={() => inputRef?.current?.click()}
           colorScheme="darkPrimary"
           variant="outline"
-          leftIcon={<BiUpload color="#4E87F8" />}
+          leftIcon={<BiUpload color="brand.300" />}
           display="flex"
         >
           {t(`${WORK_ORDER}.${label}`)}
         </Button>
       ) : (
-        <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+        <Box color="brand.300" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
           <HStack spacing="5px" h="31px" padding="10px" align="center">
             <Text as="span" maxW="70px" isTruncated title="something">
               {value}
             </Text>
-            <MdOutlineCancel cursor="pointer" onClick={onFileClear} />
+            <MdOutlineCancel color="brand.300" cursor="pointer" onClick={onFileClear} />
           </HStack>
         </Box>
       )}
@@ -597,7 +607,8 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
   doc.setFont(basicFont, 'bold')
   doc.text(heading, startx, 20)
   var img = new Image()
-  img.src = '/vendorportal/wo-logo.png'
+  const isDevelopment = process.env.NODE_ENV === 'development'
+  img.src = isDevelopment ? 'wo-logo-tree.png' : '/vendorportal/wo-logo-tree.png'
   img.onload = function () {
     doc.addImage(img, 'png', 160, 5, 35, 35)
 
@@ -606,7 +617,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.text('Property Address:', startx, 55)
     doc.setFont(summaryFont, 'normal')
     doc.text(projectData?.streetAddress ?? '', startx, 60)
-    doc.text(projectData?.market + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
+    doc.text(projectData?.city + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
 
     doc.setFont(summaryFont, 'bold')
     const centerTextX = 75
@@ -680,7 +691,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     })
     doc.setFontSize(10)
     doc.setFont(basicFont, 'normal')
-    doc.save('Assigned Line Items.pdf')
+    doc.save(`${workOrder?.id}_${workOrder?.companyName}_${workOrder?.propertyAddress}.pdf`)
   }
 }
 
@@ -710,8 +721,9 @@ export const useActionsShowDecision = ({ workOrder }) => {
 
   return {
     showPriceCheckBox: !isVendor,
+    notifyVendorCheckBox: !isVendor,
     showMarkAllIsVerified: !isVendor && workOrder,
-    showMarkAllIsComplete: isVendor,
+    showMarkAllIsCompleted: !!workOrder,
     showVerification: !!workOrder,
   }
 }
@@ -892,7 +904,27 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
-
+      {
+        header: `${WORK_ORDER}.location`,
+        accessorKey: 'location',
+        cell: ({ row }) => {
+          const index = row?.index
+          return (
+            <Box>
+              <EditableField
+                index={index}
+                selectedCell={selectedCell}
+                setSelectedCell={setSelectedCell}
+                fieldName="location"
+                fieldArray="assignedItems"
+                formControl={formControl}
+                inputType="text"
+                allowEdit={allowEdit}
+              />
+            </Box>
+          )
+        },
+      },
       {
         header: `${WORK_ORDER}.sku`,
         accessorKey: 'sku',
@@ -935,27 +967,6 @@ export const useGetLineItemsColumn = ({
           )
         },
         size: 200,
-      },
-      {
-        header: `${WORK_ORDER}.location`,
-        accessorKey: 'location',
-        cell: ({ row }) => {
-          const index = row?.index
-          return (
-            <Box>
-              <EditableField
-                index={index}
-                selectedCell={selectedCell}
-                setSelectedCell={setSelectedCell}
-                fieldName="location"
-                fieldArray="assignedItems"
-                formControl={formControl}
-                inputType="text"
-                allowEdit={allowEdit}
-              />
-            </Box>
-          )
-        },
       },
       {
         header: () => {
@@ -1187,8 +1198,8 @@ export const useGetLineItemsColumn = ({
               control={control}
               render={({ field, fieldState }) => {
                 return (
-                  <VStack gap="1px">
-                    <Box>
+                  <VStack spacing="-12px">
+                    <Box py="12px">
                       <UploadImage
                         testId={'upload-' + index}
                         label={`upload`}
@@ -1245,7 +1256,7 @@ export const useGetLineItemsColumn = ({
         },
       },
     ]
-  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems])
+  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems, verificationEnabled])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
 }

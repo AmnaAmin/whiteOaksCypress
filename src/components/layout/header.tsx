@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   HStack,
+  Icon,
   Link,
   Menu,
   MenuButton,
@@ -18,11 +19,12 @@ import React, { useState } from 'react'
 import { FaBell } from 'react-icons/fa'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
-import LogoIcon from 'icons/header-logo'
 import { RouterLink } from '../router-link/router-link'
 import { Notification } from './notification'
 import { useTranslation } from 'react-i18next'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
+import LogoIcon from 'icons/header-logo'
+import { BiSearch } from 'react-icons/bi'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -34,13 +36,13 @@ const UserInfo: React.FC<{ show: boolean }> = ({ show }) => {
   return (
     <HStack>
       <Avatar name={userName} src={account?.imageUrl ?? ''} w="32px" h="32px" />
-      <VStack alignItems="start" spacing="0px" visibility={{ base: 'hidden', md: 'visible' }}>
+      <VStack alignItems="start" spacing="0px">
         <Flex alignItems="center">
-          <Text fontSize="12px" pr="1" fontWeight={400} fontStyle="normal" color="white">
+          <Text fontSize="12px" pr="1" fontWeight={400} fontStyle="normal" color="white" whiteSpace="nowrap">
             {userName}
           </Text>
         </Flex>
-        <Text fontSize="12px" fontStyle="normal" fontWeight={400} color="white">
+        <Text fontSize="12px" fontStyle="normal" fontWeight={400} color="white" whiteSpace="nowrap">
           {account?.userTypeLabel}
         </Text>
       </VStack>
@@ -65,24 +67,30 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { t } = useTranslation()
 
   return (
-    <Box py="8px" px={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
+    <Box py="8px" pl={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
       <HStack justifyContent="space-between">
         <Flex>
           <Button
             leftIcon={<GiHamburgerMenu />}
             variant="unstyled"
-            size="md"
+            fontSize="18px"
+            color="white"
             mr="2"
             onClick={toggleMenu}
             display={{ base: 'inline', lg: 'none' }}
           />
-          <LogoIcon />
+          <Box display={{ base: 'none', sm: 'inline' }}>
+            <LogoIcon />
+          </Box>
         </Flex>
 
         <HStack spacing="5" px="1">
           {/* * Language Dropdown Menu */}
           <Box display={{ base: 'none', md: 'block' }}>
             <DropdownLanguage />
+          </Box>
+          <Box display={{ base: 'block', md: 'none' }}>
+            <Icon as={BiSearch} color="white" fontSize="18px" />
           </Box>
           <Box position="relative">
             <Menu
@@ -114,14 +122,21 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
             <Menu placement="bottom">
               <MenuButton
                 bgSize="auto"
-                w={{ base: '50px', md: 'auto' }}
+                w={{ base: 'auto' }}
                 onClick={() => {
                   setShow(!show)
                 }}
               >
                 <UserInfo show={show} />
               </MenuButton>
-              <MenuList minWidth="230px" position="relative" left={12} roundedTop={0} pb={0}>
+              <MenuList
+                boxShadow=" 0px 4px 6px 1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
+                minWidth="230px"
+                position="relative"
+                left={12}
+                roundedTop={0}
+                py={0}
+              >
                 <MenuItem sx={hoverEffect} h="48px" borderBottom="1px solid #E2E8F0">
                   <RouterLink to="/settings">{t('settings')}</RouterLink>
                 </MenuItem>

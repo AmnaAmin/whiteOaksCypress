@@ -3,6 +3,19 @@ import { enUS } from 'date-fns/locale'
 import sub from 'date-fns/sub'
 import { range } from 'lodash'
 import { GenericObjectType } from 'types/common.types'
+import moment from 'moment'
+
+//  const APP_DATE_FORMAT = 'DD/MM/YY HH:mm';
+//  const APP_TIMESTAMP_FORMAT = 'DD/MM/YY HH:mm:ss';
+//  const APP_LOCAL_DATE_FORMAT = 'DD/MM/YYYY';
+const APP_LOCAL_DATETIME_FORMAT = 'YYYY-MM-DDTHH:mm'
+const APP_LOCAL_DATETIME_FORMAT_Z = 'YYYY-MM-DDTHH:mm Z'
+//  const APP_WHOLE_NUMBER_FORMAT = '0,0';
+//  const APP_TWO_DIGITS_AFTER_POINT_NUMBER_FORMAT = '0,0.[00]';
+
+export const convertDateTimeFromServer = date => (date ? moment(date).format(APP_LOCAL_DATETIME_FORMAT) : null)
+
+export const convertDateTimeToServer = date => (date ? moment(date, APP_LOCAL_DATETIME_FORMAT_Z).toDate() : null)
 
 export const dateFormat = (date: string | Date) => {
   if (date === null) return ''
@@ -10,10 +23,11 @@ export const dateFormat = (date: string | Date) => {
   return date ? format(new Date(date), 'MM/dd/yyyy') : ''
 }
 
-export const datePickerFormat = (date: string | Date) => {
-  if (date === null) return null
+export const datePickerFormat = (date: any) => {
+  if (date === null || date === undefined) return null
 
-  return date ? format(new Date(date), 'yyyy-MM-dd') : null
+  // return date ? format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd') : null
+  return date ? moment(date).format('YYYY-MM-DD') : null
 }
 
 export const dateISOFormat = (date: string | Date | null) => {
@@ -81,17 +95,17 @@ monthOptions.unshift({
   month: '-1',
 })
 
-export const convertDateTimeFromServer = (date: string) => {
-  return date ? format(new Date(date), 'MM/dd/yyyy') : null
-}
+// export const convertDateTimeFromServer = (date: string) => {
+//   return date ? format(new Date(date), 'MM/dd/yyyy') : null
+// }
 
 export const convertDateWithTimeStamp = (date: string) => {
   return date ? format(new Date(date), 'Pp', { locale: enUS }) : null
 }
 
-export const convertDateTimeToServer = (date: Date) => {
-  return date ? new Date(format(new Date(date), 'MM/dd/yyyy')) : null
-}
+// export const convertDateTimeToServer = (date: Date) => {
+//   return date ? new Date(format(new Date(date), 'MM/dd/yyyy')) : null
+// }
 
 export const customFormat = (date: Date, dateFormat: string) => {
   return date ? format(new Date(date), dateFormat) : null

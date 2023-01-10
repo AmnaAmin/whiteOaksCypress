@@ -8,20 +8,21 @@ import {
   FormErrorMessage,
   FormLabel,
   HStack,
+  Input,
   Text,
   VStack,
 } from '@chakra-ui/react'
 import { BiDownload } from 'react-icons/bi'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, useFormContext } from 'react-hook-form'
-import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { useWatchDocumentFeild } from './hook'
 import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
-import { dateFormat } from 'utils/date-time-utils'
+import { datePickerFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
+import { AdminPortalVerifyDocument } from './verify-documents'
 
 type DocumentsProps = {
   vendor: VendorProfile
@@ -51,6 +52,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     control,
     setValue,
     getValues,
+    register,
   } = useFormContext<DocumentsCardFormValues>()
   const documents = getValues()
 
@@ -98,45 +100,52 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   }
 
   const resetFields = () => {
-    setValue('w9DocumentDate', dateFormat(vendor?.w9DocumentDate!))
+    setValue('w9DocumentDate', datePickerFormat(vendor?.w9DocumentDate!))
     setValue('w9Document', null)
-    setValue('agreementSignedDate', dateFormat(vendor?.agreementSignedDate!))
+    setValue('agreementSignedDate', datePickerFormat(vendor?.agreementSignedDate!))
     setValue('agreement', null)
-    setValue('autoInsuranceExpDate', dateFormat(vendor?.autoInsuranceExpirationDate!))
+    setValue('autoInsuranceExpDate', datePickerFormat(vendor?.autoInsuranceExpirationDate!))
     setValue('insurance', null)
-    setValue('coiGlExpDate', dateFormat(vendor?.coiglExpirationDate!))
+    setValue('coiGlExpDate', datePickerFormat(vendor?.coiglExpirationDate!))
     setValue('coiGlExpFile', null)
-    setValue('coiWcExpDate', dateFormat(vendor?.coiWcExpirationDate!))
+    setValue('coiWcExpDate', datePickerFormat(vendor?.coiWcExpirationDate!))
     setValue('coiWcExpFile', null)
   }
 
   return (
     <>
-      <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px" pt="20px">
-        <HStack spacing="16px" alignItems="flex-start">
+      <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px">
+        <HStack
+          flexDir={{ base: 'column', sm: 'row' }}
+          spacing="16px"
+          alignItems="flex-start"
+          marginTop={{ base: '20px', md: '0' }}
+        >
           <Flex w="215px">
             <Box>
-              <FormLabel variant="strong-label" size="md" color="#2D3748">
-                {t('W9DocumentDate')}
-              </FormLabel>
-              <FormDatePicker
-                disabled={true}
-                errorMessage={errors.w9DocumentDate && errors.w9DocumentDate?.message}
-                label={''}
-                name={`w9DocumentDate`}
-                control={control}
-                placeholder="mm/dd/yyyy"
-                style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
-                testId="w9DocumentDate"
-                onChange={e => {
-                  if (!changedDateFields.includes('w9DocumentDate')) {
-                    setChangeDateFields([...changedDateFields, 'w9DocumentDate'])
-                  }
-                }}
-              />
+              <FormControl isInvalid={!!errors.w9DocumentDate}>
+                <FormLabel variant="strong-label" size="md" color="#2D3748">
+                  {t('W9DocumentDate')}
+                </FormLabel>
+                <Input
+                  isDisabled={true}
+                  w="215px"
+                  type="date"
+                  {...register('w9DocumentDate')}
+                  data-testid="w9DocumentDate"
+                />
+                <FormErrorMessage>{errors.w9DocumentDate && errors.w9DocumentDate.message}</FormErrorMessage>
+              </FormControl>
             </Box>
           </Flex>
-          <HStack>
+          <HStack
+            sx={{
+              '@media screen and (max-width: 480px)': {
+                ms: '0 !important',
+                mt: '20px !important',
+              },
+            }}
+          >
             <FormControl w="215px" isInvalid={!!errors.w9Document?.message}>
               <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('fileUpload')}
@@ -160,41 +169,50 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
-                      {documents.w9DocumentUrl && (
-                        <Box overflow="hidden" top={16}>
-                          {downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
-                        </Box>
-                      )}
+                      <Box overflow="hidden" top={16} h="18px">
+                        {documents.w9DocumentUrl &&
+                          downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
+                      </Box>
                     </VStack>
                   )
                 }}
               />
             </FormControl>
-            {(isW9DocumentDateChanged || watchW9DocumentFile) && <SaveChangedFieldAlert />}
+            {isW9DocumentDateChanged || watchW9DocumentFile ? (
+              <SaveChangedFieldAlert />
+            ) : (
+              <AdminPortalVerifyDocument
+                vendor={vendor as any}
+                fieldName="W9DocumentCheckBox"
+                registerToFormField={register}
+              />
+            )}
           </HStack>
         </HStack>
         <Box>
-          <HStack alignItems="flex-start" spacing="16px">
+          <HStack
+            flexDir={{ base: 'column', sm: 'row' }}
+            alignItems="flex-start"
+            spacing="16px"
+            marginTop={{ base: '20px', md: '0' }}
+          >
             <Box>
-              <FormLabel variant="strong-label" size="md" color="#2D3748">
-                {t('agreementSignedDate')}
-              </FormLabel>
-              <FormDatePicker
-                errorMessage={errors.agreementSignedDate && errors.agreementSignedDate?.message}
-                label={''}
-                name={`agreementSignedDate`}
-                control={control}
-                placeholder="mm/dd/yyyy"
-                style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
-                testId="agreementSignedDate"
-                onChange={e => {
-                  if (!changedDateFields.includes('agreementSignedDate')) {
-                    setChangeDateFields([...changedDateFields, 'agreementSignedDate'])
-                  }
-                }}
-              />
+              <FormControl isInvalid={!!errors.agreementSignedDate}>
+                <FormLabel variant="strong-label" size="md" color="#2D3748">
+                  {t('agreementSignedDate')}
+                </FormLabel>
+                <Input type="date" w="215px" data-testid="agreementSignedDate" {...register('agreementSignedDate')} />
+                <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
+              </FormControl>
             </Box>
-            <HStack>
+            <HStack
+              sx={{
+                '@media screen and (max-width: 480px)': {
+                  ms: '0 !important',
+                  mt: '20px !important',
+                },
+              }}
+            >
               <FormControl w="215px" isInvalid={!!errors.agreement?.message}>
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
@@ -223,57 +241,78 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.agreementUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.agreementUrl &&
+                            downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {(isAgreementSignedDateChanged || watchAgreementFile) && <SaveChangedFieldAlert />}
+              {isAgreementSignedDateChanged || watchAgreementFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <AdminPortalVerifyDocument
+                  vendor={vendor as any}
+                  fieldName="agreementSignCheckBox"
+                  registerToFormField={register}
+                />
+              )}
             </HStack>
           </HStack>
         </Box>
 
-        <HStack w="100%" pb={5} pt={3}>
-          <FormLabel m={0} variant="strong-label" size="lg">
+        <HStack
+          w="100%"
+          pb={5}
+          pt={1}
+          sx={{
+            '@media screen and (max-width: 480px)': {
+              ms: '0 !important',
+              mt: '30px !important',
+            },
+          }}
+        >
+          <FormLabel m={0} variant="strong-label" fontSize="18px" color="#2D3748">
             {t('insurance')}
           </FormLabel>
 
           <Divider borderColor="gray.300" />
         </HStack>
         <Box>
-          <HStack alignItems="flex-start" spacing="16px">
+          <HStack
+            flexDir={{ base: 'column', sm: 'row' }}
+            alignItems="flex-start"
+            spacing="16px"
+            marginTop={{ base: '20px', md: '0' }}
+          >
             <Box>
-              <FormLabel
-                variant="strong-label"
-                size="md"
-                w="200px"
-                isTruncated
-                title={t('autoInsuranceExpDate')}
-                color="#2D3748"
-              >
-                {t('autoInsuranceExpDate')}
-              </FormLabel>
-              <FormDatePicker
-                errorMessage={errors.autoInsuranceExpDate && errors.autoInsuranceExpDate?.message}
-                label={''}
-                name={`autoInsuranceExpDate`}
-                control={control}
-                placeholder="mm/dd/yyyy"
-                style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
-                testId="autoInsuranceExpDate"
-                onChange={e => {
-                  if (!changedDateFields.includes('autoInsuranceExpDate')) {
-                    setChangeDateFields([...changedDateFields, 'autoInsuranceExpDate'])
-                  }
-                }}
-              />
+              <FormControl isInvalid={!!errors.autoInsuranceExpDate}>
+                <FormLabel
+                  variant="strong-label"
+                  size="md"
+                  w="200px"
+                  isTruncated
+                  title={t('autoInsuranceExpDate')}
+                  color="#2D3748"
+                >
+                  {t('autoInsuranceExpDate')}
+                </FormLabel>
+                <Input type="date" w="215px" {...register('autoInsuranceExpDate')} data-testid="autoInsuranceExpDate" />
+                <FormErrorMessage>
+                  {errors.autoInsuranceExpDate && errors.autoInsuranceExpDate.message}
+                </FormErrorMessage>
+              </FormControl>
             </Box>
-            <HStack>
+            <HStack
+              sx={{
+                '@media screen and (max-width: 480px)': {
+                  ms: '0 !important',
+                  mt: '20px !important',
+                },
+              }}
+            >
               <FormControl w="215px" isInvalid={!!errors.insurance?.message}>
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
@@ -302,42 +341,53 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.insuranceUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.insuranceUrl &&
+                            downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {(isAutoInsuranceExpDateChanged || watchInsuranceFile) && <SaveChangedFieldAlert />}
+              {isAutoInsuranceExpDateChanged || watchInsuranceFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <AdminPortalVerifyDocument
+                  vendor={vendor as any}
+                  fieldName="autoInsuranceCheckBox"
+                  registerToFormField={register}
+                />
+              )}
             </HStack>
           </HStack>
         </Box>
         <Box>
-          <HStack alignItems="flex-start" spacing="16px">
+          <HStack
+            flexDir={{ base: 'column', sm: 'row' }}
+            marginTop={{ base: '20px', md: '0' }}
+            alignItems="flex-start"
+            spacing="16px"
+          >
             <Box>
-              <FormLabel variant="strong-label" size="md" color="#2D3748">
-                {t('COIGLExpDate')}
-              </FormLabel>
-              <FormDatePicker
-                errorMessage={errors.coiGlExpDate && errors.coiGlExpDate?.message}
-                label={''}
-                name={`coiGlExpDate`}
-                control={control}
-                placeholder="mm/dd/yyyy"
-                style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
-                testId="coiGlExpDate"
-                onChange={e => {
-                  if (!changedDateFields.includes('COIGLExpDate')) {
-                    setChangeDateFields([...changedDateFields, 'COIGLExpDate'])
-                  }
-                }}
-              />
+              <FormControl isInvalid={!!errors.coiGlExpDate}>
+                <FormLabel variant="strong-label" size="md" color="#2D3748">
+                  {t('COIGLExpDate')}
+                </FormLabel>
+                <Input type="date" w="215px" {...register('coiGlExpDate')} data-testid="coiGlExpDate" />
+                <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
+              </FormControl>
             </Box>
-            <HStack w="100%" pr="20px">
+            <HStack
+              w="100%"
+              pr="20px"
+              sx={{
+                '@media screen and (max-width: 480px)': {
+                  ms: '0 !important',
+                  mt: '20px !important',
+                },
+              }}
+            >
               <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message} color="#2D3748">
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
@@ -364,42 +414,53 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.coiGLExpUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.coiGLExpUrl &&
+                            downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {(isCoiGlExpDateChanged || watchCoiGlExpFile) && <SaveChangedFieldAlert />}
+              {isCoiGlExpDateChanged || watchCoiGlExpFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <AdminPortalVerifyDocument
+                  vendor={vendor as any}
+                  fieldName="coiGLExpCheckBox"
+                  registerToFormField={register}
+                />
+              )}
             </HStack>
           </HStack>
         </Box>
         <Box>
-          <HStack alignItems="flex-start" spacing="16px">
+          <HStack
+            flexDir={{ base: 'column', sm: 'row' }}
+            alignItems="flex-start"
+            spacing="16px"
+            marginTop={{ base: '20px', md: '0' }}
+          >
             <Box>
-              <FormLabel variant="strong-label" size="md" color="#2D3748">
-                {t('COIWCExpDate')}
-              </FormLabel>
-              <FormDatePicker
-                errorMessage={errors.coiWcExpDate && errors.coiWcExpDate?.message}
-                label={''}
-                name={`coiWcExpDate`}
-                control={control}
-                placeholder="mm/dd/yyyy"
-                style={{ width: '215px', color: 'gray.500', fontStyle: 'normal', fontWeight: 400, fontSize: '14px' }}
-                testId="coiWcExpDate"
-                onChange={e => {
-                  if (!changedDateFields.includes('coiWcExpDate')) {
-                    setChangeDateFields([...changedDateFields, 'coiWcExpDate'])
-                  }
-                }}
-              />
+              <FormControl isInvalid={!!errors.coiWcExpDate}>
+                <FormLabel variant="strong-label" size="md" color="#2D3748">
+                  {t('COIWCExpDate')}
+                </FormLabel>
+                <Input type="date" w="215px" {...register('coiWcExpDate')} data-testid="coiWcExpDate" />
+                <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
+              </FormControl>
             </Box>
-            <HStack w="100%" pr="20px">
+            <HStack
+              w="100%"
+              pr="20px"
+              sx={{
+                '@media screen and (max-width: 480px)': {
+                  ms: '0 !important',
+                  mt: '20px !important',
+                },
+              }}
+            >
               <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message}>
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('fileUpload')}
@@ -426,17 +487,24 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        {documents.coiWcExpUrl && (
-                          <Box overflow="hidden" top={16}>
-                            {downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
-                          </Box>
-                        )}
+                        <Box overflow="hidden" top={16} h="18px">
+                          {documents.coiWcExpUrl &&
+                            downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
+                        </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {(isCoiWcExpDateChanged || watchCoiWcExpFile) && <SaveChangedFieldAlert />}
+              {isCoiWcExpDateChanged || watchCoiWcExpFile ? (
+                <SaveChangedFieldAlert />
+              ) : (
+                <AdminPortalVerifyDocument
+                  vendor={vendor as any}
+                  fieldName="CoiWcExpCheckbox"
+                  registerToFormField={register}
+                />
+              )}
             </HStack>
           </HStack>
         </Box>

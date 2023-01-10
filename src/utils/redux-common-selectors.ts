@@ -15,7 +15,7 @@ type UserRoles = {
   isOpsOrAdmin: boolean
 }
 
-enum UserTypes {
+export enum UserTypes {
   admin = 1,
   fieldProjectManager = 5,
   vendor = 6,

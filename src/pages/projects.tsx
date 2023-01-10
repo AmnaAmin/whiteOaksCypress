@@ -38,13 +38,13 @@ export const Projects = () => {
   const { fpmUsers = [], setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
 
   const [resetAllFilters, setResetAllFilters] = useState(false)
-  const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard');
-  const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay');
+  const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard')
+  const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay')
 
   const { t } = useTranslation()
 
   const clearAll = () => {
-    setResetAllFilters(true);
+    setResetAllFilters(true)
     setTimeout(() => {
       setResetAllFilters(false)
     }, 700)
@@ -56,7 +56,8 @@ export const Projects = () => {
     <>
       <VStack alignItems="start" h="calc(100vh - 160px)">
         <Box w="100%">
-          <ProjectFilters onSelectCard={(selection) => {
+          <ProjectFilters
+            onSelectCard={selection => {
               setSelectedDay(null)
               setSelectedCard(selection)
             }}
@@ -76,7 +77,7 @@ export const Projects = () => {
           <WeekDayFilters
             selectedFPM={selectedFPM}
             clear={clearAll}
-            onSelectDay={(selection) => {
+            onSelectDay={selection => {
               setSelectedCard(null)
               setSelectedDay(selection)
             }}
@@ -87,7 +88,7 @@ export const Projects = () => {
           {!isFPM && (
             <Button onClick={onNewProjectModalOpen} colorScheme="brand" fontSize="14px" minW={'140px'}>
               <Icon as={BiBookAdd} fontSize="18px" mr={2} />
-              {t('New Project')}
+              {t('projects.newProjects')}
             </Button>
           )}
           {fpmUsers?.length > 0 && isFPM && (

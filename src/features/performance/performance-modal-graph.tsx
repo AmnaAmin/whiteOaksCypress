@@ -79,7 +79,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
     <>
       <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
         <Flex mb={5}>
-          <Box mt={5} flex={1} mb={5}>
+          <Box mt={5} flex={1}>
             <HStack>
               <Flex ml={'230px'} justifyContent={'center'} width="300px">
                 <FormLabel width={'200px'} variant="strong-label" size="lg">
@@ -102,7 +102,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
           {isLoading ? (
             <BlankSlate size="sm" />
           ) : (
-            <OverviewGraph vendorData={graphData} width="98%" height={380} hasUsers={false} />
+            <OverviewGraph vendorData={graphData} width="98%" height={350} hasUsers={false} monthOption={monthOption} />
           )}
         </Box>
       </Box>
@@ -110,7 +110,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
   )
 }
 
-export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
+export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption }) => {
   const labels = [
     { key: 'Bonus', color: '#FB8832' },
     { key: 'Profit', color: '#949AC2' },
@@ -138,13 +138,20 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
     [barProps],
   )
 
-  let { Revenue = undefined , Profit = undefined, Bonus = undefined } = vendorData?.length > 0 ? vendorData[0] : {
-    Revenue: undefined,
-    Profit: undefined,
-    Bonus: undefined
-  }
+  let {
+    Revenue = undefined,
+    Profit = undefined,
+    Bonus = undefined,
+  } = vendorData?.length > 0
+    ? vendorData[0]
+    : {
+        Revenue: undefined,
+        Profit: undefined,
+        Bonus: undefined,
+      }
 
   const emptyGraph = [Revenue, Profit, Bonus].every(matrix => matrix === undefined)
+  const currAndLast = ['This Month', 'Last Month'].includes(monthOption?.label)
 
   return (
     <div>
@@ -160,7 +167,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             bottom: 10,
           }}
         >
-          <CartesianGrid stroke="#EFF3F9"/>
+          <CartesianGrid stroke="#EFF3F9" />
           <XAxis
             dataKey={hasUsers ? 'username' : 'month'}
             axisLine={false}
@@ -174,7 +181,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             tickMargin={20}
           >
             {/* -- If vendorData does not have any data for the specific month, empty graph message will show -- */}
-            {emptyGraph && (
+            {emptyGraph && currAndLast && (
               <Label
                 value="There is currently no data available for the month selected"
                 offset={180}
@@ -183,7 +190,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
                 fontStyle="italic"
               />
             )}
-          </XAxis>          
+          </XAxis>
           <YAxis
             tickLine={{ stroke: '#4F4F4F' }}
             type="number"
@@ -204,7 +211,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers }) => {
             formatter={value => currencyFormatter(value)}
             contentStyle={{ borderRadius: '6px' }}
             data-testid="tooltip-overview"
-            // cursor={{ fill: 'transparent' }}
+            cursor={{ fill: 'transparent' }}
           />
 
           <Bar barSize={30} dataKey="Bonus" fill="#FB8832" radius={[10, 10, 0, 0]} hide={barProps['Bonus'] === true} />

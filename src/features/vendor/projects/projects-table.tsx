@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Box, Link } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 import { SELECTED_CARD_MAP_URL, useGetAllWorkOrders, useWorkOrders } from 'api/projects'
 import Status from '../../common/status'
@@ -22,6 +22,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
+import { Link } from 'react-router-dom'
 
 const PROJECT_TABLE_QUERY_KEYS = {
   projectId: 'projectId.equals',
@@ -40,16 +41,16 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     cell: (row: any) => {
       const value = row.cell.getValue()
       return (
-        <Link
-          href={`${process.env.PUBLIC_URL}/project-details/${value}`}
-          color="#533f03"
-          fontWeight="bold"
+        <Box
+          fontWeight={'500'}
           _hover={{
-            color: '#8d2638',
+            color: 'barColor.50',
+            textDecor: 'underline',
           }}
+          color="brand.300"
         >
-          {value}
-        </Link>
+          <Link to={`/project-details/${value}`}>{value}</Link>
+        </Box>
       )
     },
   },
@@ -123,7 +124,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
   const filtersInitialValues = {
-    statusLabel: selectedCard !== 'pastDue' ? selectedCard : '',
+    statusLabel: selectedCard !== 'pastDue' ? selectedCard : 'past Due',
   }
 
   const tableColumnsWithFilters = useMemo(() => {
@@ -152,7 +153,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }
 
   return (
-    <Box overflow={'auto'} h="calc(100vh - 270px)" roundedTop={6}>
+    <Box overflow={'auto'} h="calc(100vh - 225px)">
       <TableContextProvider
         data={workOrderData}
         columns={tableColumnsWithFilters}

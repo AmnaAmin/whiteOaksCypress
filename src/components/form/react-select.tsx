@@ -50,6 +50,7 @@ export const chakraStyles = {
     borderColor: 'gray.200',
     borderRadius: 'md',
     bg: 'white',
+    margin: '2px',
   }),
   menuList: (provided: any, state: any) => {
     const menuHeight = state.selectProps?.selectProps?.menuHeight || ''
@@ -171,7 +172,7 @@ const MenuList: React.FC<any> = props => {
     )
   }
 
-  return <List width={300} height={300} rowCount={children.length} rowHeight={35} rowRenderer={rowRenderer} />
+  return <List width={300} height={215} rowCount={children.length} rowHeight={35} rowRenderer={rowRenderer} />
 }
 
 export const CreatableSelect = forwardRef((props: SelectProps, ref: any) => (

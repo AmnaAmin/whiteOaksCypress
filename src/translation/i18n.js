@@ -16,7 +16,10 @@ import { sideNav } from '../components/layout/sideNav.i18n'
 import { dashboard } from '../features/vendor/dashboard/dashboard.i18n'
 import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
 import { projectType } from '../features/project-type/project-type.i18n'
+import { auditLogs } from 'features/project-details/audit-logs/auditLogs.i18n'
+import { support } from 'features/support/support.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
+import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -40,7 +43,10 @@ i18n.use(initReactI18next).init({
         ...dashboard.en.translation,
         ...adminDashboard.en.translation,
         ...projectType.en.translation,
+        ...auditLogs.en.translation,
+        ...support.en.translation,
         ...vendorProfile.en.translation,
+        ...projectAwards.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -200,6 +206,7 @@ i18n.use(initReactI18next).init({
         // Projects-WorkOrderDetails
         editVendorWorkOrder: 'Edit Vendor Work Order',
         workOrderDetails: 'Work Order Details',
+        projectAward: 'Project Award',
         companyName: 'Company Name',
         ownerName: 'Primary Contact',
         clientApprovedAmount: 'Client Approved Amount',
@@ -239,6 +246,10 @@ i18n.use(initReactI18next).init({
         addSignature: 'Add Signature',
         typeName: 'Type Your Name Here',
         LWrequired: 'Lien Waiver is required for Draw Transaction.',
+        AwardRq: 'You need to select award plan.',
+        DrawRemaining: 'You have 0 Draw Remaining',
+        MaterialRemaining: 'You have 0 Material Remaining',
+        PaymentRemaining: 'Remaining payment amount exceeded.',
         nameofClaimant: 'Name of Claimant',
         customerName: 'Customer Name',
         jobLocation: 'Job Location',
@@ -270,6 +281,7 @@ i18n.use(initReactI18next).init({
         paymentMethods: 'Payment Methods',
         payDateVariance: 'Pay Date Variance',
         finalInvoice: 'Final Invoice',
+        finalApproved: 'Final Approved',
         uploadInvoice: 'Upload Invoice',
         firstHeading: 'Conditional waiver and release on final payment',
         secondHeading: 'Identifying Information',
@@ -318,6 +330,8 @@ i18n.use(initReactI18next).init({
         // VENDOR
         details: 'Details',
         market: 'Market',
+        prjt: 'Projects',
+        businessPhoneNumber: 'Business Phone Number',
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
@@ -338,11 +352,16 @@ i18n.use(initReactI18next).init({
         primaryEmail: 'Primary Email',
         secondaryEmail: 'Secondary Email',
         coiglExpirationDate: 'COI-GL Expiration Date',
+        constructionTrade: 'Construction Trade',
+        totalCapacity: 'Total Capacity',
+        activeDate: 'Active Date',
         statusLabel: 'Status',
         coiWcExpirationDate: 'COI-WC Expiration Date',
         einNumber: 'EIN/SSN',
         availableCapacity: 'Available Capacity',
         skills: 'Construction Trade',
+        portalRegistration: 'Portal Registration',
+        enableVendorPortal: 'Enable Vendor Portal',
 
         // Vendor-profile-documents
         agreementSignedDate: 'Document Signed',
@@ -538,7 +557,10 @@ i18n.use(initReactI18next).init({
         ...dashboard.es.translation,
         ...adminDashboard.es.translation,
         ...projectType.es.translation,
+        ...auditLogs.es.translation,
+        ...support.es.translation,
         ...vendorProfile.es.translation,
+        ...projectAwards.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -758,6 +780,7 @@ i18n.use(initReactI18next).init({
         // Project - WorkOrderDetails
         editVendorWorkOrder: 'Editar Orden de Trabajo de Proveedor',
         workOrderDetails: 'Detalles de la Orden de Trabajo',
+        projectAward: 'Premio Proyecto',
         companyName: 'Nombre de empresa',
         ownerName: 'Contacto Primario',
         clientApprovedAmount: 'Monto aprobado por el cliente',
@@ -796,6 +819,10 @@ i18n.use(initReactI18next).init({
         addSignature: 'Agregar Firma',
         typeName: 'Escribe tu nombre aquí',
         LWrequired: 'Se requiere exención de gravamen para la transacción de giro.',
+        AwardRq: 'Debe seleccionar el plan de premios.',
+        DrawRemaining: 'Tienes 0 sorteos restantes.',
+        MaterialRemaining: 'Tienes 0 Material Restante.',
+        PaymentRemaining: 'Monto de pago restante excedido.',
         nameofClaimant: 'Nombre del Reclamante',
         customerName: 'Nombre del Cliente',
         jobLocation: 'Locación de Trabajo',
@@ -826,6 +853,7 @@ i18n.use(initReactI18next).init({
         check: 'Controlar',
         payDateVariance: 'Variación de la fecha de pago',
         finalInvoice: 'Factura Final',
+        finalApproved: 'Aprobado definitivo',
         uploadInvoice: 'Cargar factura',
         firstHeading: 'Renuncia condicional y liberación en el pago final',
         secondHeading: 'Información identificativa',
@@ -874,6 +902,9 @@ i18n.use(initReactI18next).init({
         // VENDOR-PROFILE
         details: 'Detalles',
         market: 'Mercado',
+        prjt: 'Proyectos',
+        businessPhoneNumber: 'Número de teléfono laboral',
+
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
         score: 'Puntaje',
@@ -895,6 +926,9 @@ i18n.use(initReactI18next).init({
         primaryEmail: 'Correo Electrónico Principal',
         secondaryEmail: 'Email Secundario',
         coiglExpirationDate: 'Fecha de vencimiento de COI-GL',
+        constructionTrade: 'Construcción Comercio',
+        totalCapacity: 'Capacidad total',
+        activeDate: 'Fecha Activa',
         statusLabel: 'Estado',
         coiWcExpirationDate: 'Fecha de vencimiento de COI-WC',
         einNumber: 'EIN/SSN',

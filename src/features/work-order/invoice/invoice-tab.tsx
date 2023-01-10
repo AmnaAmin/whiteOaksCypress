@@ -19,7 +19,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { currencyFormatter } from 'utils/string-formatters'
-import { convertDateTimeToServer, dateFormat } from 'utils/date-time-utils'
+import { dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useCallback, useEffect, useState } from 'react'
@@ -46,16 +46,28 @@ export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.
         <Icon as={icons} fontSize="23px" color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} lineHeight="20px" fontSize="14px" fontStyle="normal" color="gray.700" mb="1">
+        <Text
+          fontWeight={500}
+          lineHeight="20px"
+          fontSize="14px"
+          fontStyle="normal"
+          color="#2D3748"
+          mb="1"
+          title={title}
+          whiteSpace="nowrap"
+          w="100px"
+        >
           {title}
         </Text>
         <Text
           data-testid={title}
-          color="gray.600"
+          color="#4A5568"
           lineHeight="20px"
           fontSize="14px"
           fontStyle="normal"
           fontWeight={400}
+          noOfLines={1}
+          title={value}
         >
           {value}
         </Text>
@@ -162,7 +174,7 @@ export const InvoiceTab = ({
     if (onSave) {
       onSave({
         status: STATUS_CODE.DECLINED,
-        declineDate : new Date(),
+        declineDate: new Date(),
         lienWaiverAccepted: false,
       })
     }
@@ -172,9 +184,9 @@ export const InvoiceTab = ({
     const paymentTermDate = addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)
     const updatedWorkOrder = {
       ...workOrder,
-      dateInvoiceSubmitted: convertDateTimeToServer(invoiceSubmittedDate),
-      expectedPaymentDate: convertDateTimeToServer(nextFriday(paymentTermDate)),
-      paymentTermDate: convertDateTimeToServer(paymentTermDate),
+      dateInvoiceSubmitted: dateISOFormatWithZeroTime(invoiceSubmittedDate),
+      expectedPaymentDate: dateISOFormatWithZeroTime(nextFriday(paymentTermDate)),
+      paymentTermDate: dateISOFormatWithZeroTime(paymentTermDate),
     }
     if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Declined)) {
       updatedWorkOrder.status = STATUS_CODE.INVOICED
@@ -253,47 +265,67 @@ export const InvoiceTab = ({
 
   return (
     <Box>
-      <ModalBody h={'calc(100vh - 300px)'} mx="25px">
-        <Grid gridTemplateColumns="repeat(auto-fit ,minmax(170px,1fr))" gap={2} minH="100px" alignItems={'center'}>
-          <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
-          <InvoiceInfo
-            title={t('finalInvoice')}
-            value={currencyFormatter(workOrder?.finalInvoiceAmount)}
-            icons={BiDollarCircle}
-          />
-          <InvoiceInfo
-            title={t('PONumber')}
-            value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
-            icons={BiFile}
-          />
-          <InvoiceInfo
-            title={t('invoiceDate')}
-            value={
-              workOrder.dateInvoiceSubmitted && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                ? dateFormat(workOrder?.dateInvoiceSubmitted)
-                : 'mm/dd/yy'
-            }
-            icons={BiCalendar}
-          />
-          <InvoiceInfo
-            title={t('dueDate')}
-            value={
-              workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                ? dateFormat(workOrder?.paymentTermDate)
-                : 'mm/dd/yy'
-            }
-            icons={BiCalendar}
-          />
+      <ModalBody mx={{ base: 0, lg: '25px' }}>
+        <Grid
+          templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(150px,1fr))' }}
+          gap={5}
+          alignItems={'center'}
+          my="24px"
+          display={{ base: 'flex', sm: 'grid' }}
+          flexWrap="wrap"
+        >
+          <Box flex={{ base: '1', sm: 'unset' }}>
+            <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
+          </Box>
+          <Box flex={{ base: '1', sm: 'unset' }}>
+            <InvoiceInfo
+              title={t('finalInvoice')}
+              value={currencyFormatter(workOrder?.finalInvoiceAmount)}
+              icons={BiDollarCircle}
+            />
+          </Box>
+          <Box flex={{ base: '1', sm: 'unset' }}>
+            <InvoiceInfo
+              title={t('PONumber')}
+              value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
+              icons={BiFile}
+            />
+          </Box>
+          <Divider borderWidth={0} display={{ base: 'block', sm: 'none' }} />
+          <Box flex={{ base: '1', sm: 'unset' }}>
+            <InvoiceInfo
+              title={t('invoiceDate')}
+              value={
+                workOrder.dateInvoiceSubmitted &&
+                ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                  ? dateFormat(workOrder?.dateInvoiceSubmitted)
+                  : 'mm/dd/yy'
+              }
+              icons={BiCalendar}
+            />
+          </Box>
+          <Box flex={{ base: '1', sm: 'unset' }}>
+            <InvoiceInfo
+              title={t('dueDate')}
+              value={
+                workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                  ? dateFormat(workOrder?.paymentTermDate)
+                  : 'mm/dd/yy'
+              }
+              icons={BiCalendar}
+            />
+          </Box>
         </Grid>
 
         <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
 
         <Box
-          h="calc(100% - 135px)"
+          h="calc(100vh - 409px)"
           overflow="auto"
           borderRadius={7}
           borderBottom="1px solid #CBD5E0"
           border="1px solid #CBD5E0"
+          mb="16px"
         >
           <Table variant="simple" size="sm">
             <Thead>

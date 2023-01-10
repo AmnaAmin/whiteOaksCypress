@@ -8,7 +8,7 @@ import Clients from './clients'
 import { Receivable } from './receivable'
 import { VendorSkills } from 'pages/vendor-manager/vendor-skills'
 import { Markets } from 'pages/vendor-manager/markets'
-// import Alerts from './alerts'
+import Alerts from './alerts'
 // import { ProjectCoordinatorDashboard } from 'pages/dashboard'
 
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
@@ -17,10 +17,11 @@ import { PerformanceTab } from 'features/performance/performance'
 import { UserManagement } from './admin/user-management'
 import Dashboard from './admin/dashboard'
 import { ProjectType } from './admin/project-type'
+import { SupportTickets } from './admin/support-tickets'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
-const VendorProfilePage = lazy(() => import('pages/vendor/vendor-profile'))
+const VendorProfilePage = lazy(() => import('pages/vendor/vendor-profile-v-portal'))
 const VendorProjectDetails = lazy(() => import('pages/vendor/project-details'))
 
 export default function useRoutesConfig() {
@@ -85,6 +86,7 @@ export default function useRoutesConfig() {
         { path: 'projectType', element: ProjectType },
         { path: 'projects', element: Projects },
         { path: 'payable', element: Payable },
+        { path: 'support-tickets', element: SupportTickets },
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
         { path: 'clients', element: Clients },
@@ -92,6 +94,7 @@ export default function useRoutesConfig() {
         { path: 'markets', element: Markets },
         { path: 'performance', element: PerformanceTab },
         { path: 'vendorSkills', element: VendorSkills },
+        { path: 'alerts', element: Alerts },
       ]
 
     case isAccounting:

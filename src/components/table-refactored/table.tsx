@@ -1,7 +1,20 @@
-import React from 'react'
+import React, { useState, useEffect, useRef, useMemo } from 'react'
 import { Column, Table as TableType, TableOptions, flexRender } from '@tanstack/react-table'
-
-import { Table as ChakraTable, Thead, Tbody, Tr, Th, Td, Text, Flex, Stack, Box, Tfoot } from '@chakra-ui/react'
+import {
+  Table as ChakraTable,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  Text,
+  Flex,
+  Stack,
+  Box,
+  Tfoot,
+  HStack,
+  Icon,
+} from '@chakra-ui/react'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -9,21 +22,37 @@ import { useTranslation } from 'react-i18next'
 import { useTableInstance } from './table-context'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { MdClose } from 'react-icons/md'
+import { useLayoutEffect } from 'react'
+import _ from 'lodash'
+import { useStickyState } from 'utils/hooks'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
 }
 
-function Filter({ column, table }: { column: Column<any, unknown>; table: TableType<any> }) {
+function Filter({
+  column,
+  table,
+  allowStickyFilters = false,
+}: {
+  column: Column<any, unknown>
+  table: TableType<any>
+  allowStickyFilters?: boolean
+}) {
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
   // We inject meta into certain columns where the filter state can be prefilled either by backend or by UI
   // In react table, meta key can be added to any column and meta can hold any arbitrary value
   const metaData: any = column.columnDef?.meta as any
-  const filterInitialState = metaData?.filterInitialState || null
+
+  /* @ts-ignore */
+  const tableId = table?.options?.meta?.id
+  const columnKey = tableId ? tableId + '.' + column.id : column.id
+  const [stickyFilter, setStickyFilter] = useStickyState(null, allowStickyFilters ? columnKey + '.' + column.id : null)
+  const filterInitialState = metaData?.filterInitialState || stickyFilter || null
   const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date' || 'date')
-
   const sortedUniqueValues = React.useMemo(
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
     [column.getFacetedUniqueValues()],
@@ -39,9 +68,15 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
       <DebouncedInput
         type={dateFilter ? 'date' : 'text'}
         value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
-        onChange={value =>
-          dateFilter ? column.setFilterValue(dateFormat(value as string)) : column.setFilterValue(value)
-        }
+        onChange={value => {
+          if (dateFilter) {
+            column.setFilterValue(dateFormat(value as string))
+            setStickyFilter(dateFormat(value as string))
+          } else {
+            column.setFilterValue(window.encodeURIComponent(value))
+            setStickyFilter(value)
+          }
+        }}
         className="w-36 border shadow rounded"
         list={column.id + 'list'}
         // @ts-ignore
@@ -51,6 +86,22 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
       <div className="h-1" />
     </>
   )
+}
+
+function useIsInViewport(ref) {
+  const [isIntersecting, setIsIntersecting] = useState(false)
+
+  const observer = useMemo(() => new IntersectionObserver(([entry]) => setIsIntersecting(entry.isIntersecting)), [])
+
+  useEffect(() => {
+    observer.observe(ref.current)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [ref, observer])
+
+  return isIntersecting
 }
 
 // A debounced input react component
@@ -66,13 +117,18 @@ function DebouncedInput({
   debounce?: number
   resetValue?: boolean
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
-  const [value, setValue] = React.useState(initialValue)
+  const [value, setValue] = useState(initialValue)
+  const [showClearIcon, setShowClearIcon] = useState(false)
+  const [inputWidth, setInputWidth] = useState(0)
+  const inputRef = useRef<any>()
 
-  React.useEffect(() => {
+  const isInputInViewPort = useIsInViewport(inputRef)
+
+  useEffect(() => {
     setValue(resetValue ? '' : initialValue)
   }, [initialValue, resetValue])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const timeout = setTimeout(() => {
       onChange(value)
     }, debounce)
@@ -80,20 +136,68 @@ function DebouncedInput({
     return () => clearTimeout(timeout)
   }, [value])
 
+  useLayoutEffect(() => {
+    setInputWidth(inputRef.current.offsetWidth)
+
+    const setW = () => {
+      setInputWidth(inputRef.current.offsetWidth)
+    }
+    window.addEventListener('DOMContentLoaded', setW)
+
+    const changeWidth = _.debounce(() => setInputWidth(inputRef.current.offsetWidth), 50)
+
+    window.addEventListener('resize', changeWidth)
+
+    return () => {
+      window.removeEventListener('resize', changeWidth)
+      window.removeEventListener('DOMContentLoaded', setW)
+    }
+  }, [isInputInViewPort])
+
+  const onInputChange = e => {
+    setValue(e.target.value)
+
+    if (e.target.value.replace(/\s+/g, '') !== '') setShowClearIcon(true)
+    else setShowClearIcon(false)
+  }
+
   return (
-    <Input
-      bg="white"
-      maxW="150px"
-      // @ts-ignore
-      size={5}
-      borderRadius="4px"
-      height="24px"
-      paddingX={2}
-      {...props}
-      value={value}
-      onChange={e => setValue(e.target.value)}
-      borderColor="gray.300"
-    />
+    <HStack position={'relative'}>
+      <Input
+        bg="white"
+        maxW="150px"
+        // @ts-ignore
+        size={5}
+        borderRadius="4px"
+        height="24px"
+        paddingX={2}
+        {...props}
+        value={value}
+        onChange={onInputChange}
+        borderColor="gray.300"
+        ref={inputRef}
+        paddingRight={'13px'}
+        data-testid="tableFilterInputField"
+        _focus={{
+          border: '1px solid #345EA6',
+        }}
+      />
+      {showClearIcon && props.type !== 'date' ? (
+        <Icon
+          data-testid="tableFilterInputFieldClearIcon"
+          cursor="pointer"
+          as={MdClose}
+          position="absolute"
+          right={`calc(100% - ${inputWidth - 3}px)`}
+          zIndex={10000}
+          mr="-20px"
+          onClick={e => {
+            setValue('')
+            setShowClearIcon(false)
+          }}
+        />
+      ) : null}
+    </HStack>
   )
 }
 
@@ -106,6 +210,7 @@ type TableProps = {
   isShowFooter?: boolean
   handleOnDrag?: (result) => void
   handleOnDragStart?: (result) => void
+  allowStickyFilters?: boolean
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -117,6 +222,7 @@ export const Table: React.FC<TableProps> = ({
   isShowFooter,
   handleOnDrag,
   handleOnDragStart,
+  allowStickyFilters,
   ...restProps
 }) => {
   const { t } = useTranslation()
@@ -136,14 +242,15 @@ export const Table: React.FC<TableProps> = ({
   return (
     <Stack
       display="table"
-      minH="calc(100% - 41px)"
       w="100%"
       boxShadow="sm"
       rounded="md"
       position="relative"
       zIndex={0}
-      border="1px solid #CBD5E0"
+      // border="1px solid #CBD5E0"
       bg="white"
+      minH={'inherit'}
+      height="100%"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
@@ -175,7 +282,7 @@ export const Table: React.FC<TableProps> = ({
                       <Text
                         fontSize="14px"
                         color="gray.700"
-                        fontWeight={600}
+                        fontWeight={500}
                         fontStyle="normal"
                         textTransform="none"
                         isTruncated
@@ -202,11 +309,11 @@ export const Table: React.FC<TableProps> = ({
             </Tr>
           ))}
 
-          {/** Header Filter Input Field for each column */}
+          {/** Header Filter Input Field for each column **/}
           {!isHideFilters &&
             getHeaderGroups().map(headerGroup => {
               return (
-                <Tr key={`th_${headerGroup.id}`}>
+                <Tr key={`th_${headerGroup.id}`} position="relative">
                   {headerGroup.headers.map(header => {
                     return (
                       <Th
@@ -220,9 +327,23 @@ export const Table: React.FC<TableProps> = ({
                         {...getColumnMaxMinWidths(header.column)}
                       >
                         {header.column.getCanFilter() ? (
-                          <div>
-                            <Filter column={header.column} table={tableInstance} />
-                          </div>
+                          <Box
+                          // Header bottom line -> might be needed later
+                          // _after={{
+                          //   content: '""',
+                          //   bottom: '0px',
+                          //   left: '0px',
+                          //   position: 'absolute',
+                          //   minW: '100%',
+                          //   borderBottom: '1px solid #CBD5E0',
+                          // }}
+                          >
+                            <Filter
+                              allowStickyFilters={allowStickyFilters}
+                              column={header.column}
+                              table={tableInstance}
+                            />
+                          </Box>
                         ) : null}
                       </Th>
                     )
@@ -267,8 +388,9 @@ export const Table: React.FC<TableProps> = ({
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
-                          bg: 'gray.50',
+                          bg: row.getIsSelected() ? '#F3F8FF' : '',
                         }}
+                        backgroundColor={row.getIsSelected() ? 'gray.50' : ''}
                       >
                         {row.getVisibleCells().map(cell => {
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
@@ -279,7 +401,7 @@ export const Table: React.FC<TableProps> = ({
                               title={cell.getContext()?.getValue() as string}
                               {...getColumnMaxMinWidths(cell.column)}
                             >
-                              {value}
+                              {cell?.renderValue() ? value : '_ _ _'}
                             </Td>
                           )
                         })}
@@ -359,7 +481,7 @@ const DragDropEnabledRows = ({
                       backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
                       boxShadow={snapshot.isDragging ? '0px 3px 5px 3px rgb(112 144 176 / 12%)' : 'none'}
                       _hover={{
-                        bg: 'gray.50',
+                        bg: '#F3F8FF',
                       }}
                     >
                       {row.getVisibleCells().map(cell => {

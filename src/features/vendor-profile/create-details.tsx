@@ -170,7 +170,7 @@ const CreateVendorDetail: React.FC<{
         <HStack spacing="4" my="30px">
           <Box w="215px">
             <FormControl isInvalid={!!errors.businessPhoneNumber}>
-              <FormLabel variant="strong-label" size="md">
+              <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('businessPhoneNo')}
               </FormLabel>
               <Controller
@@ -208,7 +208,7 @@ const CreateVendorDetail: React.FC<{
           </Flex>
           <Box w="215px">
             <FormControl>
-              <FormLabel variant="strong-label" size="md">
+              <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('secondaryPhoneNo')}
               </FormLabel>
               <Controller
@@ -441,6 +441,17 @@ const CreateVendorDetail: React.FC<{
                 <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
               </FormControl>
             </VStack>
+            <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+              <Text>{t('portalRegistration')}</Text>
+              <FormControl>
+                <HStack spacing="16px">
+                  <Checkbox {...register('enableVendorPortal')} colorScheme="brand">
+                    {t('enableVendorPortal')}
+                  </Checkbox>
+                </HStack>
+                <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
+              </FormControl>
+            </VStack>
           </Stack>
         </Box>
       </Box>
@@ -450,7 +461,7 @@ const CreateVendorDetail: React.FC<{
         pt="8px"
         mt="30px"
         id="footer"
-        borderTop="2px solid #E2E8F0"
+        borderTop="1px solid #E2E8F0"
         alignItems="center"
         justifyContent="end"
       >

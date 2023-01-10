@@ -1,16 +1,17 @@
-import { Link } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/react-table'
 import Status from 'features/common/status'
 import numeral from 'numeral'
 import { isDefined } from 'utils'
 import { dateFormat } from 'utils/date-time-utils'
 import { percentageFormatter } from 'utils/string-formatters'
+import { Link } from 'react-router-dom'
 
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
   generalLabourName: 'generalLabourName.contains',
   projectManager: 'projectManager.contains',
-  projectStatus: 'projectStatus.equals',
+  projectStatus: 'projectStatus.in',
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
   clientStartDate: 'clientStartDate.equals',
@@ -54,16 +55,16 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     cell: (row: any) => {
       const value = row.cell.getValue()
       return (
-        <Link
-          href={`${process.env.PUBLIC_URL}/project-details/${value}`}
-          color="#533f03"
-          fontWeight="bold"
+        <Box
+          fontWeight={'500'}
           _hover={{
-            color: '#8d2638',
+            color: 'barColor.50',
+            textDecor: 'underline',
           }}
+          color="brand.300"
         >
-          {value}
-        </Link>
+          <Link to={`/project-details/${value}`}>{value}</Link>
+        </Box>
       )
     },
   },
