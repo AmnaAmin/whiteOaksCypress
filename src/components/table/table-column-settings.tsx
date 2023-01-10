@@ -88,7 +88,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
 
   return (
     <>
-      <Box _hover={{ bg: 'darkPrimary.50', roundedBottomRight:'6px' }}>
+      <Box _hover={{ bg: 'darkPrimary.50', roundedBottomRight: '6px' }}>
         <Button
           colorScheme="darkPrimary"
           variant="ghost"
