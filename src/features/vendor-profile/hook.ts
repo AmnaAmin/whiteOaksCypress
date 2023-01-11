@@ -86,16 +86,24 @@ export const useWatchDocumentFeild = (control: Control<DocumentsCardFormValues>,
 export const checkIsLicenseChanged = (values: any, licenseDocument) => {
   const watchLicenseType = licenseDocument?.licenseType
   const watchLicenseNumber = licenseDocument?.licenseNumber
-  const watchExpiryDate = licenseDocument?.licenseExpirationDate
-  const watchExpirationFile = values?.expirationFile
+  //const watchExpiryDate = licenseDocument?.licenseExpirationDate
+  const watchExpirationFile = licenseDocument?.s3Url && values?.expirationFile
 
   const watchLicenseTypeNot = watchLicenseType !== undefined
   const watchLicenseNumberNot = watchLicenseNumber !== undefined
-  const watchExpiryDateNot = watchExpiryDate !== undefined
+  //const watchExpiryDateNot = watchExpiryDate !== undefined
 
   const isLicenseTypeChanged = watchLicenseType !== values.licenseType && watchLicenseTypeNot
   const isLicenseNumberChanged = watchLicenseNumber !== values?.licenseNumber && watchLicenseNumberNot
-  const isExpiryDateChanged = watchExpiryDate !== datePickerFormat(values?.expiryDate) && watchExpiryDateNot
 
-  return isLicenseTypeChanged || isLicenseNumberChanged || isExpiryDateChanged || !!watchExpirationFile
+  /*
+
+  the 
+  date comparison is creating bugs it needs to be fixed
+  const isExpiryDateChanged = watchExpiryDate !== datePickerFormat(values?.expiryDate) && watchExpiryDateNot
+  
+
+  return isLicenseTypeChanged || isLicenseNumberChanged || isExpiryDateChanged || !!watchExpirationFile*/
+
+  return isLicenseTypeChanged || isLicenseNumberChanged || !!watchExpirationFile
 }

@@ -270,8 +270,8 @@ export const parseWODetailValuesToPayload = formValues => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
   const cancelWorkOrder = formValues?.cancel.value === 35
-  /*eslint-disable */
-  const assignedItems = !cancelWorkOrder 
+
+  const assignedItems = !cancelWorkOrder
     ? [
         ...formValues?.assignedItems?.map((a, index) => {
           const isNewSmartLineItem = !a.smartLineItemId
@@ -290,9 +290,8 @@ export const parseWODetailValuesToPayload = formValues => {
           return assignedItem
         }),
       ]
-    : [] 
-    /*eslint-disable */
-    
+    : []
+
   return {
     cancel: formValues?.cancel?.value,
     ...(cancelWorkOrder && { status: 35, cancelledDate: new Date() }),
@@ -300,6 +299,7 @@ export const parseWODetailValuesToPayload = formValues => {
     workOrderDateCompleted: formValues?.workOrderDateCompleted,
     workOrderExpectedCompletionDate: formValues?.workOrderExpectedCompletionDate,
     showPricing: formValues.showPrice,
+    assignedItems: [...assignedItems],
     notifyVendor: formValues.notifyVendor,
     vendorId: formValues.vendorId?.value,
     vendorSkillId: formValues.vendorSkillId?.value,

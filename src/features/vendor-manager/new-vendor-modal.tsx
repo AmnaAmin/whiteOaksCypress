@@ -39,13 +39,13 @@ const NewVendorModal: React.FC<NewVendorModalType> = props => {
       <Modal onClose={props.onClose} isOpen={props.isOpen} size="6xl">
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader mb="5px" borderBottom="2px solid #E2E8F0">
+          <ModalHeader borderBottom="2px solid #E2E8F0">
             <FormLabel variant="strong-label" size="lg">
               {t('newVendor')}
             </FormLabel>
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
-          <ModalBody>
+          <ModalBody bg="#F2F3F4" py="10px">
             <NewVendorTabs onClose={props.onClose} />
           </ModalBody>
         </ModalContent>

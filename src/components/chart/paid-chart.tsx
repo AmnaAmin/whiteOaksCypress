@@ -31,7 +31,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
   const emptyGraphData = data?.filter(value => value?.count)?.length === 0
 
   const CustomTooltip = ({ active, payload }: any) => {
-    const countValue = payload.map(e => {
+    const countValue = payload?.map(e => {
       return e.payload
     })
 
@@ -90,6 +90,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
               position="insideBottom"
               fill="#A0AEC0"
               fontStyle="italic"
+              fontSize={'14px'}
             />
           )}
         </XAxis>
@@ -107,7 +108,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
             fontStyle: 'Poppins',
           }}
         />
-        {!emptyGraphData && <Tooltip content={<CustomTooltip />} />}
+        {!emptyGraphData && <Tooltip content={<CustomTooltip />} cursor={{ fill: '#EBF8FF' }} />}
 
         <Bar dataKey="sum" fill="#68D391" radius={[5, 5, 0, 0]} />
       </BarChart>

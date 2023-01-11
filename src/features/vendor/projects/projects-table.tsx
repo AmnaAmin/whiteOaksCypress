@@ -42,11 +42,12 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
       const value = row.cell.getValue()
       return (
         <Box
-          fontWeight={'600'}
+          fontWeight={'500'}
           _hover={{
             color: 'barColor.50',
+            textDecor: 'underline',
           }}
-          color="brand.500"
+          color="brand.300"
         >
           <Link to={`/project-details/${value}`}>{value}</Link>
         </Box>
@@ -117,13 +118,13 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }, [selectedCard])
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(
-    filteredUrl + '&' + queryStringWithoutPagination,
+    filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
   )
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
   const filtersInitialValues = {
-    statusLabel: selectedCard !== 'pastDue' ? selectedCard : '',
+    statusLabel: selectedCard !== 'pastDue' ? selectedCard : 'past Due',
   }
 
   const tableColumnsWithFilters = useMemo(() => {
@@ -139,7 +140,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }, [tableColumns])
 
   const { workOrderData, isLoading, dataCount, totalPages } = useWorkOrders(
-    filteredUrl + '&' + queryStringWithPagination,
+    filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
 
@@ -152,7 +153,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }
 
   return (
-    <Box overflow={'auto'} h="calc(100vh - 225px)">
+    <Box overflow={'auto'} minH="calc(100vh - 225px)">
       <TableContextProvider
         data={workOrderData}
         columns={tableColumnsWithFilters}

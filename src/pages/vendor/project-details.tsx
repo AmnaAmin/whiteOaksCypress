@@ -1,4 +1,4 @@
-import { useDisclosure, Text } from '@chakra-ui/react'
+import { useDisclosure } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
 import { Box, Stack, Button } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -18,6 +18,7 @@ import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 import { TriggeredAlertsTable } from 'features/project-details/alerts/triggered-alerts-table'
 import { Card } from 'components/card/card'
 import { boxShadow } from 'theme/common-style'
+import { STATUS } from 'features/common/status'
 
 const tabesStyle = {
   h: { base: '52px', sm: 'unset' },
@@ -40,7 +41,7 @@ const ProjectDetails: React.FC = props => {
   const vendorWOStatusValue = (projectData?.vendorWOStatusValue || '').toLowerCase()
 
   const isNewTransactionAllow = vendorWOStatusValue
-    ? !!(vendorWOStatusValue === 'paid' || vendorWOStatusValue === 'cancelled')
+    ? ![STATUS.Paid, STATUS.Cancelled, STATUS.Invoiced].includes(vendorWOStatusValue?.toLocaleLowerCase() as STATUS)
     : true
 
   return (
@@ -70,7 +71,7 @@ const ProjectDetails: React.FC = props => {
                 {t('documents')}
               </Tab>
 
-              <Tab {...tabesStyle}>{t('alerts')}</Tab>
+              {/* <Tab {...tabesStyle}>{t('alerts')}</Tab> */}
             </TabList>
             <Card
               rounded="0px"
@@ -79,7 +80,7 @@ const ProjectDetails: React.FC = props => {
               style={boxShadow}
               pr={{ base: 0, sm: '15px' }}
             >
-              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" mb="15px">
+              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
                 {tabIndex === 2 && (
                   <Button
                     onClick={onDocumentModalOpen}
@@ -87,11 +88,12 @@ const ProjectDetails: React.FC = props => {
                     leftIcon={<BiUpload fontSize="16px" />}
                     w={{ base: '100%', sm: 'unset' }}
                     mr={{ base: '15px', sm: 'unset' }}
+                    mb="15px"
                   >
                     {t('upload')}
                   </Button>
                 )}
-                {tabIndex === 3 && (
+                {/* {tabIndex === 3 && (
                   <Button
                     colorScheme="darkPrimary"
                     onClick={onAlertModalOpen}
@@ -103,15 +105,18 @@ const ProjectDetails: React.FC = props => {
                     </Text>
                   </Button>
                 )}
+              )} */}
+
                 {tabIndex === 0 && (
                   <Button
                     data-testid="new-transaction-button"
                     onClick={onTransactionModalOpen}
                     colorScheme="darkPrimary"
                     leftIcon={<BiAddToQueue />}
-                    isDisabled={isNewTransactionAllow}
+                    isDisabled={!isNewTransactionAllow}
                     w={{ base: '100%', sm: 'unset' }}
                     mr={{ base: '15px', sm: 'unset' }}
+                    mb="15px"
                   >
                     {t('newTransaction')}
                   </Button>
