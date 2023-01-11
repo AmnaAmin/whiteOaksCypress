@@ -12,8 +12,15 @@ export const disabledInputStyle = {
 
 export const inputFocusStateStyle = {
   _focus: {
-    borderColor: '#4E87F8',
-    boxShadow: '0 0 0 1px #4E87F8',
+    borderColor: 'inherit',
+    boxShadow: 'none',
+  },
+}
+
+export const requiredInputFocusStateStyle = {
+  _focus: {
+    borderColor: 'none',
+    boxShadow: 'none',
   },
 }
 

@@ -20,6 +20,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type TransactionProps = {
   projectStatus: string
@@ -63,6 +64,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     setTotalRows(rows?.length)
   }
 
+  const { isVendor } = useUserRolesSelector()
   return (
     <>
       {isLoading && (
@@ -73,7 +75,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
       {transactions && (
         <Box
           w="100%"
-          minH="calc(100vh - 450px)"
+          minH={isVendor ? 'calc(100vh - 370px)' : 'calc(100vh - 510px)'}
           position="relative"
           borderRadius="6px"
           border="1px solid #CBD5E0"
@@ -89,13 +91,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
             <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <ButtonsWrapper>
-                <ExportButton
-                  columns={tableColumns}
-                  refetch={refetch}
-                  isLoading={isLoading}
-                  colorScheme="darkPrimary.400"
-                  fileName="transactions"
-                />
+                <ExportButton columns={tableColumns} refetch={refetch} isLoading={isLoading} fileName="transactions" />
                 <CustomDivider />
                 {settingColumns && (
                   <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
