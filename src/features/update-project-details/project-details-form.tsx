@@ -117,29 +117,29 @@ const ProjectDetailsTab = (props: tabProps) => {
           </TabList>
 
           <TabPanels mt="31px">
-            <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
+            <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '343px'}>
               <ProjectManagement
                 projectStatusSelectOptions={projectStatusSelectOptions}
                 projectTypeSelectOptions={projectTypeSelectOptions}
               />
             </TabPanel>
 
-            <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
+            <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '343px'}>
               <InvoiceAndPayments />
             </TabPanel>
 
-            <TabPanel p="0" ml="32px" minH={style?.height ? '380px' : '430px'}>
+            <TabPanel p="0" ml="32px" minH={style?.height ? '380px' : '343px'}>
               <Contact
                 projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
                 projectManagerSelectOptions={fpmSelectOptions}
                 clientSelectOptions={clientSelectOptions}
               />
             </TabPanel>
-            <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '430px'}>
+            <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '343px'}>
               <Location />
             </TabPanel>
 
-            <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '430px'}>
+            <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '343px'}>
               <Misc />
             </TabPanel>
           </TabPanels>
