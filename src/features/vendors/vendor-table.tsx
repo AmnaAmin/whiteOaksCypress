@@ -24,7 +24,7 @@ import {
 } from 'components/table-refactored/pagination'
 
 const VENDOR_TABLE_QUERY_KEYS = {
-  statusLabel: 'statusLabel.contains',
+  statusLabel: 'statusLabel.equals',
   companyName: 'companyName.contains',
   region: 'region.contains',
   ownerName: 'ownerName.contains',
@@ -36,6 +36,8 @@ const VENDOR_TABLE_QUERY_KEYS = {
   availableCapacity: 'availableCapacity.equals',
   skills: 'skills.contains',
   market: 'market.contains',
+  state: 'state.contains',
+  businessPhoneNumber: 'businessPhoneNumber.contains',
 }
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
@@ -152,21 +154,15 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     pagination.pageSize,
   )
 
-  // const [filterVendors, setFilterVendors] = useState(vendors)
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
-
   const { refetch, isLoading: isExportDataLoading } = useGetAllVendors(queryStringWithoutPagination)
 
-  // useEffect(() => {
-  //   setFilterVendors(
-  //     vendors?.filter(
-  //       vendor => !selectedCard || vendor.statusLabel?.replace(/\s/g, '').toLowerCase() === selectedCard?.toLowerCase(),
-  //     ),
-  //   )
-  // }, [selectedCard, vendors])
-
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendors)
-  const { tableColumns, settingColumns } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
+  const { tableColumns, settingColumns } = useTableColumnSettings(
+    VENDOR_COLUMNS,
+    TableNames.vendors,
+    //  { statusLabel: selectedCard ? selectedCard : ''}
+  )
 
   const onSave = columns => {
     postGridColumn(columns)

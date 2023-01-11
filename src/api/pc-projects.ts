@@ -423,10 +423,10 @@ export const useClients = () => {
 // }
 
 export const VENDORS_SELECTED_CARD_MAP_URL = {
-  active: 'status.equals=34',
-  inActive: 'status.equals=36',
-  doNotUse: 'status.equals=114',
-  expired: 'status.equals=110',
+  active: 'status.equals=12',
+  inActive: 'status.equals=13',
+  doNotUse: 'status.equals=14',
+  expired: 'status.equals=15',
 }
 
 const VENDOR_QUERY_KEY = 'vendor'
@@ -445,7 +445,7 @@ export const useVendor = (queryString: string, pageSize: number) => {
 
   const { data, ...rest } = usePaginationQuery<vendors>(
     [VENDOR_QUERY_KEY, apiQueryString],
-    `view-vendors?${apiQueryString}&status.notEquals=35`,
+    `view-vendors/v1?${apiQueryString}`,
     pageSize,
   )
 
