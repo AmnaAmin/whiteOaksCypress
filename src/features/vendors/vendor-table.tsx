@@ -144,7 +144,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
           />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportCustomButton columns={tableColumns} data={filterVendors} colorScheme="brand" fileName="vendors" />
+              <ExportCustomButton columns={tableColumns} data={filterVendors} fileName="vendors" />
 
               {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
