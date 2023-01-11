@@ -73,7 +73,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
       {transactions && (
         <Box
           w="100%"
-          minH="calc(100vh - 450px)"
+          minH="calc(100vh - 370px)"
           position="relative"
           borderRadius="6px"
           border="1px solid #CBD5E0"

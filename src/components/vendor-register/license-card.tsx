@@ -1,3 +1,4 @@
+/*eslint-disable */
 import React, { useCallback, useMemo, useState } from 'react'
 import {
   Box,
@@ -24,29 +25,22 @@ import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { BiAddToQueue, BiDownload } from 'react-icons/bi'
-import { checkIsLicenseChanged } from './hook'
-import { SaveChangedFieldAlert } from './save-change-field'
-import { VENDORPROFILE } from './vendor-profile.i18n'
-import { AdminPortalVerifyLicense } from './verify-license'
 
 type LicenseProps = {
-  vendor: VendorProfile
-  onClose?: () => void
   isActive: boolean
 }
 type licenseFormProps = {
-  vendor: VendorProfile
-  onClose?: () => void
+
   isActive: boolean
 }
-export const License = React.forwardRef((props: LicenseProps, ref) => {
+export const LicenseCard = React.forwardRef((props: LicenseProps, ref) => {
   return (
     <Box>
-      <LicenseForm isActive={props.isActive} vendor={props.vendor} onClose={props.onClose} />
+      <LicenseForm isActive={props.isActive}  />
     </Box>
   )
 })
-export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => {
+export const LicenseForm = ({ isActive,  }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
 
@@ -97,7 +91,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
     )
   }
 
-  const watchChangeFields = licenseFields
+  /*const watchChangeFields = licenseFields
     ?.map((e, index) => checkIsLicenseChanged(formValues?.licenses?.[index], vendor?.licenseDocuments[index]))
     .includes(true)
 
@@ -110,7 +104,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         setValue(`licenses.${index}.expirationFile`, null),
       ]
     })
-  }
+  }*/
 
   const getSelectOptions = useCallback(
     index => {
@@ -127,9 +121,9 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
   return (
     <Box>
       <VStack align="start" h="584px" spacing="15px" overflow="auto">
-        <Box width={{ base: '100%', md: 'auto' }}>
+        <Box width={ { base: "100%", md: "auto" } }>
           <Button
-            ml={{ sm: '0px', md: '45px' }}
+            ml={{ sm: "0px", md: "45px" }}
             variant="outline"
             colorScheme="darkPrimary"
             data-testid="addLicense"
@@ -142,29 +136,31 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
               })
             }
             leftIcon={<BiAddToQueue />}
-            width={{ base: '100%', md: 'auto' }}
+            width={ { base: "100%", md: "auto" } }
           >
             {t('addLicense')}
           </Button>
         </Box>
         {licenseFields
           .map((license, index) => {
-            const isLicenseChanged = checkIsLicenseChanged(
-              formValues?.licenses?.[index],
-              vendor?.licenseDocuments[index],
-            )
+            
 
             return (
               <HStack
                 flexDir={{ base: 'column', sm: 'row' }}
                 key={license?.id}
-                mt={{ base: '-40px', md: '40px' }}
+                mt={{ base:"-40px", md:"40px"}}
                 spacing={4}
                 data-testid="licenseRows"
                 w="100%"
-                alignItems={{ base: '', md: 'center' }}
+                alignItems={{ base: "", md: "center" }}
               >
-                <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }}>
+                <Box 
+                  w="2em" 
+                  color="#345EA6" 
+                  fontSize="15px"
+                  m={{ base: "4%", md: 0 }}
+                >
                   <Center>
                     <Icon
                       as={MdOutlineCancel}
@@ -186,14 +182,16 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   control={control}
                   options={getSelectOptions(index)}
                   rules={{ required: isActive && 'This is required field' }}
+                  
                   controlStyle={{
-                    maxW: { ...{ sm: '95%', md: '215px' } },
+                    maxW: {...{sm: "95%", md: "215px"}}
                   }}
                   elementStyle={{
                     bg: 'white',
                     borderLeft: '2px solid #345EA6',
                   }}
                   testId={`licenseType-` + index}
+                  
                 />
                 <FormInput
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseNumber?.message}
@@ -201,8 +199,8 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   placeholder=""
                   register={register}
                   controlStyle={{
-                    w: { ...{ sm: '100%', md: '215px' } },
-                    maxW: { ...{ sm: '95%', md: '215px' } },
+                    w: {...{sm: "100%", md: "215px"}},
+                    maxW: {...{sm: "95%", md: "215px"}}
                   }}
                   elementStyle={{
                     bg: 'white',
@@ -218,7 +216,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                       {t('expiryDate')}
                     </FormLabel>
                     <Input
-                      w={{ base: '100%', md: '215px' }}
+                      w={{ base:"100%", md: "215px"}}
                       type="date"
                       variant="required-field"
                       {...register(`licenses.${index}.expiryDate`)}
@@ -227,21 +225,14 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   </FormControl>
                 </Box>
 
-                <VStack alignItems={{ base: '', md: 'center' }}>
-                  <FormControl
-                    w={{ base: '100%', md: '215px' }}
-                    h="92px"
-                    isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}
-                  >
+                <VStack alignItems={{ base: "", md: "center" }}>
+                  <FormControl w={{ base:"100%", md: "215px"}} h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
                     <FormLabel size="md" color="#2D3748">
                       File Upload
                     </FormLabel>
                     <Controller
                       name={`licenses.${index}.expirationFile`}
                       control={control}
-                      rules={
-                        vendor?.licenseDocuments[index]?.s3Url ? {} : { required: isActive && 'This is required field' }
-                      }
                       render={({ field, fieldState }) => {
                         return (
                           <VStack alignItems="baseline">
@@ -256,73 +247,26 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                                   field.onChange(file)
                                 }}
                                 onClear={() => setValue(field.name, null)}
+                                
                               ></ChooseFileField>
                               <FormErrorMessage bottom="5px" pos="absolute">
                                 {fieldState.error?.message}
                               </FormErrorMessage>
                             </Box>
-                            {vendor?.licenseDocuments[index] && (
-                              <Box overflow="hidden" pos="absolute" top={16}>
-                                {downloadDocument(
-                                  vendor?.licenseDocuments[index]?.s3Url,
-                                  vendor?.licenseDocuments[index]?.fileType ?? 'doc.png',
-                                )}
-                              </Box>
-                            )}
+                            
                           </VStack>
                         )
                       }}
                     />
                   </FormControl>
                 </VStack>
-
-                {isLicenseChanged ? (
-                  <>
-                    <SaveChangedFieldAlert />
-                  </>
-                ) : (
-                  <AdminPortalVerifyLicense
-                    currStatus={(vendor?.licenseDocuments[index] as any)?.status}
-                    fieldName={`licenseCheckbox${index}`}
-                    registerToFormField={register}
-                  />
-                )}
+                
               </HStack>
             )
           })
           .sort((curr: any, pre: any) => (curr.date > pre.date ? 1 : -1))}
       </VStack>
-      <Flex
-        id="footer"
-        w="100%"
-        height="72px"
-        mt={2}
-        pt="8px"
-        alignItems="center"
-        justifyContent="end"
-        borderTop="2px solid #CBD5E0"
-      >
-        {watchChangeFields && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3">
-            {t(`${VENDORPROFILE}.discardChanges`)}
-          </Button>
-        )}
-
-        {onClose && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
-            Cancel
-          </Button>
-        )}
-        <Button
-          disabled={disableLicenseNext}
-          type="submit"
-          variant="solid"
-          colorScheme="darkPrimary"
-          data-testid="saveLicenses"
-        >
-          {vendor?.id ? t('save') : t('next')}
-        </Button>
-      </Flex>
+      
     </Box>
   )
 }

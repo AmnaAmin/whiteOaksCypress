@@ -1,4 +1,4 @@
-import { useDisclosure, Text } from '@chakra-ui/react'
+import { useDisclosure } from '@chakra-ui/react'
 import { Tabs, TabList, TabPanel, TabPanels, Tab } from 'components/tabs/tabs'
 import { Box, Stack, Button } from '@chakra-ui/react'
 import React, { useRef, useState } from 'react'
@@ -70,7 +70,7 @@ const ProjectDetails: React.FC = props => {
                 {t('documents')}
               </Tab>
 
-              <Tab {...tabesStyle}>{t('alerts')}</Tab>
+              {/* <Tab {...tabesStyle}>{t('alerts')}</Tab> */}
             </TabList>
             <Card
               rounded="0px"
@@ -79,7 +79,7 @@ const ProjectDetails: React.FC = props => {
               style={boxShadow}
               pr={{ base: 0, sm: '15px' }}
             >
-              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" mb="15px">
+              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
                 {tabIndex === 2 && (
                   <Button
                     onClick={onDocumentModalOpen}
@@ -87,11 +87,12 @@ const ProjectDetails: React.FC = props => {
                     leftIcon={<BiUpload fontSize="16px" />}
                     w={{ base: '100%', sm: 'unset' }}
                     mr={{ base: '15px', sm: 'unset' }}
+                    mb="15px"
                   >
                     {t('upload')}
                   </Button>
                 )}
-                {tabIndex === 3 && (
+                {/* {tabIndex === 3 && (
                   <Button
                     colorScheme="darkPrimary"
                     onClick={onAlertModalOpen}
@@ -103,6 +104,8 @@ const ProjectDetails: React.FC = props => {
                     </Text>
                   </Button>
                 )}
+              )} */}
+
                 {tabIndex === 0 && (
                   <Button
                     data-testid="new-transaction-button"
@@ -112,6 +115,7 @@ const ProjectDetails: React.FC = props => {
                     isDisabled={!isNewTransactionAllow}
                     w={{ base: '100%', sm: 'unset' }}
                     mr={{ base: '15px', sm: 'unset' }}
+                    mb="15px"
                   >
                     {t('newTransaction')}
                   </Button>

@@ -154,7 +154,7 @@ export const ProjectAwardCard = ({
           // pointerEvents={disabled ? 'none' : 'auto'}
           onClick={handleSelected}
           bgColor={selectedCard === id ? 'blue.50' : ''}
-          borderColor={selectedCard === id ? '#4E87F8' : ''}
+          borderColor={selectedCard === id ? 'brand.300' : ''}
           _hover={{ bg: 'gray.100' }}
         >
           <VStack w="195px" px={'10px'} alignItems={'Start'} spacing={3}>
@@ -179,7 +179,7 @@ export const ProjectAwardCard = ({
             <Text fontWeight="400" fontSize="12px" color="gray.500" whiteSpace="nowrap">
               {t(`${PROJECT_AWARD}.scopeAmount`)}
             </Text>
-            <Text fontWeight="600" fontSize="16px" color="#4E87F8">
+            <Text fontWeight="600" fontSize="16px" color="brand.300">
               {currencyFormatter(calculatePercentage(cardsvalues?.factoringFee))}
             </Text>
             <Divider borderColor="transparent" />
@@ -202,7 +202,7 @@ export const ProjectAwardCard = ({
               <Text fontWeight="400" fontSize="14px" color="gray.600">
                 {currencyFormatter(calFactorFeePercentage(cardsvalues?.factoringFee))}
               </Text>
-              <Text fontWeight="400" fontSize="12px" color="blue.400">
+              <Text fontWeight="400" fontSize="12px" color="brand.300">
                 {`${cardsvalues?.factoringFee}%`}
               </Text>
             </HStack>
