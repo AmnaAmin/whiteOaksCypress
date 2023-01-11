@@ -208,7 +208,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const isShowCheckboxes = !isApproved && transactionFields?.length > 1 && !isSysFactoringFee
 
   return (
-    <Box overflowX="auto" w="100%">
+    <Box overflowX={isApproved ? 'initial' : 'auto'} w="100%">
       <VStack alignItems="start" w="720px">
         <Flex w="720px" mt="10px" mb="15px">
           {!isApproved && (
@@ -384,7 +384,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           flexDirection="column"
           rounded={6}
           w="100%"
-          minH="34vh"
+          minH="36vh"
         >
           <Grid
             gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
@@ -440,13 +440,14 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     className="amount-input-row"
                     key={transactionField.id}
                     gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
-                    p="4"
+                    p={isApproved ? '3' : '4'}
                     fontSize="14px"
                     color="gray.600"
                     gap="2rem 4rem"
                     borderWidth={'0 0 1px 0'}
                     borderStyle="solid"
                     borderColor="gray.300"
+                    height={isApproved ? '40px' : 'auto'}
                   >
                     {isShowCheckboxes && (
                       <GridItem>
@@ -567,10 +568,17 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               borderColor="gray.300"
               bg="white"
               rounded={6}
+              height={isApproved ? '40px' : 'auto'}
             >
               {isShowCheckboxes && <GridItem />}
-              <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.300" py="4"></GridItem>
-              <GridItem py="4" fontWeight="bold" data-testid="total-amount">
+              <GridItem
+                borderWidth="0 1px 0 0"
+                borderStyle="solid"
+                borderColor="gray.300"
+                py="4"
+                height={isApproved ? '40px' : 'auto'}
+              ></GridItem>
+              <GridItem py={isApproved ? '3' : '4'} fontWeight="bold" data-testid="total-amount">
                 {t('total')}: {totalAmount}
               </GridItem>
             </Grid>
