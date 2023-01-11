@@ -6,7 +6,7 @@ import Overview from 'components/chart/Overview'
 import PaidChart from 'components/chart/paid-chart'
 // import { usePaidWOAmountByYearAndMonthTotal } from 'api/vendor-dashboard'
 import Dropdown from 'components/dropdown-menu/Dropdown'
-import { MonthOption, monthOptions } from 'utils/date-time-utils'
+import { MonthOption, monthOptions, monthOptionsPaidGraph } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 
 import { useUserProfile } from 'utils/redux-common-selectors'
@@ -103,7 +103,7 @@ const Dashboard: React.FC = () => {
             </Text>
             <Spacer />
             <Box mt="20px" mr="30px" w="145px" border={'1px solid #CBD5E0'} borderRadius={'6px'}>
-              <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
+              <Dropdown options={monthOptionsPaidGraph} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
 
