@@ -252,9 +252,9 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
             <Card
               pb="8px"
-              pt="18px"
+              pt="15px"
               px="18px"
-              roundedTopLeft="0px"
+              roundedTop="0px"
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
               width={isVendor ? 'calc(96vw - var(--sidebar-width))' : '100%'}
             >

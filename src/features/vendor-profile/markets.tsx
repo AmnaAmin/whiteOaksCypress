@@ -36,7 +36,7 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
 export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
   const { control } = useFormContext<VendorMarketFormValues>()
   const tradeCheckboxes = useWatch({ control, name: 'markets' })
-  
+
   return (
     <>
       <Box h="584px" overflow="auto">

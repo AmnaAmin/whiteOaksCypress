@@ -32,9 +32,9 @@ import WorkOrderDetailTab from './details/work-order-detail-tab'
 import { WorkOrderNotes } from 'features/work-order/notes/work-order-notes'
 import Status from '../../common/status'
 import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
-import { Card } from 'components/card/card'
 import { ProjectAwardTab } from 'features/work-order/project-award/project.award'
 import { useProjectAward } from 'api/project-award'
+import { Card } from 'features/login-form-centered/Card'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -148,15 +148,23 @@ export const WorkOrderDetails = ({
               index={tabIndex}
               onChange={index => setTabIndex(index)}
             >
-              <TabList border="none" pt="12px" flexDir={{ base: 'column', md: 'row' }}>
-                <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
-                {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
-                <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
-                <Tab data-testid="invoice">{t('invoice')}</Tab>
-                <Tab data-testid="payments">{t('payments')}</Tab>
-                <Tab data-testid="notes">{t('notes')}</Tab>
-              </TabList>
-              <Card mb={3} py={0} roundedTop={0} roundedRight={12}>
+              <Card
+                bg={{ base: 'white', md: 'transparent' }}
+                p={{ base: '12px 12px 16px 12px', md: '0px !important' }}
+                rounded="6px 6px 0px 0px"
+                boxShadow={{ sm: 'none' }}
+                mt="12px"
+              >
+                <TabList border="none" flexDir={{ base: 'column', md: 'row' }}>
+                  <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
+                  {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
+                  <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
+                  <Tab data-testid="invoice">{t('invoice')}</Tab>
+                  <Tab data-testid="payments">{t('payments')}</Tab>
+                  <Tab data-testid="notes">{t('notes')}</Tab>
+                </TabList>
+              </Card>
+              <Card mb={3} py={0} roundedTop={0} roundedRight={{ base: 0, md: 12 }}>
                 <TabPanels>
                   <TabPanel p={0}>
                     <WorkOrderDetailTab

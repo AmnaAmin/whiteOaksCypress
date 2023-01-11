@@ -20,7 +20,6 @@ import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { useTranslation } from 'react-i18next'
 
-
 type DocumentsProps = {
   isActive: boolean
 }
@@ -36,7 +35,6 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   )
 })
 
-
 export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
@@ -50,7 +48,6 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
   } = useFormContext<DocumentsCardFormValues>()
   const documents = getValues()
 
- 
   /*const {
     isW9DocumentDateChanged,
     watchW9DocumentFile,
@@ -158,13 +155,11 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
-                     
                     </VStack>
                   )
                 }}
               />
             </FormControl>
-            
           </HStack>
         </HStack>
         <Box>
@@ -219,13 +214,11 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              
             </HStack>
           </HStack>
         </Box>
@@ -308,13 +301,11 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              
             </HStack>
           </HStack>
         </Box>
@@ -344,7 +335,6 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 },
               }}
             >
-              
               <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message} color="#2D3748">
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
@@ -369,20 +359,18 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
-                          
+
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              
             </HStack>
           </HStack>
         </Box>
-        
+
         <Box>
           <HStack
             flexDir={{ base: 'column', sm: 'row' }}
@@ -409,7 +397,6 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 },
               }}
             >
-              
               <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message} color="#2D3748">
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
@@ -431,21 +418,17 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
-                          
+
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              
             </HStack>
           </HStack>
         </Box>
-        
-        
       </VStack>
     </>
   )

@@ -32,7 +32,7 @@ const InvoicingAndPaymentTab = ({
   const { t } = useTranslation()
   return (
     <Box>
-      <ModalBody ml={30} w="95%" h={'calc(100vh - 300px)'} overflow="auto">
+      <ModalBody ml={'0px'} w="95%" h={'calc(100vh - 300px)'} overflow="auto">
         <Grid
           templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(170px,1fr))' }}
           gap={5}

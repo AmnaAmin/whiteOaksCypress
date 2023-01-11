@@ -12,27 +12,17 @@ type marketFormProps = {
   isActive: boolean
 }
 
-export const MarketListCard: React.FC<{ onClose?: () => void; isActive: boolean }> = ({
-  onClose,
-  isActive,
-}) => {
+export const MarketListCard: React.FC<{ onClose?: () => void; isActive: boolean }> = ({ onClose, isActive }) => {
   const { markets, isLoading } = useMarkets()
 
   return (
-    <Box>
-      {isLoading ? (
-        <BlankSlate />
-      ) : (
-        <MarketForm isActive={isActive} markets={markets} onClose={onClose} />
-      )}
-    </Box>
+    <Box>{isLoading ? <BlankSlate /> : <MarketForm isActive={isActive} markets={markets} onClose={onClose} />}</Box>
   )
 }
 
 export const MarketForm = ({ onClose, isActive, markets }: marketFormProps) => {
   const { control } = useFormContext<VendorMarketFormValues>()
   const tradeCheckboxes = useWatch({ control, name: 'markets' })
-
 
   return (
     <>
@@ -65,7 +55,6 @@ export const MarketForm = ({ onClose, isActive, markets }: marketFormProps) => {
           })}
         </Flex>
       </Box>
-      
     </>
   )
 }
