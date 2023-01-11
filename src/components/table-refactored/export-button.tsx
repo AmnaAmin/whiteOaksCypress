@@ -48,7 +48,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 
   return (
     <Box _hover={{ bg: 'darkPrimary.50' }}>
-      <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading} colorScheme="darkBlue.300">
+      <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading} colorScheme="darkBlue">
         {children ?? (
           <HStack spacing={1}>
             <Icon as={BiExport} fontSize={'18px'} mb="1px" fontWeight={500} />
