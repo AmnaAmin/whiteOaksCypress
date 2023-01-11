@@ -256,7 +256,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               px="18px"
               roundedTopLeft='0px'
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
-              width={isVendor ? 'calc(100vw - var(--sidebar-width))' : '100%'}
+              width={isVendor ? 'calc(96vw - var(--sidebar-width))' : '100%'}
             >
               <TabPanels mt={{ base: '0', sm: '30px' }}>
                 <TabPanel p="0px">
