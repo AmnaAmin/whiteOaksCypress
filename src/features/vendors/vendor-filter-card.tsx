@@ -27,12 +27,12 @@ const VendorFilterCard: React.FC<{
           {props.IconElement}
         </Center>
 
-        <HStack alignItems="start" spacing={1} w="calc(100%)">
-          <Text fontSize="16px" fontWeight={400} color="gray.600">
+        <HStack alignItems="center" spacing={1} w="calc(100%)">
+          <Text fontSize="14px" fontWeight={400} color="gray.700">
             {props.title}
           </Text>
           <Spacer />
-          <Text fontSize="18px" fontWeight={600} color="gray.600">
+          <Text fontSize="20px" fontWeight={600} color="gray.700">
             {props.number}
           </Text>
         </HStack>
