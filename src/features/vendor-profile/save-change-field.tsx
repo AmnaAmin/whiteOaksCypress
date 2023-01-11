@@ -6,7 +6,7 @@ export const SaveChangedFieldAlert = () => {
   return (
     <HStack py="25px">
       <Divider orientation="vertical" border="1px solid #CBD5E0 !important" h="20px" />
-      <Text fontStyle="italic" color="#F56565" fontSize="12px">
+      <Text fontStyle="italic" color="#F56565" fontSize="12px" whiteSpace="nowrap">
         {t(`${VENDORPROFILE}.changeFieldMessage`)}
       </Text>
     </HStack>
