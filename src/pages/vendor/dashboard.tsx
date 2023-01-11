@@ -6,7 +6,7 @@ import Overview from 'components/chart/Overview'
 import PaidChart from 'components/chart/paid-chart'
 // import { usePaidWOAmountByYearAndMonthTotal } from 'api/vendor-dashboard'
 import Dropdown from 'components/dropdown-menu/Dropdown'
-import { MonthOption, monthOptions } from 'utils/date-time-utils'
+import { MonthOption, monthOptions, monthOptionsPaidGraph } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 
 import { useUserProfile } from 'utils/redux-common-selectors'
@@ -16,7 +16,6 @@ import { useNavigate } from 'react-router-dom'
 import { UpcomingPaymentTable } from 'features/vendor/dashboard/upcoming-payment-table'
 import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
 import { boxShadow } from 'theme/common-style'
-import { monthOptionsPaidGraph } from 'api/vendor-dashboard'
 
 const Dashboard: React.FC = () => {
   const { vendorId } = useUserProfile() as Account
