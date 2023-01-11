@@ -159,7 +159,6 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
               columns={tableColumns}
               refetch={refetch}
               isLoading={isExportDataLoading}
-              colorScheme="brand"
               fileName="receivable"
             />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
