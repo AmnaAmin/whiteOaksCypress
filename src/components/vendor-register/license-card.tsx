@@ -30,17 +30,16 @@ type LicenseProps = {
   isActive: boolean
 }
 type licenseFormProps = {
-
   isActive: boolean
 }
 export const LicenseCard = React.forwardRef((props: LicenseProps, ref) => {
   return (
     <Box>
-      <LicenseForm isActive={props.isActive}  />
+      <LicenseForm isActive={props.isActive} />
     </Box>
   )
 })
-export const LicenseForm = ({ isActive,  }: licenseFormProps) => {
+export const LicenseForm = ({ isActive }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
 
@@ -121,9 +120,9 @@ export const LicenseForm = ({ isActive,  }: licenseFormProps) => {
   return (
     <Box>
       <VStack align="start" h="584px" spacing="15px" overflow="auto">
-        <Box width={ { base: "100%", md: "auto" } }>
+        <Box width={{ base: '100%', md: 'auto' }}>
           <Button
-            ml={{ sm: "0px", md: "45px" }}
+            ml={{ sm: '0px', md: '45px' }}
             variant="outline"
             colorScheme="darkPrimary"
             data-testid="addLicense"
@@ -136,31 +135,24 @@ export const LicenseForm = ({ isActive,  }: licenseFormProps) => {
               })
             }
             leftIcon={<BiAddToQueue />}
-            width={ { base: "100%", md: "auto" } }
+            width={{ base: '100%', md: 'auto' }}
           >
             {t('addLicense')}
           </Button>
         </Box>
         {licenseFields
           .map((license, index) => {
-            
-
             return (
               <HStack
                 flexDir={{ base: 'column', sm: 'row' }}
                 key={license?.id}
-                mt={{ base:"-40px", md:"40px"}}
+                mt={{ base: '-40px', md: '40px' }}
                 spacing={4}
                 data-testid="licenseRows"
                 w="100%"
-                alignItems={{ base: "", md: "center" }}
+                alignItems={{ base: '', md: 'center' }}
               >
-                <Box 
-                  w="2em" 
-                  color="#345EA6" 
-                  fontSize="15px"
-                  m={{ base: "4%", md: 0 }}
-                >
+                <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }}>
                   <Center>
                     <Icon
                       as={MdOutlineCancel}
@@ -182,16 +174,14 @@ export const LicenseForm = ({ isActive,  }: licenseFormProps) => {
                   control={control}
                   options={getSelectOptions(index)}
                   rules={{ required: isActive && 'This is required field' }}
-                  
                   controlStyle={{
-                    maxW: {...{sm: "95%", md: "215px"}}
+                    maxW: { ...{ sm: '95%', md: '215px' } },
                   }}
                   elementStyle={{
                     bg: 'white',
                     borderLeft: '2px solid #345EA6',
                   }}
                   testId={`licenseType-` + index}
-                  
                 />
                 <FormInput
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseNumber?.message}
@@ -199,8 +189,8 @@ export const LicenseForm = ({ isActive,  }: licenseFormProps) => {
                   placeholder=""
                   register={register}
                   controlStyle={{
-                    w: {...{sm: "100%", md: "215px"}},
-                    maxW: {...{sm: "95%", md: "215px"}}
+                    w: { ...{ sm: '100%', md: '215px' } },
+                    maxW: { ...{ sm: '95%', md: '215px' } },
                   }}
                   elementStyle={{
                     bg: 'white',
@@ -216,7 +206,7 @@ export const LicenseForm = ({ isActive,  }: licenseFormProps) => {
                       {t('expiryDate')}
                     </FormLabel>
                     <Input
-                      w={{ base:"100%", md: "215px"}}
+                      w={{ base: '100%', md: '215px' }}
                       type="date"
                       variant="required-field"
                       {...register(`licenses.${index}.expiryDate`)}
@@ -225,8 +215,12 @@ export const LicenseForm = ({ isActive,  }: licenseFormProps) => {
                   </FormControl>
                 </Box>
 
-                <VStack alignItems={{ base: "", md: "center" }}>
-                  <FormControl w={{ base:"100%", md: "215px"}} h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
+                <VStack alignItems={{ base: '', md: 'center' }}>
+                  <FormControl
+                    w={{ base: '100%', md: '215px' }}
+                    h="92px"
+                    isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}
+                  >
                     <FormLabel size="md" color="#2D3748">
                       File Upload
                     </FormLabel>
@@ -247,26 +241,22 @@ export const LicenseForm = ({ isActive,  }: licenseFormProps) => {
                                   field.onChange(file)
                                 }}
                                 onClear={() => setValue(field.name, null)}
-                                
                               ></ChooseFileField>
                               <FormErrorMessage bottom="5px" pos="absolute">
                                 {fieldState.error?.message}
                               </FormErrorMessage>
                             </Box>
-                            
                           </VStack>
                         )
                       }}
                     />
                   </FormControl>
                 </VStack>
-                
               </HStack>
             )
           })
           .sort((curr: any, pre: any) => (curr.date > pre.date ? 1 : -1))}
       </VStack>
-      
     </Box>
   )
 }

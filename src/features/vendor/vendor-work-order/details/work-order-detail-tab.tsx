@@ -154,7 +154,7 @@ const WorkOrderDetailTab = ({
           )}
           <SimpleGrid
             templateColumns={{ base: 'unset', sm: 'repeat(auto-fit , minmax(180px , 1fr))' }}
-            spacing={5}
+            spacing={'16px'}
             borderBottom="1px solid  #E2E8F0"
             minH="60px"
             my="30px"
