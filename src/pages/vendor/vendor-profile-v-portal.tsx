@@ -192,7 +192,9 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   return (
     <FormProvider {...formReturn}>
       <Stack width={{ base: '100%', lg: '1200px' }}>
-        <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
+        <Box display={{ base: 'none', sm: 'block' }}>
+          <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
+        </Box>
 
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
@@ -201,7 +203,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               p={{ base: '6px', sm: '0px !important' }}
               rounded="6px 6px 0px 6px"
               boxShadow={{ sm: 'none' }}
+              pt="0"
             >
+              <Box display={{ base: 'block', sm: 'none' }}>
+                <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
+              </Box>
               <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
                 <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
                 <Tab
@@ -240,7 +246,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 {!isVendor && <Tab>{t('prjt')}</Tab>}
               </TabList>
             </Card>
-            <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
+            <Box pt="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
               <Divider borderWidth="1px" color="#E2E8F0" />
             </Box>
 
@@ -252,7 +258,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
               width={isVendor ? 'calc(100vw - var(--sidebar-width))' : '100%'}
             >
-              <TabPanels mt="31px">
+              <TabPanels mt={{ base: '0', sm: '30px' }}>
                 <TabPanel p="0px">
                   {tabIndex === 0 ? (
                     VendorType === 'editVendor' ? (

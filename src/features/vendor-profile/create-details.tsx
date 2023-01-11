@@ -55,6 +55,13 @@ const CreateVendorDetail: React.FC<{
   const formValues = useWatch({ control })
 
   const validatePayment = paymentsMethods?.filter(payment => formValues[payment.name])
+
+  const preventNumber = e => {
+    let keyCode = e.keyCode ? e.keyCode : e.which
+    if (keyCode > 47 && keyCode < 58) {
+      e.preventDefault()
+    }
+  }
   return (
     <Stack spacing={3}>
       <Box height="498px" overflow="auto">
@@ -71,6 +78,7 @@ const CreateVendorDetail: React.FC<{
                 required: isActive && 'This is required',
               })}
               size="md"
+              onKeyPress={preventNumber}
             />
             <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName.message}</FormErrorMessage>
           </FormControl>
@@ -119,6 +127,7 @@ const CreateVendorDetail: React.FC<{
               })}
               variant="required-field"
               size="md"
+              onKeyPress={preventNumber}
             />
             <FormErrorMessage pos="absolute">{errors.ownerName?.message}</FormErrorMessage>
           </FormControl>
@@ -145,7 +154,7 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input type="text" {...register('secondName')} variant="outline" size="md" />
+            <Input type="text" {...register('secondName')} variant="outline" size="md" onKeyPress={preventNumber} />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -202,7 +211,13 @@ const CreateVendorDetail: React.FC<{
                 {t('ext')}
               </FormLabel>
 
-              <Input {...register('businessPhoneNumberExtension')} w="121px" variant="outline" size="md" />
+              <Input
+                {...register('businessPhoneNumberExtension')}
+                w="121px"
+                variant="outline"
+                size="md"
+                type="number"
+              />
             </FormControl>
             <Spacer w="95px" />
           </Flex>
@@ -239,7 +254,7 @@ const CreateVendorDetail: React.FC<{
                 {t('ext')}
               </FormLabel>
 
-              <Input {...register('secondPhoneNumberExtension')} w="121px" variant="outline" size="md" />
+              <Input {...register('secondPhoneNumberExtension')} type="number" w="121px" variant="outline" size="md" />
             </FormControl>
           </Box>
         </HStack>
