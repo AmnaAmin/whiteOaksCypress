@@ -36,6 +36,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   )
 })
 
+
 export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
@@ -157,10 +158,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
-                      <Box overflow="hidden" top={16} h="18px">
-                        {documents.w9DocumentUrl &&
-                          downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
-                      </Box>
+                     
                     </VStack>
                   )
                 }}
@@ -221,10 +219,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        <Box overflow="hidden" top={16} h="18px">
-                          {documents.agreementUrl &&
-                            downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
-                        </Box>
+                        
                       </VStack>
                     )
                   }}
@@ -313,10 +308,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        <Box overflow="hidden" top={16} h="18px">
-                          {documents.insuranceUrl &&
-                            downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
-                        </Box>
+                        
                       </VStack>
                     )
                   }}
@@ -352,6 +344,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 },
               }}
             >
+              
               <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message} color="#2D3748">
                 <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
@@ -376,12 +369,10 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
+                          
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        <Box overflow="hidden" top={16} h="18px">
-                          {documents.coiGLExpUrl &&
-                            downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
-                        </Box>
+                        
                       </VStack>
                     )
                   }}
@@ -391,12 +382,13 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
             </HStack>
           </HStack>
         </Box>
+        
         <Box>
           <HStack
             flexDir={{ base: 'column', sm: 'row' }}
+            marginTop={{ base: '20px', md: '0' }}
             alignItems="flex-start"
             spacing="16px"
-            marginTop={{ base: '20px', md: '0' }}
           >
             <Box>
               <FormControl isInvalid={!!errors.coiWcExpDate}>
@@ -404,7 +396,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                   {t('COIWCExpDate')}
                 </FormLabel>
                 <Input type="date" w="215px" {...register('coiWcExpDate')} data-testid="coiWcExpDate" />
-                <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
+                <FormErrorMessage>{errors.coiWcExpDate && errors.coiWcExpDate?.message}</FormErrorMessage>
               </FormControl>
             </Box>
             <HStack
@@ -417,16 +409,14 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 },
               }}
             >
-              <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
+              
+              <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message} color="#2D3748">
+                <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller
                   name="coiWcExpFile"
                   control={control}
-                  rules={{
-                    required: changedDateFields.includes('coiWcExpDate') ? isActive && 'This is required field' : '',
-                  }}
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">
@@ -441,12 +431,10 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
+                          
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        <Box overflow="hidden" top={16} h="18px">
-                          {documents.coiWcExpUrl &&
-                            downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
-                        </Box>
+                        
                       </VStack>
                     )
                   }}
@@ -456,6 +444,8 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
             </HStack>
           </HStack>
         </Box>
+        
+        
       </VStack>
     </>
   )

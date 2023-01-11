@@ -32,7 +32,8 @@ import React, { useEffect, useState } from "react"
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import InputMask from "react-input-mask"
 import Select from 'components/form/react-select'
-
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as Yup from 'yup';
 
 const CustomTab = React.forwardRef((props: any, ref: any) => {
      
@@ -42,7 +43,10 @@ const CustomTab = React.forwardRef((props: any, ref: any) => {
       const styles = useMultiStyleConfig('Tabs', tabProps)
   
       return (
-        <Button {...tabProps} __css={styles.tab} sx={{
+        <Button 
+        {...tabProps} 
+        __css={styles.tab} 
+        sx={{
             ":hover": {
                 color: "#000",
                 background: "transparent !important",
@@ -50,7 +54,8 @@ const CustomTab = React.forwardRef((props: any, ref: any) => {
             },
             borderBottomColor: isSelected ? "#000 !important":"#D9D9D9 !important",
             color: "#000 !important"
-        }}>
+        }}
+        >
             <Box 
             as='span' 
             mr='2' 
@@ -64,6 +69,160 @@ const CustomTab = React.forwardRef((props: any, ref: any) => {
       )
 })
 
+export const validateTrade = trades => {
+    const checkedTrades = trades?.filter(t => t.checked)
+    if (!(checkedTrades && checkedTrades.length > 0)) {
+      return false
+    }
+    return true
+}
+  
+export const validateMarket = markets => {
+    const checkedMarkets = markets?.filter(t => t.checked)
+    if (!(checkedMarkets && checkedMarkets.length > 0)) {
+      return false
+    }
+    return true
+}
+
+const measureStrength = (p: string): [number, number] => {
+    let force = 0;
+    const regex = /[$&+,:;=?@#|'<>.^*()%!-]/g;
+    const flags = {
+      lowerLetters: /[a-z]+/.test(p),
+      upperLetters: /[A-Z]+/.test(p),
+      numbers: /[0-9]+/.test(p),
+      symbols: regex.test(p),
+    };
+  
+    const passedMatches = Object.values(flags).filter((isMatchedFlag: boolean) => !!isMatchedFlag).length;
+  
+    force += 2 * p.length + (p.length >= 10 ? 1 : 0);
+    force += passedMatches * 10;
+  
+    // penalty (short password)
+    force = p.length <= 6 ? Math.min(force, 10) : force;
+  
+    // penalty (poor variety of characters)
+    force = passedMatches === 1 ? Math.min(force, 10) : force;
+    force = passedMatches === 2 ? Math.min(force, 20) : force;
+    force = passedMatches === 3 ? Math.min(force, 40) : force;
+  
+    return [force, passedMatches];
+  };
+
+  const defaultColor = 'rgb(221, 221, 221)';
+
+const colors = ['#F00', '#F90', '#FF0', '#9F0', '#0F0'];
+const PasswordStrengthBar = ({ password }: any) => {
+    const getColor = (s: number): any => {
+      let idx = 0;
+      if (s <= 10) {
+        idx = 0;
+      } else if (s <= 20) {
+        idx = 1;
+      } else if (s <= 30) {
+        idx = 2;
+      } else if (s <= 40) {
+        idx = 3;
+      } else {
+        idx = 4;
+      }
+      return { idx: idx + 1, col: colors[idx] };
+    };
+  
+    const getPoints = force => {
+      const pts = [] as any[];
+      for (let i = 0; i < 5; i++) {
+        pts.push(<li key={i} className="point" style={i < force.idx ? { backgroundColor: force.col } : { backgroundColor: '#DDD' }} />);
+      }
+      return pts;
+    };
+  
+    const strength = password ? getColor(measureStrength(password)[0]) : defaultColor;
+    const points = getPoints(strength);
+  
+    return (
+      <div id="strength" className="form-group">
+        <label className="mb-0 PasswordStrength-Label">
+          <small>
+            Password strength:
+          </small>
+        </label>
+        <ul id="strengthBar" className="pl-0 mb-0">
+          {points}
+        </ul>
+      </div>
+    );
+  };
+
+export const phoneRegex = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/;
+
+export const yupNullable = (_, val) => (val === '' ? undefined : _);
+
+const vendorRegisterFormSchema = {
+    email: Yup.string().email('Must be a valid email').required('Email is required'),
+    firstName: Yup.string().required('First Name is required'),
+    lastName: Yup.string().required('Last name is required'),
+    password: Yup.string()
+      .required('Password is required')
+      .test('len', 'Password must contain a lower, upper, symbol and a special character', ( val: any ) => measureStrength(val)[1] >= 4),
+    businessName: Yup.string().required('Business name is required'),
+
+    //Location Details
+    primaryContact: Yup.string().matches(phoneRegex, 'Phone Contact number is not valid').required('Primary Contact is required'),
+    secondaryContact: Yup.string().matches(phoneRegex, 'Secondary Contact number is not valid').transform(yupNullable),
+    businessContact: Yup.string().matches(phoneRegex, 'Business Contact number is not valid').required('Business Contact is required'),
+    businessContactExt: Yup.number().transform(yupNullable),
+    secondaryPhone: Yup.string().matches(phoneRegex, 'Secondary Phone number is not valid').transform(yupNullable),
+    secondaryPhoneExt: Yup.number().transform(yupNullable),
+    primaryEmail: Yup.string().email('Must be a valid email').required('Email is required').transform(yupNullable),
+    secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),
+    streetAddress: Yup.string().required('Street Address is required'),
+    city: Yup.string().required('City is required'),
+    state: Yup.object().required('State is required'),
+    zipCode: Yup.string().required('ZipCode is required'),
+    capacity: Yup.string().required('Capacity is required'),
+
+    //Documents
+
+    w9DocumentDate: Yup.string(),
+    w9Document: Yup.mixed().required(),
+    
+    agreementSignedDate: Yup.string().required(),
+    agreement: Yup.mixed().required(),
+   
+    
+    autoInsuranceExpDate: Yup.string().required(),
+    insurance: Yup.mixed().required(),
+    
+    
+    coiGlExpDate: Yup.string().required(),
+    coiGlExpFile: Yup.mixed().required(),
+    
+
+    coiWcExpDate: Yup.string().required(),
+    coiWcExpFile: Yup.mixed().required(),
+    
+    
+    
+
+    //Licenses
+    licenses: Yup.array().of(
+        Yup.object().shape({
+          licenseType: Yup.string().typeError('License Type must be a string').required('License Type is required'),
+          licenseNumber: Yup.string().typeError('License Number must be a string').required('License Number is required'),
+          licenseExpirationDate: Yup.string().typeError('Expiration Date must be a string').required('Expiration Date is required'),
+          expirationFile: Yup.mixed().required('File is required'),
+        })
+      ),
+
+    //Trades or Vendor Skills
+    trades: Yup.array().required(),
+    // Markets
+    markets: Yup.array().required()
+};
+
 
 enum FORM_TABS {
     LOCATION_DETAILS,
@@ -76,10 +235,33 @@ export const VendorRegister = () => {
 
     const [ formTabIndex, setformTabIndex ] = useState<number>(FORM_TABS.LOCATION_DETAILS);
     const [ ssnEinTabIndex, setSsnEinTabIndex ] = useState<number>(0);
-
+    const [ disableLoginFields, setDisableLoginFields ] = useState<boolean>(false);
+    const [ customResolver, setCustomResolver ] = useState<any>(vendorRegisterFormSchema);
+    
     const formReturn = useForm({
-        mode: "onChange"
-    });
+        //mode: "onChange",
+        resolver: yupResolver( Yup.object().shape( customResolver ) ),
+        //validateCriteriaMode: 'firstErrorDetected'
+    } as any);
+
+    useEffect( () => {
+
+        if ( ssnEinTabIndex === 0 ) {
+            setCustomResolver( { ...vendorRegisterFormSchema, einNumber: Yup.string()
+                .required("EIN is a required field")
+                .matches(/^[0-9]+$/, "Must be only digits")
+                .min(9, 'Must be exactly 9 digits')
+                .max(9, 'Must be exactly 9 digits') } )
+        } else {
+            setCustomResolver( { ...vendorRegisterFormSchema, ssnNumber: Yup.string()
+                .required("SSN is a required field")
+                .matches(/^[0-9]+$/, "Must be only digits")
+                .min(9, 'Must be exactly 9 digits')
+                .max(9, 'Must be exactly 9 digits') } )
+        }
+
+       
+    }, [ssnEinTabIndex] );
     
     const { markets } = useMarkets();
     const { data: trades } = useTrades();
@@ -87,6 +269,8 @@ export const VendorRegister = () => {
     const toast = useToast();
     
     const  { mutate: createVendorAccount } = useVendorRegister();
+
+    console.log("Re-render check");
 
     const { 
         handleSubmit, 
@@ -125,48 +309,127 @@ export const VendorRegister = () => {
 
     const doNext = async () => {
         
-        const detailFields = [ "ownerName",
-                                "secondName",
-                                "businessPhoneNumber",
-                                "businessPhoneNumberExtension",
-                                "secondPhoneNumber",
-                                "businessEmailAddress",
-                                "companyName",
-                                "streetAddress",
-                                "city",
-                                "zipCode",
-                                "capacity",
-                                "einNumber",
-                                "ssnNumber",
-                                "secondEmailAddress",
-                                "secondEmailAddress",
-                                "state",
-                                "email",
-                                "firstName",
-                                "lastName",
-                                "password",
-                                
-                             ];
+        const isSsn = ssnEinTabIndex === 1 ? true : false
+
+        let detailFields = [
+            "email",
+            "firstName",
+            "lastName",
+            "password",
+            "companyName",
+            "ownerName",
+            "secondName",
+            "businessPhoneNumber",
+            "businessPhoneNumberExtension",
+            "secondPhoneNumber",
+            "businessEmailAddress",
+            "streetAddress",
+            "city",
+            "zipCode",
+            "capacity",
+            "einNumber",
+            "ssnNumber",
+            "secondEmailAddress",
+            "secondEmailAddress",
+            "state"
+        ];
+
+        const documentFields = [
+            "w9DocumentDate",
+            "w9Document",
+            "agreement",
+            "agreementSignedDate",
+            "insurance",
+            "autoInsuranceExpDate",
+            "coiGlExpFile",
+            "coiGlExpDate",
+            "coiWcExpFile",
+            "coiWcExpDate",
+        ]
+
+        const licenseFields = [
+            "licenses"
+        ]
+
+        const tradeFieldName = "trades";
+
+        if ( isSsn ) {
+            detailFields = detailFields.filter( fN  => fN !== "einNumber"  );
+        } else {
+            detailFields = detailFields.filter( fN  => fN !== "ssnNumber"  );
+        }
 
         if ( formTabIndex === FORM_TABS.LOCATION_DETAILS ) {
 
-            if ( await trigger( detailFields ) )
-                setformTabIndex( FORM_TABS.DOCUMENTS );
+            
+           for ( const fieldName of detailFields ) {
+                
+                if ( ! await trigger( fieldName ) )
+                    return null;
+            }
+
+            setDisableLoginFields(true);
+            setformTabIndex( FORM_TABS.DOCUMENTS );
 
             return null;
+
         }
 
-        if ( formTabIndex < 4 )
-            setformTabIndex( formTabIndex + 1 );
+        if ( formTabIndex === FORM_TABS.DOCUMENTS ) {
+
+            
+
+            for ( const fieldName of documentFields ) {
+                if ( ! await trigger( fieldName ) ){
+                    return null;
+                }
+                    
+            }
+            
+            setformTabIndex( FORM_TABS.LICENSE );
+
+            return null;
+
+        }
+
+        if ( formTabIndex === FORM_TABS.LICENSE ) {
+
+            for ( const fieldName of licenseFields ) {
+                if ( ! await trigger( fieldName ) )
+                    return null;
+            }
+
+            
+            setformTabIndex( FORM_TABS.CONSTRUCTION_TRADE );
+
+            return null;
+
+        }
+
+        if ( formTabIndex === FORM_TABS.CONSTRUCTION_TRADE ) {
+
+            if ( ! validateTrade( getValues(tradeFieldName) ) ) {
+                showError("Trade");
+                return null;
+            }
+            
+            setformTabIndex( FORM_TABS.MARKETS );
+
+            return null;
+
+        }
+
+
     }
 
     const doCancel = () => {
         reset();
         setformTabIndex(FORM_TABS.LOCATION_DETAILS);
+        setDisableLoginFields(false);
     }
 
     const onSubmit = async ( formValues ) => {
-        
+
         const firstName = formValues.firstName;
         const lastName = formValues.lastName;
         const password = formValues.password;
@@ -174,9 +437,9 @@ export const VendorRegister = () => {
         const login = email;
         const streetAddress = formValues.streetAddress;
         const telephoneNumber = formValues.telephoneNumber;
-        const state = formValues.state.id;
+        const state = formValues.state?.id;
 
-        console.log( formValues );
+        
 
         const vendorDetails: any = await parseCreateVendorFormToAPIData( formValues, [] );
 
@@ -198,30 +461,14 @@ export const VendorRegister = () => {
             telephoneNumber: telephoneNumber,
             vendorDetails: vendorDetails,
             stateId: state,
-            state: state
+            state: state,
+            isSsn: ssnEinTabIndex === 1 ? true : false
         };
 
         
         
         createVendorAccount( vendorObj );
-    }
-
-    
-    const validateTrade = trades => {
-        const checkedTrades = trades?.filter(t => t.checked)
-        if (!(checkedTrades && checkedTrades.length > 0)) {
-          return false
-        }
-        return true
-    }
-      
-    const validateMarket = markets => {
-        const checkedMarkets = markets?.filter(t => t.checked)
-        if (!(checkedMarkets && checkedMarkets.length > 0)) {
-          return false
-        }
-        return true
-    }
+    } 
     
     const showError = name => {
         toast({
@@ -233,7 +480,16 @@ export const VendorRegister = () => {
 
     const createUserVendorAccount = async ( formValues: any ) => {
         
-        onSubmit( formValues );
+
+        if ( ! validateMarket( formValues.markets ) ) {
+
+            showError("Market");
+           
+        } else {
+            onSubmit( formValues );
+        }
+
+        
         
     }
     
@@ -318,6 +574,7 @@ export const VendorRegister = () => {
                                                     type="email"
                                                     fontSize="14px"
                                                     color="#252F40"
+                                                    disabled={ disableLoginFields }
                                                     placeholder="Please enter your email address"
                                                     {
                                                         ...register("email", {
@@ -341,6 +598,7 @@ export const VendorRegister = () => {
                                                     type="text"
                                                     fontSize="14px"
                                                     color="#252F40"
+                                                    disabled={ disableLoginFields }
                                                     placeholder="Enter your first name"
                                                     {
                                                         ...register("firstName", {
@@ -365,6 +623,7 @@ export const VendorRegister = () => {
                                                     type="text"
                                                     fontSize="14px"
                                                     color="#252F40"
+                                                    disabled={ disableLoginFields }
                                                     placeholder="Enter your last name"
                                                     {
                                                         ...register("lastName", {
@@ -389,6 +648,7 @@ export const VendorRegister = () => {
                                                     type="password"
                                                     fontSize="14px"
                                                     color="#252F40"
+                                                    disabled={ disableLoginFields }
                                                     placeholder="Enter your password"
                                                     {
                                                         ...register("password", {
@@ -401,18 +661,20 @@ export const VendorRegister = () => {
                                                 </FormErrorMessage>
                                             </FormControl>
 
-                                            <FormControl isInvalid={errors?.businessName}>
+                                            <FormControl isInvalid={errors?.companyName}>
                                                 <FormLabel 
                                                     htmlFor="companyName"
                                                     fontSize="12px"
                                                     color="#252F40"
                                                     fontWeight="bold"
                                                 >Business Name</FormLabel>
+                                                
                                                 <Input 
                                                     id="companyName"
                                                     type="text"
                                                     fontSize="14px"
                                                     color="#252F40"
+                                                    disabled={ disableLoginFields }
                                                     placeholder="Enter your business name"
                                                     {
                                                         ...register("companyName", {
@@ -444,14 +706,19 @@ export const VendorRegister = () => {
                                 </Flex>
                                 <Flex alignItems="center" w="60%" maxW="800px">
                                     <VStack w="100%">
-                                        <Tabs w="680px" onChange={ index => setformTabIndex(index) } index={formTabIndex}>
+                                        <Tabs 
+                                            w="680px" 
+                                            onChange={ index => setformTabIndex(index) } 
+                                            index={formTabIndex}
+                                        >
                                             
                                             <TabList>
-                                                    <CustomTab>Location Details</CustomTab>
-                                                    <CustomTab>Documents</CustomTab>
-                                                    <CustomTab>License</CustomTab>
-                                                    <CustomTab>Construction Trade</CustomTab>
-                                                    <CustomTab>Markets</CustomTab>
+                                                    <CustomTab isDisabled = { formTabIndex !== FORM_TABS.LOCATION_DETAILS }>Location Details</CustomTab>
+                                                    <CustomTab isDisabled= { formTabIndex !== FORM_TABS.DOCUMENTS }>Documents</CustomTab>
+                                                    <CustomTab isDisabled = { formTabIndex !== FORM_TABS.LICENSE }>License</CustomTab>
+                                                    <CustomTab isDisabled = { formTabIndex !== FORM_TABS.CONSTRUCTION_TRADE }>Construction Trade</CustomTab>
+                                                    <CustomTab isDisabled = { formTabIndex !== FORM_TABS.MARKETS }>Markets</CustomTab>
+                                                  
                                             </TabList>
                                             
                                             
