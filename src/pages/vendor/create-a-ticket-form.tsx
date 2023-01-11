@@ -186,8 +186,6 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
   const watchRequiredField =
     !watchFields?.issueType || !watchFields?.severity || !watchFields?.title || !watchFields?.description
 
-  console.log(watchRequiredField)
-
   const [fileBlob, setFileBlob] = React.useState<Blob>()
   const { mutate: createTicket, isLoading: creatLoading } = useCreateTicketMutation()
   const { mutate: EditTicket, isLoading: editLoading } = useEditTicketMutation()
@@ -226,10 +224,8 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
     }
   }
 
-  console.log(supportDetail)
-
   return (
-    <Card py="0">
+    <Card py="0" rounded={supportDetail || supportPage ? 0 : 'xl'}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box mt="40px" ml="20px" h="calc(100vh - 333px)" overflow="auto">
           <Box>
@@ -422,12 +418,12 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
           </FormControl>
         </Box>
         <HStack w="100%" h="100px" mt="20px" justifyContent="end" borderTop="2px solid #E2E8F0">
-          {supportPage && (
-            <Button variant="outline" onClick={onClose} colorScheme="green">
+          {(supportDetail || supportPage) && (
+            <Button variant="outline" onClick={onClose} colorScheme="brand">
               {t(`${SUPPORT}.cancel`)}
             </Button>
           )}
-          <Button type="submit" colorScheme="green" data-testid="save" isDisabled={watchRequiredField || Lodings}>
+          <Button type="submit" colorScheme="brand" data-testid="save" isDisabled={watchRequiredField || Lodings}>
             {t(`${SUPPORT}.save`)}
           </Button>
         </HStack>
