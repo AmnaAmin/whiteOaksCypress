@@ -1,5 +1,5 @@
 import { theme as chakraTheme } from '@chakra-ui/react'
-import { inputBorderLeftStyle, inputFocusStateStyle } from 'theme/common-style'
+import { inputBorderLeftStyle, inputFocusStateStyle, requiredInputFocusStateStyle } from 'theme/common-style'
 
 const inputDisableStyle = {
   bg: 'gray.100',
@@ -30,7 +30,7 @@ const input = {
             borderRadius: '6px',
             color: 'gray.500',
             bg: 'white',
-            _focus: inputFocusStateStyle,
+            _focus: requiredInputFocusStateStyle,
             _disabled: {
               ...inputDisableStyle,
               ...inputBorderLeftStyle,
