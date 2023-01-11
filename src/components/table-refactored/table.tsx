@@ -249,6 +249,7 @@ export const Table: React.FC<TableProps> = ({
       zIndex={0}
       // border="1px solid #CBD5E0"
       bg="white"
+      h="100%"
       minH={'inherit'}
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
