@@ -26,6 +26,7 @@ export const dateFormat = (date: string | Date) => {
 export const datePickerFormat = (date: any) => {
   if (date === null || date === undefined) return null
 
+  // new Date() makes a day lesser based on time zone. Hence avoiding that by using moment.
   // return date ? format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd') : null
   return date ? moment(date).format('YYYY-MM-DD') : null
 }
