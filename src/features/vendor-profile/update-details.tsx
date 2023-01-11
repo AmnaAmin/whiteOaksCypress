@@ -76,7 +76,7 @@ export const UpdateDetails: React.FC<{
   return (
     <>
       <Flex direction="column">
-        <Grid templateColumns={{ md: 'repeat(auto-fit, minmax(250px, 1fr))', sm: '' }} gap="20px" w="90%" mb="30px">
+        <Grid templateColumns={{ base: 'repeat(auto-fit, minmax(215px, 1fr))', sm: '' }} gap="20px" w="90%" mb="30px">
           <GridItem>
             <FieldInfoCard
               testid="businessName"
@@ -109,7 +109,7 @@ export const UpdateDetails: React.FC<{
         </Grid>
         <Divider border="1px solid" borderColor="gray.200" mb="27px" />
 
-        <Grid templateColumns={{ md: 'repeat(auto-fit, minmax(250px, 1fr))', sm: '' }} gap="20px" w="90%" mb="40px">
+        <Grid templateColumns={{ base: 'repeat(auto-fit, minmax(215px, 1fr))', sm: '' }} gap="20px" w="90%" mb="40px">
           <GridItem>
             <FieldInfoCard
               testid="streetAddress"

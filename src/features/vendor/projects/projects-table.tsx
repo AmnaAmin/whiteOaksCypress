@@ -170,7 +170,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
               columns={tableColumnsWithFilters}
               refetch={refetch}
               isLoading={isExportDataLoading}
-              colorScheme="darkBlue"
               fileName="workOrders"
             />
             <CustomDivider />
