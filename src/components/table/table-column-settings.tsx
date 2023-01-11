@@ -90,7 +90,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
     <>
       <Box _hover={{ bg: 'darkPrimary.50', roundedBottomRight: '6px' }}>
         <Button
-          colorScheme="darkBlue.300"
+          colorScheme="darkBlue"
           variant="ghost"
           m={0}
           onClick={onOpen}
