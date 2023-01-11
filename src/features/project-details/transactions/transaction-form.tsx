@@ -259,7 +259,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   useEffect(() => {
-    if (selectedWorkOrder?.awardPlanPayTerm) {
+    if (selectedWorkOrder?.awardPlanPayTerm && !transaction?.id) {
       const paymentTermValue = {
         value: selectedWorkOrder?.awardPlanPayTerm,
         label: selectedWorkOrder?.awardPlanPayTerm as string,
@@ -267,7 +267,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       }
       setValue('paymentTerm', paymentTermValue)
     } else {
-      setValue('paymentTerm', null)
+      const updatedPaymentTerm = {
+        value: transaction?.paymentTerm,
+        label: transaction?.paymentTerm,
+        title: transaction?.paymentTerm,
+      }
+      setValue('paymentTerm', updatedPaymentTerm as any)
     }
   }, [selectedWorkOrder])
 
