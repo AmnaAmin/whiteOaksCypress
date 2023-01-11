@@ -289,10 +289,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     resetExpectedCompletionDateFields(option)
   }
 
-  const onPaymentTermChange = option => {
-    setValue('paymentTerm', option)
-  }
-
   const onSubmit = useCallback(
     async (values: FormValues) => {
       const queryOptions = {
@@ -593,7 +589,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 isDisabled={isUpdateForm}
                                 onChange={paymentTermOption => {
                                   field.onChange(paymentTermOption)
-                                  onPaymentTermChange(paymentTermOption)
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
