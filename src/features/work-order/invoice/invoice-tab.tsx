@@ -53,8 +53,9 @@ export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.
           fontStyle="normal"
           color="#2D3748"
           mb="1"
-          noOfLines={1}
           title={title}
+          whiteSpace="nowrap"
+          w="100px"
         >
           {title}
         </Text>
@@ -273,35 +274,47 @@ export const InvoiceTab = ({
           display={{ base: 'flex', sm: 'grid' }}
           flexWrap="wrap"
         >
-          <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
-          <InvoiceInfo
-            title={t('finalInvoice')}
-            value={currencyFormatter(workOrder?.finalInvoiceAmount)}
-            icons={BiDollarCircle}
-          />
-          <InvoiceInfo
-            title={t('PONumber')}
-            value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
-            icons={BiFile}
-          />
-          <InvoiceInfo
-            title={t('invoiceDate')}
-            value={
-              workOrder.dateInvoiceSubmitted && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                ? dateFormat(workOrder?.dateInvoiceSubmitted)
-                : 'mm/dd/yy'
-            }
-            icons={BiCalendar}
-          />
-          <InvoiceInfo
-            title={t('dueDate')}
-            value={
-              workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                ? dateFormat(workOrder?.paymentTermDate)
-                : 'mm/dd/yy'
-            }
-            icons={BiCalendar}
-          />
+          <Box flex={{ base: '1', sm: 'unset' }}>
+            <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
+          </Box>
+          <Box flex={{ base: '1', sm: 'unset' }}>
+            <InvoiceInfo
+              title={t('finalInvoice')}
+              value={currencyFormatter(workOrder?.finalInvoiceAmount)}
+              icons={BiDollarCircle}
+            />
+          </Box>
+          <Box flex={{ base: '1', sm: 'unset' }}>
+            <InvoiceInfo
+              title={t('PONumber')}
+              value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
+              icons={BiFile}
+            />
+          </Box>
+          <Divider borderWidth={0} display={{ base: 'block', sm: 'none' }} />
+          <Box flex={{ base: '1', sm: 'unset' }}>
+            <InvoiceInfo
+              title={t('invoiceDate')}
+              value={
+                workOrder.dateInvoiceSubmitted &&
+                ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                  ? dateFormat(workOrder?.dateInvoiceSubmitted)
+                  : 'mm/dd/yy'
+              }
+              icons={BiCalendar}
+            />
+          </Box>
+          <Box flex={{ base: '1', sm: 'unset' }}>
+            <InvoiceInfo
+              title={t('dueDate')}
+              value={
+                workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                  ? dateFormat(workOrder?.paymentTermDate)
+                  : 'mm/dd/yy'
+              }
+              icons={BiCalendar}
+            />
+          </Box>
         </Grid>
 
         <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
