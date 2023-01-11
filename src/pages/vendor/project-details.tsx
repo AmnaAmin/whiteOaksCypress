@@ -16,8 +16,7 @@ import { useProject } from 'api/projects'
 import { Project } from 'types/project.type'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 import { TriggeredAlertsTable } from 'features/project-details/alerts/triggered-alerts-table'
-import { Card } from 'components/card/card'
-import { boxShadow } from 'theme/common-style'
+import { Card } from 'features/login-form-centered/Card'
 import { STATUS } from 'features/common/status'
 
 const tabesStyle = {
@@ -58,27 +57,35 @@ const ProjectDetails: React.FC = props => {
             onChange={index => setTabIndex(index)}
             w="100%"
           >
-            <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
-              <Tab aria-labelledby="transaction-tab" {...tabesStyle}>
-                {t('transaction')}
-              </Tab>
+            <Card
+              bg={{ base: 'white', sm: 'transparent' }}
+              p={{ base: '12px 12px 16px 12px', sm: '0px !important' }}
+              rounded="6px 6px 0px 0px"
+              boxShadow={{ sm: 'none' }}
+            >
+              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
+                <Tab aria-labelledby="transaction-tab" {...tabesStyle}>
+                  {t('transaction')}
+                </Tab>
 
-              <Tab whiteSpace="nowrap" {...tabesStyle}>
-                {t('vendorWorkOrders')}
-              </Tab>
+                <Tab whiteSpace="nowrap" {...tabesStyle}>
+                  {t('vendorWorkOrders')}
+                </Tab>
 
-              <Tab aria-labelledby="documents-tab" {...tabesStyle}>
-                {t('documents')}
-              </Tab>
+                <Tab aria-labelledby="documents-tab" {...tabesStyle}>
+                  {t('documents')}
+                </Tab>
 
-              {/* <Tab {...tabesStyle}>{t('alerts')}</Tab> */}
-            </TabList>
+                {/* <Tab {...tabesStyle}>{t('alerts')}</Tab> */}
+              </TabList>
+            </Card>
             <Card
               rounded="0px"
               roundedBottomLeft="6px"
               roundedBottomRight="6px"
-              style={boxShadow}
-              pr={{ base: 0, sm: '15px' }}
+              px="12px"
+              pr={{ base: 0, sm: '12px' }}
+              py={{ base: '0px', sm: '12px' }}
             >
               <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
                 {tabIndex === 2 && (

@@ -2,7 +2,7 @@ import { Box, Button, chakra, FormControl, FormLabel, HTMLChakraProps, Input, St
 import { useForm } from 'react-hook-form'
 import { useAuth } from 'utils/auth-context'
 import { PasswordField } from './PasswordField'
-import { Link } from "@chakra-ui/react"
+import { Link } from '@chakra-ui/react'
 
 type FormValues = {
   email: string

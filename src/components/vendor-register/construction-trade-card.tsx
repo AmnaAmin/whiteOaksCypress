@@ -15,21 +15,10 @@ type tradesFormProps = {
   isActive: boolean
 }
 
-export const ConstructionTradeCard: React.FC<{ onClose?: () => void; isActive: boolean }> = ({
-  onClose,
-  isActive,
-}) => {
+export const ConstructionTradeCard: React.FC<{ onClose?: () => void; isActive: boolean }> = ({ onClose, isActive }) => {
   const { data: trades, isLoading } = useTrades()
 
-  return (
-    <Box>
-      {isLoading ? (
-        <BlankSlate />
-      ) : (
-        <TradeForm isActive={isActive} trades={trades} onClose={onClose} />
-      )}
-    </Box>
-  )
+  return <Box>{isLoading ? <BlankSlate /> : <TradeForm isActive={isActive} trades={trades} onClose={onClose} />}</Box>
 }
 
 export const TradeForm = ({ trades, onClose, isActive }: tradesFormProps) => {
@@ -67,7 +56,6 @@ export const TradeForm = ({ trades, onClose, isActive }: tradesFormProps) => {
           })}
         </Flex>
       </Box>
-      
     </>
   )
 }
