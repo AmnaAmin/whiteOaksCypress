@@ -89,13 +89,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
             <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <ButtonsWrapper>
-                <ExportButton
-                  columns={tableColumns}
-                  refetch={refetch}
-                  isLoading={isLoading}
-                  colorScheme="darkPrimary.400"
-                  fileName="transactions"
-                />
+                <ExportButton columns={tableColumns} refetch={refetch} isLoading={isLoading} fileName="transactions" />
                 <CustomDivider />
                 {settingColumns && (
                   <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
