@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import { UpcomingPaymentTable } from 'features/vendor/dashboard/upcoming-payment-table'
 import { DASHBOARD } from 'features/vendor/dashboard/dashboard.i18n'
 import { boxShadow } from 'theme/common-style'
+import { monthOptionsPaidGraph } from 'api/vendor-dashboard'
 
 const Dashboard: React.FC = () => {
   const { vendorId } = useUserProfile() as Account
@@ -103,7 +104,7 @@ const Dashboard: React.FC = () => {
             </Text>
             <Spacer />
             <Box mt="20px" mr="30px" w="145px" border={'1px solid #CBD5E0'} borderRadius={'6px'}>
-              <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
+              <Dropdown options={monthOptionsPaidGraph} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
 

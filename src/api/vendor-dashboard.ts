@@ -2,6 +2,7 @@ import { useClient } from 'utils/auth-context'
 import { useQuery } from 'react-query'
 import { VendorEntity } from 'types/vendor.types'
 import { usePaginationQuery } from 'api'
+import { format, sub } from 'date-fns'
 
 export const useVendorCards = () => {
   const client = useClient()
@@ -119,3 +120,22 @@ export const useGetAllUpcomingPaymentWorkOrders = (queryString: string) => {
     },
   )
 }
+
+export const year = format(sub(new Date(), { months: 0 }), 'yyyy')
+console.log('year', year)
+
+export const monthOptionsPaidGraph = [
+  { value: 13, label: 'All', year: '-1', month: '-1' },
+  { value: 1, label: 'January', year: year, month: '1' },
+  { value: 2, label: 'February', year: year, month: '2' },
+  { value: 3, label: 'March', year: year, month: '3' },
+  { value: 4, label: 'April', year: year, month: '4' },
+  { value: 5, label: 'May', year: year, month: '5' },
+  { value: 6, label: 'June', year: year, month: '6' },
+  { value: 7, label: 'July', year: year, month: '7' },
+  { value: 8, label: 'August', year: year, month: '8' },
+  { value: 9, label: 'September', year: year, month: '9' },
+  { value: 10, label: 'October', year: year, month: '10' },
+  { value: 11, label: 'November', year: year, month: '11' },
+  { value: 13, label: 'December', year: year, month: '12' },
+]
