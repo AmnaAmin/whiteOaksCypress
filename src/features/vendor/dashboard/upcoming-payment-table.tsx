@@ -126,7 +126,7 @@ export const UpcomingPaymentTable = () => {
               columns={tableColumns}
               refetch={refetch}
               isLoading={isExportDataLoading}
-              colorScheme="darkBlue"
+              colorScheme="darkPrimary"
               fileName="upcoming-payment"
             />
             <CustomDivider />
