@@ -148,7 +148,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   heading,
 }) => {
   const { t } = useTranslation()
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isVendor } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -412,7 +412,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               options={transactionTypeOptions}
                               isDisabled={isUpdateForm}
                               size="md"
-                              selectProps={{ isBorderLeft: true, menuHeight: '188px' }}
+                              selectProps={{ isBorderLeft: true, menuHeight: isVendor ? '85px' : '188px' }}
                               onChange={async (option: SelectOption) => {
                                 const formValues = { ...defaultValues, transactionType: option }
 
