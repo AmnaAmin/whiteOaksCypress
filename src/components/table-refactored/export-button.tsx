@@ -79,7 +79,7 @@ export const ExportCustomButton: React.FC<ExportCustomButtonProps> = ({
   const { t } = useTranslation()
 
   return (
-    <Button variant="ghost" color="darkBlue" onClick={handleExport} {...rest}>
+    <Button variant="ghost" colorScheme="darkBlue" onClick={handleExport} {...rest}>
       {children ?? (
         <HStack spacing={1}>
           <BiExport fontSize={'18px'} />
