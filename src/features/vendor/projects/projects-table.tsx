@@ -118,7 +118,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }, [selectedCard])
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(
-    filteredUrl + '&' + queryStringWithoutPagination,
+    filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
   )
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
@@ -140,7 +140,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }, [tableColumns])
 
   const { workOrderData, isLoading, dataCount, totalPages } = useWorkOrders(
-    filteredUrl + '&' + queryStringWithPagination,
+    filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
 
@@ -153,7 +153,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }
 
   return (
-    <Box overflow={'auto'} h="calc(100vh - 225px)">
+    <Box overflow={'auto'} minH="calc(100vh - 225px)">
       <TableContextProvider
         data={workOrderData}
         columns={tableColumnsWithFilters}

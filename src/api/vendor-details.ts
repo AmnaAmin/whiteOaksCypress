@@ -14,13 +14,7 @@ import {
   VendorTradeFormValues,
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
-import {
-  // convertDateTimeFromServer,
-  convertDateTimeToServer,
-  // customFormat,
-  datePickerFormat,
-  convertDateTimeFromServer,
-} from 'utils/date-time-utils'
+import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -426,14 +420,14 @@ export const parseLicenseValues = async (values: any, licensesDocuments: any) =>
           licenseNumber: license.licenseNumber,
           licenseType: license.licenseType,
           // licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
-          licenseExpirationDate: convertDateTimeFromServer(license.expiryDate),
+          licenseExpirationDate: dateISOFormat(license.expiryDate),
           status: values[`licenseCheckbox${index}`] ? 'VERIFIED' : existingLicense.status,
         }
       } else {
         fileContents = await readFileContent(license.expirationFile)
         doc = {
           // licenseExpirationDate: customFormat(license.expiryDate, 'yyyy-MM-dd'),
-          licenseExpirationDate: convertDateTimeFromServer(license.expiryDate),
+          licenseExpirationDate: dateISOFormat(license.expiryDate),
           licenseNumber: license.licenseNumber,
           licenseType: license.licenseType,
           fileObjectContentType: license?.expirationFile?.type,
@@ -492,9 +486,9 @@ export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
   return {
     documents: vendorProfilePayload,
     agreementSignedDate: formData.agreementSignedDate!,
-    autoInsuranceExpirationDate: convertDateTimeToServer(formData.autoInsuranceExpDate!),
-    coiglExpirationDate: convertDateTimeToServer(formData.coiGlExpDate!),
-    coiWcExpirationDate: convertDateTimeToServer(formData.coiWcExpDate!),
+    autoInsuranceExpirationDate: dateISOFormat(formData.autoInsuranceExpDate!),
+    coiglExpirationDate: dateISOFormat(formData.coiGlExpDate!),
+    coiWcExpirationDate: dateISOFormat(formData.coiWcExpDate!),
     coiGLStatus: formData.coiGLExpCheckBox ? 'VERIFIED' : (formData as any).coiGLStatus,
     coiWCStatus: formData.CoiWcExpCheckbox ? 'VERIFIED' : (formData as any).coiWCStatus,
     agreementSignedStatus: formData.agreementSignCheckBox ? 'VERIFIED' : (formData as any).agreementSignedStatus,

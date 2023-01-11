@@ -26,6 +26,7 @@ export const dateFormat = (date: string | Date) => {
 export const datePickerFormat = (date: any) => {
   if (date === null || date === undefined) return null
 
+  // new Date() makes a day lesser based on time zone. Hence avoiding that by using moment.
   // return date ? format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd') : null
   return date ? moment(date).format('YYYY-MM-DD') : null
 }
@@ -81,7 +82,7 @@ export type MonthOption = {
   year: string
 }
 
-export const monthOptions: MonthOption[] = range(13).map(n => ({
+export const monthOptions: MonthOption[] = range(12).map(n => ({
   value: n,
   label: format(sub(new Date(), { months: n }), 'MMMM'),
   year: format(sub(new Date(), { months: n }), 'yyyy'),
