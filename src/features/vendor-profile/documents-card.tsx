@@ -47,8 +47,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
 
+  
   const {
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
     control,
     setValue,
     getValues,
@@ -61,6 +62,12 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
       setChangeDateFields([])
     }
   }, [vendor])
+
+  useEffect( () => {
+    setChangeDateFields([])
+  }, [isSubmitSuccessful] )
+
+
 
   const {
     isW9DocumentDateChanged,
@@ -201,7 +208,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('agreementSignedDate')}
                 </FormLabel>
-                <Input type="date" w="215px" data-testid="agreementSignedDate" {...register('agreementSignedDate')} />
+                <Input type="date" w="215px" data-testid="agreementSignedDate" {...register('agreementSignedDate', {
+                  required: changedDateFields.includes('agreementSignedDate')
+                  ? isActive && 'This is required field'
+                  : '',
+                })} />
                 <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
               </FormControl>
             </Box>
@@ -222,7 +233,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   control={control}
                   rules={{
                     required: changedDateFields.includes('agreementSignedDate')
-                      ? isActive && 'This is required field'
+                      ? isActive && 'This is required field.'
                       : '',
                   }}
                   render={({ field, fieldState }) => {
@@ -236,6 +247,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             onChange={(file: any) => {
                               onFileChange(file)
                               field.onChange(file)
+                              setChangeDateFields( [ ...changedDateFields, "agreementSignedDate" ] )
+                              
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
@@ -299,7 +312,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 >
                   {t('autoInsuranceExpDate')}
                 </FormLabel>
-                <Input type="date" w="215px" {...register('autoInsuranceExpDate')} data-testid="autoInsuranceExpDate" />
+                <Input type="date" w="215px" {...register('autoInsuranceExpDate', {
+                  required: changedDateFields.includes('autoInsuranceExpDate')
+                  ? isActive && 'This is required field'
+                  : '',
+                })} data-testid="autoInsuranceExpDate" />
                 <FormErrorMessage>
                   {errors.autoInsuranceExpDate && errors.autoInsuranceExpDate.message}
                 </FormErrorMessage>
@@ -336,6 +353,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             onChange={(file: any) => {
                               onFileChange(file)
                               field.onChange(file)
+                              setChangeDateFields( [ ...changedDateFields, "autoInsuranceExpDate" ] )
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
@@ -374,7 +392,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('COIGLExpDate')}
                 </FormLabel>
-                <Input type="date" w="215px" {...register('coiGlExpDate')} data-testid="coiGlExpDate" />
+                <Input type="date" w="215px" {...register('coiGlExpDate', {
+                  required: changedDateFields.includes('COIGLExpDate') ? isActive && 'This is required field' : ''
+                })} data-testid="coiGlExpDate" />
                 <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
               </FormControl>
             </Box>
@@ -407,8 +427,13 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
                             onChange={(file: any) => {
+                              
                               onFileChange(file)
+                              
                               field.onChange(file)
+                              
+                              setChangeDateFields( [ ...changedDateFields, "COIGLExpDate" ] )
+                              
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
@@ -447,8 +472,10 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('COIWCExpDate')}
                 </FormLabel>
-                <Input type="date" w="215px" {...register('coiWcExpDate')} data-testid="coiWcExpDate" />
-                <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
+                <Input type="date" w="215px" {...register('coiWcExpDate', {
+                  required: changedDateFields.includes('coiWcExpDate') ? isActive && 'This is required field' : ''
+                })} data-testid="coiWcExpDate" />
+                <FormErrorMessage>{errors.coiWcExpDate && errors.coiWcExpDate.message}</FormErrorMessage>
               </FormControl>
             </Box>
             <HStack
@@ -482,6 +509,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             onChange={(file: any) => {
                               onFileChange(file)
                               field.onChange(file)
+                              setChangeDateFields( [ ...changedDateFields, "coiWcExpDate" ] )
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
