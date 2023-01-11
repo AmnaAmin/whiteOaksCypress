@@ -90,15 +90,6 @@ export const ExportCustomButton: React.FC<ExportCustomButtonProps> = ({
           )}
         </Button>
       </Box>
-      <Button variant="ghost" colorScheme="darkBlue" onClick={handleExport} {...rest}>
-        {children ?? (
-          <HStack spacing={1}>
-            <BiExport fontSize={'18px'} />
-
-            <Text fontWeight={500}>{t('export')}</Text>
-          </HStack>
-        )}
-      </Button>
     </>
   )
 }
