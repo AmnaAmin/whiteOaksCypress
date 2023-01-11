@@ -420,7 +420,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   </GridItem>
                 </Grid>
               ) : (
-                <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" gap={10}>
+                <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" mt={8} gap={10}>
                   <GridItem>
                     <InputView
                       controlStyle={{ w: '16em' }}
