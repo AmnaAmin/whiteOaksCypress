@@ -48,7 +48,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 
   return (
     <Box _hover={{ bg: 'darkPrimary.50' }}>
-      <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading} colorScheme="darkPrimary">
+      <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading} colorScheme="darkBlue">
         {children ?? (
           <HStack spacing={1}>
             <Icon as={BiExport} fontSize={'18px'} mb="1px" fontWeight={500} />
@@ -79,14 +79,17 @@ export const ExportCustomButton: React.FC<ExportCustomButtonProps> = ({
   const { t } = useTranslation()
 
   return (
-    <Button variant="ghost" colorScheme="darkBlue" onClick={handleExport} {...rest}>
-      {children ?? (
-        <HStack spacing={1}>
-          <BiExport fontSize={'18px'} />
-
-          <Text fontWeight={500}>{t('export')}</Text>
-        </HStack>
-      )}
-    </Button>
+    <>
+      <Box _hover={{ bg: 'darkPrimary.50' }}>
+        <Button variant="ghost" colorScheme="darkBlue" onClick={handleExport} {...rest}>
+          {children ?? (
+            <HStack spacing={1}>
+              <BiExport fontSize={'18px'} />
+              <Text fontWeight={500}>{t('export')}</Text>
+            </HStack>
+          )}
+        </Button>
+      </Box>
+    </>
   )
 }

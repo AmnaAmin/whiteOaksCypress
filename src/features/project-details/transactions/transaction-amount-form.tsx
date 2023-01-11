@@ -366,7 +366,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   size="sm"
                   colorScheme="darkPrimary"
                   color="darkPrimary.300"
-                  border={'1px solid darkPrimary.300'}
+                  border={'1px solid #345EA6'}
                   isDisabled={isApproved || !values?.transactionType?.value || isSysFactoringFee}
                 >
                   {t(`${TRANSACTION}.attachment`)}

@@ -17,6 +17,7 @@ import { Project } from 'types/project.type'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 import { TriggeredAlertsTable } from 'features/project-details/alerts/triggered-alerts-table'
 import { Card } from 'features/login-form-centered/Card'
+import { STATUS } from 'features/common/status'
 
 const tabesStyle = {
   h: { base: '52px', sm: 'unset' },
@@ -39,7 +40,7 @@ const ProjectDetails: React.FC = props => {
   const vendorWOStatusValue = (projectData?.vendorWOStatusValue || '').toLowerCase()
 
   const isNewTransactionAllow = vendorWOStatusValue
-    ? !!(vendorWOStatusValue === 'paid' || vendorWOStatusValue === 'cancelled')
+    ? ![STATUS.Paid, STATUS.Cancelled, STATUS.Invoiced].includes(vendorWOStatusValue?.toLocaleLowerCase() as STATUS)
     : true
 
   return (
