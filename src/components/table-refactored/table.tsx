@@ -71,10 +71,10 @@ function Filter({
         onChange={value => {
           if (dateFilter) {
             column.setFilterValue(dateFormat(value as string))
-            setStickyFilter(dateFormat(value as string))
+            if (allowStickyFilters) setStickyFilter(dateFormat(value as string))
           } else {
             column.setFilterValue(window.encodeURIComponent(value))
-            setStickyFilter(value)
+            if (allowStickyFilters) setStickyFilter(value)
           }
         }}
         className="w-36 border shadow rounded"
