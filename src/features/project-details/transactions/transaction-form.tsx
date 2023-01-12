@@ -586,7 +586,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 {...field}
                                 selectProps={{ isBorderLeft: true }}
                                 options={PAYMENT_TERMS_OPTIONS}
-                                //isDisabled={isUpdateForm}
+                                isDisabled={!isAdmin}
                                 onChange={paymentTermOption => {
                                   field.onChange(paymentTermOption)
                                 }}
