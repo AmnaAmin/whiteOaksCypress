@@ -11,4 +11,4 @@ unzip -o output-preprod.zip
 cd output-preprod
 
 echo "🚀 deploying to s3"
-aws s3 sync . s3://woa-preprod-ui/
+aws s3 sync . s3://woa-preprod-ui/ --delete
