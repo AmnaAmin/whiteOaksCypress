@@ -84,6 +84,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return cellInfo?.capacity ? cellInfo?.capacity?.toString() : '- - -'
     },
+    filterFn: 'equalsString',
   },
   {
     header: 'availableCapacity',
@@ -91,6 +92,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo) {
       return cellInfo?.availableCapacity ? cellInfo?.availableCapacity?.toString() : '- - -'
     },
+    filterFn: 'equalsString',
   },
   {
     header: 'constructionTrade',
