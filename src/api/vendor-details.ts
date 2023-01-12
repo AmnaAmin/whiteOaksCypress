@@ -161,7 +161,7 @@ export const parseVendorFormDataToAPIData = (
     markets: vendorProfileData?.markets || [],
     licenseDocuments: vendorProfileData?.licenseDocuments || [],
     paymentOptions: paymentsMethods.filter(payment => formValues[payment.name]),
-    enableVendorPortal: formValues.enableVendorPortal,
+    enableVendorPortal: formValues.enableVendorPortal?.value,
   }
 }
 
