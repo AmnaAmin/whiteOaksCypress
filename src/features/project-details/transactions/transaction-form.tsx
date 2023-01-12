@@ -148,7 +148,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   heading,
 }) => {
   const { t } = useTranslation()
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isVendor } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -259,7 +259,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   useEffect(() => {
-    if (selectedWorkOrder?.awardPlanPayTerm) {
+    if (selectedWorkOrder?.awardPlanPayTerm && !transaction?.id) {
       const paymentTermValue = {
         value: selectedWorkOrder?.awardPlanPayTerm,
         label: selectedWorkOrder?.awardPlanPayTerm as string,
@@ -267,7 +267,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       }
       setValue('paymentTerm', paymentTermValue)
     } else {
-      setValue('paymentTerm', null)
+      const updatedPaymentTerm = {
+        value: transaction?.paymentTerm,
+        label: transaction?.paymentTerm,
+        title: transaction?.paymentTerm,
+      }
+      setValue('paymentTerm', updatedPaymentTerm as any)
     }
   }, [selectedWorkOrder])
 
@@ -407,7 +412,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               options={transactionTypeOptions}
                               isDisabled={isUpdateForm}
                               size="md"
-                              selectProps={{ isBorderLeft: true, menuHeight: '188px' }}
+                              selectProps={{ isBorderLeft: true, menuHeight: isVendor ? '85px' : '188px' }}
                               onChange={async (option: SelectOption) => {
                                 const formValues = { ...defaultValues, transactionType: option }
 
@@ -581,7 +586,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 {...field}
                                 selectProps={{ isBorderLeft: true }}
                                 options={PAYMENT_TERMS_OPTIONS}
-                                isDisabled={isUpdateForm}
+                                //isDisabled={isUpdateForm}
                                 onChange={paymentTermOption => {
                                   field.onChange(paymentTermOption)
                                 }}

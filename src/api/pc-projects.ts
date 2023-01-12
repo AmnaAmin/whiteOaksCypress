@@ -464,7 +464,7 @@ export const useGetAllVendors = (filterQueryString: string) => {
   const { data, ...rest } = useQuery<Array<Project>>(
     ALL_VENDORS_QUERY_KEY,
     async () => {
-      const response = await client(`view-vendors?${filterQueryString}&status.notEquals=35`, {})
+      const response = await client(`view-vendors/v1?${filterQueryString}`, {})
 
       return response?.data
     },

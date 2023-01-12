@@ -1,3 +1,4 @@
+/*eslint-disable */
 import React, { useEffect, useState } from 'react'
 import {
   Box,
@@ -17,38 +18,29 @@ import 'react-datepicker/dist/react-datepicker.css'
 import { Controller, useFormContext } from 'react-hook-form'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import ChooseFileField from 'components/choose-file/choose-file'
-import { useWatchDocumentFeild } from './hook'
-import { SaveChangedFieldAlert } from './save-change-field'
-import { VENDORPROFILE } from './vendor-profile.i18n'
-import { datePickerFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
-import { AdminPortalVerifyDocument } from './verify-documents'
 
 type DocumentsProps = {
-  vendor: VendorProfile
-  onClose?: () => void
-  VendorType: string
   isActive: boolean
 }
 type DocumentFormProps = {
-  vendor: VendorProfile
   onClose?: () => void
   isActive: boolean
 }
 export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   return (
     <Box w="100%">
-      <DocumentsForm isActive={props.isActive} vendor={props.vendor} onClose={props.onClose}></DocumentsForm>
+      <DocumentsForm isActive={props.isActive}></DocumentsForm>
     </Box>
   )
 })
 
-export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
+export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
 
   const {
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors },
     control,
     setValue,
     getValues,
@@ -56,17 +48,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   } = useFormContext<DocumentsCardFormValues>()
   const documents = getValues()
 
-  useEffect(() => {
-    if (!vendor) {
-      setChangeDateFields([])
-    }
-  }, [vendor])
-
-  useEffect(() => {
-    setChangeDateFields([])
-  }, [isSubmitSuccessful])
-
-  const {
+  /*const {
     isW9DocumentDateChanged,
     watchW9DocumentFile,
     isAgreementSignedDateChanged,
@@ -78,7 +60,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     isCoiWcExpDateChanged,
     watchCoiWcExpFile,
     isAllFiledWatch,
-  } = useWatchDocumentFeild(control, vendor)
+  } = useWatchDocumentFeild(control, vendor)*/
 
   const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
@@ -104,7 +86,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   }
 
   const resetFields = () => {
-    setValue('w9DocumentDate', datePickerFormat(vendor?.w9DocumentDate!))
+    /*setValue('w9DocumentDate', datePickerFormat(vendor?.w9DocumentDate!))
     setValue('w9Document', null)
     setValue('agreementSignedDate', datePickerFormat(vendor?.agreementSignedDate!))
     setValue('agreement', null)
@@ -113,7 +95,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     setValue('coiGlExpDate', datePickerFormat(vendor?.coiglExpirationDate!))
     setValue('coiGlExpFile', null)
     setValue('coiWcExpDate', datePickerFormat(vendor?.coiWcExpirationDate!))
-    setValue('coiWcExpFile', null)
+    setValue('coiWcExpFile', null)*/
   }
 
   return (
@@ -173,24 +155,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
-                      <Box overflow="hidden" top={16} h="18px">
-                        {documents.w9DocumentUrl &&
-                          downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
-                      </Box>
                     </VStack>
                   )
                 }}
               />
             </FormControl>
-            {isW9DocumentDateChanged || watchW9DocumentFile ? (
-              <SaveChangedFieldAlert />
-            ) : (
-              <AdminPortalVerifyDocument
-                vendor={vendor as any}
-                fieldName="W9DocumentCheckBox"
-                registerToFormField={register}
-              />
-            )}
           </HStack>
         </HStack>
         <Box>
@@ -205,16 +174,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('agreementSignedDate')}
                 </FormLabel>
-                <Input
-                  type="date"
-                  w="215px"
-                  data-testid="agreementSignedDate"
-                  {...register('agreementSignedDate', {
-                    required: changedDateFields.includes('agreementSignedDate')
-                      ? isActive && 'This is required field'
-                      : '',
-                  })}
-                />
+                <Input type="date" w="215px" data-testid="agreementSignedDate" {...register('agreementSignedDate')} />
                 <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
               </FormControl>
             </Box>
@@ -235,7 +195,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   control={control}
                   rules={{
                     required: changedDateFields.includes('agreementSignedDate')
-                      ? isActive && 'This is required field.'
+                      ? isActive && 'This is required field'
                       : '',
                   }}
                   render={({ field, fieldState }) => {
@@ -249,30 +209,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             onChange={(file: any) => {
                               onFileChange(file)
                               field.onChange(file)
-                              setChangeDateFields([...changedDateFields, 'agreementSignedDate'])
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </Box>
-                        <Box overflow="hidden" top={16} h="18px">
-                          {documents.agreementUrl &&
-                            downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
                         </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {isAgreementSignedDateChanged || watchAgreementFile ? (
-                <SaveChangedFieldAlert />
-              ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="agreementSignCheckBox"
-                  registerToFormField={register}
-                />
-              )}
             </HStack>
           </HStack>
         </Box>
@@ -313,16 +259,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 >
                   {t('autoInsuranceExpDate')}
                 </FormLabel>
-                <Input
-                  type="date"
-                  w="215px"
-                  {...register('autoInsuranceExpDate', {
-                    required: changedDateFields.includes('autoInsuranceExpDate')
-                      ? isActive && 'This is required field'
-                      : '',
-                  })}
-                  data-testid="autoInsuranceExpDate"
-                />
+                <Input type="date" w="215px" {...register('autoInsuranceExpDate')} data-testid="autoInsuranceExpDate" />
                 <FormErrorMessage>
                   {errors.autoInsuranceExpDate && errors.autoInsuranceExpDate.message}
                 </FormErrorMessage>
@@ -359,30 +296,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             onChange={(file: any) => {
                               onFileChange(file)
                               field.onChange(file)
-                              setChangeDateFields([...changedDateFields, 'autoInsuranceExpDate'])
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </Box>
-                        <Box overflow="hidden" top={16} h="18px">
-                          {documents.insuranceUrl &&
-                            downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
                         </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {isAutoInsuranceExpDateChanged || watchInsuranceFile ? (
-                <SaveChangedFieldAlert />
-              ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="autoInsuranceCheckBox"
-                  registerToFormField={register}
-                />
-              )}
             </HStack>
           </HStack>
         </Box>
@@ -398,14 +321,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('COIGLExpDate')}
                 </FormLabel>
-                <Input
-                  type="date"
-                  w="215px"
-                  {...register('coiGlExpDate', {
-                    required: changedDateFields.includes('COIGLExpDate') ? isActive && 'This is required field' : '',
-                  })}
-                  data-testid="coiGlExpDate"
-                />
+                <Input type="date" w="215px" {...register('coiGlExpDate')} data-testid="coiGlExpDate" />
                 <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
               </FormControl>
             </Box>
@@ -439,57 +355,36 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             isError={!!fieldState.error?.message}
                             onChange={(file: any) => {
                               onFileChange(file)
-
                               field.onChange(file)
-
-                              setChangeDateFields([...changedDateFields, 'COIGLExpDate'])
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
+
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </Box>
-                        <Box overflow="hidden" top={16} h="18px">
-                          {documents.coiGLExpUrl &&
-                            downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
                         </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {isCoiGlExpDateChanged || watchCoiGlExpFile ? (
-                <SaveChangedFieldAlert />
-              ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="coiGLExpCheckBox"
-                  registerToFormField={register}
-                />
-              )}
             </HStack>
           </HStack>
         </Box>
+
         <Box>
           <HStack
             flexDir={{ base: 'column', sm: 'row' }}
+            marginTop={{ base: '20px', md: '0' }}
             alignItems="flex-start"
             spacing="16px"
-            marginTop={{ base: '20px', md: '0' }}
           >
             <Box>
               <FormControl isInvalid={!!errors.coiWcExpDate}>
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('COIWCExpDate')}
                 </FormLabel>
-                <Input
-                  type="date"
-                  w="215px"
-                  {...register('coiWcExpDate', {
-                    required: changedDateFields.includes('coiWcExpDate') ? isActive && 'This is required field' : '',
-                  })}
-                  data-testid="coiWcExpDate"
-                />
-                <FormErrorMessage>{errors.coiWcExpDate && errors.coiWcExpDate.message}</FormErrorMessage>
+                <Input type="date" w="215px" {...register('coiWcExpDate')} data-testid="coiWcExpDate" />
+                <FormErrorMessage>{errors.coiWcExpDate && errors.coiWcExpDate?.message}</FormErrorMessage>
               </FormControl>
             </Box>
             <HStack
@@ -502,16 +397,13 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 },
               }}
             >
-              <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
+              <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message} color="#2D3748">
+                <FormLabel variant="strong-label" size="md">
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller
                   name="coiWcExpFile"
                   control={control}
-                  rules={{
-                    required: changedDateFields.includes('coiWcExpDate') ? isActive && 'This is required field' : '',
-                  }}
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline">
@@ -523,59 +415,21 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             onChange={(file: any) => {
                               onFileChange(file)
                               field.onChange(file)
-                              setChangeDateFields([...changedDateFields, 'coiWcExpDate'])
                             }}
                             onClear={() => setValue(field.name, null)}
                           ></ChooseFileField>
+
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </Box>
-                        <Box overflow="hidden" top={16} h="18px">
-                          {documents.coiWcExpUrl &&
-                            downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
                         </Box>
                       </VStack>
                     )
                   }}
                 />
               </FormControl>
-              {isCoiWcExpDateChanged || watchCoiWcExpFile ? (
-                <SaveChangedFieldAlert />
-              ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="CoiWcExpCheckbox"
-                  registerToFormField={register}
-                />
-              )}
             </HStack>
           </HStack>
         </Box>
       </VStack>
-
-      <Flex
-        id="footer"
-        mt={2}
-        height="72px"
-        pt="8px"
-        w="100%"
-        borderTop="2px solid #CBD5E0"
-        alignItems="center"
-        justifyContent="end"
-      >
-        {isAllFiledWatch && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3">
-            {t(`${VENDORPROFILE}.discardChanges`)}
-          </Button>
-        )}
-        {onClose && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
-            Cancel
-          </Button>
-        )}
-        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="darkPrimary">
-          {vendor?.id ? t('save') : t('next')}
-        </Button>
-      </Flex>
     </>
   )
 }

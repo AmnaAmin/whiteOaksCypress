@@ -39,6 +39,7 @@ import { orderBy } from 'lodash'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { MdOutlineCancel } from 'react-icons/md'
 import { readFileContent } from 'api/vendor-details'
+import { truncateWithEllipsis } from 'utils/string-formatters'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -263,13 +264,15 @@ export const LienWaiverTab: React.FC<any> = props => {
                   base: 'repeat(auto-fill,minmax(215px ,1fr))',
                   md: 'repeat(auto-fill,minmax(215px ,0fr))',
                 }}
-                gap={5}
+                gap={10}
                 w={{ base: '100%', lg: '630px' }}
               >
                 <GridItem>
                   <InputView
                     label={t('nameofClaimant')}
-                    InputElem={<Text data-testid="nameOfClaimant">{workOrder.claimantName}</Text>}
+                    InputElem={
+                      <Text data-testid="nameOfClaimant">{truncateWithEllipsis(workOrder.claimantName, 25)}</Text>
+                    }
                   />
                 </GridItem>
                 <GridItem>
@@ -297,8 +300,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                     base: 'repeat(auto-fill,minmax(215px ,1fr))',
                     md: 'repeat(auto-fill,minmax(215px ,0fr))',
                   }}
-                  gap={5}
-                  mt="16px"
+                  gap={10}
+                  mt={8}
                 >
                   <GridItem>
                     <FormInput
@@ -417,7 +420,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   </GridItem>
                 </Grid>
               ) : (
-                <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" gap={10}>
+                <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" mt={8} gap={10}>
                   <GridItem>
                     <InputView
                       controlStyle={{ w: '16em' }}

@@ -202,7 +202,7 @@ export const ProjectAwardCard = ({
               <Text fontWeight="400" fontSize="14px" color="gray.600">
                 {currencyFormatter(calFactorFeePercentage(cardsvalues?.factoringFee))}
               </Text>
-              <Text fontWeight="400" fontSize="12px" color="blue.400">
+              <Text fontWeight="400" fontSize="12px" color="brand.300">
                 {`${cardsvalues?.factoringFee}%`}
               </Text>
             </HStack>

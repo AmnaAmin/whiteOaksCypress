@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react'
 import { useGetAllVendors, useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
 import Status from 'features/common/status'
 import { dateFormat } from 'utils/date-time-utils'
-import { ColumnDef, PaginationState } from '@tanstack/react-table'
+import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
@@ -132,12 +132,15 @@ type ProjectProps = {
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
       queryStringAPIFilterKeys: VENDOR_TABLE_QUERY_KEYS,
       pagination,
       setPagination,
+      sorting,
+      selectedCard,
     })
 
   useEffect(() => {
@@ -150,12 +153,14 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }, [selectedCard])
 
   const { vendors, isLoading, dataCount, totalPages } = useVendor(
-    filteredUrl + '&' + queryStringWithPagination,
+    filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
 
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
-  const { refetch, isLoading: isExportDataLoading } = useGetAllVendors(queryStringWithoutPagination)
+  const { refetch, isLoading: isExportDataLoading } = useGetAllVendors(
+    filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
+  )
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendors)
   const { tableColumns, settingColumns } = useTableColumnSettings(
@@ -188,11 +193,13 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
           setPagination={setPagination}
           columnFilters={columnFilters}
           setColumnFilters={setColumnFilters}
+          sorting={sorting}
+          setSorting={setSorting}
         >
           <Table
             onRowClick={row => setSelectedVendor(row)}
             isLoading={isLoading}
-            // isEmpty={!isLoading && !filterVendors?.length}
+            isEmpty={!isLoading && !vendors?.length}
           />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>

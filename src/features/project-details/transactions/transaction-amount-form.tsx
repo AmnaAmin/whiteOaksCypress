@@ -366,7 +366,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   size="sm"
                   colorScheme="darkPrimary"
                   color="darkPrimary.300"
-                  border={'1px solid darkPrimary.300'}
+                  border={'1px solid #345EA6'}
                   isDisabled={isApproved || !values?.transactionType?.value || isSysFactoringFee}
                 >
                   {t(`${TRANSACTION}.attachment`)}
@@ -384,7 +384,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           flexDirection="column"
           rounded={6}
           w="100%"
-          minH="34vh"
+          minH="36vh"
         >
           <Grid
             gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
