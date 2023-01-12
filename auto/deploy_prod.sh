@@ -11,4 +11,4 @@ unzip -o output-prod.zip
 cd output-prod
 
 echo "🚀 deploying to s3"
-aws s3 sync . s3://whiteoaks-ui/
+aws s3 sync . s3://whiteoaks-ui/ --delete

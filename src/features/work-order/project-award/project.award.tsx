@@ -34,7 +34,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
         <ModalBody h={'calc(100vh - 300px)'} p="25px" overflow={'auto'}>
           <Flex w="100%" alignContent="space-between" pos="relative">
             <Box flex="4" minW="59em">
-              <FormLabel color={'#4A5568'} fontWeight={600}>
+              <FormLabel color={'gray.700'} fontWeight={500}>
                 {t(`${PROJECT_AWARD}.selectPerformance`)}
               </FormLabel>
             </Box>
