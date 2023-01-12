@@ -60,7 +60,7 @@ type ContactsFormValues = {
 type ProjectDetailsLocationFormValues = {
   address: string | null
   city: string | null
-  state: any
+  state: SelectOption | null
   zip: string | null
   market: SelectOption | null
   gateCode: string | null

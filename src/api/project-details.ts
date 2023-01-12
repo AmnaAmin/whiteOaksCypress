@@ -457,7 +457,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     // Location
     streetAddress: formValues?.address,
     city: formValues?.city,
-    state: formValues?.state?.id,
+    state: formValues?.state?.value || null,
     zipCode: formValues?.zip,
     market: formValues?.market?.label || null,
     gateCode: formValues?.gateCode,
@@ -469,7 +469,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     property: {
       streetAddress: formValues?.address,
       city: formValues?.city,
-      state: formValues?.state?.id,
+      state: formValues?.state?.value,
       zipCode: formValues?.zip,
     },
 
