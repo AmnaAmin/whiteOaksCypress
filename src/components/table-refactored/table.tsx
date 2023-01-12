@@ -396,7 +396,7 @@ export const Table: React.FC<TableProps> = ({
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
-                          bg: row.getIsSelected() ? '#F3F8FF' : '',
+                          bg: !!onRowClick ? '#F3F8FF' : '',
                         }}
                         backgroundColor={row.getIsSelected() ? 'gray.50' : ''}
                       >

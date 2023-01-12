@@ -119,7 +119,7 @@ export const UpcomingPaymentTable = () => {
         setPagination={setPagination}
         setColumnFilters={setColumnFilters}
       >
-        <Table onRowClick={() => {}} isLoading={isLoading} isEmpty={!isLoading && !workOrders?.length} />
+        <Table isLoading={isLoading} isEmpty={!isLoading && !workOrders?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
