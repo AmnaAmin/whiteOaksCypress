@@ -159,7 +159,7 @@ export const ProjectAwardCard = ({
         >
           <VStack w="195px" px={'10px'} alignItems={'Start'} spacing={3}>
             <HStack w={'100%'} justifyContent={'space-between'}>
-              <Text fontWeight="600" fontSize="16px" color="gray.600" whiteSpace="nowrap">
+              <Text fontWeight="500" fontSize="16px" color="gray.700" whiteSpace="nowrap">
                 {cardsvalues?.name}
               </Text>
               {(checkIcon || selectedCard === id) && (
