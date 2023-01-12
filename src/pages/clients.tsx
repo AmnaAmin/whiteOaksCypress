@@ -1,5 +1,6 @@
 import { Box, Button, Divider, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react'
 import { useClients } from 'api/clients'
+import { Card } from 'components/card/card'
 import { ClientsTable } from 'features/clients/clients-table'
 import { CLIENTS } from 'features/clients/clients.i18n'
 import NewClientModal from 'features/clients/new-client-modal'
@@ -30,11 +31,8 @@ export const Client = () => {
 
   return (
     <>
-      <Box>
-        <Flex h="52px" alignItems="center" justifyContent="space-between" px={2}>
-          <Text fontSize="18px" fontWeight={500} color="gray.600">
-            {t(`${CLIENTS}.clientOverview`)}
-          </Text>
+      <Card pt="16px" pb="26px" px="10px" rounded="6px">
+        <Flex mb="16px" alignItems="center" justifyContent="flex-end">
           {!isProjectCoordinator && (
             <Button onClick={onNewClientModalOpen} colorScheme="brand" fontSize="14px">
               <Icon as={BiBookAdd} fontSize="18px" mr={2} />
@@ -45,24 +43,25 @@ export const Client = () => {
         <Flex
           px={7}
           alignItems="center"
-          bg="gray.50"
           h="52px"
-          borderBottom="1px solid #E2E8F0"
+          border="1px solid #CBD5E0"
+          borderBottom="none"
           borderTopRadius={6}
           fontSize="18px"
           fontWeight={500}
           color="gray.600"
+          bg="#F2F3F4"
         >
           <Text flex={1}>{t(`${CLIENTS}.businessName`)}</Text>
           <Divider orientation="vertical" border="1px solid" />
-          <Text pl={5} flex={1}>
+          <Text textAlign="center" flex={1}>
             {t(`${CLIENTS}.accountPayable`)}
           </Text>
         </Flex>
         <Box>
           <ClientsTable ref={tabsContainerRef} createdClientId={createdClientId} />
         </Box>
-      </Box>
+      </Card>
       {isOpenNewClientModal && (
         <NewClientModal
           setCreatedClientId={setCreatedClientId}
