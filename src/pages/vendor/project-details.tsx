@@ -81,8 +81,8 @@ const ProjectDetails: React.FC = props => {
             </Card>
             <Card
               rounded="0px"
-              roundedBottomLeft="6px"
-              roundedBottomRight="6px"
+              roundedRight={{ base: '0px', sm: '6px' }}
+              roundedBottom="6px"
               px="12px"
               pr={{ base: 0, sm: '12px' }}
               py={{ base: '0px', sm: '12px' }}
