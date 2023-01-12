@@ -317,6 +317,7 @@ export const parseFormValuesFromAPIData = ({
   const findOptionByValue = (options: SelectOption[], value: string | number | null): SelectOption | null =>
     options.find(option => option.value === value) || null
 
+  // Due to corrupt data, getting state on the basis of id and code so using both the values 
   const stateValue = stateSelectOptions?.find(b => b?.value === (project?.state))
   const stateIdValue = stateSelectOptions?.find(b => b?.id === Number(project?.state))
 
