@@ -299,7 +299,7 @@ export const parseFormValuesFromAPIData = ({
   projectCoordinatorSelectOptions?: SelectOption[]
   projectManagerSelectOptions?: SelectOption[]
   clientSelectOptions?: SelectOption[]
-  stateSelectOptions?: any
+  stateSelectOptions?: SelectOption[]
   marketSelectOptions?: SelectOption[]
 }): ProjectDetailsFormValues | Object => {
   if (
@@ -317,7 +317,7 @@ export const parseFormValuesFromAPIData = ({
   const findOptionByValue = (options: SelectOption[], value: string | number | null): SelectOption | null =>
     options.find(option => option.value === value) || null
 
-  const stateValue = stateSelectOptions?.find(b => b?.id === Number(project?.state))
+  const stateValue = stateSelectOptions?.find(b => b?.value === (project?.state))
   const marketValue = marketSelectOptions?.find(b => b?.label === project?.market)
 
   const projectStatusSelectOptions = getProjectStatusSelectOptions()
