@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ClientFormValues } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
+import orderBy from 'lodash/orderBy'
 
 export const useClients = () => {
   const client = useClient()
@@ -14,7 +15,7 @@ export const useClients = () => {
   return useQuery('client', async () => {
     const response = await client(`clients?page=0&size=10000000&sort=id,asc`, {})
 
-    return response?.data
+    return orderBy(response?.data || [], ['id'], ['desc'])
   })
 }
 
@@ -48,7 +49,7 @@ export const useUpdateClientDetails = () => {
     {
       onSuccess() {
         toast({
-          title:t(`${CLIENTS}.updateClientDetails`),
+          title: t(`${CLIENTS}.updateClientDetails`),
           description: t(`${CLIENTS}.updateClientMsg`),
           status: 'success',
           duration: 9000,
@@ -122,7 +123,7 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
 export const clientDefault = ({ markets }) => {
   const defaultValues = {
     markets,
-    paymentTerm: {value: 20 , label: 20},
+    paymentTerm: { value: 20, label: 20 },
     // paymentCreditCard : true,
     // paymentCheck: true,
     // paymentAch: true,
@@ -185,7 +186,7 @@ export const useSaveNewClientDetails = () => {
       onSuccess() {
         toast({
           title: t(`${CLIENTS}.newClientDetails`),
-          description: t(`${CLIENTS}.newClientMsg`), 
+          description: t(`${CLIENTS}.newClientMsg`),
           status: 'success',
           duration: 9000,
           isClosable: true,
