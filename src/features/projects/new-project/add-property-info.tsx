@@ -52,7 +52,7 @@ export const AddPropertyInfo: React.FC<{
   // API calls
   const { projects } = useProjects()
   const { propertySelectOptions } = useProperties()
-  const { stateSelectOptions } = useStates()
+  const { stateSelectOptions , states} = useStates()
   const { marketSelectOptions, markets } = useMarkets()
 
   const { data: isAddressVerified, refetch, isLoading } = useGetAddressVerification(addressInfo)
@@ -95,13 +95,15 @@ export const AddPropertyInfo: React.FC<{
     const property = option?.property
     const market = markets.find(m => m?.id === property?.marketId)
 
+    const state =  states.find(s => s?.code === property?.state)
+
     setValue('streetAddress', property?.streetAddress || option.label)
     setValue('city', property?.city)
     setValue('zipCode', property?.zipCode)
     setValue('propertyId', property?.id)
     setValue('property', property)
     setValue('newMarket', { label: market?.metropolitanServiceArea, value: market?.id })
-    setValue('state', { label: market?.stateName, value: market?.stateId })
+    setValue('state', { label: state?.name, value: state?.code })
 
     // Check for duplicate address
     const duplicatedInProjects =
