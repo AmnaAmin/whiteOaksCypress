@@ -69,11 +69,8 @@ function register(payload: unknown) {
 }
 
 async function logout() {
-  if (window.location.pathname !== '/login') {
-    window.location.href = window.location.origin + '/login'
-  }
-
-  return Promise.resolve()
+   window.location.href = window.location.origin
+   return Promise.resolve()
 }
 
 export { login, forgetPassword, resetPassword, register, logout, localStorageKey }
