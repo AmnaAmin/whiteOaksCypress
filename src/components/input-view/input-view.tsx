@@ -26,7 +26,7 @@ const InputView = ({ Icon: Icons, label, InputElem, showDivider = true, controlS
   return (
     <Box {...controlStyle}>
       <Stack>
-        <HStack lineHeight={'23px'}>
+        <HStack lineHeight={'32px'}>
           {Icons && (
             <Box h={'40px'} pb="6px" color={'#4A5568'}>
               <Icon fontSize={20} as={Icons} />

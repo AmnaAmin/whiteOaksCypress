@@ -45,8 +45,10 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
     setValue,
     getValues,
     register,
+    watch,
   } = useFormContext<DocumentsCardFormValues>()
   const documents = getValues()
+  const watchAgreementFile = watch('agreement')
 
   /*const {
     isW9DocumentDateChanged,
@@ -174,7 +176,15 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('agreementSignedDate')}
                 </FormLabel>
-                <Input type="date" w="215px" data-testid="agreementSignedDate" {...register('agreementSignedDate')} />
+                <Input
+                  type="date"
+                  w="215px"
+                  {...(!!watchAgreementFile && { borderLeft: '2px solid #345EA6' })}
+                  data-testid="agreementSignedDate"
+                  {...register('agreementSignedDate', {
+                    required: !!watchAgreementFile && 'This is required',
+                  })}
+                />
                 <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
               </FormControl>
             </Box>
