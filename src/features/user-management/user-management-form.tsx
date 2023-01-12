@@ -701,11 +701,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             <Button
               variant="outline"
               isDisabled={user?.activated ? true : false}
-              _disabled={{
-                bg: '#EBF8FF',
-                color: '#4E87F8',
-                opacity: 0.5,
-              }}
               colorScheme="brand"
               onClick={() => setIsDeleteBtnClicked(true)}
             >
