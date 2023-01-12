@@ -226,7 +226,7 @@ export const useProperties = () => {
   const client = useClient()
 
   const { data: properties, ...rest } = useQuery('properties', async () => {
-    const response = await client(`properties`, {})
+    const response = await client(`properties/all`, {})
 
     return response?.data
   })
