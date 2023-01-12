@@ -95,6 +95,10 @@ export const documentTerm = [
   { value: 39, label: '30' },
 ]
 
+export const portalAccess = [
+  { value: true, label: 'Enable' },
+  { value: false, label: 'Disable' },
+]
 export const useVendorAddress = projectId => {
   const client = useClient()
 
