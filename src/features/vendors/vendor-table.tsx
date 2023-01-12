@@ -18,6 +18,9 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'status',
     accessorKey: 'statusLabel',
+    accessorFn: (cellInfo: any) => {
+      return cellInfo.statusLabel ? cellInfo.statusLabel : ''
+    },
     cell: cellInfo => {
       const value = cellInfo.getValue() as string
 
@@ -48,7 +51,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     header: 'activeDate',
     accessorKey: 'createdDate',
     accessorFn(cellInfo) {
-      return dateFormat(cellInfo.createdDate)
+      return cellInfo.createdDate ? dateFormat(cellInfo.createdDate) : '- - -'
     },
     meta: { format: 'date' },
   },
@@ -56,7 +59,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     header: 'coiglExpirationDate', //'COI-GL Expiration Date',
     accessorKey: 'coiglExpirationDate',
     accessorFn(cellInfo) {
-      return dateFormat(cellInfo.coiglExpirationDate)
+      return cellInfo.coiglExpirationDate ? dateFormat(cellInfo.coiglExpirationDate) : '- - -'
     },
     meta: { format: 'date' },
   },
@@ -64,39 +67,53 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     header: 'coiWcExpirationDate',
     accessorKey: 'coiWcExpirationDate',
     accessorFn(cellInfo) {
-      return dateFormat(cellInfo.coiWcExpirationDate)
+      return cellInfo.coiWcExpirationDate ? dateFormat(cellInfo.coiWcExpirationDate) : '- - -'
     },
     meta: { format: 'date' },
   },
   {
     header: 'EIN/SSN',
     accessorKey: 'einNumber',
+    accessorFn(cellInfo) {
+      return cellInfo?.einNumber ? cellInfo?.einNumber : '- - -'
+    },
   },
   {
     header: 'totalCapacity',
     accessorKey: 'capacity',
     accessorFn(cellInfo) {
-      return cellInfo?.capacity?.toString()
+      return cellInfo?.capacity ? cellInfo?.capacity?.toString() : '- - -'
     },
+    filterFn: 'equalsString',
   },
   {
     header: 'availableCapacity',
     accessorKey: 'availableCapacity',
     accessorFn(cellInfo) {
-      return cellInfo?.availableCapacity?.toString()
+      return cellInfo?.availableCapacity ? cellInfo?.availableCapacity?.toString() : '- - -'
     },
+    filterFn: 'equalsString',
   },
   {
     header: 'constructionTrade',
     accessorKey: 'skills',
+    accessorFn(cellInfo) {
+      return cellInfo?.skills ? cellInfo?.skills : '- - -'
+    },
   },
   {
     header: 'market',
     accessorKey: 'market',
+    accessorFn(cellInfo) {
+      return cellInfo?.market ? cellInfo?.market : '- - -'
+    },
   },
   {
     header: 'businessPhoneNumber',
     accessorKey: 'businessPhoneNumber',
+    accessorFn(cellInfo) {
+      return cellInfo?.businessPhoneNumber ? cellInfo?.businessPhoneNumber : '- - -'
+    },
   },
 ]
 
