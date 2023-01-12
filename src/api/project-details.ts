@@ -299,7 +299,7 @@ export const parseFormValuesFromAPIData = ({
   projectCoordinatorSelectOptions?: SelectOption[]
   projectManagerSelectOptions?: SelectOption[]
   clientSelectOptions?: SelectOption[]
-  stateSelectOptions?: SelectOption[]
+  stateSelectOptions?: any
   marketSelectOptions?: SelectOption[]
 }): ProjectDetailsFormValues | Object => {
   if (
@@ -318,6 +318,8 @@ export const parseFormValuesFromAPIData = ({
     options.find(option => option.value === value) || null
 
   const stateValue = stateSelectOptions?.find(b => b?.value === (project?.state))
+  const stateIdValue = stateSelectOptions?.find(b => b?.id === Number(project?.state))
+
   const marketValue = marketSelectOptions?.find(b => b?.label === project?.market)
 
   const projectStatusSelectOptions = getProjectStatusSelectOptions()
@@ -369,7 +371,7 @@ export const parseFormValuesFromAPIData = ({
     // Location Form values
     address: project.streetAddress,
     city: project.city,
-    state: stateValue, //findOptionById(stateSelectOptions, project.state),
+    state: stateValue ? stateValue : stateIdValue,
     zip: project.zipCode,
     market: marketValue,
     gateCode: project.gateCode,
