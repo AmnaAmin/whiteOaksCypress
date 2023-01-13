@@ -60,9 +60,9 @@ type ContactsFormValues = {
 type ProjectDetailsLocationFormValues = {
   address: string | null
   city: string | null
-  state: string | null
+  state: SelectOption | null
   zip: string | null
-  market: string | null
+  market: SelectOption | null
   gateCode: string | null
   lockBoxCode: string | null
   hoaContactPhoneNumber: string | null

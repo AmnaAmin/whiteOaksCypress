@@ -193,7 +193,7 @@ const vendorRegisterFormSchema = {
   state: Yup.object().required('State is required'),
   zipCode: Yup.string().required('ZipCode is required'),
   capacity: Yup.string().required('Capacity is required'),
-  
+
   //Documents
 
   w9DocumentDate: Yup.string(),
@@ -241,17 +241,15 @@ export const VendorRegister = () => {
   const [ssnEinTabIndex, setSsnEinTabIndex] = useState<number>(0)
   const [disableLoginFields, setDisableLoginFields] = useState<boolean>(false)
   const [customResolver, setCustomResolver] = useState<any>(vendorRegisterFormSchema)
-  const ref = useRef<HTMLFormElement>(null);
-  const [ showLoginFields, setShowLoginFields ] = useState<boolean>(true);
+  const ref = useRef<HTMLFormElement>(null)
+  const [showLoginFields, setShowLoginFields] = useState<boolean>(true)
   const [isMobile] = useMediaQuery('(max-width: 480px)')
-  
-  useEffect( () => {
 
-    if ( ! isMobile ) return;
+  useEffect(() => {
+    if (!isMobile) return
 
-    if ( formTabIndex !== FORM_TABS.LOCATION_DETAILS )
-      setShowLoginFields(false);
-  }, [isMobile] )
+    if (formTabIndex !== FORM_TABS.LOCATION_DETAILS) setShowLoginFields(false)
+  }, [isMobile])
 
   const formReturn = useForm({
     //mode: "onChange",
@@ -265,14 +263,14 @@ export const VendorRegister = () => {
         ...vendorRegisterFormSchema,
         einNumber: Yup.string()
           .required('EIN is a required field')
-          .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits')
+          .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits'),
       })
     } else {
       setCustomResolver({
         ...vendorRegisterFormSchema,
         ssnNumber: Yup.string()
           .required('SSN is a required field')
-          .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits')
+          .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits'),
       })
     }
   }, [ssnEinTabIndex])
@@ -413,12 +411,10 @@ export const VendorRegister = () => {
   }
 
   const doCancel = () => {
+    if (formTabIndex !== FORM_TABS.LOCATION_DETAILS) setformTabIndex(FORM_TABS.LOCATION_DETAILS)
 
-    if ( formTabIndex !== FORM_TABS.LOCATION_DETAILS )
-      setformTabIndex(FORM_TABS.LOCATION_DETAILS);
-
-    if ( ref.current ) {
-       ref.current.reset();
+    if (ref.current) {
+      ref.current.reset()
     }
 
     const fieldsArr = [
@@ -442,10 +438,10 @@ export const VendorRegister = () => {
       'secondEmailAddress',
       'secondEmailAddress',
       'state',
-    ];
+    ]
 
     //reset( {} )
-    
+
     setDisableLoginFields(false)
     setShowLoginFields(true)
   }
@@ -496,7 +492,6 @@ export const VendorRegister = () => {
   }
 
   const createUserVendorAccount = async (formValues: any) => {
-
     if (!validateMarket(formValues.markets)) {
       showError('Market')
     } else {
@@ -509,7 +504,7 @@ export const VendorRegister = () => {
       bgImg="url(./bg.svg)"
       bgRepeat="no-repeat"
       bgSize="cover"
-      minH={{ sm: "auto", md: "100vh"}}
+      minH={{ sm: 'auto', md: '100vh' }}
       py="12"
       px={{ base: '4', lg: '8' }}
       display="flex"
@@ -518,7 +513,7 @@ export const VendorRegister = () => {
       maxW="100%"
       overflow="hidden"
     >
-      <Box w={{ sm: "100%" , lg: "1200px" }} mx="auto" overflow="hidden">
+      <Box w={{ sm: '100%', lg: '1200px' }} mx="auto" overflow="hidden">
         <Card
           borderBottomLeftRadius="0px !important"
           borderBottomRightRadius="0px !important"
@@ -526,22 +521,25 @@ export const VendorRegister = () => {
           py="10px !important"
           opacity="1"
           height="auto"
-          minH={{ sm: "auto", md: "90vh"}}
+          minH={{ sm: 'auto', md: '90vh' }}
           overflow="hidden"
         >
           <FormProvider {...formReturn}>
-            <form 
-              onSubmit={handleSubmit(createUserVendorAccount)} 
-              autoComplete="off"
-              ref={ref}
-            >
-              <HStack spacing={{ sm: "0px", md: "50px" }} alignItems="flex-start" flexDir={{ base: 'column', sm: 'row' }}>
-                <Box width={{ sm: "100%", md: "30%" }}>
-                  <VStack alignItems="baseline" sx={{
-                    "@media only screen and (max-width:480px)": {
-                      alignItems: "center"
-                    }
-                  }}>
+            <form onSubmit={handleSubmit(createUserVendorAccount)} autoComplete="off" ref={ref}>
+              <HStack
+                spacing={{ sm: '0px', md: '50px' }}
+                alignItems="flex-start"
+                flexDir={{ base: 'column', sm: 'row' }}
+              >
+                <Box width={{ sm: '100%', md: '30%' }}>
+                  <VStack
+                    alignItems="baseline"
+                    sx={{
+                      '@media only screen and (max-width:480px)': {
+                        alignItems: 'center',
+                      },
+                    }}
+                  >
                     <Box w="105px" h="140px">
                       <Image src="./logo-reg-vendor.svg" />
                       <Image src="./WhiteOaks.svg" mt="10px" />
@@ -566,7 +564,7 @@ export const VendorRegister = () => {
                     </Center>
                   </VStack>
 
-                  <Stack spacing="13px" mt="30px" display={ showLoginFields ? "block": "none" }>
+                  <Stack spacing="13px" mt="30px" display={showLoginFields ? 'block' : 'none'}>
                     <FormControl isInvalid={errors?.email}>
                       <FormLabel htmlFor="email" fontSize="12px" color="#252F40" fontWeight="bold">
                         Email Address
@@ -667,11 +665,16 @@ export const VendorRegister = () => {
                   </Stack>
                 </Box>
                 <Flex>
-                  <Stack direction="row" h="557px" p={4} sx={{
-                    "@media only screen and (max-width: 480px)": {
-                      display: "none !important"
-                    }
-                  }}>
+                  <Stack
+                    direction="row"
+                    h="557px"
+                    p={4}
+                    sx={{
+                      '@media only screen and (max-width: 480px)': {
+                        display: 'none !important',
+                      },
+                    }}
+                  >
                     <Divider
                       orientation="vertical"
                       border="3px solid #345587"
@@ -684,13 +687,22 @@ export const VendorRegister = () => {
                     />
                   </Stack>
                 </Flex>
-                <Flex alignItems="center" w={{ sm: "100%", md: "60%" }} maxW="800px" sx={{
-                    "@media only screen and (max-width: 480px)": {
-                      marginTop: "30px !important"
-                    }
-                  }}>
+                <Flex
+                  alignItems="center"
+                  w={{ sm: '100%', md: '60%' }}
+                  maxW="800px"
+                  sx={{
+                    '@media only screen and (max-width: 480px)': {
+                      marginTop: '30px !important',
+                    },
+                  }}
+                >
                   <VStack w="100%">
-                    <Tabs w={{ sm: "100%", md: "680px" }} onChange={index => setformTabIndex(index)} index={formTabIndex}>
+                    <Tabs
+                      w={{ sm: '100%', md: '680px' }}
+                      onChange={index => setformTabIndex(index)}
+                      index={formTabIndex}
+                    >
                       <TabList flexDir={{ base: 'column', sm: 'row' }}>
                         <CustomTab isDisabled={formTabIndex !== FORM_TABS.LOCATION_DETAILS}>Location Details</CustomTab>
                         <CustomTab isDisabled={formTabIndex !== FORM_TABS.DOCUMENTS}>Documents</CustomTab>
@@ -702,13 +714,9 @@ export const VendorRegister = () => {
                       </TabList>
 
                       <TabPanels>
-                        <TabPanel p={{ sm: 0, md: "1rem" }}>
-                          <HStack 
-                            mt="30px" 
-                            spacing={{ sm: "0", md: "70px"}} 
-                            flexDir={{ base: 'column', sm: 'row' }}
-                          >
-                            <VStack w={{ sm: "100%", md: "50%" }} spacing="20px">
+                        <TabPanel p={{ sm: 0, md: '1rem' }}>
+                          <HStack mt="30px" spacing={{ sm: '0', md: '70px' }} flexDir={{ base: 'column', sm: 'row' }}>
+                            <VStack w={{ sm: '100%', md: '50%' }} spacing="20px">
                               <FormControl isInvalid={errors?.ownerName}>
                                 <FormLabel htmlFor="ownerName" fontSize="12px" color="#252F40" fontWeight="bold">
                                   Primary Contact
@@ -805,14 +813,14 @@ export const VendorRegister = () => {
                               </FormControl>
                             </VStack>
 
-                            <VStack  
-                              w={{ sm: "100%", md: "50%" }} 
+                            <VStack
+                              w={{ sm: '100%', md: '50%' }}
                               spacing="20px"
                               sx={{
-                                "@media only screen and (max-width: 480px)": {
-                                  marginTop: "20px !important",
-                                  width: "100% !important"
-                                }
+                                '@media only screen and (max-width: 480px)': {
+                                  marginTop: '20px !important',
+                                  width: '100% !important',
+                                },
                               }}
                             >
                               <FormControl isInvalid={errors?.secondName}>
@@ -883,49 +891,45 @@ export const VendorRegister = () => {
                           </HStack>
 
                           <Tabs index={ssnEinTabIndex} onChange={index => setSsnEinTabIndex(index)} w="100%" mt="10px">
-                              <TabList>
-                                <Tab>EIN</Tab>
-                                <Tab>SSN</Tab>
-                              </TabList>
-                              <TabPanels>
-                                <TabPanel>
-                                  <FormControl isInvalid={errors?.einNumber}>
-                                    <Input
-                                      as={InputMask}
-                                      id="einNumber"
-                                      type="text"
-                                      fontSize="14px"
-                                      color="#252F40"
-                                      mask="999-99-9999"
-                                      {...register('einNumber', {
-                                        required: 'This is required',
-                                      })}
-                                    />
-                                    <FormErrorMessage>
-                                      {errors?.einNumber && errors?.einNumber?.message}
-                                    </FormErrorMessage>
-                                  </FormControl>
-                                </TabPanel>
-                                <TabPanel>
-                                  <FormControl isInvalid={errors?.ssnNumber}>
-                                    <Input
-                                      as={InputMask}
-                                      id="ssnNumber"
-                                      type="text"
-                                      fontSize="14px"
-                                      color="#252F40"
-                                      mask="999-99-9999"
-                                      {...register('ssnNumber', {
-                                        required: 'This is required',
-                                      })}
-                                    />
-                                    <FormErrorMessage>
-                                      {errors?.ssnNumber && errors?.ssnNumber?.message}
-                                    </FormErrorMessage>
-                                  </FormControl>
-                                </TabPanel>
-                              </TabPanels>
-                            </Tabs>
+                            <TabList>
+                              <Tab>EIN</Tab>
+                              <Tab>SSN</Tab>
+                            </TabList>
+                            <TabPanels>
+                              <TabPanel>
+                                <FormControl isInvalid={errors?.einNumber}>
+                                  <Input
+                                    as={InputMask}
+                                    id="einNumber"
+                                    type="text"
+                                    fontSize="14px"
+                                    color="#252F40"
+                                    mask="999-99-9999"
+                                    {...register('einNumber', {
+                                      required: 'This is required',
+                                    })}
+                                  />
+                                  <FormErrorMessage>{errors?.einNumber && errors?.einNumber?.message}</FormErrorMessage>
+                                </FormControl>
+                              </TabPanel>
+                              <TabPanel>
+                                <FormControl isInvalid={errors?.ssnNumber}>
+                                  <Input
+                                    as={InputMask}
+                                    id="ssnNumber"
+                                    type="text"
+                                    fontSize="14px"
+                                    color="#252F40"
+                                    mask="999-99-9999"
+                                    {...register('ssnNumber', {
+                                      required: 'This is required',
+                                    })}
+                                  />
+                                  <FormErrorMessage>{errors?.ssnNumber && errors?.ssnNumber?.message}</FormErrorMessage>
+                                </FormControl>
+                              </TabPanel>
+                            </TabPanels>
+                          </Tabs>
 
                           <VStack w="100%" spacing="20px" mb="20px">
                             <FormControl isInvalid={errors?.streetAddress}>
@@ -946,19 +950,17 @@ export const VendorRegister = () => {
                                 {errors?.streetAddress && errors?.streetAddress?.message}
                               </FormErrorMessage>
                             </FormControl>
-
-                            
                           </VStack>
 
                           <VStack w="100%">
-                            <HStack 
-                              w="100%" 
-                              spacing={{ sm: "0", md:"20px" }}
+                            <HStack
+                              w="100%"
+                              spacing={{ sm: '0', md: '20px' }}
                               flexDir={{ base: 'column', sm: 'row' }}
                               sx={{
-                                "@media only screen and (max-width: 480px)": {
-                                  marginTop: "20px !important"
-                                }
+                                '@media only screen and (max-width: 480px)': {
+                                  marginTop: '20px !important',
+                                },
                               }}
                             >
                               <FormControl isInvalid={errors?.city}>
@@ -977,11 +979,14 @@ export const VendorRegister = () => {
                                 />
                                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
                               </FormControl>
-                              <FormControl isInvalid={!!errors?.state} sx={{
-                                "@media only screen and (max-width: 480px)": {
-                                  marginTop: "20px !important"
-                                }
-                              }}>
+                              <FormControl
+                                isInvalid={!!errors?.state}
+                                sx={{
+                                  '@media only screen and (max-width: 480px)': {
+                                    marginTop: '20px !important',
+                                  },
+                                }}
+                              >
                                 <FormLabel htmlFor="state" fontSize="12px" color="#252F40" fontWeight="bold">
                                   State
                                 </FormLabel>
@@ -992,7 +997,6 @@ export const VendorRegister = () => {
                                   render={({ field, fieldState }) => (
                                     <>
                                       <Select
-
                                         {...field}
                                         options={stateSelectOptions}
                                         selected={field.value}
@@ -1008,20 +1012,24 @@ export const VendorRegister = () => {
                                 />
                               </FormControl>
                             </HStack>
-                            <HStack w="100%" 
-                              flexDir={{ base: 'column', sm: 'row' }} 
-                              spacing={{ sm: "0", md:"20px" }}
+                            <HStack
+                              w="100%"
+                              flexDir={{ base: 'column', sm: 'row' }}
+                              spacing={{ sm: '0', md: '20px' }}
                               sx={{
-                                "@media only screen and (max-width: 480px)": {
-                                  marginTop: "20px !important !important"
-                                }
+                                '@media only screen and (max-width: 480px)': {
+                                  marginTop: '20px !important !important',
+                                },
                               }}
                             >
-                              <FormControl isInvalid={errors?.zipCode} sx={{
-                                "@media only screen and (max-width: 480px)": {
-                                  marginTop: "20px !important"
-                                }
-                              }}>
+                              <FormControl
+                                isInvalid={errors?.zipCode}
+                                sx={{
+                                  '@media only screen and (max-width: 480px)': {
+                                    marginTop: '20px !important',
+                                  },
+                                }}
+                              >
                                 <FormLabel htmlFor="zipCode" fontSize="12px" color="#252F40" fontWeight="bold">
                                   Zip Code
                                 </FormLabel>
@@ -1037,11 +1045,14 @@ export const VendorRegister = () => {
                                 />
                                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
                               </FormControl>
-                              <FormControl isInvalid={errors?.capacity} sx={{
-                                "@media only screen and (max-width: 480px)": {
-                                  marginTop: "20px !important"
-                                }
-                              }}>
+                              <FormControl
+                                isInvalid={errors?.capacity}
+                                sx={{
+                                  '@media only screen and (max-width: 480px)': {
+                                    marginTop: '20px !important',
+                                  },
+                                }}
+                              >
                                 <FormLabel htmlFor="capacity" fontSize="12px" color="#252F40" fontWeight="bold">
                                   Capacity
                                 </FormLabel>
@@ -1060,37 +1071,49 @@ export const VendorRegister = () => {
                             </HStack>
                           </VStack>
                         </TabPanel>
-                        <TabPanel p={{ sm: 0, md: "1rem" }}>
+                        <TabPanel p={{ sm: 0, md: '1rem' }}>
                           <DocumentsCard isActive={formTabIndex === FORM_TABS.DOCUMENTS} />
                         </TabPanel>
-                        <TabPanel p={{ sm: 0, md: "1rem" }}>
+                        <TabPanel p={{ sm: 0, md: '1rem' }}>
                           <LicenseCard isActive={formTabIndex === FORM_TABS.LICENSE} />
                         </TabPanel>
-                        <TabPanel p={{ sm: "1rem", md: "1rem" }} sx={{
-                          "@media only screen and (max-width: 480px)": {
-                            width: "345px",
-                            marginBottom: "20px",
-                            marginTop: "20px"
-                          }
-                        }}>
+                        <TabPanel
+                          p={{ sm: '1rem', md: '1rem' }}
+                          sx={{
+                            '@media only screen and (max-width: 480px)': {
+                              width: '345px',
+                              marginBottom: '20px',
+                              marginTop: '20px',
+                            },
+                          }}
+                        >
                           <ConstructionTradeCard isActive={formTabIndex === FORM_TABS.CONSTRUCTION_TRADE} />
                         </TabPanel>
-                        <TabPanel p={{ sm: "1rem", md: "1rem" }} sx={{
-                            "@media only screen and (max-width: 480px)": {
-                              marginTop: "30px !important"
-                            }
-                          }}>
+                        <TabPanel
+                          p={{ sm: '1rem', md: '1rem' }}
+                          sx={{
+                            '@media only screen and (max-width: 480px)': {
+                              marginTop: '30px !important',
+                            },
+                          }}
+                        >
                           <MarketListCard isActive={formTabIndex === FORM_TABS.MARKETS} />
                         </TabPanel>
                       </TabPanels>
                     </Tabs>
-                    <HStack spacing="16px" position="relative" left="23.7%" marginTop="30px !important" sx={{
-                      "@media only screen and (max-width: 480px)": {
-                        position: "static",
-                        marginTop: "30px !important",
-                        marginBottom: "30px !important"
-                      }
-                    }}>
+                    <HStack
+                      spacing="16px"
+                      position="relative"
+                      left="23.7%"
+                      marginTop="30px !important"
+                      sx={{
+                        '@media only screen and (max-width: 480px)': {
+                          position: 'static',
+                          marginTop: '30px !important',
+                          marginBottom: '30px !important',
+                        },
+                      }}
+                    >
                       <Button
                         onClick={doCancel}
                         bgColor="#FFFFFF"

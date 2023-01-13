@@ -6,8 +6,15 @@ import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
+import Select from 'components/form/react-select'
+import { SelectOption } from 'types/transaction.type'
 
-const Location: React.FC = () => {
+type LocationProps = {
+  stateSelectOptions: SelectOption[]
+  marketSelectOptions: SelectOption[]
+}
+
+const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOptions}) => {
   const {
     register,
     control,
@@ -18,13 +25,14 @@ const Location: React.FC = () => {
     isAddressDisabled,
     isCityDisabled,
     isZipDisabled,
+    isStateDisabled,
     isGateCodeDisabled,
     isMarketDisabled,
     isLockBoxCodeDisabled,
   } = useFieldsDisabled(control)
 
   const { t } = useTranslation()
-
+ 
   return (
     <Stack>
       <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
@@ -51,7 +59,28 @@ const Location: React.FC = () => {
             <FormLabel variant="strong-label" size="md" htmlFor="state">
               {t(`project.projectDetails.state`)}
             </FormLabel>
-            <Input isDisabled={isCityDisabled} id="state" {...register('state')} />
+            <Controller
+              control={control}
+              name={`state`}
+              rules={{ required: 'This is required field' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <Select
+                    {...field}
+                    options={stateSelectOptions}
+                    size="md"
+                    value={field.value}
+                    isDisabled={isStateDisabled}
+                    selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
+                    onChange={option => {
+                      field.onChange(option)
+                    }}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+            {/* <Input isDisabled={isCityDisabled} id="state" {...register('state')} /> */}
           </FormControl>
         </GridItem>
         <GridItem>
@@ -68,7 +97,28 @@ const Location: React.FC = () => {
             <FormLabel variant="strong-label" size="md" htmlFor="market">
               {t(`project.projectDetails.market`)}
             </FormLabel>
-            <Input isDisabled={isMarketDisabled} id="market" {...register('market')} />
+            {/* <Input isDisabled={isMarketDisabled} id="market" {...register('market')} /> */}
+            <Controller
+                  control={control}
+                  name={`market`}
+                  rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Select
+                        {...field}
+                        options={marketSelectOptions}
+                        size="md"
+                        value={field.value}
+                        selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
+                        isDisabled={isMarketDisabled}
+                        onChange={option => {
+                          field.onChange(option)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                />
           </FormControl>
         </GridItem>
         <GridItem>
