@@ -54,14 +54,37 @@ const CreateVendorDetail: React.FC<{
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
   const formValues = useWatch({ control })
 
+  const capacityError = useWatch({ name: 'capacity', control })
+
   const validatePayment = paymentsMethods?.filter(payment => formValues[payment.name])
 
   const preventNumber = e => {
     let keyCode = e.keyCode ? e.keyCode : e.which
-    if (keyCode > 47 && keyCode < 58) {
+    //  to prevent the special characters and Numbers
+    if (
+      (keyCode > 47 && keyCode < 58) ||
+      keyCode === 36 ||
+      keyCode === 34 ||
+      keyCode === 35 ||
+      keyCode === 37 ||
+      keyCode === 38 ||
+      keyCode === 39 ||
+      keyCode === 40 ||
+      keyCode === 41 ||
+      keyCode === 42 ||
+      keyCode === 43 ||
+      keyCode === 44 ||
+      keyCode === 45 ||
+      keyCode === 46 ||
+      keyCode === 47 ||
+      keyCode === 64 ||
+      keyCode === 94 ||
+      keyCode === 63
+    ) {
       e.preventDefault()
     }
   }
+
   return (
     <Stack spacing={3}>
       <Box height="498px" overflow="auto">
@@ -306,6 +329,7 @@ const CreateVendorDetail: React.FC<{
                 w="215px"
                 variant="required-field"
                 size="md"
+                onKeyPress={preventNumber}
               />
               <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
             </FormControl>
@@ -366,6 +390,7 @@ const CreateVendorDetail: React.FC<{
               />
               <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
+            <Text color="red">{capacityError! > 500 ? 'Capacity should not be more than 500' : ''}</Text>
           </GridItem>
           <GridItem>
             <FormControl isInvalid={!!errors.einNumber}>

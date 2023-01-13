@@ -110,7 +110,7 @@ export const UpcomingPaymentTable = () => {
   )
 
   return (
-    <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderRadius="6px">
+    <Box overflowX="auto" minH="calc(100vh - 500px)" border="1px solid #CBD5E0" borderRadius="6px">
       <TableContextProvider
         data={workOrders}
         columns={tableColumns}
