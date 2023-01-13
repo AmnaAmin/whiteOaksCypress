@@ -26,6 +26,7 @@ import { useEffect } from 'react'
 import { STATUS } from 'features/common/status'
 import { CustomInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
+import { truncateWithEllipsis } from 'utils/string-formatters'
 
 const CalenderCard = props => {
   return (
@@ -330,7 +331,7 @@ const PaymentInfoTab = props => {
               <Box height="80px">
                 <FormControl>
                   <FormLabel variant={'strong-label'} size={'md'}>
-                    {t('clientFinalApprovedAmount')}
+                    {truncateWithEllipsis(t('clientFinalApprovedAmount'), 30)}
                   </FormLabel>
                   <Input
                     id="cc"
@@ -360,7 +361,7 @@ const PaymentInfoTab = props => {
               <Box height="80px">
                 <FormControl isInvalid={!!errors?.partialPayment}>
                   <FormLabel variant={'strong-label'} size={'md'}>
-                    {t('payment')}
+                    {t('partialPayment')}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -399,7 +400,7 @@ const PaymentInfoTab = props => {
               <Box>
                 <FormControl isInvalid={!!errors?.paymentDate}>
                   <FormLabel variant={'strong-label'} size={'md'}>
-                    {t('paymentDate')}
+                    {t('partialPaymentDate')}
                   </FormLabel>
                   <Input
                     id="paymentDate"
