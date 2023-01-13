@@ -30,7 +30,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       if (selectedCard === 'past due') {
         const pastDueFilters = [{ id: 'pastDue', value: '1' }]
         const projectStatus = [{ id: 'projectStatus', value: 'new,active,punch' }]
-        finalFilters = [...finalFilters, ...pastDueFilters, ...projectStatus ]
+        finalFilters = [...finalFilters, ...pastDueFilters, ...projectStatus]
 
         // Account Payable Cards contains 1, 2, 3, 4, 5, 6, which represents
         // past due, 7 days, 14 days, 20 days, 30 days, and overpayment
