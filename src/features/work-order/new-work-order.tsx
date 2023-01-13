@@ -270,7 +270,6 @@ export const NewWorkOrderForm: React.FC<{
   const clientStart = projectData?.clientStartDate
   const clientEnd = projectData?.clientDueDate
 
-
   useEffect(() => {
     if (woStartDate! > woExpectedCompletionDate!) {
       setValue('workOrderExpectedCompletionDate', null)
