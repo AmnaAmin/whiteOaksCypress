@@ -1043,7 +1043,7 @@ export const VendorRegister = () => {
                                     required: 'This is required',
                                   })}
                                 />
-                                <FormErrorMessage>{errors?.capacity && errors?.city?.capacity}</FormErrorMessage>
+                                <FormErrorMessage>{errors?.capacity && errors?.capacity?.message}</FormErrorMessage>
                               </FormControl>
                             </HStack>
                           </VStack>
