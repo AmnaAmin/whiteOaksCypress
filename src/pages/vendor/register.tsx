@@ -193,7 +193,7 @@ const vendorRegisterFormSchema = {
   state: Yup.object().required('State is required'),
   zipCode: Yup.string().required('ZipCode is required'),
   capacity: Yup.string().required('Capacity is required'),
-
+  
   //Documents
 
   w9DocumentDate: Yup.string(),
@@ -262,18 +262,14 @@ export const VendorRegister = () => {
         ...vendorRegisterFormSchema,
         einNumber: Yup.string()
           .required('EIN is a required field')
-          .matches(/^[0-9]+$/, 'Must be only digits')
-          .min(9, 'Must be exactly 9 digits')
-          .max(9, 'Must be exactly 9 digits'),
+          .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits')
       })
     } else {
       setCustomResolver({
         ...vendorRegisterFormSchema,
         ssnNumber: Yup.string()
           .required('SSN is a required field')
-          .matches(/^[0-9]+$/, 'Must be only digits')
-          .min(9, 'Must be exactly 9 digits')
-          .max(9, 'Must be exactly 9 digits'),
+          .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits')
       })
     }
   }, [ssnEinTabIndex])
@@ -321,6 +317,8 @@ export const VendorRegister = () => {
 
   const doNext = async () => {
     const isSsn = ssnEinTabIndex === 1 ? true : false
+
+    console.log( getValues() );
 
     let detailFields = [
       'email',
@@ -886,7 +884,7 @@ export const VendorRegister = () => {
                                       type="text"
                                       fontSize="14px"
                                       color="#252F40"
-                                      mask="99-9999999"
+                                      mask="999-99-9999"
                                       {...register('einNumber', {
                                         required: 'This is required',
                                       })}
