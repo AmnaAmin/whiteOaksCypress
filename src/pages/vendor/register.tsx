@@ -173,10 +173,10 @@ const vendorRegisterFormSchema = {
       'Password must contain a lower, upper, symbol and a special character',
       (val: any) => measureStrength(val)[1] >= 4,
     ),
-  businessName: Yup.string().required('Business name is required'),
+  companyName: Yup.string().required('Business name is required'),
 
   //Location Details
-  primaryContact: Yup.string()
+  /*businessPhoneNumber: Yup.string()
     .matches(phoneRegex, 'Phone Contact number is not valid')
     .required('Primary Contact is required'),
   secondaryContact: Yup.string().matches(phoneRegex, 'Secondary Contact number is not valid').transform(yupNullable),
@@ -187,7 +187,7 @@ const vendorRegisterFormSchema = {
   secondaryPhone: Yup.string().matches(phoneRegex, 'Secondary Phone number is not valid').transform(yupNullable),
   secondaryPhoneExt: Yup.number().transform(yupNullable),
   primaryEmail: Yup.string().email('Must be a valid email').required('Email is required').transform(yupNullable),
-  secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),
+  secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),*/
   streetAddress: Yup.string().required('Street Address is required'),
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
@@ -246,6 +246,9 @@ export const VendorRegister = () => {
   const [isMobile] = useMediaQuery('(max-width: 480px)')
   
   useEffect( () => {
+
+    if ( ! isMobile ) return;
+
     if ( formTabIndex !== FORM_TABS.LOCATION_DETAILS )
       setShowLoginFields(false);
   }, [isMobile] )
@@ -317,8 +320,6 @@ export const VendorRegister = () => {
 
   const doNext = async () => {
     const isSsn = ssnEinTabIndex === 1 ? true : false
-
-    console.log( getValues() );
 
     let detailFields = [
       'email',
@@ -495,6 +496,7 @@ export const VendorRegister = () => {
   }
 
   const createUserVendorAccount = async (formValues: any) => {
+
     if (!validateMarket(formValues.markets)) {
       showError('Market')
     } else {
@@ -579,7 +581,7 @@ export const VendorRegister = () => {
                         {...register('email', {
                           required: 'This is required',
                         })}
-                        tabIndex={0}
+                        tabIndex={1}
                       />
                       <FormErrorMessage>{errors?.email && errors?.email?.message}</FormErrorMessage>
                     </FormControl>
@@ -597,6 +599,7 @@ export const VendorRegister = () => {
                         {...register('firstName', {
                           required: 'This is required',
                         })}
+                        tabIndex={2}
                       />
                       <FormErrorMessage>{errors?.firstName && errors?.firstName?.message}</FormErrorMessage>
                     </FormControl>
@@ -615,6 +618,7 @@ export const VendorRegister = () => {
                         {...register('lastName', {
                           required: 'This is required',
                         })}
+                        tabIndex={3}
                       />
                       <FormErrorMessage>{errors?.lastName && errors?.lastName?.message}</FormErrorMessage>
                     </FormControl>
@@ -633,6 +637,7 @@ export const VendorRegister = () => {
                         {...register('password', {
                           required: 'This is required',
                         })}
+                        tabIndex={4}
                       />
                       <FormErrorMessage>{errors?.password && errors?.password?.message}</FormErrorMessage>
                     </FormControl>
@@ -652,6 +657,7 @@ export const VendorRegister = () => {
                         {...register('companyName', {
                           required: 'This is required',
                         })}
+                        tabIndex={5}
                       />
                       <FormErrorMessage>{errors?.companyName && errors?.companyName?.message}</FormErrorMessage>
                     </FormControl>
@@ -713,6 +719,7 @@ export const VendorRegister = () => {
                                   {...register('ownerName', {
                                     required: 'This is required',
                                   })}
+                                  tabIndex={6}
                                 />
                                 <FormErrorMessage>{errors?.ownerName && errors?.ownerName?.message}</FormErrorMessage>
                               </FormControl>
@@ -1043,7 +1050,7 @@ export const VendorRegister = () => {
                                     required: 'This is required',
                                   })}
                                 />
-                                <FormErrorMessage>{errors?.capacity && errors?.city?.capacity}</FormErrorMessage>
+                                <FormErrorMessage>{errors?.capacity && errors?.capacity?.message}</FormErrorMessage>
                               </FormControl>
                             </HStack>
                           </VStack>
