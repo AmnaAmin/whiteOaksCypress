@@ -75,6 +75,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     watchCoiWcExpFile,
     isAllFiledWatch,
   } = useWatchDocumentFeild(control, vendor)
+  const isAgreementRequired = !!watchAgreementFile || !!documents.agreementUrl
 
   const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
@@ -197,7 +198,13 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('agreementSignedDate')}
                 </FormLabel>
-                <Input type="date" w="215px" data-testid="agreementSignedDate" {...register('agreementSignedDate')} />
+                <Input
+                  {...(isAgreementRequired && { borderLeft: '2px solid #345EA6' })}
+                  type="date"
+                  w="215px"
+                  data-testid="agreementSignedDate"
+                  {...register('agreementSignedDate', { required: isAgreementRequired && 'This is required' })}
+                />
                 <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
               </FormControl>
             </Box>

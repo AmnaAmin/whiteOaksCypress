@@ -31,7 +31,7 @@ import {
   useTrades,
   useVendorNext,
 } from 'api/vendor-details'
-import { documentStatus, documentScore } from 'api/vendor-projects'
+import { documentStatus, documentScore, portalAccess } from 'api/vendor-projects'
 import first from 'lodash/first'
 import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
@@ -109,6 +109,22 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect options={documentStatus} {...field} selectProps={{ isBorderLeft: true }} />
+                  <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+          </FormControl>
+          <FormControl w="215px" isInvalid={!!errors.enableVendorPortal}>
+            <FormLabel variant="strong-label" size="md">
+              {t('portalAccess')}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="enableVendorPortal"
+              rules={{ required: isActive && 'This is required' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <ReactSelect options={portalAccess} {...field} />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -456,17 +472,6 @@ const CreateVendorDetail: React.FC<{
                 <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
               </FormControl>
             </VStack>
-            <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
-              <Text>{t('portalRegistration')}</Text>
-              <FormControl>
-                <HStack spacing="16px">
-                  <Checkbox {...register('enableVendorPortal')} colorScheme="brand">
-                    {t('enableVendorPortal')}
-                  </Checkbox>
-                </HStack>
-                <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
-              </FormControl>
-            </VStack>
           </Stack>
         </Box>
       </Box>
@@ -528,6 +533,10 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
     setValue(
       'score',
       documentScore.find(s => s.value === vendorProfileData.score),
+    )
+    setValue(
+      'enableVendorPortal',
+      portalAccess.find(s => s.value === vendorProfileData.enableVendorPortal),
     )
     setValue(
       'status',
