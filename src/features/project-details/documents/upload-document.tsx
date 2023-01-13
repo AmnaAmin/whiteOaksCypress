@@ -98,11 +98,11 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     //   })
     // console.log('chFile', chFile)
 
-    // const documents = formValues.documents.forEach(async file => {
-    // const documentPayload = await createDocumentPayload(
-    //   formValues.chooseFile[0],
-    //   formValues?.documentTypes?.value?.toString(),
-    // )
+    const documents = formValues.documents.forEach(async file => {
+    const documentPayload = await createDocumentPayload(
+      formValues.chooseFile[0],
+      formValues?.documentTypes?.value?.toString(),
+    )
 
     const doc: Document = {
       ...documentPayload,
