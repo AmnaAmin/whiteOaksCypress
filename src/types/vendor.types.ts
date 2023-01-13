@@ -239,7 +239,7 @@ export type VendorProfileDetailsFormData = {
   agreementSignCheckBox?: boolean
   autoInsuranceCheckBox?: boolean
   W9DocumentCheckBox?: boolean
-  enableVendorPortal?: boolean
+  enableVendorPortal?: Select
 }
 
 export type VendorTrade = {

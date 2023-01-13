@@ -607,8 +607,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
   doc.setFont(basicFont, 'bold')
   doc.text(heading, startx, 20)
   var img = new Image()
-  const isDevelopment = process.env.NODE_ENV === 'development'
-  img.src = isDevelopment ? 'wo-logo-tree.png' : '/vendorportal/wo-logo-tree.png'
+  img.src = 'wo-logo-tree.png'
   img.onload = function () {
     doc.addImage(img, 'png', 160, 5, 35, 35)
 

@@ -133,8 +133,8 @@ export const ProjectDetails: React.FC = props => {
 
             <Card
               rounded="0px"
-              roundedBottomLeft="6px"
-              roundedBottomRight="6px"
+              roundedRight={{ base: '0px', md: '6px' }}
+              roundedBottom="6px"
               style={boxShadow}
               pr={{ base: 0, sm: '15px' }}
             >

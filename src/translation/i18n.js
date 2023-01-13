@@ -335,6 +335,7 @@ i18n.use(initReactI18next).init({
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
+        portalAccess: 'Portal Access',
         capacity: 'Capacity',
         last4digits: 'Last 4 digits of SSN/EIN',
         streetAddress: 'Street Address',
@@ -908,6 +909,7 @@ i18n.use(initReactI18next).init({
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
         score: 'Puntaje',
+        portalAccess: 'Acceso al Portal',
         capacity: 'Capacidad',
         last4digits: 'Últimos 4 dígitos del SSN/EIN',
         paymentMethods: 'Métodos de Pago',

@@ -80,6 +80,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     isAllFiledWatch,
   } = useWatchDocumentFeild(control, vendor)
 
+  const isAgreementRequired = !!watchAgreementFile || !!documents.agreementUrl
   const [, setFileBlob] = React.useState<Blob>()
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
@@ -208,11 +209,10 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <Input
                   type="date"
                   w="215px"
+                  {...(isAgreementRequired && { borderLeft: '2px solid #345EA6' })}
                   data-testid="agreementSignedDate"
                   {...register('agreementSignedDate', {
-                    required: changedDateFields.includes('agreementSignedDate')
-                      ? isActive && 'This is required field'
-                      : '',
+                    required: isAgreementRequired && 'This is required',
                   })}
                 />
                 <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>

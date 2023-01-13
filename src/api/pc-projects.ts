@@ -3,7 +3,6 @@ import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { Vendors } from 'types/vendor.types'
 import { useQueryClient } from 'react-query'
-// import orderBy from 'lodash/orderBy'
 import xml2js from 'xml2js'
 import { ProjectType } from 'types/common.types'
 import { useEffect, useRef, useState } from 'react'
@@ -406,22 +405,6 @@ export const useClients = () => {
   }
 }
 
-// const VENDOR_QUERY_KEY = 'vendor'
-// export const useVendor = () => {
-//   const client = useClient()
-
-//   const { data, ...rest } = useQuery<Array<Vendors>>(VENDOR_QUERY_KEY, async () => {
-//     const response = await client(`view-vendors`, {})
-
-//     return orderBy(response?.data || [], ['id'], ['desc'])
-//   })
-
-//   return {
-//     vendors: data,
-//     ...rest,
-//   }
-// }
-
 export const VENDORS_SELECTED_CARD_MAP_URL = {
   active: 'status.equals=12',
   inActive: 'status.equals=13',
@@ -474,12 +457,10 @@ export const useGetAllVendors = (filterQueryString: string) => {
   )
 
   return {
-    allProjects: data,
+    allVendors: data,
     ...rest,
   }
 }
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const useGanttChart = (projectId?: string): any => {
   const client = useClient()

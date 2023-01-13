@@ -34,38 +34,51 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     {
       header: `${CLIENTS}.contact`,
       accessorKey: 'contacts[0].contact',
-      accessorFn: row => row.contacts?.[0]?.contact,
+      accessorFn: row => {
+        return row.contacts?.[0] ? row.contacts?.[0]?.contact : '- - -'
+      },
     },
     {
       header: `${CLIENTS}.address`,
       accessorKey: 'streetAddress',
-      accessorFn: row => row.streetAddress,
+      accessorFn: row => {
+        return row.streetAddress ? row.streetAddress : '- - -'
+      },
     },
     {
       header: `${CLIENTS}.phone`,
       accessorKey: 'contacts[0].phoneNumber',
-      accessorFn: row => row.contacts?.[0]?.phoneNumber,
+      accessorFn: row => {
+        return row.contacts?.[0] ? row.contacts?.[0]?.phoneNumber : '- - -'
+      },
     },
     {
       header: `${CLIENTS}.email`,
       accessorKey: 'contacts[0].emailAddress',
-      accessorFn: row => row.contacts?.[0]?.emailAddress,
+      accessorFn: row => {
+        return row.contacts?.[0] ? row.contacts?.[0]?.emailAddress : '- - -'
+      },
     },
     {
       header: `${CLIENTS}.contact`,
       accessorKey: 'accountPayableContactInfos[0].contact',
-      accessorFn: row => row.accountPayableContactInfos?.[0]?.contact,
+      accessorFn: row => {
+        return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.contact : '- - -'
+      },
     },
     {
       header: `${CLIENTS}.email`,
       accessorKey: 'accountPayableContactInfos[0].emailAddress',
-      accessorFn: row => row.accountPayableContactInfos?.[0]?.emailAddress,
+      accessorFn: row => {
+        return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.emailAddress : '- - -'
+      },
     },
-
     {
       header: `${CLIENTS}.phone`,
       accessorKey: 'accountPayableContactInfos[0].phoneNumber',
-      accessorFn: row => row.accountPayableContactInfos?.[0]?.phoneNumber,
+      accessorFn: row => {
+        return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.phoneNumber : '- - -'
+      },
     },
   ]
 
