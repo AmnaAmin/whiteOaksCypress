@@ -25,6 +25,7 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
     isAddressDisabled,
     isCityDisabled,
     isZipDisabled,
+    isStateDisabled,
     isGateCodeDisabled,
     isMarketDisabled,
     isLockBoxCodeDisabled,
@@ -69,6 +70,7 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
                     options={stateSelectOptions}
                     size="md"
                     value={field.value}
+                    isDisabled={isStateDisabled}
                     selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                     onChange={option => {
                       field.onChange(option)
