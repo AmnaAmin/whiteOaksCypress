@@ -1,104 +1,70 @@
-import { Box, Flex, Td, Text, Tr } from '@chakra-ui/react'
-import { RowProps } from 'components/table/react-table'
-import { TableWrapper } from 'components/table/table'
-import { t } from 'i18next'
-import { useState } from 'react'
-import { Market } from 'types/vendor.types'
+import React, { useEffect, useState } from 'react'
+import { Box } from '@chakra-ui/react'
+import { useGetAllVendors, useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
+import Status from 'features/common/status'
 import { dateFormat } from 'utils/date-time-utils'
-import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
+import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
+import { Table } from 'components/table-refactored/table'
+import { ExportButton } from 'components/table-refactored/export-button'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { TableNames } from 'types/table-column.types'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { useMarkets } from 'api/vendor-details'
+import { Market } from 'types/vendor.types'
 import { NewMarketModal } from './new-market-modal'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
 
-type MarketsProps = {
-  setTableInstance?: (tableInstance: any) => void
-  isLoading: boolean
-  markets?: Array<Market>
-}
+export const MARKET_COLUMNS: ColumnDef<any>[] = [
+  {
+    header: `${VENDOR_MANAGER}.metroServiceArea`,
+    accessorKey: 'metropolitanServiceArea',
+  },
+  {
+    header: `${VENDOR_MANAGER}.createdBy`,
+    accessorKey: 'createdBy',
+  },
+  {
+    header: `${VENDOR_MANAGER}.createdDate`,
+    accessorKey: 'createdDate',
+    accessorFn(cellInfo) {
+      return cellInfo.createdDate ? dateFormat(cellInfo.createdDate) : '- - -'
+    },
+    meta: { format: 'date' },
+  },
+  {
+    header: `${VENDOR_MANAGER}.modifiedBy`,
+    accessorKey: 'modifiedBy',
+  },
+  {
+    header: `${VENDOR_MANAGER}.modifiedDateSubmit`,
+    accessorKey: 'modifiedDate',
+    accessorFn(cellInfo) {
+      return cellInfo.modifiedDate ? dateFormat(cellInfo.modifiedDate) : '- - -'
+    },
+    meta: { format: 'date' },
+  },
+  {
+    header: `${VENDOR_MANAGER}.stateName`,
+    accessorKey: 'stateName',
+  },
+]
 
-export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoading, markets }) => {
+export const MarketsTable: React.FC<{}> = () => {
+  const [sorting, setSorting] = React.useState<SortingState>([])
+
+  const { markets, isLoading, refetch } = useMarkets()
   const [selectedMarket, setSelectedMarket] = useState<Market>()
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.markets)
+  const { tableColumns, settingColumns } = useTableColumnSettings(MARKET_COLUMNS, TableNames.markets)
 
-  const marketsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
-    return (
-      <Tr
-        bg="white"
-        _hover={{
-          background: '#eee',
-        }}
-        onClick={e => {
-          if (onRowClick) {
-            onRowClick(e, row)
-          }
-        }}
-        {...row.getRowProps({
-          style,
-        })}
-      >
-        {row.cells.map(cell => {
-          return (
-            <Td {...cell.getCellProps()} key={`row_${cell.value}`} p="0">
-              <Flex alignItems="center" h="60px">
-                <Text
-                  noOfLines={2}
-                  title={cell.value}
-                  padding="0 15px"
-                  color="#4A5568"
-                  fontStyle="normal"
-                  mt="10px"
-                  mb="10px"
-                  fontSize="14px"
-                  fontWeight={400}
-                >
-                  {cell.render('Cell')}
-                </Text>
-              </Flex>
-            </Td>
-          )
-        })}
-      </Tr>
-    )
+  const onSave = columns => {
+    postGridColumn(columns)
   }
 
-  const { columns, resizeElementRef } = useColumnWidthResize([
-    {
-      Header: t(`${VENDOR_MANAGER}.metroServiceArea`),
-      accessor: 'metropolitanServiceArea',
-    },
-    {
-      Header: t(`${VENDOR_MANAGER}.createdBy`),
-      accessor: 'createdBy',
-    },
-    {
-      Header: t(`${VENDOR_MANAGER}.createdDate`),
-      accessor: 'createdDate',
-      Cell: ({ value }) => dateFormat(value),
-      getCellExportValue(row) {
-        return dateFormat(row.original.createdDate)
-      },
-    },
-    {
-      Header: t(`${VENDOR_MANAGER}.modifiedBy`),
-      accessor: 'modifiedBy',
-    },
-
-    {
-      Header: t(`${VENDOR_MANAGER}.modifiedDateSubmit`),
-      accessor: 'modifiedDate',
-      Cell({ value }) {
-        return <Box>{dateFormat(value)}</Box>
-      },
-      getCellExportValue(row) {
-        return dateFormat(row.original.modifiedDate)
-      },
-    },
-
-    {
-      Header: t(`${VENDOR_MANAGER}.stateName`),
-      accessor: 'stateName',
-    },
-  ])
   return (
-    <Box ref={resizeElementRef}>
+    <Box overflow="auto">
       {selectedMarket && (
         <NewMarketModal
           isOpen={selectedMarket ? true : false}
@@ -108,17 +74,29 @@ export const MarketsTable: React.FC<MarketsProps> = ({ setTableInstance, isLoadi
           selectedMarket={selectedMarket}
         />
       )}
-      <TableWrapper
-        columns={columns}
-        data={markets || []}
-        TableRow={marketsRow}
-        tableHeight="calc(100vh - 300px)"
-        name="work-orders-table"
-        isLoading={isLoading}
-        disableFilter={true}
-        setTableInstance={setTableInstance}
-        onRowClick={(e, row) => setSelectedMarket(row.original)}
-      />
+      <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderBottomRadius="6px">
+        <TableContextProvider data={markets} columns={tableColumns} sorting={sorting} setSorting={setSorting}>
+          <Table
+            onRowClick={row => setSelectedMarket(row)}
+            isLoading={isLoading}
+            isEmpty={!isLoading && !markets?.length}
+          />
+          <TableFooter position="sticky" bottom="0" left="0" right="0">
+            <ButtonsWrapper>
+              <ExportButton
+                columns={tableColumns}
+                colorScheme="brand"
+                fileName="markets"
+                refetch={refetch}
+                isLoading={isLoading}
+              />
+              <CustomDivider />
+
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            </ButtonsWrapper>
+          </TableFooter>
+        </TableContextProvider>
+      </Box>
     </Box>
   )
 }
