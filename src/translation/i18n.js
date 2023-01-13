@@ -509,6 +509,7 @@ i18n.use(initReactI18next).init({
         poNumber: 'PO Number',
         profitTotal: 'Profit Total',
         partialPayment: 'Partial Payment',
+        partialPaymentDate: 'Partial Payment Date',
         woaCompletionDate: 'WOA Completion Date',
         accountPayable: 'Account Payable',
         accountRecievable: 'Account Recievable',
@@ -1025,6 +1026,8 @@ i18n.use(initReactI18next).init({
         creditCard: 'Crédito',
         ach: 'ACH',
         comment: 'Comentario',
+        partialPayment: 'Pago parcial',
+        partialPaymentDate: 'Fecha de pago parcial',
 
         // Alerts
         triggeredAlerts: 'Alertas activadas',

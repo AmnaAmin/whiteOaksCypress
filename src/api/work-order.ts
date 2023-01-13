@@ -207,8 +207,8 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
     clientOriginalApprovedAmountEnabled: defaultStatus || isAdmin,
     clientApprovedAmountEnabled: defaultStatus || isAdmin,
     finalInvoiceAmountEnabled: defaultStatus,
-    paymentDateEnabled: defaultStatus || invoicedState,
-    partialPaymentEnabled: defaultStatus || invoicedState,
+    paymentDateEnabled: !isAdmin ? defaultStatus || invoicedState : true,
+    partialPaymentEnabled: !isAdmin ? defaultStatus || invoicedState : true,
   }
 }
 
