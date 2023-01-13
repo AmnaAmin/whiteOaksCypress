@@ -54,7 +54,7 @@ export const chakraStyles = {
   }),
   menuList: (provided: any, state: any) => {
     const menuHeight = state.selectProps?.selectProps?.menuHeight || ''
-
+    
     return { ...provided, height: menuHeight }
   },
   option: (provider: any, state: any) => {
@@ -136,9 +136,9 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
   return (
     <ReactSelect
-      {...props}
       ref={ref}
       chakraStyles={chakraStyles}
+      {...props}
       components={{
         IndicatorSeparator: false,
         SingleValue: option => {

@@ -278,7 +278,17 @@ export const Table: React.FC<TableProps> = ({
                     onClick={header.column.getToggleSortingHandler()}
                     {...getColumnMaxMinWidths(header.column)}
                   >
-                    <Flex alignItems="center">
+                    <Flex
+                      alignItems="center"
+                      _before={{
+                        content: '""',
+                        bottom: '-2px',
+                        left: '0px',
+                        position: 'absolute',
+                        minW: '100%',
+                        borderBottom: '3px solid #ECEDEE',
+                      }}
+                    >
                       <Text
                         fontSize="14px"
                         color="gray.700"
@@ -322,7 +332,7 @@ export const Table: React.FC<TableProps> = ({
                         py="3"
                         position="sticky"
                         zIndex={1}
-                        top="38px"
+                        top="43px"
                         // borderBottomColor="gray.300"
                         bg="#ECEDEE"
                         {...getColumnMaxMinWidths(header.column)}
@@ -396,7 +406,7 @@ export const Table: React.FC<TableProps> = ({
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
-                          bg: row.getIsSelected() ? '#F3F8FF' : '',
+                          bg: !!onRowClick ? '#F3F8FF' : '',
                         }}
                         backgroundColor={row.getIsSelected() ? 'gray.50' : ''}
                       >

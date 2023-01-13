@@ -84,7 +84,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: `${TRANSACTION}.trade`,
     accessorKey: 'skillName',
     accessorFn: cellInfo => {
-      return cellInfo.skillName
+      return cellInfo.skillName ? cellInfo.skillName : '- - -'
     },
     filterFn: 'includesString',
   },
@@ -122,5 +122,8 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${TRANSACTION}.approvedBy`,
     accessorKey: 'approvedBy',
+    accessorFn: cellInfo => {
+      return cellInfo.approvedBy ? cellInfo?.approvedBy : '- - -'
+    },
   },
 ]

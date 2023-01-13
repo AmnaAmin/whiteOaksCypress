@@ -200,8 +200,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
             <Card
               bg={{ base: 'white', sm: 'transparent' }}
-              p={{ base: '6px', sm: '0px !important' }}
-              rounded="6px 6px 0px 6px"
+              p={{ base: '12px', sm: '0px !important' }}
+              rounded={'6px 6px 0px 0px'}
               boxShadow={{ sm: 'none' }}
               pt="0"
             >
@@ -254,9 +254,10 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               pb="8px"
               pt="15px"
               px="18px"
-              roundedTop="0px"
+              roundedLeft="0px"
+              roundedTopRight={{ base: '0px', sm: '8px' }}
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
-              width={isVendor ? 'calc(96vw - var(--sidebar-width))' : '100%'}
+              width={isVendor ? { base: '100%', lg: 'calc(96vw - var(--sidebar-width))' } : '100%'}
             >
               <TabPanels mt={{ base: '0', sm: '30px' }}>
                 <TabPanel p="0px">

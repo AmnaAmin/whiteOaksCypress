@@ -23,6 +23,7 @@ import {
   Button,
   Tab,
   useToast,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import { useStates } from 'api/pc-projects'
 import { parseCreateVendorFormToAPIData, useMarkets, useTrades } from 'api/vendor-details'
@@ -32,7 +33,7 @@ import { DocumentsCard } from 'components/vendor-register/documents-card'
 import { LicenseCard } from 'components/vendor-register/license-card'
 import { MarketListCard } from 'components/vendor-register/market-list-card'
 import { Card } from 'features/login-form-centered/Card'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 import Select from 'components/form/react-select'
@@ -172,10 +173,10 @@ const vendorRegisterFormSchema = {
       'Password must contain a lower, upper, symbol and a special character',
       (val: any) => measureStrength(val)[1] >= 4,
     ),
-  businessName: Yup.string().required('Business name is required'),
+  companyName: Yup.string().required('Business name is required'),
 
   //Location Details
-  primaryContact: Yup.string()
+  /*businessPhoneNumber: Yup.string()
     .matches(phoneRegex, 'Phone Contact number is not valid')
     .required('Primary Contact is required'),
   secondaryContact: Yup.string().matches(phoneRegex, 'Secondary Contact number is not valid').transform(yupNullable),
@@ -186,13 +187,13 @@ const vendorRegisterFormSchema = {
   secondaryPhone: Yup.string().matches(phoneRegex, 'Secondary Phone number is not valid').transform(yupNullable),
   secondaryPhoneExt: Yup.number().transform(yupNullable),
   primaryEmail: Yup.string().email('Must be a valid email').required('Email is required').transform(yupNullable),
-  secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),
+  secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),*/
   streetAddress: Yup.string().required('Street Address is required'),
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
   zipCode: Yup.string().required('ZipCode is required'),
   capacity: Yup.string().required('Capacity is required'),
-
+  
   //Documents
 
   w9DocumentDate: Yup.string(),
@@ -240,6 +241,17 @@ export const VendorRegister = () => {
   const [ssnEinTabIndex, setSsnEinTabIndex] = useState<number>(0)
   const [disableLoginFields, setDisableLoginFields] = useState<boolean>(false)
   const [customResolver, setCustomResolver] = useState<any>(vendorRegisterFormSchema)
+  const ref = useRef<HTMLFormElement>(null);
+  const [ showLoginFields, setShowLoginFields ] = useState<boolean>(true);
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
+  
+  useEffect( () => {
+
+    if ( ! isMobile ) return;
+
+    if ( formTabIndex !== FORM_TABS.LOCATION_DETAILS )
+      setShowLoginFields(false);
+  }, [isMobile] )
 
   const formReturn = useForm({
     //mode: "onChange",
@@ -253,18 +265,14 @@ export const VendorRegister = () => {
         ...vendorRegisterFormSchema,
         einNumber: Yup.string()
           .required('EIN is a required field')
-          .matches(/^[0-9]+$/, 'Must be only digits')
-          .min(9, 'Must be exactly 9 digits')
-          .max(9, 'Must be exactly 9 digits'),
+          .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits')
       })
     } else {
       setCustomResolver({
         ...vendorRegisterFormSchema,
         ssnNumber: Yup.string()
           .required('SSN is a required field')
-          .matches(/^[0-9]+$/, 'Must be only digits')
-          .min(9, 'Must be exactly 9 digits')
-          .max(9, 'Must be exactly 9 digits'),
+          .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits')
       })
     }
   }, [ssnEinTabIndex])
@@ -275,8 +283,6 @@ export const VendorRegister = () => {
   const toast = useToast()
 
   const { mutate: createVendorAccount } = useVendorRegister()
-
-  console.log('Re-render check')
 
   const {
     handleSubmit,
@@ -407,9 +413,41 @@ export const VendorRegister = () => {
   }
 
   const doCancel = () => {
-    reset()
-    setformTabIndex(FORM_TABS.LOCATION_DETAILS)
+
+    if ( formTabIndex !== FORM_TABS.LOCATION_DETAILS )
+      setformTabIndex(FORM_TABS.LOCATION_DETAILS);
+
+    if ( ref.current ) {
+       ref.current.reset();
+    }
+
+    const fieldsArr = [
+      'email',
+      'firstName',
+      'lastName',
+      'password',
+      'companyName',
+      'ownerName',
+      'secondName',
+      'businessPhoneNumber',
+      'businessPhoneNumberExtension',
+      'secondPhoneNumber',
+      'businessEmailAddress',
+      'streetAddress',
+      'city',
+      'zipCode',
+      'capacity',
+      'einNumber',
+      'ssnNumber',
+      'secondEmailAddress',
+      'secondEmailAddress',
+      'state',
+    ];
+
+    //reset( {} )
+    
     setDisableLoginFields(false)
+    setShowLoginFields(true)
   }
 
   const onSubmit = async formValues => {
@@ -458,6 +496,7 @@ export const VendorRegister = () => {
   }
 
   const createUserVendorAccount = async (formValues: any) => {
+
     if (!validateMarket(formValues.markets)) {
       showError('Market')
     } else {
@@ -470,7 +509,7 @@ export const VendorRegister = () => {
       bgImg="url(./bg.svg)"
       bgRepeat="no-repeat"
       bgSize="cover"
-      minH="100vh"
+      minH={{ sm: "auto", md: "100vh"}}
       py="12"
       px={{ base: '4', lg: '8' }}
       display="flex"
@@ -479,7 +518,7 @@ export const VendorRegister = () => {
       maxW="100%"
       overflow="hidden"
     >
-      <Box width="100%" mx="auto" overflow="hidden">
+      <Box w={{ sm: "100%" , lg: "1200px" }} mx="auto" overflow="hidden">
         <Card
           borderBottomLeftRadius="0px !important"
           borderBottomRightRadius="0px !important"
@@ -487,14 +526,22 @@ export const VendorRegister = () => {
           py="10px !important"
           opacity="1"
           height="auto"
-          minH="90vh"
+          minH={{ sm: "auto", md: "90vh"}}
           overflow="hidden"
         >
           <FormProvider {...formReturn}>
-            <form onSubmit={handleSubmit(createUserVendorAccount)} autoComplete="off">
-              <HStack spacing="50px" alignItems="flex-start">
-                <Box width="30%">
-                  <VStack alignItems="baseline">
+            <form 
+              onSubmit={handleSubmit(createUserVendorAccount)} 
+              autoComplete="off"
+              ref={ref}
+            >
+              <HStack spacing={{ sm: "0px", md: "50px" }} alignItems="flex-start" flexDir={{ base: 'column', sm: 'row' }}>
+                <Box width={{ sm: "100%", md: "30%" }}>
+                  <VStack alignItems="baseline" sx={{
+                    "@media only screen and (max-width:480px)": {
+                      alignItems: "center"
+                    }
+                  }}>
                     <Box w="105px" h="140px">
                       <Image src="./logo-reg-vendor.svg" />
                       <Image src="./WhiteOaks.svg" mt="10px" />
@@ -519,7 +566,7 @@ export const VendorRegister = () => {
                     </Center>
                   </VStack>
 
-                  <Stack spacing="13px" mt="30px">
+                  <Stack spacing="13px" mt="30px" display={ showLoginFields ? "block": "none" }>
                     <FormControl isInvalid={errors?.email}>
                       <FormLabel htmlFor="email" fontSize="12px" color="#252F40" fontWeight="bold">
                         Email Address
@@ -534,6 +581,7 @@ export const VendorRegister = () => {
                         {...register('email', {
                           required: 'This is required',
                         })}
+                        tabIndex={1}
                       />
                       <FormErrorMessage>{errors?.email && errors?.email?.message}</FormErrorMessage>
                     </FormControl>
@@ -551,6 +599,7 @@ export const VendorRegister = () => {
                         {...register('firstName', {
                           required: 'This is required',
                         })}
+                        tabIndex={2}
                       />
                       <FormErrorMessage>{errors?.firstName && errors?.firstName?.message}</FormErrorMessage>
                     </FormControl>
@@ -569,6 +618,7 @@ export const VendorRegister = () => {
                         {...register('lastName', {
                           required: 'This is required',
                         })}
+                        tabIndex={3}
                       />
                       <FormErrorMessage>{errors?.lastName && errors?.lastName?.message}</FormErrorMessage>
                     </FormControl>
@@ -587,6 +637,7 @@ export const VendorRegister = () => {
                         {...register('password', {
                           required: 'This is required',
                         })}
+                        tabIndex={4}
                       />
                       <FormErrorMessage>{errors?.password && errors?.password?.message}</FormErrorMessage>
                     </FormControl>
@@ -606,13 +657,18 @@ export const VendorRegister = () => {
                         {...register('companyName', {
                           required: 'This is required',
                         })}
+                        tabIndex={5}
                       />
                       <FormErrorMessage>{errors?.companyName && errors?.companyName?.message}</FormErrorMessage>
                     </FormControl>
                   </Stack>
                 </Box>
                 <Flex>
-                  <Stack direction="row" h="557px" p={4}>
+                  <Stack direction="row" h="557px" p={4} sx={{
+                    "@media only screen and (max-width: 480px)": {
+                      display: "none !important"
+                    }
+                  }}>
                     <Divider
                       orientation="vertical"
                       border="3px solid #345587"
@@ -625,10 +681,14 @@ export const VendorRegister = () => {
                     />
                   </Stack>
                 </Flex>
-                <Flex alignItems="center" w="60%" maxW="800px">
+                <Flex alignItems="center" w={{ sm: "100%", md: "60%" }} maxW="800px" sx={{
+                    "@media only screen and (max-width: 480px)": {
+                      marginTop: "30px !important"
+                    }
+                  }}>
                   <VStack w="100%">
-                    <Tabs w="680px" onChange={index => setformTabIndex(index)} index={formTabIndex}>
-                      <TabList>
+                    <Tabs w={{ sm: "100%", md: "680px" }} onChange={index => setformTabIndex(index)} index={formTabIndex}>
+                      <TabList flexDir={{ base: 'column', sm: 'row' }}>
                         <CustomTab isDisabled={formTabIndex !== FORM_TABS.LOCATION_DETAILS}>Location Details</CustomTab>
                         <CustomTab isDisabled={formTabIndex !== FORM_TABS.DOCUMENTS}>Documents</CustomTab>
                         <CustomTab isDisabled={formTabIndex !== FORM_TABS.LICENSE}>License</CustomTab>
@@ -639,9 +699,13 @@ export const VendorRegister = () => {
                       </TabList>
 
                       <TabPanels>
-                        <TabPanel>
-                          <HStack mt="30px" spacing="70px">
-                            <VStack w="50%" spacing="20px">
+                        <TabPanel p={{ sm: 0, md: "1rem" }}>
+                          <HStack 
+                            mt="30px" 
+                            spacing={{ sm: "0", md: "70px"}} 
+                            flexDir={{ base: 'column', sm: 'row' }}
+                          >
+                            <VStack w={{ sm: "100%", md: "50%" }} spacing="20px">
                               <FormControl isInvalid={errors?.ownerName}>
                                 <FormLabel htmlFor="ownerName" fontSize="12px" color="#252F40" fontWeight="bold">
                                   Primary Contact
@@ -655,6 +719,7 @@ export const VendorRegister = () => {
                                   {...register('ownerName', {
                                     required: 'This is required',
                                   })}
+                                  tabIndex={6}
                                 />
                                 <FormErrorMessage>{errors?.ownerName && errors?.ownerName?.message}</FormErrorMessage>
                               </FormControl>
@@ -735,7 +800,16 @@ export const VendorRegister = () => {
                               </FormControl>
                             </VStack>
 
-                            <VStack w="50%" spacing="20px">
+                            <VStack  
+                              w={{ sm: "100%", md: "50%" }} 
+                              spacing="20px"
+                              sx={{
+                                "@media only screen and (max-width: 480px)": {
+                                  marginTop: "20px !important",
+                                  width: "100% !important"
+                                }
+                              }}
+                            >
                               <FormControl isInvalid={errors?.secondName}>
                                 <FormLabel htmlFor="secondName" fontSize="12px" color="#252F40" fontWeight="bold">
                                   Secondary Contact
@@ -802,27 +876,8 @@ export const VendorRegister = () => {
                               </FormControl>
                             </VStack>
                           </HStack>
-                          <VStack w="100%" spacing="20px" mt="20px">
-                            <FormControl isInvalid={errors?.streetAddress}>
-                              <FormLabel htmlFor="streetAddress" fontSize="12px" color="#252F40" fontWeight="bold">
-                                Street Address
-                              </FormLabel>
-                              <Input
-                                id="streetAddress"
-                                type="text"
-                                fontSize="14px"
-                                color="#252F40"
-                                placeholder="Please enter your street address"
-                                {...register('streetAddress', {
-                                  required: 'This is required',
-                                })}
-                              />
-                              <FormErrorMessage>
-                                {errors?.streetAddress && errors?.streetAddress?.message}
-                              </FormErrorMessage>
-                            </FormControl>
 
-                            <Tabs index={ssnEinTabIndex} onChange={index => setSsnEinTabIndex(index)} w="100%">
+                          <Tabs index={ssnEinTabIndex} onChange={index => setSsnEinTabIndex(index)} w="100%" mt="10px">
                               <TabList>
                                 <Tab>EIN</Tab>
                                 <Tab>SSN</Tab>
@@ -836,7 +891,7 @@ export const VendorRegister = () => {
                                       type="text"
                                       fontSize="14px"
                                       color="#252F40"
-                                      mask="99-9999999"
+                                      mask="999-99-9999"
                                       {...register('einNumber', {
                                         required: 'This is required',
                                       })}
@@ -866,10 +921,41 @@ export const VendorRegister = () => {
                                 </TabPanel>
                               </TabPanels>
                             </Tabs>
+
+                          <VStack w="100%" spacing="20px" mb="20px">
+                            <FormControl isInvalid={errors?.streetAddress}>
+                              <FormLabel htmlFor="streetAddress" fontSize="12px" color="#252F40" fontWeight="bold">
+                                Street Address
+                              </FormLabel>
+                              <Input
+                                id="streetAddress"
+                                type="text"
+                                fontSize="14px"
+                                color="#252F40"
+                                placeholder="Please enter your street address"
+                                {...register('streetAddress', {
+                                  required: 'This is required',
+                                })}
+                              />
+                              <FormErrorMessage>
+                                {errors?.streetAddress && errors?.streetAddress?.message}
+                              </FormErrorMessage>
+                            </FormControl>
+
+                            
                           </VStack>
 
                           <VStack w="100%">
-                            <HStack w="100%" spacing="20px">
+                            <HStack 
+                              w="100%" 
+                              spacing={{ sm: "0", md:"20px" }}
+                              flexDir={{ base: 'column', sm: 'row' }}
+                              sx={{
+                                "@media only screen and (max-width: 480px)": {
+                                  marginTop: "20px !important"
+                                }
+                              }}
+                            >
                               <FormControl isInvalid={errors?.city}>
                                 <FormLabel htmlFor="city" fontSize="12px" color="#252F40" fontWeight="bold">
                                   City
@@ -886,7 +972,11 @@ export const VendorRegister = () => {
                                 />
                                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
                               </FormControl>
-                              <FormControl isInvalid={!!errors?.state}>
+                              <FormControl isInvalid={!!errors?.state} sx={{
+                                "@media only screen and (max-width: 480px)": {
+                                  marginTop: "20px !important"
+                                }
+                              }}>
                                 <FormLabel htmlFor="state" fontSize="12px" color="#252F40" fontWeight="bold">
                                   State
                                 </FormLabel>
@@ -897,11 +987,15 @@ export const VendorRegister = () => {
                                   render={({ field, fieldState }) => (
                                     <>
                                       <Select
+
                                         {...field}
                                         options={stateSelectOptions}
                                         selected={field.value}
                                         onChange={option => field.onChange(option)}
-                                        selectProps={{ isBorderLeft: true }}
+                                        selectProps={{ isBorderLeft: false }}
+                                        className="state-option-vendor-register"
+                                        maxMenuHeight={200}
+                                        minMenuHeight={200}
                                       />
                                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                                     </>
@@ -909,8 +1003,20 @@ export const VendorRegister = () => {
                                 />
                               </FormControl>
                             </HStack>
-                            <HStack w="100%" spacing="20px">
-                              <FormControl isInvalid={errors?.zipCode}>
+                            <HStack w="100%" 
+                              flexDir={{ base: 'column', sm: 'row' }} 
+                              spacing={{ sm: "0", md:"20px" }}
+                              sx={{
+                                "@media only screen and (max-width: 480px)": {
+                                  marginTop: "20px !important !important"
+                                }
+                              }}
+                            >
+                              <FormControl isInvalid={errors?.zipCode} sx={{
+                                "@media only screen and (max-width: 480px)": {
+                                  marginTop: "20px !important"
+                                }
+                              }}>
                                 <FormLabel htmlFor="zipCode" fontSize="12px" color="#252F40" fontWeight="bold">
                                   Zip Code
                                 </FormLabel>
@@ -926,7 +1032,11 @@ export const VendorRegister = () => {
                                 />
                                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
                               </FormControl>
-                              <FormControl isInvalid={errors?.capacity}>
+                              <FormControl isInvalid={errors?.capacity} sx={{
+                                "@media only screen and (max-width: 480px)": {
+                                  marginTop: "20px !important"
+                                }
+                              }}>
                                 <FormLabel htmlFor="capacity" fontSize="12px" color="#252F40" fontWeight="bold">
                                   Capacity
                                 </FormLabel>
@@ -940,26 +1050,42 @@ export const VendorRegister = () => {
                                     required: 'This is required',
                                   })}
                                 />
-                                <FormErrorMessage>{errors?.capacity && errors?.city?.capacity}</FormErrorMessage>
+                                <FormErrorMessage>{errors?.capacity && errors?.capacity?.message}</FormErrorMessage>
                               </FormControl>
                             </HStack>
                           </VStack>
                         </TabPanel>
-                        <TabPanel>
+                        <TabPanel p={{ sm: 0, md: "1rem" }}>
                           <DocumentsCard isActive={formTabIndex === FORM_TABS.DOCUMENTS} />
                         </TabPanel>
-                        <TabPanel>
+                        <TabPanel p={{ sm: 0, md: "1rem" }}>
                           <LicenseCard isActive={formTabIndex === FORM_TABS.LICENSE} />
                         </TabPanel>
-                        <TabPanel>
+                        <TabPanel p={{ sm: "1rem", md: "1rem" }} sx={{
+                          "@media only screen and (max-width: 480px)": {
+                            width: "345px",
+                            marginBottom: "20px",
+                            marginTop: "20px"
+                          }
+                        }}>
                           <ConstructionTradeCard isActive={formTabIndex === FORM_TABS.CONSTRUCTION_TRADE} />
                         </TabPanel>
-                        <TabPanel>
+                        <TabPanel p={{ sm: "1rem", md: "1rem" }} sx={{
+                            "@media only screen and (max-width: 480px)": {
+                              marginTop: "30px !important"
+                            }
+                          }}>
                           <MarketListCard isActive={formTabIndex === FORM_TABS.MARKETS} />
                         </TabPanel>
                       </TabPanels>
                     </Tabs>
-                    <HStack spacing="16px" position="relative" left="16.7%" marginTop="6%">
+                    <HStack spacing="16px" position="relative" left="23.7%" marginTop="30px !important" sx={{
+                      "@media only screen and (max-width: 480px)": {
+                        position: "static",
+                        marginTop: "30px !important",
+                        marginBottom: "30px !important"
+                      }
+                    }}>
                       <Button
                         onClick={doCancel}
                         bgColor="#FFFFFF"
