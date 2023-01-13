@@ -185,9 +185,9 @@ const vendorRegisterFormSchema = {
     .required('Business Contact is required'),
   businessContactExt: Yup.number().transform(yupNullable),
   secondaryPhone: Yup.string().matches(phoneRegex, 'Secondary Phone number is not valid').transform(yupNullable),
-  secondaryPhoneExt: Yup.number().transform(yupNullable),
-  primaryEmail: Yup.string().email('Must be a valid email').required('Email is required').transform(yupNullable),
-  secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),*/
+  secondaryPhoneExt: Yup.number().transform(yupNullable),*/
+  businessEmailAddress: Yup.string().email('Must be a valid email').required('Email is required').transform(yupNullable),
+  secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),
   streetAddress: Yup.string().required('Street Address is required'),
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
@@ -458,7 +458,7 @@ export const VendorRegister = () => {
     const login = email
     const streetAddress = formValues.streetAddress
     const telephoneNumber = formValues.telephoneNumber
-    const state = formValues.state?.id
+    const state = formValues.state?.value
 
     const vendorDetails: any = await parseCreateVendorFormToAPIData(formValues, [])
 
@@ -579,7 +579,8 @@ export const VendorRegister = () => {
                         disabled={disableLoginFields}
                         placeholder="Please enter your email address"
                         {...register('email', {
-                          required: 'This is required',
+                          required: 'This is required', 
+                          onChange: e => setValue("businessEmailAddress", e.target.value)
                         })}
                         tabIndex={1}
                       />
@@ -598,6 +599,7 @@ export const VendorRegister = () => {
                         placeholder="Enter your first name"
                         {...register('firstName', {
                           required: 'This is required',
+                          onChange: e => setValue("ownerName", e.target.value + " " + getValues("lastName")  )
                         })}
                         tabIndex={2}
                       />
@@ -617,6 +619,7 @@ export const VendorRegister = () => {
                         placeholder="Enter your last name"
                         {...register('lastName', {
                           required: 'This is required',
+                          onChange: e => setValue("ownerName", getValues("firstName") + " " + e.target.value )
                         })}
                         tabIndex={3}
                       />
@@ -716,6 +719,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your primary contact"
+                                  readOnly={true}
                                   {...register('ownerName', {
                                     required: 'This is required',
                                   })}
@@ -775,7 +779,7 @@ export const VendorRegister = () => {
                                 </Box>
                               </HStack>
 
-                              <FormControl isInvalid={errors?.primaryEmailAddress}>
+                              <FormControl isInvalid={errors?.businessEmailAddress}>
                                 <FormLabel
                                   htmlFor="businessEmailAddress"
                                   fontSize="12px"
@@ -790,6 +794,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your primary email address"
+                                  readOnly={true}
                                   {...register('businessEmailAddress', {
                                     required: 'This is required',
                                   })}
