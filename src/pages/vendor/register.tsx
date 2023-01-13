@@ -504,8 +504,6 @@ export const VendorRegister = () => {
     }
   }
 
-  console.log( errors );
-
   return (
     <Box
       bgImg="url(./bg.svg)"
