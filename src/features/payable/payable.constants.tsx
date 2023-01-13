@@ -11,7 +11,7 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   paymentTerm: 'paymentTerm.equals',
   paymentType: 'paymentType.contains',
   expectedPaymentDate: 'expectedPaymentDate.equals',
-  finalInvoiceAmount: 'finalInvoiceAmount.greaterThanOrEqual',
+  finalInvoiceAmount: 'finalInvoiceAmount.equals',
   marketName: 'marketName.contains',
   workOrderStartDate: 'workOrderStartDate.equals',
   workOrderDateCompleted: 'workOrderDateCompleted.equals',
