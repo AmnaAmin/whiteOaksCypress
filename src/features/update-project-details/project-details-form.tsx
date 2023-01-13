@@ -26,6 +26,8 @@ import { Link } from 'react-router-dom'
 import { useSubFormErrors } from './hooks'
 import { useProjectExtraAttributes } from 'api/pc-projects'
 // import { PROJECT_DETAILS } from './projectDetails.i18n'
+import { useMarkets, useStates } from 'api/pc-projects'
+
 import { useTranslation } from 'react-i18next'
 
 type tabProps = {
@@ -47,6 +49,8 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { clientSelectOptions } = useGetClientSelectOptions()
   const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData)
   const { data: overPayment } = useGetOverpayment(projectData?.id)
+  const { stateSelectOptions } = useStates()
+  const { marketSelectOptions } = useMarkets()
 
   const { mutate: updateProjectDetails } = useProjectDetailsUpdateMutation()
 
@@ -68,6 +72,8 @@ const ProjectDetailsTab = (props: tabProps) => {
       projectManagerSelectOptions: fpmSelectOptions,
       projectCoordinatorSelectOptions,
       clientSelectOptions,
+      stateSelectOptions,
+      marketSelectOptions,
     })
 
     formReturn.reset(formValues)
@@ -79,6 +85,8 @@ const ProjectDetailsTab = (props: tabProps) => {
     projectTypeSelectOptions?.length,
     clientSelectOptions?.length,
     overPayment,
+    stateSelectOptions?.length,
+    marketSelectOptions?.length,
   ])
 
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
@@ -136,7 +144,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               />
             </TabPanel>
             <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '343px'}>
-              <Location />
+              <Location stateSelectOptions={stateSelectOptions} marketSelectOptions={marketSelectOptions} />
             </TabPanel>
 
             <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '343px'}>
