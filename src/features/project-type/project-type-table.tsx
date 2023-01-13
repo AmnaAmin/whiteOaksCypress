@@ -42,13 +42,12 @@ export const PROJECT_TYPE_COLUMNS: ColumnDef<any>[] = [
 export const ProjectTypeTable = () => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedProjectType, setSelectedProjectType] = useState()
-  const { data: projectType, isLoading, refetch } = useProjectType()
+  const { data: projectType, isLoading } = useProjectType()
   return (
     <Box overflow="auto" roundedTop={8}>
       <ProjectTypeModal
         projectTypetDetails={selectedProjectType}
         onClose={() => {
-          refetch()
           setSelectedProjectType(undefined)
           onCloseDisclosure()
         }}
