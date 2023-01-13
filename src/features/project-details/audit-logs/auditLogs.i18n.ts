@@ -8,7 +8,7 @@ export const auditLogs = {
         modifiedDate: 'Modified Date',
         parameter: 'Parameter',
         oldValue: 'Old Value',
-        newValue: 'New Value'
+        newValue: 'New Value',
       },
     },
   },
@@ -19,7 +19,7 @@ export const auditLogs = {
         modifiedDate: 'Fecha de modificación',
         parameter: 'Parámetro',
         oldValue: 'Valor antiguo',
-        newValue: 'Nuevo valor'
+        newValue: 'Nuevo valor',
       },
     },
   },

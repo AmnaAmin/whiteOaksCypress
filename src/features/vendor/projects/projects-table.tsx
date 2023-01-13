@@ -153,7 +153,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }
 
   return (
-    <Box overflow={'auto'} minH="calc(100vh - 225px)">
+    <Box overflowX={'auto'} minH="calc(100vh - 370px)">
       <TableContextProvider
         data={workOrderData}
         columns={tableColumnsWithFilters}

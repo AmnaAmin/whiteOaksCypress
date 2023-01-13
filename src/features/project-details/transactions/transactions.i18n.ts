@@ -89,7 +89,7 @@ export const transaction = {
         finalSOWAmount: 'Final SOW Amount',
         partialPayments: 'Partial Payments',
         AR: 'AR',
-        workOrderIdTransTable: "Work Order ID",
+        workOrderIdTransTable: 'Work Order ID',
       },
     },
   },
@@ -198,7 +198,7 @@ export const transaction = {
         finalSOWAmount: 'Importe de la SOW final',
         partialPayments: 'Pagos Parciales',
         AR: 'AR',
-        workOrderIdTransTable: "ID de orden de trabajo"
+        workOrderIdTransTable: 'ID de orden de trabajo',
       },
     },
   },
