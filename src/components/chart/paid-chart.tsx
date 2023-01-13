@@ -1,6 +1,6 @@
-import { Box, Text } from '@chakra-ui/react'
+import { Box, Text, useMediaQuery } from '@chakra-ui/react'
 import { usePaidWOAmountByYearAndMonth } from 'api/vendor-dashboard'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Label, CartesianGrid } from 'recharts'
 import { monthsShort } from 'utils/date-time-utils'
 
@@ -46,6 +46,18 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
     return null
   }
 
+  const [isMobile] = useMediaQuery(['(max-width: 620px)'])
+
+  const [message, setMessage] = useState<string>('')
+
+  useEffect(() => {
+    if (isMobile) {
+      setMessage('No Data Available')
+    } else {
+      setMessage('There is currently no data available for the month selected')
+    }
+  }, [isMobile])
+
   return (
     <ResponsiveContainer width={width} height={height}>
       <BarChart
@@ -85,7 +97,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
         >
           {emptyGraphData && (
             <Label
-              value="There is currently no data available for the month selected"
+              value={message}
               offset={180}
               position="insideBottom"
               fill="#A0AEC0"
