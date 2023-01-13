@@ -243,6 +243,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowPaidBackDateField,
     isShowMarkAsField,
     isShowPaymentRecievedDateField,
+    isPaymentTermDisabled,
   } = useFieldShowHideDecision(control, transaction)
   const isAdminEnabled = isAdmin && isManualTransaction(transaction?.transactionType)
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control)
@@ -586,7 +587,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 {...field}
                                 selectProps={{ isBorderLeft: true }}
                                 options={PAYMENT_TERMS_OPTIONS}
-                                isDisabled={!isAdmin}
+                                isDisabled={isPaymentTermDisabled}
                                 onChange={paymentTermOption => {
                                   field.onChange(paymentTermOption)
                                 }}
