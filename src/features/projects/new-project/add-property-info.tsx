@@ -45,7 +45,12 @@ export const AddPropertyInfo: React.FC<{
     onClose: onAddressVerificationModalClose,
   } = useDisclosure()
   const { isDuplicateAddress, setIsDuplicateAddress } = props
-  const [addressInfo, setAddressInfo] = useState<AddressInfo>({ address: '', city: '', state: '', zipCode: '' })
+  const [addressInfo, setAddressInfo] = useState<AddressInfo>({
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+  })
   const [check, setCheck] = useState(false)
   const [existProperty, setExistProperty] = useState([{ id: 0, status: '' }])
 
@@ -54,6 +59,10 @@ export const AddPropertyInfo: React.FC<{
   const { propertySelectOptions } = useProperties()
   const { stateSelectOptions, states } = useStates()
   const { marketSelectOptions, markets } = useMarkets()
+  const [preventSpecialChara, setPreventSpecialChara] = React.useState('')
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const [phoneValidation, setPhoneValidation] = useState<any>()
 
   const { data: isAddressVerified, refetch, isLoading } = useGetAddressVerification(addressInfo)
 
@@ -79,6 +88,9 @@ export const AddPropertyInfo: React.FC<{
   const watchCity = useWatch({ name: 'city', control })
   const watchState = useWatch({ name: 'state', control })
   const watchZipCode = useWatch({ name: 'zipCode', control })
+  const watchPhone = useWatch({ name: 'hoaPhone', control })
+
+  const isHoaPhone = watchPhone?.replace(/\D+/g, '').length! < 10
 
   // Set all values of Address Info
   useEffect(() => {
@@ -121,6 +133,33 @@ export const AddPropertyInfo: React.FC<{
     }
   }
 
+  //  prevent special characters
+  const handleChange = e => {
+    const result = e.target.value.replace(/[^a-zA-Z\s]/g, '')
+    setPreventSpecialChara(result)
+  }
+
+  // Email Validation
+  function isValidEmail(email) {
+    return /\S+@\S+\.\S+/.test(email)
+  }
+
+  const handleEmailChange = event => {
+    if (!isValidEmail(event.target.value)) {
+      setError('invalid email address')
+    } else {
+      setError('')
+    }
+
+    setMessage(event.target.value)
+  }
+
+  // Phone validation
+  const handlePhoneValidation = (e: any) => {
+    const result = e.target.value
+
+    setPhoneValidation(result.replace(/\D+/g, '').length < 10)
+  }
   return (
     <>
       <Flex flexDir="column">
@@ -191,6 +230,8 @@ export const AddPropertyInfo: React.FC<{
                       setAddressInfo({ ...addressInfo, city: e.target.value })
                     },
                   })}
+                  onChange={handleChange}
+                  value={preventSpecialChara}
                 />
                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
               </FormControl>
@@ -308,7 +349,11 @@ export const AddPropertyInfo: React.FC<{
                           id="hoaPhone"
                           customInput={Input}
                           value={field.value}
-                          onChange={e => field.onChange(e)}
+                          onChange={e => {
+                            field.onChange(e)
+                            handlePhoneValidation(e)
+                          }}
+                          isRequired={true}
                           format="(###)-###-####"
                           mask="_"
                           placeholder="(___)-___-____"
@@ -318,6 +363,7 @@ export const AddPropertyInfo: React.FC<{
                     )
                   }}
                 />
+                <Text color="red">{phoneValidation && 'Invalid Phone number'}</Text>
               </FormControl>
             </GridItem>
             <GridItem>
@@ -329,11 +375,17 @@ export const AddPropertyInfo: React.FC<{
               </FormControl>
             </GridItem>
             <GridItem pb={1}>
-              <FormControl>
+              <FormControl isInvalid={!!errors.hoaEmailAddress}>
                 <FormLabel htmlFor="hoaContactEmail" size="md">
                   {t(`${NEW_PROJECT}.hoaContactEmail`)}
                 </FormLabel>
-                <Input id="hoaContactEmail" {...register('hoaEmailAddress')} type="email" />
+                <Input
+                  id="hoaContactEmail"
+                  {...register('hoaEmailAddress')}
+                  value={message}
+                  onChange={handleEmailChange}
+                />
+                <Text color="red">{error ? error : ''}</Text>
               </FormControl>
             </GridItem>
           </Grid>
@@ -347,7 +399,7 @@ export const AddPropertyInfo: React.FC<{
             colorScheme="brand"
             ml="3"
             size="md"
-            disabled={isNextButtonDisabled}
+            disabled={isNextButtonDisabled || isHoaPhone}
             onClick={() => {
               if (addressShouldBeVerified) {
                 refetch()
