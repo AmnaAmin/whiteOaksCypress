@@ -37,4 +37,5 @@ export enum TableNames {
   upcomingPayment = 'upcomingPayment',
   auditLogs = 'auditLogs',
   vendorSkills = 'vendorSkills',
+  markets = 'markets',
 }
