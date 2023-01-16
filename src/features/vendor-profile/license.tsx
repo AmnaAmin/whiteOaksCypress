@@ -27,6 +27,7 @@ import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 import { checkIsLicenseChanged } from './hook'
 import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { AdminPortalVerifyLicense } from './verify-license'
 
 type LicenseProps = {
@@ -49,6 +50,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
+  const { isFPM } = useUserRolesSelector()
 
   const {
     formState: { errors },
@@ -143,6 +145,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
             }
             leftIcon={<BiAddToQueue />}
             width={{ base: '100%', md: 'auto' }}
+            isDisabled={isFPM}
           >
             {t('addLicense')}
           </Button>
@@ -164,7 +167,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 w="100%"
                 alignItems={{ base: '', md: 'center' }}
               >
-                <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }}>
+                <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }} pointerEvents={isFPM ? 'none' : 'auto'}>
                   <Center>
                     <Icon
                       as={MdOutlineCancel}
@@ -178,7 +181,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 </Box>
 
                 <FormSelect
-                  disable={!!license.licenseType}
+                  disable={!!license.licenseType || isFPM}
                   bg={license?.expirationFile ? 'gray.50' : 'white'}
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
                   label={t('licenseType')}
@@ -211,6 +214,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
                   variant="required-field"
+                  disabled={isFPM}
                 />
                 <Box h="105px">
                   <FormControl>
@@ -223,6 +227,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                       variant="required-field"
                       {...register(`licenses.${index}.expiryDate`)}
                       data-testid={`expiryDate-` + index}
+                      isDisabled={isFPM}
                     />
                   </FormControl>
                 </Box>
@@ -244,7 +249,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                       }
                       render={({ field, fieldState }) => {
                         return (
-                          <VStack alignItems="baseline">
+                          <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                             <Box w="100%">
                               <ChooseFileField
                                 testId={`expirationFile-` + index}
@@ -256,6 +261,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                                   field.onChange(file)
                                 }}
                                 onClear={() => setValue(field.name, null)}
+                                disabled={isFPM}
                               ></ChooseFileField>
                               <FormErrorMessage bottom="5px" pos="absolute">
                                 {fieldState.error?.message}
@@ -303,7 +309,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         borderTop="2px solid #CBD5E0"
       >
         {watchChangeFields && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3">
+          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3" isDisabled={isFPM}>
             {t(`${VENDORPROFILE}.discardChanges`)}
           </Button>
         )}
@@ -314,7 +320,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
           </Button>
         )}
         <Button
-          disabled={disableLicenseNext}
+          disabled={disableLicenseNext || isFPM}
           type="submit"
           variant="solid"
           colorScheme="darkPrimary"

@@ -6,12 +6,14 @@ import { useState } from 'react'
 import { BiBookAdd } from 'react-icons/bi'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useTranslation } from 'react-i18next'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Card } from 'components/card/card'
 
 const Vendors = () => {
   const { isOpen: isOpenNewVendorModal, onOpen: onNewVendorModalOpen, onClose: onNewVendorModalClose } = useDisclosure()
   const [selectedCard, setSelectedCard] = useState<string>('')
   const { t } = useTranslation()
+  const { isFPM } = useUserRolesSelector()
 
   return (
     <Box mt="5">
@@ -22,13 +24,15 @@ const Vendors = () => {
           {/* <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
           {t('clearFilter')}
         </Button> */}
-          <Spacer />
+        <Spacer />
+        {!isFPM && (
           <Box pt="4">
             <Button onClick={onNewVendorModalOpen} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
               {t(`${VENDOR_MANAGER}.newVendor`)}
             </Button>
           </Box>
-        </HStack>
+        )}
+      </HStack>
 
         <VendorTable selectedCard={selectedCard as string} />
       </Card>
