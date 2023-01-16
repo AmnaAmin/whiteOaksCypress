@@ -19,9 +19,8 @@ import {
 } from '@chakra-ui/react'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { useForm, useWatch } from 'react-hook-form'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, dateISOFormat } from 'utils/date-time-utils'
 import { useAccountDetails, useVendorSkillsMutation } from 'api/vendor-details'
-import { convertDateTimeToServerISO } from 'components/table/util'
 import { useQueryClient } from 'react-query'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
 import { t } from 'i18next'
@@ -65,12 +64,8 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
   const onSubmit = data => {
     const arg = {
       createdBy: selectedVendorSkills ? selectedVendorSkills?.createdBy : account?.createdBy,
-      createdDate: convertDateTimeToServerISO(
-        selectedVendorSkills ? selectedVendorSkills?.createdDate : account?.createdDate,
-      ),
-      modifiedDate: convertDateTimeToServerISO(
-        selectedVendorSkills ? selectedVendorSkills?.createdDate : account?.createdDate,
-      ),
+      createdDate: dateISOFormat(selectedVendorSkills ? selectedVendorSkills?.createdDate : account?.createdDate),
+      modifiedDate: dateISOFormat(selectedVendorSkills ? selectedVendorSkills?.createdDate : account?.createdDate),
       modifiedBy: selectedVendorSkills ? selectedVendorSkills?.modifiedBy : account?.modifiedBy,
       skill: data?.skill,
       id: selectedVendorSkills?.id,
