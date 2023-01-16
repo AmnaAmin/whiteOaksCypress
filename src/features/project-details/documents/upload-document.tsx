@@ -40,7 +40,6 @@ export type DocumentProps = {
 
 export const UploadDocumentModal: React.FC<DocumentProps> = ({isOpen, onClose, projectId}) => {
 
-// export const UploadDocumentModal = (isOpen, onClose, projectId) => {
   const { t } = useTranslation()
   const [documentType] = useState<SelectOption | undefined>()
   const { mutate: saveDocument, isLoading } = useUploadDocument()
@@ -92,26 +91,8 @@ export const UploadDocumentModal: React.FC<DocumentProps> = ({isOpen, onClose, p
         console.log('documentPayload', documentPayload)
       }),
     )
-    // documentPayload.push(results)
-    // console.log('results', results)
+    
     console.log('documentPayload', documentPayload)
-
-    // let chFile
-    // formValues?.chooseFile &&
-    //   formValues?.chooseFile.forEach((file, index) => {
-
-    //     const chooseF = {
-    //       chooseFile: file?.chooseFile,
-    //     }
-    //     chFile.push(chooseF)
-    //   })
-    // console.log('chFile', chFile)
-
-    // const documents = formValues.documents.forEach(async file => {
-    //   const documentPayload = await createDocumentPayload(
-    //     formValues.chooseFile[0],
-    //     formValues?.documentTypes?.value?.toString(),
-    //   )
 
       const doc: Document = {
         ...documentPayload,
@@ -119,6 +100,7 @@ export const UploadDocumentModal: React.FC<DocumentProps> = ({isOpen, onClose, p
         vendorId,
         workOrderId,
       }
+      console.log('doc', doc)
 
       saveDocument(doc, {
         onSuccess() {
