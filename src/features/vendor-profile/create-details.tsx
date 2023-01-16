@@ -52,6 +52,13 @@ const CreateVendorDetail: React.FC<{
   const { disableDetailsNext } = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
+  const watchBusinessPhoneNo = useWatch({ name: 'businessPhoneNumber', control })
+  const watchSecondaryPhoneNo = useWatch({ name: 'secondPhoneNumber', control })
+
+  const isBusinessPhNo = watchBusinessPhoneNo?.replace(/\D+/g, '').length! < 10
+  const isSecondaryPhNo = watchSecondaryPhoneNo?.replace(/\D+/g, '').length! < 10
+  const isSSNNumber = ssnNumber?.replace(/\D+/g, '').length! < 9
+  const isEinNumber = einNumber?.replace(/\D+/g, '').length! < 9
   const formValues = useWatch({ control })
 
   const capacityError = useWatch({ name: 'capacity', control })
@@ -516,7 +523,7 @@ const CreateVendorDetail: React.FC<{
           </Button>
         )}
         <Button
-          disabled={disableDetailsNext}
+          disabled={disableDetailsNext || isBusinessPhNo || isSecondaryPhNo || isEinNumber || isSSNNumber}
           type="submit"
           data-testid="saveDocumentCards"
           variant="solid"

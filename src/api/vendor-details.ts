@@ -615,6 +615,7 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
       'state',
       'streetAddress',
       'zipCode',
+      'secondPhoneNumber',
     ],
   })
   const documentFields = useWatch({
