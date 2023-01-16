@@ -27,9 +27,9 @@ export const useVendorRegister = () => {
           status: 'success',
         })
       },
-      onError: () => {
+      onError: (error: unknown) => {
         toast({
-          title: 'Error.',
+          title: `Error. ${(error as { message: string })?.message}`,
           position: 'top-left',
           status: 'error',
         })
