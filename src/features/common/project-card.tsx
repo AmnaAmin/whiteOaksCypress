@@ -40,8 +40,8 @@ export const ProjectCard = ({
         border="1px solid transparent"
         borderTop="4px solid transparent"
         // pointerEvents={disabled ? 'none' : 'auto'}
-        onClick={() => !disabled && onSelectCard(selectedCard !== value && value)}
-        borderColor={selectedCard === value ? '#4E87F8' : ''}
+        onClick={() => !disabled && onSelectCard(selectedCard !== value ? value : null)}
+        borderColor={selectedCard === value ? 'brand.300' : ''}
         _hover={{ bg: 'blue.50' }}
       >
         <Flex w="100%" mb="5px">

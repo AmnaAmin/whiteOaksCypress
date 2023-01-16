@@ -27,8 +27,8 @@ import ProjectNotes from 'features/project-details/project-notes-tab'
 import { STATUS } from 'features/common/status'
 import { TransactionDetails } from 'features/project-details/transaction-details/transaction-details'
 import ScheduleTab from 'features/project-details/project-schedule/schedule-tab'
-import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-table'
-import { useProjectAuditLogs } from 'api/project-details'
+// import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-table'
+// import { useProjectAuditLogs } from 'api/project-details'
 import { boxShadow } from 'theme/common-style'
 
 export const ProjectDetails: React.FC = props => {
@@ -60,7 +60,7 @@ export const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
+  // const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
 
   const [isShowProjectFinancialOverview, setIsShowProjectFinancialOverview] = useState(false)
 
@@ -95,11 +95,11 @@ export const ProjectDetails: React.FC = props => {
     }
   }, [ganttChartData, projectData])
 
-  useEffect(() => {
-    if (tabIndex === 6) {
-      refetchAudits()
-    }
-  }, [tabIndex])
+  // useEffect(() => {
+  //   if (tabIndex === 6) {
+  //     refetchAudits()
+  //   }
+  // }, [tabIndex])
 
   return (
     <>
@@ -110,7 +110,7 @@ export const ProjectDetails: React.FC = props => {
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
           <Tabs size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
             <TabList h={'50px'} alignItems="end" border="none">
-              <Flex h={'40px'}>
+              <Flex h={'40px'} py={'1px'}>
                 <Tab>{t('projects.projectDetails.transactions')}</Tab>
                 <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
                 <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
@@ -127,18 +127,18 @@ export const ProjectDetails: React.FC = props => {
 
                   {/* Figma update */}
                 </Tab>
-                <Tab>{t('projects.projectDetails.auditLogs')}</Tab>
+                {/* <Tab>{t('projects.projectDetails.auditLogs')}</Tab> */}
               </Flex>
             </TabList>
 
             <Card
               rounded="0px"
-              roundedBottomLeft="6px"
-              roundedBottomRight="6px"
+              roundedRight={{ base: '0px', md: '6px' }}
+              roundedBottom="6px"
               style={boxShadow}
               pr={{ base: 0, sm: '15px' }}
             >
-              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" mb="15px">
+              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
                 {tabIndex === 2 &&
                   ![
                     STATUS.Closed,
@@ -149,12 +149,12 @@ export const ProjectDetails: React.FC = props => {
                     STATUS.ClientPaid,
                     STATUS.Overpayment,
                   ].includes(projectStatus as STATUS) && (
-                    <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
+                    <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen} mb="15px">
                       {t('newWorkOrder')}
                     </Button>
                   )}
                 {tabIndex === 4 && (
-                  <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />}>
+                  <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />} mb="15px">
                     {t('projects.projectDetails.upload')}
                   </Button>
                 )}
@@ -165,7 +165,7 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )} */}
                 {tabIndex === 0 && (
-                  <HStack spacing="16px">
+                  <HStack spacing="16px" mb="10px">
                     <Box mt={'14px'}>
                       <FormControl display="flex" alignItems="center">
                         <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" size="md">
@@ -204,19 +204,19 @@ export const ProjectDetails: React.FC = props => {
                     )}
                   </Box>
                 </TabPanel>
-                <TabPanel p="0px" mt="6px">
+                <TabPanel p="0px">
                   <Card rounded="16px" padding="0">
                     <ProjectDetailsTab projectData={projectData as Project} />
                   </Card>
                 </TabPanel>
 
-                <TabPanel p="0px" h="100%" mt="7px">
+                <TabPanel p="0px">
                   <WorkOrdersTable ref={tabsContainerRef} />
                 </TabPanel>
-                <TabPanel p="0px" mt="7px">
+                <TabPanel p="0px" minH="calc(100vh - 409px)">
                   <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
                 </TabPanel>
-                <TabPanel p="0px" mt="7px">
+                <TabPanel p="0px">
                   <VendorDocumentsTable ref={tabsContainerRef} />
                 </TabPanel>
 
@@ -230,12 +230,13 @@ export const ProjectDetails: React.FC = props => {
                 />
               </TabPanel> */}
 
-                <TabPanel p="0" mt="7px">
+                <TabPanel p="0" minH="calc(100vh - 408px)">
                   <ProjectNotes projectId={projectId} />
                 </TabPanel>
-                <TabPanel p="0px" mt="7px">
+                {/*
+                <TabPanel p="0px" minH="calc(100vh - 450px)">
                   <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch={refetchAudits} />
-                </TabPanel>
+                </TabPanel> */}
               </TabPanels>
             </Card>
           </Tabs>

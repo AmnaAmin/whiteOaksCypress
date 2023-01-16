@@ -32,9 +32,9 @@ import WorkOrderDetailTab from './details/work-order-detail-tab'
 import { WorkOrderNotes } from 'features/work-order/notes/work-order-notes'
 import Status from '../../common/status'
 import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
-import { Card } from 'components/card/card'
 import { ProjectAwardTab } from 'features/work-order/project-award/project.award'
 import { useProjectAward } from 'api/project-award'
+import { Card } from 'features/login-form-centered/Card'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -116,16 +116,22 @@ export const WorkOrderDetails = ({
           borderTop="2px solid #345EA6"
           w={{ base: modalSize, sm: 'calc(100% - 30px)', md: 'calc(100% - 150px)' }}
         >
-          <ModalHeader borderBottom={'1px solid gray.300'} h="64px" py={4} display="flex" alignItems="center">
+          <ModalHeader borderBottom={'1px solid gray.300'} minH="64px" py={4} display="flex" alignItems="center">
             <Box>
-              <HStack fontSize="16px" fontWeight={500} h="32px" color="gray.600" flexWrap="wrap-reverse">
-                <Text borderRight="2px solid #E2E8F0" lineHeight="22px" h="22px" pr={2} data-testid="work-order-id">
-                  WO {workOrder?.id ? workOrder?.id : ''}
-                </Text>
-                <Text lineHeight="22px" h="22px" data-testid="work-order-company">
-                  {workOrder?.companyName}
-                </Text>
-                {workOrder?.statusLabel && <Status value={workOrder?.statusLabel} id={workOrder?.statusLabel} />}
+              <HStack fontSize="16px" fontWeight={500} minH="32px" color="gray.600" flexWrap="wrap-reverse" spacing={0}>
+                <HStack h="40px" mr="16px">
+                  <Text borderRight="2px solid #E2E8F0" lineHeight="22px" h="22px" pr={2} data-testid="work-order-id">
+                    WO {workOrder?.id ? workOrder?.id : ''}
+                  </Text>
+                  <Text lineHeight="22px" h="22px" data-testid="work-order-company">
+                    {workOrder?.companyName}
+                  </Text>
+                </HStack>
+                {workOrder?.statusLabel && (
+                  <HStack pr={6}>
+                    <Status value={workOrder?.statusLabel} id={workOrder?.statusLabel} />
+                  </HStack>
+                )}
               </HStack>
             </Box>
           </ModalHeader>
@@ -142,15 +148,23 @@ export const WorkOrderDetails = ({
               index={tabIndex}
               onChange={index => setTabIndex(index)}
             >
-              <TabList pt="12px" flexDir={{ base: 'column', md: 'row' }}>
-                <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
-                {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
-                <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
-                <Tab data-testid="invoice">{t('invoice')}</Tab>
-                <Tab data-testid="payments">{t('payments')}</Tab>
-                <Tab data-testid="notes">{t('notes')}</Tab>
-              </TabList>
-              <Card mb={3} py={0} roundedTop={0} roundedRight={12}>
+              <Card
+                bg={{ base: 'white', md: 'transparent' }}
+                p={{ base: '12px 12px 16px 12px', md: '0px !important' }}
+                rounded="6px 6px 0px 0px"
+                boxShadow={{ sm: 'none' }}
+                mt="12px"
+              >
+                <TabList border="none" flexDir={{ base: 'column', md: 'row' }}>
+                  <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
+                  {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
+                  <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
+                  <Tab data-testid="invoice">{t('invoice')}</Tab>
+                  <Tab data-testid="payments">{t('payments')}</Tab>
+                  <Tab data-testid="notes">{t('notes')}</Tab>
+                </TabList>
+              </Card>
+              <Card mb={3} py={0} roundedTop={0} roundedRight={{ base: 0, md: 12 }}>
                 <TabPanels>
                   <TabPanel p={0}>
                     <WorkOrderDetailTab

@@ -2,6 +2,7 @@ import { Box, Button, chakra, FormControl, FormLabel, HTMLChakraProps, Input, St
 import { useForm } from 'react-hook-form'
 import { useAuth } from 'utils/auth-context'
 import { PasswordField } from './PasswordField'
+import { Link } from '@chakra-ui/react'
 
 type FormValues = {
   email: string
@@ -53,7 +54,7 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
           SIGN IN
         </Button>
         <Text textAlign="center" fontSize={{ base: '16px', sm: '21px' }} fontWeight={500} color="#8392AB">
-          Register as a Vendor
+          <Link href="vendor/register">Register as a Vendor</Link>
         </Text>
       </Stack>
     </chakra.form>

@@ -15,6 +15,7 @@ import {
   Center,
   Text,
   Icon,
+  Box,
 } from '@chakra-ui/react'
 import { BiGridVertical } from 'react-icons/bi'
 
@@ -87,20 +88,21 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
 
   return (
     <>
-      <Button
-        colorScheme="darkBlue"
-        variant="ghost"
-        m={0}
-        onClick={onOpen}
-        data-testid="column-settings-button"
-        disabled={disabled}
-      >
-        <HStack spacing={1}>
-          <Icon as={MdOutlineSettings} fontSize="18px" fontWeight={500} />
-          <Text fontWeight={500}>{t('settings')}</Text>
-        </HStack>
-      </Button>
-
+      <Box _hover={{ bg: 'darkPrimary.50', roundedBottomRight: '6px' }}>
+        <Button
+          colorScheme="darkBlue"
+          variant="ghost"
+          m={0}
+          onClick={onOpen}
+          data-testid="column-settings-button"
+          disabled={disabled}
+        >
+          <HStack spacing={1}>
+            <Icon as={MdOutlineSettings} fontSize="18px" fontWeight={500} />
+            <Text fontWeight={500}>{t('settings')}</Text>
+          </HStack>
+        </Button>
+      </Box>
       <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="xl">
         <ModalOverlay />
         <ModalContent h="620px" bg="#F2F3F4" rounded="none">

@@ -7,6 +7,7 @@ import { BiBookAdd } from 'react-icons/bi'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { Card } from 'components/card/card'
 
 const Vendors = () => {
   const { isOpen: isOpenNewVendorModal, onOpen: onNewVendorModalOpen, onClose: onNewVendorModalClose } = useDisclosure()
@@ -18,8 +19,9 @@ const Vendors = () => {
     <Box mt="5">
       <VendorFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
 
-      <HStack mb="10px">
-        {/* <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
+      <Card py="3px" mt="11px">
+        <HStack mb="10px">
+          {/* <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
           {t('clearFilter')}
         </Button> */}
         <Spacer />
@@ -32,9 +34,8 @@ const Vendors = () => {
         )}
       </HStack>
 
-      <Box>
         <VendorTable selectedCard={selectedCard as string} />
-      </Box>
+      </Card>
 
       <NewVendorModal isOpen={isOpenNewVendorModal} onClose={onNewVendorModalClose} />
     </Box>

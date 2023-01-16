@@ -71,6 +71,7 @@ const WorkOrderDetailTab = ({
             })
           : [],
       showPrice: workOrder.showPricing,
+      // notifyVendor: workOrder.notifyVendor,
     }
   }
 
@@ -153,7 +154,7 @@ const WorkOrderDetailTab = ({
           )}
           <SimpleGrid
             templateColumns={{ base: 'unset', sm: 'repeat(auto-fit , minmax(180px , 1fr))' }}
-            spacing={5}
+            spacing={'16px'}
             borderBottom="1px solid  #E2E8F0"
             minH="60px"
             my="30px"
@@ -163,35 +164,46 @@ const WorkOrderDetailTab = ({
             flexWrap="wrap"
             display={{ base: 'flex', sm: 'grid' }}
           >
-            <SummaryCard
-              title={t('WOIssued')}
-              icon={BiCalendar}
-              value={workOrder.workOrderIssueDate ? dateFormat(workOrder.workOrderIssueDate) : 'mm/dd/yy'}
-            />
-            <SummaryCard
-              title={t('expectedStart')}
-              icon={BiCalendar}
-              value={workOrder.workOrderStartDate ? dateFormat(workOrder.workOrderStartDate) : 'mm/dd/yy'}
-            />
-            <SummaryCard
-              icon={BiCalendar}
-              title={t('expectedCompletion')}
-              value={
-                workOrder.workOrderExpectedCompletionDate
-                  ? dateFormat(workOrder.workOrderExpectedCompletionDate)
-                  : 'mm/dd/yy'
-              }
-            />
-            <SummaryCard
-              icon={BiCalendar}
-              title={t('completedByVendor')}
-              value={workOrder.workOrderDateCompleted ? dateFormat(workOrder.workOrderDateCompleted) : 'mm/dd/yy'}
-            />
-            <SummaryCard
-              title={t(`${NEW_PROJECT}.lockBoxCode`)}
-              icon={BiFile}
-              value={!!projectData?.lockBoxCode ? projectData?.lockBoxCode : '--'}
-            />
+            <Box flex={{ base: '1.1', sm: 'unset' }}>
+              <SummaryCard
+                title={t('WOIssued')}
+                icon={BiCalendar}
+                value={workOrder.workOrderIssueDate ? dateFormat(workOrder.workOrderIssueDate) : 'mm/dd/yy'}
+              />
+            </Box>
+            <Box flex={{ base: '1', sm: 'unset' }}>
+              <SummaryCard
+                title={t('expectedStart')}
+                icon={BiCalendar}
+                value={workOrder.workOrderStartDate ? dateFormat(workOrder.workOrderStartDate) : 'mm/dd/yy'}
+              />
+            </Box>
+            <Box flex={{ base: '1', sm: 'unset' }}>
+              <SummaryCard
+                icon={BiCalendar}
+                title={t('expectedCompletion')}
+                value={
+                  workOrder.workOrderExpectedCompletionDate
+                    ? dateFormat(workOrder.workOrderExpectedCompletionDate)
+                    : 'mm/dd/yy'
+                }
+              />
+            </Box>
+
+            <Box flex={{ base: '1', sm: 'unset' }}>
+              <SummaryCard
+                icon={BiCalendar}
+                title={t('completedByVendor')}
+                value={workOrder.workOrderDateCompleted ? dateFormat(workOrder.workOrderDateCompleted) : 'mm/dd/yy'}
+              />
+            </Box>
+            <Box flex={{ base: '1', sm: 'unset' }}>
+              <SummaryCard
+                title={t(`${NEW_PROJECT}.lockBoxCode`)}
+                icon={BiFile}
+                value={!!projectData?.lockBoxCode ? projectData?.lockBoxCode : '--'}
+              />
+            </Box>
           </SimpleGrid>
           <Box mx={{ base: '0', lg: '30px' }} mt={8}>
             {isLoadingLineItems ? (

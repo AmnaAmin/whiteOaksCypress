@@ -123,7 +123,9 @@ const AssignedItems = (props: AssignedItemType) => {
     }
   }, [lineItems])
 
-  const { showPriceCheckBox, showMarkAllIsVerified, showMarkAllIsCompleted } = useActionsShowDecision({ workOrder })
+  const { showPriceCheckBox, notifyVendorCheckBox, showMarkAllIsVerified, showMarkAllIsCompleted } =
+    useActionsShowDecision({ workOrder })
+
   const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, lineItems })
   const { isVendor } = useUserRolesSelector()
   const [markAllVerified, setMarkAllVerified] = useState<boolean>()
@@ -244,6 +246,17 @@ const AssignedItems = (props: AssignedItemType) => {
                 {t(`${WORK_ORDER}.showPrice`)}
               </Checkbox>
             )}
+            {notifyVendorCheckBox && (
+              <Checkbox
+                defaultChecked
+                variant={'outLineGreen'}
+                data-testid="notifyVendorCheckBox"
+                size="md"
+                {...register('notifyVendor')}
+              >
+                {t(`${WORK_ORDER}.sendNotification`)}
+              </Checkbox>
+            )}
             {showMarkAllIsCompleted && (
               <Checkbox
                 data-testid="showMarkAllIsComplete"
@@ -305,7 +318,14 @@ const AssignedItems = (props: AssignedItemType) => {
           </HStack>
         </Stack>
 
-        <Box width="100%" height={'100%'} overflowX={overflowXVal} overflowY={'hidden'}>
+        <Box
+          width="100%"
+          overflowX={overflowXVal}
+          overflowY={'hidden'}
+          borderRadius={7}
+          borderBottom="1px solid #CBD5E0"
+          border="1px solid #CBD5E0"
+        >
           <TableContextProvider data={values.assignedItems} columns={ASSIGNED_ITEMS_COLUMNS}>
             <Table
               handleOnDrag={handleOnDragEnd}

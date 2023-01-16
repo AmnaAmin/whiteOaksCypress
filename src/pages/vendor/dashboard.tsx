@@ -6,7 +6,7 @@ import Overview from 'components/chart/Overview'
 import PaidChart from 'components/chart/paid-chart'
 // import { usePaidWOAmountByYearAndMonthTotal } from 'api/vendor-dashboard'
 import Dropdown from 'components/dropdown-menu/Dropdown'
-import { MonthOption, monthOptions } from 'utils/date-time-utils'
+import { MonthOption, monthOptions, monthOptionsPaidGraph } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 
 import { useUserProfile } from 'utils/redux-common-selectors'
@@ -102,8 +102,8 @@ const Dashboard: React.FC = () => {
               {t('WOpaid')}
             </Text>
             <Spacer />
-            <Box mt="20px" mr="30px" w="140px" border={'1px solid #CBD5E0'}>
-              <Dropdown options={monthOptions} onChange={setPaidOption} defaultValue={paidOption} />
+            <Box mt="20px" mr="30px" w="145px" border={'1px solid #CBD5E0'} borderRadius={'6px'}>
+              <Dropdown options={monthOptionsPaidGraph} onChange={setPaidOption} defaultValue={paidOption} />
             </Box>
           </Flex>
 
@@ -111,7 +111,7 @@ const Dashboard: React.FC = () => {
         </Card>
       </Flex>
       <Card w="100%" style={boxShadow} borderRadius={'6px'}>
-        <Box mt={3} ml={1}>
+        <Box mt={1} ml={1} mb={1}>
           <FormLabel fontSize={'18px'} lineHeight={'28px'} color="gray.700" fontWeight={500}>
             {t(`${DASHBOARD}.upcomingPayment`)}
           </FormLabel>

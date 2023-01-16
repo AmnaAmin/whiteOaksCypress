@@ -73,7 +73,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
   ]
 
   return (
-    <Box overflow={'auto'} h="calc(100vh - 320px)">
+    <Box overflowX={'auto'} minH="calc(100vh - 370px)" pb="2">
       {isOpen && selectedUser && (
         <PerformanceModal
           performanceDetails={selectedUser as PerformanceType}
@@ -84,7 +84,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
           isOpen={isOpen}
         />
       )}
-      <Box overflow={'auto'} h="calc(100vh - 320px)" border="1px solid #CBD5E0" borderTopRadius="6px">
+      <Box overflowX={'auto'} minH="calc(100vh - 370px)" border="1px solid #CBD5E0" borderTopRadius="6px">
         <TableContextProvider data={performance} columns={PERFORMANCE_COLUMNS}>
           <Table
             onRowClick={row => {

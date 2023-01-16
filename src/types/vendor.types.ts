@@ -140,6 +140,12 @@ export type VendorProfilePayload = {
     documentType: number
     fileObject: string
   }[]
+  coiGLStatus?: string | boolean
+  coiWCStatus?: string | boolean
+  agreementSignedStatus?: string | boolean
+  autoInsuranceStatus?: string | boolean
+  w9Status?: string | boolean
+  enableVendorPortal?: boolean
 }
 
 export type LicenseDocument = {
@@ -228,6 +234,12 @@ export type VendorProfileDetailsFormData = {
   coiWcExpDate?: Date
   trades?: any[]
   markets?: any[]
+  coiGLExpCheckBox?: boolean
+  CoiWcExpCheckbox?: boolean
+  agreementSignCheckBox?: boolean
+  autoInsuranceCheckBox?: boolean
+  W9DocumentCheckBox?: boolean
+  enableVendorPortal?: Select
 }
 
 export type VendorTrade = {

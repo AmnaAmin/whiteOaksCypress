@@ -42,6 +42,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const status = useWatch({ name: 'status', control })
   const selectedTransactionTypeId = transactionType?.value
   const selectedAgainstId = against?.value
+  const { isAdmin } = useUserRolesSelector()
 
   const isTransactionTypeChangeOrderSelected =
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.changeOrder
@@ -58,6 +59,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
       val => val === selectedTransactionTypeId,
     ),
   }
+  const isPaymentTermDisabled = isAgainstWorkOrderOptionSelected && !isAdmin
 
   // The status field should be hidden if user create new transaction or
   // if the transaction of type overpayment with markAs = revenue
@@ -76,6 +78,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     refundCheckbox,
+    isPaymentTermDisabled,
     isShowPaymentRecievedDateField: [TransactionTypeValues.payment, TransactionTypeValues.woPaid].includes(
       selectedTransactionTypeId,
     ),
@@ -87,13 +90,11 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
 export const useFieldRequiredDecision = (control: Control<FormValues, any>) => {
   const status = useWatch({ name: 'status', control })
   const isStatusApproved = status?.value === TransactionStatusValues.approved
-  const against = useWatch({ name: 'against', control })
+  // const against = useWatch({ name: 'against', control })
   const transactionType = useWatch({ name: 'transactionType', control })
-
   return {
     isPaidDateRequired: isStatusApproved,
-    isInvoicedDateRequired:
-      isStatusApproved || (transactionType?.value === TransactionTypeValues?.draw && against?.label === 'Project SOW'),
+    isInvoicedDateRequired: isStatusApproved || transactionType?.value === TransactionTypeValues?.draw,
   }
 }
 

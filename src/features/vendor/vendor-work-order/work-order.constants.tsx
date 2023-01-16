@@ -19,6 +19,9 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
   {
     header: 'id',
     accessorKey: 'id',
+    accessorFn: cellInfo => {
+      return cellInfo.id ? cellInfo.id?.toString() : '- - -'
+    },
   },
 
   {
@@ -52,13 +55,13 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
       return numeral(cellInfo.finalInvoiceAmount).format('$0,0.00')
     },
   },
-  {
-    header: 'finalApproved',
-    accessorKey: 'clientOriginalApprovedAmount',
-    accessorFn(cellInfo: any) {
-      return numeral(cellInfo.clientOriginalApprovedAmount).format('$0,0.00')
-    },
-  },
+  // {
+  //   header: 'finalApproved',
+  //   accessorKey: 'clientOriginalApprovedAmount',
+  //   accessorFn(cellInfo: any) {
+  //     return numeral(cellInfo.clientOriginalApprovedAmount).format('$0,0.00')
+  //   },
+  // },
   {
     header: 'issue',
     accessorKey: 'workOrderIssueDate',

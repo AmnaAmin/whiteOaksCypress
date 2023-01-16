@@ -69,10 +69,7 @@ function register(payload: unknown) {
 }
 
 async function logout() {
-  if (window.location.pathname !== '/login') {
-    window.location.href = window.location.origin + '/login'
-  }
-
+  window.location.href = window.location.origin
   return Promise.resolve()
 }
 

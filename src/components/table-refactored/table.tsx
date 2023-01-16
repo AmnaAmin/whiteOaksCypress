@@ -71,10 +71,10 @@ function Filter({
         onChange={value => {
           if (dateFilter) {
             column.setFilterValue(dateFormat(value as string))
-            setStickyFilter(dateFormat(value as string))
+            if (allowStickyFilters) setStickyFilter(dateFormat(value as string))
           } else {
-            column.setFilterValue(value)
-            setStickyFilter(value)
+            column.setFilterValue(window.encodeURIComponent(value))
+            if (allowStickyFilters) setStickyFilter(value)
           }
         }}
         className="w-36 border shadow rounded"
@@ -178,6 +178,9 @@ function DebouncedInput({
         ref={inputRef}
         paddingRight={'13px'}
         data-testid="tableFilterInputField"
+        _focus={{
+          border: '1px solid #345EA6',
+        }}
       />
       {showClearIcon && props.type !== 'date' ? (
         <Icon
@@ -246,8 +249,8 @@ export const Table: React.FC<TableProps> = ({
       zIndex={0}
       // border="1px solid #CBD5E0"
       bg="white"
+      h="100%"
       minH={'inherit'}
-      height="100%"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
@@ -270,12 +273,22 @@ export const Table: React.FC<TableProps> = ({
                     py="3"
                     bg="#ECEDEE"
                     zIndex={1}
-                    borderBottomColor="gray.300"
+                    borderBottomColor="#ECEDEE"
                     cursor={isSortable ? 'pointer' : ''}
                     onClick={header.column.getToggleSortingHandler()}
                     {...getColumnMaxMinWidths(header.column)}
                   >
-                    <Flex alignItems="center">
+                    <Flex
+                      alignItems="center"
+                      _before={{
+                        content: '""',
+                        bottom: '-2px',
+                        left: '0px',
+                        position: 'absolute',
+                        minW: '100%',
+                        borderBottom: '3px solid #ECEDEE',
+                      }}
+                    >
                       <Text
                         fontSize="14px"
                         color="gray.700"
@@ -285,6 +298,7 @@ export const Table: React.FC<TableProps> = ({
                         isTruncated
                         display="inline-block"
                         title={typeof title === 'string' ? t(title as string) : ''}
+                        py="1px"
                       >
                         {typeof title === 'string' ? t(title as string) : title}
                       </Text>
@@ -318,8 +332,8 @@ export const Table: React.FC<TableProps> = ({
                         py="3"
                         position="sticky"
                         zIndex={1}
-                        top="38px"
-                        borderBottomColor="gray.300"
+                        top="43px"
+                        // borderBottomColor="gray.300"
                         bg="#ECEDEE"
                         {...getColumnMaxMinWidths(header.column)}
                       >
@@ -328,6 +342,14 @@ export const Table: React.FC<TableProps> = ({
                             _after={{
                               content: '""',
                               bottom: '0px',
+                              left: '0px',
+                              position: 'absolute',
+                              minW: '100%',
+                              borderBottom: '1px solid #CBD5E0',
+                            }}
+                            _before={{
+                              content: '""',
+                              top: '0px',
                               left: '0px',
                               position: 'absolute',
                               minW: '100%',
@@ -384,7 +406,7 @@ export const Table: React.FC<TableProps> = ({
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
-                          bg: '#F3F8FF',
+                          bg: !!onRowClick ? '#F3F8FF' : '',
                         }}
                         backgroundColor={row.getIsSelected() ? 'gray.50' : ''}
                       >
