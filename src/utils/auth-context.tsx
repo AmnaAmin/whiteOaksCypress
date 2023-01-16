@@ -7,6 +7,8 @@ import { getToken, removeToken, setToken } from './storage.utils'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
 import { Box } from '@chakra-ui/layout'
+import { useToast } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
 
 type AuthState = {
   user: Account
@@ -41,6 +43,8 @@ interface AuthProviderProps {
 }
 function AuthProvider(props: AuthProviderProps) {
   const token = getToken()
+  const toast = useToast()
+  const { t } = useTranslation()
 
   const { data, isLoading, isIdle, run, setData } = useAsync({})
 
@@ -62,6 +66,17 @@ function AuthProvider(props: AuthProviderProps) {
         })
         .then(({ user, token }) => {
           setData({ user, token })
+        })
+        .catch(error => {
+          const err = JSON.parse(error)
+          toast({
+            title: err?.title || 'Error',
+            description: err?.message ? t(err?.message) : 'Something went wrong',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
         })
     },
     [setData],
