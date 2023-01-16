@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -14,39 +14,37 @@ import {
   Input,
   Divider,
   useToast,
+  Icon,
+  Text,
 } from '@chakra-ui/react'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { useForm, useWatch } from 'react-hook-form'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, dateISOFormat } from 'utils/date-time-utils'
 import { useAccountDetails, useVendorSkillsMutation } from 'api/vendor-details'
-import { convertDateTimeToServerISO } from 'components/table/util'
 import { useQueryClient } from 'react-query'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
 import { t } from 'i18next'
 import { Market } from 'types/vendor.types'
-const InformationCard: React.FC<{
-  Icon: React.ElementType
-  label: string
-  value: string | boolean | any
-  register: any
-}> = ({ Icon, label, value, register }) => {
+import { useTranslation } from 'react-i18next'
+
+const InformationCard: React.FC<{ label: string; value: string; icons: React.ElementType }> = ({
+  label,
+  value,
+  icons,
+}) => {
+  const { t } = useTranslation()
   return (
-    <HStack h="45px" alignItems="self-start" spacing="16px">
-      <Icon as={Icon} fontSize="22px" color="#718096" />
-      <Box>
-        <FormLabel variant="strong-lable" size="md" m="0" noOfLines={1}>
-          {label}
-        </FormLabel>
-        <Input
-          readOnly
-          variant="unstyled"
-          placeholder="Unstyled"
-          value={value}
-          color="gray.500"
-          w="120px"
-          {...register}
-          type="text"
-        />
+    <HStack spacing={4}>
+      <Box h="37px">
+        <Icon as={icons} fontSize={20} color="gray.500" />
+      </Box>
+      <Box w="135px">
+        <Text fontWeight={500} fontSize="14px" color="gray.600" isTruncated title={t(`${VENDOR_MANAGER}.${label}`)}>
+          {t(`${VENDOR_MANAGER}.${label}`)}
+        </Text>
+        <Text fontWeight={400} fontSize="14px" color="gray.500" h="18px" isTruncated title={value}>
+          {value}
+        </Text>
       </Box>
     </HStack>
   )
@@ -59,16 +57,16 @@ type newVendorSkillsTypes = {
 export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedVendorSkills }) => {
   const { data: account } = useAccountDetails()
   const { mutate: createVendorSkills } = useVendorSkillsMutation()
-  const { control, register, handleSubmit, reset } = useForm()
+  const { control, register, handleSubmit, reset, setValue } = useForm()
   const toast = useToast()
   const queryClient = useQueryClient()
 
   const onSubmit = data => {
     const arg = {
-      createdBy: data?.createdBy,
-      createdDate: convertDateTimeToServerISO(data?.createdDate),
-      modifiedDate: convertDateTimeToServerISO(data?.createdDate),
-      modifiedBy: data?.modifiedBy,
+      createdBy: selectedVendorSkills ? selectedVendorSkills?.createdBy : account?.createdBy,
+      createdDate: dateISOFormat(selectedVendorSkills ? selectedVendorSkills?.createdDate : account?.createdDate),
+      modifiedDate: dateISOFormat(selectedVendorSkills ? selectedVendorSkills?.createdDate : account?.createdDate),
+      modifiedBy: selectedVendorSkills ? selectedVendorSkills?.modifiedBy : account?.modifiedBy,
       skill: data?.skill,
       id: selectedVendorSkills?.id,
       method: selectedVendorSkills ? 'PUT' : 'POST',
@@ -93,12 +91,26 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
     name: 'skill',
   })
 
+  useEffect(() => {
+    if (selectedVendorSkills) {
+      setValue('skill', selectedVendorSkills?.skill)
+    }
+  }, [selectedVendorSkills])
+
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          onClose()
+          reset()
+        }}
+        size="3xl"
+        isCentered
+      >
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalOverlay />
-          <ModalContent>
+          <ModalContent borderTop="2px solid #4E87F8" rounded={0}>
             <ModalHeader borderBottom="1px solid #E2E8F0">
               <FormLabel variant="strong-label" size="lg">
                 {selectedVendorSkills ? `ID-${selectedVendorSkills?.id}` : t(`${VENDOR_MANAGER}.newVendorSkills`)}
@@ -106,32 +118,24 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
             </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <HStack spacing="25px" mt="30px">
+              <HStack spacing="25px" mt="20px">
                 <InformationCard
-                  Icon={BiDetail}
-                  label={t(`${VENDOR_MANAGER}.createdBy`)}
+                  icons={BiDetail}
+                  label={'createdBy'}
                   value={selectedVendorSkills ? selectedVendorSkills?.createdBy : account?.firstName}
-                  register={register('createdBy')}
                 />
                 <InformationCard
-                  Icon={BiCalendar}
-                  label={t(`${VENDOR_MANAGER}.createdDate`)}
-                  value={dateFormat(new Date())}
-                  register={register('createdDate')}
+                  icons={BiCalendar}
+                  label={'createdDate'}
+                  value={selectedVendorSkills ? dateFormat(selectedVendorSkills?.createdDate!) : dateFormat(new Date())}
                 />
                 {selectedVendorSkills && (
                   <>
+                    <InformationCard icons={BiDetail} label={'modifiedBy'} value={selectedVendorSkills?.modifiedBy} />
                     <InformationCard
-                      Icon={BiDetail}
-                      label={t(`${VENDOR_MANAGER}.modifiedBy`)}
-                      value={selectedVendorSkills?.modifiedBy}
-                      register={register('modifiedBy')}
-                    />
-                    <InformationCard
-                      Icon={BiCalendar}
-                      label={t(`${VENDOR_MANAGER}.modifiedDate`)}
+                      icons={BiCalendar}
+                      label={'modifiedDate'}
                       value={dateFormat(selectedVendorSkills?.modifiedDate)}
-                      register={register('modifiedDate')}
                     />
                   </>
                 )}
@@ -147,12 +151,20 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                   borderLeft="2.5px solid blue"
                   w="215px"
                   defaultValue={selectedVendorSkills?.skill}
+                  title={watchvalue}
                 />
               </Box>
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px">
               <HStack spacing="16px">
-                <Button variant="outline" colorScheme="brand" onClick={onClose}>
+                <Button
+                  variant="outline"
+                  colorScheme="brand"
+                  onClick={() => {
+                    onClose()
+                    reset()
+                  }}
+                >
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
                 <Button disabled={!watchvalue} type="submit" colorScheme="brand">
