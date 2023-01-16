@@ -201,7 +201,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
         />
       )}
 
-      <Box overflow={'auto'} h="calc(100vh - 320px)" roundedTop={6} border="1px solid #CBD5E0">
+      <Box overflowX={'auto'} minH="calc(100vh - 370px)" roundedTop={6} border="1px solid #CBD5E0">
         <TableContextProvider
           data={vendors}
           columns={tableColumns}
