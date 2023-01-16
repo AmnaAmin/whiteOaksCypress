@@ -73,7 +73,7 @@ function Filter({
             column.setFilterValue(dateFormat(value as string))
             if (allowStickyFilters) setStickyFilter(dateFormat(value as string))
           } else {
-            column.setFilterValue(window.encodeURIComponent(value))
+            column.setFilterValue(value)
             if (allowStickyFilters) setStickyFilter(value)
           }
         }}

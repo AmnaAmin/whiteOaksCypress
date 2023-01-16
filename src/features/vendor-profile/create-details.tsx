@@ -35,6 +35,7 @@ import { documentStatus, documentScore, portalAccess } from 'api/vendor-projects
 import first from 'lodash/first'
 import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 const CreateVendorDetail: React.FC<{
   onClose?: () => void
   vendorProfileData: VendorProfile
@@ -60,6 +61,7 @@ const CreateVendorDetail: React.FC<{
   const isSSNNumber = ssnNumber?.replace(/\D+/g, '').length! < 9
   const isEinNumber = einNumber?.replace(/\D+/g, '').length! < 9
   const formValues = useWatch({ control })
+  const { isFPM } = useUserRolesSelector()
 
   const capacityError = useWatch({ name: 'capacity', control })
 
@@ -108,6 +110,7 @@ const CreateVendorDetail: React.FC<{
                 required: isActive && 'This is required',
               })}
               size="md"
+              isDisabled={isFPM}
               onKeyPress={preventNumber}
             />
             <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName.message}</FormErrorMessage>
@@ -122,7 +125,12 @@ const CreateVendorDetail: React.FC<{
               rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect options={documentScore} {...field} selectProps={{ isBorderLeft: true }} />
+                  <ReactSelect
+                    options={documentScore}
+                    {...field}
+                    selectProps={{ isBorderLeft: true }}
+                    isDisabled={isFPM}
+                  />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -138,7 +146,12 @@ const CreateVendorDetail: React.FC<{
               rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect options={documentStatus} {...field} selectProps={{ isBorderLeft: true }} />
+                  <ReactSelect
+                    options={documentStatus}
+                    {...field}
+                    selectProps={{ isBorderLeft: true }}
+                    isDisabled={isFPM}
+                  />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -154,7 +167,7 @@ const CreateVendorDetail: React.FC<{
               rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect options={portalAccess} {...field} />
+                  <ReactSelect options={portalAccess} {...field} isDisabled={isFPM} />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -173,6 +186,7 @@ const CreateVendorDetail: React.FC<{
               })}
               variant="required-field"
               size="md"
+              isDisabled={isFPM}
               onKeyPress={preventNumber}
             />
             <FormErrorMessage pos="absolute">{errors.ownerName?.message}</FormErrorMessage>
@@ -192,6 +206,7 @@ const CreateVendorDetail: React.FC<{
               })}
               variant="required-field"
               size="md"
+              isDisabled={isFPM}
             />
             <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
           </FormControl>
@@ -200,7 +215,14 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input type="text" {...register('secondName')} variant="outline" size="md" onKeyPress={preventNumber} />
+            <Input
+              type="text"
+              {...register('secondName')}
+              variant="outline"
+              size="md"
+              isDisabled={isFPM}
+              onKeyPress={preventNumber}
+            />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -217,6 +239,7 @@ const CreateVendorDetail: React.FC<{
               })}
               variant="outline"
               size="md"
+              isDisabled={isFPM}
             />
           </FormControl>
           <GridItem></GridItem>
@@ -243,6 +266,7 @@ const CreateVendorDetail: React.FC<{
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
+                        isDisabled={isFPM}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -262,6 +286,7 @@ const CreateVendorDetail: React.FC<{
                 w="121px"
                 variant="outline"
                 size="md"
+                isDisabled={isFPM}
                 type="number"
               />
             </FormControl>
@@ -286,6 +311,7 @@ const CreateVendorDetail: React.FC<{
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
+                        isDisabled={isFPM}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -300,7 +326,14 @@ const CreateVendorDetail: React.FC<{
                 {t('ext')}
               </FormLabel>
 
-              <Input {...register('secondPhoneNumberExtension')} type="number" w="121px" variant="outline" size="md" />
+              <Input
+                {...register('secondPhoneNumberExtension')}
+                type="number"
+                w="121px"
+                variant="outline"
+                size="md"
+                isDisabled={isFPM}
+              />
             </FormControl>
           </Box>
         </HStack>
@@ -319,6 +352,7 @@ const CreateVendorDetail: React.FC<{
                 w="215px"
                 variant="required-field"
                 size="md"
+                isDisabled={isFPM}
               />
               <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
             </FormControl>
@@ -336,6 +370,7 @@ const CreateVendorDetail: React.FC<{
                 w="215px"
                 variant="required-field"
                 size="md"
+                isDisabled={isFPM}
                 onKeyPress={preventNumber}
               />
               <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
@@ -357,6 +392,7 @@ const CreateVendorDetail: React.FC<{
                       options={stateSelectOptions}
                       {...field}
                       selectProps={{ isBorderLeft: true }}
+                      isDisabled={isFPM}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -377,6 +413,7 @@ const CreateVendorDetail: React.FC<{
                 w="215px"
                 variant="required-field"
                 size="md"
+                isDisabled={isFPM}
               />
               <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
@@ -394,6 +431,7 @@ const CreateVendorDetail: React.FC<{
                 w="215px"
                 variant="required-field"
                 size="md"
+                isDisabled={isFPM}
               />
               <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
@@ -419,6 +457,7 @@ const CreateVendorDetail: React.FC<{
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
+                        isDisabled={isFPM}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -448,6 +487,7 @@ const CreateVendorDetail: React.FC<{
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
+                        isDisabled={isFPM}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -479,6 +519,7 @@ const CreateVendorDetail: React.FC<{
                         maxMenuHeight="100%"
                         {...field}
                         selectProps={{ isBorderLeft: true }}
+                        isDisabled={isFPM}
                       />
                       <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -496,6 +537,7 @@ const CreateVendorDetail: React.FC<{
                         required: !validatePayment?.length && 'This is required',
                       })}
                       colorScheme="brand"
+                      isDisabled={isFPM}
                     >
                       {payment.name}
                     </Checkbox>
@@ -523,7 +565,7 @@ const CreateVendorDetail: React.FC<{
           </Button>
         )}
         <Button
-          disabled={disableDetailsNext || isBusinessPhNo || isSecondaryPhNo || isEinNumber || isSSNNumber}
+          disabled={disableDetailsNext || isFPM || isBusinessPhNo || isSecondaryPhNo || isEinNumber || isSSNNumber}
           type="submit"
           data-testid="saveDocumentCards"
           variant="solid"

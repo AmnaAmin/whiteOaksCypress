@@ -322,6 +322,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             render={({ field: { onChange, ...rest } }) => (
               <ReactSelect
                 {...rest}
+                isDisabled={isVendor}
                 selectProps={{ isBorderLeft: true }}
                 options={accountTypeOptions}
                 onChange={target => {
