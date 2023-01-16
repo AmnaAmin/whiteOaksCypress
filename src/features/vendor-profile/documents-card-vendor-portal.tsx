@@ -146,6 +146,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 mt: '20px !important',
               },
             }}
+            flexDir={{ base: 'column', sm: 'row' }}
+            alignItems={{ base: 'start', sm: 'center' }}
+            spacing={{ base: 0, sm: '0.5rem' }}
           >
             <FormControl w="215px" isInvalid={!!errors.w9Document?.message}>
               <FormLabel variant="strong-label" size="md" color="#2D3748">
@@ -170,7 +173,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
-                      <Box overflow="hidden" top={16} h="18px">
+                      <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
                         {documents.w9DocumentUrl &&
                           downloadDocument(documents.w9DocumentUrl, t('W9Document'), 'w9DocumentLink')}
                       </Box>
@@ -215,6 +218,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   mt: '20px !important',
                 },
               }}
+              flexDir={{ base: 'column', sm: 'row' }}
+              alignItems={{ base: 'start', sm: 'center' }}
+              spacing={{ base: 0, sm: '0.5rem' }}
             >
               <FormControl w="215px" isInvalid={!!errors.agreement?.message}>
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
@@ -244,7 +250,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        <Box overflow="hidden" top={16} h="18px">
+                        <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
                           {documents.agreementUrl &&
                             downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
                         </Box>
@@ -311,6 +317,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   mt: '20px !important',
                 },
               }}
+              flexDir={{ base: 'column', sm: 'row' }}
+              alignItems={{ base: 'start', sm: 'center' }}
+              spacing={{ base: 0, sm: '0.5rem' }}
             >
               <FormControl w="215px" isInvalid={!!errors.insurance?.message}>
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
@@ -340,7 +349,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        <Box overflow="hidden" top={16} h="18px">
+                        <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
                           {documents.insuranceUrl &&
                             downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
                         </Box>
@@ -382,6 +391,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   mt: '20px !important',
                 },
               }}
+              flexDir={{ base: 'column', sm: 'row' }}
+              alignItems={{ base: 'start', sm: 'center' }}
+              spacing={{ base: 0, sm: '0.5rem' }}
             >
               <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message} color="#2D3748">
                 <FormLabel variant="strong-label" size="md">
@@ -409,7 +421,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        <Box overflow="hidden" top={16} h="18px">
+                        <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
                           {documents.coiGLExpUrl &&
                             downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
                         </Box>
@@ -451,6 +463,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   mt: '20px !important',
                 },
               }}
+              flexDir={{ base: 'column', sm: 'row' }}
+              alignItems={{ base: 'start', sm: 'center' }}
+              spacing={{ base: 0, sm: '0.5rem' }}
             >
               <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message}>
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
@@ -478,7 +493,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
-                        <Box overflow="hidden" top={16} h="18px">
+                        <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
                           {documents.coiWcExpUrl &&
                             downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
                         </Box>
