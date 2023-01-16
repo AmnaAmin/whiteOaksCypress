@@ -22,8 +22,9 @@ export const Receivable = () => {
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay] = useState<string>('')
   const [batchTitle, setBatchTitle] = useState<string>('')
-  const [batchMsg, setBatchMsg] = useState<string | null>('')
+  const [batchMsg, setBatchMsg] = useState<string>('')
   const [isBatchError, setIsBatchError] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   // const clearAll = () => {
   //   setSelectedCard('')
@@ -50,12 +51,8 @@ export const Receivable = () => {
   const { data: batchRun, refetch: refetchBatch } = useBatchRun(batchId, queryStringWithPagination)
 
   // Get Batch Run Errors
-  console.log('batchRun', batchRun)
-
-  const checkBatchRun = batchRun ? batchRun?.filter(br => br?.statusId === 2) : ''
-  console.log('checkBatchRun', checkBatchRun)
+  const checkBatchRun = batchRun?.filter(br => br?.statusId === 2) || []
   const batchResult = checkBatchRun ? checkBatchRun.map(a => a.value).join(', ') : ''
-  console.log('batchResult', batchResult)
 
   // const { weekDayFilters } = useWeeklyCount()
 
@@ -65,22 +62,17 @@ export const Receivable = () => {
     }
   }, [loading])
 
-  const batchErrorCheck = async () => {
-    await batchResult
-    alert()
-    // setTimeout(() => {
-    if (!batchResult) {
-      setIsBatchError(true)
-      setBatchTitle(t(`${ACCOUNTS}.batchError`))
-      setBatchMsg(t(`${ACCOUNTS}.batchErrorMsg`) + batchResult)
-    } else {
+  useEffect(() => {
+    if (!checkBatchRun[0]) {
       setIsBatchError(false)
       setBatchTitle(t(`${ACCOUNTS}.batchProcess`))
       setBatchMsg(t(`${ACCOUNTS}.batchSuccess`))
+    } else {
+      setIsBatchError(true)
+      setBatchTitle(t(`${ACCOUNTS}.batchError`))
+      setBatchMsg(t(`${ACCOUNTS}.batchErrorMsg`) + batchResult)
     }
-    // }, 1000)
-    // }, [batchResult])
-  }
+  }, [checkBatchRun])
 
   const Submit = formValues => {
     const receivableProjects = compact(formValues.selected)?.map((row: any) => ({
@@ -101,6 +93,7 @@ export const Receivable = () => {
 
     batchCall(obj as any, {
       onSuccess: () => {
+        setIsSuccess(true)
         refetch()
       },
     })
@@ -108,8 +101,9 @@ export const Receivable = () => {
 
   const onNotificationClose = () => {
     setIsBatchClick(false)
+    setIsBatchError(false)
     setBatchTitle('')
-    setBatchMsg(null)
+    setBatchMsg('')
   }
 
   return (
@@ -165,25 +159,15 @@ export const Receivable = () => {
             />
           </Box>
         </Box>
-        {!loading && isBatchClick && batchMsg && (
           <ConfirmationBox
-            title={
-              // batchTitle
-              //checkBatchRun.length > 0
-              isBatchError && batchResult ? t(`${ACCOUNTS}.batchError`) : t(`${ACCOUNTS}.batchProcess`)
-            }
-            content={
-              // batchMsg
-              // checkBatchRun.length > 0
-              isBatchError && batchResult ? t(`${ACCOUNTS}.batchErrorMsg`) + batchResult : t(`${ACCOUNTS}.batchSuccess`)
-            }
-            isOpen={batchErrorCheck} //!loading && isBatchClick && isBatchError && batchResult}
+            title={batchTitle}
+            content={batchMsg}
+            isOpen={!loading && isBatchClick && isSuccess}
             onClose={onNotificationClose}
             onConfirm={onNotificationClose}
             yesButtonText={t(`${ACCOUNTS}.close`)}
             showNoButton={false}
           />
-        )}
       </form>
       <DevTool control={control} />
     </>

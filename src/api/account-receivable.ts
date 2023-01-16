@@ -100,7 +100,7 @@ export const useCheckBatch = (setLoading, loading, paginatedQueryString ) => {
         return batchResponse
       },
       enabled: loading && isAPIEnabled,
-      refetchInterval: 10000,
+      // refetchInterval: 10000,
     },
   )
 }
