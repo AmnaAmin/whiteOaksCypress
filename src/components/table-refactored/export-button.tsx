@@ -7,6 +7,7 @@ import { BiExport } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from 'react-query'
 import { useSaveToExcel } from './util'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type ExportButtonProps = ButtonProps & {
   columns: ColumnDef<any>[]
@@ -31,6 +32,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 }) => {
   const { t } = useTranslation()
   const exportToExcel = useSaveToExcel()
+  const { isFPM } = useUserRolesSelector()
 
   const handleExport = () => {
     if (fetchedData) {
@@ -48,7 +50,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 
   return (
     <Box _hover={{ bg: 'darkPrimary.50' }}>
-      <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading} colorScheme="darkBlue">
+      <Button variant="ghost" onClick={handleExport} {...rest} isDisabled={isLoading || isFPM} colorScheme="darkBlue">
         {children ?? (
           <HStack spacing={1}>
             <Icon as={BiExport} fontSize={'18px'} mb="1px" fontWeight={500} />
