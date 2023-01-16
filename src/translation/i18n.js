@@ -20,6 +20,7 @@ import { auditLogs } from 'features/project-details/audit-logs/auditLogs.i18n'
 import { support } from 'features/support/support.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
+import { globalErrors } from './errors.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -47,6 +48,7 @@ i18n.use(initReactI18next).init({
         ...support.en.translation,
         ...vendorProfile.en.translation,
         ...projectAwards.en.translation,
+        ...globalErrors.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -563,6 +565,7 @@ i18n.use(initReactI18next).init({
         ...support.es.translation,
         ...vendorProfile.es.translation,
         ...projectAwards.es.translation,
+        ...globalErrors.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',

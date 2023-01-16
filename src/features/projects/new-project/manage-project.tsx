@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
@@ -14,15 +14,24 @@ export const ManageProject: React.FC<{
   isLoading: boolean
   onClose: () => void
 }> = props => {
-  const { register, control, setValue, getValues } = useFormContext<ProjectFormValues>()
+  const {
+    register,
+    control,
+    setValue,
+    getValues,
+    formState: { errors },
+  } = useFormContext<ProjectFormValues>()
   const values = getValues()
   const { t } = useTranslation()
+
+  const [preventSpecialChara, setPreventSpecialChara] = React.useState('')
   // not used until requirement is clear : const { fieldProjectManagerOptions } = useFPMs()
   const { fieldProjectManagerByMarketOptions } = useFPMsByMarket(values.newMarket?.value)
   const { projectCoordinatorSelectOptions } = useProjectCoordinators()
   const { clientSelectOptions } = useClients()
 
   const isProjectManagementSaveButtonDisabled = useProjectManagementSaveButtonDisabled(control)
+  const phoneNumberRef = useRef<any>()
 
   const setPC = e => {
     setValue('projectCoordinator', e)
@@ -30,6 +39,11 @@ export const ManageProject: React.FC<{
 
   const setClient = option => {
     setValue('client', option)
+  }
+
+  const handleChange = e => {
+    const result = e.target.value.replace(/[^a-zA-Z\s]/g, '')
+    setPreventSpecialChara(result)
   }
 
   return (
@@ -110,19 +124,32 @@ export const ManageProject: React.FC<{
           <GridItem>
             <FormControl>
               <FormLabel size="md">{t(`${NEW_PROJECT}.clientSuperName`)}</FormLabel>
-              <Input id="clientSuperName" {...register('superLastName')} />
+              <Input
+                id="clientSuperName"
+                {...register('superLastName')}
+                value={preventSpecialChara}
+                onChange={handleChange}
+              />
             </FormControl>
           </GridItem>
         </Grid>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors.superPhoneNumber}>
               <FormLabel size="md" htmlFor="superPhone">
                 {t(`${NEW_PROJECT}.superPhoneNumber`)}
               </FormLabel>
               <Controller
                 control={control}
-                name="superPhoneNumber"
+                {...register('superPhoneNumber', {
+                  validate: (value: any) => {
+                    if (phoneNumberRef.current) {
+                      if (phoneNumberRef.current.value.replace(/\D+/g, '').length === 10) return true
+                    }
+
+                    return false
+                  },
+                })}
                 render={({ field, fieldState }) => {
                   return (
                     <>
@@ -134,8 +161,15 @@ export const ManageProject: React.FC<{
                         format="(###)-###-####"
                         mask="_"
                         placeholder="(___)-___-____"
+                        getInputRef={phoneNumberRef}
                       />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      <FormErrorMessage>
+                        {fieldState.error?.message}
+
+                        {errors?.superPhoneNumber && errors?.superPhoneNumber.type === 'validate' && (
+                          <span>Invalid Phone number</span>
+                        )}
+                      </FormErrorMessage>
                     </>
                   )
                 }}
@@ -147,15 +181,24 @@ export const ManageProject: React.FC<{
               <FormLabel size="md" htmlFor="superPhoneNumberExtension">
                 {t(`${NEW_PROJECT}.ext`)}
               </FormLabel>
-              <Input id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} />
+              <Input id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} type="number" />
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors.superEmailAddress}>
               <FormLabel size="md" htmlFor="superEmail">
                 {t(`${NEW_PROJECT}.superEmail`)}
               </FormLabel>
-              <Input id="superEmail" {...register('superEmailAddress')} />
+              <Input
+                id="superEmail"
+                {...register('superEmailAddress', {
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'invalid email address',
+                  },
+                })}
+              />
+              <FormErrorMessage>{errors.superEmailAddress && errors.superEmailAddress.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
         </Grid>
