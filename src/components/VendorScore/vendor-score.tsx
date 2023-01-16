@@ -70,7 +70,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
         alignItems="center"
         gridGap="11px"
       >
-        <Card h={156} rounded="6px" marginTop={{ base: '30px', sm: '30px', md: 0, xl: 0, lg: 0 }}>
+        <Card h={158} rounded="6px" marginTop={{ base: '30px', sm: '30px', md: 0, xl: 0, lg: 0 }}>
           <Flex h="99%" w="100%">
             <HStack w="100%" spacing="0">
               <VStack spacing="3px" alignItems="start" w="100%">
