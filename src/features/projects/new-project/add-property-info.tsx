@@ -52,7 +52,7 @@ export const AddPropertyInfo: React.FC<{
   // API calls
   const { projects } = useProjects()
   const { propertySelectOptions } = useProperties()
-  const { stateSelectOptions , states} = useStates()
+  const { stateSelectOptions, states } = useStates()
   const { marketSelectOptions, markets } = useMarkets()
 
   const { data: isAddressVerified, refetch, isLoading } = useGetAddressVerification(addressInfo)
@@ -95,7 +95,7 @@ export const AddPropertyInfo: React.FC<{
     const property = option?.property
     const market = markets.find(m => m?.id === property?.marketId)
 
-    const state =  states.find(s => s?.code === property?.state)
+    const state = states.find(s => s?.code === property?.state)
 
     setValue('streetAddress', property?.streetAddress || option.label)
     setValue('city', property?.city)
@@ -237,6 +237,7 @@ export const AddPropertyInfo: React.FC<{
                       setAddressInfo({ ...addressInfo, zipCode: e.target.value })
                     },
                   })}
+                  type="number"
                 />
                 <FormErrorMessage>{errors?.zipCode && errors?.zipCode?.message}</FormErrorMessage>
               </FormControl>
@@ -277,7 +278,7 @@ export const AddPropertyInfo: React.FC<{
                 <FormLabel htmlFor="gateCode" size="md">
                   {t(`${NEW_PROJECT}.gateCode`)}
                 </FormLabel>
-                <Input id="gateCode" {...register('gateCode')} />
+                <Input id="gateCode" {...register('gateCode')} type="number" />
               </FormControl>
             </GridItem>
 
@@ -286,7 +287,7 @@ export const AddPropertyInfo: React.FC<{
                 <FormLabel htmlFor="lockBoxCode" size="md">
                   {t(`${NEW_PROJECT}.lockBoxCode`)}
                 </FormLabel>
-                <Input id="lockBoxCode" {...register('lockBoxCode')} />
+                <Input id="lockBoxCode" {...register('lockBoxCode')} type="number" />
               </FormControl>
             </GridItem>
           </Grid>
@@ -324,7 +325,7 @@ export const AddPropertyInfo: React.FC<{
                 <FormLabel htmlFor="ext" size="md">
                   {t(`${NEW_PROJECT}.ext`)}
                 </FormLabel>
-                <Input id="ext" {...register('hoaPhoneNumberExtension')} />
+                <Input id="ext" {...register('hoaPhoneNumberExtension')} type="number" />
               </FormControl>
             </GridItem>
             <GridItem pb={1}>
@@ -332,7 +333,7 @@ export const AddPropertyInfo: React.FC<{
                 <FormLabel htmlFor="hoaContactEmail" size="md">
                   {t(`${NEW_PROJECT}.hoaContactEmail`)}
                 </FormLabel>
-                <Input id="hoaContactEmail" {...register('hoaEmailAddress')} />
+                <Input id="hoaContactEmail" {...register('hoaEmailAddress')} type="email" />
               </FormControl>
             </GridItem>
           </Grid>
