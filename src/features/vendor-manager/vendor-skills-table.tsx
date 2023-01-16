@@ -1,15 +1,20 @@
 import React, { useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
-import { useTrades } from 'api/vendor-details'
-import { NewVendorSkillsModal } from './new-vendor-skill-modal'
 import { dateFormat } from 'utils/date-time-utils'
-import { VENDOR_MANAGER } from './vendor-manager.i18n'
-import { Market } from 'types/vendor.types'
+import { ColumnDef, SortingState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
-import Table from 'components/table-refactored/table'
-import { ColumnDef } from '@tanstack/react-table'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
+import { Table } from 'components/table-refactored/table'
+import { ExportButton } from 'components/table-refactored/export-button'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { TableNames } from 'types/table-column.types'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { useTrades } from 'api/vendor-details'
+import { Market } from 'types/vendor.types'
+import { NewVendorSkillsModal } from './new-vendor-skill-modal'
+import { VENDOR_MANAGER } from './vendor-manager.i18n'
 
-export const VENDORE_SKILLS_COLUMNS: ColumnDef<any>[] = [
+export const VENDORSKILLS_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${VENDOR_MANAGER}.skills`,
     accessorKey: 'skill',
@@ -21,7 +26,9 @@ export const VENDORE_SKILLS_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${VENDOR_MANAGER}.createdDate`,
     accessorKey: 'createdDate',
-    accessorFn: cellInfo => dateFormat(cellInfo.createdDate),
+    accessorFn(cellInfo) {
+      return cellInfo.createdDate ? dateFormat(cellInfo.createdDate) : '- - -'
+    },
     meta: { format: 'date' },
   },
   {
@@ -31,17 +38,27 @@ export const VENDORE_SKILLS_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${VENDOR_MANAGER}.modifiedDate`,
     accessorKey: 'modifiedDate',
-    accessorFn: cellInfo => dateFormat(cellInfo.modifiedDate),
+    accessorFn(cellInfo) {
+      return cellInfo.modifiedDate ? dateFormat(cellInfo.modifiedDate) : '- - -'
+    },
     meta: { format: 'date' },
   },
 ]
 
-export const VendorSkillsTable = () => {
-  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+export const VendorSkillsTable: React.FC<{}> = () => {
+  const [sorting, setSorting] = React.useState<SortingState>([])
   const { data: VendorSkills, isLoading, refetch } = useTrades()
   const [selectedVendorSkills, setSelectedVendorSkills] = useState<Market>()
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendorSkills)
+  const { tableColumns, settingColumns } = useTableColumnSettings(VENDORSKILLS_COLUMNS, TableNames.vendorSkills)
+  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+
+  const onSave = columns => {
+    postGridColumn(columns)
+  }
+
   return (
-    <Box overflow="auto" roundedTop={8}>
+    <Box overflow="auto">
       <NewVendorSkillsModal
         selectedVendorSkills={selectedVendorSkills}
         onClose={() => {
@@ -51,16 +68,30 @@ export const VendorSkillsTable = () => {
         }}
         isOpen={isOpen}
       />
-
-      <Box overflow={'auto'} h="calc(100vh - 160px)" roundedTop={6} border="1px solid #CBD5E0">
-        <TableContextProvider data={VendorSkills} columns={VENDORE_SKILLS_COLUMNS}>
+      <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" roundedTop={6}>
+        <TableContextProvider data={VendorSkills} columns={tableColumns} sorting={sorting} setSorting={setSorting}>
           <Table
-            isLoading={isLoading}
             onRowClick={row => {
               setSelectedVendorSkills(row)
               onOpen()
             }}
+            isLoading={isLoading}
+            isEmpty={!isLoading && !VendorSkills?.length}
           />
+          <TableFooter position="sticky" bottom="0" left="0" right="0">
+            <ButtonsWrapper>
+              <ExportButton
+                columns={tableColumns}
+                colorScheme="brand"
+                fileName="VendorSkills"
+                refetch={refetch}
+                isLoading={isLoading}
+              />
+              <CustomDivider />
+
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            </ButtonsWrapper>
+          </TableFooter>
         </TableContextProvider>
       </Box>
     </Box>
