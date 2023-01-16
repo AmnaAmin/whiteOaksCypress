@@ -32,7 +32,15 @@ import { useProjectWorkOrders } from 'api/projects'
 import { STATUS } from 'features/common/status'
 import { DOCUMENT_TYPES } from 'constants/documents.constants'
 
-export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
+export type DocumentProps = {
+  isOpen: boolean
+  projectId? : string
+  onClose: () => void
+}
+
+export const UploadDocumentModal: React.FC<DocumentProps> = ({isOpen, onClose, projectId}) => {
+
+// export const UploadDocumentModal = (isOpen, onClose, projectId) => {
   const { t } = useTranslation()
   const [documentType] = useState<SelectOption | undefined>()
   const { mutate: saveDocument, isLoading } = useUploadDocument()
@@ -73,10 +81,10 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     const workOrderId = formValues?.against?.value?.id?.toString() || ''
     console.log('formValues', formValues)
 
-    let documentPayload
+    let documentPayload = [] as any
     let fileDoc
     const results = await Promise.all(
-      formValues?.chooseFile.map(async (docFile: any, index: number) => {
+      formValues?.chooseFile.map(async (docFile: any) => {
         console.log('docFile', docFile)
         fileDoc = await createDocumentPayload(docFile, formValues?.documentTypes?.value?.toString())
         console.log('fileDoc', fileDoc)
@@ -86,6 +94,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     )
     // documentPayload.push(results)
     // console.log('results', results)
+    console.log('documentPayload', documentPayload)
 
     // let chFile
     // formValues?.chooseFile &&
@@ -98,104 +107,77 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     //   })
     // console.log('chFile', chFile)
 
-    const documents = formValues.documents.forEach(async file => {
-    const documentPayload = await createDocumentPayload(
-      formValues.chooseFile[0],
-      formValues?.documentTypes?.value?.toString(),
-    )
+    // const documents = formValues.documents.forEach(async file => {
+    //   const documentPayload = await createDocumentPayload(
+    //     formValues.chooseFile[0],
+    //     formValues?.documentTypes?.value?.toString(),
+    //   )
 
-    const doc: Document = {
-      ...documentPayload,
-      projectId,
-      vendorId,
-      workOrderId,
+      const doc: Document = {
+        ...documentPayload,
+        projectId,
+        vendorId,
+        workOrderId,
+      }
+
+      saveDocument(doc, {
+        onSuccess() {
+          onClose()
+          reset()
+        },
+      })
     }
 
-    saveDocument(doc, {
-      onSuccess() {
-        onClose()
-        reset()
-      },
+    const watchField = useWatch({
+      control,
+      name: 'documentTypes',
     })
-  }
+    const watchPermitOption = watchField?.label === 'Permit'
 
-  const watchField = useWatch({
-    control,
-    name: 'documentTypes',
-  })
-  const watchPermitOption = watchField?.label === 'Permit'
+    const [modalSize, setModalSize] = useState<string>('3xl')
 
-  const [modalSize, setModalSize] = useState<string>('3xl')
+    useEffect(() => {
+      isMobile ? setModalSize('sm') : setModalSize('3xl')
+    }, [isMobile])
 
-  useEffect(() => {
-    isMobile ? setModalSize('sm') : setModalSize('3xl')
-  }, [isMobile])
-
-  return (
-    <Modal
-      isCentered
-      isOpen={isOpen}
-      onClose={() => {
-        onClose()
-        reset()
-      }}
-      size={modalSize}
-      variant="custom"
-    >
-      <ModalOverlay />
-      <ModalContent minH="317px">
-        <ModalHeader>{t('uploadDocument')}</ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} onClick={() => reset()} />
-        {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
-        <ModalBody>
-          <form onSubmit={handleSubmit(onSubmit)} id="ReactHookFrom">
-            {isDocumentTypesLoading ? (
-              <ViewLoader />
-            ) : (
-              <HStack h="90px">
-                <Grid gridTemplateColumns={{ md: '215px 215px 215px', sm: '' }} gap="15px">
-                  <GridItem>
-                    <FormControl isInvalid={!!errors?.documentTypes} data-testid="document-type">
-                      <FormLabel htmlFor="documentType" variant="strong-label" size="md">
-                        {t('documentType')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        name="documentTypes"
-                        rules={{ required: 'Document type is required' }}
-                        render={({ field: { onChange, value, name, ref }, fieldState }) => {
-                          return (
-                            <>
-                              <ReactSelect
-                                options={docTypes}
-                                selectProps={{ isBorderLeft: true, menuHeight: '200px' }}
-                                value={documentType}
-                                onChange={onChange}
-                              />
-
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem>
-                  {watchPermitOption && (
+    return (
+      <Modal
+        isCentered
+        isOpen={isOpen}
+        onClose={() => {
+          onClose()
+          reset()
+        }}
+        size={modalSize}
+        variant="custom"
+      >
+        <ModalOverlay />
+        <ModalContent minH="317px">
+          <ModalHeader>{t('uploadDocument')}</ModalHeader>
+          <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} onClick={() => reset()} />
+          {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
+          <ModalBody>
+            <form onSubmit={handleSubmit(onSubmit)} id="ReactHookFrom">
+              {isDocumentTypesLoading ? (
+                <ViewLoader />
+              ) : (
+                <HStack h="90px">
+                  <Grid gridTemplateColumns={{ md: '215px 215px 215px', sm: '' }} gap="15px">
                     <GridItem>
-                      <FormControl isInvalid={!!errors?.against} data-testid="document-type">
+                      <FormControl isInvalid={!!errors?.documentTypes} data-testid="document-type">
                         <FormLabel htmlFor="documentType" variant="strong-label" size="md">
-                          {t('against')}
+                          {t('documentType')}
                         </FormLabel>
                         <Controller
                           control={control}
-                          name="against"
-                          rules={{ required: 'Against type is required' }}
-                          render={({ field: { onChange, onBlur, value, name, ref }, fieldState }) => {
+                          name="documentTypes"
+                          rules={{ required: 'Document type is required' }}
+                          render={({ field: { onChange, value, name, ref }, fieldState }) => {
                             return (
                               <>
                                 <ReactSelect
-                                  options={workOderState}
-                                  selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
+                                  options={docTypes}
+                                  selectProps={{ isBorderLeft: true, menuHeight: '200px' }}
                                   value={documentType}
                                   onChange={onChange}
                                 />
@@ -207,9 +189,36 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         />
                       </FormControl>
                     </GridItem>
-                  )}
+                    {watchPermitOption && (
+                      <GridItem>
+                        <FormControl isInvalid={!!errors?.against} data-testid="document-type">
+                          <FormLabel htmlFor="documentType" variant="strong-label" size="md">
+                            {t('against')}
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            name="against"
+                            rules={{ required: 'Against type is required' }}
+                            render={({ field: { onChange, onBlur, value, name, ref }, fieldState }) => {
+                              return (
+                                <>
+                                  <ReactSelect
+                                    options={workOderState}
+                                    selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
+                                    value={documentType}
+                                    onChange={onChange}
+                                  />
 
-                  {/* <GridItem>
+                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                </>
+                              )
+                            }}
+                          />
+                        </FormControl>
+                      </GridItem>
+                    )}
+
+                    {/* <GridItem>
                     <FormControl isInvalid={!!errors?.chooseFile}>
                       <FormLabel htmlFor="chooseFile" variant="strong-label" size="md">
                         {t('uploadFile')}
@@ -244,59 +253,59 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                       />
                     </FormControl>
                   </GridItem> */}
-                </Grid>
-              </HStack>
-            )}
-            <>
-              <FormControl isInvalid={!!errors?.chooseFile}>
-                <Controller
-                  control={control}
-                  name="chooseFile"
-                  rules={{
-                    validate: files => {
-                      const fileLengthExceeded = files?.some(file => file?.name?.length > 255)
-                      return fileLengthExceeded ? 'File name length should be less than 255' : true
-                    },
-                    required: 'Document file is required',
-                  }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <>
-                        <FileDragDrop
-                          isRequired
-                          testId="choose-document"
-                          name={field.name}
-                          onUpload={(docs: any) => {
-                            field.onChange(docs)
-                          }}
-                        />
-                        <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
-                      </>
-                    )
-                  }}
-                />
-              </FormControl>
-            </>
-          </form>
-        </ModalBody>
-        <ModalFooter>
-          <HStack spacing="16px">
-            <Button
-              variant="outline"
-              onClick={() => {
-                onClose()
-                reset()
-              }}
-              colorScheme="brand"
-            >
-              {t('cancel')}
-            </Button>
-            <Button type="submit" isDisabled={isLoading} colorScheme="brand" form="ReactHookFrom">
-              {t('save')}
-            </Button>
-          </HStack>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  )
-}
+                  </Grid>
+                </HStack>
+              )}
+              <>
+                <FormControl isInvalid={!!errors?.chooseFile}>
+                  <Controller
+                    control={control}
+                    name="chooseFile"
+                    rules={{
+                      validate: files => {
+                        const fileLengthExceeded = files?.some(file => file?.name?.length > 255)
+                        return fileLengthExceeded ? 'File name length should be less than 255' : true
+                      },
+                      required: 'Document file is required',
+                    }}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <>
+                          <FileDragDrop
+                            isRequired
+                            testId="choose-document"
+                            name={field.name}
+                            onUpload={(docs: any) => {
+                              field.onChange(docs)
+                            }}
+                          />
+                          <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                        </>
+                      )
+                    }}
+                  />
+                </FormControl>
+              </>
+            </form>
+          </ModalBody>
+          <ModalFooter>
+            <HStack spacing="16px">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  onClose()
+                  reset()
+                }}
+                colorScheme="brand"
+              >
+                {t('cancel')}
+              </Button>
+              <Button type="submit" isDisabled={isLoading} colorScheme="brand" form="ReactHookFrom">
+                {t('save')}
+              </Button>
+            </HStack>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    )
+  }
