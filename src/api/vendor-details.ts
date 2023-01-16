@@ -3,6 +3,7 @@ import _ from 'lodash'
 import { useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import orderBy from 'lodash/orderBy'
 import {
   License,
   Market,
@@ -202,7 +203,7 @@ export const useTrades = () => {
   return useQuery<Array<Trade>>('trades', async () => {
     const response = await client(`vendor-skills`, {})
 
-    return response?.data
+    return orderBy(response?.data || [], ['id'], ['desc'])
   })
 }
 

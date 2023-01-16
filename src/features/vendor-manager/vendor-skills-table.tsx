@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box } from '@chakra-ui/react'
+import { Box, useDisclosure } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef, SortingState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
@@ -51,6 +51,7 @@ export const VendorSkillsTable: React.FC<{}> = () => {
   const [selectedVendorSkills, setSelectedVendorSkills] = useState<Market>()
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendorSkills)
   const { tableColumns, settingColumns } = useTableColumnSettings(VENDORSKILLS_COLUMNS, TableNames.vendorSkills)
+  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
   const onSave = columns => {
     postGridColumn(columns)
@@ -58,19 +59,22 @@ export const VendorSkillsTable: React.FC<{}> = () => {
 
   return (
     <Box overflow="auto">
-      {selectedVendorSkills && (
-        <NewVendorSkillsModal
-          isOpen={selectedVendorSkills ? true : false}
-          onClose={() => {
-            setSelectedVendorSkills(undefined)
-          }}
-          selectedVendorSkills={selectedVendorSkills}
-        />
-      )}
-      <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderBottomRadius="6px">
+      <NewVendorSkillsModal
+        selectedVendorSkills={selectedVendorSkills}
+        onClose={() => {
+          refetch()
+          setSelectedVendorSkills(undefined)
+          onCloseDisclosure()
+        }}
+        isOpen={isOpen}
+      />
+      <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" roundedTop={6}>
         <TableContextProvider data={VendorSkills} columns={tableColumns} sorting={sorting} setSorting={setSorting}>
           <Table
-            onRowClick={row => setSelectedVendorSkills(row)}
+            onRowClick={row => {
+              setSelectedVendorSkills(row)
+              onOpen()
+            }}
             isLoading={isLoading}
             isEmpty={!isLoading && !VendorSkills?.length}
           />
