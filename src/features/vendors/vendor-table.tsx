@@ -14,6 +14,8 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { Vendor as VendorType } from 'types/vendor.types'
 import Vendor from './selected-vendor-modal'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useUser } from 'api/user-management'
+import { useAuth } from 'utils/auth-context'
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
@@ -105,15 +107,16 @@ type ProjectProps = {
   selectedCard: string
 }
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
-  const { vendors : allVendors, isLoading } = useVendor()
+  const { vendors: allVendors, isLoading } = useVendor()
   const { isFPM } = useUserRolesSelector()
 
   // FPM portal -> Show vendors having same market as the logged in FPM
-  const fpmMarketIds = [9, 30]
-  const { fpmVendors } = useFPMVendor(fpmMarketIds)
-  const vendors = isFPM ? fpmVendors : allVendors
+  const { data: account } = useAuth()
+  const { data: userInfo } = useUser(account?.user?.email)
+  const marketIDs = userInfo?.markets?.map(m => m.id)
+  const { fpmVendors } = useFPMVendor(marketIDs)
 
-  console.log('fpmVendors', fpmVendors)
+  const vendors = isFPM ? fpmVendors : allVendors
   const [filterVendors, setFilterVendors] = useState(vendors)
 
   useEffect(() => {
