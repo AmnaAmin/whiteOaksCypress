@@ -79,9 +79,23 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
         flex="1"
         position="relative"
         overflow="hidden"
+        sx={{
+          '@media only screen and (max-width: 480px)': {
+            width: '100% !important',
+          },
+        }}
       >
         {value && (
-          <Flex rounded="6px" alignItems="center" height="40px">
+          <Flex
+            rounded="6px"
+            alignItems="center"
+            height="40px"
+            sx={{
+              '@media only screen and (max-width: 480px)': {
+                width: '100% !important',
+              },
+            }}
+          >
             <Text
               whiteSpace="nowrap"
               title={value as string}
@@ -93,10 +107,28 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
               isTruncated
               w="170px"
               textAlign="start"
+              sx={{
+                '@media only screen and (max-width: 480px)': {
+                  position: 'relative',
+                  left: '0',
+                },
+              }}
             >
               {value}
             </Text>
-            <Button type="button" variant="link" size="xl" colorScheme={isError ? 'red' : 'darkPrimary'} bg="white">
+            <Button
+              type="button"
+              variant="link"
+              size="xl"
+              colorScheme={isError ? 'red' : 'darkPrimary'}
+              bg="white"
+              sx={{
+                '@media only screen and (max-width: 480px)': {
+                  position: 'relative',
+                  left: '26%',
+                },
+              }}
+            >
               <BiUpload />
             </Button>
           </Flex>

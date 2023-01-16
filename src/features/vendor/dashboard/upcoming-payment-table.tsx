@@ -26,6 +26,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { TableNames } from 'types/table-column.types'
 import Status from 'features/common/status'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { currencyFormatter } from 'utils/string-formatters'
 
 export const UpcomingPaymentTable = () => {
   const { t } = useTranslation()
@@ -73,6 +74,18 @@ export const UpcomingPaymentTable = () => {
       accessorFn: row => dateFormat(row.expectedPaymentDate),
       meta: { format: 'date' },
     },
+    {
+      header: t(`${DASHBOARD}.invoiceDate`),
+      accessorKey: 'dateInvoiceSubmitted',
+      accessorFn: row => dateFormat(row.dateInvoiceSubmitted),
+      meta: { format: 'date' },
+    },
+    {
+      header: t(`${DASHBOARD}.finalInvoice`),
+      accessorKey: 'finalInvoiceAmount',
+      accessorFn: row => currencyFormatter(row.finalInvoiceAmount),
+      meta: { format: 'currency' },
+    },
   ]
 
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
@@ -97,7 +110,7 @@ export const UpcomingPaymentTable = () => {
   )
 
   return (
-    <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderRadius="6px">
+    <Box overflowX="auto" minH="calc(100vh - 500px)" border="1px solid #CBD5E0" borderRadius="6px">
       <TableContextProvider
         data={workOrders}
         columns={tableColumns}
@@ -106,14 +119,14 @@ export const UpcomingPaymentTable = () => {
         setPagination={setPagination}
         setColumnFilters={setColumnFilters}
       >
-        <Table onRowClick={() => {}} isLoading={isLoading} isEmpty={!isLoading && !workOrders?.length} />
+        <Table isLoading={isLoading} isEmpty={!isLoading && !workOrders?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
               columns={tableColumns}
               refetch={refetch}
               isLoading={isExportDataLoading}
-              colorScheme="darkBlue"
+              colorScheme="darkPrimary"
               fileName="upcoming-payment"
             />
             <CustomDivider />

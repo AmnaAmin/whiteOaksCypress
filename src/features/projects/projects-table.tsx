@@ -132,8 +132,9 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   }
 
   return (
-    <Box overflow={'auto'} height="calc(100vh - 100px)" roundedTop={6} border="1px solid #CBD5E0">
+    <Box overflowX={'auto'} minH="calc(100vh - 370px)" roundedTop={6} border="1px solid #CBD5E0">
       <TableContextProvider
+        id="projects"
         data={projects}
         columns={tableColumns}
         pagination={pagination}
@@ -144,7 +145,12 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         setColumnFilters={setColumnFilters}
         totalPages={totalPages}
       >
-        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !projects?.length} />
+        <Table
+          allowStickyFilters={true}
+          isLoading={isLoading}
+          onRowClick={onRowClick}
+          isEmpty={!isLoading && !projects?.length}
+        />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton

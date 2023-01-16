@@ -136,9 +136,9 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
   return (
     <ReactSelect
-      {...props}
       ref={ref}
       chakraStyles={chakraStyles}
+      {...props}
       components={{
         IndicatorSeparator: false,
         SingleValue: option => {

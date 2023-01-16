@@ -17,7 +17,7 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { ClientFormValues } from 'types/client.type'
@@ -89,6 +89,9 @@ export const Details: React.FC<clientDetailProps> = props => {
     control,
     name: 'accountPayableContactInfos',
   })
+
+  const phoneNumberRef = useRef<any>()
+  const phoneNumberRef2 = useRef<any>()
 
   return (
     <Box>
@@ -354,7 +357,16 @@ export const Details: React.FC<clientDetailProps> = props => {
                     </FormLabel>
                     <Controller
                       control={control}
-                      {...register(`contacts.${index}.phoneNumber`, { required: 'This is required' })}
+                      {...register(`contacts.${index}.phoneNumber`, {
+                        required: 'This is required',
+                        validate: (value: any) => {
+                          if (phoneNumberRef.current) {
+                            if (phoneNumberRef.current.value.replace(/\D+/g, '').length === 10) return true
+                          }
+
+                          return false
+                        },
+                      })}
                       render={({ field }) => {
                         return (
                           <>
@@ -368,10 +380,15 @@ export const Details: React.FC<clientDetailProps> = props => {
                               placeholder="(___)-___-____"
                               isDisabled={isProjectCoordinator}
                               variant={'required-field'}
+                              getInputRef={phoneNumberRef}
                             />
                             <FormErrorMessage>
                               {errors?.contacts?.[index]?.phoneNumber &&
                                 errors?.contacts?.[index]?.phoneNumber?.message}
+                              {errors?.contacts?.[index]?.phoneNumber &&
+                                errors?.contacts?.[index]?.phoneNumber!.type === 'validate' && (
+                                  <span>Phone number should be a 10-digit number</span>
+                                )}
                             </FormErrorMessage>
                           </>
                         )
@@ -509,7 +526,16 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
                   <Controller
                     control={control}
-                    {...register(`accountPayableContactInfos.${index}.phoneNumber`, { required: 'This is required' })}
+                    {...register(`accountPayableContactInfos.${index}.phoneNumber`, {
+                      required: 'This is required',
+                      validate: (value: any) => {
+                        if (phoneNumberRef2.current) {
+                          if (phoneNumberRef2.current.value.replace(/\D+/g, '').length === 10) return true
+                        }
+
+                        return false
+                      },
+                    })}
                     render={({ field }) => {
                       return (
                         <>
@@ -523,10 +549,15 @@ export const Details: React.FC<clientDetailProps> = props => {
                             placeholder="(___)-___-____"
                             isDisabled={isProjectCoordinator}
                             variant={'required-field'}
+                            getInputRef={phoneNumberRef2}
                           />
                           <FormErrorMessage>
                             {errors?.accountPayableContactInfos?.[index]?.phoneNumber &&
                               errors?.accountPayableContactInfos?.[index]?.phoneNumber?.message}
+                            {errors?.accountPayableContactInfos?.[index]?.phoneNumber &&
+                              errors?.accountPayableContactInfos?.[index]?.phoneNumber!.type === 'validate' && (
+                                <span>Phone number should be a 10-digit number</span>
+                              )}
                           </FormErrorMessage>
                         </>
                       )

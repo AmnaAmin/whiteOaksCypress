@@ -208,7 +208,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const isShowCheckboxes = !isApproved && transactionFields?.length > 1 && !isSysFactoringFee
 
   return (
-    <Box overflowX="auto" w="100%">
+    <Box overflowX={isApproved ? 'initial' : 'auto'} w="100%">
       <VStack alignItems="start" w="720px">
         <Flex w="720px" mt="10px" mb="15px">
           {!isApproved && (
@@ -332,7 +332,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
             {(!isApproved || !isSysFactoringFee) &&
               (document && !document.s3Url ? (
-                <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+                <Box color="#345EA6" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
                   <HStack spacing="5px" h="31px" padding="10px" align="center">
                     <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
                       {document?.name || document.fileType}
@@ -366,6 +366,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   size="sm"
                   colorScheme="darkPrimary"
                   color="darkPrimary.300"
+                  border={'1px solid #345EA6'}
                   isDisabled={isApproved || !values?.transactionType?.value || isSysFactoringFee}
                 >
                   {t(`${TRANSACTION}.attachment`)}
@@ -376,12 +377,14 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
         <Flex
           borderStyle="solid"
-          borderColor="gray.200"
+          borderColor="gray.300"
           borderWidth="1px 1px 1px 1px"
           flex="1"
           pos="relative"
           flexDirection="column"
           rounded={6}
+          w="100%"
+          minH="36vh"
         >
           <Grid
             gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
@@ -393,14 +396,14 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             gap="1rem 4rem"
             borderWidth="0 0 1px 0"
             borderStyle="solid"
-            borderColor="gray.200"
+            borderColor="gray.300"
             roundedTop={6}
           >
             {isShowCheckboxes && (
               <GridItem id="all-checkbox">
                 <Checkbox
                   variant="normal"
-                  colorScheme="CustomPrimaryColor"
+                  colorScheme="PrimaryCheckBox"
                   isChecked={allChecked}
                   isDisabled={isApproved || isSysFactoringFee}
                   isIndeterminate={isIndeterminate}
@@ -413,7 +416,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           </Grid>
           {isMaterialsLoading ? (
             <Center>
-              <VStack>
+              <VStack justifyContent="center" mt="60px">
                 <Spinner size="lg" />
                 <FormLabel variant={'light-label'} color="brand.300">
                   {t(`${TRANSACTION}.scanningMessage`)}
@@ -437,13 +440,14 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     className="amount-input-row"
                     key={transactionField.id}
                     gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
-                    p="4"
+                    p={isApproved ? '3' : '4'}
                     fontSize="14px"
                     color="gray.600"
                     gap="2rem 4rem"
                     borderWidth={'0 0 1px 0'}
                     borderStyle="solid"
-                    borderColor="gray.200"
+                    borderColor="gray.300"
+                    height={isApproved ? '40px' : 'auto'}
                   >
                     {isShowCheckboxes && (
                       <GridItem>
@@ -561,13 +565,20 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               columnGap="4rem"
               borderWidth="1px 0 0 0"
               borderStyle="solid"
-              borderColor="gray.200"
+              borderColor="gray.300"
               bg="white"
               rounded={6}
+              height={isApproved ? '40px' : 'auto'}
             >
               {isShowCheckboxes && <GridItem />}
-              <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.200" py="4"></GridItem>
-              <GridItem py="4" fontWeight="bold" data-testid="total-amount">
+              <GridItem
+                borderWidth="0 1px 0 0"
+                borderStyle="solid"
+                borderColor="gray.300"
+                py="4"
+                height={isApproved ? '40px' : 'auto'}
+              ></GridItem>
+              <GridItem py={isApproved ? '3' : '4'} fontWeight="bold" data-testid="total-amount">
                 {t('total')}: {totalAmount}
               </GridItem>
             </Grid>
@@ -576,7 +587,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 
         <ConfirmationBox
           title="Are You Sure?"
-          content="Do you really want to delete these items? This process cannot be undone."
+          content="Do you want to proceed? This process cannot be undone. "
           isOpen={isDeleteConfirmationModalOpen}
           onClose={onDeleteConfirmationModalClose}
           onConfirm={deleteRows}

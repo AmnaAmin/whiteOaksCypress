@@ -568,18 +568,18 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
           onClick={() => inputRef?.current?.click()}
           colorScheme="darkPrimary"
           variant="outline"
-          leftIcon={<BiUpload color="#4E87F8" />}
+          leftIcon={<BiUpload color="brand.300" />}
           display="flex"
         >
           {t(`${WORK_ORDER}.${label}`)}
         </Button>
       ) : (
-        <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+        <Box color="brand.300" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
           <HStack spacing="5px" h="31px" padding="10px" align="center">
             <Text as="span" maxW="70px" isTruncated title="something">
               {value}
             </Text>
-            <MdOutlineCancel cursor="pointer" onClick={onFileClear} />
+            <MdOutlineCancel color="brand.300" cursor="pointer" onClick={onFileClear} />
           </HStack>
         </Box>
       )}
@@ -607,8 +607,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
   doc.setFont(basicFont, 'bold')
   doc.text(heading, startx, 20)
   var img = new Image()
-  const isDevelopment = process.env.NODE_ENV === 'development'
-  img.src = isDevelopment ? 'wo-logo-tree.png' : '/vendorportal/wo-logo-tree.png'
+  img.src = 'wo-logo-tree.png'
   img.onload = function () {
     doc.addImage(img, 'png', 160, 5, 35, 35)
 
@@ -691,7 +690,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     })
     doc.setFontSize(10)
     doc.setFont(basicFont, 'normal')
-    doc.save('Assigned Line Items.pdf')
+    doc.save(`${workOrder?.id}_${workOrder?.companyName}_${workOrder?.propertyAddress}.pdf`)
   }
 }
 
@@ -721,8 +720,9 @@ export const useActionsShowDecision = ({ workOrder }) => {
 
   return {
     showPriceCheckBox: !isVendor,
+    notifyVendorCheckBox: !isVendor,
     showMarkAllIsVerified: !isVendor && workOrder,
-    showMarkAllIsComplete: isVendor,
+    showMarkAllIsCompleted: !!workOrder,
     showVerification: !!workOrder,
   }
 }
@@ -1255,7 +1255,7 @@ export const useGetLineItemsColumn = ({
         },
       },
     ]
-  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems])
+  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems, verificationEnabled])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
 }

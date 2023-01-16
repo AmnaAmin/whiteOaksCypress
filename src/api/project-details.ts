@@ -289,6 +289,8 @@ export const parseFormValuesFromAPIData = ({
   projectManagerSelectOptions,
   clientSelectOptions,
   overPayment,
+  stateSelectOptions,
+  marketSelectOptions,
 }: {
   project?: Project
   projectExtraAttributes?: ProjectExtraAttributesType
@@ -297,13 +299,17 @@ export const parseFormValuesFromAPIData = ({
   projectCoordinatorSelectOptions?: SelectOption[]
   projectManagerSelectOptions?: SelectOption[]
   clientSelectOptions?: SelectOption[]
+  stateSelectOptions?: any
+  marketSelectOptions?: SelectOption[]
 }): ProjectDetailsFormValues | Object => {
   if (
     !project ||
     !projectTypeSelectOptions ||
     !projectCoordinatorSelectOptions ||
     !projectManagerSelectOptions ||
-    !clientSelectOptions
+    !clientSelectOptions ||
+    !stateSelectOptions ||
+    !marketSelectOptions
   ) {
     return {}
   }
@@ -311,9 +317,15 @@ export const parseFormValuesFromAPIData = ({
   const findOptionByValue = (options: SelectOption[], value: string | number | null): SelectOption | null =>
     options.find(option => option.value === value) || null
 
+  // Due to corrupt data, getting state on the basis of id and code so using both the values 
+  const stateValue = stateSelectOptions?.find(b => b?.value === (project?.state))
+  const stateIdValue = stateSelectOptions?.find(b => b?.id === Number(project?.state))
+
+  const marketValue = marketSelectOptions?.find(b => b?.label === project?.market)
+
   const projectStatusSelectOptions = getProjectStatusSelectOptions()
   const remainingPayment = project.accountRecievable || 0
-
+ 
   return {
     // Project Management form values
     status: findOptionByValue(projectStatusSelectOptions, project.projectStatusId),
@@ -360,9 +372,9 @@ export const parseFormValuesFromAPIData = ({
     // Location Form values
     address: project.streetAddress,
     city: project.city,
-    state: project.state,
+    state: stateValue ? stateValue : stateIdValue,
     zip: project.zipCode,
-    market: project.market,
+    market: marketValue,
     gateCode: project.gateCode,
     lockBoxCode: project.lockBoxCode,
     hoaContactEmail: project.hoaEmailAddress,
@@ -448,9 +460,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
     // Location
     streetAddress: formValues?.address,
     city: formValues?.city,
-    state: formValues?.state,
+    state: formValues?.state?.value || null,
     zipCode: formValues?.zip,
-    market: formValues?.market,
+    market: formValues?.market?.label || null,
     gateCode: formValues?.gateCode,
     lockBoxCode: formValues?.lockBoxCode,
     hoaPhone: formValues?.hoaContactPhoneNumber,
@@ -460,7 +472,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     property: {
       streetAddress: formValues?.address,
       city: formValues?.city,
-      state: formValues?.state,
+      state: formValues?.state?.value,
       zipCode: formValues?.zip,
     },
 

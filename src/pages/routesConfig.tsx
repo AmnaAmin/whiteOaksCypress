@@ -21,7 +21,7 @@ import { SupportTickets } from './admin/support-tickets'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
-const VendorProfilePage = lazy(() => import('pages/vendor/vendor-profile'))
+const VendorProfilePage = lazy(() => import('pages/vendor/vendor-profile-v-portal'))
 const VendorProjectDetails = lazy(() => import('pages/vendor/project-details'))
 
 export default function useRoutesConfig() {

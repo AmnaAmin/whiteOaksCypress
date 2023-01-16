@@ -52,7 +52,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
         }))
       : null
 
-  const states = documentTypes
+  const docTypes = documentTypes
     ? documentTypes
         ?.filter(doc => ![DOCUMENT_TYPES.ORIGINAL_SOW].includes(doc.id))
         ?.map(state => ({
@@ -152,7 +152,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
             {isDocumentTypesLoading ? (
               <ViewLoader />
             ) : (
-              <HStack h="130px">
+              <HStack h="90px">
                 <Grid gridTemplateColumns={{ md: '215px 215px 215px', sm: '' }} gap="15px">
                   <GridItem>
                     <FormControl isInvalid={!!errors?.documentTypes} data-testid="document-type">
@@ -163,12 +163,12 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         control={control}
                         name="documentTypes"
                         rules={{ required: 'Document type is required' }}
-                        render={({ field: { onChange, onBlur, value, name, ref }, fieldState }) => {
+                        render={({ field: { onChange, value, name, ref }, fieldState }) => {
                           return (
                             <>
                               <ReactSelect
-                                options={states}
-                                selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
+                                options={docTypes}
+                                selectProps={{ isBorderLeft: true, menuHeight: '200px' }}
                                 value={documentType}
                                 onChange={onChange}
                               />

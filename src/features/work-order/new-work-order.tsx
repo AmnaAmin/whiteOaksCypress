@@ -266,8 +266,9 @@ export const NewWorkOrderForm: React.FC<{
 
   const watchLineItems = useWatch({ name: 'assignedItems', control })
 
-  // New WO -> Disable dates before client start date
+  // New WO -> Disable dates between client start date and client end date
   const clientStart = projectData?.clientStartDate
+  const clientEnd = projectData?.clientDueDate
 
   useEffect(() => {
     if (woStartDate! > woExpectedCompletionDate!) {
@@ -603,6 +604,7 @@ export const NewWorkOrderForm: React.FC<{
                         borderLeft="2px solid #4E87F8"
                         focusBorderColor="none"
                         min={woStartDate || (clientStart as any)}
+                        max={clientEnd as any}
                         {...register('workOrderStartDate', {
                           required: 'This field is required.',
                           validate: (date: any) => {

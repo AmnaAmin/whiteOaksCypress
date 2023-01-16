@@ -148,7 +148,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   heading,
 }) => {
   const { t } = useTranslation()
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isVendor } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -202,6 +202,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
+  const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
 
   const selectedWorkOrderStats = useMemo(() => {
@@ -242,6 +243,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowPaidBackDateField,
     isShowMarkAsField,
     isShowPaymentRecievedDateField,
+    isPaymentTermDisabled,
   } = useFieldShowHideDecision(control, transaction)
   const isAdminEnabled = isAdmin && isManualTransaction(transaction?.transactionType)
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control)
@@ -257,14 +259,32 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
+  useEffect(() => {
+    if (selectedWorkOrder?.awardPlanPayTerm && !transaction?.id) {
+      const paymentTermValue = {
+        value: selectedWorkOrder?.awardPlanPayTerm,
+        label: selectedWorkOrder?.awardPlanPayTerm as string,
+        title: selectedWorkOrder?.awardPlanPayTerm as string,
+      }
+      setValue('paymentTerm', paymentTermValue)
+    } else {
+      const updatedPaymentTerm = {
+        value: transaction?.paymentTerm,
+        label: transaction?.paymentTerm,
+        title: transaction?.paymentTerm,
+      }
+      setValue('paymentTerm', updatedPaymentTerm as any)
+    }
+  }, [selectedWorkOrder])
+
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
-      setValue('paymentTerm', null)
       setValue('invoicedDate', null)
       setValue('workOrder', null)
       setValue('changeOrder', null)
     } else {
       setValue('newExpectedCompletionDate', '')
+      setValue('paymentTerm', null)
     }
 
     resetExpectedCompletionDateFields(option)
@@ -393,7 +413,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               options={transactionTypeOptions}
                               isDisabled={isUpdateForm}
                               size="md"
-                              selectProps={{ isBorderLeft: true }}
+                              selectProps={{ isBorderLeft: true, menuHeight: isVendor ? '88px' : '188px' }}
                               onChange={async (option: SelectOption) => {
                                 const formValues = { ...defaultValues, transactionType: option }
 
@@ -567,7 +587,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 {...field}
                                 selectProps={{ isBorderLeft: true }}
                                 options={PAYMENT_TERMS_OPTIONS}
-                                isDisabled={isUpdateForm}
+                                isDisabled={isPaymentTermDisabled}
                                 onChange={paymentTermOption => {
                                   field.onChange(paymentTermOption)
                                 }}
@@ -832,7 +852,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-            isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg}
+            isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg || !invoicedDate}
             colorScheme="darkPrimary"
             onClick={event => {
               event.stopPropagation()

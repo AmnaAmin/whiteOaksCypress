@@ -7,20 +7,27 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Progress,
   useDisclosure,
 } from '@chakra-ui/react'
 import { SUPPORT } from 'features/support/support.i18n'
-import { CreateATicketForm } from 'pages/vendor/create-a-ticket'
-import { useCallback, useEffect } from 'react'
+import { CreateATicketForm } from 'pages/vendor/create-a-ticket-form'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export type ProjectTypeFormTypes = {
   onClose: () => void
   supportDetail?: any
   isOpen: boolean
+  supportPage?: string
 }
 
-export const SupportModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, supportDetail, isOpen }) => {
+export const SupportModal: React.FC<ProjectTypeFormTypes> = ({
+  onClose: close,
+  supportDetail,
+  isOpen,
+  supportPage,
+}) => {
   const { t } = useTranslation()
   const { onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
@@ -36,6 +43,7 @@ export const SupportModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, s
       onCloseDisclosure()
     }
   }, [onCloseDisclosure, onOpen, supportDetail])
+  const [isLoading, setLoading] = useState(false)
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>
@@ -45,7 +53,7 @@ export const SupportModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, s
           <FormLabel variant="strong-label" m={0}>
             {supportDetail ? (
               <>
-                {t(`${SUPPORT}.id`)} {supportDetail.id} | {t(`${SUPPORT}.editProjectType`)}
+                {t(`${SUPPORT}.id`)} {supportDetail.id} | {t(`${SUPPORT}.editTicket`)}
               </>
             ) : (
               t(`${SUPPORT}.newticket`)
@@ -53,10 +61,16 @@ export const SupportModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, s
           </FormLabel>
         </ModalHeader>
         <ModalCloseButton onClick={onClose} />
+        {isLoading && <Progress isIndeterminate colorScheme="brand" aria-label="loading" size="xs" />}
 
         <ModalBody p={0}>
           <Box>
-            <CreateATicketForm onClose={onClose} />
+            <CreateATicketForm
+              onClose={onClose}
+              supportPage={supportPage}
+              supportDetail={supportDetail}
+              setLoading={setLoading}
+            />
           </Box>
         </ModalBody>
       </ModalContent>

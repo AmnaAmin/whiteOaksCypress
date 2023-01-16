@@ -10,6 +10,7 @@ import {
   FormLabel,
   FormErrorMessage,
   Text,
+  Input,
 } from '@chakra-ui/react'
 import { MdOutlineCancel } from 'react-icons/md'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -17,7 +18,6 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { licenseTypes, useVendorNext } from 'api/vendor-details'
 import { FormSelect } from 'components/react-hook-form-fields/select'
 import { FormInput } from 'components/react-hook-form-fields/input'
-import { FormDatePicker } from 'components/react-hook-form-fields/date-picker'
 import { LicenseFormValues, VendorProfile } from 'types/vendor.types'
 import { useTranslation } from 'react-i18next'
 
@@ -27,6 +27,8 @@ import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 import { checkIsLicenseChanged } from './hook'
 import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
+import { AdminPortalVerifyLicense } from './verify-license'
+
 type LicenseProps = {
   vendor: VendorProfile
   onClose?: () => void
@@ -125,9 +127,9 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
   return (
     <Box>
       <VStack align="start" h="584px" spacing="15px" overflow="auto">
-        <Box>
+        <Box width={{ base: '100%', md: 'auto' }}>
           <Button
-            ml={'45px'}
+            ml={{ sm: '0px', md: '45px' }}
             variant="outline"
             colorScheme="darkPrimary"
             data-testid="addLicense"
@@ -140,6 +142,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
               })
             }
             leftIcon={<BiAddToQueue />}
+            width={{ base: '100%', md: 'auto' }}
           >
             {t('addLicense')}
           </Button>
@@ -155,12 +158,13 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
               <HStack
                 flexDir={{ base: 'column', sm: 'row' }}
                 key={license?.id}
-                mt="40px"
+                mt={{ base: '-40px', md: '40px' }}
                 spacing={4}
                 data-testid="licenseRows"
                 w="100%"
+                alignItems={{ base: '', md: 'center' }}
               >
-                <Box w="2em" color="#345EA6" fontSize="15px">
+                <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }}>
                   <Center>
                     <Icon
                       as={MdOutlineCancel}
@@ -182,7 +186,9 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   control={control}
                   options={getSelectOptions(index)}
                   rules={{ required: isActive && 'This is required field' }}
-                  controlStyle={{ maxW: '215px' }}
+                  controlStyle={{
+                    maxW: { ...{ sm: '95%', md: '215px' } },
+                  }}
                   elementStyle={{
                     bg: 'white',
                     borderLeft: '2px solid #345EA6',
@@ -194,7 +200,10 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   label={t('licenseNumber')}
                   placeholder=""
                   register={register}
-                  controlStyle={{ maxW: '215px' }}
+                  controlStyle={{
+                    w: { ...{ sm: '100%', md: '215px' } },
+                    maxW: { ...{ sm: '95%', md: '215px' } },
+                  }}
                   elementStyle={{
                     bg: 'white',
                   }}
@@ -203,20 +212,27 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   testId={`licenseNumber-` + index}
                   variant="required-field"
                 />
-                <FormDatePicker
-                  isRequired={true}
-                  placeholder="mm/dd/yy"
-                  errorMessage={errors.licenses && errors.licenses[index]?.expiryDate?.message}
-                  label={t('expiryDate')}
-                  name={`licenses.${index}.expiryDate`}
-                  control={control}
-                  rules={{ required: isActive && 'This is required field' }}
-                  style={{ maxW: '215px', h: '92px' }}
-                  defaultValue={startDate}
-                  testId={`expiryDate-` + index}
-                />
-                <VStack>
-                  <FormControl w="215px" h="92px" isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}>
+                <Box h="105px">
+                  <FormControl>
+                    <FormLabel variant="strong-label" size="md" color="#2D3748">
+                      {t('expiryDate')}
+                    </FormLabel>
+                    <Input
+                      w={{ base: '100%', md: '215px' }}
+                      type="date"
+                      variant="required-field"
+                      {...register(`licenses.${index}.expiryDate`)}
+                      data-testid={`expiryDate-` + index}
+                    />
+                  </FormControl>
+                </Box>
+
+                <VStack alignItems={{ base: '', md: 'center' }}>
+                  <FormControl
+                    w={{ base: '100%', md: '215px' }}
+                    h="92px"
+                    isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}
+                  >
                     <FormLabel size="md" color="#2D3748">
                       File Upload
                     </FormLabel>
@@ -229,7 +245,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                       render={({ field, fieldState }) => {
                         return (
                           <VStack alignItems="baseline">
-                            <Box>
+                            <Box w="100%">
                               <ChooseFileField
                                 testId={`expirationFile-` + index}
                                 name={field.name}
@@ -259,11 +275,18 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                     />
                   </FormControl>
                 </VStack>
+
                 {isLicenseChanged ? (
                   <>
                     <SaveChangedFieldAlert />
                   </>
-                ) : null}
+                ) : (
+                  <AdminPortalVerifyLicense
+                    currStatus={(vendor?.licenseDocuments[index] as any)?.status}
+                    fieldName={`licenseCheckbox${index}`}
+                    registerToFormField={register}
+                  />
+                )}
               </HStack>
             )
           })

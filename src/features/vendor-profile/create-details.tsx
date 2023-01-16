@@ -31,7 +31,7 @@ import {
   useTrades,
   useVendorNext,
 } from 'api/vendor-details'
-import { documentStatus, documentScore } from 'api/vendor-projects'
+import { documentStatus, documentScore, portalAccess } from 'api/vendor-projects'
 import first from 'lodash/first'
 import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
@@ -54,7 +54,37 @@ const CreateVendorDetail: React.FC<{
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
   const formValues = useWatch({ control })
 
+  const capacityError = useWatch({ name: 'capacity', control })
+
   const validatePayment = paymentsMethods?.filter(payment => formValues[payment.name])
+
+  const preventNumber = e => {
+    let keyCode = e.keyCode ? e.keyCode : e.which
+    //  to prevent the special characters and Numbers
+    if (
+      (keyCode > 47 && keyCode < 58) ||
+      keyCode === 36 ||
+      keyCode === 34 ||
+      keyCode === 35 ||
+      keyCode === 37 ||
+      keyCode === 38 ||
+      keyCode === 39 ||
+      keyCode === 40 ||
+      keyCode === 41 ||
+      keyCode === 42 ||
+      keyCode === 43 ||
+      keyCode === 44 ||
+      keyCode === 45 ||
+      keyCode === 46 ||
+      keyCode === 47 ||
+      keyCode === 64 ||
+      keyCode === 94 ||
+      keyCode === 63
+    ) {
+      e.preventDefault()
+    }
+  }
+
   return (
     <Stack spacing={3}>
       <Box height="498px" overflow="auto">
@@ -71,6 +101,7 @@ const CreateVendorDetail: React.FC<{
                 required: isActive && 'This is required',
               })}
               size="md"
+              onKeyPress={preventNumber}
             />
             <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName.message}</FormErrorMessage>
           </FormControl>
@@ -106,6 +137,22 @@ const CreateVendorDetail: React.FC<{
               )}
             />
           </FormControl>
+          <FormControl w="215px" isInvalid={!!errors.enableVendorPortal}>
+            <FormLabel variant="strong-label" size="md">
+              {t('portalAccess')}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="enableVendorPortal"
+              rules={{ required: isActive && 'This is required' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <ReactSelect options={portalAccess} {...field} />
+                  <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+          </FormControl>
         </HStack>
         <HStack spacing="16px" mt="30px">
           <FormControl w="215px" isInvalid={!!errors.ownerName}>
@@ -119,6 +166,7 @@ const CreateVendorDetail: React.FC<{
               })}
               variant="required-field"
               size="md"
+              onKeyPress={preventNumber}
             />
             <FormErrorMessage pos="absolute">{errors.ownerName?.message}</FormErrorMessage>
           </FormControl>
@@ -145,7 +193,7 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input type="text" {...register('secondName')} variant="outline" size="md" />
+            <Input type="text" {...register('secondName')} variant="outline" size="md" onKeyPress={preventNumber} />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -202,7 +250,13 @@ const CreateVendorDetail: React.FC<{
                 {t('ext')}
               </FormLabel>
 
-              <Input {...register('businessPhoneNumberExtension')} w="121px" variant="outline" size="md" />
+              <Input
+                {...register('businessPhoneNumberExtension')}
+                w="121px"
+                variant="outline"
+                size="md"
+                type="number"
+              />
             </FormControl>
             <Spacer w="95px" />
           </Flex>
@@ -239,7 +293,7 @@ const CreateVendorDetail: React.FC<{
                 {t('ext')}
               </FormLabel>
 
-              <Input {...register('secondPhoneNumberExtension')} w="121px" variant="outline" size="md" />
+              <Input {...register('secondPhoneNumberExtension')} type="number" w="121px" variant="outline" size="md" />
             </FormControl>
           </Box>
         </HStack>
@@ -275,6 +329,7 @@ const CreateVendorDetail: React.FC<{
                 w="215px"
                 variant="required-field"
                 size="md"
+                onKeyPress={preventNumber}
               />
               <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
             </FormControl>
@@ -335,6 +390,7 @@ const CreateVendorDetail: React.FC<{
               />
               <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
+            <Text color="red">{capacityError! > 500 ? 'Capacity should not be more than 500' : ''}</Text>
           </GridItem>
           <GridItem>
             <FormControl isInvalid={!!errors.einNumber}>
@@ -450,7 +506,7 @@ const CreateVendorDetail: React.FC<{
         pt="8px"
         mt="30px"
         id="footer"
-        borderTop="2px solid #E2E8F0"
+        borderTop="1px solid #E2E8F0"
         alignItems="center"
         justifyContent="end"
       >
@@ -502,6 +558,10 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
     setValue(
       'score',
       documentScore.find(s => s.value === vendorProfileData.score),
+    )
+    setValue(
+      'enableVendorPortal',
+      portalAccess.find(s => s.value === vendorProfileData.enableVendorPortal),
     )
     setValue(
       'status',

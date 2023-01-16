@@ -95,6 +95,7 @@ describe('New Work Order modal test cases', () => {
     expect(screen.getByTestId('addItemsBtn')).toBeInTheDocument()
     expect(screen.getByTestId('uploadWO')).toBeInTheDocument()
     expect(screen.getByTestId('showPriceCheckBox')).toBeInTheDocument()
+    //expect(screen.getByTestId('notifyVendorCheckBox')).toBeInTheDocument()
     expect(screen.queryByTestId('showMarkAllIsVerified')).not.toBeInTheDocument()
     expect(screen.queryByTestId('showMarkAllIsComplete')).not.toBeInTheDocument()
     expect(screen.queryByTestId('downloadPdf')).not.toBeInTheDocument()

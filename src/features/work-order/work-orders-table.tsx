@@ -79,7 +79,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
       {workOrders && (
         <Box
           w="100%"
-          minH="calc(100vh - 450px)"
+          minH="calc(100vh - 503px)"
           position="relative"
           borderRadius="6px"
           border="1px solid #CBD5E0"

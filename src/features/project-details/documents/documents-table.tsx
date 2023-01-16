@@ -7,7 +7,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { useDocuments } from 'api/vendor-projects'
 import { DOCUMENTS_TABLE_COLUMNS } from 'constants/documents.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
-import { ButtonsWrapper, TableFooter } from 'components/table-refactored/table-footer'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
 import { ExportCustomButton } from 'components/table-refactored/export-button'
 import {
@@ -18,6 +18,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
@@ -49,6 +50,8 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
 
   const onRowClick = row => {}
 
+  const { isVendor } = useUserRolesSelector()
+
   return (
     <>
       {isLoadingDocuments && (
@@ -58,14 +61,13 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
       )}
       {documents && (
         <Box
-          overflow={'auto'}
+          overflowX={'auto'}
           w="100%"
-          h="auto"
           position="relative"
           border="1px solid #CBD5E0"
           borderRadius="6px"
           roundedRight={{ base: '0px', sm: '6px' }}
-          minH={{ sm: 'auto', md: 'calc(100vh - 450px)' }}
+          minH={isVendor ? { sm: 'auto', md: 'calc(100vh - 370px)' } : { sm: 'auto', md: 'calc(100vh - 507px)' }}
         >
           <TableContextProvider
             totalPages={documents?.length ? totalPages : -1}
@@ -77,7 +79,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <ButtonsWrapper>
                 <ExportCustomButton columns={tableColumns} data={documents} fileName="documents" />
-
+                <CustomDivider />
                 {settingColumns && (
                   <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
                 )}
