@@ -36,13 +36,18 @@ import first from 'lodash/first'
 import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+
+const validateTelePhoneNumber = ( number: string ): boolean => {
+  return number ? number.match(/\d/g)?.length===10 : false;
+}
+
 const CreateVendorDetail: React.FC<{
   onClose?: () => void
   vendorProfileData: VendorProfile
   isActive: boolean
 }> = ({ onClose, vendorProfileData, isActive }) => {
   const { t } = useTranslation()
-
+ 
   const { data: paymentsMethods } = usePaymentMethods()
   const { stateSelectOptions } = useStates()
   const {
@@ -240,13 +245,16 @@ const CreateVendorDetail: React.FC<{
 
         <HStack spacing="4" my="30px">
           <Box w="215px">
-            <FormControl isInvalid={!!errors.businessPhoneNumber}>
+            <FormControl isInvalid={!!errors.businessPhoneNumber} h="70px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('businessPhoneNo')}
               </FormLabel>
               <Controller
                 control={control}
-                rules={{ required: isActive && 'This is required' }}
+                rules={{ 
+                  required: isActive && 'This is required',
+                  validate: ( number: string ) => validateTelePhoneNumber( number )
+                }}
                 name="businessPhoneNumber"
                 render={({ field, fieldState }) => {
                   return (
@@ -261,7 +269,7 @@ const CreateVendorDetail: React.FC<{
                         }}
                         isDisabled={isFPM}
                       />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      <FormErrorMessage>{fieldState.error && "Valid Phone Number Is Required" }</FormErrorMessage>
                     </>
                   )
                 }}
@@ -269,7 +277,7 @@ const CreateVendorDetail: React.FC<{
             </FormControl>
           </Box>
           <Flex>
-            <FormControl>
+            <FormControl h="70px">
               <FormLabel variant="strong-label" size="md">
                 {t('ext')}
               </FormLabel>
@@ -286,7 +294,7 @@ const CreateVendorDetail: React.FC<{
             <Spacer w="95px" />
           </Flex>
           <Box w="215px">
-            <FormControl>
+            <FormControl h="70px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('secondaryPhoneNo')}
               </FormLabel>
@@ -314,7 +322,7 @@ const CreateVendorDetail: React.FC<{
             </FormControl>
           </Box>
           <Box w="109px">
-            <FormControl>
+            <FormControl h="90px">
               <FormLabel variant="strong-label" size="md">
                 {t('ext')}
               </FormLabel>
