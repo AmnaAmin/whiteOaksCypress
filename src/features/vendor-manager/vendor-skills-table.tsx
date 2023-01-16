@@ -9,7 +9,7 @@ import { ExportButton } from 'components/table-refactored/export-button'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
-import {  useTrades } from 'api/vendor-details'
+import { useTrades } from 'api/vendor-details'
 import { Market } from 'types/vendor.types'
 import { NewVendorSkillsModal } from './new-vendor-skill-modal'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
@@ -48,7 +48,7 @@ export const VENDORSKILLS_COLUMNS: ColumnDef<any>[] = [
 export const VendorSkillsTable: React.FC<{}> = () => {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const { data: VendorSkills, isLoading, refetch } = useTrades()
-    const [selectedVendorSkills, setSelectedVendorSkills] = useState<Market>()
+  const [selectedVendorSkills, setSelectedVendorSkills] = useState<Market>()
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendorSkills)
   const { tableColumns, settingColumns } = useTableColumnSettings(VENDORSKILLS_COLUMNS, TableNames.vendorSkills)
 
@@ -93,4 +93,3 @@ export const VendorSkillsTable: React.FC<{}> = () => {
     </Box>
   )
 }
-
