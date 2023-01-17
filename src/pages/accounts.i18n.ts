@@ -5,7 +5,7 @@ export const accounts = {
     translation: {
       [ACCOUNTS]: {
         close: 'Close',
-        batchSuccess: 'Batch Processing successful!',
+        batchSuccess: 'Batch Processing Successful!',
         batchProcess: 'Batch Processing',
         batch: 'Batch Process',
         processing: 'Processing...',

@@ -39,14 +39,14 @@ export function ReceivableConfirmationBox({
   const { t } = useTranslation()
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="xl">
+    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="lg">
       <ModalOverlay />
       <ModalContent rounded="6">
         <ModalHeader
           borderBottom="2px solid #E2E8F0"
           fontWeight={400}
           color="gray.600"
-          fontSize="20px"
+          fontSize="16px"
           fontStyle="normal"
           mb="5"
         >
@@ -62,14 +62,14 @@ export function ReceivableConfirmationBox({
             <>
               {batchRunSuccess?.length > 0 && (
                 <Box mb={2}>
-                  <Text color="gray.600" fontSize="16px" fontWeight={700} fontStyle="normal" mb="2">
+                  <Text color="gray.600" fontSize="14px" fontWeight={600} fontStyle="normal" mb="2">
                     {t(`${ACCOUNTS}.batchSuccess`)}
                   </Text>
                   {batchRunSuccess?.length > 0 &&
                     batchRunSuccess?.map(b => (
-                      <HStack>
+                      <HStack mb={1}>
                         <Icon as={BiCheckCircle} fontSize="18px" color={'green.400'} />
-                        <HStack color="gray.500" fontSize="16px" fontWeight={400}>
+                        <HStack color="gray.500" fontSize="12px" fontWeight={400}>
                           <Text>{t(`${ACCOUNTS}.batchSuccessMsg`)}</Text>
                           <Text color="#345EA6">
                             {t(`${ACCOUNTS}.projectID`) + b.value + '.'}
@@ -83,14 +83,14 @@ export function ReceivableConfirmationBox({
               {batchRunFailed?.length > 0 && batchRunSuccess.length > 0 && <Divider mb={5} mt={5} />}
               {batchRunFailed?.length > 0 && (
                 <Box mb={2}>
-                  <Text color="gray.600" fontSize="16px" fontWeight={700} fontStyle="normal" mb="2">
+                  <Text color="gray.600" fontSize="14px" fontWeight={600} fontStyle="normal" mb="2">
                     {t(`${ACCOUNTS}.batchError`)}
                   </Text>
                   {batchRunFailed.length > 0 &&
                     batchRunFailed?.map(b => (
-                      <HStack>
+                      <HStack mb={1}>
                         <Icon as={BiErrorCircle} fontSize="18px" color={'red.400'} />
-                        <HStack color="gray.500" fontSize="16px" fontWeight={400}>
+                        <HStack color="gray.500" fontSize="12px" fontWeight={400}>
                           <Text>{t(`${ACCOUNTS}.batchErrorMsg`)}</Text>
                           <Text color="#345EA6">
                             {t(`${ACCOUNTS}.projectID`) + b.value + '.'}
