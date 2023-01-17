@@ -29,6 +29,7 @@ import { useAddressShouldBeVerified, usePropertyInformationNextDisabled } from '
 import NumberFormat from 'react-number-format'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { STATUS } from 'features/common/status'
+import { CustomRequiredInput } from 'components/input/input'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -59,7 +60,6 @@ export const AddPropertyInfo: React.FC<{
   const { propertySelectOptions } = useProperties()
   const { stateSelectOptions, states } = useStates()
   const { marketSelectOptions, markets } = useMarkets()
-  const [preventSpecialChara, setPreventSpecialChara] = React.useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [phoneValidation, setPhoneValidation] = useState<any>()
@@ -131,12 +131,6 @@ export const AddPropertyInfo: React.FC<{
       setIsDuplicateAddress(true)
       setExistProperty(duplicatedInProjects.map(p => ({ id: p.id as number, status: p.projectStatus as string })))
     }
-  }
-
-  //  prevent special characters
-  const handleChange = e => {
-    const result = e.target.value.replace(/[^a-zA-Z\s]/g, '')
-    setPreventSpecialChara(result)
   }
 
   // Email Validation
@@ -227,11 +221,11 @@ export const AddPropertyInfo: React.FC<{
                   {...register('city', {
                     required: true,
                     onChange: e => {
-                      setAddressInfo({ ...addressInfo, city: e.target.value })
+                      const city = e.target.value?.replace(/[^a-zA-Z\s]/g, '')
+                      setValue('city', city)
+                      setAddressInfo({ ...addressInfo, city })
                     },
                   })}
-                  onChange={handleChange}
-                  value={preventSpecialChara}
                 />
                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
               </FormControl>
@@ -347,7 +341,7 @@ export const AddPropertyInfo: React.FC<{
                       <>
                         <NumberFormat
                           id="hoaPhone"
-                          customInput={Input}
+                          customInput={CustomRequiredInput}
                           value={field.value}
                           onChange={e => {
                             field.onChange(e)
@@ -363,7 +357,7 @@ export const AddPropertyInfo: React.FC<{
                     )
                   }}
                 />
-                <Text color="red">{phoneValidation && 'Invalid Phone number'}</Text>
+                <FormErrorMessage>{phoneValidation && 'Invalid Phone number'}</FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem>
