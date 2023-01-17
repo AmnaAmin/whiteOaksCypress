@@ -1,10 +1,8 @@
 import { Box, Button, Divider, Flex, FormLabel, Icon, Spacer } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
-import { ConfirmationBox } from 'components/Confirmation'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReceivableFilter } from 'features/recievable/receivable-filter'
 import { ReceivableTable } from 'features/recievable/receivable-table'
-import { reloadResources, t } from 'i18next'
 import { compact } from 'lodash'
 import { useEffect, useState } from 'react'
 import { useBatchProcessingMutation, useBatchRun, useCheckBatch } from 'api/account-receivable'
@@ -15,16 +13,14 @@ import { useReceivableTableColumns } from 'features/recievable/hook'
 import { ACCOUNTS } from 'pages/accounts.i18n'
 import { BiSync } from 'react-icons/bi'
 import { RECEIVABLE_TABLE_QUERY_KEYS } from 'features/recievable/receivable.constants'
+import { ReceivableConfirmationBox } from 'features/recievable/receivable-confirmation-box'
+import { useTranslation } from 'react-i18next'
 
 export const Receivable = () => {
   const [loading, setLoading] = useState(false)
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay] = useState<string>('')
-  const [batchTitle, setBatchTitle] = useState<string>('')
-  const [batchMsg, setBatchMsg] = useState<string>('')
-  const [isBatchError, setIsBatchError] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
 
   // const clearAll = () => {
   //   setSelectedCard('')
@@ -48,11 +44,8 @@ export const Receivable = () => {
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
   const batchId = run?.data?.id || 0
-  const { data: batchRun, refetch: refetchBatch } = useBatchRun(batchId, queryStringWithPagination)
-
-  // Get Batch Run Errors
-  const checkBatchRun = batchRun?.filter(br => br?.statusId === 2) || []
-  const batchResult = checkBatchRun ? checkBatchRun.map(a => a.value).join(', ') : ''
+  const { data: batchRun, isLoading } = useBatchRun(batchId, queryStringWithPagination)
+  const { t } = useTranslation()
 
   // const { weekDayFilters } = useWeeklyCount()
 
@@ -61,18 +54,6 @@ export const Receivable = () => {
       reset()
     }
   }, [loading])
-
-  useEffect(() => {
-    if (!checkBatchRun[0]) {
-      setIsBatchError(false)
-      setBatchTitle(t(`${ACCOUNTS}.batchProcess`))
-      setBatchMsg(t(`${ACCOUNTS}.batchSuccess`))
-    } else {
-      setIsBatchError(true)
-      setBatchTitle(t(`${ACCOUNTS}.batchError`))
-      setBatchMsg(t(`${ACCOUNTS}.batchErrorMsg`) + batchResult)
-    }
-  }, [checkBatchRun])
 
   const Submit = formValues => {
     const receivableProjects = compact(formValues.selected)?.map((row: any) => ({
@@ -93,7 +74,6 @@ export const Receivable = () => {
 
     batchCall(obj as any, {
       onSuccess: () => {
-        setIsSuccess(true)
         refetch()
       },
     })
@@ -101,9 +81,6 @@ export const Receivable = () => {
 
   const onNotificationClose = () => {
     setIsBatchClick(false)
-    setIsBatchError(false)
-    setBatchTitle('')
-    setBatchMsg('')
   }
 
   return (
@@ -159,15 +136,15 @@ export const Receivable = () => {
             />
           </Box>
         </Box>
-          <ConfirmationBox
-            title={batchTitle}
-            content={batchMsg}
-            isOpen={!loading && isBatchClick && isSuccess}
+        {!isLoading && (
+          <ReceivableConfirmationBox
+            title={t(`${ACCOUNTS}.batchProcess`)}
+            isOpen={!loading && isBatchClick}
             onClose={onNotificationClose}
-            onConfirm={onNotificationClose}
-            yesButtonText={t(`${ACCOUNTS}.close`)}
-            showNoButton={false}
+            batchData={batchRun}
+            isLoading={isLoading}
           />
+        )}
       </form>
       <DevTool control={control} />
     </>
