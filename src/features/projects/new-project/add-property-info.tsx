@@ -29,8 +29,7 @@ import { useAddressShouldBeVerified, usePropertyInformationNextDisabled } from '
 import NumberFormat from 'react-number-format'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { STATUS } from 'features/common/status'
-import { validEmail } from 'utils/string-formatters'
-import { CustomRequiredInput } from 'components/input/input'
+import { isValidEmail } from 'utils/string-formatters'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -132,7 +131,7 @@ export const AddPropertyInfo: React.FC<{
 
   // Email Validation
   const handleEmailChange = event => {
-    if (!validEmail(event.target.value)) {
+    if (!isValidEmail(event.target.value)) {
       setError('invalid email address')
     } else {
       setError('')
@@ -328,7 +327,7 @@ export const AddPropertyInfo: React.FC<{
                       <>
                         <NumberFormat
                           id="hoaPhone"
-                          customInput={CustomRequiredInput}
+                          customInput={Input}
                           value={field.value}
                           onChange={e => {
                             field.onChange(e)

@@ -1,6 +1,7 @@
 import { Control, useWatch } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { isValidAndNonEmpty } from 'utils'
+import { isValidPhoneNumber } from 'utils/string-formatters'
 
 export const useProjectInformationNextButtonDisabled = (control: Control<ProjectFormValues>, errors): boolean => {
   const formValues = useWatch({ control })
@@ -23,7 +24,7 @@ export const usePropertyInformationNextDisabled = (
 
   // Acknowledge check appears based on address selected from saved address list so here we also check that in case user has entered new address
   const isAcknowledgeCheck = formValues?.property && isDuplicateAddress ? formValues?.acknowledgeCheck : true
-  const isHoaPhone = formValues?.hoaPhone!.replace(/\D+/g, '').length! < 10
+  const isHoaPhone = isValidPhoneNumber(formValues?.hoaPhone)
 
   return (
     !formValues.streetAddress ||
@@ -44,8 +45,13 @@ export const useAddressShouldBeVerified = (control: Control<ProjectFormValues>):
 
 export const useProjectManagementSaveButtonDisabled = (control: Control<ProjectFormValues>): boolean => {
   const formValues = useWatch({ control })
-
-  return !formValues?.projectManager?.value || !formValues?.projectCoordinator?.value || !formValues?.client?.value
+  const isSuperPhoneNumber = isValidPhoneNumber(formValues?.superPhoneNumber)
+  return (
+    !formValues?.projectManager?.value ||
+    !formValues?.projectCoordinator?.value ||
+    !formValues?.client?.value ||
+    isSuperPhoneNumber
+  )
 }
 
 export const useWOStartDateMin = (control: Control<ProjectFormValues>): string => {
