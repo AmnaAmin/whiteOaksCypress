@@ -29,6 +29,7 @@ import { useAddressShouldBeVerified, usePropertyInformationNextDisabled } from '
 import NumberFormat from 'react-number-format'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { STATUS } from 'features/common/status'
+import { CustomInput } from 'components/input/input'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -59,10 +60,8 @@ export const AddPropertyInfo: React.FC<{
   const { propertySelectOptions } = useProperties()
   const { stateSelectOptions, states } = useStates()
   const { marketSelectOptions, markets } = useMarkets()
-  const [preventSpecialChara, setPreventSpecialChara] = React.useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
-  const [phoneValidation, setPhoneValidation] = useState<any>()
 
   const { data: isAddressVerified, refetch, isLoading } = useGetAddressVerification(addressInfo)
 
@@ -88,9 +87,9 @@ export const AddPropertyInfo: React.FC<{
   const watchCity = useWatch({ name: 'city', control })
   const watchState = useWatch({ name: 'state', control })
   const watchZipCode = useWatch({ name: 'zipCode', control })
-  const watchPhone = useWatch({ name: 'hoaPhone', control })
+  // const watchPhone = useWatch({ name: 'hoaPhone', control })
 
-  const isHoaPhone = watchPhone?.replace(/\D+/g, '').length! < 10
+  // const isHoaPhone = watchPhone?.replace(/\D+/g, '').length! < 10
 
   // Set all values of Address Info
   useEffect(() => {
@@ -133,12 +132,6 @@ export const AddPropertyInfo: React.FC<{
     }
   }
 
-  //  prevent special characters
-  const handleChange = e => {
-    const result = e.target.value.replace(/[^a-zA-Z\s]/g, '')
-    setPreventSpecialChara(result)
-  }
-
   // Email Validation
   function isValidEmail(email) {
     return /\S+@\S+\.\S+/.test(email)
@@ -154,12 +147,6 @@ export const AddPropertyInfo: React.FC<{
     setMessage(event.target.value)
   }
 
-  // Phone validation
-  const handlePhoneValidation = (e: any) => {
-    const result = e.target.value
-
-    setPhoneValidation(result.replace(/\D+/g, '').length < 10)
-  }
   return (
     <>
       <Flex flexDir="column">
@@ -227,11 +214,11 @@ export const AddPropertyInfo: React.FC<{
                   {...register('city', {
                     required: true,
                     onChange: e => {
-                      setAddressInfo({ ...addressInfo, city: e.target.value })
+                      const city = e.target.value?.replace(/[^a-zA-Z\s]/g, '')
+                      setValue('city', city)
+                      setAddressInfo({ ...addressInfo, city })
                     },
                   })}
-                  onChange={handleChange}
-                  value={preventSpecialChara}
                 />
                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
               </FormControl>
@@ -347,13 +334,11 @@ export const AddPropertyInfo: React.FC<{
                       <>
                         <NumberFormat
                           id="hoaPhone"
-                          customInput={Input}
+                          customInput={CustomInput}
                           value={field.value}
                           onChange={e => {
                             field.onChange(e)
-                            handlePhoneValidation(e)
                           }}
-                          isRequired={true}
                           format="(###)-###-####"
                           mask="_"
                           placeholder="(___)-___-____"
@@ -363,7 +348,6 @@ export const AddPropertyInfo: React.FC<{
                     )
                   }}
                 />
-                <Text color="red">{phoneValidation && 'Invalid Phone number'}</Text>
               </FormControl>
             </GridItem>
             <GridItem>
@@ -399,7 +383,7 @@ export const AddPropertyInfo: React.FC<{
             colorScheme="brand"
             ml="3"
             size="md"
-            disabled={isNextButtonDisabled || isHoaPhone}
+            disabled={isNextButtonDisabled}
             onClick={() => {
               if (addressShouldBeVerified) {
                 refetch()
