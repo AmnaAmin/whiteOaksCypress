@@ -53,13 +53,7 @@ const CreateVendorDetail: React.FC<{
   const { disableDetailsNext } = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
-  const watchBusinessPhoneNo = useWatch({ name: 'businessPhoneNumber', control })
-  const watchSecondaryPhoneNo = useWatch({ name: 'secondPhoneNumber', control })
 
-  const isBusinessPhNo = watchBusinessPhoneNo?.replace(/\D+/g, '').length! < 10
-  const isSecondaryPhNo = watchSecondaryPhoneNo?.replace(/\D+/g, '').length! < 10
-  const isSSNNumber = ssnNumber?.replace(/\D+/g, '').length! < 9
-  const isEinNumber = einNumber?.replace(/\D+/g, '').length! < 9
   const formValues = useWatch({ control })
   const { isFPM } = useUserRolesSelector()
 
@@ -435,7 +429,9 @@ const CreateVendorDetail: React.FC<{
               />
               <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
-            <Text color="red">{capacityError! > 500 ? 'Capacity should not be more than 500' : ''}</Text>
+            <Text fontSize="14px" color="red">
+              {capacityError! > 500 ? 'Capacity should not be more than 500' : ''}
+            </Text>
           </GridItem>
           <GridItem>
             <FormControl isInvalid={!!errors.einNumber}>
@@ -565,7 +561,7 @@ const CreateVendorDetail: React.FC<{
           </Button>
         )}
         <Button
-          disabled={disableDetailsNext || isFPM || isBusinessPhNo || isSecondaryPhNo || isEinNumber || isSSNNumber}
+          disabled={disableDetailsNext || isFPM}
           type="submit"
           data-testid="saveDocumentCards"
           variant="solid"

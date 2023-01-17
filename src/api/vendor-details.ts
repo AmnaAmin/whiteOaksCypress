@@ -606,7 +606,6 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
       'einNumber',
       'ssnNumber',
       'businessEmailAddress',
-      'businessPhoneNumber',
       'capacity',
       'city',
       'companyName',
@@ -615,9 +614,10 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
       'state',
       'streetAddress',
       'zipCode',
-      'secondPhoneNumber',
     ],
   })
+
+  const businessPhoneNumber = useWatch({ name: 'businessPhoneNumber', control })
   const documentFields = useWatch({
     control,
     name: ['w9Document'],
@@ -627,8 +627,12 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
     name: ['licenses'],
   })
   const licensesArray = licenseField?.length > 0 ? licenseField[0] : []
+  const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10
+  const isSSNNumber = ssn?.replace(/\D+/g, '').length! === 9
+  const isEinNumber = ein?.replace(/\D+/g, '').length! === 9
   return {
-    disableDetailsNext: detailfields.some(n => !n) || !(ein || ssn),
+    disableDetailsNext: detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo,
+
     disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl), //disable logic for next on documents tab.
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
   }
