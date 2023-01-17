@@ -462,14 +462,16 @@ export const useGetAllVendors = (filterQueryString: string) => {
   }
 }
 
-
 export const useFPMVendor = (marketId?: number[]): any => {
   const client = useClient()
 
   const { data, ...rest } = useQuery<ProjectType>(
     ['fpmVendors', marketId],
     async () => {
-      const response = await client(`view-vendors/v1?marketId.in=${marketId}&sort=modifiedDate,asc&page=0&size=10000000`, {})
+      const response = await client(
+        `view-vendors/v1?marketId.in=${marketId}&sort=modifiedDate,asc&page=0&size=10000000`,
+        {},
+      )
       return response?.data
     },
     { enabled: !!marketId },

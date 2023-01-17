@@ -195,8 +195,8 @@ const vendorRegisterFormSchema = {
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
   zipCode: Yup.string().required('ZipCode is required'),
-  capacity: Yup.string().required('Capacity is required').matches(/^\d+$/, "Must be a digit"),
-  
+  capacity: Yup.string().required('Capacity is required').matches(/^\d+$/, 'Must be a digit'),
+
   //Documents
 
   w9DocumentDate: Yup.string(),
@@ -219,7 +219,7 @@ const vendorRegisterFormSchema = {
     Yup.object().shape({
       licenseType: Yup.string().typeError('License Type must be a string').required('License Type is required'),
       licenseNumber: Yup.string().typeError('License Number must be a string').required('License Number is required'),
-      licenseExpirationDate: Yup.string()
+      expiryDate: Yup.string()
         .typeError('Expiration Date must be a string')
         .required('Expiration Date is required'),
       expirationFile: Yup.mixed().required('File is required'),
@@ -358,7 +358,7 @@ export const VendorRegister = () => {
       'coiWcExpDate',
     ]
 
-    const licenseFields = ['licenses']
+    const licenseFieldName = "licenses"
 
     const tradeFieldName = 'trades'
 
@@ -379,7 +379,7 @@ export const VendorRegister = () => {
       return null
     }
 
-    if (formTabIndex === FORM_TABS.DOCUMENTS) {
+    if (  formTabIndex === FORM_TABS.DOCUMENTS  ) {
       for (const fieldName of documentFields) {
         if (!(await trigger(fieldName))) {
           return null
@@ -391,20 +391,25 @@ export const VendorRegister = () => {
       return null
     }
 
-    if (formTabIndex === FORM_TABS.LICENSE) {
-      for (const fieldName of licenseFields) {
-        if (!(await trigger(fieldName))) return null
-      }
+    if (  formTabIndex === FORM_TABS.LICENSE  ) {
+      
+        if ( ! ( await trigger( licenseFieldName ) ) ) {
+          return null
+        }
 
-      setformTabIndex(FORM_TABS.CONSTRUCTION_TRADE)
+        setformTabIndex(FORM_TABS.CONSTRUCTION_TRADE)
 
-      return null
+        return null
     }
 
-    if (formTabIndex === FORM_TABS.CONSTRUCTION_TRADE) {
+    if (  formTabIndex === FORM_TABS.CONSTRUCTION_TRADE ) {
+
       if (!validateTrade(getValues(tradeFieldName))) {
+      
         showError('Trade')
+      
         return null
+      
       }
 
       setformTabIndex(FORM_TABS.MARKETS)
@@ -447,6 +452,7 @@ export const VendorRegister = () => {
 
     setDisableLoginFields(false)
     setShowLoginFields(true)
+
   }
 
   const onSubmit = async formValues => {
