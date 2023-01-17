@@ -39,6 +39,8 @@ import InputMask from 'react-input-mask'
 import Select from 'components/form/react-select'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
+import NumberFormat from 'react-number-format'
+import { phoneRegex } from "utils/form-validation"
 
 const CustomTab = React.forwardRef((props: any, ref: any) => {
   const tabProps = useTab({ ...props, ref })
@@ -158,8 +160,6 @@ const PasswordStrengthBar = ({ password }: any) => {
   )
 }
 
-export const phoneRegex = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
-
 export const yupNullable = (_, val) => (val === '' ? undefined : _)
 
 const vendorRegisterFormSchema = {
@@ -174,8 +174,11 @@ const vendorRegisterFormSchema = {
       (val: any) => measureStrength(val)[1] >= 4,
     ),
   companyName: Yup.string().required('Business name is required'),
-
+  
   //Location Details
+  businessPhoneNumber: Yup.string()
+    .matches(phoneRegex, 'Phone Contact number is not valid'),
+
   /*businessPhoneNumber: Yup.string()
     .matches(phoneRegex, 'Phone Contact number is not valid')
     .required('Primary Contact is required'),
@@ -740,7 +743,6 @@ export const VendorRegister = () => {
                                   {...register('ownerName', {
                                     required: 'This is required',
                                   })}
-                                  tabIndex={6}
                                 />
                                 <FormErrorMessage>{errors?.ownerName && errors?.ownerName?.message}</FormErrorMessage>
                               </FormControl>
@@ -756,15 +758,23 @@ export const VendorRegister = () => {
                                     >
                                       Business Phone Number
                                     </FormLabel>
-                                    <Input
-                                      id="businessPhoneNumber"
-                                      type="text"
-                                      fontSize="14px"
-                                      color="#252F40"
-                                      placeholder="Enter Business Phone"
-                                      {...register('businessPhoneNumber', {
-                                        required: 'This is required',
-                                      })}
+                                    <Controller
+                                      control={control}
+                                      name="businessPhoneNumber"
+                                      render={({ field }) => {
+                                        return (
+                                          <NumberFormat
+                                            customInput={Input}
+                                            value={field.value}
+                                            onChange={e => field.onChange(e)}
+                                            format="(###)-###-####"
+                                            mask="_"
+                                            placeholder="(___)-___-____"
+                                            borderLeft="2.5px solid #4E87F8"
+                                            tabIndex={6}
+                                          />
+                                        )
+                                      }}
                                     />
                                     <FormErrorMessage>
                                       {errors?.businessPhoneNumber && errors?.businessPhoneNumber?.message}

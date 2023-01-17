@@ -45,6 +45,7 @@ export const usePasswordFormValidationResolver = () => {
   return useYupValidationResolver(PasswordFormValidationSchema)
 }
 
+export const phoneRegex = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
 
 export const validateTelePhoneNumber = ( number: string ): boolean => {
   return number ? number.match(/\d/g)?.length===10 : false;
