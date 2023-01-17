@@ -167,7 +167,13 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 w="100%"
                 alignItems={{ base: '', md: 'center' }}
               >
-                <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }} pointerEvents={isFPM ? 'none' : 'auto'}>
+                <Box
+                  w="2em"
+                  color="#345EA6"
+                  fontSize="15px"
+                  m={{ base: '4%', md: 0 }}
+                  pointerEvents={isFPM ? 'none' : 'auto'}
+                >
                   <Center>
                     <Icon
                       as={MdOutlineCancel}
@@ -315,19 +321,21 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         )}
 
         {onClose && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        <Button
-          disabled={disableLicenseNext || isFPM}
-          type="submit"
-          variant="solid"
-          colorScheme="darkPrimary"
-          data-testid="saveLicenses"
-        >
-          {vendor?.id ? t('save') : t('next')}
-        </Button>
+        {!isFPM && (
+          <Button
+            disabled={disableLicenseNext || isFPM}
+            type="submit"
+            variant="solid"
+            colorScheme="darkPrimary"
+            data-testid="saveLicenses"
+          >
+            {vendor?.id ? t('save') : t('next')}
+          </Button>
+        )}
       </Flex>
     </Box>
   )

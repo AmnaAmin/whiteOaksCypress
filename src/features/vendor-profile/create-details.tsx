@@ -37,8 +37,8 @@ import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
-const validateTelePhoneNumber = ( number: string ): boolean => {
-  return number ? number.match(/\d/g)?.length===10 : false;
+const validateTelePhoneNumber = (number: string): boolean => {
+  return number ? number.match(/\d/g)?.length === 10 : false
 }
 
 const CreateVendorDetail: React.FC<{
@@ -47,7 +47,7 @@ const CreateVendorDetail: React.FC<{
   isActive: boolean
 }> = ({ onClose, vendorProfileData, isActive }) => {
   const { t } = useTranslation()
- 
+
   const { data: paymentsMethods } = usePaymentMethods()
   const { stateSelectOptions } = useStates()
   const {
@@ -251,9 +251,9 @@ const CreateVendorDetail: React.FC<{
               </FormLabel>
               <Controller
                 control={control}
-                rules={{ 
+                rules={{
                   required: isActive && 'This is required',
-                  validate: ( number: string ) => validateTelePhoneNumber( number )
+                  validate: (number: string) => validateTelePhoneNumber(number),
                 }}
                 name="businessPhoneNumber"
                 render={({ field, fieldState }) => {
@@ -269,7 +269,7 @@ const CreateVendorDetail: React.FC<{
                         }}
                         isDisabled={isFPM}
                       />
-                      <FormErrorMessage>{fieldState.error && "Valid Phone Number Is Required" }</FormErrorMessage>
+                      <FormErrorMessage>{fieldState.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
                     </>
                   )
                 }}
@@ -561,19 +561,21 @@ const CreateVendorDetail: React.FC<{
         justifyContent="end"
       >
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
-        <Button
-          disabled={disableDetailsNext || isFPM}
-          type="submit"
-          data-testid="saveDocumentCards"
-          variant="solid"
-          colorScheme="brand"
-        >
-          {vendorProfileData?.id ? t('save') : t('next')}
-        </Button>
+        {!isFPM && (
+          <Button
+            disabled={disableDetailsNext}
+            type="submit"
+            data-testid="saveDocumentCards"
+            variant="solid"
+            colorScheme="brand"
+          >
+            {vendorProfileData?.id ? t('save') : t('next')}
+          </Button>
+        )}
       </Flex>
     </Stack>
   )
