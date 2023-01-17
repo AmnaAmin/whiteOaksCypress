@@ -7,50 +7,26 @@ import { useState } from 'react'
 import { useSupport } from 'api/support'
 import { SupportModal } from './support-modal'
 
-export enum SUPPORT_FIELDS_TYPES {
-  bug = 4,
-  FeatureRequest = 5,
-  Major = 1,
-  Medium = 3,
-  Low = 2,
-  New = 66,
-  WorkInProgress = 67,
-  Resolved = 69,
-  Rejected = 70,
-}
-
-const SupportTypes: React.FC<{ id: number }> = ({ id }) => {
-  return (
-    <>
-      {id === 4
-        ? 'bug'
-        : null || id === SUPPORT_FIELDS_TYPES.bug
-        ? 'Feature Request'
-        : null || id === SUPPORT_FIELDS_TYPES.FeatureRequest
-        ? 'Feature Request'
-        : null || id === SUPPORT_FIELDS_TYPES.Major
-        ? 'Major'
-        : null || id === SUPPORT_FIELDS_TYPES.Medium
-        ? 'Medium'
-        : null || id === SUPPORT_FIELDS_TYPES.Low
-        ? 'Low'
-        : null || id === SUPPORT_FIELDS_TYPES.New
-        ? 'New'
-        : null || id === SUPPORT_FIELDS_TYPES.WorkInProgress
-        ? 'WorkIn Progress'
-        : null || id === SUPPORT_FIELDS_TYPES.Resolved
-        ? 'Resolved'
-        : null || id === SUPPORT_FIELDS_TYPES.Rejected
-        ? 'Rejected'
-        : null}
-    </>
-  )
-}
+export const supportField = [
+  { key: 4, value: 'bug' },
+  { key: 5, value: 'Feature Request' },
+  { key: 1, value: 'Major' },
+  { key: 3, value: 'Medium' },
+  { key: 2, value: 'Low' },
+  { key: 66, value: 'New' },
+  { key: 67, value: 'Work In Progress' },
+  { key: 69, value: 'Resolved' },
+  { key: 70, value: 'Rejected' },
+]
 
 export const SUPPORT_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${SUPPORT}.id`,
     accessorKey: 'id',
+    accessorFn: row => {
+      return row?.id?.toString() ?? '- - -'
+    },
+    filterFn: 'equals',
   },
   {
     header: `${SUPPORT}.title`,
@@ -63,37 +39,38 @@ export const SUPPORT_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${SUPPORT}.issueType`,
     accessorKey: 'lkpSupportTypeId',
-    cell: (row: any) => {
-      const value = row.cell.getValue()
-      return <SupportTypes id={value} />
+    accessorFn: row => {
+      return supportField?.find(s => s.key === row.lkpSupportTypeId)?.value ?? '- - -'
     },
+    filterFn: 'includesString',
   },
   {
     header: `${SUPPORT}.severity`,
     accessorKey: 'lkpSeverityId',
-    cell: (row: any) => {
-      const value = row.cell.getValue()
-      return <SupportTypes id={value} />
+    accessorFn: row => {
+      return supportField?.find(s => s.key === row.lkpSeverityId)?.value ?? '- - -'
     },
   },
   {
     header: `${SUPPORT}.status`,
     accessorKey: 'lkpStatusId',
-    cell: (row: any) => {
-      const value = row.cell.getValue()
-      return <SupportTypes id={value} />
+    accessorFn: row => {
+      return supportField?.find(s => s.key === row.lkpStatusId)?.value ?? '- - -'
     },
   },
   {
     header: `${SUPPORT}.createdBy`,
     accessorKey: 'createdBy',
+    accessorFn: row => {
+      return row.createdBy ?? '- - -'
+    },
   },
 ]
 
 export const SupportTable = () => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-  const [selectedRow, setSelectedRow] = useState()
   const { data: supportList, isLoading } = useSupport()
+  const [selectedRow, setSelectedRow] = useState(supportList)
   return (
     <Box overflow="auto" roundedTop={8}>
       <SupportModal
@@ -105,7 +82,7 @@ export const SupportTable = () => {
         isOpen={isOpen}
       />
 
-      <Box overflow={'auto'} h="calc(100vh - 160px)">
+      <Box overflow={'auto'} h="calc(100vh - 160px)" roundedTop={6} border="1px solid #CBD5E0">
         <TableContextProvider data={supportList} columns={SUPPORT_COLUMNS}>
           <Table
             isLoading={isLoading}

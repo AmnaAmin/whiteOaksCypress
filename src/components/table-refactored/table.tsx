@@ -25,21 +25,34 @@ import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { MdClose } from 'react-icons/md'
 import { useLayoutEffect } from 'react'
 import _ from 'lodash'
+import { useStickyState } from 'utils/hooks'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
 }
 
-function Filter({ column, table }: { column: Column<any, unknown>; table: TableType<any> }) {
+function Filter({
+  column,
+  table,
+  allowStickyFilters = false,
+}: {
+  column: Column<any, unknown>
+  table: TableType<any>
+  allowStickyFilters?: boolean
+}) {
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
   // We inject meta into certain columns where the filter state can be prefilled either by backend or by UI
   // In react table, meta key can be added to any column and meta can hold any arbitrary value
   const metaData: any = column.columnDef?.meta as any
-  const filterInitialState = metaData?.filterInitialState || null
+
+  /* @ts-ignore */
+  const tableId = table?.options?.meta?.id
+  const columnKey = tableId ? tableId + '.' + column.id : column.id
+  const [stickyFilter, setStickyFilter] = useStickyState(null, allowStickyFilters ? columnKey + '.' + column.id : null)
+  const filterInitialState = metaData?.filterInitialState || stickyFilter || null
   const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date' || 'date')
-
   const sortedUniqueValues = React.useMemo(
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
     [column.getFacetedUniqueValues()],
@@ -55,9 +68,15 @@ function Filter({ column, table }: { column: Column<any, unknown>; table: TableT
       <DebouncedInput
         type={dateFilter ? 'date' : 'text'}
         value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
-        onChange={value =>
-          dateFilter ? column.setFilterValue(dateFormat(value as string)) : column.setFilterValue(value)
-        }
+        onChange={value => {
+          if (dateFilter) {
+            column.setFilterValue(dateFormat(value as string))
+            if (allowStickyFilters) setStickyFilter(dateFormat(value as string))
+          } else {
+            column.setFilterValue(value)
+            if (allowStickyFilters) setStickyFilter(value)
+          }
+        }}
         className="w-36 border shadow rounded"
         list={column.id + 'list'}
         // @ts-ignore
@@ -159,6 +178,9 @@ function DebouncedInput({
         ref={inputRef}
         paddingRight={'13px'}
         data-testid="tableFilterInputField"
+        _focus={{
+          border: '1px solid #345EA6',
+        }}
       />
       {showClearIcon && props.type !== 'date' ? (
         <Icon
@@ -188,6 +210,7 @@ type TableProps = {
   isShowFooter?: boolean
   handleOnDrag?: (result) => void
   handleOnDragStart?: (result) => void
+  allowStickyFilters?: boolean
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -199,6 +222,7 @@ export const Table: React.FC<TableProps> = ({
   isShowFooter,
   handleOnDrag,
   handleOnDragStart,
+  allowStickyFilters,
   ...restProps
 }) => {
   const { t } = useTranslation()
@@ -225,8 +249,8 @@ export const Table: React.FC<TableProps> = ({
       zIndex={0}
       // border="1px solid #CBD5E0"
       bg="white"
+      h="100%"
       minH={'inherit'}
-      height="100%"
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
@@ -249,12 +273,22 @@ export const Table: React.FC<TableProps> = ({
                     py="3"
                     bg="#ECEDEE"
                     zIndex={1}
-                    borderBottomColor="gray.300"
+                    borderBottomColor="#ECEDEE"
                     cursor={isSortable ? 'pointer' : ''}
                     onClick={header.column.getToggleSortingHandler()}
                     {...getColumnMaxMinWidths(header.column)}
                   >
-                    <Flex alignItems="center">
+                    <Flex
+                      alignItems="center"
+                      _before={{
+                        content: '""',
+                        bottom: '-2px',
+                        left: '0px',
+                        position: 'absolute',
+                        minW: '100%',
+                        borderBottom: '3px solid #ECEDEE',
+                      }}
+                    >
                       <Text
                         fontSize="14px"
                         color="gray.700"
@@ -264,6 +298,7 @@ export const Table: React.FC<TableProps> = ({
                         isTruncated
                         display="inline-block"
                         title={typeof title === 'string' ? t(title as string) : ''}
+                        py="1px"
                       >
                         {typeof title === 'string' ? t(title as string) : title}
                       </Text>
@@ -297,8 +332,8 @@ export const Table: React.FC<TableProps> = ({
                         py="3"
                         position="sticky"
                         zIndex={1}
-                        top="38px"
-                        borderBottomColor="gray.300"
+                        top="43px"
+                        // borderBottomColor="gray.300"
                         bg="#ECEDEE"
                         {...getColumnMaxMinWidths(header.column)}
                       >
@@ -312,8 +347,20 @@ export const Table: React.FC<TableProps> = ({
                               minW: '100%',
                               borderBottom: '1px solid #CBD5E0',
                             }}
+                            _before={{
+                              content: '""',
+                              top: '0px',
+                              left: '0px',
+                              position: 'absolute',
+                              minW: '100%',
+                              borderBottom: '1px solid #CBD5E0',
+                            }}
                           >
-                            <Filter column={header.column} table={tableInstance} />
+                            <Filter
+                              allowStickyFilters={allowStickyFilters}
+                              column={header.column}
+                              table={tableInstance}
+                            />
                           </Box>
                         ) : null}
                       </Th>
@@ -359,7 +406,7 @@ export const Table: React.FC<TableProps> = ({
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
-                          bg: '#F3F8FF',
+                          bg: !!onRowClick ? '#F3F8FF' : '',
                         }}
                         backgroundColor={row.getIsSelected() ? 'gray.50' : ''}
                       >

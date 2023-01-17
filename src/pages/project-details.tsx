@@ -27,6 +27,9 @@ import ProjectNotes from 'features/project-details/project-notes-tab'
 import { STATUS } from 'features/common/status'
 import { TransactionDetails } from 'features/project-details/transaction-details/transaction-details'
 import ScheduleTab from 'features/project-details/project-schedule/schedule-tab'
+// import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-table'
+// import { useProjectAuditLogs } from 'api/project-details'
+import { boxShadow } from 'theme/common-style'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -57,6 +60,7 @@ export const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  // const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
 
   const [isShowProjectFinancialOverview, setIsShowProjectFinancialOverview] = useState(false)
 
@@ -91,16 +95,22 @@ export const ProjectDetails: React.FC = props => {
     }
   }, [ganttChartData, projectData])
 
+  // useEffect(() => {
+  //   if (tabIndex === 6) {
+  //     refetchAudits()
+  //   }
+  // }, [tabIndex])
+
   return (
     <>
       <Stack w={{ base: '971px', xl: '100%' }} spacing={'16px'} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
         <AmountDetailsCard projectId={projectId} />
 
-        <Stack w={{ base: '971px', xl: '100%' }} spacing={5}>
+        <Stack w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
           <Tabs size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
-            <TabList h={'50px'} alignItems="end">
-              <Flex h={'40px'}>
+            <TabList h={'50px'} alignItems="end" border="none">
+              <Flex h={'40px'} py={'1px'}>
                 <Tab>{t('projects.projectDetails.transactions')}</Tab>
                 <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
                 <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
@@ -117,9 +127,18 @@ export const ProjectDetails: React.FC = props => {
 
                   {/* Figma update */}
                 </Tab>
+                {/* <Tab>{t('projects.projectDetails.auditLogs')}</Tab> */}
               </Flex>
+            </TabList>
 
-              <HStack h="50px" w="100%" justifyContent="end">
+            <Card
+              rounded="0px"
+              roundedRight={{ base: '0px', md: '6px' }}
+              roundedBottom="6px"
+              style={boxShadow}
+              pr={{ base: 0, sm: '15px' }}
+            >
+              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
                 {tabIndex === 2 &&
                   ![
                     STATUS.Closed,
@@ -128,13 +147,14 @@ export const ProjectDetails: React.FC = props => {
                     STATUS.Paid,
                     STATUS.Punch,
                     STATUS.ClientPaid,
+                    STATUS.Overpayment,
                   ].includes(projectStatus as STATUS) && (
-                    <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen}>
+                    <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen} mb="15px">
                       {t('newWorkOrder')}
                     </Button>
                   )}
                 {tabIndex === 4 && (
-                  <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />}>
+                  <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />} mb="15px">
                     {t('projects.projectDetails.upload')}
                   </Button>
                 )}
@@ -145,7 +165,7 @@ export const ProjectDetails: React.FC = props => {
                   </Button>
                 )} */}
                 {tabIndex === 0 && (
-                  <HStack spacing="16px">
+                  <HStack spacing="16px" mb="10px">
                     <Box mt={'14px'}>
                       <FormControl display="flex" alignItems="center">
                         <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" size="md">
@@ -154,7 +174,7 @@ export const ProjectDetails: React.FC = props => {
                         <Switch
                           size="sm"
                           id="view-details"
-                          outline="4px solid #F2F3F4"
+                          outline="4px solid white"
                           rounded="full"
                           isChecked={isShowProjectFinancialOverview}
                           onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
@@ -173,36 +193,34 @@ export const ProjectDetails: React.FC = props => {
                     </Button>
                   </HStack>
                 )}
-              </HStack>
-            </TabList>
+              </Box>
+              <TabPanels h="100%">
+                <TabPanel p="0px" h="100%" mt="7px">
+                  <Box h="100%">
+                    {isShowProjectFinancialOverview ? (
+                      <TransactionDetails ref={tabsContainerRef} />
+                    ) : (
+                      <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
+                    )}
+                  </Box>
+                </TabPanel>
+                <TabPanel p="0px">
+                  <Card rounded="16px" padding="0">
+                    <ProjectDetailsTab projectData={projectData as Project} />
+                  </Card>
+                </TabPanel>
 
-            <TabPanels h="100%">
-              <TabPanel p="0px" h="100%" mt="7px">
-                <Box h="100%">
-                  {isShowProjectFinancialOverview ? (
-                    <TransactionDetails ref={tabsContainerRef} />
-                  ) : (
-                    <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
-                  )}
-                </Box>
-              </TabPanel>
-              <TabPanel p="0px" mt="6px">
-                <Card rounded="16px" padding="0">
-                  <ProjectDetailsTab projectData={projectData as Project} />
-                </Card>
-              </TabPanel>
+                <TabPanel p="0px">
+                  <WorkOrdersTable ref={tabsContainerRef} />
+                </TabPanel>
+                <TabPanel p="0px" minH="calc(100vh - 409px)">
+                  <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
+                </TabPanel>
+                <TabPanel p="0px">
+                  <VendorDocumentsTable ref={tabsContainerRef} />
+                </TabPanel>
 
-              <TabPanel p="0px" h="100%" mt="7px">
-                <WorkOrdersTable ref={tabsContainerRef} />
-              </TabPanel>
-              <TabPanel p="0px" mt="7px">
-                <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
-              </TabPanel>
-              <TabPanel p="0px" mt="7px">
-                <VendorDocumentsTable ref={tabsContainerRef} />
-              </TabPanel>
-
-              {/* <TabPanel px="0">
+                {/* <TabPanel px="0">
                 <TriggeredAlertsTable
                   onRowClick={(e, row) => {
                     selectedAlertRow(row.values)
@@ -212,10 +230,15 @@ export const ProjectDetails: React.FC = props => {
                 />
               </TabPanel> */}
 
-              <TabPanel p="0" mt="7px">
-                <ProjectNotes projectId={projectId} />
-              </TabPanel>
-            </TabPanels>
+                <TabPanel p="0" minH="calc(100vh - 408px)">
+                  <ProjectNotes projectId={projectId} />
+                </TabPanel>
+                {/*
+                <TabPanel p="0px" minH="calc(100vh - 450px)">
+                  <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch={refetchAudits} />
+                </TabPanel> */}
+              </TabPanels>
+            </Card>
           </Tabs>
         </Stack>
 

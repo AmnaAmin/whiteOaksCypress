@@ -1,6 +1,6 @@
+import { Box, Text, useMediaQuery } from '@chakra-ui/react'
 import { usePaidWOAmountByYearAndMonth } from 'api/vendor-dashboard'
-import { round } from 'lodash'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Label, CartesianGrid } from 'recharts'
 import { monthsShort } from 'utils/date-time-utils'
 
@@ -24,10 +24,39 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
   const graphData = data?.map(value => ({
     label: selectedOptionAll ? value?.label[0] + value?.label?.slice(1)?.toLowerCase() : value?.label,
     count: value?.count,
+    sum: value?.sum,
   }))
 
   // If the graph has no data we are showing a message on the graph.
   const emptyGraphData = data?.filter(value => value?.count)?.length === 0
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    const countValue = payload?.map(e => {
+      return e.payload
+    })
+
+    if (active && payload) {
+      return (
+        <Box border="1px solid #CBD5E0" rounded="4px" bg="white" p="6px">
+          <Text color="#68D391">{`Count : ${countValue[0].count}`}</Text>
+        </Box>
+      )
+    }
+
+    return null
+  }
+
+  const [isMobile] = useMediaQuery(['(max-width: 620px)'])
+
+  const [message, setMessage] = useState<string>('')
+
+  useEffect(() => {
+    if (isMobile) {
+      setMessage('No Data Available')
+    } else {
+      setMessage('There is currently no data available for the month selected')
+    }
+  }, [isMobile])
 
   return (
     <ResponsiveContainer width={width} height={height}>
@@ -68,11 +97,12 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
         >
           {emptyGraphData && (
             <Label
-              value="There is currently no data available for the month selected"
+              value={message}
               offset={180}
               position="insideBottom"
               fill="#A0AEC0"
               fontStyle="italic"
+              fontSize={'14px'}
             />
           )}
         </XAxis>
@@ -81,7 +111,7 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
           type="number"
           axisLine={{ stroke: '#EBEBEB' }}
           tickLine={false}
-          tickCount={5}
+          tickCount={4}
           dx={-15}
           tick={{
             fill: '#718096',
@@ -89,13 +119,10 @@ export const PaidChartGraph = ({ data, width, height, filters }) => {
             fontSize: '12px',
             fontStyle: 'Poppins',
           }}
-          tickFormatter={tick => {
-            return ` ${'$' + round(tick / 1000, 2) + 'k'} `
-          }}
         />
-        {!emptyGraphData && <Tooltip contentStyle={{ borderRadius: '6px' }} cursor={{ fill: '#EBF8FF' }} />}
+        {!emptyGraphData && <Tooltip content={<CustomTooltip />} cursor={{ fill: '#EBF8FF' }} />}
 
-        <Bar dataKey="count" fill="#68D391" radius={[5, 5, 0, 0]} />
+        <Bar dataKey="sum" fill="#68D391" radius={[5, 5, 0, 0]} />
       </BarChart>
     </ResponsiveContainer>
   )

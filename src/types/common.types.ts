@@ -93,3 +93,12 @@ export type Client = {
 }
 
 export type Language = 'English' | 'Spanish'
+
+export type AuditLogType = {
+  id: number
+  modifiedBy: string
+  modifiedDate: string
+  parameter: string
+  oldValue: string
+  newValue: string
+}

@@ -16,9 +16,11 @@ import { sideNav } from '../components/layout/sideNav.i18n'
 import { dashboard } from '../features/vendor/dashboard/dashboard.i18n'
 import { adminDashboard } from 'features/admin-dashboard/admin-dashboard.i18n'
 import { projectType } from '../features/project-type/project-type.i18n'
+import { auditLogs } from 'features/project-details/audit-logs/auditLogs.i18n'
 import { support } from 'features/support/support.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
+import { globalErrors } from './errors.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -42,9 +44,11 @@ i18n.use(initReactI18next).init({
         ...dashboard.en.translation,
         ...adminDashboard.en.translation,
         ...projectType.en.translation,
+        ...auditLogs.en.translation,
         ...support.en.translation,
         ...vendorProfile.en.translation,
         ...projectAwards.en.translation,
+        ...globalErrors.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -279,6 +283,7 @@ i18n.use(initReactI18next).init({
         paymentMethods: 'Payment Methods',
         payDateVariance: 'Pay Date Variance',
         finalInvoice: 'Final Invoice',
+        finalApproved: 'Final Approved',
         uploadInvoice: 'Upload Invoice',
         firstHeading: 'Conditional waiver and release on final payment',
         secondHeading: 'Identifying Information',
@@ -328,9 +333,11 @@ i18n.use(initReactI18next).init({
         details: 'Details',
         market: 'Market',
         prjt: 'Projects',
+        businessPhoneNumber: 'Business Phone Number',
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
+        portalAccess: 'Portal Access',
         capacity: 'Capacity',
         last4digits: 'Last 4 digits of SSN/EIN',
         streetAddress: 'Street Address',
@@ -356,6 +363,8 @@ i18n.use(initReactI18next).init({
         einNumber: 'EIN/SSN',
         availableCapacity: 'Available Capacity',
         skills: 'Construction Trade',
+        portalRegistration: 'Portal Registration',
+        enableVendorPortal: 'Enable Vendor Portal',
 
         // Vendor-profile-documents
         agreementSignedDate: 'Document Signed',
@@ -502,6 +511,7 @@ i18n.use(initReactI18next).init({
         poNumber: 'PO Number',
         profitTotal: 'Profit Total',
         partialPayment: 'Partial Payment',
+        partialPaymentDate: 'Partial Payment Date',
         woaCompletionDate: 'WOA Completion Date',
         accountPayable: 'Account Payable',
         accountRecievable: 'Account Recievable',
@@ -551,9 +561,11 @@ i18n.use(initReactI18next).init({
         ...dashboard.es.translation,
         ...adminDashboard.es.translation,
         ...projectType.es.translation,
+        ...auditLogs.es.translation,
         ...support.es.translation,
         ...vendorProfile.es.translation,
         ...projectAwards.es.translation,
+        ...globalErrors.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -846,6 +858,7 @@ i18n.use(initReactI18next).init({
         check: 'Controlar',
         payDateVariance: 'Variación de la fecha de pago',
         finalInvoice: 'Factura Final',
+        finalApproved: 'Aprobado definitivo',
         uploadInvoice: 'Cargar factura',
         firstHeading: 'Renuncia condicional y liberación en el pago final',
         secondHeading: 'Información identificativa',
@@ -895,10 +908,12 @@ i18n.use(initReactI18next).init({
         details: 'Detalles',
         market: 'Mercado',
         prjt: 'Proyectos',
+        businessPhoneNumber: 'Número de teléfono laboral',
 
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
         score: 'Puntaje',
+        portalAccess: 'Acceso al Portal',
         capacity: 'Capacidad',
         last4digits: 'Últimos 4 dígitos del SSN/EIN',
         paymentMethods: 'Métodos de Pago',
@@ -1014,6 +1029,8 @@ i18n.use(initReactI18next).init({
         creditCard: 'Crédito',
         ach: 'ACH',
         comment: 'Comentario',
+        partialPayment: 'Pago parcial',
+        partialPaymentDate: 'Fecha de pago parcial',
 
         // Alerts
         triggeredAlerts: 'Alertas activadas',

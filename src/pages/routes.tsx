@@ -6,7 +6,7 @@ import routesConfig from './routesConfig'
 import { Suspense } from 'react'
 import { ViewLoader } from 'components/page-level-loader'
 import first from 'lodash/first'
-import { CreateATicketForm } from './vendor/create-a-ticket'
+import { CreateATicketForm } from './vendor/create-a-ticket-form'
 
 export default function ProjectCordinatorRoutes() {
   const routes = routesConfig()

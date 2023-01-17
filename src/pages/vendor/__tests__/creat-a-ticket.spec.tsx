@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event'
 import { Providers } from 'providers'
 import { render, waitForLoadingToFinish, screen, selectOption, waitFor, fireEvent } from 'utils/test-utils'
-import CreateATicketForm from '../create-a-ticket'
+import CreateATicketForm from '../create-a-ticket-form'
 
 const renderCreateATicketForm = async () => {
   render(<CreateATicketForm />, { wrapper: Providers })

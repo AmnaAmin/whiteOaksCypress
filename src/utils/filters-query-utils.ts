@@ -46,6 +46,8 @@ export const getAPIFilterQueryString = (
             'workOrderDateCompleted',
             'expectedPaymentDate',
             'newExpectedCompletionDate',
+            'coiglExpirationDate',
+            'coiWcExpirationDate',
           ].includes(filter.id)
         ) {
           return {

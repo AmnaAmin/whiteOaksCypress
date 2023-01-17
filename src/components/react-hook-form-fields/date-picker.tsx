@@ -34,36 +34,38 @@ export const FormDatePicker = React.forwardRef((props: DatePickerProps, ref) => 
       control={props.control}
       name={props.name}
       rules={props.rules}
-      render={({ field: { onChange, onBlur, value, ...rest }, fieldState }) => (
-        <>
-          <DatePicker
-            style={props.style}
-            selected={value ? new Date(value) : new Date()}
-            value={value || ''}
-            onBlur={onBlur}
-            onChange={val => {
-              const format = getFormattedDate(val)
-              onChange(format)
-              if (props.onChange) props.onChange(val)
-            }}
-            placeholderText={props.placeholder}
-            customInput={
-              <DatePickerInput
-                disable={props.disabled}
-                variant={props.isRequired}
-                testId={props.testId}
-                size={props.size || 'lg'}
-                style={props.elementStyle}
-              />
-            }
-          />
-          <Box>
-            <FormErrorMessage position="absolute" mt="3px">
-              {fieldState.error?.message}
-            </FormErrorMessage>
-          </Box>
-        </>
-      )}
+      render={({ field: { onChange, onBlur, value, ...rest }, fieldState }) => {
+        return (
+          <>
+            <DatePicker
+              style={props.style}
+              selected={value ? new Date(value) : new Date()}
+              value={value || ''}
+              onBlur={onBlur}
+              onChange={val => {
+                const format = getFormattedDate(val)
+                onChange(format)
+                if (props.onChange) props.onChange(val)
+              }}
+              placeholderText={props.placeholder}
+              customInput={
+                <DatePickerInput
+                  disable={props.disabled}
+                  variant={props.isRequired}
+                  testId={props.testId}
+                  size={props.size || 'lg'}
+                  style={props.elementStyle}
+                />
+              }
+            />
+            <Box>
+              <FormErrorMessage position="absolute" mt="3px">
+                {fieldState.error?.message}
+              </FormErrorMessage>
+            </Box>
+          </>
+        )
+      }}
     />
   </FormControl>
 ))

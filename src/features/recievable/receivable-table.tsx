@@ -141,7 +141,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   }
 
   return (
-    <Box overflow="auto" width="100%" h="600px" roundedTop={6} border="1px solid #CBD5E0">
+    <Box overflowX="auto" width="100%" minH="calc(100vh - 370)" roundedTop={6} border="1px solid #CBD5E0">
       <TableContextProvider
         data={receivables}
         columns={tableColumns}
@@ -159,7 +159,6 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
               columns={tableColumns}
               refetch={refetch}
               isLoading={isExportDataLoading}
-              colorScheme="brand"
               fileName="receivable"
             />
             {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}

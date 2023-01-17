@@ -73,6 +73,9 @@ function useAsync(initialState: any) {
 
 const useStickyState = (defaultValue, key) => {
   const [value, setValue] = React.useState(() => {
+    if (!key) {
+      return
+    }
     const stickyValue = window.localStorage.getItem(key)
     return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue
   })

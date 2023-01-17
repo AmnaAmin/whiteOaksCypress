@@ -30,22 +30,44 @@ const CustomAlert: React.FC<{ title: string; tabs?: number; onClose?: () => void
     navigate('/vendors', { state: params })
   }
   return (
-    <Alert status="error" rounded={6} bg="#FFE4E4" pr={1} mb={3} h={{ sm: 'auto', md: '47px', xl: '47px', lg: '47px' }}>
-      <AlertIcon />
-      <AlertDescription display="flex" justifyContent="space-between" w="100%">
-        <HStack>
-          <FormLabel variant="strong-label" m={0} color="#F56565">
-            {t(`${DASHBOARD ? DASHBOARD : VENDORPROFILE}.${title}`)}
-          </FormLabel>
-          {!data && (
-            <Button variant="outline" colorScheme="red" ml={3} h="28px" onClick={() => selectTabs(tabs)}>
-              {t(`${DASHBOARD}.renewNow`)}
-            </Button>
-          )}
-        </HStack>
-        {!data && <CloseButton onClick={onClose} m={3} />}
-      </AlertDescription>
-    </Alert>
+    <Box
+      width={{
+        sm: '100%',
+        md: '70%',
+        lg: '70%',
+      }}
+      marginTop={{ base: '4px', sm: '30px', md: 0, xl: 0, lg: 0 }}
+    >
+      <Alert
+        status="error"
+        rounded={6}
+        bg="#FFE4E4"
+        pr={1}
+        mb={3}
+        h={{ sm: 'auto', md: '47px', xl: '47px', lg: '47px' }}
+      >
+        <AlertIcon />
+        <AlertDescription display="flex" justifyContent="space-between" w="100%">
+          <HStack>
+            <FormLabel
+              variant="strong-label"
+              m={0}
+              color="#F56565"
+              fontSize={{ base: '12px', sm: '14px', lg: '16px' }}
+              lineHeight="20px"
+            >
+              {t(`${DASHBOARD ? DASHBOARD : VENDORPROFILE}.${title}`)}
+            </FormLabel>
+            {!data && (
+              <Button variant="outline" colorScheme="red" ml={3} h="28px" onClick={() => selectTabs(tabs)}>
+                {t(`${DASHBOARD}.renewNow`)}
+              </Button>
+            )}
+          </HStack>
+          {!data && <CloseButton onClick={onClose} m={3} />}
+        </AlertDescription>
+      </Alert>
+    </Box>
   )
 }
 
@@ -61,14 +83,7 @@ export const ExpirationAlertMessage: React.FC<{
   const { expiredInsuranceDateProfile, expiredLicenseDateProfile } = useDocumentLicenseMessage({ data })
 
   return isVisible ? (
-    <Box
-      width={{
-        sm: '100%',
-        md: '70%',
-        lg: '70%',
-      }}
-      marginTop={{ base: '30px', sm: '30px', md: 0, xl: 0, lg: 0 }}
-    >
+    <Box>
       {expiredInsuranceDate && expiredLicenseDate ? (
         <CustomAlert title={'licenseInsuranceExpirationMessage'} tabs={1} onClose={onClose} />
       ) : null}

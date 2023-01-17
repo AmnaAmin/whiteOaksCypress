@@ -115,7 +115,7 @@ export const TransactionInfoCard: React.FC<{
           },
         }}
       >
-        <Text h="20px" color="gray.500" whiteSpace={{ base: 'nowrap', md: 'unset' }} noOfLines={[0, 1]}>
+        <Text h="20px" color="gray.500" whiteSpace={{ base: 'nowrap', md: 'nowrap', sm: 'unset' }} noOfLines={[0, 1]}>
           {projectData?.projectManager}
         </Text>
       </InfoStructureCard>

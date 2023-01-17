@@ -4,9 +4,14 @@ import { VENDORPROFILE } from './vendor-profile.i18n'
 
 export const SaveChangedFieldAlert = () => {
   return (
-    <HStack py="25px">
-      <Divider orientation="vertical" border="1px solid #CBD5E0 !important" h="20px" />
-      <Text fontStyle="italic" color="#F56565" fontSize="12px">
+    <HStack pt="10px" spacing={{ base: 0, sm: '0.5rem' }}>
+      <Divider
+        orientation="vertical"
+        border="1px solid #CBD5E0 !important"
+        h="20px"
+        display={{ base: 'none', sm: 'block' }}
+      />
+      <Text fontStyle="italic" color="#F56565" fontSize="12px" whiteSpace="nowrap">
         {t(`${VENDORPROFILE}.changeFieldMessage`)}
       </Text>
     </HStack>

@@ -13,7 +13,7 @@ import {
   BiError,
 } from 'react-icons/bi'
 
-import { FaAlignCenter, FaHome } from 'react-icons/fa'
+import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
 import { SIDE_NAV } from './sideNav.i18n'
@@ -161,6 +161,12 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#4E87F8',
     },
     {
+      pathTo: '/vendors',
+      title: `${SIDE_NAV}.vendors`,
+      Icon: BiUserPin,
+      color: '#9F7AEA',
+    },
+    {
       pathTo: '/performance',
       title: `${SIDE_NAV}.performance`,
       Icon: BiLineChart,
@@ -285,12 +291,7 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiLineChart,
       color: '#68D391',
     },
-    // {
-    //   pathTo: '/support-tickets',
-    //   title: 'Support',
-    //   Icon: FaReact,
-    //   color: '#3182CE',
-    // },
+
     {
       pathTo: '/userManager',
       title: `${SIDE_NAV}.userMgmt`,
@@ -314,6 +315,12 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
+    },
+    {
+      pathTo: '/support-tickets',
+      title: 'Support',
+      Icon: FaReact,
+      color: '#3182CE',
     },
     ...(showForPreProd
       ? [
