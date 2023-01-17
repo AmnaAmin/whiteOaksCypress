@@ -41,6 +41,7 @@ const VENDOR_TABLE_QUERY_KEYS = {
   market: 'market.contains',
   state: 'state.contains',
   businessPhoneNumber: 'businessPhoneNumber.contains',
+  businessEmailAddress: 'businessEmailAddress.contains',
 }
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
@@ -150,7 +151,6 @@ type ProjectProps = {
   selectedCard: string
 }
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
-
   const { isFPM } = useUserRolesSelector()
 
   // FPM portal -> Show vendors having same market as the logged in FPM
@@ -181,7 +181,12 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     }
   }, [selectedCard])
 
-  const { vendors : allVendors, isLoading, dataCount, totalPages } = useVendor(
+  const {
+    vendors: allVendors,
+    isLoading,
+    dataCount,
+    totalPages,
+  } = useVendor(
     filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
