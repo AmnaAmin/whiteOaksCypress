@@ -16,6 +16,7 @@ import {
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
 import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
+import { ValidateEmail } from 'utils/string-formatters'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -600,12 +601,13 @@ export const useSaveLanguage = () => {
 }
 
 export const useVendorNext = ({ control, documents }: { control: any; documents?: any }) => {
-  const [ein, ssn, ...detailfields] = useWatch({
+  const [ein, ssn, businessEmailAddress, ...detailfields] = useWatch({
     control,
     name: [
       'einNumber',
       'ssnNumber',
       'businessEmailAddress',
+
       'capacity',
       'city',
       'companyName',
@@ -630,8 +632,9 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10
   const isSSNNumber = ssn?.replace(/\D+/g, '').length! === 9
   const isEinNumber = ein?.replace(/\D+/g, '').length! === 9
+  const isValidEmail = ValidateEmail(businessEmailAddress)
   return {
-    disableDetailsNext: detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo,
+    disableDetailsNext: detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo || isValidEmail,
 
     disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl), //disable logic for next on documents tab.
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
