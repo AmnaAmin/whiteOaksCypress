@@ -45,8 +45,6 @@ export const SupportModal: React.FC<ProjectTypeFormTypes> = ({
   }, [onCloseDisclosure, onOpen, supportDetail])
   const [isLoading, setLoading] = useState(false)
 
-  console.log('loding', isLoading)
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>
       <ModalOverlay />
@@ -63,7 +61,7 @@ export const SupportModal: React.FC<ProjectTypeFormTypes> = ({
           </FormLabel>
         </ModalHeader>
         <ModalCloseButton onClick={onClose} />
-        {isLoading && <Progress isIndeterminate colorScheme="green" aria-label="loading" size="xs" />}
+        {isLoading && <Progress isIndeterminate colorScheme="brand" aria-label="loading" size="xs" />}
 
         <ModalBody p={0}>
           <Box>

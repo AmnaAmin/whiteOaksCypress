@@ -16,7 +16,7 @@ export const SupportTickets = () => {
           {t(`${SUPPORT}.support`)}
         </Text>
 
-        <Button onClick={onOpen} colorScheme="green" leftIcon={<BiAddToQueue />}>
+        <Button onClick={onOpen} colorScheme="brand" leftIcon={<BiAddToQueue />}>
           {t(`${SUPPORT}.newticket`)}
         </Button>
       </HStack>

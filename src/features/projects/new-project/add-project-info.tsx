@@ -45,6 +45,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   const woStartDateMin = useWOStartDateMin(control)
 
   const [fileBlob, setFileBlob] = React.useState<Blob>()
+  const [preventSpecialChara, setPreventSpecialChara] = React.useState('')
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
   }
@@ -58,6 +59,11 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
     setValue('documents', fileBlob as Blob)
   }
 
+  const handleChange = e => {
+    const result = e.target.value.replace(/[^a-zA-Z\s]/g, '')
+    setPreventSpecialChara(result)
+  }
+
   return (
     <Flex flexDir="column">
       <Box px="6" minH="300px">
@@ -67,7 +73,13 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.name`)} size="md" htmlFor="name">
                 {t(`${NEW_PROJECT}.name`)}
               </FormLabel>
-              <Input id="name" {...register('name')} autoComplete="off" />
+              <Input
+                id="name"
+                {...register('name', {})}
+                autoComplete="off"
+                value={preventSpecialChara}
+                onChange={handleChange}
+              />
             </FormControl>
           </GridItem>
 
@@ -101,7 +113,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.woNumber`)} size="md" htmlFor="woNumber">
                 {t(`${NEW_PROJECT}.woNumber`)}
               </FormLabel>
-              <Input id="woNumber" {...register('woNumber')} autoComplete="off" />
+              <Input id="woNumber" {...register('woNumber')} autoComplete="off" type="number" />
             </FormControl>
           </GridItem>
 
@@ -110,7 +122,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.poNumber`)} size="md" htmlFor="poNumber">
                 {t(`${NEW_PROJECT}.poNumber`)}
               </FormLabel>
-              <Input id="poNumber" {...register('poNumber')} autoComplete="off" />
+              <Input id="poNumber" {...register('poNumber')} autoComplete="off" type="number" />
             </FormControl>
           </GridItem>
         </Grid>

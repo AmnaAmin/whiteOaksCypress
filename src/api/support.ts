@@ -105,6 +105,7 @@ export const parseSupportFormValuesToAPIEditPayload = (
     title: formValues.title,
     description: formValues.description,
     resolution: formValues.resolution,
+    s3Url: supportDetail?.s3Url,
   }
 }
 

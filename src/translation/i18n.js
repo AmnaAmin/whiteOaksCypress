@@ -20,6 +20,7 @@ import { auditLogs } from 'features/project-details/audit-logs/auditLogs.i18n'
 import { support } from 'features/support/support.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
+import { globalErrors } from './errors.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -47,6 +48,7 @@ i18n.use(initReactI18next).init({
         ...support.en.translation,
         ...vendorProfile.en.translation,
         ...projectAwards.en.translation,
+        ...globalErrors.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -335,6 +337,7 @@ i18n.use(initReactI18next).init({
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
+        portalAccess: 'Portal Access',
         capacity: 'Capacity',
         last4digits: 'Last 4 digits of SSN/EIN',
         streetAddress: 'Street Address',
@@ -360,6 +363,8 @@ i18n.use(initReactI18next).init({
         einNumber: 'EIN/SSN',
         availableCapacity: 'Available Capacity',
         skills: 'Construction Trade',
+        portalRegistration: 'Portal Registration',
+        enableVendorPortal: 'Enable Vendor Portal',
 
         // Vendor-profile-documents
         agreementSignedDate: 'Document Signed',
@@ -506,6 +511,7 @@ i18n.use(initReactI18next).init({
         poNumber: 'PO Number',
         profitTotal: 'Profit Total',
         partialPayment: 'Partial Payment',
+        partialPaymentDate: 'Partial Payment Date',
         woaCompletionDate: 'WOA Completion Date',
         accountPayable: 'Account Payable',
         accountRecievable: 'Account Recievable',
@@ -559,6 +565,7 @@ i18n.use(initReactI18next).init({
         ...support.es.translation,
         ...vendorProfile.es.translation,
         ...projectAwards.es.translation,
+        ...globalErrors.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -906,6 +913,7 @@ i18n.use(initReactI18next).init({
         // Vendor-profile-details
         businessName: 'Nombre del Negocio',
         score: 'Puntaje',
+        portalAccess: 'Acceso al Portal',
         capacity: 'Capacidad',
         last4digits: 'Últimos 4 dígitos del SSN/EIN',
         paymentMethods: 'Métodos de Pago',
@@ -1021,6 +1029,8 @@ i18n.use(initReactI18next).init({
         creditCard: 'Crédito',
         ach: 'ACH',
         comment: 'Comentario',
+        partialPayment: 'Pago parcial',
+        partialPaymentDate: 'Fecha de pago parcial',
 
         // Alerts
         triggeredAlerts: 'Alertas activadas',

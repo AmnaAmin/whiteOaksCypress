@@ -27,4 +27,5 @@ export type SupportsPayload = {
   title: string
   description: string
   resolution: string
+  s3Url?: string | null
 } & FileAttachment

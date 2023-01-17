@@ -42,20 +42,19 @@ export const PROJECT_TYPE_COLUMNS: ColumnDef<any>[] = [
 export const ProjectTypeTable = () => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedProjectType, setSelectedProjectType] = useState()
-  const { data: projectType, isLoading, refetch } = useProjectType()
+  const { data: projectType, isLoading } = useProjectType()
   return (
     <Box overflow="auto" roundedTop={8}>
       <ProjectTypeModal
         projectTypetDetails={selectedProjectType}
         onClose={() => {
-          refetch()
           setSelectedProjectType(undefined)
           onCloseDisclosure()
         }}
         isOpen={isOpen}
       />
 
-      <Box overflow={'auto'} h="calc(100vh - 160px)" roundedTop={6}>
+      <Box overflowX={'auto'} h="calc(100vh - 450px)" roundedTop={6}>
         <TableContextProvider data={projectType} columns={PROJECT_TYPE_COLUMNS}>
           <Table
             isLoading={isLoading}

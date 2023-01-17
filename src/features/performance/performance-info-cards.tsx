@@ -38,7 +38,7 @@ export const PerformanceInfoCards: React.FC<{
         h={{ base: 'unset', xl: '97px' }}
         w="100%"
         bg="white"
-        borderRadius="4px"
+        borderRadius="6px"
         box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
         mt={'3'}
         mb={'3'}

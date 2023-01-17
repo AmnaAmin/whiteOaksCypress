@@ -3,12 +3,12 @@ import { useMutation, useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { Vendors } from 'types/vendor.types'
 import { useQueryClient } from 'react-query'
-import orderBy from 'lodash/orderBy'
 import xml2js from 'xml2js'
 import { ProjectType } from 'types/common.types'
 import { useEffect, useRef, useState } from 'react'
 import round from 'lodash/round'
 import { PROJECTS_QUERY_KEY } from './projects'
+import { usePaginationQuery } from 'api'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
@@ -226,7 +226,7 @@ export const useProperties = () => {
   const client = useClient()
 
   const { data: properties, ...rest } = useQuery('properties', async () => {
-    const response = await client(`properties`, {})
+    const response = await client(`properties/all`, {})
 
     return response?.data
   })
@@ -405,18 +405,78 @@ export const useClients = () => {
   }
 }
 
+export const VENDORS_SELECTED_CARD_MAP_URL = {
+  active: 'status.equals=12',
+  inActive: 'status.equals=13',
+  doNotUse: 'status.equals=14',
+  expired: 'status.equals=15',
+}
+
 const VENDOR_QUERY_KEY = 'vendor'
-export const useVendor = () => {
-  const client = useClient()
+type vendors = Array<any>
 
-  const { data, ...rest } = useQuery<Array<Vendors>>(VENDOR_QUERY_KEY, async () => {
-    const response = await client(`view-vendors`, {})
+const getVendorsQueryString = (filterQueryString: string) => {
+  let queryString = filterQueryString
+  if (filterQueryString?.search('&sort=coiWcExpirationDate.equals') < 0) {
+    queryString = queryString + `&sort=createdDate,asc`
+  }
+  return queryString
+}
 
-    return orderBy(response?.data || [], ['id'], ['desc'])
-  })
+export const useVendor = (queryString: string, pageSize: number) => {
+  const apiQueryString = getVendorsQueryString(queryString)
+
+  const { data, ...rest } = usePaginationQuery<vendors>(
+    [VENDOR_QUERY_KEY, apiQueryString],
+    `view-vendors/v1?${apiQueryString}`,
+    pageSize,
+  )
 
   return {
-    vendors: data,
+    vendors: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
+    ...rest,
+  }
+}
+
+export const ALL_VENDORS_QUERY_KEY = 'all_vendors'
+export const useGetAllVendors = (filterQueryString: string) => {
+  const client = useClient()
+
+  const { data, ...rest } = useQuery<Array<Project>>(
+    ALL_VENDORS_QUERY_KEY,
+    async () => {
+      const response = await client(`view-vendors/v1?${filterQueryString}`, {})
+
+      return response?.data
+    },
+    {
+      enabled: false,
+    },
+  )
+
+  return {
+    allVendors: data,
+    ...rest,
+  }
+}
+
+
+export const useFPMVendor = (marketId?: number[]): any => {
+  const client = useClient()
+
+  const { data, ...rest } = useQuery<ProjectType>(
+    ['fpmVendors', marketId],
+    async () => {
+      const response = await client(`view-vendors/v1?marketId.in=${marketId}&sort=modifiedDate,asc&page=0&size=10000000`, {})
+      return response?.data
+    },
+    { enabled: !!marketId },
+  )
+
+  return {
+    fpmVendors: data,
     ...rest,
   }
 }

@@ -354,7 +354,7 @@ export const PerformanceGraphWithUsers: React.FC<{
 
   return (
     <>
-      <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'13px'}>
+      <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'6px'}>
         <Grid h="40px" templateColumns="repeat(3, 1fr)" gap={0} m={5}>
           <GridItem rowSpan={2} colSpan={2} colStart={1} colEnd={2}>
             <HStack>

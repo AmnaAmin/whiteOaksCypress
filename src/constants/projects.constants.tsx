@@ -1,10 +1,11 @@
-import { Link } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/react-table'
 import Status from 'features/common/status'
 import numeral from 'numeral'
 import { isDefined } from 'utils'
 import { dateFormat } from 'utils/date-time-utils'
 import { percentageFormatter } from 'utils/string-formatters'
+import { Link } from 'react-router-dom'
 
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
@@ -17,26 +18,26 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   clientDueDate: 'clientDueDate.equals',
   projectTypeLabel: 'projectTypeLabel.contains',
   projectCoordinator: 'projectCoordinator.contains',
-  accountPayable: 'accountPayable.contains',
+  accountPayable: 'accountPayable.equals',
   zipCode: 'zipCode.contains',
   clientName: 'clientName.contains',
-  sowOriginalContractAmount: 'sowOriginalContractAmount.greaterThanOrEqual',
-  projectRelatedCost: 'projectRelatedCost.greaterThanOrEqual',
+  sowOriginalContractAmount: 'sowOriginalContractAmount.equals',
+  projectRelatedCost: 'projectRelatedCost.equals',
   woaPaidDate: 'woaPaidDate.equals',
   invoiceNumber: 'invoiceNumber.contains',
   woaInvoiceDate: 'woaInvoiceDate.equals',
-  accountRecievable: 'accountRecievable.greaterThanOrEqual',
+  accountRecievable: 'accountRecievable.equals',
   market: 'market.contains',
   state: 'state.contains',
   woaCompletionDate: 'woaCompletionDate.equals',
   region: 'region.contains',
-  partialPayment: 'partialPayment.contains',
+  partialPayment: 'partialPayment.equals',
   expectedPaymentDate: 'expectedPaymentDate.equals',
   profitPercentage: 'profitPercentage.equals',
   profitPercentageAmount: 'profitPercentageAmount.greaterThanOrEqual',
   profitTotal: 'profitTotal.equals',
-  materialCost: 'materialCost.contains',
-  drawAmount: 'drawAmount.greaterThanOrEqual',
+  materialCost: 'materialCost.equals',
+  drawAmount: 'drawAmount.equals',
   vendorPaymentPercentage: 'vendorPaymentPercentage.equals',
   woNumber: 'woNumber.contains',
   poNumber: 'poNumber.contains',
@@ -44,6 +45,9 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   projectManagerId: 'projectManagerId.in',
   projectStatusId: 'projectStatusId.in',
   clientSignoffDate: 'clientSignoffDate.lessThanOrEqual',
+  sowNewAmount: 'sowNewAmount.equals',
+  drawAmountSow: 'drawAmountSow.equals',
+  drawAmountWo: 'drawAmountWo.equals',
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
@@ -54,16 +58,16 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     cell: (row: any) => {
       const value = row.cell.getValue()
       return (
-        <Link
-          href={`${process.env.PUBLIC_URL}/project-details/${value}`}
-          color="#533f03"
-          fontWeight="bold"
+        <Box
+          fontWeight={'500'}
           _hover={{
-            color: '#8d2638',
+            color: 'barColor.50',
+            textDecor: 'underline',
           }}
+          color="brand.300"
         >
-          {value}
-        </Link>
+          <Link to={`/project-details/${value}`}>{value}</Link>
+        </Box>
       )
     },
   },

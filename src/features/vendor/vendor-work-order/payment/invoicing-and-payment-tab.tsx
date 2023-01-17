@@ -1,4 +1,4 @@
-import { Box, HStack, Text, ModalFooter, Divider, ModalBody, Flex, Grid, GridItem } from '@chakra-ui/react'
+import { Box, Text, ModalFooter, Divider, ModalBody, Flex, Grid, GridItem } from '@chakra-ui/react'
 import { BiFile, BiCalendar } from 'react-icons/bi'
 import InputView from 'components/input-view/input-view'
 import { dateFormat } from 'utils/date-time-utils'
@@ -32,7 +32,7 @@ const InvoicingAndPaymentTab = ({
   const { t } = useTranslation()
   return (
     <Box>
-      <ModalBody ml={30} w="95%" h={'calc(100vh - 300px)'} overflow="auto">
+      <ModalBody ml={'0px'} w="95%" h={'calc(100vh - 300px)'} overflow="auto">
         <Grid
           templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(170px,1fr))' }}
           gap={5}
@@ -41,7 +41,7 @@ const InvoicingAndPaymentTab = ({
           flexWrap="wrap"
           display={{ base: 'flex', sm: 'grid' }}
         >
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -57,7 +57,7 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiFile}
@@ -72,7 +72,14 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem
+            flex={{ base: '1', sm: 'unset' }}
+            sx={{
+              '@media only screen and (max-width: 418px)': {
+                mr: 3,
+              },
+            }}
+          >
             <InputView
               showDivider={false}
               Icon={BiFile}
@@ -87,7 +94,7 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -111,7 +118,14 @@ const InvoicingAndPaymentTab = ({
           flexWrap="wrap"
           display={{ base: 'flex', sm: 'grid' }}
         >
-          <GridItem>
+          <GridItem
+            flex={{ base: '1', sm: 'unset' }}
+            sx={{
+              '@media only screen and (max-width: 418px)': {
+                mr: 3,
+              },
+            }}
+          >
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -127,7 +141,7 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -142,7 +156,7 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -157,7 +171,7 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
 
-          <GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -174,8 +188,15 @@ const InvoicingAndPaymentTab = ({
           </GridItem>
         </Grid>
         <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" />
-        <HStack mr={100} pt={30} spacing="60px" justifyContent={'center'}>
-          <Box w="20%">
+        <Grid
+          templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(170px,1fr))' }}
+          gap={5}
+          alignItems={'center'}
+          my="30px"
+          flexWrap="wrap"
+          display={{ base: 'flex', sm: 'grid' }}
+        >
+          <GridItem>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -189,50 +210,8 @@ const InvoicingAndPaymentTab = ({
                 )
               }
             />
-          </Box>
-
-          {/* <Box w="25%">
-          <InputView
-          showDivider={false}
-            Icon={<BiDollarCircle />}
-            label="Final Invoice:"
-            InputElem={<Text>{currencyFormatter(invoiceAndPaymentData?.finalInvoiceAmount)} </Text>}
-          />
-        </Box> */}
-
-          {/* Is it required?! */}
-
-          {/* <Box w="20%">
-            <InputView
-              showDivider={false}
-              label={t('WOOriginalAmount')}
-              Icon={<BiDollarCircle />}
-              InputElem={
-                invoiceAndPaymentData.clientOriginalApprovedAmount ? (
-                  <Text>{currencyFormatter(invoiceAndPaymentData?.clientOriginalApprovedAmount)}</Text>
-                ) : (
-                  <Text>dd/mm/yy</Text>
-                )
-              }
-            />
-          </Box> */}
-          <Box w="20%"></Box>
-          <Box w="20%"></Box>
-          <Box w="20%"></Box>
-
-          {/* <Box w="25%">
-          <InputView
-          showDivider={false}
-            label="Upload Invoice"
-            Icon={<BiFile />}
-            InputElem={
-              <Button h="1.6rem" colorScheme="blue" variant="outline" color="#4E87F8">
-                Choose File
-              </Button>
-            }
-          />
-        </Box> */}
-        </HStack>
+          </GridItem>
+        </Grid>
       </ModalBody>
       <ModalFooter borderTop="1px solid #E2E8F0" p={5}>
         <Flex w="100%" justifyContent="end">

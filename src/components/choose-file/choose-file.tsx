@@ -80,20 +80,20 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
         position="relative"
         overflow="hidden"
         sx={{
-          "@media only screen and (max-width: 480px)": {
-            width: "100% !important"
-          }
+          '@media only screen and (max-width: 480px)': {
+            width: '100% !important',
+          },
         }}
       >
         {value && (
-          <Flex 
+          <Flex
             rounded="6px"
-            alignItems="center" 
-            height="40px" 
+            alignItems="center"
+            height="40px"
             sx={{
-              "@media only screen and (max-width: 480px)": {
-                width: "100% !important"
-              }
+              '@media only screen and (max-width: 480px)': {
+                width: '100% !important',
+              },
             }}
           >
             <Text
@@ -108,26 +108,25 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
               w="170px"
               textAlign="start"
               sx={{
-                "@media only screen and (max-width: 480px)": {
-                  position: "relative",
-                  left: "0"
-                }
+                '@media only screen and (max-width: 480px)': {
+                  position: 'relative',
+                  left: '0',
+                },
               }}
-
             >
               {value}
             </Text>
-            <Button 
-              type="button" 
-              variant="link" 
-              size="xl" 
-              colorScheme={isError ? 'red' : 'darkPrimary'} 
+            <Button
+              type="button"
+              variant="link"
+              size="xl"
+              colorScheme={isError ? 'red' : 'darkPrimary'}
               bg="white"
               sx={{
-                "@media only screen and (max-width: 480px)": {
-                  position: "relative",
-                  left: "26%"
-                }
+                '@media only screen and (max-width: 480px)': {
+                  position: 'relative',
+                  left: '26%',
+                },
               }}
             >
               <BiUpload />
