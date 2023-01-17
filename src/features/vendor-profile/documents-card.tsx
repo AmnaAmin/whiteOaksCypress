@@ -521,7 +521,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
-                        <Box >
+                        <Box>
                           <ChooseFileField
                             name={field.name}
                             value={field.value?.name ? field.value?.name : t('chooseFile')}

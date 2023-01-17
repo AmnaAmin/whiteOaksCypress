@@ -57,3 +57,10 @@ export const percentageFormatter = (percentage: number) => {
   }
   return percentage
 }
+
+export const validateEmail = (mail: any) => {
+  if (/\S+@\S+\.\S+/.test(mail)) {
+    return false
+  }
+  return true
+}
