@@ -7,6 +7,7 @@ import React from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { Market, VendorMarketFormValues, VendorProfile } from 'types/vendor.types'
 import { useMarkets } from 'api/vendor-details'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type marketFormProps = {
   onClose?: () => void
@@ -36,6 +37,7 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
 export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
   const { control } = useFormContext<VendorMarketFormValues>()
   const tradeCheckboxes = useWatch({ control, name: 'markets' })
+  const { isFPM } = useUserRolesSelector()
 
   return (
     <>
@@ -58,6 +60,7 @@ export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
                         const checked = event.target.checked
                         onChange({ ...checkbox, checked })
                       }}
+                      isDisabled={isFPM}
                     >
                       {value.market?.metropolitanServiceArea}
                     </CheckboxButton>
@@ -84,7 +87,7 @@ export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
         )}
 
         <Button
-          disabled={!validateMarket(tradeCheckboxes)}
+          disabled={!validateMarket(tradeCheckboxes) || isFPM}
           type="submit"
           variant="solid"
           colorScheme="darkPrimary"

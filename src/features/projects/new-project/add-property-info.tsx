@@ -208,7 +208,9 @@ export const AddPropertyInfo: React.FC<{
                   {...register('city', {
                     required: true,
                     onChange: e => {
-                      setAddressInfo({ ...addressInfo, city: e.target.value })
+                      const city = e.target.value?.replace(/[^a-zA-Z\s]/g, '')
+                      setValue('city', city)
+                      setAddressInfo({ ...addressInfo, city })
                     },
                   })}
                 />

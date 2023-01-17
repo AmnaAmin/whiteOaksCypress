@@ -186,13 +186,16 @@ const vendorRegisterFormSchema = {
   businessContactExt: Yup.number().transform(yupNullable),
   secondaryPhone: Yup.string().matches(phoneRegex, 'Secondary Phone number is not valid').transform(yupNullable),
   secondaryPhoneExt: Yup.number().transform(yupNullable),*/
-  businessEmailAddress: Yup.string().email('Must be a valid email').required('Email is required').transform(yupNullable),
+  businessEmailAddress: Yup.string()
+    .email('Must be a valid email')
+    .required('Email is required')
+    .transform(yupNullable),
   secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),
   streetAddress: Yup.string().required('Street Address is required'),
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
   zipCode: Yup.string().required('ZipCode is required'),
-  capacity: Yup.string().required('Capacity is required'),
+  capacity: Yup.string().required('Capacity is required').matches(/^\d+$/, 'Must be a digit'),
 
   //Documents
 
@@ -216,9 +219,7 @@ const vendorRegisterFormSchema = {
     Yup.object().shape({
       licenseType: Yup.string().typeError('License Type must be a string').required('License Type is required'),
       licenseNumber: Yup.string().typeError('License Number must be a string').required('License Number is required'),
-      licenseExpirationDate: Yup.string()
-        .typeError('Expiration Date must be a string')
-        .required('Expiration Date is required'),
+      expiryDate: Yup.string().typeError('Expiration Date must be a string').required('Expiration Date is required'),
       expirationFile: Yup.mixed().required('File is required'),
     }),
   ),
@@ -355,7 +356,7 @@ export const VendorRegister = () => {
       'coiWcExpDate',
     ]
 
-    const licenseFields = ['licenses']
+    const licenseFieldName = 'licenses'
 
     const tradeFieldName = 'trades'
 
@@ -389,8 +390,8 @@ export const VendorRegister = () => {
     }
 
     if (formTabIndex === FORM_TABS.LICENSE) {
-      for (const fieldName of licenseFields) {
-        if (!(await trigger(fieldName))) return null
+      if (!(await trigger(licenseFieldName))) {
+        return null
       }
 
       setformTabIndex(FORM_TABS.CONSTRUCTION_TRADE)
@@ -401,6 +402,7 @@ export const VendorRegister = () => {
     if (formTabIndex === FORM_TABS.CONSTRUCTION_TRADE) {
       if (!validateTrade(getValues(tradeFieldName))) {
         showError('Trade')
+
         return null
       }
 
@@ -577,8 +579,8 @@ export const VendorRegister = () => {
                         disabled={disableLoginFields}
                         placeholder="Please enter your email address"
                         {...register('email', {
-                          required: 'This is required', 
-                          onChange: e => setValue("businessEmailAddress", e.target.value)
+                          required: 'This is required',
+                          onChange: e => setValue('businessEmailAddress', e.target.value),
                         })}
                         tabIndex={1}
                       />
@@ -597,7 +599,7 @@ export const VendorRegister = () => {
                         placeholder="Enter your first name"
                         {...register('firstName', {
                           required: 'This is required',
-                          onChange: e => setValue("ownerName", e.target.value + " " + getValues("lastName")  )
+                          onChange: e => setValue('ownerName', e.target.value + ' ' + getValues('lastName')),
                         })}
                         tabIndex={2}
                       />
@@ -617,7 +619,7 @@ export const VendorRegister = () => {
                         placeholder="Enter your last name"
                         {...register('lastName', {
                           required: 'This is required',
-                          onChange: e => setValue("ownerName", getValues("firstName") + " " + e.target.value )
+                          onChange: e => setValue('ownerName', getValues('firstName') + ' ' + e.target.value),
                         })}
                         tabIndex={3}
                       />
