@@ -107,17 +107,19 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
           </Radio>
         </Stack>
       </RadioGroup>
-      <Box overflow={'auto'} w="100%" h="430px" position="relative" roundedTop={6} pointerEvents={isFPM ? 'none' : 'auto'}>
+      <Box
+        overflow={'auto'}
+        w="100%"
+        h="430px"
+        position="relative"
+        roundedTop={6}
+        pointerEvents={isFPM ? 'none' : 'auto'}
+      >
         <TableContextProvider data={tableData} columns={tableColumns}>
-          <Table isLoading={isFetching || isLoading} isEmpty={!isFetching && !tableData?.length}/>
+          <Table isLoading={isFetching || isLoading} isEmpty={!isFetching && !tableData?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportButton
-                columns={tableColumns}
-                fetchedData={tableData}
-                colorScheme="brand"
-                fileName="projects"
-              />
+              <ExportButton columns={tableColumns} fetchedData={tableData} colorScheme="brand" fileName="projects" />
               <CustomDivider />
               {settingColumns && (
                 <TableColumnSettings

@@ -24,15 +24,15 @@ const Vendors = () => {
           {/* <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
           {t('clearFilter')}
         </Button> */}
-        <Spacer />
-        {!isFPM && (
-          <Box pt="4">
-            <Button onClick={onNewVendorModalOpen} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
-              {t(`${VENDOR_MANAGER}.newVendor`)}
-            </Button>
-          </Box>
-        )}
-      </HStack>
+          <Spacer />
+          {!isFPM && (
+            <Box pt="4">
+              <Button onClick={onNewVendorModalOpen} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
+                {t(`${VENDOR_MANAGER}.newVendor`)}
+              </Button>
+            </Box>
+          )}
+        </HStack>
 
         <VendorTable selectedCard={selectedCard as string} />
       </Card>
