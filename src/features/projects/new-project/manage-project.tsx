@@ -24,7 +24,7 @@ export const ManageProject: React.FC<{
   const values = getValues()
   const { t } = useTranslation()
 
-  const [preventSpecialChara, setPreventSpecialChara] = React.useState('')
+  const [formattedClientName, setFormattedClientName] = React.useState('')
   // not used until requirement is clear : const { fieldProjectManagerOptions } = useFPMs()
   const { fieldProjectManagerByMarketOptions } = useFPMsByMarket(values.newMarket?.value)
   const { projectCoordinatorSelectOptions } = useProjectCoordinators()
@@ -42,8 +42,9 @@ export const ManageProject: React.FC<{
   }
 
   const handleChange = e => {
+    //  this regex is used to remove any special character
     const result = e.target.value.replace(/[^a-zA-Z\s]/g, '')
-    setPreventSpecialChara(result)
+    setFormattedClientName(result)
   }
 
   return (
@@ -127,7 +128,7 @@ export const ManageProject: React.FC<{
               <Input
                 id="clientSuperName"
                 {...register('superLastName')}
-                value={preventSpecialChara}
+                value={formattedClientName}
                 onChange={handleChange}
               />
             </FormControl>

@@ -57,3 +57,7 @@ export const percentageFormatter = (percentage: number) => {
   }
   return percentage
 }
+
+export const validEmail = value => {
+  return /\S+@\S+\.\S+/.test(value)
+}

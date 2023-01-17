@@ -29,6 +29,7 @@ import { useAddressShouldBeVerified, usePropertyInformationNextDisabled } from '
 import NumberFormat from 'react-number-format'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { STATUS } from 'features/common/status'
+import { validEmail } from 'utils/string-formatters'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -59,7 +60,6 @@ export const AddPropertyInfo: React.FC<{
   const { propertySelectOptions } = useProperties()
   const { stateSelectOptions, states } = useStates()
   const { marketSelectOptions, markets } = useMarkets()
-  const [preventSpecialChara, setPreventSpecialChara] = React.useState('')
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [phoneValidation, setPhoneValidation] = useState<any>()
@@ -88,9 +88,6 @@ export const AddPropertyInfo: React.FC<{
   const watchCity = useWatch({ name: 'city', control })
   const watchState = useWatch({ name: 'state', control })
   const watchZipCode = useWatch({ name: 'zipCode', control })
-  const watchPhone = useWatch({ name: 'hoaPhone', control })
-
-  const isHoaPhone = watchPhone?.replace(/\D+/g, '').length! < 10
 
   // Set all values of Address Info
   useEffect(() => {
@@ -133,19 +130,9 @@ export const AddPropertyInfo: React.FC<{
     }
   }
 
-  //  prevent special characters
-  const handleChange = e => {
-    const result = e.target.value.replace(/[^a-zA-Z\s]/g, '')
-    setPreventSpecialChara(result)
-  }
-
   // Email Validation
-  function isValidEmail(email) {
-    return /\S+@\S+\.\S+/.test(email)
-  }
-
   const handleEmailChange = event => {
-    if (!isValidEmail(event.target.value)) {
+    if (!validEmail(event.target.value)) {
       setError('invalid email address')
     } else {
       setError('')
@@ -157,7 +144,6 @@ export const AddPropertyInfo: React.FC<{
   // Phone validation
   const handlePhoneValidation = (e: any) => {
     const result = e.target.value
-
     setPhoneValidation(result.replace(/\D+/g, '').length < 10)
   }
   return (
@@ -230,8 +216,6 @@ export const AddPropertyInfo: React.FC<{
                       setAddressInfo({ ...addressInfo, city: e.target.value })
                     },
                   })}
-                  onChange={handleChange}
-                  value={preventSpecialChara}
                 />
                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
               </FormControl>
@@ -399,7 +383,7 @@ export const AddPropertyInfo: React.FC<{
             colorScheme="brand"
             ml="3"
             size="md"
-            disabled={isNextButtonDisabled || isHoaPhone}
+            disabled={isNextButtonDisabled}
             onClick={() => {
               if (addressShouldBeVerified) {
                 refetch()
