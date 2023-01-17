@@ -44,3 +44,8 @@ export const PasswordFormValidationSchema = yup.object({
 export const usePasswordFormValidationResolver = () => {
   return useYupValidationResolver(PasswordFormValidationSchema)
 }
+
+
+export const validateTelePhoneNumber = ( number: string ): boolean => {
+  return number ? number.match(/\d/g)?.length===10 : false;
+}
