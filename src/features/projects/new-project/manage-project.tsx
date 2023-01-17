@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import { useProjectManagementSaveButtonDisabled } from './hooks'
 import NumberFormat from 'react-number-format'
 import Select from 'components/form/react-select'
-import { CustomRequiredInput } from 'components/input/input'
 
 export const ManageProject: React.FC<{
   isLoading: boolean
@@ -148,7 +147,7 @@ export const ManageProject: React.FC<{
                     <>
                       <NumberFormat
                         id="superPhoneNumber"
-                        customInput={CustomRequiredInput}
+                        customInput={Input}
                         value={field.value}
                         onChange={e => field.onChange(e)}
                         format="(###)-###-####"
@@ -180,7 +179,7 @@ export const ManageProject: React.FC<{
                 {...register('superEmailAddress', {
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'invalid email address',
+                    message: 'Invalid Email Address',
                   },
                 })}
               />

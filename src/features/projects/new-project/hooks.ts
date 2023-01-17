@@ -45,14 +45,7 @@ export const useAddressShouldBeVerified = (control: Control<ProjectFormValues>):
 export const useProjectManagementSaveButtonDisabled = (control: Control<ProjectFormValues>): boolean => {
   const formValues = useWatch({ control })
 
-  const isSuperPhNumber = formValues?.superPhoneNumber!.replace(/\D+/g, '').length! < 10
-
-  return (
-    !formValues?.projectManager?.value ||
-    !formValues?.projectCoordinator?.value ||
-    !formValues?.client?.value ||
-    isSuperPhNumber
-  )
+  return !formValues?.projectManager?.value || !formValues?.projectCoordinator?.value || !formValues?.client?.value
 }
 
 export const useWOStartDateMin = (control: Control<ProjectFormValues>): string => {
