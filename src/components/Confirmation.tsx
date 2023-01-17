@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 
 interface ConfirmationBoxProps {
-  isOpen?: any
+  isOpen: boolean
   isLoading?: boolean
   onClose: any
   onConfirm?: () => void
