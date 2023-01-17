@@ -195,8 +195,8 @@ const vendorRegisterFormSchema = {
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
   zipCode: Yup.string().required('ZipCode is required'),
-  capacity: Yup.string().required('Capacity is required').matches(/^\d+$/, "Must be a digit"),
-  
+  capacity: Yup.string().required('Capacity is required').matches(/^\d+$/, 'Must be a digit'),
+
   //Documents
 
   w9DocumentDate: Yup.string(),
