@@ -106,9 +106,10 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const fpmRole: any = formValues?.fieldProjectManagerRoleId
 
   const isEditUser = !!(user && user.id)
-  const isVendor = accountType?.label === 'Vendor'
+  const isVendor = userInfo  && userInfo.userTypeLabel === 'Vendor';
   const isProjectCoordinator = accountType?.label === 'Project Coordinator'
   const isFPM = accountType?.label === 'Field Project Manager'
+
 
   // We only show markets when account type is either market fpm, regular fpm or it is project cordinator
   const showMarkets = useMemo(() => {
