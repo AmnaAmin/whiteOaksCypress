@@ -16,7 +16,7 @@ import {
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
 import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
-import { ValidateEmail } from 'utils/string-formatters'
+import { validateEmail } from 'utils/string-formatters'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -632,7 +632,7 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10
   const isSSNNumber = ssn?.replace(/\D+/g, '').length! === 9
   const isEinNumber = ein?.replace(/\D+/g, '').length! === 9
-  const isValidEmail = ValidateEmail(businessEmailAddress)
+  const isValidEmail = validateEmail(businessEmailAddress)
   return {
     disableDetailsNext: detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo || isValidEmail,
 
