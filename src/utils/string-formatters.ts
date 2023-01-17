@@ -70,3 +70,9 @@ export const isValidPhoneNumber = value => {
   }
   return false
 }
+export const validateEmail = (mail: any) => {
+  if (/\S+@\S+\.\S+/.test(mail)) {
+    return false
+  }
+  return true
+}

@@ -31,7 +31,6 @@ export const ManageProject: React.FC<{
   const { clientSelectOptions } = useClients()
 
   const isProjectManagementSaveButtonDisabled = useProjectManagementSaveButtonDisabled(control)
-
   const setPC = e => {
     setValue('projectCoordinator', e)
   }
