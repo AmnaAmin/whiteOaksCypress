@@ -30,6 +30,7 @@ import NumberFormat from 'react-number-format'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { STATUS } from 'features/common/status'
 import { validEmail } from 'utils/string-formatters'
+import { CustomRequiredInput } from 'components/input/input'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -62,7 +63,6 @@ export const AddPropertyInfo: React.FC<{
   const { marketSelectOptions, markets } = useMarkets()
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
-  const [phoneValidation, setPhoneValidation] = useState<any>()
 
   const { data: isAddressVerified, refetch, isLoading } = useGetAddressVerification(addressInfo)
 
@@ -141,11 +141,6 @@ export const AddPropertyInfo: React.FC<{
     setMessage(event.target.value)
   }
 
-  // Phone validation
-  const handlePhoneValidation = (e: any) => {
-    const result = e.target.value
-    setPhoneValidation(result.replace(/\D+/g, '').length < 10)
-  }
   return (
     <>
       <Flex flexDir="column">
@@ -331,13 +326,11 @@ export const AddPropertyInfo: React.FC<{
                       <>
                         <NumberFormat
                           id="hoaPhone"
-                          customInput={Input}
+                          customInput={CustomRequiredInput}
                           value={field.value}
                           onChange={e => {
                             field.onChange(e)
-                            handlePhoneValidation(e)
                           }}
-                          isRequired={true}
                           format="(###)-###-####"
                           mask="_"
                           placeholder="(___)-___-____"
@@ -347,7 +340,6 @@ export const AddPropertyInfo: React.FC<{
                     )
                   }}
                 />
-                <Text color="red">{phoneValidation && 'Invalid Phone number'}</Text>
               </FormControl>
             </GridItem>
             <GridItem>

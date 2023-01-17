@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useProjectManagementSaveButtonDisabled } from './hooks'
 import NumberFormat from 'react-number-format'
 import Select from 'components/form/react-select'
+import { CustomRequiredInput } from 'components/input/input'
 
 export const ManageProject: React.FC<{
   isLoading: boolean
@@ -31,7 +32,6 @@ export const ManageProject: React.FC<{
   const { clientSelectOptions } = useClients()
 
   const isProjectManagementSaveButtonDisabled = useProjectManagementSaveButtonDisabled(control)
-  const phoneNumberRef = useRef<any>()
 
   const setPC = e => {
     setValue('projectCoordinator', e)
@@ -136,41 +136,26 @@ export const ManageProject: React.FC<{
         </Grid>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
-            <FormControl isInvalid={!!errors.superPhoneNumber}>
+            <FormControl>
               <FormLabel size="md" htmlFor="superPhone">
                 {t(`${NEW_PROJECT}.superPhoneNumber`)}
               </FormLabel>
               <Controller
                 control={control}
-                {...register('superPhoneNumber', {
-                  validate: (value: any) => {
-                    if (phoneNumberRef.current) {
-                      if (phoneNumberRef.current.value.replace(/\D+/g, '').length === 10) return true
-                    }
-
-                    return false
-                  },
-                })}
+                name="superPhoneNumber"
                 render={({ field, fieldState }) => {
                   return (
                     <>
                       <NumberFormat
                         id="superPhoneNumber"
-                        customInput={Input}
+                        customInput={CustomRequiredInput}
                         value={field.value}
                         onChange={e => field.onChange(e)}
                         format="(###)-###-####"
                         mask="_"
                         placeholder="(___)-___-____"
-                        getInputRef={phoneNumberRef}
                       />
-                      <FormErrorMessage>
-                        {fieldState.error?.message}
-
-                        {errors?.superPhoneNumber && errors?.superPhoneNumber.type === 'validate' && (
-                          <span>Invalid Phone number</span>
-                        )}
-                      </FormErrorMessage>
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )
                 }}
