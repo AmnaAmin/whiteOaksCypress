@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
@@ -31,8 +31,6 @@ export const ManageProject: React.FC<{
   const { clientSelectOptions } = useClients()
 
   const isProjectManagementSaveButtonDisabled = useProjectManagementSaveButtonDisabled(control)
-  const phoneNumberRef = useRef<any>()
-
   const setPC = e => {
     setValue('projectCoordinator', e)
   }
@@ -141,15 +139,7 @@ export const ManageProject: React.FC<{
               </FormLabel>
               <Controller
                 control={control}
-                {...register('superPhoneNumber', {
-                  validate: (value: any) => {
-                    if (phoneNumberRef.current) {
-                      if (phoneNumberRef.current.value.replace(/\D+/g, '').length === 10) return true
-                    }
-
-                    return false
-                  },
-                })}
+                {...register('superPhoneNumber')}
                 render={({ field, fieldState }) => {
                   return (
                     <>
@@ -161,15 +151,8 @@ export const ManageProject: React.FC<{
                         format="(###)-###-####"
                         mask="_"
                         placeholder="(___)-___-____"
-                        getInputRef={phoneNumberRef}
                       />
-                      <FormErrorMessage>
-                        {fieldState.error?.message}
-
-                        {errors?.superPhoneNumber && errors?.superPhoneNumber.type === 'validate' && (
-                          <span>Invalid Phone number</span>
-                        )}
-                      </FormErrorMessage>
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )
                 }}
