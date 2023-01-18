@@ -1,22 +1,8 @@
-import { Box, Center, FormLabel, Grid, GridItem, HStack, Spinner } from '@chakra-ui/react'
-import { useFPMs } from 'api/pc-projects'
-import { MonthOption } from 'api/performance'
-import ReactSelect from 'components/form/react-select'
-import { subMonths, format } from 'date-fns'
-import { enUS } from 'date-fns/locale'
-import { flatten, take, last } from 'lodash'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { Box, Center, Spinner } from '@chakra-ui/react'
+import React, { useCallback, useState } from 'react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, Legend } from 'recharts'
-import { SelectOption } from 'types/transaction.type'
-import { months, monthsShort, getQuarterByDate, getLastQuarterByDate, getQuarterByMonth } from 'utils/date-time-utils'
-import { currencyFormatter } from 'utils/string-formatters'
 
-type GraphData = {
-  username: string
-  month: any
-  Revenue: any
-  Profit: any
-}[]
+import { currencyFormatter } from 'utils/string-formatters'
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck }) => {
   const labels = [
@@ -78,18 +64,14 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             dataKey={hasUsers ? 'username' : 'month'}
             axisLine={false}
             tickMargin={30}
-            angle={-45}
+            angle={-60}
             interval={Math.floor(vendorData?.length / 60)}
-            tick={
-              ['This Month', 'Last Month'].includes(monthCheck?.label)
-                ? {
-                    fill: '#4A5568',
-                    fontSize: '12px',
-                    fontWeight: 400,
-                    fontStyle: 'normal',
-                  }
-                : false
-            }
+            tick={{
+              fill: '#4A5568',
+              fontSize: '12px',
+              fontWeight: 400,
+              fontStyle: 'normal',
+            }}
             tickLine={false}
             tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
             label={{
@@ -97,7 +79,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
               angle: 360,
               position: 'bottom',
               textAnchor: 'middle',
-              offset: ['This Month', 'Last Month'].includes(monthCheck?.label) ? 80 : 50,
+              offset: 80,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -127,7 +109,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
                 fontWeight: 700,
                 fontStyle: 'inter',
               }}
-              tickMargin={['This Month', 'Last Month'].includes(monthCheck?.label) ? 50 : 5}
+              tickMargin={50}
               xAxisId="users"
             />
           )}
@@ -175,8 +157,8 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             wrapperStyle={{
               lineHeight: '31px',
               position: 'relative',
-              bottom: '50px',
-              left: '40px',
+              bottom: '40px',
+              left: '100px',
             }}
             iconType="circle"
             iconSize={10}
@@ -198,205 +180,16 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
 }
 
 export const PerformanceGraphWithUsers: React.FC<{
-  chartData?: any
+  graphData?: any
   isLoading: boolean
   setYearFilter: (value) => void
-  yearFilter: string | number | null
+  yearFilter: string | number | undefined
   isFetching: boolean
-}> = ({ chartData, isLoading, setYearFilter, yearFilter, isFetching }) => {
-  const { fieldProjectManagerOptions } = useFPMs()
-  const [monthOption, setMonthOption] = useState(MonthOption[0])
-  const [fpmOption, setFpmOption] = useState([])
-  const [graphData, setGraphData] = useState<GraphData>()
-
-  const data = useMemo(
-    () =>
-      flatten(
-        months?.map((month, monthIndex) => {
-          const monthExistsInChart = Object?.keys(chartData)?.find(months => months === month)
-          let nameMonthData
-
-          if (monthExistsInChart) {
-            nameMonthData = chartData?.[month]
-            const graphs = Object?.keys(nameMonthData)?.map((nameKey, index) => {
-              const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
-              return {
-                username: `${firstName} ${lastName}`,
-                month: monthsShort[month],
-                userId: Number(last(userId)),
-                quarter: getQuarterByMonth(monthIndex),
-                Revenue: nameMonthData[nameKey]?.revenue,
-                Profit: nameMonthData[nameKey]?.profit,
-              }
-            })
-            let newgraphs = graphs?.map((n, i) => ({
-              ...n,
-              centerMonth: Math.floor(graphs?.length / 2) === i ? n?.month : undefined,
-            }))
-            return newgraphs
-          }
-
-          return {
-            month: monthsShort[month],
-            centerMonth: monthsShort[month],
-            quarter: getQuarterByMonth(monthIndex),
-            username: '',
-            userId: 0,
-            Bonus: 0,
-            Profit: 0,
-            Revenue: 0,
-          }
-        }),
-      ),
-    [chartData],
-  )
-
-  useEffect(() => {
-    filterGraphData(fpmOption, monthOption)
-  }, [data])
-
-  const onFpmOptionChange = options => {
-    if (options?.length < 1) {
-      return
-    }
-    setFpmOption([])
-
-    if (options?.length > 5) {
-      return
-    }
-
-    // fix fpm names length to keep them within the select bar
-    const selectedFpmOption =
-      options?.map(fpm => ({
-        value: (fpm as SelectOption)?.value,
-        label: (fpm as SelectOption)?.label.substring(0, 8) + '..',
-      })) || []
-
-    setFpmOption(selectedFpmOption)
-
-    filterGraphData(selectedFpmOption, monthOption)
-  }
-
-  const getMonthValue = monthOption => {
-    let selectedFpm = [] as any
-    const currentYear = new Date().getFullYear()
-    const currentMonth = new Date().getMonth()
-    const isCurrentYearData = yearFilter === currentYear || !yearFilter
-    const isPastYearData = yearFilter === currentYear - 1
-
-    if (!['lastMonth', 'thisMonth'].includes(monthOption?.value)) {
-      // fix fpm names length to keep them within the select bar
-      const getFpm = take(fieldProjectManagerOptions, 5)
-      selectedFpm =
-        getFpm?.map(fpm => ({
-          value: (fpm as SelectOption)?.value,
-          label: (fpm as SelectOption)?.label.substring(0, 8) + '..',
-        })) || []
-    }
-
-    setFpmOption(selectedFpm)
-    setMonthOption(monthOption)
-
-    if (
-      ['thisMonth', 'currentQuarter', 'currentYear'].includes(monthOption?.value) ||
-      (monthOption?.label === 'Last Month' && currentMonth !== 0) ||
-      (monthOption?.label === 'Past Quarter' && ![0, 1, 2].includes(currentMonth))
-    ) {
-      if (isCurrentYearData) {
-        filterGraphData(selectedFpm, monthOption)
-      } else {
-        setYearFilter(currentYear)
-      }
-    }
-
-    if (
-      monthOption?.label === 'Last Year' ||
-      (monthOption?.label === 'Last Month' && currentMonth === 0) ||
-      (monthOption?.label === 'Past Quarter' && [0, 1, 2].includes(currentMonth))
-    ) {
-      if (isPastYearData) {
-        filterGraphData(selectedFpm, monthOption)
-      } else {
-        setYearFilter(currentYear - 1)
-      }
-    }
-  }
-
-  const filterGraphData = (selectedFpm, monthOption) => {
-    let selectedMonth, selectedQuater
-
-    // Checks if this month is selected, then returns month in the short form like Jan, Feb
-    if (monthOption?.label === 'This Month') {
-      selectedMonth = format(new Date(), 'LLL', { locale: enUS })
-    }
-    // Checks if last month is selected, then returns month in the short form like Jan, Feb
-    if (monthOption?.label === 'Last Month') {
-      selectedMonth = format(subMonths(new Date(), 1), 'LLL', { locale: enUS })
-    }
-    // Checks if current quarter is selected, then returns months for that quarter
-    if (monthOption?.label === 'Current Quarter') {
-      selectedQuater = getQuarterByDate()
-    }
-    // Checks if past quarter is selected, then returns months for that quarter
-    if (monthOption?.label === 'Past Quarter') {
-      selectedQuater = getLastQuarterByDate() !== 0 ? getLastQuarterByDate() : 4
-    }
-
-    selectedFpm = selectedFpm?.map(n => n?.value)
-    const finalGraphData = data?.filter(
-      a =>
-        (!selectedMonth || a?.month === selectedMonth) &&
-        (!selectedQuater || a?.quarter === selectedQuater) &&
-        (!selectedFpm?.length || selectedFpm?.includes(a?.userId)),
-    )
-    setGraphData(finalGraphData)
-  }
-
+  monthOption: any
+}> = ({ graphData, isLoading, setYearFilter, yearFilter, isFetching, monthOption }) => {
   return (
     <>
       <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'6px'}>
-        <Grid h="40px" templateColumns="repeat(3, 1fr)" gap={0} m={5}>
-          <GridItem rowSpan={2} colSpan={2} colStart={1} colEnd={2}>
-            <HStack>
-              <FormLabel ml={8} variant="strong-label" size="md">
-                Filter By Month:
-              </FormLabel>
-              <Box width={'50%'}>
-                <ReactSelect
-                  name={`monthsDropdown`}
-                  options={MonthOption.filter(m => m.value !== 'all')}
-                  onChange={getMonthValue}
-                  defaultValue={monthOption}
-                  selected={setMonthOption}
-                  variant="light-label"
-                  size="md"
-                />
-              </Box>
-            </HStack>
-          </GridItem>
-          <GridItem colStart={2} colEnd={6}>
-            <HStack>
-              <FormLabel width={'10%'} variant="strong-label" size="md">
-                Filter By:
-              </FormLabel>
-              <Box width={'90%'} pr={8} minHeight={'40px'}>
-                <ReactSelect
-                  name={`fpmDropdown`}
-                  value={fpmOption}
-                  isDisabled={['This Month', 'Last Month'].includes(monthOption?.label)}
-                  options={fieldProjectManagerOptions}
-                  onChange={onFpmOptionChange}
-                  defaultValue={fpmOption}
-                  isOptionDisabled={() => fpmOption.length >= 5}
-                  isClearable={false}
-                  variant="light-label"
-                  size="md"
-                  isMulti
-                />
-              </Box>
-            </HStack>
-          </GridItem>
-        </Grid>
         {isFetching ? (
           <Center height={500}>
             <Spinner size="xl" />

@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ErrorType } from 'types/common.types'
 import { PerformanceType } from 'types/performance.type'
 import { useClient } from 'utils/auth-context'
+import { getQueryString } from 'utils/filters-query-utils'
 
 export const useRevenuePerformance = yearFilter => {
   const client = useClient()
@@ -15,20 +16,26 @@ export const useRevenuePerformance = yearFilter => {
   })
 }
 
-export const usePerformance = (yearFilter: string | null | number) => {
+export const usePerformance = ({ yearFilter, months, fpmIds }) => {
   const client = useClient()
-  const url = yearFilter ? `fpm-quota?year=${yearFilter}` : `fpm-quota`
+  const queryParams = {
+    year: yearFilter,
+    months,
+    fpmIds,
+  }
+  const filterQuery = getQueryString(queryParams)
+  const url = filterQuery ? `fpm-quota?${filterQuery}` : `fpm-quota`
   return useQuery('performance-list', async () => {
     const response = await client(url, {})
     return response?.data
   })
 }
 
-export const useFPMDetails = (FPMId: any) => {
+export const useFPMDetails = (FPMId: any, yearFilter?: string | number | null) => {
   const client = useClient()
-
+  const url = yearFilter ? `fpm-quota-info/${FPMId}?year=${yearFilter}` : `fpm-quota-info/${FPMId}`
   return useQuery('fpm-details', async () => {
-    const response = await client(`fpm-quota-info/${FPMId}`, {})
+    const response = await client(url, {})
     return response?.data
   })
 }
