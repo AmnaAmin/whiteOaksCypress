@@ -321,19 +321,21 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         )}
 
         {onClose && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        <Button
-          disabled={disableLicenseNext || isFPM}
-          type="submit"
-          variant="solid"
-          colorScheme="darkPrimary"
-          data-testid="saveLicenses"
-        >
-          {vendor?.id ? t('save') : t('next')}
-        </Button>
+        {!isFPM && (
+          <Button
+            disabled={disableLicenseNext || isFPM}
+            type="submit"
+            variant="solid"
+            colorScheme="darkPrimary"
+            data-testid="saveLicenses"
+          >
+            {vendor?.id ? t('save') : t('next')}
+          </Button>
+        )}
       </Flex>
     </Box>
   )
