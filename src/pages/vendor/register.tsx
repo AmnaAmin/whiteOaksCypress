@@ -57,17 +57,21 @@ const CustomTab = React.forwardRef((props: any, ref: any) => {
     <Button
       {...tabProps}
       __css={styles.tab}
+      _disabled={{
+        color: '#7C7C7C !important',
+      }}
       sx={{
         ':hover': {
           color: '#000',
           background: 'transparent !important',
           borderBottomColor: '#000',
         },
-        borderBottomColor: isSelected ? '#000 !important' : '#D9D9D9 !important',
-        color: '#000 !important',
+        borderBottomColor: isSelected ? '#345587 !important' : '#D9D9D9 !important',
+        color: '#252F40 !important',
+        borderBottomWidth: '3px',
       }}
     >
-      <Box as="span" mr="2" fontWeight={isSelected ? 'bold' : ''} fontSize="12px" background="transparent">
+      <Box as="span" mr="2" fontWeight={isSelected ? '500' : ''} fontSize="12px" background="transparent">
         {tabProps.children}
       </Box>
     </Button>
@@ -479,15 +483,14 @@ export const VendorRegister = () => {
     >
       <Box w={{ sm: '100%', lg: '1200px' }} mx="auto" overflow="hidden">
         <Card
-          borderBottomLeftRadius="0px !important"
-          borderBottomRightRadius="0px !important"
+          rounded="10px"
           bg="#F5F5F5;"
-          py="10px !important"
           opacity="1"
           height="auto"
-          minH={{ sm: 'auto', lg: '90vh' }}
+          minH={{ sm: 'auto' }}
           overflow="hidden"
-          outline="1px solid green"
+          pt="40px"
+          pb="39px"
         >
           <FormProvider {...formReturn}>
             <form onSubmit={handleSubmit(createUserVendorAccount)} autoComplete="off" ref={ref}>
@@ -521,7 +524,6 @@ export const VendorRegister = () => {
                       <Divider
                         orientation="horizontal"
                         border="1px solid #C5C5C5"
-                        backgroundColor="#C5C5C5"
                         borderColor="#C5C5C5 !important"
                         w="100%"
                         opacity="1"
@@ -530,7 +532,7 @@ export const VendorRegister = () => {
                   </VStack>
 
                   <Stack spacing="13px" mt="30px" display={showLoginFields ? 'block' : 'none'}>
-                    <FormControl isInvalid={errors?.email} outline="1px solid green">
+                    <FormControl isInvalid={errors?.email}>
                       <FormLabel htmlFor="email" sx={formLabeStyle}>
                         Email Address
                       </FormLabel>
@@ -609,12 +611,27 @@ export const VendorRegister = () => {
                           autoComplete="new-password"
                         />
                         <InputRightElement
+                          mr="12px"
                           cursor="pointer"
                           children={
                             showPassword ? (
-                              <Icon as={BiHide} onClick={() => setShowPassword(false)} />
+                              <Text
+                                fontSize="12px"
+                                fontWeight="400"
+                                color="#B5B8BB"
+                                onClick={() => setShowPassword(false)}
+                              >
+                                HIDE
+                              </Text>
                             ) : (
-                              <Icon as={BiShow} onClick={() => setShowPassword(true)} />
+                              <Text
+                                fontSize="12px"
+                                fontWeight="400"
+                                color="#B5B8BB"
+                                onClick={() => setShowPassword(true)}
+                              >
+                                SHOW
+                              </Text>
                             )
                           }
                         />
@@ -660,10 +677,10 @@ export const VendorRegister = () => {
                   >
                     <Divider
                       orientation="vertical"
-                      border="3px solid #345587"
+                      border="2px solid #345587"
                       backgroundColor="#345587"
                       opacity="1"
-                      borderRadius="300px"
+                      rounded="3xl"
                       position="relative"
                       top="calc(98% - 400px);"
                       borderColor="#345587 !important"
@@ -690,7 +707,12 @@ export const VendorRegister = () => {
                       onChange={index => setformTabIndex(index)}
                       index={formTabIndex}
                     >
-                      <TabList flexDir={{ base: 'column', sm: 'row' }}>
+                      <TabList
+                        flexDir={{ base: 'column', sm: 'row' }}
+                        gap="1px"
+                        w={{ lg: 'calc(100% - 100px)' }}
+                        ml={{ lg: '10' }}
+                      >
                         <CustomTab isDisabled={isTabDisabled(FORM_TABS.LOCATION_DETAILS)}>Location Details</CustomTab>
                         <CustomTab isDisabled={isTabDisabled(FORM_TABS.DOCUMENTS)}>Documents</CustomTab>
                         <CustomTab isDisabled={isTabDisabled(FORM_TABS.LICENSE)}>License</CustomTab>
@@ -701,7 +723,7 @@ export const VendorRegister = () => {
                       </TabList>
 
                       <TabPanels>
-                        <TabPanel p={{ sm: 0, md: '1rem' }}>
+                        <TabPanel py="0px">
                           <HStack mt="30px" spacing={{ sm: '0', md: '70px' }} flexDir={{ base: 'column', sm: 'row' }}>
                             <VStack w={{ sm: '100%', md: '50%' }} spacing="20px">
                               <FormControl isInvalid={errors?.ownerName}>
@@ -866,11 +888,25 @@ export const VendorRegister = () => {
                             my="4"
                             variant="solid-rounded"
                           >
-                            <TabList outline={'1px solid green'} h="25px">
-                              <Tab _selected={{ bg: '#345587', color: 'white' }} borderRadius="3px 3px 0px 0px">
+                            <TabList h="25px" ml="2" gap="4px">
+                              <Tab
+                                fontSize="12px"
+                                fontWeight="500"
+                                _selected={{ bg: '#345587', color: 'white' }}
+                                borderRadius="3px 3px 0px 0px"
+                                color="#A0A2A6"
+                                bg="#D9D9D9"
+                              >
                                 EIN
                               </Tab>
-                              <Tab _selected={{ bg: '#345587', color: 'white' }} borderRadius="3px 3px 0px 0px">
+                              <Tab
+                                color="#A0A2A6"
+                                bg="#D9D9D9"
+                                fontSize="12px"
+                                fontWeight="500"
+                                _selected={{ bg: '#345587', color: 'white' }}
+                                borderRadius="3px 3px 0px 0px"
+                              >
                                 SSN
                               </Tab>
                             </TabList>
@@ -882,7 +918,7 @@ export const VendorRegister = () => {
                                     id="einNumber"
                                     type="text"
                                     fontSize="14px"
-                                    color="#252F40"
+                                    color="#B5B8BB"
                                     mask="999-99-9999"
                                     {...register('einNumber', {
                                       required: 'This is required',
@@ -898,7 +934,7 @@ export const VendorRegister = () => {
                                     id="ssnNumber"
                                     type="text"
                                     fontSize="14px"
-                                    color="#252F40"
+                                    color="#B5B8BB"
                                     mask="999-99-9999"
                                     {...register('ssnNumber', {
                                       required: 'This is required',
@@ -934,7 +970,7 @@ export const VendorRegister = () => {
                           <VStack w="100%">
                             <HStack
                               w="100%"
-                              spacing={{ sm: '0', md: '20px' }}
+                              spacing={{ sm: '0', md: '70px' }}
                               flexDir={{ base: 'column', sm: 'row' }}
                               sx={{
                                 '@media only screen and (max-width: 480px)': {
@@ -994,7 +1030,7 @@ export const VendorRegister = () => {
                             <HStack
                               w="100%"
                               flexDir={{ base: 'column', sm: 'row' }}
-                              spacing={{ sm: '0', md: '20px' }}
+                              spacing={{ sm: '0', md: '70px' }}
                               sx={{
                                 '@media only screen and (max-width: 480px)': {
                                   marginTop: '20px !important !important',
@@ -1097,6 +1133,7 @@ export const VendorRegister = () => {
                         onClick={doCancel}
                         bgColor="#FFFFFF"
                         width="154px"
+                        h="42px"
                         borderRadius="8px"
                         fontSize="14px"
                         borderWidth="1px"
@@ -1112,6 +1149,7 @@ export const VendorRegister = () => {
                           disabled={FORM_TABS.MARKETS === formTabIndex}
                           bgColor="#345587"
                           width="154px"
+                          h="42px"
                           borderRadius="8px"
                           fontSize="14px"
                           borderWidth="1px"
