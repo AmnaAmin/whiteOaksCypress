@@ -1,13 +1,11 @@
 import { Box, Button, Divider, Flex, FormLabel, Icon, Spacer } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
-import { ConfirmationBox } from 'components/Confirmation'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReceivableFilter } from 'features/recievable/receivable-filter'
 import { ReceivableTable } from 'features/recievable/receivable-table'
-import { t } from 'i18next'
 import { compact } from 'lodash'
 import { useEffect, useState } from 'react'
-import { useBatchProcessingMutation, useCheckBatch } from 'api/account-receivable'
+import { useBatchProcessingMutation, useBatchRun, useCheckBatch } from 'api/account-receivable'
 import { PaginationState, SortingState } from '@tanstack/react-table'
 import { useForm } from 'react-hook-form'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
@@ -15,6 +13,8 @@ import { useReceivableTableColumns } from 'features/recievable/hook'
 import { ACCOUNTS } from 'pages/accounts.i18n'
 import { BiSync } from 'react-icons/bi'
 import { RECEIVABLE_TABLE_QUERY_KEYS } from 'features/recievable/receivable.constants'
+import { ReceivableConfirmationBox } from 'features/recievable/receivable-confirmation-box'
+import { useTranslation } from 'react-i18next'
 
 export const Receivable = () => {
   const [loading, setLoading] = useState(false)
@@ -40,9 +40,13 @@ export const Receivable = () => {
     sorting,
   })
 
-  const { mutate: batchCall } = useBatchProcessingMutation()
+  const { data: run, mutate: batchCall } = useBatchProcessingMutation()
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
+  const batchId = run?.data?.id || 0
+  const { data: batchRun, isLoading } = useBatchRun(batchId, queryStringWithPagination)
+  const { t } = useTranslation()
+
   // const { weekDayFilters } = useWeeklyCount()
 
   useEffect(() => {
@@ -115,6 +119,9 @@ export const Receivable = () => {
             </Button>
           </Flex>
           <Divider border="2px solid #E2E8F0" />
+
+          {/* {batchRunStatus && <Box>{failedRun?.description}</Box>} */}
+
           <Box mt={2} pb="4">
             {loading && <ViewLoader />}
             <ReceivableTable
@@ -129,15 +136,15 @@ export const Receivable = () => {
             />
           </Box>
         </Box>
-        <ConfirmationBox
-          title={t(`${ACCOUNTS}.batchProcess`)}
-          content={t(`${ACCOUNTS}.batchSuccess`)}
-          isOpen={!loading && isBatchClick}
-          onClose={onNotificationClose}
-          onConfirm={onNotificationClose}
-          yesButtonText={t(`${ACCOUNTS}.close`)}
-          showNoButton={false}
-        />
+        {!isLoading && (
+          <ReceivableConfirmationBox
+            title={t(`${ACCOUNTS}.batchProcess`)}
+            isOpen={!loading && isBatchClick}
+            onClose={onNotificationClose}
+            batchData={batchRun}
+            isLoading={isLoading}
+          />
+        )}
       </form>
       <DevTool control={control} />
     </>
