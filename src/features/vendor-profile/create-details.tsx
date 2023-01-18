@@ -564,19 +564,21 @@ const CreateVendorDetail: React.FC<{
         justifyContent="end"
       >
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
-        <Button
-          disabled={disableDetailsNext || isFPM}
-          type="submit"
-          data-testid="saveDocumentCards"
-          variant="solid"
-          colorScheme="brand"
-        >
-          {vendorProfileData?.id ? t('save') : t('next')}
-        </Button>
+        {!isFPM && (
+          <Button
+            disabled={disableDetailsNext}
+            type="submit"
+            data-testid="saveDocumentCards"
+            variant="solid"
+            colorScheme="brand"
+          >
+            {vendorProfileData?.id ? t('save') : t('next')}
+          </Button>
+        )}
       </Flex>
     </Stack>
   )
