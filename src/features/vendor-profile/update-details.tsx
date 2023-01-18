@@ -65,8 +65,8 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
   )
 }
 
-const validateTelePhoneNumber = ( number: string ): boolean => {
-  return number ? number.match(/\d/g)?.length===10 : false;
+const validateTelePhoneNumber = (number: string): boolean => {
+  return number ? number.match(/\d/g)?.length === 10 : false
 }
 
 export const UpdateDetails: React.FC<{
@@ -207,7 +207,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                   </FormControl>
                 </Stack>
               </Box>
-              
+
               <Box>
                 <Stack direction={['column', 'row']} spacing={4}>
                   <FormControl isInvalid={!!errors.businessPhoneNumber} w="215px">
@@ -216,9 +216,9 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                     </FormLabel>
                     <Controller
                       control={control}
-                      rules={{ 
+                      rules={{
                         required: isActive && 'This is required',
-                        validate: ( number: string ) => validateTelePhoneNumber( number )
+                        validate: (number: string) => validateTelePhoneNumber(number),
                       }}
                       name="businessPhoneNumber"
                       render={({ field, fieldState }) => {

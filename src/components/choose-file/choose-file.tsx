@@ -8,6 +8,7 @@ type ChooseFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
   testId?: string
   isRequired?: boolean
   acceptedFiles?: string
+  inputStyle?: any
 }
 
 const ChooseFileField: React.FC<ChooseFileProps> = ({
@@ -18,6 +19,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
   isError,
   isRequired,
   acceptedFiles,
+  inputStyle,
   ...inputProps
 }) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -49,6 +51,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
       minW="215px"
       h="40px"
       borderWidth="1px"
+      {...inputStyle}
       borderStyle="solid"
       borderColor={isError ? 'red' : '#E2E8F0'}
       rounded="6"
@@ -58,6 +61,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
       _hover={{
         borderColor: 'gray.300',
         borderLeft: leftBorder,
+        ...inputStyle,
       }}
     >
       <input

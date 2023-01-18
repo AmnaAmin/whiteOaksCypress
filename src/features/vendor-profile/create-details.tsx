@@ -58,6 +58,7 @@ const CreateVendorDetail: React.FC<{
   const { disableDetailsNext } = useVendorNext({ control })
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
+
   const formValues = useWatch({ control })
   const { isFPM } = useUserRolesSelector()
 
@@ -436,7 +437,9 @@ const CreateVendorDetail: React.FC<{
               />
               <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
-            <Text color="red">{capacityError! > 500 ? 'Capacity should not be more than 500' : ''}</Text>
+            <Text fontSize="14px" color="red">
+              {capacityError! > 500 ? 'Capacity should not be more than 500' : ''}
+            </Text>
           </GridItem>
           <GridItem>
             <FormControl isInvalid={!!errors.einNumber}>

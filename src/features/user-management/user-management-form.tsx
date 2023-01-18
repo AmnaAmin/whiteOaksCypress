@@ -43,14 +43,11 @@ import { PasswordField } from './password-field'
 import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
+import { validateTelePhoneNumber } from 'utils/form-validation'
 
 type UserManagement = {
   onClose: () => void
   user?: UserForm
-}
-
-const validateTelePhoneNumber = ( number: string ): boolean => {
-  return number ? number.match(/\d/g)?.length===10 : false;
 }
 
 const validateMarket = markets => {
@@ -106,7 +103,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const fpmRole: any = formValues?.fieldProjectManagerRoleId
 
   const isEditUser = !!(user && user.id)
-  const isVendor = accountType?.label === 'Vendor'
+  const isVendor = userInfo && userInfo.userTypeLabel === 'Vendor'
   const isProjectCoordinator = accountType?.label === 'Project Coordinator'
   const isFPM = accountType?.label === 'Field Project Manager'
 
@@ -128,8 +125,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const noMarketsSelected = !validateMarket(formValues?.markets)
   const noStatesSelected = !validateState(formValues?.states)
   const noRegionSelected = !validateRegions(formValues?.regions)
-  const invalidTelePhone = validateTelePhoneNumber(formValues?.telephoneNumber as string);
-
+  const invalidTelePhone =
+    validateTelePhoneNumber(formValues?.telephoneNumber as string) || !formValues?.telephoneNumber
 
   const watchRequiredField =
     !formValues?.email ||
@@ -680,9 +677,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 )
               }}
             />
-            <FormErrorMessage>
-              {!invalidTelePhone ? "Valid Phone Number Is Required" : null}
-            </FormErrorMessage>
+            <FormErrorMessage>{!invalidTelePhone ? 'Valid Phone Number Is Required' : null}</FormErrorMessage>
           </Box>
         </FormControl>
 
@@ -738,8 +733,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         >
           {t(`${USER_MANAGEMENT}.modal.cancel`)}
         </Button>
-        
-        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone }>
+
+        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
           {t(`${USER_MANAGEMENT}.modal.save`)}
         </Button>
         <ConfirmationBox
