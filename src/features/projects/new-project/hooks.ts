@@ -33,7 +33,7 @@ export const usePropertyInformationNextDisabled = (
     !formValues.zipCode ||
     !formValues.newMarket?.value ||
     !isAcknowledgeCheck ||
-    isHoaPhone
+    !isHoaPhone
   )
 }
 
@@ -50,7 +50,7 @@ export const useProjectManagementSaveButtonDisabled = (control: Control<ProjectF
     !formValues?.projectManager?.value ||
     !formValues?.projectCoordinator?.value ||
     !formValues?.client?.value ||
-    isSuperPhoneNumber
+    !isSuperPhoneNumber
   )
 }
 

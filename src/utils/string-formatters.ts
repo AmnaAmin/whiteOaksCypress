@@ -64,14 +64,8 @@ export const isValidEmail = value => {
 
 export const isValidPhoneNumber = value => {
   if (value?.replace(/\D+/g, '').length! === 0) {
-    return false
-  } else if (value?.replace(/\D+/g, '').length! < 10) {
     return true
-  }
-  return false
-}
-export const validateEmail = (mail: any) => {
-  if (/\S+@\S+\.\S+/.test(mail)) {
+  } else if (value?.replace(/\D+/g, '').length! < 10) {
     return false
   }
   return true
