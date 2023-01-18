@@ -81,20 +81,21 @@ export const MarketForm = ({ onClose, isActive }: marketFormProps) => {
         justifyContent="end"
       >
         {onClose && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-
-        <Button
-          disabled={!validateMarket(tradeCheckboxes) || isFPM}
-          type="submit"
-          variant="solid"
-          colorScheme="darkPrimary"
-          data-testid="saveMarkets"
-        >
-          {t('save')}
-        </Button>
+        {!isFPM && (
+          <Button
+            disabled={!validateMarket(tradeCheckboxes) || isFPM}
+            type="submit"
+            variant="solid"
+            colorScheme="darkPrimary"
+            data-testid="saveMarkets"
+          >
+            {t('save')}
+          </Button>
+        )}
       </Flex>
     </>
   )

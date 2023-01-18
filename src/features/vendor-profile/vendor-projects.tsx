@@ -142,14 +142,15 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
         justifyContent="end"
       >
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
-
-        <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets" isDisabled={isFPM}>
-          {t('save')}
-        </Button>
+        {!isFPM && (
+          <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets" isDisabled={isFPM}>
+            {t('save')}
+          </Button>
+        )}
       </Flex>
     </VStack>
   )
