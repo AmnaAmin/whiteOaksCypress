@@ -186,8 +186,6 @@ export const VendorRegister = () => {
 
     if (formTabIndex !== FORM_TABS.LOCATION_DETAILS) setShowLoginFields(false)
 
-    if (formTabIndex === FORM_TABS.LOCATION_DETAILS) setShowLoginFields(true)
-
   }, [isMobile])
 
   const formReturn = useForm({
@@ -260,6 +258,8 @@ export const VendorRegister = () => {
 
   useEffect(() => {
     if (formTabIndex === FORM_TABS.LOCATION_DETAILS) setDisableLoginFields(false)
+    if (formTabIndex === FORM_TABS.LOCATION_DETAILS && isMobile) setShowLoginFields(true)
+    if (formTabIndex !== FORM_TABS.LOCATION_DETAILS && isMobile) setShowLoginFields(false)
   }, [formTabIndex])
 
   const doNext = async () => {
