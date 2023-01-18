@@ -486,7 +486,7 @@ export const useProjectAuditLogs = projectId => {
 
   const { data: auditLogs, ...rest } = useQuery('audit-logs', async () => {
     const response = await client(
-      `audit-trails?type.equals=Project&typeId.equals=${projectId}&sort=modifiedDate,asc`,
+      `audit-trails?type.equals=Project&parentId.equals=${projectId}&sort=id,desc`,
       {},
     )
 
