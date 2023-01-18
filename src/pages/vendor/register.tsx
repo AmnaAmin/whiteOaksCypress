@@ -677,13 +677,12 @@ export const VendorRegister = () => {
                   >
                     <Divider
                       orientation="vertical"
-                      border="2px solid #345587"
-                      backgroundColor="#345587"
+                      borderWidth="1px"
                       opacity="1"
                       rounded="3xl"
                       position="relative"
                       top="calc(98% - 400px);"
-                      borderColor="#345587 !important"
+                      borderColor="#E2E8F0 !important"
                     />
                   </Stack>
                 </Flex>
@@ -1018,8 +1017,8 @@ export const VendorRegister = () => {
                                         onChange={option => field.onChange(option)}
                                         selectProps={{ isBorderLeft: false }}
                                         className="state-option-vendor-register"
-                                        maxMenuHeight={200}
-                                        minMenuHeight={200}
+                                        maxMenuHeight={150}
+                                        minMenuHeight={150}
                                       />
                                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                                     </>
@@ -1084,6 +1083,14 @@ export const VendorRegister = () => {
                                 <FormErrorMessage>{errors?.capacity && errors?.capacity?.message}</FormErrorMessage>
                               </FormControl>
                             </HStack>
+                            <Box w="calc(100% - 10px)" pt="24px">
+                              <Divider
+                                orientation="horizontal"
+                                borderWidth="1px"
+                                opacity="1"
+                                borderColor="#E2E8F0 !important"
+                              />
+                            </Box>
                           </VStack>
                         </TabPanel>
                         <TabPanel p={{ sm: 0, md: '1rem' }}>
@@ -1116,10 +1123,11 @@ export const VendorRegister = () => {
                         </TabPanel>
                       </TabPanels>
                     </Tabs>
+
                     <HStack
                       spacing="16px"
                       position="relative"
-                      left="23.7%"
+                      left="34.4%"
                       marginTop="30px !important"
                       sx={{
                         '@media only screen and (max-width: 480px)': {
@@ -1132,8 +1140,8 @@ export const VendorRegister = () => {
                       <Button
                         onClick={doCancel}
                         bgColor="#FFFFFF"
-                        width="154px"
-                        h="42px"
+                        width="78px"
+                        h="40px"
                         borderRadius="8px"
                         fontSize="14px"
                         borderWidth="1px"
@@ -1148,8 +1156,8 @@ export const VendorRegister = () => {
                           onClick={doNext}
                           disabled={FORM_TABS.MARKETS === formTabIndex}
                           bgColor="#345587"
-                          width="154px"
-                          h="42px"
+                          width="78px"
+                          h="40px"
                           borderRadius="8px"
                           fontSize="14px"
                           borderWidth="1px"
