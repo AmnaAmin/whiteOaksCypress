@@ -27,7 +27,7 @@ import {
   useCreateTicketMutation,
   useEditTicketMutation,
 } from 'api/support'
-import { useUserProfile } from 'utils/redux-common-selectors'
+import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { Button } from 'components/button/button'
@@ -91,6 +91,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
   const defaultValues = React.useMemo(() => {
     return getSupportFormDefaultValues(email)
   }, [email])
+  const { isAdmin } = useUserRolesSelector()
 
   const onFileChange = (document: File) => {
     if (!document) return
@@ -294,28 +295,27 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                     )}
                   />
                 </FormControl>
-                {(supportPage || supportDetail) && (
-                  <FormControl w="215px" data-testid="status">
-                    <FormLabel htmlFor="status" variant="strong-label" color="gray.600">
-                      {t(`${SUPPORT}.status`)}
-                    </FormLabel>
-                    <Controller
-                      control={control}
-                      name="status"
-                      render={({ field, fieldState }) => (
-                        <>
-                          <ReactSelect
-                            id="status"
-                            options={STATUS_OPTIONS}
-                            {...field}
-                            selectProps={{ isBorderLeft: true }}
-                            isDisabled
-                          />
-                        </>
-                      )}
-                    />
-                  </FormControl>
-                )}
+
+                <FormControl w="215px" data-testid="status">
+                  <FormLabel htmlFor="status" variant="strong-label" color="gray.600">
+                    {t(`${SUPPORT}.status`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="status"
+                    render={({ field, fieldState }) => (
+                      <>
+                        <ReactSelect
+                          id="status"
+                          options={STATUS_OPTIONS}
+                          {...field}
+                          selectProps={{ isBorderLeft: true }}
+                          isDisabled={!isAdmin}
+                        />
+                      </>
+                    )}
+                  />
+                </FormControl>
               </HStack>
 
               <FormControl isInvalid={!!errors.title?.message} w="449px">
@@ -374,7 +374,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                 {t(`${SUPPORT}.resolution`)}
               </FormLabel>
               <Textarea
-                disabled
+                isDisabled={!isAdmin}
                 _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }}
                 size="lg"
                 bg="white"
@@ -408,6 +408,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                           field.onChange(file)
                         }}
                         onClear={() => setValue(field.name, null)}
+                        inputStyle={{ borderLeft: '2px solid #E2E8F0' }}
                       ></ChooseFileField>
                     </Box>
                     {supportDetail?.s3Url && downloadDocument(supportDetail?.s3Url, supportDetail?.s3Url)}

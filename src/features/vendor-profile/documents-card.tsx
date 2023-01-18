@@ -521,7 +521,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   render={({ field, fieldState }) => {
                     return (
                       <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
-                        <Box >
+                        <Box>
                           <ChooseFileField
                             name={field.name}
                             value={field.value?.name ? field.value?.name : t('chooseFile')}
@@ -574,19 +574,21 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           </Button>
         )}
         {onClose && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        <Button
-          type="submit"
-          data-testid="saveDocumentCards"
-          variant="solid"
-          colorScheme="darkPrimary"
-          isDisabled={isFPM}
-        >
-          {vendor?.id ? t('save') : t('next')}
-        </Button>
+        {!isFPM && (
+          <Button
+            type="submit"
+            data-testid="saveDocumentCards"
+            variant="solid"
+            colorScheme="darkPrimary"
+            isDisabled={isFPM}
+          >
+            {vendor?.id ? t('save') : t('next')}
+          </Button>
+        )}
       </Flex>
     </>
   )
