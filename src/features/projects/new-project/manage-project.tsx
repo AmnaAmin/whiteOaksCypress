@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
@@ -24,15 +24,13 @@ export const ManageProject: React.FC<{
   const values = getValues()
   const { t } = useTranslation()
 
-  const [preventSpecialChara, setPreventSpecialChara] = React.useState('')
+  const [formattedClientName, setFormattedClientName] = React.useState('')
   // not used until requirement is clear : const { fieldProjectManagerOptions } = useFPMs()
   const { fieldProjectManagerByMarketOptions } = useFPMsByMarket(values.newMarket?.value)
   const { projectCoordinatorSelectOptions } = useProjectCoordinators()
   const { clientSelectOptions } = useClients()
 
   const isProjectManagementSaveButtonDisabled = useProjectManagementSaveButtonDisabled(control)
-  const phoneNumberRef = useRef<any>()
-
   const setPC = e => {
     setValue('projectCoordinator', e)
   }
@@ -42,8 +40,9 @@ export const ManageProject: React.FC<{
   }
 
   const handleChange = e => {
+    //  this regex is used to remove any special character
     const result = e.target.value.replace(/[^a-zA-Z\s]/g, '')
-    setPreventSpecialChara(result)
+    setFormattedClientName(result)
   }
 
   return (
@@ -127,7 +126,7 @@ export const ManageProject: React.FC<{
               <Input
                 id="clientSuperName"
                 {...register('superLastName')}
-                value={preventSpecialChara}
+                value={formattedClientName}
                 onChange={handleChange}
               />
             </FormControl>
@@ -135,21 +134,13 @@ export const ManageProject: React.FC<{
         </Grid>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
-            <FormControl isInvalid={!!errors.superPhoneNumber}>
+            <FormControl>
               <FormLabel size="md" htmlFor="superPhone">
                 {t(`${NEW_PROJECT}.superPhoneNumber`)}
               </FormLabel>
               <Controller
                 control={control}
-                {...register('superPhoneNumber', {
-                  validate: (value: any) => {
-                    if (phoneNumberRef.current) {
-                      if (phoneNumberRef.current.value.replace(/\D+/g, '').length === 10) return true
-                    }
-
-                    return false
-                  },
-                })}
+                name="superPhoneNumber"
                 render={({ field, fieldState }) => {
                   return (
                     <>
@@ -161,15 +152,8 @@ export const ManageProject: React.FC<{
                         format="(###)-###-####"
                         mask="_"
                         placeholder="(___)-___-____"
-                        getInputRef={phoneNumberRef}
                       />
-                      <FormErrorMessage>
-                        {fieldState.error?.message}
-
-                        {errors?.superPhoneNumber && errors?.superPhoneNumber.type === 'validate' && (
-                          <span>Invalid Phone number</span>
-                        )}
-                      </FormErrorMessage>
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
                   )
                 }}
@@ -194,7 +178,7 @@ export const ManageProject: React.FC<{
                 {...register('superEmailAddress', {
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: 'invalid email address',
+                    message: 'Invalid Email Address',
                   },
                 })}
               />
