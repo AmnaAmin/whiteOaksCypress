@@ -58,8 +58,14 @@ export const percentageFormatter = (percentage: number) => {
   return percentage
 }
 
-export const validateEmail = (mail: any) => {
-  if (/\S+@\S+\.\S+/.test(mail)) {
+export const isValidEmail = value => {
+  return /\S+@\S+\.\S+/.test(value)
+}
+
+export const isValidPhoneNumber = value => {
+  if (value?.replace(/\D+/g, '').length! === 0) {
+    return true
+  } else if (value?.replace(/\D+/g, '').length! < 10) {
     return false
   }
   return true

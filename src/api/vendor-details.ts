@@ -16,7 +16,7 @@ import {
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
 import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
-import { validateEmail } from 'utils/string-formatters'
+import { isValidEmail } from 'utils/string-formatters'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -632,9 +632,10 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10
   const isSSNNumber = ssn?.replace(/\D+/g, '').length! === 9
   const isEinNumber = ein?.replace(/\D+/g, '').length! === 9
-  const isValidEmail = validateEmail(businessEmailAddress)
+  const isEmail = isValidEmail(businessEmailAddress)
+
   return {
-    disableDetailsNext: detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo || isValidEmail,
+    disableDetailsNext: detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo || !isEmail,
 
     disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl), //disable logic for next on documents tab.
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),

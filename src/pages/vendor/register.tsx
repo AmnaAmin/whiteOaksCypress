@@ -44,6 +44,9 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import PasswordStrengthBar, { measureStrength } from 'components/vendor-register/password-strength-bar'
 import { BiShow, BiHide } from 'react-icons/bi'
+import NumberFormat from 'react-number-format'
+import { phoneRegex } from 'utils/form-validation'
+
 
 const CustomTab = React.forwardRef((props: any, ref: any) => {
   const tabProps = useTab({ ...props, ref })
@@ -88,8 +91,6 @@ export const validateMarket = markets => {
   return true
 }
 
-export const phoneRegex = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
-
 export const yupNullable = (_, val) => (val === '' ? undefined : _)
 
 const vendorRegisterFormSchema = {
@@ -106,6 +107,8 @@ const vendorRegisterFormSchema = {
   companyName: Yup.string().required('Business name is required'),
 
   //Location Details
+  businessPhoneNumber: Yup.string().matches(phoneRegex, 'Phone Contact number is not valid'),
+
   /*businessPhoneNumber: Yup.string()
     .matches(phoneRegex, 'Phone Contact number is not valid')
     .required('Primary Contact is required'),
@@ -149,9 +152,7 @@ const vendorRegisterFormSchema = {
     Yup.object().shape({
       licenseType: Yup.string().typeError('License Type must be a string').required('License Type is required'),
       licenseNumber: Yup.string().typeError('License Number must be a string').required('License Number is required'),
-      expiryDate: Yup.string()
-        .typeError('Expiration Date must be a string')
-        .required('Expiration Date is required'),
+      expiryDate: Yup.string().typeError('Expiration Date must be a string').required('Expiration Date is required'),
       expirationFile: Yup.mixed().required('File is required'),
     }),
   ),
@@ -178,11 +179,15 @@ export const VendorRegister = () => {
   const [showLoginFields, setShowLoginFields] = useState<boolean>(true)
   const [isMobile] = useMediaQuery('(max-width: 480px)')
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [unLockedTabs, setUnLoackedTabs] = useState<Array<FORM_TABS>>([])
 
   useEffect(() => {
     if (!isMobile) return
 
     if (formTabIndex !== FORM_TABS.LOCATION_DETAILS) setShowLoginFields(false)
+
+    if (formTabIndex === FORM_TABS.LOCATION_DETAILS) setShowLoginFields(true)
+
   }, [isMobile])
 
   const formReturn = useForm({
@@ -214,7 +219,7 @@ export const VendorRegister = () => {
   const { stateSelectOptions } = useStates()
   const toast = useToast()
 
-  const { mutate: createVendorAccount } = useVendorRegister()
+  const { mutate: createVendorAccount, error: errorOnRegister } = useVendorRegister()
 
   const {
     handleSubmit,
@@ -252,6 +257,10 @@ export const VendorRegister = () => {
       setValue('trades', tradeFormValues.trades)
     }
   }, [trades, markets])
+
+  useEffect(() => {
+    if (formTabIndex === FORM_TABS.LOCATION_DETAILS) setDisableLoginFields(false)
+  }, [formTabIndex])
 
   const doNext = async () => {
     const isSsn = ssnEinTabIndex === 1 ? true : false
@@ -292,7 +301,7 @@ export const VendorRegister = () => {
       'coiWcExpDate',
     ]
 
-    const licenseFieldName = "licenses"
+    const licenseFieldName = 'licenses'
 
     const tradeFieldName = 'trades'
 
@@ -309,11 +318,12 @@ export const VendorRegister = () => {
 
       setDisableLoginFields(true)
       setformTabIndex(FORM_TABS.DOCUMENTS)
+      setUnLoackedTabs([...unLockedTabs, FORM_TABS.LOCATION_DETAILS])
 
       return null
     }
 
-    if (  formTabIndex === FORM_TABS.DOCUMENTS  ) {
+    if (formTabIndex === FORM_TABS.DOCUMENTS) {
       for (const fieldName of documentFields) {
         if (!(await trigger(fieldName))) {
           return null
@@ -321,32 +331,32 @@ export const VendorRegister = () => {
       }
 
       setformTabIndex(FORM_TABS.LICENSE)
+      setUnLoackedTabs([...unLockedTabs, FORM_TABS.DOCUMENTS])
 
       return null
     }
 
-    if (  formTabIndex === FORM_TABS.LICENSE  ) {
-      
-        if ( ! ( await trigger( licenseFieldName ) ) ) {
-          return null
-        }
-
-        setformTabIndex(FORM_TABS.CONSTRUCTION_TRADE)
-
+    if (formTabIndex === FORM_TABS.LICENSE) {
+      if (!(await trigger(licenseFieldName))) {
         return null
+      }
+
+      setformTabIndex(FORM_TABS.CONSTRUCTION_TRADE)
+      setUnLoackedTabs([...unLockedTabs, FORM_TABS.LICENSE])
+
+      return null
     }
 
-    if (  formTabIndex === FORM_TABS.CONSTRUCTION_TRADE ) {
-
+    if (formTabIndex === FORM_TABS.CONSTRUCTION_TRADE) {
       if (!validateTrade(getValues(tradeFieldName))) {
-      
         showError('Trade')
-      
+
         return null
-      
       }
 
       setformTabIndex(FORM_TABS.MARKETS)
+      setUnLoackedTabs([...unLockedTabs, FORM_TABS.MARKETS])
+      setUnLoackedTabs([...unLockedTabs, FORM_TABS.CONSTRUCTION_TRADE])
 
       return null
     }
@@ -386,7 +396,15 @@ export const VendorRegister = () => {
 
     setDisableLoginFields(false)
     setShowLoginFields(true)
+    setUnLoackedTabs([])
+  }
 
+  const isTabDisabled = (tab: FORM_TABS): boolean => {
+    if (formTabIndex !== tab && !unLockedTabs.includes(tab)) {
+      return true
+    }
+
+    return false
   }
 
   const onSubmit = async formValues => {
@@ -663,13 +681,13 @@ export const VendorRegister = () => {
                       index={formTabIndex}
                     >
                       <TabList flexDir={{ base: 'column', sm: 'row' }}>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.LOCATION_DETAILS}>Location Details</CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.DOCUMENTS}>Documents</CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.LICENSE}>License</CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.CONSTRUCTION_TRADE}>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.LOCATION_DETAILS)}>Location Details</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.DOCUMENTS)}>Documents</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.LICENSE)}>License</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.CONSTRUCTION_TRADE)}>
                           Construction Trade
                         </CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.MARKETS}>Markets</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.MARKETS)}>Markets</CustomTab>
                       </TabList>
 
                       <TabPanels>
@@ -690,7 +708,6 @@ export const VendorRegister = () => {
                                   {...register('ownerName', {
                                     required: 'This is required',
                                   })}
-                                  tabIndex={6}
                                 />
                                 <FormErrorMessage>{errors?.ownerName && errors?.ownerName?.message}</FormErrorMessage>
                               </FormControl>
@@ -706,15 +723,23 @@ export const VendorRegister = () => {
                                     >
                                       Business Phone Number
                                     </FormLabel>
-                                    <Input
-                                      id="businessPhoneNumber"
-                                      type="text"
-                                      fontSize="14px"
-                                      color="#252F40"
-                                      placeholder="Enter Business Phone"
-                                      {...register('businessPhoneNumber', {
-                                        required: 'This is required',
-                                      })}
+                                    <Controller
+                                      control={control}
+                                      name="businessPhoneNumber"
+                                      render={({ field }) => {
+                                        return (
+                                          <NumberFormat
+                                            customInput={Input}
+                                            value={field.value}
+                                            onChange={e => field.onChange(e)}
+                                            format="(###)-###-####"
+                                            mask="_"
+                                            placeholder="(___)-___-____"
+                                            borderLeft="2.5px solid #4E87F8"
+                                            tabIndex={6}
+                                          />
+                                        )
+                                      }}
                                     />
                                     <FormErrorMessage>
                                       {errors?.businessPhoneNumber && errors?.businessPhoneNumber?.message}
