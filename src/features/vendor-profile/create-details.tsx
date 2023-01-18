@@ -438,7 +438,7 @@ const CreateVendorDetail: React.FC<{
               <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
             <Text fontSize="14px" color="red">
-              {capacityError! > 500 ? 'Capacity should not be more than 500' : ''}
+              {capacityError! < 500 ? 'Capacity is accepted more than 500' : ''}
             </Text>
           </GridItem>
           <GridItem>
