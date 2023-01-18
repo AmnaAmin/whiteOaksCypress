@@ -47,7 +47,6 @@ import { BiShow, BiHide } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { phoneRegex } from 'utils/form-validation'
 
-
 const CustomTab = React.forwardRef((props: any, ref: any) => {
   const tabProps = useTab({ ...props, ref })
   const isSelected = !!tabProps['aria-selected']
@@ -178,14 +177,13 @@ export const VendorRegister = () => {
   const ref = useRef<HTMLFormElement>(null)
   const [showLoginFields, setShowLoginFields] = useState<boolean>(true)
   const [isMobile] = useMediaQuery('(max-width: 480px)')
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false)
   const [unLockedTabs, setUnLoackedTabs] = useState<Array<FORM_TABS>>([])
 
   useEffect(() => {
     if (!isMobile) return
 
     if (formTabIndex !== FORM_TABS.LOCATION_DETAILS) setShowLoginFields(false)
-
   }, [isMobile])
 
   const formReturn = useForm({
@@ -228,11 +226,11 @@ export const VendorRegister = () => {
     setValue,
     getValues,
     trigger,
-    watch
+    watch,
   } = formReturn
 
-  const watchPassword = watch( "password", "" );
-  
+  const watchPassword = watch('password', '')
+
   useEffect(() => {
     if (markets?.length) {
       const tradeFormValues = {
@@ -460,6 +458,11 @@ export const VendorRegister = () => {
     }
   }
 
+  const formLabeStyle = {
+    fontSize: '12px',
+    fontWeight: 500,
+    color: '#252F40',
+  }
   return (
     <Box
       bgImg="url(./bg.svg)"
@@ -484,6 +487,7 @@ export const VendorRegister = () => {
           height="auto"
           minH={{ sm: 'auto', lg: '90vh' }}
           overflow="hidden"
+          outline="1px solid green"
         >
           <FormProvider {...formReturn}>
             <form onSubmit={handleSubmit(createUserVendorAccount)} autoComplete="off" ref={ref}>
@@ -506,10 +510,10 @@ export const VendorRegister = () => {
                       <Image src="./WhiteOaks.svg" mt="10px" />
                     </Box>
                     <Box>
-                      <Heading fontSize="30px" color="#345587">
+                      <Heading fontSize="30px" fontWeight={500} color="#345587">
                         Vendor Registration
                       </Heading>
-                      <Text fontSize="13px" color="#8392AB" mb="5px" mt="5px">
+                      <Text fontSize="13px" fontWeight={400} color="#8392AB" mb="5px" mt="5px">
                         Please fill the below form for vendor registration.
                       </Text>
                     </Box>
@@ -526,8 +530,8 @@ export const VendorRegister = () => {
                   </VStack>
 
                   <Stack spacing="13px" mt="30px" display={showLoginFields ? 'block' : 'none'}>
-                    <FormControl isInvalid={errors?.email}>
-                      <FormLabel htmlFor="email" fontSize="12px" color="#252F40" fontWeight="bold">
+                    <FormControl isInvalid={errors?.email} outline="1px solid green">
+                      <FormLabel htmlFor="email" sx={formLabeStyle}>
                         Email Address
                       </FormLabel>
                       <Input
@@ -547,7 +551,7 @@ export const VendorRegister = () => {
                       <FormErrorMessage>{errors?.email && errors?.email?.message}</FormErrorMessage>
                     </FormControl>
                     <FormControl isInvalid={errors?.firstName}>
-                      <FormLabel htmlFor="firstName" fontSize="12px" color="#252F40" fontWeight="bold">
+                      <FormLabel htmlFor="firstName" sx={formLabeStyle}>
                         First Name
                       </FormLabel>
                       <Input
@@ -567,7 +571,7 @@ export const VendorRegister = () => {
                     </FormControl>
 
                     <FormControl isInvalid={errors?.lastName}>
-                      <FormLabel htmlFor="lastName" fontSize="12px" color="#252F40" fontWeight="bold">
+                      <FormLabel htmlFor="lastName" sx={formLabeStyle}>
                         Last Name
                       </FormLabel>
                       <Input
@@ -587,13 +591,13 @@ export const VendorRegister = () => {
                     </FormControl>
 
                     <FormControl isInvalid={errors?.password}>
-                      <FormLabel htmlFor="password" fontSize="12px" color="#252F40" fontWeight="bold">
+                      <FormLabel htmlFor="password" sx={formLabeStyle}>
                         Password
                       </FormLabel>
                       <InputGroup>
                         <Input
                           id="password"
-                          type={ showPassword ? "text" : "password" }
+                          type={showPassword ? 'text' : 'password'}
                           fontSize="14px"
                           color="#252F40"
                           disabled={disableLoginFields}
@@ -606,7 +610,13 @@ export const VendorRegister = () => {
                         />
                         <InputRightElement
                           cursor="pointer"
-                          children={showPassword ? <Icon as={BiHide} onClick={()=>setShowPassword(false)} /> : <Icon as={BiShow} onClick={()=>setShowPassword(true)} />} 
+                          children={
+                            showPassword ? (
+                              <Icon as={BiHide} onClick={() => setShowPassword(false)} />
+                            ) : (
+                              <Icon as={BiShow} onClick={() => setShowPassword(true)} />
+                            )
+                          }
                         />
                       </InputGroup>
                       <PasswordStrengthBar password={watchPassword} />
@@ -614,7 +624,7 @@ export const VendorRegister = () => {
                     </FormControl>
 
                     <FormControl isInvalid={errors?.companyName}>
-                      <FormLabel htmlFor="companyName" fontSize="12px" color="#252F40" fontWeight="bold">
+                      <FormLabel htmlFor="companyName" sx={formLabeStyle}>
                         Business Name
                       </FormLabel>
 
@@ -670,8 +680,8 @@ export const VendorRegister = () => {
                     },
                     '@media only screen and (min-width: 500px) and (max-width: 900px)': {
                       marginTop: '30px !important',
-                      marginInline: "0 !important"
-                    }
+                      marginInline: '0 !important',
+                    },
                   }}
                 >
                   <VStack w="100%">
@@ -695,7 +705,7 @@ export const VendorRegister = () => {
                           <HStack mt="30px" spacing={{ sm: '0', md: '70px' }} flexDir={{ base: 'column', sm: 'row' }}>
                             <VStack w={{ sm: '100%', md: '50%' }} spacing="20px">
                               <FormControl isInvalid={errors?.ownerName}>
-                                <FormLabel htmlFor="ownerName" fontSize="12px" color="#252F40" fontWeight="bold">
+                                <FormLabel htmlFor="ownerName" sx={formLabeStyle}>
                                   Primary Contact
                                 </FormLabel>
                                 <Input
@@ -715,12 +725,7 @@ export const VendorRegister = () => {
                               <HStack w="100%" spacing="5px">
                                 <Box w="80%">
                                   <FormControl isInvalid={errors?.businessPhoneNumber}>
-                                    <FormLabel
-                                      htmlFor="businessPhoneNumber"
-                                      fontSize="12px"
-                                      color="#252F40"
-                                      fontWeight="bold"
-                                    >
+                                    <FormLabel htmlFor="businessPhoneNumber" sx={formLabeStyle}>
                                       Business Phone Number
                                     </FormLabel>
                                     <Controller
@@ -735,7 +740,7 @@ export const VendorRegister = () => {
                                             format="(###)-###-####"
                                             mask="_"
                                             placeholder="(___)-___-____"
-                                            borderLeft="2.5px solid #4E87F8"
+                                            borderLeft="2.5px solid #345587"
                                             tabIndex={6}
                                           />
                                         )
@@ -748,12 +753,7 @@ export const VendorRegister = () => {
                                 </Box>
                                 <Box w="20%">
                                   <FormControl isInvalid={errors?.businessPhoneNumberExtension}>
-                                    <FormLabel
-                                      htmlFor="businessPhoneNumberExtension"
-                                      fontSize="12px"
-                                      color="#252F40"
-                                      fontWeight="bold"
-                                    >
+                                    <FormLabel htmlFor="businessPhoneNumberExtension" sx={formLabeStyle}>
                                       Ext.
                                     </FormLabel>
                                     <Input
@@ -772,12 +772,7 @@ export const VendorRegister = () => {
                               </HStack>
 
                               <FormControl isInvalid={errors?.businessEmailAddress}>
-                                <FormLabel
-                                  htmlFor="businessEmailAddress"
-                                  fontSize="12px"
-                                  color="#252F40"
-                                  fontWeight="bold"
-                                >
+                                <FormLabel htmlFor="businessEmailAddress" sx={formLabeStyle}>
                                   Primary Email Address
                                 </FormLabel>
                                 <Input
@@ -808,7 +803,7 @@ export const VendorRegister = () => {
                               }}
                             >
                               <FormControl isInvalid={errors?.secondName}>
-                                <FormLabel htmlFor="secondName" fontSize="12px" color="#252F40" fontWeight="bold">
+                                <FormLabel htmlFor="secondName" sx={formLabeStyle}>
                                   Secondary Contact
                                 </FormLabel>
                                 <Input
@@ -825,12 +820,7 @@ export const VendorRegister = () => {
                               </FormControl>
 
                               <FormControl isInvalid={errors?.secondaryPhone}>
-                                <FormLabel
-                                  htmlFor="secondPhoneNumber"
-                                  fontSize="12px"
-                                  color="#252F40"
-                                  fontWeight="bold"
-                                >
+                                <FormLabel htmlFor="secondPhoneNumber" sx={formLabeStyle}>
                                   Secondary Phone Number
                                 </FormLabel>
                                 <Input
@@ -849,12 +839,7 @@ export const VendorRegister = () => {
                               </FormControl>
 
                               <FormControl isInvalid={errors?.secondEmailAddress}>
-                                <FormLabel
-                                  htmlFor="secondEmailAddress"
-                                  fontSize="12px"
-                                  color="#252F40"
-                                  fontWeight="bold"
-                                >
+                                <FormLabel htmlFor="secondEmailAddress" sx={formLabeStyle}>
                                   Secondary Email Address
                                 </FormLabel>
                                 <Input
@@ -874,13 +859,23 @@ export const VendorRegister = () => {
                             </VStack>
                           </HStack>
 
-                          <Tabs index={ssnEinTabIndex} onChange={index => setSsnEinTabIndex(index)} w="100%" mt="10px">
-                            <TabList>
-                              <Tab>EIN</Tab>
-                              <Tab>SSN</Tab>
+                          <Tabs
+                            index={ssnEinTabIndex}
+                            onChange={index => setSsnEinTabIndex(index)}
+                            w="100%"
+                            my="4"
+                            variant="solid-rounded"
+                          >
+                            <TabList outline={'1px solid green'} h="25px">
+                              <Tab _selected={{ bg: '#345587', color: 'white' }} borderRadius="3px 3px 0px 0px">
+                                EIN
+                              </Tab>
+                              <Tab _selected={{ bg: '#345587', color: 'white' }} borderRadius="3px 3px 0px 0px">
+                                SSN
+                              </Tab>
                             </TabList>
                             <TabPanels>
-                              <TabPanel>
+                              <TabPanel p="0px">
                                 <FormControl isInvalid={errors?.einNumber}>
                                   <Input
                                     as={InputMask}
@@ -896,7 +891,7 @@ export const VendorRegister = () => {
                                   <FormErrorMessage>{errors?.einNumber && errors?.einNumber?.message}</FormErrorMessage>
                                 </FormControl>
                               </TabPanel>
-                              <TabPanel>
+                              <TabPanel p="0px">
                                 <FormControl isInvalid={errors?.ssnNumber}>
                                   <Input
                                     as={InputMask}
@@ -917,7 +912,7 @@ export const VendorRegister = () => {
 
                           <VStack w="100%" spacing="20px" mb="20px">
                             <FormControl isInvalid={errors?.streetAddress}>
-                              <FormLabel htmlFor="streetAddress" fontSize="12px" color="#252F40" fontWeight="bold">
+                              <FormLabel htmlFor="streetAddress" sx={formLabeStyle}>
                                 Street Address
                               </FormLabel>
                               <Input
@@ -948,7 +943,7 @@ export const VendorRegister = () => {
                               }}
                             >
                               <FormControl isInvalid={errors?.city}>
-                                <FormLabel htmlFor="city" fontSize="12px" color="#252F40" fontWeight="bold">
+                                <FormLabel htmlFor="city" sx={formLabeStyle}>
                                   City
                                 </FormLabel>
                                 <Input
@@ -971,7 +966,7 @@ export const VendorRegister = () => {
                                   },
                                 }}
                               >
-                                <FormLabel htmlFor="state" fontSize="12px" color="#252F40" fontWeight="bold">
+                                <FormLabel htmlFor="state" sx={formLabeStyle}>
                                   State
                                 </FormLabel>
                                 <Controller
@@ -1014,7 +1009,7 @@ export const VendorRegister = () => {
                                   },
                                 }}
                               >
-                                <FormLabel htmlFor="zipCode" fontSize="12px" color="#252F40" fontWeight="bold">
+                                <FormLabel htmlFor="zipCode" sx={formLabeStyle}>
                                   Zip Code
                                 </FormLabel>
                                 <Input
@@ -1037,7 +1032,7 @@ export const VendorRegister = () => {
                                   },
                                 }}
                               >
-                                <FormLabel htmlFor="capacity" fontSize="12px" color="#252F40" fontWeight="bold">
+                                <FormLabel htmlFor="capacity" sx={formLabeStyle}>
                                   Capacity
                                 </FormLabel>
                                 <Input
