@@ -247,6 +247,7 @@ export const VendorRegister = () => {
   const ref = useRef<HTMLFormElement>(null)
   const [showLoginFields, setShowLoginFields] = useState<boolean>(true)
   const [isMobile] = useMediaQuery('(max-width: 480px)')
+  const [unLockedTabs, setUnLoackedTabs] = useState<Array<FORM_TABS>>([]);
 
   useEffect(() => {
     if (!isMobile) return
@@ -283,7 +284,7 @@ export const VendorRegister = () => {
   const { stateSelectOptions } = useStates()
   const toast = useToast()
 
-  const { mutate: createVendorAccount } = useVendorRegister()
+  const { mutate: createVendorAccount, error: errorOnRegister } = useVendorRegister()
 
   const {
     handleSubmit,
@@ -318,6 +319,13 @@ export const VendorRegister = () => {
       setValue('trades', tradeFormValues.trades)
     }
   }, [trades, markets])
+
+
+  useEffect( () => {
+    if ( formTabIndex === FORM_TABS.LOCATION_DETAILS )
+      setDisableLoginFields(false);
+
+  }, [formTabIndex] );
 
   const doNext = async () => {
     const isSsn = ssnEinTabIndex === 1 ? true : false
@@ -375,6 +383,7 @@ export const VendorRegister = () => {
 
       setDisableLoginFields(true)
       setformTabIndex(FORM_TABS.DOCUMENTS)
+      setUnLoackedTabs( [...unLockedTabs, FORM_TABS.LOCATION_DETAILS ] );
 
       return null
     }
@@ -387,6 +396,7 @@ export const VendorRegister = () => {
       }
 
       setformTabIndex(FORM_TABS.LICENSE)
+      setUnLoackedTabs( [...unLockedTabs, FORM_TABS.DOCUMENTS ] );
 
       return null
     }
@@ -398,6 +408,7 @@ export const VendorRegister = () => {
         }
 
         setformTabIndex(FORM_TABS.CONSTRUCTION_TRADE)
+        setUnLoackedTabs( [...unLockedTabs, FORM_TABS.LICENSE ] );
 
         return null
     }
@@ -413,6 +424,8 @@ export const VendorRegister = () => {
       }
 
       setformTabIndex(FORM_TABS.MARKETS)
+      setUnLoackedTabs( [...unLockedTabs, FORM_TABS.MARKETS ] );
+      setUnLoackedTabs( [...unLockedTabs, FORM_TABS.CONSTRUCTION_TRADE ] );
 
       return null
     }
@@ -450,8 +463,19 @@ export const VendorRegister = () => {
 
     //reset( {} )
 
-    setDisableLoginFields(false)
-    setShowLoginFields(true)
+    setDisableLoginFields(false);
+    setShowLoginFields(true);
+    setUnLoackedTabs([]);
+
+  }
+
+  const isTabDisabled = ( tab: FORM_TABS ): boolean => {
+    
+    if ( formTabIndex !== tab && ! unLockedTabs.includes( tab ) ) {
+      return true;
+    }
+    
+    return false;
 
   }
 
@@ -713,13 +737,13 @@ export const VendorRegister = () => {
                       index={formTabIndex}
                     >
                       <TabList flexDir={{ base: 'column', sm: 'row' }}>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.LOCATION_DETAILS}>Location Details</CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.DOCUMENTS}>Documents</CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.LICENSE}>License</CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.CONSTRUCTION_TRADE}>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.LOCATION_DETAILS)}>Location Details</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.DOCUMENTS)}>Documents</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.LICENSE)}>License</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.CONSTRUCTION_TRADE)}>
                           Construction Trade
                         </CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.MARKETS}>Markets</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.MARKETS)}>Markets</CustomTab>
                       </TabList>
 
                       <TabPanels>

@@ -27,12 +27,16 @@ export const useVendorRegister = () => {
           status: 'success',
         })
       },
-      onError: (error: unknown) => {
+      onError: (error: any) => {
+
+        toast.closeAll();
+        
         toast({
-          title: `Error. ${(error as { message: string })?.message}`,
+          title: `Error. ${error.response.data.title}`,
           position: 'top-left',
           status: 'error',
         })
+
       },
     },
   )
