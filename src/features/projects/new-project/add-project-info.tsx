@@ -67,7 +67,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.name`)} size="md" htmlFor="name">
                 {t(`${NEW_PROJECT}.name`)}
               </FormLabel>
-              <Input id="name" {...register('name')} autoComplete="off" />
+              <Input id="name" {...register('name', {})} autoComplete="off" />
             </FormControl>
           </GridItem>
 
@@ -101,7 +101,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.woNumber`)} size="md" htmlFor="woNumber">
                 {t(`${NEW_PROJECT}.woNumber`)}
               </FormLabel>
-              <Input id="woNumber" {...register('woNumber')} autoComplete="off" />
+              <Input id="woNumber" {...register('woNumber')} autoComplete="off" type="number" />
             </FormControl>
           </GridItem>
 
@@ -110,7 +110,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.poNumber`)} size="md" htmlFor="poNumber">
                 {t(`${NEW_PROJECT}.poNumber`)}
               </FormLabel>
-              <Input id="poNumber" {...register('poNumber')} autoComplete="off" />
+              <Input id="poNumber" {...register('poNumber')} autoComplete="off" type="number" />
             </FormControl>
           </GridItem>
         </Grid>

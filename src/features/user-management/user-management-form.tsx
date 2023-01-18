@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Checkbox,
   Flex,
@@ -42,6 +43,7 @@ import { PasswordField } from './password-field'
 import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
+import { validateTelePhoneNumber } from 'utils/form-validation'
 
 type UserManagement = {
   onClose: () => void
@@ -123,6 +125,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const noMarketsSelected = !validateMarket(formValues?.markets)
   const noStatesSelected = !validateState(formValues?.states)
   const noRegionSelected = !validateRegions(formValues?.regions)
+  const invalidTelePhone =
+    validateTelePhoneNumber(formValues?.telephoneNumber as string) || !formValues?.telephoneNumber
+
   const watchRequiredField =
     !formValues?.email ||
     !formValues?.firstName ||
@@ -322,6 +327,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             render={({ field: { onChange, ...rest } }) => (
               <ReactSelect
                 {...rest}
+                isDisabled={userInfo && userInfo.userTypeLabel === 'Vendor'}
                 selectProps={{ isBorderLeft: true }}
                 options={accountTypeOptions}
                 onChange={target => {
@@ -649,41 +655,48 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       </HStack>
 
       <HStack mt="30px" spacing={15}>
-        <FormControl w={215}>
+        <FormControl w={215} isInvalid={!invalidTelePhone}>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.telephone`)}
           </FormLabel>
-          <Controller
-            control={control}
-            name="telephoneNumber"
-            render={({ field }) => {
-              return (
-                <NumberFormat
-                  customInput={Input}
-                  value={field.value}
-                  onChange={e => field.onChange(e)}
-                  format="(###)-###-####"
-                  mask="_"
-                  placeholder="(___)-___-____"
-                  borderLeft="2.5px solid #4E87F8"
-                />
-              )
-            }}
-          />
+          <Box height="70px">
+            <Controller
+              control={control}
+              name="telephoneNumber"
+              render={({ field }) => {
+                return (
+                  <NumberFormat
+                    customInput={Input}
+                    value={field.value}
+                    onChange={e => field.onChange(e)}
+                    format="(###)-###-####"
+                    mask="_"
+                    placeholder="(___)-___-____"
+                    borderLeft="2.5px solid #4E87F8"
+                  />
+                )
+              }}
+            />
+            <FormErrorMessage>{!invalidTelePhone ? 'Valid Phone Number Is Required' : null}</FormErrorMessage>
+          </Box>
         </FormControl>
 
         <FormControl w={215}>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.ext`)}
           </FormLabel>
-          <Input type="text" {...register('telephoneNumberExtension')} />
+          <Box height="70px">
+            <Input type="text" {...register('telephoneNumberExtension')} />
+          </Box>
         </FormControl>
 
         <FormControl w={215}>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.employeeID`)}
           </FormLabel>
-          <Input type="text" {...register('employeeId')} />
+          <Box height="70px">
+            <Input type="text" {...register('employeeId')} />
+          </Box>
         </FormControl>
       </HStack>
 
@@ -720,7 +733,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         >
           {t(`${USER_MANAGEMENT}.modal.cancel`)}
         </Button>
-        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField}>
+
+        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
           {t(`${USER_MANAGEMENT}.modal.save`)}
         </Button>
         <ConfirmationBox

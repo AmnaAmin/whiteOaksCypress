@@ -21,6 +21,7 @@ const VendorFilterCard: React.FC<{
       _hover={{ bg: 'blue.50' }}
       rounded="5px"
       px="0px"
+      boxShadow="0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
     >
       <HStack spacing="4" alignItems="center" h="calc(100% - 5px)" ml="8px" mr="15.73px">
         <Center bg={props.bgColor} p="10px" rounded="full">

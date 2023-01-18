@@ -7,6 +7,7 @@ import React from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { Trade, VendorProfile, VendorTradeFormValues } from 'types/vendor.types'
 import { useTrades } from 'api/vendor-details'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type tradesFormProps = {
   vendorProfileData: VendorProfile
@@ -35,7 +36,7 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: (
 
 export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: tradesFormProps) => {
   const { control } = useFormContext<VendorTradeFormValues>()
-
+  const { isFPM } = useUserRolesSelector()
   const tradeCheckboxes = useWatch({ control, name: 'trades' })
   return (
     <>
@@ -58,6 +59,7 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
                         const checked = event.target.checked
                         onChange({ ...checkbox, checked })
                       }}
+                      isDisabled={isFPM}
                     >
                       {value.trade.skill}
                     </CheckboxButton>
@@ -78,19 +80,21 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
         mt={2}
       >
         {onClose && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        <Button
-          disabled={!validateTrade(tradeCheckboxes)}
-          type="submit"
-          variant="solid"
-          colorScheme="darkPrimary"
-          data-testid="saveVendorSkills"
-        >
-          {vendorProfileData?.id ? t('save') : t('next')}
-        </Button>
+        {!isFPM && (
+          <Button
+            disabled={!validateTrade(tradeCheckboxes) || isFPM}
+            type="submit"
+            variant="solid"
+            colorScheme="darkPrimary"
+            data-testid="saveVendorSkills"
+          >
+            {vendorProfileData?.id ? t('save') : t('next')}
+          </Button>
+        )}
       </Flex>
     </>
   )

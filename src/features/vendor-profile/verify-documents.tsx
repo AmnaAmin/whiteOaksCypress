@@ -4,6 +4,7 @@ import { BiCheckSquare } from 'react-icons/bi'
 import { AiFillExclamationCircle } from 'react-icons/ai'
 import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
 import { UseFormRegister } from 'react-hook-form'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 interface NewVendorProfile extends VendorProfile {
   coiGLStatus: string | null
@@ -107,8 +108,13 @@ export const VendorPortalVerifyDocument = (props: VendorPortalVerifyDocumentProp
 
   return (
     <>
-      <HStack py="25px">
-        <Divider orientation="vertical" border="1px solid #CBD5E0 !important" h="20px" />
+      <HStack pt="10px" spacing={{ base: 0, sm: '0.5rem' }}>
+        <Divider
+          orientation="vertical"
+          border="1px solid #CBD5E0 !important"
+          h="20px"
+          display={{ base: 'none', sm: 'block' }}
+        />
         {verificationStatus === VERIFICATION_STATUS.VERIFIED && (
           <Flex bgColor="#E7F8EC" borderRadius="6px" p="5px">
             <Text fontSize="14px" lineHeight="20px" color="#48BB78">
@@ -143,6 +149,7 @@ interface AdminVerifyDocumentProps {
 
 export const AdminPortalVerifyDocument = (props: AdminVerifyDocumentProps): JSX.Element => {
   const [verificationStatus, setVerificationStatus] = useState<VERIFICATION_STATUS>(VERIFICATION_STATUS.UNVERIFIED)
+  const { isFPM } = useUserRolesSelector()
 
   useEffect(() => {
     if (props.fieldName === 'CoiWcExpCheckbox') {
@@ -246,6 +253,7 @@ export const AdminPortalVerifyDocument = (props: AdminVerifyDocumentProps): JSX.
             //bgColor="#FFFFFF"
             //borderColor="#E2E8F0"
             // borderWidth="2px"
+            isDisabled={isFPM}
             {...props.registerToFormField(props.fieldName as any)}
           >
             <Text fontSize="14px" lineHeight="20px" color="#718096">
