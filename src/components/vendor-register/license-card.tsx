@@ -201,9 +201,7 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                   variant="required-field"
                 />
                 <Box h="105px">
-                  <FormControl
-                    isInvalid={!!errors.licenses?.[index]?.expiryDate?.message}
-                  >
+                  <FormControl isInvalid={!!errors.licenses?.[index]?.expiryDate?.message}>
                     <FormLabel variant="strong-label" size="md" color="#2D3748">
                       {t('expiryDate')}
                     </FormLabel>
@@ -214,11 +212,10 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                       {...register(`licenses.${index}.expiryDate`)}
                       data-testid={`expiryDate-` + index}
                     />
-                    <FormErrorMessage  pos="absolute">
+                    <FormErrorMessage pos="absolute">
                       {errors.licenses && errors.licenses[index]?.expiryDate?.message}
                     </FormErrorMessage>
                   </FormControl>
-                  
                 </Box>
 
                 <VStack alignItems={{ base: '', md: 'center' }}>

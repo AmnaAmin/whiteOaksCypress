@@ -45,7 +45,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   const woStartDateMin = useWOStartDateMin(control)
 
   const [fileBlob, setFileBlob] = React.useState<Blob>()
-  const [preventSpecialChara, setPreventSpecialChara] = React.useState('')
+  const [formattedName, setFormattedName] = React.useState('')
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
   }
@@ -61,7 +61,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
 
   const handleChange = e => {
     const result = e.target.value.replace(/[^a-zA-Z\s]/g, '')
-    setPreventSpecialChara(result)
+    setFormattedName(result)
   }
 
   return (
@@ -77,7 +77,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                 id="name"
                 {...register('name', {})}
                 autoComplete="off"
-                value={preventSpecialChara}
+                value={formattedName}
                 onChange={handleChange}
               />
             </FormControl>
