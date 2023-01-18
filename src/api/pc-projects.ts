@@ -132,23 +132,25 @@ export const useFPMUsers = () => {
   }
   useEffect(() => {
     const fpmUserOptions =
-      fpmTypes?.map((type, i) => {
-        return {
-          label: type.value,
-          id: type.id,
-          isHidden: i > 0,
-          onClick: () => handleToggleUser(type),
-          options:
-            fpmUsers
-              ?.filter(fpm => fpm.fieldProjectManagerRoleId === type.id)
-              .map(user => ({
-                ...user,
-                isHidden: i > 0,
-                label: `${user?.firstName} ${user?.lastName}`,
-                value: user?.id,
-              })) || [],
-        }
-      }) || []
+      fpmTypes
+        ?.map((type, i) => {
+          return {
+            label: type.value,
+            id: type.id,
+            isHidden: i > 0,
+            onClick: () => handleToggleUser(type),
+            options:
+              fpmUsers
+                ?.filter(fpm => fpm.fieldProjectManagerRoleId === type.id)
+                .map(user => ({
+                  ...user,
+                  isHidden: i > 0,
+                  label: `${user?.firstName} ${user?.lastName}`,
+                  value: user?.id,
+                })) || [],
+          }
+        })
+        .sort(fpm => fpm?.id === 60 && -1) || []
     setFilterFpm(fpmUserOptions)
   }, [fpmTypes, fpmUsers])
 
