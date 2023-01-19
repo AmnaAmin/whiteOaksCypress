@@ -152,6 +152,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
       description: description ?? t('saveLWError'),
       status: 'error',
       isClosable: true,
+      position: 'top-left',
     })
     setTabIndex(1)
     onGenerateInvoiceClose()
