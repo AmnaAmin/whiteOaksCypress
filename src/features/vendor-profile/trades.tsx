@@ -80,19 +80,21 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
         mt={2}
       >
         {onClose && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        <Button
-          disabled={!validateTrade(tradeCheckboxes) || isFPM}
-          type="submit"
-          variant="solid"
-          colorScheme="darkPrimary"
-          data-testid="saveVendorSkills"
-        >
-          {vendorProfileData?.id ? t('save') : t('next')}
-        </Button>
+        {!isFPM && (
+          <Button
+            disabled={!validateTrade(tradeCheckboxes) || isFPM}
+            type="submit"
+            variant="solid"
+            colorScheme="darkPrimary"
+            data-testid="saveVendorSkills"
+          >
+            {vendorProfileData?.id ? t('save') : t('next')}
+          </Button>
+        )}
       </Flex>
     </>
   )

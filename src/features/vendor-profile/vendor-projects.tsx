@@ -107,17 +107,19 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
           </Radio>
         </Stack>
       </RadioGroup>
-      <Box overflow={'auto'} w="100%" h="430px" position="relative" roundedTop={6} pointerEvents={isFPM ? 'none' : 'auto'}>
+      <Box
+        overflow={'auto'}
+        w="100%"
+        h="430px"
+        position="relative"
+        roundedTop={6}
+        pointerEvents={isFPM ? 'none' : 'auto'}
+      >
         <TableContextProvider data={tableData} columns={tableColumns}>
-          <Table isLoading={isFetching || isLoading} isEmpty={!isFetching && !tableData?.length}/>
+          <Table isLoading={isFetching || isLoading} isEmpty={!isFetching && !tableData?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>
-              <ExportButton
-                columns={tableColumns}
-                fetchedData={tableData}
-                colorScheme="brand"
-                fileName="projects"
-              />
+              <ExportButton columns={tableColumns} fetchedData={tableData} colorScheme="brand" fileName="projects" />
               <CustomDivider />
               {settingColumns && (
                 <TableColumnSettings
@@ -140,14 +142,15 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
         justifyContent="end"
       >
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
-
-        <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets" isDisabled={isFPM}>
-          {t('save')}
-        </Button>
+        {!isFPM && (
+          <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets" isDisabled={isFPM}>
+            {t('save')}
+          </Button>
+        )}
       </Flex>
     </VStack>
   )

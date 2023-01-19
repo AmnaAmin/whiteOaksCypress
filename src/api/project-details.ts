@@ -480,13 +480,13 @@ export const parseProjectDetailsPayloadFromFormData = async (
     createdDate: dateISOFormat(formValues?.dateCreated),
   }
 }
-
+// type.equals=Project&
 export const useProjectAuditLogs = projectId => {
   const client = useClient('/audit/api')
 
   const { data: auditLogs, ...rest } = useQuery('audit-logs', async () => {
     const response = await client(
-      `audit-trails?type.equals=Project&typeId.equals=${projectId}&sort=modifiedDate,asc`,
+      `audit-trails?groupId.equals=${projectId}&page=0&size=10000000&sort=id,desc`,
       {},
     )
 

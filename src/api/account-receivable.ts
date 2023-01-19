@@ -71,8 +71,10 @@ export const useBatchProcessingMutation = () => {
   }, {})
 }
 
-export const useCheckBatch = (setLoading, loading, paginatedQueryString) => {
+export const useCheckBatch = (setLoading, loading, paginatedQueryString ) => {
   const [isAPIEnabled, setAPIEnabled] = useState(false)
+  const [batchResponse, setBatchResponse] = useState()
+
   const client = useClient()
   const queryClient = useQueryClient()
 
@@ -84,15 +86,42 @@ export const useCheckBatch = (setLoading, loading, paginatedQueryString) => {
       return response?.data
     },
     {
-      onSuccess(isBatchProcessingInProgress) {
+      async onSuccess(isBatchProcessingInProgress) {
         if (!isBatchProcessingInProgress) {
           setLoading(false)
           setAPIEnabled(false)
           queryClient.invalidateQueries([GET_PAGINATED_RECEIVABLE_QUERY_KEY, paginatedQueryString])
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+
+          const response = await client(`batch-values/batchType/940`, {})
+          setBatchResponse(response?.data)
+          return response?.data
         }
+        return batchResponse
       },
       enabled: loading && isAPIEnabled,
+      // refetchInterval: 10000,
+    },
+  )
+}
+
+export const useBatchRun = (batchId, paginatedQueryString) => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+
+  return useQuery(
+    ['batchRun'],
+    async data => {
+      const response = await client(`batch-values/batchType/${batchId}`, {})
+      return response?.data
+    },
+    {
+      async onSuccess(isBatchProcessingInProgress) {
+        if (!isBatchProcessingInProgress) {
+          queryClient.invalidateQueries([GET_PAGINATED_RECEIVABLE_QUERY_KEY, paginatedQueryString])
+          queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+        }
+      },
       refetchInterval: 10000,
     },
   )
