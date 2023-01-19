@@ -1,7 +1,6 @@
 import React from 'react'
 import { Box, Center, Flex, FormLabel } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { usePerformance } from 'api/performance'
 import { currencyFormatter } from 'utils/string-formatters'
 import RevenueIcon from 'icons/revenue-icon'
 import ProfitIcon from 'icons/profit-icon'
@@ -18,9 +17,9 @@ const IconElement: React.FC<{ Icon: React.ElementType; isLoading: boolean }> = (
 }
 
 export const PerformanceInfoCards: React.FC<{
-  isLoading: boolean
-}> = ({ isLoading }) => {
-  const { data: performance } = usePerformance()
+  performance: any
+  isPerformanceLoading: boolean
+}> = ({ isPerformanceLoading, performance }) => {
   const revenue = performance?.map(p => p?.revenue).reduce((partialSum, a) => partialSum + a, 0)
   const profit = performance?.map(p => p?.profit).reduce((partialSum, a) => partialSum + a, 0)
   const disqualifiedRevenue = performance?.map(p => p?.disqualifiedRevenue).reduce((partialSum, a) => partialSum + a, 0)
@@ -37,12 +36,12 @@ export const PerformanceInfoCards: React.FC<{
         mt={'3'}
         mb={'3'}
       >
-        {isLoading ? (
+        {isPerformanceLoading ? (
           <BlankSlate width="100%" />
         ) : (
           <>
             <Center width={'33%'} borderRight="1px solid #E5E5E5" px={4} flexWrap={'wrap'}>
-              <IconElement Icon={RevenueIcon} isLoading={isLoading} />
+              <IconElement Icon={RevenueIcon} isLoading={isPerformanceLoading} />
               <Flex flexDir={'column'} ml={3}>
                 <FormLabel variant="light-label" size="md">
                   <Box>{'Revenue'}</Box>
@@ -53,7 +52,7 @@ export const PerformanceInfoCards: React.FC<{
               </Flex>
             </Center>
             <Center width={'33%'} borderRight="1px solid #E5E5E5" px={4}>
-              <IconElement Icon={DisqualifiedRevenueIcon} isLoading={isLoading} />
+              <IconElement Icon={DisqualifiedRevenueIcon} isLoading={isPerformanceLoading} />
               <Flex flexDir={'column'} ml={3}>
                 <FormLabel variant="light-label" size="md">
                   <Box>{'Disqualified Revenue'}</Box>
@@ -64,7 +63,7 @@ export const PerformanceInfoCards: React.FC<{
               </Flex>
             </Center>
             <Center width={'33%'}>
-              <IconElement Icon={ProfitIcon} isLoading={isLoading} />
+              <IconElement Icon={ProfitIcon} isLoading={isPerformanceLoading} />
               <Flex flexDir={'column'} ml={3}>
                 <FormLabel variant="light-label" size="md">
                   <Box>{'Profit'}</Box>

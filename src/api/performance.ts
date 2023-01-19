@@ -4,30 +4,38 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ErrorType } from 'types/common.types'
 import { PerformanceType } from 'types/performance.type'
 import { useClient } from 'utils/auth-context'
+import { getQueryString } from 'utils/filters-query-utils'
 
-export const useRevenuePerformance = () => {
+export const useRevenuePerformance = yearFilter => {
   const client = useClient()
 
   return useQuery('performance', async () => {
-    const response = await client(`fpm-quota-chart/revenue-profit`, {})
+    const url = yearFilter ? `fpm-quota-chart/revenue-profit?year=${yearFilter}` : `fpm-quota-chart/revenue-profit`
+    const response = await client(url, {})
     return response?.data
   })
 }
 
-export const usePerformance = () => {
+export const usePerformance = ({ yearFilter, months, fpmIds }) => {
   const client = useClient()
-
+  const queryParams = {
+    year: yearFilter,
+    months,
+    fpmIds,
+  }
+  const filterQuery = getQueryString(queryParams)
+  const url = filterQuery ? `fpm-quota?${filterQuery}` : `fpm-quota`
   return useQuery('performance-list', async () => {
-    const response = await client(`fpm-quota`, {})
+    const response = await client(url, {})
     return response?.data
   })
 }
 
-export const useFPMDetails = (FPMId: any) => {
+export const useFPMDetails = (FPMId: any, yearFilter?: string | number | null) => {
   const client = useClient()
-
+  const url = yearFilter ? `fpm-quota-info/${FPMId}?year=${yearFilter}` : `fpm-quota-info/${FPMId}`
   return useQuery('fpm-details', async () => {
-    const response = await client(`fpm-quota-info/${FPMId}`, {})
+    const response = await client(url, {})
     return response?.data
   })
 }
@@ -135,6 +143,8 @@ export const MonthOptionTypes = {
   thisMonth: 'thisMonth',
   currentQuarter: 'currentQuarter',
   pastQuarter: 'pastQuarter',
+  currentYear: 'currentYear',
+  lastYear: 'lastYear',
 }
 
 export const MonthOption = [
@@ -142,6 +152,8 @@ export const MonthOption = [
   { value: MonthOptionTypes.lastMonth, label: 'Last Month' },
   { value: MonthOptionTypes.currentQuarter, label: 'Current Quarter' },
   { value: MonthOptionTypes.pastQuarter, label: 'Past Quarter' },
+  { value: MonthOptionTypes.currentYear, label: 'Current Year' },
+  { value: MonthOptionTypes.lastYear, label: 'Last Year' },
   { value: MonthOptionTypes.all, label: 'All' },
 ]
 
