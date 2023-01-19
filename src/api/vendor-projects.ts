@@ -7,6 +7,8 @@ import autoTable from 'jspdf-autotable'
 import { dateFormat } from 'utils/date-time-utils'
 import { currencyFormatter, truncateWithEllipsisInCenter } from 'utils/string-formatters'
 import { Project } from 'types/project.type'
+import { useMemo } from 'react'
+import { SelectOption } from 'types/transaction.type'
 
 export const useUploadDocument = () => {
   const { projectId } = useParams<'projectId'>()
@@ -29,6 +31,7 @@ export const useUploadDocument = () => {
           description: 'New document has been uploaded successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error) {
@@ -37,6 +40,7 @@ export const useUploadDocument = () => {
           description: 'Error occured during uploading new document',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -84,8 +88,38 @@ export const documentStatus = [
   { value: 12, label: 'Active' },
   { value: 13, label: 'Inactive' },
   { value: 15, label: 'Expired' },
-  { value: 14, label: 'DoNotUse' },
+  { value: 14, label: 'Do Not Use' },
 ]
+
+export const useDocumentStatusSelectOptions = vendorProfileData => {
+  return useMemo(() => {
+    if (!vendorProfileData) return []
+
+    const documentStatusId = vendorProfileData?.status
+
+    if (!documentStatusId) return []
+
+    const selectOptionWithDisableEnabled = documentStatus.map((selectOption: SelectOption) => {
+      const optionValue = selectOption?.value
+      if (documentStatusId === 15 && optionValue === 12) {
+        return {
+          ...selectOption,
+          label: `${selectOption?.label} (All docs must be verified.)`,
+          isDisabled: true,
+        }
+      }
+      if (documentStatusId === 15 && optionValue === 13) {
+        return {
+          ...selectOption,
+          label: `${selectOption?.label} (All docs must be verified.)`,
+          isDisabled: true,
+        }
+      }
+      return selectOption
+    })
+    return selectOptionWithDisableEnabled
+  }, [vendorProfileData])
+}
 
 export const documentTerm = [
   { value: 24, label: '7' },

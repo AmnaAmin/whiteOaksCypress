@@ -68,6 +68,7 @@ export const useCreateUserMutation = () => {
           description: t(`${USER_MANAGEMENT}.modal.addUserSuccess`),
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -76,6 +77,7 @@ export const useCreateUserMutation = () => {
           description: (error.title as string) ?? t(`${USER_MANAGEMENT}.modal.userAddFailed`),
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -103,6 +105,7 @@ export const useSaveUserDetails = () => {
           description: t(`${USER_MANAGEMENT}.modal.updateUserSuccess`),
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -111,6 +114,7 @@ export const useSaveUserDetails = () => {
           description: (error.title as string) ?? t(`${USER_MANAGEMENT}.modal.userUpdateFailed`),
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -137,6 +141,7 @@ export const useDeleteUserDetails = () => {
           description: t(`${USER_MANAGEMENT}.modal.deleteUserSuccess`),
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -145,6 +150,7 @@ export const useDeleteUserDetails = () => {
           description: (error.title as string) ?? t(`${USER_MANAGEMENT}.modal.deleteUserFailed`),
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },

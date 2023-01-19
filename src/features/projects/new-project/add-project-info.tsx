@@ -45,7 +45,6 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
   const woStartDateMin = useWOStartDateMin(control)
 
   const [fileBlob, setFileBlob] = React.useState<Blob>()
-  const [formattedName, setFormattedName] = React.useState('')
   const readFile = (event: any) => {
     setFileBlob(event.target?.result?.split(',')?.[1])
   }
@@ -59,11 +58,6 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
     setValue('documents', fileBlob as Blob)
   }
 
-  const handleChange = e => {
-    const result = e.target.value.replace(/[^a-zA-Z\s]/g, '')
-    setFormattedName(result)
-  }
-
   return (
     <Flex flexDir="column">
       <Box px="6" minH="300px">
@@ -73,13 +67,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.name`)} size="md" htmlFor="name">
                 {t(`${NEW_PROJECT}.name`)}
               </FormLabel>
-              <Input
-                id="name"
-                {...register('name', {})}
-                autoComplete="off"
-                value={formattedName}
-                onChange={handleChange}
-              />
+              <Input id="name" {...register('name', {})} autoComplete="off" />
             </FormControl>
           </GridItem>
 
