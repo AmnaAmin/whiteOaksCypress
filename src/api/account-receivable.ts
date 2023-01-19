@@ -122,21 +122,6 @@ export const useBatchRun = (batchId, paginatedQueryString) => {
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },
-      refetchInterval: 1000,
     },
   )
 }
-
-// export const useBatchRun = batchId => {
-//   const client = useClient()
-
-//   const { data: batchRun, ...rest } = useQuery('batchRun', async () => {
-//     const response = await client(`batch-values/batchType/${batchId}`, {})
-//     return response?.data
-//   })
-
-//   return {
-//     batchRun,
-//     ...rest,
-//   }
-// }
