@@ -71,7 +71,7 @@ export const useBatchProcessingMutation = () => {
   }, {})
 }
 
-export const useCheckBatch = (setLoading, loading, paginatedQueryString ) => {
+export const useCheckBatch = (setLoading, loading, paginatedQueryString) => {
   const [isAPIEnabled, setAPIEnabled] = useState(false)
   const [batchResponse, setBatchResponse] = useState()
 
@@ -100,7 +100,7 @@ export const useCheckBatch = (setLoading, loading, paginatedQueryString ) => {
         return batchResponse
       },
       enabled: loading && isAPIEnabled,
-      // refetchInterval: 10000,
+      refetchInterval: 10000,
     },
   )
 }
@@ -122,7 +122,6 @@ export const useBatchRun = (batchId, paginatedQueryString) => {
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },
-      refetchInterval: 10000,
     },
   )
 }

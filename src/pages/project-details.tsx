@@ -27,8 +27,8 @@ import ProjectNotes from 'features/project-details/project-notes-tab'
 import { STATUS } from 'features/common/status'
 import { TransactionDetails } from 'features/project-details/transaction-details/transaction-details'
 import ScheduleTab from 'features/project-details/project-schedule/schedule-tab'
-// import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-table'
-// import { useProjectAuditLogs } from 'api/project-details'
+import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-table'
+import { useProjectAuditLogs } from 'api/project-details'
 import { boxShadow } from 'theme/common-style'
 
 export const ProjectDetails: React.FC = props => {
@@ -60,7 +60,7 @@ export const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  // const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
+  const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
 
   const [isShowProjectFinancialOverview, setIsShowProjectFinancialOverview] = useState(false)
 
@@ -127,7 +127,7 @@ export const ProjectDetails: React.FC = props => {
 
                   {/* Figma update */}
                 </Tab>
-                {/* <Tab>{t('projects.projectDetails.auditLogs')}</Tab> */}
+                {<Tab>{t('projects.projectDetails.auditLogs')}</Tab>}
               </Flex>
             </TabList>
 
@@ -233,10 +233,10 @@ export const ProjectDetails: React.FC = props => {
                 <TabPanel p="0" minH="calc(100vh - 408px)">
                   <ProjectNotes projectId={projectId} />
                 </TabPanel>
-                {/*
+                {
                 <TabPanel p="0px" minH="calc(100vh - 450px)">
                   <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch={refetchAudits} />
-                </TabPanel> */}
+                </TabPanel>}
               </TabPanels>
             </Card>
           </Tabs>

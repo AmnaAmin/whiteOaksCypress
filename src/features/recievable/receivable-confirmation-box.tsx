@@ -54,7 +54,7 @@ export function ReceivableConfirmationBox({
         </ModalHeader>
         <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} />
         <ModalBody>
-          {isLoading ? (
+          {isLoading && batchData.length < 0 ? (
             <Center>
               <Spinner size="xl" />
             </Center>
