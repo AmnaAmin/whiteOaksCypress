@@ -40,6 +40,7 @@ export const Receivable = () => {
     sorting,
   })
 
+  const [refetchInterval, setRefetchInterval] = useState<number>(5000)
   const { data: run, mutate: batchCall } = useBatchProcessingMutation()
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
@@ -47,6 +48,9 @@ export const Receivable = () => {
   const { data: batchRun, isLoading } = useBatchRun(batchId, queryStringWithPagination)
   const { t } = useTranslation()
 
+  console.log('batchId', batchId)
+
+  console.log('batchRun', batchRun)
   // const { weekDayFilters } = useWeeklyCount()
 
   useEffect(() => {
@@ -136,10 +140,11 @@ export const Receivable = () => {
             />
           </Box>
         </Box>
-        {!isLoading && (
+        {isLoading && <ViewLoader />}
+        {batchRun?.length > 0 && (
           <ReceivableConfirmationBox
             title={t(`${ACCOUNTS}.batchProcess`)}
-            isOpen={!loading && isBatchClick}
+            isOpen={!loading && isBatchClick && batchRun?.length > 0}
             onClose={onNotificationClose}
             batchData={batchRun}
             isLoading={isLoading}
