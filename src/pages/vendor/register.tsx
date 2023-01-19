@@ -543,6 +543,7 @@ export const VendorRegister = () => {
                         })}
                         tabIndex={1}
                         autoComplete="new-email"
+                        variant="required-field"
                       />
                       <FormErrorMessage>{errors?.email && errors?.email?.message}</FormErrorMessage>
                     </FormControl>
@@ -562,6 +563,7 @@ export const VendorRegister = () => {
                           onChange: e => setValue('ownerName', e.target.value + ' ' + getValues('lastName')),
                         })}
                         tabIndex={2}
+                        variant="required-field"
                       />
                       <FormErrorMessage>{errors?.firstName && errors?.firstName?.message}</FormErrorMessage>
                     </FormControl>
@@ -582,6 +584,7 @@ export const VendorRegister = () => {
                           onChange: e => setValue('ownerName', getValues('firstName') + ' ' + e.target.value),
                         })}
                         tabIndex={3}
+                        variant="required-field"
                       />
                       <FormErrorMessage>{errors?.lastName && errors?.lastName?.message}</FormErrorMessage>
                     </FormControl>
@@ -603,6 +606,7 @@ export const VendorRegister = () => {
                           })}
                           tabIndex={4}
                           autoComplete="new-password"
+                          variant="required-field"
                         />
                         <InputRightElement
                           cursor="pointer"
@@ -629,6 +633,7 @@ export const VendorRegister = () => {
                           required: 'This is required',
                         })}
                         tabIndex={5}
+                        variant="required-field"
                       />
                       <FormErrorMessage>{errors?.companyName && errors?.companyName?.message}</FormErrorMessage>
                     </FormControl>
@@ -708,6 +713,7 @@ export const VendorRegister = () => {
                                   {...register('ownerName', {
                                     required: 'This is required',
                                   })}
+                                  variant="required-field"
                                 />
                                 <FormErrorMessage>{errors?.ownerName && errors?.ownerName?.message}</FormErrorMessage>
                               </FormControl>
@@ -735,7 +741,7 @@ export const VendorRegister = () => {
                                             format="(###)-###-####"
                                             mask="_"
                                             placeholder="(___)-___-____"
-                                            borderLeft="2.5px solid #4E87F8"
+                                            borderLeft="2.5px solid #345EA6"
                                             tabIndex={6}
                                           />
                                         )
@@ -790,6 +796,7 @@ export const VendorRegister = () => {
                                   {...register('businessEmailAddress', {
                                     required: 'This is required',
                                   })}
+                                  variant="required-field"
                                 />
                                 <FormErrorMessage>
                                   {errors?.businessEmailAddress && errors?.businessEmailAddress?.message}
@@ -892,6 +899,7 @@ export const VendorRegister = () => {
                                     {...register('einNumber', {
                                       required: 'This is required',
                                     })}
+                                    variant="required-field"
                                   />
                                   <FormErrorMessage>{errors?.einNumber && errors?.einNumber?.message}</FormErrorMessage>
                                 </FormControl>
@@ -908,6 +916,7 @@ export const VendorRegister = () => {
                                     {...register('ssnNumber', {
                                       required: 'This is required',
                                     })}
+                                    variant="required-field"
                                   />
                                   <FormErrorMessage>{errors?.ssnNumber && errors?.ssnNumber?.message}</FormErrorMessage>
                                 </FormControl>
@@ -929,6 +938,7 @@ export const VendorRegister = () => {
                                 {...register('streetAddress', {
                                   required: 'This is required',
                                 })}
+                                variant="required-field"
                               />
                               <FormErrorMessage>
                                 {errors?.streetAddress && errors?.streetAddress?.message}
@@ -960,6 +970,7 @@ export const VendorRegister = () => {
                                   {...register('city', {
                                     required: 'This is required',
                                   })}
+                                  variant="required-field"
                                 />
                                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
                               </FormControl>
@@ -985,10 +996,10 @@ export const VendorRegister = () => {
                                         options={stateSelectOptions}
                                         selected={field.value}
                                         onChange={option => field.onChange(option)}
-                                        selectProps={{ isBorderLeft: false }}
                                         className="state-option-vendor-register"
                                         maxMenuHeight={200}
                                         minMenuHeight={200}
+                                        selectProps={{ isBorderLeft: true }}
                                       />
                                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                                     </>
@@ -1026,6 +1037,7 @@ export const VendorRegister = () => {
                                   {...register('zipCode', {
                                     required: 'This is required',
                                   })}
+                                  variant="required-field"
                                 />
                                 <FormErrorMessage>{errors?.city && errors?.city?.message}</FormErrorMessage>
                               </FormControl>
@@ -1049,6 +1061,7 @@ export const VendorRegister = () => {
                                   {...register('capacity', {
                                     required: 'This is required',
                                   })}
+                                  variant="required-field"
                                 />
                                 <FormErrorMessage>{errors?.capacity && errors?.capacity?.message}</FormErrorMessage>
                               </FormControl>
