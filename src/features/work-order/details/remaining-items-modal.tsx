@@ -103,6 +103,7 @@ const RemainingItemsModal: React.FC<{
             description: 'Remaining Items updated successfully.',
             status: 'success',
             isClosable: true,
+            position: 'top-left',
           })
         }
       })

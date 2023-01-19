@@ -80,6 +80,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
           description: `Vendor Skill have been ${selectedVendorSkills?.id ? 'Updated' : ' Created'} Successfully.`,
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
         onClose()
         reset()
