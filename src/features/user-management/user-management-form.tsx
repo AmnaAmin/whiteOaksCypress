@@ -103,7 +103,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const fpmRole: any = formValues?.fieldProjectManagerRoleId
 
   const isEditUser = !!(user && user.id)
-  const isVendor = userInfo && userInfo.userTypeLabel === 'Vendor'
+  const isVendor = accountType?.label === 'Vendor'
   const isProjectCoordinator = accountType?.label === 'Project Coordinator'
   const isFPM = accountType?.label === 'Field Project Manager'
 
@@ -327,7 +327,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             render={({ field: { onChange, ...rest } }) => (
               <ReactSelect
                 {...rest}
-                isDisabled={isVendor}
+                isDisabled={userInfo && userInfo.userTypeLabel === 'Vendor'}
                 selectProps={{ isBorderLeft: true }}
                 options={accountTypeOptions}
                 onChange={target => {

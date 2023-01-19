@@ -27,7 +27,7 @@ export const usePCRecievable = () => {
   }
 }
 
-const GET_PAGINATED_RECEIVABLE_QUERY_KEY = 'get_paginated_receivable_api_key'
+export const GET_PAGINATED_RECEIVABLE_QUERY_KEY = 'get_paginated_receivable_api_key'
 export const usePaginatedAccountReceivables = (queryString: string, pageSize: number) => {
   const { data, ...rest } = usePaginationQuery<ReceivableTableData>(
     [GET_PAGINATED_RECEIVABLE_QUERY_KEY, queryString],
@@ -71,7 +71,7 @@ export const useBatchProcessingMutation = () => {
   }, {})
 }
 
-export const useCheckBatch = (setLoading, loading, paginatedQueryString ) => {
+export const useCheckBatch = (setLoading, loading, paginatedQueryString) => {
   const [isAPIEnabled, setAPIEnabled] = useState(false)
   const [batchResponse, setBatchResponse] = useState()
 
@@ -100,7 +100,7 @@ export const useCheckBatch = (setLoading, loading, paginatedQueryString ) => {
         return batchResponse
       },
       enabled: loading && isAPIEnabled,
-      // refetchInterval: 10000,
+      refetchInterval: 10000,
     },
   )
 }
@@ -122,7 +122,6 @@ export const useBatchRun = (batchId, paginatedQueryString) => {
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },
-      refetchInterval: 10000,
     },
   )
 }
