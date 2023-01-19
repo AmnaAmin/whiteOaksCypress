@@ -57,10 +57,10 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
       rounded="6"
       onClick={onFileClear}
       bg="white"
-      borderLeft={leftBorder}
+      borderLeft={ isRequired ? leftBorder : ''}
       _hover={{
         borderColor: 'gray.300',
-        borderLeft: leftBorder,
+        borderLeft: isRequired ? leftBorder : '',
         ...inputStyle,
       }}
     >

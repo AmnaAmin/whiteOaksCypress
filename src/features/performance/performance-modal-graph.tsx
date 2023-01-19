@@ -1,7 +1,6 @@
-import { Box, Flex, FormLabel, HStack } from '@chakra-ui/react'
+import { Box, Center, Flex, FormLabel, HStack, Spinner } from '@chakra-ui/react'
 import { MonthOption } from 'api/performance'
 import ReactSelect from 'components/form/react-select'
-import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { format, subMonths } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -16,16 +15,21 @@ type GraphData = {
   Profit: any
 }[]
 
-const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ chartData, isLoading }) => {
+const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean; yearFilter: number | null; setYearFilter }> = ({
+  chartData = [],
+  isLoading,
+  yearFilter,
+  setYearFilter,
+}) => {
   const [monthOption, setMonthOption] = useState(MonthOption[0])
   const [graphData, setGraphData] = useState<GraphData>()
-  const currentMonth = format(new Date(), 'LLL', { locale: enUS })
   const vendors = [chartData?.chart]
 
   const vendorData = useMemo(
     () =>
       months.map((key, monthIndex) => {
-        const monthExistsInChart = chartData !== undefined && Object.keys(vendors[0])?.find(months => months === key)
+        const monthExistsInChart =
+          chartData !== undefined && vendors[0] && Object.keys(vendors[0])?.find(months => months === key)
         let nameMonthData
         if (monthExistsInChart) {
           nameMonthData = chartData?.chart[key]
@@ -42,14 +46,45 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
   )
 
   useEffect(() => {
-    const finalGraphData = vendorData?.filter(a => a.month === currentMonth)
-    setGraphData(finalGraphData)
+    filterGraphData(monthOption)
   }, [vendorData])
 
   const getMonthValue = monthOption => {
+    const currentYear = new Date().getFullYear()
+    const currentMonth = new Date().getMonth()
+    const isCurrentYearData = yearFilter === currentYear || !yearFilter
+    const isPastYearData = yearFilter === currentYear - 1
+
+    setMonthOption(monthOption)
+
+    if (
+      ['thisMonth', 'currentQuarter', 'currentYear'].includes(monthOption?.value) ||
+      (monthOption?.label === 'Last Month' && currentMonth !== 0) ||
+      (monthOption?.label === 'Past Quarter' && ![0, 1, 2].includes(currentMonth))
+    ) {
+      if (isCurrentYearData) {
+        filterGraphData(monthOption)
+      } else {
+        setYearFilter(currentYear)
+      }
+    }
+
+    if (
+      monthOption?.label === 'Last Year' ||
+      (monthOption?.label === 'Last Month' && currentMonth === 0) ||
+      (monthOption?.label === 'Past Quarter' && [0, 1, 2].includes(currentMonth))
+    ) {
+      if (isPastYearData) {
+        filterGraphData(monthOption)
+      } else {
+        setYearFilter(currentYear - 1)
+      }
+    }
+
     setMonthOption(monthOption)
     filterGraphData(monthOption)
   }
+
   const filterGraphData = monthOption => {
     let selectedMonth, selectedQuater
     // Checks if this month is selected, then returns month in the short form like Jan, Feb
@@ -66,7 +101,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
     }
     // Checks if past quarter is selected, then returns months for that quarter
     if (monthOption?.label === 'Past Quarter') {
-      selectedQuater = getLastQuarterByDate()
+      selectedQuater = getLastQuarterByDate() !== 0 ? getLastQuarterByDate() : 4
     }
 
     const finalGraphData = vendorData?.filter(
@@ -89,7 +124,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
               <Box width={'150px'}>
                 <ReactSelect
                   name={`monthsDropdown`}
-                  options={MonthOption}
+                  options={MonthOption.filter(m => m.value !== 'all')}
                   onChange={getMonthValue}
                   defaultValue={monthOption}
                   selected={setMonthOption}
@@ -100,7 +135,9 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
         </Flex>
         <Box mb={5}>
           {isLoading ? (
-            <BlankSlate size="sm" />
+            <Center height={350}>
+              <Spinner size="lg" />
+            </Center>
           ) : (
             <OverviewGraph vendorData={graphData} width="98%" height={350} hasUsers={false} monthOption={monthOption} />
           )}

@@ -40,11 +40,12 @@ export const Receivable = () => {
     sorting,
   })
 
+  const [batchLoading, setBatchLoading] = useState(false)
   const { data: run, mutate: batchCall } = useBatchProcessingMutation()
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
   const batchId = run?.data?.id || 0
-  const { data: batchRun, isLoading } = useBatchRun(batchId, queryStringWithPagination)
+  const { data: batchRun, isLoading, refetch: refetchBatch } = useBatchRun(batchId, queryStringWithPagination)
   const { t } = useTranslation()
 
   // const { weekDayFilters } = useWeeklyCount()
@@ -54,6 +55,14 @@ export const Receivable = () => {
       reset()
     }
   }, [loading])
+
+  useEffect(() => {
+    if (batchId === 0) {
+      setBatchLoading(true)
+    }
+    setBatchLoading(false)
+    refetchBatch()
+  }, [batchId])
 
   const Submit = formValues => {
     const receivableProjects = compact(formValues.selected)?.map((row: any) => ({
@@ -136,10 +145,11 @@ export const Receivable = () => {
             />
           </Box>
         </Box>
-        {!isLoading && (
+        {batchLoading && <ViewLoader />}
+        {batchRun?.length > 0 && !batchLoading && (
           <ReceivableConfirmationBox
             title={t(`${ACCOUNTS}.batchProcess`)}
-            isOpen={!loading && isBatchClick}
+            isOpen={!loading && isBatchClick && batchRun?.length > 0}
             onClose={onNotificationClose}
             batchData={batchRun}
             isLoading={isLoading}
