@@ -88,6 +88,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
           description: `Market have been ${selectedMarket?.id ? 'Updated' : ' Created'} Successfully.`,
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
         onClose()
         reset()
