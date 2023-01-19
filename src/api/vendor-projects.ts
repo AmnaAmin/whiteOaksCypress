@@ -29,6 +29,7 @@ export const useUploadDocument = () => {
           description: 'New document has been uploaded successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error) {
@@ -37,6 +38,7 @@ export const useUploadDocument = () => {
           description: 'Error occured during uploading new document',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },

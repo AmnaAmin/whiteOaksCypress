@@ -449,6 +449,7 @@ export const VendorRegister = () => {
       description: `Atleast one ${name} must be selected`,
       status: 'error',
       isClosable: true,
+      position: 'top-left',
     })
   }
 
