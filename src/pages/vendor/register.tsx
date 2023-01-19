@@ -363,10 +363,13 @@ export const VendorRegister = () => {
   }
 
   const doCancel = () => {
+
+    return window && (window.location.href = "/login");
+
     if (formTabIndex !== FORM_TABS.LOCATION_DETAILS) setformTabIndex(FORM_TABS.LOCATION_DETAILS)
 
     if (ref.current) {
-      ref.current.reset()
+      ref.current?.reset()
     }
 
     const fieldsArr = [
