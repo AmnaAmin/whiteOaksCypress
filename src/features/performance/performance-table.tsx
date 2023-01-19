@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
-import { usePerformance } from 'api/performance'
 import numeral from 'numeral'
 import { PerformanceType } from 'types/performance.type'
 import PerformanceModal from './performance-modal'
@@ -10,7 +9,8 @@ import Table from 'components/table-refactored/table'
 import { ColumnDef } from '@tanstack/react-table'
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
-  const { data: performance, isLoading } = usePerformance()
+  const { performance, isPerformanceTableLoading } = props
+
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
 
@@ -91,8 +91,8 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
               setSelectedUser(row)
               onOpen()
             }}
-            isLoading={isLoading}
-            isEmpty={!isLoading && !performance?.length}
+            isLoading={isPerformanceTableLoading}
+            isEmpty={!isPerformanceTableLoading && !performance?.length}
           />
         </TableContextProvider>
       </Box>
