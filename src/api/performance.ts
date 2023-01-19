@@ -112,6 +112,7 @@ export const useMutatePerformance = (FPMId: number) => {
           description: 'Performance Details have been updated successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
         queryClient.invalidateQueries('performance-list')
         queryClient.invalidateQueries('fpm-details')

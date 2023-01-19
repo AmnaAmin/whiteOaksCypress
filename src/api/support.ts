@@ -126,6 +126,7 @@ export const useCreateTicketMutation = () => {
           description: t(`${SUPPORT}.createTicketSuccessMessage`),
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
         queryClient.invalidateQueries(SUPPORT_LIST)
       },
@@ -135,6 +136,7 @@ export const useCreateTicketMutation = () => {
           description: error.message,
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -158,6 +160,7 @@ export const useEditTicketMutation = () => {
           description: t(`${SUPPORT}.editTicketSuccessMessage`),
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
         queryClient.invalidateQueries(SUPPORT_LIST)
       },
@@ -167,6 +170,7 @@ export const useEditTicketMutation = () => {
           description: error.message,
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
