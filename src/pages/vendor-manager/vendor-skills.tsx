@@ -12,7 +12,7 @@ export const VendorSkills = () => {
   return (
     <>
       <Box>
-        <HStack justifyContent="space-between" h="70px">
+        <HStack justifyContent="space-between" h="60px">
           <Text fontWeight={600} fontSize="18px" color="gray.600">
             {t(`${VENDOR_MANAGER}.vendorSkills`)}
           </Text>

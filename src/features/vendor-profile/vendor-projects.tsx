@@ -13,6 +13,7 @@ import { ExportButton } from 'components/table-refactored/export-button'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { TableNames } from 'types/table-column.types'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type ProjectProps = {
   onClose?: () => void
@@ -22,6 +23,8 @@ type ProjectProps = {
 }
 export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose, isFetching, isLoading }) => {
   const { projectTypes } = useProjectTypeSelectOptions()
+  const { isFPM } = useUserRolesSelector()
+
   const VENDOR_PROJECTS_TABLE_COLUMNS: ColumnDef<any>[] = useMemo(() => {
     return [
       {
@@ -96,11 +99,22 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
     <VStack gap={5}>
       <RadioGroup w="100%" justifyContent={'flex-start'} onChange={setProjectStatus} value={projectStatus}>
         <Stack direction="row">
-          <Radio value="active">{t('active')}</Radio>
-          <Radio value="paid">{t('paid')}</Radio>
+          <Radio value="active" isDisabled={isFPM}>
+            {t('active')}
+          </Radio>
+          <Radio value="paid" isDisabled={isFPM}>
+            {t('paid')}
+          </Radio>
         </Stack>
       </RadioGroup>
-      <Box overflow={'auto'} w="100%" h="430px" position="relative" roundedTop={6}>
+      <Box
+        overflow={'auto'}
+        w="100%"
+        h="430px"
+        position="relative"
+        roundedTop={6}
+        pointerEvents={isFPM ? 'none' : 'auto'}
+      >
         <TableContextProvider data={tableData} columns={tableColumns}>
           <Table isLoading={isFetching || isLoading} isEmpty={!isFetching && !tableData?.length} />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
@@ -108,7 +122,11 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
               <ExportButton columns={tableColumns} fetchedData={tableData} colorScheme="brand" fileName="projects" />
               <CustomDivider />
               {settingColumns && (
-                <TableColumnSettings disabled={isFetching || isLoading} onSave={onSave} columns={settingColumns} />
+                <TableColumnSettings
+                  disabled={isFetching || isLoading || isFPM}
+                  onSave={onSave}
+                  columns={settingColumns}
+                />
               )}
             </ButtonsWrapper>
           </TableFooter>
@@ -124,14 +142,15 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
         justifyContent="end"
       >
         {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
-
-        <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets">
-          {t('save')}
-        </Button>
+        {!isFPM && (
+          <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets" isDisabled={isFPM}>
+            {t('save')}
+          </Button>
+        )}
       </Flex>
     </VStack>
   )

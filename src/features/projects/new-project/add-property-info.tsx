@@ -29,6 +29,7 @@ import { useAddressShouldBeVerified, usePropertyInformationNextDisabled } from '
 import NumberFormat from 'react-number-format'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { STATUS } from 'features/common/status'
+import { isValidEmail } from 'utils/string-formatters'
 
 export const AddPropertyInfo: React.FC<{
   isLoading: boolean
@@ -45,15 +46,22 @@ export const AddPropertyInfo: React.FC<{
     onClose: onAddressVerificationModalClose,
   } = useDisclosure()
   const { isDuplicateAddress, setIsDuplicateAddress } = props
-  const [addressInfo, setAddressInfo] = useState<AddressInfo>({ address: '', city: '', state: '', zipCode: '' })
+  const [addressInfo, setAddressInfo] = useState<AddressInfo>({
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+  })
   const [check, setCheck] = useState(false)
   const [existProperty, setExistProperty] = useState([{ id: 0, status: '' }])
 
   // API calls
   const { projects } = useProjects()
   const { propertySelectOptions } = useProperties()
-  const { stateSelectOptions , states} = useStates()
+  const { stateSelectOptions, states } = useStates()
   const { marketSelectOptions, markets } = useMarkets()
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
 
   const { data: isAddressVerified, refetch, isLoading } = useGetAddressVerification(addressInfo)
 
@@ -95,7 +103,7 @@ export const AddPropertyInfo: React.FC<{
     const property = option?.property
     const market = markets.find(m => m?.id === property?.marketId)
 
-    const state =  states.find(s => s?.code === property?.state)
+    const state = states.find(s => s?.code === property?.state)
 
     setValue('streetAddress', property?.streetAddress || option.label)
     setValue('city', property?.city)
@@ -119,6 +127,17 @@ export const AddPropertyInfo: React.FC<{
       setIsDuplicateAddress(true)
       setExistProperty(duplicatedInProjects.map(p => ({ id: p.id as number, status: p.projectStatus as string })))
     }
+  }
+
+  // Email Validation
+  const handleEmailChange = event => {
+    if (!isValidEmail(event.target.value)) {
+      setError('invalid email address')
+    } else {
+      setError('')
+    }
+
+    setMessage(event.target.value)
   }
 
   return (
@@ -188,7 +207,9 @@ export const AddPropertyInfo: React.FC<{
                   {...register('city', {
                     required: true,
                     onChange: e => {
-                      setAddressInfo({ ...addressInfo, city: e.target.value })
+                      const city = e.target.value?.replace(/[^a-zA-Z\s]/g, '')
+                      setValue('city', city)
+                      setAddressInfo({ ...addressInfo, city })
                     },
                   })}
                 />
@@ -237,6 +258,7 @@ export const AddPropertyInfo: React.FC<{
                       setAddressInfo({ ...addressInfo, zipCode: e.target.value })
                     },
                   })}
+                  type="number"
                 />
                 <FormErrorMessage>{errors?.zipCode && errors?.zipCode?.message}</FormErrorMessage>
               </FormControl>
@@ -277,7 +299,7 @@ export const AddPropertyInfo: React.FC<{
                 <FormLabel htmlFor="gateCode" size="md">
                   {t(`${NEW_PROJECT}.gateCode`)}
                 </FormLabel>
-                <Input id="gateCode" {...register('gateCode')} />
+                <Input id="gateCode" {...register('gateCode')} type="number" />
               </FormControl>
             </GridItem>
 
@@ -286,7 +308,7 @@ export const AddPropertyInfo: React.FC<{
                 <FormLabel htmlFor="lockBoxCode" size="md">
                   {t(`${NEW_PROJECT}.lockBoxCode`)}
                 </FormLabel>
-                <Input id="lockBoxCode" {...register('lockBoxCode')} />
+                <Input id="lockBoxCode" {...register('lockBoxCode')} type="number" />
               </FormControl>
             </GridItem>
           </Grid>
@@ -307,7 +329,9 @@ export const AddPropertyInfo: React.FC<{
                           id="hoaPhone"
                           customInput={Input}
                           value={field.value}
-                          onChange={e => field.onChange(e)}
+                          onChange={e => {
+                            field.onChange(e)
+                          }}
                           format="(###)-###-####"
                           mask="_"
                           placeholder="(___)-___-____"
@@ -324,15 +348,21 @@ export const AddPropertyInfo: React.FC<{
                 <FormLabel htmlFor="ext" size="md">
                   {t(`${NEW_PROJECT}.ext`)}
                 </FormLabel>
-                <Input id="ext" {...register('hoaPhoneNumberExtension')} />
+                <Input id="ext" {...register('hoaPhoneNumberExtension')} type="number" />
               </FormControl>
             </GridItem>
             <GridItem pb={1}>
-              <FormControl>
+              <FormControl isInvalid={!!errors.hoaEmailAddress}>
                 <FormLabel htmlFor="hoaContactEmail" size="md">
                   {t(`${NEW_PROJECT}.hoaContactEmail`)}
                 </FormLabel>
-                <Input id="hoaContactEmail" {...register('hoaEmailAddress')} />
+                <Input
+                  id="hoaContactEmail"
+                  {...register('hoaEmailAddress')}
+                  value={message}
+                  onChange={handleEmailChange}
+                />
+                <Text color="red">{error ? error : ''}</Text>
               </FormControl>
             </GridItem>
           </Grid>

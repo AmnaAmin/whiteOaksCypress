@@ -132,23 +132,25 @@ export const useFPMUsers = () => {
   }
   useEffect(() => {
     const fpmUserOptions =
-      fpmTypes?.map((type, i) => {
-        return {
-          label: type.value,
-          id: type.id,
-          isHidden: i > 0,
-          onClick: () => handleToggleUser(type),
-          options:
-            fpmUsers
-              ?.filter(fpm => fpm.fieldProjectManagerRoleId === type.id)
-              .map(user => ({
-                ...user,
-                isHidden: i > 0,
-                label: `${user?.firstName} ${user?.lastName}`,
-                value: user?.id,
-              })) || [],
-        }
-      }) || []
+      fpmTypes
+        ?.map((type, i) => {
+          return {
+            label: type.value,
+            id: type.id,
+            isHidden: i > 0,
+            onClick: () => handleToggleUser(type),
+            options:
+              fpmUsers
+                ?.filter(fpm => fpm.fieldProjectManagerRoleId === type.id)
+                .map(user => ({
+                  ...user,
+                  isHidden: i > 0,
+                  label: `${user?.firstName} ${user?.lastName}`,
+                  value: user?.id,
+                })) || [],
+          }
+        })
+        .sort(fpm => fpm?.id === 60 && -1) || []
     setFilterFpm(fpmUserOptions)
   }, [fpmTypes, fpmUsers])
 
@@ -458,6 +460,27 @@ export const useGetAllVendors = (filterQueryString: string) => {
 
   return {
     allVendors: data,
+    ...rest,
+  }
+}
+
+export const useFPMVendor = (marketId?: number[]): any => {
+  const client = useClient()
+
+  const { data, ...rest } = useQuery<ProjectType>(
+    ['fpmVendors', marketId],
+    async () => {
+      const response = await client(
+        `view-vendors/v1?marketId.in=${marketId}&sort=modifiedDate,asc&page=0&size=10000000`,
+        {},
+      )
+      return response?.data
+    },
+    { enabled: !!marketId },
+  )
+
+  return {
+    fpmVendors: data,
     ...rest,
   }
 }

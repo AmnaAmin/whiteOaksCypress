@@ -24,6 +24,9 @@ import {
   Tab,
   useToast,
   useMediaQuery,
+  InputGroup,
+  InputRightElement,
+  Icon,
 } from '@chakra-ui/react'
 import { useStates } from 'api/pc-projects'
 import { parseCreateVendorFormToAPIData, useMarkets, useTrades } from 'api/vendor-details'
@@ -39,6 +42,11 @@ import InputMask from 'react-input-mask'
 import Select from 'components/form/react-select'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
+import PasswordStrengthBar, { measureStrength } from 'components/vendor-register/password-strength-bar'
+import { BiShow, BiHide } from 'react-icons/bi'
+import NumberFormat from 'react-number-format'
+import { phoneRegex } from 'utils/form-validation'
+
 
 const CustomTab = React.forwardRef((props: any, ref: any) => {
   const tabProps = useTab({ ...props, ref })
@@ -83,83 +91,6 @@ export const validateMarket = markets => {
   return true
 }
 
-const measureStrength = (p: string): [number, number] => {
-  let force = 0
-  const regex = /[$&+,:;=?@#|'<>.^*()%!-]/g
-  const flags = {
-    lowerLetters: /[a-z]+/.test(p),
-    upperLetters: /[A-Z]+/.test(p),
-    numbers: /[0-9]+/.test(p),
-    symbols: regex.test(p),
-  }
-
-  const passedMatches = Object.values(flags).filter((isMatchedFlag: boolean) => !!isMatchedFlag).length
-
-  force += 2 * p.length + (p.length >= 10 ? 1 : 0)
-  force += passedMatches * 10
-
-  // penalty (short password)
-  force = p.length <= 6 ? Math.min(force, 10) : force
-
-  // penalty (poor variety of characters)
-  force = passedMatches === 1 ? Math.min(force, 10) : force
-  force = passedMatches === 2 ? Math.min(force, 20) : force
-  force = passedMatches === 3 ? Math.min(force, 40) : force
-
-  return [force, passedMatches]
-}
-
-const defaultColor = 'rgb(221, 221, 221)'
-
-const colors = ['#F00', '#F90', '#FF0', '#9F0', '#0F0']
-const PasswordStrengthBar = ({ password }: any) => {
-  const getColor = (s: number): any => {
-    let idx = 0
-    if (s <= 10) {
-      idx = 0
-    } else if (s <= 20) {
-      idx = 1
-    } else if (s <= 30) {
-      idx = 2
-    } else if (s <= 40) {
-      idx = 3
-    } else {
-      idx = 4
-    }
-    return { idx: idx + 1, col: colors[idx] }
-  }
-
-  const getPoints = force => {
-    const pts = [] as any[]
-    for (let i = 0; i < 5; i++) {
-      pts.push(
-        <li
-          key={i}
-          className="point"
-          style={i < force.idx ? { backgroundColor: force.col } : { backgroundColor: '#DDD' }}
-        />,
-      )
-    }
-    return pts
-  }
-
-  const strength = password ? getColor(measureStrength(password)[0]) : defaultColor
-  const points = getPoints(strength)
-
-  return (
-    <div id="strength" className="form-group">
-      <label className="mb-0 PasswordStrength-Label">
-        <small>Password strength:</small>
-      </label>
-      <ul id="strengthBar" className="pl-0 mb-0">
-        {points}
-      </ul>
-    </div>
-  )
-}
-
-export const phoneRegex = /^(\+?\d{0,4})?\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{3}\)?)\s?-?\s?(\(?\d{4}\)?)?$/
-
 export const yupNullable = (_, val) => (val === '' ? undefined : _)
 
 const vendorRegisterFormSchema = {
@@ -176,6 +107,8 @@ const vendorRegisterFormSchema = {
   companyName: Yup.string().required('Business name is required'),
 
   //Location Details
+  businessPhoneNumber: Yup.string().matches(phoneRegex, 'Phone Contact number is not valid'),
+
   /*businessPhoneNumber: Yup.string()
     .matches(phoneRegex, 'Phone Contact number is not valid')
     .required('Primary Contact is required'),
@@ -185,14 +118,17 @@ const vendorRegisterFormSchema = {
     .required('Business Contact is required'),
   businessContactExt: Yup.number().transform(yupNullable),
   secondaryPhone: Yup.string().matches(phoneRegex, 'Secondary Phone number is not valid').transform(yupNullable),
-  secondaryPhoneExt: Yup.number().transform(yupNullable),
-  primaryEmail: Yup.string().email('Must be a valid email').required('Email is required').transform(yupNullable),
-  secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),*/
+  secondaryPhoneExt: Yup.number().transform(yupNullable),*/
+  businessEmailAddress: Yup.string()
+    .email('Must be a valid email')
+    .required('Email is required')
+    .transform(yupNullable),
+  secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),
   streetAddress: Yup.string().required('Street Address is required'),
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
   zipCode: Yup.string().required('ZipCode is required'),
-  capacity: Yup.string().required('Capacity is required'),
+  capacity: Yup.string().required('Capacity is required').matches(/^\d+$/, 'Must be a digit'),
 
   //Documents
 
@@ -216,9 +152,7 @@ const vendorRegisterFormSchema = {
     Yup.object().shape({
       licenseType: Yup.string().typeError('License Type must be a string').required('License Type is required'),
       licenseNumber: Yup.string().typeError('License Number must be a string').required('License Number is required'),
-      licenseExpirationDate: Yup.string()
-        .typeError('Expiration Date must be a string')
-        .required('Expiration Date is required'),
+      expiryDate: Yup.string().typeError('Expiration Date must be a string').required('Expiration Date is required'),
       expirationFile: Yup.mixed().required('File is required'),
     }),
   ),
@@ -244,11 +178,14 @@ export const VendorRegister = () => {
   const ref = useRef<HTMLFormElement>(null)
   const [showLoginFields, setShowLoginFields] = useState<boolean>(true)
   const [isMobile] = useMediaQuery('(max-width: 480px)')
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [unLockedTabs, setUnLoackedTabs] = useState<Array<FORM_TABS>>([])
 
   useEffect(() => {
     if (!isMobile) return
 
     if (formTabIndex !== FORM_TABS.LOCATION_DETAILS) setShowLoginFields(false)
+
   }, [isMobile])
 
   const formReturn = useForm({
@@ -280,7 +217,7 @@ export const VendorRegister = () => {
   const { stateSelectOptions } = useStates()
   const toast = useToast()
 
-  const { mutate: createVendorAccount } = useVendorRegister()
+  const { mutate: createVendorAccount, error: errorOnRegister } = useVendorRegister()
 
   const {
     handleSubmit,
@@ -291,8 +228,11 @@ export const VendorRegister = () => {
     setValue,
     getValues,
     trigger,
+    watch
   } = formReturn
 
+  const watchPassword = watch( "password", "" );
+  
   useEffect(() => {
     if (markets?.length) {
       const tradeFormValues = {
@@ -315,6 +255,12 @@ export const VendorRegister = () => {
       setValue('trades', tradeFormValues.trades)
     }
   }, [trades, markets])
+
+  useEffect(() => {
+    if (formTabIndex === FORM_TABS.LOCATION_DETAILS) setDisableLoginFields(false)
+    if (formTabIndex === FORM_TABS.LOCATION_DETAILS && isMobile) setShowLoginFields(true)
+    if (formTabIndex !== FORM_TABS.LOCATION_DETAILS && isMobile) setShowLoginFields(false)
+  }, [formTabIndex])
 
   const doNext = async () => {
     const isSsn = ssnEinTabIndex === 1 ? true : false
@@ -355,7 +301,7 @@ export const VendorRegister = () => {
       'coiWcExpDate',
     ]
 
-    const licenseFields = ['licenses']
+    const licenseFieldName = 'licenses'
 
     const tradeFieldName = 'trades'
 
@@ -372,6 +318,7 @@ export const VendorRegister = () => {
 
       setDisableLoginFields(true)
       setformTabIndex(FORM_TABS.DOCUMENTS)
+      setUnLoackedTabs([...unLockedTabs, FORM_TABS.LOCATION_DETAILS])
 
       return null
     }
@@ -384,16 +331,18 @@ export const VendorRegister = () => {
       }
 
       setformTabIndex(FORM_TABS.LICENSE)
+      setUnLoackedTabs([...unLockedTabs, FORM_TABS.DOCUMENTS])
 
       return null
     }
 
     if (formTabIndex === FORM_TABS.LICENSE) {
-      for (const fieldName of licenseFields) {
-        if (!(await trigger(fieldName))) return null
+      if (!(await trigger(licenseFieldName))) {
+        return null
       }
 
       setformTabIndex(FORM_TABS.CONSTRUCTION_TRADE)
+      setUnLoackedTabs([...unLockedTabs, FORM_TABS.LICENSE])
 
       return null
     }
@@ -401,10 +350,13 @@ export const VendorRegister = () => {
     if (formTabIndex === FORM_TABS.CONSTRUCTION_TRADE) {
       if (!validateTrade(getValues(tradeFieldName))) {
         showError('Trade')
+
         return null
       }
 
       setformTabIndex(FORM_TABS.MARKETS)
+      setUnLoackedTabs([...unLockedTabs, FORM_TABS.MARKETS])
+      setUnLoackedTabs([...unLockedTabs, FORM_TABS.CONSTRUCTION_TRADE])
 
       return null
     }
@@ -444,6 +396,15 @@ export const VendorRegister = () => {
 
     setDisableLoginFields(false)
     setShowLoginFields(true)
+    setUnLoackedTabs([])
+  }
+
+  const isTabDisabled = (tab: FORM_TABS): boolean => {
+    if (formTabIndex !== tab && !unLockedTabs.includes(tab)) {
+      return true
+    }
+
+    return false
   }
 
   const onSubmit = async formValues => {
@@ -454,7 +415,7 @@ export const VendorRegister = () => {
     const login = email
     const streetAddress = formValues.streetAddress
     const telephoneNumber = formValues.telephoneNumber
-    const state = formValues.state?.id
+    const state = formValues.state?.value
 
     const vendorDetails: any = await parseCreateVendorFormToAPIData(formValues, [])
 
@@ -521,7 +482,7 @@ export const VendorRegister = () => {
           py="10px !important"
           opacity="1"
           height="auto"
-          minH={{ sm: 'auto', md: '90vh' }}
+          minH={{ sm: 'auto', lg: '90vh' }}
           overflow="hidden"
         >
           <FormProvider {...formReturn}>
@@ -529,9 +490,9 @@ export const VendorRegister = () => {
               <HStack
                 spacing={{ sm: '0px', md: '50px' }}
                 alignItems="flex-start"
-                flexDir={{ base: 'column', sm: 'row' }}
+                flexDir={{ base: 'column', lg: 'row' }}
               >
-                <Box width={{ sm: '100%', md: '30%' }}>
+                <Box width={{ sm: '100%', lg: '30%' }}>
                   <VStack
                     alignItems="baseline"
                     sx={{
@@ -545,10 +506,10 @@ export const VendorRegister = () => {
                       <Image src="./WhiteOaks.svg" mt="10px" />
                     </Box>
                     <Box>
-                      <Heading fontSize="26px" color="#345587">
+                      <Heading fontSize="30px" color="#345587">
                         Vendor Registration
                       </Heading>
-                      <Text fontSize="14px" color="#8392AB" mb="10px">
+                      <Text fontSize="13px" color="#8392AB" mb="5px" mt="5px">
                         Please fill the below form for vendor registration.
                       </Text>
                     </Box>
@@ -578,8 +539,10 @@ export const VendorRegister = () => {
                         placeholder="Please enter your email address"
                         {...register('email', {
                           required: 'This is required',
+                          onChange: e => setValue('businessEmailAddress', e.target.value),
                         })}
                         tabIndex={1}
+                        autoComplete="new-email"
                       />
                       <FormErrorMessage>{errors?.email && errors?.email?.message}</FormErrorMessage>
                     </FormControl>
@@ -596,6 +559,7 @@ export const VendorRegister = () => {
                         placeholder="Enter your first name"
                         {...register('firstName', {
                           required: 'This is required',
+                          onChange: e => setValue('ownerName', e.target.value + ' ' + getValues('lastName')),
                         })}
                         tabIndex={2}
                       />
@@ -615,6 +579,7 @@ export const VendorRegister = () => {
                         placeholder="Enter your last name"
                         {...register('lastName', {
                           required: 'This is required',
+                          onChange: e => setValue('ownerName', getValues('firstName') + ' ' + e.target.value),
                         })}
                         tabIndex={3}
                       />
@@ -625,18 +590,26 @@ export const VendorRegister = () => {
                       <FormLabel htmlFor="password" fontSize="12px" color="#252F40" fontWeight="bold">
                         Password
                       </FormLabel>
-                      <Input
-                        id="password"
-                        type="password"
-                        fontSize="14px"
-                        color="#252F40"
-                        disabled={disableLoginFields}
-                        placeholder="Enter your password"
-                        {...register('password', {
-                          required: 'This is required',
-                        })}
-                        tabIndex={4}
-                      />
+                      <InputGroup>
+                        <Input
+                          id="password"
+                          type={ showPassword ? "text" : "password" }
+                          fontSize="14px"
+                          color="#252F40"
+                          disabled={disableLoginFields}
+                          placeholder="Enter your password"
+                          {...register('password', {
+                            required: 'This is required',
+                          })}
+                          tabIndex={4}
+                          autoComplete="new-password"
+                        />
+                        <InputRightElement
+                          cursor="pointer"
+                          children={showPassword ? <Icon as={BiHide} onClick={()=>setShowPassword(false)} /> : <Icon as={BiShow} onClick={()=>setShowPassword(true)} />} 
+                        />
+                      </InputGroup>
+                      <PasswordStrengthBar password={watchPassword} />
                       <FormErrorMessage>{errors?.password && errors?.password?.message}</FormErrorMessage>
                     </FormControl>
 
@@ -670,6 +643,9 @@ export const VendorRegister = () => {
                       '@media only screen and (max-width: 480px)': {
                         display: 'none !important',
                       },
+                      '@media only screen and (max-width: 900px)': {
+                        display: 'none !important',
+                      },
                     }}
                   >
                     <Divider
@@ -686,12 +662,16 @@ export const VendorRegister = () => {
                 </Flex>
                 <Flex
                   alignItems="center"
-                  w={{ sm: '100%', md: '60%' }}
+                  w={{ sm: '100%', lg: '60%' }}
                   maxW="800px"
                   sx={{
                     '@media only screen and (max-width: 480px)': {
                       marginTop: '30px !important',
                     },
+                    '@media only screen and (min-width: 500px) and (max-width: 900px)': {
+                      marginTop: '30px !important',
+                      marginInline: "0 !important"
+                    }
                   }}
                 >
                   <VStack w="100%">
@@ -701,13 +681,13 @@ export const VendorRegister = () => {
                       index={formTabIndex}
                     >
                       <TabList flexDir={{ base: 'column', sm: 'row' }}>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.LOCATION_DETAILS}>Location Details</CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.DOCUMENTS}>Documents</CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.LICENSE}>License</CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.CONSTRUCTION_TRADE}>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.LOCATION_DETAILS)}>Location Details</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.DOCUMENTS)}>Documents</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.LICENSE)}>License</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.CONSTRUCTION_TRADE)}>
                           Construction Trade
                         </CustomTab>
-                        <CustomTab isDisabled={formTabIndex !== FORM_TABS.MARKETS}>Markets</CustomTab>
+                        <CustomTab isDisabled={isTabDisabled(FORM_TABS.MARKETS)}>Markets</CustomTab>
                       </TabList>
 
                       <TabPanels>
@@ -724,10 +704,10 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your primary contact"
+                                  readOnly={true}
                                   {...register('ownerName', {
                                     required: 'This is required',
                                   })}
-                                  tabIndex={6}
                                 />
                                 <FormErrorMessage>{errors?.ownerName && errors?.ownerName?.message}</FormErrorMessage>
                               </FormControl>
@@ -743,15 +723,23 @@ export const VendorRegister = () => {
                                     >
                                       Business Phone Number
                                     </FormLabel>
-                                    <Input
-                                      id="businessPhoneNumber"
-                                      type="text"
-                                      fontSize="14px"
-                                      color="#252F40"
-                                      placeholder="Enter Business Phone"
-                                      {...register('businessPhoneNumber', {
-                                        required: 'This is required',
-                                      })}
+                                    <Controller
+                                      control={control}
+                                      name="businessPhoneNumber"
+                                      render={({ field }) => {
+                                        return (
+                                          <NumberFormat
+                                            customInput={Input}
+                                            value={field.value}
+                                            onChange={e => field.onChange(e)}
+                                            format="(###)-###-####"
+                                            mask="_"
+                                            placeholder="(___)-___-____"
+                                            borderLeft="2.5px solid #4E87F8"
+                                            tabIndex={6}
+                                          />
+                                        )
+                                      }}
                                     />
                                     <FormErrorMessage>
                                       {errors?.businessPhoneNumber && errors?.businessPhoneNumber?.message}
@@ -783,7 +771,7 @@ export const VendorRegister = () => {
                                 </Box>
                               </HStack>
 
-                              <FormControl isInvalid={errors?.primaryEmailAddress}>
+                              <FormControl isInvalid={errors?.businessEmailAddress}>
                                 <FormLabel
                                   htmlFor="businessEmailAddress"
                                   fontSize="12px"
@@ -798,6 +786,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your primary email address"
+                                  readOnly={true}
                                   {...register('businessEmailAddress', {
                                     required: 'This is required',
                                   })}

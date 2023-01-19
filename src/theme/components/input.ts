@@ -16,6 +16,7 @@ const input = {
           field: {
             borderRadius: '6px',
             color: 'gray.500',
+            textAlign: 'start',
             bg: 'white',
             _focus: inputFocusStateStyle,
             _disabled: inputDisableStyle,
@@ -29,6 +30,7 @@ const input = {
             ...inputBorderLeftStyle,
             borderRadius: '6px',
             color: 'gray.500',
+            textAlign: 'start',
             bg: 'white',
             _focus: requiredInputFocusStateStyle,
             _disabled: {

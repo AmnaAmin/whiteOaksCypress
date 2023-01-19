@@ -22,6 +22,7 @@ import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { AdminPortalVerifyDocument } from './verify-documents'
 
 type DocumentsProps = {
@@ -46,7 +47,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
-
+  const { isFPM } = useUserRolesSelector()
   const {
     formState: { errors, isSubmitSuccessful },
     control,
@@ -160,7 +161,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 control={control}
                 render={({ field, fieldState }) => {
                   return (
-                    <VStack alignItems="baseline">
+                    <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                       <Box>
                         <ChooseFileField
                           name={field.name}
@@ -171,6 +172,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             field.onChange(file)
                           }}
                           onClear={() => setValue(field.name, null)}
+                          disabled={isFPM}
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
@@ -214,6 +216,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   {...register('agreementSignedDate', {
                     required: isAgreementRequired && 'This is required',
                   })}
+                  isDisabled={isFPM}
                 />
                 <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
               </FormControl>
@@ -240,7 +243,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline">
+                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -321,6 +324,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                       ? isActive && 'This is required field'
                       : '',
                   })}
+                  isDisabled={isFPM}
                   data-testid="autoInsuranceExpDate"
                 />
                 <FormErrorMessage>
@@ -350,7 +354,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline">
+                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -405,6 +409,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                     required: changedDateFields.includes('COIGLExpDate') ? isActive && 'This is required field' : '',
                   })}
                   data-testid="coiGlExpDate"
+                  isDisabled={isFPM}
                 />
                 <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
               </FormControl>
@@ -431,7 +436,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline">
+                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -488,6 +493,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                     required: changedDateFields.includes('coiWcExpDate') ? isActive && 'This is required field' : '',
                   })}
                   data-testid="coiWcExpDate"
+                  isDisabled={isFPM}
                 />
                 <FormErrorMessage>{errors.coiWcExpDate && errors.coiWcExpDate.message}</FormErrorMessage>
               </FormControl>
@@ -514,7 +520,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline">
+                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -563,18 +569,26 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         justifyContent="end"
       >
         {isAllFiledWatch && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3">
+          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3" isDisabled={isFPM}>
             {t(`${VENDORPROFILE}.discardChanges`)}
           </Button>
         )}
         {onClose && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="darkPrimary">
-          {vendor?.id ? t('save') : t('next')}
-        </Button>
+        {!isFPM && (
+          <Button
+            type="submit"
+            data-testid="saveDocumentCards"
+            variant="solid"
+            colorScheme="darkPrimary"
+            isDisabled={isFPM}
+          >
+            {vendor?.id ? t('save') : t('next')}
+          </Button>
+        )}
       </Flex>
     </>
   )

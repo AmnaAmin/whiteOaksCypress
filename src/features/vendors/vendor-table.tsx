@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { useGetAllVendors, useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
+import { useFPMVendor, useGetAllVendors, useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
 import Status from 'features/common/status'
 import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
@@ -13,6 +13,9 @@ import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { Vendor as VendorType } from 'types/vendor.types'
 import Vendor from './selected-vendor-modal'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useUser } from 'api/user-management'
+import { useAuth } from 'utils/auth-context'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import {
   GotoFirstPage,
@@ -147,6 +150,14 @@ type ProjectProps = {
   selectedCard: string
 }
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
+  const { isFPM } = useUserRolesSelector()
+
+  // FPM portal -> Show vendors having same market as the logged in FPM
+  const { data: account } = useAuth()
+  const { data: userInfo } = useUser(account?.user?.email)
+  const marketIDs = userInfo?.markets?.map(m => m.id)
+  const { fpmVendors } = useFPMVendor(marketIDs)
+
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -169,7 +180,12 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     }
   }, [selectedCard])
 
-  const { vendors, isLoading, dataCount, totalPages } = useVendor(
+  const {
+    vendors: allVendors,
+    isLoading,
+    dataCount,
+    totalPages,
+  } = useVendor(
     filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
@@ -189,6 +205,8 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const onSave = columns => {
     postGridColumn(columns)
   }
+
+  const vendors = isFPM ? fpmVendors : allVendors
 
   return (
     <Box overflow="auto">
