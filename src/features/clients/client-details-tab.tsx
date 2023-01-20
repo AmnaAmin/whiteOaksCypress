@@ -44,7 +44,6 @@ export const Details: React.FC<clientDetailProps> = props => {
   const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
   const { isProjectCoordinator } = useUserRolesSelector()
-  const [formattedAddress, setFormattedAddress] = useState('')
   const [formattedName, setFormattedName] = useState('')
 
   const btnStyle = {
@@ -270,8 +269,6 @@ export const Details: React.FC<clientDetailProps> = props => {
                 style={disabledTextStyle}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
-                value={formattedAddress}
-                onChange={e => setFormattedAddress(preventSpecialCharacter(e.target.value))}
               />
               <FormErrorMessage>{errors?.streetAddress && errors?.streetAddress?.message}</FormErrorMessage>
             </FormControl>
