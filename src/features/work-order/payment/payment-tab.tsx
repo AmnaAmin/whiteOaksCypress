@@ -27,7 +27,6 @@ import { STATUS } from 'features/common/status'
 import { CustomInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
 import { truncateWithEllipsis } from 'utils/string-formatters'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const CalenderCard = props => {
   return (
@@ -87,8 +86,6 @@ const PaymentInfoTab = props => {
     finalInvoiceAmount: string | number
   }
 
-  const { isAdmin } = useUserRolesSelector()
-
   const {
     register,
     handleSubmit,
@@ -100,7 +97,7 @@ const PaymentInfoTab = props => {
     watch,
     reset: resetPayments,
   } = useForm<FormValues>({
-    defaultValues: defaultValuesPayment(workOrder, paymentsTerms, isAdmin),
+    defaultValues: defaultValuesPayment(workOrder, paymentsTerms),
   })
   const watchPartialPayment = watch('partialPayment')
   const watchPaymentDate = watch('paymentDate')
@@ -112,7 +109,7 @@ const PaymentInfoTab = props => {
       setValue('expectedPaymentDate', null)
       setValue('paymentTerm', null)
     } else {
-      resetPayments(defaultValuesPayment(workOrder, paymentsTerms, isAdmin))
+      resetPayments(defaultValuesPayment(workOrder, paymentsTerms))
     }
   }, [workOrder])
 

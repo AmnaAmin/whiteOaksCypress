@@ -231,7 +231,7 @@ export const parseProjectAwardValuesToPayload = id => {
   }
 }
 
-export const defaultValuesPayment = (workOrder, paymentsTerms, isAdmin) => {
+export const defaultValuesPayment = (workOrder, paymentsTerms) => {
   const defaultValues = {
     dateInvoiceSubmitted: getLocalTimeZoneDate(workOrder?.dateInvoiceSubmitted),
     paymentTerm: workOrder?.paymentTerm
@@ -245,7 +245,7 @@ export const defaultValuesPayment = (workOrder, paymentsTerms, isAdmin) => {
     clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
     clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
     partialPayment: 0,
-    paymentDate: !isAdmin && getLocalTimeZoneDate(workOrder?.partialPaymentDate),
+    // paymentDate:getLocalTimeZoneDate(workOrder?.partialPaymentDate),
     finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
   }
   return defaultValues
