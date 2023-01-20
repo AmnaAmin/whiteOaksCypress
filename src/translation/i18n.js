@@ -303,6 +303,7 @@ i18n.use(initReactI18next).init({
         createdDate: 'Created Date',
         createdBy: 'Created By',
         uploadFile: 'Upload File',
+        workOrderId: 'Work Order ID',
         // Project - Alerts
         value: 'Value',
         category: 'Category',
@@ -878,6 +879,7 @@ i18n.use(initReactI18next).init({
         createdDate: 'Fecha de creación',
         createdBy: 'Creado por',
         uploadFile: 'Subir archivo',
+        workOrderId: 'ID de pedido de trabajo',
         // Project - Alerts
         value: 'Valor',
         category: 'Categoría',

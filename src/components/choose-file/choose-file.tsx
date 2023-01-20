@@ -9,6 +9,8 @@ type ChooseFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
   isRequired?: boolean
   acceptedFiles?: string
   inputStyle?: any
+  uploadIconStyle?: any
+  textContStyle?: any
 }
 
 const ChooseFileField: React.FC<ChooseFileProps> = ({
@@ -20,6 +22,8 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
   isRequired,
   acceptedFiles,
   inputStyle,
+  uploadIconStyle,
+  textContStyle,
   ...inputProps
 }) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -57,7 +61,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
       rounded="6"
       onClick={onFileClear}
       bg="white"
-      borderLeft={ isRequired ? leftBorder : ''}
+      borderLeft={isRequired ? leftBorder : ''}
       _hover={{
         borderColor: 'gray.300',
         borderLeft: isRequired ? leftBorder : '',
@@ -115,8 +119,10 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
                 '@media only screen and (max-width: 480px)': {
                   position: 'relative',
                   left: '0',
+                  width: '170px',
                 },
               }}
+              {...(textContStyle && textContStyle ? { ...textContStyle } : {})}
             >
               {value}
             </Text>
@@ -126,6 +132,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
               size="xl"
               colorScheme={isError ? 'red' : 'darkPrimary'}
               bg="white"
+              {...(uploadIconStyle && uploadIconStyle ? { ...uploadIconStyle } : {})}
               sx={{
                 '@media only screen and (max-width: 480px)': {
                   position: 'relative',

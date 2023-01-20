@@ -57,7 +57,8 @@ export const PasswordField = React.forwardRef<HTMLInputElement, InputProps>((pro
           {...props}
           bg="#FFFFFF"
           placeholder="Password"
-          border="1px solid #D9D9D9"
+          border="none"
+          outline="1px solid #D9D9D9"
         />
       </InputGroup>
     </FormControl>

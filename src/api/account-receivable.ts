@@ -27,7 +27,7 @@ export const usePCRecievable = () => {
   }
 }
 
-const GET_PAGINATED_RECEIVABLE_QUERY_KEY = 'get_paginated_receivable_api_key'
+export const GET_PAGINATED_RECEIVABLE_QUERY_KEY = 'get_paginated_receivable_api_key'
 export const usePaginatedAccountReceivables = (queryString: string, pageSize: number) => {
   const { data, ...rest } = usePaginationQuery<ReceivableTableData>(
     [GET_PAGINATED_RECEIVABLE_QUERY_KEY, queryString],
