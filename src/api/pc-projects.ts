@@ -9,7 +9,6 @@ import { useEffect, useRef, useState } from 'react'
 import round from 'lodash/round'
 import { PROJECTS_QUERY_KEY } from './projects'
 import { usePaginationQuery } from 'api'
-import { UserTypes } from 'types/account.types'
 
 export const usePCProject = (projectId?: string) => {
   const client = useClient()
