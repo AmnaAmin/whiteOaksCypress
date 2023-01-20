@@ -231,9 +231,11 @@ const WorkOrderDetailTab = ({
             <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
               {t('cancel')}
             </Button>
-            <Button type="submit" colorScheme="darkPrimary" disabled={isUpdating || isFetchingLineItems}>
-              {t('save')}
-            </Button>
+            {values?.assignedItems && values?.assignedItems?.length > 0 && (
+              <Button type="submit" colorScheme="darkPrimary" disabled={isUpdating || isFetchingLineItems}>
+                {t('save')}
+              </Button>
+            )}
           </HStack>
         </ModalFooter>
       </form>
