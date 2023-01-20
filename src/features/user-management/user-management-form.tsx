@@ -278,7 +278,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             <Input isDisabled={isEditUser} borderLeft="2.5px solid #4E87F8" type="id" {...register('id')} />
           </FormControl>
         )}
-        <FormControl w={215}>
+        <FormControl w={215} isInvalid={!!errors.email} h="77px">
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.email`)}
           </FormLabel>
@@ -290,7 +290,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               required: 'This is required',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid email',
+                message: 'Invalid Email Address',
               },
             })}
           />
