@@ -317,15 +317,15 @@ export const parseFormValuesFromAPIData = ({
   const findOptionByValue = (options: SelectOption[], value: string | number | null): SelectOption | null =>
     options.find(option => option.value === value) || null
 
-  // Due to corrupt data, getting state on the basis of id and code so using both the values 
-  const stateValue = stateSelectOptions?.find(b => b?.value === (project?.state))
+  // Due to corrupt data, getting state on the basis of id and code so using both the values
+  const stateValue = stateSelectOptions?.find(b => b?.value === project?.state)
   const stateIdValue = stateSelectOptions?.find(b => b?.id === Number(project?.state))
 
   const marketValue = marketSelectOptions?.find(b => b?.label === project?.market)
 
   const projectStatusSelectOptions = getProjectStatusSelectOptions()
   const remainingPayment = project.accountRecievable || 0
- 
+
   return {
     // Project Management form values
     status: findOptionByValue(projectStatusSelectOptions, project.projectStatusId),
@@ -480,15 +480,12 @@ export const parseProjectDetailsPayloadFromFormData = async (
     createdDate: dateISOFormat(formValues?.dateCreated),
   }
 }
-
+// type.equals=Project&
 export const useProjectAuditLogs = projectId => {
   const client = useClient('/audit/api')
 
   const { data: auditLogs, ...rest } = useQuery('audit-logs', async () => {
-    const response = await client(
-      `audit-trails?type.equals=Project&typeId.equals=${projectId}&sort=modifiedDate,asc`,
-      {},
-    )
+    const response = await client(`audit-trails?groupId.equals=${projectId}&page=0&size=10000000&sort=id,desc`, {})
 
     return response?.data
   })

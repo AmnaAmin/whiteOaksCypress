@@ -156,7 +156,9 @@ export const WorkOrderDetails = ({
                 mt="12px"
               >
                 <TabList border="none" flexDir={{ base: 'column', md: 'row' }}>
-                  <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
+                  <Tab outline="1px solid red" data-testid="workOrderDetails">
+                    {t('workOrderDetails')}
+                  </Tab>
                   {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                   <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
                   <Tab data-testid="invoice">{t('invoice')}</Tab>
@@ -166,7 +168,7 @@ export const WorkOrderDetails = ({
               </Card>
               <Card mb={3} py={0} roundedTop={0} roundedRight={{ base: 0, md: 12 }}>
                 <TabPanels>
-                  <TabPanel p={0}>
+                  <TabPanel p={0} outline="1px solid red">
                     <WorkOrderDetailTab
                       setIsUpdating={setIsUpdating}
                       isUpdating={isUpdating}
