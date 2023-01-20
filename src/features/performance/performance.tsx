@@ -9,6 +9,7 @@ import { PerformanceInfoCards } from './performance-info-cards'
 import { PerformanceTable } from './performance-table'
 import { PerformanceGraphWithUsers } from './revenue-performance-graph'
 import { enUS } from 'date-fns/locale'
+import { Card } from 'components/card/card'
 
 type GraphData = {
   username: string
@@ -159,7 +160,7 @@ export const PerformanceTab = () => {
   }, [data])
 
   return (
-    <>
+    <Box pb="2">
       <PerformanceFilters
         yearFilter={yearFilter}
         setYearFilter={setYearFilter}
@@ -180,7 +181,9 @@ export const PerformanceTab = () => {
         />
       </Box>
       <PerformanceInfoCards isPerformanceLoading={isPerformanceTableLoading} performance={performance} />
-      <PerformanceTable performance={performance} isPerformanceTableLoading={isPerformanceTableLoading} />
-    </>
+      <Card px="12px" py="16px">
+        <PerformanceTable performance={performance} isPerformanceTableLoading={isPerformanceTableLoading} />
+      </Card>
+    </Box>
   )
 }
