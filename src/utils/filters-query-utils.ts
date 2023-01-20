@@ -1,7 +1,7 @@
 import { ColumnFiltersState, SortingState } from '@tanstack/react-table'
 import { dateISOFormatWithZeroTime, datePickerFormat } from './date-time-utils'
 
-const getQueryString = (obj: { [key: string]: string | number }) => {
+export const getQueryString = (obj: { [key: string]: string | number | undefined }) => {
   return Object.keys(obj).reduce((str, key, i) => {
     const delimiter = i === 0 ? '' : '&'
     const val = obj[key]
