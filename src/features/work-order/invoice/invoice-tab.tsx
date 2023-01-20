@@ -231,6 +231,7 @@ export const InvoiceTab = ({
       description: description ?? t('saveLWError'),
       status: 'error',
       isClosable: true,
+      position: 'top-left',
     })
     setTabIndex(1)
     onGenerateInvoiceClose()
