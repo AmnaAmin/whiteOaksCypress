@@ -1,4 +1,5 @@
-import { Box, Button, HStack, Text, useDisclosure } from '@chakra-ui/react'
+import { Button, HStack, useDisclosure, Text } from '@chakra-ui/react'
+import { Card } from 'components/card/card'
 import { SupportModal } from 'features/support/support-modal'
 import { SupportTable } from 'features/support/support-table'
 import { SUPPORT } from 'features/support/support.i18n'
@@ -10,8 +11,8 @@ export const SupportTickets = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const SUPPORT_PAGE = 'support_page'
   return (
-    <Box>
-      <HStack h="50px" justifyContent="space-between">
+    <Card px="12px" py="16px">
+      <HStack justifyContent="space-between" mb="16px">
         <Text data-testid="users" fontSize="18px" fontWeight={600} color="#4A5568">
           {t(`${SUPPORT}.support`)}
         </Text>
@@ -23,6 +24,6 @@ export const SupportTickets = () => {
 
       <SupportTable />
       <SupportModal onClose={onClose} isOpen={isOpen} supportPage={SUPPORT_PAGE} />
-    </Box>
+    </Card>
   )
 }
