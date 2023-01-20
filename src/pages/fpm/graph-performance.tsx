@@ -87,7 +87,7 @@ export const OverviewGraph = ({ vendorData, width, height }) => {
             type="number"
             tickSize={8}
             tickCount={10}
-            domain={[0, 20000]}
+            domain={[0, 'auto']}
             axisLine={false}
             tick={{
               fontSize: '12px',
