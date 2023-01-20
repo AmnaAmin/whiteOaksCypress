@@ -245,7 +245,7 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
     clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
     clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
     partialPayment: 0,
-    paymentDate: getLocalTimeZoneDate(workOrder?.partialPaymentDate),
+    // paymentDate:getLocalTimeZoneDate(workOrder?.partialPaymentDate),
     finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
   }
   return defaultValues
