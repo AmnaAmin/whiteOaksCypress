@@ -639,7 +639,7 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   const isSSNNumber = ssn?.replace(/\D+/g, '').length! === 9
   const isEinNumber = ein?.replace(/\D+/g, '').length! === 9
   const isEmail = isValidEmail(businessEmailAddress)
-  const isCapacity = capacity >= 500
+  const isCapacity = capacity <= 500
 
   return {
     disableDetailsNext:
