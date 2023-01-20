@@ -33,7 +33,7 @@ export const Login = () => {
             </Text>
           </VStack>
         </Card>
-        <Card borderTopRightRadius="0px !important" borderTopLeftRadius="0px !important" bg="#FFFFFF">
+        <Card borderTopRightRadius="0px !important" borderTopLeftRadius="0px !important" bg="#FFFFFF" pb="10">
           <LoginForm />
         </Card>
         <Text textAlign="center" fontSize="14px" fontWeight="400px" color="#3A3A3A" mt="23px">
