@@ -1,4 +1,15 @@
-import { Button, chakra, FormControl, FormLabel, HTMLChakraProps, Input, Stack, Text, VStack } from '@chakra-ui/react'
+import {
+  Button,
+  chakra,
+  FormControl,
+  FormLabel,
+  HTMLChakraProps,
+  Input,
+  Stack,
+  Text,
+  VStack,
+  Box,
+} from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { useAuth } from 'utils/auth-context'
 import { PasswordField } from './PasswordField'
@@ -23,7 +34,7 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
 
   return (
     <chakra.form onSubmit={handleSubmit(onSubmit)} {...props}>
-      <Stack spacing="29px" mx={{ sm: '70px' }} pt="15px">
+      <Stack spacing="29px" mx={{ sm: '70px' }} pt="20px">
         <FormControl id="email" isInvalid={!!errors?.email?.message}>
           <FormLabel fontSize="12px" fontWeight="700" color="#252F40">
             Username
@@ -56,9 +67,11 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
         >
           SIGN IN
         </Button>
-        <Text textAlign="center" fontSize={{ base: '16px', sm: '21px' }} fontWeight={500} color="#8392AB">
-          <Link href="vendor/register">Register as a Vendor</Link>
-        </Text>
+        <Box textAlign="center" pt="8px">
+          <Link href="vendor/register" fontSize={{ base: '16px', sm: '21px' }} fontWeight={500} color="#8392AB">
+            Register as a Vendor
+          </Link>
+        </Box>
       </Stack>
     </chakra.form>
   )
