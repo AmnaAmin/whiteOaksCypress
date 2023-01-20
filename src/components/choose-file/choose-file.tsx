@@ -61,7 +61,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
       rounded="6"
       onClick={onFileClear}
       bg="white"
-      borderLeft={ isRequired ? leftBorder : ''}
+      borderLeft={isRequired ? leftBorder : ''}
       _hover={{
         borderColor: 'gray.300',
         borderLeft: isRequired ? leftBorder : '',
@@ -119,10 +119,10 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
                 '@media only screen and (max-width: 480px)': {
                   position: 'relative',
                   left: '0',
-                  width: "170px"
+                  width: '170px',
                 },
               }}
-              { ...(textContStyle && textContStyle ? { ...textContStyle }: {}) }
+              {...(textContStyle && textContStyle ? { ...textContStyle } : {})}
             >
               {value}
             </Text>
@@ -132,7 +132,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
               size="xl"
               colorScheme={isError ? 'red' : 'darkPrimary'}
               bg="white"
-              { ...(uploadIconStyle && uploadIconStyle ? { ...uploadIconStyle }: {}) }
+              {...(uploadIconStyle && uploadIconStyle ? { ...uploadIconStyle } : {})}
               sx={{
                 '@media only screen and (max-width: 480px)': {
                   position: 'relative',
