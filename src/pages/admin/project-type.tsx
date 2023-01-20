@@ -1,4 +1,5 @@
-import { Box, Button, HStack, Text, useDisclosure } from '@chakra-ui/react'
+import { Button, HStack, useDisclosure } from '@chakra-ui/react'
+import { Card } from 'components/card/card'
 import { ProjectTypeModal } from 'features/project-type/project-type-modal'
 import { ProjectTypeTable } from 'features/project-type/project-type-table'
 import { PROJECT_TYPE } from 'features/project-type/project-type.i18n'
@@ -9,11 +10,11 @@ export const ProjectType = () => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
-    <Box>
-      <HStack h="50px" justifyContent="space-between">
-        <Text data-testid="users" fontSize="18px" fontWeight={600} color="#4A5568">
+    <Card px="12px" py="16px">
+      <HStack justifyContent="flex-end" mb="16px">
+        {/* <Text data-testid="users" fontSize="18px" fontWeight={600} color="#4A5568">
           {t(`${PROJECT_TYPE}.projectType`)}
-        </Text>
+        </Text> */}
 
         <Button onClick={onOpen} colorScheme="brand" leftIcon={<BiAddToQueue />}>
           {t(`${PROJECT_TYPE}.addProjectType`)}
@@ -22,6 +23,6 @@ export const ProjectType = () => {
 
       <ProjectTypeTable />
       <ProjectTypeModal onClose={onClose} isOpen={isOpen} />
-    </Box>
+    </Card>
   )
 }
