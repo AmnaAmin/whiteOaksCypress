@@ -1,4 +1,4 @@
-import { Button, HStack, useDisclosure } from '@chakra-ui/react'
+import { Button, HStack, useDisclosure, Text } from '@chakra-ui/react'
 import { Card } from 'components/card/card'
 import { EditUserModal } from 'features/user-management/edit-user-modal'
 import { UserManagementTable } from 'features/user-management/user-management-table'
@@ -11,10 +11,10 @@ export const UserManagement = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   return (
     <Card px="12px" py="16px">
-      <HStack justifyContent="flex-end" mb="16px">
-        {/* <Text data-testid="users" fontSize="18px" fontWeight={600} color="#4A5568">
+      <HStack justifyContent="space-between" mb="16px">
+        <Text data-testid="users" fontSize="18px" fontWeight={600} color="#4A5568">
           {t(`${USER_MANAGEMENT}.table.users`)}
-        </Text> */}
+        </Text>
         <Button data-testid="add-user" colorScheme="brand" onClick={onOpen} leftIcon={<BiAddToQueue />}>
           {t(`${USER_MANAGEMENT}.modal.addUser`)}
         </Button>

@@ -1,4 +1,4 @@
-import { Button, HStack, Icon, useDisclosure } from '@chakra-ui/react'
+import { Button, HStack, Icon, useDisclosure, Text } from '@chakra-ui/react'
 import { Card } from 'components/card/card'
 import { NewVendorSkillsModal } from 'features/vendor-manager/new-vendor-skill-modal'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
@@ -13,10 +13,10 @@ export const VendorSkills = () => {
   return (
     <>
       <Card px="12px" py="16px">
-        <HStack justifyContent="flex-end" mb="16px">
-          {/* <Text fontWeight={600} fontSize="18px" color="gray.600">
+        <HStack justifyContent="space-between" mb="16px">
+          <Text fontWeight={600} fontSize="18px" color="gray.600">
             {t(`${VENDOR_MANAGER}.vendorSkills`)}
-          </Text> */}
+          </Text>
           <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onDocumentModalOpen}>
             {t(`${VENDOR_MANAGER}.newVendorSkills`)}
           </Button>
