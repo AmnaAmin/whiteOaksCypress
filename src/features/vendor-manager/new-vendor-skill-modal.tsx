@@ -149,7 +149,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                 <Input
                   {...register('skill')}
                   type="text"
-                  borderLeft="2.5px solid blue"
+                  variant="required-field"
                   w="215px"
                   defaultValue={selectedVendorSkills?.skill}
                   title={watchvalue}
