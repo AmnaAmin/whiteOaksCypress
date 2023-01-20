@@ -209,6 +209,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   w="215px"
                   data-testid="agreementSignedDate"
                   {...register('agreementSignedDate', { required: isAgreementRequired && 'This is required' })}
+                  { ...( ! isAdmin && {min: datePickerFormat( new Date() ) as string} ) }
                 />
                 <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
               </FormControl>
