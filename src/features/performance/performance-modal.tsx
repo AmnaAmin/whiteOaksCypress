@@ -11,7 +11,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { PerformanceType } from 'types/performance.type'
 import {
   badges,
@@ -36,7 +36,8 @@ const PerformanceModal = ({
   isOpen: boolean
 }) => {
   const { t } = useTranslation()
-  const { data: fpmData, isLoading } = useFPMDetails(performanceDetails?.userId)
+  const [yearFilter, setYearFilter] = useState(null)
+  const { data: fpmData, isLoading, refetch, isFetching } = useFPMDetails(performanceDetails?.userId, yearFilter)
   const { mutate: savePerformanceDetails } = useMutatePerformance(performanceDetails?.userId)
   const formReturn = useForm<PerformanceType>()
   const { control, formState, reset } = formReturn
@@ -45,6 +46,12 @@ const PerformanceModal = ({
   const bonusValue = bonus?.find(b => b?.value === fpmData?.newBonus)
   const badgeValue = badges?.find(b => b?.value === fpmData?.badge)
   const quotaValue = ignorePerformance?.find(b => b?.value === fpmData?.ignoreQuota)
+
+  useEffect(() => {
+    if (yearFilter) {
+      refetch()
+    }
+  }, [yearFilter])
 
   useEffect(() => {
     reset({
@@ -93,7 +100,12 @@ const PerformanceModal = ({
                 formControl={formReturn as UseFormReturn<any>}
               />
               <Box mt={5} height={'450px'}>
-                <PerformanceGraph chartData={fpmData} isLoading={isLoading} />
+                <PerformanceGraph
+                  chartData={fpmData}
+                  isLoading={isLoading || isFetching}
+                  yearFilter={yearFilter}
+                  setYearFilter={setYearFilter}
+                />
               </Box>
             </ModalBody>
             <Divider mt={3} />

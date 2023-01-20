@@ -100,6 +100,7 @@ export const useCreateVendorMutation = () => {
         description: t('createVendorSuccess'),
         status: 'success',
         isClosable: true,
+        position: 'top-left',
       })
     },
     onError(error: any) {
@@ -108,6 +109,7 @@ export const useCreateVendorMutation = () => {
         description: (error.title as string) ?? 'Unable to create project.',
         status: 'error',
         isClosable: true,
+        position: 'top-left',
       })
     },
   })
@@ -226,6 +228,7 @@ export const useVendorSkillsMutation = () => {
           description: (error.title as string) ?? 'Vendor Skill Operation Failed.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -249,6 +252,7 @@ export const useMarketsMutation = () => {
           description: (error.title as string) ?? 'Markets Operation Failed.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -355,6 +359,7 @@ export const useSaveVendorDetails = (name: string) => {
           description: t(`update${name}Success`),
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
       onError(error: any) {
@@ -363,6 +368,7 @@ export const useSaveVendorDetails = (name: string) => {
           description: (error.title as string) ?? 'Unable to update vendor.',
           status: 'error',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
@@ -563,6 +569,7 @@ export const useSaveSettings = () => {
           description: 'Settings have been updated successfully.',
           status: 'success',
           isClosable: true,
+          position: 'top-left',
         })
       },
     },
