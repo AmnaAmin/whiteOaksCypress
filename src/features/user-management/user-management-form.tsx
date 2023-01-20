@@ -275,22 +275,22 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             <FormLabel variant="strong-label" size="md">
               {t(`${USER_MANAGEMENT}.modal.id`)}
             </FormLabel>
-            <Input isDisabled={isEditUser} borderLeft="2.5px solid #4E87F8" type="id" {...register('id')} />
+            <Input isDisabled={isEditUser} variant="required-field" type="id" {...register('id')} />
           </FormControl>
         )}
-        <FormControl w={215}>
+        <FormControl w={215} isInvalid={!!errors.email} h="77px">
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.email`)}
           </FormLabel>
           <Input
             isDisabled={isEditUser}
-            borderLeft="2.5px solid #4E87F8"
+            variant="required-field"
             type="email"
             {...register('email', {
               required: 'This is required',
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: 'Invalid email',
+                message: 'Invalid Email Address',
               },
             })}
           />
@@ -301,14 +301,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.firstName`)}
           </FormLabel>
-          <Input borderLeft="2.5px solid #4E87F8" type="text" {...register('firstName')} />
+          <Input variant="required-field" type="text" {...register('firstName')} />
         </FormControl>
 
         <FormControl w={215}>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.lastName`)}
           </FormLabel>
-          <Input autoComplete="off" borderLeft="2.5px solid #4E87F8" type="text" {...register('lastName')} />
+          <Input autoComplete="off" variant="required-field" type="text" {...register('lastName')} />
         </FormControl>
       </HStack>
 
@@ -566,7 +566,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <FormLabel variant="strong-label" size="md">
                 {t(`${USER_MANAGEMENT}.modal.newTarget`)}
               </FormLabel>
-              <Input borderLeft="2.5px solid #4E87F8" type="number" {...register('newTarget')} />
+              <Input variant="required-field" type="number" {...register('newTarget')} />
             </FormControl>
 
             <FormControl w="215px">
@@ -618,7 +618,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.address`)}
           </FormLabel>
-          <Input borderLeft="2.5px solid #4E87F8" type="text" {...register('streetAddress')} />
+          <Input variant="required-field" type="text" {...register('streetAddress')} />
         </FormControl>
 
         <FormControl w={215}>
@@ -672,7 +672,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                     format="(###)-###-####"
                     mask="_"
                     placeholder="(___)-___-____"
-                    borderLeft="2.5px solid #4E87F8"
+                    variant="required-field"
                   />
                 )
               }}
