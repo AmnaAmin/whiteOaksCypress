@@ -168,7 +168,7 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
                   <FormLabel variant="strong-label">{t(`${PROJECT_TYPE}.type`)}</FormLabel>
                   <Input
                     type="text"
-                    borderLeft="2.5px solid #4E87F8"
+                    variant="required-field"
                     {...register('type')}
                     title={typeFieldWatch}
                     data-testid="type"

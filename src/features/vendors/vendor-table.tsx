@@ -156,7 +156,6 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const { data: account } = useAuth()
   const { data: userInfo } = useUser(account?.user?.email)
   const marketIDs = userInfo?.markets?.map(m => m.id)
-  const { fpmVendors } = useFPMVendor(marketIDs)
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
@@ -182,13 +181,25 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
 
   const {
     vendors: allVendors,
-    isLoading,
-    dataCount,
-    totalPages,
+    isLoading: vendorsLoading,
+    dataCount: vendorsDataCount,
+    totalPages: vendorsTotalPages,
   } = useVendor(
     filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
+
+  const {
+    vendors: fpmVendors,
+    isLoading: isFPMVendorLoading,
+    dataCount: fpmDataCount,
+    totalPages: fpmTotalPages,
+  } = useFPMVendor( 
+      marketIDs ? marketIDs : [], 
+      filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
+      pagination.pageSize,
+      isFPM
+     )
 
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
   const { refetch, isLoading: isExportDataLoading } = useGetAllVendors(
@@ -206,8 +217,12 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     postGridColumn(columns)
   }
 
-  const vendors = isFPM ? fpmVendors : allVendors
+  const vendors = isFPM ? fpmVendors : allVendors;
+  const isLoading = isFPM ? isFPMVendorLoading : vendorsLoading;
+  const dataCount = isFPM ? fpmDataCount : vendorsDataCount;
+  const totalPages = isFPM ? fpmTotalPages : vendorsTotalPages;
 
+ 
   return (
     <Box overflow="auto">
       {selectedVendor && (
