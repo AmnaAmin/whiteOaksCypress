@@ -69,7 +69,7 @@ const CreateVendorDetail: React.FC<{
   // Set Document Status dropdown if Status is Expired
   const [statusOptions, setStatusOptions] = useState<any>([])
   const documentStatusSelectOptions = useDocumentStatusSelectOptions(vendorProfileData)
-  
+
   useEffect(() => {
     if (vendorProfileData?.status === 15) {
       setStatusOptions(documentStatusSelectOptions)
@@ -450,7 +450,7 @@ const CreateVendorDetail: React.FC<{
               <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
             <Text fontSize="14px" color="red">
-              {capacityError! > 500 ? 'Capacity should not be more than 500' : ''}
+              {capacityError! > 500 ? 'capacity should not be greater than 500' : ''}
             </Text>
           </GridItem>
           <GridItem>
