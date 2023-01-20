@@ -431,7 +431,7 @@ const WorkOrderDetailTab = props => {
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
-            <SimpleGrid columns={5}>
+            <SimpleGrid columns={7} gap={1}>
               <CalenderCard
                 testId={'woIssued'}
                 title={t(`${WORK_ORDER}.woIssued`)}
