@@ -48,6 +48,8 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
   const { isFPM } = useUserRolesSelector()
+  const { isAdmin } = useUserRolesSelector()
+
   const {
     formState: { errors, isSubmitSuccessful },
     control,
@@ -339,6 +341,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   {...register('autoInsuranceExpDate', {
                     required: isInsuranceRequired && 'This is required field',
                   })}
+                  { ...( ! isAdmin && {min: datePickerFormat( new Date() ) as string} ) }
                   isDisabled={isFPM}
                   data-testid="autoInsuranceExpDate"
                 />
@@ -428,6 +431,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   })}
                   data-testid="coiGlExpDate"
                   isDisabled={isFPM}
+                  { ...( ! isAdmin && {min: datePickerFormat( new Date() ) as string} ) }
                 />
                 <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
               </FormControl>
@@ -513,6 +517,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   })}
                   data-testid="coiWcExpDate"
                   isDisabled={isFPM}
+                  { ...( ! isAdmin && {min: datePickerFormat( new Date() ) as string} ) }
                 />
                 <FormErrorMessage>{errors.coiWcExpDate && errors.coiWcExpDate.message}</FormErrorMessage>
               </FormControl>

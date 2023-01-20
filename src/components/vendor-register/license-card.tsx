@@ -206,7 +206,7 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                       {t('expiryDate')}
                     </FormLabel>
                     <Input
-                      w={{ base: '100%', md: '215px' }}
+                      w={{ base: '100%', md: '150px' }}
                       type="date"
                       variant="required-field"
                       {...register(`licenses.${index}.expiryDate`)}
@@ -220,7 +220,7 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
 
                 <VStack alignItems={{ base: '', md: 'center' }}>
                   <FormControl
-                    w={{ base: '100%', md: '215px' }}
+                    w={{ base: '100%', md: '150px' }}
                     h="92px"
                     isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}
                   >
@@ -243,7 +243,14 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                                   onFileChange(file)
                                   field.onChange(file)
                                 }}
-                                onClear={() => setValue(field.name, null)}
+                                onClear={() => setValue(field.name, null)}  
+                                inputStyle={ { w: { sm: "", md: "150px !important" },  minW: { sm: "", md: "150px !important",  } } }
+                                textContStyle={{
+                                  w: { sm: "170px !important", md: "110px !important" }
+                                }}
+                                uploadIconStyle={ { 
+                                 
+                                } }  
                               ></ChooseFileField>
                               <FormErrorMessage bottom="5px" pos="absolute">
                                 {fieldState.error?.message}
