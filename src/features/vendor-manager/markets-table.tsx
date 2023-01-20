@@ -72,7 +72,7 @@ export const MarketsTable: React.FC<{}> = () => {
           selectedMarket={selectedMarket}
         />
       )}
-      <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderBottomRadius="6px">
+      <Box overflow={'auto'} h="calc(100vh - 170px)" border="1px solid #CBD5E0" borderBottomRadius="6px">
         <TableContextProvider data={markets} columns={tableColumns} sorting={sorting} setSorting={setSorting}>
           <Table
             onRowClick={row => setSelectedMarket(row)}
