@@ -17,7 +17,7 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { ClientFormValues } from 'types/client.type'
@@ -31,6 +31,7 @@ import { BiPlus } from 'react-icons/bi'
 // import { paymentsTerms } from 'api/vendor-projects'
 import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
+import { preventSpecialCharacter } from 'utils/string-formatters'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -43,6 +44,8 @@ export const Details: React.FC<clientDetailProps> = props => {
   const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
   const { isProjectCoordinator } = useUserRolesSelector()
+  const [formattedAddress, setFormattedAddress] = useState('')
+  const [formattedName, setFormattedName] = useState('')
 
   const btnStyle = {
     alignItems: 'center',
@@ -267,6 +270,8 @@ export const Details: React.FC<clientDetailProps> = props => {
                 style={disabledTextStyle}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
+                value={formattedAddress}
+                onChange={e => setFormattedAddress(preventSpecialCharacter(e.target.value))}
               />
               <FormErrorMessage>{errors?.streetAddress && errors?.streetAddress?.message}</FormErrorMessage>
             </FormControl>
@@ -346,6 +351,8 @@ export const Details: React.FC<clientDetailProps> = props => {
                       isDisabled={isProjectCoordinator}
                       variant={'required-field'}
                       type="text"
+                      value={formattedName}
+                      onChange={e => setFormattedName(preventSpecialCharacter(e.target.value))}
                     />
                     <FormErrorMessage>{errors?.contacts?.[index]?.contact?.message}</FormErrorMessage>
                   </FormControl>
