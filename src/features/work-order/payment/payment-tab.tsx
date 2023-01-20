@@ -82,7 +82,7 @@ const PaymentInfoTab = props => {
     clientOriginalApprovedAmount: string | null
     clientApprovedAmount: string | null
     partialPayment: number | undefined | string
-    paymentDate: string | null | boolean
+    paymentDate: string | null
     finalInvoiceAmount: string | number
   }
 
