@@ -68,7 +68,7 @@ export const VendorSkillsTable: React.FC<{}> = () => {
         }}
         isOpen={isOpen}
       />
-      <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" roundedTop={6}>
+      <Box overflow={'auto'} h="calc(100vh - 170px)" border="1px solid #CBD5E0" roundedTop={6}>
         <TableContextProvider data={VendorSkills} columns={tableColumns} sorting={sorting} setSorting={setSorting}>
           <Table
             onRowClick={row => {
