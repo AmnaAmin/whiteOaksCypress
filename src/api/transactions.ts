@@ -26,7 +26,7 @@ import { createForm } from 'utils/lien-waiver'
 import { Document } from 'types/vendor.types'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
-import { ACCONT_RECEIVABLE_API_KEY } from 'api/account-receivable'
+import { ACCONT_RECEIVABLE_API_KEY, GET_PAGINATED_RECEIVABLE_QUERY_KEY } from 'api/account-receivable'
 import numeral from 'numeral'
 import { ErrorType } from 'types/common.types'
 import {
@@ -664,6 +664,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['overpayment', Number(projectId)])
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
+        queryClient.invalidateQueries(GET_PAGINATED_RECEIVABLE_QUERY_KEY)
 
         toast({
           title: 'Update Transaction.',
