@@ -12,10 +12,13 @@ import {
   Flex,
   InputGroup,
   InputLeftElement,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 
 import 'react-datepicker/dist/react-datepicker.css'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { SettingsValues } from 'types/vendor.types'
 import last from 'lodash/last'
 import { readFileContent, useSaveSettings, useAccountDetails } from 'api/vendor-details'
@@ -27,6 +30,14 @@ import { Button } from 'components/button/button'
 import { convertImageUrltoDataURL, dataURLtoFile } from 'components/table/util'
 import { Card } from 'components/card/card'
 import { useAuth } from 'utils/auth-context'
+import NumberFormat from 'react-number-format'
+import { CustomRequiredInput } from 'components/input/input'
+import ReactSelect from 'components/form/react-select'
+import { useStates } from 'api/pc-projects'
+
+const validateTelePhoneNumber = (number: string): boolean => {
+  return number ? number.match(/\d/g)?.length === 10 : false
+}
 
 const Settings = React.forwardRef(() => {
   const { mutate: saveSettings, isSuccess } = useSaveSettings()
@@ -37,11 +48,27 @@ const Settings = React.forwardRef(() => {
   const [imgFile, setImgFile] = useState<any>(null)
 
   const { i18n, t } = useTranslation()
+  const { stateSelectOptions: stateOptions } = useStates()
+
+  useEffect(() => {
+    if (account) {
+      return stateOptions
+    }
+  }, [stateOptions])
 
   const settingsDefaultValue = account => {
     const settings = {
       firstName: account.firstName,
       lastName: account.lastName,
+      address: account.streetAddress,
+      city: account.city,
+      state: {
+        id: account.stateId,
+        value: stateOptions[account.stateId - 1]?.value,
+        label: stateOptions[account.stateId - 1]?.label,
+      },
+      zipCode: account.zipCode,
+      phoneNo: account.telephoneNumber,
       email: account.login,
       language: account.langKey,
       profilePicture: account.imageUrl,
@@ -59,7 +86,7 @@ const Settings = React.forwardRef(() => {
     register,
     formState: { errors },
     handleSubmit,
-    // control,
+    control,
     watch,
     reset,
     getValues,
@@ -75,6 +102,11 @@ const Settings = React.forwardRef(() => {
       firstName: values.firstName || '',
       lastName: values.lastName || '',
       imageUrl: preview,
+      address: values.address || '',
+      stateId: values.state.id || '',
+      city: values.city || '',
+      zipCode: values.zipCode || '',
+      phoneNO: values.phoneNo || '',
     })
   }, [isSuccess, getValues])
 
@@ -118,6 +150,11 @@ const Settings = React.forwardRef(() => {
         login: values.email,
         avatarName: imgFile?.type ?? null,
         avatar: fileContents,
+        streetAddress: values.address,
+        stateId: values.state.id,
+        city: values.city,
+        zipCode: values.zipCode,
+        telephoneNumber: values.phoneNo,
       }
       saveSettings(settingsPayload)
 
@@ -129,15 +166,15 @@ const Settings = React.forwardRef(() => {
   return (
     <Card py="0">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box mt="40px" ml="20px" h="68vh" overflow="auto">
-          <Flex align="center" mb={12}>
+        <Box mt="30px" ml={{ base: 0, sm: '20px' }} h="68vh" overflow="auto">
+          <Flex align="center" mb={7}>
             <Text mr={2} fontSize="18px" fontWeight={500} color="gray.600" fontStyle="normal">
               {t('settings')}
             </Text>
             <Divider border="1px solid #E2E8F0" />
           </Flex>
 
-          <Stack mb="10">
+          <Stack mb="7">
             <Text fontSize="16px" fontWeight={500} color="gray.600" fontStyle="normal">
               {t('profilePicture')}
             </Text>
@@ -149,7 +186,7 @@ const Settings = React.forwardRef(() => {
             </HStack>
           </Stack>
 
-          <Stack w="215px" mb={9}>
+          <Stack w="215px" mb="20px">
             <VStack alignItems="start">
               <Text fontSize="14px" fontWeight={500} color="gray.600">
                 {t('email')}
@@ -166,13 +203,13 @@ const Settings = React.forwardRef(() => {
             </VStack>
           </Stack>
 
-          <HStack spacing={4}>
+          <HStack spacing={{ base: 0, sm: 4 }} flexDir={{ base: 'column', sm: 'row' }} alignItems="start">
             <FormInput
               errorMessage={errors.firstName && errors.firstName?.message}
               label={t('firstName')}
               placeholder={t('firstName')}
               register={register}
-              controlStyle={{ w: '215px' }}
+              controlStyle={{ w: { base: '100%', sm: '215px' } }}
               variant="required-field"
               rules={{ required: 'This is required field' }}
               name={`firstName`}
@@ -181,12 +218,100 @@ const Settings = React.forwardRef(() => {
               errorMessage={errors.lastName && errors.lastName?.message}
               label={t('lastName')}
               placeholder={t('lastName')}
+              variant="required-field"
               register={register}
-              controlStyle={{ w: '215px' }}
+              controlStyle={{ w: { base: '100%', sm: '215px' } }}
               elementStyle={{ bg: 'white' }}
               rules={{ required: 'This is required field' }}
               name={`lastName`}
             />
+          </HStack>
+          <HStack spacing={{ base: 0, sm: 4 }} flexDir={{ base: 'column', sm: 'row' }} alignItems="start">
+            <FormInput
+              errorMessage={errors.address && errors.address?.message}
+              label={t('address')}
+              register={register}
+              variant="required-field"
+              controlStyle={{ w: { base: '100%', sm: '215px' } }}
+              elementStyle={{ bg: 'white' }}
+              rules={{ required: 'This is required field' }}
+              name={`address`}
+            />
+
+            <FormInput
+              errorMessage={errors.city && errors.city?.message}
+              label={t('city')}
+              register={register}
+              controlStyle={{ w: { base: '100%', sm: '215px' } }}
+              variant="required-field"
+              rules={{ required: 'This is required field' }}
+              name={`city`}
+            />
+          </HStack>
+          <HStack spacing={{ base: 0, sm: 4 }} flexDir={{ base: 'column', sm: 'row' }} alignItems="start">
+            {/* <FormInput
+              errorMessage={errors.state && errors.state?.message}
+              label={t('state')}
+              register={register}
+              controlStyle={{ w: { base: '100%', sm: '215px' } }}
+              variant="required-field"
+              rules={{ required: 'This is required field' }}
+              name={`state`}
+            /> */}
+            <FormControl w={215}>
+              <FormLabel variant="strong-label" size="md" h="21px">
+                {t(`state`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="state"
+                render={({ field }) => (
+                  <ReactSelect id="state" {...field} options={stateOptions} selectProps={{ isBorderLeft: true }} />
+                )}
+              />
+            </FormControl>
+            <FormInput
+              errorMessage={errors.zipCode && errors.zipCode?.message}
+              label={t('zipCode')}
+              register={register}
+              controlStyle={{ w: { base: '100%', sm: '215px' } }}
+              variant="required-field"
+              elementStyle={{ bg: 'white' }}
+              rules={{ required: 'This is required field' }}
+              name={`zipCode`}
+            />
+          </HStack>
+          <HStack spacing={4}>
+            <FormControl isInvalid={!!errors.phoneNo} w={{ base: '100%', sm: '215px' }}>
+              <FormLabel variant="strong-label" size="md" noOfLines={1} mb={'3px'}>
+                {t('phoneNo')}
+              </FormLabel>
+              <Controller
+                control={control}
+                rules={{
+                  required: 'This is required field',
+                  validate: (number: string | undefined) => validateTelePhoneNumber(number!),
+                }}
+                name="phoneNo"
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={CustomRequiredInput}
+                        format="(###)-###-####"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+
+                      <FormErrorMessage>{fieldState.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              ></Controller>
+            </FormControl>
           </HStack>
         </Box>
         <Flex id="footer" w="100%" h="90px" alignItems="center" justifyContent="end" borderTop="2px solid #E2E8F0">
