@@ -93,6 +93,8 @@ export const validateMarket = markets => {
 
 export const yupNullable = (_, val) => (val === '' ? undefined : _)
 
+
+
 const vendorRegisterFormSchema = {
   email: Yup.string().email('Must be a valid email').required('Email is required'),
   firstName: Yup.string().required('First Name is required'),
@@ -180,6 +182,7 @@ export const VendorRegister = () => {
   const [isMobile] = useMediaQuery('(max-width: 480px)')
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [unLockedTabs, setUnLoackedTabs] = useState<Array<FORM_TABS>>([])
+  const [isNextBtnActive, setisNextBtnActive ] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isMobile) return
@@ -222,7 +225,7 @@ export const VendorRegister = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid, isDirty },
     reset,
     control,
     setValue,
@@ -463,6 +466,56 @@ export const VendorRegister = () => {
       onSubmit(formValues)
     }
   }
+
+  const locationDetailFieldValues = {
+  'email': watch("email"),
+  'firstName': watch("firstName"),
+  'lastName': watch("lastName"),
+  'password': watch("password"),
+  'companyName': watch("companyName"),
+  'businessPhoneNumber': watch("businessPhoneNumber"),
+  'businessEmailAddress': watch("businessEmailAddress"),
+  'streetAddress': watch("streetAddress"),
+  'city': watch("city"),
+  'zipCode': watch("zipCode"),
+  'capacity': watch("capacity"),
+  //'einNumber': watch("einNumber"),
+  //'ssnNumber': watch("ssnNumber"),
+  'state': watch("state"),
+  ...( ssnEinTabIndex === 0 ? { einNumber: watch("einNumber") }:{}),
+  ...( ssnEinTabIndex === 1 ? { ssnNumber: watch("ssnNumber") }: {} )
+  
+}
+
+  const locationDetailsSchema = {
+    email: Yup.string().required('Email is required'),
+    firstName: Yup.string().required('First Name is required'),
+    lastName: Yup.string().required('Last name is required'),
+    password: Yup.string()
+      .required('Password is required'),
+    companyName: Yup.string().required('Business name is required'),
+    businessPhoneNumber: Yup.string().required(),
+    streetAddress: Yup.string().required('Street Address is required'),
+    city: Yup.string().required('City is required'),
+    state: Yup.object().required('State is required'),
+    zipCode: Yup.string().required('ZipCode is required'),
+    capacity: Yup.string().required('Capacity is required'),
+    ...( ssnEinTabIndex === 0 ? { einNumber: Yup.string()
+      .required('EIN is a required field').matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits') }:{} ),
+    ...( ssnEinTabIndex === 1 ? { ssnNumber: Yup.string()
+      .required('SSN is a required field').matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits') }: {} )
+  }
+
+  useEffect( () => {
+    Yup.object(locationDetailsSchema).
+    validate(locationDetailFieldValues,{ strict: true }).then( (value) => {
+      setisNextBtnActive(true);
+    }).catch( (err) => {
+      setisNextBtnActive(false);
+    } )
+
+  }, [locationDetailFieldValues] );
+
 
   return (
     <Box
@@ -828,9 +881,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your secondary contact"
-                                  {...register('secondName', {
-                                    required: 'This is required',
-                                  })}
+                                  {...register('secondName')}
                                 />
                                 <FormErrorMessage>{errors?.secondName && errors?.secondName?.message}</FormErrorMessage>
                               </FormControl>
@@ -850,9 +901,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Enter your secondary phone number"
-                                  {...register('secondPhoneNumber', {
-                                    required: 'This is required',
-                                  })}
+                                  {...register('secondPhoneNumber')}
                                 />
                                 <FormErrorMessage>
                                   {errors?.secondaryPhone && errors?.secondaryPhone?.message}
@@ -874,9 +923,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your secondary email address"
-                                  {...register('secondEmailAddress', {
-                                    required: 'This is required',
-                                  })}
+                                  {...register('secondEmailAddress')}
                                 />
                                 <FormErrorMessage>
                                   {errors?.secondEmailAddress && errors?.secondEmailAddress?.message}
@@ -917,9 +964,7 @@ export const VendorRegister = () => {
                                     fontSize="14px"
                                     color="#252F40"
                                     mask="999-99-9999"
-                                    {...register('ssnNumber', {
-                                      required: 'This is required',
-                                    })}
+                                    {...register('ssnNumber')}
                                     variant="required-field"
                                   />
                                   <FormErrorMessage>{errors?.ssnNumber && errors?.ssnNumber?.message}</FormErrorMessage>
@@ -1131,7 +1176,7 @@ export const VendorRegister = () => {
                       {FORM_TABS.MARKETS !== formTabIndex && (
                         <Button
                           onClick={doNext}
-                          disabled={FORM_TABS.MARKETS === formTabIndex}
+                          disabled={ !isNextBtnActive }
                           bgColor="#345587"
                           width="154px"
                           borderRadius="8px"
