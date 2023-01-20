@@ -44,3 +44,7 @@
     transform: scale(0.8) !important;
   }
 }
+
+::-webkit-datetime-edit {
+  text-align: left;
+}
