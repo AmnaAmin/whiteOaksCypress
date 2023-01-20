@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, FormLabel, Icon, Spacer } from '@chakra-ui/react'
+import { Box, Button, Flex, FormLabel, Icon, Spacer } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReceivableFilter } from 'features/recievable/receivable-filter'
@@ -15,6 +15,7 @@ import { BiSync } from 'react-icons/bi'
 import { RECEIVABLE_TABLE_QUERY_KEYS } from 'features/recievable/receivable.constants'
 import { ReceivableConfirmationBox } from 'features/recievable/receivable-confirmation-box'
 import { useTranslation } from 'react-i18next'
+import { Card } from 'components/card/card'
 
 export const Receivable = () => {
   const [loading, setLoading] = useState(false)
@@ -95,18 +96,18 @@ export const Receivable = () => {
   return (
     <>
       <form onSubmit={handleSubmit(Submit)}>
-        <Box>
+        <Box pb="2">
           <FormLabel variant="strong-label" size="lg">
             {t(`${ACCOUNTS}.accountReceivable`)}
           </FormLabel>
-          <Box mb={2}>
+          <Box mb={'12px'}>
             <ReceivableFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
           </Box>
 
           {/* Temp comment */}
-
-          <Flex alignItems="center" py="16px">
-            {/* <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
+          <Card px="12px" py="16px">
+            <Flex alignItems="center" mb="16px">
+              {/* <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
               {t('dueProjects')}
             </FormLabel>
             <AccountWeekDayFilters
@@ -115,35 +116,35 @@ export const Receivable = () => {
               selectedDay={selectedDay}
               clear={clearAll}
             /> */}
-            <Spacer />
-            <Button
-              alignContent="right"
-              // onClick={onNewProjectModalOpen}
-              colorScheme="brand"
-              type="submit"
-              minW={'140px'}
-            >
-              <Icon as={BiSync} fontSize="18px" mr={2} />
-              {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
-            </Button>
-          </Flex>
-          <Divider border="2px solid #E2E8F0" />
+              <Spacer />
+              <Button
+                alignContent="right"
+                // onClick={onNewProjectModalOpen}
+                colorScheme="brand"
+                type="submit"
+                minW={'140px'}
+              >
+                <Icon as={BiSync} fontSize="18px" mr={2} />
+                {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
+              </Button>
+            </Flex>
 
-          {/* {batchRunStatus && <Box>{failedRun?.description}</Box>} */}
+            {/* {batchRunStatus && <Box>{failedRun?.description}</Box>} */}
 
-          <Box mt={2} pb="4">
-            {loading && <ViewLoader />}
-            <ReceivableTable
-              receivableColumns={receivableTableColumns}
-              setPagination={setPagination}
-              setColumnFilters={setColumnFilters}
-              pagination={pagination}
-              sorting={sorting}
-              setSorting={setSorting}
-              queryStringWithPagination={queryStringWithPagination}
-              queryStringWithoutPagination={queryStringWithoutPagination}
-            />
-          </Box>
+            <Box>
+              {loading && <ViewLoader />}
+              <ReceivableTable
+                receivableColumns={receivableTableColumns}
+                setPagination={setPagination}
+                setColumnFilters={setColumnFilters}
+                pagination={pagination}
+                sorting={sorting}
+                setSorting={setSorting}
+                queryStringWithPagination={queryStringWithPagination}
+                queryStringWithoutPagination={queryStringWithoutPagination}
+              />
+            </Box>
+          </Card>
         </Box>
         {batchLoading && <ViewLoader />}
         {batchRun?.length > 0 && !batchLoading && (
