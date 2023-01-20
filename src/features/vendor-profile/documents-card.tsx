@@ -148,7 +148,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <Input
                   isDisabled={true}
                   w="215px"
-                  {...register('agreementSignedDate')}
+                  {...register('w9DocumentDate')}
                   type="date"
                   data-testid="w9DocumentDate"
                 />
