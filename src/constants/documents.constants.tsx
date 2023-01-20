@@ -18,6 +18,12 @@ const withPreviewCell = cellInfo => {
 
 export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
+    id: 'workOrderId',
+    header: 'workOrderId',
+    accessorKey: 'workOrderId',
+    cell: withPreviewCell,
+  },
+  {
     id: 'fileType',
     header: 'document',
     accessorKey: 'fileType',
