@@ -243,14 +243,15 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                                   onFileChange(file)
                                   field.onChange(file)
                                 }}
-                                onClear={() => setValue(field.name, null)}  
-                                inputStyle={ { w: { sm: "", md: "150px !important" },  minW: { sm: "", md: "150px !important",  } } }
-                                textContStyle={{
-                                  w: { sm: "170px !important", md: "110px !important" }
+                                onClear={() => setValue(field.name, null)}
+                                inputStyle={{
+                                  w: { sm: '', md: '150px !important' },
+                                  minW: { sm: '', md: '150px !important' },
                                 }}
-                                uploadIconStyle={ { 
-                                 
-                                } }  
+                                textContStyle={{
+                                  w: { sm: '170px !important', md: '110px !important' },
+                                }}
+                                uploadIconStyle={{}}
                               ></ChooseFileField>
                               <FormErrorMessage bottom="5px" pos="absolute">
                                 {fieldState.error?.message}
