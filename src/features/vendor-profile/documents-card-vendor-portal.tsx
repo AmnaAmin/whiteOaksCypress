@@ -23,6 +23,7 @@ import { VENDORPROFILE } from './vendor-profile.i18n'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { VendorPortalVerifyDocument } from './verify-documents'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type DocumentsProps = {
   vendor: VendorProfile
@@ -46,6 +47,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
+  const { isAdmin } = useUserRolesSelector()
 
   const {
     formState: { errors },
@@ -304,7 +306,13 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 >
                   {t('autoInsuranceExpDate')}
                 </FormLabel>
-                <Input type="date" w="215px" {...register('autoInsuranceExpDate')} data-testid="autoInsuranceExpDate" />
+                <Input
+                  type="date"
+                  w="215px"
+                  {...register('autoInsuranceExpDate')}
+                  data-testid="autoInsuranceExpDate"
+                  {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
+                />
                 <FormErrorMessage>
                   {errors.autoInsuranceExpDate && errors.autoInsuranceExpDate.message}
                 </FormErrorMessage>
@@ -378,7 +386,13 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('COIGLExpDate')}
                 </FormLabel>
-                <Input type="date" w="215px" {...register('coiGlExpDate')} data-testid="coiGlExpDate" />
+                <Input
+                  type="date"
+                  w="215px"
+                  {...register('coiGlExpDate')}
+                  data-testid="coiGlExpDate"
+                  {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
+                />
                 <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
               </FormControl>
             </Box>
@@ -450,7 +464,13 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('COIWCExpDate')}
                 </FormLabel>
-                <Input type="date" w="215px" {...register('coiWcExpDate')} data-testid="coiWcExpDate" />
+                <Input
+                  type="date"
+                  w="215px"
+                  {...register('coiWcExpDate')}
+                  data-testid="coiWcExpDate"
+                  {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
+                />
                 <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
               </FormControl>
             </Box>

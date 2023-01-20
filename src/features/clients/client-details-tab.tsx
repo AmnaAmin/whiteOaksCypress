@@ -424,7 +424,10 @@ export const Details: React.FC<clientDetailProps> = props => {
                       id="emailAddress"
                       {...register(`contacts.${index}.emailAddress`, {
                         required: 'This is required',
-                        pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                        pattern: {
+                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                          message: 'Invalid Email Address',
+                        },
                       })}
                       variant={'required-field'}
                       style={disabledTextStyle}
@@ -595,7 +598,10 @@ export const Details: React.FC<clientDetailProps> = props => {
                     id="emailAddress"
                     {...register(`accountPayableContactInfos.${index}.emailAddress`, {
                       required: 'This is required',
-                      pattern: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                        message: 'Invalid Email Address',
+                      },
                     })}
                     variant={'required-field'}
                     style={disabledTextStyle}
