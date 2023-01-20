@@ -41,6 +41,7 @@ const VENDOR_TABLE_QUERY_KEYS = {
   market: 'market.contains',
   state: 'state.contains',
   businessPhoneNumber: 'businessPhoneNumber.contains',
+  businessEmailAddress: 'businessEmailAddress.contains',
 }
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
