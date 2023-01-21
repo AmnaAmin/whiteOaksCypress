@@ -464,6 +464,26 @@ export const useGetAllVendors = (filterQueryString: string) => {
   }
 }
 
+export const useGetAllFPMVendors = (marketIds,filterQueryString: string) => {
+  const client = useClient()
+
+  const { data, ...rest } = useQuery<Array<Project>>(
+    ["all_fpm_vendors", marketIds],
+    async () => {
+      const response = await client(`view-vendors/v1?marketId.in=${marketIds}&${filterQueryString}`, {})
+
+      return response?.data
+    },
+    {
+      enabled: false,
+    },
+  )
+
+  return {
+    allVendors: data,
+    ...rest,
+  }
+}
 export const useFPMVendor = (marketIds, queryString, pageSize, isFPM) => {
   const apiQueryString = getVendorsQueryString(queryString)
   const { data, ...rest } = usePaginationQuery<vendors>(
