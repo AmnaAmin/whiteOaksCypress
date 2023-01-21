@@ -22,7 +22,7 @@ export default function ProjectCordinatorRoutes() {
           key={page.path}
           path={`/${page.path}`}
           element={
-            <Suspense fallback={ViewLoader}>
+            <Suspense fallback={<ViewLoader />}>
               <page.element />
             </Suspense>
           }
