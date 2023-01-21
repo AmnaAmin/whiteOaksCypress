@@ -10,7 +10,7 @@ describe('Dashboard Test Cases', () => {
     await waitForLoadingToFinish()
 
     expect(global.window.location.pathname).toEqual('/vendorDashboard')
-    await waitForLoadingToFinish()
+    //await waitForLoadingToFinish()
 
     expect(screen.getByText(/Score/)).toBeInTheDocument()
     expect(screen.getByTestId('vendor-score').textContent).toEqual('1')
