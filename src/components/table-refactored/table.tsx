@@ -88,7 +88,7 @@ function Filter({
   )
 }
 
-function useIsInViewport(ref) {
+export const useIsInViewport = (ref) => {
   const [isIntersecting, setIsIntersecting] = useState(false)
 
   const observer = useMemo(() => new IntersectionObserver(([entry]) => setIsIntersecting(entry.isIntersecting)), [])
@@ -124,6 +124,12 @@ function DebouncedInput({
 
   const isInputInViewPort = useIsInViewport(inputRef)
 
+  useEffect( () => {
+    if (typeof value === "string" && value.replace(/\s+/g, '') !== ''){
+      setShowClearIcon(true);
+    }
+  }, [] );
+
   useEffect(() => {
     setValue(resetValue ? '' : initialValue)
   }, [initialValue, resetValue])
@@ -157,8 +163,10 @@ function DebouncedInput({
   const onInputChange = e => {
     setValue(e.target.value)
 
-    if (e.target.value.replace(/\s+/g, '') !== '') setShowClearIcon(true)
-    else setShowClearIcon(false)
+    if (e.target.value.replace(/\s+/g, '') !== '') 
+      setShowClearIcon(true)
+    else 
+      setShowClearIcon(false)
   }
 
   return (

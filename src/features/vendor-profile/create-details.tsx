@@ -104,7 +104,7 @@ const CreateVendorDetail: React.FC<{
       e.preventDefault()
     }
   }
-
+  
   return (
     <Stack spacing={3}>
       <Box height="498px" overflow="auto">
@@ -124,7 +124,7 @@ const CreateVendorDetail: React.FC<{
               isDisabled={isFPM}
               onKeyPress={preventNumber}
             />
-            <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px" isInvalid={!!errors.score}>
             <FormLabel variant="strong-label" size="md">
@@ -547,13 +547,14 @@ const CreateVendorDetail: React.FC<{
               <Text>{t('paymentMethods')}</Text>
               <FormControl isInvalid={!!errors.Check?.message && !validatePayment?.length}>
                 <HStack spacing="16px">
-                  {paymentsMethods?.map(payment => (
+                  {paymentsMethods?.map((payment, index) => (
                     <Checkbox
                       {...register(payment.name, {
                         required: !validatePayment?.length && 'This is required',
                       })}
                       colorScheme="brand"
                       isDisabled={isFPM}
+                      key={index}
                     >
                       {payment.name}
                     </Checkbox>
