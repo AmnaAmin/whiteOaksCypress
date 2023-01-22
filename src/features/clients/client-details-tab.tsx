@@ -17,7 +17,7 @@ import {
   Icon,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { ClientFormValues } from 'types/client.type'
@@ -44,7 +44,6 @@ export const Details: React.FC<clientDetailProps> = props => {
   const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
   const { isProjectCoordinator } = useUserRolesSelector()
-  const [formattedName, setFormattedName] = useState('')
 
   const btnStyle = {
     alignItems: 'center',
@@ -348,8 +347,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       isDisabled={isProjectCoordinator}
                       variant={'required-field'}
                       type="text"
-                      value={formattedName}
-                      onChange={e => setFormattedName(preventSpecialCharacter(e.target.value))}
+                      onKeyPress={e => preventSpecialCharacter(e)}
                     />
                     <FormErrorMessage>{errors?.contacts?.[index]?.contact?.message}</FormErrorMessage>
                   </FormControl>
@@ -522,6 +520,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
                     type="text"
+                    onKeyPress={e => preventSpecialCharacter(e)}
                   />
                   <FormErrorMessage>{errors?.accountPayableContactInfos?.[index]?.contact?.message}</FormErrorMessage>
                 </FormControl>
