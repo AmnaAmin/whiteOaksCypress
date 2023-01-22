@@ -108,6 +108,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 {...register('companyName', { required: 'This is required' })}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
+                onKeyPress={e => preventSpecialCharacter(e)}
               />
               <FormErrorMessage>{errors?.companyName?.message}</FormErrorMessage>
             </FormControl>
