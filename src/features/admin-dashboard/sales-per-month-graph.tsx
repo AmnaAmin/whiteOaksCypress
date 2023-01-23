@@ -68,11 +68,11 @@ export const SalesPerMonth = ({ data, bar, line }) => {
     if (payload && payload.length) {
       return (
         <div>
-          {payload?.map(item => {
+          {payload?.map((item,index) => {
             return (
               <Box
                 className={item.className}
-                key={item.id}
+                key={index}
                 background={item.fill}
                 color="white"
                 rounded={5}

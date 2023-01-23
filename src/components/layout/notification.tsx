@@ -20,7 +20,7 @@ export const Notification = () => {
         <Box w="519" maxH="489px" border="none" overflow="auto" pb={2}>
           {list.map(data => {
             return (
-              <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} key={data.id}>
+              <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} key={data.id} as="div">
                 <Flex
                   borderRadius={8}
                   width="480px"
