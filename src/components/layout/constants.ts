@@ -17,6 +17,7 @@ import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
 import { SIDE_NAV } from './sideNav.i18n'
+import { MdOnlinePrediction } from 'react-icons/md'
 
 type Menu = {
   pathTo: string
@@ -31,6 +32,7 @@ type Menus = {
 
 // Show tab on preprod only
 const showForPreProd = window.location.href.includes('preprod')
+const showForPreProdAndLocal = showForPreProd || window.location.href.includes("localhost:")
 
 export const MENU_ROLE_BASED: Menus = {
   [UserTypes.vendor]: [
@@ -249,6 +251,12 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: FaHome,
       color: '#ED8936',
     },
+    ...(showForPreProdAndLocal ? [{
+      pathTo: "estimates",
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: "#ECC94B"
+    }]:[]),
     {
       pathTo: '/projects',
       title: `${SIDE_NAV}.projects`,
