@@ -77,7 +77,7 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
         />
       )}
 
-      <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderRadius="6px">
+      <Box overflow={'auto'} h="calc(100vh - 170px)" border="1px solid #CBD5E0" borderRadius="6px">
         <TableContextProvider data={data} columns={columns}>
           <Table
             onRowClick={row => {

@@ -54,7 +54,7 @@ export const ProjectTypeTable = () => {
         isOpen={isOpen}
       />
 
-      <Box overflowX={'auto'} h="calc(100vh - 450px)" roundedTop={6}>
+      <Box overflowX={'auto'} h="calc(100vh - 170px)" roundedTop={6}>
         <TableContextProvider data={projectType} columns={PROJECT_TYPE_COLUMNS}>
           <Table
             isLoading={isLoading}

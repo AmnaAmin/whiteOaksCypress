@@ -253,8 +253,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               width={isVendor ? '1250px' : '100%'}
               borderTopRightRadius="6px"
             >
-              <TabPanels mt="31px">
-                <TabPanel p="0px">
+              <TabPanels>
+                <TabPanel p="0px" mt="30px">
                   {tabIndex === 0 ? (
                     VendorType === 'editVendor' ? (
                       <CreateDetails
@@ -271,7 +271,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     )
                   ) : null}
                 </TabPanel>
-                <TabPanel p="0px">
+                <TabPanel p="0px" mt="30px">
                   <Box h="100%" w="100%">
                     {tabIndex === 1 && (
                       <DocumentsCard
@@ -283,7 +283,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     )}
                   </Box>
                 </TabPanel>
-                <TabPanel p="0px">
+                <TabPanel p="0px" mt="30px">
                   <Box h="100%" w="100%">
                     {tabIndex === 2 && (
                       <License
@@ -294,7 +294,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     )}
                   </Box>
                 </TabPanel>
-                <TabPanel p="0px">
+                <TabPanel p="0px" mt="30px">
                   {tabIndex === 3 && (
                     <TradeList
                       isActive={tabIndex === 3}
@@ -303,7 +303,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     />
                   )}
                 </TabPanel>
-                <TabPanel p="0px">
+                <TabPanel p="0px" mt="30px">
                   {tabIndex === 4 && (
                     <MarketList
                       isActive={tabIndex === 4}

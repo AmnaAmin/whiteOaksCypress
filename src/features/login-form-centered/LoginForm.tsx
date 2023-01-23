@@ -1,4 +1,15 @@
-import { Box, Button, chakra, FormControl, FormLabel, HTMLChakraProps, Input, Stack, Text } from '@chakra-ui/react'
+import {
+  Button,
+  chakra,
+  FormControl,
+  FormLabel,
+  HTMLChakraProps,
+  Input,
+  Stack,
+  Text,
+  VStack,
+  Box,
+} from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { useAuth } from 'utils/auth-context'
 import { PasswordField } from './PasswordField'
@@ -23,24 +34,27 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
 
   return (
     <chakra.form onSubmit={handleSubmit(onSubmit)} {...props}>
-      <Stack spacing="29px">
+      <Stack spacing="29px" mx={{ sm: '70px' }} pt="20px">
         <FormControl id="email" isInvalid={!!errors?.email?.message}>
           <FormLabel fontSize="12px" fontWeight="700" color="#252F40">
             Username
           </FormLabel>
           <Input
             placeholder="Username"
+            border="none"
             type="email"
             autoComplete="email"
             {...register('email', { required: 'This required field' })}
             bg="#FFFFFF"
-            border="1px solid #D9D9D9"
+            outline="1px solid #D9D9D9"
           />
         </FormControl>
-        <PasswordField {...register('password', { required: 'This is required field.' })} />
-        <Box color="#345587" fontWeight="400" fontSize="12px" pb="20px">
-          Forgot Password?
-        </Box>
+        <VStack pb="20px" alignItems="start" spacing="14px">
+          <PasswordField {...register('password', { required: 'This is required field.' })} />
+          <Text color="#345587" fontWeight="400" fontSize="12px">
+            Forgot Password?
+          </Text>
+        </VStack>
         <Button
           type="submit"
           _hover={{ bg: 'blue.700' }}
@@ -53,9 +67,11 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
         >
           SIGN IN
         </Button>
-        <Text textAlign="center" fontSize={{ base: '16px', sm: '21px' }} fontWeight={500} color="#8392AB">
-          <Link href="vendor/register">Register as a Vendor</Link>
-        </Text>
+        <Box textAlign="center" pt="8px">
+          <Link href="vendor/register" fontSize={{ base: '16px', sm: '21px' }} fontWeight={500} color="#8392AB">
+            Register as a Vendor
+          </Link>
+        </Box>
       </Stack>
     </chakra.form>
   )

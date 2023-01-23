@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, FormLabel, Icon, Spacer } from '@chakra-ui/react'
+import { Box, Flex, FormLabel, Icon, Spacer } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
 // import { usePayableWeeklyCount } from 'features/recievable/hook'
@@ -19,6 +19,7 @@ import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { PAYABLE_TABLE_QUERY_KEYS } from 'features/payable/payable.constants'
 import { DevTool } from '@hookform/devtools'
 import { ACCOUNTS } from 'pages/accounts.i18n'
+import { Card } from 'components/card/card'
 
 //All commented Code will be used later
 export const Payable = () => {
@@ -88,21 +89,22 @@ export const Payable = () => {
 
   return (
     <form onSubmit={handleSubmit(Submit)}>
-      <Box>
+      <Box pb="2">
         <FormLabel variant="strong-label" size="lg">
           {t(`${ACCOUNTS}.accountPayable`)}
         </FormLabel>
-        <Box>
+        <Box mb={'12px'}>
           <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
         </Box>
-        <Flex alignItems="center" py="16px">
-          {/* <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
+        <Card px="12px" py="16px">
+          <Flex alignItems="center" mb="16px">
+            {/* <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
             {t('dueProjects')}
           </FormLabel>
           <Box ml="2">
             <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
           </Box> */}
-          {/*
+            {/*
            This will be used in future 
           <AccountWeekDayFilters
             weekDayFilters={weekDayFilters}
@@ -110,33 +112,34 @@ export const Payable = () => {
             selectedDay={selectedDay}
             clear={clearAll}
           /> */}
-          <Spacer />
-          <Button alignContent="right" colorScheme="brand" type="submit" disabled={selectedCard === '6'} minW="140px">
-            <Icon as={BiSync} fontSize="18px" mr={2} />
-            {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
-          </Button>
-        </Flex>
-        <Divider border="2px solid #E2E8F0" />
+            <Spacer />
+            <Button alignContent="right" colorScheme="brand" type="submit" disabled={selectedCard === '6'} minW="140px">
+              <Icon as={BiSync} fontSize="18px" mr={2} />
+              {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
+            </Button>
+          </Flex>
+
+          {/* -- If overpayment card is not selected, then show payable table. (Overpayment Card Id is 6) -- */}
+          {selectedCard !== '6' ? (
+            <Box>
+              {loading && <ViewLoader />}
+              <PayableTable
+                payableColumns={payableColumns}
+                pagination={pagination}
+                sorting={sorting}
+                setSorting={setSorting}
+                setPagination={setPagination}
+                setColumnFilters={setColumnFilters}
+                queryStringWithPagination={queryStringWithPagination}
+                queryStringWithoutPagination={queryStringWithoutPagination}
+              />
+            </Box>
+          ) : (
+            <OverPaymentTransactionsTable />
+          )}
+        </Card>
       </Box>
 
-      {/* -- If overpayment card is not selected, then show payable table. (Overpayment Card Id is 6) -- */}
-      {selectedCard !== '6' ? (
-        <Box mt={2} pb="4">
-          {loading && <ViewLoader />}
-          <PayableTable
-            payableColumns={payableColumns}
-            pagination={pagination}
-            sorting={sorting}
-            setSorting={setSorting}
-            setPagination={setPagination}
-            setColumnFilters={setColumnFilters}
-            queryStringWithPagination={queryStringWithPagination}
-            queryStringWithoutPagination={queryStringWithoutPagination}
-          />
-        </Box>
-      ) : (
-        <OverPaymentTransactionsTable />
-      )}
       <ConfirmationBox
         title={t(`${ACCOUNTS}.batchProcess`)}
         content={t(`${ACCOUNTS}.batchSuccess`)}

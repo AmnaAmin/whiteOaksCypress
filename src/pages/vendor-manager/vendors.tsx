@@ -16,17 +16,17 @@ const Vendors = () => {
   const { isFPM } = useUserRolesSelector()
 
   return (
-    <Box mt="5">
+    <Box pb="2">
       <VendorFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
 
-      <Card py="3px" mt="11px">
-        <HStack mb="10px">
+      <Card px="12px" py="16px" mt="12px">
+        <HStack mb="16px">
           {/* <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
           {t('clearFilter')}
         </Button> */}
           <Spacer />
           {!isFPM && (
-            <Box pt="4">
+            <Box>
               <Button onClick={onNewVendorModalOpen} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
                 {t(`${VENDOR_MANAGER}.newVendor`)}
               </Button>
