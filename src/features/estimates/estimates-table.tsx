@@ -19,9 +19,9 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { PaginationState, SortingState } from '@tanstack/react-table'
-import { PROJECT_COLUMNS } from 'constants/projects.constants'
+import { ESTIMATE_COLUMNS } from 'constants/estimates.constants'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
-import { PROJECT_TABLE_QUERIES_KEY } from 'constants/projects.constants'
+import { ESTIMATE_TABLE_QUERIES_KEY } from 'constants/estimates.constants'
 import { columns, generateSettingColumn } from 'components/table-refactored/make-data'
 import { Account } from 'types/account.types'
 import { useUserProfile } from 'utils/redux-common-selectors'
@@ -50,7 +50,7 @@ export const EstimatesTable: React.FC<ProjectProps> = ({
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
-      queryStringAPIFilterKeys: PROJECT_TABLE_QUERIES_KEY,
+      queryStringAPIFilterKeys: ESTIMATE_TABLE_QUERIES_KEY,
       pagination,
       setPagination,
       sorting,
@@ -74,7 +74,7 @@ export const EstimatesTable: React.FC<ProjectProps> = ({
     settingColumns,
     isFetched: tablePreferenceFetched,
   } = useTableColumnSettings(
-    PROJECT_COLUMNS,
+    ESTIMATE_COLUMNS,
     TableNames.project,
     {
       projectStatus: selectedCard !== 'past due' ? selectedCard : '',
@@ -111,7 +111,7 @@ export const EstimatesTable: React.FC<ProjectProps> = ({
   }
 
   const onRowClick = rowData => {
-    navigate(`/project-details/${rowData.id}`)
+    navigate(`/estimate-details/${rowData.id}`)
   }
 
   const onPageSizeChange = pageSize => {

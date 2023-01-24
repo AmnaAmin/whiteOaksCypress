@@ -20,11 +20,12 @@ import { ProjectType } from './admin/project-type'
 import { SupportTickets } from './admin/support-tickets'
 
 import { Estimates } from "pages/estimates";
+import { EstimateDetails } from 'pages/estimate-details'
+
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
 const VendorProfilePage = lazy(() => import('pages/vendor/vendor-profile-v-portal'))
 const VendorProjectDetails = lazy(() => import('pages/vendor/project-details'))
-
 
 
 export default function useRoutesConfig() {
@@ -100,6 +101,7 @@ export default function useRoutesConfig() {
         { path: 'performance', element: PerformanceTab },
         { path: 'vendorSkills', element: VendorSkills },
         { path: 'alerts', element: Alerts },
+        { path: 'estimate-details/:projectId', element: EstimateDetails },
       ]
 
     case isAccounting:

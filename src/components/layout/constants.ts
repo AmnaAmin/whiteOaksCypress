@@ -252,7 +252,7 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#ED8936',
     },
     ...(showForPreProdAndLocal ? [{
-      pathTo: "estimates",
+      pathTo: "/estimates",
       title: `${SIDE_NAV}.estimates`,
       Icon: MdOnlinePrediction,
       color: "#ECC94B"

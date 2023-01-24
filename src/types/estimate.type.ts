@@ -1,6 +1,6 @@
 import { SelectOption } from './transaction.type'
 
-export type Estimate = {
+export type Project = {
   accountRecievable: number | null
   accountPayable: number | null
   changeordersTotal: string | null
@@ -50,18 +50,18 @@ export type Estimate = {
   pmPhoneNumberExtension: string | null
   profitPercentage: number | null
   profitTotal: number | null
-  estimateClosedDate: string | null
-  estimateManager: string | null
-  estimateCoordinator: string | null
-  estimateCoordinatorId: number | null
-  estimateManagerId: number | null
-  estimateManagerPhoneNumber: string | null
-  estimateManagerPhoneNumberExtension: string | null
-  estimateRelatedCost: number | null
-  estimateStatus: string | null
-  estimateStatusId: number | null
-  estimateType: number | null
-  estimateTypeLabel: string | null
+  projectClosedDate: string | null
+  projectManager: string | null
+  projectCoordinator: string | null
+  projectCoordinatorId: number | null
+  projectManagerId: number | null
+  projectManagerPhoneNumber: string | null
+  projectManagerPhoneNumberExtension: string | null
+  projectRelatedCost: number | null
+  projectStatus: string | null
+  projectStatusId: number | null
+  projectType: number | null
+  projectTypeLabel: string | null
   propertyId: number | null
   region: string | null
   revenue: number | null
@@ -95,8 +95,8 @@ export type Estimate = {
   numberOfChangeOrders: number | null
   overPayment: number | null
   newPartialPayment: number | null
-  overrideEstimateStatus: string | null
-  estimateStartDate: string | null
+  overrideProjectStatus: string | null
+  projectStartDate: string | null
   punchDate?: string | null
   closedDate?: string | null
   disputedDate?: string | null
@@ -107,9 +107,9 @@ export type Estimate = {
   vendorWODueDate?: string
 }
 
-export type EstimateExtraAttributesType = {
+export type ProjectExtraAttributesType = {
   id: number
-  estimateId: number
+  projectId: number
   punchDate: string | null
   collectionDate: string | null
   disputedDate: string | null
@@ -120,7 +120,7 @@ export type EstimateExtraAttributesType = {
   lastModifiedDate: string | null
 }
 
-export type EstimateColumnType = {
+export type ProjectColumnType = {
   id: number
   flex?: number
   hide: boolean
@@ -142,7 +142,7 @@ export type EstimateColumnType = {
   userId: string
 }
 
-export type EstimateWorkOrderType = {
+export type ProjectWorkOrderType = {
   awardPlanId: number
   id: number
   displayAwardPlan: boolean
@@ -153,7 +153,7 @@ export type EstimateWorkOrderType = {
   clientOriginalApprovedAmount: number
   paymentTerm: string
   vendorId: number
-  estimateId: number
+  projectId: number
   capacity: number
   status: number
   statusLabel: string
@@ -190,7 +190,7 @@ export type EstimateWorkOrderType = {
   cancel: string
 }
 
-export type EstimateAlertType = {
+export type ProjectAlertType = {
   subject: string
   triggeredType: string
   attribute: string
@@ -198,10 +198,10 @@ export type EstimateAlertType = {
   dateCreated: string
 }
 
-export type EstimateFormValues = {
+export type ProjectFormValues = {
   acknowledgeCheck?: boolean
   name?: string
-  estimateType?: SelectOption | null
+  projectType?: SelectOption | null
   woNumber?: string
   poNumber?: string
   clientStartDate?: string
@@ -223,8 +223,8 @@ export type EstimateFormValues = {
   hoaEmailAddress?: string | null
   hoaPhone?: string | null
   hoaPhoneNumberExtension?: string
-  estimateManager?: SelectOption | null
-  estimateCoordinator?: SelectOption | null
+  projectManager?: SelectOption | null
+  projectCoordinator?: SelectOption | null
   clientName?: string
   client?: SelectOption | null
   superLastName?: string | null
@@ -232,12 +232,13 @@ export type EstimateFormValues = {
   superPhoneNumber?: string
   superPhoneNumberExtension?: string
   superEmailAddress?: string
-  estimateClosedDate?: string
-  estimateExpectedCloseDate?: string
-  estimateStartDate?: string
+  projectClosedDate?: string
+  projectExpectedCloseDate?: string
+  projectStartDate?: string
   woaCompletionDate?: string
   propertyId?: number
-  property?: any
+  property?: any,
+  dueIn: boolean | undefined
 }
 
 export type Market = {
@@ -251,15 +252,15 @@ export type Market = {
   stateName: string
 }
 
-export type EstimateFinancialOverview = {
+export type ProjectFinancialOverview = {
   changeOrderId: number
   vendorPayment: number
   workOrderId: number | null
-  estimateId: number
+  projectId: number
   vendorId: number
   vendorName: string | null
-  estimateManagerId: number
-  estimateCoordinatorId: number
+  projectManagerId: number
+  projectCoordinatorId: number
   skillName: string
   originalAmount: number
   newAmount: number

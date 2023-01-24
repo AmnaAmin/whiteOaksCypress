@@ -27,7 +27,7 @@ import { useCreateProjectMutation } from 'api/pc-projects'
 import { useNavigate } from 'react-router-dom'
 import { DevTool } from '@hookform/devtools'
 import { useTranslation } from 'react-i18next'
-import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
+import { NEW_ESTIMATE } from 'features/vendor/estimates/estimates.i18n'
 import { useProjectInformationNextButtonDisabled, usePropertyInformationNextDisabled } from './hooks'
 import { createDocumentPayload } from 'utils/file-utils'
 import { useAuth } from 'utils/auth-context'
@@ -203,9 +203,9 @@ const AddEstimateForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         <form onSubmit={handleSubmit(onSubmit)} id="newProjectForm">
           <Tabs colorScheme="brand" variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)} mt="3">
             <TabList color="#4A5568" mx="6">
-              <Tab>{t(`${NEW_PROJECT}.projectInformation`)}</Tab>
-              <Tab isDisabled={isProjectInfoNextButtonDisabled}>{t(`${NEW_PROJECT}.propertyInformation`)}</Tab>
-              <Tab isDisabled={isPropertyInformationNextButtonDisabled}>{t(`${NEW_PROJECT}.projectManagement`)}</Tab>
+              <Tab>{t(`${NEW_ESTIMATE}.estimateInformation`)}</Tab>
+              <Tab isDisabled={isProjectInfoNextButtonDisabled}>{t(`${NEW_ESTIMATE}.propertyInformation`)}</Tab>
+              <Tab isDisabled={isPropertyInformationNextButtonDisabled}>{t(`${NEW_ESTIMATE}.estimateManagement`)}</Tab>
             </TabList>
             <TabPanels mt="31px" h="100%">
               <TabPanel p="0px" h="100%">
@@ -253,7 +253,7 @@ export const AddNewEstimateModal: React.FC<UpdateProjectProps> = ({ isOpen, onCl
     >
       <ModalOverlay>
         <ModalContent>
-          <ModalHeader>{t(`${NEW_PROJECT}.title`)}</ModalHeader>
+          <ModalHeader>{t(`${NEW_ESTIMATE}.title`)}</ModalHeader>
           <ModalCloseButton _focus={{ outline: 'none' }} />
           <ModalBody px="0">
             <AddEstimateForm onClose={onClose} />
