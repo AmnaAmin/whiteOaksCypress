@@ -110,7 +110,7 @@ const Misc: React.FC = () => {
             </FormLabel>
 
             <DatePickerInput
-              value={disputedDate && status?.value === STATUS.Disputed ? dateFormat(disputedDate) : 'mm/dd/yyyy'}
+              value={disputedDate ? dateFormat(disputedDate) : 'mm/dd/yyyy'}
               disable
             />
 

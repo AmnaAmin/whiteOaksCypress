@@ -88,7 +88,7 @@ const useProjectCardJson = cards => {
       id: 'disputed',
       title: t('projects.projectFilter.disputed'),
       value: 'disputed',
-      number: cards?.find(c => c.status === '220')?.count || 0,
+      number: cards?.find(c => c.status === 220)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconNinth} bg="#FFF5F7" />,
     },
     {
