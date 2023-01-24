@@ -20,6 +20,10 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorKey: 'name',
     },
     {
+      header: 'Month' as string,
+      accessorKey: 'monthName',
+    },
+    {
       header: 'Revenue',
       accessorKey: 'revenue',
       accessorFn(row) {
@@ -32,6 +36,14 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorKey: 'profit',
       accessorFn(row) {
         return numeral(row.profit).format('$0,0.00')
+      },
+      meta: { format: 'currency' },
+    },
+    {
+      header: 'Bonus',
+      accessorKey: 'currentBonus',
+      accessorFn(row) {
+        return numeral(row.currentBonus).format('$0,0.00')
       },
       meta: { format: 'currency' },
     },
@@ -50,14 +62,14 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       },
       meta: { format: 'currency' },
     },
-    {
-      header: 'Badge',
-      accessorKey: 'badge',
-      cell: (row: any) => {
-        const value = row.cell.getValue()
-        return <Badge value={value} id={value} />
-      },
-    },
+    // {
+    //   header: 'Badge',
+    //   accessorKey: 'badge',
+    //   cell: (row: any) => {
+    //     const value = row.cell.getValue()
+    //     return <Badge value={value} id={value} />
+    //   },
+    // },
     {
       header: 'Disqualified Revenue',
       accessorKey: 'disqualifiedRevenue',
@@ -66,10 +78,10 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       },
       meta: { format: 'currency' },
     },
-    {
-      header: 'Email',
-      accessorKey: 'email',
-    },
+    // {
+    //   header: 'Email',
+    //   accessorKey: 'email',
+    // },
   ]
 
   return (
