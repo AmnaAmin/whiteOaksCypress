@@ -7,7 +7,6 @@ import VendorFilterCard from './vendor-filter-card'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useTranslation } from 'react-i18next'
 
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useUser } from 'api/user-management'
 import { useAuth } from 'utils/auth-context'
 
@@ -47,7 +46,6 @@ const useVendorCardJson = cards => {
 }
 
 export const VendorFilters = ({ onSelectCard, selectedCard }) => {
-  const { isFPM } = useUserRolesSelector()
    // FPM portal -> Show vendors having same market as the logged in FPM
    const { data: account } = useAuth()
    const { data: userInfo } = useUser(account?.user?.email)
