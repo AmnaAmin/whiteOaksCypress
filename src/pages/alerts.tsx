@@ -6,6 +6,7 @@ import { ManagedAlertsModal } from 'features/alerts/managed-alerts-modal'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiOutlinePlus } from 'react-icons/ai'
+import { Card } from 'components/card/card'
 
 const Alerts = () => {
   const { t } = useTranslation()
@@ -17,9 +18,11 @@ const Alerts = () => {
   return (
     <Box>
       <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
-        <TabList whiteSpace="nowrap">
+        <TabList whiteSpace="nowrap" border="none">
           <Tab>{t('triggeredAlert')}</Tab>
           <Tab>{t('managedAlert')}</Tab>
+        </TabList>
+        <Card rounded="0px" roundedRight={{ base: '0px', md: '6px' }} roundedBottom="6px" pr={{ base: 0, sm: '15px' }}>
           <Box w="100%" display="flex" justifyContent="end" position="relative">
             {tabIndex === 0 && (
               <Button colorScheme="brand" onClick={onAlertModalOpen}>
@@ -33,27 +36,27 @@ const Alerts = () => {
               </Button>
             )}
           </Box>
-        </TabList>
-        <TabPanels>
-          <TabPanel px={0}>
-            <TriggeredAlertsTable
-              onRowClick={(e, row) => {
-                selectedAlertRow(row.values)
-                onAlertModalOpen()
-              }}
-              ref={tabsContainerRef}
-            />
-          </TabPanel>
-          <TabPanel px={0}>
-            <ManagedAlertTable
-              onRowClick={(e, row) => {
-                selectedAlertRow(row.values)
-                onNewAlertModalOpen()
-              }}
-              ref={tabsContainerRef}
-            />
-          </TabPanel>
-        </TabPanels>
+          <TabPanels>
+            <TabPanel px={0}>
+              <TriggeredAlertsTable
+                onRowClick={(e, row) => {
+                  selectedAlertRow(row.values)
+                  onAlertModalOpen()
+                }}
+                ref={tabsContainerRef}
+              />
+            </TabPanel>
+            <TabPanel px={0}>
+              <ManagedAlertTable
+                onRowClick={(e, row) => {
+                  selectedAlertRow(row.values)
+                  onNewAlertModalOpen()
+                }}
+                ref={tabsContainerRef}
+              />
+            </TabPanel>
+          </TabPanels>
+        </Card>
       </Tabs>
 
       <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
