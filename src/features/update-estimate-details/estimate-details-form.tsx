@@ -112,7 +112,7 @@ const EstimateDetailsTab = (props: tabProps) => {
             mr={style?.marginRight || ''}
           >
             <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
-              {t(`project.projectDetails.projectManagement`)}
+              {t(`estimate.estimateDetails.estimateManagement`)}
             </TabCustom>
             <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
               {t(`project.projectDetails.invoicingPayment`)}
