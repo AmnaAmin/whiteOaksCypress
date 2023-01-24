@@ -251,7 +251,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               <FormErrorMessage>{errors?.woaStartDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-          <GridItem>
+          <GridItem outline="1px solid green">
             <FormControl isInvalid={!!errors?.woaCompletionDate}>
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.woaCompletion`)}
@@ -260,7 +260,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                 type="date"
                 isDisabled={isWOACompletionDisabled}
                 variant={isWOACompletionDateRequired ? 'required-field' : 'outline'}
-                max={dateToday}
+                max={isAdmin ? '' : dateToday}
                 {...register('woaCompletionDate', {
                   required: isWOACompletionDateRequired ? 'This is required field.' : false,
                 })}
@@ -268,7 +268,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               <FormErrorMessage>{errors?.woaCompletionDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-          <GridItem>
+          <GridItem outline="1px solid green">
             <FormControl isInvalid={!!errors?.clientWalkthroughDate}>
               <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
                 {t(`project.projectDetails.clientWalkthrough`)}
@@ -277,7 +277,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                 type="date"
                 isDisabled={isClientWalkthroughDisabled}
                 variant={isClientWalkthroughDateRequired ? 'required-field' : 'outline'}
-                max={dateToday}
+                max={isAdmin ? '' : dateToday}
                 {...register('clientWalkthroughDate', {
                   required: isClientWalkthroughDateRequired ? 'This is required field.' : false,
                 })}
