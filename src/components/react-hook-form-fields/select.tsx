@@ -18,6 +18,7 @@ type SelectProps = {
   testId?: string
   disable?: boolean
   bg?: string
+  fontSize?: string
 }
 
 export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
@@ -27,7 +28,7 @@ export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
     isInvalid={!!props.errorMessage}
     w={{ sm: '95%', md: '215px' }}
   >
-    <FormLabel fontSize={props.size || 'sm'} htmlFor={props.name} color="#2D3748">
+    <FormLabel fontSize={props.fontSize || '14px'} htmlFor={props.name} color="gray.700" fontWeight="500">
       {props.label}
     </FormLabel>
     <Controller
@@ -60,7 +61,7 @@ export const FormSelect = React.forwardRef((props: SelectProps, ref) => (
             </Select>
           </InputGroup>
           <Box minH="20px" mt="3px">
-            <FormErrorMessage m="0px">{fieldState.error?.message}</FormErrorMessage>
+            <FormErrorMessage whiteSpace="nowrap">{fieldState.error?.message}</FormErrorMessage>
           </Box>
         </>
       )}
