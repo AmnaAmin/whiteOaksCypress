@@ -194,7 +194,7 @@ export const VendorRegister = () => {
   }, [isMobile])
 
   const formReturn = useForm({
-    //mode: "onChange",
+    mode: "onChange",
     resolver: yupResolver(Yup.object().shape(customResolver)),
     //validateCriteriaMode: 'firstErrorDetected'
   } as any)
