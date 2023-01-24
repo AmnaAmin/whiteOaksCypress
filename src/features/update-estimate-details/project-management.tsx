@@ -188,7 +188,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           
           
           <GridItem>
-            <FormControl>
+            <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
                Amount
               </FormLabel>
