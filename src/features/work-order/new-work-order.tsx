@@ -603,7 +603,7 @@ export const NewWorkOrderForm: React.FC<{
                         height="40px"
                         borderLeft="2px solid #4E87F8"
                         focusBorderColor="none"
-                        min={woStartDate || (clientStart as any)}
+                        min={clientStart as any}
                         max={clientEnd as any}
                         {...register('workOrderStartDate', {
                           required: 'This field is required.',
