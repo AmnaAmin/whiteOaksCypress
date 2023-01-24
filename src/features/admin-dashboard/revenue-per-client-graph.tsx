@@ -61,9 +61,9 @@ export const RevenuePerClient = () => {
     if (payload && payload.length) {
       return (
         <div>
-          {payload?.map(item => {
+          {payload?.map((item, index) => {
             return (
-              <Box background="white" border="1px solid #CBD5E0" rounded={5} fontSize="14px" p={2}>
+              <Box key={index} background="white" border="1px solid #CBD5E0" rounded={5} fontSize="14px" p={2}>
                 <Box>{`Revenue in ${item?.payload?.clientName}:`} </Box>
                 <Center fontWeight={600} color="#F6AD55">{`$${item.value}`}</Center>
               </Box>

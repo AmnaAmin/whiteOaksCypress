@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitForLoadingToFinish } from 'utils/test-utils'
+import { fireEvent, render, screen, waitForLoadingToFinishLabelOnly } from 'utils/test-utils'
 import App from 'App'
 import userEvent from '@testing-library/user-event'
 // import { FIRST_PROJECT_ID } from '../../mocks/api/projects/data'
@@ -7,11 +7,13 @@ jest.setTimeout(150000)
 
 describe('Vendor Projects Test Cases', () => {
   test('App should redirect to /projects', async () => {
-    await render(<App />, { route: '/projects' })
+    render(<App />, { route: '/projects' })
+    
+    await waitForLoadingToFinishLabelOnly()
+
 
     expect(global.window.location.pathname).toEqual('/projects')
-    await waitForLoadingToFinish()
-
+    
     userEvent.click(screen.getByTestId('column-settings-button'))
 
     expect(screen.getByRole('dialog', { name: 'Settings' })).toBeInTheDocument()

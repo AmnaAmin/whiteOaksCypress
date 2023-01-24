@@ -28,6 +28,8 @@ import { checkIsLicenseChanged } from './hook'
 import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
 import { VendorPortalVerifyLicense } from './verify-license'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { datePickerFormat } from 'utils/date-time-utils'
 
 type LicenseProps = {
   vendor: VendorProfile
@@ -49,6 +51,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
+  const { isAdmin } = useUserRolesSelector();
 
   const {
     formState: { errors },
@@ -223,6 +226,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                       variant="required-field"
                       {...register(`licenses.${index}.expiryDate`)}
                       data-testid={`expiryDate-` + index}
+                      {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
                     />
                   </FormControl>
                 </Box>
