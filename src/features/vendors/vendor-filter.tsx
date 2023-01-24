@@ -51,9 +51,9 @@ export const VendorFilters = ({ onSelectCard, selectedCard }) => {
    const { data: userInfo } = useUser(account?.user?.email)
    let marketIDs = userInfo?.markets?.map(m => m.id)
    let ids = userInfo?.markets?.map(m => m.id);
-   if(ids == "undefined") marketIDs = 0
-   else if(ids == "") marketIDs = 0
-   else if(ids == " ") marketIDs = 0
+   if(ids === "undefined") marketIDs = 0
+   else if(ids === "") marketIDs = 0
+   else if(ids === " ") marketIDs = 0
    else userInfo?.markets?.map(m => m.id);
    /*const marketIDs = "undefined" ? "0" 
     : "" ? "0" 
