@@ -251,7 +251,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               <FormErrorMessage>{errors?.woaStartDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-          <GridItem outline="1px solid green">
+          <GridItem>
             <FormControl isInvalid={!!errors?.woaCompletionDate}>
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.woaCompletion`)}
@@ -268,7 +268,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               <FormErrorMessage>{errors?.woaCompletionDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-          <GridItem outline="1px solid green">
+          <GridItem>
             <FormControl isInvalid={!!errors?.clientWalkthroughDate}>
               <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
                 {t(`project.projectDetails.clientWalkthrough`)}

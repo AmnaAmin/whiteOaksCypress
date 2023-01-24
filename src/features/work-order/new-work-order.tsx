@@ -593,7 +593,7 @@ export const NewWorkOrderForm: React.FC<{
                       />
                     </FormControl>
                   </Box>
-                  <Box outline="1px solid green">
+                  <Box>
                     <FormControl isInvalid={!!errors?.workOrderStartDate}>
                       <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
                         {t('expectedStartDate')}
