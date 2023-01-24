@@ -388,7 +388,7 @@ export const parseFormValuesFromAPIData = ({
     closedDate: getLocalTimeZoneDate(project.projectClosedDate as string),
     clientPaidDate: getLocalTimeZoneDate(project.clientPaidDate as string),
     collectionDate: getLocalTimeZoneDate(projectExtraAttributes?.collectionDate as string),
-    disputedDate: getLocalTimeZoneDate(projectExtraAttributes?.disputedDate as string),
+    disputedDate: getLocalTimeZoneDate(project?.disputedDate as string),
     woaPaidDate: getLocalTimeZoneDate(project.woaPaidDate as string),
     dueDateVariance: project.dueDateVariance,
     payDateVariance: project.signoffDateVariance,
