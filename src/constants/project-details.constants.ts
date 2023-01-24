@@ -49,14 +49,20 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
     OPTIONS[ProjectStatus.Active],
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Cancelled],
+    OPTIONS[ProjectStatus.Disputed],
   ],
   [ProjectStatus.Punch]: [
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Active],
     OPTIONS[ProjectStatus.Closed],
     OPTIONS[ProjectStatus.Cancelled],
+    OPTIONS[ProjectStatus.Disputed],
   ],
-  [ProjectStatus.Closed]: [OPTIONS[ProjectStatus.Closed], OPTIONS[ProjectStatus.Invoiced]],
+  [ProjectStatus.Closed]: [
+    OPTIONS[ProjectStatus.Closed],
+    OPTIONS[ProjectStatus.Invoiced],
+    OPTIONS[ProjectStatus.Disputed],
+  ],
   [ProjectStatus.Invoiced]: [
     OPTIONS[ProjectStatus.Invoiced],
     OPTIONS[ProjectStatus.ClientPaid],
