@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { useFPMVendor, useGetAllVendors, useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
+import { 
+  useFPMVendor, useGetAllVendors, useVendor, 
+  VENDORS_SELECTED_CARD_MAP_URL, useGetAllFPMVendors } from 'api/pc-projects'
 import Status from 'features/common/status'
 import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
@@ -41,6 +43,7 @@ const VENDOR_TABLE_QUERY_KEYS = {
   market: 'market.contains',
   state: 'state.contains',
   businessPhoneNumber: 'businessPhoneNumber.contains',
+  businessEmailAddress: 'businessEmailAddress.contains',
 }
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
@@ -202,7 +205,11 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
      )
 
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
-  const { refetch, isLoading: isExportDataLoading } = useGetAllVendors(
+  const { refetch: allVendorsRefetch, isLoading: isAllExportDataLoading } = useGetAllVendors(
+    filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
+  )
+
+  const { refetch: fpmVendorsRefetch, isLoading: isFPMExportDataLoading } = useGetAllFPMVendors(marketIDs,
     filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
   )
 
@@ -221,7 +228,8 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const isLoading = isFPM ? isFPMVendorLoading : vendorsLoading;
   const dataCount = isFPM ? fpmDataCount : vendorsDataCount;
   const totalPages = isFPM ? fpmTotalPages : vendorsTotalPages;
-
+  const refetch =  isFPM?  fpmVendorsRefetch : allVendorsRefetch;
+  const isExportDataLoading = isFPM ? isFPMExportDataLoading : isAllExportDataLoading;
  
   return (
     <Box overflow="auto">

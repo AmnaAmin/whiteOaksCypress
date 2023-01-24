@@ -229,6 +229,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                     required: isAgreementRequired && 'This is required',
                   })}
                   isDisabled={isFPM}
+                  { ...( ! isAdmin && {min: datePickerFormat( new Date() ) as string} ) }
                 />
                 <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
               </FormControl>
