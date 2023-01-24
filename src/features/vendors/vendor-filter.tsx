@@ -49,11 +49,16 @@ export const VendorFilters = ({ onSelectCard, selectedCard }) => {
    // FPM portal -> Show vendors having same market as the logged in FPM
    const { data: account } = useAuth()
    const { data: userInfo } = useUser(account?.user?.email)
-   //const marketIDs = userInfo?.markets?.map(m => m.id)
-   const marketIDs = "undefined" ? "0" 
+   let marketIDs = userInfo?.markets?.map(m => m.id)
+   let ids = userInfo?.markets?.map(m => m.id);
+   if(ids == "undefined") marketIDs = 0
+   else if(ids == "") marketIDs = 0
+   else if(ids == " ") marketIDs = 0
+   else userInfo?.markets?.map(m => m.id);
+   /*const marketIDs = "undefined" ? "0" 
     : "" ? "0" 
     : " " ? "0" 
-    : userInfo?.markets?.map(m => m.id);
+    : userInfo?.markets?.map(m => m.id);*/
   const { data: values } = useVendorCards(marketIDs)
   const cards = useVendorCardJson(values)
 
