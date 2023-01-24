@@ -6,9 +6,9 @@ export const estimates = {
       [NEW_ESTIMATE]: {
         // Modal
         title: 'New Estimate',
-        estimateInformation: 'Project Information',
+        estimateInformation: 'Estimate Information',
         propertyInformation: 'Property Information',
-        estimateManagement: 'Project Management',
+        estimateManagement: 'Estimate Management',
 
         // Estimate Table
         estimateID: 'Estimate ID',

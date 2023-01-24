@@ -119,7 +119,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors.projectName} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="projectName">
-                {t(`project.projectDetails.projectName`)}
+                {t(`estimate.estimateDetails.estimateName`)}
               </FormLabel>
               <Input placeholder="PC project 1" id="projectName" {...register('projectName')} autoComplete="off" />
               <FormErrorMessage>{errors.projectName && errors.projectName.message}</FormErrorMessage>

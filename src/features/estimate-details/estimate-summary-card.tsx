@@ -25,7 +25,7 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
   )
 }
 
-export const ProjectSummaryCard: React.FC<{
+export const EstimateSummaryCard: React.FC<{
   projectData: Project
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
@@ -67,7 +67,7 @@ export const ProjectSummaryCard: React.FC<{
             {projectData?.clientName}
           </FormLabel>
         </InfoStructureCard>
-        <InfoStructureCard title={t('projects.projectSummary.projectDue')} isLoading={isLoading}>
+        <InfoStructureCard title={t('estimates.estimateSummary.estimateDue')} isLoading={isLoading}>
           <FormLabel variant="light-label" size="md" noOfLines={1}>
             {dateFormat(projectData?.clientDueDate as string)}
           </FormLabel>
