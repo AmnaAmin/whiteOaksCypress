@@ -44,6 +44,10 @@ export async function selectOption(container: HTMLElement, optionText: string, s
   await findByText(container, optionText)
   fireEvent.click(getByText(container, optionText))
 }
+export const waitForLoadingToFinishLabelOnly = () =>
+  waitForElementToBeRemoved(() => [...screen.queryAllByLabelText(/loading/i)], {
+    timeout: 30000,
+  })
 
 export const waitForLoadingToFinish = () =>
   waitForElementToBeRemoved(() => [...screen.queryAllByLabelText(/loading/i), ...screen.queryAllByText(/Loading/i)], {
