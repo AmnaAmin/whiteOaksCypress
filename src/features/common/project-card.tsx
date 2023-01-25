@@ -45,7 +45,9 @@ export const ProjectCard = ({
         _hover={{ bg: 'blue.50' }}
       >
         <Flex w="100%" mb="5px">
-          <Text marginLeft={'7.87px'}>{IconElement}</Text>
+          <Text as="span" marginLeft={'7.87px'}>
+            {IconElement}
+          </Text>
           <HStack w="100%" justifyContent="space-between">
             <Text fontSize="14px" fontWeight="400" marginTop="4px" paddingLeft={'9.89px'} color="gray.700">
               {title}
@@ -57,6 +59,7 @@ export const ProjectCard = ({
               color="gray.700"
               pr="19.27px"
               data-testid={`value-of-${title.toLocaleLowerCase()}`}
+              as="span"
             >
               {isLoading ? <BlankSlate /> : number}
             </Text>

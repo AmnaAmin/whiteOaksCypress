@@ -50,6 +50,7 @@ import { CANCEL_WO_OPTIONS } from 'constants/index'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
+import { useUploadDocument } from 'api/vendor-projects'
 
 const CalenderCard = props => {
   return (
@@ -139,6 +140,7 @@ const WorkOrderDetailTab = props => {
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
   const [uploadedWO, setUploadedWO] = useState<any>(null)
+  const { mutate: saveDocument } = useUploadDocument()
 
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
@@ -168,8 +170,19 @@ const WorkOrderDetailTab = props => {
 
   const downloadPdf = useCallback(() => {
     let doc = new jsPDF()
-    createInvoicePdf({ doc, workOrder, projectData, assignedItems: assignedItemsWatch, hideAward: false })
+    createInvoicePdf({
+      doc,
+      workOrder,
+      projectData,
+      assignedItems: assignedItemsWatch,
+      hideAward: false,
+      onSave: saveWorkOrderDocument,
+    })
   }, [assignedItemsWatch, projectData, workOrder])
+
+  const saveWorkOrderDocument = doc => {
+    saveDocument(doc)
+  }
 
   const setAssignedItems = useCallback(
     items => {
@@ -431,7 +444,7 @@ const WorkOrderDetailTab = props => {
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
-            <SimpleGrid columns={5}>
+            <SimpleGrid columns={7} gap={1}>
               <CalenderCard
                 testId={'woIssued'}
                 title={t(`${WORK_ORDER}.woIssued`)}
@@ -537,7 +550,7 @@ const WorkOrderDetailTab = props => {
               </Box>
             </HStack>
           </Box>
-          {!(uploadedWO && uploadedWO?.s3Url) && (
+          {!(uploadedWO && uploadedWO?.s3Url && !assignedItemsWatch) && (
             <Box mx="32px" mt={10}>
               {isLoadingLineItems ? (
                 <Center>
@@ -573,7 +586,7 @@ const WorkOrderDetailTab = props => {
                 {t('seeProjectDetails')}
               </Button>
             )}
-            {uploadedWO && uploadedWO?.s3Url && (
+            {uploadedWO && uploadedWO?.s3Url && !assignedItemsWatch && (
               <Button
                 variant="outline"
                 colorScheme="brand"
@@ -589,7 +602,7 @@ const WorkOrderDetailTab = props => {
             <Button onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>
-            <Button data-testId="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
+            <Button data-testid="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
               {t('save')}
             </Button>
           </HStack>

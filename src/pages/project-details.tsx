@@ -234,9 +234,10 @@ export const ProjectDetails: React.FC = props => {
                   <ProjectNotes projectId={projectId} />
                 </TabPanel>
                 {
-                <TabPanel p="0px" minH="calc(100vh - 450px)">
-                  <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch={refetchAudits} />
-                </TabPanel>}
+                  <TabPanel p="0px" minH="calc(100vh - 450px)">
+                    <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch={refetchAudits} />
+                  </TabPanel>
+                }
               </TabPanels>
             </Card>
           </Tabs>

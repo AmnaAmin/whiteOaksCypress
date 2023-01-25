@@ -93,6 +93,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
       description: `Atleast one ${name} must be selected`,
       status: 'error',
       isClosable: true,
+      position: 'top-left',
     })
   }
   useEffect(() => {

@@ -16,7 +16,7 @@ import {
   Spacer,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
@@ -31,7 +31,7 @@ import {
   useTrades,
   useVendorNext,
 } from 'api/vendor-details'
-import { documentStatus, documentScore, portalAccess } from 'api/vendor-projects'
+import { documentStatus, documentScore, portalAccess, useDocumentStatusSelectOptions } from 'api/vendor-projects'
 import first from 'lodash/first'
 import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
@@ -65,6 +65,18 @@ const CreateVendorDetail: React.FC<{
   const capacityError = useWatch({ name: 'capacity', control })
 
   const validatePayment = paymentsMethods?.filter(payment => formValues[payment.name])
+
+  // Set Document Status dropdown if Status is Expired
+  const [statusOptions, setStatusOptions] = useState<any>([])
+  const documentStatusSelectOptions = useDocumentStatusSelectOptions(vendorProfileData)
+
+  useEffect(() => {
+    if (vendorProfileData?.status === 15) {
+      setStatusOptions(documentStatusSelectOptions)
+    } else {
+      setStatusOptions(documentStatus)
+    }
+  })
 
   const preventNumber = e => {
     let keyCode = e.keyCode ? e.keyCode : e.which
@@ -112,7 +124,7 @@ const CreateVendorDetail: React.FC<{
               isDisabled={isFPM}
               onKeyPress={preventNumber}
             />
-            <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName.message}</FormErrorMessage>
+            <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px" isInvalid={!!errors.score}>
             <FormLabel variant="strong-label" size="md">
@@ -146,7 +158,7 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
-                    options={documentStatus}
+                    options={statusOptions}
                     {...field}
                     selectProps={{ isBorderLeft: true }}
                     isDisabled={isFPM}
@@ -438,7 +450,7 @@ const CreateVendorDetail: React.FC<{
               <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
             <Text fontSize="14px" color="red">
-              {capacityError! > 500 ? 'Capacity should not be more than 500' : ''}
+              {capacityError! > 500 ? 'capacity should not be greater than 500' : ''}
             </Text>
           </GridItem>
           <GridItem>
@@ -535,13 +547,14 @@ const CreateVendorDetail: React.FC<{
               <Text>{t('paymentMethods')}</Text>
               <FormControl isInvalid={!!errors.Check?.message && !validatePayment?.length}>
                 <HStack spacing="16px">
-                  {paymentsMethods?.map(payment => (
+                  {paymentsMethods?.map((payment, index) => (
                     <Checkbox
                       {...register(payment.name, {
                         required: !validatePayment?.length && 'This is required',
                       })}
                       colorScheme="brand"
                       isDisabled={isFPM}
+                      key={index}
                     >
                       {payment.name}
                     </Checkbox>

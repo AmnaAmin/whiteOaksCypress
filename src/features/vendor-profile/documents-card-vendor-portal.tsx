@@ -23,6 +23,7 @@ import { VENDORPROFILE } from './vendor-profile.i18n'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { VendorPortalVerifyDocument } from './verify-documents'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type DocumentsProps = {
   vendor: VendorProfile
@@ -46,6 +47,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
+  const { isAdmin } = useUserRolesSelector()
 
   const {
     formState: { errors },
@@ -120,25 +122,23 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           flexDir={{ base: 'column', sm: 'row' }}
           spacing="16px"
           alignItems="flex-start"
-          marginTop={{ base: '20px', md: '0' }}
+          marginTop={{ base: '20px', sm: '0' }}
+          w="100%"
         >
-          <Flex w="215px">
-            <Box>
-              <FormControl isInvalid={!!errors.w9DocumentDate}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
-                  {t('W9DocumentDate')}
-                </FormLabel>
-                <Input
-                  isDisabled={true}
-                  w="215px"
-                  type="date"
-                  {...register('w9DocumentDate')}
-                  data-testid="w9DocumentDate"
-                />
-                <FormErrorMessage>{errors.w9DocumentDate && errors.w9DocumentDate.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
-          </Flex>
+          <FormControl w={{ base: '100%', sm: 'unset' }} isInvalid={!!errors.w9DocumentDate}>
+            <FormLabel variant="strong-label" size="md" color="#2D3748">
+              {t('W9DocumentDate')}
+            </FormLabel>
+            <Input
+              isDisabled={true}
+              w={{ base: '100%', sm: '215px' }}
+              type="date"
+              {...register('w9DocumentDate')}
+              data-testid="w9DocumentDate"
+            />
+            <FormErrorMessage>{errors.w9DocumentDate && errors.w9DocumentDate.message}</FormErrorMessage>
+          </FormControl>
+
           <HStack
             sx={{
               '@media screen and (max-width: 480px)': {
@@ -149,8 +149,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             flexDir={{ base: 'column', sm: 'row' }}
             alignItems={{ base: 'start', sm: 'center' }}
             spacing={{ base: 0, sm: '0.5rem' }}
+            w={{ base: '100%', sm: 'unset' }}
           >
-            <FormControl w="215px" isInvalid={!!errors.w9Document?.message}>
+            <FormControl isInvalid={!!errors.w9Document?.message} w={{ base: '100%', sm: '215px' }}>
               <FormLabel variant="strong-label" size="md" color="#2D3748">
                 {t('fileUpload')}
               </FormLabel>
@@ -160,7 +161,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 render={({ field, fieldState }) => {
                   return (
                     <VStack alignItems="baseline">
-                      <Box>
+                      <Box w={{ base: '100%', sm: '215px' }}>
                         <ChooseFileField
                           name={field.name}
                           value={field.value?.name ? field.value?.name : t('chooseFile')}
@@ -189,84 +190,85 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             )}
           </HStack>
         </HStack>
-        <Box>
+
+        <HStack
+          flexDir={{ base: 'column', sm: 'row' }}
+          alignItems="flex-start"
+          spacing="16px"
+          marginTop={{ base: '20px', md: '0' }}
+          w={{ base: '100%', sm: 'unset' }}
+        >
+          <FormControl w={{ base: '100%', sm: '215px' }} isInvalid={!!errors.agreementSignedDate}>
+            <FormLabel variant="strong-label" size="md" color="#2D3748">
+              {t('agreementSignedDate')}
+            </FormLabel>
+            <Input
+              {...(isAgreementRequired && { borderLeft: '2px solid #345EA6' })}
+              type="date"
+              w={{ base: '100%', sm: '215px' }}
+              data-testid="agreementSignedDate"
+              {...register('agreementSignedDate', { required: isAgreementRequired && 'This is required' })}
+              {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
+            />
+            <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
+          </FormControl>
+
           <HStack
+            sx={{
+              '@media screen and (max-width: 480px)': {
+                ms: '0 !important',
+                mt: '20px !important',
+              },
+            }}
             flexDir={{ base: 'column', sm: 'row' }}
-            alignItems="flex-start"
-            spacing="16px"
-            marginTop={{ base: '20px', md: '0' }}
+            alignItems={{ base: 'start', sm: 'center' }}
+            spacing={{ base: 0, sm: '0.5rem' }}
+            w={{ base: '100%', sm: 'unset' }}
           >
-            <Box>
-              <FormControl isInvalid={!!errors.agreementSignedDate}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
-                  {t('agreementSignedDate')}
-                </FormLabel>
-                <Input
-                  {...(isAgreementRequired && { borderLeft: '2px solid #345EA6' })}
-                  type="date"
-                  w="215px"
-                  data-testid="agreementSignedDate"
-                  {...register('agreementSignedDate', { required: isAgreementRequired && 'This is required' })}
-                />
-                <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
-            <HStack
-              sx={{
-                '@media screen and (max-width: 480px)': {
-                  ms: '0 !important',
-                  mt: '20px !important',
-                },
-              }}
-              flexDir={{ base: 'column', sm: 'row' }}
-              alignItems={{ base: 'start', sm: 'center' }}
-              spacing={{ base: 0, sm: '0.5rem' }}
-            >
-              <FormControl w="215px" isInvalid={!!errors.agreement?.message}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
-                  {t('fileUpload')}
-                </FormLabel>
-                <Controller
-                  name="agreement"
-                  control={control}
-                  rules={{
-                    required: changedDateFields.includes('agreementSignedDate')
-                      ? isActive && 'This is required field'
-                      : '',
-                  }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <VStack alignItems="baseline">
-                        <Box>
-                          <ChooseFileField
-                            name={field.name}
-                            value={field.value?.name ? field.value?.name : t('chooseFile')}
-                            isError={!!fieldState.error?.message}
-                            onChange={(file: any) => {
-                              onFileChange(file)
-                              field.onChange(file)
-                            }}
-                            onClear={() => setValue(field.name, null)}
-                          ></ChooseFileField>
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </Box>
-                        <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
-                          {documents.agreementUrl &&
-                            downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
-                        </Box>
-                      </VStack>
-                    )
-                  }}
-                />
-              </FormControl>
-              {isAgreementSignedDateChanged || watchAgreementFile ? (
-                <SaveChangedFieldAlert />
-              ) : (
-                <VendorPortalVerifyDocument vendor={vendor as any} fieldName="agreementSign" />
-              )}
-            </HStack>
+            <FormControl w={{ base: '100%', sm: '215px' }} isInvalid={!!errors.agreement?.message}>
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
+                {t('fileUpload')}
+              </FormLabel>
+              <Controller
+                name="agreement"
+                control={control}
+                rules={{
+                  required: changedDateFields.includes('agreementSignedDate')
+                    ? isActive && 'This is required field'
+                    : '',
+                }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <VStack alignItems="baseline">
+                      <Box w={{ base: '100%', sm: '215px' }}>
+                        <ChooseFileField
+                          name={field.name}
+                          value={field.value?.name ? field.value?.name : t('chooseFile')}
+                          isError={!!fieldState.error?.message}
+                          onChange={(file: any) => {
+                            onFileChange(file)
+                            field.onChange(file)
+                          }}
+                          onClear={() => setValue(field.name, null)}
+                        ></ChooseFileField>
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </Box>
+                      <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
+                        {documents.agreementUrl &&
+                          downloadDocument(documents.agreementUrl, t('agreementSign'), 'agreementLink')}
+                      </Box>
+                    </VStack>
+                  )
+                }}
+              />
+            </FormControl>
+            {isAgreementSignedDateChanged || watchAgreementFile ? (
+              <SaveChangedFieldAlert />
+            ) : (
+              <VendorPortalVerifyDocument vendor={vendor as any} fieldName="agreementSign" />
+            )}
           </HStack>
-        </Box>
+        </HStack>
 
         <HStack
           w="100%"
@@ -285,231 +287,236 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
 
           <Divider borderColor="gray.300" />
         </HStack>
-        <Box>
+
+        <HStack
+          flexDir={{ base: 'column', sm: 'row' }}
+          alignItems="flex-start"
+          spacing="16px"
+          marginTop={{ base: '20px', md: '0' }}
+          w={{ base: '100%', sm: 'unset' }}
+        >
+          <FormControl isInvalid={!!errors.autoInsuranceExpDate} w={{ base: '100%', sm: '215px' }}>
+            <FormLabel variant="strong-label" size="md" isTruncated title={t('autoInsuranceExpDate')} color="#2D3748">
+              {t('autoInsuranceExpDate')}
+            </FormLabel>
+            <Input
+              type="date"
+              w={{ base: '100%', sm: '215px' }}
+              {...register('autoInsuranceExpDate')}
+              data-testid="autoInsuranceExpDate"
+              {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
+            />
+            <FormErrorMessage>{errors.autoInsuranceExpDate && errors.autoInsuranceExpDate.message}</FormErrorMessage>
+          </FormControl>
+
           <HStack
+            sx={{
+              '@media screen and (max-width: 480px)': {
+                ms: '0 !important',
+                mt: '20px !important',
+              },
+            }}
             flexDir={{ base: 'column', sm: 'row' }}
-            alignItems="flex-start"
-            spacing="16px"
-            marginTop={{ base: '20px', md: '0' }}
+            alignItems={{ base: 'start', sm: 'center' }}
+            spacing={{ base: 0, sm: '0.5rem' }}
+            w={{ base: '100%', sm: 'unset' }}
           >
-            <Box>
-              <FormControl isInvalid={!!errors.autoInsuranceExpDate}>
-                <FormLabel
-                  variant="strong-label"
-                  size="md"
-                  w="200px"
-                  isTruncated
-                  title={t('autoInsuranceExpDate')}
-                  color="#2D3748"
-                >
-                  {t('autoInsuranceExpDate')}
-                </FormLabel>
-                <Input type="date" w="215px" {...register('autoInsuranceExpDate')} data-testid="autoInsuranceExpDate" />
-                <FormErrorMessage>
-                  {errors.autoInsuranceExpDate && errors.autoInsuranceExpDate.message}
-                </FormErrorMessage>
-              </FormControl>
-            </Box>
-            <HStack
-              sx={{
-                '@media screen and (max-width: 480px)': {
-                  ms: '0 !important',
-                  mt: '20px !important',
-                },
-              }}
-              flexDir={{ base: 'column', sm: 'row' }}
-              alignItems={{ base: 'start', sm: 'center' }}
-              spacing={{ base: 0, sm: '0.5rem' }}
-            >
-              <FormControl w="215px" isInvalid={!!errors.insurance?.message}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
-                  {t('fileUpload')}
-                </FormLabel>
-                <Controller
-                  name="insurance"
-                  control={control}
-                  rules={{
-                    required: changedDateFields.includes('autoInsuranceExpDate')
-                      ? isActive && 'This is required field'
-                      : '',
-                  }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <VStack alignItems="baseline">
-                        <Box>
-                          <ChooseFileField
-                            name={field.name}
-                            value={field.value?.name ? field.value?.name : t('chooseFile')}
-                            isError={!!fieldState.error?.message}
-                            onChange={(file: any) => {
-                              onFileChange(file)
-                              field.onChange(file)
-                            }}
-                            onClear={() => setValue(field.name, null)}
-                          ></ChooseFileField>
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </Box>
-                        <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
-                          {documents.insuranceUrl &&
-                            downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
-                        </Box>
-                      </VStack>
-                    )
-                  }}
-                />
-              </FormControl>
-              {isAutoInsuranceExpDateChanged || watchInsuranceFile ? (
-                <SaveChangedFieldAlert />
-              ) : (
-                <VendorPortalVerifyDocument vendor={vendor as any} fieldName="autoInsurance" />
-              )}
-            </HStack>
+            <FormControl w={{ base: '100%', sm: '215px' }} isInvalid={!!errors.insurance?.message}>
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
+                {t('fileUpload')}
+              </FormLabel>
+              <Controller
+                name="insurance"
+                control={control}
+                rules={{
+                  required: changedDateFields.includes('autoInsuranceExpDate')
+                    ? isActive && 'This is required field'
+                    : '',
+                }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <VStack alignItems="baseline">
+                      <Box w={{ base: '100%', sm: '215px' }}>
+                        <ChooseFileField
+                          name={field.name}
+                          value={field.value?.name ? field.value?.name : t('chooseFile')}
+                          isError={!!fieldState.error?.message}
+                          onChange={(file: any) => {
+                            onFileChange(file)
+                            field.onChange(file)
+                          }}
+                          onClear={() => setValue(field.name, null)}
+                        ></ChooseFileField>
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </Box>
+                      <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
+                        {documents.insuranceUrl &&
+                          downloadDocument(documents.insuranceUrl, t('autoInsurance'), 'autoInsuranceLink')}
+                      </Box>
+                    </VStack>
+                  )
+                }}
+              />
+            </FormControl>
+            {isAutoInsuranceExpDateChanged || watchInsuranceFile ? (
+              <SaveChangedFieldAlert />
+            ) : (
+              <VendorPortalVerifyDocument vendor={vendor as any} fieldName="autoInsurance" />
+            )}
           </HStack>
-        </Box>
-        <Box>
+        </HStack>
+
+        <HStack
+          flexDir={{ base: 'column', sm: 'row' }}
+          marginTop={{ base: '20px', md: '0' }}
+          alignItems="flex-start"
+          spacing="16px"
+          w={{ base: '100%', sm: 'unset' }}
+        >
+          <FormControl w={{ base: '100%', sm: '215px' }} isInvalid={!!errors.coiGlExpDate}>
+            <FormLabel variant="strong-label" size="md" color="#2D3748">
+              {t('COIGLExpDate')}
+            </FormLabel>
+            <Input
+              type="date"
+              w={{ base: '100%', sm: '215px' }}
+              {...register('coiGlExpDate')}
+              data-testid="coiGlExpDate"
+              {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
+            />
+            <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
+          </FormControl>
+
           <HStack
+            sx={{
+              '@media screen and (max-width: 480px)': {
+                ms: '0 !important',
+                mt: '20px !important',
+              },
+            }}
             flexDir={{ base: 'column', sm: 'row' }}
-            marginTop={{ base: '20px', md: '0' }}
-            alignItems="flex-start"
-            spacing="16px"
+            alignItems={{ base: 'start', sm: 'center' }}
+            spacing={{ base: 0, sm: '0.5rem' }}
+            w={{ base: '100%', sm: 'unset' }}
           >
-            <Box>
-              <FormControl isInvalid={!!errors.coiGlExpDate}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
-                  {t('COIGLExpDate')}
-                </FormLabel>
-                <Input type="date" w="215px" {...register('coiGlExpDate')} data-testid="coiGlExpDate" />
-                <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
-            <HStack
-              w="100%"
-              pr="20px"
-              sx={{
-                '@media screen and (max-width: 480px)': {
-                  ms: '0 !important',
-                  mt: '20px !important',
-                },
-              }}
-              flexDir={{ base: 'column', sm: 'row' }}
-              alignItems={{ base: 'start', sm: 'center' }}
-              spacing={{ base: 0, sm: '0.5rem' }}
-            >
-              <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message} color="#2D3748">
-                <FormLabel variant="strong-label" size="md">
-                  {t('fileUpload')}
-                </FormLabel>
-                <Controller
-                  name="coiGlExpFile"
-                  control={control}
-                  rules={{
-                    required: changedDateFields.includes('COIGLExpDate') ? isActive && 'This is required field' : '',
-                  }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <VStack alignItems="baseline">
-                        <Box>
-                          <ChooseFileField
-                            name={field.name}
-                            value={field.value?.name ? field.value?.name : t('chooseFile')}
-                            isError={!!fieldState.error?.message}
-                            onChange={(file: any) => {
-                              onFileChange(file)
-                              field.onChange(file)
-                            }}
-                            onClear={() => setValue(field.name, null)}
-                          ></ChooseFileField>
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </Box>
-                        <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
-                          {documents.coiGLExpUrl &&
-                            downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
-                        </Box>
-                      </VStack>
-                    )
-                  }}
-                />
-              </FormControl>
-              {isCoiGlExpDateChanged || watchCoiGlExpFile ? (
-                <SaveChangedFieldAlert />
-              ) : (
-                <VendorPortalVerifyDocument vendor={vendor as any} fieldName="coiGLExp" />
-              )}
-            </HStack>
+            <FormControl w={{ base: '100%', sm: '215px' }} isInvalid={!!errors.coiGlExpFile?.message} color="#2D3748">
+              <FormLabel variant="strong-label" size="md">
+                {t('fileUpload')}
+              </FormLabel>
+              <Controller
+                name="coiGlExpFile"
+                control={control}
+                rules={{
+                  required: changedDateFields.includes('COIGLExpDate') ? isActive && 'This is required field' : '',
+                }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <VStack alignItems="baseline">
+                      <Box w={{ base: '100%', sm: '215px' }}>
+                        <ChooseFileField
+                          name={field.name}
+                          value={field.value?.name ? field.value?.name : t('chooseFile')}
+                          isError={!!fieldState.error?.message}
+                          onChange={(file: any) => {
+                            onFileChange(file)
+                            field.onChange(file)
+                          }}
+                          onClear={() => setValue(field.name, null)}
+                        ></ChooseFileField>
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </Box>
+                      <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
+                        {documents.coiGLExpUrl &&
+                          downloadDocument(documents.coiGLExpUrl, t('generalLiability'), 'coiGlExpLink')}
+                      </Box>
+                    </VStack>
+                  )
+                }}
+              />
+            </FormControl>
+            {isCoiGlExpDateChanged || watchCoiGlExpFile ? (
+              <SaveChangedFieldAlert />
+            ) : (
+              <VendorPortalVerifyDocument vendor={vendor as any} fieldName="coiGLExp" />
+            )}
           </HStack>
-        </Box>
-        <Box>
+        </HStack>
+
+        <HStack
+          flexDir={{ base: 'column', sm: 'row' }}
+          alignItems="flex-start"
+          spacing="16px"
+          marginTop={{ base: '20px', md: '0' }}
+          w={{ base: '100%', sm: 'unset' }}
+        >
+          <FormControl w={{ base: '100%', sm: '215px' }} isInvalid={!!errors.coiWcExpDate}>
+            <FormLabel variant="strong-label" size="md" color="#2D3748">
+              {t('COIWCExpDate')}
+            </FormLabel>
+            <Input
+              type="date"
+              w={{ base: '100%', sm: '215px' }}
+              {...register('coiWcExpDate')}
+              data-testid="coiWcExpDate"
+              {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
+            />
+            <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
+          </FormControl>
+
           <HStack
+            sx={{
+              '@media screen and (max-width: 480px)': {
+                ms: '0 !important',
+                mt: '20px !important',
+              },
+            }}
             flexDir={{ base: 'column', sm: 'row' }}
-            alignItems="flex-start"
-            spacing="16px"
-            marginTop={{ base: '20px', md: '0' }}
+            alignItems={{ base: 'start', sm: 'center' }}
+            spacing={{ base: 0, sm: '0.5rem' }}
+            w={{ base: '100%', sm: 'unset' }}
           >
-            <Box>
-              <FormControl isInvalid={!!errors.coiWcExpDate}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
-                  {t('COIWCExpDate')}
-                </FormLabel>
-                <Input type="date" w="215px" {...register('coiWcExpDate')} data-testid="coiWcExpDate" />
-                <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
-              </FormControl>
-            </Box>
-            <HStack
-              w="100%"
-              pr="20px"
-              sx={{
-                '@media screen and (max-width: 480px)': {
-                  ms: '0 !important',
-                  mt: '20px !important',
-                },
-              }}
-              flexDir={{ base: 'column', sm: 'row' }}
-              alignItems={{ base: 'start', sm: 'center' }}
-              spacing={{ base: 0, sm: '0.5rem' }}
-            >
-              <FormControl w="215px" isInvalid={!!errors.coiWcExpFile?.message}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
-                  {t('fileUpload')}
-                </FormLabel>
-                <Controller
-                  name="coiWcExpFile"
-                  control={control}
-                  rules={{
-                    required: changedDateFields.includes('coiWcExpDate') ? isActive && 'This is required field' : '',
-                  }}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <VStack alignItems="baseline">
-                        <Box>
-                          <ChooseFileField
-                            name={field.name}
-                            value={field.value?.name ? field.value?.name : t('chooseFile')}
-                            isError={!!fieldState.error?.message}
-                            onChange={(file: any) => {
-                              onFileChange(file)
-                              field.onChange(file)
-                            }}
-                            onClear={() => setValue(field.name, null)}
-                          ></ChooseFileField>
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </Box>
-                        <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
-                          {documents.coiWcExpUrl &&
-                            downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
-                        </Box>
-                      </VStack>
-                    )
-                  }}
-                />
-              </FormControl>
-              {isCoiWcExpDateChanged || watchCoiWcExpFile ? (
-                <SaveChangedFieldAlert />
-              ) : (
-                <VendorPortalVerifyDocument vendor={vendor as any} fieldName="CoiWcExp" />
-              )}
-            </HStack>
+            <FormControl w={{ base: '100%', sm: '215px' }} isInvalid={!!errors.coiWcExpFile?.message}>
+              <FormLabel variant="strong-label" size="md" color="#2D3748">
+                {t('fileUpload')}
+              </FormLabel>
+              <Controller
+                name="coiWcExpFile"
+                control={control}
+                rules={{
+                  required: changedDateFields.includes('coiWcExpDate') ? isActive && 'This is required field' : '',
+                }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <VStack alignItems="baseline">
+                      <Box w={{ base: '100%', sm: '215px' }}>
+                        <ChooseFileField
+                          name={field.name}
+                          value={field.value?.name ? field.value?.name : t('chooseFile')}
+                          isError={!!fieldState.error?.message}
+                          onChange={(file: any) => {
+                            onFileChange(file)
+                            field.onChange(file)
+                          }}
+                          onClear={() => setValue(field.name, null)}
+                        ></ChooseFileField>
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </Box>
+                      <Box overflow="hidden" top={16} h={{ base: '0', sm: '18px' }}>
+                        {documents.coiWcExpUrl &&
+                          downloadDocument(documents.coiWcExpUrl, t('workerComp'), 'coiWcExpLink')}
+                      </Box>
+                    </VStack>
+                  )
+                }}
+              />
+            </FormControl>
+            {isCoiWcExpDateChanged || watchCoiWcExpFile ? (
+              <SaveChangedFieldAlert />
+            ) : (
+              <VendorPortalVerifyDocument vendor={vendor as any} fieldName="CoiWcExp" />
+            )}
           </HStack>
-        </Box>
+        </HStack>
       </VStack>
 
       <Flex

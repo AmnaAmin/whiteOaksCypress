@@ -82,7 +82,7 @@ export const SupportTable = () => {
         isOpen={isOpen}
       />
 
-      <Box overflow={'auto'} h="calc(100vh - 160px)" roundedTop={6} border="1px solid #CBD5E0">
+      <Box overflow={'auto'} h="calc(100vh - 170px)" roundedTop={6} border="1px solid #CBD5E0">
         <TableContextProvider data={supportList} columns={SUPPORT_COLUMNS}>
           <Table
             isLoading={isLoading}

@@ -117,8 +117,14 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
     [selectedLicenseType, formValues],
   )
 
+  const formLabeStyle = {
+    fontSize: '14px',
+    fontWeight: 500,
+    color: 'gray.700',
+  }
+
   return (
-    <Box>
+    <Box w={{ base: '100%', sm: 'Calc(100% + 30px)' }}>
       <VStack align="start" h="584px" spacing="15px" overflow="auto">
         <Box width={{ base: '100%', md: 'auto' }}>
           <Button
@@ -164,7 +170,6 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                     />
                   </Center>
                 </Box>
-
                 <FormSelect
                   disable={!!license.licenseType}
                   bg={license?.expirationFile ? 'gray.50' : 'white'}
@@ -176,12 +181,14 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                   rules={{ required: isActive && 'This is required field' }}
                   controlStyle={{
                     maxW: { ...{ sm: '95%', md: '215px' } },
+                    h: '90px',
                   }}
                   elementStyle={{
                     bg: 'white',
                     borderLeft: '2px solid #345EA6',
                   }}
                   testId={`licenseType-` + index}
+                  fontSize="14px"
                 />
                 <FormInput
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseNumber?.message}
@@ -191,6 +198,7 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                   controlStyle={{
                     w: { ...{ sm: '100%', md: '215px' } },
                     maxW: { ...{ sm: '95%', md: '215px' } },
+                    h: '90px',
                   }}
                   elementStyle={{
                     bg: 'white',
@@ -199,14 +207,15 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
                   variant="required-field"
+                  fontSize="14px"
                 />
                 <Box h="105px">
                   <FormControl isInvalid={!!errors.licenses?.[index]?.expiryDate?.message}>
-                    <FormLabel variant="strong-label" size="md" color="#2D3748">
+                    <FormLabel variant="strong-label" sx={formLabeStyle}>
                       {t('expiryDate')}
                     </FormLabel>
                     <Input
-                      w={{ base: '100%', md: '215px' }}
+                      w={{ base: '100%', md: '150px' }}
                       type="date"
                       variant="required-field"
                       {...register(`licenses.${index}.expiryDate`)}
@@ -220,13 +229,11 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
 
                 <VStack alignItems={{ base: '', md: 'center' }}>
                   <FormControl
-                    w={{ base: '100%', md: '215px' }}
+                    w={{ base: '100%', md: '150px' }}
                     h="92px"
                     isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}
                   >
-                    <FormLabel size="md" color="#2D3748">
-                      File Upload
-                    </FormLabel>
+                    <FormLabel sx={formLabeStyle}>File Upload</FormLabel>
                     <Controller
                       name={`licenses.${index}.expirationFile`}
                       control={control}
@@ -244,6 +251,14 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                                   field.onChange(file)
                                 }}
                                 onClear={() => setValue(field.name, null)}
+                                inputStyle={{
+                                  w: { sm: '', md: '150px !important' },
+                                  minW: { sm: '', md: '150px !important' },
+                                }}
+                                textContStyle={{
+                                  w: { sm: '170px !important', md: '110px !important' },
+                                }}
+                                uploadIconStyle={{}}
                               ></ChooseFileField>
                               <FormErrorMessage bottom="5px" pos="absolute">
                                 {fieldState.error?.message}

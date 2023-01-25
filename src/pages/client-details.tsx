@@ -93,7 +93,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
 
   return (
     <FormProvider {...methods}>
-      <form onSubmit={handleSubmit2(onSubmit, err => console.log('err..', err))} id="clientDetails">
+      <form onSubmit={handleSubmit2(onSubmit, err => console.log('err..', err))} id="clientDetails" noValidate>
         <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
           <TabList>
             <TabCustom isError={isClientDetailsTabErrors && tabIndex !== 0}>{t('details')}</TabCustom>

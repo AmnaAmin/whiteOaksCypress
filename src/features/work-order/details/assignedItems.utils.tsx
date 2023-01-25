@@ -587,7 +587,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
   )
 }
 
-export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
+export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward, onSave }) => {
   const workOrderInfo = [
     { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
     { label: 'Expected Completion:', value: workOrder?.workOrderExpectedCompletionDate ?? '' },
@@ -691,6 +691,15 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.setFontSize(10)
     doc.setFont(basicFont, 'normal')
     doc.save(`${workOrder?.id}_${workOrder?.companyName}_${workOrder?.propertyAddress}.pdf`)
+    const pdfUri = doc.output('datauristring')
+    onSave?.({
+      documentType: 1010,
+      workOrderId: workOrder.id,
+      fileObject: pdfUri.split(',')[1],
+      fileObjectContentType: 'application/pdf',
+      fileType: `${workOrder?.id}_${workOrder?.companyName}_${workOrder?.propertyAddress}.pdf`,
+      projectId: workOrder?.projectId,
+    })
   }
 }
 
