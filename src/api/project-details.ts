@@ -222,6 +222,20 @@ export const useProjectStatusSelectOptions = (project: Project) => {
         }
       }
 
+      // if Project status is Active and some workorders are not completed then
+      // Project punch status should be disabled
+      if (
+        numberOfWorkOrders !== numberOfCompletedWorkOrders &&
+        projectStatusId === ProjectStatus.Disputed &&
+        optionValue === ProjectStatus.Punch
+      ) {
+        return {
+          ...selectOption,
+          label: `${selectOption.label} (All Workorders must be completed)`,
+          disabled: true,
+        }
+      }
+      
       // If project status is Client Paid and there are some workorders not paid then
       // project status Paid should be disabled
       if (
