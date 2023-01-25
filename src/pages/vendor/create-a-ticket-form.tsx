@@ -56,6 +56,7 @@ const ReadonlyInfoCard: React.FC<{ icon: React.ElementType; value: string; title
   value,
   title,
 }) => {
+  const { t } = useTranslation()
   return (
     <HStack spacing="12px">
       <Stack h="40px">
@@ -63,7 +64,7 @@ const ReadonlyInfoCard: React.FC<{ icon: React.ElementType; value: string; title
       </Stack>
       <Stack spacing={0}>
         <Text color="gray.600" fontSize="14px" fontWeight={500}>
-          {title}
+          {t(`${SUPPORT}.${title}`)}
         </Text>
         <Text color="gray.500" fontSize="14px" fontWeight={400}>
           {value}
@@ -246,9 +247,9 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                   <ReadonlyInfoCard
                     icon={BiCalendar}
                     value={dateFormat(supportDetail?.createdDate)}
-                    title={'Date Created'}
+                    title={'dateCreated'}
                   />
-                  <ReadonlyInfoCard icon={BiDetail} value={supportDetail?.createdBy} title={'Created By'} />
+                  <ReadonlyInfoCard icon={BiDetail} value={supportDetail?.createdBy} title={'createdBy'} />
                 </HStack>
               )}
               <HStack spacing={3}>

@@ -18,6 +18,7 @@ import { badges, bonus, ignorePerformance, useFPMDetails } from 'api/performance
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import Select from 'components/form/react-select'
+import { PERFORMANCE } from './performance.i18n'
 
 type FieldInfoCardProps = {
   title: string
@@ -27,12 +28,13 @@ type FieldInfoCardProps = {
 }
 
 const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testid }) => {
+  const { t } = useTranslation()
   return (
     <Box>
       <HStack alignItems="start">
         <VStack spacing={1} alignItems="start">
           <Text color="#4A5568" fontWeight={500} fontSize="16px" lineHeight="24px" fontStyle="inter" noOfLines={1}>
-            {title}
+            {t(`${PERFORMANCE}.${title}`)}
           </Text>
           <Text color="#718096" fontSize="16px" fontWeight={400} fontStyle="inter" lineHeight={'24px'}>
             {value}
@@ -59,19 +61,19 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
       <Box>
         <Flex direction="row" mt={2}>
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Bonus')} value={currencyFormatter(fpmData?.currentBonus)} />
+            <FieldInfoCard title={'bonus'} value={currencyFormatter(fpmData?.currentBonus)} />
           </Box>
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Previous Bonus')} value={currencyFormatter(fpmData?.previousBonus)} />
+            <FieldInfoCard title={'previousBonus'} value={currencyFormatter(fpmData?.previousBonus)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'} ml={8}>
-            <FieldInfoCard title={t('Profit')} value={currencyFormatter(fpmData?.profit)} />
+            <FieldInfoCard title={'profit'} value={currencyFormatter(fpmData?.profit)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Revenue')} value={currencyFormatter(fpmData?.revenue)} />
+            <FieldInfoCard title={'tevenue'} value={currencyFormatter(fpmData?.revenue)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={t('Target')} value={currencyFormatter(fpmData?.target)} />
+            <FieldInfoCard title={'target'} value={currencyFormatter(fpmData?.target)} />
           </Box>
         </Flex>
         <Divider mt={4} mb={5} />
@@ -80,7 +82,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('Bonus %')}
+                {t(`${PERFORMANCE}.bonusPercentage`)}
               </FormLabel>
               <Controller
                 control={control}
@@ -104,7 +106,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('New Target')}
+                {t(`${PERFORMANCE}.newTarget`)}
               </FormLabel>
               <Controller
                 control={control}
@@ -133,7 +135,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('Badge')}
+                {t(`${PERFORMANCE}.badge`)}
               </FormLabel>
               <Controller
                 control={control}
@@ -159,7 +161,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t('Ignore Performance')}
+                {t(`${PERFORMANCE}.ignorePerformance`)}
               </FormLabel>
               <Controller
                 control={control}

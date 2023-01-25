@@ -61,8 +61,16 @@ const CalenderCard = props => {
         <BiCalendar size={23} color="#718096" />
       </Box>
       <Box lineHeight="20px">
-        <Text whiteSpace="nowrap" fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
-          {props.title}
+        <Text
+          whiteSpace="nowrap"
+          fontWeight={500}
+          fontSize="14px"
+          fontStyle="normal"
+          color="gray.600"
+          mb="1"
+          title={t(`${WORK_ORDER}.${props.title}`)}
+        >
+          {t(`${WORK_ORDER}.${props.title}`)}
         </Text>
         <Text
           data-testid={props?.testId}
@@ -72,6 +80,7 @@ const CalenderCard = props => {
           fontSize="14px"
           fontStyle="normal"
           fontWeight={400}
+          title={props.date}
         >
           {props.date}
         </Text>
@@ -84,8 +93,16 @@ const InformationCard = props => {
   return (
     <Flex>
       <Box lineHeight="20px">
-        <Text whiteSpace="nowrap" fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
-          {t(props.title)}
+        <Text
+          whiteSpace="nowrap"
+          fontWeight={500}
+          fontSize="14px"
+          fontStyle="normal"
+          color="gray.600"
+          mb="1"
+          title={t(`${WORK_ORDER}.${props.title}`)}
+        >
+          {t(`${WORK_ORDER}.${props.title}`)}
         </Text>
         <Text
           minH="20px"
@@ -98,6 +115,7 @@ const InformationCard = props => {
           fontStyle="normal"
           fontWeight={400}
           data-testid={props?.testId}
+          title={props.date}
         >
           {props.date}
         </Text>
@@ -403,12 +421,12 @@ export const NewWorkOrderForm: React.FC<{
             <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
                 <CalenderCard
-                  title="Client Start"
+                  title="clientStart"
                   testId="clientStart"
                   date={projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate) : 'mm/dd/yy'}
                 />
                 <CalenderCard
-                  title="Client End"
+                  title="clientEnd"
                   testId="clientEnd"
                   date={projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate) : 'mm/dd/yy'}
                 />
@@ -429,7 +447,7 @@ export const NewWorkOrderForm: React.FC<{
                   <Box>
                     <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
                       <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('type')}
+                        {t(`${WORK_ORDER}.type`)}
                       </FormLabel>
                       <Controller
                         control={control}
@@ -459,8 +477,14 @@ export const NewWorkOrderForm: React.FC<{
                   </Box>
                   <Box>
                     <FormControl isInvalid={!!errors.vendorSkillId} data-testid="vendorId">
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('companyName')}
+                      <FormLabel
+                        fontSize="14px"
+                        noOfLines={1}
+                        fontWeight={500}
+                        color="gray.600"
+                        title={t(`${WORK_ORDER}.companyName`)}
+                      >
+                        {t(`${WORK_ORDER}.companyName`)}
                       </FormLabel>
                       <Controller
                         control={control}
@@ -484,8 +508,14 @@ export const NewWorkOrderForm: React.FC<{
                   </Box>
                   <Box>
                     <FormControl isInvalid={!!errors?.clientApprovedAmount}>
-                      <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('clientApprovedAmount')}
+                      <FormLabel
+                        noOfLines={1}
+                        fontSize="14px"
+                        fontWeight={500}
+                        color="gray.600"
+                        title={t(`${WORK_ORDER}.clientApprovedAmount`)}
+                      >
+                        {t(`${WORK_ORDER}.clientApprovedAmount`)}
                       </FormLabel>
                       <Controller
                         control={control}
@@ -520,8 +550,14 @@ export const NewWorkOrderForm: React.FC<{
                   </Box>
                   <Box>
                     <FormControl isInvalid={!!errors?.percentage}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('profitPercentage')}
+                      <FormLabel
+                        fontSize="14px"
+                        noOfLines={1}
+                        fontWeight={500}
+                        color="gray.600"
+                        title={t(`${WORK_ORDER}.profitPercentage`)}
+                      >
+                        {t(`${WORK_ORDER}.profitPercentage`)}
                       </FormLabel>
                       <Controller
                         control={control}
@@ -560,8 +596,14 @@ export const NewWorkOrderForm: React.FC<{
 
                   <Box height="80px">
                     <FormControl isInvalid={!!errors?.invoiceAmount}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600" noOfLines={1}>
-                        {t('vendorWorkOrderAmount')}
+                      <FormLabel
+                        fontSize="14px"
+                        fontWeight={500}
+                        color="gray.600"
+                        noOfLines={1}
+                        title={t(`${WORK_ORDER}.vendorWorkOrderAmount`)}
+                      >
+                        {t(`${WORK_ORDER}.vendorWorkOrderAmount`)}
                       </FormLabel>
                       <Controller
                         control={control}
@@ -593,8 +635,14 @@ export const NewWorkOrderForm: React.FC<{
                   </Box>
                   <Box>
                     <FormControl isInvalid={!!errors?.workOrderStartDate}>
-                      <FormLabel whiteSpace="nowrap" fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('expectedStartDate')}
+                      <FormLabel
+                        noOfLines={1}
+                        fontSize="14px"
+                        fontWeight={500}
+                        color="gray.600"
+                        title={t(`${WORK_ORDER}.expectedStartDate`)}
+                      >
+                        {t(`${WORK_ORDER}.expectedStartDate`)}
                       </FormLabel>
                       <Input
                         id="workOrderStartDate"
@@ -633,8 +681,14 @@ export const NewWorkOrderForm: React.FC<{
                   </Box>
                   <Box>
                     <FormControl isInvalid={!!errors?.workOrderExpectedCompletionDate}>
-                      <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                        {t('expectedCompletionDate')}
+                      <FormLabel
+                        fontSize="14px"
+                        fontWeight={500}
+                        color="gray.600"
+                        title={t(`${WORK_ORDER}.expectedCompletionDate`)}
+                        noOfLines={1}
+                      >
+                        {t(`${WORK_ORDER}.expectedCompletionDate`)}
                       </FormLabel>
                       <Input
                         id="workOrderExpectedCompletionDate"
@@ -751,7 +805,7 @@ export const NewWorkOrderForm: React.FC<{
                 colorScheme="brand"
                 variant="outline"
               >
-                {t('cancel')}
+                {t(`${WORK_ORDER}.cancel`)}
               </Button>
               <Button
                 type="submit"
@@ -759,7 +813,7 @@ export const NewWorkOrderForm: React.FC<{
                 colorScheme="brand"
                 disabled={!(getValues()?.assignedItems?.length > 0 || !!watchUploadWO) || isWorkOrderCreating}
               >
-                {t('save')}
+                {t(`${WORK_ORDER}.save`)}
               </Button>
             </HStack>
           </ModalFooter>

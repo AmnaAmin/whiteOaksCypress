@@ -17,8 +17,12 @@ import ReactSelect from 'components/form/react-select'
 import { enUS } from 'date-fns/locale'
 import { Card } from 'components/card/card'
 import { filterByMonthOptions } from './admin-dashboard.utils'
+import { ADMIN_DASHBOARD } from './admin-dashboard.i18n'
+import { useTranslation } from 'react-i18next'
 
 export const SalesPerMonth = ({ data, bar, line }) => {
+  const { t } = useTranslation()
+
   const [barProps, setBarProps] = useState(
     bar.reduce(
       (a, { key }) => {
@@ -68,17 +72,9 @@ export const SalesPerMonth = ({ data, bar, line }) => {
     if (payload && payload.length) {
       return (
         <div>
-          {payload?.map((item,index) => {
+          {payload?.map((item, index) => {
             return (
-              <Box
-                className={item.className}
-                key={index}
-                background={item.fill}
-                color="white"
-                rounded={5}
-                mb={1}
-                p={1}
-              >
+              <Box className={item.className} key={index} background={item.fill} color="white" rounded={5} mb={1} p={1}>
                 {`${item.name} : $${item.value}`}
               </Box>
             )
@@ -109,7 +105,7 @@ export const SalesPerMonth = ({ data, bar, line }) => {
     <>
       <Box>
         <HStack mb={5}>
-          <FormLabel>Filter By Month:</FormLabel>
+          <FormLabel>{t(`${ADMIN_DASHBOARD}.filterByMonth`)}</FormLabel>
           <Box width="25%">
             <ReactSelect
               defaultValue={{ label: 'All', value: 'All' }}

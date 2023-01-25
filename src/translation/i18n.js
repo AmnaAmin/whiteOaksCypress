@@ -21,6 +21,7 @@ import { support } from 'features/support/support.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 import { globalErrors } from './errors.i18n'
+import { performance } from 'features/performance/performance.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -49,6 +50,7 @@ i18n.use(initReactI18next).init({
         ...vendorProfile.en.translation,
         ...projectAwards.en.translation,
         ...globalErrors.en.translation,
+        ...performance.en.translation,
 
         // DASHBOARD
         vendorScore: 'Vendor Score',
@@ -567,6 +569,7 @@ i18n.use(initReactI18next).init({
         ...vendorProfile.es.translation,
         ...projectAwards.es.translation,
         ...globalErrors.es.translation,
+        ...performance.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -1039,8 +1042,8 @@ i18n.use(initReactI18next).init({
         managedAlerts: 'Alertas administradas',
 
         //Reports
-        rptPageTitle: 'Reports',
-        rptBackBtnLabel: 'Back',
+        rptPageTitle: 'Informes',
+        rptBackBtnLabel: 'atrás',
 
         //Notifications
         viewAllNotification: 'Ver todas las notificaciones',
