@@ -600,7 +600,6 @@ export const VendorRegister = () => {
                         Email Address
                       </FormLabel>
                       <Input
-                        w="283px"
                         id="email"
                         type="email"
                         fontSize="14px"
