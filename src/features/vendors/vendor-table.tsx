@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { 
-  useFPMVendor, useGetAllVendors, useVendor, 
-  VENDORS_SELECTED_CARD_MAP_URL, useGetAllFPMVendors } from 'api/pc-projects'
+import {
+  useFPMVendor,
+  useGetAllVendors,
+  useVendor,
+  VENDORS_SELECTED_CARD_MAP_URL,
+  useGetAllFPMVendors,
+} from 'api/pc-projects'
 import Status from 'features/common/status'
 import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
@@ -197,19 +201,20 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     isLoading: isFPMVendorLoading,
     dataCount: fpmDataCount,
     totalPages: fpmTotalPages,
-  } = useFPMVendor( 
-      marketIDs ? marketIDs : [], 
-      filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
-      pagination.pageSize,
-      isFPM
-     )
+  } = useFPMVendor(
+    marketIDs ? marketIDs : [],
+    filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
+    pagination.pageSize,
+    isFPM,
+  )
 
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
   const { refetch: allVendorsRefetch, isLoading: isAllExportDataLoading } = useGetAllVendors(
     filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
   )
 
-  const { refetch: fpmVendorsRefetch, isLoading: isFPMExportDataLoading } = useGetAllFPMVendors(marketIDs,
+  const { refetch: fpmVendorsRefetch, isLoading: isFPMExportDataLoading } = useGetAllFPMVendors(
+    marketIDs,
     filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
   )
 
@@ -224,13 +229,13 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     postGridColumn(columns)
   }
 
-  const vendors = isFPM ? fpmVendors : allVendors;
-  const isLoading = isFPM ? isFPMVendorLoading : vendorsLoading;
-  const dataCount = isFPM ? fpmDataCount : vendorsDataCount;
-  const totalPages = isFPM ? fpmTotalPages : vendorsTotalPages;
-  const refetch =  isFPM?  fpmVendorsRefetch : allVendorsRefetch;
-  const isExportDataLoading = isFPM ? isFPMExportDataLoading : isAllExportDataLoading;
- 
+  const vendors = isFPM ? fpmVendors : allVendors
+  const isLoading = isFPM ? isFPMVendorLoading : vendorsLoading
+  const dataCount = isFPM ? fpmDataCount : vendorsDataCount
+  const totalPages = isFPM ? fpmTotalPages : vendorsTotalPages
+  const refetch = isFPM ? fpmVendorsRefetch : allVendorsRefetch
+  const isExportDataLoading = isFPM ? isFPMExportDataLoading : isAllExportDataLoading
+
   return (
     <Box overflow="auto">
       {selectedVendor && (

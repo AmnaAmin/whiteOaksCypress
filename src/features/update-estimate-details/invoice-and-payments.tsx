@@ -228,7 +228,7 @@ const InvoiceAndPayments: React.FC = () => {
             )}
           </VStack>
         </GridItem>
-        
+
         <GridItem>
           <FormControl w="215px" isInvalid={!!errors.paymentTerms}>
             <FormLabel variant="strong-label" size="md">

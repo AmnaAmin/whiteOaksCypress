@@ -43,21 +43,21 @@ const useProjectCardJson = cards => {
     },
     {
       id: 'punch',
-      title: "Completed",
+      title: 'Completed',
       value: 'punch',
       number: cards?.find(c => c.status === 9)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconThird} bg="#E6FFFA" />,
     },
     {
       id: 'closed',
-      title: "Submitted",
+      title: 'Submitted',
       value: 'closed',
       number: cards?.find(c => c.status === 10)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconForth} bg="#FCE8D8" />,
     },
     {
       id: 'clientPaid',
-      title: "Invoiced",
+      title: 'Invoiced',
       value: 'client paid',
       number: cards?.find(c => c.status === 72)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconSixth} bg="#FEEBCB" />,
@@ -71,41 +71,39 @@ const useProjectCardJson = cards => {
     },
     {
       id: 'pastDue',
-      title: "Revision",
+      title: 'Revision',
       value: 'past due',
       number: cards?.find(c => c.status === 62)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconFifth} bg="#EBF8FF" />,
     },
     {
       id: 'disputed',
-      title: "Approved",
+      title: 'Approved',
       value: 'disputed',
       number: cards?.find(c => c.status === '220')?.count || 0,
       IconElement: <IconElement Icon={SummaryIconNinth} bg="#FFF5F7" />,
     },
     {
       id: 'collection',
-      title: "Past Due",
+      title: 'Past Due',
       value: 'collection',
       number: cards?.find(c => c.status === '119')?.count || 0,
       IconElement: <IconElement Icon={SummaryIconTenth} bg="#FAF5FF" />,
     },
     {
       id: 'collection',
-      title: "Denied",
+      title: 'Denied',
       value: 'collection',
       number: cards?.find(c => c.status === '119')?.count || 0,
       IconElement: <IconElement Icon={SummaryIconTenth} bg="#FAF5FF" />,
     },
     {
       id: 'collection',
-      title: "Collection",
+      title: 'Collection',
       value: 'collection',
       number: cards?.find(c => c.status === '119')?.count || 0,
       IconElement: <IconElement Icon={SummaryIconTenth} bg="#FAF5FF" />,
     },
-    
-    
   ]
 }
 

@@ -14,7 +14,11 @@ const useCheckPathSelected = (pathTo: string) => {
   const { pathname } = useLocation()
   const isProjectDetails = pathname.includes('/project-details')
   const isEstimateDetails = pathname.includes('/estimate-details')
-  const isLinkSelected = pathname === pathTo || pathTo === 'Dashboard' || (pathTo === '/projects' && isProjectDetails) || (pathTo === '/estimates' && isEstimateDetails)
+  const isLinkSelected =
+    pathname === pathTo ||
+    pathTo === 'Dashboard' ||
+    (pathTo === '/projects' && isProjectDetails) ||
+    (pathTo === '/estimates' && isEstimateDetails)
   return { isLinkSelected }
 }
 

@@ -19,14 +19,13 @@ import Dashboard from './admin/dashboard'
 import { ProjectType } from './admin/project-type'
 import { SupportTickets } from './admin/support-tickets'
 
-import { Estimates } from "pages/estimates";
+import { Estimates } from 'pages/estimates'
 import { EstimateDetails } from 'pages/estimate-details'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
 const VendorProfilePage = lazy(() => import('pages/vendor/vendor-profile-v-portal'))
 const VendorProjectDetails = lazy(() => import('pages/vendor/project-details'))
-
 
 export default function useRoutesConfig() {
   const {
@@ -89,7 +88,7 @@ export default function useRoutesConfig() {
         { path: 'userManager', element: UserManagement },
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'projectType', element: ProjectType },
-        { path: "estimates", element: Estimates },
+        { path: 'estimates', element: Estimates },
         { path: 'projects', element: Projects },
         { path: 'payable', element: Payable },
         { path: 'support-tickets', element: SupportTickets },

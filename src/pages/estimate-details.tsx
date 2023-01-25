@@ -35,7 +35,7 @@ export const EstimateDetails: React.FC = props => {
   const [tabIndex, setTabIndex] = useState(0)
   // const [alertRow, selectedAlertRow] = useState(true)
   // const [firstDate, setFirstDate] = useState(undefined);
-  
+
   // const [projectTableInstance, setInstance] = useState<any>(null)
   // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -103,7 +103,6 @@ export const EstimateDetails: React.FC = props => {
               pr={{ base: 0, sm: '15px' }}
             >
               <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
-                
                 {tabIndex === 2 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />} mb="15px">
                     {t('estimates.estimateDetails.upload')}
@@ -161,8 +160,6 @@ export const EstimateDetails: React.FC = props => {
                   </Card>
                 </TabPanel>
 
-                
-                
                 <TabPanel p="0px">
                   <VendorDocumentsTable ref={tabsContainerRef} />
                 </TabPanel>
@@ -196,7 +193,7 @@ export const EstimateDetails: React.FC = props => {
           projectId={projectId as string}
           projectStatus={projectStatus}
         />
-        
+
         {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       </Stack>
