@@ -1,7 +1,7 @@
 import { useToast } from '@chakra-ui/react'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS } from 'constants/project-details.constants'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Client, ErrorType, ProjectType, State, User } from 'types/common.types'
 import {
@@ -20,6 +20,7 @@ import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { GET_TRANSACTIONS_API_KEY } from './transactions'
 import { AuditLogType } from 'types/common.types'
+import { PROJECT_STATUS } from 'features/common/status'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -235,7 +236,6 @@ export const useProjectStatusSelectOptions = (project: Project) => {
           disabled: true,
         }
       }
-      
       // If project status is Client Paid and there are some workorders not paid then
       // project status Paid should be disabled
       if (
@@ -299,6 +299,123 @@ export const useProjectStatusSelectOptions = (project: Project) => {
 
     return selectOptionWithDisableEnabled
   }, [project])
+}
+
+export const useProjectOverrideStatusSelectOptions = projectData => {
+  // const [overrideProjectStatusOptions, setOverrideProjectStatusOptions] = useState<any>([])
+  let overrideProjectStatusOptions
+  const projectStatusId = projectData?.projectStatusId
+  const previousProjectStatus = projectData?.previousStatus
+
+  return useMemo(() => {
+    if (!projectStatusId) return []
+    // Setting Override Status dropdown on the basis of Project Status
+    // setOverrideProjectStatusOptions([])
+    if (projectStatusId !== undefined) {
+      overrideProjectStatusOptions = []
+      // Project Status -> Active
+      if (projectStatusId === 8) {
+        overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.disputed]
+      }
+      // Project Status -> Punch
+      else if (projectStatusId === 9) {
+        overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
+      }
+      // Project Status -> Closed
+      else if (projectStatusId === 10) {
+        overrideProjectStatusOptions = [
+          PROJECT_STATUS.new,
+          PROJECT_STATUS.active,
+          PROJECT_STATUS.punch,
+          PROJECT_STATUS.disputed,
+        ]
+      }
+      // Project Status -> Invoiced
+      else if (projectStatusId === 11) {
+        overrideProjectStatusOptions = [
+          PROJECT_STATUS.new,
+          PROJECT_STATUS.active,
+          PROJECT_STATUS.punch,
+          PROJECT_STATUS.closed,
+          PROJECT_STATUS.disputed,
+        ]
+      }
+      // Project Status -> Paid
+      else if (projectStatusId === 41) {
+        overrideProjectStatusOptions = [
+          PROJECT_STATUS.new,
+          PROJECT_STATUS.active,
+          PROJECT_STATUS.punch,
+          PROJECT_STATUS.closed,
+          PROJECT_STATUS.invoiced,
+        ]
+      }
+      // Project Status -> Client Paid
+      else if (projectStatusId === 72) {
+        overrideProjectStatusOptions = [
+          PROJECT_STATUS.new,
+          PROJECT_STATUS.active,
+          PROJECT_STATUS.punch,
+          PROJECT_STATUS.closed,
+          PROJECT_STATUS.invoiced,
+          PROJECT_STATUS.disputed,
+        ]
+      }
+      // Project Status -> Disputed
+      // In case of disputed, all the cases will be implemented on the basis of previous Status
+      else if (projectStatusId === 220) {
+        // Last Project Status -> Active
+        if (previousProjectStatus === 8) {
+          overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.disputed]
+        }
+        // Last Project Status -> Punch
+        else if (previousProjectStatus === 9) {
+          overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
+        }
+        // Last Project Status -> Closed
+        else if (previousProjectStatus === 10) {
+          overrideProjectStatusOptions = [
+            PROJECT_STATUS.new,
+            PROJECT_STATUS.active,
+            PROJECT_STATUS.punch,
+            PROJECT_STATUS.disputed,
+          ]
+        }
+        // Last Project Status -> Invoiced
+        else if (previousProjectStatus === 11) {
+          overrideProjectStatusOptions = [
+            PROJECT_STATUS.new,
+            PROJECT_STATUS.active,
+            PROJECT_STATUS.punch,
+            PROJECT_STATUS.closed,
+            PROJECT_STATUS.disputed,
+          ]
+        }
+        // Last Project Status -> Paid
+        else if (previousProjectStatus === 41) {
+          overrideProjectStatusOptions = [
+            PROJECT_STATUS.new,
+            PROJECT_STATUS.active,
+            PROJECT_STATUS.punch,
+            PROJECT_STATUS.closed,
+            PROJECT_STATUS.invoiced,
+          ]
+        }
+        // Last Project Status -> Client Paid
+        else if (previousProjectStatus === 72) {
+          overrideProjectStatusOptions = [
+            PROJECT_STATUS.new,
+            PROJECT_STATUS.active,
+            PROJECT_STATUS.punch,
+            PROJECT_STATUS.closed,
+            PROJECT_STATUS.invoiced,
+            PROJECT_STATUS.disputed,
+          ]
+        }
+      }
+    }
+    return overrideProjectStatusOptions
+  }, [projectData, projectStatusId])
 }
 
 const PAYMENT_TERMS = [7, 10, 15, 30]
@@ -442,10 +559,12 @@ export const parseProjectDetailsPayloadFromFormData = async (
     documents[0] = await createDocumentPayload(formValues.invoiceAttachment)
   }
 
+  console.log('FormValues ...', formValues?.previousStatus)
   return {
     ...projectPayload,
     // Project Management payload
     projectStatusId: formValues?.status?.value || null,
+    previousStatus: formValues?.previousStatus || null,
     projectType: formValues?.type?.value ?? null,
     woNumber: formValues.woNumber,
     poNumber: formValues.poNumber,
