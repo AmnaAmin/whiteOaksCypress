@@ -73,116 +73,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     }
   }, [watchStatus?.label])
 
-  console.log('previousStatus', projectData?.previousStatus)
-
-  // Setting Override Status dropdown on the basis of Project Status
-  // useEffect(() => {
-  //   setOverrideProjectStatusOptions([])
-  //   if (watchStatus !== undefined) {
-  //     setOverrideProjectStatusOptions([])
-  //     // Project Status -> Active
-  //     if (watchStatus?.value === 8) {
-  //       setOverrideProjectStatusOptions([PROJECT_STATUS.new, PROJECT_STATUS.disputed])
-  //     }
-  //     // Project Status -> Punch
-  //     else if (watchStatus?.value === 9) {
-  //       setOverrideProjectStatusOptions([PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed])
-  //     }
-  //     // Project Status -> Closed
-  //     else if (watchStatus?.value === 10) {
-  //       setOverrideProjectStatusOptions([
-  //         PROJECT_STATUS.new,
-  //         PROJECT_STATUS.active,
-  //         PROJECT_STATUS.punch,
-  //         PROJECT_STATUS.disputed,
-  //       ])
-  //     }
-  //     // Project Status -> Invoiced
-  //     else if (watchStatus?.value === 11) {
-  //       setOverrideProjectStatusOptions([
-  //         PROJECT_STATUS.new,
-  //         PROJECT_STATUS.active,
-  //         PROJECT_STATUS.punch,
-  //         PROJECT_STATUS.closed,
-  //         PROJECT_STATUS.disputed,
-  //       ])
-  //     }
-  //     // Project Status -> Paid
-  //     else if (watchStatus?.value === 41) {
-  //       setOverrideProjectStatusOptions([
-  //         PROJECT_STATUS.new,
-  //         PROJECT_STATUS.active,
-  //         PROJECT_STATUS.punch,
-  //         PROJECT_STATUS.closed,
-  //         PROJECT_STATUS.invoiced,
-  //       ])
-  //     }
-  //     // Project Status -> Client Paid
-  //     else if (watchStatus?.value === 72) {
-  //       setOverrideProjectStatusOptions([
-  //         PROJECT_STATUS.new,
-  //         PROJECT_STATUS.active,
-  //         PROJECT_STATUS.punch,
-  //         PROJECT_STATUS.closed,
-  //         PROJECT_STATUS.invoiced,
-  //         PROJECT_STATUS.disputed,
-  //       ])
-  //     }
-  //     // Project Status -> Disputed
-  //     // In case of disputed, all the cases will be implemented on the basis of previous Status
-  //     else if (watchStatus?.value === 220) {
-  //       // Last Project Status -> Active
-  //       if (previousProjectStatus === 8) {
-  //         setOverrideProjectStatusOptions([PROJECT_STATUS.new, PROJECT_STATUS.disputed])
-  //       }
-  //       // Last Project Status -> Punch
-  //       else if (previousProjectStatus === 9) {
-  //         setOverrideProjectStatusOptions([PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed])
-  //       }
-  //       // Last Project Status -> Closed
-  //       else if (previousProjectStatus === 10) {
-  //         setOverrideProjectStatusOptions([
-  //           PROJECT_STATUS.new,
-  //           PROJECT_STATUS.active,
-  //           PROJECT_STATUS.punch,
-  //           PROJECT_STATUS.disputed,
-  //         ])
-  //       }
-  //       // Last Project Status -> Invoiced
-  //       else if (previousProjectStatus === 11) {
-  //         setOverrideProjectStatusOptions([
-  //           PROJECT_STATUS.new,
-  //           PROJECT_STATUS.active,
-  //           PROJECT_STATUS.punch,
-  //           PROJECT_STATUS.closed,
-  //           PROJECT_STATUS.disputed,
-  //         ])
-  //       }
-  //       // Last Project Status -> Paid
-  //       else if (previousProjectStatus === 41) {
-  //         setOverrideProjectStatusOptions([
-  //           PROJECT_STATUS.new,
-  //           PROJECT_STATUS.active,
-  //           PROJECT_STATUS.punch,
-  //           PROJECT_STATUS.closed,
-  //           PROJECT_STATUS.invoiced,
-  //         ])
-  //       }
-  //       // Last Project Status -> Client Paid
-  //       else if (previousProjectStatus === 72) {
-  //         setOverrideProjectStatusOptions([
-  //           PROJECT_STATUS.new,
-  //           PROJECT_STATUS.active,
-  //           PROJECT_STATUS.punch,
-  //           PROJECT_STATUS.closed,
-  //           PROJECT_STATUS.invoiced,
-  //           PROJECT_STATUS.disputed,
-  //         ])
-  //       }
-  //     }
-  //   }
-  // }, [watchStatus])
-
   return (
     <Box>
       <Stack>
@@ -261,7 +151,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                   <>
                     <ReactSelect
                       {...field}
-                      options= {projectOverrideStatusSelectOptions} // {overrideProjectStatusOptions}
+                      options={projectOverrideStatusSelectOptions} // {overrideProjectStatusOptions}
                       isDisabled={!isAdmin}
                       isOptionDisabled={option => option.disabled}
                       onChange={option => {
