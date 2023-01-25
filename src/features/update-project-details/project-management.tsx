@@ -64,15 +64,20 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
       setOverrideProjectStatusOptions([])
       // Project Status -> Active
       if (watchStatus?.value === 8) {
-        setOverrideProjectStatusOptions([PROJECT_STATUS.new])
+        setOverrideProjectStatusOptions([PROJECT_STATUS.new, PROJECT_STATUS.disputed])
       }
       // Project Status -> Punch
       else if (watchStatus?.value === 9) {
-        setOverrideProjectStatusOptions([PROJECT_STATUS.new])
+        setOverrideProjectStatusOptions([PROJECT_STATUS.new, PROJECT_STATUS.disputed])
       }
       // Project Status -> Closed
       else if (watchStatus?.value === 10) {
-        setOverrideProjectStatusOptions([PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch])
+        setOverrideProjectStatusOptions([
+          PROJECT_STATUS.new,
+          PROJECT_STATUS.active,
+          PROJECT_STATUS.punch,
+          PROJECT_STATUS.disputed
+        ])
       }
       // Project Status -> Invoiced
       else if (watchStatus?.value === 11) {
@@ -81,6 +86,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           PROJECT_STATUS.active,
           PROJECT_STATUS.punch,
           PROJECT_STATUS.closed,
+          PROJECT_STATUS.disputed
         ])
       }
       // Project Status -> Paid
@@ -90,7 +96,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           PROJECT_STATUS.active,
           PROJECT_STATUS.punch,
           PROJECT_STATUS.closed,
-          PROJECT_STATUS.invoiced,
+          PROJECT_STATUS.invoiced
         ])
       }
       // Project Status -> Client Paid
@@ -101,6 +107,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           PROJECT_STATUS.punch,
           PROJECT_STATUS.closed,
           PROJECT_STATUS.invoiced,
+          PROJECT_STATUS.disputed
         ])
       }
     }

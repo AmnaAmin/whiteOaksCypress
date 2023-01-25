@@ -447,7 +447,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     borderWidth={'0 0 1px 0'}
                     borderStyle="solid"
                     borderColor="gray.300"
-                    height={isApproved ? '40px' : 'auto'}
+                    height="auto"
                   >
                     {isShowCheckboxes && (
                       <GridItem>
@@ -568,7 +568,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               borderColor="gray.300"
               bg="white"
               rounded={6}
-              height={isApproved ? '40px' : 'auto'}
+              height="auto" 
             >
               {isShowCheckboxes && <GridItem />}
               <GridItem
@@ -576,7 +576,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 borderStyle="solid"
                 borderColor="gray.300"
                 py="4"
-                height={isApproved ? '40px' : 'auto'}
+                height="auto" 
               ></GridItem>
               <GridItem py={isApproved ? '3' : '4'} fontWeight="bold" data-testid="total-amount">
                 {t('total')}: {totalAmount}

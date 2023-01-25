@@ -22,7 +22,7 @@ export enum STATUS {
   ClientPaid = 'client paid',
   Overpayment = 'overpayment',
   Collection = 'collection',
-  Dispute = 'dispute',
+  Disputed = 'disputed',
   Cancel = 'cancel',
   Expired = 'expired',
   Declined = 'declined',
@@ -48,7 +48,7 @@ const STATUS_COLOR = {
   [STATUS.ClientPaid]: { color: '#48BB78', backgroundColor: '#F9FEFA' },
   [STATUS.Overpayment]: { color: '#38B2AC', backgroundColor: '#F5FFFF' },
   [STATUS.Collection]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' },
-  [STATUS.Dispute]: { color: '#ED64A6', backgroundColor: '#FFFBFC' },
+  [STATUS.Disputed]: { color: '#ED64A6', backgroundColor: '#FFFBFC' },
   [STATUS.Cancel]: { color: '#E53E3E', backgroundColor: '#FFF5F7' },
   [STATUS.Expired]: { color: '#F56565', backgroundColor: '#FFF5F5' },
   [STATUS.Inactive]: { color: '#ED64A6', backgroundColor: '#FFF5F7' },
@@ -90,4 +90,5 @@ export const PROJECT_STATUS = {
   cancelled: { value: '33', label: 'CANCELLED' },
   clientPaid: { value: '72', label: 'CLIENT PAID' },
   overpayment: { value: '109', label: 'Overpayment' },
+  disputed: { value: '220', label: 'DISPUTED' },
 }
