@@ -26,6 +26,7 @@ type ProjectManagementValues = {
   clientWalkthroughDate: string | null
   clientSignOffDate: string | null
   overrideProjectStatus: SelectOption | null
+  previousStatus: number | null
 }
 
 type ProjectInvoicingAndPaymentFormValues = {
@@ -179,6 +180,7 @@ export type ProjectDetailsAPIPayload = {
   firstWorkOrderDate: string | null
   lastCompletedWorkOrder: string | null
   projectStatusId: number | null
+  previousStatus: number | null
   projectClosedDate: string | null
   finalInvoiceAmount: number | null
   accountRecievable: number | null
