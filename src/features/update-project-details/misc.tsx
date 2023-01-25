@@ -109,10 +109,7 @@ const Misc: React.FC = () => {
               {t(`project.projectDetails.disputed`)}
             </FormLabel>
 
-            <DatePickerInput
-              value={disputedDate && status?.value === STATUS.Dispute ? dateFormat(disputedDate) : 'mm/dd/yyyy'}
-              disable
-            />
+            <DatePickerInput value={disputedDate ? dateFormat(disputedDate) : 'mm/dd/yyyy'} disable />
 
             <FormErrorMessage></FormErrorMessage>
           </FormControl>

@@ -104,7 +104,7 @@ const CreateVendorDetail: React.FC<{
       e.preventDefault()
     }
   }
-  
+
   return (
     <Stack spacing={3}>
       <Box height="498px" overflow="auto">

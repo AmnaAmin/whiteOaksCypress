@@ -49,6 +49,10 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
         accessorKey: 'pendingCount',
       },
       {
+        header: 'WoId',
+        accessorKey: 'id',
+      },
+      {
         header: 'pastDue',
         accessorKey: 'isPastDue',
       },

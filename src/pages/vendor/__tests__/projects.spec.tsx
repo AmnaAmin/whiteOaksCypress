@@ -8,12 +8,11 @@ jest.setTimeout(150000)
 describe('Vendor Projects Test Cases', () => {
   test('App should redirect to /projects', async () => {
     render(<App />, { route: '/projects' })
-    
+
     await waitForLoadingToFinishLabelOnly()
 
-
     expect(global.window.location.pathname).toEqual('/projects')
-    
+
     userEvent.click(screen.getByTestId('column-settings-button'))
 
     expect(screen.getByRole('dialog', { name: 'Settings' })).toBeInTheDocument()

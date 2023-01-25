@@ -46,8 +46,8 @@ export const Layout: React.FC = props => {
                   <FormLabel ml={6} color="#A1A6B1" size="sm" letterSpacing="1px">
                     {t(`${SIDE_NAV}.menu`)}
                   </FormLabel>
-                  {menu?.map((item,index) => (
-                  <React.Fragment key={index}>
+                  {menu?.map((item, index) => (
+                    <React.Fragment key={index}>
                       {item.title === `${SIDE_NAV}.userMgmt` && (
                         <Flex
                           alignItems="center"
