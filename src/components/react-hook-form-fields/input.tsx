@@ -24,6 +24,7 @@ type InputProps = {
   weight?: number
   testId?: string
   variant?: string
+  fontSize?: string
 }
 
 export const FormInput = React.forwardRef((props: InputProps, ref) => (
@@ -32,7 +33,7 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
       display="flex"
       color="#2D3748"
       fontWeight={props.weight || 500}
-      fontSize={props.size || '14px'}
+      fontSize={props.fontSize || '14px'}
       {...props.labelStyle}
       htmlFor={props.name}
     >
@@ -66,7 +67,7 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
       />
     </InputGroup>
     <Box minH="20px" mt="3px">
-      <FormErrorMessage m="0px">{props.errorMessage}</FormErrorMessage>
+      <FormErrorMessage whiteSpace="nowrap">{props.errorMessage}</FormErrorMessage>
     </Box>
   </FormControl>
 ))

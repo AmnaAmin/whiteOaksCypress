@@ -51,7 +51,7 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
-  const { isAdmin } = useUserRolesSelector();
+  const { isAdmin } = useUserRolesSelector()
 
   const {
     formState: { errors },
