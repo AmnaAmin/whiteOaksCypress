@@ -76,7 +76,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           PROJECT_STATUS.new,
           PROJECT_STATUS.active,
           PROJECT_STATUS.punch,
-          PROJECT_STATUS.disputed
+          PROJECT_STATUS.disputed,
         ])
       }
       // Project Status -> Invoiced
@@ -86,7 +86,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           PROJECT_STATUS.active,
           PROJECT_STATUS.punch,
           PROJECT_STATUS.closed,
-          PROJECT_STATUS.disputed
+          PROJECT_STATUS.disputed,
         ])
       }
       // Project Status -> Paid
@@ -96,7 +96,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           PROJECT_STATUS.active,
           PROJECT_STATUS.punch,
           PROJECT_STATUS.closed,
-          PROJECT_STATUS.invoiced
+          PROJECT_STATUS.invoiced,
         ])
       }
       // Project Status -> Client Paid
@@ -107,7 +107,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           PROJECT_STATUS.punch,
           PROJECT_STATUS.closed,
           PROJECT_STATUS.invoiced,
-          PROJECT_STATUS.disputed
+          PROJECT_STATUS.disputed,
         ])
       }
     }

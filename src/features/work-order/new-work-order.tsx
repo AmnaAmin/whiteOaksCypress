@@ -605,7 +605,7 @@ export const NewWorkOrderForm: React.FC<{
                         height="40px"
                         variant="required-field"
                         focusBorderColor="none"
-                        min={woStartDate || (clientStart as any)}
+                        min={clientStart as any}
                         max={isAdmin ? '' : (clientEnd as any)}
                         {...register('workOrderStartDate', {
                           required: 'This field is required.',

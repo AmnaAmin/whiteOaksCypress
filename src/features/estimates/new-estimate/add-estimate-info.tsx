@@ -9,7 +9,7 @@ import {
   Grid,
   GridItem,
   Input,
-  Checkbox
+  Checkbox,
 } from '@chakra-ui/react'
 
 import { Controller, useFormContext } from 'react-hook-form'
@@ -17,7 +17,6 @@ import { ProjectFormValues } from 'types/estimate.type'
 import { useTranslation } from 'react-i18next'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { NEW_ESTIMATE } from 'features/vendor/estimates/estimates.i18n'
-
 
 type InfoProps = {
   setNextTab: () => void
@@ -31,13 +30,13 @@ export const AddEstimateInfo = React.forwardRef((props: InfoProps, ref) => {
     register,
     formState: { errors },
     control,
-    watch
+    watch,
   } = useFormContext<ProjectFormValues>()
 
   //const isProjectInformationNextButtonDisabled = useProjectInformationNextButtonDisabled(control, errors)
 
-  const dueInWatch  = watch("dueIn");
-  
+  const dueInWatch = watch('dueIn')
+
   return (
     <Flex flexDir="column">
       <Box px="6" minH="300px">
@@ -64,8 +63,6 @@ export const AddEstimateInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormErrorMessage>{errors.dueIn && errors.dueIn?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-
-          
         </Grid>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
           <GridItem style={{ textAlign: 'left' }}>
@@ -94,7 +91,6 @@ export const AddEstimateInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormErrorMessage>{errors.clientDueDate && errors.clientDueDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-          
         </Grid>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
@@ -102,49 +98,51 @@ export const AddEstimateInfo = React.forwardRef((props: InfoProps, ref) => {
               <Controller
                 control={control}
                 name="dueIn"
-                render={ ( { field, fieldState } ) => (
-                  <Checkbox mt="15%"
+                render={({ field, fieldState }) => (
+                  <Checkbox
+                    mt="15%"
                     variant="normal"
                     colorScheme="PrimaryCheckBox"
-                    isChecked={ field.value }
-                    onChange={ e => field.onChange( e.target.checked ) }
+                    isChecked={field.value}
+                    onChange={e => field.onChange(e.target.checked)}
                   >
                     Paid Amount
                   </Checkbox>
-                ) }
+                )}
               />
-              
             </FormControl>
           </GridItem>
-          { !!dueInWatch && (<GridItem>
-            <FormControl isInvalid={!!errors?.sowOriginalContractAmount}>
-              <FormLabel isTruncated title={t(`${NEW_ESTIMATE}.originalSOWAmount`)} size="md">
-                Amount
-              </FormLabel>
-              <Controller
-                control={control}
-                name="sowOriginalContractAmount"
-                rules={{ required: 'This is required field' }}
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberInput
-                        value={field.value}
-                        onValueChange={values => {
-                          const { floatValue } = values
-                          field.onChange(floatValue)
-                        }}
-                        customInput={CustomRequiredInput}
-                        thousandSeparator={true}
-                        prefix={'$'}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              />
-            </FormControl>
-          </GridItem> ) }
+          {!!dueInWatch && (
+            <GridItem>
+              <FormControl isInvalid={!!errors?.sowOriginalContractAmount}>
+                <FormLabel isTruncated title={t(`${NEW_ESTIMATE}.originalSOWAmount`)} size="md">
+                  Amount
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="sowOriginalContractAmount"
+                  rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <NumberInput
+                          value={field.value}
+                          onValueChange={values => {
+                            const { floatValue } = values
+                            field.onChange(floatValue)
+                          }}
+                          customInput={CustomRequiredInput}
+                          thousandSeparator={true}
+                          prefix={'$'}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </GridItem>
+          )}
         </Grid>
       </Box>
 

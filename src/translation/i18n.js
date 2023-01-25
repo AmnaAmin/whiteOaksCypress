@@ -21,7 +21,7 @@ import { support } from 'features/support/support.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 import { globalErrors } from './errors.i18n'
-import { estimates } from "features/estimates/estimates.i18n"
+import { estimates } from 'features/estimates/estimates.i18n'
 import { estimates as vendorEstimates } from 'features/vendor/estimates/estimates.i18n'
 import { estimate } from 'features/update-estimate-details/estimate-details.i18n'
 

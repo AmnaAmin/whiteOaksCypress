@@ -237,7 +237,7 @@ export type ProjectFormValues = {
   projectStartDate?: string
   woaCompletionDate?: string
   propertyId?: number
-  property?: any,
+  property?: any
   dueIn: boolean | undefined
 }
 
