@@ -52,7 +52,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
 
-  const { mutate: updateProjectDetails } = useProjectDetailsUpdateMutation()
+  const { mutate: updateProjectDetails, isLoading } = useProjectDetailsUpdateMutation()
 
   const formReturn = useForm<ProjectDetailsFormValues>()
 
@@ -166,7 +166,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               type="submit"
               form="project-details"
               fontSize="16px"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLoading}
             >
               {t(`project.projectDetails.save`)}
             </Button>
