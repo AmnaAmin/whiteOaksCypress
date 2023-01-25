@@ -70,21 +70,30 @@ const Settings = React.forwardRef(() => {
     return settings
   }
 
-  useEffect(() => {
-    refetch()
-    const element = document.getElementById('Avatar')
-    element?.classList.add('form-file-input')
-  }, [refetch])
-
   const {
     register,
     formState: { errors },
     handleSubmit,
     control,
-    watch,
     reset,
     getValues,
+    setValue,
   } = useForm<SettingsValues>()
+
+  useEffect(() => {
+    if (!account) return
+    setValue('state', {
+      id: account.stateId,
+      value: stateOptions[account.stateId - 1]?.value,
+      label: stateOptions[account.stateId - 1]?.label,
+    })
+  }, [stateOptions, account])
+
+  useEffect(() => {
+    refetch()
+    const element = document.getElementById('Avatar')
+    element?.classList.add('form-file-input')
+  }, [refetch])
 
   useEffect(() => {
     if (!isSuccess) return
@@ -121,15 +130,6 @@ const Settings = React.forwardRef(() => {
       reset(defaultSettings)
     }
   }, [account, reset])
-
-  /* debug purpose */
-  const watchAllFields = watch()
-  React.useEffect(() => {
-    const subscription = watch(value => {
-      // console.log('Value Change', value)
-    })
-    return () => subscription.unsubscribe()
-  }, [watch, watchAllFields])
 
   const onSubmit = useCallback(
     async values => {
