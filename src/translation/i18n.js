@@ -22,6 +22,9 @@ import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 import { globalErrors } from './errors.i18n'
 import { performance } from 'features/performance/performance.i18n'
+import { estimates } from 'features/estimates/estimates.i18n'
+import { estimates as vendorEstimates } from 'features/vendor/estimates/estimates.i18n'
+import { estimate } from 'features/update-estimate-details/estimate-details.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -51,8 +54,11 @@ i18n.use(initReactI18next).init({
         ...projectAwards.en.translation,
         ...globalErrors.en.translation,
         ...performance.en.translation,
+        ...estimates.en.translation,
+        ...vendorEstimates.en.translation,
+        ...estimate.en.translation,
 
-        // DASHBOARD
+        // DASHBOARDa
         vendorScore: 'Vendor Score',
         vendorStatus: 'Vendor Status',
         upcomingPayment: 'Upcoming Payment',
@@ -497,7 +503,7 @@ i18n.use(initReactI18next).init({
         body: 'Body',
         textUser: 'Text User',
         recipientPhoneNo: 'Recipient Phone No',
-
+        WoId: 'WO Id',
         // **** PROJECT COORDINATOR ****//
 
         // PC projectDetails
@@ -570,6 +576,9 @@ i18n.use(initReactI18next).init({
         ...projectAwards.es.translation,
         ...globalErrors.es.translation,
         ...performance.es.translation,
+        ...estimates.es.translation,
+        ...vendorEstimates.es.translation,
+        ...estimate.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -600,6 +609,7 @@ i18n.use(initReactI18next).init({
         body: 'Cuerpo',
         textUser: 'Usuario de texto',
         recipientPhoneNo: 'Número de teléfono del destinatario',
+        WoId: 'WO Id',
 
         // Payments tab pc
         lwDate: 'Fecha LW',

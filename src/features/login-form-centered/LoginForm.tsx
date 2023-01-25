@@ -8,12 +8,13 @@ import {
   Stack,
   Text,
   VStack,
-  Box,
+  Icon,
+  Divider,
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { useAuth } from 'utils/auth-context'
 import { PasswordField } from './PasswordField'
-import { Link } from '@chakra-ui/react'
+import { BiUserCheck } from 'react-icons/bi'
 
 type FormValues = {
   email: string
@@ -67,11 +68,31 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
         >
           SIGN IN
         </Button>
-        <Box textAlign="center" pt="8px">
-          <Link href="vendor/register" fontSize={{ base: '16px', sm: '21px' }} fontWeight={500} color="#8392AB">
-            Register as a Vendor
-          </Link>
-        </Box>
+
+        <Divider
+          sx={{
+            '@media (min-width: 800px)': {
+              position: 'relative',
+              left: '-13.5%',
+              width: '130%',
+            },
+          }}
+        />
+        <Button
+          _hover={{ bg: '#345587', color: '#fff' }}
+          bg="#fff"
+          size="md"
+          fontSize="14px"
+          fontWeight="500"
+          color="#345587"
+          rounded="8px"
+          border={'1px solid rgba(52, 94, 166, 1)'}
+          onClick={() => {
+            window.location.href = 'vendor/register'
+          }}
+        >
+          <Icon as={BiUserCheck} w="32px" h="26px" /> Register As a Vendor
+        </Button>
       </Stack>
     </chakra.form>
   )

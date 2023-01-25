@@ -92,7 +92,7 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
         columns={columns}
         data={alerts || []}
         TableRow={alertsRow}
-        tableHeight="calc(100vh - 407px)"
+        tableHeight="calc(100vh - 250px)"
         name="alerts-table"
       />
     </Box>

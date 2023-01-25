@@ -26,6 +26,7 @@ import { useEffect } from 'react'
 import { STATUS } from '../../../common/status'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
+import { useUploadDocument } from 'api/vendor-projects'
 
 const SummaryCard = props => {
   return (
@@ -62,6 +63,7 @@ const WorkOrderDetailTab = ({
 }) => {
   const { t } = useTranslation()
   const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({})
+  const { mutate: saveDocument } = useUploadDocument()
   const getDefaultValues = () => {
     return {
       assignedItems:
@@ -100,9 +102,12 @@ const WorkOrderDetailTab = ({
       projectData,
       assignedItems: values.assignedItems,
       hideAward: true,
+      onSave: saveWorkOrderDocument,
     })
   }
-
+  const saveWorkOrderDocument = doc => {
+    saveDocument(doc)
+  }
   const parseAssignedItems = values => {
     const assignedItems = [
       ...values?.assignedItems?.map((a, index) => {

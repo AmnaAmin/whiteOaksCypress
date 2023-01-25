@@ -10,6 +10,7 @@ export enum ProjectStatus {
   Paid = 41,
   ClientPaid = 72,
   Overpayment = 109,
+  Disputed = 220,
 }
 
 type ProjectManagementValues = {
