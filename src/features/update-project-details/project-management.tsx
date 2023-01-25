@@ -39,6 +39,11 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 
   const watchStatus = useWatch({ name: 'status', control })
 
+  const watchOverrideProjectStatus = useWatch({ name: 'overrideProjectStatus', control })
+
+  console.log('watchOverrideProjectStatus', watchOverrideProjectStatus)
+  // console.log('previousStatus', projectData?.previousStatus)
+
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
   const {
@@ -67,7 +72,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   }, [watchStatus?.label])
 
   useEffect(() => {
-    if (watchStatus?.label === STATUS.Disputed.toUpperCase()) {
+    if (
+      watchStatus?.label === STATUS.Disputed.toUpperCase() ||
+      watchOverrideProjectStatus?.label === STATUS.Disputed.toUpperCase()
+    ) {
       setValue('previousStatus', projectData?.projectStatusId)
     }
   }, [watchStatus?.label])
