@@ -1,7 +1,7 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { PROJECT_STATUS, STATUS } from 'features/common/status'
-import React, { useEffect, useState } from 'react'
+import { STATUS } from 'features/common/status'
+import React, { useEffect } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
@@ -40,7 +40,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const watchStatus = useWatch({ name: 'status', control })
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
-  const previousProjectStatus = projectData?.previousStatus
 
   const {
     isWOAStartDisabled,
