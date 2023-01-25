@@ -53,7 +53,6 @@ import NumberFormat from 'react-number-format'
 import { WORK_ORDER } from './workOrder.i18n'
 import { MdOutlineCancel } from 'react-icons/md'
 import { isValidAndNonEmpty } from 'utils'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const CalenderCard = props => {
   return (
@@ -266,7 +265,6 @@ export const NewWorkOrderForm: React.FC<{
   ])
 
   const watchLineItems = useWatch({ name: 'assignedItems', control })
-  const { isAdmin } = useUserRolesSelector()
 
   // New WO -> Disable dates between client start date and client end date
   const clientStart = projectData?.clientStartDate
@@ -606,7 +604,7 @@ export const NewWorkOrderForm: React.FC<{
                         variant="required-field"
                         focusBorderColor="none"
                         min={clientStart as any}
-                        max={isAdmin ? '' : (clientEnd as any)}
+                        max={clientEnd as any}
                         {...register('workOrderStartDate', {
                           required: 'This field is required.',
                           validate: (date: any) => {
