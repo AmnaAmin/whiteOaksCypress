@@ -52,8 +52,8 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
     OPTIONS[ProjectStatus.Disputed],
   ],
   [ProjectStatus.Punch]: [
-    OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Active],
+    OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Closed],
     OPTIONS[ProjectStatus.Cancelled],
     OPTIONS[ProjectStatus.Disputed],
@@ -78,7 +78,7 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
     OPTIONS[ProjectStatus.Paid],
     OPTIONS[ProjectStatus.Disputed],
   ],
-  [ProjectStatus.Paid]: [OPTIONS[ProjectStatus.Paid]],
+  [ProjectStatus.Paid]: [OPTIONS[ProjectStatus.Paid], OPTIONS[ProjectStatus.Disputed]],
   [ProjectStatus.Cancelled]: [OPTIONS[ProjectStatus.Cancelled]],
-  [ProjectStatus.Disputed]: [OPTIONS[ProjectStatus.Disputed], OPTIONS[ProjectStatus.ClientPaid]],
+  [ProjectStatus.Disputed]: [OPTIONS[ProjectStatus.Disputed]],
 }

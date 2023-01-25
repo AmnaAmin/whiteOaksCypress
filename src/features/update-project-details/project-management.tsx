@@ -1,10 +1,11 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { PROJECT_STATUS, STATUS } from 'features/common/status'
-import React, { useEffect, useState } from 'react'
+import { STATUS } from 'features/common/status'
+import React, { useEffect } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
+import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
@@ -13,12 +14,20 @@ import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hook
 type ProjectManagerProps = {
   projectStatusSelectOptions: SelectOption[]
   projectTypeSelectOptions: SelectOption[]
+  projectOverrideStatusSelectOptions: any //SelectOption[]
+  projectData: Project
 }
-const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectOptions, projectTypeSelectOptions }) => {
+const ProjectManagement: React.FC<ProjectManagerProps> = ({
+  projectStatusSelectOptions,
+  projectTypeSelectOptions,
+  projectOverrideStatusSelectOptions,
+  projectData,
+}) => {
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
-  const [overrideProjectStatusOptions, setOverrideProjectStatusOptions] = useState<any>([])
+  // const [overrideProjectStatusOptions, setOverrideProjectStatusOptions] = useState<any>([])
+  // const [lastProjectStatus, setlastProjectStatus] = useState<any>('')
 
   const {
     formState: { errors },
@@ -29,6 +38,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
   } = useFormContext<ProjectDetailsFormValues>()
 
   const watchStatus = useWatch({ name: 'status', control })
+
+  const watchOverrideProjectStatus = useWatch({ name: 'overrideProjectStatus', control })
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
@@ -57,62 +68,14 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
     }
   }, [watchStatus?.label])
 
-  // Setting Override Status dropdown on the basis of Project Status
   useEffect(() => {
-    setOverrideProjectStatusOptions([])
-    setValue("overrideProjectStatus", null);
-    if (watchStatus !== undefined) {
-      setOverrideProjectStatusOptions([])
-      // Project Status -> Active
-      if (watchStatus?.value === 8) {
-        setOverrideProjectStatusOptions([PROJECT_STATUS.new, PROJECT_STATUS.disputed])
-      }
-      // Project Status -> Punch
-      else if (watchStatus?.value === 9) {
-        setOverrideProjectStatusOptions([PROJECT_STATUS.new, PROJECT_STATUS.disputed])
-      }
-      // Project Status -> Closed
-      else if (watchStatus?.value === 10) {
-        setOverrideProjectStatusOptions([
-          PROJECT_STATUS.new,
-          PROJECT_STATUS.active,
-          PROJECT_STATUS.punch,
-          PROJECT_STATUS.disputed,
-        ])
-      }
-      // Project Status -> Invoiced
-      else if (watchStatus?.value === 11) {
-        setOverrideProjectStatusOptions([
-          PROJECT_STATUS.new,
-          PROJECT_STATUS.active,
-          PROJECT_STATUS.punch,
-          PROJECT_STATUS.closed,
-          PROJECT_STATUS.disputed,
-        ])
-      }
-      // Project Status -> Paid
-      else if (watchStatus?.value === 41) {
-        setOverrideProjectStatusOptions([
-          PROJECT_STATUS.new,
-          PROJECT_STATUS.active,
-          PROJECT_STATUS.punch,
-          PROJECT_STATUS.closed,
-          PROJECT_STATUS.invoiced,
-        ])
-      }
-      // Project Status -> Client Paid
-      else if (watchStatus?.value === 72) {
-        setOverrideProjectStatusOptions([
-          PROJECT_STATUS.new,
-          PROJECT_STATUS.active,
-          PROJECT_STATUS.punch,
-          PROJECT_STATUS.closed,
-          PROJECT_STATUS.invoiced,
-          PROJECT_STATUS.disputed,
-        ])
-      }
+    if (
+      watchStatus?.label === STATUS.Disputed.toUpperCase() ||
+      watchOverrideProjectStatus?.label === STATUS.Disputed.toUpperCase()
+    ) {
+      setValue('previousStatus', projectData?.projectStatusId)
     }
-  }, [watchStatus])
+  }, [watchStatus?.label, watchOverrideProjectStatus?.label])
 
   return (
     <Box>
@@ -192,7 +155,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                   <>
                     <ReactSelect
                       {...field}
-                      options={overrideProjectStatusOptions}
+                      options={projectOverrideStatusSelectOptions} // {overrideProjectStatusOptions}
                       isDisabled={!isAdmin}
                       isOptionDisabled={option => option.disabled}
                       onChange={option => {
