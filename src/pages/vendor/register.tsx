@@ -131,7 +131,7 @@ const vendorRegisterFormSchema = {
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
   zipCode: Yup.string().required('ZipCode is required'),
-  capacity: Yup.string().required('Capacity is required').matches(/^\d+$/, 'Must be a digit'),
+  capacity: Yup.number().required('Capacity is required').max(500, "Max Limit is 500"),
 
   //Documents
 
@@ -193,7 +193,7 @@ export const VendorRegister = () => {
   }, [isMobile])
 
   const formReturn = useForm({
-    //mode: "onChange",
+    mode: "onChange",
     resolver: yupResolver(Yup.object().shape(customResolver)),
     //validateCriteriaMode: 'firstErrorDetected'
   } as any)
@@ -1229,20 +1229,23 @@ export const VendorRegister = () => {
                                     marginTop: '20px !important',
                                   },
                                 }}
+                                h="69px"
                               >
                                 <FormLabel htmlFor="capacity" sx={formLabeStyle}>
                                   Capacity
                                 </FormLabel>
                                 <Input
                                   id="capacity"
-                                  type="text"
+                                  type="number"
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your capacity"
                                   {...register('capacity', {
                                     required: 'This is required',
+                                    max: 500,
                                   })}
                                   variant="required-field"
+                                  max="500"
                                 />
                                 <FormErrorMessage>{errors?.capacity && errors?.capacity?.message}</FormErrorMessage>
                               </FormControl>
