@@ -69,6 +69,7 @@ const CustomTab = React.forwardRef((props: any, ref: any) => {
         borderBottomColor: isSelected ? '#345587 !important' : '#D9D9D9 !important',
         color: '#252F40 !important',
         borderBottomWidth: '3px',
+        whiteSpace: 'noWrap',
       }}
     >
       <Box as="span" mr="2" fontWeight={isSelected ? '500' : ''} fontSize="12px" background="transparent">
@@ -599,6 +600,7 @@ export const VendorRegister = () => {
                         Email Address
                       </FormLabel>
                       <Input
+                        w="283px"
                         id="email"
                         type="email"
                         fontSize="14px"
@@ -776,7 +778,7 @@ export const VendorRegister = () => {
                       <TabList
                         flexDir={{ base: 'column', sm: 'row' }}
                         gap="1px"
-                        w={{ lg: 'calc(100% - 100px)' }}
+                        w={{ lg: 'calc(100% - 110px)' }}
                         ml={{ lg: '10' }}
                       >
                         <CustomTab isDisabled={isTabDisabled(FORM_TABS.LOCATION_DETAILS)}>Location Details</CustomTab>
@@ -797,6 +799,7 @@ export const VendorRegister = () => {
                                   Primary Contact
                                 </FormLabel>
                                 <Input
+                                  w="283px"
                                   id="ownerName"
                                   type="text"
                                   fontSize="14px"
@@ -827,8 +830,12 @@ export const VendorRegister = () => {
                                             value={field.value}
                                             onChange={e => field.onChange(e)}
                                             format="(###)-###-####"
+                                            color="#718096"
                                             mask="_"
                                             placeholder="(___)-___-____"
+                                            _placeholder={{
+                                              color: '#718096',
+                                            }}
                                             borderLeft="2.5px solid #345587"
                                             tabIndex={6}
                                           />
@@ -980,7 +987,7 @@ export const VendorRegister = () => {
                                     id="einNumber"
                                     type="text"
                                     fontSize="14px"
-                                    color="#B5B8BB"
+                                    color="#718096"
                                     mask="999-99-9999"
                                     {...register('einNumber', {
                                       required: 'This is required',
@@ -997,7 +1004,7 @@ export const VendorRegister = () => {
                                     id="ssnNumber"
                                     type="text"
                                     fontSize="14px"
-                                    color="#B5B8BB"
+                                    color="#718096"
                                     mask="999-99-9999"
                                     {...register('ssnNumber')}
                                     variant="required-field"
