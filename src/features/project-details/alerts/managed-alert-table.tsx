@@ -71,7 +71,7 @@ export const ManagedAlertTable = React.forwardRef((props: any, ref) => {
         columns={columns}
         data={Data}
         TableRow={alertsRow}
-        tableHeight="calc(100vh - 300px)"
+        tableHeight="calc(100vh - 250px)"
         name="alerts-table"
       />
     </Box>

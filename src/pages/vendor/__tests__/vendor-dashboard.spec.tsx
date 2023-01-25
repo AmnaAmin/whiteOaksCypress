@@ -1,5 +1,5 @@
 import App from 'App'
-import { render, screen, waitForLoadingToFinish } from '../../../utils/test-utils'
+import { render, screen, waitForLoadingToFinishLabelOnly } from '../../../utils/test-utils'
 
 jest.setTimeout(150000)
 
@@ -7,10 +7,9 @@ describe('Dashboard Test Cases', () => {
   test('Dasbhoard should render widgets properly', async () => {
     render(<App />, { route: '/vendorDashboard' })
 
-    await waitForLoadingToFinish()
+    await waitForLoadingToFinishLabelOnly()
 
     expect(global.window.location.pathname).toEqual('/vendorDashboard')
-    await waitForLoadingToFinish()
 
     expect(screen.getByText(/Score/)).toBeInTheDocument()
     expect(screen.getByTestId('vendor-score').textContent).toEqual('1')

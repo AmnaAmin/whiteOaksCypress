@@ -68,17 +68,9 @@ export const SalesPerMonth = ({ data, bar, line }) => {
     if (payload && payload.length) {
       return (
         <div>
-          {payload?.map(item => {
+          {payload?.map((item, index) => {
             return (
-              <Box
-                className={item.className}
-                key={item.id}
-                background={item.fill}
-                color="white"
-                rounded={5}
-                mb={1}
-                p={1}
-              >
+              <Box className={item.className} key={index} background={item.fill} color="white" rounded={5} mb={1} p={1}>
                 {`${item.name} : $${item.value}`}
               </Box>
             )

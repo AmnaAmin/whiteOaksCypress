@@ -110,7 +110,7 @@ const SliderItem: React.FC<{ title: string; date: string; testId?: string }> = (
       mb="2"
     >
       <Text>{title}</Text>
-      <Text data-testId={testId}>{dateFormat(date)}</Text>
+      <Text data-testid={testId}>{dateFormat(date)}</Text>
     </Flex>
   )
 }
