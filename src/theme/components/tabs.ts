@@ -16,6 +16,8 @@ const tabsVariants = {
             _selected: {
               borderTopColor: `${props.colorScheme}.300`,
               borderTopWidth: '3px',
+              borderLeftColor: '#CBD5E0',
+              borderRightColor: '#CBD5E0',
               bg: 'white',
               color: `${props.colorScheme}.300`,
               fontWeight: 500,
