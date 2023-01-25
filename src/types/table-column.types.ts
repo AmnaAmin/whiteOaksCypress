@@ -38,4 +38,5 @@ export enum TableNames {
   auditLogs = 'auditLogs',
   vendorSkills = 'vendorSkills',
   markets = 'markets',
+  estimates = 'estimates',
 }
