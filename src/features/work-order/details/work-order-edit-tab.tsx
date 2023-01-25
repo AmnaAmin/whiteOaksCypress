@@ -589,7 +589,7 @@ const WorkOrderDetailTab = props => {
             <Button onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>
-            <Button data-testId="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
+            <Button data-testid="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
               {t('save')}
             </Button>
           </HStack>

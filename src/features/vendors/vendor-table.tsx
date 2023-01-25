@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { useFPMVendor, useGetAllVendors, useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
+import { 
+  useFPMVendor, useGetAllVendors, useVendor, 
+  VENDORS_SELECTED_CARD_MAP_URL, useGetAllFPMVendors } from 'api/pc-projects'
 import Status from 'features/common/status'
 import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
@@ -41,6 +43,7 @@ const VENDOR_TABLE_QUERY_KEYS = {
   market: 'market.contains',
   state: 'state.contains',
   businessPhoneNumber: 'businessPhoneNumber.contains',
+  businessEmailAddress: 'businessEmailAddress.contains',
 }
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
@@ -156,7 +159,6 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const { data: account } = useAuth()
   const { data: userInfo } = useUser(account?.user?.email)
   const marketIDs = userInfo?.markets?.map(m => m.id)
-  const { fpmVendors } = useFPMVendor(marketIDs)
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
@@ -182,16 +184,32 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
 
   const {
     vendors: allVendors,
-    isLoading,
-    dataCount,
-    totalPages,
+    isLoading: vendorsLoading,
+    dataCount: vendorsDataCount,
+    totalPages: vendorsTotalPages,
   } = useVendor(
     filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
 
+  const {
+    vendors: fpmVendors,
+    isLoading: isFPMVendorLoading,
+    dataCount: fpmDataCount,
+    totalPages: fpmTotalPages,
+  } = useFPMVendor( 
+      marketIDs ? marketIDs : [], 
+      filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
+      pagination.pageSize,
+      isFPM
+     )
+
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
-  const { refetch, isLoading: isExportDataLoading } = useGetAllVendors(
+  const { refetch: allVendorsRefetch, isLoading: isAllExportDataLoading } = useGetAllVendors(
+    filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
+  )
+
+  const { refetch: fpmVendorsRefetch, isLoading: isFPMExportDataLoading } = useGetAllFPMVendors(marketIDs,
     filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
   )
 
@@ -206,8 +224,13 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     postGridColumn(columns)
   }
 
-  const vendors = isFPM ? fpmVendors : allVendors
-
+  const vendors = isFPM ? fpmVendors : allVendors;
+  const isLoading = isFPM ? isFPMVendorLoading : vendorsLoading;
+  const dataCount = isFPM ? fpmDataCount : vendorsDataCount;
+  const totalPages = isFPM ? fpmTotalPages : vendorsTotalPages;
+  const refetch =  isFPM?  fpmVendorsRefetch : allVendorsRefetch;
+  const isExportDataLoading = isFPM ? isFPMExportDataLoading : isAllExportDataLoading;
+ 
   return (
     <Box overflow="auto">
       {selectedVendor && (

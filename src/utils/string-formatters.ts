@@ -70,3 +70,9 @@ export const isValidPhoneNumber = value => {
   }
   return true
 }
+
+export const preventSpecialCharacter = e => {
+  if (/[^a-zA-Z\s]/g.test(e.key)) {
+    e.preventDefault()
+  }
+}

@@ -214,15 +214,16 @@ export const useProjectTypeSelectOptions = () => {
   }
 }
 
-export const useVendorCards = () => {
+export const useVendorCards = (marketIds) => {
   const client = useClient()
 
-  return useQuery('vendorsCards', async () => {
-    const response = await client(`vendorsCards`, {})
+  return useQuery<Vendors>(["vendorsCards", marketIds],async () => {
+    const response = await client(`vendorsCards/v1?marketIds=${marketIds}`, {})
 
     return response?.data
   })
 }
+
 
 export const useProperties = () => {
   const client = useClient()
@@ -464,23 +465,39 @@ export const useGetAllVendors = (filterQueryString: string) => {
   }
 }
 
-export const useFPMVendor = (marketId?: number[]): any => {
+export const useGetAllFPMVendors = (marketIds,filterQueryString: string) => {
   const client = useClient()
 
-  const { data, ...rest } = useQuery<ProjectType>(
-    ['fpmVendors', marketId],
+  const { data, ...rest } = useQuery<Array<Project>>(
+    ["all_fpm_vendors", marketIds],
     async () => {
-      const response = await client(
-        `view-vendors/v1?marketId.in=${marketId}&sort=modifiedDate,asc&page=0&size=10000000`,
-        {},
-      )
+      const response = await client(`view-vendors/v1?marketId.in=${marketIds}&${filterQueryString}`, {})
+
       return response?.data
     },
-    { enabled: !!marketId },
+    {
+      enabled: false,
+    },
   )
 
   return {
-    fpmVendors: data,
+    allVendors: data,
+    ...rest,
+  }
+}
+export const useFPMVendor = (marketIds, queryString, pageSize, isFPM) => {
+  const apiQueryString = getVendorsQueryString(queryString)
+  const { data, ...rest } = usePaginationQuery<vendors>(
+    ["fpm-vendors", apiQueryString, marketIds],
+    `view-vendors/v1?marketId.in=${marketIds}&${apiQueryString}`,
+    pageSize,
+    { enabled: marketIds && isFPM }
+  )
+
+  return {
+    vendors: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
     ...rest,
   }
 }

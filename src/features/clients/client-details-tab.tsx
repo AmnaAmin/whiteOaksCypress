@@ -31,6 +31,7 @@ import { BiPlus } from 'react-icons/bi'
 // import { paymentsTerms } from 'api/vendor-projects'
 import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
+import { preventSpecialCharacter } from 'utils/string-formatters'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -107,6 +108,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 {...register('companyName', { required: 'This is required' })}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
+                onKeyPress={e => preventSpecialCharacter(e)}
               />
               <FormErrorMessage>{errors?.companyName?.message}</FormErrorMessage>
             </FormControl>
@@ -346,6 +348,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       isDisabled={isProjectCoordinator}
                       variant={'required-field'}
                       type="text"
+                      onKeyPress={e => preventSpecialCharacter(e)}
                     />
                     <FormErrorMessage>{errors?.contacts?.[index]?.contact?.message}</FormErrorMessage>
                   </FormControl>
@@ -518,6 +521,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
                     type="text"
+                    onKeyPress={e => preventSpecialCharacter(e)}
                   />
                   <FormErrorMessage>{errors?.accountPayableContactInfos?.[index]?.contact?.message}</FormErrorMessage>
                 </FormControl>

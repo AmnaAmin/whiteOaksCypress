@@ -14,6 +14,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import TableColumnSettings from 'components/table/table-column-settings'
 import { TableNames } from 'types/table-column.types'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { Card } from 'components/card/card'
 
 type ProjectProps = {
   onClose?: () => void
@@ -46,6 +47,10 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
       {
         header: 'pendingTransactions',
         accessorKey: 'pendingCount',
+      },
+      {
+        header: 'WoId',
+        accessorKey: 'id',
       },
       {
         header: 'pastDue',
@@ -96,47 +101,51 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
   }
 
   return (
-    <VStack gap={5}>
-      <RadioGroup w="100%" justifyContent={'flex-start'} onChange={setProjectStatus} value={projectStatus}>
-        <Stack direction="row">
-          <Radio value="active" isDisabled={isFPM}>
-            {t('active')}
-          </Radio>
-          <Radio value="paid" isDisabled={isFPM}>
-            {t('paid')}
-          </Radio>
-        </Stack>
-      </RadioGroup>
-      <Box
-        overflow={'auto'}
-        w="100%"
-        h="430px"
-        position="relative"
-        roundedTop={6}
-        pointerEvents={isFPM ? 'none' : 'auto'}
-      >
-        <TableContextProvider data={tableData} columns={tableColumns}>
-          <Table isLoading={isFetching || isLoading} isEmpty={!isFetching && !tableData?.length} />
-          <TableFooter position="sticky" bottom="0" left="0" right="0">
-            <ButtonsWrapper>
-              <ExportButton columns={tableColumns} fetchedData={tableData} colorScheme="brand" fileName="projects" />
-              <CustomDivider />
-              {settingColumns && (
-                <TableColumnSettings
-                  disabled={isFetching || isLoading || isFPM}
-                  onSave={onSave}
-                  columns={settingColumns}
-                />
-              )}
-            </ButtonsWrapper>
-          </TableFooter>
-        </TableContextProvider>
-      </Box>
+    <Card px={0}>
+      <VStack px="11px" gap="20px" mb="14px">
+        <RadioGroup w="100%" justifyContent={'flex-start'} onChange={setProjectStatus} value={projectStatus}>
+          <Stack direction="row">
+            <Radio value="active" isDisabled={isFPM}>
+              {t('active')}
+            </Radio>
+            <Radio value="paid" isDisabled={isFPM}>
+              {t('paid')}
+            </Radio>
+          </Stack>
+        </RadioGroup>
+        <Box
+          overflow={'auto'}
+          w="100%"
+          h="530px"
+          position="relative"
+          roundedTop={6}
+          pointerEvents={isFPM ? 'none' : 'auto'}
+          border="1px solid #CBD5E0"
+          rounded="6px"
+        >
+          <TableContextProvider data={tableData} columns={tableColumns}>
+            <Table isLoading={isFetching || isLoading} isEmpty={!isFetching && !tableData?.length} />
+            <TableFooter position="sticky" bottom="0" left="0" right="0">
+              <ButtonsWrapper>
+                <ExportButton columns={tableColumns} fetchedData={tableData} colorScheme="brand" fileName="projects" />
+                <CustomDivider />
+                {settingColumns && (
+                  <TableColumnSettings
+                    disabled={isFetching || isLoading || isFPM}
+                    onSave={onSave}
+                    columns={settingColumns}
+                  />
+                )}
+              </ButtonsWrapper>
+            </TableFooter>
+          </TableContextProvider>
+        </Box>
+      </VStack>
       <Flex
-        mt={2}
+        px={2}
         borderTop="2px solid #E2E8F0"
         alignItems="center"
-        height="72px"
+        height="66px"
         pt="8px"
         w="100%"
         justifyContent="end"
@@ -152,6 +161,6 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
           </Button>
         )}
       </Flex>
-    </VStack>
+    </Card>
   )
 }
