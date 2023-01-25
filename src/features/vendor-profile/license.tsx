@@ -54,7 +54,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
   const { isFPM, isAdmin } = useUserRolesSelector()
 
   // HK|PSWOA-1567|after save license document lines swap
-  vendor?.licenseDocuments?.sort((a, b) => (a.id < b.id ? -1 : 1));
+  vendor?.licenseDocuments?.sort((a, b) => (a.id < b.id ? -1 : 1))
 
   const {
     formState: { errors },

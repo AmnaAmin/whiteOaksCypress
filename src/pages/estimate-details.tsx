@@ -1,9 +1,9 @@
 import { useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } from '@chakra-ui/react'
 
 import { Box, Button, Stack } from '@chakra-ui/react'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useParams } from 'react-router'
-import { ProjectSummaryCard } from 'features/estimate-details/project-summary-card'
+import { EstimateSummaryCard } from 'features/estimate-details/estimate-summary-card'
 import { useTranslation } from 'react-i18next'
 import { TransactionsTable } from 'features/estimate-details/transactions/transactions-table'
 import { usePCProject } from 'api/pc-projects'
@@ -12,21 +12,16 @@ import { AmountDetailsCard } from 'features/estimate-details/project-amount-deta
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 
 import EstimateDetailsTab from 'features/update-estimate-details/estimate-details-form'
-import NewWorkOrder from 'features/work-order/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
-import { WorkOrdersTable } from 'features/work-order/work-orders-table'
 import AddNewTransactionModal from 'features/estimate-details/transactions/add-transaction-modal'
 import { VendorDocumentsTable } from 'features/estimate-details/documents/documents-table'
 import { UploadDocumentModal } from 'features/estimate-details/documents/upload-document'
 import { Card } from 'components/card/card'
 // import { AlertsTable } from 'features/projects/alerts/alerts-table'
 // import { AlertStatusModal } from 'features/projects/alerts/alert-status'
-import { useGanttChart } from 'api/pc-projects'
 // import { countInCircle } from 'theme/common-style'
 import ProjectNotes from 'features/estimate-details/project-notes-tab'
-import { STATUS } from 'features/common/status'
 import { TransactionDetails } from 'features/estimate-details/transaction-details/transaction-details'
-import ScheduleTab from 'features/estimate-details/project-schedule/schedule-tab'
 import { AuditLogsTable } from 'features/estimate-details/audit-logs/audit-logs-table'
 import { useProjectAuditLogs } from 'api/project-details'
 import { boxShadow } from 'theme/common-style'
@@ -38,10 +33,9 @@ export const EstimateDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
-  const { ganttChartData, isLoading: isGanttChartLoading } = useGanttChart(projectId)
   // const [alertRow, selectedAlertRow] = useState(true)
   // const [firstDate, setFirstDate] = useState(undefined);
-  const [formattedGanttData, setFormattedGanttData] = useState<any[]>([])
+
   // const [projectTableInstance, setInstance] = useState<any>(null)
   // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
   // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
@@ -59,7 +53,6 @@ export const EstimateDetails: React.FC = props => {
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
-  const { isOpen, onOpen, onClose } = useDisclosure()
   const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
 
   const [isShowProjectFinancialOverview, setIsShowProjectFinancialOverview] = useState(false)
@@ -67,33 +60,6 @@ export const EstimateDetails: React.FC = props => {
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
   const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
-
-  useEffect(() => {
-    if (ganttChartData?.length > 0 && projectData) {
-      const firstRecord = {
-        id: +new Date(),
-        type: 'task',
-        trade: 'Project',
-        name: 'Client Start/End',
-        start: new Date(projectData.clientStartDate as string),
-        end: new Date(projectData.clientDueDate as string),
-        progress: 100,
-      }
-
-      setFormattedGanttData([
-        firstRecord,
-        ...ganttChartData.map(row => ({
-          id: row.id,
-          type: 'task',
-          name: row.workDescription,
-          trade: row.companyName,
-          progress: Number(row.status),
-          start: new Date(row.startDate as string),
-          end: new Date(row.endDate as string),
-        })),
-      ])
-    }
-  }, [ganttChartData, projectData])
 
   // useEffect(() => {
   //   if (tabIndex === 6) {
@@ -104,7 +70,7 @@ export const EstimateDetails: React.FC = props => {
   return (
     <>
       <Stack w={{ base: '971px', xl: '100%' }} spacing={'16px'} ref={tabsContainerRef} h="calc(100vh - 160px)">
-        <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
+        <EstimateSummaryCard projectData={projectData as Project} isLoading={isLoading} />
         <AmountDetailsCard projectId={projectId} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
@@ -113,8 +79,6 @@ export const EstimateDetails: React.FC = props => {
               <Flex h={'40px'} py={'1px'}>
                 <Tab>{t('estimates.estimateDetails.transactions')}</Tab>
                 <Tab>{t('estimates.estimateDetails.estimateDetails')}</Tab>
-                <Tab>{t('estimates.estimateDetails.vendorWorkOrders')}</Tab>
-                <Tab>{t('estimates.estimateDetails.schedule')}</Tab>
                 <Tab>{t('estimates.estimateDetails.documents')}</Tab>
                 {/* <Tab>{t('alerts')}</Tab> */}
                 <Tab>
@@ -139,21 +103,7 @@ export const EstimateDetails: React.FC = props => {
               pr={{ base: 0, sm: '15px' }}
             >
               <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
-                {tabIndex === 2 &&
-                  ![
-                    STATUS.Closed,
-                    STATUS.Invoiced,
-                    STATUS.Cancelled,
-                    STATUS.Paid,
-                    STATUS.Punch,
-                    STATUS.ClientPaid,
-                    STATUS.Overpayment,
-                  ].includes(projectStatus as STATUS) && (
-                    <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen} mb="15px">
-                      {t('newWorkOrder')}
-                    </Button>
-                  )}
-                {tabIndex === 4 && (
+                {tabIndex === 2 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />} mb="15px">
                     {t('estimates.estimateDetails.upload')}
                   </Button>
@@ -211,12 +161,6 @@ export const EstimateDetails: React.FC = props => {
                 </TabPanel>
 
                 <TabPanel p="0px">
-                  <WorkOrdersTable ref={tabsContainerRef} />
-                </TabPanel>
-                <TabPanel p="0px" minH="calc(100vh - 409px)">
-                  <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
-                </TabPanel>
-                <TabPanel p="0px">
                   <VendorDocumentsTable ref={tabsContainerRef} />
                 </TabPanel>
 
@@ -249,7 +193,7 @@ export const EstimateDetails: React.FC = props => {
           projectId={projectId as string}
           projectStatus={projectStatus}
         />
-        {isOpen && <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />}
+
         {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       </Stack>

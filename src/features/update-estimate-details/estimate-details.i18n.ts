@@ -6,12 +6,12 @@ export const estimate = {
       estimate: {
         estimateDetails: {
           // Project Management
-          estimateManagement: 'Project Management',
+          estimateManagement: 'Estimate Management',
           status: 'Status',
           type: 'Type',
           woNumber: 'WO Number',
           poNumber: 'PO Number',
-          estimateName: 'Project Name',
+          estimateName: 'Estimate Name',
           clientStart: 'Client Start',
           clientDue: 'Client Due',
           woaStart: 'WOA Start',

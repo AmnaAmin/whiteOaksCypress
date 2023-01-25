@@ -100,6 +100,11 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
     setValue('coiWcExpFile', null)*/
   }
 
+  const formLabeStyle = {
+    fontSize: '14px',
+    fontWeight: 500,
+    color: 'gray.700',
+  }
   return (
     <>
       <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px">
@@ -112,7 +117,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
           <Flex w="215px">
             <Box>
               <FormControl isInvalid={!!errors.w9DocumentDate}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
+                <FormLabel variant="strong-label" sx={formLabeStyle}>
                   {t('W9DocumentDate')}
                 </FormLabel>
                 <Input
@@ -135,7 +140,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
             }}
           >
             <FormControl w="215px" isInvalid={!!errors.w9Document?.message}>
-              <FormLabel variant="strong-label" size="md" color="#2D3748">
+              <FormLabel variant="strong-label" sx={formLabeStyle}>
                 {t('fileUpload')}
               </FormLabel>
               <Controller
@@ -173,7 +178,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
           >
             <Box>
               <FormControl isInvalid={!!errors.agreementSignedDate}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
+                <FormLabel variant="strong-label" sx={formLabeStyle}>
                   {t('agreementSignedDate')}
                 </FormLabel>
                 <Input
@@ -197,7 +202,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
               }}
             >
               <FormControl w="215px" isInvalid={!!errors.agreement?.message}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
+                <FormLabel variant="strong-label" sx={formLabeStyle}>
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller
@@ -244,7 +249,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
             },
           }}
         >
-          <FormLabel m={0} variant="strong-label" fontSize="18px" color="#2D3748">
+          <FormLabel m={0} variant="strong-label" fontSize="16px" fontWeight="500" color="gray.600">
             {t('insurance')}
           </FormLabel>
 
@@ -261,11 +266,10 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
               <FormControl isInvalid={!!errors.autoInsuranceExpDate}>
                 <FormLabel
                   variant="strong-label"
-                  size="md"
                   w="200px"
                   isTruncated
                   title={t('autoInsuranceExpDate')}
-                  color="#2D3748"
+                  sx={formLabeStyle}
                 >
                   {t('autoInsuranceExpDate')}
                 </FormLabel>
@@ -284,7 +288,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
               }}
             >
               <FormControl w="215px" isInvalid={!!errors.insurance?.message}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
+                <FormLabel variant="strong-label" sx={formLabeStyle}>
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller
@@ -328,7 +332,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
           >
             <Box>
               <FormControl isInvalid={!!errors.coiGlExpDate}>
-                <FormLabel variant="strong-label" size="md" color="#2D3748">
+                <FormLabel variant="strong-label" sx={formLabeStyle}>
                   {t('COIGLExpDate')}
                 </FormLabel>
                 <Input type="date" w="215px" {...register('coiGlExpDate')} data-testid="coiGlExpDate" />
@@ -346,7 +350,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
               }}
             >
               <FormControl w="215px" isInvalid={!!errors.coiGlExpFile?.message} color="#2D3748">
-                <FormLabel variant="strong-label" size="md">
+                <FormLabel variant="strong-label" sx={formLabeStyle}>
                   {t('fileUpload')}
                 </FormLabel>
                 <Controller

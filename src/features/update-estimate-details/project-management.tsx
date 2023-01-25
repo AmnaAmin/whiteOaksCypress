@@ -16,9 +16,8 @@ type ProjectManagerProps = {
   projectTypeSelectOptions: SelectOption[]
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectOptions, projectTypeSelectOptions }) => {
-  
   const { t } = useTranslation()
-  
+
   const [, setOverrideProjectStatusOptions] = useState<any>([])
 
   const {
@@ -27,18 +26,14 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
     register,
     clearErrors,
     setValue,
-    setError
+    setError,
   } = useFormContext<ProjectDetailsFormValues>()
 
   const watchStatus = useWatch({ name: 'status', control })
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
-  const {
-    isClientDueDateDisabled,
-    isClientStartDateDisabled,
-  } = useFieldsDisabled(control)
-
+  const { isClientDueDateDisabled, isClientStartDateDisabled } = useFieldsDisabled(control)
 
   useEffect(() => {
     if (watchStatus?.label === STATUS.Active.toUpperCase()) {
@@ -119,7 +114,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
           <GridItem>
             <FormControl isInvalid={!!errors.projectName} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="projectName">
-                {t(`project.projectDetails.projectName`)}
+                {t(`estimate.estimateDetails.estimateName`)}
               </FormLabel>
               <Input placeholder="PC project 1" id="projectName" {...register('projectName')} autoComplete="off" />
               <FormErrorMessage>{errors.projectName && errors.projectName.message}</FormErrorMessage>
@@ -152,8 +147,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               />
             </FormControl>
           </GridItem>
-          
-          
+
           <GridItem>
             <FormControl isInvalid={!!errors?.clientStartDate} w="215px">
               <FormLabel variant="strong-label" size="md">
@@ -185,12 +179,11 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               <FormErrorMessage>{errors?.clientDueDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-          
-          
+
           <GridItem>
             <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
-               Amount
+                Amount
               </FormLabel>
               <Controller
                 control={control}
@@ -220,7 +213,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
 
           <GridItem>
             <FormControl>
-              <FormLabel isTruncated  size="md">
+              <FormLabel isTruncated size="md">
                 Upload Estimate
               </FormLabel>
               <Controller
@@ -234,7 +227,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                         <ChooseFileField
                           isRequired
                           name={field.name}
-                          value={field.value ? field.value?.name : "Choose File"}
+                          value={field.value ? field.value?.name : 'Choose File'}
                           isError={!!fieldState.error?.message}
                           acceptedFiles=".pdf,.png,.jpg,.jpeg"
                           onChange={(file: any) => {
@@ -243,7 +236,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                             if (!['application/pdf', 'image/png', 'image/jpg', 'image/jpeg'].includes(file.type)) {
                               setError(field.name, {
                                 type: 'custom',
-                                message: "Please select a valid file format (pdf, png, jpg, jpeg)",
+                                message: 'Please select a valid file format (pdf, png, jpg, jpeg)',
                               })
                             }
                           }}
@@ -260,7 +253,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
               />
             </FormControl>
           </GridItem>
-          
         </Grid>
       </Stack>
     </Box>

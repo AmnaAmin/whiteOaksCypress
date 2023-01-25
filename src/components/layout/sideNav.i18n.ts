@@ -19,7 +19,7 @@ export const sideNav = {
         administration: 'ADMINISTRATION',
         menu: 'MENU',
         alerts: 'Alerts',
-        estimates: "Estimates"
+        estimates: 'Estimates',
       },
     },
   },
@@ -41,7 +41,7 @@ export const sideNav = {
         administration: 'Administración',
         menu: 'MENÚ',
         alerts: 'Alertas',
-        estimates: "estimados"
+        estimates: 'estimados',
       },
     },
   },

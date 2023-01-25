@@ -21,7 +21,7 @@ import { support } from 'features/support/support.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 import { globalErrors } from './errors.i18n'
-import { estimates } from "features/estimates/estimates.i18n"
+import { estimates } from 'features/estimates/estimates.i18n'
 import { estimates as vendorEstimates } from 'features/vendor/estimates/estimates.i18n'
 import { estimate } from 'features/update-estimate-details/estimate-details.i18n'
 
@@ -501,7 +501,7 @@ i18n.use(initReactI18next).init({
         body: 'Body',
         textUser: 'Text User',
         recipientPhoneNo: 'Recipient Phone No',
-
+        WoId: 'WO Id',
         // **** PROJECT COORDINATOR ****//
 
         // PC projectDetails
@@ -606,6 +606,7 @@ i18n.use(initReactI18next).init({
         body: 'Cuerpo',
         textUser: 'Usuario de texto',
         recipientPhoneNo: 'Número de teléfono del destinatario',
+        WoId: 'WO Id',
 
         // Payments tab pc
         lwDate: 'Fecha LW',

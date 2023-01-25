@@ -270,7 +270,7 @@ export const UpdateEstimateModal: React.FC<UpdateProjectProps> = ({ isOpen, onCl
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader bg="gray.50" borderBottom="1px solid #eee">
-          Update Project
+          Update Estimate
         </ModalHeader>
         <ModalCloseButton _focus={{ outline: 'none' }} />
         <ModalBody px="6" pt="3" pb="1">

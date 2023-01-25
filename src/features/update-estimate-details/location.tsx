@@ -14,7 +14,7 @@ type LocationProps = {
   marketSelectOptions: SelectOption[]
 }
 
-const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOptions}) => {
+const Location: React.FC<LocationProps> = ({ stateSelectOptions, marketSelectOptions }) => {
   const {
     register,
     control,
@@ -32,7 +32,7 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
   } = useFieldsDisabled(control)
 
   const { t } = useTranslation()
- 
+
   return (
     <Stack>
       <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
@@ -99,26 +99,26 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
             </FormLabel>
             {/* <Input isDisabled={isMarketDisabled} id="market" {...register('market')} /> */}
             <Controller
-                  control={control}
-                  name={`market`}
-                  rules={{ required: 'This is required field' }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Select
-                        {...field}
-                        options={marketSelectOptions}
-                        size="md"
-                        value={field.value}
-                        selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
-                        isDisabled={isMarketDisabled}
-                        onChange={option => {
-                          field.onChange(option)
-                        }}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )}
-                />
+              control={control}
+              name={`market`}
+              rules={{ required: 'This is required field' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <Select
+                    {...field}
+                    options={marketSelectOptions}
+                    size="md"
+                    value={field.value}
+                    selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
+                    isDisabled={isMarketDisabled}
+                    onChange={option => {
+                      field.onChange(option)
+                    }}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
           </FormControl>
         </GridItem>
         <GridItem>

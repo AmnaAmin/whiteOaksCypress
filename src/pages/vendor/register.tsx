@@ -67,8 +67,9 @@ const CustomTab = React.forwardRef((props: any, ref: any) => {
           borderBottomColor: '#000',
         },
         borderBottomColor: isSelected ? '#345587 !important' : '#D9D9D9 !important',
-        color: '#252F40 !important',
+        color: '#000000 !important',
         borderBottomWidth: '3px',
+        whiteSpace: 'noWrap',
       }}
     >
       <Box as="span" mr="2" fontWeight={isSelected ? '500' : ''} fontSize="12px" background="transparent">
@@ -95,8 +96,6 @@ export const validateMarket = markets => {
 }
 
 export const yupNullable = (_, val) => (val === '' ? undefined : _)
-
-
 
 const vendorRegisterFormSchema = {
   email: Yup.string().email('Must be a valid email').required('Email is required'),
@@ -185,7 +184,7 @@ export const VendorRegister = () => {
   const [isMobile] = useMediaQuery('(max-width: 480px)')
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [unLockedTabs, setUnLoackedTabs] = useState<Array<FORM_TABS>>([])
-  const [isNextBtnActive, setisNextBtnActive ] = useState<boolean>(false);
+  const [isNextBtnActive, setisNextBtnActive] = useState<boolean>(false)
 
   useEffect(() => {
     if (!isMobile) return
@@ -469,31 +468,29 @@ export const VendorRegister = () => {
   }
 
   const locationDetailFieldValues = {
-  'email': watch("email"),
-  'firstName': watch("firstName"),
-  'lastName': watch("lastName"),
-  'password': watch("password"),
-  'companyName': watch("companyName"),
-  'businessPhoneNumber': watch("businessPhoneNumber"),
-  'businessEmailAddress': watch("businessEmailAddress"),
-  'streetAddress': watch("streetAddress"),
-  'city': watch("city"),
-  'zipCode': watch("zipCode"),
-  'capacity': watch("capacity"),
-  //'einNumber': watch("einNumber"),
-  //'ssnNumber': watch("ssnNumber"),
-  'state': watch("state"),
-  ...( ssnEinTabIndex === 0 ? { einNumber: watch("einNumber") }:{}),
-  ...( ssnEinTabIndex === 1 ? { ssnNumber: watch("ssnNumber") }: {} )
-  
-}
+    email: watch('email'),
+    firstName: watch('firstName'),
+    lastName: watch('lastName'),
+    password: watch('password'),
+    companyName: watch('companyName'),
+    businessPhoneNumber: watch('businessPhoneNumber'),
+    businessEmailAddress: watch('businessEmailAddress'),
+    streetAddress: watch('streetAddress'),
+    city: watch('city'),
+    zipCode: watch('zipCode'),
+    capacity: watch('capacity'),
+    //'einNumber': watch("einNumber"),
+    //'ssnNumber': watch("ssnNumber"),
+    state: watch('state'),
+    ...(ssnEinTabIndex === 0 ? { einNumber: watch('einNumber') } : {}),
+    ...(ssnEinTabIndex === 1 ? { ssnNumber: watch('ssnNumber') } : {}),
+  }
 
   const locationDetailsSchema = {
     email: Yup.string().required('Email is required'),
     firstName: Yup.string().required('First Name is required'),
     lastName: Yup.string().required('Last name is required'),
-    password: Yup.string()
-      .required('Password is required'),
+    password: Yup.string().required('Password is required'),
     companyName: Yup.string().required('Business name is required'),
     businessPhoneNumber: Yup.string().required(),
     streetAddress: Yup.string().required('Street Address is required'),
@@ -501,27 +498,37 @@ export const VendorRegister = () => {
     state: Yup.object().required('State is required'),
     zipCode: Yup.string().required('ZipCode is required'),
     capacity: Yup.string().required('Capacity is required'),
-    ...( ssnEinTabIndex === 0 ? { einNumber: Yup.string()
-      .required('EIN is a required field').matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits') }:{} ),
-    ...( ssnEinTabIndex === 1 ? { ssnNumber: Yup.string()
-      .required('SSN is a required field').matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits') }: {} )
+    ...(ssnEinTabIndex === 0
+      ? {
+          einNumber: Yup.string()
+            .required('EIN is a required field')
+            .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits'),
+        }
+      : {}),
+    ...(ssnEinTabIndex === 1
+      ? {
+          ssnNumber: Yup.string()
+            .required('SSN is a required field')
+            .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits'),
+        }
+      : {}),
   }
 
-  useEffect( () => {
-    Yup.object(locationDetailsSchema).
-    validate(locationDetailFieldValues,{ strict: true }).then( (value) => {
-      setisNextBtnActive(true);
-    }).catch( (err) => {
-      setisNextBtnActive(false);
-    } )
-
-  }, [locationDetailFieldValues] );
-
+  useEffect(() => {
+    Yup.object(locationDetailsSchema)
+      .validate(locationDetailFieldValues, { strict: true })
+      .then(value => {
+        setisNextBtnActive(true)
+      })
+      .catch(err => {
+        setisNextBtnActive(false)
+      })
+  }, [locationDetailFieldValues])
 
   const formLabeStyle = {
-    fontSize: '12px',
+    fontSize: '14px',
     fontWeight: 500,
-    color: '#252F40',
+    color: 'gray.700',
   }
   return (
     <Box
@@ -770,7 +777,7 @@ export const VendorRegister = () => {
                       <TabList
                         flexDir={{ base: 'column', sm: 'row' }}
                         gap="1px"
-                        w={{ lg: 'calc(100% - 100px)' }}
+                        w={{ lg: 'calc(100% - 110px)' }}
                         ml={{ lg: '10' }}
                       >
                         <CustomTab isDisabled={isTabDisabled(FORM_TABS.LOCATION_DETAILS)}>Location Details</CustomTab>
@@ -791,6 +798,7 @@ export const VendorRegister = () => {
                                   Primary Contact
                                 </FormLabel>
                                 <Input
+                                  w="283px"
                                   id="ownerName"
                                   type="text"
                                   fontSize="14px"
@@ -821,8 +829,12 @@ export const VendorRegister = () => {
                                             value={field.value}
                                             onChange={e => field.onChange(e)}
                                             format="(###)-###-####"
+                                            color="#718096"
                                             mask="_"
                                             placeholder="(___)-___-____"
+                                            _placeholder={{
+                                              color: '#718096',
+                                            }}
                                             borderLeft="2.5px solid #345587"
                                             tabIndex={6}
                                           />
@@ -974,7 +986,7 @@ export const VendorRegister = () => {
                                     id="einNumber"
                                     type="text"
                                     fontSize="14px"
-                                    color="#B5B8BB"
+                                    color="#718096"
                                     mask="999-99-9999"
                                     {...register('einNumber', {
                                       required: 'This is required',
@@ -991,7 +1003,7 @@ export const VendorRegister = () => {
                                     id="ssnNumber"
                                     type="text"
                                     fontSize="14px"
-                                    color="#B5B8BB"
+                                    color="#718096"
                                     mask="999-99-9999"
                                     {...register('ssnNumber')}
                                     variant="required-field"
@@ -1218,7 +1230,7 @@ export const VendorRegister = () => {
                       {FORM_TABS.MARKETS !== formTabIndex && (
                         <Button
                           onClick={doNext}
-                          disabled={ !isNextBtnActive }
+                          disabled={!isNextBtnActive}
                           bgColor="#345587"
                           width="78px"
                           h="40px"
