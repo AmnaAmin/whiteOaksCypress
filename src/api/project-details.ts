@@ -346,6 +346,8 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
           PROJECT_STATUS.punch,
           PROJECT_STATUS.closed,
           PROJECT_STATUS.invoiced,
+          PROJECT_STATUS.clientPaid,
+          PROJECT_STATUS.disputed,
         ]
       }
       // Project Status -> Client Paid
