@@ -366,11 +366,16 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       else if (projectStatusId === PROJECT_STATUS.disputed.value) {
         // Last Project Status -> Active
         if (previousProjectStatus === PROJECT_STATUS.active.value) {
-          overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.disputed]
+          overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
         }
         // Last Project Status -> Punch
         else if (previousProjectStatus === PROJECT_STATUS.punch.value) {
-          overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
+          overrideProjectStatusOptions = [
+            PROJECT_STATUS.new,
+            PROJECT_STATUS.active,
+            PROJECT_STATUS.punch,
+            PROJECT_STATUS.disputed,
+          ]
         }
         // Last Project Status -> Closed
         else if (previousProjectStatus === PROJECT_STATUS.closed.value) {
@@ -378,6 +383,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
             PROJECT_STATUS.new,
             PROJECT_STATUS.active,
             PROJECT_STATUS.punch,
+            PROJECT_STATUS.closed,
             PROJECT_STATUS.disputed,
           ]
         }
@@ -388,6 +394,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
             PROJECT_STATUS.active,
             PROJECT_STATUS.punch,
             PROJECT_STATUS.closed,
+            PROJECT_STATUS.invoiced,
             PROJECT_STATUS.disputed,
           ]
         }
@@ -399,6 +406,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
             PROJECT_STATUS.punch,
             PROJECT_STATUS.closed,
             PROJECT_STATUS.invoiced,
+            PROJECT_STATUS.paid,
           ]
         }
         // Last Project Status -> Client Paid
@@ -409,6 +417,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
             PROJECT_STATUS.punch,
             PROJECT_STATUS.closed,
             PROJECT_STATUS.invoiced,
+            PROJECT_STATUS.clientPaid,
             PROJECT_STATUS.disputed,
           ]
         }
