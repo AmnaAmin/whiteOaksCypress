@@ -267,7 +267,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                 type="date"
                 isDisabled={isWOACompletionDisabled}
                 variant={isWOACompletionDateRequired ? 'required-field' : 'outline'}
-                max={dateToday}
+                max={isAdmin ? '' : dateToday}
                 {...register('woaCompletionDate', {
                   required: isWOACompletionDateRequired ? 'This is required field.' : false,
                 })}
@@ -284,7 +284,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
                 type="date"
                 isDisabled={isClientWalkthroughDisabled}
                 variant={isClientWalkthroughDateRequired ? 'required-field' : 'outline'}
-                max={dateToday}
+                max={isAdmin ? '' : dateToday}
                 {...register('clientWalkthroughDate', {
                   required: isClientWalkthroughDateRequired ? 'This is required field.' : false,
                 })}
