@@ -67,7 +67,7 @@ const CustomTab = React.forwardRef((props: any, ref: any) => {
           borderBottomColor: '#000',
         },
         borderBottomColor: isSelected ? '#345587 !important' : '#D9D9D9 !important',
-        color: '#252F40 !important',
+        color: '#000000 !important',
         borderBottomWidth: '3px',
         whiteSpace: 'noWrap',
       }}
@@ -526,9 +526,9 @@ export const VendorRegister = () => {
   }, [locationDetailFieldValues])
 
   const formLabeStyle = {
-    fontSize: '12px',
+    fontSize: '14px',
     fontWeight: 500,
-    color: '#252F40',
+    color: 'gray.700',
   }
   return (
     <Box
@@ -600,7 +600,6 @@ export const VendorRegister = () => {
                         Email Address
                       </FormLabel>
                       <Input
-                        w="283px"
                         id="email"
                         type="email"
                         fontSize="14px"
