@@ -214,15 +214,16 @@ export const useProjectTypeSelectOptions = () => {
   }
 }
 
-export const useVendorCards = () => {
+export const useVendorCards = (marketIds) => {
   const client = useClient()
 
-  return useQuery('vendorsCards', async () => {
-    const response = await client(`vendorsCards`, {})
+  return useQuery<Vendors>(["vendorsCards", marketIds],async () => {
+    const response = await client(`vendorsCards/v1?marketIds=${marketIds}`, {})
 
     return response?.data
   })
 }
+
 
 export const useProperties = () => {
   const client = useClient()
