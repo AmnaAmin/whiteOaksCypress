@@ -566,7 +566,6 @@ export const parseProjectDetailsPayloadFromFormData = async (
     documents[0] = await createDocumentPayload(formValues.invoiceAttachment)
   }
 
-  console.log('FormValues ...', formValues?.previousStatus)
   return {
     ...projectPayload,
     // Project Management payload

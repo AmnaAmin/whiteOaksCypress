@@ -41,9 +41,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 
   const watchOverrideProjectStatus = useWatch({ name: 'overrideProjectStatus', control })
 
-  console.log('watchOverrideProjectStatus', watchOverrideProjectStatus)
-  // console.log('previousStatus', projectData?.previousStatus)
-
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
   const {
@@ -78,7 +75,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     ) {
       setValue('previousStatus', projectData?.projectStatusId)
     }
-  }, [watchStatus?.label])
+  }, [watchStatus?.label, watchOverrideProjectStatus?.label])
 
   return (
     <Box>
