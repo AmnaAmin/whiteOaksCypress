@@ -37,6 +37,10 @@ const OPTIONS = {
     value: ProjectStatus.Paid,
     label: 'PAID',
   },
+  [ProjectStatus.Disputed]: {
+    value: ProjectStatus.Disputed,
+    label: 'DISPUTED',
+  },
 }
 
 export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
@@ -45,17 +49,36 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
     OPTIONS[ProjectStatus.Active],
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Cancelled],
+    OPTIONS[ProjectStatus.Disputed],
   ],
   [ProjectStatus.Punch]: [
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Active],
     OPTIONS[ProjectStatus.Closed],
     OPTIONS[ProjectStatus.Cancelled],
+    OPTIONS[ProjectStatus.Disputed],
   ],
-  [ProjectStatus.Closed]: [OPTIONS[ProjectStatus.Closed], OPTIONS[ProjectStatus.Invoiced]],
-  [ProjectStatus.Invoiced]: [OPTIONS[ProjectStatus.Invoiced], OPTIONS[ProjectStatus.ClientPaid]],
-  [ProjectStatus.ClientPaid]: [OPTIONS[ProjectStatus.ClientPaid], OPTIONS[ProjectStatus.Paid]],
-  [ProjectStatus.Overpayment]: [OPTIONS[ProjectStatus.Overpayment], OPTIONS[ProjectStatus.Paid]],
+  [ProjectStatus.Closed]: [
+    OPTIONS[ProjectStatus.Closed],
+    OPTIONS[ProjectStatus.Invoiced],
+    OPTIONS[ProjectStatus.Disputed],
+  ],
+  [ProjectStatus.Invoiced]: [
+    OPTIONS[ProjectStatus.Invoiced],
+    OPTIONS[ProjectStatus.ClientPaid],
+    OPTIONS[ProjectStatus.Disputed],
+  ],
+  [ProjectStatus.ClientPaid]: [
+    OPTIONS[ProjectStatus.ClientPaid],
+    OPTIONS[ProjectStatus.Paid],
+    OPTIONS[ProjectStatus.Disputed],
+  ],
+  [ProjectStatus.Overpayment]: [
+    OPTIONS[ProjectStatus.Overpayment],
+    OPTIONS[ProjectStatus.Paid],
+    OPTIONS[ProjectStatus.Disputed],
+  ],
   [ProjectStatus.Paid]: [OPTIONS[ProjectStatus.Paid]],
   [ProjectStatus.Cancelled]: [OPTIONS[ProjectStatus.Cancelled]],
+  [ProjectStatus.Disputed]: [OPTIONS[ProjectStatus.Disputed], OPTIONS[ProjectStatus.ClientPaid]],
 }
