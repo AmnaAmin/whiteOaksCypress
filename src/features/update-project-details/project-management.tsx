@@ -60,6 +60,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
   // Setting Override Status dropdown on the basis of Project Status
   useEffect(() => {
     setOverrideProjectStatusOptions([])
+    setValue("overrideProjectStatus", null);
     if (watchStatus !== undefined) {
       setOverrideProjectStatusOptions([])
       // Project Status -> Active
