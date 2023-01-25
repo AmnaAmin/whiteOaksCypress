@@ -251,6 +251,21 @@ export const useProjectStatusSelectOptions = (project: Project) => {
         }
       }
 
+      // if project status is Disputed and remaining payment is not zero then
+      // also if there is pending draw transaction, then client paid will be disabled
+      // project status Paid should be disabled
+      if (
+        sowNewAmount - partialPayment > 0 &&
+        projectStatusId === ProjectStatus.Disputed &&
+        optionValue === ProjectStatus.ClientPaid
+      ) {
+        return {
+          ...selectOption,
+          label: `${selectOption.label} (Remaining Payment must be $0)`,
+          disabled: true,
+        }
+      }
+
       // If project status is Overpayment and there are some workorders not paid then
       // project status Paid should be disabled
       if (
