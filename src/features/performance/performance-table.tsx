@@ -3,7 +3,6 @@ import { Box, useDisclosure } from '@chakra-ui/react'
 import numeral from 'numeral'
 import { PerformanceType } from 'types/performance.type'
 import PerformanceModal from './performance-modal'
-import Badge from 'features/common/badge'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { ColumnDef } from '@tanstack/react-table'
@@ -18,6 +17,10 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
     {
       header: 'Name' as string,
       accessorKey: 'name',
+    },
+    {
+      header: 'Month' as string,
+      accessorKey: 'monthName',
     },
     {
       header: 'Revenue',
@@ -36,6 +39,14 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       meta: { format: 'currency' },
     },
     {
+      header: 'Bonus',
+      accessorKey: 'currentBonus',
+      accessorFn(row) {
+        return numeral(row.currentBonus).format('$0,0.00')
+      },
+      meta: { format: 'currency' },
+    },
+    {
       header: 'Margin %',
       accessorKey: 'marginPercentage',
       accessorFn(row) {
@@ -50,14 +61,14 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       },
       meta: { format: 'currency' },
     },
-    {
-      header: 'Badge',
-      accessorKey: 'badge',
-      cell: (row: any) => {
-        const value = row.cell.getValue()
-        return <Badge value={value} id={value} />
-      },
-    },
+    // {
+    //   header: 'Badge',
+    //   accessorKey: 'badge',
+    //   cell: (row: any) => {
+    //     const value = row.cell.getValue()
+    //     return <Badge value={value} id={value} />
+    //   },
+    // },
     {
       header: 'Disqualified Revenue',
       accessorKey: 'disqualifiedRevenue',
@@ -66,10 +77,10 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       },
       meta: { format: 'currency' },
     },
-    {
-      header: 'Email',
-      accessorKey: 'email',
-    },
+    // {
+    //   header: 'Email',
+    //   accessorKey: 'email',
+    // },
   ]
 
   return (
