@@ -12,7 +12,13 @@ const SelectOpion = [
   { value: '5', label: 'Option 5 ' },
 ]
 
-export const AlertsDetailsTab = () => {
+type AlertsDetailsTypes = {
+  isOpen: boolean
+  onClose: () => void
+  selectedAlert: any
+}
+
+export const AlertsDetailsTab: React.FC<AlertsDetailsTypes> = ({ isOpen, onClose, selectedAlert }) => {
   const { t } = useTranslation()
   const [watchValue, setWatchValue] = useState()
   const {

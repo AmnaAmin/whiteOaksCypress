@@ -334,7 +334,7 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: FaReact,
       color: '#3182CE',
     },
-    ...(showForPreProd
+    ...(showForPreProdAndLocal
       ? [
           {
             pathTo: '/alerts',

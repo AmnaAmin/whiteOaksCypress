@@ -2,9 +2,18 @@ import React from 'react'
 import { Box, Td, Tr, Text, Flex } from '@chakra-ui/react'
 import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
-import { useTranslation } from 'react-i18next'
-import Data from './alerts-data.json'
 import { TableWrapper } from 'components/table/table'
+import { useTranslation } from 'react-i18next'
+import { useProjectAlerts } from 'api/projects'
+import { useParams } from 'react-router-dom'
+import { useAuth } from 'utils/auth-context'
+import { dateFormat } from 'utils/date-time-utils'
+
+enum PROJECT_CATEGORY {
+  WARNING = 1,
+  INFO = 2,
+  ERROR = 3,
+}
 
 const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   return (
@@ -37,13 +46,23 @@ const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
   )
 }
 
-export const ManagedAlertTable = React.forwardRef((props: any, ref) => {
+export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
+  const { data } = useAuth()
+  const account = data?.user
+  const { projectId } = useParams<'projectId'>()
+  // const { data: alerts } = useProjectAlerts(projectId, account?.login)
   const { t } = useTranslation()
 
   const { columns, resizeElementRef } = useColumnWidthResize([
     {
-      Header: t('name'),
-      accessor: 'title',
+      Header: <input type="checkbox"></input>,
+      Cell: () => <input type="checkbox"></input>,
+      accessor: 'checkbox',
+      width: 60,
+    },
+    {
+      Header: 'Name',
+      accessor: 'subject',
     },
 
     {
@@ -57,10 +76,12 @@ export const ManagedAlertTable = React.forwardRef((props: any, ref) => {
     {
       Header: t('category') as string,
       accessor: 'category',
+      Cell: ({ value }) => PROJECT_CATEGORY[value],
     },
     {
       Header: t('dateTriggered') as string,
       accessor: 'dateCreated',
+      Cell: ({ value }) => dateFormat(value),
     },
   ])
 
@@ -69,7 +90,7 @@ export const ManagedAlertTable = React.forwardRef((props: any, ref) => {
       <TableWrapper
         onRowClick={props.onRowClick}
         columns={columns}
-        data={Data}
+        data={[]}
         TableRow={alertsRow}
         tableHeight="calc(100vh - 250px)"
         name="alerts-table"

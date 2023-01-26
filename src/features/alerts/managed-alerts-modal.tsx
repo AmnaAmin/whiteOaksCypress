@@ -16,17 +16,18 @@ import { AlertsDetailsTab } from 'features/alerts/alerts-details-tab'
 import { AlertsNotifyTab } from 'features/alerts/alerts-notify-tab'
 import { useTranslation } from 'react-i18next'
 
-type NewAlertsTypes = {
+type ManagedAlertsTypes = {
   isOpen: boolean
   onClose: () => void
-  alert: any
+  selectedAlert: any
 }
 
-export const ManagedAlertsModal: React.FC<NewAlertsTypes> = ({ isOpen, onClose, alert }) => {
+export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClose, selectedAlert }) => {
   const { t } = useTranslation()
+  console.log('selectedAlert', selectedAlert)
   return (
     <>
-      {alert && (
+      {selectedAlert && (
         <Modal isOpen={isOpen} onClose={onClose} size="5xl">
           <ModalOverlay />
           <ModalContent>
@@ -44,10 +45,10 @@ export const ManagedAlertsModal: React.FC<NewAlertsTypes> = ({ isOpen, onClose, 
                 </TabList>
                 <TabPanels>
                   <TabPanel p={0}>
-                    <AlertsDetailsTab />
+                    <AlertsDetailsTab selectedAlert={selectedAlert} isOpen={false} onClose={onClose} />
                   </TabPanel>
                   <TabPanel p={0}>
-                    <AlertsNotifyTab onClose={onClose} />
+                    {/* <AlertsNotifyTab selectedAlert = {selectedAlert} onClose={onClose} /> */}
                   </TabPanel>
                 </TabPanels>
               </Tabs>
