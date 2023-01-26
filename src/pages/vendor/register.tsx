@@ -43,7 +43,6 @@ import Select from 'components/form/react-select'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup'
 import PasswordStrengthBar, { measureStrength } from 'components/vendor-register/password-strength-bar'
-import { BiShow, BiHide } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { phoneRegex } from 'utils/form-validation'
 
@@ -132,7 +131,7 @@ const vendorRegisterFormSchema = {
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
   zipCode: Yup.string().required('ZipCode is required'),
-  capacity: Yup.string().required('Capacity is required').matches(/^\d+$/, 'Must be a digit'),
+  capacity: Yup.number().required('Capacity is required').max(500, "Max Limit is 500"),
 
   //Documents
 
@@ -185,6 +184,7 @@ export const VendorRegister = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [unLockedTabs, setUnLoackedTabs] = useState<Array<FORM_TABS>>([])
   const [isNextBtnActive, setisNextBtnActive] = useState<boolean>(false)
+  const [isCreateButtonActive, setIsCreateButtonActive] = useState<boolean>(false);
 
   useEffect(() => {
     if (!isMobile) return
@@ -193,7 +193,7 @@ export const VendorRegister = () => {
   }, [isMobile])
 
   const formReturn = useForm({
-    //mode: "onChange",
+    mode: "onChange",
     resolver: yupResolver(Yup.object().shape(customResolver)),
     //validateCriteriaMode: 'firstErrorDetected'
   } as any)
@@ -514,8 +514,67 @@ export const VendorRegister = () => {
       : {}),
   }
 
+  const documentFieldValues = {
+    w9DocumentDate: watch("w9DocumentDate"),
+    w9Document: watch("w9Document"),
+
+    agreementSignedDate: watch("agreementSignedDate"),
+    agreement: watch("agreement"),
+
+    autoInsuranceExpDate: watch("autoInsuranceExpDate"),
+    insurance: watch("insurance"),
+
+    coiGlExpDate: watch("coiGlExpDate"),
+    coiGlExpFile: watch("coiGlExpFile"),
+
+    coiWcExpDate: watch("coiWcExpDate"),
+    coiWcExpFile: watch("coiWcExpFile"),
+  }
+
+  const documentSchema = {
+      w9DocumentDate: Yup.string(),
+      w9Document: Yup.mixed().required(),
+
+      agreementSignedDate: Yup.string().required(),
+      agreement: Yup.mixed().required(),
+
+      autoInsuranceExpDate: Yup.string().required(),
+      insurance: Yup.mixed().required(),
+
+      coiGlExpDate: Yup.string().required(),
+      coiGlExpFile: Yup.mixed().required(),
+
+      coiWcExpDate: Yup.string().required(),
+      coiWcExpFile: Yup.mixed().required(),
+  }
+
+  const licenseFieldValues = {
+    licenses: watch("licenses")
+  }
+
+  const licenseFieldSchema = {
+    licenses: Yup.array().of(
+      Yup.object().shape({
+        licenseType: Yup.string().typeError('License Type must be a string').required('License Type is required'),
+        licenseNumber: Yup.string().typeError('License Number must be a string').required('License Number is required'),
+        expiryDate: Yup.string().typeError('Expiration Date must be a string').required('Expiration Date is required'),
+        expirationFile: Yup.mixed().required('File is required'),
+      }),
+    )
+  }
+
+  const tradeFieldValues = {
+    trades: watch("trades")
+  }
+
+  const marketFieldValues = {
+    markets: watch("markets")
+  }
+
   useEffect(() => {
-    Yup.object(locationDetailsSchema)
+
+    if ( formTabIndex === FORM_TABS.LOCATION_DETAILS ) {
+      Yup.object(locationDetailsSchema)
       .validate(locationDetailFieldValues, { strict: true })
       .then(value => {
         setisNextBtnActive(true)
@@ -523,7 +582,40 @@ export const VendorRegister = () => {
       .catch(err => {
         setisNextBtnActive(false)
       })
-  }, [locationDetailFieldValues])
+    }
+
+    if ( formTabIndex === FORM_TABS.DOCUMENTS ) {
+      Yup.object( documentSchema )
+      .validate( documentFieldValues, { strict: true } )
+      .then ( value => {
+        setisNextBtnActive(true)
+      }  )
+      .catch( err => {
+        setisNextBtnActive(false);
+      } )
+    }
+
+    if ( formTabIndex === FORM_TABS.LICENSE ) {
+      Yup.object( licenseFieldSchema )
+      .validate( licenseFieldValues, { strict: true } )
+      .then( value => {
+        setisNextBtnActive(true)
+      } ).catch( err => setisNextBtnActive(false) );
+    }
+
+    if ( formTabIndex === FORM_TABS.CONSTRUCTION_TRADE ) {
+
+      validateTrade( tradeFieldValues.trades ) ? setisNextBtnActive( true ) : setisNextBtnActive( false )
+      
+    }
+
+    if ( formTabIndex === FORM_TABS.MARKETS ) {
+      
+      validateMarket( marketFieldValues.markets ) ? setIsCreateButtonActive( true ) : setIsCreateButtonActive( false )
+      
+    }
+    
+  }, [locationDetailFieldValues,documentFieldValues, licenseFieldValues, tradeFieldValues, marketFieldValues])
 
   const formLabeStyle = {
     fontSize: '14px',
@@ -1137,20 +1229,23 @@ export const VendorRegister = () => {
                                     marginTop: '20px !important',
                                   },
                                 }}
+                                h="69px"
                               >
                                 <FormLabel htmlFor="capacity" sx={formLabeStyle}>
                                   Capacity
                                 </FormLabel>
                                 <Input
                                   id="capacity"
-                                  type="text"
+                                  type="number"
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your capacity"
                                   {...register('capacity', {
                                     required: 'This is required',
+                                    max: 500,
                                   })}
                                   variant="required-field"
+                                  max="500"
                                 />
                                 <FormErrorMessage>{errors?.capacity && errors?.capacity?.message}</FormErrorMessage>
                               </FormControl>
@@ -1236,6 +1331,7 @@ export const VendorRegister = () => {
                           borderWidth="1px"
                           borderColor="#345587"
                           fontWeight="bold"
+                          colorScheme="brand"
                         >
                           Next
                         </Button>
@@ -1250,6 +1346,8 @@ export const VendorRegister = () => {
                           borderColor="#345587"
                           fontWeight="bold"
                           type="submit"
+                          disabled={!isCreateButtonActive}
+                          colorScheme="brand"
                         >
                           Create Account
                         </Button>

@@ -31,9 +31,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({ projectStatusSelectO
 
   const watchStatus = useWatch({ name: 'status', control })
 
-  const minOfWoaStartDate = useWOAStartDateMin(control)
+  const minOfWoaStartDate = useWOAStartDateMin(control as any)
 
-  const { isClientDueDateDisabled, isClientStartDateDisabled } = useFieldsDisabled(control)
+  const { isClientDueDateDisabled, isClientStartDateDisabled } = useFieldsDisabled(control as any)
 
   useEffect(() => {
     if (watchStatus?.label === STATUS.Active.toUpperCase()) {

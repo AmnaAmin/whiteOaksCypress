@@ -531,6 +531,7 @@ i18n.use(initReactI18next).init({
         clientName: 'Client Name',
         zipCode: 'Zip Code',
         projectTypeLabel: 'Type',
+        disqualifiedRevenueFlag: 'Disqualified Revenue',
 
         // PC Clients
         clientOverview: 'Client Overview',
