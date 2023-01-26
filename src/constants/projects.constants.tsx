@@ -48,6 +48,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   sowNewAmount: 'sowNewAmount.equals',
   drawAmountSow: 'drawAmountSow.equals',
   drawAmountWo: 'drawAmountWo.equals',
+  disqualifiedRevenueFlag:'disqualifiedRevenueFlag.equals'
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
@@ -255,9 +256,13 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.woNo',
     accessorKey: 'woNumber',
-  },
+  },  
   {
     header: 'projects.projectTable.poNo',
     accessorKey: 'poNumber',
+  },
+  {
+    header: 'projects.projectTable.disqualifiedRevenueFlag',
+    accessorKey: 'disqualifiedRevenueFlag',
   },
 ]
