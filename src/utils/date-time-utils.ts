@@ -32,7 +32,7 @@ export const dateFormatNew = (date: string | Date) => {
   }
 
   if ( typeof date === "string" ) {
-    console.log("Date: ", date);
+    //console.log("Date: ", date);
 
     if ( date.indexOf("Z") === -1 && date.indexOf("T") === -1 ) {
       date = date+"T00:00:00";
@@ -40,7 +40,7 @@ export const dateFormatNew = (date: string | Date) => {
       date = date.replace("Z","");
     }
     
-    console.log("After Date: ", date);
+    //console.log("After Date: ", date);
   }
 
   return date ? format(new Date(date), 'MM/dd/yyyy') : ''
