@@ -19,7 +19,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { currencyFormatter } from 'utils/string-formatters'
-import { dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
+import { dateFormatNew, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useCallback, useEffect, useState } from 'react'
@@ -299,9 +299,9 @@ export const InvoiceTab = ({
               value={
                 workOrder.dateInvoiceSubmitted &&
                 ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                  ? dateFormat(workOrder?.dateInvoiceSubmitted)
+                  ? (dateFormatNew(workOrder?.dateInvoiceSubmitted) as any)
                   : 'mm/dd/yy'
-              }
+              } 
               icons={BiCalendar}
             />
           </Box>
@@ -310,7 +310,7 @@ export const InvoiceTab = ({
               title={t('dueDate')}
               value={
                 workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                  ? dateFormat(workOrder?.paymentTermDate)
+                  ? (dateFormatNew(workOrder?.paymentTermDate) as any)
                   : 'mm/dd/yy'
               }
               icons={BiCalendar}

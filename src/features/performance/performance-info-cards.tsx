@@ -5,6 +5,8 @@ import { currencyFormatter } from 'utils/string-formatters'
 import RevenueIcon from 'icons/revenue-icon'
 import ProfitIcon from 'icons/profit-icon'
 import DisqualifiedRevenueIcon from 'icons/disqualified-revenue-icon'
+import { PERFORMANCE } from './performance.i18n'
+import { useTranslation } from 'react-i18next'
 
 const IconElement: React.FC<{ Icon: React.ElementType; isLoading: boolean }> = ({ Icon }) => {
   return (
@@ -20,6 +22,8 @@ export const PerformanceInfoCards: React.FC<{
   performance: any
   isPerformanceLoading: boolean
 }> = ({ isPerformanceLoading, performance }) => {
+  const { t } = useTranslation()
+
   const revenue = performance?.map(p => p?.revenue).reduce((partialSum, a) => partialSum + a, 0)
   const profit = performance?.map(p => p?.profit).reduce((partialSum, a) => partialSum + a, 0)
   const disqualifiedRevenue = performance?.map(p => p?.disqualifiedRevenue).reduce((partialSum, a) => partialSum + a, 0)
@@ -44,7 +48,7 @@ export const PerformanceInfoCards: React.FC<{
               <IconElement Icon={RevenueIcon} isLoading={isPerformanceLoading} />
               <Flex flexDir={'column'} ml={3}>
                 <FormLabel variant="light-label" size="md">
-                  <Box>{'Revenue'}</Box>
+                  <Box>{t(`${PERFORMANCE}.revenue`)}</Box>
                 </FormLabel>
                 <FormLabel variant="strong-label" size="md">
                   {currencyFormatter(revenue)}
@@ -55,7 +59,7 @@ export const PerformanceInfoCards: React.FC<{
               <IconElement Icon={DisqualifiedRevenueIcon} isLoading={isPerformanceLoading} />
               <Flex flexDir={'column'} ml={3}>
                 <FormLabel variant="light-label" size="md">
-                  <Box>{'Disqualified Revenue'}</Box>
+                  <Box>{t(`${PERFORMANCE}.disqualifiedRevenue`)}</Box>
                 </FormLabel>
                 <FormLabel variant="strong-label" size="md">
                   {currencyFormatter(disqualifiedRevenue)}
@@ -66,7 +70,7 @@ export const PerformanceInfoCards: React.FC<{
               <IconElement Icon={ProfitIcon} isLoading={isPerformanceLoading} />
               <Flex flexDir={'column'} ml={3}>
                 <FormLabel variant="light-label" size="md">
-                  <Box>{'Profit'}</Box>
+                  <Box>{t(`${PERFORMANCE}.profit`)}</Box>
                 </FormLabel>
                 <FormLabel variant="strong-label" size="md">
                   <Box>{currencyFormatter(profit)}</Box>

@@ -6,6 +6,8 @@ import { useFPMs } from 'api/pc-projects'
 import { SelectOption } from 'types/transaction.type'
 
 import { take } from 'lodash'
+import { PERFORMANCE } from './performance.i18n'
+import { useTranslation } from 'react-i18next'
 
 export const PerformanceFilters: React.FC<{
   yearFilter: number | undefined | string
@@ -17,6 +19,7 @@ export const PerformanceFilters: React.FC<{
   filterGraphData
 }> = ({ yearFilter, setYearFilter, setFpmOption, fpmOption, setMonthOption, monthOption, filterGraphData }) => {
   const { fieldProjectManagerOptions } = useFPMs()
+  const { t } = useTranslation()
 
   const onFpmOptionChange = options => {
     if (options?.length < 1) {
@@ -91,7 +94,7 @@ export const PerformanceFilters: React.FC<{
         <GridItem rowSpan={2} colSpan={2} colStart={1} colEnd={2}>
           <HStack>
             <FormLabel ml={8} variant="strong-label" size="md">
-              Filter By Month:
+              {t(`${PERFORMANCE}.filterByMonth`)}
             </FormLabel>
             <Box width={'50%'}>
               <ReactSelect
@@ -109,7 +112,7 @@ export const PerformanceFilters: React.FC<{
         <GridItem colStart={2} colEnd={6}>
           <HStack>
             <FormLabel width={'10%'} variant="strong-label" size="md">
-              Filter By:
+              {t(`${PERFORMANCE}.filterBy`)}
             </FormLabel>
             <Box width={'90%'} pr={8} minHeight={'40px'}>
               <ReactSelect

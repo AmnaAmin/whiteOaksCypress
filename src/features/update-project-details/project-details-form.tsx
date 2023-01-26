@@ -53,9 +53,8 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
 
+  const { mutate: updateProjectDetails, isLoading } = useProjectDetailsUpdateMutation()
   const projectOverrideStatusSelectOptions = useProjectOverrideStatusSelectOptions(projectData)
-
-  const { mutate: updateProjectDetails } = useProjectDetailsUpdateMutation()
 
   const formReturn = useForm<ProjectDetailsFormValues>()
 
@@ -129,9 +128,9 @@ const ProjectDetailsTab = (props: tabProps) => {
             <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '343px'}>
               <ProjectManagement
                 projectStatusSelectOptions={projectStatusSelectOptions}
-                projectOverrideStatusSelectOptions = {projectOverrideStatusSelectOptions}
+                projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
                 projectTypeSelectOptions={projectTypeSelectOptions}
-                projectData = {projectData}
+                projectData={projectData}
               />
             </TabPanel>
 
@@ -169,7 +168,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               type="submit"
               form="project-details"
               fontSize="16px"
-              disabled={isSubmitting}
+              disabled={isSubmitting || isLoading}
             >
               {t(`project.projectDetails.save`)}
             </Button>
