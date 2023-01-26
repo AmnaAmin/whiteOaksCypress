@@ -21,7 +21,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
 import { useTableInstance } from './table-context'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { datePickerFormat } from 'utils/date-time-utils'
 import { MdClose } from 'react-icons/md'
 import { useLayoutEffect } from 'react'
 import _ from 'lodash'
@@ -70,8 +70,8 @@ function Filter({
         value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
         onChange={value => {
           if (dateFilter) {
-            column.setFilterValue(dateFormat(value as string))
-            if (allowStickyFilters) setStickyFilter(dateFormat(value as string))
+            column.setFilterValue(datePickerFormat(value as string))
+            if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
           } else {
             column.setFilterValue(value)
             if (allowStickyFilters) setStickyFilter(value)
