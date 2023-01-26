@@ -1331,6 +1331,7 @@ export const VendorRegister = () => {
                           borderWidth="1px"
                           borderColor="#345587"
                           fontWeight="bold"
+                          colorScheme="brand"
                         >
                           Next
                         </Button>
@@ -1346,6 +1347,7 @@ export const VendorRegister = () => {
                           fontWeight="bold"
                           type="submit"
                           disabled={!isCreateButtonActive}
+                          colorScheme="brand"
                         >
                           Create Account
                         </Button>
