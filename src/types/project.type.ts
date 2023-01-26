@@ -60,6 +60,7 @@ export type Project = {
   projectRelatedCost: number | null
   projectStatus: string | null
   projectStatusId: number | null
+  previousStatus: number | null
   projectType: number | null
   projectTypeLabel: string | null
   propertyId: number | null

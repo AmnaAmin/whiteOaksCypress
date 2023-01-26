@@ -20,6 +20,7 @@ import {
   useGetUsersByType,
   useProjectDetailsUpdateMutation,
   useProjectStatusSelectOptions,
+  useProjectOverrideStatusSelectOptions,
 } from 'api/project-details'
 import { DevTool } from '@hookform/devtools'
 import { Link } from 'react-router-dom'
@@ -53,6 +54,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { marketSelectOptions } = useMarkets()
 
   const { mutate: updateProjectDetails, isLoading } = useProjectDetailsUpdateMutation()
+  const projectOverrideStatusSelectOptions = useProjectOverrideStatusSelectOptions(projectData)
 
   const formReturn = useForm<ProjectDetailsFormValues>()
 
@@ -128,7 +130,9 @@ const ProjectDetailsTab = (props: tabProps) => {
             <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '343px'}>
               <ProjectManagement
                 projectStatusSelectOptions={projectStatusSelectOptions}
+                projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
                 projectTypeSelectOptions={projectTypeSelectOptions}
+                projectData={projectData}
               />
             </TabPanel>
 
