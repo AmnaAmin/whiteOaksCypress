@@ -236,7 +236,7 @@ export const NewWorkOrderForm: React.FC<{
   const formReturn = useForm<NewWorkOrderType>({
     defaultValues: defaultFormValues(),
   })
-
+  const { isAdmin } = useUserRolesSelector()
   const {
     register,
     handleSubmit,
@@ -266,7 +266,6 @@ export const NewWorkOrderForm: React.FC<{
   ])
 
   const watchLineItems = useWatch({ name: 'assignedItems', control })
-  const { isAdmin } = useUserRolesSelector()
 
   // New WO -> Disable dates between client start date and client end date
   const clientStart = projectData?.clientStartDate
