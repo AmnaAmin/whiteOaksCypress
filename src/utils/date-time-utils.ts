@@ -25,7 +25,7 @@ export const dateFormat = (date: string | Date) => {
 
 export const dateFormatNew = (date: string | Date) => {
 
-  if (date === null) return ''
+  if (date === null || date === "") return ''
 
   if ( typeof date === "object" ) {
     date = date.toString().replace("Z","");
@@ -42,7 +42,7 @@ export const dateFormatNew = (date: string | Date) => {
     
     //console.log("After Date: ", date);
   }
-
+  //console.log("Date:", date);
   return date ? format(new Date(date), 'MM/dd/yyyy') : ''
 }
 
