@@ -19,6 +19,8 @@ export const adminDashboard = {
         profitAndRevenue: 'Profit And Revenue',
         // revenue per client
         revenuePerClient: 'Revenue Per Client',
+
+        filterByMonth: 'Filter By Month:',
       },
     },
   },
@@ -40,6 +42,8 @@ export const adminDashboard = {
         profitAndRevenue: 'Beneficio e ingresos',
         // revenue per client
         revenuePerClient: 'Ingresos por cliente',
+
+        filterByMonth: 'Filtrar por mes:',
       },
     },
   },

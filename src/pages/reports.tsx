@@ -20,10 +20,9 @@ const Reports = () => {
         color="gray.600"
       >
         <Text flex={1}>
-          {' '}
           <Button colorScheme="brand" fontSize="14px" onClick={() => navigate(-1)}>
             {t('rptBackBtnLabel')}
-          </Button>{' '}
+          </Button>
         </Text>
       </Flex>
       <Box alignItems="left">
