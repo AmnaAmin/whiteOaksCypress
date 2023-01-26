@@ -34,7 +34,7 @@ export const datePickerFormat = (date: any) => {
     date = date.replace("Z","");
   }
 
-  console.log( "Date : ", date );
+  //console.log( "Date : ", date );
   // new Date() makes a day lesser based on time zone. Hence avoiding that by using moment.
   // return date ? format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd') : null
   return date ? moment(date).format('YYYY-MM-DD') : null
