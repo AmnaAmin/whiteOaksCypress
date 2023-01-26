@@ -70,8 +70,8 @@ function Filter({
         value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
         onChange={value => {
           if (dateFilter) {
-            column.setFilterValue(dateFormat(value as string))
-            if (allowStickyFilters) setStickyFilter(dateFormat(value as string))
+            column.setFilterValue(datePickerFormat(value as string))
+            if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
           } else {
             column.setFilterValue(value)
             if (allowStickyFilters) setStickyFilter(value)
