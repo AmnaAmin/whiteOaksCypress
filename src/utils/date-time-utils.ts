@@ -23,6 +23,29 @@ export const dateFormat = (date: string | Date) => {
   return date ? format(new Date(date), 'MM/dd/yyyy') : ''
 }
 
+export const dateFormatNew = (date: string | Date) => {
+
+  if (date === null) return ''
+
+  if ( typeof date === "object" ) {
+    date = date.toString().replace("Z","");
+  }
+
+  if ( typeof date === "string" ) {
+    console.log("Date: ", date);
+
+    if ( date.indexOf("Z") === -1 && date.indexOf("T") === -1 ) {
+      date = date+"T00:00:00";
+    } else {
+      date = date.replace("Z","");
+    }
+    
+    console.log("After Date: ", date);
+  }
+
+  return date ? format(new Date(date), 'MM/dd/yyyy') : ''
+}
+
 export const datePickerFormat = (date: any) => {
   if (date === null || date === undefined) return null
 
