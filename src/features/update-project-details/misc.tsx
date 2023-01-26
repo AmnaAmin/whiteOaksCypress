@@ -27,6 +27,8 @@ const Misc: React.FC = () => {
     payDateVariance,
     payVariance,
     status,
+    reconcileDate,
+    verifiedDate,
   } = getValues()
 
   const { t } = useTranslation()
@@ -152,7 +154,22 @@ const Misc: React.FC = () => {
             <Input value={payVariance as number} isDisabled id="payVariance" />
           </FormControl>
         </GridItem>
-        <GridItem></GridItem>
+        <GridItem>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md" htmlFor="reconcileDate">
+              {t(`project.projectDetails.reconcileDate`)}
+            </FormLabel>
+            <DatePickerInput value={reconcileDate ? dateFormat(reconcileDate) : 'mm/dd/yyyy'} disable />
+          </FormControl>
+        </GridItem>
+        <GridItem>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md" htmlFor="verifiedDate">
+              {t(`project.projectDetails.verifiedDate`)}
+            </FormLabel>
+            <DatePickerInput value={verifiedDate ? dateFormat(verifiedDate) : 'mm/dd/yyyy'} disable />
+          </FormControl>          
+        </GridItem>
       </Grid>
     </Stack>
   )

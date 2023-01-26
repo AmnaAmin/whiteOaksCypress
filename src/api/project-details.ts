@@ -239,8 +239,9 @@ export const useProjectStatusSelectOptions = (project: Project) => {
 
       // if Project status is Reconcile 
       // Project Close status should be disabled
+      //projectStatusId === ProjectStatus.Reconcile || projectStatusId === ProjectStatus.Punch
       if (
-        (projectStatusId === ProjectStatus.Reconcile || projectStatusId === ProjectStatus.Punch) &&
+        (!project.isReconciled) &&
         optionValue === ProjectStatus.Closed
       ) {
         return {
@@ -501,7 +502,6 @@ export const parseFormValuesFromAPIData = ({
 
   const projectStatusSelectOptions = getProjectStatusSelectOptions()
   const remainingPayment = project.accountRecievable || 0
-
   return {
     // Project Management form values
     status: findOptionByValue(projectStatusSelectOptions, project.projectStatusId),
@@ -517,7 +517,12 @@ export const parseFormValuesFromAPIData = ({
     clientSignOffDate: project.clientSignoffDate as string,
     overrideProjectStatus: '',
     isReconciled: project.isReconciled as boolean,
-
+    reconcileDate: project.reconcileDate as string,
+    verifiedDate: project.verifiedDate as string,
+    reconciledBy: project.reconciledBy as string,
+    verifiedBy: project.verifiedBy as string,
+    verifiedbyDesc: project.verifiedbyDesc as string,
+    reconciledbyDesc: project.reconciledbyDesc as string,
     // Project Invoice and Payment form values
     originalSOWAmount: project.sowOriginalContractAmount,
     sowLink: project.sowLink,
@@ -606,7 +611,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
     clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
-    isReconciled: (formValues.isReconciled as any).value,
+    isReconciled: formValues.isReconciled,
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,
     sowNewAmount: formValues?.finalSOWAmount,

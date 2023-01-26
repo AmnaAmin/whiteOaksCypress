@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import { Text, Box, Checkbox, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { STATUS } from 'features/common/status'
 import React, { useEffect } from 'react'
@@ -25,7 +25,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 }) => {
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
-  const { isAdmin, isDoc, isProjectCoordinator, isAccounting, isOperations } = useUserRolesSelector()
+  const { isAdmin } = useUserRolesSelector()
   // const [overrideProjectStatusOptions, setOverrideProjectStatusOptions] = useState<any>([])
   // const [lastProjectStatus, setlastProjectStatus] = useState<any>('')
 
@@ -35,7 +35,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     register,
     clearErrors,
     setValue,
-    getValues,
   } = useFormContext<ProjectDetailsFormValues>()
 
   const watchStatus = useWatch({ name: 'status', control })
@@ -44,9 +43,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
-  const formValues = getValues();
-  console.log(formValues);
-  
+  const watchIsReconciled = useWatch({ name: 'isReconciled', control })
+  const watchForm = useWatch({control })
 
   const {
     isWOAStartDisabled,
@@ -55,7 +53,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     isClientDueDateDisabled,
     isClientSignOffDisabled,
     isClientStartDateDisabled,
-    isReconciledDisabled,
+    isReconcileAllowed,
   } = useFieldsDisabled(control)
 
   const {
@@ -279,27 +277,43 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormErrorMessage>{errors?.clientSignOffDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-          <GridItem>
-            <FormControl w="215px">
+        </Grid>
+        <Grid>
+          {(watchStatus?.label === STATUS.Reconcile.toUpperCase() && isReconcileAllowed) && (<GridItem>
+            <FormControl maxW="500px">
               <FormLabel variant="strong-label" size="md">
                 {t(`verifyProject`)}
               </FormLabel>
-              
               <Checkbox
-                defaultChecked
-                variant={'outLineGreen'}
+                colorScheme="PrimaryCheckBox"
+                isChecked={watchIsReconciled === null ? false : watchIsReconciled}
+                variant={'normal'}
                 data-testid="notifyVendorCheckBox"
+                disabled={Number.isInteger(watchForm.verifiedBy)}
                 size="md"
-                disabled={isReconciledDisabled}
                 {...register('isReconciled')}
               >
-               
-                  {formValues.isReconciled ? t(`verifyProjectDesc`) : ""}
-              
+              <Text color='#000'>{watchForm.verifiedDate ? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${watchForm.verifiedDate}`: ""}</Text>
               </Checkbox>
-
             </FormControl>
-          </GridItem>
+          </GridItem>)} 
+          {((watchStatus?.label === STATUS.Reconcile.toUpperCase() && watchForm.isReconciled) && !isReconcileAllowed) && (<GridItem>
+            <FormControl maxW="500px">
+              <FormLabel variant="strong-label" size="md">
+                {t(`verifyProject`)}
+              </FormLabel>
+              <Checkbox
+                colorScheme="PrimaryCheckBox"
+                variant={'normal'}
+                data-testid="notifyVendorCheckBox"
+                size="md"
+                disabled={true}
+                {...register('isReconciled')}
+              >
+              <Text color='#000'>{watchForm.verifiedDate? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${watchForm.verifiedDate}`: ""}</Text>
+              </Checkbox>
+            </FormControl>
+          </GridItem>)} 
         </Grid>
       </Stack>
     </Box>

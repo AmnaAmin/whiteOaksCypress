@@ -29,6 +29,10 @@ type ProjectManagementValues = {
   overrideProjectStatus: SelectOption | null
   previousStatus: number | null
   isReconciled?:  boolean |  null
+  reconciledBy: string | null
+  verifiedBy: string | null
+  verifiedbyDesc: string | null
+  reconciledbyDesc: string | null
 }
 
 type ProjectInvoicingAndPaymentFormValues = {
@@ -86,6 +90,8 @@ type ProjectDetailsMiscFormValues = {
   dueDateVariance: number | null
   payDateVariance: number | null
   payVariance: number | null
+  reconcileDate: string | null
+  verifiedDate: string | null
 }
 
 // Project Details form values types
