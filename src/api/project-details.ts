@@ -236,6 +236,20 @@ export const useProjectStatusSelectOptions = (project: Project) => {
           disabled: true,
         }
       }
+
+      // if Project status is Reconcile 
+      // Project Close status should be disabled
+      if (
+        (projectStatusId === ProjectStatus.Reconcile || projectStatusId === ProjectStatus.Punch) &&
+        optionValue === ProjectStatus.Closed
+      ) {
+        return {
+          ...selectOption,
+          label: `${selectOption.label} (Verification required)`,
+          disabled: true,
+        }
+      }
+
       // If project status is Client Paid and there are some workorders not paid then
       // project status Paid should be disabled
       if (
@@ -318,6 +332,10 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       // Project Status -> Punch
       else if (projectStatusId === Number(PROJECT_STATUS.punch.value)) {
         overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
+      }
+       // Project Status -> Reconcile
+       else if (projectStatusId === Number(PROJECT_STATUS.reconcile.value)) {
+        overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch]
       }
       // Project Status -> Closed
       else if (projectStatusId === Number(PROJECT_STATUS.closed.value)) {
@@ -438,6 +456,7 @@ export const getPaymentTermsSelectOptions = () => {
   }))
 }
 
+
 export const parseFormValuesFromAPIData = ({
   project,
   projectExtraAttributes,
@@ -497,6 +516,7 @@ export const parseFormValuesFromAPIData = ({
     clientWalkthroughDate: project.clientWalkthroughDate as string,
     clientSignOffDate: project.clientSignoffDate as string,
     overrideProjectStatus: '',
+    isReconciled: project.isReconciled as boolean,
 
     // Project Invoice and Payment form values
     originalSOWAmount: project.sowOriginalContractAmount,
@@ -586,7 +606,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
     clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
-
+    isReconciled: (formValues.isReconciled as any).value,
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,
     sowNewAmount: formValues?.finalSOWAmount,

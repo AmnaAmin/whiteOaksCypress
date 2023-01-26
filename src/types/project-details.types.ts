@@ -11,6 +11,7 @@ export enum ProjectStatus {
   ClientPaid = 72,
   Overpayment = 109,
   Disputed = 220,
+  Reconcile = 120,
 }
 
 type ProjectManagementValues = {
@@ -27,6 +28,7 @@ type ProjectManagementValues = {
   clientSignOffDate: string | null
   overrideProjectStatus: SelectOption | null
   previousStatus: number | null
+  isReconciled?:  boolean |  null
 }
 
 type ProjectInvoicingAndPaymentFormValues = {
@@ -114,6 +116,7 @@ export type ProjectDetailsAPIPayload = {
   clientDueDate: string | null
   clientWalkthroughDate: string | null
   overrideProjectStatus: SelectOption | null
+  isReconciled?: boolean | null
 
   // invoicing and payment payload
   sowOriginalContractAmount: number | null
@@ -218,3 +221,7 @@ export type OverPaymentType = {
   count: number
   sum: number
 }
+export const verifyProject = [
+  { value: true, label: 'Yes' },
+  { value: false, label: 'No' },
+]

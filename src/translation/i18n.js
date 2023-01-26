@@ -372,7 +372,8 @@ i18n.use(initReactI18next).init({
         skills: 'Construction Trade',
         portalRegistration: 'Portal Registration',
         enableVendorPortal: 'Enable Vendor Portal',
-
+        verifyProjectDesc: 'Project verified by ',
+        verifyProject: 'Project Verified',
         // Vendor-profile-documents
         agreementSignedDate: 'Document Signed',
         uploadAgreement: 'Upload Agreement',
@@ -926,6 +927,11 @@ i18n.use(initReactI18next).init({
         businessName: 'Nombre del Negocio',
         score: 'Puntaje',
         portalAccess: 'Acceso al Portal',
+        enableVendorPortal: 'Enable Vendor Portal',
+        verifyProjectDesc: 'Proyecto verificado por',
+        verifyProject: 'Proyecto Verificado',
+
+        
         capacity: 'Capacidad',
         last4digits: 'Últimos 4 dígitos del SSN/EIN',
         paymentMethods: 'Métodos de Pago',

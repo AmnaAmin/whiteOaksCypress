@@ -29,6 +29,7 @@ export enum STATUS {
   Inactive = 'inactive',
   DoNotUse = 'do not use',
   Decline = 'decline',
+  Reconcile = 'reconcile',
 }
 
 const STATUS_COLOR = {
@@ -91,4 +92,5 @@ export const PROJECT_STATUS = {
   clientPaid: { value: '72', label: 'CLIENT PAID' },
   overpayment: { value: '109', label: 'Overpayment' },
   disputed: { value: '220', label: 'DISPUTED' },
+  reconcile: { value: '120', label: 'RECONCILE' },
 }

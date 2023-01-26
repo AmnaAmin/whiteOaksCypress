@@ -1,10 +1,10 @@
-import { Box, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import { Box, Checkbox, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { STATUS } from 'features/common/status'
 import React, { useEffect } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { ProjectDetailsFormValues } from 'types/project-details.types'
+import { ProjectDetailsFormValues} from 'types/project-details.types'
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat } from 'utils/date-time-utils'
@@ -25,7 +25,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 }) => {
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isDoc, isProjectCoordinator, isAccounting, isOperations } = useUserRolesSelector()
   // const [overrideProjectStatusOptions, setOverrideProjectStatusOptions] = useState<any>([])
   // const [lastProjectStatus, setlastProjectStatus] = useState<any>('')
 
@@ -35,6 +35,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     register,
     clearErrors,
     setValue,
+    getValues,
   } = useFormContext<ProjectDetailsFormValues>()
 
   const watchStatus = useWatch({ name: 'status', control })
@@ -43,6 +44,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
+  const formValues = getValues();
+  console.log(formValues);
+  
+
   const {
     isWOAStartDisabled,
     isWOACompletionDisabled,
@@ -50,6 +55,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     isClientDueDateDisabled,
     isClientSignOffDisabled,
     isClientStartDateDisabled,
+    isReconciledDisabled,
   } = useFieldsDisabled(control)
 
   const {
@@ -271,6 +277,27 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 })}
               />
               <FormErrorMessage>{errors?.clientSignOffDate?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl w="215px">
+              <FormLabel variant="strong-label" size="md">
+                {t(`verifyProject`)}
+              </FormLabel>
+              
+              <Checkbox
+                defaultChecked
+                variant={'outLineGreen'}
+                data-testid="notifyVendorCheckBox"
+                size="md"
+                disabled={isReconciledDisabled}
+                {...register('isReconciled')}
+              >
+               
+                  {formValues.isReconciled ? t(`verifyProjectDesc`) : ""}
+              
+              </Checkbox>
+
             </FormControl>
           </GridItem>
         </Grid>
