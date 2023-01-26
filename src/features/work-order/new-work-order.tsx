@@ -53,6 +53,7 @@ import NumberFormat from 'react-number-format'
 import { WORK_ORDER } from './workOrder.i18n'
 import { MdOutlineCancel } from 'react-icons/md'
 import { isValidAndNonEmpty } from 'utils'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const CalenderCard = props => {
   return (
@@ -235,7 +236,7 @@ export const NewWorkOrderForm: React.FC<{
   const formReturn = useForm<NewWorkOrderType>({
     defaultValues: defaultFormValues(),
   })
-
+  const { isAdmin } = useUserRolesSelector()
   const {
     register,
     handleSubmit,
@@ -604,7 +605,7 @@ export const NewWorkOrderForm: React.FC<{
                         variant="required-field"
                         focusBorderColor="none"
                         min={clientStart as any}
-                        max={clientEnd as any}
+                        max={isAdmin ? '' : (clientEnd as any)}
                         {...register('workOrderStartDate', {
                           required: 'This field is required.',
                           validate: (date: any) => {
