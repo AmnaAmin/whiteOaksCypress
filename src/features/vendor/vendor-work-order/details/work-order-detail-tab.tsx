@@ -16,7 +16,7 @@ import {
 import { BiCalendar, BiFile } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormatNew } from 'utils/date-time-utils'
 import jsPDF from 'jspdf'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import AssignedItems from 'features/work-order/details/assigned-items'
@@ -173,14 +173,14 @@ const WorkOrderDetailTab = ({
               <SummaryCard
                 title={t('WOIssued')}
                 icon={BiCalendar}
-                value={workOrder.workOrderIssueDate ? dateFormat(workOrder.workOrderIssueDate) : 'mm/dd/yy'}
+                value={workOrder.workOrderIssueDate ? dateFormatNew(workOrder.workOrderIssueDate) : 'mm/dd/yy'}
               />
             </Box>
             <Box flex={{ base: '1', sm: 'unset' }}>
               <SummaryCard
                 title={t('expectedStart')}
                 icon={BiCalendar}
-                value={workOrder.workOrderStartDate ? dateFormat(workOrder.workOrderStartDate) : 'mm/dd/yy'}
+                value={workOrder.workOrderStartDate ? dateFormatNew(workOrder.workOrderStartDate) : 'mm/dd/yy'}
               />
             </Box>
             <Box flex={{ base: '1', sm: 'unset' }}>
@@ -189,7 +189,7 @@ const WorkOrderDetailTab = ({
                 title={t('expectedCompletion')}
                 value={
                   workOrder.workOrderExpectedCompletionDate
-                    ? dateFormat(workOrder.workOrderExpectedCompletionDate)
+                    ? dateFormatNew(workOrder.workOrderExpectedCompletionDate)
                     : 'mm/dd/yy'
                 }
               />
@@ -199,7 +199,7 @@ const WorkOrderDetailTab = ({
               <SummaryCard
                 icon={BiCalendar}
                 title={t('completedByVendor')}
-                value={workOrder.workOrderDateCompleted ? dateFormat(workOrder.workOrderDateCompleted) : 'mm/dd/yy'}
+                value={workOrder.workOrderDateCompleted ? dateFormatNew(workOrder.workOrderDateCompleted) : 'mm/dd/yy'}
               />
             </Box>
             <Box flex={{ base: '1', sm: 'unset' }}>
