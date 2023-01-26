@@ -75,7 +75,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     ) {
       setValue('previousStatus', projectData?.projectStatusId)
     }
-  }, [watchStatus?.label, watchOverrideProjectStatus?.label])
+  }, [watchStatus?.label, watchOverrideProjectStatus?.label, projectData?.projectStatusId])
 
   return (
     <Box>
@@ -162,6 +162,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                         clearErrors()
                         field.onChange(option)
                       }}
+                      isClearable={true}
                     />
                   </>
                 )}
