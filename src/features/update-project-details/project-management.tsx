@@ -278,8 +278,11 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormErrorMessage>{errors?.clientSignOffDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+          <GridItem></GridItem>
         </Grid>
+        
         <Grid>
+        
           {(watchStatus?.label === STATUS.Reconcile.toUpperCase() && isReconcileAllowed) && (<GridItem>
             <FormControl maxW="500px">
               <FormLabel variant="strong-label" size="md">
