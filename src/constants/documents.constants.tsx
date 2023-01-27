@@ -3,7 +3,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { BiDownArrowCircle } from 'react-icons/bi'
 import { Text, Flex, Box, Icon, Spacer } from '@chakra-ui/react'
 import { downloadFileOnly } from 'utils/file-utils'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 
 export const DOCUMENT_TYPES = {
   ORIGINAL_SOW: 39,
@@ -74,8 +74,9 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'createdDate',
     id: 'createdDate',
     accessorFn(cellInfo) {
-      return dateFormat(cellInfo.createdDate)
+      return datePickerFormat(cellInfo.createdDate)
     },
+
     meta: { format: 'date' },
     cell(cellInfo) {
       return (
