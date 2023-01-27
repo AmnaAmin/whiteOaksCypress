@@ -97,7 +97,7 @@ export type Project = {
   overPayment: number | null
   newPartialPayment: number | null
   overrideProjectStatus: string | null
-  isReconciled: boolean | null
+  isReconciled: boolean | false
   reconcileDate: string | null
   verifiedDate: string | null
   reconciledBy: string | null

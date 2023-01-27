@@ -28,7 +28,7 @@ type ProjectManagementValues = {
   clientSignOffDate: string | null
   overrideProjectStatus: SelectOption | null
   previousStatus: number | null
-  isReconciled?:  boolean |  null
+  isReconciled?:  boolean |  false
   reconciledBy: string | null
   verifiedBy: string | null
   verifiedbyDesc: string | null
@@ -122,7 +122,7 @@ export type ProjectDetailsAPIPayload = {
   clientDueDate: string | null
   clientWalkthroughDate: string | null
   overrideProjectStatus: SelectOption | null
-  isReconciled?: boolean | null
+  isReconciled?: boolean | false
 
   // invoicing and payment payload
   sowOriginalContractAmount: number | null
