@@ -7,7 +7,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   const status = useWatch({ name: 'status', control })
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
   const remainingPayment = useWatch({ name: 'remainingPayment', control })
-  const { isFPM, isProjectCoordinator, isDoc, isAccounting, isAdmin } = useUserRolesSelector()
+  const { isFPM, isProjectCoordinator, isDoc, isAccounting, isAdmin, isOperations, isVendor, isClientManager, isConstructionOperations,isVendorManager } = useUserRolesSelector()
 
   const projectStatus = status?.value
 
@@ -23,6 +23,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   // const isStatusPastDue = projectStatus === STATUS.PastDue
   const isStatusCancelled = projectStatus === STATUS.Cancelled
 
+  const isStatusReconciled = projectStatus === STATUS.Reconcile
   // Enabled field status on location tab
   const newActivePunchEnabledFieldStatus =
     isStatusNew || isStatusActive || isStatusPunch || isStatusClientPaid || isStatusPaid
@@ -35,13 +36,13 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isStatusClientPaid,
     isStatusClosed,
     isStatusCancelled,
-
+    isStatusReconciled,
     // Project Management form fields states
     isWOAStartDateRequired: isStatusActive,
     isWOACompletionDateRequired: isStatusClosed,
     isClientWalkthroughDateRequired: isStatusClosed,
     isClientSignOffDateRequired: isStatusClosed,
-
+    
     isWOAStartDisabled:
       isFPM ||
       isStatusClosed ||
@@ -85,7 +86,19 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
       isStatusPaid ||
       isStatusOverPayment ||
       isStatusInvoiced,
-
+    isReconciledDisabled:
+      isFPM || 
+      isVendor || 
+      isClientManager ||
+      isConstructionOperations || 
+      isVendorManager,
+    isReconcileAllowed:
+      isAdmin || 
+      isDoc || 
+      isAccounting ||
+      isOperations || 
+      isProjectCoordinator,
+  
     // Invoicing and payment form fields states
     isOriginalSOWAmountDisabled: isAllTimeDisabled,
     isFinalSOWAmountDisabled: isAllTimeDisabled,

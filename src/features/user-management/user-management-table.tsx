@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import { USER_MANAGEMENT } from './user-management.i8n'
 import { useUserManagement } from 'api/user-management'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { StatusUserMgt } from './status-user-mgt'
 import { EditUserModal } from './edit-user-modal'
 import { ColumnDef } from '@tanstack/react-table'
@@ -49,7 +49,13 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
     {
       header: `${USER_MANAGEMENT}.table.createdDate`,
       accessorKey: 'createdDate',
-      accessorFn: value => dateFormat(value.createdDate),
+      accessorFn: (cellInfo: any) => {
+        return datePickerFormat(cellInfo.createdDate)
+      },
+      cell: (row: any) => {
+        const value = row?.row.original?.createdDate
+        return dateFormat(value)
+      },
       meta: { format: 'date' },
     },
 
@@ -60,7 +66,11 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
     {
       header: `${USER_MANAGEMENT}.table.modifiedDate`,
       accessorKey: 'lastModifiedDate',
-      accessorFn: value => dateFormat(value.lastModifiedDate),
+      accessorFn: (cellInfo: any) => datePickerFormat(cellInfo.lastModifiedDate),
+      cell: (row: any) => {
+        const value = row?.row.original?.lastModifiedDate
+        return dateFormat(value)
+      },
       meta: { format: 'date' },
     },
   ]

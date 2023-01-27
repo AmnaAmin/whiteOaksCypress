@@ -21,6 +21,7 @@ import { support } from 'features/support/support.i18n'
 import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 import { globalErrors } from './errors.i18n'
+import { performance } from 'features/performance/performance.i18n'
 import { estimates } from 'features/estimates/estimates.i18n'
 import { estimates as vendorEstimates } from 'features/vendor/estimates/estimates.i18n'
 import { estimate } from 'features/update-estimate-details/estimate-details.i18n'
@@ -52,6 +53,7 @@ i18n.use(initReactI18next).init({
         ...vendorProfile.en.translation,
         ...projectAwards.en.translation,
         ...globalErrors.en.translation,
+        ...performance.en.translation,
         ...estimates.en.translation,
         ...vendorEstimates.en.translation,
         ...estimate.en.translation,
@@ -373,7 +375,8 @@ i18n.use(initReactI18next).init({
         skills: 'Construction Trade',
         portalRegistration: 'Portal Registration',
         enableVendorPortal: 'Enable Vendor Portal',
-
+        verifyProjectDesc: 'Project verified by ',
+        verifyProject: 'Project Verified',
         // Vendor-profile-documents
         agreementSignedDate: 'Document Signed',
         uploadAgreement: 'Upload Agreement',
@@ -575,6 +578,7 @@ i18n.use(initReactI18next).init({
         ...vendorProfile.es.translation,
         ...projectAwards.es.translation,
         ...globalErrors.es.translation,
+        ...performance.es.translation,
         ...estimates.es.translation,
         ...vendorEstimates.es.translation,
         ...estimate.es.translation,
@@ -929,6 +933,11 @@ i18n.use(initReactI18next).init({
         businessName: 'Nombre del Negocio',
         score: 'Puntaje',
         portalAccess: 'Acceso al Portal',
+        enableVendorPortal: 'Enable Vendor Portal',
+        verifyProjectDesc: 'Proyecto verificado por',
+        verifyProject: 'Proyecto Verificado',
+
+        
         capacity: 'Capacidad',
         last4digits: 'Últimos 4 dígitos del SSN/EIN',
         paymentMethods: 'Métodos de Pago',
@@ -1052,8 +1061,8 @@ i18n.use(initReactI18next).init({
         managedAlerts: 'Alertas administradas',
 
         //Reports
-        rptPageTitle: 'Reports',
-        rptBackBtnLabel: 'Back',
+        rptPageTitle: 'Informes',
+        rptBackBtnLabel: 'atrás',
 
         //Notifications
         viewAllNotification: 'Ver todas las notificaciones',

@@ -7,7 +7,7 @@ type InputProps = {
   label?: string
   name: string
   className?: string
-  placeholder: string
+  placeholder?: string
   required?: boolean
   size?: 'lg' | 'sm'
   register: UseFormRegister<any>
@@ -66,7 +66,7 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
         variant={props.variant}
       />
     </InputGroup>
-    <Box minH="20px" mt="3px">
+    <Box minH="20px" mt="5px">
       <FormErrorMessage whiteSpace="nowrap">{props.errorMessage}</FormErrorMessage>
     </Box>
   </FormControl>

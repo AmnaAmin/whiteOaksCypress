@@ -74,6 +74,8 @@ export const project = {
           payDateVariance: 'Pay Date Variance',
           payVariance: 'Pay Variance',
           woaPaid: 'WOA Paid',
+          reconcileDate: 'Reconciled',
+          verifiedDate: 'Verified',
 
           save: 'Save',
           cancel: 'Cancel',
@@ -154,6 +156,8 @@ export const project = {
           payDateVariance: 'Variación de la fecha de pago',
           payVariance: 'Variación de pago',
           woaPaid: 'WOA pagado',
+          reconcileDate: 'Reconciliada',
+          verifiedDate: 'Verificada',
 
           save: 'Ahorrar',
           cancel: 'Cancelar',

@@ -6,6 +6,7 @@ import PerformanceModal from './performance-modal'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { ColumnDef } from '@tanstack/react-table'
+import { PERFORMANCE } from './performance.i18n'
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
   const { performance, isPerformanceTableLoading } = props
@@ -15,15 +16,15 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
 
   const PERFORMANCE_COLUMNS: ColumnDef<any>[] = [
     {
-      header: 'Name' as string,
+      header: `${PERFORMANCE}.name` as string,
       accessorKey: 'name',
     },
     {
-      header: 'Month' as string,
+      header: `${PERFORMANCE}.month` as string,
       accessorKey: 'monthName',
     },
     {
-      header: 'Revenue',
+      header: `${PERFORMANCE}.revenue`,
       accessorKey: 'revenue',
       accessorFn(row) {
         return numeral(row.revenue).format('$0,0.00')
@@ -31,7 +32,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       meta: { format: 'currency' },
     },
     {
-      header: 'Profit',
+      header: `${PERFORMANCE}.profit`,
       accessorKey: 'profit',
       accessorFn(row) {
         return numeral(row.profit).format('$0,0.00')
@@ -39,7 +40,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       meta: { format: 'currency' },
     },
     {
-      header: 'Bonus',
+      header: `${PERFORMANCE}.bonus`,
       accessorKey: 'currentBonus',
       accessorFn(row) {
         return numeral(row.currentBonus).format('$0,0.00')
@@ -47,14 +48,14 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       meta: { format: 'currency' },
     },
     {
-      header: 'Margin %',
+      header: `${PERFORMANCE}.margin`,
       accessorKey: 'marginPercentage',
       accessorFn(row) {
         return numeral(row.marginPercentage / 100).format('0.00%')
       },
     },
     {
-      header: 'Target',
+      header: `${PERFORMANCE}.target`,
       accessorKey: 'target',
       accessorFn(row) {
         return numeral(row.target).format('$0,0.00')
@@ -70,7 +71,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
     //   },
     // },
     {
-      header: 'Disqualified Revenue',
+      header: `${PERFORMANCE}.disqualifiedRevenue`,
       accessorKey: 'disqualifiedRevenue',
       accessorFn(cellInfo) {
         return numeral(cellInfo.disqualifiedRevenue).format('$0,0.00')

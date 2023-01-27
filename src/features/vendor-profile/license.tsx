@@ -250,7 +250,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                     isInvalid={!!errors.licenses?.[index]?.expirationFile?.message}
                   >
                     <FormLabel size="md" color="#2D3748">
-                      File Upload
+                      {t('fileUpload')}
                     </FormLabel>
                     <Controller
                       name={`licenses.${index}.expirationFile`}
