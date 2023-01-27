@@ -64,7 +64,6 @@ const ProjectDetailsTab = (props: tabProps) => {
   } = formReturn
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors } =
     useSubFormErrors(errors)
-
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
       project: projectData,
@@ -77,7 +76,6 @@ const ProjectDetailsTab = (props: tabProps) => {
       stateSelectOptions,
       marketSelectOptions,
     })
-
     formReturn.reset(formValues)
   }, [
     projectData,

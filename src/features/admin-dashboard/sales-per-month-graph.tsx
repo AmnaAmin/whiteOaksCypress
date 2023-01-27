@@ -17,8 +17,12 @@ import ReactSelect from 'components/form/react-select'
 import { enUS } from 'date-fns/locale'
 import { Card } from 'components/card/card'
 import { filterByMonthOptions } from './admin-dashboard.utils'
+import { ADMIN_DASHBOARD } from './admin-dashboard.i18n'
+import { useTranslation } from 'react-i18next'
 
 export const SalesPerMonth = ({ data, bar, line }) => {
+  const { t } = useTranslation()
+
   const [barProps, setBarProps] = useState(
     bar.reduce(
       (a, { key }) => {
@@ -101,7 +105,7 @@ export const SalesPerMonth = ({ data, bar, line }) => {
     <>
       <Box>
         <HStack mb={5}>
-          <FormLabel>Filter By Month:</FormLabel>
+          <FormLabel>{t(`${ADMIN_DASHBOARD}.filterByMonth`)}</FormLabel>
           <Box width="25%">
             <ReactSelect
               defaultValue={{ label: 'All', value: 'All' }}
