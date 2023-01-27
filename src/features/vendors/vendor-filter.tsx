@@ -2,13 +2,14 @@ import { Grid, Icon } from '@chakra-ui/react'
 
 import React from 'react'
 import { BiClipboard, BiFile, BiHourglass, BiMessageSquareError } from 'react-icons/bi'
-import { useVendorCards } from 'api/pc-projects'
+import { useFPMVendorCards, useVendorCards } from 'api/pc-projects'
 import VendorFilterCard from './vendor-filter-card'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useTranslation } from 'react-i18next'
 
 import { useUser } from 'api/user-management'
 import { useAuth } from 'utils/auth-context'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const useVendorCardJson = cards => {
   const { t } = useTranslation()
@@ -59,7 +60,14 @@ export const VendorFilters = ({ onSelectCard, selectedCard }) => {
     : "" ? "0" 
     : " " ? "0" 
     : userInfo?.markets?.map(m => m.id);*/
-  const { data: values } = useVendorCards(marketIDs)
+
+  const { isFPM } = useUserRolesSelector()
+
+  const { data: valuesVendor } = useVendorCards()
+  const { data: valuesFPMVendor } = useFPMVendorCards(marketIDs ? marketIDs : 0)
+
+  const values = isFPM ? valuesFPMVendor : valuesVendor
+
   const cards = useVendorCardJson(values)
 
   return (
