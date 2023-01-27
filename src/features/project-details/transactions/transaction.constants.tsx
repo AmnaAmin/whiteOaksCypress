@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { TransactionMarkAsValues, TransactionStatusValues } from 'types/transaction.type'
 import Status from 'features/common/status'
 import numeral from 'numeral'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { TRANSACTION } from './transactions.i18n'
 
 export const CHANGE_ORDER_DEFAULT_VALUE = '0'
@@ -115,7 +115,11 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: `${TRANSACTION}.submit`,
     accessorKey: 'modifiedDate',
     accessorFn: cellInfo => {
-      return dateFormat(cellInfo.modifiedDate)
+      return datePickerFormat(cellInfo.modifiedDate)
+    },
+    cell: (row: any) => {
+      const value = row?.row.original?.modifiedDate
+      return dateFormat(value)
     },
     meta: { format: 'date' },
   },
