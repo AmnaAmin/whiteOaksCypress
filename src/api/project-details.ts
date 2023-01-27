@@ -614,7 +614,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
     clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
-    isReconciled: formValues.isReconciled,
+    isReconciled: formValues.isReconciled === null ? false : formValues.isReconciled,
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,
     sowNewAmount: formValues?.finalSOWAmount,
