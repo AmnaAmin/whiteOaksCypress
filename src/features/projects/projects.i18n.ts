@@ -39,6 +39,7 @@ export const projects = {
           woNo: 'WO No',
           poNo: 'PO No',
           invoiceDate: 'Invoice Date',
+          disqualifiedRevenueFlag: 'Disqualified Revenue',
         },
         projectFilter: {
           new: 'New',

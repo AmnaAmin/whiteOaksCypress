@@ -86,6 +86,7 @@ const ProjectDetails: React.FC = props => {
               px="12px"
               pr={{ base: 0, sm: '12px' }}
               py={{ base: '0px', sm: '12px' }}
+              mt={'2px'}
             >
               <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
                 {tabIndex === 2 && (

@@ -4,7 +4,7 @@ import { useToast } from '@chakra-ui/toast'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import autoTable from 'jspdf-autotable'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormatNew } from 'utils/date-time-utils'
 import { currencyFormatter, truncateWithEllipsisInCenter } from 'utils/string-formatters'
 import { Project } from 'types/project.type'
 import { useMemo } from 'react'
@@ -192,11 +192,11 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   doc.text('Due Date', rightMarginX + 135, 65)
   doc.setFont(baseFont, 'normal')
   doc.text(
-    workOrder.dateInvoiceSubmitted ? dateFormat(workOrder?.dateInvoiceSubmitted) : 'mm/dd/yyyy',
+    workOrder.dateInvoiceSubmitted ? dateFormatNew(workOrder?.dateInvoiceSubmitted) : 'mm/dd/yyyy',
     rightMarginX + 160,
     60,
   )
-  doc.text(workOrder.paymentTermDate ? dateFormat(workOrder?.paymentTermDate) : 'mm/dd/yyyy', rightMarginX + 160, 65)
+  doc.text(workOrder.paymentTermDate ? dateFormatNew(workOrder?.paymentTermDate) : 'mm/dd/yyyy', rightMarginX + 160, 65)
 
   // Table
   autoTable(doc, {

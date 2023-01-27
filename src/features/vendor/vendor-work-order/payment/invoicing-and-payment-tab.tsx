@@ -1,7 +1,7 @@
 import { Box, Text, ModalFooter, Divider, ModalBody, Flex, Grid, GridItem } from '@chakra-ui/react'
 import { BiFile, BiCalendar } from 'react-icons/bi'
 import InputView from 'components/input-view/input-view'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormatNew } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 import { STATUS } from 'features/common/status'
@@ -49,7 +49,7 @@ const InvoicingAndPaymentTab = ({
               InputElem={
                 invoiceAndPaymentData.paymentTermDate &&
                 ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
-                  <Text>{dateFormat(invoiceAndPaymentData?.paymentTermDate)}</Text>
+                  <Text>{dateFormatNew(invoiceAndPaymentData?.paymentTermDate)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
                 )
@@ -101,7 +101,7 @@ const InvoicingAndPaymentTab = ({
               label={t('paid')}
               InputElem={
                 invoiceAndPaymentData?.datePaid ? (
-                  <Text>{dateFormat(invoiceAndPaymentData?.datePaid)}</Text>
+                  <Text>{dateFormatNew(invoiceAndPaymentData?.datePaid)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
                 )
@@ -133,7 +133,7 @@ const InvoicingAndPaymentTab = ({
               InputElem={
                 invoiceAndPaymentData.dateLeanWaiverSubmitted &&
                 ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
-                  <Text>{dateFormat(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
+                  <Text>{dateFormatNew(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
                 )
@@ -148,7 +148,7 @@ const InvoicingAndPaymentTab = ({
               label={t('permitDate')}
               InputElem={
                 invoiceAndPaymentData?.datePermitsPulled ? (
-                  <Text>{dateFormat(invoiceAndPaymentData?.datePermitsPulled)}</Text>
+                  <Text>{dateFormatNew(invoiceAndPaymentData?.datePermitsPulled)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
                 )
@@ -163,7 +163,7 @@ const InvoicingAndPaymentTab = ({
               label={t('paymentProcessed')}
               InputElem={
                 invoiceAndPaymentData?.datePaymentProcessed ? (
-                  <Text>{dateFormat(invoiceAndPaymentData?.datePaymentProcessed)}</Text>
+                  <Text>{dateFormatNew(invoiceAndPaymentData?.datePaymentProcessed)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
                 )
@@ -179,7 +179,7 @@ const InvoicingAndPaymentTab = ({
               InputElem={
                 invoiceAndPaymentData.dateInvoiceSubmitted &&
                 ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
-                  <Text>{dateFormat(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
+                  <Text>{dateFormatNew(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
                 )
@@ -204,7 +204,7 @@ const InvoicingAndPaymentTab = ({
               InputElem={
                 invoiceAndPaymentData.expectedPaymentDate &&
                 ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
-                  <Text>{dateFormat(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
+                  <Text>{dateFormatNew(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
                 )

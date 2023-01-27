@@ -26,7 +26,7 @@ import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'rea
 import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormatNew } from 'utils/date-time-utils'
 import Select from 'components/form/react-select'
 import { defaultValuesWODetails, parseWODetailValuesToPayload, useFieldEnableDecisionDetailsTab } from 'api/work-order'
 import AssignedItems from './assigned-items'
@@ -448,13 +448,13 @@ const WorkOrderDetailTab = props => {
               <CalenderCard
                 testId={'woIssued'}
                 title={t(`${WORK_ORDER}.woIssued`)}
-                date={dateFormat(workOrderIssueDate)}
+                date={dateFormatNew(workOrderIssueDate)}
               />
               <CalenderCard
                 testId={'lwSubmitted'}
                 title={t(`${WORK_ORDER}.lwSubmitted`)}
                 date={
-                  dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormat(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
+                  dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
                 }
               />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}

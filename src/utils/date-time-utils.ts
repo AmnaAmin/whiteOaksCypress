@@ -23,9 +23,41 @@ export const dateFormat = (date: string | Date) => {
   return date ? format(new Date(date), 'MM/dd/yyyy') : ''
 }
 
+export const dateFormatNew = (date: string | Date) => {
+
+  if (date === null || date === "") return ''
+
+  if ( typeof date === "object" ) {
+    date = date.toString().replace("Z","");
+  }
+
+  if ( typeof date === "string" ) {
+    //console.log("Date: ", date);
+
+    if ( date.indexOf("Z") === -1 && date.indexOf("T") === -1 ) {
+      date = date+"T00:00:00";
+    } else {
+      date = date.replace("Z","");
+    }
+    
+    //console.log("After Date: ", date);
+  }
+  //console.log("Date:", date);
+  return date ? format(new Date(date), 'MM/dd/yyyy') : ''
+}
+
 export const datePickerFormat = (date: any) => {
   if (date === null || date === undefined) return null
 
+  if ( typeof date === "object" ) {
+    date = date.toString().replace("Z","");
+  }
+
+  if ( typeof date === "string" ) {
+    date = date.replace("Z","");
+  }
+
+  //console.log( "Date : ", date );
   // new Date() makes a day lesser based on time zone. Hence avoiding that by using moment.
   // return date ? format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd') : null
   return date ? moment(date).format('YYYY-MM-DD') : null

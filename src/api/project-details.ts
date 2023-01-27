@@ -599,7 +599,10 @@ export const parseProjectDetailsPayloadFromFormData = async (
     ...projectPayload,
     // Project Management payload
     projectStatusId: formValues?.status?.value || null,
-    previousStatus: formValues?.previousStatus || null,
+    previousStatus:
+      formValues?.status?.value === 220 && formValues?.previousStatus === 220
+        ? project?.previousStatus
+        : formValues?.previousStatus,
     projectType: formValues?.type?.value ?? null,
     woNumber: formValues.woNumber,
     poNumber: formValues.poNumber,
