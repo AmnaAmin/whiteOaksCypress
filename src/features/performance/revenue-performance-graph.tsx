@@ -1,10 +1,13 @@
 import { Box, Center, Spinner } from '@chakra-ui/react'
 import React, { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, Legend } from 'recharts'
 
 import { currencyFormatter } from 'utils/string-formatters'
+import { PERFORMANCE } from './performance.i18n'
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck }) => {
+  const { t } = useTranslation()
   const labels = [
     { key: 'Profit', color: '#949AC2' },
     { key: 'Revenue', color: '#68B8EF' },
@@ -164,10 +167,11 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             iconSize={10}
             align="center"
             formatter={value => {
+              const values = value?.toLowerCase()
               return (
                 <Box display="inline-flex" marginInlineEnd="30px">
                   <Box as="span" color="gray.600" fontSize="12px" fontStyle="normal" fontWeight={400}>
-                    {value}
+                    {t(`${PERFORMANCE}.${values}`)}
                   </Box>
                 </Box>
               )

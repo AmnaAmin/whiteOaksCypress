@@ -13,6 +13,10 @@ const OPTIONS = {
     value: ProjectStatus.Punch,
     label: 'PUNCH',
   },
+  [ProjectStatus.Reconcile]: {
+    value: ProjectStatus.Reconcile,
+    label: 'RECONCILE',
+  },
   [ProjectStatus.Closed]: {
     value: ProjectStatus.Closed,
     label: 'CLOSED',
@@ -52,6 +56,14 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
     OPTIONS[ProjectStatus.Disputed],
   ],
   [ProjectStatus.Punch]: [
+    OPTIONS[ProjectStatus.Active],
+    OPTIONS[ProjectStatus.Punch],
+    OPTIONS[ProjectStatus.Reconcile],
+    OPTIONS[ProjectStatus.Closed],
+    OPTIONS[ProjectStatus.Cancelled],
+    OPTIONS[ProjectStatus.Disputed],
+  ],
+  [ProjectStatus.Reconcile]: [
     OPTIONS[ProjectStatus.Active],
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Closed],

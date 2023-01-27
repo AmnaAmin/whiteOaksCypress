@@ -49,6 +49,13 @@ const useProjectCardJson = cards => {
       IconElement: <IconElement Icon={SummaryIconThird} bg="#E6FFFA" />,
     },
     {
+      id: 'reconcile',
+      title: t('projects.projectFilter.reconcile'),
+      value: 'reconcile',
+      number: cards?.find(c => c.status === 120)?.count || 0,
+      IconElement: <IconElement Icon={SummaryIconThird} bg="#E6FFFA" />,
+    },
+    {
       id: 'closed',
       title: t('projects.projectFilter.closed'),
       value: 'closed',

@@ -218,7 +218,7 @@ export const useAgainstOptions = (
       transactionType?.value === TransactionTypeValues.draw &&
       !isVendor &&
       !transaction?.id &&
-      !['new', 'active', 'punch', 'closed'].includes(projectStatus.toLowerCase())
+      !['new', 'active', 'punch', 'closed', 'reconcile'].includes(projectStatus.toLowerCase())
     ) {
       return againstOptions.slice(1)
     }
