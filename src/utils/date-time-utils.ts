@@ -17,16 +17,18 @@ export const convertDateTimeFromServer = date => (date ? moment(date).format(APP
 
 export const convertDateTimeToServer = date => (date ? moment(date, APP_LOCAL_DATETIME_FORMAT_Z).toDate() : null)
 
-export const dateFormat = (date: string | Date) => {
-  if (date === null) return ''
+export const dateFormat = (date: string | Date ): any => {
+  if (date === null || date === "" || !date ) return ''
 
-  return date ? format(new Date(date), 'MM/dd/yyyy') : ''
+  //return dateFormatNew(date);
+  return date ? moment.utc(date).format('MM/DD/YYYY') : null
+  //return date ? format(new Date(date), 'MM/dd/yyyy') : ''
 }
 
-export const dateFormatNew = (date: string | Date) => {
-
-  if (date === null || date === "") return ''
-
+export const dateFormatNew = (date: string | Date): any => {
+  return dateFormat(date);
+  /*if (date === null || date === "") return ''
+  
   if ( typeof date === "object" ) {
     date = date.toString().replace("Z","");
   }
@@ -34,7 +36,7 @@ export const dateFormatNew = (date: string | Date) => {
   if ( typeof date === "string" ) {
     //console.log("Date: ", date);
 
-    if ( date.indexOf("Z") === -1 && date.indexOf("T") === -1 ) {
+    if ( date.indexOf("Z") === -1 && date.indexOf("T") === -1 && date.indexOf("/") === -1 ) {
       date = date+"T00:00:00";
     } else {
       date = date.replace("Z","");
@@ -43,24 +45,24 @@ export const dateFormatNew = (date: string | Date) => {
     //console.log("After Date: ", date);
   }
   //console.log("Date:", date);
-  return date ? format(new Date(date), 'MM/dd/yyyy') : ''
+  return date ? format(new Date(date), 'MM/dd/yyyy') : ''*/
 }
 
 export const datePickerFormat = (date: any) => {
   if (date === null || date === undefined) return null
 
-  if ( typeof date === "object" ) {
+  /*if ( typeof date === "object" ) {
     date = date.toString().replace("Z","");
   }
 
   if ( typeof date === "string" ) {
     date = date.replace("Z","");
-  }
+  }*/
 
   //console.log( "Date : ", date );
   // new Date() makes a day lesser based on time zone. Hence avoiding that by using moment.
   // return date ? format(new Date(date.replace(/-/g, '\/')), 'yyyy-MM-dd') : null
-  return date ? moment(date).format('YYYY-MM-DD') : null
+  return date ? moment.utc(date).format('YYYY-MM-DD') : null
 }
 
 export const dateISOFormat = (date: string | Date | null) => {
