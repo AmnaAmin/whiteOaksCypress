@@ -17,6 +17,8 @@ const Alerts = () => {
   const [alertRow, selectedAlertRow] = useState(true)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
 
+  const { data: managedAlerts, refetch, isLoading } = useManagedAlert()
+
   return (
     <Box>
       <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
@@ -49,21 +51,16 @@ const Alerts = () => {
               />
             </TabPanel>
             <TabPanel px={0}>
-              <ManagedAlertTable
-                // onRowClick={(e, row) => {
-                //   selectedAlertRow(row.values)
-                //   onNewAlertModalOpen()
-                // }}
-                // managedAlertsData={managedAlertsData}
-                // ref={tabsContainerRef}
-              />
+              <ManagedAlertTable managedAlerts={managedAlerts} isLoading={isLoading} refetch={refetch}/>
             </TabPanel>
           </TabPanels>
         </Card>
       </Tabs>
 
       <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
-      {/* <ManagedAlertsModal isOpen={isOpenNewAlertModal} onClose={onNewAlertModalClose} alert={alertRow} /> */}
+      {isOpenNewAlertModal && (
+        <ManagedAlertsModal isOpen={isOpenNewAlertModal} onClose={onNewAlertModalClose} selectedAlert={managedAlerts} />
+      )}
     </Box>
   )
 }

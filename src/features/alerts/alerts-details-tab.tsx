@@ -1,7 +1,6 @@
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { useState } from 'react'
-import { Controller, useForm, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
   AlertFormValues,
@@ -12,21 +11,17 @@ import {
   TYPE_SELECTION_OPTIONS,
 } from 'types/alert.type'
 
-type AlertsDetailsTypes = {
-  isOpen: boolean
-  onClose: () => void
-  selectedAlert: any
-}
-
-export const AlertsDetailsTab: React.FC<AlertsDetailsTypes> = ({ isOpen, onClose, selectedAlert }) => {
+export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
   const { t } = useTranslation()
-  const [watchValue, setWatchValue] = useState()
+
   const {
     register,
     formState: { errors },
     control,
-    clearErrors,
   } = useFormContext<AlertFormValues>()
+
+  const watchTitle = useWatch({ control, name: 'title' })
+  const watchCategory = useWatch({ control, name: 'category' })
 
   return (
     <Box>
@@ -126,7 +121,7 @@ export const AlertsDetailsTab: React.FC<AlertsDetailsTypes> = ({ isOpen, onClose
         <Button type="submit" form="alertDetails" variant="outline" colorScheme="brand">
           {t('save')}
         </Button>
-        <Button isDisabled={true} colorScheme="brand">
+        <Button isDisabled={!watchTitle || !watchCategory} colorScheme="brand" onClick={props?.setNextTab}>
           {t('next')}
         </Button>
       </HStack>

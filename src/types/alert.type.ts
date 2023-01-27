@@ -15,7 +15,7 @@ export type AlertFormValues = {
   schedular?: string
   statement?: string
   triggeredAlerts?: []
-  userTypes?: []
+  userTypes?: any
   manageAlertModal?: boolean
   setManageAlertModal?: string
   alertRuleQuery?: string

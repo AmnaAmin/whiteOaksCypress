@@ -11,7 +11,6 @@ import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 
 import { ManagedAlertsModal } from './managed-alerts-modal'
-import { useManagedAlert } from 'api/alerts'
 import { ProjectAlertType } from 'types/project.type'
 
 export const MANAGED_ALERTS_COLUMNS: ColumnDef<any>[] = [
@@ -57,8 +56,13 @@ export const MANAGED_ALERTS_COLUMNS: ColumnDef<any>[] = [
   },
 ]
 
-export const ManagedAlertTable: React.FC<{}> = () => {
-  const { data: managedAlertsData, refetch, isLoading } = useManagedAlert()
+type ManagedAlertsTablesTypes = {
+  isLoading: boolean
+  refetch: any
+  managedAlerts: any
+}
+
+export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({ managedAlerts, isLoading, refetch }) => {
 
   const [sorting, setSorting] = React.useState<SortingState>([])
 
@@ -69,8 +73,6 @@ export const ManagedAlertTable: React.FC<{}> = () => {
   const onSave = columns => {
     postGridColumn(columns)
   }
-
-  console.log('managedAlertsData', managedAlertsData)
 
   return (
     <Box overflow="auto">
@@ -84,11 +86,11 @@ export const ManagedAlertTable: React.FC<{}> = () => {
         />
       )}
       <Box overflow={'auto'} h="calc(100vh - 170px)" border="1px solid #CBD5E0" borderBottomRadius="6px">
-        <TableContextProvider data={managedAlertsData} columns={tableColumns} sorting={sorting} setSorting={setSorting}>
+        <TableContextProvider data={managedAlerts} columns={tableColumns} sorting={sorting} setSorting={setSorting}>
           <Table
             onRowClick={row => setSelectedAlert(row)}
             isLoading={isLoading}
-            isEmpty={!isLoading && !managedAlertsData?.length}
+            isEmpty={!isLoading && !managedAlerts?.length}
           />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <ButtonsWrapper>

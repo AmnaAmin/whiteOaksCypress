@@ -15,11 +15,11 @@ import {
 import { DevTool } from '@hookform/devtools'
 import { AlertsDetailsTab } from 'features/alerts/alerts-details-tab'
 import { AlertsNotifyTab } from 'features/alerts/alerts-notify-tab'
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { AlertFormValues, AlertType } from 'types/alert.type'
-import { alertDetailsDefaultValues } from 'api/alerts'
+import { AlertFormValues } from 'types/alert.type'
+import { alertDetailsDefaultValues, useSaveAlertDetails, useUpdateAlertDetails } from 'api/alerts'
 
 type ManagedAlertsTypes = {
   isOpen: boolean
@@ -29,7 +29,10 @@ type ManagedAlertsTypes = {
 
 export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClose, selectedAlert }) => {
   const { t } = useTranslation()
-  console.log('selectedAlert', selectedAlert)
+  const { mutate: editAlertsDetails } = useUpdateAlertDetails()
+  const { mutate: saveAlertsDetails } = useSaveAlertDetails()
+
+  const [tabIndex, setTabIndex] = useState(0)
 
   const methods = useForm<AlertFormValues>()
 
@@ -37,46 +40,45 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
     handleSubmit,
     control,
     reset,
-    formState: { errors },
   } = methods
-  
+
   useEffect(() => {
     if (selectedAlert) {
       reset(alertDetailsDefaultValues({ selectedAlert }))
-    } 
+    }
   }, [reset, selectedAlert])
+
+  const setNextTab = () => {
+    setTabIndex(tabIndex + 1)
+  }
 
   const onSubmit = useCallback(
     async values => {
       const queryOptions = {
-        onSuccess(response) {
-          // props?.setCreatedClientId?.(response.data?.id)
+        onSuccess() {
         },
       }
-      const clientPayload = {
+      const alertsPayload = {
         ...values,
-        paymentTerm: values.paymentTerm?.value,
-        state: values.state?.id,
-        markets: values.markets.filter(market => market && market.checked).map(market => ({ id: market.id })),
-        contacts: values.contacts?.map(c => ({
-          ...c,
-          market: c.market?.value,
-        })),
+        category: values?.category?.label,
+        notify: values?.notify?.value,
+        typeSelection: values?.typeSelection?.label,
+        attributeSelection: values?.attributeSelection?.label,
+        behaviourSelection: values?.behaviourSelection?.label,
       }
       if (values?.id) {
-        // editClientDetails(clientPayload, queryOptions)
-      } 
-      // else {
-      //   addNewClientDetails(clientPayload, {
-      //     onSuccess() {
-      //       onClose()
-      //     },
-      //   })
-      // }
+        editAlertsDetails(alertsPayload, queryOptions)
+      }
+      else {
+        saveAlertsDetails(alertsPayload, {
+          onSuccess() {
+            onClose()
+          },
+        })
+      }
     },
-    [], // addNewClientDetails
+    [saveAlertsDetails],
   )
-
 
   return (
     <>
@@ -88,22 +90,22 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
               <ModalContent>
                 <ModalHeader borderBottom="1px solid #eee">
                   <FormLabel variant="strong-label" size="lg">
-                    {t('newAlert')}
+                    { selectedAlert ? t('editAlert') : t('newAlert')}
                   </FormLabel>
                 </ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <Tabs variant="enclosed" colorScheme="brand">
+                  <Tabs variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
                     <TabList>
                       <Tab>{t('details')}</Tab>
                       <Tab>{t('notify')}</Tab>
                     </TabList>
                     <TabPanels>
                       <TabPanel p={0}>
-                        <AlertsDetailsTab selectedAlert={selectedAlert} isOpen={false} onClose={onClose} />
+                        <AlertsDetailsTab setNextTab={setNextTab}/>
                       </TabPanel>
                       <TabPanel p={0}>
-                        {/* <AlertsNotifyTab selectedAlert = {selectedAlert} onClose={onClose} /> */}
+                        <AlertsNotifyTab onClose={onClose} />
                       </TabPanel>
                     </TabPanels>
                   </Tabs>
