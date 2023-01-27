@@ -4,8 +4,6 @@ import ReactSelect from 'components/form/react-select'
 import { MonthOption } from 'api/performance'
 import { useFPMs } from 'api/pc-projects'
 import { SelectOption } from 'types/transaction.type'
-
-import { take } from 'lodash'
 import { PERFORMANCE } from './performance.i18n'
 import { useTranslation } from 'react-i18next'
 
@@ -17,15 +15,15 @@ export const PerformanceFilters: React.FC<{
   setMonthOption
   monthOption
   filterGraphData
+  fpmPerformace
 }> = ({ yearFilter, setYearFilter, setFpmOption, fpmOption, setMonthOption, monthOption, filterGraphData }) => {
   const { fieldProjectManagerOptions } = useFPMs()
   const { t } = useTranslation()
 
   const onFpmOptionChange = options => {
     if (options?.length < 1) {
-      return
+      setFpmOption([])
     }
-    setFpmOption([])
 
     if (options?.length > 5) {
       return
@@ -49,16 +47,6 @@ export const PerformanceFilters: React.FC<{
     const currentMonth = new Date().getMonth()
     const isCurrentYearData = yearFilter === currentYear || !yearFilter
     const isPastYearData = yearFilter === currentYear - 1
-
-    if (!['lastMonth', 'thisMonth'].includes(monthOption?.value)) {
-      // fix fpm names length to keep them within the select bar
-      const getFpm = take(fieldProjectManagerOptions, 5)
-      selectedFpm =
-        getFpm?.map(fpm => ({
-          value: (fpm as SelectOption)?.value,
-          label: (fpm as SelectOption)?.label.substring(0, 8) + '..',
-        })) || []
-    }
 
     setFpmOption(selectedFpm)
     setMonthOption(monthOption)
@@ -118,7 +106,6 @@ export const PerformanceFilters: React.FC<{
               <ReactSelect
                 name={`fpmDropdown`}
                 value={fpmOption}
-                isDisabled={['This Month', 'Last Month'].includes(monthOption?.label)}
                 options={fieldProjectManagerOptions}
                 onChange={onFpmOptionChange}
                 defaultValue={fpmOption}

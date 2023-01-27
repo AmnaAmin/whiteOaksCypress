@@ -169,6 +169,7 @@ export const PerformanceTab = () => {
         filterGraphData={filterGraphData}
         fpmOption={fpmOption}
         setFpmOption={setFpmOption}
+        fpmPerformace={performance}
       />
       <Box p={0} rounded="13px" flex={1}>
         <PerformanceGraphWithUsers
