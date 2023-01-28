@@ -58,7 +58,11 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'WOstatus',
     accessorKey: 'statusLabel',
     cell: (row: any) => {
-      const value = row.cell.getValue()
+      let value = row.cell.getValue() as string
+
+      if ( value === "Declined" )
+        value = "Rejected";
+      
       return <Status value={value} id={value} />
     },
   },

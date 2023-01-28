@@ -134,6 +134,10 @@ const WorkOrderDetails = ({
   }
   const showRejectInvoice = (displayAwardPlan && tabIndex === 3) || (!displayAwardPlan && tabIndex === 2)
 
+  if ( workOrder?.statusLabel === "Declined" ) {
+    workOrder.statusLabel = "Rejected";
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'} closeOnOverlayClick={false}>
       <ModalOverlay />

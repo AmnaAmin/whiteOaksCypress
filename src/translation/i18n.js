@@ -78,7 +78,7 @@ i18n.use(initReactI18next).init({
         clientStartDate: 'Client Start Date',
         clientDueDate: 'Client Due Date',
         invoicedWO: 'Invoiced WO',
-        completednotPaid: 'Declined Invoices',
+        completednotPaid: 'Rejected Invoices',
         upcomingPayments: 'Upcoming Pay',
         overview: 'Overview',
         WOpaid: 'WO Paid',

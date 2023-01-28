@@ -43,6 +43,10 @@ export const TransactionInfoCard: React.FC<{
 }> = ({ projectData, isLoading }) => {
   const { t } = useTranslation()
 
+  if ( projectData?.vendorWOStatusValue === "Declined" ) {
+    projectData.vendorWOStatusValue = "Rejected"
+  }
+
   return (
     <Flex flexWrap="wrap" w="100%" bg="white" borderRadius="6px" style={boxShadow} mt={{ base: 5, sm: 0 }}>
       <InfoStructureCard

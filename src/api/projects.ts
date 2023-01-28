@@ -62,6 +62,15 @@ export const useProjectWorkOrders = projectId => {
   return useQuery<ProjectWorkOrderType[]>(['GetProjectWorkOrders', projectId], async () => {
     const response = await client(`project/${projectId}/workorders`, {})
 
+    if ( response && response.data ) {
+      response.data = response.data?.map( ( workOrder ) => {
+        if ( workOrder?.statusLabel === "Declined" ) {
+          workOrder.statusLabel = "Rejected"
+        }
+        return workOrder;
+      } );
+    }
+    
     return orderBy(
       response?.data,
       [
@@ -210,6 +219,15 @@ export const useWorkOrders = (queryString: string, pageSize: number) => {
     `vendor/workorders?${apiQueryString}&status.notEquals=35`,
     pageSize,
   )
+
+  if ( data && data.data ) {
+    data.data = data.data?.map( ( workOrder ) => {
+      if ( workOrder?.statusLabel === "Declined" ) {
+        workOrder.statusLabel = "Rejected"
+      }
+      return workOrder;
+    } );
+  }
 
   return {
     workOrderData: data?.data,
