@@ -10,12 +10,11 @@ import { useTranslation } from 'react-i18next'
 export const PerformanceFilters: React.FC<{
   yearFilter: number | undefined | string
   setYearFilter: (val) => void
-  setFpmOption
-  fpmOption
-  setMonthOption
-  monthOption
-  filterGraphData
-  fpmPerformace
+  setFpmOption: (val) => void
+  fpmOption: SelectOption[]
+  setMonthOption: (val) => void
+  monthOption: SelectOption
+  filterGraphData: (selectedFpms, selectedMonth) => void
 }> = ({ yearFilter, setYearFilter, setFpmOption, fpmOption, setMonthOption, monthOption, filterGraphData }) => {
   const { fieldProjectManagerOptions } = useFPMs()
   const { t } = useTranslation()
@@ -33,7 +32,7 @@ export const PerformanceFilters: React.FC<{
     const selectedFpmOption =
       options?.map(fpm => ({
         value: (fpm as SelectOption)?.value,
-        label: (fpm as SelectOption)?.label.substring(0, 8) + '..',
+        label: (fpm as SelectOption)?.label,
       })) || []
 
     setFpmOption(selectedFpmOption)
