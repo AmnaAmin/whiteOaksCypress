@@ -38,8 +38,8 @@ describe('Given a ProjectTilesFilter Render properly', () => {
       expect(screen.getByText('Invoiced WO')).toBeInTheDocument()
       expect(screen.getByTestId('value-of-invoiced wo').textContent).toEqual(`${invoicedCardValue}`)
 
-      expect(screen.getByText('Declined Invoices')).toBeInTheDocument()
-      expect(screen.getByTestId('value-of-declined invoices').textContent).toEqual(`${declinedCardValue}`)
+      expect(screen.getByText('Rejected Invoices')).toBeInTheDocument()
+      expect(screen.getByTestId('value-of-rejected invoices').textContent).toEqual(`${declinedCardValue}`)
 
       screen.debug(undefined, 10000)
     })
@@ -54,7 +54,7 @@ describe('Given a ProjectTilesFilter Render properly', () => {
       await userEvent.click(screen.getByText('Past Due WO'))
       await userEvent.click(screen.getByText('Completed'))
       await userEvent.click(screen.getByText('Invoiced WO'))
-      await userEvent.click(screen.getByText('Declined Invoices'))
+      await userEvent.click(screen.getByText('Rejected Invoices'))
 
       expect(onSelectCard).toHaveBeenCalled()
       expect(onSelectCard).toBeCalledWith('active')
