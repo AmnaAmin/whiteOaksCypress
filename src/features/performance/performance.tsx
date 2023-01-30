@@ -114,7 +114,7 @@ export const PerformanceTab = () => {
    * When Performance is fetched, we check if top 5 fpm by revenue should be preselelcted in filter by.
    * In all cases other than 'This Month' and 'Last Month' top 5 fpms are preselected.
    * UniqueBy is applied because single FPM can have top revenues in more than one month.
-   * Indicator to show default is set to 0. So user can further select/unselect FPMs and filter accordingly.
+   * Indicator to show default is set to 'false'. So user can further select/unselect FPMs and filter accordingly.
    * In cases when user select/unselect FPM or This Month and Last Month is selected the complete query result is displayed in Table.
    */
 
