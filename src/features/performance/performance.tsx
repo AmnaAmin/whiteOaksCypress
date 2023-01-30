@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react'
 import { MonthOption, usePerformance, useRevenuePerformance } from 'api/performance'
 import { format, subMonths } from 'date-fns'
-import { flatten, last } from 'lodash'
+import { last } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { getLastQuarterByDate, getQuarterByDate, getQuarterByMonth, months, monthsShort } from 'utils/date-time-utils'
 import { PerformanceFilters } from './performance-filters'
@@ -52,7 +52,14 @@ const useMapMonths = monthOption => {
     monthFilter,
   }
 }
-
+type FPMMonthlyData = {
+  username: string
+  month: any
+  userId: number
+  quarter: number
+  Revenue: string | number
+  Profit: string | number
+}
 export const PerformanceTab = () => {
   const [yearFilter, setYearFilter] = useState(undefined)
   const [graphData, setGraphData] = useState<GraphData>()
@@ -83,47 +90,30 @@ export const PerformanceTab = () => {
     }
   }, [yearFilter, monthOption, fpmOption])
 
-  const data = useMemo(
-    () =>
-      flatten(
-        months?.map((month, monthIndex) => {
-          const monthExistsInChart = Object?.keys(performanceChart)?.find(months => months === month)
-          let nameMonthData
-
-          if (monthExistsInChart) {
-            nameMonthData = performanceChart?.[month]
-            const graphs = Object?.keys(nameMonthData)?.map((nameKey, index) => {
-              const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
-              return {
-                username: `${firstName} ${lastName}`,
-                month: monthsShort[month],
-                userId: Number(last(userId)),
-                quarter: getQuarterByMonth(monthIndex),
-                Revenue: nameMonthData[nameKey]?.revenue,
-                Profit: nameMonthData[nameKey]?.profit,
-              }
-            })
-            let newgraphs = graphs?.map((n, i) => ({
-              ...n,
-              centerMonth: Math.floor(graphs?.length / 2) === i ? n?.month : undefined,
-            }))
-            return newgraphs
-          }
-
+  const data = useMemo(() => {
+    var graphs = [] as Array<FPMMonthlyData>
+    months?.forEach((month, monthIndex) => {
+      const monthExistsInChart = Object?.keys(performanceChart)?.find(months => months === month)
+      let nameMonthData
+      var userMonthData = null as Array<FPMMonthlyData> | null
+      if (monthExistsInChart) {
+        nameMonthData = performanceChart?.[month]
+        userMonthData = Object?.keys(nameMonthData)?.map((nameKey, index) => {
+          const [firstName, lastName, ...userId] = `${nameKey}`.split('_')
           return {
+            username: `${firstName} ${lastName}`,
             month: monthsShort[month],
-            centerMonth: monthsShort[month],
+            userId: Number(last(userId)),
             quarter: getQuarterByMonth(monthIndex),
-            username: '',
-            userId: 0,
-            Bonus: 0,
-            Profit: 0,
-            Revenue: 0,
+            Revenue: nameMonthData[nameKey]?.revenue,
+            Profit: nameMonthData[nameKey]?.profit,
           }
-        }),
-      ),
-    [performanceChart],
-  )
+        })
+        graphs.push(...userMonthData)
+      }
+    })
+    return graphs
+  }, [performanceChart])
 
   const filterGraphData = (selectedFpm, monthOption) => {
     let selectedMonth, selectedQuater

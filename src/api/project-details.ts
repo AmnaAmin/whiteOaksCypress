@@ -14,7 +14,7 @@ import {
 import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
-import { dateISOFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
+import { dateISOFormat, datePickerFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
 import { createDocumentPayload } from 'utils/file-utils'
 import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
@@ -510,7 +510,7 @@ export const parseFormValuesFromAPIData = ({
     poNumber: project.poNumber,
     projectName: project.name,
     woaStartDate: project.woaStartDate as string,
-    woaCompletionDate: getLocalTimeZoneDate(project.woaCompletionDate as string),
+    woaCompletionDate: datePickerFormat(project.woaCompletionDate as string),
     clientStartDate: project.clientStartDate as string,
     clientDueDate: project.clientDueDate as string,
     clientWalkthroughDate: project.clientWalkthroughDate as string,
