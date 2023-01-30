@@ -172,7 +172,7 @@ export const PerformanceTab = () => {
       </Box>
       <PerformanceInfoCards isPerformanceLoading={isPerformanceTableLoading} performance={performance} />
       <Card px="12px" py="16px">
-        <PerformanceTable performance={performance} isPerformanceTableLoading={isPerformanceTableLoading} />
+        <PerformanceTable refetch={refetchFpmQuota} performance={performance} isPerformanceTableLoading={isPerformanceTableLoading} />
       </Card>
     </Box>
   )

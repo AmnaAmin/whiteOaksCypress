@@ -7,9 +7,15 @@ import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { ColumnDef } from '@tanstack/react-table'
 import { PERFORMANCE } from './performance.i18n'
+import { ExportButton } from 'components/table-refactored/export-button'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
+import { settingColumns } from 'components/table-refactored/make-data'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { TableNames } from 'types/table-column.types'
+import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
-  const { performance, isPerformanceTableLoading } = props
+  const { performance, isPerformanceTableLoading, refetch} = props
 
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
@@ -83,9 +89,10 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
     //   accessorKey: 'email',
     // },
   ]
+  const { tableColumns } = useTableColumnSettings(PERFORMANCE_COLUMNS, TableNames.performance)
 
   return (
-    <Box overflowX={'auto'} minH="calc(100vh - 370px)" pb="2">
+    <Box  overflowX={'auto'} minH="calc(100vh - 370px)" pb="2">
       {isOpen && selectedUser && (
         <PerformanceModal
           performanceDetails={selectedUser as PerformanceType}
@@ -97,7 +104,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
         />
       )}
       <Box overflowX={'auto'} minH="calc(100vh - 370px)" border="1px solid #CBD5E0" borderTopRadius="6px">
-        <TableContextProvider data={performance} columns={PERFORMANCE_COLUMNS}>
+        <TableContextProvider data={performance} columns={tableColumns} >
           <Table
             onRowClick={row => {
               setSelectedUser(row)
@@ -106,8 +113,21 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
             isLoading={isPerformanceTableLoading}
             isEmpty={!isPerformanceTableLoading && !performance?.length}
           />
+ <TableFooter>
+   <Box>
+   <ExportButton columns={tableColumns}
+    colorScheme="brand" 
+    fileName="performance" 
+    isLoading={isPerformanceTableLoading} 
+    refetch={refetch} />
+    
+        </Box> 
+       </TableFooter>
+
+
         </TableContextProvider>
       </Box>
+     
     </Box>
   )
 })
