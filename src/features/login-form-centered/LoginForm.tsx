@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form'
 import { useAuth } from 'utils/auth-context'
 import { PasswordField } from './PasswordField'
 import { BiUserCheck } from 'react-icons/bi'
+import { Link } from 'react-router-dom'
 
 type FormValues = {
   email: string
@@ -53,7 +54,7 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
         <VStack pb="20px" alignItems="start" spacing="14px">
           <PasswordField {...register('password', { required: 'This is required field.' })} />
           <Text color="#345587" fontWeight="400" fontSize="12px">
-            Forgot Password?
+            <Link to="/account/reset/">Forgot Password?</Link>
           </Text>
         </VStack>
         <Button
