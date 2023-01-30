@@ -1,10 +1,10 @@
 import { useToast } from '@chakra-ui/react'
+import _ from 'lodash'
 import { Control, useWatch } from 'react-hook-form'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ErrorType } from 'types/common.types'
 import { PerformanceType } from 'types/performance.type'
 import { useClient } from 'utils/auth-context'
-import { getQueryString } from 'utils/filters-query-utils'
 
 export const useRevenuePerformance = yearFilter => {
   const client = useClient()
@@ -16,19 +16,28 @@ export const useRevenuePerformance = yearFilter => {
   })
 }
 
-export const usePerformance = ({ yearFilter, months, fpmIds }) => {
+export const usePerformance = filterQuery => {
   const client = useClient()
-  const queryParams = {
-    year: yearFilter,
-    months,
-    fpmIds,
-  }
-  const filterQuery = getQueryString(queryParams)
+
   const url = filterQuery ? `fpm-quota?${filterQuery}` : `fpm-quota`
-  return useQuery('performance-list', async () => {
+  const performanceList = useQuery('performance-list', async () => {
     const response = await client(url, {})
     return response?.data
   })
+  const fpmsOrderedByRevenue = _.orderBy(
+    performanceList?.data?.filter(f => !!f.revenue),
+    [
+      item => {
+        return item.revenue
+      },
+    ],
+    ['desc'],
+  )
+
+  return {
+    ...performanceList,
+    fpmsOrderedByRevenue,
+  }
 }
 
 export const useFPMDetails = (FPMId: any, yearFilter?: string | number | null) => {
