@@ -83,9 +83,13 @@ export const dateISOFormatWithZeroTime = (date: string | Date | null) => {
 
   // check is date is valid
   if (dateObj.toString() === 'Invalid Date') return null
-  var isoFormatDate = format(new Date(date), 'yyyy-MM-dd') + 'T00:00:00.000Z'
+  //var isoFormatDate = format(new Date(date), 'yyyy-MM-dd') + 'T00:00:00.000Z'
 
-  return isoFormatDate || null
+  //console.log( isoFormatDate );
+  //console.log( moment.utc(date).format() )
+  
+  return moment(date).format( 'YYYY-MM-DD') + 'T00:00:00.000Z';
+  //return isoFormatDate || null
 }
 
 export const getFormattedDate = (date: Date) => {
