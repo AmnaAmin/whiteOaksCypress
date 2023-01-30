@@ -1,12 +1,13 @@
 import { Box, Button, Tab, TabList, TabPanel, TabPanels, Tabs, useDisclosure } from '@chakra-ui/react'
-import { AlertStatusModal } from 'features/project-details/alerts/alert-status'
-import { ManagedAlertTable } from 'features/project-details/alerts/managed-alert-table'
-import { TriggeredAlertsTable } from 'features/project-details/alerts/triggered-alerts-table'
+import { AlertStatusModal } from 'features/alerts/alert-status'
+import { ManagedAlertTable } from 'features/alerts/managed-alert-table'
+import { TriggeredAlertsTable } from 'features/alerts/triggered-alerts-table'
 import { ManagedAlertsModal } from 'features/alerts/managed-alerts-modal'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { Card } from 'components/card/card'
+import { useManagedAlert } from 'api/alerts'
 
 const Alerts = () => {
   const { t } = useTranslation()
@@ -15,6 +16,9 @@ const Alerts = () => {
   const [tabIndex, setTabIndex] = useState<number>(0)
   const [alertRow, selectedAlertRow] = useState(true)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
+
+  const { data: managedAlerts, refetch, isLoading } = useManagedAlert()
+
   return (
     <Box>
       <Tabs variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
@@ -47,20 +51,16 @@ const Alerts = () => {
               />
             </TabPanel>
             <TabPanel px={0}>
-              <ManagedAlertTable
-                onRowClick={(e, row) => {
-                  selectedAlertRow(row.values)
-                  onNewAlertModalOpen()
-                }}
-                ref={tabsContainerRef}
-              />
+              <ManagedAlertTable managedAlerts={managedAlerts} isLoading={isLoading} refetch={refetch}/>
             </TabPanel>
           </TabPanels>
         </Card>
       </Tabs>
 
       <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
-      <ManagedAlertsModal isOpen={isOpenNewAlertModal} onClose={onNewAlertModalClose} alert={alertRow} />
+      {isOpenNewAlertModal && (
+        <ManagedAlertsModal isOpen={isOpenNewAlertModal} onClose={onNewAlertModalClose} selectedAlert={managedAlerts} />
+      )}
     </Box>
   )
 }

@@ -1,135 +1,130 @@
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import {
+  AlertFormValues,
+  ATTRIBUTE_SELECTION_OPTIONS,
+  BEHAVIOUR_SELECTION_OPTIONS,
+  CATEGORY_OPTIONS,
+  NOTIFY_OPTIONS,
+  TYPE_SELECTION_OPTIONS,
+} from 'types/alert.type'
 
-const SelectOpion = [
-  { value: '1', label: 'Option 1' },
-  { value: '2', label: 'Option 2' },
-  { value: '3', label: 'Option 3' },
-  { value: '4', label: 'Option 4' },
-  { value: '5', label: 'Option 5 ' },
-]
-
-export const AlertsDetailsTab = () => {
+export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
   const { t } = useTranslation()
-  const [watchValue, setWatchValue] = useState()
+
   const {
     register,
-    handleSubmit,
-    control,
-    watch,
     formState: { errors },
-  } = useForm()
-  const onSubmit = data => {
-    setWatchValue(watch)
-  }
+    control,
+  } = useFormContext<AlertFormValues>()
+
+  const watchTitle = useWatch({ control, name: 'title' })
+  const watchCategory = useWatch({ control, name: 'category' })
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Box>
-        <HStack spacing="16px" mt="30px">
-          <FormControl isInvalid={errors.Name} w={215}>
-            <FormLabel variant="strong-label">{t('name')}</FormLabel>
-            <Input type="text" borderLeft="2.5px solid blue" {...register('Name', { required: 'This is required' })} />
-            <FormErrorMessage pos="absolute">{errors.Name && errors.Name.message}</FormErrorMessage>
-          </FormControl>
+    <Box>
+      <HStack spacing="16px" mt="30px">
+        <FormControl isInvalid={!!errors.title} w={215}>
+          <FormLabel variant="strong-label">{t('name')}</FormLabel>
+          <Input type="text" borderLeft="2.5px solid blue" {...register('title', { required: 'This is required' })} />
+          <FormErrorMessage pos="absolute">{errors.title && errors.title.message}</FormErrorMessage>
+        </FormControl>
 
-          <FormControl isInvalid={!!errors.Category} w={215}>
-            <FormLabel variant="strong-label">{t('category')}</FormLabel>
-            <Controller
-              name="Category"
-              control={control}
-              rules={{ required: 'This is required' }}
-              render={({ field, fieldState }) => (
-                <>
-                  <ReactSelect {...field} selectProps={{ isBorderLeft: true }} options={SelectOpion} />
-                  <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
-                </>
-              )}
-            />
-          </FormControl>
+        <FormControl isInvalid={!!errors.category} w={215}>
+          <FormLabel variant="strong-label">{t('category')}</FormLabel>
+          <Controller
+            name="category"
+            control={control}
+            rules={{ required: 'This is required' }}
+            render={({ field, fieldState }) => (
+              <>
+                <ReactSelect {...field} selectProps={{ isBorderLeft: true }} options={CATEGORY_OPTIONS} />
+                <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+              </>
+            )}
+          />
+        </FormControl>
 
-          <Box w={215}>
-            <FormLabel variant="strong-label">{t('status')}</FormLabel>
-            <Controller
-              name="Status"
-              control={control}
-              render={({ field }) => {
-                return <ReactSelect {...field} options={SelectOpion} />
-              }}
-            />
-          </Box>
-        </HStack>
-
-        <HStack mt="30px">
-          <FormLabel variant="strong-label" size="lg" whiteSpace="nowrap" m="0">
-            {t('alertingRules')}
-          </FormLabel>
-          <Divider borderWidth="1px" />
-        </HStack>
-
-        <Box w={215} mt="30px">
+        <Box w={215}>
           <FormLabel variant="strong-label">{t('status')}</FormLabel>
-          <Input type="text" {...register('Status')} disabled value="If" />
+          <Controller
+            name="notify"
+            control={control}
+            render={({ field }) => {
+              return <ReactSelect {...field} options={NOTIFY_OPTIONS} />
+            }}
+          />
+        </Box>
+      </HStack>
+
+      <HStack mt="30px">
+        <FormLabel variant="strong-label" size="lg" whiteSpace="nowrap" m="0">
+          {t('alertingRules')}
+        </FormLabel>
+        <Divider borderWidth="1px" />
+      </HStack>
+
+      <Box w={215} mt="30px">
+        <FormLabel variant="strong-label">{t('status')}</FormLabel>
+        <Input type="text" {...register('conditionSelection')} disabled />
+      </Box>
+
+      <HStack spacing="16px" mt="30px">
+        <Box w={215}>
+          <FormLabel variant="strong-label">{t('type')}</FormLabel>
+          <Controller
+            name="typeSelection"
+            control={control}
+            render={({ field }) => {
+              return <ReactSelect {...field} options={TYPE_SELECTION_OPTIONS} />
+            }}
+          />
         </Box>
 
-        <HStack spacing="16px" mt="30px">
-          <Box w={215}>
-            <FormLabel variant="strong-label">{t('type')}</FormLabel>
-            <Controller
-              name="Type"
-              control={control}
-              render={({ field }) => {
-                return <ReactSelect {...field} options={SelectOpion} />
-              }}
-            />
-          </Box>
+        <Box w={215}>
+          <FormLabel variant="strong-label">{t('attribute')}</FormLabel>
+          <Controller
+            name="attributeSelection"
+            control={control}
+            render={({ field }) => {
+              return <ReactSelect {...field} options={ATTRIBUTE_SELECTION_OPTIONS} />
+            }}
+          />
+        </Box>
 
-          <Box w={215}>
-            <FormLabel variant="strong-label">{t('attribute')}</FormLabel>
-            <Controller
-              name="Attribute"
-              control={control}
-              render={({ field }) => {
-                return <ReactSelect {...field} options={SelectOpion} />
-              }}
-            />
-          </Box>
+        <Box w={215}>
+          <FormLabel variant="strong-label">{t('behaviour')}</FormLabel>
+          <Controller
+            name="behaviourSelection"
+            control={control}
+            render={({ field }) => {
+              return <ReactSelect {...field} options={BEHAVIOUR_SELECTION_OPTIONS} />
+            }}
+          />
+        </Box>
 
-          <Box w={215}>
-            <FormLabel variant="strong-label">{t('behaviour')}</FormLabel>
-            <Controller
-              name="Behaviour"
-              control={control}
-              render={({ field }) => {
-                return <ReactSelect {...field} options={SelectOpion} />
-              }}
-            />
-          </Box>
+        <Box w={215}>
+          <FormLabel variant="strong-label">{t('customValue')}</FormLabel>
+          <Controller
+            name="subject" // need to change // this is incorrect
+            control={control}
+            render={({ field }) => {
+              return <ReactSelect {...field} options={[]} />
+            }}
+          />
+        </Box>
+      </HStack>
 
-          <Box w={215}>
-            <FormLabel variant="strong-label">{t('customValue')}</FormLabel>
-            <Controller
-              name="Custom Value"
-              control={control}
-              render={({ field }) => {
-                return <ReactSelect {...field} options={SelectOpion} />
-              }}
-            />
-          </Box>
-        </HStack>
-
-        <HStack h="78px" mt="30px" borderTop="1px solid #E2E8F0" justifyContent="end" spacing="16px">
-          <Button type="submit" variant="outline" colorScheme="brand">
-            {t('save')}
-          </Button>
-          <Button isDisabled={watchValue ? false : true} colorScheme="brand">
-            {t('next')}
-          </Button>
-        </HStack>
-      </Box>
-    </form>
+      <HStack h="78px" mt="30px" borderTop="1px solid #E2E8F0" justifyContent="end" spacing="16px">
+        <Button type="submit" form="alertDetails" variant="outline" colorScheme="brand">
+          {t('save')}
+        </Button>
+        <Button isDisabled={!watchTitle || !watchCategory} colorScheme="brand" onClick={props?.setNextTab}>
+          {t('next')}
+        </Button>
+      </HStack>
+    </Box>
   )
 }
