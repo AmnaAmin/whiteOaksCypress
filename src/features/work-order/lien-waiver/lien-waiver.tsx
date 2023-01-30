@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import { convertImageToDataURL } from 'components/table/util'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormatNew } from 'utils/date-time-utils'
 import { downloadFile, imgUtility } from 'utils/file-utils'
 import jsPdf from 'jspdf'
 import { head } from 'lodash'
@@ -406,7 +406,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       placeholder="mm/dd/yy"
                       register={register}
                       name={`dateOfSignature`}
-                      value={dateFormat(formValues?.dateOfSignature as string)}
+                      value={dateFormatNew(formValues?.dateOfSignature as string)}
                       elementStyle={{
                         bg: 'white',
                         borderWidth: '0 0 1px 0',
@@ -428,7 +428,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       InputElem={
                         <>
                           {workOrder?.lienWaiverAccepted && workOrder?.dateOfSignature
-                            ? dateFormat(workOrder?.dateOfSignature)
+                            ? dateFormatNew(workOrder?.dateOfSignature)
                             : 'mm/dd/yy'}
                         </>
                       }
@@ -486,6 +486,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             ref={inputRef}
             style={{ display: 'none' }}
             onChange={onFileChange}
+            data-testid = 'upload-LW'
             accept="application/pdf, image/png, image/jpg, image/jpeg"
           />
           {!isVendor &&

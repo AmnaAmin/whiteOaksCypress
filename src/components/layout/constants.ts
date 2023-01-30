@@ -318,7 +318,7 @@ export const MENU_ROLE_BASED: Menus = {
     },
     {
       pathTo: '/projectType',
-      title: 'Project type',
+      title: `${SIDE_NAV}.projectType`,
       Icon: BiDockTop,
       color: '#9B2C2C',
     },
@@ -330,11 +330,11 @@ export const MENU_ROLE_BASED: Menus = {
     },
     {
       pathTo: '/support-tickets',
-      title: 'Support',
+      title: `${SIDE_NAV}.support`,
       Icon: FaReact,
       color: '#3182CE',
     },
-    ...(showForPreProd
+    ...(showForPreProdAndLocal
       ? [
           {
             pathTo: '/alerts',

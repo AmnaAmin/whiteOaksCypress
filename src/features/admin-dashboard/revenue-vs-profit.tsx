@@ -7,6 +7,8 @@ import ReactSelect from 'components/form/react-select'
 import { filterByMonthOptions } from './admin-dashboard.utils'
 import { mapRevenueVsProfitToGraphData, useRevenueVsProfit } from 'api/admin-dashboard'
 import { Card } from 'components/card/card'
+import { ADMIN_DASHBOARD } from './admin-dashboard.i18n'
+import { useTranslation } from 'react-i18next'
 
 const currentMonth = format(new Date(), 'LLL', { locale: enUS })
 const defaultFilterByMonth = filterByMonthOptions?.find(m => m.value === currentMonth) || []
@@ -18,6 +20,7 @@ const filterDataByMonth = (profitVsRevenueData, monthName: any) => {
 export const RevenueVsProfit = () => {
   const { revenueProfitGraph } = useRevenueVsProfit()
   const [graphData, setGraphData] = useState([])
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (revenueProfitGraph) {
@@ -56,7 +59,7 @@ export const RevenueVsProfit = () => {
     <>
       <Box>
         <HStack mb={5}>
-          <FormLabel>Filter By Month:</FormLabel>
+          <FormLabel>{t(`${ADMIN_DASHBOARD}.filterByMonth`)}</FormLabel>
           <Box width="25%">
             <ReactSelect defaultValue={defaultFilterByMonth} options={filterByMonthOptions} onChange={handleFilter} />
           </Box>

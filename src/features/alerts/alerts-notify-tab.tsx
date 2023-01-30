@@ -1,18 +1,10 @@
-import { Box, Button, Divider, FormLabel, HStack, Input, Textarea } from '@chakra-ui/react'
-import { DevTool } from '@hookform/devtools'
+import { Box, Button, Divider, FormErrorMessage, FormLabel, HStack, Input, Textarea } from '@chakra-ui/react'
 import { CheckboxButton } from 'components/form/checkbox-button'
-import { useMemo } from 'react'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { useMemo, useRef } from 'react'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-
-type UserTypesField = { id: string; name: string; checked: boolean }
-const userTypes = [
-  { id: '1', name: 'Admin', checked: false },
-  { id: '2', name: 'Accounting', checked: false },
-  { id: '3', name: 'FPM', checked: false },
-  { id: '4', name: 'Operational', checked: false },
-  { id: '5', name: 'Project Coordinator', checked: false },
-]
+import NumberFormat from 'react-number-format'
+import { AlertFormValues } from 'types/alert.type'
 
 const TextDivider: React.FC<{ title: string }> = props => {
   return (
@@ -28,110 +20,126 @@ const TextDivider: React.FC<{ title: string }> = props => {
 export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
   const { t } = useTranslation()
 
-  const { register, control, handleSubmit, watch } = useForm<{
-    userTypes: UserTypesField[]
-    recepient: string
-    subject: string
-    bodyFirst: string
-    recepientPhoneNo: string
-    bodySecond: string
-  }>({
-    defaultValues: { userTypes: userTypes },
-  })
-  const onSubmit = data => {}
+  const {
+    register,
+    formState: { errors },
+    control,
+    watch,
+  } = useFormContext<AlertFormValues>()
 
   const fields = watch()
 
   const isEnabled = useMemo(() => {
-    const { userTypes, recepient, bodyFirst, recepientPhoneNo } = fields
-    const isOneOfUserTypesSelected = userTypes.map(userType => userType.checked).some(Boolean)
-    return !!(recepient || bodyFirst || recepientPhoneNo || isOneOfUserTypesSelected)
+    const { userTypes, recipientEmailAddress, body, recipientPhoneNumber } = fields
+    const isOneOfUserTypesSelected = userTypes?.map(userType => userType).some(Boolean)
+    return !!(recipientEmailAddress || body || recipientPhoneNumber || isOneOfUserTypesSelected)
   }, [fields])
 
-  const { fields: userTypeFields } = useFieldArray({ control, name: 'userTypes' })
+  const userTypes = useWatch({ control, name: 'userTypes' })
+
+  const phoneNumberRef = useRef<any>()
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Box>
-        <TextDivider title={t('userTypes')} />
+    <Box>
+      <TextDivider title={t('userTypes')} />
 
-        <HStack mt="30px" spacing="12px">
-          {userTypeFields.map((item, index) => {
-            return (
-              <Controller
-                name={`userTypes.${index}`}
-                control={control}
-                key={index}
-                render={({ field: { name, onChange, value } }) => {
-                  return (
-                    <CheckboxButton
-                      name={name}
-                      key={name}
-                      isChecked={item.checked}
-                      onChange={event => {
-                        const checked = event.target.checked
-                        item.checked = checked
-                        onChange({ ...item, checked })
-                      }}
-                    >
-                      {item.name}
-                    </CheckboxButton>
-                  )
-                }}
-              />
-            )
-          })}
-        </HStack>
+      <HStack mt="30px" spacing="12px">
+        {userTypes?.map((user, index) => (
+          <CheckboxButton
+            {...register(user, {
+              required: !userTypes?.length && 'This is required',
+            })}
+            colorScheme="brand"
+            key={index}
+            value={user}
+            isChecked={user}
+          >
+            {user}
+          </CheckboxButton>
+        ))}
+      </HStack>
 
-        <TextDivider title={t('emailUser')} />
+      <TextDivider title={t('emailUser')} />
 
-        <HStack mt="30px">
-          <Box>
-            <FormLabel variant="strong-label">{t('recipient')}</FormLabel>
-            <Input type="email" {...register('recepient')} />
-          </Box>
-
-          <Box>
-            <FormLabel variant="strong-label">{t('subject')}</FormLabel>
-            <Input disabled value="When Project Project ne..." {...register('subject')} />
-          </Box>
-        </HStack>
-
-        <Box mt="30px" w="445px">
-          <FormLabel variant="strong-label" size="lg">
-            {t('body')}
-          </FormLabel>
-          <Textarea placeholder="Write here..." {...register('bodyFirst')} />
+      <HStack mt="30px">
+        <Box>
+          <FormLabel variant="strong-label">{t('recipient')}</FormLabel>
+          <Input type="email" {...register('recipientEmailAddress')} />
         </Box>
 
-        <TextDivider title={t('textUser')} />
-
-        <Box mt="30px" w="215px">
-          <Box>
-            <FormLabel variant="strong-label" whiteSpace="nowrap">
-              {t('recipientPhoneNo')}
-            </FormLabel>
-            <Input type="number" {...register('recepientPhoneNo')} />
-          </Box>
+        <Box>
+          <FormLabel variant="strong-label">{t('subject')}</FormLabel>
+          <Input disabled value="When Project Project ne..." {...register('message')} />
         </Box>
+      </HStack>
 
-        <Box mt="30px" w="445px">
-          <FormLabel variant="strong-label" size="lg">
-            {t('body')}
-          </FormLabel>
-          <Textarea isDisabled bg="gray.200" value="When Project Project new" w="445px" {...register('bodySecond')} />
-        </Box>
-
-        <HStack h="78px" mt="30px" borderTop="1px solid #E2E8F0" justifyContent="end" spacing="16px">
-          <Button onClick={props.onClose} variant="outline" colorScheme="brand">
-            {t('cancel')}
-          </Button>
-          <Button type="submit" isDisabled={!isEnabled} colorScheme="brand">
-            {t('save')}
-          </Button>
-        </HStack>
+      <Box mt="30px" w="445px">
+        <FormLabel variant="strong-label" size="lg">
+          {t('body')}
+        </FormLabel>
+        <Textarea placeholder="Write here..." {...register('body')} />
       </Box>
-      <DevTool control={control} />
-    </form>
+
+      <TextDivider title={t('textUser')} />
+
+      <Box mt="30px" w="215px">
+        <Box>
+          <FormLabel variant="strong-label" whiteSpace="nowrap">
+            {t('recipientPhoneNo')}
+          </FormLabel>
+          <Controller
+            control={control}
+            {...register(`recipientPhoneNumber`, {
+              validate: (value: any) => {
+                if (phoneNumberRef.current) {
+                  if (phoneNumberRef.current.value.replace(/\D+/g, '').length === 10) return true
+                }
+
+                return false
+              },
+            })}
+            render={({ field }) => {
+              return (
+                <>
+                  <NumberFormat
+                    id="phoneNumber"
+                    customInput={Input}
+                    value={field.value}
+                    onChange={e => field.onChange(e)}
+                    format="(###)-###-####"
+                    mask="_"
+                    placeholder="(___)-___-____"
+                    getInputRef={phoneNumberRef}
+                  />
+                  <FormErrorMessage>
+                    {errors?.recipientPhoneNumber && errors?.recipientPhoneNumber?.message}
+                    {errors?.recipientPhoneNumber && errors?.recipientPhoneNumber!.type === 'validate' && (
+                      <span>Phone number should be a 10-digit number</span>
+                    )}
+                  </FormErrorMessage>
+                </>
+              )
+            }}
+          />
+          {/* <Input type="number" {...register('recipientPhoneNumber')} /> */}
+        </Box>
+      </Box>
+
+      <Box mt="30px" w="445px">
+        <FormLabel variant="strong-label" size="lg">
+          {t('body')}
+        </FormLabel>
+        <Textarea isDisabled bg="gray.200" value="When Project Project new" w="445px" {...register('message')} />
+      </Box>
+
+      <HStack h="78px" mt="30px" borderTop="1px solid #E2E8F0" justifyContent="end" spacing="16px">
+        <Button onClick={props.onClose} variant="outline" colorScheme="brand">
+          {t('cancel')}
+        </Button>
+        <Button type="submit" form="alertDetails" isDisabled={!isEnabled} colorScheme="brand">
+          {t('save')}
+        </Button>
+      </HStack>
+    </Box>
   )
 }

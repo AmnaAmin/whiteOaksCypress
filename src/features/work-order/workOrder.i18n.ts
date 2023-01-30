@@ -55,6 +55,20 @@ export const workOrder = {
         completionVariance: 'Completion Variance',
         claimantSignature: 'Claimant Signature',
         dateOfSignature: 'Date Of Signature',
+
+        // New Work Order
+
+        clientStart: 'Client Start',
+        clientEnd: 'Client End',
+        profitPercentage: 'Profit Percentage',
+        finalSowAmount: 'Final SOW Amount',
+        type: 'Type',
+        clientApprovedAmount: 'Client Approved Amount',
+        vendorWorkOrderAmount: 'Vendor WO Amount',
+        expectedStartDate: 'Expected Start Date',
+        expectedCompletionDate: 'Expected Completion Date',
+        save: 'Save',
+        cancel: 'Cancel',
       },
     },
   },
@@ -111,6 +125,20 @@ export const workOrder = {
         completionVariance: 'Variación de finalización',
         claimantSignature: 'Firma del reclamante',
         dateOfSignature: 'Fecha de la firma',
+
+        // New Work Order
+
+        clientStart: 'Inicio del cliente',
+        clientEnd: 'Extremo del cliente',
+        profitPercentage: 'Porcentaje de beneficio',
+        finalSowAmount: 'Importe de la SOW final',
+        type: 'Escribe',
+        clientApprovedAmount: 'Monto aprobado por el cliente',
+        vendorWorkOrderAmount: 'Importe de la orden de trabajo del proveedor',
+        expectedStartDate: 'fecha de inicio esperada',
+        expectedCompletionDate: 'Fecha de finalización prevista',
+        save: 'Salvar',
+        cancel: 'Cancelar',
       },
     },
   },

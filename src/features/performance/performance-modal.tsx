@@ -25,6 +25,7 @@ import { PerformanceDetail } from './performance-details'
 import { Button } from 'components/button/button'
 import { useForm, UseFormReturn } from 'react-hook-form'
 import PerformanceGraph from './performance-modal-graph'
+import { PERFORMANCE } from './performance.i18n'
 
 const PerformanceModal = ({
   performanceDetails,
@@ -111,7 +112,7 @@ const PerformanceModal = ({
             <Divider mt={3} />
             <ModalFooter>
               <Button variant="outline" colorScheme="brand" onClick={onClose} mr={2}>
-                {t('cancel')}
+                {t(`${PERFORMANCE}.cancel`)}
               </Button>
               <Button
                 colorScheme="brand"
@@ -119,7 +120,7 @@ const PerformanceModal = ({
                 form="performanceValues"
                 disabled={isPerformanceSaveButtonDisabled}
               >
-                {t('save')}
+                {t(`${PERFORMANCE}.save`)}
               </Button>
             </ModalFooter>
           </ModalContent>

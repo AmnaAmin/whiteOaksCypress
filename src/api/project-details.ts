@@ -14,7 +14,7 @@ import {
 import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
-import { dateISOFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
+import { dateISOFormat, datePickerFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
 import { createDocumentPayload } from 'utils/file-utils'
 import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
@@ -236,6 +236,21 @@ export const useProjectStatusSelectOptions = (project: Project) => {
           disabled: true,
         }
       }
+
+      // if Project status is Reconcile 
+      // Project Close status should be disabled
+      //projectStatusId === ProjectStatus.Reconcile || projectStatusId === ProjectStatus.Punch
+      if (
+        (!project.isReconciled) &&
+        optionValue === ProjectStatus.Closed
+      ) {
+        return {
+          ...selectOption,
+          label: `${selectOption.label} (Verification required)`,
+          disabled: true,
+        }
+      }
+
       // If project status is Client Paid and there are some workorders not paid then
       // project status Paid should be disabled
       if (
@@ -318,6 +333,10 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       // Project Status -> Punch
       else if (projectStatusId === Number(PROJECT_STATUS.punch.value)) {
         overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
+      }
+       // Project Status -> Reconcile
+       else if (projectStatusId === Number(PROJECT_STATUS.reconcile.value)) {
+        overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch]
       }
       // Project Status -> Closed
       else if (projectStatusId === Number(PROJECT_STATUS.closed.value)) {
@@ -438,6 +457,7 @@ export const getPaymentTermsSelectOptions = () => {
   }))
 }
 
+
 export const parseFormValuesFromAPIData = ({
   project,
   projectExtraAttributes,
@@ -482,7 +502,6 @@ export const parseFormValuesFromAPIData = ({
 
   const projectStatusSelectOptions = getProjectStatusSelectOptions()
   const remainingPayment = project.accountRecievable || 0
-
   return {
     // Project Management form values
     status: findOptionByValue(projectStatusSelectOptions, project.projectStatusId),
@@ -491,13 +510,19 @@ export const parseFormValuesFromAPIData = ({
     poNumber: project.poNumber,
     projectName: project.name,
     woaStartDate: project.woaStartDate as string,
-    woaCompletionDate: getLocalTimeZoneDate(project.woaCompletionDate as string),
+    woaCompletionDate: datePickerFormat(project.woaCompletionDate as string),
     clientStartDate: project.clientStartDate as string,
     clientDueDate: project.clientDueDate as string,
     clientWalkthroughDate: project.clientWalkthroughDate as string,
     clientSignOffDate: project.clientSignoffDate as string,
     overrideProjectStatus: '',
-
+    isReconciled: project.isReconciled as boolean,
+    reconcileDate: project.reconcileDate as string,
+    verifiedDate: project.verifiedDate as string,
+    reconciledBy: project.reconciledBy as string,
+    verifiedBy: project.verifiedBy as string,
+    verifiedbyDesc: project.verifiedbyDesc as string,
+    reconciledbyDesc: project.reconciledbyDesc as string,
     // Project Invoice and Payment form values
     originalSOWAmount: project.sowOriginalContractAmount,
     sowLink: project.sowLink,
@@ -589,7 +614,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
     clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
-
+    isReconciled: formValues.isReconciled === null ? false : formValues.isReconciled,
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,
     sowNewAmount: formValues?.finalSOWAmount,

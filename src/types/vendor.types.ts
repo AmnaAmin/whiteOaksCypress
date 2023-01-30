@@ -331,6 +331,12 @@ export type SettingsValues = {
   email?: string
   language?: any
   profilePicture?: any
+  address?: string
+  city?: string
+  state?: any
+  zipCode?: string
+  phoneNo?: string
+  stateId?: number
 }
 
 export type Vendors = {

@@ -1,10 +1,13 @@
 import { Box, Center, Spinner } from '@chakra-ui/react'
 import React, { useCallback, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Label, Legend } from 'recharts'
 
 import { currencyFormatter } from 'utils/string-formatters'
+import { PERFORMANCE } from './performance.i18n'
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck }) => {
+  const { t } = useTranslation()
   const labels = [
     { key: 'Profit', color: '#949AC2' },
     { key: 'Revenue', color: '#68B8EF' },
@@ -71,6 +74,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
               fontSize: '12px',
               fontWeight: 400,
               fontStyle: 'normal',
+              display: 'none',
             }}
             tickLine={false}
             tickFormatter={value => (value?.length > 12 ? `${value.slice(0, 12)}...` : value)}
@@ -79,7 +83,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
               angle: 360,
               position: 'bottom',
               textAnchor: 'middle',
-              offset: 80,
+              offset: 40,
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
@@ -99,17 +103,18 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
           </XAxis>
           {hasUsers && (
             <XAxis
-              dataKey={['This Month', 'Last Month'].includes(monthCheck?.label) ? 'centerMonth' : 'month'}
+              dataKey={'month'}
               axisLine={false}
-              interval={['This Month', 'Last Month'].includes(monthCheck?.label) ? 0 : 5}
+              interval={0}
               tickLine={false}
+              allowDuplicatedCategory={false}
               tick={{
                 fill: '#4A5568',
                 fontSize: '12px',
                 fontWeight: 700,
                 fontStyle: 'inter',
               }}
-              tickMargin={50}
+              //tickMargin={50}
               xAxisId="users"
             />
           )}
@@ -157,17 +162,18 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             wrapperStyle={{
               lineHeight: '31px',
               position: 'relative',
-              bottom: '40px',
+              bottom: '70px',
               left: '100px',
             }}
             iconType="circle"
             iconSize={10}
             align="center"
             formatter={value => {
+              const values = value?.toLowerCase()
               return (
                 <Box display="inline-flex" marginInlineEnd="30px">
                   <Box as="span" color="gray.600" fontSize="12px" fontStyle="normal" fontWeight={400}>
-                    {value}
+                    {t(`${PERFORMANCE}.${values}`)}
                   </Box>
                 </Box>
               )

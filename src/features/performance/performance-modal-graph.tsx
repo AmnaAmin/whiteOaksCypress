@@ -4,9 +4,11 @@ import ReactSelect from 'components/form/react-select'
 import { format, subMonths } from 'date-fns'
 import { enUS } from 'date-fns/locale'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Label } from 'recharts'
 import { getLastQuarterByDate, getQuarterByDate, getQuarterByMonth, months, monthsShort } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
+import { PERFORMANCE } from './performance.i18n'
 
 type GraphData = {
   month: any
@@ -24,6 +26,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean; yearFilt
   const [monthOption, setMonthOption] = useState(MonthOption[0])
   const [graphData, setGraphData] = useState<GraphData>()
   const vendors = [chartData?.chart]
+  const { t } = useTranslation()
 
   const vendorData = useMemo(
     () =>
@@ -118,7 +121,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean; yearFilt
             <HStack>
               <Flex ml={'230px'} justifyContent={'center'} width="300px">
                 <FormLabel width={'200px'} variant="strong-label" size="lg">
-                  Performance Per Month
+                  {t(`${PERFORMANCE}.performancePerMonth`)}
                 </FormLabel>
               </Flex>
               <Box width={'150px'}>
@@ -148,6 +151,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean; yearFilt
 }
 
 export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption }) => {
+  const { t } = useTranslation()
   const labels = [
     { key: 'Bonus', color: '#FB8832' },
     { key: 'Profit', color: '#949AC2' },
@@ -220,7 +224,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption
             {/* -- If vendorData does not have any data for the specific month, empty graph message will show -- */}
             {emptyGraph && currAndLast && (
               <Label
-                value="There is currently no data available for the month selected"
+                value={t(`${PERFORMANCE}.noDateMessage`)}
                 offset={180}
                 position="insideBottom"
                 fill="#A0AEC0"
@@ -278,10 +282,11 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthOption
             iconSize={10}
             align="center"
             formatter={value => {
+              const values = value?.toLowerCase()
               return (
                 <Box display="inline-flex" marginInlineEnd="30px" data-testid={'legend-' + value}>
                   <Box as="span" color="gray.600" fontSize="12px" fontStyle="normal" fontWeight={400}>
-                    {value}
+                    {t(`${PERFORMANCE}.${values}`)}
                   </Box>
                 </Box>
               )

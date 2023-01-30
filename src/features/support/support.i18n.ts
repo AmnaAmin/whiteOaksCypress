@@ -20,6 +20,7 @@ export const support = {
 
         //modal
         editTicket: 'Edit Support Ticket',
+        dateCreated: 'Date Created',
 
         //extra
         createTicket: 'Create a Ticket',
@@ -57,6 +58,9 @@ export const support = {
         resolution: 'Resolución (1000 Caracteres)',
         // modal
         editTicket: 'Editar ticket de soporte',
+        createTicket: 'Crear un boleto',
+        fileUpload: 'Subir archivo',
+        dateCreated: 'fecha de creacion',
 
         save: 'Ahorrar',
         cancel: 'Cancelar',

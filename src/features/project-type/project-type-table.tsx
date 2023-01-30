@@ -1,5 +1,5 @@
 import { Box, useDisclosure } from '@chakra-ui/react'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { ColumnDef } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
@@ -21,7 +21,11 @@ export const PROJECT_TYPE_COLUMNS: ColumnDef<any>[] = [
     header: `${PROJECT_TYPE}.createdDate`,
     accessorKey: 'createdDate',
     accessorFn(cellInfo) {
-      return dateFormat(cellInfo.createdDate)
+      return datePickerFormat(cellInfo.createdDate)
+    },
+    cell: (row: any) => {
+      const value = row?.row.original?.createdDate
+      return value ? dateFormat(value) : '- - -'
     },
     meta: { format: 'date' },
   },
@@ -33,7 +37,11 @@ export const PROJECT_TYPE_COLUMNS: ColumnDef<any>[] = [
     header: `${PROJECT_TYPE}.modifiedDate`,
     accessorKey: 'lastModifiedDate',
     accessorFn(cellInfo) {
-      return dateFormat(cellInfo.lastModifiedDate)
+      return datePickerFormat(cellInfo.lastModifiedDate)
+    },
+    cell: (row: any) => {
+      const value = row?.row.original?.lastModifiedDate
+      return value ? dateFormat(value) : '- - -'
     },
     meta: { format: 'date' },
   },
