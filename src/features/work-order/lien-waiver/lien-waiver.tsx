@@ -486,6 +486,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             ref={inputRef}
             style={{ display: 'none' }}
             onChange={onFileChange}
+            data-testid = 'upload-LW'
             accept="application/pdf, image/png, image/jpg, image/jpeg"
           />
           {!isVendor &&
