@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues} from 'types/project-details.types'
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
-import { datePickerFormat } from 'utils/date-time-utils'
+import { datePickerFormat, dateFormat } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 
@@ -54,6 +54,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     isClientSignOffDisabled,
     isClientStartDateDisabled,
     isReconcileAllowed,
+    isReconcileDisabled,
   } = useFieldsDisabled(control)
 
   const {
@@ -283,7 +284,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
         
         <Grid>
         
-          {(watchStatus?.label === STATUS.Reconcile.toUpperCase() && isReconcileAllowed) && (<GridItem>
+          <GridItem>
             <FormControl maxW="500px">
               <FormLabel variant="strong-label" size="md">
                 {t(`verifyProject`)}
@@ -293,31 +294,14 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 isChecked={watchIsReconciled === null ? false : watchIsReconciled}
                 variant={'normal'}
                 data-testid="notifyVendorCheckBox"
-                disabled={Number.isInteger(watchForm.verifiedBy)}
+                disabled={isReconcileDisabled || watchStatus?.label !== STATUS.Reconcile.toUpperCase() }
                 size="md"
                 {...register('isReconciled')}
               >
-              <Text color='#000'>{watchForm.verifiedDate ? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${watchForm.verifiedDate}`: ""}</Text>
+              <Text color='#000'>{watchForm.verifiedDate? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`: ""}</Text>
               </Checkbox>
             </FormControl>
-          </GridItem>)} 
-          {((watchStatus?.label === STATUS.Reconcile.toUpperCase() && watchForm.isReconciled) && !isReconcileAllowed) && (<GridItem>
-            <FormControl maxW="500px">
-              <FormLabel variant="strong-label" size="md">
-                {t(`verifyProject`)}
-              </FormLabel>
-              <Checkbox
-                colorScheme="PrimaryCheckBox"
-                variant={'normal'}
-                data-testid="notifyVendorCheckBox"
-                size="md"
-                disabled={true}
-                {...register('isReconciled')}
-              >
-              <Text color='#000'>{watchForm.verifiedDate? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${watchForm.verifiedDate}`: ""}</Text>
-              </Checkbox>
-            </FormControl>
-          </GridItem>)} 
+          </GridItem>
         </Grid>
       </Stack>
     </Box>
