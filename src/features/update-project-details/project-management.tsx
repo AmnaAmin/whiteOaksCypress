@@ -53,7 +53,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     isClientDueDateDisabled,
     isClientSignOffDisabled,
     isClientStartDateDisabled,
-    isReconcileAllowed,
     isReconcileDisabled,
   } = useFieldsDisabled(control)
 
