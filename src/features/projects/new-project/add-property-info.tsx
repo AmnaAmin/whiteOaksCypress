@@ -362,7 +362,9 @@ export const AddPropertyInfo: React.FC<{
                   value={message}
                   onChange={handleEmailChange}
                 />
-                <Text color="red">{error ? error : ''}</Text>
+                <Text color="red" fontSize="14px" fontWeight="400">
+                  {error ? error : ''}
+                </Text>
               </FormControl>
             </GridItem>
           </Grid>
