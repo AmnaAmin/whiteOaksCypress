@@ -204,7 +204,7 @@ export const useTrades = () => {
   const client = useClient()
 
   return useQuery<Array<Trade>>('trades', async () => {
-    const response = await client(`vendor-skills`, {})
+    const response = await client('vendor-skills', {})
 
     return orderBy(response?.data || [], ['id'], ['desc'])
   })
