@@ -2,7 +2,6 @@ import React from 'react'
 import { Box, FormLabel, Grid, GridItem, HStack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { MonthOption } from 'api/performance'
-import { useFPMs } from 'api/pc-projects'
 import { SelectOption } from 'types/transaction.type'
 import { PERFORMANCE } from './performance.i18n'
 import { useTranslation } from 'react-i18next'
@@ -11,17 +10,31 @@ export const PerformanceFilters: React.FC<{
   yearFilter: number | undefined | string
   setYearFilter: (val) => void
   setFpmOption: (val) => void
-  fpmOption: SelectOption[]
+  fpmOption: (SelectOption | null)[]
   setMonthOption: (val) => void
   monthOption: SelectOption
   filterGraphData: (selectedFpms, selectedMonth) => void
-}> = ({ yearFilter, setYearFilter, setFpmOption, fpmOption, setMonthOption, monthOption, filterGraphData }) => {
-  const { fieldProjectManagerOptions } = useFPMs()
+  fieldProjectManagerOptions: SelectOption[]
+  setDefaultToTopFive: (val: boolean) => void
+  setFpmFilter: (val) => void
+}> = ({
+  yearFilter,
+  setYearFilter,
+  setFpmOption,
+  fpmOption,
+  setMonthOption,
+  monthOption,
+  filterGraphData,
+  fieldProjectManagerOptions,
+  setDefaultToTopFive,
+  setFpmFilter,
+}) => {
   const { t } = useTranslation()
 
   const onFpmOptionChange = options => {
     if (options?.length < 1) {
-      setFpmOption([])
+      setFpmOption([]) // using FPM option to render Filter By Select
+      setFpmFilter([]) // using FPM filter to create query for fetching selected fpm's performance
     }
 
     if (options?.length > 5) {
@@ -36,7 +49,7 @@ export const PerformanceFilters: React.FC<{
       })) || []
 
     setFpmOption(selectedFpmOption)
-
+    setFpmFilter(selectedFpmOption)
     filterGraphData(selectedFpmOption, monthOption)
   }
 
@@ -47,9 +60,12 @@ export const PerformanceFilters: React.FC<{
     const isCurrentYearData = yearFilter === currentYear || !yearFilter
     const isPastYearData = yearFilter === currentYear - 1
 
-    setFpmOption(selectedFpm)
+    setFpmOption(selectedFpm) //empty select
+    setFpmFilter(selectedFpm) //empty fpm query data
     setMonthOption(monthOption)
-
+    if (!['lastMonth', 'thisMonth'].includes(monthOption?.value)) {
+      setDefaultToTopFive(true) // Indicator to set default Top Five FPMs on options change other than this and last month.
+    }
     if (
       ['thisMonth', 'currentQuarter', 'currentYear'].includes(monthOption?.value) ||
       (monthOption?.label === 'Last Month' && currentMonth !== 0) ||

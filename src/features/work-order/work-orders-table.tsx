@@ -54,6 +54,7 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
   }, [workOrders])
 
   const setPageCount = rows => {
+    /*Test in Preprod*/
     setTotalPages(Math.ceil((rows?.length ?? 0) / 50))
     setTotalRows(rows?.length)
   }
