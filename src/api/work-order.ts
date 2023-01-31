@@ -351,7 +351,7 @@ export const defaultValuesLienWaiver = lienWaiverData => {
 
 export const useLWFieldsStatusDecision = ({ workOrder }) => {
   const disabled =
-    ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) ||
+    ![STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) ||
     (workOrder.leanWaiverSubmitted && workOrder?.lienWaiverAccepted)
   return {
     isFieldsDisabled: disabled,

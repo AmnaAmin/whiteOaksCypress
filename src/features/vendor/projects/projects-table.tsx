@@ -59,9 +59,6 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'statusLabel',
     cell: (row: any) => {
       let value = row.cell.getValue() as string
-
-      if ( value === "Declined" )
-        value = "Rejected";
       
       return <Status value={value} id={value} />
     },

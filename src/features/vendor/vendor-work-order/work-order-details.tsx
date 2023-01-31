@@ -107,10 +107,6 @@ export const WorkOrderDetails = ({
     })
   }
 
-  if ( workOrder?.statusLabel === "Declined" ) {
-    workOrder.statusLabel = "Rejected";
-  }
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize} closeOnOverlayClick={false}>
       <ModalOverlay />

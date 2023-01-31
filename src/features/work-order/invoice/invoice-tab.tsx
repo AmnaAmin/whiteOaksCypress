@@ -188,7 +188,7 @@ export const InvoiceTab = ({
       expectedPaymentDate: dateISOFormatWithZeroTime(nextFriday(paymentTermDate)),
       paymentTermDate: dateISOFormatWithZeroTime(paymentTermDate),
     }
-    if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Declined)) {
+    if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Rejected)) {
       updatedWorkOrder.status = STATUS_CODE.INVOICED
     }
     return updatedWorkOrder
@@ -298,7 +298,7 @@ export const InvoiceTab = ({
               title={t('invoiceDate')}
               value={
                 workOrder.dateInvoiceSubmitted &&
-                ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                ![STATUS.Rejected]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
                   ? (dateFormatNew(workOrder?.dateInvoiceSubmitted) as any)
                   : 'mm/dd/yy'
               } 
@@ -309,7 +309,7 @@ export const InvoiceTab = ({
             <InvoiceInfo
               title={t('dueDate')}
               value={
-                workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                workOrder.paymentTermDate && ![STATUS.Rejected]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
                   ? (dateFormatNew(workOrder?.paymentTermDate) as any)
                   : 'mm/dd/yy'
               }
@@ -431,7 +431,7 @@ export const InvoiceTab = ({
               data-testid="generateInvoice"
               disabled={
                 !(
-                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Declined ||
+                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Rejected ||
                   workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
                 )
               }

@@ -25,7 +25,7 @@ export enum STATUS {
   Disputed = 'disputed',
   Cancel = 'cancel',
   Expired = 'expired',
-  Declined = 'rejected',
+  Declined = 'declined',
   Inactive = 'inactive',
   DoNotUse = 'do not use',
   Decline = 'decline',

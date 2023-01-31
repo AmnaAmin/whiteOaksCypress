@@ -490,7 +490,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             accept="application/pdf, image/png, image/jpg, image/jpeg"
           />
           {!isVendor &&
-            [STATUS.Declined, STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) &&
+            [STATUS.Rejected, STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase()) &&
             (!!document ? (
               <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
                 <HStack spacing="5px" h="38px" padding="10px" align="center">
@@ -533,7 +533,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             </Button>
           ) : (
             <>
-              {[STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
+              {[STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
                 workOrder?.statusLabel?.toLocaleLowerCase(),
               ) &&
                 !(workOrder.leanWaiverSubmitted && workOrder.lienWaiverAccepted) && (

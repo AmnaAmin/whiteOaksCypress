@@ -29,9 +29,6 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
     accessorKey: 'statusLabel',
     cell: row => {
       let value = row.cell.getValue() as string
-
-      if ( value === "Declined" )
-        value = "Rejected";
       
       return <Status value={value} id={value} />
     },
