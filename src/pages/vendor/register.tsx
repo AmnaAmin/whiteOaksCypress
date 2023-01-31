@@ -131,7 +131,7 @@ const vendorRegisterFormSchema = {
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
   zipCode: Yup.string().required('ZipCode is required'),
-  capacity: Yup.number().required('Capacity is required').max(500, "Max Limit is 500"),
+  capacity: Yup.number().required('Capacity is required').max(500, 'Max Limit is 500'),
 
   //Documents
 
@@ -184,7 +184,7 @@ export const VendorRegister = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [unLockedTabs, setUnLoackedTabs] = useState<Array<FORM_TABS>>([])
   const [isNextBtnActive, setisNextBtnActive] = useState<boolean>(false)
-  const [isCreateButtonActive, setIsCreateButtonActive] = useState<boolean>(false);
+  const [isCreateButtonActive, setIsCreateButtonActive] = useState<boolean>(false)
 
   useEffect(() => {
     if (!isMobile) return
@@ -193,7 +193,7 @@ export const VendorRegister = () => {
   }, [isMobile])
 
   const formReturn = useForm({
-    mode: "onChange",
+    mode: 'onChange',
     resolver: yupResolver(Yup.object().shape(customResolver)),
     //validateCriteriaMode: 'firstErrorDetected'
   } as any)
@@ -515,41 +515,41 @@ export const VendorRegister = () => {
   }
 
   const documentFieldValues = {
-    w9DocumentDate: watch("w9DocumentDate"),
-    w9Document: watch("w9Document"),
+    w9DocumentDate: watch('w9DocumentDate'),
+    w9Document: watch('w9Document'),
 
-    agreementSignedDate: watch("agreementSignedDate"),
-    agreement: watch("agreement"),
+    agreementSignedDate: watch('agreementSignedDate'),
+    agreement: watch('agreement'),
 
-    autoInsuranceExpDate: watch("autoInsuranceExpDate"),
-    insurance: watch("insurance"),
+    autoInsuranceExpDate: watch('autoInsuranceExpDate'),
+    insurance: watch('insurance'),
 
-    coiGlExpDate: watch("coiGlExpDate"),
-    coiGlExpFile: watch("coiGlExpFile"),
+    coiGlExpDate: watch('coiGlExpDate'),
+    coiGlExpFile: watch('coiGlExpFile'),
 
-    coiWcExpDate: watch("coiWcExpDate"),
-    coiWcExpFile: watch("coiWcExpFile"),
+    coiWcExpDate: watch('coiWcExpDate'),
+    coiWcExpFile: watch('coiWcExpFile'),
   }
 
   const documentSchema = {
-      w9DocumentDate: Yup.string(),
-      w9Document: Yup.mixed().required(),
+    w9DocumentDate: Yup.string(),
+    w9Document: Yup.mixed().required(),
 
-      agreementSignedDate: Yup.string().required(),
-      agreement: Yup.mixed().required(),
+    agreementSignedDate: Yup.string().required(),
+    agreement: Yup.mixed().required(),
 
-      autoInsuranceExpDate: Yup.string().required(),
-      insurance: Yup.mixed().required(),
+    autoInsuranceExpDate: Yup.string().required(),
+    insurance: Yup.mixed().required(),
 
-      coiGlExpDate: Yup.string().required(),
-      coiGlExpFile: Yup.mixed().required(),
+    coiGlExpDate: Yup.string().required(),
+    coiGlExpFile: Yup.mixed().required(),
 
-      coiWcExpDate: Yup.string().required(),
-      coiWcExpFile: Yup.mixed().required(),
+    coiWcExpDate: Yup.string().required(),
+    coiWcExpFile: Yup.mixed().required(),
   }
 
   const licenseFieldValues = {
-    licenses: watch("licenses")
+    licenses: watch('licenses'),
   }
 
   const licenseFieldSchema = {
@@ -560,67 +560,67 @@ export const VendorRegister = () => {
         expiryDate: Yup.string().typeError('Expiration Date must be a string').required('Expiration Date is required'),
         expirationFile: Yup.mixed().required('File is required'),
       }),
-    )
+    ),
   }
 
   const tradeFieldValues = {
-    trades: watch("trades")
+    trades: watch('trades'),
   }
 
   const marketFieldValues = {
-    markets: watch("markets")
+    markets: watch('markets'),
   }
 
   useEffect(() => {
-
-    if ( formTabIndex === FORM_TABS.LOCATION_DETAILS ) {
+    if (formTabIndex === FORM_TABS.LOCATION_DETAILS) {
       Yup.object(locationDetailsSchema)
-      .validate(locationDetailFieldValues, { strict: true })
-      .then(value => {
-        setisNextBtnActive(true)
-      })
-      .catch(err => {
-        setisNextBtnActive(false)
-      })
+        .validate(locationDetailFieldValues, { strict: true })
+        .then(value => {
+          setisNextBtnActive(true)
+        })
+        .catch(err => {
+          setisNextBtnActive(false)
+        })
     }
 
-    if ( formTabIndex === FORM_TABS.DOCUMENTS ) {
-      Yup.object( documentSchema )
-      .validate( documentFieldValues, { strict: true } )
-      .then ( value => {
-        setisNextBtnActive(true)
-      }  )
-      .catch( err => {
-        setisNextBtnActive(false);
-      } )
+    if (formTabIndex === FORM_TABS.DOCUMENTS) {
+      Yup.object(documentSchema)
+        .validate(documentFieldValues, { strict: true })
+        .then(value => {
+          setisNextBtnActive(true)
+        })
+        .catch(err => {
+          setisNextBtnActive(false)
+        })
     }
 
-    if ( formTabIndex === FORM_TABS.LICENSE ) {
-      Yup.object( licenseFieldSchema )
-      .validate( licenseFieldValues, { strict: true } )
-      .then( value => {
-        setisNextBtnActive(true)
-      } ).catch( err => setisNextBtnActive(false) );
+    if (formTabIndex === FORM_TABS.LICENSE) {
+      Yup.object(licenseFieldSchema)
+        .validate(licenseFieldValues, { strict: true })
+        .then(value => {
+          setisNextBtnActive(true)
+        })
+        .catch(err => setisNextBtnActive(false))
     }
 
-    if ( formTabIndex === FORM_TABS.CONSTRUCTION_TRADE ) {
-
-      validateTrade( tradeFieldValues.trades ) ? setisNextBtnActive( true ) : setisNextBtnActive( false )
-      
+    if (formTabIndex === FORM_TABS.CONSTRUCTION_TRADE) {
+      validateTrade(tradeFieldValues.trades) ? setisNextBtnActive(true) : setisNextBtnActive(false)
     }
 
-    if ( formTabIndex === FORM_TABS.MARKETS ) {
-      
-      validateMarket( marketFieldValues.markets ) ? setIsCreateButtonActive( true ) : setIsCreateButtonActive( false )
-      
+    if (formTabIndex === FORM_TABS.MARKETS) {
+      validateMarket(marketFieldValues.markets) ? setIsCreateButtonActive(true) : setIsCreateButtonActive(false)
     }
-    
-  }, [locationDetailFieldValues,documentFieldValues, licenseFieldValues, tradeFieldValues, marketFieldValues])
+  }, [locationDetailFieldValues, documentFieldValues, licenseFieldValues, tradeFieldValues, marketFieldValues])
 
   const formLabeStyle = {
     fontSize: '14px',
     fontWeight: 500,
     color: 'gray.700',
+  }
+  const placeholderStyle = {
+    fontSize: '14px',
+    fontWeight: 400,
+    color: 'gray.500',
   }
   return (
     <Box
@@ -698,6 +698,7 @@ export const VendorRegister = () => {
                         color="#252F40"
                         disabled={disableLoginFields}
                         placeholder="Please enter your email address"
+                        _placeholder={placeholderStyle}
                         {...register('email', {
                           required: 'This is required',
                           onChange: e => setValue('businessEmailAddress', e.target.value),
@@ -719,6 +720,7 @@ export const VendorRegister = () => {
                         color="#252F40"
                         disabled={disableLoginFields}
                         placeholder="Enter your first name"
+                        _placeholder={placeholderStyle}
                         {...register('firstName', {
                           required: 'This is required',
                           onChange: e => setValue('ownerName', e.target.value + ' ' + getValues('lastName')),
@@ -740,6 +742,7 @@ export const VendorRegister = () => {
                         color="#252F40"
                         disabled={disableLoginFields}
                         placeholder="Enter your last name"
+                        _placeholder={placeholderStyle}
                         {...register('lastName', {
                           required: 'This is required',
                           onChange: e => setValue('ownerName', getValues('firstName') + ' ' + e.target.value),
@@ -762,6 +765,7 @@ export const VendorRegister = () => {
                           color="#252F40"
                           disabled={disableLoginFields}
                           placeholder="Enter your password"
+                          _placeholder={placeholderStyle}
                           {...register('password', {
                             required: 'This is required',
                           })}
@@ -811,6 +815,7 @@ export const VendorRegister = () => {
                         color="#252F40"
                         disabled={disableLoginFields}
                         placeholder="Enter your business name"
+                        _placeholder={placeholderStyle}
                         {...register('companyName', {
                           required: 'This is required',
                         })}
@@ -896,6 +901,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your primary contact"
+                                  _placeholder={placeholderStyle}
                                   readOnly={true}
                                   {...register('ownerName', {
                                     required: 'This is required',
@@ -968,6 +974,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your primary email address"
+                                  _placeholder={placeholderStyle}
                                   readOnly={true}
                                   {...register('businessEmailAddress', {
                                     required: 'This is required',
@@ -1000,6 +1007,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your secondary contact"
+                                  _placeholder={placeholderStyle}
                                   {...register('secondName')}
                                 />
                                 <FormErrorMessage>{errors?.secondName && errors?.secondName?.message}</FormErrorMessage>
@@ -1015,6 +1023,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Enter your secondary phone number"
+                                  _placeholder={placeholderStyle}
                                   {...register('secondPhoneNumber')}
                                 />
                                 <FormErrorMessage>
@@ -1032,6 +1041,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your secondary email address"
+                                  _placeholder={placeholderStyle}
                                   {...register('secondEmailAddress')}
                                 />
                                 <FormErrorMessage>
@@ -1117,6 +1127,7 @@ export const VendorRegister = () => {
                                 fontSize="14px"
                                 color="#252F40"
                                 placeholder="Please enter your street address"
+                                _placeholder={placeholderStyle}
                                 {...register('streetAddress', {
                                   required: 'This is required',
                                 })}
@@ -1149,6 +1160,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your city"
+                                  _placeholder={placeholderStyle}
                                   {...register('city', {
                                     required: 'This is required',
                                   })}
@@ -1215,6 +1227,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your zip code"
+                                  _placeholder={placeholderStyle}
                                   {...register('zipCode', {
                                     required: 'This is required',
                                   })}
@@ -1240,6 +1253,7 @@ export const VendorRegister = () => {
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your capacity"
+                                  _placeholder={placeholderStyle}
                                   {...register('capacity', {
                                     required: 'This is required',
                                     max: 500,
