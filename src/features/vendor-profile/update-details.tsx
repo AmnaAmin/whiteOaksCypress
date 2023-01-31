@@ -95,7 +95,9 @@ export const UpdateDetails: React.FC<{
           <GridItem>
             <FieldInfoCard
               title={t('last4digits')}
-              value={`${vendorProfileData?.einNumber?.slice(-4)}`}
+              value={`${vendorProfileData?.ssnNumber?.slice(-4) ?? ''} ${
+                vendorProfileData?.ssnNumber && vendorProfileData?.einNumber ? '/' : ''
+              } ${vendorProfileData?.einNumber?.slice(-4) ?? ''}`}
               icon={BiCreditCardFront}
             />
           </GridItem>

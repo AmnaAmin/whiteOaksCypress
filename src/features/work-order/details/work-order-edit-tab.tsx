@@ -8,7 +8,6 @@ import {
   Divider,
   Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   HStack,
   Input,
@@ -227,7 +226,7 @@ const WorkOrderDetailTab = props => {
   const [selectedVendorId, setSelectedVendorId] = useState<any>([])
 
   const { data: trades } = useTrades()
-  const [vendorSkillId, setVendorSkillId] = useState(null)
+  const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
 
   const { vendors } = useFilteredVendors(vendorSkillId)
 
@@ -390,7 +389,6 @@ const WorkOrderDetailTab = props => {
                                     }}
                                     selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
                                   />
-                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                                 </>
                               )
                             }}
@@ -398,7 +396,7 @@ const WorkOrderDetailTab = props => {
                         </FormControl>
                       </Box>
                       <Box w="215px">
-                        <FormControl isInvalid={!!errors.vendorSkillId} data-testid="vendorId">
+                        <FormControl isInvalid={!!errors.vendorId} data-testid="vendorId">
                           <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                             {t('companyName')}
                           </FormLabel>
@@ -419,7 +417,6 @@ const WorkOrderDetailTab = props => {
                                       field.onChange(option)
                                     }}
                                   />
-                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                                 </>
                               )
                             }}
@@ -493,7 +490,7 @@ const WorkOrderDetailTab = props => {
                 </Box>
               )}
               <Box w="215px">
-                <FormControl zIndex="2">
+                <FormControl zIndex="2" isInvalid={!!errors.workOrderStartDate}>
                   <FormLabel variant="strong-label" size="md">
                     {t('expectedStart')}
                   </FormLabel>
@@ -512,7 +509,7 @@ const WorkOrderDetailTab = props => {
                 </FormControl>
               </Box>
               <Box w="215px">
-                <FormControl>
+                <FormControl isInvalid={!!errors.workOrderExpectedCompletionDate}>
                   <FormLabel variant="strong-label" size="md">
                     {t('expectedCompletion')}
                   </FormLabel>
@@ -550,7 +547,7 @@ const WorkOrderDetailTab = props => {
               </Box>
             </HStack>
           </Box>
-          {!(uploadedWO && uploadedWO?.s3Url && !assignedItemsWatch) && (
+          {!(uploadedWO && uploadedWO?.s3Url) && (
             <Box mx="32px" mt={10}>
               {isLoadingLineItems ? (
                 <Center>
@@ -586,7 +583,7 @@ const WorkOrderDetailTab = props => {
                 {t('seeProjectDetails')}
               </Button>
             )}
-            {uploadedWO && uploadedWO?.s3Url && !assignedItemsWatch && (
+            {uploadedWO && uploadedWO?.s3Url && (
               <Button
                 variant="outline"
                 colorScheme="brand"

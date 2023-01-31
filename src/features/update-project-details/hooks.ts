@@ -86,7 +86,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
       isStatusPaid ||
       isStatusOverPayment ||
       isStatusInvoiced,
-    isReconciledDisabled:
+    isReconcileDisabled:
       isFPM || 
       isVendor || 
       isClientManager ||

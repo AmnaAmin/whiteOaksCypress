@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react'
 import { MonthOption, usePerformance, useRevenuePerformance } from 'api/performance'
 import { format, subMonths } from 'date-fns'
-import { last } from 'lodash'
+import _, { last } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
 import { getLastQuarterByDate, getQuarterByDate, getQuarterByMonth, months, monthsShort } from 'utils/date-time-utils'
 import { PerformanceFilters } from './performance-filters'
@@ -10,6 +10,9 @@ import { PerformanceTable } from './performance-table'
 import { PerformanceGraphWithUsers } from './revenue-performance-graph'
 import { enUS } from 'date-fns/locale'
 import { Card } from 'components/card/card'
+import { useFPMs } from 'api/pc-projects'
+import { getQueryString } from 'utils/filters-query-utils'
+import { SelectOption } from 'types/transaction.type'
 
 type GraphData = {
   username: string
@@ -64,7 +67,9 @@ export const PerformanceTab = () => {
   const [yearFilter, setYearFilter] = useState(undefined)
   const [graphData, setGraphData] = useState<GraphData>()
   const [monthOption, setMonthOption] = useState(MonthOption[0])
-  const [fpmOption, setFpmOption] = useState<any>([])
+  const [fpmOption, setFpmOption] = useState<Array<SelectOption | null>>([])
+  const [defaultToTopFive, setDefaultToTopFive] = useState<boolean>(false)
+  const [fpmFilter, setFpmFilter] = useState<Array<SelectOption | null>>()
   const {
     data: performanceChart = [],
     isLoading,
@@ -72,11 +77,26 @@ export const PerformanceTab = () => {
     isFetching,
   } = useRevenuePerformance(yearFilter)
   const { monthFilter } = useMapMonths(monthOption)
+  const [fpmPerformanceData, setFPMPerformanceData] = useState<Array<FPMMonthlyData> | null>()
+  const { fieldProjectManagerOptions } = useFPMs()
+
+  // create query when year/month or fpms filter change
+  const queryString = useMemo(() => {
+    const queryParams = {
+      year: yearFilter,
+      months: monthFilter,
+      fpmIds: fpmFilter?.map(f => f?.value)?.join(','),
+    }
+    return getQueryString(queryParams)
+  }, [yearFilter, monthFilter, fpmFilter])
+
   const {
     data: performance,
+    fpmsOrderedByRevenue,
     isLoading: isPerformanceTableLoading,
+    isFetching: isPerformanceTableFetching,
     refetch: refetchFpmQuota,
-  } = usePerformance({ yearFilter, months: monthFilter, fpmIds: fpmOption?.map(f => f?.value)?.join(',') })
+  } = usePerformance(queryString)
 
   useEffect(() => {
     if (yearFilter) {
@@ -85,10 +105,38 @@ export const PerformanceTab = () => {
   }, [yearFilter])
 
   useEffect(() => {
-    if (!!yearFilter || !!monthOption || !!fpmOption) {
+    if (queryString) {
       refetchFpmQuota()
     }
-  }, [yearFilter, monthOption, fpmOption])
+  }, [queryString])
+
+  /*
+   * When Performance is fetched, we check if top 5 fpm by revenue should be preselelcted in filter by.
+   * In all cases other than 'This Month' and 'Last Month' top 5 fpms are preselected.
+   * UniqueBy is applied because single FPM can have top revenues in more than one month.
+   * Indicator to show default is set to 'false'. So user can further select/unselect FPMs and filter accordingly.
+   * In cases when user select/unselect FPM or This Month and Last Month is selected the complete performance list is displayed in Table.
+   */
+
+  useEffect(() => {
+    if (defaultToTopFive) {
+      const topFpmByRevenue = fpmsOrderedByRevenue.slice(0, 5)
+      const selectedFpm =
+        _.uniqBy(
+          topFpmByRevenue?.map(fpm => ({
+            value: fpm?.userId,
+            label: fpm?.name,
+          })),
+          'value',
+        ) || []
+
+      setFpmOption(selectedFpm)
+      setFPMPerformanceData(topFpmByRevenue)
+      setDefaultToTopFive(false)
+    } else {
+      setFPMPerformanceData(performance)
+    }
+  }, [performance])
 
   const data = useMemo(() => {
     var graphs = [] as Array<FPMMonthlyData>
@@ -147,7 +195,7 @@ export const PerformanceTab = () => {
 
   useEffect(() => {
     filterGraphData(fpmOption, monthOption)
-  }, [data])
+  }, [data, fpmOption])
 
   return (
     <Box pb="2">
@@ -159,6 +207,9 @@ export const PerformanceTab = () => {
         filterGraphData={filterGraphData}
         fpmOption={fpmOption}
         setFpmOption={setFpmOption}
+        fieldProjectManagerOptions={fieldProjectManagerOptions}
+        setDefaultToTopFive={setDefaultToTopFive}
+        setFpmFilter={setFpmFilter}
       />
       <Box p={0} rounded="13px" flex={1}>
         <PerformanceGraphWithUsers
@@ -170,9 +221,15 @@ export const PerformanceTab = () => {
           graphData={graphData || []}
         />
       </Box>
-      <PerformanceInfoCards isPerformanceLoading={isPerformanceTableLoading} performance={performance} />
+      <PerformanceInfoCards
+        isPerformanceLoading={isPerformanceTableLoading || isPerformanceTableFetching}
+        performance={fpmPerformanceData}
+      />
       <Card px="12px" py="16px">
-        <PerformanceTable refetch={refetchFpmQuota} performance={performance} isPerformanceTableLoading={isPerformanceTableLoading} />
+        <PerformanceTable   refetch={refetchFpmQuota}
+          performance={fpmPerformanceData}
+          isPerformanceTableLoading={isPerformanceTableLoading || isPerformanceTableFetching}
+        />
       </Card>
     </Box>
   )

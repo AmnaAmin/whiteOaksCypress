@@ -15,6 +15,7 @@ import { useForm } from 'react-hook-form'
 import { useAuth } from 'utils/auth-context'
 import { PasswordField } from './PasswordField'
 import { BiUserCheck } from 'react-icons/bi'
+import { Link } from 'react-router-dom'
 
 type FormValues = {
   email: string
@@ -53,7 +54,7 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
         <VStack pb="20px" alignItems="start" spacing="14px">
           <PasswordField {...register('password', { required: 'This is required field.' })} />
           <Text color="#345587" fontWeight="400" fontSize="12px">
-            Forgot Password?
+            <Link to="/account/reset/">Forgot Password?</Link>
           </Text>
         </VStack>
         <Button
@@ -62,7 +63,7 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
           bg="#345587"
           size="md"
           fontSize="14px"
-          fontWeight="700"
+          fontWeight="600"
           color="#FFFFFF"
           rounded="8px"
         >
@@ -86,12 +87,12 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
           fontWeight="500"
           color="#345587"
           rounded="8px"
-          border={'1px solid rgba(52, 94, 166, 1)'}
+          border={'1px solid #345587'}
           onClick={() => {
             window.location.href = 'vendor/register'
           }}
         >
-          <Icon as={BiUserCheck} w="32px" h="26px" /> Register As a Vendor
+          <Icon as={BiUserCheck} w="32px" h="26px" mr="19px" /> Register As a Vendor
         </Button>
       </Stack>
     </chakra.form>
