@@ -8,7 +8,6 @@ import {
   Divider,
   Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   HStack,
   Input,
@@ -227,9 +226,9 @@ const WorkOrderDetailTab = props => {
   const [selectedVendorId, setSelectedVendorId] = useState<any>([])
 
   const { data: trades } = useTrades()
-  const [vendorSkillId, setVendorSkillId] = useState(null)
+  const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
 
-  const { vendors } = useFilteredVendors(vendorSkillId)
+  const { vendors } = useFilteredVendors(vendorSkillId, workOrder.projectId)
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
 
@@ -390,7 +389,6 @@ const WorkOrderDetailTab = props => {
                                     }}
                                     selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
                                   />
-                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                                 </>
                               )
                             }}
@@ -398,7 +396,7 @@ const WorkOrderDetailTab = props => {
                         </FormControl>
                       </Box>
                       <Box w="215px">
-                        <FormControl isInvalid={!!errors.vendorSkillId} data-testid="vendorId">
+                        <FormControl isInvalid={!!errors.vendorId} data-testid="vendorId">
                           <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                             {t('companyName')}
                           </FormLabel>
@@ -413,13 +411,12 @@ const WorkOrderDetailTab = props => {
                                     {...field}
                                     options={vendorOptions}
                                     size="md"
-                                    selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
+                                    selectProps={{ isBorderLeft: true }}
                                     onChange={option => {
                                       setSelectedVendorId(option.value)
                                       field.onChange(option)
                                     }}
                                   />
-                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                                 </>
                               )
                             }}
@@ -493,7 +490,7 @@ const WorkOrderDetailTab = props => {
                 </Box>
               )}
               <Box w="215px">
-                <FormControl zIndex="2">
+                <FormControl zIndex="2" isInvalid={!!errors.workOrderStartDate}>
                   <FormLabel variant="strong-label" size="md">
                     {t('expectedStart')}
                   </FormLabel>
@@ -512,7 +509,7 @@ const WorkOrderDetailTab = props => {
                 </FormControl>
               </Box>
               <Box w="215px">
-                <FormControl>
+                <FormControl isInvalid={!!errors.workOrderExpectedCompletionDate}>
                   <FormLabel variant="strong-label" size="md">
                     {t('expectedCompletion')}
                   </FormLabel>
