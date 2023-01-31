@@ -550,7 +550,7 @@ const WorkOrderDetailTab = props => {
               </Box>
             </HStack>
           </Box>
-          {!(uploadedWO && uploadedWO?.s3Url && !assignedItemsWatch) && (
+          {!(uploadedWO && uploadedWO?.s3Url) && (
             <Box mx="32px" mt={10}>
               {isLoadingLineItems ? (
                 <Center>
@@ -586,7 +586,7 @@ const WorkOrderDetailTab = props => {
                 {t('seeProjectDetails')}
               </Button>
             )}
-            {uploadedWO && uploadedWO?.s3Url && !assignedItemsWatch && (
+            {uploadedWO && uploadedWO?.s3Url && (
               <Button
                 variant="outline"
                 colorScheme="brand"
