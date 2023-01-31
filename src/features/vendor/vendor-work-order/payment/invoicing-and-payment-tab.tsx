@@ -48,7 +48,7 @@ const InvoicingAndPaymentTab = ({
               label={t('paymentTermDate')}
               InputElem={
                 invoiceAndPaymentData.paymentTermDate &&
-                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                ![STATUS.Rejected]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormatNew(invoiceAndPaymentData?.paymentTermDate)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -132,7 +132,7 @@ const InvoicingAndPaymentTab = ({
               label={t('LWDate')}
               InputElem={
                 invoiceAndPaymentData.dateLeanWaiverSubmitted &&
-                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                ![STATUS.Rejected]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormatNew(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -178,7 +178,7 @@ const InvoicingAndPaymentTab = ({
               label={t('invoiceSubmitted')}
               InputElem={
                 invoiceAndPaymentData.dateInvoiceSubmitted &&
-                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                ![STATUS.Rejected]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormatNew(invoiceAndPaymentData?.dateInvoiceSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>
@@ -203,7 +203,7 @@ const InvoicingAndPaymentTab = ({
               label={t('expectedPay')}
               InputElem={
                 invoiceAndPaymentData.expectedPaymentDate &&
-                ![STATUS.Declined]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                ![STATUS.Rejected]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
                   <Text>{dateFormatNew(invoiceAndPaymentData?.expectedPaymentDate)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>

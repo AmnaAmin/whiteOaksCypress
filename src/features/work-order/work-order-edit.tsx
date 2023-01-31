@@ -211,7 +211,7 @@ const WorkOrderDetails = ({
                       )*/}
 
                   {showRejectInvoice &&
-                    [STATUS.Invoiced, STATUS.Declined].includes(
+                    [STATUS.Invoiced, STATUS.Rejected].includes(
                       workOrder?.statusLabel?.toLocaleLowerCase() as STATUS,
                     ) && (
                       <Center w="100%" justifyContent="end">

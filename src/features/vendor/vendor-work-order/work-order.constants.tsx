@@ -28,7 +28,8 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
     header: 'WOstatus',
     accessorKey: 'statusLabel',
     cell: row => {
-      const value = row.cell.getValue() as string
+      let value = row.cell.getValue() as string
+      
       return <Status value={value} id={value} />
     },
   },

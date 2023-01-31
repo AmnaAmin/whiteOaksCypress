@@ -343,7 +343,7 @@ const WorkOrderDetailTab = props => {
         <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
           <Stack spacing="32px" m="25px">
             <Box>
-              {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
+              {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
                 <Alert status="info" variant="custom" size="sm">
                   <AlertIcon />
 

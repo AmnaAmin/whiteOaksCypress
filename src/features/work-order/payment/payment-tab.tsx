@@ -103,7 +103,7 @@ const PaymentInfoTab = props => {
   const watchPaymentDate = watch('paymentDate')
 
   useEffect(() => {
-    if ([STATUS.Declined]?.includes(workOrder?.statusLabel?.toLowerCase())) {
+    if ([STATUS.Rejected]?.includes(workOrder?.statusLabel?.toLowerCase())) {
       setValue('dateInvoiceSubmitted', null)
       setValue('paymentTermDate', null)
       setValue('expectedPaymentDate', null)

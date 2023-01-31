@@ -30,6 +30,7 @@ export enum STATUS {
   DoNotUse = 'do not use',
   Decline = 'decline',
   Reconcile = 'reconcile',
+  Rejected = 'rejected'
 }
 
 const STATUS_COLOR = {
@@ -55,6 +56,7 @@ const STATUS_COLOR = {
   [STATUS.Inactive]: { color: '#ED64A6', backgroundColor: '#FFF5F7' },
   [STATUS.DoNotUse]: { color: '#F56565', backgroundColor: '#FEFEFE' },
   [STATUS.Decline]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' },
+  [STATUS.Rejected]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' }
 }
 
 const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
