@@ -529,7 +529,7 @@ export const useGanttChart = (projectId?: string): any => {
   }
 }
 
-export const useFilteredVendors = (vendorSkillId, projectId) => {
+export const useFilteredVendors = vendorSkillId => {
   const status_active = 12
   const capacity = 1 // sfor new workorder capacity is fixed
   const client = useClient()
@@ -541,9 +541,7 @@ export const useFilteredVendors = (vendorSkillId, projectId) => {
     '&capacity.greaterThanOrEqual=' +
     capacity +
     '&status.equals=' +
-    status_active +
-    '&projectsId.equals=' +
-    projectId
+    status_active
   const { data, ...rest } = useQuery<Array<Vendors>>(
     ['FETCH_FILTERED_VENDORS', vendorSkillId],
     async () => {
