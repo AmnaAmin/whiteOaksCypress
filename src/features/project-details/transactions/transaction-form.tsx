@@ -138,6 +138,7 @@ export type TransactionFormProps = {
   projectId: string
   projectStatus: string
   heading?: string
+  screen?: string
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -146,6 +147,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   projectId,
   projectStatus,
   heading,
+  screen
 }) => {
   const { t } = useTranslation()
   const { isAdmin, isVendor } = useUserRolesSelector()
@@ -155,7 +157,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [remainingAmt, setRemainingAmt] = useState(false)
 
   // const [document, setDocument] = useState<File | null>(null)
-  const { transactionTypeOptions } = useTransactionTypes()
+  const { transactionTypeOptions } = useTransactionTypes(screen)
 
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)

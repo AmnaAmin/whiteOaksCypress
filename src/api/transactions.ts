@@ -79,6 +79,32 @@ export const useTransactionsV1 = (projectId?: string) => {
   }
 }
 
+export const GET_TRANSACTIONS_BY_WORK_ORDER_API_KEY = "transactions_work_order";
+
+export const useWOTransactionsV1 = (workOrderId: string, projectId?: string) => {
+  const client = useClient()
+
+  const { data: transactions, ...rest } = useQuery<Array<TransactionType>>(
+    [GET_TRANSACTIONS_BY_WORK_ORDER_API_KEY, projectId, workOrderId],
+    async () => {
+      const response = await client(`change-orders/v1?projectId=${projectId}&sort=modifiedDate,asc`, {})
+
+      if ( response && response.data ) {
+        response.data = response.data.filter( t => t.parentWorkOrderId === workOrderId );
+      }
+
+      
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
+
+  return {
+    transactions,
+    ...rest,
+  }
+}
+
 export const useProjectInfo = (projectId: string) => {
   const client = useClient()
 
@@ -121,12 +147,12 @@ const transactionTypeOptions = [
   },
 ]
 
-export const useTransactionTypes = () => {
+export const useTransactionTypes = ( screen?: string ) => {
   const { isVendor } = useUserRolesSelector()
-
+  
   return {
     // Note for vendor user we only show change order and draw, that's why we filter out the rest
-    transactionTypeOptions: isVendor ? transactionTypeOptions.slice(0, 2) : transactionTypeOptions,
+    transactionTypeOptions: (isVendor || screen === "WORK_ORDER_TRANSACTION_TABLE_MODAL") ? transactionTypeOptions.slice(0, 2) : transactionTypeOptions,
   }
 }
 
@@ -611,6 +637,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
     },
     {
       onSuccess() {
+        queryClient.invalidateQueries( [GET_TRANSACTIONS_BY_WORK_ORDER_API_KEY, projectId] );
         queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])

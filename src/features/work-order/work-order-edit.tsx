@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -41,6 +41,7 @@ import { ProjectAwardTab } from './project-award/project.award'
 import { useProjectAward } from 'api/project-award'
 import { Card } from 'components/card/card'
 import { BiErrorCircle } from 'react-icons/bi'
+import { TransactionsTab } from './transactions/transactions-tab'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -87,6 +88,7 @@ const WorkOrderDetails = ({
 
   const navigate = useNavigate()
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
+  const tabsContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (workOrder) {
@@ -134,6 +136,8 @@ const WorkOrderDetails = ({
   }
   const showRejectInvoice = (displayAwardPlan && tabIndex === 3) || (!displayAwardPlan && tabIndex === 2)
 
+  
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'} closeOnOverlayClick={false}>
       <ModalOverlay />
@@ -170,6 +174,7 @@ const WorkOrderDetails = ({
               >
                 <TabList color="gray.600" ml="10px" mr="20px">
                   <Tab>{t('workOrderDetails')}</Tab>
+                  <Tab>{t('projects.projectDetails.transactions')}</Tab>
                   {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
                   <Tab>{t('lienWaiver')}</Tab>
                   <Tab>{t('invoice')}</Tab>
@@ -237,6 +242,18 @@ const WorkOrderDetails = ({
                         isFetchingLineItems={isFetchingLineItems}
                         isLoadingLineItems={isLoadingLineItems}
                       />
+                    </TabPanel>
+                    <TabPanel p={0}>
+                    {isProjectLoading ? (
+                        <BlankSlate />
+                      ) : (
+                        <TransactionsTab 
+                        projectId={projectId as string}  
+                        tabsContainerRef={tabsContainerRef}
+                        projectData={projectData}
+                        onClose={onClose}
+                        workOrder={workOrder}
+                      /> )}
                     </TabPanel>
                     {displayAwardPlan && (
                       <TabPanel p={0}>

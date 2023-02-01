@@ -10,9 +10,10 @@ import { useState, useEffect } from 'react'
 type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   projectId: string
   projectStatus: string
+  screen?: string
 }
 
-const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId, projectStatus }) => {
+const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId, projectStatus, screen }) => {
   const { t } = useTranslation()
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
@@ -35,7 +36,7 @@ const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId, p
 
         <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
-            <TransactionForm onClose={onClose} projectId={projectId} projectStatus={projectStatus} />
+            <TransactionForm onClose={onClose} projectId={projectId} projectStatus={projectStatus} screen={screen} />
           </Card>
         </ModalBody>
       </ModalContent>
