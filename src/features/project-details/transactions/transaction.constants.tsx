@@ -103,7 +103,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     },
     filterFn: 'includesString',
     cell: (row: any) => {
-      let value = row.cell.getValue() as string
+      const value = row.cell.getValue() as string
 
       return numeral(value).format('$0,0.00')
     },

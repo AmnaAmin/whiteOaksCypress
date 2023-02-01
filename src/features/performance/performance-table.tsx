@@ -35,7 +35,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
         return cellInfo.revenue?.toString()
       },
       cell: (row: any) => {
-        let value = row.cell.getValue() as string
+        const value = row.cell.getValue() as string
         return numeral(value).format('$0,0.00')
       },
       meta: { format: 'currency' },
@@ -48,7 +48,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
         return cellInfo.profit?.toString()
       },
       cell: (row: any) => {
-        let value = row.cell.getValue() as string
+        const value = row.cell.getValue() as string
         return numeral(value).format('$0,0.00')
       },
       meta: { format: 'currency' },
@@ -61,7 +61,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
         return cellInfo.currentBonus?.toString()
       },
       cell: (row: any) => {
-        let value = row.cell.getValue() as string
+        const value = row.cell.getValue() as string
         return numeral(value).format('$0,0.00')
       },
       meta: { format: 'currency' },
@@ -81,7 +81,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
         return cellInfo.target?.toString()
       },
       cell: (row: any) => {
-        let value = row.cell.getValue() as string
+        const value = row.cell.getValue() as string
         return numeral(value).format('$0,0.00')
       },
       meta: { format: 'currency' },
@@ -101,7 +101,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
         return cellInfo.disqualifiedRevenue?.toString()
       },
       cell: (row: any) => {
-        let value = row.cell.getValue() as string
+        const value = row.cell.getValue() as string
         return numeral(value).format('$0,0.00')
       },
       meta: { format: 'currency' },

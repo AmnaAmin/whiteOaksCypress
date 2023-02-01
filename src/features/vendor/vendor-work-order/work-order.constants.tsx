@@ -57,7 +57,7 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
     },
     filterFn: 'includesString',
     cell: (row: any) => {
-      let value = row.cell.getValue() as string
+      const value = row.cell.getValue() as string
 
       return numeral(value).format('$0,0.00')
     },
