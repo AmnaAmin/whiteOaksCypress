@@ -3,7 +3,6 @@ import AddNewTransactionModal from "features/project-details/transactions/add-tr
 import { WOTransactionsTable } from "./wo-transactions-table"
 import { t } from "i18next"
 import { BiAddToQueue } from "react-icons/bi"
-import { useUserRolesSelector } from "utils/redux-common-selectors"
 
 interface Props {
     projectData: any,
@@ -23,8 +22,6 @@ export const TransactionsTab = ({ projectData, tabsContainerRef, onClose, projec
     const projectStatus = (projectData?.projectStatus || '').toLowerCase()
     
     const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
-
-    const { isVendor } = useUserRolesSelector()
       
     return (
     <>
