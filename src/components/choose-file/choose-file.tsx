@@ -136,7 +136,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
               sx={{
                 '@media only screen and (max-width: 480px)': {
                   position: 'relative',
-                  left: '26%',
+                  left: '31%',
                 },
               }}
             >
