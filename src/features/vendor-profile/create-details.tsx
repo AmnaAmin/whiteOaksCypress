@@ -518,7 +518,8 @@ const CreateVendorDetail: React.FC<{
         </Grid>
         <Box>
           <Stack alignItems="center" direction="row" spacing="16px">
-            <Box w="215px">
+            {/* hiding payment terms */}
+            <Box w="215px" display={'none'}>
               <FormControl isInvalid={!!errors.paymentTerm}>
                 <FormLabel variant="strong-label" size="md">
                   {t('paymentTerms')}
