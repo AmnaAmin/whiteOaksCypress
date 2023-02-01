@@ -60,8 +60,13 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   }, [transactions])
 
   const setPageCount = rows => {
-    setTotalPages(Math.ceil((rows?.length ?? 0) / 50))
-    setTotalRows(rows?.length)
+    if (!rows?.length) {
+      setTotalPages(1)
+      setTotalRows(0)
+    } else {
+      setTotalPages(Math.ceil((rows?.length ?? 0) / 50))
+      setTotalRows(rows?.length ?? 0)
+    }
   }
 
   const { isVendor } = useUserRolesSelector()
