@@ -411,7 +411,7 @@ const WorkOrderDetailTab = props => {
                                     {...field}
                                     options={vendorOptions}
                                     size="md"
-                                    selectProps={{ isBorderLeft: true }}
+                                    selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
                                     onChange={option => {
                                       setSelectedVendorId(option.value)
                                       field.onChange(option)
