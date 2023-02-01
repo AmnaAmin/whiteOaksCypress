@@ -168,7 +168,7 @@ export const WorkOrderDetails = ({
                   <Tab data-testid="notes">{t('notes')}</Tab>
                 </TabList>
               </Card>
-              <Card mb={3} py={0} roundedTop={0} roundedRight={{ base: 0, md: 12 }}>
+              <Card mb={3} p="0px !important" roundedTop={0} roundedRight={{ base: 0, md: 12 }}>
                 <TabPanels>
                   <TabPanel p={0}>
                     <WorkOrderDetailTab
@@ -184,16 +184,17 @@ export const WorkOrderDetails = ({
                   </TabPanel>
                   <TabPanel p={0}>
                     {isLoading ? (
-                        <BlankSlate />
-                      ) : (
-                        <TransactionsTab 
-                          projectId={projectId as string}  
-                          tabsContainerRef={tabsContainerRef}
-                          projectData={projectData}
-                          onClose={onClose}
-                          workOrder={workOrder}
-                      /> )}
-                    </TabPanel>
+                      <BlankSlate />
+                    ) : (
+                      <TransactionsTab
+                        projectId={projectId as string}
+                        tabsContainerRef={tabsContainerRef}
+                        projectData={projectData}
+                        onClose={onClose}
+                        workOrder={workOrder}
+                      />
+                    )}
+                  </TabPanel>
                   {displayAwardPlan && (
                     <TabPanel p={0}>
                       <ProjectAwardTab
