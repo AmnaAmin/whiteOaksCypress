@@ -237,13 +237,10 @@ export const useProjectStatusSelectOptions = (project: Project) => {
         }
       }
 
-      // if Project status is Reconcile 
+      // if Project status is Reconcile
       // Project Close status should be disabled
       //projectStatusId === ProjectStatus.Reconcile || projectStatusId === ProjectStatus.Punch
-      if (
-        (!project.isReconciled) &&
-        optionValue === ProjectStatus.Closed
-      ) {
+      if (!project.isReconciled && optionValue === ProjectStatus.Closed) {
         return {
           ...selectOption,
           label: `${selectOption.label} (Verification required)`,
@@ -251,11 +248,25 @@ export const useProjectStatusSelectOptions = (project: Project) => {
         }
       }
 
-      // If project status is Client Paid and there are some workorders not paid then
+      // If project status is Client Paid and there are some workOrders not paid then
       // project status Paid should be disabled
       if (
         numberOfPaidWorkOrders !== numberOfWorkOrders && //AM || WOA-4187
         projectStatusId === ProjectStatus.ClientPaid &&
+        optionValue === ProjectStatus.Paid
+      ) {
+        return {
+          ...selectOption,
+          label: `${selectOption.label} (All Vendor WO must be paid)`,
+          disabled: true,
+        }
+      }
+
+      // If Project Status is OverPayment and there are some workOrders not paid then project status Paid should be disabled
+
+      if (
+        numberOfPaidWorkOrders !== numberOfWorkOrders &&
+        projectStatusId === ProjectStatus.Overpayment &&
         optionValue === ProjectStatus.Paid
       ) {
         return {
@@ -334,8 +345,8 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       else if (projectStatusId === Number(PROJECT_STATUS.punch.value)) {
         overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
       }
-       // Project Status -> Reconcile
-       else if (projectStatusId === Number(PROJECT_STATUS.reconcile.value)) {
+      // Project Status -> Reconcile
+      else if (projectStatusId === Number(PROJECT_STATUS.reconcile.value)) {
         overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch]
       }
       // Project Status -> Closed
@@ -456,7 +467,6 @@ export const getPaymentTermsSelectOptions = () => {
     label: `${paymentTerm}`,
   }))
 }
-
 
 export const parseFormValuesFromAPIData = ({
   project,
