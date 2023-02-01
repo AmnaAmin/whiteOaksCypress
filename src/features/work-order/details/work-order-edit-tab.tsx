@@ -228,7 +228,7 @@ const WorkOrderDetailTab = props => {
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
 
-  const { vendors } = useFilteredVendors(vendorSkillId, workOrder.projectId)
+  const { vendors } = useFilteredVendors(vendorSkillId)
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
 
@@ -343,7 +343,7 @@ const WorkOrderDetailTab = props => {
         <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
           <Stack spacing="32px" m="25px">
             <Box>
-              {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
+              {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
                 <Alert status="info" variant="custom" size="sm">
                   <AlertIcon />
 
@@ -547,7 +547,7 @@ const WorkOrderDetailTab = props => {
               </Box>
             </HStack>
           </Box>
-          {!(uploadedWO && uploadedWO?.s3Url && !assignedItemsWatch) && (
+          {!(uploadedWO && uploadedWO?.s3Url) && (
             <Box mx="32px" mt={10}>
               {isLoadingLineItems ? (
                 <Center>
@@ -583,7 +583,7 @@ const WorkOrderDetailTab = props => {
                 {t('seeProjectDetails')}
               </Button>
             )}
-            {uploadedWO && uploadedWO?.s3Url && !assignedItemsWatch && (
+            {uploadedWO && uploadedWO?.s3Url && (
               <Button
                 variant="outline"
                 colorScheme="brand"

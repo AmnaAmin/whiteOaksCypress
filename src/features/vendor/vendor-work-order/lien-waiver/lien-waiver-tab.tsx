@@ -233,7 +233,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                     register={register}
                     controlStyle={{ w: '16em' }}
                     disabled={
-                      ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
+                      ![STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
                         lienWaiverData?.statusLabel?.toLocaleLowerCase(),
                       ) ||
                       (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
@@ -273,7 +273,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                         _active: { bg: 'gray.100' },
                       }}
                       disabled={
-                        ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
+                        ![STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
                           lienWaiverData?.statusLabel?.toLocaleLowerCase(),
                         ) ||
                         (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
@@ -299,7 +299,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                           height="auto"
                           _hover={{ bg: 'inherit' }}
                           disabled={
-                            ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
+                            ![STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
                               lienWaiverData?.statusLabel?.toLocaleLowerCase(),
                             ) ||
                             (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
@@ -317,7 +317,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                             height="auto"
                             _hover={{ bg: 'inherit' }}
                             disabled={
-                              ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
+                              ![STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
                                 lienWaiverData?.statusLabel?.toLocaleLowerCase(),
                               ) ||
                               (lienWaiverData.leanWaiverSubmitted && lienWaiverData?.lienWaiverAccepted)
@@ -377,7 +377,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           )}
         </Flex>
         <HStack spacing="16px" justifyContent="end">
-          {[STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(
+          {[STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
             lienWaiverData?.statusLabel?.toLocaleLowerCase(),
           ) ? (
             !(lienWaiverData.leanWaiverSubmitted && lienWaiverData.lienWaiverAccepted) && (

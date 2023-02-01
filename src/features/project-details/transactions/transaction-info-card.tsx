@@ -42,7 +42,7 @@ export const TransactionInfoCard: React.FC<{
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
   const { t } = useTranslation()
-
+  
   return (
     <Flex flexWrap="wrap" w="100%" bg="white" borderRadius="6px" style={boxShadow} mt={{ base: 5, sm: 0 }}>
       <InfoStructureCard

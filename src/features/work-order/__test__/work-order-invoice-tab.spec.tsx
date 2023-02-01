@@ -89,9 +89,9 @@ describe('Work Order Invoice Test Cases', () => {
     expect(screen.queryByTestId('seeInvoice')).toBeInTheDocument()
   })
 
-  test('User can regenerate invoice in declined state', async () => {
+  test('User can regenerate invoice in rejected state', async () => {
     const onClose = jest.fn()
-    const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'declined')
+    const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'rejected')
     const documentsData = []
     const vendorAddress = VENDOR_ADDRESS
 
