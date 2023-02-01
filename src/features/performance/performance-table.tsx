@@ -138,7 +138,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
                 colorScheme="brand"
                 fileName="performance"
                 isLoading={isPerformanceTableLoading}
-                fetchedData={performance}
+                refetch={refetch}
               />
             </Box>
           </TableFooter>
