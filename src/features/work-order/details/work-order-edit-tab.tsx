@@ -228,7 +228,7 @@ const WorkOrderDetailTab = props => {
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
 
-  const { vendors } = useFilteredVendors(vendorSkillId)
+  const { vendors } = useFilteredVendors(vendorSkillId, workOrder?.projectId)
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
 

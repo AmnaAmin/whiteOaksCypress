@@ -146,7 +146,7 @@ export const NewWorkOrder: React.FC<{
   const { swoProject } = useFetchProjectId(projectData?.id)
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
-  const { vendors } = useFilteredVendors(vendorSkillId)
+  const { vendors } = useFilteredVendors(vendorSkillId, projectData?.id)
   const toast = useToast()
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
 
