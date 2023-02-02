@@ -178,7 +178,12 @@ const CreateVendorDetail: React.FC<{
               rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect options={portalAccess} {...field} isDisabled={isFPM} />
+                  <ReactSelect
+                    options={portalAccess}
+                    {...field}
+                    isDisabled={isFPM}
+                    selectProps={{ isBorderLeft: true }}
+                  />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
