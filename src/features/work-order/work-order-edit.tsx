@@ -109,7 +109,7 @@ const WorkOrderDetails = ({
   const onSave = values => {
     const payload = { ...workOrder, ...values }
 
-    if (!workOrder?.awardPlanId && values?.workOrderDateCompleted && tabIndex === 0) {
+    if (displayAwardPlan && !workOrder?.awardPlanId && values?.workOrderDateCompleted && tabIndex === 0) {
       setIsError(true)
       toast({
         title: 'Work Order',
