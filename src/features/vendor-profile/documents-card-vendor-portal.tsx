@@ -124,6 +124,12 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           alignItems="flex-start"
           marginTop={{ base: '20px', sm: '0' }}
           w="100%"
+          sx={{
+            '@media only screen and (max-width: 480px)': {
+              paddingBottom: '10px',
+              borderBottom: '1px solid #ddd',
+            },
+          }}
         >
           <FormControl w={{ base: '100%', sm: 'unset' }} isInvalid={!!errors.w9DocumentDate}>
             <FormLabel variant="strong-label" size="md" color="#2D3748">
@@ -135,6 +141,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               type="date"
               {...register('w9DocumentDate')}
               data-testid="w9DocumentDate"
+              css={{
+                '&::-webkit-date-and-time-value': {
+                  textAlign: 'left',
+                },
+              }}
             />
             <FormErrorMessage>{errors.w9DocumentDate && errors.w9DocumentDate.message}</FormErrorMessage>
           </FormControl>
@@ -209,6 +220,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               data-testid="agreementSignedDate"
               {...register('agreementSignedDate', { required: isAgreementRequired && 'This is required' })}
               {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
+              css={{
+                '&::-webkit-date-and-time-value': {
+                  textAlign: 'left',
+                },
+              }}
             />
             <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
           </FormControl>
@@ -294,6 +310,12 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           spacing="16px"
           marginTop={{ base: '20px', md: '0' }}
           w={{ base: '100%', sm: 'unset' }}
+          sx={{
+            '@media only screen and (max-width: 480px)': {
+              paddingBottom: '10px',
+              borderBottom: '1px solid #ddd',
+            },
+          }}
         >
           <FormControl isInvalid={!!errors.autoInsuranceExpDate} w={{ base: '100%', sm: '215px' }}>
             <FormLabel variant="strong-label" size="md" isTruncated title={t('autoInsuranceExpDate')} color="#2D3748">
@@ -372,6 +394,12 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           alignItems="flex-start"
           spacing="16px"
           w={{ base: '100%', sm: 'unset' }}
+          sx={{
+            '@media only screen and (max-width: 480px)': {
+              paddingBottom: '10px',
+              borderBottom: '1px solid #ddd',
+            },
+          }}
         >
           <FormControl w={{ base: '100%', sm: '215px' }} isInvalid={!!errors.coiGlExpDate}>
             <FormLabel variant="strong-label" size="md" color="#2D3748">
@@ -383,6 +411,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {...register('coiGlExpDate')}
               data-testid="coiGlExpDate"
               {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
+              css={{
+                '&::-webkit-date-and-time-value': {
+                  textAlign: 'left',
+                },
+              }}
             />
             <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
           </FormControl>
@@ -459,6 +492,11 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {...register('coiWcExpDate')}
               data-testid="coiWcExpDate"
               {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
+              css={{
+                '&::-webkit-date-and-time-value': {
+                  textAlign: 'left',
+                },
+              }}
             />
             <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
           </FormControl>

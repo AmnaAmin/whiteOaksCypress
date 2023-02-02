@@ -10,7 +10,7 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
-  const { isUpdating, isUpgradeProjectAward } = props
+  const { isUpdating, projectAwardData, isUpgradeProjectAward } = props
   const { isAdmin } = useUserRolesSelector()
 
   const [selectedCard, setSelectedCard] = useState(null)
@@ -24,7 +24,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
 
   const onSubmit = () => {
     if (selectedCard) {
-      props?.onSave(parseProjectAwardValuesToPayload(selectedCard))
+      props?.onSave(parseProjectAwardValuesToPayload(selectedCard, projectAwardData))
     }
   }
 
@@ -41,7 +41,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
           </Flex>
           <HStack>
             <TextCard />
-            {props?.projectAwardData?.map(card => {
+            {projectAwardData?.map(card => {
               return (
                 <ProjectAwardCard
                   workOrder={props?.workOrder}
