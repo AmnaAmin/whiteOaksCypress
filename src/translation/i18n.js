@@ -258,8 +258,10 @@ i18n.use(initReactI18next).init({
         typeName: 'Type Your Name Here',
         LWrequired: 'Lien Waiver is required for Draw Transaction.',
         AwardRq: 'You need to select award plan.',
-        DrawRemaining: 'You have 0 Draw Remaining',
-        MaterialRemaining: 'You have 0 Material Remaining',
+        DrawRemaining:
+          'WO has reached its allowed limits under the selected award plan. In order to continue with this transaction, you can upgrade to the next available plan by choosing the upgrade option.',
+        MaterialRemaining:
+          'WO has reached its allowed limits under the selected award plan. In order to continue with this transaction, you can upgrade to the next available plan by choosing the upgrade option.',
         PaymentRemaining: 'Remaining payment amount exceeded.',
         nameofClaimant: 'Name of Claimant',
         customerName: 'Customer Name',
@@ -937,7 +939,6 @@ i18n.use(initReactI18next).init({
         verifyProjectDesc: 'Proyecto verificado por',
         verifyProject: 'Proyecto Verificado',
 
-        
         capacity: 'Capacidad',
         last4digits: 'Últimos 4 dígitos del SSN/EIN',
         paymentMethods: 'Métodos de Pago',

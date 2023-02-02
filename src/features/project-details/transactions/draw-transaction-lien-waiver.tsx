@@ -17,6 +17,7 @@ import {
   Grid,
   GridItem,
   Button,
+  Spacer,
 } from '@chakra-ui/react'
 import InputView from 'components/input-view/input-view'
 import trimCanvas from 'trim-canvas'
@@ -59,14 +60,19 @@ export const ProjectAwardAlert = () => {
   )
 }
 
-export const ProjectTransacrtionRemaingALert = ({ msg }) => {
+export const ProjectTransacrtionRemaingALert = ({ msg, onOpen, isUpgradeProjectAward }: any) => {
   const { t } = useTranslation()
 
   return (
     <Alert mt={2} status="info" variant="custom" size="sm">
       <AlertIcon />
-      <AlertDescription>{t(`${msg}`)}</AlertDescription>
-      <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
+      <AlertDescription maxW="90%">{t(`${msg}`)}</AlertDescription>
+      <Spacer />
+      {isUpgradeProjectAward ? (
+        <Button variant="outline" colorScheme="brand" onClick={onOpen}>
+          Upgrade
+        </Button>
+      ) : null}
     </Alert>
   )
 }

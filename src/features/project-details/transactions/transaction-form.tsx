@@ -12,6 +12,7 @@ import {
   HStack,
   Button,
   Divider,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
@@ -78,6 +79,7 @@ import {
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
+import UpdateProjectAward from './UpdateProjectAward'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -153,7 +155,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   const [remainingAmt, setRemainingAmt] = useState(false)
-
+  const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes()
 
@@ -372,8 +374,22 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {isFormLoading && <ViewLoader />}
       {check && isLienWaiverRequired && <LienWaiverAlert />}
       {!check && isValidForAwardPlan && materialAndDraw ? <ProjectAwardAlert /> : null}
-      {check && showDrawRemainingMsg && <ProjectTransacrtionRemaingALert msg="DrawRemaining" />}
-      {check && showMaterialRemainingMsg && <ProjectTransacrtionRemaingALert msg="MaterialRemaining" />}
+      {check && showDrawRemainingMsg && (
+        <ProjectTransacrtionRemaingALert
+          msg="DrawRemaining"
+          onOpen={onProjectAwardOpen}
+          onClose={onClose}
+          isUpgradeProjectAward={true}
+        />
+      )}
+      {check && showMaterialRemainingMsg && (
+        <ProjectTransacrtionRemaingALert
+          msg="MaterialRemaining"
+          onOpen={onProjectAwardOpen}
+          onClose={onClose}
+          isUpgradeProjectAward={true}
+        />
+      )}
       {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaining" />}
 
       {isFormSubmitLoading && (
@@ -394,7 +410,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 gap={'1.5rem 1rem'}
                 pt="20px"
                 pb="4"
-                // outline={'1px solid red'}
               >
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
@@ -887,6 +902,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             </>
           )
         )}
+        <UpdateProjectAward
+          isOpen={isProjectAwardOpen}
+          onClose={onProjectAwardClose}
+          selectedWorkOrder={selectedWorkOrder}
+          closeTransactionModal={onClose}
+        />
       </HStack>
     </Flex>
   )
