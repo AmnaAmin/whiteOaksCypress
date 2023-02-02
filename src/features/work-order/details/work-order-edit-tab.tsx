@@ -329,7 +329,7 @@ const WorkOrderDetailTab = props => {
     if (workOrder?.id) {
       reset(defaultValuesWODetails(workOrder, workOrderAssignedItems, defaultSkill, defaultVendor))
     }
-  }, [workOrder, reset, workOrderAssignedItems?.length])
+  }, [workOrder, reset, workOrderAssignedItems])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
