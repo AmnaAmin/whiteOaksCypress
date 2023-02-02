@@ -527,7 +527,6 @@ const CreateVendorDetail: React.FC<{
                 <Controller
                   control={control}
                   name="paymentTerm"
-                  rules={{ required: isActive && 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect
