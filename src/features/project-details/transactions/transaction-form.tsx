@@ -138,6 +138,8 @@ export type TransactionFormProps = {
   projectId: string
   projectStatus: string
   heading?: string
+  screen?: string
+  currentWorkOrderId?: number
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -146,6 +148,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   projectId,
   projectStatus,
   heading,
+  screen,
+  currentWorkOrderId,
 }) => {
   const { t } = useTranslation()
   const { isAdmin, isVendor } = useUserRolesSelector()
@@ -155,7 +159,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [remainingAmt, setRemainingAmt] = useState(false)
 
   // const [document, setDocument] = useState<File | null>(null)
-  const { transactionTypeOptions } = useTransactionTypes()
+  const { transactionTypeOptions } = useTransactionTypes(screen)
 
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
@@ -254,11 +258,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
-  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus, transaction)
+  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus, transaction, currentWorkOrderId)
   const payDateVariance = useCalculatePayDateVariance(control)
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
-
+  
   useEffect(() => {
     if (selectedWorkOrder?.awardPlanPayTerm && !transaction?.id) {
       const paymentTermValue = {
@@ -277,6 +281,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }, [selectedWorkOrder])
 
+  
+
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
       setValue('invoicedDate', null)
@@ -289,6 +295,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
     resetExpectedCompletionDateFields(option)
   }
+
+ 
 
   const onSubmit = useCallback(
     async (values: FormValues) => {
@@ -311,6 +319,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     [createChangeOrder, onClose, projectId, transaction, updateChangeOrder],
   )
 
+  
+
   const resetExpectedCompletionDateFields = useCallback(
     (againstOption: SelectOption) => {
       if (againstOption && againstOption?.value !== AGAINST_DEFAULT_VALUE) {
@@ -328,6 +338,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   // Disable selection of future payment received date for all users expect Admin
   const futureDateDisable = !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
+
+  
 
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
@@ -348,6 +360,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const { transactionType } = getValues()
 
+  
+
   useEffect(
     function updateAgainstOption() {
       if (transaction) return
@@ -366,6 +380,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     reset(defaultValues)
     onClose()
   }
+
+  useEffect( () => {
+
+  }, [] );
 
   return (
     <Flex direction="column">
@@ -413,7 +431,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               options={transactionTypeOptions}
                               isDisabled={isUpdateForm}
                               size="md"
-                              selectProps={{ isBorderLeft: true, menuHeight: isVendor ? '88px' : '188px' }}
+                              selectProps={{ isBorderLeft: true, menuHeight: isVendor ? '88px' : '100%' }}
                               onChange={async (option: SelectOption) => {
                                 const formValues = { ...defaultValues, transactionType: option }
 
