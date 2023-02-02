@@ -6,7 +6,7 @@ import { waitForLoadingToFinish, screen } from 'utils/test-utils'
 import {
   activeCardValue,
   completedCardValue,
-  declinedCardValue,
+  rejectedCardValue,
   invoicedCardValue,
   PastDueWOCardValue,
 } from './project-filter-mock'
@@ -39,7 +39,7 @@ describe('Given a ProjectTilesFilter Render properly', () => {
       expect(screen.getByTestId('value-of-invoiced wo').textContent).toEqual(`${invoicedCardValue}`)
 
       expect(screen.getByText('Rejected Invoices')).toBeInTheDocument()
-      expect(screen.getByTestId('value-of-rejected invoices').textContent).toEqual(`${declinedCardValue}`)
+      expect(screen.getByTestId('value-of-rejected invoices').textContent).toEqual(`${rejectedCardValue}`)
 
       screen.debug(undefined, 10000)
     })
@@ -65,7 +65,7 @@ describe('Given a ProjectTilesFilter Render properly', () => {
       expect(onSelectCard).toHaveBeenCalled()
       expect(onSelectCard).toBeCalledWith('invoiced')
       expect(onSelectCard).toHaveBeenCalled()
-      expect(onSelectCard).toBeCalledWith('declined')
+      expect(onSelectCard).toBeCalledWith('rejected')
     })
   })
 })

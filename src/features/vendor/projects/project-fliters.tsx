@@ -45,9 +45,9 @@ const useVendorCardJson = cards => {
       IconElement: <IconElement Icon={BiDetail} bg="#E2EFDF" />,
     },
     {
-      id: 'declined',
+      id: 'rejected',
       title: t('completednotPaid'),
-      value: 'declined',
+      value: 'rejected',
       number: cards?.find(c => c.label === 'rejected')?.count,
       IconElement: <IconElement Icon={BiMessageSquareX} bg="#FAE6E5" />,
     },
