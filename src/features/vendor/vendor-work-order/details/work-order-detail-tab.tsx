@@ -151,7 +151,7 @@ const WorkOrderDetailTab = ({
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
         <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
-          {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && !workOrder.lienWaiverAccepted && (
+          {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && !workOrder.lienWaiverAccepted && (
             <Alert m="25px" status="info" variant="custom" size="sm">
               <AlertIcon />
               <AlertDescription>{t(`${WORK_ORDER}.rejectedInvoiceInfo`)}</AlertDescription>

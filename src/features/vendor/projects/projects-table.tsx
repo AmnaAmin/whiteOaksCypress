@@ -58,7 +58,8 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'WOstatus',
     accessorKey: 'statusLabel',
     cell: (row: any) => {
-      const value = row.cell.getValue()
+      let value = row.cell.getValue() as string
+      
       return <Status value={value} id={value} />
     },
   },
@@ -153,7 +154,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }
 
   return (
-    <Box overflowX={'auto'} minH="calc(100vh - 250px)">
+    <Box  overflowX={'auto'} minH="calc(100vh - 250px)">
       <TableContextProvider
         data={workOrderData}
         columns={tableColumnsWithFilters}

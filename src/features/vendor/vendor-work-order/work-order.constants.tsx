@@ -28,7 +28,8 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
     header: 'WOstatus',
     accessorKey: 'statusLabel',
     cell: row => {
-      const value = row.cell.getValue() as string
+      let value = row.cell.getValue() as string
+
       return <Status value={value} id={value} />
     },
   },
@@ -52,7 +53,13 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
     header: 'finalInvoice',
     accessorKey: 'finalInvoiceAmount',
     accessorFn(cellInfo: any) {
-      return numeral(cellInfo.finalInvoiceAmount).format('$0,0.00')
+      return cellInfo.finalInvoiceAmount?.toString()
+    },
+    filterFn: 'includesString',
+    cell: (row: any) => {
+      const value = row.cell.getValue() as string
+
+      return numeral(value).format('$0,0.00')
     },
   },
   // {

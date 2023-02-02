@@ -20,6 +20,7 @@ import {
   Box,
   Flex,
   Icon,
+  useToast,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver/lien-waiver'
@@ -54,7 +55,7 @@ const WorkOrderDetails = ({
 }) => {
   const { t } = useTranslation()
   const [tabIndex, setTabIndex] = useState(0)
-  // const [notesCount, setNotesCount] = useState(0)
+  const toast = useToast()
   const [rejectLW, setRejectLW] = useState(false)
   const [rejectInvoice, setRejectInvoice] = useState(false)
   const { projectId } = useParams<{ projectId: string }>()
@@ -109,9 +110,24 @@ const WorkOrderDetails = ({
 
   const onSave = values => {
     const payload = { ...workOrder, ...values }
-
-    if (!workOrder?.awardPlanId && values?.workOrderDateCompleted && tabIndex === 0) {
+    const { assignedItems } = values
+    const hasMarkedSomeComplete = assignedItems?.some(item => item.isCompleted)
+    if (
+      displayAwardPlan &&
+      !workOrder?.awardPlanId &&
+      (values?.workOrderDateCompleted || hasMarkedSomeComplete) &&
+      tabIndex === 0
+    ) {
       setIsError(true)
+      toast({
+        title: 'Work Order',
+        description: 'Award Plan is missing.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+      return
     } else {
       setIsError(false)
     }
@@ -119,8 +135,6 @@ const WorkOrderDetails = ({
     updateWorkOrder(payload, {
       onSuccess: res => {
         if (res?.data) {
-          onClose()
-
           const workOrder = res?.data
           if (isPayable && ![STATUS_CODE.INVOICED].includes(workOrder.status)) {
             onClose()
@@ -208,7 +222,7 @@ const WorkOrderDetails = ({
                       )*/}
 
                   {showRejectInvoice &&
-                    [STATUS.Invoiced, STATUS.Declined].includes(
+                    [STATUS.Invoiced, STATUS.Rejected].includes(
                       workOrder?.statusLabel?.toLocaleLowerCase() as STATUS,
                     ) && (
                       <Center w="100%" justifyContent="end">

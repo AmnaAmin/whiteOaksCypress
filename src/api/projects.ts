@@ -61,7 +61,7 @@ export const useProjectWorkOrders = projectId => {
 
   return useQuery<ProjectWorkOrderType[]>(['GetProjectWorkOrders', projectId], async () => {
     const response = await client(`project/${projectId}/workorders`, {})
-
+    
     return orderBy(
       response?.data,
       [

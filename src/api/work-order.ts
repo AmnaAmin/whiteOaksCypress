@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { ProjectWorkOrder } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
-import { dateISOFormat, datePickerFormat} from 'utils/date-time-utils'
+import { dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useTranslation } from 'react-i18next'
@@ -225,9 +225,10 @@ export const parsePaymentValuesToPayload = formValues => {
   }
 }
 
-export const parseProjectAwardValuesToPayload = id => {
+export const parseProjectAwardValuesToPayload = (id, projectAwardData) => {
   return {
     awardPlanId: id,
+    paymentTerm: projectAwardData.find(pa => pa.id === id)?.payTerm,
   }
 }
 
@@ -351,7 +352,7 @@ export const defaultValuesLienWaiver = lienWaiverData => {
 
 export const useLWFieldsStatusDecision = ({ workOrder }) => {
   const disabled =
-    ![STATUS.Completed, STATUS.Invoiced, STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) ||
+    ![STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) ||
     (workOrder.leanWaiverSubmitted && workOrder?.lienWaiverAccepted)
   return {
     isFieldsDisabled: disabled,

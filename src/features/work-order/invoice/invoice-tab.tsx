@@ -29,7 +29,7 @@ import { orderBy } from 'lodash'
 import { downloadFile } from 'utils/file-utils'
 import { STATUS, STATUS_CODE, STATUS as WOstatus } from 'features/common/status'
 import jsPDF from 'jspdf'
-import { addDays, nextFriday } from 'date-fns'
+import { addDays, nextFriday, nextWednesday } from 'date-fns'
 import { createInvoice } from 'api/vendor-projects'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -182,13 +182,15 @@ export const InvoiceTab = ({
   const prepareInvoicePayload = () => {
     const invoiceSubmittedDate = new Date()
     const paymentTermDate = addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)
+    const paymentProcessedDate = nextWednesday( paymentTermDate );
     const updatedWorkOrder = {
       ...workOrder,
       dateInvoiceSubmitted: dateISOFormatWithZeroTime(invoiceSubmittedDate),
       expectedPaymentDate: dateISOFormatWithZeroTime(nextFriday(paymentTermDate)),
       paymentTermDate: dateISOFormatWithZeroTime(paymentTermDate),
+      datePaymentProcessed: dateISOFormatWithZeroTime(paymentProcessedDate)
     }
-    if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Declined)) {
+    if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Rejected)) {
       updatedWorkOrder.status = STATUS_CODE.INVOICED
     }
     return updatedWorkOrder
@@ -298,7 +300,7 @@ export const InvoiceTab = ({
               title={t('invoiceDate')}
               value={
                 workOrder.dateInvoiceSubmitted &&
-                ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                ![STATUS.Rejected]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
                   ? (dateFormatNew(workOrder?.dateInvoiceSubmitted) as any)
                   : 'mm/dd/yy'
               } 
@@ -309,7 +311,7 @@ export const InvoiceTab = ({
             <InvoiceInfo
               title={t('dueDate')}
               value={
-                workOrder.paymentTermDate && ![STATUS.Declined]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                workOrder.paymentTermDate && ![STATUS.Rejected]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
                   ? (dateFormatNew(workOrder?.paymentTermDate) as any)
                   : 'mm/dd/yy'
               }
@@ -431,7 +433,7 @@ export const InvoiceTab = ({
               data-testid="generateInvoice"
               disabled={
                 !(
-                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Declined ||
+                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Rejected ||
                   workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
                 )
               }

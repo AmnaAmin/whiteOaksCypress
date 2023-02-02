@@ -394,7 +394,7 @@ export const WORK_ORDERS = [
     projectCoordinatorId: 195,
     capacity: 1,
     status: 111,
-    statusLabel: 'Declined',
+    statusLabel: 'rejected',
     createdBy: 'admin@devtek.ai',
     createdDate: '2022-07-15T13:01:03Z',
     datePermitsPulled: null,

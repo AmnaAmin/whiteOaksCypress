@@ -228,7 +228,7 @@ const WorkOrderDetailTab = props => {
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
 
-  const { vendors } = useFilteredVendors(vendorSkillId, workOrder.projectId)
+  const { vendors } = useFilteredVendors(vendorSkillId, workOrder?.projectId)
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
 
@@ -329,7 +329,7 @@ const WorkOrderDetailTab = props => {
     if (workOrder?.id) {
       reset(defaultValuesWODetails(workOrder, workOrderAssignedItems, defaultSkill, defaultVendor))
     }
-  }, [workOrder, reset, workOrderAssignedItems?.length])
+  }, [workOrder, reset, workOrderAssignedItems])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
@@ -343,7 +343,7 @@ const WorkOrderDetailTab = props => {
         <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
           <Stack spacing="32px" m="25px">
             <Box>
-              {[STATUS.Declined].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
+              {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
                 <Alert status="info" variant="custom" size="sm">
                   <AlertIcon />
 
@@ -411,7 +411,7 @@ const WorkOrderDetailTab = props => {
                                     {...field}
                                     options={vendorOptions}
                                     size="md"
-                                    selectProps={{ isBorderLeft: true }}
+                                    selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
                                     onChange={option => {
                                       setSelectedVendorId(option.value)
                                       field.onChange(option)
@@ -547,7 +547,7 @@ const WorkOrderDetailTab = props => {
               </Box>
             </HStack>
           </Box>
-          {!(uploadedWO && uploadedWO?.s3Url && !assignedItemsWatch) && (
+          {!(uploadedWO && uploadedWO?.s3Url) && (
             <Box mx="32px" mt={10}>
               {isLoadingLineItems ? (
                 <Center>
@@ -583,7 +583,7 @@ const WorkOrderDetailTab = props => {
                 {t('seeProjectDetails')}
               </Button>
             )}
-            {uploadedWO && uploadedWO?.s3Url && !assignedItemsWatch && (
+            {uploadedWO && uploadedWO?.s3Url && (
               <Button
                 variant="outline"
                 colorScheme="brand"

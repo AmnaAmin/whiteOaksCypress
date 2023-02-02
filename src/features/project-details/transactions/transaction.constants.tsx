@@ -98,8 +98,14 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${TRANSACTION}.totalAmount`,
     accessorKey: 'transactionTotal',
-    accessorFn: cellInfo => {
-      return numeral(cellInfo.transactionTotal).format('$0,0.00')
+    accessorFn(cellInfo: any) {
+      return cellInfo.transactionTotal?.toString()
+    },
+    filterFn: 'includesString',
+    cell: (row: any) => {
+      const value = row.cell.getValue() as string
+
+      return numeral(value).format('$0,0.00')
     },
     meta: { format: 'currency' },
   },

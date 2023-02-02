@@ -184,7 +184,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
       expectedPaymentDate: convertDateTimeToServer(nextFriday(paymentTermDate)),
       paymentTermDate: convertDateTimeToServer(paymentTermDate),
     }
-    if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Declined)) {
+    if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Rejected)) {
       updatedWorkOrder.status = STATUS_CODE.INVOICED
     }
     return updatedWorkOrder
@@ -423,7 +423,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
               data-testid="generateInvoice"
               disabled={
                 !(
-                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Declined ||
+                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Rejected ||
                   workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
                 )
               }

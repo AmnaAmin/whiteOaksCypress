@@ -103,7 +103,7 @@ const PaymentInfoTab = props => {
   const watchPaymentDate = watch('paymentDate')
 
   useEffect(() => {
-    if ([STATUS.Declined]?.includes(workOrder?.statusLabel?.toLowerCase())) {
+    if ([STATUS.Rejected]?.includes(workOrder?.statusLabel?.toLowerCase())) {
       setValue('dateInvoiceSubmitted', null)
       setValue('paymentTermDate', null)
       setValue('expectedPaymentDate', null)
@@ -211,11 +211,13 @@ const PaymentInfoTab = props => {
                             selectProps={{ isBorderLeft: false }}
                             onChange={option => {
                               const dateInvSubmitted = getValues('dateInvoiceSubmitted')
-                              const paymentTermDate = addDays(new Date(dateInvSubmitted as string), option.value)
-                              const expectedPaymentDate = nextFriday(paymentTermDate)
-                              setValue('paymentTermDate', datePickerFormat(paymentTermDate))
-                              setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
                               field.onChange(option)
+                              if (dateInvSubmitted) {
+                                const paymentTermDate = addDays(new Date(dateInvSubmitted as string), option.value)
+                                const expectedPaymentDate = nextFriday(paymentTermDate)
+                                setValue('paymentTermDate', datePickerFormat(paymentTermDate))
+                                setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
+                              }
                             }}
                           />
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
