@@ -148,11 +148,16 @@ const transactionTypeOptions = [
 ]
 
 export const useTransactionTypes = ( screen?: string ) => {
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAdmin } = useUserRolesSelector()
   
+  if ( screen === "WORK_ORDER_TRANSACTION_TABLE_MODAL" && isAdmin ) {
+    return {
+      transactionTypeOptions: transactionTypeOptions.slice(0, 3),
+    }
+  }
   return {
     // Note for vendor user we only show change order and draw, that's why we filter out the rest
-    transactionTypeOptions: (isVendor || screen === "WORK_ORDER_TRANSACTION_TABLE_MODAL") ? transactionTypeOptions.slice(0, 2) : transactionTypeOptions,
+    transactionTypeOptions: isVendor  ? transactionTypeOptions.slice(0, 2) : transactionTypeOptions,
   }
 }
 

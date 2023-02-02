@@ -62,6 +62,7 @@ export const TransactionsTab = ({ projectData, tabsContainerRef, onClose, projec
           projectId={projectId as string}
           projectStatus={projectStatus}
           screen="WORK_ORDER_TRANSACTION_TABLE_MODAL"
+          currentWorkOrderId={workOrder.id}
         />
     </>
   )

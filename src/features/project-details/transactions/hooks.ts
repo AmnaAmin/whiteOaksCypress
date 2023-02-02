@@ -202,11 +202,19 @@ export const useAgainstOptions = (
   control: Control<FormValues, any>,
   projectStatus,
   transaction,
+  currentWorkOrderId?
 ) => {
   const { isVendor } = useUserRolesSelector()
   const transactionType = useWatch({ name: 'transactionType', control })
 
+  
+
   return useMemo(() => {
+
+    if ( currentWorkOrderId ){
+      return isVendor ? againstOptions.filter( (option) => option.value === currentWorkOrderId?.toString() ) : againstOptions.slice(1)?.filter( (option) => option.value === currentWorkOrderId?.toString() );
+    }
+
     // In case of other users than vendors the first option of againstOptions is the
     // Project SOW which should be hide in case transactionType is material
     if (transactionType?.value === TransactionTypeValues.material && !isVendor) {

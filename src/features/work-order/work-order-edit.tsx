@@ -248,11 +248,11 @@ const WorkOrderDetails = ({
                         <BlankSlate />
                       ) : (
                         <TransactionsTab 
-                        projectId={projectId as string}  
-                        tabsContainerRef={tabsContainerRef}
-                        projectData={projectData}
-                        onClose={onClose}
-                        workOrder={workOrder}
+                          projectId={projectId as string}  
+                          tabsContainerRef={tabsContainerRef}
+                          projectData={projectData}
+                          onClose={onClose}
+                          workOrder={workOrder}
                       /> )}
                     </TabPanel>
                     {displayAwardPlan && (
