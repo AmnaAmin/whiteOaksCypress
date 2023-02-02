@@ -262,7 +262,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const payDateVariance = useCalculatePayDateVariance(control)
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
-  console.log( "Against Options Start" , againstOptions );
+  
   useEffect(() => {
     if (selectedWorkOrder?.awardPlanPayTerm && !transaction?.id) {
       const paymentTermValue = {
