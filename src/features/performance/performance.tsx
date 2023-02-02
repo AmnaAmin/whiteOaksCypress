@@ -226,7 +226,7 @@ export const PerformanceTab = () => {
         performance={fpmPerformanceData}
       />
       <Card px="12px" py="16px">
-        <PerformanceTable   refetch={refetchFpmQuota}
+        <PerformanceTable
           performance={fpmPerformanceData}
           isPerformanceTableLoading={isPerformanceTableLoading || isPerformanceTableFetching}
         />

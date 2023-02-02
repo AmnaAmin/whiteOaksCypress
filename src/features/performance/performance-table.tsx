@@ -13,7 +13,7 @@ import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
-  const { performance, isPerformanceTableLoading, refetch} = props
+  const { performance, isPerformanceTableLoading} = props
 
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
@@ -30,24 +30,39 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
     {
       header: `${PERFORMANCE}.revenue`,
       accessorKey: 'revenue',
-      accessorFn(row) {
-        return numeral(row.revenue).format('$0,0.00')
+      filterFn: 'includesString',
+      accessorFn(cellInfo: any) {
+        return cellInfo.revenue?.toString()
+      },
+      cell: (row: any) => {
+        const value = row.cell.getValue() as string
+        return numeral(value).format('$0,0.00')
       },
       meta: { format: 'currency' },
     },
     {
       header: `${PERFORMANCE}.profit`,
       accessorKey: 'profit',
-      accessorFn(row) {
-        return numeral(row.profit).format('$0,0.00')
+      filterFn: 'includesString',
+      accessorFn(cellInfo: any) {
+        return cellInfo.profit?.toString()
+      },
+      cell: (row: any) => {
+        const value = row.cell.getValue() as string
+        return numeral(value).format('$0,0.00')
       },
       meta: { format: 'currency' },
     },
     {
       header: `${PERFORMANCE}.bonus`,
       accessorKey: 'currentBonus',
-      accessorFn(row) {
-        return numeral(row.currentBonus).format('$0,0.00')
+      filterFn: 'includesString',
+      accessorFn(cellInfo: any) {
+        return cellInfo.currentBonus?.toString()
+      },
+      cell: (row: any) => {
+        const value = row.cell.getValue() as string
+        return numeral(value).format('$0,0.00')
       },
       meta: { format: 'currency' },
     },
@@ -61,8 +76,13 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
     {
       header: `${PERFORMANCE}.target`,
       accessorKey: 'target',
-      accessorFn(row) {
-        return numeral(row.target).format('$0,0.00')
+      filterFn: 'includesString',
+      accessorFn(cellInfo: any) {
+        return cellInfo.target?.toString()
+      },
+      cell: (row: any) => {
+        const value = row.cell.getValue() as string
+        return numeral(value).format('$0,0.00')
       },
       meta: { format: 'currency' },
     },
@@ -77,20 +97,20 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
     {
       header: `${PERFORMANCE}.disqualifiedRevenue`,
       accessorKey: 'disqualifiedRevenue',
-      accessorFn(cellInfo) {
-        return numeral(cellInfo.disqualifiedRevenue).format('$0,0.00')
+      accessorFn(cellInfo: any) {
+        return cellInfo.disqualifiedRevenue?.toString()
+      },
+      cell: (row: any) => {
+        const value = row.cell.getValue() as string
+        return numeral(value).format('$0,0.00')
       },
       meta: { format: 'currency' },
     },
-    // {
-    //   header: 'Email',
-    //   accessorKey: 'email',
-    // },
   ]
   const { tableColumns } = useTableColumnSettings(PERFORMANCE_COLUMNS, TableNames.performance)
 
   return (
-    <Box  overflowX={'auto'} minH="calc(100vh - 370px)" pb="2">
+    <Box overflowX={'auto'} minH="calc(100vh - 370px)" pb="2">
       {isOpen && selectedUser && (
         <PerformanceModal
           performanceDetails={selectedUser as PerformanceType}
@@ -102,7 +122,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
         />
       )}
       <Box overflowX={'auto'} minH="calc(100vh - 370px)" border="1px solid #CBD5E0" borderTopRadius="6px">
-        <TableContextProvider data={performance} columns={tableColumns} >
+        <TableContextProvider data={performance} columns={tableColumns}>
           <Table
             onRowClick={row => {
               setSelectedUser(row)
@@ -117,7 +137,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
     colorScheme="brand" 
     fileName="performance" 
     isLoading={isPerformanceTableLoading} 
-    refetch={refetch} />
+  fetchedData={performance} />
     
         </Box> 
        </TableFooter>
@@ -125,7 +145,6 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
 
         </TableContextProvider>
       </Box>
-     
     </Box>
   )
 })
