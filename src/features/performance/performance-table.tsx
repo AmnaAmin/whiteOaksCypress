@@ -13,7 +13,7 @@ import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
-  const { performance, isPerformanceTableLoading, refetch } = props
+  const { performance, isPerformanceTableLoading} = props
 
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
@@ -131,17 +131,18 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
             isLoading={isPerformanceTableLoading}
             isEmpty={!isPerformanceTableLoading && !performance?.length}
           />
-          <TableFooter>
-            <Box>
-              <ExportButton
-                columns={tableColumns}
-                colorScheme="brand"
-                fileName="performance"
-                isLoading={isPerformanceTableLoading}
-                refetch={refetch}
-              />
-            </Box>
-          </TableFooter>
+ <TableFooter>
+   <Box>
+   <ExportButton columns={tableColumns}
+    colorScheme="brand" 
+    fileName="performance" 
+    isLoading={isPerformanceTableLoading} 
+  fetchedData={performance} />
+    
+        </Box> 
+       </TableFooter>
+
+
         </TableContextProvider>
       </Box>
     </Box>
