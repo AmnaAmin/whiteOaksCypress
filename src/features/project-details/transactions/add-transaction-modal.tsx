@@ -31,7 +31,7 @@ const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId, p
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader>{t(`${TRANSACTION}.newTransaction`)}</ModalHeader>
-        <ModalCloseButton _hover={{ bg: 'blue.50' }} />
+        <ModalCloseButton _hover={{ bg: 'blue.50' }} _focus={{ outline: 'none' }} />
 
         <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
