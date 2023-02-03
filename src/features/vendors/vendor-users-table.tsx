@@ -148,7 +148,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
 
   const handleActivationLogic = () => {
 
-    const status = toggleSwitchVendors ? 'active' : 'inactive'
+    const status = toggleSwitchVendors ? 'inactive' : 'active'
     toggleVendorActivations({ vendorId: mainVendorId, action: status })
 
     confirmationDialogClose();
