@@ -34,6 +34,7 @@ import {
 } from 'api/vendor-details'
 import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
+import { VendorUsersTab } from 'features/vendors/vendor-users-table'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -98,6 +99,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   useEffect(() => {
     setReachTabIndex(index => (tabIndex > index ? tabIndex : index))
   }, [tabIndex])
+
 
   const submitForm = useCallback(
     async (formData: VendorProfileDetailsFormData) => {
@@ -238,6 +240,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 </Tab>
                 {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
                 {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
+               <Tab>Users</Tab>
               </TabList>
             </Card>
             <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
@@ -325,6 +328,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     )}
                   </TabPanel>
                 )}
+                <TabPanel p="0px">
+                  <VendorUsersTab 
+                    vendorProfileData={vendorProfileData as VendorProfile} 
+                    onClose={props.onClose}
+                  />
+                </TabPanel>
                 {/* <TabPanel p="0px">
                 <Box overflow="auto">
                 <AuditLogs

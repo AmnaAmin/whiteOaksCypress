@@ -35,6 +35,8 @@ import {
 import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
 import { ExpirationAlertMessage } from 'features/common/expiration-alert-message'
+import { VendorUsersTab } from 'features/vendors/vendor-users-table'
+import { useAuth } from 'utils/auth-context'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -182,6 +184,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
     [toast, vendorProfileData, useSaveVendorDetails, paymentsMethods, tabIndex],
   )
 
+  const { data: userInfo } = useAuth();
+    
   const { state } = useLocation()
 
   useEffect(() => {
@@ -198,6 +202,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         </Box>
 
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
+         
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
             <Card
               bg={{ base: 'white', sm: 'transparent' }}
@@ -245,6 +250,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 </Tab>
                 {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
                 {!isVendor && <Tab>{t('prjt')}</Tab>}
+                {(userInfo?.user as any)?.vendorAdmin ? <Tab>Users</Tab> : null}
               </TabList>
             </Card>
             <Box pt="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
@@ -261,6 +267,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
               width={isVendor ? { base: '100%', lg: 'calc(96vw - var(--sidebar-width))' } : '100%'}
             >
+               <fieldset disabled={!(userInfo?.user as any)?.vendorAdmin}>
               <TabPanels mt={{ base: '0', sm: '30px' }}>
                 <TabPanel p="0px">
                   {tabIndex === 0 ? (
@@ -320,6 +327,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     />
                   )}
                 </TabPanel>
+                {(userInfo?.user as any)?.vendorAdmin && <TabPanel p="0px">
+                  <VendorUsersTab 
+                    vendorProfileData={vendorProfileData as VendorProfile} 
+                    onClose={props.onClose}
+                  />
+                </TabPanel>}
 
                 {!isVendor && (
                   <TabPanel p="0px">
@@ -345,8 +358,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               </TabPanel> */}
                 {/* <TabPanel p="0px"></TabPanel> */}
               </TabPanels>
+              </fieldset>
+              
             </Card>
           </Tabs>
+          
         </form>
         <DevTool control={control} />
       </Stack>
