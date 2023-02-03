@@ -100,6 +100,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
     setReachTabIndex(index => (tabIndex > index ? tabIndex : index))
   }, [tabIndex])
 
+
   const submitForm = useCallback(
     async (formData: VendorProfileDetailsFormData) => {
       if (vendorProfileData?.id) {
@@ -239,7 +240,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 </Tab>
                 {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
                 {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
-                <Tab>Users</Tab>
+               <Tab>Users</Tab>
               </TabList>
             </Card>
             <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>

@@ -1,5 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { Box, Flex, Button, VStack, FormControl, FormLabel, Switch, Icon, HStack, Spacer, useDisclosure } from '@chakra-ui/react'
+import {
+  Box,
+  Flex,
+  Button,
+  VStack,
+  FormControl,
+  FormLabel,
+  Switch,
+  Icon,
+  HStack,
+  Spacer,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { VendorProfile, Vendor as VendorType } from 'types/vendor.types'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
@@ -8,16 +20,17 @@ import { ColumnDef } from '@tanstack/react-table'
 import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import { Card } from 'components/card/card'
-import { useUserManagement } from 'api/user-management'
 import { BiBookAdd } from 'react-icons/bi'
 import VendorUserModal from './vendor-user-modal'
+import { useToggleVendorActivation, useVendorUsers } from 'api/vendor-user'
+import { StatusUserMgt } from 'features/user-management/status-user-mgt'
+import { useAuth } from 'utils/auth-context'
 
 type UserProps = {
   onClose?: () => void
   vendorProfileData: VendorProfile
 }
 export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose }) => {
-
   //eslint-disable-next-line
   const mainVendorId = vendorProfileData.id
 
@@ -38,6 +51,12 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
       {
         header: 'Account',
         accessorKey: 'accountType',
+        accessorFn: row => {
+          return row?.account ? 'Admin' : 'User'
+        },
+        cell: ( row: any ) => {
+          return row.account ? "Admin" : "User"
+        }
       },
       {
         header: 'Language',
@@ -46,6 +65,13 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
       {
         header: 'status',
         accessorKey: 'Status',
+        accessorFn: row => {
+          return row?.status ? 'Activated' : 'Deactivate'
+        },
+        cell: (row: any) => {
+          const value = row?.row.original?.status
+          return <StatusUserMgt id={value} />
+        }
       },
     ]
   }, [])
@@ -53,7 +79,22 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
   const [selectedVendorUser, setSelectedVendorUser] = useState<VendorType>()
   const { tableColumns } = useTableColumnSettings(VENDOR_USERS_TABLE_COLUMNS, TableNames.vendorUsers)
   const [tableData, setTableData] = useState<any>([])
-  const { data, isLoading } = useUserManagement()
+  //const { data, isLoading } = useUserManagement()
+  
+  const [ activationSwitch, setActivationSwitch ] = useState<boolean>(false);
+
+  const { mutate: toggleVendorActivations } = useToggleVendorActivation()
+
+  const { data: userInfo } = useAuth();
+
+  console.log( userInfo );
+
+  const { data, isLoading } = useVendorUsers( mainVendorId, userInfo?.user?.email );
+  
+  const handleActivationSwitch = e => {
+    const status = e.target.checked ? 'active' : 'inactive'
+    toggleVendorActivations({ vendorId: mainVendorId, action: status })
+  }
 
   const mapToTable = data => {
     return data?.map(u => {
@@ -75,38 +116,38 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
   }, [isLoading])
 
   const openNewUserForm = () => {
-    setSelectedVendorUser(undefined);
-    onOpen();
+    setSelectedVendorUser(undefined)
+    onOpen()
   }
 
-  const setSelectedVendor = (r) => {
-    setSelectedVendorUser(r);
-    onOpen();
+  const setSelectedVendor = r => {
+    setSelectedVendorUser(r)
+    onOpen()
   }
 
   const { isOpen, onOpen, onClose: onCloseUsersModal } = useDisclosure()
 
   return (
     <Card px={0}>
-        <VendorUserModal
-          parentVendorId={mainVendorId}
-          vendorDetails={selectedVendorUser as VendorType}
-          isOpen={isOpen}
-          onClose={() => { 
-            setSelectedVendorUser(undefined)
-            onCloseUsersModal();
-          }}
-        />
+      <VendorUserModal
+        parentVendorId={mainVendorId}
+        vendorDetails={selectedVendorUser as VendorType}
+        isOpen={isOpen}
+        onClose={() => {
+          setSelectedVendorUser(undefined)
+          onCloseUsersModal()
+        }}
+      />
       <HStack px="11px" gap="20px" mb="14px">
         <FormControl display="flex">
           <FormLabel htmlFor="deactivate-vendors" mb="0">
             Deactivate Vendors
           </FormLabel>
-          <Switch id="deactivate-vendors" data-testid="deactivate-vendors" />
+          <Switch id="deactivate-vendors" data-testid="deactivate-vendors" onChange={handleActivationSwitch} />
         </FormControl>
         <Spacer />
         <Box display="flex" alignItems="flex-end">
-          <Button onClick={ openNewUserForm } colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
+          <Button onClick={openNewUserForm} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
             New User
           </Button>
         </Box>

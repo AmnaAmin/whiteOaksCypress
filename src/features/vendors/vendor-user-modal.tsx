@@ -16,6 +16,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+  VStack,
 } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { languageOptions, useVendorProfile } from 'api/vendor-details'
@@ -27,7 +28,9 @@ import { useTranslation } from 'react-i18next'
 import ReactSelect from 'components/form/react-select'
 import NumberFormat from 'react-number-format'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-import { useAddUpdateVendorUser, useVendorUserDetails } from 'api/vendor-user'
+import { useAddUpdateVendorUser,  useVendorUserDetails } from 'api/vendor-user'
+import { useStates } from 'api/pc-projects'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const VendorUserModal = ({
   vendorDetails,
@@ -42,6 +45,10 @@ const VendorUserModal = ({
 }) => {
   const { t } = useTranslation()
 
+  const { isAdmin, isDoc, isAccounting, isProjectCoordinator, isOperations } = useUserRolesSelector();
+
+  const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations;
+  
   //es-lint-disable-next-line
   const { data: vendorProfileData, isLoading } = useVendorProfile(vendorDetails?.id)
 
@@ -49,6 +56,8 @@ const VendorUserModal = ({
 
   const form = useForm()
 
+  const { stateSelectOptions: stateOptions } = useStates()
+  
   const {
     register,
     handleSubmit,
@@ -56,13 +65,14 @@ const VendorUserModal = ({
     control,
     reset,
     watch,
-    setValue
-  } = form;
+    setValue,
+  } = form
 
-  useVendorUserDetails( form, vendorDetails );
+  useVendorUserDetails(form, vendorDetails)
 
-  const formValues = watch()
+  const formValues = watch();
 
+  
   const invalidTelePhone =
     validateTelePhoneNumber(formValues?.telephoneNumber as string) || !formValues?.telephoneNumber
 
@@ -78,14 +88,22 @@ const VendorUserModal = ({
       lastName: formValues.lastName,
       userActivated: true,
       vendorAdmin: formValues.vendorAdmin,
-      primaryAdmin: true,
+      primaryAdmin: formValues.primaryAdmin,
       langKey: formValues.langKey.value,
-      phoneNumber: formValues.telephoneNumber,
+      telephoneNumber: formValues.telephoneNumber,
       vendorId: parentVendorId,
+      city: formValues.city,
+      streetAddress: formValues.streetAddress,
+      state: stateOptions?.find(s => s.id === formValues?.stateId),
+      zipCode: formValues.zipCode,
     } as any
 
     if (isEditUser) {
       userPayload.id = vendorDetails?.id
+    }
+
+    if (formValues.newPassword !== '' && formValues.newPassword.length >= 4) {
+      userPayload.password = formValues.newPassword
     }
 
     createUpdateUser(userPayload, {
@@ -95,21 +113,17 @@ const VendorUserModal = ({
     })
   }
 
-  
-
   const onCloseModal = () => {
-    onClose();
-    setValue( "telephoneNumber", "" );
-    reset();
+    onClose()
+    setValue('telephoneNumber', '')
+    reset()
   }
-
-  console.log(errors)
 
   return (
     <div>
       <Modal size="none" isOpen={isOpen} onClose={onCloseModal}>
         <ModalOverlay />
-        <ModalContent w="600px" rounded={3} borderTop="2px solid #4E87F8" bg="#fff">
+        <ModalContent w="950px" rounded={3} borderTop="2px solid #4E87F8" bg="#fff">
           <ModalHeader
             h="63px"
             borderBottom="1px solid #E2E8F0"
@@ -142,23 +156,15 @@ const VendorUserModal = ({
                 ) : (
                   <Box ml="20px">
                     <HStack mt="30px" spacing={15}>
-                      <FormControl w={215}>
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.firstName`)}
-                        </FormLabel>
-                        <Input variant="required-field" type="text" {...register('firstName')} />
-                      </FormControl>
-
-                      <FormControl w={215}>
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.lastName`)}
-                        </FormLabel>
-                        <Input autoComplete="off" variant="required-field" type="text" {...register('lastName')} />
-                      </FormControl>
-                    </HStack>
-
-                    <HStack mt="30px" spacing={15}>
-                      <FormControl w={215} isInvalid={!!errors.email} h="120px">
+                      {isEditUser && (
+                        <FormControl w={215}>
+                          <FormLabel variant="strong-label" size="md">
+                            {t(`${USER_MANAGEMENT}.modal.id`)}
+                          </FormLabel>
+                          <Input isDisabled={isEditUser} variant="required-field" type="id" {...register('id')} />
+                        </FormControl>
+                      )}
+                      <FormControl w={215} isInvalid={!!errors.email} h="77px">
                         <FormLabel variant="strong-label" size="md">
                           {t(`${USER_MANAGEMENT}.modal.email`)}
                         </FormLabel>
@@ -177,9 +183,23 @@ const VendorUserModal = ({
                         <FormErrorMessage pos={'absolute'}>{errors.email?.message}</FormErrorMessage>
                       </FormControl>
 
-                      <HStack mt="30px" h="120px">
-                        <PasswordField errors={errors} register={register} isRequired={!isEditUser} />
-                      </HStack>
+                      <FormControl w={215}>
+                        <FormLabel variant="strong-label" size="md">
+                          {t(`${USER_MANAGEMENT}.modal.firstName`)}
+                        </FormLabel>
+                        <Input variant="required-field" type="text" {...register('firstName')} />
+                      </FormControl>
+
+                      <FormControl w={215}>
+                        <FormLabel variant="strong-label" size="md">
+                          {t(`${USER_MANAGEMENT}.modal.lastName`)}
+                        </FormLabel>
+                        <Input autoComplete="off" variant="required-field" type="text" {...register('lastName')} />
+                      </FormControl>
+                    </HStack>
+
+                    <HStack mt="30px">
+                      <PasswordField errors={errors} register={register} isRequired={!isEditUser} />
                     </HStack>
 
                     <HStack mt="30px" spacing={15}>
@@ -224,12 +244,61 @@ const VendorUserModal = ({
                         </Box>
                       </FormControl>
                     </HStack>
+                    <HStack mt="30px" spacing={15}>
+                      <FormControl w={215}>
+                        <FormLabel variant="strong-label" size="md">
+                          {t(`${USER_MANAGEMENT}.modal.address`)}
+                        </FormLabel>
+                        <Input variant="required-field" type="text" {...register('streetAddress')} />
+                      </FormControl>
+
+                      <FormControl w={215}>
+                        <FormLabel variant="strong-label" size="md">
+                          {t(`${USER_MANAGEMENT}.modal.city`)}
+                        </FormLabel>
+                        <Input type="text" {...register('city')} />
+                      </FormControl>
+
+                      <FormControl w={215}>
+                        <FormLabel variant="strong-label" size="md">
+                          {t(`${USER_MANAGEMENT}.modal.state`)}
+                        </FormLabel>
+                        <Controller
+                          control={control}
+                          name="state"
+                          render={({ field }) => (
+                            <ReactSelect
+                              id="state"
+                              {...field}
+                              options={stateOptions}
+                              selectProps={{ isBorderLeft: true }}
+                            />
+                          )}
+                        />
+                      </FormControl>
+
+                      <FormControl w={215}>
+                        <FormLabel variant="strong-label" size="md">
+                          {t(`${USER_MANAGEMENT}.modal.zipcode`)}
+                        </FormLabel>
+                        <Input type="number" {...register('zipCode')} />
+                      </FormControl>
+                    </HStack>
 
                     <HStack mt="30px">
                       <Box></Box>
                       <FormControl w="215px">
                         <Box>
-                          <Checkbox {...register('vendorAdmin')}>Admin</Checkbox>
+                          <VStack>
+                            <Checkbox {...register('vendorAdmin')} onChange={ (e) => {
+                              if ( ! e.target.checked ){
+                                setValue("primaryAdmin", false);
+                              }
+                            } }>Admin</Checkbox>
+                            <Checkbox isDisabled={!isAppAdmin} {...register('primaryAdmin')}>
+                              Primary
+                            </Checkbox>
+                          </VStack>
                         </Box>
                       </FormControl>
                     </HStack>
@@ -237,7 +306,7 @@ const VendorUserModal = ({
                 )}
               </Box>
               <Flex borderTop="1px solid #E2E8F0" mt="20px" pt="20px" justifyContent="right">
-                <HStack spacing="16px" >
+                <HStack spacing="16px">
                   <Button
                     variant="outline"
                     onClick={() => {
