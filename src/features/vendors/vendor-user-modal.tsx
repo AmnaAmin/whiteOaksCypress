@@ -30,6 +30,7 @@ import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useAddVendorUser, useVendorUserDetails, useUpdateVendorUser } from 'api/vendor-user'
 import { useStates } from 'api/pc-projects'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useAuth } from 'utils/auth-context'
 
 const VendorUserModal = ({
   vendorDetails,
@@ -57,7 +58,7 @@ const VendorUserModal = ({
 
   const { stateSelectOptions: stateOptions } = useStates()
 
-  
+  const { data: userInfo } = useAuth()
 
   const {
     register,
@@ -95,7 +96,6 @@ const VendorUserModal = ({
       email: formValues.email,
       firstName: formValues.firstName,
       lastName: formValues.lastName,
-      userActivated: true,
       vendorAdmin: formValues.vendorAdmin,
       primaryAdmin: formValues.primaryAdmin,
       langKey: formValues.langKey?.value || '',
@@ -105,7 +105,10 @@ const VendorUserModal = ({
       streetAddress: formValues.streetAddress,
       stateId: formValues.state?.id || '',
       zipCode: formValues.zipCode,
-      activated: formValues.activated
+      activated: formValues.activated,
+      parentId: userInfo?.user.id
+
+
     } as any
 
     if (isEditUser) {
