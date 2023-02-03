@@ -32,6 +32,7 @@ import { useToggleVendorActivation, useVendorUsers } from 'api/vendor-user'
 import { StatusUserMgt } from 'features/user-management/status-user-mgt'
 import { useAuth } from 'utils/auth-context'
 import { useQueryClient } from 'react-query'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type UserProps = {
   onClose?: () => void
@@ -40,6 +41,10 @@ type UserProps = {
 export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose }) => {
   //eslint-disable-next-line
   const mainVendorId = vendorProfileData.id
+
+  const { isAdmin, isDoc, isAccounting, isProjectCoordinator, isOperations } = useUserRolesSelector()
+
+  const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations
 
   const VENDOR_USERS_TABLE_COLUMNS: ColumnDef<any>[] = useMemo(() => {
     return [
@@ -170,12 +175,12 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
         }}
       />
       <HStack px="11px" gap="20px" mb="14px">
-        <FormControl display="flex">
+        {isAppAdmin && <FormControl display="flex">
           <FormLabel htmlFor="deactivate-vendors" mb="0">
             Deactivate Vendors
           </FormLabel>
           <Switch id="deactivate-vendors" data-testid="deactivate-vendors" onChange={handleActivationSwitch} isChecked={toggleSwitchVendors} />
-        </FormControl>
+        </FormControl>}
         <Spacer />
         <Box display="flex" alignItems="flex-end">
           <Button onClick={openNewUserForm} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
