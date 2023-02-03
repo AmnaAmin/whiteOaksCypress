@@ -18,7 +18,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { languageOptions, useVendorProfile } from 'api/vendor-details'
+import { languageOptions } from 'api/vendor-details'
 import { Vendor } from 'types/vendor.types'
 import { Controller, useForm } from 'react-hook-form'
 import { PasswordField } from 'features/user-management/password-field'

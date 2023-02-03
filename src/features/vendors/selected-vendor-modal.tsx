@@ -17,11 +17,13 @@ import { VendorProfileTabs } from 'pages/vendor/vendor-profile'
 import { useVendorProfile } from 'api/vendor-details'
 import { Vendor as VendorType } from 'types/vendor.types'
 import { useCallback, useEffect } from 'react'
+import { useQueryClient } from 'react-query'
 
 const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; onClose: () => void }) => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorDetails.id)
 
+  const queryClient = useQueryClient();
   const onClose = useCallback(() => {
     onCloseDisclosure()
     close()
@@ -33,6 +35,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; 
     } else {
       onCloseDisclosure()
     }
+    queryClient.resetQueries('vendor-users-list')
   }, [onCloseDisclosure, onOpen, vendorDetails])
   return (
     <div>
