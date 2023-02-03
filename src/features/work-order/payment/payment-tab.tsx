@@ -376,6 +376,7 @@ const PaymentInfoTab = props => {
                         <>
                           <NumberFormat
                             value={field.value}
+                            data-testid="partial-payment-field"
                             thousandSeparator
                             customInput={CustomInput}
                             prefix={'$'}
@@ -436,7 +437,7 @@ const PaymentInfoTab = props => {
             )}
           </HStack>
           <HStack justifyContent="end">
-            <Button variant="outline" onClick={props.onClose} colorScheme="brand">
+            <Button data-testid="wo-cancel-btn" variant="outline" onClick={props.onClose} colorScheme="brand">
               {t('close')}
             </Button>
             <Button type="submit" colorScheme="brand" disabled={isWorkOrderUpdating}>
