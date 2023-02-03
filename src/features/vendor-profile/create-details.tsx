@@ -168,33 +168,35 @@ const CreateVendorDetail: React.FC<{
               )}
             />
           </FormControl>
-          <FormControl w="215px" isInvalid={!!errors.enableVendorPortal}>
+          <FormControl w="215px" isInvalid={!!errors.enableVendorPortal} display="none">
             <FormLabel variant="strong-label" size="md">
               {t('portalAccess')}
             </FormLabel>
             <Controller
               control={control}
               name="enableVendorPortal"
-              rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect options={portalAccess} {...field} isDisabled={isFPM} />
+                  <ReactSelect
+                    options={portalAccess}
+                    {...field}
+                    isDisabled={isFPM}
+                    selectProps={{ isBorderLeft: true }}
+                  />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
             />
           </FormControl>
         </HStack>
-        <HStack spacing="16px" mt="30px">
+        <HStack spacing="16px" mt="30px" display="none">
           <FormControl w="215px" isInvalid={!!errors.ownerName}>
             <FormLabel variant="strong-label" size="md">
               {t('primaryContact')}
             </FormLabel>
             <Input
               type="text"
-              {...register('ownerName', {
-                required: isActive && 'This is required',
-              })}
+              {...register('ownerName')}
               variant="required-field"
               size="md"
               isDisabled={isFPM}
@@ -208,13 +210,7 @@ const CreateVendorDetail: React.FC<{
             </FormLabel>
             <Input
               type="email"
-              {...register('businessEmailAddress', {
-                required: isActive && 'This is required',
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Invalid email',
-                },
-              })}
+              {...register('businessEmailAddress')}
               variant="required-field"
               size="md"
               isDisabled={isFPM}
@@ -334,7 +330,7 @@ const CreateVendorDetail: React.FC<{
               ></Controller>
             </FormControl>
           </Box>
-          <Box w="109px">
+          <Box w="109px" top="9px" pos="relative">
             <FormControl h="90px">
               <FormLabel variant="strong-label" size="md">
                 {t('ext')}
@@ -424,7 +420,7 @@ const CreateVendorDetail: React.FC<{
                 {...register('zipCode', {
                   required: isActive && 'This is required',
                 })}
-                w="215px"
+                w="121px"
                 variant="required-field"
                 size="md"
                 isDisabled={isFPM}
@@ -527,7 +523,6 @@ const CreateVendorDetail: React.FC<{
                 <Controller
                   control={control}
                   name="paymentTerm"
-                  rules={{ required: isActive && 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect

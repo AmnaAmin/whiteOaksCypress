@@ -2,7 +2,7 @@ export const activeCardValue = 4
 export const PastDueWOCardValue = 4
 export const completedCardValue = 1
 export const invoicedCardValue = 1
-export const declinedCardValue = 1
+export const rejectedCardValue = 1
 
 export const PROJECT_FILTER_CARDS = [
   {
@@ -22,7 +22,7 @@ export const PROJECT_FILTER_CARDS = [
     count: invoicedCardValue,
   },
   {
-    label: 'declined',
-    count: declinedCardValue,
+    label: 'rejected',
+    count: rejectedCardValue,
   },
 ]
