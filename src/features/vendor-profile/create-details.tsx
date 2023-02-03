@@ -178,7 +178,12 @@ const CreateVendorDetail: React.FC<{
               rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect options={portalAccess} {...field} isDisabled={isFPM} />
+                  <ReactSelect
+                    options={portalAccess}
+                    {...field}
+                    isDisabled={isFPM}
+                    selectProps={{ isBorderLeft: true }}
+                  />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -518,7 +523,8 @@ const CreateVendorDetail: React.FC<{
         </Grid>
         <Box>
           <Stack alignItems="center" direction="row" spacing="16px">
-            <Box w="215px">
+            {/* hiding payment terms */}
+            <Box w="215px" display={'none'}>
               <FormControl isInvalid={!!errors.paymentTerm}>
                 <FormLabel variant="strong-label" size="md">
                   {t('paymentTerms')}
@@ -526,7 +532,6 @@ const CreateVendorDetail: React.FC<{
                 <Controller
                   control={control}
                   name="paymentTerm"
-                  rules={{ required: isActive && 'This is required' }}
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect

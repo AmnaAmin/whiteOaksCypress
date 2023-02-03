@@ -110,7 +110,6 @@ const WorkOrderDetailTab = props => {
     navigateToProjectDetails,
     isWorkOrderUpdating,
     swoProject,
-    rejectInvoiceCheck,
     projectData,
     documentsData,
     workOrderAssignedItems,
@@ -329,7 +328,7 @@ const WorkOrderDetailTab = props => {
     if (workOrder?.id) {
       reset(defaultValuesWODetails(workOrder, workOrderAssignedItems, defaultSkill, defaultVendor))
     }
-  }, [workOrder, reset, workOrderAssignedItems?.length])
+  }, [workOrder, reset, workOrderAssignedItems])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
@@ -450,9 +449,7 @@ const WorkOrderDetailTab = props => {
               <CalenderCard
                 testId={'lwSubmitted'}
                 title={t(`${WORK_ORDER}.lwSubmitted`)}
-                date={
-                  dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
-                }
+                date={dateLeanWaiverSubmitted ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
               />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
               <CalenderCard
