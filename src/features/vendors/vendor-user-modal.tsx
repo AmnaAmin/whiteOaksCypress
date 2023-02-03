@@ -98,12 +98,12 @@ const VendorUserModal = ({
       userActivated: true,
       vendorAdmin: formValues.vendorAdmin,
       primaryAdmin: formValues.primaryAdmin,
-      langKey: formValues.langKey.value,
+      langKey: formValues.langKey?.value || '',
       telephoneNumber: formValues.telephoneNumber,
       vendorId: parentVendorId,
       city: formValues.city,
       streetAddress: formValues.streetAddress,
-      state: stateOptions?.find(s => s.id === formValues?.stateId),
+      stateId: formValues.state?.id || '',
       zipCode: formValues.zipCode,
       activated: formValues.activated
     } as any
