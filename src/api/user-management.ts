@@ -179,6 +179,8 @@ export const userMangtPayload = (user: any) => {
     userType: user.accountType?.value,
     ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
     newBonus: user.newBonus?.label ? user.newBonus?.value : '',
+    vendorAdmin: user.vendorAdmin,
+    primaryAdmin: user.primaryAdmin
   }
   delete userObj.states
   delete userObj.state
@@ -343,6 +345,8 @@ const parseUserFormData = ({
     parentFieldProjectManagerId: allManagersOptions?.find(
       manager => manager.value === userInfo?.parentFieldProjectManagerId,
     ),
+    vendorAdmin: userInfo.vendorAdmin,
+    primaryAdmin: userInfo.primaryAdmin
   }
 }
 
