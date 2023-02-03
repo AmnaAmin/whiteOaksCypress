@@ -19,7 +19,7 @@ import {
   useMediaQuery,
 } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Project, ProjectWorkOrderType } from 'types/project.type'
@@ -35,6 +35,7 @@ import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
 import { ProjectAwardTab } from 'features/work-order/project-award/project.award'
 import { useProjectAward } from 'api/project-award'
 import { Card } from 'features/login-form-centered/Card'
+import { TransactionsTab } from 'features/work-order/transactions/transactions-tab'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -107,6 +108,8 @@ export const WorkOrderDetails = ({
     })
   }
 
+  const tabsContainerRef = useRef<HTMLDivElement>(null)
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize} closeOnOverlayClick={false}>
       <ModalOverlay />
@@ -157,6 +160,7 @@ export const WorkOrderDetails = ({
               >
                 <TabList border="none" flexDir={{ base: 'column', md: 'row' }}>
                   <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
+                  <Tab data-testid="transactions">{t('projects.projectDetails.transactions')}</Tab>
                   {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
                   <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
                   <Tab data-testid="invoice">{t('invoice')}</Tab>
@@ -164,7 +168,7 @@ export const WorkOrderDetails = ({
                   <Tab data-testid="notes">{t('notes')}</Tab>
                 </TabList>
               </Card>
-              <Card mb={3} py={0} roundedTop={0} roundedRight={{ base: 0, md: 12 }}>
+              <Card mb={3} p="0px !important" roundedTop={0} roundedRight={{ base: 0, md: 12 }}>
                 <TabPanels>
                   <TabPanel p={0}>
                     <WorkOrderDetailTab
@@ -177,6 +181,19 @@ export const WorkOrderDetails = ({
                       isFetchingLineItems={isFetchingLineItems}
                       isLoadingLineItems={isLoadingLineItems}
                     />
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    {isLoading ? (
+                      <BlankSlate />
+                    ) : (
+                      <TransactionsTab
+                        projectId={projectId as string}
+                        tabsContainerRef={tabsContainerRef}
+                        projectData={projectData}
+                        onClose={onClose}
+                        workOrder={workOrder}
+                      />
+                    )}
                   </TabPanel>
                   {displayAwardPlan && (
                     <TabPanel p={0}>
