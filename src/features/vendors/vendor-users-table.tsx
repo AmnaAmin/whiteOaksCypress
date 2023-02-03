@@ -87,9 +87,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
 
   const { data: userInfo } = useAuth();
 
-  console.log( userInfo );
-
-  const { data, isLoading } = useVendorUsers( mainVendorId, userInfo?.user?.email );
+  const { data, isLoading } = useVendorUsers( mainVendorId, userInfo?.user?.email, userInfo?.user?.id );
   
   const handleActivationSwitch = e => {
     const status = e.target.checked ? 'active' : 'inactive'

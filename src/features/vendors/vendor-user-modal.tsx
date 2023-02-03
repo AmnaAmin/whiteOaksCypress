@@ -28,7 +28,7 @@ import { useTranslation } from 'react-i18next'
 import ReactSelect from 'components/form/react-select'
 import NumberFormat from 'react-number-format'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-import { useAddUpdateVendorUser,  useVendorUserDetails } from 'api/vendor-user'
+import { useAddUpdateVendorUser, useVendorUserDetails } from 'api/vendor-user'
 import { useStates } from 'api/pc-projects'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
@@ -45,10 +45,10 @@ const VendorUserModal = ({
 }) => {
   const { t } = useTranslation()
 
-  const { isAdmin, isDoc, isAccounting, isProjectCoordinator, isOperations } = useUserRolesSelector();
+  const { isAdmin, isDoc, isAccounting, isProjectCoordinator, isOperations } = useUserRolesSelector()
 
-  const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations;
-  
+  const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations
+
   //es-lint-disable-next-line
   const { isLoading } = useVendorProfile(vendorDetails?.id)
 
@@ -57,7 +57,9 @@ const VendorUserModal = ({
   const form = useForm()
 
   const { stateSelectOptions: stateOptions } = useStates()
+
   
+
   const {
     register,
     handleSubmit,
@@ -70,16 +72,24 @@ const VendorUserModal = ({
 
   useVendorUserDetails(form, vendorDetails)
 
-  const formValues = watch();
+  const formValues = watch()
 
-  
+  const watchRequiredField =
+    !formValues?.email ||
+    !formValues?.firstName ||
+    !formValues?.lastName ||
+    (!isEditUser && !formValues?.newPassword) ||
+    !formValues?.state ||
+    !formValues?.streetAddress ||
+    !formValues?.telephoneNumber ||
+    !formValues?.langKey
+
   const invalidTelePhone =
     validateTelePhoneNumber(formValues?.telephoneNumber as string) || !formValues?.telephoneNumber
 
   const { mutate: createUpdateUser } = useAddUpdateVendorUser()
 
   const onSubmit = values => {
-
     const userPayload = {
       login: formValues.email,
       email: formValues.email,
@@ -95,6 +105,7 @@ const VendorUserModal = ({
       streetAddress: formValues.streetAddress,
       state: stateOptions?.find(s => s.id === formValues?.stateId),
       zipCode: formValues.zipCode,
+      activated: formValues.activated
     } as any
 
     if (isEditUser) {
@@ -117,6 +128,8 @@ const VendorUserModal = ({
     setValue('telephoneNumber', '')
     reset()
   }
+
+  const isPrimaryDisabled = !formValues.vendorAdmin
 
   return (
     <div>
@@ -242,6 +255,18 @@ const VendorUserModal = ({
                           </FormErrorMessage>
                         </Box>
                       </FormControl>
+                      <FormControl w={215}>
+                      <Checkbox
+                        mt="25px"
+                        isChecked={formValues.activated}
+                        fontSize="16px"
+                        fontWeight={400}
+                        color="#718096"
+                        {...register('activated')}
+                      >
+                        {t(`${USER_MANAGEMENT}.modal.activated`)}
+                      </Checkbox>
+                    </FormControl>
                     </HStack>
                     <HStack mt="30px" spacing={15}>
                       <FormControl w={215}>
@@ -283,25 +308,37 @@ const VendorUserModal = ({
                         <Input type="number" {...register('zipCode')} />
                       </FormControl>
                     </HStack>
-
-                    <HStack mt="30px">
-                      <Box></Box>
-                      <FormControl w="215px">
-                        <Box>
-                          <VStack>
-                            <Checkbox {...register('vendorAdmin')} onChange={ (e) => {
-                              if ( ! e.target.checked ){
-                                setValue("primaryAdmin", false);
-                              }
-                            } }>Admin</Checkbox>
-                            <Checkbox isDisabled={!isAppAdmin} {...register('primaryAdmin')}>
-                              Primary
-                            </Checkbox>
-                          </VStack>
-                        </Box>
+                    
+                    <Box>
+                    <HStack mt="30px" w="300px">
+                      <FormControl>
+                        <Checkbox
+                          {...register('vendorAdmin', {
+                            onChange: e => {
+                              console.log(e.target.checked);
+                              if (!e.target.checked) setValue('primaryAdmin', false)
+                            },
+                          })}
+                        >
+                          Admin
+                        </Checkbox>
+                      </FormControl>
+                      <FormControl>
+                        <Checkbox
+                          isChecked={formValues.primaryAdmin}
+                          display={isAppAdmin ? 'block' : 'none'}
+                          isDisabled={isPrimaryDisabled}
+                          {...register('primaryAdmin')}
+                        >
+                          <chakra.span position="relative" top="-5px">Primary</chakra.span>
+                        </Checkbox>
                       </FormControl>
                     </HStack>
+                    </Box>
+                    
+                    
                   </Box>
+                  
                 )}
               </Box>
               <Flex borderTop="1px solid #E2E8F0" mt="20px" pt="20px" justifyContent="right">
@@ -316,7 +353,7 @@ const VendorUserModal = ({
                   >
                     {t('cancel')}
                   </Button>
-                  <Button type="submit" colorScheme="brand">
+                  <Button type="submit" colorScheme="brand" disabled={!!watchRequiredField }>
                     {t('save')}
                   </Button>
                 </HStack>

@@ -4,15 +4,24 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useStates } from './pc-projects'
 import { languageOptions } from './vendor-details'
 
-export const useVendorUsers = ( vendorId: any, adminVendorLogin: any ) => {
+export const useVendorUsers = ( vendorId: any, adminVendorLogin: any, userLoginId: any ) => {
 
   const client = useClient();
+  
+  const { isAdmin, isDoc, isAccounting, isProjectCoordinator, isOperations } = useUserRolesSelector()
+
+  const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations
+
+  if ( !isAppAdmin ){
+    vendorId = 0;
+  }
 
   return useQuery('vendor-users-list', async () => {
-    const response = await client(`vendor/users/portal?vendorId=${vendorId}&adminVendorLogin=${adminVendorLogin}`, {})
+    const response = await client(`vendor/users/portal?vendorId=${vendorId}&adminVendorLogin=${adminVendorLogin}&parentId=${userLoginId}`, {})
 
     return response?.data
   })
@@ -33,7 +42,7 @@ export const useAddUpdateVendorUser = () => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries('vendor-users-list')
+        queryClient.resetQueries('vendor-users-list')
         toast({
           title: t(`${USER_MANAGEMENT}.modal.addUser`),
           description: t(`${USER_MANAGEMENT}.modal.addUserSuccess`),
@@ -72,7 +81,7 @@ export const useToggleVendorActivation = () => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries('vendor-users-list')
+        queryClient.resetQueries('vendor-users-list')
         toast({
           title: t(`${USER_MANAGEMENT}.modal.updateUser`),
           description: t(`${USER_MANAGEMENT}.modal.updateUserSuccess`),
@@ -112,7 +121,8 @@ export const useVendorUserDetails = (form, vendorUserInfo) => {
         state: stateOptions?.find(s => s.id === vendorUserInfo?.stateId),
         zipCode: vendorUserInfo.zipCode,
         id: vendorUserInfo.id,
-        primaryAdmin: vendorUserInfo.primaryAdmin
+        primaryAdmin: vendorUserInfo.primaryAdmin,
+        activated: vendorUserInfo.activated
       })
     } else {
       reset({
