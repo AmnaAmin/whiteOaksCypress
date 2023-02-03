@@ -267,7 +267,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
               width={isVendor ? { base: '100%', lg: 'calc(96vw - var(--sidebar-width))' } : '100%'}
             >
-               <fieldset disabled={(userInfo?.user as any)?.vendorAdmin}>
+               <fieldset disabled={!(userInfo?.user as any)?.vendorAdmin}>
               <TabPanels mt={{ base: '0', sm: '30px' }}>
                 <TabPanel p="0px">
                   {tabIndex === 0 ? (
