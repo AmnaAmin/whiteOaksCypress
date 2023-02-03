@@ -447,6 +447,7 @@ export const VendorRegister = () => {
       isSsn: ssnEinTabIndex === 1 ? true : false,
     }
 
+    
     createVendorAccount(vendorObj)
   }
 
