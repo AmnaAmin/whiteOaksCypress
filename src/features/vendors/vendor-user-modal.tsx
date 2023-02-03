@@ -16,7 +16,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  VStack,
 } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { languageOptions, useVendorProfile } from 'api/vendor-details'

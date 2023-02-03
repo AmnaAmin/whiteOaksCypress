@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import {
   Box,
   Flex,
@@ -11,6 +11,12 @@ import {
   HStack,
   Spacer,
   useDisclosure,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
 } from '@chakra-ui/react'
 import { VendorProfile, Vendor as VendorType } from 'types/vendor.types'
 import { TableContextProvider } from 'components/table-refactored/table-context'
@@ -54,9 +60,9 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
         accessorFn: row => {
           return row?.account ? 'Admin' : 'User'
         },
-        cell: ( row: any ) => {
-          return row.account ? "Admin" : "User"
-        }
+        cell: (row: any) => {
+          return row.account ? 'Admin' : 'User'
+        },
       },
       {
         header: 'Language',
@@ -71,7 +77,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
         cell: (row: any) => {
           const value = row?.row.original?.status
           return <StatusUserMgt id={value} />
-        }
+        },
       },
     ]
   }, [])
@@ -79,19 +85,21 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
   const [selectedVendorUser, setSelectedVendorUser] = useState<VendorType>()
   const { tableColumns } = useTableColumnSettings(VENDOR_USERS_TABLE_COLUMNS, TableNames.vendorUsers)
   const [tableData, setTableData] = useState<any>([])
+  const [ toggleSwitchVendors, setToggleSwitchVendors ] = useState<boolean>(false);
   //const { data, isLoading } = useUserManagement()
-  
-  const [ activationSwitch, setActivationSwitch ] = useState<boolean>(false);
+
+  //const [activationSwitch, setActivationSwitch] = useState<boolean>(false)
 
   const { mutate: toggleVendorActivations } = useToggleVendorActivation()
 
-  const { data: userInfo } = useAuth();
+  const { data: userInfo } = useAuth()
 
-  const { data, isLoading } = useVendorUsers( mainVendorId, userInfo?.user?.email, userInfo?.user?.id );
-  
+  const { data, isLoading } = useVendorUsers(mainVendorId, userInfo?.user?.email, userInfo?.user?.id)
+
   const handleActivationSwitch = e => {
-    const status = e.target.checked ? 'active' : 'inactive'
-    toggleVendorActivations({ vendorId: mainVendorId, action: status })
+    
+    setToggleSwitchVendors(e.target.checked);
+    confirmationDialogOpen();
   }
 
   const mapToTable = data => {
@@ -124,6 +132,27 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
   }
 
   const { isOpen, onOpen, onClose: onCloseUsersModal } = useDisclosure()
+  const {
+    isOpen: confirmationDialogIsOpen,
+    onOpen: confirmationDialogOpen,
+    onClose: confirmationDialogClose,
+  } = useDisclosure()
+
+  const cancelRef = useRef();
+
+  const handleCancelActivationLogic = () => {
+    setToggleSwitchVendors(!toggleSwitchVendors);
+    confirmationDialogClose();
+  }
+
+  const handleActivationLogic = () => {
+
+    const status = toggleSwitchVendors ? 'active' : 'inactive'
+    toggleVendorActivations({ vendorId: mainVendorId, action: status })
+
+    confirmationDialogClose();
+    
+  }
 
   return (
     <Card px={0}>
@@ -141,7 +170,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
           <FormLabel htmlFor="deactivate-vendors" mb="0">
             Deactivate Vendors
           </FormLabel>
-          <Switch id="deactivate-vendors" data-testid="deactivate-vendors" onChange={handleActivationSwitch} />
+          <Switch id="deactivate-vendors" data-testid="deactivate-vendors" onChange={handleActivationSwitch} isChecked={toggleSwitchVendors} />
         </FormControl>
         <Spacer />
         <Box display="flex" alignItems="flex-end">
@@ -180,6 +209,32 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
           </Button>
         )}
       </Flex>
+      <AlertDialog
+        isOpen={confirmationDialogIsOpen}
+        leastDestructiveRef={cancelRef as any}
+        onClose={confirmationDialogClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+              { toggleSwitchVendors ? "Deactivate Vendors" : "Activate Vendors" }
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure you want to { toggleSwitchVendors ? "deactivate all vendors" : "activate all vendors" } ? 
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button variant="outline" colorScheme="brand" ref={cancelRef as any} onClick={ handleCancelActivationLogic }>
+                Cancel
+              </Button>
+              <Button colorScheme="brand" onClick={ handleActivationLogic } mr={3} ml={5}>
+                Ok
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </Card>
   )
 }

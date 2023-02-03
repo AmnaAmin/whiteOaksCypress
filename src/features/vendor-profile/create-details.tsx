@@ -168,7 +168,7 @@ const CreateVendorDetail: React.FC<{
               )}
             />
           </FormControl>
-          <FormControl w="215px" isInvalid={!!errors.enableVendorPortal}>
+          <FormControl w="215px" isInvalid={!!errors.enableVendorPortal} display="none">
             <FormLabel variant="strong-label" size="md">
               {t('portalAccess')}
             </FormLabel>
@@ -185,7 +185,7 @@ const CreateVendorDetail: React.FC<{
             />
           </FormControl>
         </HStack>
-        <HStack spacing="16px" mt="30px">
+        <HStack spacing="16px" mt="30px" display="none">
           <FormControl w="215px" isInvalid={!!errors.ownerName}>
             <FormLabel variant="strong-label" size="md">
               {t('primaryContact')}
@@ -334,7 +334,7 @@ const CreateVendorDetail: React.FC<{
               ></Controller>
             </FormControl>
           </Box>
-          <Box w="109px">
+          <Box w="109px" top="9px" pos="relative">
             <FormControl h="90px">
               <FormLabel variant="strong-label" size="md">
                 {t('ext')}
@@ -424,7 +424,7 @@ const CreateVendorDetail: React.FC<{
                 {...register('zipCode', {
                   required: isActive && 'This is required',
                 })}
-                w="215px"
+                w="121px"
                 variant="required-field"
                 size="md"
                 isDisabled={isFPM}
