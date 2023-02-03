@@ -20,7 +20,7 @@ export const useVendorUsers = ( vendorId: any, adminVendorLogin: any, userLoginI
     vendorId = 0;
   }
 
-  return useQuery('vendor-users-list', async () => {
+  return useQuery('vendor-users-list', [vendorId, adminVendorLogin, userLoginId], async () => {
     const response = await client(`vendor/users/portal?vendorId=${vendorId}&adminVendorLogin=${adminVendorLogin}&parentId=${userLoginId}`, {})
 
     return response?.data

@@ -27,6 +27,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; 
   const onClose = useCallback(() => {
     onCloseDisclosure()
     close()
+    queryClient.resetQueries('vendor-users-list')
   }, [close, onCloseDisclosure])
 
   useEffect(() => {
