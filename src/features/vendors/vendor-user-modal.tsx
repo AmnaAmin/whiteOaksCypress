@@ -50,7 +50,7 @@ const VendorUserModal = ({
   const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations
 
   //es-lint-disable-next-line
-  const { isLoading } = useVendorProfile(vendorDetails?.id)
+  //const { isLoading } = useVendorProfile(vendorDetails?.id)
 
   const isEditUser = !!(vendorDetails && vendorDetails.id)
 
@@ -175,7 +175,7 @@ const VendorUserModal = ({
               action="#"
             >
               <Box mt="14px">
-                {isLoading ? (
+                {false ? (
                   <BlankSlate width="60px" />
                 ) : (
                   <Box ml="20px">
