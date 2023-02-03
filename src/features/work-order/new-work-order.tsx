@@ -477,7 +477,7 @@ export const NewWorkOrderForm: React.FC<{
                     </FormControl>
                   </Box>
                   <Box>
-                    <FormControl isInvalid={!!errors.vendorSkillId} data-testid="vendorId">
+                    <FormControl isInvalid={!!errors.vendorId} data-testid="vendorId">
                       <FormLabel
                         fontSize="14px"
                         noOfLines={1}

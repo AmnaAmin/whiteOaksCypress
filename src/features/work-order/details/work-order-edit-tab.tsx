@@ -110,7 +110,6 @@ const WorkOrderDetailTab = props => {
     navigateToProjectDetails,
     isWorkOrderUpdating,
     swoProject,
-    rejectInvoiceCheck,
     projectData,
     documentsData,
     workOrderAssignedItems,
@@ -450,9 +449,7 @@ const WorkOrderDetailTab = props => {
               <CalenderCard
                 testId={'lwSubmitted'}
                 title={t(`${WORK_ORDER}.lwSubmitted`)}
-                date={
-                  dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
-                }
+                date={dateLeanWaiverSubmitted ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
               />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
               <CalenderCard
