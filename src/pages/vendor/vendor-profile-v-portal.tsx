@@ -88,7 +88,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const [tabIndex, setTabIndex] = useState<any>(0)
   const [reachTabIndex, setReachTabIndex] = useState(0)
   const formReturn = useForm<VendorProfileDetailsFormData>()
-  const { control, setValue } = formReturn
+  const { control } = formReturn
   useVendorDetails({ form: formReturn, vendorProfileData })
   const showError = name => {
     toast({
