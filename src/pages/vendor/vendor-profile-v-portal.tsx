@@ -185,7 +185,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   )
 
   const { data: userInfo } = useAuth();
-
+    
   const { state } = useLocation()
 
   useEffect(() => {
@@ -202,6 +202,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         </Box>
 
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
+         
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
             <Card
               bg={{ base: 'white', sm: 'transparent' }}
@@ -266,6 +267,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
               width={isVendor ? { base: '100%', lg: 'calc(96vw - var(--sidebar-width))' } : '100%'}
             >
+               <fieldset disabled={(userInfo?.user as any)?.vendorAdmin}>
               <TabPanels mt={{ base: '0', sm: '30px' }}>
                 <TabPanel p="0px">
                   {tabIndex === 0 ? (
@@ -356,9 +358,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               </TabPanel> */}
                 {/* <TabPanel p="0px"></TabPanel> */}
               </TabPanels>
+              </fieldset>
               
             </Card>
           </Tabs>
+          
         </form>
         <DevTool control={control} />
       </Stack>

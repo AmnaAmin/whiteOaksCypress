@@ -50,7 +50,7 @@ const VendorUserModal = ({
   const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations;
   
   //es-lint-disable-next-line
-  const { data: vendorProfileData, isLoading } = useVendorProfile(vendorDetails?.id)
+  const { isLoading } = useVendorProfile(vendorDetails?.id)
 
   const isEditUser = !!(vendorDetails && vendorDetails.id)
 
@@ -79,7 +79,6 @@ const VendorUserModal = ({
   const { mutate: createUpdateUser } = useAddUpdateVendorUser()
 
   const onSubmit = values => {
-    console.log(values)
 
     const userPayload = {
       login: formValues.email,
