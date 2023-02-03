@@ -27,7 +27,7 @@ export const useVendorUsers = ( vendorId: any, adminVendorLogin: any, userLoginI
   })
 }
 
-export const useAddUpdateVendorUser = () => {
+export const useAddVendorUser = () => {
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -55,6 +55,43 @@ export const useAddUpdateVendorUser = () => {
         toast({
           title: t(`${USER_MANAGEMENT}.modal.addUser`),
           description: (error.title as string) ?? t(`${USER_MANAGEMENT}.modal.userAddFailed`),
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+export const useUpdateVendorUser = () => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  const { t } = useTranslation()
+
+  return useMutation(
+    userPayload => {
+      return client('vendor/user/portal', {
+        data: userPayload,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.resetQueries('vendor-users-list')
+        toast({
+          title: t(`${USER_MANAGEMENT}.modal.updateUser`),
+          description: t(`${USER_MANAGEMENT}.modal.updateUserSuccess`),
+          status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: t(`${USER_MANAGEMENT}.modal.updateUser`),
+          description: (error.title as string) ?? t(`${USER_MANAGEMENT}.modal.userUpdateFailed`),
           status: 'error',
           isClosable: true,
           position: 'top-left',
@@ -106,6 +143,8 @@ export const useToggleVendorActivation = () => {
 export const useVendorUserDetails = (form, vendorUserInfo) => {
   const { setValue, reset } = form
   const { stateSelectOptions: stateOptions } = useStates()
+  //console.log( vendorUserInfo );
+  //console.log(stateOptions?.find(s => s.id === vendorUserInfo?.state));
   useEffect(() => {
     
     if (!!(vendorUserInfo && vendorUserInfo.id)) {

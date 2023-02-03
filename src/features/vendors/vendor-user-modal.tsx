@@ -27,7 +27,7 @@ import { useTranslation } from 'react-i18next'
 import ReactSelect from 'components/form/react-select'
 import NumberFormat from 'react-number-format'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-import { useAddUpdateVendorUser, useVendorUserDetails } from 'api/vendor-user'
+import { useAddVendorUser, useVendorUserDetails, useUpdateVendorUser } from 'api/vendor-user'
 import { useStates } from 'api/pc-projects'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
@@ -86,7 +86,8 @@ const VendorUserModal = ({
   const invalidTelePhone =
     validateTelePhoneNumber(formValues?.telephoneNumber as string) || !formValues?.telephoneNumber
 
-  const { mutate: createUpdateUser } = useAddUpdateVendorUser()
+  const { mutate: createUser } = useAddVendorUser()
+  const { mutate: updateUser } = useUpdateVendorUser();
 
   const onSubmit = values => {
     const userPayload = {
@@ -115,11 +116,20 @@ const VendorUserModal = ({
       userPayload.password = formValues.newPassword
     }
 
-    createUpdateUser(userPayload, {
-      onSuccess: () => {
-        onCloseModal()
-      },
-    })
+    if ( isEditUser ) {
+      updateUser(userPayload, {
+        onSuccess: () => {
+          onCloseModal()
+        },
+      });
+    } else {
+      createUser(userPayload, {
+        onSuccess: () => {
+          onCloseModal()
+        },
+      })
+    }
+    
   }
 
   const onCloseModal = () => {

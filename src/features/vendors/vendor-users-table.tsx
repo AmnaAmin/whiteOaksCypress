@@ -31,6 +31,7 @@ import VendorUserModal from './vendor-user-modal'
 import { useToggleVendorActivation, useVendorUsers } from 'api/vendor-user'
 import { StatusUserMgt } from 'features/user-management/status-user-mgt'
 import { useAuth } from 'utils/auth-context'
+import { useQueryClient } from 'react-query'
 
 type UserProps = {
   onClose?: () => void
@@ -154,6 +155,8 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
     
   }
 
+  const queryClient = useQueryClient();
+
   return (
     <Card px={0}>
       <VendorUserModal
@@ -163,6 +166,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
         onClose={() => {
           setSelectedVendorUser(undefined)
           onCloseUsersModal()
+          queryClient.resetQueries('vendor-users-list')
         }}
       />
       <HStack px="11px" gap="20px" mb="14px">
