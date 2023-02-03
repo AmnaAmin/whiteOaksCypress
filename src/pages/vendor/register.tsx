@@ -442,7 +442,7 @@ export const VendorRegister = () => {
       streetAddress: streetAddress,
       telephoneNumber: telephoneNumber,
       vendorDetails: vendorDetails,
-      stateId: state,
+      stateId: state?.id,
       state: state,
       isSsn: ssnEinTabIndex === 1 ? true : false,
     }
