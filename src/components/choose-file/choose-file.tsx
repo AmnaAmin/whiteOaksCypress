@@ -1,4 +1,4 @@
-import { Button, Box, Text, Flex } from '@chakra-ui/react'
+import { Button, Box, Text, Flex, Spacer } from '@chakra-ui/react'
 import * as React from 'react'
 import { BiUpload } from 'react-icons/bi'
 
@@ -111,9 +111,9 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
               fontSize="14px"
               fontWeight={400}
               fontStyle={'normal'}
-              marginLeft={3}
+              marginLeft="12px"
               isTruncated
-              w="170px"
+              w="173px"
               textAlign="start"
               sx={{
                 '@media only screen and (max-width: 480px)': {
@@ -126,6 +126,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
             >
               {value}
             </Text>
+            <Spacer />
             <Button
               type="button"
               variant="link"
@@ -136,7 +137,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
               sx={{
                 '@media only screen and (max-width: 480px)': {
                   position: 'relative',
-                  left: '31%',
+                  right: '12px',
                 },
               }}
             >
