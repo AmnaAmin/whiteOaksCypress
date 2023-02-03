@@ -8,14 +8,22 @@ type projectAwardProps = {
   isOpen: boolean
   onClose: () => void
   selectedWorkOrder: any
-  closeTransactionModal: () => void
+  // closeTransactionModal: () => void
+  updateNow: (update: boolean) => void
 }
 
 const UpdateProjectAward: React.FC<projectAwardProps> = props => {
-  const { isOpen, onClose, selectedWorkOrder, closeTransactionModal } = props
+  const {
+    isOpen,
+    onClose,
+    selectedWorkOrder,
+    // closeTransactionModal,
+    updateNow,
+  } = props
   const { projectAwardData } = useProjectAward()
   const [isUpdating, setIsUpdating] = useState<boolean>()
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
+  // const [updateTrans,setUpdateTrans] = useState(false)
 
   const { awardPlanScopeAmount, workOrderDetails } = useFetchWorkOrder({
     workOrderId: selectedWorkOrder?.id,
@@ -27,7 +35,9 @@ const UpdateProjectAward: React.FC<projectAwardProps> = props => {
     updateWorkOrder(payload, {
       onSuccess: () => {
         setIsUpdating(false)
-        closeTransactionModal()
+        // closeTransactionModal()
+        updateNow(true)
+        onClose()
       },
       onError: () => {
         setIsUpdating(false)

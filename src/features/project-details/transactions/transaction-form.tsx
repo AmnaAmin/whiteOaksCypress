@@ -349,6 +349,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }, [transaction, againstOptions?.length, workOrderSelectOptions.length, changeOrderSelectOptions.length])
 
   const { transactionType } = getValues()
+  // const { against } = getValues()
 
   useEffect(
     function updateAgainstOption() {
@@ -367,6 +368,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const onModalClose = () => {
     reset(defaultValues)
     onClose()
+  }
+
+  const updateNow = update => {
+    return update && reset(defaultValues)
   }
 
   return (
@@ -906,7 +911,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           isOpen={isProjectAwardOpen}
           onClose={onProjectAwardClose}
           selectedWorkOrder={selectedWorkOrder}
-          closeTransactionModal={onClose}
+          // closeTransactionModal={onClose}
+          updateNow={updateNow}
         />
       </HStack>
     </Flex>
