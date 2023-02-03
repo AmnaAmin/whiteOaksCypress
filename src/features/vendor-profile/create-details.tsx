@@ -122,7 +122,6 @@ const CreateVendorDetail: React.FC<{
               })}
               size="md"
               isDisabled={isFPM}
-              onKeyPress={preventNumber}
             />
             <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
           </FormControl>
@@ -194,14 +193,7 @@ const CreateVendorDetail: React.FC<{
             <FormLabel variant="strong-label" size="md">
               {t('primaryContact')}
             </FormLabel>
-            <Input
-              type="text"
-              {...register('ownerName')}
-              variant="required-field"
-              size="md"
-              isDisabled={isFPM}
-              onKeyPress={preventNumber}
-            />
+            <Input type="text" {...register('ownerName')} variant="required-field" size="md" isDisabled={isFPM} />
             <FormErrorMessage pos="absolute">{errors.ownerName?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px" isInvalid={!!errors.businessEmailAddress}>
@@ -222,14 +214,7 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input
-              type="text"
-              {...register('secondName')}
-              variant="outline"
-              size="md"
-              isDisabled={isFPM}
-              onKeyPress={preventNumber}
-            />
+            <Input type="text" {...register('secondName')} variant="outline" size="md" isDisabled={isFPM} />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
