@@ -175,7 +175,6 @@ const CreateVendorDetail: React.FC<{
             <Controller
               control={control}
               name="enableVendorPortal"
-              rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
@@ -197,9 +196,7 @@ const CreateVendorDetail: React.FC<{
             </FormLabel>
             <Input
               type="text"
-              {...register('ownerName', {
-                required: isActive && 'This is required',
-              })}
+              {...register('ownerName')}
               variant="required-field"
               size="md"
               isDisabled={isFPM}
@@ -213,13 +210,7 @@ const CreateVendorDetail: React.FC<{
             </FormLabel>
             <Input
               type="email"
-              {...register('businessEmailAddress', {
-                required: isActive && 'This is required',
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Invalid email',
-                },
-              })}
+              {...register('businessEmailAddress')}
               variant="required-field"
               size="md"
               isDisabled={isFPM}

@@ -452,7 +452,7 @@ export const NewWorkOrderForm: React.FC<{
                       </FormLabel>
                       <Controller
                         control={control}
-                        rules={{ required: 'This is required' }}
+                        rules={{ required: 'This field is required' }}
                         name="vendorSkillId"
                         render={({ field, fieldState }) => {
                           return (
@@ -489,7 +489,7 @@ export const NewWorkOrderForm: React.FC<{
                       </FormLabel>
                       <Controller
                         control={control}
-                        rules={{ required: 'This is required' }}
+                        rules={{ required: 'This field is required' }}
                         name="vendorId"
                         render={({ field, fieldState }) => {
                           return (
@@ -521,7 +521,7 @@ export const NewWorkOrderForm: React.FC<{
                       <Controller
                         control={control}
                         rules={{
-                          required: 'This is required',
+                          required: 'This field is required',
                           min: { value: 0, message: 'Enter a valid amount' },
                         }}
                         name="clientApprovedAmount"
@@ -562,7 +562,7 @@ export const NewWorkOrderForm: React.FC<{
                       </FormLabel>
                       <Controller
                         control={control}
-                        rules={{ required: 'This is required' }}
+                        rules={{ required: 'This field is required' }}
                         name="percentage"
                         render={({ field, fieldState }) => {
                           return (
@@ -608,7 +608,7 @@ export const NewWorkOrderForm: React.FC<{
                       </FormLabel>
                       <Controller
                         control={control}
-                        rules={{ required: 'This is required' }}
+                        rules={{ required: 'This field is required' }}
                         name="invoiceAmount"
                         render={({ field, fieldState }) => {
                           return (
