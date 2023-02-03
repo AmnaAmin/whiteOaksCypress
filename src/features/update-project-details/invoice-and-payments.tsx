@@ -377,6 +377,7 @@ const InvoiceAndPayments: React.FC = () => {
                     customInput={Input}
                     thousandSeparator={true}
                     prefix={'$'}
+                    data-testid="payment-field"
                   />
                 )
               }}
