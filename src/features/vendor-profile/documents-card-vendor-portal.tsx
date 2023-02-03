@@ -48,6 +48,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
+  
 
   const {
     formState: { errors },
@@ -578,6 +579,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             Cancel
           </Button>
         )}
+        
         <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="darkPrimary">
           {vendor?.id ? t('save') : t('next')}
         </Button>

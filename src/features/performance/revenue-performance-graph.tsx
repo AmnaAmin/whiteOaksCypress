@@ -120,7 +120,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
           )}
           <YAxis
             type="number"
-            tickSize={55}
+            tickSize={75}
             tickCount={10}
             domain={[0, 'auto']}
             axisLine={false}

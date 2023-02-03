@@ -62,7 +62,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
             </FormLabel>
           </Box>
           <HStack spacing="16px" justifyContent="end">
-            <Button onClick={props?.onClose} variant="outline" colorScheme="brand">
+            <Button data-testid="wo-cancel-btn" onClick={props?.onClose} variant="outline" colorScheme="brand">
               {t('cancel')}
             </Button>
 

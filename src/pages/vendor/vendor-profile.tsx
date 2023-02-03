@@ -34,6 +34,7 @@ import {
 } from 'api/vendor-details'
 import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
+import { VendorUsersTab } from 'features/vendors/vendor-users-table'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -238,6 +239,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 </Tab>
                 {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
                 {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
+                {vendorProfileData?.id && <Tab>Users</Tab>}
               </TabList>
             </Card>
             <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
@@ -323,6 +325,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                         onClose={props.onClose}
                       />
                     )}
+                  </TabPanel>
+                )}
+                {vendorProfileData?.id && (
+                  <TabPanel p="0px">
+                    <VendorUsersTab vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
                   </TabPanel>
                 )}
                 {/* <TabPanel p="0px">
