@@ -169,7 +169,13 @@ export const useVendorUserDetails = (form, vendorUserInfo) => {
         firstName: "",
         lastName: "",
         telephoneNumber: "",
-        vendorAdmin: false
+        vendorAdmin: false,
+        primaryAdmin: false,
+        city: "",
+        streetAddress: "",
+        state: "",
+        zipCode: "",
+        activated: false,
       })
       setValue( "telephoneNumber", "" )
       setValue('langKey', languageOptions[0])
