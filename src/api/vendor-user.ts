@@ -8,23 +8,29 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useStates } from './pc-projects'
 import { languageOptions } from './vendor-details'
 
-export const useVendorUsers = ( vendorId: any, adminVendorLogin: any, userLoginId: any ) => {
+export const useVendorUsers = (vendorId: any, adminVendorLogin: any, userLoginId: any) => {
+  const client = useClient()
 
-  const client = useClient();
-  
   const { isAdmin, isDoc, isAccounting, isProjectCoordinator, isOperations } = useUserRolesSelector()
 
   const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations
 
-  if ( !isAppAdmin ){
-    vendorId = 0;
+  if (!isAppAdmin) {
+    vendorId = 0
   }
 
-  return useQuery(['vendor-users-list',vendorId, adminVendorLogin, userLoginId], async () => {
-    const response = await client(`vendor/users/portal?vendorId=${vendorId}&adminVendorLogin=${adminVendorLogin}&parentId=${userLoginId}`, {})
+  return useQuery(
+    ['vendor-users-list', vendorId, adminVendorLogin, userLoginId],
+    async () => {
+      const response = await client(
+        `vendor/users/portal?vendorId=${vendorId}&adminVendorLogin=${adminVendorLogin}&parentId=${userLoginId}`,
+        {},
+      )
 
-    return response?.data
-  })
+      return response?.data
+    },
+    { enabled: !!vendorId },
+  )
 }
 
 export const useAddVendorUser = () => {
@@ -146,7 +152,6 @@ export const useVendorUserDetails = (form, vendorUserInfo) => {
   //console.log( vendorUserInfo );
   //console.log(stateOptions?.find(s => s.id === vendorUserInfo?.state));
   useEffect(() => {
-    
     if (!!(vendorUserInfo && vendorUserInfo.id)) {
       reset({
         email: vendorUserInfo.email,
@@ -161,25 +166,24 @@ export const useVendorUserDetails = (form, vendorUserInfo) => {
         zipCode: vendorUserInfo.zipCode,
         id: vendorUserInfo.id,
         primaryAdmin: vendorUserInfo.primaryAdmin,
-        activated: vendorUserInfo.activated
+        activated: vendorUserInfo.activated,
       })
     } else {
       reset({
-        email: "",
-        firstName: "",
-        lastName: "",
-        telephoneNumber: "",
+        email: '',
+        firstName: '',
+        lastName: '',
+        telephoneNumber: '',
         vendorAdmin: false,
         primaryAdmin: false,
-        city: "",
-        streetAddress: "",
-        state: "",
-        zipCode: "",
+        city: '',
+        streetAddress: '',
+        state: '',
+        zipCode: '',
         activated: false,
       })
-      setValue( "telephoneNumber", "" )
+      setValue('telephoneNumber', '')
       setValue('langKey', languageOptions[0])
     }
-  }, [vendorUserInfo]);
-  
+  }, [vendorUserInfo])
 }
