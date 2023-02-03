@@ -78,8 +78,8 @@ describe('Work Order Lien Waiver Test Cases', () => {
 
     // Check all fields are diabled
     expect(screen.getByTestId('claimantsTitle')).toHaveAttribute('disabled')
-    expect(screen.getByTestId('openSignature')).toHaveAttribute('disabled')
-    expect(screen.getByTestId('removeSignature')).toHaveAttribute('disabled')
+    expect(screen.queryByTestId('openSignature')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('removeSignature')).not.toBeInTheDocument()
     expect(screen.getByTestId('recentLW')).toBeInTheDocument()
     // Check signature is displayed
     expect(screen.getByTestId('claimantsSignature')).toHaveAttribute(
