@@ -64,10 +64,11 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
         header: 'Account',
         accessorKey: 'accountType',
         accessorFn: row => {
-          return row?.account ? 'Admin' : 'User'
+          return row.vendorAdmin ? 'Admin' : 'User'
         },
         cell: (row: any) => {
-          return row.account ? 'Admin' : 'User'
+          const value = row?.row.original?.vendorAdmin
+          return value ? 'Admin' : 'User'
         },
       },
       {
@@ -117,12 +118,13 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
         status: u.activated,
         email: u.email,
         language: u.langKey,
-        account: u.primaryAdmin,
+        account: u.vendorAdmin,
       }
     })
   }
 
   useEffect(() => {
+    console.log(mapToTable(data));
     setTableData(mapToTable(data))
   }, [isLoading])
 

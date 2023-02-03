@@ -240,6 +240,7 @@ export type VendorProfileDetailsFormData = {
   autoInsuranceCheckBox?: boolean
   W9DocumentCheckBox?: boolean
   enableVendorPortal?: Select
+  readOnly?: boolean
 }
 
 export type VendorTrade = {

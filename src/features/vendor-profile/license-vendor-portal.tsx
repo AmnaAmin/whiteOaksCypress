@@ -30,6 +30,7 @@ import { VENDORPROFILE } from './vendor-profile.i18n'
 import { VendorPortalVerifyLicense } from './verify-license'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { datePickerFormat } from 'utils/date-time-utils'
+import { useAuth } from 'utils/auth-context'
 
 type LicenseProps = {
   vendor: VendorProfile
@@ -127,6 +128,8 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
     [selectedLicenseType, formValues],
   )
 
+  const { data: userInfo } = useAuth();
+
   return (
     <Box>
       <VStack align="start" h="584px" spacing="15px" overflow="auto">
@@ -144,6 +147,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 expirationFile: null,
               })
             }
+            disabled={!(userInfo?.user as any)?.vendorAdmin}
             leftIcon={<BiAddToQueue />}
             width={{ base: '100%', md: 'auto' }}
           >
