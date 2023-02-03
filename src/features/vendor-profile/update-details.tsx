@@ -76,7 +76,7 @@ export const UpdateDetails: React.FC<{
 }> = props => {
   const { vendorProfileData, isActive } = props
   const { t } = useTranslation()
-
+  
   return (
     <>
       <Flex direction="column">
