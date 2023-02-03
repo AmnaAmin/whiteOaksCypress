@@ -40,7 +40,7 @@ type UserProps = {
 }
 export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose }) => {
   //eslint-disable-next-line
-  const mainVendorId = vendorProfileData.id
+  const mainVendorId = vendorProfileData?.id
 
   const { isAdmin, isDoc, isAccounting, isProjectCoordinator, isOperations } = useUserRolesSelector()
 
@@ -91,7 +91,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
   const [selectedVendorUser, setSelectedVendorUser] = useState<VendorType>()
   const { tableColumns } = useTableColumnSettings(VENDOR_USERS_TABLE_COLUMNS, TableNames.vendorUsers)
   const [tableData, setTableData] = useState<any>([])
-  const [ toggleSwitchVendors, setToggleSwitchVendors ] = useState<boolean>(false);
+  const [toggleSwitchVendors, setToggleSwitchVendors] = useState<boolean>(false)
   //const { data, isLoading } = useUserManagement()
 
   //const [activationSwitch, setActivationSwitch] = useState<boolean>(false)
@@ -103,9 +103,8 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
   const { data, isLoading } = useVendorUsers(mainVendorId, userInfo?.user?.email, userInfo?.user?.id)
 
   const handleActivationSwitch = e => {
-    
-    setToggleSwitchVendors(e.target.checked);
-    confirmationDialogOpen();
+    setToggleSwitchVendors(e.target.checked)
+    confirmationDialogOpen()
   }
 
   const mapToTable = data => {
@@ -144,23 +143,21 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
     onClose: confirmationDialogClose,
   } = useDisclosure()
 
-  const cancelRef = useRef();
+  const cancelRef = useRef()
 
   const handleCancelActivationLogic = () => {
-    setToggleSwitchVendors(!toggleSwitchVendors);
-    confirmationDialogClose();
+    setToggleSwitchVendors(!toggleSwitchVendors)
+    confirmationDialogClose()
   }
 
   const handleActivationLogic = () => {
-
     const status = toggleSwitchVendors ? 'inactive' : 'active'
     toggleVendorActivations({ vendorId: mainVendorId, action: status })
 
-    confirmationDialogClose();
-    
+    confirmationDialogClose()
   }
 
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return (
     <Card px={0}>
@@ -175,12 +172,19 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
         }}
       />
       <HStack px="11px" gap="20px" mb="14px">
-        {isAppAdmin && <FormControl display="flex">
-          <FormLabel htmlFor="deactivate-vendors" mb="0">
-            Deactivate Vendors
-          </FormLabel>
-          <Switch id="deactivate-vendors" data-testid="deactivate-vendors" onChange={handleActivationSwitch} isChecked={toggleSwitchVendors} />
-        </FormControl>}
+        {isAppAdmin && (
+          <FormControl display="flex">
+            <FormLabel htmlFor="deactivate-vendors" mb="0">
+              Deactivate Vendors
+            </FormLabel>
+            <Switch
+              id="deactivate-vendors"
+              data-testid="deactivate-vendors"
+              onChange={handleActivationSwitch}
+              isChecked={toggleSwitchVendors}
+            />
+          </FormControl>
+        )}
         <Spacer />
         <Box display="flex" alignItems="flex-end">
           <Button onClick={openNewUserForm} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
@@ -225,19 +229,24 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
       >
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize='lg' fontWeight='bold'>
-              { toggleSwitchVendors ? "Deactivate Vendors" : "Activate Vendors" }
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              {toggleSwitchVendors ? 'Deactivate Vendors' : 'Activate Vendors'}
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure you want to { toggleSwitchVendors ? "deactivate all vendors" : "activate all vendors" } ? 
+              Are you sure you want to {toggleSwitchVendors ? 'deactivate all vendors' : 'activate all vendors'} ?
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button variant="outline" colorScheme="brand" ref={cancelRef as any} onClick={ handleCancelActivationLogic }>
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                ref={cancelRef as any}
+                onClick={handleCancelActivationLogic}
+              >
                 Cancel
               </Button>
-              <Button colorScheme="brand" onClick={ handleActivationLogic } mr={3} ml={5}>
+              <Button colorScheme="brand" onClick={handleActivationLogic} mr={3} ml={5}>
                 Ok
               </Button>
             </AlertDialogFooter>
