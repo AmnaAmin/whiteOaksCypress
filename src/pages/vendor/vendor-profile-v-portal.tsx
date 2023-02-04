@@ -213,7 +213,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               <Box display={{ base: 'block', sm: 'none' }}>
                 <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
               </Box>
-              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
+              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }} height={ { sm: "", lg: "40px" }}>
                 <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
                 <Tab
                   _disabled={{ cursor: 'not-allowed' }}
@@ -265,6 +265,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               roundedTopRight={{ base: '0px', sm: '8px' }}
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
               width={isVendor ? { base: '100%', lg: 'calc(96vw - var(--sidebar-width))' } : '100%'}
+              marginTop="1.7px"
+              marginLeft="1px"
             >
               <fieldset disabled={!(userInfo?.user as any)?.vendorAdmin}>
                 <Box
