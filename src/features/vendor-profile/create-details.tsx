@@ -107,7 +107,7 @@ const CreateVendorDetail: React.FC<{
 
   return (
     <Stack spacing={3}>
-      <Box height="498px" overflow="auto">
+      <Box  overflow="auto">
         <HStack spacing="16px">
           <FormControl w="215px" isInvalid={!!errors.companyName}>
             <FormLabel variant="strong-label" size="md">

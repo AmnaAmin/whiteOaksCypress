@@ -70,7 +70,7 @@ export const PasswordField: React.FC<{ errors: any; register: any; isRequired: b
             setStrength(score)
           }}
           style={{
-            borderLeft: isRequired ? '2.5px solid #4E87F8' : '',
+            borderLeft: isRequired ? '2.5px solid #345EA6' : '',
           }}
         />
         <InputRightElement h="40px">
