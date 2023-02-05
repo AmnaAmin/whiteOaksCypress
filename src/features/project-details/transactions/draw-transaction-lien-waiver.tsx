@@ -60,7 +60,7 @@ export const ProjectAwardAlert = () => {
   )
 }
 
-export const ProjectTransacrtionRemaingALert = ({ msg, onOpen, isUpgradeProjectAward }: any) => {
+export const ProjectTransactionRemainingALert = ({ msg, onOpen, isUpgradeProjectAward }: any) => {
   const { t } = useTranslation()
 
   return (

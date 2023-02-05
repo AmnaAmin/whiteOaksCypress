@@ -67,7 +67,7 @@ import {
   DrawLienWaiver,
   LienWaiverAlert,
   ProjectAwardAlert,
-  ProjectTransacrtionRemaingALert,
+  ProjectTransactionRemainingALert,
 } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
@@ -79,7 +79,7 @@ import {
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
-import UpdateProjectAward from './UpdateProjectAward'
+import UpdateProjectAward from './update-Project-Award'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -370,17 +370,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     onClose()
   }
 
-  const updateNow = update => {
-    return update && reset(defaultValues)
-  }
-
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
       {check && isLienWaiverRequired && <LienWaiverAlert />}
       {!check && isValidForAwardPlan && materialAndDraw ? <ProjectAwardAlert /> : null}
       {check && showDrawRemainingMsg && (
-        <ProjectTransacrtionRemaingALert
+        <ProjectTransactionRemainingALert
           msg="DrawRemaining"
           onOpen={onProjectAwardOpen}
           onClose={onClose}
@@ -388,14 +384,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         />
       )}
       {check && showMaterialRemainingMsg && (
-        <ProjectTransacrtionRemaingALert
+        <ProjectTransactionRemainingALert
           msg="MaterialRemaining"
           onOpen={onProjectAwardOpen}
           onClose={onClose}
           isUpgradeProjectAward={true}
         />
       )}
-      {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaining" />}
+      {remainingAmt && <ProjectTransactionRemainingALert msg="PaymentRemaining" />}
 
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
@@ -911,8 +907,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           isOpen={isProjectAwardOpen}
           onClose={onProjectAwardClose}
           selectedWorkOrder={selectedWorkOrder}
-          // closeTransactionModal={onClose}
-          updateNow={updateNow}
+          closeTransactionModal={onClose}
         />
       </HStack>
     </Flex>
