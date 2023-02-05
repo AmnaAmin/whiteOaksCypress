@@ -79,7 +79,7 @@ import {
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
-import UpdateProjectAward from './update-Project-Award'
+import UpdateProjectAward from './update-project-award'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
