@@ -67,6 +67,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
         borderLeft: isRequired ? leftBorder : '',
         ...inputStyle,
       }}
+      className="fileUploader"
     >
       <input
         {...inputProps}

@@ -15,7 +15,9 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Stack,
   Text,
+  VStack,
 } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { languageOptions } from 'api/vendor-details'
@@ -29,7 +31,6 @@ import NumberFormat from 'react-number-format'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useAddVendorUser, useVendorUserDetails, useUpdateVendorUser } from 'api/vendor-user'
 import { useStates } from 'api/pc-projects'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useAuth } from 'utils/auth-context'
 
 const VendorUserModal = ({
@@ -44,10 +45,6 @@ const VendorUserModal = ({
   parentVendorId: number
 }) => {
   const { t } = useTranslation()
-
-  const { isAdmin, isDoc, isAccounting, isProjectCoordinator, isOperations } = useUserRolesSelector()
-
-  const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations
 
   //es-lint-disable-next-line
   //const { isLoading } = useVendorProfile(vendorDetails?.id)
@@ -82,13 +79,15 @@ const VendorUserModal = ({
     !formValues?.state ||
     !formValues?.streetAddress ||
     !formValues?.telephoneNumber ||
-    !formValues?.langKey
+    !formValues?.langKey ||
+    !formValues?.city ||
+    !formValues?.zipCode
 
   const invalidTelePhone =
     validateTelePhoneNumber(formValues?.telephoneNumber as string) || !formValues?.telephoneNumber
 
   const { mutate: createUser } = useAddVendorUser()
-  const { mutate: updateUser } = useUpdateVendorUser();
+  const { mutate: updateUser } = useUpdateVendorUser()
 
   const onSubmit = values => {
     const userPayload = {
@@ -106,9 +105,7 @@ const VendorUserModal = ({
       stateId: formValues.state?.id || '',
       zipCode: formValues.zipCode,
       activated: formValues.activated,
-      parentId: userInfo?.user.id
-
-
+      parentId: userInfo?.user.id,
     } as any
 
     if (isEditUser) {
@@ -119,12 +116,12 @@ const VendorUserModal = ({
       userPayload.password = formValues.newPassword
     }
 
-    if ( isEditUser ) {
+    if (isEditUser) {
       updateUser(userPayload, {
         onSuccess: () => {
           onCloseModal()
         },
-      });
+      })
     } else {
       createUser(userPayload, {
         onSuccess: () => {
@@ -132,7 +129,6 @@ const VendorUserModal = ({
         },
       })
     }
-    
   }
 
   const onCloseModal = () => {
@@ -268,17 +264,17 @@ const VendorUserModal = ({
                         </Box>
                       </FormControl>
                       <FormControl w={215}>
-                      <Checkbox
-                        mt="25px"
-                        isChecked={formValues.activated}
-                        fontSize="16px"
-                        fontWeight={400}
-                        color="#718096"
-                        {...register('activated')}
-                      >
-                        {t(`${USER_MANAGEMENT}.modal.activated`)}
-                      </Checkbox>
-                    </FormControl>
+                        <Checkbox
+                          mt="25px"
+                          isChecked={formValues.activated}
+                          fontSize="16px"
+                          fontWeight={400}
+                          color="#718096"
+                          {...register('activated')}
+                        >
+                          {t(`${USER_MANAGEMENT}.modal.activated`)}
+                        </Checkbox>
+                      </FormControl>
                     </HStack>
                     <HStack mt="30px" spacing={15}>
                       <FormControl w={215}>
@@ -292,7 +288,7 @@ const VendorUserModal = ({
                         <FormLabel variant="strong-label" size="md">
                           {t(`${USER_MANAGEMENT}.modal.city`)}
                         </FormLabel>
-                        <Input type="text" {...register('city')} />
+                        <Input type="text" {...register('city')} variant="required-field" />
                       </FormControl>
 
                       <FormControl w={215}>
@@ -317,40 +313,42 @@ const VendorUserModal = ({
                         <FormLabel variant="strong-label" size="md">
                           {t(`${USER_MANAGEMENT}.modal.zipcode`)}
                         </FormLabel>
-                        <Input type="number" {...register('zipCode')} />
+                        <Input type="number" {...register('zipCode')} variant="required-field" />
                       </FormControl>
                     </HStack>
-                    
+
                     <Box>
-                    <HStack mt="30px" w="300px">
-                      <FormControl>
-                        <Checkbox
-                          {...register('vendorAdmin', {
-                            onChange: e => {
-                              console.log(e.target.checked);
-                              if (!e.target.checked) setValue('primaryAdmin', false)
-                            },
-                          })}
-                        >
-                          Admin
-                        </Checkbox>
-                      </FormControl>
-                      <FormControl>
-                        <Checkbox
-                          isChecked={formValues.primaryAdmin}
-                          display={isAppAdmin ? 'block' : 'none'}
-                          isDisabled={isPrimaryDisabled}
-                          {...register('primaryAdmin')}
-                        >
-                          <chakra.span position="relative" top="-5px">Primary</chakra.span>
-                        </Checkbox>
-                      </FormControl>
-                    </HStack>
+                      <Stack alignItems="center" direction="row" spacing="16px" mt="30px">
+                        <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+                          <FormLabel variant="strong-label" size="md">
+                            Vendor Roles
+                          </FormLabel>
+                          <FormControl>
+                            <HStack spacing="16px">
+                              <Checkbox
+                                {...register('vendorAdmin', {
+                                  onChange: e => {
+                                    if (!e.target.checked) setValue('primaryAdmin', false)
+                                  },
+                                })}
+                                colorScheme="brand"
+                              >
+                                Admin
+                              </Checkbox>
+                              <Checkbox
+                                isChecked={formValues.primaryAdmin}
+                                isDisabled={isPrimaryDisabled}
+                                {...register('primaryAdmin')}
+                              >
+                                <chakra.span position="relative">Primary</chakra.span>
+                              </Checkbox>
+                            </HStack>
+                            <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
+                          </FormControl>
+                        </VStack>
+                      </Stack>
                     </Box>
-                    
-                    
                   </Box>
-                  
                 )}
               </Box>
               <Flex borderTop="1px solid #E2E8F0" mt="20px" pt="20px" justifyContent="right">
@@ -365,7 +363,7 @@ const VendorUserModal = ({
                   >
                     {t('cancel')}
                   </Button>
-                  <Button type="submit" colorScheme="brand" disabled={!!watchRequiredField }>
+                  <Button type="submit" colorScheme="brand" disabled={!!watchRequiredField}>
                     {t('save')}
                   </Button>
                 </HStack>

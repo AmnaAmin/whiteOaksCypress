@@ -16,7 +16,7 @@ export const useVendorUsers = (vendorId: any, adminVendorLogin: any, userLoginId
   const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations
 
   if (!isAppAdmin) {
-    vendorId = 0
+    //vendorId = 0
   }
 
   return useQuery(
@@ -180,7 +180,7 @@ export const useVendorUserDetails = (form, vendorUserInfo) => {
         streetAddress: '',
         state: '',
         zipCode: '',
-        activated: false,
+        activated: true,
       })
       setValue('telephoneNumber', '')
       setValue('langKey', languageOptions[0])
