@@ -35,6 +35,8 @@ import {
 import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
 import { ExpirationAlertMessage } from 'features/common/expiration-alert-message'
+import { VendorUsersTab } from 'features/vendors/vendor-users-table'
+import { useAuth } from 'utils/auth-context'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -182,6 +184,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
     [toast, vendorProfileData, useSaveVendorDetails, paymentsMethods, tabIndex],
   )
 
+  const { data: userInfo } = useAuth()
+
   const { state } = useLocation()
 
   useEffect(() => {
@@ -209,7 +213,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               <Box display={{ base: 'block', sm: 'none' }}>
                 <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
               </Box>
-              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
+              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }} height={ { sm: "", lg: "40px" }}>
                 <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
                 <Tab
                   _disabled={{ cursor: 'not-allowed' }}
@@ -245,6 +249,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 </Tab>
                 {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
                 {!isVendor && <Tab>{t('prjt')}</Tab>}
+                {(userInfo?.user as any)?.vendorAdmin ? <Tab>Users</Tab> : null}
               </TabList>
             </Card>
             <Box pt="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
@@ -260,80 +265,119 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               roundedTopRight={{ base: '0px', sm: '8px' }}
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
               width={isVendor ? { base: '100%', lg: 'calc(96vw - var(--sidebar-width))' } : '100%'}
+              marginTop="1.7px"
+              marginLeft="1px"
             >
-              <TabPanels mt={{ base: '0', sm: '30px' }}>
-                <TabPanel p="0px">
-                  {tabIndex === 0 ? (
-                    VendorType === 'editVendor' ? (
-                      <CreateDetails
-                        isActive={tabIndex === 0}
-                        vendorProfileData={vendorProfileData as VendorProfile}
-                        onClose={props.onClose}
-                      />
-                    ) : (
-                      <UpdateDetails
-                        isActive={tabIndex === 0}
-                        vendorProfileData={vendorProfileData as VendorProfile}
-                        onClose={props.onClose}
-                      />
-                    )
-                  ) : null}
-                </TabPanel>
-                <TabPanel p="0px">
-                  <Box h="100%" w="100%">
-                    {tabIndex === 1 && (
-                      <DocumentsCard
-                        isActive={tabIndex === 1}
-                        VendorType={VendorType!}
-                        vendor={vendorProfileData as VendorProfile}
-                        onClose={props.onClose}
-                      />
+              <fieldset disabled={!(userInfo?.user as any)?.vendorAdmin}>
+                <Box
+                  sx={{
+                    'input:disabled': {
+                      bg: 'gray.100',
+                      color: 'gray.400',
+                      opacity: 0.8,
+                      cursor: 'not-allowed',
+                      borderColor: 'gray.200',
+                    },
+                    ...( !(userInfo?.user as any)?.vendorAdmin && {'button[type="submit"]:disabled' : {
+                      display: 'none !important'
+                    }} ),
+                    ...( !(userInfo?.user as any)?.vendorAdmin && {'button[type="submit"]:disabled' : {
+                      display: 'none !important'
+                    }} ),
+                    ...( !(userInfo?.user as any)?.vendorAdmin && {':disabled .fileUploader p, .fileUploader button' : {
+                      color: 'gray.400'
+                    }} ),
+                    ...( !(userInfo?.user as any)?.vendorAdmin && {'.fileUploader' : {
+                      bg: 'gray.100',
+                      color: 'gray.400',
+                      opacity: 0.8,
+                      cursor: 'not-allowed',
+                      borderColor: 'gray.200',
+                    }} )
+                  
+                  }}
+                >
+                  <TabPanels mt={{ base: '0', sm: '30px' }}>
+                    <TabPanel p="0px">
+                      {tabIndex === 0 ? (
+                        VendorType === 'editVendor' ? (
+                          <CreateDetails
+                            isActive={tabIndex === 0}
+                            vendorProfileData={vendorProfileData as VendorProfile}
+                            onClose={props.onClose}
+                          />
+                        ) : (
+                          <UpdateDetails
+                            isActive={tabIndex === 0}
+                            vendorProfileData={vendorProfileData as VendorProfile}
+                            onClose={props.onClose}
+                          />
+                        )
+                      ) : null}
+                    </TabPanel>
+                    <TabPanel p="0px">
+                      <Box h="100%" w="100%">
+                        {tabIndex === 1 && (
+                          <DocumentsCard
+                            isActive={tabIndex === 1}
+                            VendorType={VendorType!}
+                            vendor={vendorProfileData as VendorProfile}
+                            onClose={props.onClose}
+                          />
+                        )}
+                      </Box>
+                    </TabPanel>
+                    <TabPanel p="0px">
+                      <Box h="100%" w="100%">
+                        {tabIndex === 2 && (
+                          <License
+                            isActive={tabIndex === 2}
+                            vendor={vendorProfileData as VendorProfile}
+                            onClose={props.onClose}
+                          />
+                        )}
+                      </Box>
+                    </TabPanel>
+                    <TabPanel p="0px">
+                      {tabIndex === 3 && (
+                        <TradeList
+                          isActive={tabIndex === 3}
+                          vendorProfileData={vendorProfileData as VendorProfile}
+                          onClose={props.onClose}
+                        />
+                      )}
+                    </TabPanel>
+                    <TabPanel p="0px">
+                      {tabIndex === 4 && (
+                        <MarketList
+                          isActive={tabIndex === 4}
+                          vendorProfileData={vendorProfileData as VendorProfile}
+                          onClose={props.onClose}
+                        />
+                      )}
+                    </TabPanel>
+                    {(userInfo?.user as any)?.vendorAdmin && (
+                      <TabPanel p="0px">
+                        <VendorUsersTab
+                          vendorProfileData={vendorProfileData as VendorProfile}
+                          onClose={props.onClose}
+                        />
+                      </TabPanel>
                     )}
-                  </Box>
-                </TabPanel>
-                <TabPanel p="0px">
-                  <Box h="100%" w="100%">
-                    {tabIndex === 2 && (
-                      <License
-                        isActive={tabIndex === 2}
-                        vendor={vendorProfileData as VendorProfile}
-                        onClose={props.onClose}
-                      />
-                    )}
-                  </Box>
-                </TabPanel>
-                <TabPanel p="0px">
-                  {tabIndex === 3 && (
-                    <TradeList
-                      isActive={tabIndex === 3}
-                      vendorProfileData={vendorProfileData as VendorProfile}
-                      onClose={props.onClose}
-                    />
-                  )}
-                </TabPanel>
-                <TabPanel p="0px">
-                  {tabIndex === 4 && (
-                    <MarketList
-                      isActive={tabIndex === 4}
-                      vendorProfileData={vendorProfileData as VendorProfile}
-                      onClose={props.onClose}
-                    />
-                  )}
-                </TabPanel>
 
-                {!isVendor && (
-                  <TabPanel p="0px">
-                    {tabIndex === 5 && (
-                      <VendorProjects
-                        isFetching={isProjectsFetching}
-                        isLoading={isProjectsLoading}
-                        vendorProjects={vendorProjects}
-                        onClose={props.onClose}
-                      />
+                    {!isVendor && (
+                      <TabPanel p="0px">
+                        {tabIndex === 5 && (
+                          <VendorProjects
+                            isFetching={isProjectsFetching}
+                            isLoading={isProjectsLoading}
+                            vendorProjects={vendorProjects}
+                            onClose={props.onClose}
+                          />
+                        )}
+                      </TabPanel>
                     )}
-                  </TabPanel>
-                )}
-                {/* <TabPanel p="0px">
+                    {/* <TabPanel p="0px">
                 <Box overflow="auto">
                 <AuditLogs
                     isLoading={isLoading}
@@ -343,8 +387,10 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     />
                     </Box>
               </TabPanel> */}
-                {/* <TabPanel p="0px"></TabPanel> */}
-              </TabPanels>
+                    {/* <TabPanel p="0px"></TabPanel> */}
+                  </TabPanels>
+                </Box>
+              </fieldset>
             </Card>
           </Tabs>
         </form>

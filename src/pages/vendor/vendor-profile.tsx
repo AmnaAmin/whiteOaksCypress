@@ -34,6 +34,7 @@ import {
 } from 'api/vendor-details'
 import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
+import { VendorUsersTab } from 'features/vendors/vendor-users-table'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -196,13 +197,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
       <Stack width={{ base: '100%' }}>
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
-            <Card
-              bg={{ base: 'white', sm: 'transparent' }}
-              p={{ base: '6px', sm: '0px !important' }}
-              rounded="6px 6px 0px 0px"
-              boxShadow={{ sm: 'none' }}
-            >
-              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }}>
+            
+              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }} height="40px">
                 <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
                 <Tab
                   _disabled={{ cursor: 'not-allowed' }}
@@ -238,8 +234,9 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 </Tab>
                 {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
                 {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
+                {vendorProfileData?.id && <Tab>Users</Tab>}
               </TabList>
-            </Card>
+           
             <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
               <Divider borderWidth="1px" color="#E2E8F0" />
             </Box>
@@ -252,6 +249,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
               width={isVendor ? '1250px' : '100%'}
               borderTopRightRadius="6px"
+              marginTop="1.7px"
+              marginLeft="1px"
             >
               <TabPanels>
                 <TabPanel p="0px" mt="30px">
@@ -325,6 +324,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     )}
                   </TabPanel>
                 )}
+                {vendorProfileData?.id && (
+                  <TabPanel p="0px">
+                    <VendorUsersTab vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+                  </TabPanel>
+                )}
                 {/* <TabPanel p="0px">
                 <Box overflow="auto">
                 <AuditLogs
@@ -350,7 +354,6 @@ const VendorProfilePage: React.FC<Props> = props => {
   // const [buttonIndex,setButtonIndex] = useState(0)
   const { vendorId } = useUserProfile() as Account
   const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorId)
-
   return (
     <Stack w="100%" spacing={0}>
       {isLoading ? (

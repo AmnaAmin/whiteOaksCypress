@@ -16,7 +16,6 @@ import {
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
 import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
-import { isValidEmail } from 'utils/string-formatters'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -139,13 +138,13 @@ export const parseVendorFormDataToAPIData = (
 ): VendorProfilePayload => {
   return {
     ...vendorProfileData!,
-    ownerName: formValues.ownerName!,
+    //ownerName: formValues.ownerName!,
     secondName: formValues.secondName!,
     businessPhoneNumber: formValues.businessPhoneNumber,
     businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
     secondPhoneNumber: formValues.secondPhoneNumber!,
     secondPhoneNumberExtension: formValues.secondPhoneNumberExtension!,
-    businessEmailAddress: formValues.businessEmailAddress!,
+    //businessEmailAddress: formValues.businessEmailAddress!,
     companyName: formValues.companyName!,
     streetAddress: formValues.streetAddress!,
     city: formValues.city!,
@@ -153,12 +152,12 @@ export const parseVendorFormDataToAPIData = (
     capacity: formValues.capacity!,
     einNumber: formValues.einNumber!,
     ssnNumber: formValues.ssnNumber!,
-    secondEmailAddress: formValues.secondEmailAddress!,
+    //secondEmailAddress: formValues.secondEmailAddress!,
     score: formValues.score?.value,
     status: formValues.status?.value,
     state: formValues.state?.value,
     isSsn: false,
-    paymentTerm: formValues.paymentTerm?.value,
+    //paymentTerm: formValues.paymentTerm?.value,
     documents: [],
     vendorSkills: vendorProfileData?.vendorSkills || [],
     markets: vendorProfileData?.markets || [],
@@ -607,19 +606,9 @@ export const useSaveLanguage = () => {
 }
 
 export const useVendorNext = ({ control, documents }: { control: any; documents?: any }) => {
-  const [ein, ssn, businessEmailAddress, ...detailfields] = useWatch({
+  const [ein, ssn, ...detailfields] = useWatch({
     control,
-    name: [
-      'einNumber',
-      'ssnNumber',
-      'businessEmailAddress',
-      'city',
-      'companyName',
-      'ownerName',
-      'state',
-      'streetAddress',
-      'zipCode',
-    ],
+    name: ['einNumber', 'ssnNumber', 'city', 'companyName', 'state', 'streetAddress', 'zipCode'],
   })
 
   const businessPhoneNumber = useWatch({ name: 'businessPhoneNumber', control })
@@ -636,12 +625,11 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10
   const isSSNNumber = ssn?.replace(/\D+/g, '').length! === 9
   const isEinNumber = ein?.replace(/\D+/g, '').length! === 9
-  const isEmail = isValidEmail(businessEmailAddress)
+  // const isEmail = isValidEmail(businessEmailAddress)
   const isCapacity = capacity <= 500
 
   return {
-    disableDetailsNext:
-      detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo || !isEmail || !isCapacity,
+    disableDetailsNext: detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo || !isCapacity,
 
     disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl), //disable logic for next on documents tab.
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),

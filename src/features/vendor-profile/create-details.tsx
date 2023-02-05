@@ -107,7 +107,7 @@ const CreateVendorDetail: React.FC<{
 
   return (
     <Stack spacing={3}>
-      <Box height="498px" overflow="auto">
+      <Box  overflow="auto">
         <HStack spacing="16px">
           <FormControl w="215px" isInvalid={!!errors.companyName}>
             <FormLabel variant="strong-label" size="md">
@@ -122,7 +122,6 @@ const CreateVendorDetail: React.FC<{
               })}
               size="md"
               isDisabled={isFPM}
-              onKeyPress={preventNumber}
             />
             <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
           </FormControl>
@@ -168,38 +167,33 @@ const CreateVendorDetail: React.FC<{
               )}
             />
           </FormControl>
-          <FormControl w="215px" isInvalid={!!errors.enableVendorPortal}>
+          <FormControl w="215px" isInvalid={!!errors.enableVendorPortal} display="none">
             <FormLabel variant="strong-label" size="md">
               {t('portalAccess')}
             </FormLabel>
             <Controller
               control={control}
               name="enableVendorPortal"
-              rules={{ required: isActive && 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <ReactSelect options={portalAccess} {...field} isDisabled={isFPM} />
+                  <ReactSelect
+                    options={portalAccess}
+                    {...field}
+                    isDisabled={isFPM}
+                    selectProps={{ isBorderLeft: true }}
+                  />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
             />
           </FormControl>
         </HStack>
-        <HStack spacing="16px" mt="30px">
+        <HStack spacing="16px" mt="30px" display="none">
           <FormControl w="215px" isInvalid={!!errors.ownerName}>
             <FormLabel variant="strong-label" size="md">
               {t('primaryContact')}
             </FormLabel>
-            <Input
-              type="text"
-              {...register('ownerName', {
-                required: isActive && 'This is required',
-              })}
-              variant="required-field"
-              size="md"
-              isDisabled={isFPM}
-              onKeyPress={preventNumber}
-            />
+            <Input type="text" {...register('ownerName')} variant="required-field" size="md" isDisabled={isFPM} />
             <FormErrorMessage pos="absolute">{errors.ownerName?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px" isInvalid={!!errors.businessEmailAddress}>
@@ -208,13 +202,7 @@ const CreateVendorDetail: React.FC<{
             </FormLabel>
             <Input
               type="email"
-              {...register('businessEmailAddress', {
-                required: isActive && 'This is required',
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Invalid email',
-                },
-              })}
+              {...register('businessEmailAddress')}
               variant="required-field"
               size="md"
               isDisabled={isFPM}
@@ -226,14 +214,7 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input
-              type="text"
-              {...register('secondName')}
-              variant="outline"
-              size="md"
-              isDisabled={isFPM}
-              onKeyPress={preventNumber}
-            />
+            <Input type="text" {...register('secondName')} variant="outline" size="md" isDisabled={isFPM} />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -334,7 +315,7 @@ const CreateVendorDetail: React.FC<{
               ></Controller>
             </FormControl>
           </Box>
-          <Box w="109px">
+          <Box w="109px" top="9px" pos="relative">
             <FormControl h="90px">
               <FormLabel variant="strong-label" size="md">
                 {t('ext')}
@@ -424,7 +405,7 @@ const CreateVendorDetail: React.FC<{
                 {...register('zipCode', {
                   required: isActive && 'This is required',
                 })}
-                w="215px"
+                w="121px"
                 variant="required-field"
                 size="md"
                 isDisabled={isFPM}
