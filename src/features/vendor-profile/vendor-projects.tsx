@@ -14,7 +14,6 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import TableColumnSettings from 'components/table/table-column-settings'
 import { TableNames } from 'types/table-column.types'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { Card } from 'components/card/card'
 
 type ProjectProps = {
   onClose?: () => void
@@ -101,7 +100,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
   }
 
   return (
-    <Card px={0}>
+    <>
       <VStack px="11px" gap="20px" mb="14px">
         <RadioGroup w="100%" justifyContent={'flex-start'} onChange={setProjectStatus} value={projectStatus}>
           <Stack direction="row">
@@ -161,6 +160,6 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
           </Button>
         )}
       </Flex>
-    </Card>
+    </>
   )
 }
