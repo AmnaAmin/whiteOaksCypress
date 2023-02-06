@@ -64,7 +64,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'primaryEmail',
+    header: 'businessEmail',
     accessorKey: 'businessEmailAddress',
   },
   {
