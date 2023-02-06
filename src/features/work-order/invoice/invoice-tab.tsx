@@ -182,13 +182,13 @@ export const InvoiceTab = ({
   const prepareInvoicePayload = () => {
     const invoiceSubmittedDate = new Date()
     const paymentTermDate = addDays(invoiceSubmittedDate, workOrder.paymentTerm || 20)
-    const paymentProcessedDate = nextWednesday( paymentTermDate );
+    const paymentProcessedDate = nextWednesday(paymentTermDate)
     const updatedWorkOrder = {
       ...workOrder,
       dateInvoiceSubmitted: dateISOFormatWithZeroTime(invoiceSubmittedDate),
       expectedPaymentDate: dateISOFormatWithZeroTime(nextFriday(paymentTermDate)),
       paymentTermDate: dateISOFormatWithZeroTime(paymentTermDate),
-      datePaymentProcessed: dateISOFormatWithZeroTime(paymentProcessedDate)
+      datePaymentProcessed: dateISOFormatWithZeroTime(paymentProcessedDate),
     }
     if (workOrder.statusLabel?.toLowerCase()?.includes(STATUS.Rejected)) {
       updatedWorkOrder.status = STATUS_CODE.INVOICED
@@ -303,7 +303,7 @@ export const InvoiceTab = ({
                 ![STATUS.Rejected]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
                   ? (dateFormatNew(workOrder?.dateInvoiceSubmitted) as any)
                   : 'mm/dd/yy'
-              } 
+              }
               icons={BiCalendar}
             />
           </Box>
@@ -331,8 +331,8 @@ export const InvoiceTab = ({
           mb="16px"
         >
           <Table variant="simple" size="sm">
-            <Thead>
-              <Tr h={'40px'} bg={'#ECEDEE !important'}>
+            <Thead position="sticky" top={0}>
+              <Tr h={'45px'} bg={'#ECEDEE !important'}>
                 <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
                   {t('item')}
                 </Td>
@@ -350,7 +350,7 @@ export const InvoiceTab = ({
             <Tbody outline={'1px solid #CBD5E0'}>
               {items.map((item, index) => {
                 return (
-                  <Tr h="40px !important" key={index} data-testid={'invoice-items'}>
+                  <Tr h="45px !important" key={index} data-testid={'invoice-items'}>
                     <Td maxWidth={300} w={300}>
                       {item.id}
                     </Td>

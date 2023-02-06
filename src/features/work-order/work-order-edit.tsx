@@ -351,7 +351,7 @@ const WorkOrderDetails = ({
 
 const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }) => {
   return (
-    <Tab>
+    <Tab _focus={{ outline: 'none' }}>
       {isError ? (
         <Flex alignItems="center">
           <Icon as={BiErrorCircle} size="18px" color="red.400" mr="1" />
