@@ -152,7 +152,7 @@ export const useTransactionTypes = ( screen?: string ) => {
   
   if ( screen === "WORK_ORDER_TRANSACTION_TABLE_MODAL" && isAdmin ) {
     return {
-      transactionTypeOptions: transactionTypeOptions.slice(0, 3),
+      transactionTypeOptions: transactionTypeOptions.slice(0, 6),
     }
   }
   return {
