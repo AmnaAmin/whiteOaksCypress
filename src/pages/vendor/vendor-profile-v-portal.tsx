@@ -285,7 +285,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                       display: 'none !important'
                     }} ),
                     ...( !(userInfo?.user as any)?.vendorAdmin && {':disabled .fileUploader p, .fileUploader button' : {
-                      color: 'gray.400'
+                      color: 'gray.400',
+                      bg: 'gray.100'
                     }} ),
                     ...( !(userInfo?.user as any)?.vendorAdmin && {'.fileUploader' : {
                       bg: 'gray.100',
@@ -293,7 +294,13 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                       opacity: 0.8,
                       cursor: 'not-allowed',
                       borderColor: 'gray.200',
-                    }} )
+                    }} ),
+                    ...( !( userInfo?.user as any )?.vendorAdmin && { '.marketCheckBoxCont .checkboxButton' : {
+                      cursor: 'not-allowed'
+                    } } ),
+                    ...( !( userInfo?.user as any )?.vendorAdmin && { ".tradeCheckBoxCont .checkboxButton": {
+                      cursor: 'not-allowed'
+                    } } )
                   
                   }}
                 >
@@ -338,7 +345,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                         )}
                       </Box>
                     </TabPanel>
-                    <TabPanel p="0px">
+                    <TabPanel p="0px" className="tradeCheckBoxCont">
                       {tabIndex === 3 && (
                         <TradeList
                           isActive={tabIndex === 3}
@@ -347,7 +354,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                         />
                       )}
                     </TabPanel>
-                    <TabPanel p="0px">
+                    <TabPanel p="0px" className="marketCheckBoxCont">
                       {tabIndex === 4 && (
                         <MarketList
                           isActive={tabIndex === 4}

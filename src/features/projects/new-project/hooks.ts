@@ -59,3 +59,29 @@ export const useWOStartDateMin = (control: Control<ProjectFormValues>): string =
 
   return clientStartDate ? new Date(clientStartDate).toISOString().split('T')[0] : ''
 }
+
+export const useNewClientNextButtonDisabled = ({ control }: any) => {
+  const [companyName, paymentTerm, streetAddress, city, state] = useWatch({
+    control,
+    name: ['companyName', 'paymentTerm', 'streetAddress', 'city', 'state'],
+  })
+  const contact = useWatch({ control, name: ['contacts'] })
+  const contactArray = contact?.length > 0 ? contact[0] : []
+
+  const accountPayable = useWatch({ control, name: ['accountPayableContactInfos'] })
+  const accountPayableArray = accountPayable?.length > 0 ? accountPayable[0] : []
+
+  return {
+    isNewClientDetails: !companyName || !paymentTerm || !streetAddress || !city || !state,
+    isContactSection: contactArray?.some(
+      contact => !contact.contact || !contact.emailAddress || !contact.phoneNumber || !contact.market,
+    ),
+    isAccountPayableSection: accountPayableArray?.some(
+      accountPayable =>
+        !accountPayable.contact ||
+        !accountPayable.phoneNumber ||
+        !accountPayable.emailAddress ||
+        !accountPayable.comments,
+    ),
+  }
+}

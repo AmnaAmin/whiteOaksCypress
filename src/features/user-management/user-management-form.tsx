@@ -652,7 +652,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.city`)}
           </FormLabel>
-          <Input type="text" {...register('city')} />
+          <Input type="text" {...register('city')} variant="required-field" />
         </FormControl>
 
         <FormControl w={215}>
@@ -667,7 +667,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 id="state"
                 {...field}
                 options={stateOptions}
-                selectProps={{ isBorderLeft: showStates ? true : false }}
+                selectProps={{ isBorderLeft: true }}
               />
             )}
           />
@@ -677,7 +677,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.zipcode`)}
           </FormLabel>
-          <Input type="number" {...register('zipCode')} />
+          <Input type="number" {...register('zipCode')} variant="required-field" />
         </FormControl>
       </HStack>
 
