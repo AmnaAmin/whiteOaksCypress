@@ -687,6 +687,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
     },
     {
       onSuccess() {
+        queryClient.invalidateQueries( "transactions_work_order" );
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
