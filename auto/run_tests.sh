@@ -16,7 +16,8 @@ if [[ ! -z "${BUILD_VERSION}" ]]; then
 
   echo "--- Install NPM dependencies"
   npm install
-
+  export NODE_OPTIONS=--max-old-space-size=5120 
+  node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))'
   echo "+++ Run ESLint"
   npm run ci:lint
 
