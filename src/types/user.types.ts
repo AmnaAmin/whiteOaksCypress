@@ -48,4 +48,6 @@ export type UserForm = {
   userType?: number
   userTypeLabel?: string
   vendorId?: number | null
+  vendorAdmin?: boolean | null
+  primaryAdmin?: boolean | undefined
 }

@@ -17,6 +17,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
+  chakra,
 } from '@chakra-ui/react'
 import { VendorProfile, Vendor as VendorType } from 'types/vendor.types'
 import { TableContextProvider } from 'components/table-refactored/table-context'
@@ -25,7 +26,6 @@ import { t } from 'i18next'
 import { ColumnDef } from '@tanstack/react-table'
 import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
-import { Card } from 'components/card/card'
 import { BiBookAdd } from 'react-icons/bi'
 import VendorUserModal from './vendor-user-modal'
 import { useToggleVendorActivation, useVendorUsers } from 'api/vendor-user'
@@ -64,10 +64,11 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
         header: 'Account',
         accessorKey: 'accountType',
         accessorFn: row => {
-          return row?.account ? 'Admin' : 'User'
+          return row.vendorAdmin ? 'Admin' : 'User'
         },
         cell: (row: any) => {
-          return row.account ? 'Admin' : 'User'
+          const value = row?.row.original?.vendorAdmin
+          return value ? 'Admin' : 'User'
         },
       },
       {
@@ -117,12 +118,13 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
         status: u.activated,
         email: u.email,
         language: u.langKey,
-        account: u.primaryAdmin,
+        account: u.vendorAdmin,
       }
     })
   }
 
   useEffect(() => {
+    console.log(mapToTable(data))
     setTableData(mapToTable(data))
   }, [isLoading])
 
@@ -160,7 +162,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
   const queryClient = useQueryClient()
 
   return (
-    <Card px={0}>
+    <>
       <VendorUserModal
         parentVendorId={mainVendorId}
         vendorDetails={selectedVendorUser as VendorType}
@@ -171,57 +173,61 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
           queryClient.resetQueries('vendor-users-list')
         }}
       />
-      <HStack px="11px" gap="20px" mb="14px">
-        {isAppAdmin && (
-          <FormControl display="flex">
-            <FormLabel htmlFor="deactivate-vendors" mb="0">
-              Deactivate Vendors
-            </FormLabel>
-            <Switch
-              id="deactivate-vendors"
-              data-testid="deactivate-vendors"
-              onChange={handleActivationSwitch}
-              isChecked={toggleSwitchVendors}
-            />
-          </FormControl>
-        )}
-        <Spacer />
-        <Box display="flex" alignItems="flex-end">
-          <Button onClick={openNewUserForm} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
-            New User
-          </Button>
-        </Box>
-      </HStack>
-      <VStack px="11px" gap="20px" mb="14px">
-        <Box
-          overflow={'auto'}
+      <Box w="100%">
+        <HStack px="11px" gap="20px" mb="14px">
+          {isAppAdmin && (
+            <FormControl display="flex">
+              <FormLabel variant="strong-label" size="md">
+                Deactivate Vendors
+              </FormLabel>
+              <chakra.span>
+                <Switch
+                  id="deactivate-vendors"
+                  data-testid="deactivate-vendors"
+                  onChange={handleActivationSwitch}
+                  isChecked={toggleSwitchVendors}
+                />
+              </chakra.span>
+            </FormControl>
+          )}
+          <Spacer />
+          <Box display="flex" alignItems={{ sm: '', lg: 'flex-end' }}>
+            <Button onClick={openNewUserForm} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
+              New User
+            </Button>
+          </Box>
+        </HStack>
+        <VStack px="11px" gap="20px" mb="14px">
+          <Box
+            overflow={'auto'}
+            w="100%"
+            h="530px"
+            position="relative"
+            roundedTop={6}
+            border="1px solid #CBD5E0"
+            rounded="6px"
+          >
+            <TableContextProvider data={tableData} columns={tableColumns}>
+              <Table isLoading={isLoading} isEmpty={!tableData?.length} onRowClick={r => setSelectedVendor(r)} />
+            </TableContextProvider>
+          </Box>
+        </VStack>
+        <Flex
+          px={2}
+          borderTop="2px solid #E2E8F0"
+          alignItems="center"
+          height="66px"
+          pt="8px"
           w="100%"
-          h="530px"
-          position="relative"
-          roundedTop={6}
-          border="1px solid #CBD5E0"
-          rounded="6px"
+          justifyContent="end"
         >
-          <TableContextProvider data={tableData} columns={tableColumns}>
-            <Table isLoading={isLoading} isEmpty={!tableData?.length} onRowClick={r => setSelectedVendor(r)} />
-          </TableContextProvider>
-        </Box>
-      </VStack>
-      <Flex
-        px={2}
-        borderTop="2px solid #E2E8F0"
-        alignItems="center"
-        height="66px"
-        pt="8px"
-        w="100%"
-        justifyContent="end"
-      >
-        {onClose && (
-          <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
-            {t('cancel')}
-          </Button>
-        )}
-      </Flex>
+          {onClose && (
+            <Button variant="outline" colorScheme="brand" onClick={onClose} mr="3">
+              {t('cancel')}
+            </Button>
+          )}
+        </Flex>
+      </Box>
       <AlertDialog
         isOpen={confirmationDialogIsOpen}
         leastDestructiveRef={cancelRef as any}
@@ -234,7 +240,10 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure you want to {toggleSwitchVendors ? 'deactivate all vendors' : 'activate all vendors'} ?
+              {toggleSwitchVendors &&
+                'Vendor and all of its users will be deactivated. They will not be able to login to the portal and no new work order can be assigned to the vendor.'}
+              {!toggleSwitchVendors &&
+                'Vendor and all of its users will be activated. They will be able to login to the portal.'}
             </AlertDialogBody>
 
             <AlertDialogFooter>
@@ -253,6 +262,6 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
-    </Card>
+    </>
   )
 }

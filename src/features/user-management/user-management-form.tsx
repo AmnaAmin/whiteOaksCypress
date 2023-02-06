@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  chakra,
   Checkbox,
   Flex,
   FormControl,
@@ -259,6 +260,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     },
     [userInfo, isVendor, addUser, updateUser, userMangtPayload],
   )
+
+  const isPrimaryDisabled = !formValues.vendorAdmin
 
   return (
     <form
@@ -610,6 +613,30 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 )}
               />
             </FormControl>
+            <Box>
+              <HStack mt="30px" w="300px">
+                        <FormControl>
+                          <Checkbox
+                            {...register('vendorAdmin', {
+                              onChange: e => {
+                                if (!e.target.checked) setValue('primaryAdmin', false)
+                              },
+                            })}
+                          >
+                            Admin
+                          </Checkbox>
+                        </FormControl>
+                        <FormControl>
+                          <Checkbox
+                            isChecked={formValues.primaryAdmin}
+                            isDisabled={isPrimaryDisabled}
+                            {...register('primaryAdmin')}
+                          >
+                            <chakra.span position="relative">Primary</chakra.span>
+                          </Checkbox>
+                        </FormControl>
+                      </HStack>
+              </Box>
           </HStack>
         </>
       ) : null}
