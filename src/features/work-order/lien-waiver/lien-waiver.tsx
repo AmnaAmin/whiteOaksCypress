@@ -361,20 +361,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                           })}
                           ref={sigRef}
                         />
-
-                        <HStack pos={'absolute'} right="10px" top="11px" spacing={3}>
-                          <IconButton
-                            aria-label="open-signature"
-                            variant="ghost"
-                            minW="auto"
-                            height="auto"
-                            _hover={{ bg: 'inherit' }}
-                            disabled={isFieldsDisabled}
-                            data-testid="openSignature"
-                          >
-                            <BiAddToQueue color="#A0AEC0" />
-                          </IconButton>
-                          {claimantsSignature && (
+                        {!isFieldsDisabled && (
+                          <HStack pos={'absolute'} right="10px" top="11px" spacing={3}>
                             <IconButton
                               aria-label="open-signature"
                               variant="ghost"
@@ -382,16 +370,29 @@ export const LienWaiverTab: React.FC<any> = props => {
                               height="auto"
                               _hover={{ bg: 'inherit' }}
                               disabled={isFieldsDisabled}
-                              data-testid="removeSignature"
-                              onClick={e => {
-                                onRemoveSignature()
-                                e.stopPropagation()
-                              }}
+                              data-testid="openSignature"
                             >
-                              <BiTrash className="mr-1" color="#A0AEC0" />
+                              <BiAddToQueue color="#A0AEC0" />
                             </IconButton>
-                          )}
-                        </HStack>
+                            {claimantsSignature && (
+                              <IconButton
+                                aria-label="open-signature"
+                                variant="ghost"
+                                minW="auto"
+                                height="auto"
+                                _hover={{ bg: 'inherit' }}
+                                disabled={isFieldsDisabled}
+                                data-testid="removeSignature"
+                                onClick={e => {
+                                  onRemoveSignature()
+                                  e.stopPropagation()
+                                }}
+                              >
+                                <BiTrash className="mr-1" color="#A0AEC0" />
+                              </IconButton>
+                            )}
+                          </HStack>
+                        )}
                       </Button>
                       {errors?.claimantsSignature?.message && (
                         <FormErrorMessage>This is required field</FormErrorMessage>
@@ -486,7 +487,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             ref={inputRef}
             style={{ display: 'none' }}
             onChange={onFileChange}
-            data-testid = 'upload-LW'
+            data-testid="upload-LW"
             accept="application/pdf, image/png, image/jpg, image/jpeg"
           />
           {!isVendor &&
