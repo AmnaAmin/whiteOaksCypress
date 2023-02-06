@@ -107,7 +107,7 @@ const CreateVendorDetail: React.FC<{
 
   return (
     <Stack spacing={3}>
-      <Box  overflow="auto">
+      <Box overflow="auto">
         <HStack spacing="16px">
           <FormControl w="215px" isInvalid={!!errors.companyName}>
             <FormLabel variant="strong-label" size="md">
@@ -124,27 +124,6 @@ const CreateVendorDetail: React.FC<{
               isDisabled={isFPM}
             />
             <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl w="215px" isInvalid={!!errors.score}>
-            <FormLabel variant="strong-label" size="md">
-              {t('score')}
-            </FormLabel>
-            <Controller
-              control={control}
-              name="score"
-              rules={{ required: isActive && 'This is required' }}
-              render={({ field, fieldState }) => (
-                <>
-                  <ReactSelect
-                    options={documentScore}
-                    {...field}
-                    selectProps={{ isBorderLeft: true }}
-                    isDisabled={isFPM}
-                  />
-                  <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
-                </>
-              )}
-            />
           </FormControl>
           <FormControl w="215px" isInvalid={!!errors.status}>
             <FormLabel variant="strong-label" size="md">
@@ -167,6 +146,28 @@ const CreateVendorDetail: React.FC<{
               )}
             />
           </FormControl>
+          <FormControl w="215px" isInvalid={!!errors.score}>
+            <FormLabel variant="strong-label" size="md">
+              {t('score')}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="score"
+              rules={{ required: isActive && 'This is required' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <ReactSelect
+                    options={documentScore}
+                    {...field}
+                    selectProps={{ isBorderLeft: true }}
+                    isDisabled={isFPM}
+                  />
+                  <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+          </FormControl>
+
           <FormControl w="215px" isInvalid={!!errors.enableVendorPortal} display="none">
             <FormLabel variant="strong-label" size="md">
               {t('portalAccess')}
@@ -188,152 +189,8 @@ const CreateVendorDetail: React.FC<{
             />
           </FormControl>
         </HStack>
-        <HStack spacing="16px" mt="30px" display="none">
-          <FormControl w="215px" isInvalid={!!errors.ownerName}>
-            <FormLabel variant="strong-label" size="md">
-              {t('primaryContact')}
-            </FormLabel>
-            <Input type="text" {...register('ownerName')} variant="required-field" size="md" isDisabled={isFPM} />
-            <FormErrorMessage pos="absolute">{errors.ownerName?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl w="215px" isInvalid={!!errors.businessEmailAddress}>
-            <FormLabel variant="strong-label" size="md">
-              {t('primaryEmail')}
-            </FormLabel>
-            <Input
-              type="email"
-              {...register('businessEmailAddress')}
-              variant="required-field"
-              size="md"
-              isDisabled={isFPM}
-            />
-            <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
-          </FormControl>
-          <FormControl w="215px">
-            <FormLabel variant="strong-label" size="md">
-              {t('secondaryContact')}
-            </FormLabel>
 
-            <Input type="text" {...register('secondName')} variant="outline" size="md" isDisabled={isFPM} />
-          </FormControl>
-          <FormControl w="215px">
-            <FormLabel variant="strong-label" size="md">
-              {t('secondaryEmail')}
-            </FormLabel>
-
-            <Input
-              type="email"
-              {...register('secondEmailAddress', {
-                pattern: {
-                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Invalid email',
-                },
-              })}
-              variant="outline"
-              size="md"
-              isDisabled={isFPM}
-            />
-          </FormControl>
-          <GridItem></GridItem>
-        </HStack>
-
-        <HStack spacing="4" my="30px">
-          <Box w="215px">
-            <FormControl isInvalid={!!errors.businessPhoneNumber} h="70px">
-              <FormLabel variant="strong-label" size="md" noOfLines={1}>
-                {t('businessPhoneNo')}
-              </FormLabel>
-              <Controller
-                control={control}
-                rules={{
-                  required: isActive && 'This is required',
-                  validate: (number: string) => validateTelePhoneNumber(number),
-                }}
-                name="businessPhoneNumber"
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberFormat
-                        value={field.value}
-                        customInput={CustomRequiredInput}
-                        format="(###)-###-####"
-                        mask="_"
-                        onValueChange={e => {
-                          field.onChange(e.value)
-                        }}
-                        isDisabled={isFPM}
-                      />
-                      <FormErrorMessage>{fieldState.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              ></Controller>
-            </FormControl>
-          </Box>
-          <Flex>
-            <FormControl h="70px">
-              <FormLabel variant="strong-label" size="md">
-                {t('ext')}
-              </FormLabel>
-
-              <Input
-                {...register('businessPhoneNumberExtension')}
-                w="121px"
-                variant="outline"
-                size="md"
-                isDisabled={isFPM}
-                type="number"
-              />
-            </FormControl>
-            <Spacer w="95px" />
-          </Flex>
-          <Box w="215px">
-            <FormControl h="70px">
-              <FormLabel variant="strong-label" size="md" noOfLines={1}>
-                {t('secondaryPhoneNo')}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="secondPhoneNumber"
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberFormat
-                        value={field.value}
-                        customInput={CustomInput}
-                        format="(###)-###-####"
-                        mask="_"
-                        onValueChange={e => {
-                          field.onChange(e.value)
-                        }}
-                        isDisabled={isFPM}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              ></Controller>
-            </FormControl>
-          </Box>
-          <Box w="109px" top="9px" pos="relative">
-            <FormControl h="90px">
-              <FormLabel variant="strong-label" size="md">
-                {t('ext')}
-              </FormLabel>
-
-              <Input
-                {...register('secondPhoneNumberExtension')}
-                type="number"
-                w="121px"
-                variant="outline"
-                size="md"
-                isDisabled={isFPM}
-              />
-            </FormControl>
-          </Box>
-        </HStack>
-
-        <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px">
+        <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px" mt="30px">
           <GridItem>
             <FormControl isInvalid={!!errors.streetAddress}>
               <FormLabel variant="strong-label" size="md">
@@ -405,7 +262,7 @@ const CreateVendorDetail: React.FC<{
                 {...register('zipCode', {
                   required: isActive && 'This is required',
                 })}
-                w="121px"
+                w="215px"
                 variant="required-field"
                 size="md"
                 isDisabled={isFPM}
@@ -413,6 +270,140 @@ const CreateVendorDetail: React.FC<{
               <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+        </Grid>
+
+        <Grid templateColumns="repeat(3,215px)" rowGap="30px" columnGap="16px" mt="30px">
+          <GridItem>
+            <FormControl w="215px" isInvalid={!!errors.businessEmailAddress}>
+              <FormLabel variant="strong-label" size="md">
+                Business Email
+              </FormLabel>
+              <Input
+                type="email"
+                {...register('businessEmailAddress')}
+                variant="required-field"
+                size="md"
+                isDisabled={isFPM}
+              />
+              <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.businessPhoneNumber} h="70px">
+              <FormLabel variant="strong-label" size="md" noOfLines={1}>
+                {t('businessPhoneNo')}
+              </FormLabel>
+              <Controller
+                control={control}
+                rules={{
+                  required: isActive && 'This is required',
+                  validate: (number: string) => validateTelePhoneNumber(number),
+                }}
+                name="businessPhoneNumber"
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={CustomRequiredInput}
+                        format="(###)-###-####"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                        isDisabled={isFPM}
+                      />
+                      <FormErrorMessage>{fieldState.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              ></Controller>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl h="70px">
+              <FormLabel variant="strong-label" size="md">
+                {t('ext')}
+              </FormLabel>
+
+              <Input
+                {...register('businessPhoneNumberExtension')}
+                w="121px"
+                variant="outline"
+                size="md"
+                isDisabled={isFPM}
+                type="number"
+              />
+            </FormControl>
+          </GridItem>
+        </Grid>
+
+        <HStack spacing="4" my="30px" display="none">
+          <Box></Box>
+          <Flex>
+            <FormControl h="70px">
+              <FormLabel variant="strong-label" size="md">
+                {t('ext')}
+              </FormLabel>
+
+              <Input
+                {...register('businessPhoneNumberExtension')}
+                w="121px"
+                variant="outline"
+                size="md"
+                isDisabled={isFPM}
+                type="number"
+              />
+            </FormControl>
+            <Spacer w="95px" />
+          </Flex>
+          <Box w="215px" display="none">
+            <FormControl h="70px">
+              <FormLabel variant="strong-label" size="md" noOfLines={1}>
+                {t('secondaryPhoneNo')}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="secondPhoneNumber"
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        value={field.value}
+                        customInput={CustomInput}
+                        format="(###)-###-####"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                        isDisabled={isFPM}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              ></Controller>
+            </FormControl>
+          </Box>
+          <Box w="109px" top="9px" pos="relative" display="none">
+            <FormControl h="90px">
+              <FormLabel variant="strong-label" size="md">
+                {t('ext')}
+              </FormLabel>
+
+              <Input
+                {...register('secondPhoneNumberExtension')}
+                type="number"
+                w="121px"
+                variant="outline"
+                size="md"
+                isDisabled={isFPM}
+              />
+            </FormControl>
+          </Box>
+        </HStack>
+
+        <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px" mt="30px">
           <GridItem>
             <FormControl isInvalid={!!errors.capacity}>
               <FormLabel variant="strong-label" size="md">
@@ -497,6 +488,36 @@ const CreateVendorDetail: React.FC<{
           <GridItem></GridItem>
           <GridItem></GridItem>
         </Grid>
+
+        <HStack spacing="16px" mt="30px" display="none">
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t('secondaryContact')}
+            </FormLabel>
+
+            <Input type="text" {...register('secondName')} variant="outline" size="md" isDisabled={isFPM} />
+          </FormControl>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t('secondaryEmail')}
+            </FormLabel>
+
+            <Input
+              type="email"
+              {...register('secondEmailAddress', {
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid email',
+                },
+              })}
+              variant="outline"
+              size="md"
+              isDisabled={isFPM}
+            />
+          </FormControl>
+          <GridItem></GridItem>
+        </HStack>
+
         <Box>
           <Stack alignItems="center" direction="row" spacing="16px">
             {/* hiding payment terms */}
