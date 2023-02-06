@@ -201,6 +201,7 @@ function DebouncedInput({
             setValue('')
             setShowClearIcon(false)
           }}
+          visibility={value === '' ? 'hidden' : 'visible'}
         />
       ) : null}
     </HStack>
