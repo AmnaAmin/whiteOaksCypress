@@ -24,7 +24,7 @@ export const usePropertyInformationNextDisabled = (
 
   // Acknowledge check appears based on address selected from saved address list so here we also check that in case user has entered new address
   const isAcknowledgeCheck = formValues?.property && isDuplicateAddress ? formValues?.acknowledgeCheck : true
-  const isHoaPhone = isValidPhoneNumber(formValues?.hoaPhone)
+
 
   return (
     !formValues.streetAddress ||
@@ -32,8 +32,8 @@ export const usePropertyInformationNextDisabled = (
     !formValues.state?.value ||
     !formValues.zipCode ||
     !formValues.newMarket?.value ||
-    !isAcknowledgeCheck ||
-    !isHoaPhone
+    !isAcknowledgeCheck
+
   )
 }
 
