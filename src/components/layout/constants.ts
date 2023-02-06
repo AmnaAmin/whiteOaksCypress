@@ -12,7 +12,7 @@ import {
   BiUserPlus,
   BiError,
 } from 'react-icons/bi'
-
+import { SiCypress } from 'react-icons/si'
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { Account, UserTypes } from 'types/account.types'
 import { useAuth } from 'utils/auth-context'
@@ -341,6 +341,12 @@ export const MENU_ROLE_BASED: Menus = {
             title: `${SIDE_NAV}.alerts`,
             Icon: BiError,
             color: '#ED64A6',
+          },
+          {
+            pathTo: '/cypressReport',
+            title: `${SIDE_NAV}.cypressReport`,
+            Icon: SiCypress,
+            color: '#FC8181',
           },
         ]
       : []),
