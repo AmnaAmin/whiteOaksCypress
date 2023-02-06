@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, HStack, Text, VStack } from '@chakra-ui/react'
+import { Box, Divider, Flex, HStack, Icon, Text, VStack } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -163,16 +163,7 @@ export const ProjectAwardCard = ({
                 {cardsvalues?.name}
               </Text>
               {(checkIcon || selectedCard === id) && (
-                <Button
-                  type="button"
-                  variant="link"
-                  size="xl"
-                  color={selectedCard === id ? 'green.300' : 'gray.300'}
-                  bg="white"
-                  _hover={{ bg: 'none' }}
-                >
-                  <BiCheckCircle />
-                </Button>
+                <Icon as={BiCheckCircle} color={selectedCard === id ? '#68D391' : 'gray.300'} fontSize="18px" />
               )}
             </HStack>
             <Divider border="1px solid" borderColor="gray.300" />
@@ -202,7 +193,7 @@ export const ProjectAwardCard = ({
               <Text fontWeight="400" fontSize="14px" color="gray.600">
                 {currencyFormatter(calFactorFeePercentage(cardsvalues?.factoringFee))}
               </Text>
-              <Text fontWeight="400" fontSize="12px" color="brand.300">
+              <Text fontWeight="400" fontSize="12px" color="brand.300" bg="blue.50" py="1px" px="5px">
                 {`${cardsvalues?.factoringFee}%`}
               </Text>
             </HStack>
