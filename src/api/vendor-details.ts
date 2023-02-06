@@ -190,7 +190,7 @@ export const parseCreateVendorFormToAPIData = async (
 export const parseVendorAPIDataToFormData = (vendorProfileData): VendorProfileDetailsFormData => {
   return {
     ...vendorProfileData,
-    ...vendorProfileData.paymentOptions.reduce((a, payment) => ({ ...a, [payment.name]: true }), {}),
+    ...vendorProfileData?.paymentOptions?.reduce((a, payment) => ({ ...a, [payment.name]: true }), {}),
     ...documentCardsDefaultValues(vendorProfileData),
     licenses: licenseDefaultFormValues(vendorProfileData),
     trades: [],
@@ -460,24 +460,25 @@ export const createVendorPayload = (updatedObj: any, vendor: any) => {
 export const documentCardsDefaultValues = (vendor: any) => {
   const documentCards = {
     agreementSignedDate: datePickerFormat(vendor.agreementSignedDate),
-    agreementUrl: vendor.documents.find(
+    agreementUrl: vendor?.documents?.find(
       (d: any) => d.documentTypelabel === DOCUMENTS_TYPES.AGREEMENT_SIGNED_DOCUMENT.value,
     )?.s3Url,
     agreement: null,
     w9DocumentDate: datePickerFormat(vendor.w9DocumentDate),
     w9Document: null,
-    w9DocumentUrl: vendor.documents.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.W9_DOCUMENT.value)?.s3Url,
+    w9DocumentUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.W9_DOCUMENT.value)
+      ?.s3Url,
     autoInsuranceExpDate: datePickerFormat(vendor.autoInsuranceExpirationDate),
-    insuranceUrl: vendor.documents.find(
+    insuranceUrl: vendor?.documents?.find(
       (d: any) => d.documentTypelabel === DOCUMENTS_TYPES.AUTH_INSURANCE_EXPIRATION.value,
     )?.s3Url,
     insurance: null,
     coiGlExpDate: datePickerFormat(vendor.coiglExpirationDate),
     coiGlExpFile: null,
-    coiGLExpUrl: vendor.documents.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_GL.value)?.s3Url,
+    coiGLExpUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_GL.value)?.s3Url,
     coiWcExpDate: datePickerFormat(vendor.coiWcExpirationDate),
     coiWcExpFile: null,
-    coiWcExpUrl: vendor.documents.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_WC.value)?.s3Url,
+    coiWcExpUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_WC.value)?.s3Url,
   }
   return documentCards
 }

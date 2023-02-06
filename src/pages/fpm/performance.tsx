@@ -10,7 +10,7 @@ import PerformanceGraph from './graph-performance'
 export const Performance = () => {
   const { id } = useUserProfile() as Account
   const { t } = useTranslation()
-  const { data: fpmInformationData, isLoading } = useFPMProfile(id)
+  const { data: fpmInformationData, isLoading, isFetching } = useFPMProfile(id)
   const chart = fpmInformationData
   return (
     <>
@@ -21,7 +21,7 @@ export const Performance = () => {
             {t(`${FPM_CARDS}.performancePerMonth`)}
           </Text>
         </Center>
-        <PerformanceGraph chartData={chart} isLoading={isLoading} />
+        <PerformanceGraph chartData={chart} isLoading={isLoading || isFetching} />
       </Box>
     </>
   )

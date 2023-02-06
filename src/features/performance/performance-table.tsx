@@ -11,9 +11,10 @@ import { ExportButton } from 'components/table-refactored/export-button'
 import { TableFooter } from 'components/table-refactored/table-footer'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings } from 'api/table-column-settings-refactored'
+import { removeCurrencyFormat } from 'utils/string-formatters'
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
-  const { performance, isPerformanceTableLoading} = props
+  const { performance, isPerformanceTableLoading } = props
 
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
@@ -32,7 +33,9 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorKey: 'revenue',
       filterFn: 'includesString',
       accessorFn(cellInfo: any) {
-        return cellInfo.revenue?.toString()
+        const value = cellInfo?.revenue as string
+        const formattedVal = numeral(value).format('$0,0.00')
+        return removeCurrencyFormat(formattedVal)
       },
       cell: (row: any) => {
         const value = row.cell.getValue() as string
@@ -45,7 +48,9 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorKey: 'profit',
       filterFn: 'includesString',
       accessorFn(cellInfo: any) {
-        return cellInfo.profit?.toString()
+        const value = cellInfo?.profit as string
+        const formattedVal = numeral(value).format('$0,0.00')
+        return removeCurrencyFormat(formattedVal)
       },
       cell: (row: any) => {
         const value = row.cell.getValue() as string
@@ -58,7 +63,9 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorKey: 'currentBonus',
       filterFn: 'includesString',
       accessorFn(cellInfo: any) {
-        return cellInfo.currentBonus?.toString()
+        const value = cellInfo?.currentBonus as string
+        const formattedVal = numeral(value).format('$0,0.00')
+        return removeCurrencyFormat(formattedVal)
       },
       cell: (row: any) => {
         const value = row.cell.getValue() as string
@@ -78,7 +85,9 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       accessorKey: 'target',
       filterFn: 'includesString',
       accessorFn(cellInfo: any) {
-        return cellInfo.target?.toString()
+        const value = cellInfo?.target as string
+        const formattedVal = numeral(value).format('$0,0.00')
+        return removeCurrencyFormat(formattedVal)
       },
       cell: (row: any) => {
         const value = row.cell.getValue() as string
@@ -98,7 +107,9 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
       header: `${PERFORMANCE}.disqualifiedRevenue`,
       accessorKey: 'disqualifiedRevenue',
       accessorFn(cellInfo: any) {
-        return cellInfo.disqualifiedRevenue?.toString()
+        const value = cellInfo?.disqualifiedRevenue as string
+        const formattedVal = numeral(value).format('$0,0.00')
+        return removeCurrencyFormat(formattedVal)
       },
       cell: (row: any) => {
         const value = row.cell.getValue() as string
@@ -131,18 +142,17 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
             isLoading={isPerformanceTableLoading}
             isEmpty={!isPerformanceTableLoading && !performance?.length}
           />
- <TableFooter>
-   <Box>
-   <ExportButton columns={tableColumns}
-    colorScheme="brand" 
-    fileName="performance" 
-    isLoading={isPerformanceTableLoading} 
-  fetchedData={performance} />
-    
-        </Box> 
-       </TableFooter>
-
-
+          <TableFooter>
+            <Box>
+              <ExportButton
+                columns={tableColumns}
+                colorScheme="brand"
+                fileName="performance"
+                isLoading={isPerformanceTableLoading}
+                fetchedData={performance}
+              />
+            </Box>
+          </TableFooter>
         </TableContextProvider>
       </Box>
     </Box>

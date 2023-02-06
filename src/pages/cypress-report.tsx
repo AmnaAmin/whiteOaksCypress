@@ -11,13 +11,13 @@ const CypressReport = () => {
         {t(`${SIDE_NAV}.cypressReport`)}
       </FormLabel>
 
-      <Box>
+      <Box h="calc(100vh - 150px)">
         <iframe
           title="Cypress Report"
           id="woiframe"
           src={iframe_src}
           width="100%"
-          height="680px"
+          height="100%"
           frameBorder="0"
         ></iframe>
       </Box>
