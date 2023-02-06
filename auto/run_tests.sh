@@ -16,7 +16,7 @@ if [[ ! -z "${BUILD_VERSION}" ]]; then
 
   echo "--- Install NPM dependencies"
   npm install
-
+  export NODE_OPTIONS=--max-old-space-size=5120 
   echo "+++ Run ESLint"
   npm run ci:lint
 
