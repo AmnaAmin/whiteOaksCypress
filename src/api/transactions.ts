@@ -79,7 +79,7 @@ export const useTransactionsV1 = (projectId?: string) => {
   }
 }
 
-export const GET_TRANSACTIONS_BY_WORK_ORDER_API_KEY = "transactions_work_order";
+export const GET_TRANSACTIONS_BY_WORK_ORDER_API_KEY = 'transactions_work_order'
 
 export const useWOTransactionsV1 = (workOrderId: string, projectId?: string) => {
   const client = useClient()
@@ -89,11 +89,10 @@ export const useWOTransactionsV1 = (workOrderId: string, projectId?: string) => 
     async () => {
       const response = await client(`change-orders/v1?projectId=${projectId}&sort=modifiedDate,asc`, {})
 
-      if ( response && response.data ) {
-        response.data = response.data.filter( t => t.parentWorkOrderId === workOrderId );
+      if (response && response.data) {
+        response.data = response.data.filter(t => t.parentWorkOrderId === workOrderId)
       }
 
-      
       return response?.data
     },
     { enabled: !!projectId },
@@ -147,17 +146,18 @@ const transactionTypeOptions = [
   },
 ]
 
-export const useTransactionTypes = ( screen?: string ) => {
+export const useTransactionTypes = (screen?: string) => {
   const { isVendor, isAdmin } = useUserRolesSelector()
-  
-  if ( screen === "WORK_ORDER_TRANSACTION_TABLE_MODAL" && isAdmin ) {
+
+  if (screen === 'WORK_ORDER_TRANSACTION_TABLE_MODAL' && isAdmin) {
+    const transactionType = transactionTypeOptions.filter(option => option.label !== 'Payment')
     return {
-      transactionTypeOptions: transactionTypeOptions.slice(0, 6),
+      transactionTypeOptions: transactionType.slice(0, 6),
     }
   }
   return {
     // Note for vendor user we only show change order and draw, that's why we filter out the rest
-    transactionTypeOptions: isVendor  ? transactionTypeOptions.slice(0, 2) : transactionTypeOptions,
+    transactionTypeOptions: isVendor ? transactionTypeOptions.slice(0, 2) : transactionTypeOptions,
   }
 }
 
@@ -642,7 +642,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries( [GET_TRANSACTIONS_BY_WORK_ORDER_API_KEY, projectId] );
+        queryClient.invalidateQueries([GET_TRANSACTIONS_BY_WORK_ORDER_API_KEY, projectId])
         queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
@@ -687,7 +687,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries( "transactions_work_order" );
+        queryClient.invalidateQueries('transactions_work_order')
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
