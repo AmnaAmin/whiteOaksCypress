@@ -366,9 +366,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       {...register(`contacts.${index}.phoneNumber`, {
                         required: 'This is required',
                         validate: (value: any) => {
-                          if (phoneNumberRef.current) {
-                            if (phoneNumberRef.current.value.replace(/\D+/g, '').length === 10) return true
-                          }
+                          if (value.replace(/\D+/g, '').length === 10) return true
 
                           return false
                         },
@@ -539,9 +537,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     {...register(`accountPayableContactInfos.${index}.phoneNumber`, {
                       required: 'This is required',
                       validate: (value: any) => {
-                        if (phoneNumberRef2.current) {
-                          if (phoneNumberRef2.current.value.replace(/\D+/g, '').length === 10) return true
-                        }
+                        if (value.replace(/\D+/g, '').length === 10) return true
 
                         return false
                       },
