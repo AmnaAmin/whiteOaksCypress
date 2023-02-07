@@ -144,7 +144,7 @@ export const parseVendorFormDataToAPIData = (
     businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
     secondPhoneNumber: formValues.secondPhoneNumber!,
     secondPhoneNumberExtension: formValues.secondPhoneNumberExtension!,
-    //businessEmailAddress: formValues.businessEmailAddress!,
+    businessEmailAddress: formValues.businessEmailAddress!,
     companyName: formValues.companyName!,
     streetAddress: formValues.streetAddress!,
     city: formValues.city!,
