@@ -214,8 +214,6 @@ export const PerformanceTab = () => {
       <Box p={0} rounded="13px" flex={1}>
         <PerformanceGraphWithUsers
           isFetching={isFetching}
-          yearFilter={yearFilter}
-          setYearFilter={setYearFilter}
           isLoading={isLoading}
           monthOption={monthOption}
           graphData={graphData || []}
