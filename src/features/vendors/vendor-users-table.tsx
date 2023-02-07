@@ -124,7 +124,6 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
   }
 
   useEffect(() => {
-    console.log(mapToTable(data))
     setTableData(mapToTable(data))
   }, [isLoading])
 
