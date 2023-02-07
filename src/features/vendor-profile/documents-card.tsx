@@ -181,6 +181,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                           isError={!!fieldState.error?.message}
                           onChange={(file: any) => {
                             onFileChange(file)
+                            setValue('w9DocumentDate', datePickerFormat(new Date()))
                             field.onChange(file)
                           }}
                           onClear={() => setValue(field.name, null)}

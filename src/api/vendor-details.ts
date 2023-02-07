@@ -15,7 +15,7 @@ import {
   VendorTradeFormValues,
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
-import { datePickerFormat, dateISOFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
+import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -501,8 +501,7 @@ export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
     agreementSignedStatus: formData.agreementSignCheckBox ? 'VERIFIED' : (formData as any).agreementSignedStatus,
     autoInsuranceStatus: formData.autoInsuranceCheckBox ? 'VERIFIED' : (formData as any).autoInsuranceStatus,
     w9Status: formData.W9DocumentCheckBox ? 'VERIFIED' : (formData as any).w9Status,
-    w9DocumentDate: dateISOFormatWithZeroTime(new Date())
-
+    w9DocumentDate: dateISOFormat(formData.w9DocumentDate),
   }
 }
 export const parseDocumentCardsValues = async (values: any) => {
