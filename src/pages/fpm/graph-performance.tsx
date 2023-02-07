@@ -9,7 +9,8 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean }> = ({ c
   const vendors = [chartData?.chart]
 
   const vendorData = months.map(key => {
-    const monthExistsInChart = chartData !== undefined && Object.keys(vendors[0])?.find(months => months === key)
+    const monthExistsInChart =
+      chartData !== undefined && vendors?.[0] && Object.keys(vendors[0])?.find(months => months === key)
     let nameMonthData
     if (monthExistsInChart) {
       nameMonthData = chartData?.chart[key]
