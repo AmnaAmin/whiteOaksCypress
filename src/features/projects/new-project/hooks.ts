@@ -1,7 +1,6 @@
 import { Control, useWatch } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { isValidAndNonEmpty } from 'utils'
-import { isValidPhoneNumber } from 'utils/string-formatters'
 
 export const useProjectInformationNextButtonDisabled = (control: Control<ProjectFormValues>, errors): boolean => {
   const formValues = useWatch({ control })
