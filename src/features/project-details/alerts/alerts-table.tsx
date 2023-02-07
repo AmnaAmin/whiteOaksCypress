@@ -4,7 +4,7 @@ import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
 import { useTranslation } from 'react-i18next'
-import { useProjectAlerts } from 'api/projects'
+import { useFetchUserAlerts } from 'api/projects'
 import { useParams } from 'react-router-dom'
 import { useAuth } from 'utils/auth-context'
 import { dateFormat } from 'utils/date-time-utils'
@@ -49,8 +49,7 @@ const alertsRow: React.FC<RowProps> = ({ row, style, onRowClick }) => {
 export const AlertsTable = React.forwardRef((props: any, ref) => {
   const { data } = useAuth()
   const account = data?.user
-  const { projectId } = useParams<'projectId'>()
-  const { data: alerts } = useProjectAlerts(projectId, account?.login)
+  const { data: alerts } = useFetchUserAlerts(account?.login)
   const { t } = useTranslation()
 
   const { columns, resizeElementRef } = useColumnWidthResize(

@@ -204,6 +204,7 @@ export type ProjectAlertType = {
   attribute: string
   category: string
   dateCreated: string
+  login: string
 }
 
 export type ProjectFormValues = {
