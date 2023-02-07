@@ -85,6 +85,7 @@ const InformationCard = props => {
           isTruncated={true}
           maxW="150px"
           title={props.date}
+          {...props.customStyle}
         >
           {props.date}
         </Text>
@@ -426,11 +427,13 @@ const WorkOrderDetailTab = props => {
                         testId="email"
                         title={t(`${WORK_ORDER}.email`)}
                         date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
+                        customStyle={ { width: "150px", height: "20px" } }
                       />
                       <InformationCard
                         testId="phone"
                         title={t(`${WORK_ORDER}.phone`)}
                         date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
+                        customStyle={ { width: "150px", height: "20px" } }
                       />
                     </HStack>
                   </Box>
