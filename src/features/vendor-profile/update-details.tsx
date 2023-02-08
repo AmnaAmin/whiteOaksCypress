@@ -158,7 +158,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
             <VStack alignItems="start" spacing="32px" h={{ sm: '', md: '353px' }}>
               <Box>
                 <Stack spacing={4} direction={['column', 'row']}>
-                  <FormControl w="215px" isInvalid={!!errors.ownerName}>
+                  <FormControl w="215px" isInvalid={!!errors.ownerName} display="none">
                     <FormLabel sx={textStyle}>{t('primaryContact')}</FormLabel>
                     <Input
                       data-testid="primaryContact"
@@ -172,7 +172,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                     <FormErrorMessage>{errors.ownerName && errors.ownerName.message}</FormErrorMessage>
                   </FormControl>
 
-                  <FormControl isInvalid={!!errors.secondName} w="215px">
+                  <FormControl isInvalid={!!errors.secondName} w="215px" display="none">
                     <FormLabel sx={textStyle}>{t('secondaryContact')}</FormLabel>
                     <Input bg="white" {...register('secondName')} id="secondaryContact" type="text" />
                     <FormErrorMessage>{errors.secondName && errors.secondName.message}</FormErrorMessage>
@@ -185,7 +185,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                   {/* Primary Email => Input */}
 
                   <FormControl isInvalid={!!errors.businessEmailAddress} w="215px">
-                    <FormLabel sx={textStyle}>{t('primaryEmail')}</FormLabel>
+                    <FormLabel sx={textStyle}>{t('businessEmail')}</FormLabel>
                     <Input
                       variant="required-field"
                       {...register('businessEmailAddress', {
@@ -200,7 +200,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                     </FormErrorMessage>
                   </FormControl>
 
-                  <FormControl isInvalid={!!errors.secondEmailAddress} w="215px">
+                  <FormControl isInvalid={!!errors.secondEmailAddress} w="215px" display="none">
                     <FormLabel sx={textStyle}>{t('secondaryEmail')}</FormLabel>
                     <Input {...register('secondEmailAddress')} id="secondaryEmail" type="text" />
                     <FormErrorMessage>
@@ -257,7 +257,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                     </FormErrorMessage>
                   </FormControl>
 
-                  <FormControl isInvalid={!!errors.secondPhoneNumber} w="215px">
+                  <FormControl isInvalid={!!errors.secondPhoneNumber} w="215px" display="none">
                     <FormLabel sx={textStyle}>{t('secondaryNo')}</FormLabel>
                     <Controller
                       control={control}
@@ -282,7 +282,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                     <FormErrorMessage>{errors.secondPhoneNumber && errors.secondPhoneNumber.message}</FormErrorMessage>
                   </FormControl>
 
-                  <FormControl w="100px" isInvalid={!!errors.secondPhoneNumberExtension}>
+                  <FormControl w="100px" isInvalid={!!errors.secondPhoneNumberExtension} display="none">
                     <FormLabel sx={textStyle}>Ext</FormLabel>
                     <Input id="Ext" {...register('secondPhoneNumberExtension')} type="text" />
                     <FormErrorMessage>
