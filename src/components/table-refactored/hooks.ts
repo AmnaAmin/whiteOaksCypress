@@ -15,7 +15,7 @@ type UseColumnFiltersQueryStringProps = {
   selectedFlagged?: any
 }
 export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryStringProps) => {
-  console.log(options)
+  
   const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, days, sorting, selectedFlagged } =
     options
   const { pageIndex, pageSize } = pagination || {}
