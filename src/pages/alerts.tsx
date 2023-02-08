@@ -7,7 +7,7 @@ import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AiOutlinePlus } from 'react-icons/ai'
 import { Card } from 'components/card/card'
-import { useManagedAlert } from 'api/alerts'
+import { useManagedAlert, useResolveAlerts } from 'api/alerts'
 
 const Alerts = () => {
   const { t } = useTranslation()
@@ -16,6 +16,8 @@ const Alerts = () => {
   const [tabIndex, setTabIndex] = useState<number>(0)
   const [alertRow, selectedAlertRow] = useState(true)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
+  const { mutate: resolveAlerts, isLoading: isLoadingResolve } = useResolveAlerts()
+  const [selectedAlerts, setSelectedAlerts] = useState<(number | string | undefined)[]>([])
 
   const { data: managedAlerts, refetch, isLoading } = useManagedAlert()
 
@@ -29,7 +31,13 @@ const Alerts = () => {
         <Card rounded="0px" roundedRight={{ base: '0px', md: '6px' }} roundedBottom="6px" pr={{ base: 0, sm: '15px' }}>
           <Box w="100%" display="flex" justifyContent="end" position="relative">
             {tabIndex === 0 && (
-              <Button colorScheme="brand" onClick={onAlertModalOpen}>
+              <Button
+                colorScheme="brand"
+                onClick={() => {
+                  resolveAlerts(selectedAlerts)
+                }}
+                disabled={isLoadingResolve}
+              >
                 {t('resolve')}
               </Button>
             )}
@@ -43,15 +51,17 @@ const Alerts = () => {
           <TabPanels>
             <TabPanel px={0}>
               <TriggeredAlertsTable
+                selectedAlerts={selectedAlerts}
+                setSelectedAlerts={setSelectedAlerts}
                 onRowClick={(e, row) => {
-                  selectedAlertRow(row.values)
-                  onAlertModalOpen()
+                  // selectedAlertRow(row.values)
+                  // onAlertModalOpen()
                 }}
                 ref={tabsContainerRef}
               />
             </TabPanel>
             <TabPanel px={0}>
-              <ManagedAlertTable managedAlerts={managedAlerts} isLoading={isLoading} refetch={refetch}/>
+              <ManagedAlertTable managedAlerts={managedAlerts} isLoading={isLoading} refetch={refetch} />
             </TabPanel>
           </TabPanels>
         </Card>
