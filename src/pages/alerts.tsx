@@ -54,8 +54,8 @@ const Alerts = () => {
                 selectedAlerts={selectedAlerts}
                 setSelectedAlerts={setSelectedAlerts}
                 onRowClick={(e, row) => {
-                  // selectedAlertRow(row.values)
-                  // onAlertModalOpen()
+                  selectedAlertRow(row.values)
+                  onAlertModalOpen()
                 }}
                 ref={tabsContainerRef}
               />
