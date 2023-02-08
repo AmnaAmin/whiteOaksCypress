@@ -36,11 +36,7 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
 
   const methods = useForm<AlertFormValues>()
 
-  const {
-    handleSubmit,
-    control,
-    reset,
-  } = methods
+  const { handleSubmit, control, reset } = methods
 
   useEffect(() => {
     if (selectedAlert) {
@@ -55,8 +51,7 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
   const onSubmit = useCallback(
     async values => {
       const queryOptions = {
-        onSuccess() {
-        },
+        onSuccess() {},
       }
       const alertsPayload = {
         ...values,
@@ -68,8 +63,7 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
       }
       if (values?.id) {
         editAlertsDetails(alertsPayload, queryOptions)
-      }
-      else {
+      } else {
         saveAlertsDetails(alertsPayload, {
           onSuccess() {
             onClose()
@@ -90,7 +84,7 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
               <ModalContent>
                 <ModalHeader borderBottom="1px solid #eee">
                   <FormLabel variant="strong-label" size="lg">
-                    { selectedAlert ? t('editAlert') : t('newAlert')}
+                    {selectedAlert ? t('editAlert') : t('newAlert')}
                   </FormLabel>
                 </ModalHeader>
                 <ModalCloseButton />
@@ -102,7 +96,7 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
                     </TabList>
                     <TabPanels>
                       <TabPanel p={0}>
-                        <AlertsDetailsTab setNextTab={setNextTab}/>
+                        <AlertsDetailsTab setNextTab={setNextTab} />
                       </TabPanel>
                       <TabPanel p={0}>
                         <AlertsNotifyTab onClose={onClose} />

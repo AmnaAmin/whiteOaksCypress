@@ -21,9 +21,9 @@ export type AlertFormValues = {
   alertRuleQuery?: string
   recipientEmailAddress?: string
   recipientPhoneNumber?: string
-  typeSelection?: string
-  attributeSelection?: string
-  behaviourSelection?: string
+  typeSelection?: { label: string; value: string; type: string } | null
+  attributeSelection?: { label: string; value: string; type: string } | null
+  behaviourSelection?: { label: string; value: string; type: string } | null
   customAttributeSelection?: string
   fromDate?: string
   toDate?: string
@@ -82,7 +82,7 @@ export const TYPE_SELECTION_OPTIONS = [
   { value: '3', label: 'Vendor' },
   { value: '4', label: 'Transaction' },
   { value: '5', label: 'Client' },
-  { value: '6', label: 'Performance' },
+  { value: '6', label: 'Quota' },
 ]
 
 export const ATTRIBUTE_SELECTION_OPTIONS = [
@@ -91,7 +91,55 @@ export const ATTRIBUTE_SELECTION_OPTIONS = [
   { value: '3', label: 'Project type' },
 ]
 
-export const BEHAVIOUR_SELECTION_OPTIONS = [{ value: '1', label: 'Change' }]
+export enum ProjectStatus {
+  Active = 'active',
+  Punch = 'punch',
+  New = 'new',
+  Closed = 'closed',
+  Invoiced = 'Invoiced',
+  Cancelled = 'Cancelled',
+  Paid = 'paid',
+}
+
+export const vendorAttributes = [
+  { value: 'score', label: 'Score', type: 'number' },
+  { label: 'Status', value: 'ProjectStatus', type: 'enum' },
+  { label: 'Agreement signed date', value: 'Agreement signed date', type: 'string' },
+  { label: 'Ein number', value: 'Ein number', type: 'string' },
+  { label: 'Ssn number', value: 'Ssn number', type: 'string' },
+  { label: 'Owner Name', value: 'Owner Name', type: 'string' },
+]
+
+export const projectAttributes = [
+  { value: 'Status', label: 'Status' },
+  { label: 'Project Manager', value: 'Project Manager' },
+  { label: 'Project Type', value: 'Project Type' },
+]
+
+export const workOrderAttributes = [
+  { value: 'Status', label: 'Status' },
+  { label: 'Final Invoice Amount', value: 'Final Invoice Amount' },
+]
+
+export const transactionAttributes = [
+  { value: 'Amount', label: 'Amount' },
+  { value: 'Type', label: 'Type' },
+  { value: 'Status', label: 'Status' },
+]
+
+export const clientAttributes = [
+  { value: 'Company Name', label: 'Company Name' },
+  { value: 'Email Address', label: 'Email Address' },
+  { value: 'Phone number', label: 'Phone number' },
+  { value: 'Contact', label: 'Contact' },
+  { value: 'Invoice Email Address', label: 'Invoice Email Address' },
+]
+export const quotaAttributes = [{ value: 'Quota Target %', label: 'Quota Target %' }]
+
+export const BEHAVIOUR_SELECTION_OPTIONS = [
+  { value: '1', label: 'Change' },
+  { value: '2', label: 'Equal To' },
+]
 
 export type Schedular = {
   id?: number
