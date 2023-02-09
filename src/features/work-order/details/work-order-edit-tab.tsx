@@ -85,6 +85,7 @@ const InformationCard = props => {
           isTruncated={true}
           maxW="150px"
           title={props.date}
+          {...props.customStyle}
         >
           {props.date}
         </Text>
@@ -110,7 +111,6 @@ const WorkOrderDetailTab = props => {
     navigateToProjectDetails,
     isWorkOrderUpdating,
     swoProject,
-    rejectInvoiceCheck,
     projectData,
     documentsData,
     workOrderAssignedItems,
@@ -329,7 +329,7 @@ const WorkOrderDetailTab = props => {
     if (workOrder?.id) {
       reset(defaultValuesWODetails(workOrder, workOrderAssignedItems, defaultSkill, defaultVendor))
     }
-  }, [workOrder, reset, workOrderAssignedItems?.length])
+  }, [workOrder, reset, workOrderAssignedItems])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
@@ -427,11 +427,13 @@ const WorkOrderDetailTab = props => {
                         testId="email"
                         title={t(`${WORK_ORDER}.email`)}
                         date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
+                        customStyle={ { width: "150px", height: "20px" } }
                       />
                       <InformationCard
                         testId="phone"
                         title={t(`${WORK_ORDER}.phone`)}
                         date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
+                        customStyle={ { width: "150px", height: "20px" } }
                       />
                     </HStack>
                   </Box>
@@ -450,9 +452,7 @@ const WorkOrderDetailTab = props => {
               <CalenderCard
                 testId={'lwSubmitted'}
                 title={t(`${WORK_ORDER}.lwSubmitted`)}
-                date={
-                  dateLeanWaiverSubmitted && !rejectInvoiceCheck ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'
-                }
+                date={dateLeanWaiverSubmitted ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
               />
               {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
               <CalenderCard
@@ -596,7 +596,7 @@ const WorkOrderDetailTab = props => {
             )}
           </HStack>
           <HStack spacing="16px" w="100%" justifyContent="end">
-            <Button onClick={props.onClose} colorScheme="brand" variant="outline">
+            <Button data-testid="wo-cancel-btn" onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>
             <Button data-testid="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>

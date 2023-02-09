@@ -32,7 +32,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean; yearFilt
     () =>
       months.map((key, monthIndex) => {
         const monthExistsInChart =
-          chartData !== undefined && vendors[0] && Object.keys(vendors[0])?.find(months => months === key)
+          chartData !== undefined && vendors?.[0] && Object.keys(vendors[0])?.find(months => months === key)
         let nameMonthData
         if (monthExistsInChart) {
           nameMonthData = chartData?.chart[key]

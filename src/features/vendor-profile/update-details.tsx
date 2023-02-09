@@ -76,7 +76,7 @@ export const UpdateDetails: React.FC<{
 }> = props => {
   const { vendorProfileData, isActive } = props
   const { t } = useTranslation()
-
+  
   return (
     <>
       <Flex direction="column">
@@ -307,10 +307,10 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                   Cancel
                 </Button>
               )}
-
               <Button type="submit" data-testid="saveDetails" variant="solid" colorScheme="darkPrimary">
                 {t('save')}
               </Button>
+              
             </Flex>
           </Flex>
         </Box>

@@ -10,9 +10,18 @@ import { useState, useEffect } from 'react'
 type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   projectId: string
   projectStatus: string
+  screen?: string
+  currentWorkOrderId?: number
 }
 
-const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId, projectStatus }) => {
+const AddNewTransactionModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  projectId,
+  projectStatus,
+  screen,
+  currentWorkOrderId,
+}) => {
   const { t } = useTranslation()
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
@@ -31,11 +40,17 @@ const AddNewTransactionModal: React.FC<Props> = ({ isOpen, onClose, projectId, p
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader>{t(`${TRANSACTION}.newTransaction`)}</ModalHeader>
-        <ModalCloseButton _hover={{ bg: 'blue.50' }} />
+        <ModalCloseButton _hover={{ bg: 'blue.50' }} _focus={{ outline: 'none' }} />
 
         <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
-            <TransactionForm onClose={onClose} projectId={projectId} projectStatus={projectStatus} />
+            <TransactionForm
+              currentWorkOrderId={currentWorkOrderId}
+              onClose={onClose}
+              projectId={projectId}
+              projectStatus={projectStatus}
+              screen={screen}
+            />
           </Card>
         </ModalBody>
       </ModalContent>

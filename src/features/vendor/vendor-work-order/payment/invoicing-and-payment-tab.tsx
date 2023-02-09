@@ -32,7 +32,7 @@ const InvoicingAndPaymentTab = ({
   const { t } = useTranslation()
   return (
     <Box>
-      <ModalBody ml={'0px'} w="95%" h={'calc(100vh - 300px)'} overflow="auto">
+       <ModalBody h={'calc(100vh - 300px)'} pl="26px" pr="25px" pt="10px">
         <Grid
           templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(170px,1fr))' }}
           gap={5}
@@ -41,7 +41,7 @@ const InvoicingAndPaymentTab = ({
           flexWrap="wrap"
           display={{ base: 'flex', sm: 'grid' }}
         >
-          <GridItem flex={{ base: '1', sm: 'unset' }}>
+          <GridItem  flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
               Icon={BiCalendar}
@@ -131,8 +131,7 @@ const InvoicingAndPaymentTab = ({
               Icon={BiCalendar}
               label={t('LWDate')}
               InputElem={
-                invoiceAndPaymentData.dateLeanWaiverSubmitted &&
-                ![STATUS.Rejected]?.includes(invoiceAndPaymentData.status?.toLocaleLowerCase() as STATUS) ? (
+                invoiceAndPaymentData.dateLeanWaiverSubmitted  ? (
                   <Text>{dateFormatNew(invoiceAndPaymentData?.dateLeanWaiverSubmitted)}</Text>
                 ) : (
                   <Text>mm/dd/yy</Text>

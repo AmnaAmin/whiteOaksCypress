@@ -120,7 +120,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
           )}
           <YAxis
             type="number"
-            tickSize={55}
+            tickSize={75}
             tickCount={10}
             domain={[0, 'auto']}
             axisLine={false}
@@ -188,15 +188,13 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
 export const PerformanceGraphWithUsers: React.FC<{
   graphData?: any
   isLoading: boolean
-  setYearFilter: (value) => void
-  yearFilter: string | number | undefined
   isFetching: boolean
   monthOption: any
-}> = ({ graphData, isLoading, setYearFilter, yearFilter, isFetching, monthOption }) => {
+}> = ({ graphData, isFetching, isLoading, monthOption }) => {
   return (
     <>
       <Box bg="#F7FAFE" border="1px solid #EAE6E6" rounded={'6px'}>
-        {isFetching ? (
+        {isFetching || isLoading ? (
           <Center height={500}>
             <Spinner size="xl" />
           </Center>

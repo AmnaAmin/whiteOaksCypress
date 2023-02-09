@@ -1,7 +1,6 @@
 import { Control, useWatch } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { isValidAndNonEmpty } from 'utils'
-import { isValidPhoneNumber } from 'utils/string-formatters'
 
 export const useProjectInformationNextButtonDisabled = (control: Control<ProjectFormValues>, errors): boolean => {
   const formValues = useWatch({ control })
@@ -24,7 +23,7 @@ export const usePropertyInformationNextDisabled = (
 
   // Acknowledge check appears based on address selected from saved address list so here we also check that in case user has entered new address
   const isAcknowledgeCheck = formValues?.property && isDuplicateAddress ? formValues?.acknowledgeCheck : true
-  const isHoaPhone = isValidPhoneNumber(formValues?.hoaPhone)
+
 
   return (
     !formValues.streetAddress ||
@@ -32,8 +31,8 @@ export const usePropertyInformationNextDisabled = (
     !formValues.state?.value ||
     !formValues.zipCode ||
     !formValues.newMarket?.value ||
-    !isAcknowledgeCheck ||
-    !isHoaPhone
+    !isAcknowledgeCheck
+
   )
 }
 
@@ -45,17 +44,42 @@ export const useAddressShouldBeVerified = (control: Control<ProjectFormValues>):
 
 export const useProjectManagementSaveButtonDisabled = (control: Control<ProjectFormValues>): boolean => {
   const formValues = useWatch({ control })
-  const isSuperPhoneNumber = isValidPhoneNumber(formValues?.superPhoneNumber)
+  
   return (
     !formValues?.projectManager?.value ||
     !formValues?.projectCoordinator?.value ||
-    !formValues?.client?.value ||
-    !isSuperPhoneNumber
-  )
+    !formValues?.client?.value
+    )
 }
 
 export const useWOStartDateMin = (control: Control<ProjectFormValues>): string => {
   const clientStartDate = useWatch({ name: 'clientStartDate', control })
 
   return clientStartDate ? new Date(clientStartDate).toISOString().split('T')[0] : ''
+}
+
+export const useNewClientNextButtonDisabled = ({ control }: any) => {
+  const [companyName, paymentTerm, streetAddress, city, state] = useWatch({
+    control,
+    name: ['companyName', 'paymentTerm', 'streetAddress', 'city', 'state'],
+  })
+  const contact = useWatch({ control, name: ['contacts'] })
+  const contactArray = contact?.length > 0 ? contact[0] : []
+
+  const accountPayable = useWatch({ control, name: ['accountPayableContactInfos'] })
+  const accountPayableArray = accountPayable?.length > 0 ? accountPayable[0] : []
+
+  return {
+    isNewClientDetails: !companyName || !paymentTerm || !streetAddress || !city || !state,
+    isContactSection: contactArray?.some(
+      contact => !contact.contact || !contact.emailAddress || !contact.phoneNumber || !contact.market,
+    ),
+    isAccountPayableSection: accountPayableArray?.some(
+      accountPayable =>
+        !accountPayable.contact ||
+        !accountPayable.phoneNumber ||
+        !accountPayable.emailAddress ||
+        !accountPayable.comments,
+    ),
+  }
 }

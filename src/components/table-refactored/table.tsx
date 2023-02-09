@@ -201,6 +201,7 @@ function DebouncedInput({
             setValue('')
             setShowClearIcon(false)
           }}
+          visibility={value === '' ? 'hidden' : 'visible'}
         />
       ) : null}
     </HStack>
@@ -235,7 +236,6 @@ export const Table: React.FC<TableProps> = ({
 
   const tableInstance = useTableInstance()
   const { getHeaderGroups, getRowModel, getFooterGroups } = tableInstance
-
   const getColumnMaxMinWidths = (column: any) => {
     const columnWidth = column?.getSize() + 'px'
 

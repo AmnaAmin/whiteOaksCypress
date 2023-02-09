@@ -32,6 +32,7 @@ import { BiPlus } from 'react-icons/bi'
 import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
 import { preventSpecialCharacter } from 'utils/string-formatters'
+import { useNewClientNextButtonDisabled } from 'features/projects/new-project/hooks'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -66,6 +67,8 @@ export const Details: React.FC<clientDetailProps> = props => {
   // const streetAddress = useWatch({ name: 'streetAddress', control })
   // const city = useWatch({ name: 'city', control })
   // const contacts = useWatch({ name: 'contacts.0.contact', control })
+
+  const { isNewClientDetails, isContactSection, isAccountPayableSection } = useNewClientNextButtonDisabled({ control })
 
   const [watchPaymentCreditCard, watchPaymentCheck, watchPaymentAch, watchPaymentWired] = useWatch({
     control,
@@ -363,9 +366,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       {...register(`contacts.${index}.phoneNumber`, {
                         required: 'This is required',
                         validate: (value: any) => {
-                          if (phoneNumberRef.current) {
-                            if (phoneNumberRef.current.value.replace(/\D+/g, '').length === 10) return true
-                          }
+                          if (value.replace(/\D+/g, '').length === 10) return true
 
                           return false
                         },
@@ -536,9 +537,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     {...register(`accountPayableContactInfos.${index}.phoneNumber`, {
                       required: 'This is required',
                       validate: (value: any) => {
-                        if (phoneNumberRef2.current) {
-                          if (phoneNumberRef2.current.value.replace(/\D+/g, '').length === 10) return true
-                        }
+                        if (value.replace(/\D+/g, '').length === 10) return true
 
                         return false
                       },
@@ -677,7 +676,7 @@ export const Details: React.FC<clientDetailProps> = props => {
         </Button>
         {!isProjectCoordinator && (
           <Button
-            // isDisabled={!companyName || !paymentsTerms || !streetAddress || !city || !contacts}
+            isDisabled={isNewClientDetails || isContactSection || isAccountPayableSection}
             colorScheme="brand"
             form="clientDetails"
             ml={2}

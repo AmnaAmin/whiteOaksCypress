@@ -16,7 +16,6 @@ import {
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
 import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
-import { isValidEmail } from 'utils/string-formatters'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -139,7 +138,7 @@ export const parseVendorFormDataToAPIData = (
 ): VendorProfilePayload => {
   return {
     ...vendorProfileData!,
-    ownerName: formValues.ownerName!,
+    //ownerName: formValues.ownerName!,
     secondName: formValues.secondName!,
     businessPhoneNumber: formValues.businessPhoneNumber,
     businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
@@ -153,12 +152,12 @@ export const parseVendorFormDataToAPIData = (
     capacity: formValues.capacity!,
     einNumber: formValues.einNumber!,
     ssnNumber: formValues.ssnNumber!,
-    secondEmailAddress: formValues.secondEmailAddress!,
+    //secondEmailAddress: formValues.secondEmailAddress!,
     score: formValues.score?.value,
     status: formValues.status?.value,
     state: formValues.state?.value,
     isSsn: false,
-    paymentTerm: formValues.paymentTerm?.value,
+    //paymentTerm: formValues.paymentTerm?.value,
     documents: [],
     vendorSkills: vendorProfileData?.vendorSkills || [],
     markets: vendorProfileData?.markets || [],
@@ -191,7 +190,7 @@ export const parseCreateVendorFormToAPIData = async (
 export const parseVendorAPIDataToFormData = (vendorProfileData): VendorProfileDetailsFormData => {
   return {
     ...vendorProfileData,
-    ...vendorProfileData.paymentOptions.reduce((a, payment) => ({ ...a, [payment.name]: true }), {}),
+    ...vendorProfileData?.paymentOptions?.reduce((a, payment) => ({ ...a, [payment.name]: true }), {}),
     ...documentCardsDefaultValues(vendorProfileData),
     licenses: licenseDefaultFormValues(vendorProfileData),
     trades: [],
@@ -461,24 +460,25 @@ export const createVendorPayload = (updatedObj: any, vendor: any) => {
 export const documentCardsDefaultValues = (vendor: any) => {
   const documentCards = {
     agreementSignedDate: datePickerFormat(vendor.agreementSignedDate),
-    agreementUrl: vendor.documents.find(
+    agreementUrl: vendor?.documents?.find(
       (d: any) => d.documentTypelabel === DOCUMENTS_TYPES.AGREEMENT_SIGNED_DOCUMENT.value,
     )?.s3Url,
     agreement: null,
     w9DocumentDate: datePickerFormat(vendor.w9DocumentDate),
     w9Document: null,
-    w9DocumentUrl: vendor.documents.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.W9_DOCUMENT.value)?.s3Url,
+    w9DocumentUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.W9_DOCUMENT.value)
+      ?.s3Url,
     autoInsuranceExpDate: datePickerFormat(vendor.autoInsuranceExpirationDate),
-    insuranceUrl: vendor.documents.find(
+    insuranceUrl: vendor?.documents?.find(
       (d: any) => d.documentTypelabel === DOCUMENTS_TYPES.AUTH_INSURANCE_EXPIRATION.value,
     )?.s3Url,
     insurance: null,
     coiGlExpDate: datePickerFormat(vendor.coiglExpirationDate),
     coiGlExpFile: null,
-    coiGLExpUrl: vendor.documents.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_GL.value)?.s3Url,
+    coiGLExpUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_GL.value)?.s3Url,
     coiWcExpDate: datePickerFormat(vendor.coiWcExpirationDate),
     coiWcExpFile: null,
-    coiWcExpUrl: vendor.documents.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_WC.value)?.s3Url,
+    coiWcExpUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_WC.value)?.s3Url,
   }
   return documentCards
 }
@@ -501,6 +501,7 @@ export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
     agreementSignedStatus: formData.agreementSignCheckBox ? 'VERIFIED' : (formData as any).agreementSignedStatus,
     autoInsuranceStatus: formData.autoInsuranceCheckBox ? 'VERIFIED' : (formData as any).autoInsuranceStatus,
     w9Status: formData.W9DocumentCheckBox ? 'VERIFIED' : (formData as any).w9Status,
+    w9DocumentDate: dateISOFormat(formData.w9DocumentDate),
   }
 }
 export const parseDocumentCardsValues = async (values: any) => {
@@ -607,19 +608,9 @@ export const useSaveLanguage = () => {
 }
 
 export const useVendorNext = ({ control, documents }: { control: any; documents?: any }) => {
-  const [ein, ssn, businessEmailAddress, ...detailfields] = useWatch({
+  const [ein, ssn, ...detailfields] = useWatch({
     control,
-    name: [
-      'einNumber',
-      'ssnNumber',
-      'businessEmailAddress',
-      'city',
-      'companyName',
-      'ownerName',
-      'state',
-      'streetAddress',
-      'zipCode',
-    ],
+    name: ['einNumber', 'ssnNumber', 'city', 'companyName', 'state', 'streetAddress', 'zipCode'],
   })
 
   const businessPhoneNumber = useWatch({ name: 'businessPhoneNumber', control })
@@ -636,12 +627,11 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10
   const isSSNNumber = ssn?.replace(/\D+/g, '').length! === 9
   const isEinNumber = ein?.replace(/\D+/g, '').length! === 9
-  const isEmail = isValidEmail(businessEmailAddress)
+  // const isEmail = isValidEmail(businessEmailAddress)
   const isCapacity = capacity <= 500
 
   return {
-    disableDetailsNext:
-      detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo || !isEmail || !isCapacity,
+    disableDetailsNext: detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo || !isCapacity,
 
     disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl), //disable logic for next on documents tab.
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
