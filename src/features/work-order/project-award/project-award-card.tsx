@@ -69,6 +69,7 @@ export const ProjectAwardCard = ({
   onSelectedCard,
   id,
   awardPlanScopeAmount,
+  isUpgradeProjectAward,
 }) => {
   const [checkIcon, setCheckIcon] = useState(false)
   const { t } = useTranslation()
@@ -147,7 +148,9 @@ export const ProjectAwardCard = ({
           alignItems="center"
           transition="0.3s all"
           cursor={'pointer'}
-          pointerEvents={!awardPlanId || isAdmin ? undefined : 'none'}
+          pointerEvents={
+            !awardPlanId || isAdmin || (isUpgradeProjectAward && cardsvalues?.id > awardPlanId) ? undefined : 'none'
+          }
           justifyContent="space-between"
           border="1px solid transparent"
           //   borderTop="4px solid transparent"
