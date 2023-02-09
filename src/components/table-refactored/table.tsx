@@ -52,7 +52,7 @@ function Filter({
   const [stickyFilter, setStickyFilter] = useStickyState(null, allowStickyFilters ? columnKey + '.' + column.id : null)
   const filterInitialState = metaData?.filterInitialState || stickyFilter || null
   const columnFilterValue = filterInitialState || column.getFilterValue()
-  const dateFilter = column.id.includes('Date' || 'date')
+  const dateFilter = column.id.includes('Date') || column.id.includes('date')
   const sortedUniqueValues = React.useMemo(
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
     [column.getFacetedUniqueValues()],
@@ -236,7 +236,6 @@ export const Table: React.FC<TableProps> = ({
 
   const tableInstance = useTableInstance()
   const { getHeaderGroups, getRowModel, getFooterGroups } = tableInstance
-
   const getColumnMaxMinWidths = (column: any) => {
     const columnWidth = column?.getSize() + 'px'
 

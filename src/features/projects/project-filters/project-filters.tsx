@@ -14,6 +14,7 @@ import React from 'react'
 import { useProjectCards } from 'api/pc-projects'
 import { ProjectCard } from 'features/common/project-card'
 import { useTranslation } from 'react-i18next'
+import { BiFlag } from 'react-icons/bi'
 
 const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, bg }) => {
   return (
@@ -102,8 +103,15 @@ const useProjectCardJson = cards => {
       id: 'collection',
       title: t('projects.projectFilter.collection'),
       value: 'collection',
-      number: cards?.find(c => c.status === '119')?.count || 0,
+      number: cards?.find(c => c.status === 119)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconTenth} bg="#FAF5FF" />,
+    },
+    {
+      id: 'flagged',
+      title: t('projects.projectFilter.flagged'),
+      value: 'flagged',
+      number: cards?.find(c => c.status === 1)?.count || 0,
+      IconElement: <IconElement Icon={BiFlag} bg="#FFE1E1" />,
     },
   ]
 }
@@ -112,9 +120,11 @@ export type ProjectCardProps = {
   onSelectCard: (string) => void
   selectedCard: string
   selectedFPM?: any
+  onSelectFlagged?: (string) => void,
+  selectedFlagged?: any
 }
 
-export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selectedCard, selectedFPM }) => {
+export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selectedCard, selectedFPM, onSelectFlagged, selectedFlagged }) => {
   const { data: values, isLoading } = useProjectCards(selectedFPM?.id)
   const cards = useProjectCardJson(values)
 
@@ -122,7 +132,17 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selec
     <>
       <Grid gap={3} gridTemplateColumns="repeat(auto-fit,minmax(230px,1fr))">
         {cards.map(card => {
-          return (
+          return card.id === 'flagged' ? (
+            <ProjectCard
+              key={card.id}
+              {...card}
+              onSelectCard={onSelectCard}
+              selectedCard={selectedCard}
+              isLoading={isLoading}
+              selectedFlagged={selectedFlagged}
+              onSelectFlagged={onSelectFlagged}
+            />
+          ) : (
             <ProjectCard
               key={card.id}
               {...card}

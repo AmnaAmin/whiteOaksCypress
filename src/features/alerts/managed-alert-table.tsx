@@ -11,7 +11,7 @@ import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 
 import { ManagedAlertsModal } from './managed-alerts-modal'
-import { ProjectAlertType } from 'types/project.type'
+import { ProjectAlertType } from 'types/alert.type'
 
 export const MANAGED_ALERTS_COLUMNS: ColumnDef<any>[] = [
   {
@@ -68,7 +68,6 @@ type ManagedAlertsTablesTypes = {
 }
 
 export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({ managedAlerts, isLoading, refetch }) => {
-
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const [selectedAlert, setSelectedAlert] = useState<ProjectAlertType>()

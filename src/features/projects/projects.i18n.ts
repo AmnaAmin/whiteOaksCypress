@@ -53,6 +53,7 @@ export const projects = {
           overpayment: 'Overpayment',
           disputed: 'Disputed',
           collection: 'Collection',
+          flagged: "Flagged"
         },
         projectSummary: {
           projectID: 'Project ID',
@@ -160,6 +161,7 @@ export const projects = {
           overpayment: 'Sobrepago',
           disputed: 'Cuestionado',
           collection: 'Recopilación',
+          flagged: "marcado"
         },
         projectSummary: {
           projectID: 'Projecto ID',

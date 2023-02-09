@@ -178,6 +178,45 @@ export const useUpdateAlertDetails = () => {
   )
 }
 
+export const useResolveAlerts = () => {
+  const client = useClient('/alert/api')
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    (selectedAlerts: (number | string | undefined)[]) => {
+      return client('alert-histories-resolve', {
+        data: selectedAlerts,
+        method: 'PUT',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'Triggered Alerts',
+          description: 'Alerts have been resolved',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+
+        queryClient.invalidateQueries('GetProjectAlerts')
+      },
+      onError(error: any) {
+        toast({
+          title: 'Triggered Alerts',
+          description: (error.title as string) ?? 'Unable to resolve alerts.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
 export const useSaveAlertDetails = () => {
   const client = useClient('/alert/api')
   const queryClient = useQueryClient()

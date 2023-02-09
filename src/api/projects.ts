@@ -1,4 +1,4 @@
-import { Project, ProjectWorkOrderType, ProjectAlertType, ProjectFinancialOverview } from 'types/project.type'
+import { Project, ProjectWorkOrderType, ProjectFinancialOverview } from 'types/project.type'
 import { useQuery } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import numeral from 'numeral'
@@ -73,20 +73,6 @@ export const useProjectWorkOrders = projectId => {
       ['asc'],
     )
   })
-}
-
-export const useFetchUserAlerts = login => {
-  const client = useClient('/alert/api')
-
-  const { data: alerts, ...rest } = useQuery<ProjectAlertType[]>('GetProjectAlerts', async () => {
-    const response = await client(`alert-histories`, {})
-
-    return response?.data
-  })
-  return {
-    data: alerts?.filter(a => a.login === login),
-    ...rest,
-  }
 }
 
 export const useWeekDayProjectsDue = (id?: string) => {

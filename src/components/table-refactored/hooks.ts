@@ -12,9 +12,11 @@ type UseColumnFiltersQueryStringProps = {
   userIds?: number[]
   days?: any
   sorting?: SortingState
+  selectedFlagged?: any
 }
 export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryStringProps) => {
-  const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, days, sorting } =
+  
+  const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, days, sorting, selectedFlagged } =
     options
   const { pageIndex, pageSize } = pagination || {}
 
@@ -42,6 +44,10 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
           selectedCard !== 'past due' ? { id: 'projectStatus', value: selectedCard } : { id: 'pastDue', value: true }
         finalFilters = [...columnFilters, projectStatusFilter]
       }
+    }
+
+    if ( selectedFlagged ) {
+      finalFilters = [...columnFilters, { id: 'noteFlag', value: selectedFlagged }]
     }
 
     // This filter will apply when user select a day from the project due days list
@@ -74,15 +80,15 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       queryStringWithoutPagination,
       queryStringWithPagination,
     }
-  }, [selectedCard, selectedDay, columnFilters, pageIndex, pageSize, userIds, days, sorting])
+  }, [selectedCard, selectedDay, columnFilters, pageIndex, pageSize, userIds, days, sorting, selectedFlagged])
 
   useEffect(() => {
     if (!pagination) return
 
-    if (selectedCard || selectedDay || userIds || columnFilters?.length > 0) {
+    if (selectedCard || selectedDay || userIds || columnFilters?.length > 0 || selectedFlagged) {
       setPagination?.({ ...pagination, pageIndex: 0 })
     }
-  }, [columnFilters, selectedCard, selectedDay, userIds])
+  }, [columnFilters, selectedCard, selectedDay, userIds, selectedFlagged])
 
   return {
     columnFilters,

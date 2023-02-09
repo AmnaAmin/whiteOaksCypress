@@ -26,6 +26,7 @@ import { TransactionDetailsModal } from 'features/project-details/transactions/t
 type TransactionProps = {
   projectStatus: string
   workOrderId: string
+  projectId?: string
 }
 
 export const WOTransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
@@ -33,8 +34,14 @@ export const WOTransactionsTable = React.forwardRef((props: TransactionProps, re
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
-  const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS.filter( col => col["accessorKey"] !== "workOrderId"  ), TableNames.transaction)
-  const { refetch, transactions, isLoading } = useWOTransactionsV1(props.workOrderId, projectId)
+  const { tableColumns, settingColumns } = useTableColumnSettings(
+    TRANSACTION_TABLE_COLUMNS.filter(col => col['accessorKey'] !== 'workOrderId'),
+    TableNames.transaction,
+  )
+  const { refetch, transactions, isLoading } = useWOTransactionsV1(
+    props.workOrderId,
+    projectId ? projectId : props.projectId,
+  )
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
@@ -67,6 +74,7 @@ export const WOTransactionsTable = React.forwardRef((props: TransactionProps, re
   }
 
   const { isVendor } = useUserRolesSelector()
+
   return (
     <>
       {isLoading && (

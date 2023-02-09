@@ -147,17 +147,18 @@ const transactionTypeOptions = [
 ]
 
 export const useTransactionTypes = (screen?: string) => {
-  const { isVendor, isAdmin } = useUserRolesSelector()
+  const { isVendor } = useUserRolesSelector()
 
-  if (screen === 'WORK_ORDER_TRANSACTION_TABLE_MODAL' && isAdmin) {
+  if (screen === 'WORK_ORDER_TRANSACTION_TABLE_MODAL' && !isVendor) {
     const transactionType = transactionTypeOptions.filter(option => option.label !== 'Payment')
     return {
       transactionTypeOptions: transactionType.slice(0, 6),
     }
   }
+  const transactionType = transactionTypeOptions.filter(option => option.label !== 'Payment')
   return {
     // Note for vendor user we only show change order and draw, that's why we filter out the rest
-    transactionTypeOptions: isVendor ? transactionTypeOptions.slice(0, 2) : transactionTypeOptions,
+    transactionTypeOptions: isVendor ? transactionTypeOptions.slice(0, 2) : transactionType,
   }
 }
 

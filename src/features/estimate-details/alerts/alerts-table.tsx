@@ -4,10 +4,10 @@ import { useColumnWidthResize } from 'utils/hooks/useColumnsWidthResize'
 import { RowProps } from 'components/table/react-table'
 import { TableWrapper } from 'components/table/table'
 import { useTranslation } from 'react-i18next'
-import { useFetchUserAlerts } from 'api/projects'
 import { useParams } from 'react-router-dom'
 import { useAuth } from 'utils/auth-context'
 import { dateFormat } from 'utils/date-time-utils'
+import { useFetchUserAlerts } from 'api/alerts'
 
 enum PROJECT_CATEGORY {
   WARNING = 1,
@@ -50,7 +50,8 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
   const { data } = useAuth()
   const account = data?.user
   const { projectId } = useParams<'projectId'>()
-  const { data: alerts } = useFetchUserAlerts(account?.login)
+  const { data: alerts } = useFetchUserAlerts(projectId)
+  const userAlerts = alerts?.filter(a => a.login === account?.login)
   const { t } = useTranslation()
 
   const { columns, resizeElementRef } = useColumnWidthResize(
@@ -95,7 +96,7 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
       <TableWrapper
         onRowClick={props.onRowClick}
         columns={columns}
-        data={alerts || []}
+        data={userAlerts || []}
         TableRow={alertsRow}
         tableHeight="calc(100vh - 300px)"
         name="alerts-table"

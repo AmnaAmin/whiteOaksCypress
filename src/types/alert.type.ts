@@ -30,6 +30,16 @@ export type AlertFormValues = {
   conditionSelection?: string
 }
 
+export type ProjectAlertType = {
+  id: number | string
+  subject: string
+  triggeredType: string
+  attribute: string
+  category: string
+  dateCreated: string
+  login: string
+}
+
 export type AlertType = {
   id?: number
   title?: string
@@ -58,6 +68,7 @@ export type AlertType = {
   fromDate?: string
   toDate?: string
   conditionSelection?: string
+  login?: string
 }
 
 export const enum TriggerType {

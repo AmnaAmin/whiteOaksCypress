@@ -13,6 +13,8 @@ type ProjectCardProps = {
   isLoading: boolean
   disabled?: boolean
   styles?: any
+  selectedFlagged?: any
+  onSelectFlagged?: (string) => void
 }
 
 export const ProjectCard = ({
@@ -25,6 +27,8 @@ export const ProjectCard = ({
   isLoading,
   IconElement,
   styles,
+  selectedFlagged,
+  onSelectFlagged,
 }: ProjectCardProps) => {
   return (
     <Box as="label" boxShadow="1px 0px 70px rgb(0 0 0 / 10%)" {...styles}>
@@ -40,8 +44,11 @@ export const ProjectCard = ({
         border="1px solid transparent"
         borderTop="4px solid transparent"
         // pointerEvents={disabled ? 'none' : 'auto'}
-        onClick={() => !disabled && onSelectCard(selectedCard !== value ? value : null)}
-        borderColor={selectedCard === value ? 'brand.300' : ''}
+        onClick={() => {
+          !disabled && onSelectCard(selectedCard !== value ? value : null)
+          onSelectFlagged && onSelectFlagged(selectedFlagged !== "yes" ? "yes" : null)
+        }}
+        borderColor={selectedCard === value || selectedFlagged === "yes" ? 'brand.300' : ''}
         _hover={{ bg: 'blue.50' }}
       >
         <Flex w="100%" mb="5px">
