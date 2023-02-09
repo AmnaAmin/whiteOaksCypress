@@ -43,7 +43,7 @@ export const TransactionsTab = ({ projectData, tabsContainerRef, onClose, projec
           ref={tabsContainerRef}
           projectStatus={projectData?.projectStatus as string}
           workOrderId={workOrder.id}
-          projectId={projectData.id}
+          projectId={projectData?.id}
         />
       </ModalBody>
 
