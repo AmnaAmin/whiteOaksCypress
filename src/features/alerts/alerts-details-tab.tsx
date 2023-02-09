@@ -1,7 +1,6 @@
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input } from '@chakra-ui/react'
 import { getAttributeOptions } from 'api/alerts'
 import Select from 'components/form/react-select'
-import { useState } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import {
@@ -28,7 +27,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
 
   return (
     <Box>
-      <Box h={'calc(100vh - 320px)'}>
+      <Box h={'calc(100vh - 320px)'} overflow={'auto'}>
         <HStack spacing="16px" mt="30px">
           <FormControl isInvalid={!!errors.title} w={215}>
             <FormLabel variant="strong-label" size="md">
@@ -95,6 +94,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
                 return (
                   <Select
                     {...field}
+                    menuPlacement={'top'}
                     options={TYPE_SELECTION_OPTIONS}
                     size="md"
                     value={field.value}
@@ -102,7 +102,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
                       field.onChange(option)
                       setValue('attributeSelection', null)
                     }}
-                    selectProps={{ isBorderLeft: true, menuHeight: '150px' }}
+                    selectProps={{ isBorderLeft: true }}
                   />
                 )
               }}
@@ -122,12 +122,13 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
                     {...field}
                     options={getAttributeOptions(watchTypeSelection?.label)}
                     size="md"
+                    menuPlacement={'top'}
                     value={field.value}
                     onChange={option => {
                       field.onChange(option)
                       console.log(option)
                     }}
-                    selectProps={{ isBorderLeft: true, menuHeight: '150px' }}
+                    selectProps={{ isBorderLeft: true }}
                   />
                 )
               }}
@@ -145,11 +146,12 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
                 return (
                   <Select
                     {...field}
+                    menuPlacement={'top'}
                     options={BEHAVIOUR_SELECTION_OPTIONS}
                     size="md"
                     value={field.value}
                     onChange={option => {}}
-                    selectProps={{ isBorderLeft: true, menuHeight: '150px' }}
+                    selectProps={{ isBorderLeft: true }}
                   />
                 )
               }}
@@ -171,7 +173,8 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
                     size="md"
                     value={field.value}
                     onChange={option => {}}
-                    selectProps={{ isBorderLeft: true, menuHeight: '150px' }}
+                    menuPlacement={'top'}
+                    selectProps={{ isBorderLeft: true }}
                   />
                 )
               }}
