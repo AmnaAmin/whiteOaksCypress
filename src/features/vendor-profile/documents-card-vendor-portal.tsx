@@ -126,10 +126,10 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           marginTop={{ base: '20px', sm: '0' }}
           w="100%"
           sx={{
-            "@media only screen and (max-width: 480px)": {
-              paddingBottom: "10px",
-              borderBottom: "1px solid #ddd"
-            }
+            '@media only screen and (max-width: 480px)': {
+              paddingBottom: '10px',
+              borderBottom: '1px solid #ddd',
+            },
           }}
         >
           <FormControl w={{ base: '100%', sm: 'unset' }} isInvalid={!!errors.w9DocumentDate}>
@@ -143,9 +143,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {...register('w9DocumentDate')}
               data-testid="w9DocumentDate"
               css={{
-                "&::-webkit-date-and-time-value":{
-                  textAlign: "left"
-                }
+                '&::-webkit-date-and-time-value': {
+                  textAlign: 'left',
+                },
               }}
             />
             <FormErrorMessage>{errors.w9DocumentDate && errors.w9DocumentDate.message}</FormErrorMessage>
@@ -222,9 +222,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {...register('agreementSignedDate', { required: isAgreementRequired && 'This is required' })}
               {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
               css={{
-                "&::-webkit-date-and-time-value":{
-                  textAlign: "left"
-                }
+                '&::-webkit-date-and-time-value': {
+                  textAlign: 'left',
+                },
               }}
             />
             <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
@@ -312,10 +312,10 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           marginTop={{ base: '20px', md: '0' }}
           w={{ base: '100%', sm: 'unset' }}
           sx={{
-            "@media only screen and (max-width: 480px)": {
-              paddingBottom: "10px",
-              borderBottom: "1px solid #ddd"
-            }
+            '@media only screen and (max-width: 480px)': {
+              paddingBottom: '10px',
+              borderBottom: '1px solid #ddd',
+            },
           }}
         >
           <FormControl isInvalid={!!errors.autoInsuranceExpDate} w={{ base: '100%', sm: '215px' }}>
@@ -337,7 +337,6 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               '@media screen and (max-width: 480px)': {
                 ms: '0 !important',
                 mt: '20px !important',
-               
               },
             }}
             flexDir={{ base: 'column', sm: 'row' }}
@@ -397,10 +396,10 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           spacing="16px"
           w={{ base: '100%', sm: 'unset' }}
           sx={{
-            "@media only screen and (max-width: 480px)": {
-              paddingBottom: "10px",
-              borderBottom: "1px solid #ddd"
-            }
+            '@media only screen and (max-width: 480px)': {
+              paddingBottom: '10px',
+              borderBottom: '1px solid #ddd',
+            },
           }}
         >
           <FormControl w={{ base: '100%', sm: '215px' }} isInvalid={!!errors.coiGlExpDate}>
@@ -414,9 +413,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               data-testid="coiGlExpDate"
               {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
               css={{
-                "&::-webkit-date-and-time-value":{
-                  textAlign: "left"
-                }
+                '&::-webkit-date-and-time-value': {
+                  textAlign: 'left',
+                },
               }}
             />
             <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
@@ -495,9 +494,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               data-testid="coiWcExpDate"
               {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
               css={{
-                "&::-webkit-date-and-time-value":{
-                  textAlign: "left"
-                }
+                '&::-webkit-date-and-time-value': {
+                  textAlign: 'left',
+                },
               }}
             />
             <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
