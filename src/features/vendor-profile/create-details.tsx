@@ -339,24 +339,6 @@ const CreateVendorDetail: React.FC<{
         </Grid>
 
         <HStack spacing="4" my="30px" display="none">
-          <Box></Box>
-          <Flex>
-            <FormControl h="70px">
-              <FormLabel variant="strong-label" size="md">
-                {t('ext')}
-              </FormLabel>
-
-              <Input
-                {...register('businessPhoneNumberExtension')}
-                w="121px"
-                variant="outline"
-                size="md"
-                isDisabled={isFPM}
-                type="number"
-              />
-            </FormControl>
-            <Spacer w="95px" />
-          </Flex>
           <Box w="215px" display="none">
             <FormControl h="70px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
