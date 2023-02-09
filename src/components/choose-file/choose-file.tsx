@@ -38,14 +38,14 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
     onClear?.()
   }
 
-  let leftBorder = '2px solid #345EA6'
+  let leftBorder = '2px solid #345EA6 !important'
 
   if (isRequired) {
-    leftBorder = '2px solid #345EA6'
+    leftBorder = '2px solid #345EA6 !important'
   }
 
   if (isError) {
-    leftBorder = '2px solid red.400'
+    leftBorder = '2px solid red !important'
   }
 
   return (
