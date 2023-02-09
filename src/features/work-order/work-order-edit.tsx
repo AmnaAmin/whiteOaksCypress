@@ -43,6 +43,7 @@ import { useProjectAward } from 'api/project-award'
 import { Card } from 'components/card/card'
 import { BiErrorCircle } from 'react-icons/bi'
 import { TransactionsTab } from './transactions/transactions-tab'
+import { useQueryClient } from 'react-query'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -107,11 +108,12 @@ const WorkOrderDetails = ({
       setTabIndex(0)
     }
   }, [workOrder, onClose])
-
+  const queryClient = useQueryClient();
   const onSave = values => {
     const payload = { ...workOrder, ...values }
     const { assignedItems } = values
     const hasMarkedSomeComplete = assignedItems?.some(item => item.isCompleted)
+
     if (
       displayAwardPlan &&
       !workOrder?.awardPlanId &&
@@ -134,6 +136,7 @@ const WorkOrderDetails = ({
 
     updateWorkOrder(payload, {
       onSuccess: res => {
+        queryClient.invalidateQueries('transactions_work_order')
         if (res?.data) {
           const workOrder = res?.data
           if (isPayable && ![STATUS_CODE.INVOICED].includes(workOrder.status)) {
