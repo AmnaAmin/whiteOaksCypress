@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, chakra, Icon } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/react-table'
 import Status from 'features/common/status'
 import numeral from 'numeral'
@@ -6,6 +6,7 @@ import { isDefined } from 'utils'
 import { dateFormat } from 'utils/date-time-utils'
 import { percentageFormatter } from 'utils/string-formatters'
 import { Link } from 'react-router-dom'
+import { RiFlag2Fill } from 'react-icons/ri'
 
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
@@ -49,6 +50,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   drawAmountSow: 'drawAmountSow.equals',
   drawAmountWo: 'drawAmountWo.equals',
   disqualifiedRevenueFlag: 'disqualifiedRevenueFlag.equals',
+  noteFlag: 'noteFlag.equals'
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
@@ -67,10 +69,11 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
           }}
           color="brand.300"
         >
+          <chakra.span marginRight={row.row?.original?.noteFlag ? "12px":"26"}>{row.row?.original?.noteFlag && <Icon as={RiFlag2Fill} color="rgba(252, 129, 129, 1)" />}</chakra.span>
           <Link to={`/project-details/${value}`}>{value}</Link>
         </Box>
       )
-    },
+    }
   },
   {
     header: 'projects.projectTable.generalLabour',

@@ -32,6 +32,7 @@ type ProjectProps = {
   userIds?: number[]
   selectedFPM?: any
   resetFilters: boolean
+  selectedFlagged?: any
 }
 
 export const ProjectsTable: React.FC<ProjectProps> = ({
@@ -40,6 +41,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   userIds,
   selectedFPM,
   resetFilters,
+  selectedFlagged
 }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
@@ -59,6 +61,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       selectedFPM,
       userIds,
       days,
+      selectedFlagged
     })
 
   const { projects, isLoading, totalPages, dataCount } = useProjects(
@@ -79,6 +82,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     {
       projectStatus: selectedCard !== 'past due' ? selectedCard : '',
       clientDueDate: days?.find(c => c.dayName === selectedDay)?.dueDate,
+      noteFlag: selectedFlagged
     },
     resetFilters,
   )
@@ -160,7 +164,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
               fileName="projects"
             />
             <CustomDivider />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns.filter( col => col.colId !== "id" && col.colId !== "flagged" )} />}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
