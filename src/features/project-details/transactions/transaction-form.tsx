@@ -435,7 +435,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                       name="transactionType"
                       render={({ field, fieldState }) => {
                         return (
-                          <>
+                          <div data-testid="transaction-type-id">
                             <Select
                               {...field}
                               options={transactionTypeOptions}
@@ -451,7 +451,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               }}
                             />
                             <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                          </>
+                          </div>
                         )
                       }}
                     />

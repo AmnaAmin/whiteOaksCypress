@@ -11,7 +11,7 @@ export const SaveChangedFieldAlert = () => {
         h="20px"
         display={{ base: 'none', sm: 'block' }}
       />
-      <Text fontStyle="italic" color="#F56565" fontSize="12px" whiteSpace="nowrap">
+      <Text fontStyle="italic" color="#F56565" fontSize="12px" w="150px">
         {t(`${VENDORPROFILE}.changeFieldMessage`)}
       </Text>
     </HStack>
