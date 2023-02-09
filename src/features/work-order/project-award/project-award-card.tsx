@@ -148,7 +148,9 @@ export const ProjectAwardCard = ({
           alignItems="center"
           transition="0.3s all"
           cursor={'pointer'}
-          pointerEvents={!awardPlanId || isAdmin || isUpgradeProjectAward ? undefined : 'none'}
+          pointerEvents={
+            !awardPlanId || isAdmin || (isUpgradeProjectAward && cardsvalues?.id > awardPlanId) ? undefined : 'none'
+          }
           justifyContent="space-between"
           border="1px solid transparent"
           //   borderTop="4px solid transparent"

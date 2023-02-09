@@ -67,7 +67,7 @@ import {
   DrawLienWaiver,
   LienWaiverAlert,
   ProjectAwardAlert,
-  ProjectTransacrtionRemaingALert,
+  ProjectTransactionRemainingAlert,
 } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
@@ -175,7 +175,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
 
-  const { awardPlansStats } = useWorkOrderAwardStats(projectId)
+  const { awardPlansStats, refetch: refetchAwardStats } = useWorkOrderAwardStats(projectId)
 
   const { mutate: createChangeOrder, isLoading: isChangeOrderSubmitLoading } = useChangeOrderMutation(projectId)
   const { mutate: updateChangeOrder, isLoading: isChangeOrderUpdateLoading } = useChangeOrderUpdateMutation(projectId)
@@ -213,21 +213,23 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
-  }, [workOrderId])
+  }, [workOrderId, awardPlansStats])
 
   const { check, isValidForAwardPlan } = useIsAwardSelect(control)
 
   const showDrawRemainingMsg =
-    !heading &&
+    !transaction &&
     transType?.label === 'Draw' &&
     isValidForAwardPlan &&
-    (selectedWorkOrderStats?.drawRemaining === 0 || selectedWorkOrderStats?.drawRemaining === null)
+    (selectedWorkOrderStats?.drawRemaining === null ||
+      (selectedWorkOrderStats && selectedWorkOrderStats?.drawRemaining < 1))
 
   const showMaterialRemainingMsg =
-    !heading &&
+    !transaction &&
     transType?.label === 'Material' &&
     isValidForAwardPlan &&
-    (selectedWorkOrderStats?.materialRemaining === 0 || selectedWorkOrderStats?.materialRemaining === null)
+    (selectedWorkOrderStats?.materialRemaining === null ||
+      (selectedWorkOrderStats && selectedWorkOrderStats?.materialRemaining < 1))
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
 
@@ -260,11 +262,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
-  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus, transaction, currentWorkOrderId)
+  const againstOptions = useAgainstOptions(
+    againstSelectOptions,
+    control,
+    projectStatus,
+    transaction,
+    currentWorkOrderId,
+  )
   const payDateVariance = useCalculatePayDateVariance(control)
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
-  
+
   useEffect(() => {
     if (selectedWorkOrder?.awardPlanPayTerm && !transaction?.id) {
       const paymentTermValue = {
@@ -283,8 +291,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }, [selectedWorkOrder])
 
-  
-
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
       setValue('invoicedDate', null)
@@ -297,8 +303,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
     resetExpectedCompletionDateFields(option)
   }
-
- 
 
   const onSubmit = useCallback(
     async (values: FormValues) => {
@@ -321,8 +325,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     [createChangeOrder, onClose, projectId, transaction, updateChangeOrder],
   )
 
-  
-
   const resetExpectedCompletionDateFields = useCallback(
     (againstOption: SelectOption) => {
       if (againstOption && againstOption?.value !== AGAINST_DEFAULT_VALUE) {
@@ -340,8 +342,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   // Disable selection of future payment received date for all users expect Admin
   const futureDateDisable = !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
-
-  
 
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
@@ -362,8 +362,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const { transactionType } = getValues()
 
-  
-
   useEffect(
     function updateAgainstOption() {
       if (transaction) return
@@ -383,17 +381,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     onClose()
   }
 
-  useEffect( () => {
-
-  }, [] );
-
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
       {check && isLienWaiverRequired && <LienWaiverAlert />}
       {!check && isValidForAwardPlan && materialAndDraw ? <ProjectAwardAlert /> : null}
       {check && showDrawRemainingMsg && (
-        <ProjectTransacrtionRemaingALert
+        <ProjectTransactionRemainingAlert
           msg="DrawRemaining"
           onOpen={onProjectAwardOpen}
           onClose={onClose}
@@ -401,14 +395,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         />
       )}
       {check && showMaterialRemainingMsg && (
-        <ProjectTransacrtionRemaingALert
+        <ProjectTransactionRemainingAlert
           msg="MaterialRemaining"
           onOpen={onProjectAwardOpen}
           onClose={onClose}
           isUpgradeProjectAward={true}
         />
       )}
-      {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaining" />}
+      {remainingAmt && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
 
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
@@ -924,7 +918,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           isOpen={isProjectAwardOpen}
           onClose={onProjectAwardClose}
           selectedWorkOrder={selectedWorkOrder}
-          closeTransactionModal={onClose}
+          refetchAwardStats={refetchAwardStats}
         />
       </HStack>
     </Flex>

@@ -1,21 +1,24 @@
 import React, { useState } from 'react'
-import { Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody } from '@chakra-ui/modal'
+import { Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalHeader } from '@chakra-ui/modal'
 import { ProjectAwardTab } from 'features/work-order/project-award/project.award'
 import { useProjectAward } from 'api/project-award'
 import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
+import { PROJECT_AWARD } from 'features/work-order/project-award/projectAward.i18n'
+import { useTranslation } from 'react-i18next'
 
 type projectAwardProps = {
   isOpen: boolean
   onClose: () => void
   selectedWorkOrder: any
-  closeTransactionModal: () => void
+  refetchAwardStats: () => void
 }
 
 const UpdateProjectAward: React.FC<projectAwardProps> = props => {
-  const { isOpen, onClose, selectedWorkOrder, closeTransactionModal } = props
+  const { isOpen, onClose, selectedWorkOrder, refetchAwardStats } = props
   const { projectAwardData } = useProjectAward()
   const [isUpdating, setIsUpdating] = useState<boolean>()
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
+  const { t } = useTranslation()
 
   const { awardPlanScopeAmount, workOrderDetails } = useFetchWorkOrder({
     workOrderId: selectedWorkOrder?.id,
@@ -27,7 +30,8 @@ const UpdateProjectAward: React.FC<projectAwardProps> = props => {
     updateWorkOrder(payload, {
       onSuccess: () => {
         setIsUpdating(false)
-        closeTransactionModal()
+        refetchAwardStats()
+        onClose()
       },
       onError: () => {
         setIsUpdating(false)
@@ -36,21 +40,20 @@ const UpdateProjectAward: React.FC<projectAwardProps> = props => {
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="6xl">
+    <Modal isOpen={isOpen} onClose={onClose} size="6xl" variant="custom">
       <ModalOverlay />
       <ModalContent>
         <ModalCloseButton />
-        <ModalBody>
-          <ProjectAwardTab
-            workOrder={workOrderDetails}
-            onSave={onSave}
-            onClose={onClose}
-            awardPlanScopeAmount={awardPlanScopeAmount}
-            projectAwardData={projectAwardData}
-            isUpdating={isUpdating}
-            isUpgradeProjectAward={true}
-          />
-        </ModalBody>
+        <ModalHeader> {t(`${PROJECT_AWARD}.upgradePlan`)}</ModalHeader>
+        <ProjectAwardTab
+          workOrder={workOrderDetails}
+          onSave={onSave}
+          onClose={onClose}
+          awardPlanScopeAmount={awardPlanScopeAmount}
+          projectAwardData={projectAwardData}
+          isUpdating={isUpdating}
+          isUpgradeProjectAward={true}
+        />
       </ModalContent>
     </Modal>
   )
