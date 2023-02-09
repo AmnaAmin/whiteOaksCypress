@@ -41,6 +41,8 @@ export const Projects = () => {
   const [resetAllFilters, setResetAllFilters] = useState(false)
   const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard')
   const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay')
+  
+  const [selectedFlagged, setSelectedFlagged] = useState<string | null>();
 
   const { t } = useTranslation()
 
@@ -51,6 +53,7 @@ export const Projects = () => {
     }, 700)
     setSelectedCard('')
     setSelectedDay('')
+    setSelectedFlagged('')
   }
 
   return (
@@ -60,10 +63,17 @@ export const Projects = () => {
           <ProjectFilters
             onSelectCard={selection => {
               setSelectedDay(null)
+              setSelectedFlagged(null)
               setSelectedCard(selection)
             }}
             selectedCard={selectedCard}
             selectedFPM={selectedFPM}
+            onSelectFlagged={selection => {
+              setSelectedDay(null)
+              setSelectedCard(null)
+              setSelectedFlagged(selection)
+            }}
+            selectedFlagged={selectedFlagged}
           />
         </Box>
         <Card
@@ -118,6 +128,7 @@ export const Projects = () => {
               userIds={userIds}
               selectedFPM={selectedFPM}
               resetFilters={resetAllFilters}
+              selectedFlagged={selectedFlagged}
             />
           </Box>
         </Card>
