@@ -202,7 +202,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         </Box>
 
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
-          <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
+          <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)} w="100%">
             <Card
               bg={{ base: 'white', sm: 'transparent' }}
               p={{ base: '12px', sm: '0px !important' }}
