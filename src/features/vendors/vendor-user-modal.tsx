@@ -183,6 +183,20 @@ const VendorUserModal = ({
               autoCapitalize="off"
               spellCheck={false}
               action="#"
+              sx={{
+                '@media screen and (max-width: 480px)': {
+                  ".chakra-form-control": {
+                    marginTop: "20px",
+                    width: "80%"
+                  },
+                  ".chakra-form-control:first-child": {
+                    marginTop: "0px",
+                  },
+                  ".chakra-input__group": {
+                    width: "100%"
+                  }
+                },
+              }}
             >
               <Box mt="14px">
                 {false ? (
