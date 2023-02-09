@@ -139,6 +139,20 @@ export const alertDetailsDefaultValues = ({ selectedAlert }) => {
   return defaultValues
 }
 
+export const useFetchUserAlerts = (projectId?) => {
+  const client = useClient('/alert/api')
+  const url = !projectId ? 'alert-histories' : `alert-histories/project/${projectId}`
+  const { data: alerts, ...rest } = useQuery<AlertType[]>('GetProjectAlerts', async () => {
+    const response = await client(url, {})
+
+    return response?.data
+  })
+  return {
+    data: alerts,
+    ...rest,
+  }
+}
+
 export const useUpdateAlertDetails = () => {
   const client = useClient('/alert/api')
   const queryClient = useQueryClient()
