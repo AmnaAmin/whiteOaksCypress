@@ -128,7 +128,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
     [selectedLicenseType, formValues],
   )
 
-  const { data: userInfo } = useAuth();
+  const { data: userInfo } = useAuth()
 
   return (
     <Box>
@@ -264,6 +264,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                                   field.onChange(file)
                                 }}
                                 onClear={() => setValue(field.name, null)}
+                                isRequired={!vendor?.licenseDocuments[index]?.s3Url}
                               ></ChooseFileField>
                               <FormErrorMessage bottom="5px" pos="absolute">
                                 {fieldState.error?.message}

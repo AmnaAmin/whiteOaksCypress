@@ -388,7 +388,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
         >
           <Grid
             gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
-            px="4"
+            px="2"
             py="3"
             fontSize="14px"
             color="gray.600"
@@ -401,7 +401,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           >
             {isShowCheckboxes && (
               <GridItem id="all-checkbox">
-                <Checkbox
+                <Checkbox 
                   variant="normal"
                   colorScheme="PrimaryCheckBox"
                   isChecked={allChecked}

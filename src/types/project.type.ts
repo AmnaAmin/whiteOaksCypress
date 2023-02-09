@@ -198,14 +198,6 @@ export type ProjectWorkOrderType = {
   cancel: string
 }
 
-export type ProjectAlertType = {
-  subject: string
-  triggeredType: string
-  attribute: string
-  category: string
-  dateCreated: string
-}
-
 export type ProjectFormValues = {
   acknowledgeCheck?: boolean
   name?: string
