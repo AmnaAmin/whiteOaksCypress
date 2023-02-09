@@ -18,6 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   chakra,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import { VendorProfile, Vendor as VendorType } from 'types/vendor.types'
 import { TableContextProvider } from 'components/table-refactored/table-context'
@@ -160,6 +161,10 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
 
   const queryClient = useQueryClient()
 
+  const [isMobile] = useMediaQuery("(max-width: 480px)")
+
+  
+
   return (
     <>
       <VendorUserModal
@@ -189,14 +194,18 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
               </chakra.span>
             </FormControl>
           )}
-          <Spacer />
+          { ! isMobile && <Spacer /> }
           <Box display="flex" alignItems={{ sm: '', lg: 'flex-end' }}>
             <Button onClick={openNewUserForm} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
               New User
             </Button>
           </Box>
         </HStack>
-        <VStack px="11px" gap="20px" mb="14px">
+        <VStack px="11px" gap="20px" mb="14px" sx={{
+          "@media screen and (max-width: 480px)": {
+            width: "320px"
+          }
+        }}>
           <Box
             overflow={'auto'}
             w="100%"

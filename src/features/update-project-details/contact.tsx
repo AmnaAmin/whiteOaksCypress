@@ -201,7 +201,7 @@ const Contact: React.FC<ContactProps> = ({
         </Box>
       </HStack>
 
-      <Box h="40px">
+      <Box h="80px">
         <FormControl w="215px" isInvalid={!!errors.client}>
           <InputLabel title={'project.projectDetails.client'} htmlFor={'client'} />
           <Controller
@@ -209,7 +209,7 @@ const Contact: React.FC<ContactProps> = ({
             name="client"
             render={({ field, fieldState }) => (
               <>
-                <ReactSelect
+                <ReactSelect menuPlacement="top"
                   {...field}
                   options={clientSelectOptions}
                   selectProps={{ isBorderLeft: true }}
