@@ -166,7 +166,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                       type="text"
                       variant="required-field"
                       {...register('ownerName', {
-                        required: isActive && 'This is required',
+                        
                       })}
                     />
                     <FormErrorMessage>{errors.ownerName && errors.ownerName.message}</FormErrorMessage>
