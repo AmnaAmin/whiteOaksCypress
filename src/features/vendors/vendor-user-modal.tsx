@@ -17,6 +17,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  useMediaQuery,
   VStack,
 } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -32,6 +33,7 @@ import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useAddVendorUser, useVendorUserDetails, useUpdateVendorUser } from 'api/vendor-user'
 import { useStates } from 'api/pc-projects'
 import { useAuth } from 'utils/auth-context'
+import { useState, useEffect } from 'react'
 
 const VendorUserModal = ({
   vendorDetails,
@@ -139,9 +141,21 @@ const VendorUserModal = ({
 
   const isPrimaryDisabled = !formValues.vendorAdmin
 
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
+
+  const [modalSize, setModalSize] = useState<string>('3xl')
+
+  useEffect(() => {
+    if (isMobile) {
+      setModalSize('sm')
+    } else {
+      setModalSize('3xl')
+    }
+  }, [isMobile])
+
   return (
     <div>
-      <Modal size="none" isOpen={isOpen} onClose={onCloseModal}>
+      <Modal isOpen={isOpen} onClose={onCloseModal} size={modalSize} variant="custom">
         <ModalOverlay />
         <ModalContent w="950px" rounded={3} borderTop="2px solid #4E87F8" bg="#fff">
           <ModalHeader
@@ -169,13 +183,36 @@ const VendorUserModal = ({
               autoCapitalize="off"
               spellCheck={false}
               action="#"
+              sx={{
+                '@media screen and (max-width: 480px)': {
+                  ".chakra-form-control": {
+                    marginTop: "20px",
+                    width: "80%"
+                  },
+                  ".chakra-form-control:first-child": {
+                    marginTop: "0px",
+                  },
+                  ".chakra-input__group": {
+                    width: "100%"
+                  }
+                },
+              }}
             >
               <Box mt="14px">
                 {false ? (
                   <BlankSlate width="60px" />
                 ) : (
                   <Box ml="20px">
-                    <HStack mt="30px" spacing={15}>
+                    <HStack
+                      mt="30px"
+                      spacing={15}
+                      sx={{
+                        '@media screen and (max-width: 480px)': {
+                          flexDirection: 'column',
+                          alignItems: 'baseline',
+                        },
+                      }}
+                    >
                       {isEditUser && (
                         <FormControl w={215}>
                           <FormLabel variant="strong-label" size="md">
@@ -218,11 +255,29 @@ const VendorUserModal = ({
                       </FormControl>
                     </HStack>
 
-                    <HStack mt="30px">
+                    <HStack
+                      mt="30px"
+                      sx={{
+                        '@media screen and (max-width: 480px)': {
+                          flexDirection: 'column',
+                          alignItems: 'baseline',
+                          marginInlineStart: "15px"
+                        },
+                      }}
+                    >
                       <PasswordField errors={errors} register={register} isRequired={!isEditUser} />
                     </HStack>
 
-                    <HStack mt="30px" spacing={15}>
+                    <HStack
+                      mt="30px"
+                      spacing={15}
+                      sx={{
+                        '@media screen and (max-width: 480px)': {
+                          flexDirection: 'column',
+                          alignItems: 'baseline',
+                        },
+                      }}
+                    >
                       <FormControl w="215px">
                         <FormLabel variant="strong-label" size="md">
                           {t(`${USER_MANAGEMENT}.modal.language`)}
@@ -276,7 +331,16 @@ const VendorUserModal = ({
                         </Checkbox>
                       </FormControl>
                     </HStack>
-                    <HStack mt="30px" spacing={15}>
+                    <HStack
+                      mt="30px"
+                      spacing={15}
+                      sx={{
+                        '@media screen and (max-width: 480px)': {
+                          flexDirection: 'column',
+                          alignItems: 'baseline',
+                        },
+                      }}
+                    >
                       <FormControl w={215}>
                         <FormLabel variant="strong-label" size="md">
                           {t(`${USER_MANAGEMENT}.modal.address`)}
