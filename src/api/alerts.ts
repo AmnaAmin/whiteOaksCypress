@@ -2,16 +2,22 @@ import { useToast } from '@chakra-ui/react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import {
   AlertType,
-  BEHAVIOUR_SELECTION_OPTIONS,
+  behaviorOptionsForNumber,
+  behaviorOptionsForString,
   CATEGORY_OPTIONS,
   clientAttributes,
+  customBehaviorOptions,
   NOTIFY_OPTIONS,
   projectAttributes,
+  projectStatus,
   quotaAttributes,
   transactionAttributes,
+  transactionStatus,
   TYPE_SELECTION_OPTIONS,
   vendorAttributes,
+  vendorStatus,
   workOrderAttributes,
+  workOrderStatus,
 } from 'types/alert.type'
 import { useClient } from 'utils/auth-context'
 
@@ -54,13 +60,72 @@ export const getAttributeOptions = option => {
   return attributeOptions
 }
 
+export const getBehaviorOptions = option => {
+  let behaviorOptions = [] as any
+  switch (option) {
+    case 'string': {
+      behaviorOptions = behaviorOptionsForString
+      break
+    }
+    case 'number': {
+      behaviorOptions = behaviorOptionsForNumber
+      break
+    }
+    case 'custom': {
+      behaviorOptions = customBehaviorOptions
+      break
+    }
+  }
+  return behaviorOptions
+}
+
+export const getCustomOptions = ({ type, attribute }) => {
+  let customOptions = [] as any
+  switch (type) {
+    case 'Transaction': {
+      if (attribute === 'Status') {
+        return transactionStatus
+      }
+      break
+    }
+    case 'Vendor': {
+      if (attribute === 'Status') {
+        return vendorStatus
+      }
+      break
+    }
+    case 'Work Order': {
+      if (attribute === 'Status') {
+        return workOrderStatus
+      }
+      break
+    }
+    case 'Project': {
+      if (attribute === 'Status') {
+        return projectStatus
+      }
+      break
+    }
+  }
+  return customOptions
+}
+
 export const alertDetailsDefaultValues = ({ selectedAlert }) => {
   const categoryValue = CATEGORY_OPTIONS?.find(c => c?.label === selectedAlert?.category)
   const notifyValue = NOTIFY_OPTIONS?.find(n => n?.value === selectedAlert?.notify)
   const typeSelectionValue = TYPE_SELECTION_OPTIONS?.find(t => t?.label === selectedAlert?.typeSelection)
   const attributeSelections = getAttributeOptions(typeSelectionValue?.label)
   const attributeSelectionValue = attributeSelections?.find(a => a?.label === selectedAlert?.attributeSelection)
-  const behaviourSelectionValue = BEHAVIOUR_SELECTION_OPTIONS?.find(b => b?.label === selectedAlert?.behaviourSelection)
+  const behaviorSelections = getBehaviorOptions(attributeSelectionValue?.type)
+  const behaviourSelectionValue = behaviorSelections?.find(b => b?.label === selectedAlert?.behaviourSelection)
+  const customSelections = getCustomOptions({
+    type: typeSelectionValue?.label,
+    attribute: attributeSelectionValue?.label,
+  })
+  const customSelectionValue =
+    behaviourSelectionValue?.label === 'Equal To'
+      ? customSelections?.find(b => b?.value === Number(selectedAlert?.customAttributeSelection))
+      : selectedAlert?.customAttributeSelection
 
   const defaultValues = {
     ...selectedAlert,
@@ -69,6 +134,7 @@ export const alertDetailsDefaultValues = ({ selectedAlert }) => {
     typeSelection: typeSelectionValue,
     attributeSelection: attributeSelectionValue,
     behaviourSelection: behaviourSelectionValue,
+    customAttributeSelection: customSelectionValue,
   }
   return defaultValues
 }

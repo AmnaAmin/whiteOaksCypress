@@ -60,6 +60,10 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
         typeSelection: values?.typeSelection?.label,
         attributeSelection: values?.attributeSelection?.label,
         behaviourSelection: values?.behaviourSelection?.label,
+        customAttributeSelection:
+          values?.behaviourSelection?.label === 'Equal To'
+            ? values?.customAttributeSelection?.value
+            : values?.customAttributeSelection,
       }
       if (values?.id) {
         editAlertsDetails(alertsPayload, queryOptions)

@@ -1,15 +1,9 @@
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input } from '@chakra-ui/react'
-import { getAttributeOptions } from 'api/alerts'
+import { getAttributeOptions, getBehaviorOptions, getCustomOptions } from 'api/alerts'
 import Select from 'components/form/react-select'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import {
-  AlertFormValues,
-  BEHAVIOUR_SELECTION_OPTIONS,
-  CATEGORY_OPTIONS,
-  NOTIFY_OPTIONS,
-  TYPE_SELECTION_OPTIONS,
-} from 'types/alert.type'
+import { AlertFormValues, CATEGORY_OPTIONS, NOTIFY_OPTIONS, TYPE_SELECTION_OPTIONS } from 'types/alert.type'
 
 export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
   const { t } = useTranslation()
@@ -24,6 +18,10 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
   const watchTitle = useWatch({ control, name: 'title' })
   const watchCategory = useWatch({ control, name: 'category' })
   const watchTypeSelection = useWatch({ control, name: 'typeSelection' })
+  const watchAttributeSelection = useWatch({ control, name: 'attributeSelection' })
+  const watchBehaviorSelection = useWatch({ control, name: 'behaviourSelection' })
+  const showCustomSelect = watchAttributeSelection?.type === 'custom' && watchBehaviorSelection?.label === 'Equal To'
+  const showCustomInput = ['Greater Than', 'Less Than'].includes(watchBehaviorSelection?.label as string)
 
   return (
     <Box>
@@ -89,6 +87,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
             </FormLabel>
             <Controller
               name="typeSelection"
+              rules={{ required: 'This is required' }}
               control={control}
               render={({ field }) => {
                 return (
@@ -101,6 +100,8 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
                     onChange={option => {
                       field.onChange(option)
                       setValue('attributeSelection', null)
+                      setValue('behaviourSelection', null)
+                      setValue('customAttributeSelection', null)
                     }}
                     selectProps={{ isBorderLeft: true }}
                   />
@@ -116,6 +117,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
             <Controller
               name="attributeSelection"
               control={control}
+              rules={{ required: 'This is required' }}
               render={({ field }) => {
                 return (
                   <Select
@@ -126,7 +128,8 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
                     value={field.value}
                     onChange={option => {
                       field.onChange(option)
-                      console.log(option)
+                      setValue('behaviourSelection', null)
+                      setValue('customAttributeSelection', null)
                     }}
                     selectProps={{ isBorderLeft: true }}
                   />
@@ -142,44 +145,67 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
             <Controller
               name="behaviourSelection"
               control={control}
+              rules={{ required: 'This is required' }}
               render={({ field }) => {
                 return (
                   <Select
                     {...field}
                     menuPlacement={'top'}
-                    options={BEHAVIOUR_SELECTION_OPTIONS}
+                    options={getBehaviorOptions(watchAttributeSelection?.type)}
                     size="md"
                     value={field.value}
-                    onChange={option => {}}
+                    onChange={option => {
+                      field.onChange(option)
+                      setValue('customAttributeSelection', null)
+                    }}
                     selectProps={{ isBorderLeft: true }}
                   />
                 )
               }}
             />
           </Box>
-
-          <Box w={215}>
-            <FormLabel variant="strong-label" size="md">
-              {t('customValue')}
-            </FormLabel>
-            <Controller
-              name="subject" // need to change // this is incorrect
-              control={control}
-              render={({ field }) => {
-                return (
-                  <Select
-                    {...field}
-                    options={[]}
-                    size="md"
-                    value={field.value}
-                    onChange={option => {}}
-                    menuPlacement={'top'}
-                    selectProps={{ isBorderLeft: true }}
-                  />
-                )
-              }}
-            />
-          </Box>
+          {showCustomSelect && (
+            <Box w={215}>
+              <FormLabel variant="strong-label" size="md">
+                {t('customValue')}
+              </FormLabel>
+              <Controller
+                name="customAttributeSelection" // need to change // this is incorrect
+                control={control}
+                rules={{ required: 'This is required' }}
+                render={({ field }) => {
+                  return (
+                    <Select
+                      {...field}
+                      options={getCustomOptions({
+                        type: watchTypeSelection?.label,
+                        attribute: watchAttributeSelection?.label,
+                      })}
+                      size="md"
+                      value={field.value}
+                      onChange={option => {
+                        field.onChange(option)
+                      }}
+                      menuPlacement={'top'}
+                      selectProps={{ isBorderLeft: true }}
+                    />
+                  )
+                }}
+              />
+            </Box>
+          )}
+          {showCustomInput && (
+            <Box w={215}>
+              <FormLabel variant="strong-label" size="md">
+                {t('customValue')}
+              </FormLabel>
+              <Input
+                type="text"
+                variant="required-field"
+                {...register('customAttributeSelection', { required: 'This is required' })}
+              />
+            </Box>
+          )}
         </HStack>
       </Box>
 
