@@ -96,3 +96,6 @@ export const PROJECT_STATUS = {
   disputed: { value: '220', label: 'DISPUTED' },
   reconcile: { value: '120', label: 'RECONCILE' },
 }
+export const override_status ={
+select:{label:'Select'}
+}

@@ -166,7 +166,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                         clearErrors()
                         field.onChange(option)
                       }}
-                      isClearable={true}
                     />
                   </>
                 )}

@@ -20,7 +20,7 @@ import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { GET_TRANSACTIONS_API_KEY } from './transactions'
 import { AuditLogType } from 'types/common.types'
-import { PROJECT_STATUS } from 'features/common/status'
+import { override_status, PROJECT_STATUS } from 'features/common/status'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -339,19 +339,20 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       overrideProjectStatusOptions = []
       // Project Status -> Active
       if (projectStatusId === Number(PROJECT_STATUS.active.value)) {
-        overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.disputed]
+        overrideProjectStatusOptions = [override_status.select,PROJECT_STATUS.new, PROJECT_STATUS.disputed]
       }
       // Project Status -> Punch
       else if (projectStatusId === Number(PROJECT_STATUS.punch.value)) {
-        overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
+        overrideProjectStatusOptions = [override_status.select,PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
       }
       // Project Status -> Reconcile
       else if (projectStatusId === Number(PROJECT_STATUS.reconcile.value)) {
-        overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch]
+        overrideProjectStatusOptions = [override_status.select,PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch]
       }
       // Project Status -> Closed
       else if (projectStatusId === Number(PROJECT_STATUS.closed.value)) {
         overrideProjectStatusOptions = [
+          override_status.select,
           PROJECT_STATUS.new,
           PROJECT_STATUS.active,
           PROJECT_STATUS.punch,
@@ -361,6 +362,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       // Project Status -> Invoiced
       else if (projectStatusId === Number(PROJECT_STATUS.invoiced.value)) {
         overrideProjectStatusOptions = [
+          override_status.select,
           PROJECT_STATUS.new,
           PROJECT_STATUS.active,
           PROJECT_STATUS.punch,
@@ -371,6 +373,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       // Project Status -> Paid
       else if (projectStatusId === Number(PROJECT_STATUS.paid.value)) {
         overrideProjectStatusOptions = [
+          override_status.select,
           PROJECT_STATUS.new,
           PROJECT_STATUS.active,
           PROJECT_STATUS.punch,
@@ -383,6 +386,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       // Project Status -> Client Paid
       else if (projectStatusId === Number(PROJECT_STATUS.clientPaid.value)) {
         overrideProjectStatusOptions = [
+          override_status.select,
           PROJECT_STATUS.new,
           PROJECT_STATUS.active,
           PROJECT_STATUS.punch,
@@ -396,11 +400,12 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       else if (projectStatusId === Number(PROJECT_STATUS.disputed.value)) {
         // Last Project Status -> Active
         if (previousProjectStatus === Number(PROJECT_STATUS.active.value)) {
-          overrideProjectStatusOptions = [PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
+          overrideProjectStatusOptions = [override_status.select,PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
         }
         // Last Project Status -> Punch
         else if (previousProjectStatus === Number(PROJECT_STATUS.punch.value)) {
           overrideProjectStatusOptions = [
+            override_status.select,
             PROJECT_STATUS.new,
             PROJECT_STATUS.active,
             PROJECT_STATUS.punch,
@@ -410,6 +415,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
         // Last Project Status -> Closed
         else if (previousProjectStatus === Number(PROJECT_STATUS.closed.value)) {
           overrideProjectStatusOptions = [
+            override_status.select,
             PROJECT_STATUS.new,
             PROJECT_STATUS.active,
             PROJECT_STATUS.punch,
@@ -420,6 +426,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
         // Last Project Status -> Invoiced
         else if (previousProjectStatus === Number(PROJECT_STATUS.invoiced.value)) {
           overrideProjectStatusOptions = [
+            override_status.select,
             PROJECT_STATUS.new,
             PROJECT_STATUS.active,
             PROJECT_STATUS.punch,
@@ -431,6 +438,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
         // Last Project Status -> Paid
         else if (previousProjectStatus === Number(PROJECT_STATUS.paid.value)) {
           overrideProjectStatusOptions = [
+            override_status.select,
             PROJECT_STATUS.new,
             PROJECT_STATUS.active,
             PROJECT_STATUS.punch,
@@ -444,6 +452,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
         // Last Project Status -> Client Paid
         else if (previousProjectStatus === Number(PROJECT_STATUS.clientPaid.value)) {
           overrideProjectStatusOptions = [
+            override_status.select,
             PROJECT_STATUS.new,
             PROJECT_STATUS.active,
             PROJECT_STATUS.punch,
