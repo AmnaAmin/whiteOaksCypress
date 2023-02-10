@@ -89,7 +89,7 @@ export default function useRoutesConfig() {
         { path: 'userManager', element: UserManagement },
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'projectType', element: ProjectType },
-        { path: 'estimates', element: Estimates },
+        { path: 'old_estimates', element: Estimates },
         { path: 'projects', element: Projects },
         { path: 'payable', element: Payable },
         { path: 'support-tickets', element: SupportTickets },
@@ -101,7 +101,7 @@ export default function useRoutesConfig() {
         { path: 'performance', element: PerformanceTab },
         { path: 'vendorSkills', element: VendorSkills },
         { path: 'alerts', element: Alerts },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
+        { path: 'old_estimates/estimate-details/:projectId', element: EstimateDetails },
         { path: 'cypressReport', element: CypressReport },
       ]
 
