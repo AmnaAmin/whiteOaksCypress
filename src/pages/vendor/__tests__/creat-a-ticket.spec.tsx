@@ -49,5 +49,5 @@ test('Create a ticket happy flow', async () => {
   fireEvent.submit(screen.getByTestId('save'))
 
   expect(await screen.findByText('Ticket created successfully.')).toBeInTheDocument()
-  //screen.debug(undefined, 1000000)
+  screen.debug(undefined, 1000000)
 })

@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event'
 import { PROJECT_TYPE_MODAL_MOCK } from 'mocks/api/project-type/project-type-mocks'
 
 import { Providers } from 'providers'
-import { render, screen, waitFor } from 'utils/test-utils'
+import { fireEvent, render, screen, waitFor } from 'utils/test-utils'
 import { ProjectTypeModal } from './project-type-modal'
 
 jest.setTimeout(250000)
@@ -33,8 +33,8 @@ describe('Project type maodal test case', () => {
     })
     expect(screen.getByTestId('saveProjectType')).toBeEnabled()
 
-    // fix this -- fireEvent.submit(screen.getByTestId('saveProjectType'))
-    // expect(await screen.findByText('New Project Type has been created successfully.')).toBeInTheDocument()
+    fireEvent.submit(screen.getByTestId('saveProjectType'))
+    expect(await screen.findByText('New Project Type has been created successfully.')).toBeInTheDocument()
   })
 
   test('Edit Project-Type modal Should render properly', async () => {
@@ -67,7 +67,7 @@ describe('Project type maodal test case', () => {
     })
     expect(screen.getByTestId('saveProjectType')).toBeEnabled()
 
-    // fix this -- fireEvent.submit(screen.getByTestId('saveProjectType'))
-    // expect(await screen.findByText('Project Type has been Updated successfully.')).toBeInTheDocument()
+    fireEvent.submit(screen.getByTestId('saveProjectType'))
+    expect(await screen.findByText('Project Type has been Updated successfully.')).toBeInTheDocument()
   })
 })
