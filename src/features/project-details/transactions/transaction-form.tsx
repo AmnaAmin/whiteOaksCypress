@@ -12,6 +12,7 @@ import {
   HStack,
   Button,
   Divider,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
@@ -66,7 +67,7 @@ import {
   DrawLienWaiver,
   LienWaiverAlert,
   ProjectAwardAlert,
-  ProjectTransacrtionRemaingALert,
+  ProjectTransactionRemainingAlert,
 } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
@@ -78,6 +79,7 @@ import {
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
+import UpdateProjectAward from './update-project-award'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -157,7 +159,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   const [remainingAmt, setRemainingAmt] = useState(false)
-
+  const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen)
 
@@ -173,7 +175,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
 
-  const { awardPlansStats } = useWorkOrderAwardStats(projectId)
+  const { awardPlansStats, refetch: refetchAwardStats } = useWorkOrderAwardStats(projectId)
 
   const { mutate: createChangeOrder, isLoading: isChangeOrderSubmitLoading } = useChangeOrderMutation(projectId)
   const { mutate: updateChangeOrder, isLoading: isChangeOrderUpdateLoading } = useChangeOrderUpdateMutation(projectId)
@@ -211,21 +213,23 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
-  }, [workOrderId])
+  }, [workOrderId, awardPlansStats])
 
   const { check, isValidForAwardPlan } = useIsAwardSelect(control)
 
   const showDrawRemainingMsg =
-    !heading &&
+    !transaction &&
     transType?.label === 'Draw' &&
     isValidForAwardPlan &&
-    (selectedWorkOrderStats?.drawRemaining === 0 || selectedWorkOrderStats?.drawRemaining === null)
+    (selectedWorkOrderStats?.drawRemaining === null ||
+      (selectedWorkOrderStats && selectedWorkOrderStats?.drawRemaining < 1))
 
   const showMaterialRemainingMsg =
-    !heading &&
+    !transaction &&
     transType?.label === 'Material' &&
     isValidForAwardPlan &&
-    (selectedWorkOrderStats?.materialRemaining === 0 || selectedWorkOrderStats?.materialRemaining === null)
+    (selectedWorkOrderStats?.materialRemaining === null ||
+      (selectedWorkOrderStats && selectedWorkOrderStats?.materialRemaining < 1))
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
 
@@ -258,11 +262,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { amount } = useTotalAmount(control)
-  const againstOptions = useAgainstOptions(againstSelectOptions, control, projectStatus, transaction, currentWorkOrderId)
+  const againstOptions = useAgainstOptions(
+    againstSelectOptions,
+    control,
+    projectStatus,
+    transaction,
+    currentWorkOrderId,
+  )
   const payDateVariance = useCalculatePayDateVariance(control)
   const watchTransactionType = watch('transactionType')
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
-  
+
   useEffect(() => {
     if (selectedWorkOrder?.awardPlanPayTerm && !transaction?.id) {
       const paymentTermValue = {
@@ -281,8 +291,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }, [selectedWorkOrder])
 
-  
-
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
       setValue('invoicedDate', null)
@@ -295,8 +303,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
     resetExpectedCompletionDateFields(option)
   }
-
- 
 
   const onSubmit = useCallback(
     async (values: FormValues) => {
@@ -319,8 +325,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     [createChangeOrder, onClose, projectId, transaction, updateChangeOrder],
   )
 
-  
-
   const resetExpectedCompletionDateFields = useCallback(
     (againstOption: SelectOption) => {
       if (againstOption && againstOption?.value !== AGAINST_DEFAULT_VALUE) {
@@ -338,8 +342,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   // Disable selection of future payment received date for all users expect Admin
   const futureDateDisable = !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
-
-  
 
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
@@ -359,8 +361,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }, [transaction, againstOptions?.length, workOrderSelectOptions.length, changeOrderSelectOptions.length])
 
   const { transactionType } = getValues()
-
-  
+  // const { against } = getValues()
 
   useEffect(
     function updateAgainstOption() {
@@ -381,18 +382,28 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     onClose()
   }
 
-  useEffect( () => {
-
-  }, [] );
-
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
       {check && isLienWaiverRequired && <LienWaiverAlert />}
       {!check && isValidForAwardPlan && materialAndDraw ? <ProjectAwardAlert /> : null}
-      {check && showDrawRemainingMsg && <ProjectTransacrtionRemaingALert msg="DrawRemaining" />}
-      {check && showMaterialRemainingMsg && <ProjectTransacrtionRemaingALert msg="MaterialRemaining" />}
-      {remainingAmt && <ProjectTransacrtionRemaingALert msg="PaymentRemaining" />}
+      {check && showDrawRemainingMsg && (
+        <ProjectTransactionRemainingAlert
+          msg="DrawRemaining"
+          onOpen={onProjectAwardOpen}
+          onClose={onClose}
+          isUpgradeProjectAward={true}
+        />
+      )}
+      {check && showMaterialRemainingMsg && (
+        <ProjectTransactionRemainingAlert
+          msg="MaterialRemaining"
+          onOpen={onProjectAwardOpen}
+          onClose={onClose}
+          isUpgradeProjectAward={true}
+        />
+      )}
+      {remainingAmt && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
 
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
@@ -412,7 +423,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 gap={'1.5rem 1rem'}
                 pt="20px"
                 pb="4"
-                // outline={'1px solid red'}
               >
                 <GridItem>
                   <FormControl isInvalid={!!errors.transactionType} data-testid="transaction-type">
@@ -425,7 +435,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                       name="transactionType"
                       render={({ field, fieldState }) => {
                         return (
-                          <>
+                          <div data-testid="transaction-type-id">
                             <Select
                               {...field}
                               options={transactionTypeOptions}
@@ -441,7 +451,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               }}
                             />
                             <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                          </>
+                          </div>
                         )
                       }}
                     />
@@ -905,6 +915,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             </>
           )
         )}
+        <UpdateProjectAward
+          isOpen={isProjectAwardOpen}
+          onClose={onProjectAwardClose}
+          selectedWorkOrder={selectedWorkOrder}
+          refetchAwardStats={refetchAwardStats}
+        />
       </HStack>
     </Flex>
   )

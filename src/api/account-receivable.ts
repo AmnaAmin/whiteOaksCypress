@@ -105,7 +105,7 @@ export const useCheckBatch = (setLoading, loading, paginatedQueryString) => {
   )
 }
 
-export const useBatchRun = (batchId, paginatedQueryString) => {
+export const useBatchRun = (batchId, paginatedQueryString, refetchInterval) => {
   const client = useClient()
   const queryClient = useQueryClient()
 
@@ -122,6 +122,7 @@ export const useBatchRun = (batchId, paginatedQueryString) => {
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },
+      refetchInterval: refetchInterval
     },
   )
 }

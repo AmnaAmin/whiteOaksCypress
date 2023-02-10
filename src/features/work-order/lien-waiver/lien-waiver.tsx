@@ -253,8 +253,8 @@ export const LienWaiverTab: React.FC<any> = props => {
                 <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
               </Alert>
             )}
-            <Flex w="100%" alignContent="space-between" pos="relative">
-              <Box w={{ base: 'calc(100% -100px)', lg: '44em' }}>
+            <Flex alignContent="space-between" pos="relative">
+              <Box overflowWrap={'break-word'} whiteSpace="normal" w="48em">
                 <HelpText>{GetHelpText()}</HelpText>
               </Box>
             </Flex>
