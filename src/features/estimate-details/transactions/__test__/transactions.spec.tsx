@@ -430,48 +430,48 @@ describe('Given Project Coordinator create new transaction', () => {
   })
 
   // write test suite for when the user create transaction of payment type Payment
-  // describe('When the user create transaction of payment type Payment', () => {
-  //   test('Then User should create Payment transaction against vendor successfully', async () => {
-  //     const onClose = jest.fn()
-  //     await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
+  describe('When the user create transaction of payment type Payment', () => {
+    test('Then User should create Payment transaction against vendor successfully', async () => {
+      const onClose = jest.fn()
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
-  //     expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
 
-  //     // User first select Transaction type, one of ['Change Order', 'Draw']
-  //     await selectOption(screen.getByTestId('transaction-type'), 'Payment')
+      // User first select Transaction type, one of ['Change Order', 'Draw']
+      await selectOption(screen.getByTestId('transaction-type'), 'Payment')
 
-  //     /**
-  //      * Check the following fields changed properly,
-  //      * 1- Transaction Type selected with 'Payment'
-  //      * 2- Expected Completion Date field visible with already filled value of current Date but disabled
-  //      * 3- New Expected Completion Date field visible
-  //      */
-  //     expect(getByText(screen.getByTestId('transaction-type'), 'Payment')).toBeInTheDocument()
-  //     expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+      /**
+       * Check the following fields changed properly,
+       * 1- Transaction Type selected with 'Payment'
+       * 2- Expected Completion Date field visible with already filled value of current Date but disabled
+       * 3- New Expected Completion Date field visible
+       */
+      expect(getByText(screen.getByTestId('transaction-type'), 'Payment')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
 
-  //     // add payment received date
-  //     fireEvent.change(screen.getByTestId('payment-received-date'), { target: { value: '2022-10-01' } })
+      // add payment received date
+      fireEvent.change(screen.getByTestId('payment-received-date'), { target: { value: '2022-10-01' } })
 
-  //     const totalAmount = screen.getByTestId('total-amount')
+      const totalAmount = screen.getByTestId('total-amount')
 
-  //     expect(totalAmount.textContent).toEqual('Total: $0.00')
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
 
-  //     const descriptionField = screen.getByTestId('transaction-description-0')
-  //     const amountField = screen.getByTestId('transaction-amount-0')
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
 
-  //     await userEvent.type(descriptionField, 'Added')
-  //     await userEvent.type(amountField, '400')
+      await userEvent.type(descriptionField, 'Added')
+      await userEvent.type(amountField, '400')
 
-  //     // User submit the transaction
-  //     await act(async () => {
-  //       await userEvent.click(screen.getByTestId('save-transaction'))
-  //     })
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
 
-  //     await waitForLoadingToFinish()
+      await waitForLoadingToFinish()
 
-  //     expect(onClose).toHaveBeenCalled()
-  //   })
-  // })
+      expect(onClose).toHaveBeenCalled()
+    })
+  })
 })
 
 describe('Given update transaction', () => {
