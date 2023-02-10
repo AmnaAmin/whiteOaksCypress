@@ -18,7 +18,7 @@ import {
   TRANSACTION_OF_CHANGE_ORDER_AGAINST_PROJECT_SOW_NOT_APPLICABLE_WORK_ORDER_ID,
   OVERPAYMENT_TRANSACTION_ID,
 } from 'mocks/api/projects/data'
-import { createAgainstLabel, createChangeOrderLabel, createWorkOrderLabel } from 'api/transactions'
+import { createAgainstLabel, createWorkOrderLabel } from 'api/transactions'
 import { dateFormat } from 'utils/date-time-utils'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
@@ -38,7 +38,7 @@ const renderTransactionForm = async (props: TransactionFormProps) => {
 }
 
 const workOrder = WORK_ORDERS[0]
-const changeOrder = CHANGE_ORDERS[0]
+// const changeOrder = CHANGE_ORDERS[0]
 
 describe('Given Project Coordinator create new transaction', () => {
   describe('When the user create transaction of payment type Change Order', () => {
