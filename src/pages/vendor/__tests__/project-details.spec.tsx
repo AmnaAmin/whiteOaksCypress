@@ -47,9 +47,9 @@ describe('Porject Details: Document tab test cases', () => {
 
     // chooseFileByLabel(screen.getByTestId('choose-document'))
 
-    /* Fix this -- await act(async () => {
+    await act(async () => {
       await userEvent.click(screen.getByText(/Save/i))
-    })*/
+    })
 
     // expect(await screen.findAllByText('New document has been uploaded successfully.')).not.toEqual(null)
 
@@ -78,9 +78,9 @@ describe('Porject Details: Document tab test cases', () => {
     //   'dummy-file-with-long-name-more-than-255-characters-Lorem-ipsum-dolor-sit-amet-consectetur adipisicing-elito-Commodi-aeos-perspiciatisa-Id-fugit-labore-magni-quae-sit-laudantium-atque maiores-aperiam-quaerat-maxime-quisquam-ipsam-temporaa-sint-necessitatab.png',
     // )
 
-    /* await act(async () => {
+    await act(async () => {
       await userEvent.click(screen.getByText(/Save/i))
-    }) */
+    })
 
     // expect(screen.getByText(/File name length should be less than 255/i)).toBeInTheDocument()
   })
