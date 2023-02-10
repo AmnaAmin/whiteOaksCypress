@@ -119,7 +119,7 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(getByText(screen.getByTestId('work-order-select'), workOrderOptionLabel)).toBeInTheDocument()
 
       // User first select Change Order, one of ['Change Order-1', 'Change Order-2']
-      const changeOrderOptionLabel = createChangeOrderLabel(changeOrder.changeOrderAmount, changeOrder.name)
+      // const changeOrderOptionLabel = createChangeOrderLabel(changeOrder.changeOrderAmount, changeOrder.name)
       //Fix this --await selectOption(screen.getByTestId('change-order-select'), changeOrderOptionLabel)
       //expect(getByText(screen.getByTestId('change-order-select'), changeOrderOptionLabel)).toBeInTheDocument()
 

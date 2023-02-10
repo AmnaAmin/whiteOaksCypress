@@ -55,7 +55,7 @@ export const projectDetailHandlers = [
     return res(ctx.status(201), ctx.json(newChangeOrder))
   }),
   rest.post('/api/change-orders', (req, res, ctx) => {
-    const newChangeOrder = makeChangeOrderObject(CHANGE_ORDERS[0], req.body)
+    // const newChangeOrder = makeChangeOrderObject(CHANGE_ORDERS[0], req.body)
     //  commenting due to save error - appendData('/transactions', newChangeOrder)
     return res(ctx.status(201), ctx.json({}))
   }),
