@@ -2,7 +2,7 @@ import userEvent from '@testing-library/user-event'
 import { PROJECT_TYPE_MODAL_MOCK } from 'mocks/api/project-type/project-type-mocks'
 
 import { Providers } from 'providers'
-import { fireEvent, render, screen, waitFor } from 'utils/test-utils'
+import { render, screen, waitFor } from 'utils/test-utils'
 import { ProjectTypeModal } from './project-type-modal'
 
 jest.setTimeout(250000)
