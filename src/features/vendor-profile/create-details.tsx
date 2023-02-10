@@ -291,6 +291,7 @@ const CreateVendorDetail: React.FC<{
             <FormControl isInvalid={!!errors.businessPhoneNumber} h="70px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('businessPhoneNo')}
+                
               </FormLabel>
               <Controller
                 control={control}
@@ -303,6 +304,7 @@ const CreateVendorDetail: React.FC<{
                   return (
                     <>
                       <NumberFormat
+                      data-testid = "businessphoneno"
                         value={field.value}
                         customInput={CustomRequiredInput}
                         format="(###)-###-####"
@@ -419,6 +421,7 @@ const CreateVendorDetail: React.FC<{
                   return (
                     <>
                       <NumberFormat
+                      data-testid = "einnum"
                         value={field.value}
                         customInput={ssnNumber ? CustomInput : CustomRequiredInput}
                         format="##-#######"
@@ -449,6 +452,7 @@ const CreateVendorDetail: React.FC<{
                   return (
                     <>
                       <NumberFormat
+                      data-testid = "ssnnum"
                         value={field.value}
                         customInput={einNumber ? CustomInput : CustomRequiredInput}
                         format="###-##-####"
