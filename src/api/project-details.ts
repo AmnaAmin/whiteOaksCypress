@@ -20,7 +20,7 @@ import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { GET_TRANSACTIONS_API_KEY } from './transactions'
 import { AuditLogType } from 'types/common.types'
-import { override_status, PROJECT_STATUS } from 'features/common/status'
+import { PROJECT_STATUS } from 'features/common/status'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
