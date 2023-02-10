@@ -24,3 +24,4 @@ yarn-error.log*
 
 # local Database for testcases
 myDataBase.json.tmp*
+myDataBase.json

@@ -23,7 +23,7 @@ describe('Project Type table', () => {
       expect(screen.getByRole('gridcell', { name: '2020-11-01' })).toBeInTheDocument()
       expect(screen.getByRole('gridcell', { name: 'admin' })).toBeInTheDocument()
       expect(screen.getByRole('gridcell', { name: '2021-04-18' })).toBeInTheDocument()
-      screen.debug(undefined, 10000)
+      // screen.debug(undefined, 10000)
     })
   })
 })

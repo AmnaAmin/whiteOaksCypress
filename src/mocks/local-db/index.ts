@@ -10,8 +10,12 @@ export var db = new JsonDB(new Config('myDataBase', true, false, '/'))
 
 export const pushData = async (path: string, data: any) => {
   if (!data?.[0]) {
-    data.forEach((element, index) => {
-      db.push(`${path}[${index}]`, element, true)
+    await data.forEach((element, index) => {
+      try {
+        db.push(`${path}[${index}]`, element, true)
+      } catch (err) {
+        console.log(err)
+      }
     })
   } else {
     try {

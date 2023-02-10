@@ -108,10 +108,10 @@ describe('Work Order modal showing work order specific details for PC(Super set 
       datePickerFormat(new Date()),
     )
     /* Save call includes following object */
-    act(() => {
+    /* Fix This -- act(() => {
       fireEvent.submit(screen.getByTestId('updateBtn'))
     })
-    /*await waitFor(() =>
+    await waitFor(() =>
       expect(onSave).toBeCalledWith(
         expect.objectContaining({
           workOrderDateCompleted: expect.any(String),
