@@ -213,7 +213,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
             position="relative"
             roundedTop={6}
             border="1px solid #CBD5E0"
-            rounded="6px"
+            rounded="3px"
           >
             <TableContextProvider data={tableData} columns={tableColumns}>
               <Table isLoading={isLoading} isEmpty={!tableData?.length} onRowClick={r => setSelectedVendor(r)} />
