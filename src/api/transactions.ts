@@ -149,7 +149,7 @@ const transactionTypeOptions = [
 export const useTransactionTypes = (screen?: string) => {
   const { isVendor } = useUserRolesSelector()
 
-  if (screen === 'WORK_ORDER_TRANSACTION_TABLE_MODAL') {
+  if (screen === 'WORK_ORDER_TRANSACTION_TABLE_MODAL' && !isVendor) {
     const transactionType = transactionTypeOptions.filter(option => option.label !== 'Payment')
     return {
       transactionTypeOptions: transactionType.slice(0, 6),

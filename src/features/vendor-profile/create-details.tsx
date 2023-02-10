@@ -13,7 +13,6 @@ import {
   Button,
   Flex,
   FormErrorMessage,
-  Spacer,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import React, { useEffect, useState } from 'react'
@@ -292,6 +291,7 @@ const CreateVendorDetail: React.FC<{
             <FormControl isInvalid={!!errors.businessPhoneNumber} h="70px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('businessPhoneNo')}
+                
               </FormLabel>
               <Controller
                 control={control}
@@ -304,6 +304,7 @@ const CreateVendorDetail: React.FC<{
                   return (
                     <>
                       <NumberFormat
+                      data-testid = "businessphoneno"
                         value={field.value}
                         customInput={CustomRequiredInput}
                         format="(###)-###-####"
@@ -339,24 +340,6 @@ const CreateVendorDetail: React.FC<{
         </Grid>
 
         <HStack spacing="4" my="30px" display="none">
-          <Box></Box>
-          <Flex>
-            <FormControl h="70px">
-              <FormLabel variant="strong-label" size="md">
-                {t('ext')}
-              </FormLabel>
-
-              <Input
-                {...register('businessPhoneNumberExtension')}
-                w="121px"
-                variant="outline"
-                size="md"
-                isDisabled={isFPM}
-                type="number"
-              />
-            </FormControl>
-            <Spacer w="95px" />
-          </Flex>
           <Box w="215px" display="none">
             <FormControl h="70px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
@@ -438,6 +421,7 @@ const CreateVendorDetail: React.FC<{
                   return (
                     <>
                       <NumberFormat
+                      data-testid = "einnum"
                         value={field.value}
                         customInput={ssnNumber ? CustomInput : CustomRequiredInput}
                         format="##-#######"
@@ -468,6 +452,7 @@ const CreateVendorDetail: React.FC<{
                   return (
                     <>
                       <NumberFormat
+                      data-testid = "ssnnum"
                         value={field.value}
                         customInput={einNumber ? CustomInput : CustomRequiredInput}
                         format="###-##-####"
