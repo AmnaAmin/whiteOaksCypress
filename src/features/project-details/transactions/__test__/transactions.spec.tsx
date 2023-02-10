@@ -6,7 +6,6 @@ import { TransactionForm, TransactionFormProps } from '../transaction-form'
 import { Providers } from 'providers'
 import {
   WORK_ORDERS,
-  CHANGE_ORDERS,
   CHANGE_ORDER_AGAINST_VENDOR_TRANSACTION_ID,
   CHANGE_ORDER_AGAINST_PROJECT_SOW_TRANSACTION_ID,
   DRAW_TRANSACTION_AGAINST_VENDOR_ID,
