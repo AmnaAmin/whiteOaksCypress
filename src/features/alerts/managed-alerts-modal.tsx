@@ -19,7 +19,12 @@ import { useCallback, useEffect, useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { AlertFormValues } from 'types/alert.type'
-import { alertDetailsDefaultValues, useSaveAlertDetails, useUpdateAlertDetails } from 'api/alerts'
+import {
+  alertDetailsDefaultValues,
+  useFieldRelatedDecisions,
+  useSaveAlertDetails,
+  useUpdateAlertDetails,
+} from 'api/alerts'
 
 type ManagedAlertsTypes = {
   isOpen: boolean
@@ -36,8 +41,8 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
 
   const methods = useForm<AlertFormValues>()
 
-  const { handleSubmit, control, reset } = methods
-
+  const { handleSubmit, control, reset, getValues } = methods
+  console.log(getValues())
   useEffect(() => {
     if (selectedAlert) {
       reset(alertDetailsDefaultValues({ selectedAlert }))
@@ -51,7 +56,9 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
   const onSubmit = useCallback(
     async values => {
       const queryOptions = {
-        onSuccess() {},
+        onSuccess() {
+          onClose()
+        },
       }
       const alertsPayload = {
         ...values,
@@ -77,6 +84,7 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
     },
     [saveAlertsDetails],
   )
+  const { disableNext } = useFieldRelatedDecisions(control)
 
   return (
     <>
@@ -96,11 +104,11 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
                   <Tabs variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
                     <TabList>
                       <Tab>{t('details')}</Tab>
-                      <Tab>{t('notify')}</Tab>
+                      <Tab isDisabled={disableNext && !selectedAlert}>{t('notify')}</Tab>
                     </TabList>
                     <TabPanels>
                       <TabPanel p={0}>
-                        <AlertsDetailsTab setNextTab={setNextTab} />
+                        <AlertsDetailsTab selectedAlert={selectedAlert} onClose={onClose} setNextTab={setNextTab} />
                       </TabPanel>
                       <TabPanel p={0}>
                         <AlertsNotifyTab onClose={onClose} />

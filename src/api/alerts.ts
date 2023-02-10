@@ -1,4 +1,5 @@
 import { useToast } from '@chakra-ui/react'
+import { useWatch } from 'react-hook-form'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import {
   AlertType,
@@ -268,4 +269,23 @@ export const useSaveAlertDetails = () => {
       },
     },
   )
+}
+
+export const useFieldRelatedDecisions = control => {
+  const watchTitle = useWatch({ control, name: 'title' })
+  const watchCategory = useWatch({ control, name: 'category' })
+  const watchTypeSelection = useWatch({ control, name: 'typeSelection' })
+  const watchAttributeSelection = useWatch({ control, name: 'attributeSelection' })
+  const watchBehaviorSelection = useWatch({ control, name: 'behaviourSelection' })
+  const watchCustomAttributeSelection = useWatch({ control, name: 'customAttributeSelection' })
+  const showCustomSelect = watchAttributeSelection?.type === 'custom' && watchBehaviorSelection?.label === 'Equal To'
+  const showCustomInput = ['Greater Than', 'Less Than'].includes(watchBehaviorSelection?.label as string)
+  const disableNext =
+    !watchTitle ||
+    !watchCategory ||
+    !watchTypeSelection ||
+    !watchAttributeSelection ||
+    !watchBehaviorSelection ||
+    ((showCustomSelect || showCustomInput) && !watchCustomAttributeSelection)
+  return { disableNext, showCustomSelect, showCustomInput }
 }

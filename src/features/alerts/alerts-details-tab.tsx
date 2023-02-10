@@ -1,11 +1,11 @@
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input } from '@chakra-ui/react'
-import { getAttributeOptions, getBehaviorOptions, getCustomOptions } from 'api/alerts'
+import { getAttributeOptions, getBehaviorOptions, getCustomOptions, useFieldRelatedDecisions } from 'api/alerts'
 import Select from 'components/form/react-select'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { AlertFormValues, CATEGORY_OPTIONS, NOTIFY_OPTIONS, TYPE_SELECTION_OPTIONS } from 'types/alert.type'
 
-export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
+export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> = props => {
   const { t } = useTranslation()
 
   const {
@@ -15,14 +15,10 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
     setValue,
   } = useFormContext<AlertFormValues>()
 
-  const watchTitle = useWatch({ control, name: 'title' })
-  const watchCategory = useWatch({ control, name: 'category' })
   const watchTypeSelection = useWatch({ control, name: 'typeSelection' })
   const watchAttributeSelection = useWatch({ control, name: 'attributeSelection' })
-  const watchBehaviorSelection = useWatch({ control, name: 'behaviourSelection' })
-  const showCustomSelect = watchAttributeSelection?.type === 'custom' && watchBehaviorSelection?.label === 'Equal To'
-  const showCustomInput = ['Greater Than', 'Less Than'].includes(watchBehaviorSelection?.label as string)
-
+  const { disableNext, showCustomInput, showCustomSelect } = useFieldRelatedDecisions(control)
+  const { selectedAlert, onClose } = props
   return (
     <Box>
       <Box h={'calc(100vh - 320px)'} overflow={'auto'}>
@@ -32,7 +28,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
               {t('name')}
             </FormLabel>
             <Input type="text" variant="required-field" {...register('title', { required: 'This is required' })} />
-            <FormErrorMessage pos="absolute">{errors.title && errors.title.message}</FormErrorMessage>
+            <FormErrorMessage>{errors.title && errors.title.message}</FormErrorMessage>
           </FormControl>
 
           <FormControl isInvalid={!!errors.category} w={215}>
@@ -81,7 +77,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
         </Box>
 
         <HStack spacing="16px" mt="30px">
-          <Box w={215}>
+          <FormControl isInvalid={!!errors.typeSelection} w={215}>
             <FormLabel variant="strong-label" size="md">
               {t('type')}
             </FormLabel>
@@ -89,28 +85,31 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
               name="typeSelection"
               rules={{ required: 'This is required' }}
               control={control}
-              render={({ field }) => {
+              render={({ field, fieldState }) => {
                 return (
-                  <Select
-                    {...field}
-                    menuPlacement={'top'}
-                    options={TYPE_SELECTION_OPTIONS}
-                    size="md"
-                    value={field.value}
-                    onChange={option => {
-                      field.onChange(option)
-                      setValue('attributeSelection', null)
-                      setValue('behaviourSelection', null)
-                      setValue('customAttributeSelection', null)
-                    }}
-                    selectProps={{ isBorderLeft: true }}
-                  />
+                  <>
+                    <Select
+                      {...field}
+                      menuPlacement={'top'}
+                      options={TYPE_SELECTION_OPTIONS}
+                      size="md"
+                      value={field.value}
+                      onChange={option => {
+                        field.onChange(option)
+                        setValue('attributeSelection', null)
+                        setValue('behaviourSelection', null)
+                        setValue('customAttributeSelection', null)
+                      }}
+                      selectProps={{ isBorderLeft: true }}
+                    />
+                    <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                  </>
                 )
               }}
             />
-          </Box>
+          </FormControl>
 
-          <Box w={215}>
+          <FormControl isInvalid={!!errors.attributeSelection} w={215}>
             <FormLabel variant="strong-label" size="md">
               {t('attribute')}
             </FormLabel>
@@ -118,27 +117,30 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
               name="attributeSelection"
               control={control}
               rules={{ required: 'This is required' }}
-              render={({ field }) => {
+              render={({ field, fieldState }) => {
                 return (
-                  <Select
-                    {...field}
-                    options={getAttributeOptions(watchTypeSelection?.label)}
-                    size="md"
-                    menuPlacement={'top'}
-                    value={field.value}
-                    onChange={option => {
-                      field.onChange(option)
-                      setValue('behaviourSelection', null)
-                      setValue('customAttributeSelection', null)
-                    }}
-                    selectProps={{ isBorderLeft: true }}
-                  />
+                  <>
+                    <Select
+                      {...field}
+                      options={getAttributeOptions(watchTypeSelection?.label)}
+                      size="md"
+                      menuPlacement={'top'}
+                      value={field.value}
+                      onChange={option => {
+                        field.onChange(option)
+                        setValue('behaviourSelection', null)
+                        setValue('customAttributeSelection', null)
+                      }}
+                      selectProps={{ isBorderLeft: true }}
+                    />
+                    <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                  </>
                 )
               }}
             />
-          </Box>
+          </FormControl>
 
-          <Box w={215}>
+          <FormControl isInvalid={!!errors.behaviourSelection} w={215}>
             <FormLabel variant="strong-label" size="md">
               {t('behaviour')}
             </FormLabel>
@@ -146,26 +148,29 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
               name="behaviourSelection"
               control={control}
               rules={{ required: 'This is required' }}
-              render={({ field }) => {
+              render={({ field, fieldState }) => {
                 return (
-                  <Select
-                    {...field}
-                    menuPlacement={'top'}
-                    options={getBehaviorOptions(watchAttributeSelection?.type)}
-                    size="md"
-                    value={field.value}
-                    onChange={option => {
-                      field.onChange(option)
-                      setValue('customAttributeSelection', null)
-                    }}
-                    selectProps={{ isBorderLeft: true }}
-                  />
+                  <>
+                    <Select
+                      {...field}
+                      menuPlacement={'top'}
+                      options={getBehaviorOptions(watchAttributeSelection?.type)}
+                      size="md"
+                      value={field.value}
+                      onChange={option => {
+                        field.onChange(option)
+                        setValue('customAttributeSelection', null)
+                      }}
+                      selectProps={{ isBorderLeft: true }}
+                    />
+                    <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                  </>
                 )
               }}
             />
-          </Box>
+          </FormControl>
           {showCustomSelect && (
-            <Box w={215}>
+            <FormControl isInvalid={!!errors.customAttributeSelection} w={215}>
               <FormLabel variant="strong-label" size="md">
                 {t('customValue')}
               </FormLabel>
@@ -173,49 +178,64 @@ export const AlertsDetailsTab: React.FC<{ setNextTab }> = props => {
                 name="customAttributeSelection" // need to change // this is incorrect
                 control={control}
                 rules={{ required: 'This is required' }}
-                render={({ field }) => {
+                render={({ field, fieldState }) => {
                   return (
-                    <Select
-                      {...field}
-                      options={getCustomOptions({
-                        type: watchTypeSelection?.label,
-                        attribute: watchAttributeSelection?.label,
-                      })}
-                      size="md"
-                      value={field.value}
-                      onChange={option => {
-                        field.onChange(option)
-                      }}
-                      menuPlacement={'top'}
-                      selectProps={{ isBorderLeft: true }}
-                    />
+                    <>
+                      <Select
+                        {...field}
+                        options={getCustomOptions({
+                          type: watchTypeSelection?.label,
+                          attribute: watchAttributeSelection?.label,
+                        })}
+                        size="md"
+                        value={field.value}
+                        onChange={option => {
+                          field.onChange(option)
+                        }}
+                        menuPlacement={'top'}
+                        selectProps={{ isBorderLeft: true }}
+                      />
+                      <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                    </>
                   )
                 }}
               />
-            </Box>
+            </FormControl>
           )}
           {showCustomInput && (
-            <Box w={215}>
+            <FormControl isInvalid={!!errors.customAttributeSelection} w={215}>
               <FormLabel variant="strong-label" size="md">
-                {t('customValue')}
+                {t('name')}
               </FormLabel>
               <Input
                 type="text"
                 variant="required-field"
                 {...register('customAttributeSelection', { required: 'This is required' })}
               />
-            </Box>
+              <FormErrorMessage pos="absolute">
+                {errors.customAttributeSelection && (errors.customAttributeSelection as any)?.message}
+              </FormErrorMessage>
+            </FormControl>
           )}
         </HStack>
       </Box>
 
       <HStack h="78px" mt="30px" borderTop="1px solid #E2E8F0" justifyContent="end" spacing="16px">
-        <Button type="submit" form="alertDetails" variant="outline" colorScheme="brand">
-          {t('save')}
-        </Button>
-        <Button isDisabled={!watchTitle || !watchCategory} colorScheme="brand" onClick={props?.setNextTab}>
-          {t('next')}
-        </Button>
+        {
+          <Button onClick={onClose} variant="outline" colorScheme="brand">
+            {t('cancel')}
+          </Button>
+        }
+        {selectedAlert && (
+          <Button type="submit" form="alertDetails" colorScheme="brand">
+            {t('save')}
+          </Button>
+        )}
+        {!selectedAlert && (
+          <Button isDisabled={disableNext} colorScheme="brand" onClick={props?.setNextTab}>
+            {t('next')}
+          </Button>
+        )}
       </HStack>
     </Box>
   )

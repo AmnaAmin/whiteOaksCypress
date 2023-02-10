@@ -4,7 +4,7 @@ import { useMemo, useRef } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
-import { AlertFormValues } from 'types/alert.type'
+import { AlertFormValues, availableUsers } from 'types/alert.type'
 
 const TextDivider: React.FC<{ title: string }> = props => {
   return (
@@ -34,10 +34,8 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
     const isOneOfUserTypesSelected = userTypes?.map(userType => userType).some(Boolean)
     return !!(recipientEmailAddress || body || recipientPhoneNumber || isOneOfUserTypesSelected)
   }, [fields])
-
-  const userTypes = useWatch({ control, name: 'userTypes' })
-
   const phoneNumberRef = useRef<any>()
+  const watchUserTypes = useWatch({ control, name: 'userTypes' })
 
   return (
     <Box>
@@ -45,19 +43,35 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
         <TextDivider title={t('userTypes')} />
 
         <HStack mt="30px" spacing="12px">
-          {userTypes?.map((user, index) => (
-            <CheckboxButton
-              {...register(user, {
-                required: !userTypes?.length && 'This is required',
-              })}
-              colorScheme="brand"
-              key={index}
-              value={user}
-              isChecked={user}
-            >
-              {user}
-            </CheckboxButton>
-          ))}
+          {availableUsers?.map((user, index) => {
+            return (
+              <Controller
+                name={`userTypes`}
+                control={control}
+                key={index}
+                render={({ field: { name, onChange, value } }) => {
+                  return (
+                    <CheckboxButton
+                      name={name + '-' + index}
+                      key={user}
+                      isChecked={watchUserTypes?.includes(user)}
+                      data-testid={`userType.${user}`}
+                      onChange={event => {
+                        const checked = event.target.checked
+                        if (checked) {
+                          onChange(watchUserTypes ? [...watchUserTypes, user] : [user])
+                        } else {
+                          onChange(watchUserTypes?.filter(w => w !== user) ?? [])
+                        }
+                      }}
+                    >
+                      {user}
+                    </CheckboxButton>
+                  )
+                }}
+              />
+            )
+          })}
         </HStack>
 
         <TextDivider title={t('emailUser')} />

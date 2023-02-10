@@ -15,7 +15,7 @@ export type AlertFormValues = {
   schedular?: string
   statement?: string
   triggeredAlerts?: []
-  userTypes?: any
+  userTypes?: string[]
   manageAlertModal?: boolean
   setManageAlertModal?: string
   alertRuleQuery?: string
@@ -178,6 +178,7 @@ export const transactionStatus = [
   { label: 'WO Paid', value: 52 },
 ]
 
+export const availableUsers = ['Admin', 'Accounting', 'FPM', 'Operational', 'Director Of Construction']
 export type Schedular = {
   id?: number
   startTime?: string

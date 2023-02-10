@@ -69,7 +69,7 @@ const Alerts = () => {
 
       <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
       {isOpenNewAlertModal && (
-        <ManagedAlertsModal isOpen={isOpenNewAlertModal} onClose={onNewAlertModalClose} selectedAlert={managedAlerts} />
+        <ManagedAlertsModal isOpen={isOpenNewAlertModal} onClose={onNewAlertModalClose} selectedAlert={null} />
       )}
     </Box>
   )
