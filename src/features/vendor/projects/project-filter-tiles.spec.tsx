@@ -41,7 +41,7 @@ describe('Given a ProjectTilesFilter Render properly', () => {
       expect(screen.getByText('Rejected Invoices')).toBeInTheDocument()
       expect(screen.getByTestId('value-of-rejected invoices').textContent).toEqual(`${rejectedCardValue}`)
 
-      // screen.debug(undefined, 10000)
+      screen.debug(undefined, 10000)
     })
 
     test('Then onSelect of card onSelectCard should be called', async () => {

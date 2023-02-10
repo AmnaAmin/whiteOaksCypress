@@ -34,7 +34,7 @@ describe('Vendor Project Table', () => {
       expect(screen.getByRole('gridcell', { name: '11/06/2022' })).toBeInTheDocument()
       expect(screen.getByRole('gridcell', { name: '11/25/2022' })).toBeInTheDocument()
       expect(screen.getByRole('gridcell', { name: '12583' })).toBeInTheDocument()
-      //screen.debug(undefined, 10000)
+      screen.debug(undefined, 10000)
     })
   })
 })
