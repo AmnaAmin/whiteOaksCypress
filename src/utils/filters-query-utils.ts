@@ -17,7 +17,7 @@ const reduceQueriesArrayToObject = (
   queryKeyValues: { [key: string]: string },
 ) => {
   return columnFilters?.reduce((obj, item) => {
-    const dateFilter = item.id.includes('Date' || 'date')
+    const dateFilter = item.id.includes('Date') || item.id.includes('date')
     obj[queryKeyValues[item[key]]] = dateFilter ? item[valueKey] : window.encodeURIComponent(item[valueKey])
     return obj
   }, {})

@@ -1,6 +1,13 @@
 import { useToast } from '@chakra-ui/react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { AlertType, ATTRIBUTE_SELECTION_OPTIONS, BEHAVIOUR_SELECTION_OPTIONS, CATEGORY_OPTIONS, NOTIFY_OPTIONS, TYPE_SELECTION_OPTIONS } from 'types/alert.type'
+import {
+  AlertType,
+  ATTRIBUTE_SELECTION_OPTIONS,
+  BEHAVIOUR_SELECTION_OPTIONS,
+  CATEGORY_OPTIONS,
+  NOTIFY_OPTIONS,
+  TYPE_SELECTION_OPTIONS,
+} from 'types/alert.type'
 import { useClient } from 'utils/auth-context'
 
 export const useManagedAlert = () => {
@@ -30,82 +37,133 @@ export const alertDetailsDefaultValues = ({ selectedAlert }) => {
   return defaultValues
 }
 
+export const useFetchUserAlerts = (projectId?) => {
+  const client = useClient('/alert/api')
+  const url = !projectId ? 'alert-histories' : `alert-histories/project/${projectId}`
+  const { data: alerts, ...rest } = useQuery<AlertType[]>('GetProjectAlerts', async () => {
+    const response = await client(url, {})
+
+    return response?.data
+  })
+  return {
+    data: alerts,
+    ...rest,
+  }
+}
 
 export const useUpdateAlertDetails = () => {
-    const client = useClient('/alert/api')
-    const queryClient = useQueryClient()
-    const toast = useToast()
-  
-    return useMutation(
-      (alertDetails: any) => {
-        return client('alert-definitions', {
-          data: alertDetails,
-          method: 'PUT',
+  const client = useClient('/alert/api')
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    (alertDetails: any) => {
+      return client('alert-definitions', {
+        data: alertDetails,
+        method: 'PUT',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'Alert Details Updated',
+          description: 'Alert Details have been updated successfully',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        queryClient.invalidateQueries('alert-details')
+      },
+
+      onError(error: any) {
+        toast({
+          title: 'Alert Details',
+          description: (error.title as string) ?? 'Unable to update alert details.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
         })
       },
-      {
-        onSuccess() {
-          toast({
-            title: 'Alert Details Updated',
-            description: 'Alert Details have been updated successfully',
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          queryClient.invalidateQueries('alert-details')
-        },
-  
-        onError(error: any) {
-          toast({
-            title: 'Alert Details',
-            description: (error.title as string) ?? 'Unable to update alert details.',
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        },
+    },
+  )
+}
+
+export const useResolveAlerts = () => {
+  const client = useClient('/alert/api')
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    (selectedAlerts: (number | string | undefined)[]) => {
+      return client('alert-histories-resolve', {
+        data: selectedAlerts,
+        method: 'PUT',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'Triggered Alerts',
+          description: 'Alerts have been resolved',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+
+        queryClient.invalidateQueries('GetProjectAlerts')
       },
-    )
-  }
-  
-  export const useSaveAlertDetails = () => {
-    const client = useClient('/alert/api')
-    const queryClient = useQueryClient()
-    const toast = useToast()
-  
-    return useMutation(
-      (alertDetails: any) => {
-        return client('alert-definitions', {
-          data: alertDetails,
-          method: 'POST',
+      onError(error: any) {
+        toast({
+          title: 'Triggered Alerts',
+          description: (error.title as string) ?? 'Unable to resolve alerts.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
         })
       },
-      {
-        onSuccess() {
-          toast({
-            title: 'Alert Details Saved',
-            description: 'Alert Details have been saved successfully',
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-          queryClient.invalidateQueries('alert-details')
-        },
-  
-        onError(error: any) {
-          toast({
-            title: 'Alert Details',
-            description: (error.title as string) ?? 'Unable to save alert details.',
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        },
+    },
+  )
+}
+
+export const useSaveAlertDetails = () => {
+  const client = useClient('/alert/api')
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    (alertDetails: any) => {
+      return client('alert-definitions', {
+        data: alertDetails,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'Alert Details Saved',
+          description: 'Alert Details have been saved successfully',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        queryClient.invalidateQueries('alert-details')
       },
-    )
-  }
-  
+
+      onError(error: any) {
+        toast({
+          title: 'Alert Details',
+          description: (error.title as string) ?? 'Unable to save alert details.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}

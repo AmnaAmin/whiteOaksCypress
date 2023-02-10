@@ -10,7 +10,7 @@ if [[ ! -z "${BUILD_VERSION}" ]]; then
   npm install
   
 if [ "preprod" = $ENV ]; then
-  export NODE_OPTIONS=--max-old-space-size=5120 
+  export NODE_OPTIONS=--max-old-space-size=8192 
   npm run build:prod
 
   ls build
@@ -20,7 +20,7 @@ if [ "preprod" = $ENV ]; then
   buildkite-agent artifact upload output-preprod.zip
 
 elif [ "prod" = $ENV ]; then
-  export NODE_OPTIONS=--max-old-space-size=5120 
+  export NODE_OPTIONS=--max-old-space-size=8192 
   npm run build:prod
 
   ls build
