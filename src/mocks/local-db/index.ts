@@ -9,18 +9,30 @@ import { Config } from 'node-json-db/dist/lib/JsonDBConfig'
 
 export const db = new JsonDB(new Config('myDataBase', true, false, '/'))
 
-export const pushData = (path: string, data: any) => {
+export const pushData = async (path: string, data: any) => {
   if (!data?.[0]) {
-    data.forEach((element, index) => {
-      db.push(`${path}[${index}]`, element, true)
-    })
+    try {
+      await data.forEach((element, index) => {
+        db.push(`${path}[${index}]`, element, true)
+      })
+    } catch (err) {
+      console.log(err)
+    }
   } else {
-    db.push(path, data, true)
+    try {
+      await db.push(path, data, true)
+    } catch (err) {
+      console.log(err)
+    }
   }
 }
 
-export const appendData = (path: string, data: any) => {
-  db.push(`${path}[]`, data, true)
+export const appendData = async (path: string, data: any) => {
+  try {
+    await db.push(`${path}[]`, data, true)
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export const getData = (path: string) => {
