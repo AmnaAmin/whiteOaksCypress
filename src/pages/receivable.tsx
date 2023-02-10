@@ -41,12 +41,14 @@ export const Receivable = () => {
     sorting,
   })
 
+  const [refetchInterval, setRefetchInterval] = useState<number | boolean>(false);
+
   const [batchLoading, setBatchLoading] = useState(false)
   const { data: run, mutate: batchCall } = useBatchProcessingMutation()
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
   const receivableTableColumns = useReceivableTableColumns(control, register, setValue)
   const batchId = run?.data?.id || 0
-  const { data: batchRun, isLoading, refetch: refetchBatch } = useBatchRun(batchId, queryStringWithPagination)
+  const { data: batchRun, isLoading, refetch: refetchBatch } = useBatchRun(batchId, queryStringWithPagination, refetchInterval)
   const { t } = useTranslation()
 
   // const { weekDayFilters } = useWeeklyCount()
@@ -54,6 +56,12 @@ export const Receivable = () => {
   useEffect(() => {
     if (!loading) {
       reset()
+    }
+    const timer = setTimeout( () => {
+      setRefetchInterval( false );
+    }, 12000 )
+    return () => {
+      clearTimeout(timer);
     }
   }, [loading])
 
@@ -85,8 +93,10 @@ export const Receivable = () => {
     batchCall(obj as any, {
       onSuccess: () => {
         refetch()
+        setRefetchInterval( 1000 );
       },
     })
+    
   }
 
   const onNotificationClose = () => {
