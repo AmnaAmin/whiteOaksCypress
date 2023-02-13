@@ -172,7 +172,18 @@ const MenuList: React.FC<any> = props => {
     )
   }
 
-  return <List width={300} height={215} rowCount={children.length} rowHeight={35} rowRenderer={rowRenderer} />
+  return (
+    <div style={{ backgroundColor: '#fff', zIndex: 999, height: '200px', overflowY: 'scroll', maxWidth: '250px' }}>
+      <List
+        width={223}
+        height={215}
+        rowCount={children.length}
+        rowHeight={35}
+        rowRenderer={rowRenderer}
+        scrollToIndex={0}
+      />
+    </div>
+  )
 }
 
 export const CreatableSelect = forwardRef((props: SelectProps, ref: any) => (
