@@ -41,8 +41,8 @@ export const Projects = () => {
   const [resetAllFilters, setResetAllFilters] = useState(false)
   const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard')
   const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay')
-  
-  const [selectedFlagged, setSelectedFlagged] = useState<string | null>();
+
+  const [selectedFlagged, setSelectedFlagged] = useState<string | null>()
 
   const { t } = useTranslation()
 
@@ -50,7 +50,7 @@ export const Projects = () => {
     setResetAllFilters(true)
     setTimeout(() => {
       setResetAllFilters(false)
-    }, 700)
+    }, 2000)
     setSelectedCard('')
     setSelectedDay('')
     setSelectedFlagged('')
@@ -61,6 +61,7 @@ export const Projects = () => {
       <VStack alignItems="start" minH="calc(100vh - 160px)" pb="2">
         <Box w="100%" mb="5px">
           <ProjectFilters
+            clear={clearAll}
             onSelectCard={selection => {
               setSelectedDay(null)
               setSelectedFlagged(null)

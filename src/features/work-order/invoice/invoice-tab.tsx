@@ -347,7 +347,7 @@ export const InvoiceTab = ({
                 </Td>
               </Tr>
             </Thead>
-            <Tbody outline={'1px solid #CBD5E0'}>
+            <Tbody>
               {items.map((item, index) => {
                 return (
                   <Tr h="45px !important" key={index} data-testid={'invoice-items'}>
