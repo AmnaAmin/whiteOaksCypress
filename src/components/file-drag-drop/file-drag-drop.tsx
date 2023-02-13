@@ -58,7 +58,7 @@ export default function FileDragDrop({ onUpload, ...fieldProps }) {
               style={{
                 width: '100%',
                 height: '115px',
-                border: '2px dashed #4A5568',
+                border: '2px dashed #A0AEC0',
                 borderRadius: '15px',
                 backgroundColor: '#F7FAFC',
               }}
@@ -127,12 +127,12 @@ function UploadedFiles({ files }) {
                 backgroundColor: '#F7FAFE',
                 border: '1px solid #E2E8F0',
                 borderRadius: '6px',
-                maxWidth: '307px',
+                maxWidth: '407px',
                 padding: '5px 25px',
                 fontSize: '14px',
                 fontWeight: 'bold',
                 lineHeight: '24px',
-                color: '#4A5568',
+                color: '#718096',
               }}
             >
               <Flex gap="10px" alignItems="center">
@@ -148,7 +148,7 @@ function UploadedFiles({ files }) {
                   {file.name}
                 </Text>
               </Flex>
-              <Text as="span">{getFileSize(file.size)} MB</Text>
+              <Text as="span">{getFileSize(file.size)} MB</Text>     
             </Flex>
           ))}
         </Flex>
