@@ -113,10 +113,10 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isPaymentDisabled: !(isStatusClientPaid || isStatusInvoiced || invoiceBackDate) || remainingPayment === 0,
 
     // Contacts field states
-    isProjectCoordinatorDisabled: isStatusClosed || isStatusInvoiced || isStatusClientPaid || isStatusPaid,
+    isProjectCoordinatorDisabled: !isAdmin,
     isProjectCoordinatorPhoneNumberDisabled: isAllTimeDisabled,
     isProjectCoordinatorExtensionDisabled: isAllTimeDisabled,
-    isFieldProjectManagerDisabled: isStatusInvoiced || isStatusClosed || isFPM,
+    isFieldProjectManagerDisabled: isFPM,
     isFieldProjectManagerPhoneNumberDisabled: isAllTimeDisabled,
     isFieldProjectManagerExtensionDisabled: isAllTimeDisabled,
     isClientDisabled: !isAdmin,
