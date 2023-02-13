@@ -17,18 +17,18 @@ import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { AlertFormValues, availableUsers } from 'types/alert.type'
 
-const TextDivider: React.FC<{ title: string }> = props => {
+const TextDivider = ({ title }) => {
   return (
     <HStack mt="30px">
       <FormLabel variant="strong-label" size="md" whiteSpace="nowrap" m="0">
-        {props.title}
+        {title}
       </FormLabel>
       <Divider borderWidth="1px" />
     </HStack>
   )
 }
 
-export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
+export const AlertsNotifyTab = ({ onClose }) => {
   const { t } = useTranslation()
 
   const {
@@ -103,14 +103,14 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
             <FormLabel variant="strong-label" size="md">
               {t('recipient')}
             </FormLabel>
-            <Input type="email" {...register('recipientEmailAddress')} />
+            <Input data-testid="recipientEmailAddress" type="email" {...register('recipientEmailAddress')} />
           </Box>
 
           <Box>
             <FormLabel variant="strong-label" size="md">
               {t('subject')}
             </FormLabel>
-            <Input disabled value="When Project Project ne..." {...register('message')} />
+            <Input data-testid="message" disabled value="When Project Project ne..." {...register('message')} />
           </Box>
         </HStack>
 
@@ -118,7 +118,7 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
           <FormLabel variant="strong-label" size="md">
             {t('body')}
           </FormLabel>
-          <Textarea fontSize={'14px'} placeholder="Write here..." {...register('body')} />
+          <Textarea data-testid="body" fontSize={'14px'} placeholder="Write here..." {...register('body')} />
         </Box>
 
         <TextDivider title={t('textUser')} />
@@ -146,6 +146,7 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
                   <>
                     <NumberFormat
                       id="phoneNumber"
+                      data-testid="recipientPhoneNumber"
                       customInput={Input}
                       value={field.value}
                       onChange={e => field.onChange(e)}
@@ -174,9 +175,9 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
           </FormLabel>
           <Textarea
             fontSize={'14px'}
+            data-testid={'messageBody'}
             isDisabled
             bg="gray.200"
-            value="When Project Project new"
             w="445px"
             {...register('message')}
           />
@@ -184,10 +185,10 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
       </Box>
 
       <HStack h="78px" mt="30px" borderTop="1px solid #E2E8F0" justifyContent="end" spacing="16px">
-        <Button onClick={props.onClose} variant="outline" colorScheme="brand">
+        <Button onClick={onClose} data-testid={'cancelAlert'} variant="outline" colorScheme="brand">
           {t('cancel')}
         </Button>
-        <Button type="submit" form="alertDetails" isDisabled={!isEnabled} colorScheme="brand">
+        <Button type="submit" data-testid={'saveAlert'} form="alertDetails" isDisabled={!isEnabled} colorScheme="brand">
           {t('save')}
         </Button>
       </HStack>

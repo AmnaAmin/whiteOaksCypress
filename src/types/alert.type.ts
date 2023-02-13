@@ -107,7 +107,7 @@ export const vendorAttributes = [
 ]
 
 export const projectAttributes = [
-  { label: 'status', value: 'status', type: 'custom' },
+  { label: 'Status', value: 'projectStatusId', type: 'custom' },
   { label: 'Project Manager', value: 'projectManager', type: 'string' },
   { label: 'Project Type', value: 'projectType', type: 'string' },
 ]

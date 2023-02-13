@@ -114,13 +114,21 @@ export const getCustomOptions = ({ type, attribute }) => {
 }
 
 export const alertDetailsDefaultValues = ({ selectedAlert }) => {
-  const categoryValue = CATEGORY_OPTIONS?.find(c => c?.label === selectedAlert?.category)
+  const categoryValue = CATEGORY_OPTIONS?.find(
+    c => c?.label?.toLocaleLowerCase() === selectedAlert?.category?.toLocaleLowerCase(),
+  )
   const notifyValue = NOTIFY_OPTIONS?.find(n => n?.value === selectedAlert?.notify) ?? NOTIFY_OPTIONS[0]
-  const typeSelectionValue = TYPE_SELECTION_OPTIONS?.find(t => t?.label === selectedAlert?.typeSelection)
+  const typeSelectionValue = TYPE_SELECTION_OPTIONS?.find(
+    t => t?.label?.toLocaleLowerCase() === selectedAlert?.typeSelection?.toLocaleLowerCase(),
+  )
   const attributeSelections = getAttributeOptions(typeSelectionValue?.label)
-  const attributeSelectionValue = attributeSelections?.find(a => a?.label === selectedAlert?.attributeSelection)
+  const attributeSelectionValue = attributeSelections?.find(
+    a => a?.label?.toLocaleLowerCase() === selectedAlert?.attributeSelection?.toLocaleLowerCase(),
+  )
   const behaviorSelections = getBehaviorOptions(attributeSelectionValue?.type)
-  const behaviourSelectionValue = behaviorSelections?.find(b => b?.label === selectedAlert?.behaviourSelection)
+  const behaviourSelectionValue = behaviorSelections?.find(
+    b => b?.label?.toLocaleLowerCase() === selectedAlert?.behaviourSelection?.toLocaleLowerCase(),
+  )
   const customSelections = getCustomOptions({
     type: typeSelectionValue?.label,
     attribute: attributeSelectionValue?.label,

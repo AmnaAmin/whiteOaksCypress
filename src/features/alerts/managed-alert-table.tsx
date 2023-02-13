@@ -82,7 +82,7 @@ export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({ managedA
     <Box overflow="auto">
       {selectedAlert && (
         <ManagedAlertsModal
-          isOpen={selectedAlert ? true : false}
+          isOpen={!!selectedAlert}
           onClose={() => {
             setSelectedAlert(undefined)
           }}

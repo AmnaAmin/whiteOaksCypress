@@ -27,11 +27,16 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
             <FormLabel variant="strong-label" size="md">
               {t('name')}
             </FormLabel>
-            <Input type="text" variant="required-field" {...register('title', { required: 'This is required' })} />
+            <Input
+              data-testid="title"
+              type="text"
+              variant="required-field"
+              {...register('title', { required: 'This is required' })}
+            />
             <FormErrorMessage>{errors.title && errors.title.message}</FormErrorMessage>
           </FormControl>
 
-          <FormControl isInvalid={!!errors.category} w={215}>
+          <FormControl isInvalid={!!errors.category} w={215} data-testid="category">
             <FormLabel variant="strong-label" size="md">
               {t('category')}
             </FormLabel>
@@ -49,7 +54,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
           </FormControl>
 
           <Box w={215}>
-            <FormLabel variant="strong-label" size="md">
+            <FormLabel variant="strong-label" size="md" data-testid="notify">
               {t('status')}
             </FormLabel>
             <Controller
@@ -63,7 +68,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
         </HStack>
 
         <HStack mt="30px">
-          <FormLabel variant="strong-label" size="md" whiteSpace="nowrap" m="0">
+          <FormLabel variant="strong-label" size="md" whiteSpace="nowrap" m="0" data-testid="conditionSelection">
             {t('alertingRules')}
           </FormLabel>
           <Divider borderWidth="1px" />
@@ -77,7 +82,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
         </Box>
 
         <HStack spacing="16px" mt="30px">
-          <FormControl isInvalid={!!errors.typeSelection} w={215}>
+          <FormControl isInvalid={!!errors.typeSelection} data-testid="typeSelection" w={215}>
             <FormLabel variant="strong-label" size="md">
               {t('type')}
             </FormLabel>
@@ -109,7 +114,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
             />
           </FormControl>
 
-          <FormControl isInvalid={!!errors.attributeSelection} w={215}>
+          <FormControl isInvalid={!!errors.attributeSelection} data-testid="attributeSelection" w={215}>
             <FormLabel variant="strong-label" size="md">
               {t('attribute')}
             </FormLabel>
@@ -140,7 +145,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
             />
           </FormControl>
 
-          <FormControl isInvalid={!!errors.behaviourSelection} w={215}>
+          <FormControl isInvalid={!!errors.behaviourSelection} w={215} data-testid="behaviourSelection">
             <FormLabel variant="strong-label" size="md">
               {t('behaviour')}
             </FormLabel>
@@ -170,7 +175,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
             />
           </FormControl>
           {showCustomSelect && (
-            <FormControl isInvalid={!!errors.customAttributeSelection} w={215}>
+            <FormControl isInvalid={!!errors.customAttributeSelection} w={215} data-testid="customAttributeSelection">
               <FormLabel variant="strong-label" size="md">
                 {t('customValue')}
               </FormLabel>
@@ -209,6 +214,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
               </FormLabel>
               <Input
                 type="text"
+                data-testid={'customAttributeInput'}
                 variant="required-field"
                 {...register('customAttributeSelection', { required: 'This is required' })}
               />
@@ -222,17 +228,17 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
 
       <HStack h="78px" mt="30px" borderTop="1px solid #E2E8F0" justifyContent="end" spacing="16px">
         {
-          <Button onClick={onClose} variant="outline" colorScheme="brand">
+          <Button onClick={onClose} data-testid="cancel" variant="outline" colorScheme="brand">
             {t('cancel')}
           </Button>
         }
         {selectedAlert && (
-          <Button type="submit" form="alertDetails" colorScheme="brand">
+          <Button type="submit" data-testid="saveDetails" form="alertDetails" colorScheme="brand">
             {t('save')}
           </Button>
         )}
         {!selectedAlert && (
-          <Button isDisabled={disableNext} colorScheme="brand" onClick={props?.setNextTab}>
+          <Button isDisabled={disableNext} data-testid="nextDetail" colorScheme="brand" onClick={props?.setNextTab}>
             {t('next')}
           </Button>
         )}

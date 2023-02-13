@@ -33,23 +33,8 @@ type ManagedAlertsTypes = {
 }
 
 export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClose, selectedAlert }) => {
-  const { t } = useTranslation()
   const { mutate: editAlertsDetails } = useUpdateAlertDetails()
   const { mutate: saveAlertsDetails } = useSaveAlertDetails()
-
-  const [tabIndex, setTabIndex] = useState(0)
-
-  const methods = useForm<AlertFormValues>()
-
-  const { handleSubmit, control, reset } = methods
-
-  useEffect(() => {
-    reset(alertDetailsDefaultValues({ selectedAlert }))
-  }, [reset, selectedAlert])
-
-  const setNextTab = () => {
-    setTabIndex(tabIndex + 1)
-  }
 
   const onSubmit = useCallback(
     async values => {
@@ -82,44 +67,64 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
     },
     [saveAlertsDetails],
   )
-  const { disableNext } = useFieldRelatedDecisions(control)
 
   return (
     <>
       <div>
-        <Modal isOpen={isOpen} onClose={onClose} size="5xl">
-          <ModalOverlay />
-          <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit, err => console.log('err..', err))} id="alertDetails" noValidate>
-              <ModalContent>
-                <ModalHeader borderBottom="1px solid #eee">
-                  <FormLabel variant="strong-label" size="lg">
-                    {selectedAlert ? t('editAlert') : t('newAlert')}
-                  </FormLabel>
-                </ModalHeader>
-                <ModalCloseButton />
-                <ModalBody>
-                  <Tabs variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
-                    <TabList>
-                      <Tab>{t('details')}</Tab>
-                      <Tab isDisabled={disableNext && !selectedAlert}>{t('notify')}</Tab>
-                    </TabList>
-                    <TabPanels>
-                      <TabPanel p={0}>
-                        <AlertsDetailsTab selectedAlert={selectedAlert} onClose={onClose} setNextTab={setNextTab} />
-                      </TabPanel>
-                      <TabPanel p={0}>
-                        <AlertsNotifyTab onClose={onClose} />
-                      </TabPanel>
-                    </TabPanels>
-                  </Tabs>
-                </ModalBody>
-              </ModalContent>
-            </form>
-            <DevTool control={control} />
-          </FormProvider>
-        </Modal>
+        <ManagedAlertsForm onSubmit={onSubmit} selectedAlert={selectedAlert} onClose={onClose} isOpen={isOpen} />
       </div>
     </>
+  )
+}
+
+export const ManagedAlertsForm = ({ onSubmit, selectedAlert, onClose, isOpen }) => {
+  const [tabIndex, setTabIndex] = useState(0)
+  const { t } = useTranslation()
+  const methods = useForm<AlertFormValues>()
+
+  const { handleSubmit, control, reset } = methods
+  const { disableNext } = useFieldRelatedDecisions(control)
+
+  useEffect(() => {
+    reset(alertDetailsDefaultValues({ selectedAlert }))
+  }, [reset, selectedAlert])
+
+  const setNextTab = () => {
+    setTabIndex(tabIndex + 1)
+  }
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} size="5xl">
+      <ModalOverlay />
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit, err => console.log('err..', err))} id="alertDetails" noValidate>
+          <ModalContent>
+            <ModalHeader borderBottom="1px solid #eee">
+              <FormLabel variant="strong-label" size="lg">
+                {selectedAlert ? t('editAlert') : t('newAlert')}
+              </FormLabel>
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Tabs variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
+                <TabList>
+                  <Tab>{t('details')}</Tab>
+                  <Tab isDisabled={disableNext && !selectedAlert}>{t('notify')}</Tab>
+                </TabList>
+                <TabPanels>
+                  <TabPanel p={0}>
+                    <AlertsDetailsTab selectedAlert={selectedAlert} onClose={onClose} setNextTab={setNextTab} />
+                  </TabPanel>
+                  <TabPanel p={0}>
+                    <AlertsNotifyTab onClose={onClose} />
+                  </TabPanel>
+                </TabPanels>
+              </Tabs>
+            </ModalBody>
+          </ModalContent>
+        </form>
+        <DevTool control={control} />
+      </FormProvider>
+    </Modal>
   )
 }
