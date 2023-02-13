@@ -15,9 +15,11 @@ type ProjectCardProps = {
   styles?: any
   selectedFlagged?: any
   onSelectFlagged?: (string) => void
+  clear?: any
 }
 
 export const ProjectCard = ({
+  clear,
   title,
   disabled,
   selectedCard,
@@ -46,9 +48,12 @@ export const ProjectCard = ({
         // pointerEvents={disabled ? 'none' : 'auto'}
         onClick={() => {
           !disabled && onSelectCard(selectedCard !== value ? value : null)
-          onSelectFlagged && onSelectFlagged(selectedFlagged !== "yes" ? "yes" : null)
+          onSelectFlagged && onSelectFlagged(selectedFlagged !== 'yes' ? 'yes' : null)
+          if (selectedCard === value) {
+            clear()
+          }
         }}
-        borderColor={selectedCard === value || selectedFlagged === "yes" ? 'brand.300' : ''}
+        borderColor={selectedCard === value || selectedFlagged === 'yes' ? 'brand.300' : ''}
         _hover={{ bg: 'blue.50' }}
       >
         <Flex w="100%" mb="5px">

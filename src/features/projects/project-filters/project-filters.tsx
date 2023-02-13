@@ -120,11 +120,19 @@ export type ProjectCardProps = {
   onSelectCard: (string) => void
   selectedCard: string
   selectedFPM?: any
-  onSelectFlagged?: (string) => void,
+  onSelectFlagged?: (string) => void
   selectedFlagged?: any
+  clear?: any
 }
 
-export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selectedCard, selectedFPM, onSelectFlagged, selectedFlagged }) => {
+export const ProjectFilters: React.FC<ProjectCardProps> = ({
+  onSelectCard,
+  selectedCard,
+  selectedFPM,
+  onSelectFlagged,
+  selectedFlagged,
+  clear,
+}) => {
   const { data: values, isLoading } = useProjectCards(selectedFPM?.id)
   const cards = useProjectCardJson(values)
 
@@ -134,6 +142,7 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selec
         {cards.map(card => {
           return card.id === 'flagged' ? (
             <ProjectCard
+              clear={clear}
               key={card.id}
               {...card}
               onSelectCard={onSelectCard}
@@ -144,6 +153,7 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({ onSelectCard, selec
             />
           ) : (
             <ProjectCard
+              clear={clear}
               key={card.id}
               {...card}
               onSelectCard={onSelectCard}
