@@ -1,6 +1,17 @@
-import { Box, Button, Divider, FormErrorMessage, FormLabel, HStack, Input, Textarea } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  HStack,
+  Input,
+  Textarea,
+} from '@chakra-ui/react'
+import { useCreateMessageContentAndQuery } from 'api/alerts'
 import { CheckboxButton } from 'components/form/checkbox-button'
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
@@ -25,6 +36,7 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
     formState: { errors },
     control,
     watch,
+    setValue,
   } = useFormContext<AlertFormValues>()
 
   const fields = watch()
@@ -36,6 +48,16 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
   }, [fields])
   const phoneNumberRef = useRef<any>()
   const watchUserTypes = useWatch({ control, name: 'userTypes' })
+  const { messageContent, alertRuleQuery } = useCreateMessageContentAndQuery(control)
+
+  useEffect(() => {
+    if (messageContent) {
+      setValue('message', messageContent)
+    }
+    if (alertRuleQuery) {
+      setValue('alertRuleQuery', alertRuleQuery)
+    }
+  }, [messageContent, alertRuleQuery])
 
   return (
     <Box>
@@ -102,7 +124,7 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
         <TextDivider title={t('textUser')} />
 
         <Box mt="30px" w="215px">
-          <Box>
+          <FormControl isInvalid={!!errors.recipientPhoneNumber}>
             <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
               {t('recipientPhoneNo')}
             </FormLabel>
@@ -110,11 +132,13 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
               control={control}
               {...register(`recipientPhoneNumber`, {
                 validate: (value: any) => {
-                  if (phoneNumberRef.current) {
-                    if (phoneNumberRef.current.value.replace(/\D+/g, '').length === 10) return true
+                  var valid = true
+                  if (phoneNumberRef.current && phoneNumberRef.current.value.replace(/\D+/g, '') !== '') {
+                    if (phoneNumberRef.current.value.replace(/\D+/g, '').length !== 10) {
+                      valid = false
+                    }
                   }
-
-                  return false
+                  return valid
                 },
               })}
               render={({ field }) => {
@@ -141,7 +165,7 @@ export const AlertsNotifyTab: React.FC<{ onClose: () => void }> = props => {
               }}
             />
             {/* <Input type="number" {...register('recipientPhoneNumber')} /> */}
-          </Box>
+          </FormControl>
         </Box>
 
         <Box mt="30px" w="445px">

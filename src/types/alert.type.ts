@@ -76,6 +76,7 @@ export const enum TriggerType {
   SCHEDULE,
 }
 
+export const CONDTION = [{ value: 'if', label: 'IF' }]
 export const CATEGORY_OPTIONS = [
   { value: '1', label: 'WARNING' },
   { value: '2', label: 'INFO' },
@@ -97,40 +98,40 @@ export const TYPE_SELECTION_OPTIONS = [
 ]
 
 export const vendorAttributes = [
-  { value: 'score', label: 'Score', type: 'number' },
-  { label: 'Status', value: 'Status', type: 'custom' },
-  { label: 'Agreement signed date', value: 'Agreement signed date', type: 'string' },
-  { label: 'Ein number', value: 'Ein number', type: 'string' },
-  { label: 'Ssn number', value: 'Ssn number', type: 'string' },
-  { label: 'Owner Name', value: 'Owner Name', type: 'string' },
+  { label: 'Score', value: 'score', type: 'number' },
+  { label: 'Status', value: 'status', type: 'custom' },
+  { label: 'Agreement signed date', value: 'agreementSignedDate', type: 'string' },
+  { label: 'Ein number', value: 'einNumber', type: 'string' },
+  { label: 'Ssn number', value: 'ssnNumebr', type: 'string' },
+  { label: 'Owner Name', value: 'ownerName', type: 'string' },
 ]
 
 export const projectAttributes = [
-  { value: 'Status', label: 'Status', type: 'custom' },
-  { label: 'Project Manager', value: 'Project Manager', type: 'string' },
-  { label: 'Project Type', value: 'Project Type', type: 'string' },
+  { label: 'status', value: 'status', type: 'custom' },
+  { label: 'Project Manager', value: 'projectManager', type: 'string' },
+  { label: 'Project Type', value: 'projectType', type: 'string' },
 ]
 
 export const workOrderAttributes = [
-  { value: 'Status', label: 'Status', type: 'custom' },
-  { label: 'Final Invoice Amount', value: 'Final Invoice Amount', type: 'number' },
+  { label: 'Status', value: 'status', type: 'custom' },
+  { label: 'Final Invoice Amount', value: 'finalInvoiceAmount', type: 'number' },
 ]
 
 export const transactionAttributes = [
-  { value: 'Amount', label: 'Amount', type: 'number' },
-  { value: 'Type', label: 'Type', type: 'string' },
-  { value: 'Status', label: 'Status', type: 'custom' },
+  { value: 'changeOrderAmount', label: 'Amount', type: 'number' },
+  { value: 'transactionType', label: 'Type', type: 'string' },
+  { value: 'status', label: 'Status', type: 'custom' },
 ]
 
 export const clientAttributes = [
-  { value: 'Company Name', label: 'Company Name', type: 'string' },
-  { value: 'Email Address', label: 'Email Address', type: 'string' },
-  { value: 'Phone number', label: 'Phone number', type: 'string' },
-  { value: 'Contact', label: 'Contact', type: 'string' },
-  { value: 'Invoice Email Address', label: 'Invoice Email Address', type: 'string' },
+  { value: 'companyName', label: 'Company Name', type: 'string' },
+  { value: 'primaryEmailAddress', label: 'Email Address', type: 'string' },
+  { value: 'primaryPhoneNumber', label: 'Phone number', type: 'string' },
+  { value: 'primaryContact', label: 'Contact', type: 'string' },
+  { value: 'invoiceEmailAddress', label: 'Invoice Email Address', type: 'string' },
 ]
 
-export const quotaAttributes = [{ value: 'Quota Target %', label: 'Quota Target %', type: 'number' }]
+export const quotaAttributes = [{ value: 'quotaTarget', label: 'Quota Target %', type: 'number' }]
 
 export const behaviorOptionsForString = [{ value: '1', label: 'Change' }]
 

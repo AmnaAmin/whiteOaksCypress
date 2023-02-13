@@ -41,12 +41,10 @@ export const ManagedAlertsModal: React.FC<ManagedAlertsTypes> = ({ isOpen, onClo
 
   const methods = useForm<AlertFormValues>()
 
-  const { handleSubmit, control, reset, getValues } = methods
-  console.log(getValues())
+  const { handleSubmit, control, reset } = methods
+
   useEffect(() => {
-    if (selectedAlert) {
-      reset(alertDetailsDefaultValues({ selectedAlert }))
-    }
+    reset(alertDetailsDefaultValues({ selectedAlert }))
   }, [reset, selectedAlert])
 
   const setNextTab = () => {

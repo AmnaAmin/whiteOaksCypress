@@ -1,4 +1,5 @@
 import { useToast } from '@chakra-ui/react'
+import { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import {
@@ -7,6 +8,7 @@ import {
   behaviorOptionsForString,
   CATEGORY_OPTIONS,
   clientAttributes,
+  CONDTION,
   customBehaviorOptions,
   NOTIFY_OPTIONS,
   projectAttributes,
@@ -113,7 +115,7 @@ export const getCustomOptions = ({ type, attribute }) => {
 
 export const alertDetailsDefaultValues = ({ selectedAlert }) => {
   const categoryValue = CATEGORY_OPTIONS?.find(c => c?.label === selectedAlert?.category)
-  const notifyValue = NOTIFY_OPTIONS?.find(n => n?.value === selectedAlert?.notify)
+  const notifyValue = NOTIFY_OPTIONS?.find(n => n?.value === selectedAlert?.notify) ?? NOTIFY_OPTIONS[0]
   const typeSelectionValue = TYPE_SELECTION_OPTIONS?.find(t => t?.label === selectedAlert?.typeSelection)
   const attributeSelections = getAttributeOptions(typeSelectionValue?.label)
   const attributeSelectionValue = attributeSelections?.find(a => a?.label === selectedAlert?.attributeSelection)
@@ -127,7 +129,7 @@ export const alertDetailsDefaultValues = ({ selectedAlert }) => {
     behaviourSelectionValue?.label === 'Equal To'
       ? customSelections?.find(b => b?.value === Number(selectedAlert?.customAttributeSelection))
       : selectedAlert?.customAttributeSelection
-
+  const conditionSelection = CONDTION[0]?.label
   const defaultValues = {
     ...selectedAlert,
     category: categoryValue,
@@ -136,6 +138,7 @@ export const alertDetailsDefaultValues = ({ selectedAlert }) => {
     attributeSelection: attributeSelectionValue,
     behaviourSelection: behaviourSelectionValue,
     customAttributeSelection: customSelectionValue,
+    conditionSelection,
   }
   return defaultValues
 }
@@ -288,4 +291,62 @@ export const useFieldRelatedDecisions = control => {
     !watchBehaviorSelection ||
     ((showCustomSelect || showCustomInput) && !watchCustomAttributeSelection)
   return { disableNext, showCustomSelect, showCustomInput }
+}
+
+export const useCreateMessageContentAndQuery = control => {
+  const watchTypeSelection = useWatch({ control, name: 'typeSelection' })
+  const watchAttributeSelection = useWatch({ control, name: 'attributeSelection' })
+  const watchBehaviorSelection = useWatch({ control, name: 'behaviourSelection' })
+  const watchCustomAttributeSelection = useWatch({ control, name: 'customAttributeSelection' })
+  const isChange = watchBehaviorSelection?.label === 'Change'
+  const isNumberBehavior = ['Greater Than', 'Less Than'].includes(watchBehaviorSelection?.label as string)
+  const isCustomValue = watchAttributeSelection?.type === 'custom' && watchBehaviorSelection?.label === 'Equal To'
+
+  const behaviourMap: { [x in string] } = {
+    Change: '=',
+    'Equal to': '=',
+    'Greater Than': '>',
+    'Less Than': '<',
+  }
+
+  const messageContent = useMemo(() => {
+    const typeAndAttribute = 'When ' + watchTypeSelection?.label + ' ' + watchAttributeSelection?.label + ' '
+    var behavior = ''
+    if (isChange) {
+      behavior = 'changes from old value to any new value.'
+    } else if (isNumberBehavior) {
+      behavior = 'is ' + watchBehaviorSelection?.label?.toLowerCase() + ' ' + watchCustomAttributeSelection + '.'
+    } else if (isCustomValue) {
+      behavior = 'equals to ' + (watchCustomAttributeSelection?.label ?? watchCustomAttributeSelection) + '.'
+    }
+    return typeAndAttribute + behavior
+  }, [
+    watchTypeSelection,
+    watchAttributeSelection,
+    watchBehaviorSelection,
+    watchCustomAttributeSelection,
+    isChange,
+    isNumberBehavior,
+    isCustomValue,
+  ])
+
+  const alertQuery = useMemo(() => {
+    let query = ''
+    const alias = watchTypeSelection?.label?.charAt(0)?.toLowerCase()
+    query =
+      'select count(*) from ' +
+      watchTypeSelection?.label +
+      ' ' +
+      alias +
+      ' where ' +
+      alias +
+      '.' +
+      watchAttributeSelection?.value +
+      ' ' +
+      behaviourMap[watchBehaviorSelection?.label] +
+      ':parameter'
+
+    return query
+  }, [watchTypeSelection, watchBehaviorSelection, watchAttributeSelection])
+  return { messageContent, alertRuleQuery: alertQuery }
 }
