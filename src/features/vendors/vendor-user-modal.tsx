@@ -158,23 +158,34 @@ const VendorUserModal = ({
       <Modal isOpen={isOpen} onClose={onCloseModal} size={modalSize} variant="custom">
         <ModalOverlay />
         <ModalContent w="950px" rounded={3} borderTop="2px solid #4E87F8" bg="#fff">
-          <ModalHeader
-            h="63px"
-            borderBottom="1px solid #E2E8F0"
-            color="gray.600"
-            fontSize={16}
-            fontWeight={500}
-            bg="white"
+          <Box
+            sx={{
+              '@media screen and (max-width: 480px)': {
+                position: "sticky",
+                top: "0",
+                zIndex: 99,
+                zoom: 1
+              },
+            }}
           >
-            <HStack spacing={4}>
-              <HStack fontSize="16px" fontWeight={500} h="32px">
-                <Text lineHeight="22px" h="22px" pr={2}>
-                  {vendorDetails ? 'Edit User: ' + vendorDetails?.id : 'New User'}
-                </Text>
+            <ModalHeader
+              h="63px"
+              borderBottom="1px solid #E2E8F0"
+              color="gray.600"
+              fontSize={16}
+              fontWeight={500}
+              bg="white"
+            >
+              <HStack spacing={4}>
+                <HStack fontSize="16px" fontWeight={500} h="32px">
+                  <Text lineHeight="22px" h="22px" pr={2}>
+                    {vendorDetails ? 'Edit User: ' + vendorDetails?.id : 'New User'}
+                  </Text>
+                </HStack>
               </HStack>
-            </HStack>
-          </ModalHeader>
-          <ModalCloseButton _hover={{ bg: 'blue.50' }} />
+            </ModalHeader>
+            <ModalCloseButton _hover={{ bg: 'blue.50' }} />
+          </Box>
           <ModalBody px="9px" pb="22px" bg="white" borderBottom="1px solid #E2E8F0">
             <chakra.form
               onSubmit={handleSubmit(onSubmit)}
@@ -185,16 +196,18 @@ const VendorUserModal = ({
               action="#"
               sx={{
                 '@media screen and (max-width: 480px)': {
-                  ".chakra-form-control": {
-                    marginTop: "20px",
-                    width: "80%"
+                  '.chakra-form-control': {
+                    marginTop: '20px',
+                    width: '80%',
+                    marginInline: '0 !important',
                   },
-                  ".chakra-form-control:first-child": {
-                    marginTop: "0px",
+                  '.chakra-form-control:first-child': {
+                    marginTop: '0px',
                   },
-                  ".chakra-input__group": {
-                    width: "100%"
-                  }
+                  '.chakra-input__group': {
+                    width: '100%',
+                    marginInline: '0 !important',
+                  },
                 },
               }}
             >
@@ -261,7 +274,7 @@ const VendorUserModal = ({
                         '@media screen and (max-width: 480px)': {
                           flexDirection: 'column',
                           alignItems: 'baseline',
-                          marginInlineStart: "15px"
+                          marginInlineStart: '0px',
                         },
                       }}
                     >

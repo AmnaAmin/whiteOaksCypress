@@ -101,7 +101,7 @@ export default function useRoutesConfig() {
         { path: 'performance', element: PerformanceTab },
         { path: 'vendorSkills', element: VendorSkills },
         { path: 'alerts', element: Alerts },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
+        { path: 'estimates/estimate-details/:projectId', element: EstimateDetails },
         { path: 'cypressReport', element: CypressReport },
       ]
 

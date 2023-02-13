@@ -155,10 +155,9 @@ export const useTransactionTypes = (screen?: string) => {
       transactionTypeOptions: transactionType.slice(0, 6),
     }
   }
-  const transactionType = transactionTypeOptions.filter(option => option.label !== 'Payment')
   return {
     // Note for vendor user we only show change order and draw, that's why we filter out the rest
-    transactionTypeOptions: isVendor ? transactionTypeOptions.slice(0, 2) : transactionType,
+    transactionTypeOptions: isVendor ? transactionTypeOptions.slice(0, 2) : transactionTypeOptions,
   }
 }
 
