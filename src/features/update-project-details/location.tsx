@@ -41,7 +41,7 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
             <FormLabel variant="strong-label" size="md" htmlFor="address">
               {t(`project.projectDetails.address`)}
             </FormLabel>
-            <Input isDisabled={isAddressDisabled} id="address" {...register('address')} />
+            <Input variant="required-field" isDisabled={isAddressDisabled} id="address" {...register('address')} />
             <FormErrorMessage>{errors?.address?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -50,9 +50,10 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
             <FormLabel variant="strong-label" size="md" htmlFor="city">
               {t(`project.projectDetails.city`)}
             </FormLabel>
-            <Input isDisabled={isCityDisabled} id="city" {...register('city')} />
+            <Input variant="required-field" isDisabled={isCityDisabled} id="city" {...register('city')} />
             <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
           </FormControl>
+          
         </GridItem>
         <GridItem>
           <FormControl isInvalid={!!errors.state} w="215px">
@@ -88,7 +89,7 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
             <FormLabel variant="strong-label" size="md" htmlFor="zip">
               {t(`project.projectDetails.zip`)}
             </FormLabel>
-            <Input isDisabled={isZipDisabled} id="zip" {...register('zip')} />
+            <Input variant="required-field" isDisabled={isZipDisabled} id="zip" {...register('zip')} />
             <FormErrorMessage>{errors.zip && errors.zip.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
