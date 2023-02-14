@@ -6,13 +6,15 @@ import {
   HTMLChakraProps,
   Input,
   Stack,
-  Text,
   VStack,
   Icon,
   Divider,
+  Text,
+  Alert,
+  AlertDescription
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
-import { useAuth } from 'utils/auth-context'
+import { useLogin } from 'utils/auth-context'
 import { PasswordField } from './PasswordField'
 import { BiUserCheck } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
@@ -23,7 +25,7 @@ type FormValues = {
 }
 
 export const LoginForm = (props: HTMLChakraProps<'form'>) => {
-  const { login } = useAuth()
+  const { mutate: loginMutation, isError } = useLogin()
   const {
     handleSubmit,
     register,
@@ -31,12 +33,26 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
   } = useForm<FormValues>()
 
   const onSubmit = (values: FormValues) => {
-    login?.(values)
+    loginMutation(
+      { email: values.email, password: values.password },
+      {
+        onError: err => {
+          //const error = typeof err === "string" ? JSON.parse(err as string) : err;
+        },
+      },
+    )
   }
 
   return (
     <chakra.form onSubmit={handleSubmit(onSubmit)} {...props}>
       <Stack spacing="29px" mx={{ sm: '70px' }} pt="20px">
+        {isError && 
+          <Alert status="error" bg="#fd397a" border="1px solid #fd397a">
+            <AlertDescription color="#fff">
+            <strong>Failed to sign in!</strong> Please check your credentials and try again.
+            </AlertDescription>
+          </Alert>
+        }
         <FormControl id="email" isInvalid={!!errors?.email?.message}>
           <FormLabel fontSize="12px" fontWeight="700" color="#252F40">
             Username
