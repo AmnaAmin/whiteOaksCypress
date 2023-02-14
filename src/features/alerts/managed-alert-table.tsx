@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { ColumnDef, SortingState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
@@ -45,12 +45,17 @@ export const MANAGED_ALERTS_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'message' as string,
     accessorKey: 'message',
+    accessorFn(cellInfo) {
+      return cellInfo.message ? cellInfo.message : '- - -'
+    },
   },
   {
     header: 'dateTriggered' as string,
     accessorKey: 'dateCreated',
-    accessorFn(cellInfo) {
-      return cellInfo.dateCreated ? dateFormat(cellInfo.dateCreated) : '- - -'
+    accessorFn: row => datePickerFormat(row.dateCreated),
+    cell: (row: any) => {
+      const value = row?.row.original?.dateCreated
+      return dateFormat(value)
     },
     meta: { format: 'date' },
   },
@@ -77,7 +82,7 @@ export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({ managedA
     <Box overflow="auto">
       {selectedAlert && (
         <ManagedAlertsModal
-          isOpen={selectedAlert ? true : false}
+          isOpen={!!selectedAlert}
           onClose={() => {
             setSelectedAlert(undefined)
           }}
