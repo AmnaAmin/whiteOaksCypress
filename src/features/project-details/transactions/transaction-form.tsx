@@ -88,31 +88,29 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
 
   return (
     <Grid
-      templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(4, 1fr)' }}
+      templateColumns="repeat(auto-fill, minmax(100px,1fr))"
       gap={{ base: '1rem 20px', sm: '4rem' }}
       borderBottom="1px solid #E2E8F0"
       borderColor="gray.200"
       py="5"
     >
-      <Flex gap={{ base: '1rem 20px', sm: '4rem' }}>
-        <GridItem>
-          <ReadOnlyInput
-            label={t(`${TRANSACTION}.dateCreated`)}
-            name={'dateCreated'}
-            value={formValues.dateCreated as string}
-            Icon={BiCalendar}
-          />
-        </GridItem>
+      <GridItem>
+        <ReadOnlyInput
+          label={t(`${TRANSACTION}.dateCreated`)}
+          name={'dateCreated'}
+          value={formValues.dateCreated as string}
+          Icon={BiCalendar}
+        />
+      </GridItem>
 
-        <GridItem>
-          <ReadOnlyInput
-            label={t(`${TRANSACTION}.dateModified`)}
-            name={'dateModified'}
-            value={(formValues.modifiedDate as string) || '----'}
-            Icon={BiCalendar}
-          />
-        </GridItem>
-      </Flex>
+      <GridItem>
+        <ReadOnlyInput
+          label={t(`${TRANSACTION}.dateModified`)}
+          name={'dateModified'}
+          value={(formValues.modifiedDate as string) || '----'}
+          Icon={BiCalendar}
+        />
+      </GridItem>
       <GridItem>
         <ReadOnlyInput
           label={t(`${TRANSACTION}.createdBy`)}
