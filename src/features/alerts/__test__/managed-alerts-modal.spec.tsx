@@ -154,6 +154,7 @@ describe('Verify creating different alerts for the system ', () => {
       onSubmit,
       selectedAlert: MANAGED_ALERT[0],
     })
+    userEvent.type(screen.getByTestId('customAttributeInput'), '500')
     act(() => {
       fireEvent.submit(screen.getByTestId('saveDetails'))
     })
