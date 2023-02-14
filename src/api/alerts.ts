@@ -37,16 +37,29 @@ export const alertDetailsDefaultValues = ({ selectedAlert }) => {
   return defaultValues
 }
 
-export const useFetchUserAlerts = (projectId?) => {
+export const useFetchUserAlerts = (projectId?, accountLogin?) => {
   const client = useClient('/alert/api')
   const url = !projectId ? 'alert-histories' : `alert-histories/project/${projectId}`
   const { data: alerts, ...rest } = useQuery<AlertType[]>('GetProjectAlerts', async () => {
     const response = await client(url, {})
-
     return response?.data
   })
+  const notifiations = _.orderBy(
+    alerts?.filter(a => a.login === accountLogin),
+    [
+      alert => {
+        return alert?.webSockectRead
+      },
+      alert => {
+        return alert.id
+      },
+    ],
+    ['asc', 'desc'],
+  )
+
   return {
     data: alerts,
+    notifiations,
     ...rest,
   }
 }
@@ -90,7 +103,7 @@ export const useUpdateAlertDetails = () => {
   )
 }
 
-export const useResolveAlerts = () => {
+export const useResolveAlerts = (hideToast?) => {
   const client = useClient('/alert/api')
   const queryClient = useQueryClient()
   const toast = useToast()
@@ -104,14 +117,16 @@ export const useResolveAlerts = () => {
     },
     {
       onSuccess() {
-        toast({
-          title: 'Triggered Alerts',
-          description: 'Alerts have been resolved',
-          status: 'success',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
+        if (!hideToast) {
+          toast({
+            title: 'Triggered Alerts',
+            description: 'Alerts have been resolved',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        }
 
         queryClient.invalidateQueries('GetProjectAlerts')
       },
@@ -119,6 +134,47 @@ export const useResolveAlerts = () => {
         toast({
           title: 'Triggered Alerts',
           description: (error.title as string) ?? 'Unable to resolve alerts.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
+export const useUpdateAlert = (hideToast?) => {
+  const client = useClient('/alert/api')
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    updatedAlert => {
+      return client('alert-histories', {
+        data: updatedAlert,
+        method: 'PUT',
+      })
+    },
+    {
+      onSuccess() {
+        if (!hideToast) {
+          toast({
+            title: 'Alerts',
+            description: 'Alert has been updated.',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        }
+
+        queryClient.invalidateQueries('GetProjectAlerts')
+      },
+      onError(error: any) {
+        toast({
+          title: 'Alerts',
+          description: (error.title as string) ?? 'Unable to update alert.',
           status: 'error',
           duration: 9000,
           isClosable: true,

@@ -69,6 +69,7 @@ export type AlertType = {
   toDate?: string
   conditionSelection?: string
   login?: string
+  webSockectRead?: boolean | null
 }
 
 export const enum TriggerType {
