@@ -25,7 +25,6 @@ import { useTranslation } from 'react-i18next'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 import LogoIcon from 'icons/header-logo'
 import { BiSearch } from 'react-icons/bi'
-import { countInCircle } from 'theme/common-style'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -107,7 +106,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
                 _hover={{ color: 'gray.500' }}
               >
                 <FaBell fontSize="16px" />
-                <Box sx={countInCircle}>{2}</Box>
               </MenuButton>
               <Notification setShowAlertMenu={setShowAlertMenu} />
 
