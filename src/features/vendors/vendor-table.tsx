@@ -141,7 +141,7 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     header: 'market',
     accessorKey: 'market',
     accessorFn(cellInfo) {
-      return cellInfo?.market ? cellInfo?.market : '- - -'
+      return cellInfo?.markets ? cellInfo?.markets : '- - -'
     },
   },
   {
