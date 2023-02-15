@@ -421,7 +421,9 @@ export const EditableField = (props: EditableCellType) => {
             >
               {valueFormatter && isValidAndNonEmpty(remainingItemsWatch[index]?.[fieldName])
                 ? valueFormatter(remainingItemsWatch[index]?.[fieldName])
-                : remainingItemsWatch[index]?.[fieldName]}
+                : isValidAndNonEmpty(remainingItemsWatch[index]?.[fieldName])
+                ? remainingItemsWatch[index]?.[fieldName]
+                : '- - -'}
             </Box>
           ) : (
             <FormControl>
