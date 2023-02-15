@@ -3,7 +3,6 @@ import {
   chakra,
   FormControl,
   FormLabel,
-  HTMLChakraProps,
   Input,
   Stack,
   VStack,
@@ -14,7 +13,6 @@ import {
   AlertDescription
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
-import { useLogin } from 'utils/auth-context'
 import { PasswordField } from './PasswordField'
 import { BiUserCheck } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
