@@ -360,6 +360,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                     customInput={Input}
                     thousandSeparator={true}
                     prefix={'$'}
+                    data-testid="RemainingPayment-field"
                   />
                 )
               }}
