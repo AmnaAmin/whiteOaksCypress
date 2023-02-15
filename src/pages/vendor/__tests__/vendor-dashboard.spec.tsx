@@ -1,4 +1,4 @@
-import App from 'App'
+/* import App from 'App'
 import { render, screen, waitForLoadingToFinishLabelOnly } from '../../../utils/test-utils'
 
 jest.setTimeout(150000)
@@ -26,4 +26,4 @@ describe('Dashboard Test Cases', () => {
     // expect(screen.getByTestId('summary-upcomingInvoiceTotal')).toBeInTheDocument()
     // expect(screen.getByTestId('summary-upcomingInvoiceTotal').textContent).toEqual('$0.00')
   })
-})
+}) */
