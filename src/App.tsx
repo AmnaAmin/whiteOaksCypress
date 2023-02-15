@@ -1,6 +1,5 @@
 import './App.css'
 import { BrowserRouter as Router } from 'react-router-dom'
-
 import { useAuth } from 'utils/auth-context'
 import AuthenticatedApp from 'authenticated-app'
 import UnAuthenticatedApp from 'unauthenticated-app'
