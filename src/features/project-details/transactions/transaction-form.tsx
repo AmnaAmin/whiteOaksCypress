@@ -89,7 +89,7 @@ const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ 
   return (
     <Grid
       templateColumns="repeat(auto-fill, minmax(100px,1fr))"
-      gap={{ base: '1rem 20px', sm: '4rem' }}
+      gap={{ base: '1rem 20px', sm: '3.5rem' }}
       borderBottom="1px solid #E2E8F0"
       borderColor="gray.200"
       py="5"

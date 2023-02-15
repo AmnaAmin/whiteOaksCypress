@@ -1,8 +1,28 @@
 import { Box, VStack, Text, Image } from '@chakra-ui/react'
 import { Card } from 'features/login-form-centered/Card'
 import { LoginForm } from 'features/login-form-centered/LoginForm'
+import { useLogin } from 'utils/auth-context'
+
+type LoginFormValues = {
+  email: string
+  password: string
+}
 
 export const Login = () => {
+  
+  const { mutate: loginMutation, isError } = useLogin()
+  
+  const onSubmit = (values: LoginFormValues) => {
+    loginMutation(
+      { email: values.email, password: values.password },
+      {
+        onError: err => {
+          //const error = typeof err === "string" ? JSON.parse(err as string) : err;
+        },
+      },
+    )
+  }
+
   return (
     <Box
       bgImg="url(./bg.svg)"
@@ -34,7 +54,7 @@ export const Login = () => {
           </VStack>
         </Card>
         <Card borderTopRightRadius="0px !important" borderTopLeftRadius="0px !important" bg="#FFFFFF" pb="10">
-          <LoginForm />
+          <LoginForm onSubmitForm={onSubmit} isError={isError} />
         </Card>
         <Text textAlign="center" fontSize="14px" fontWeight="400px" color="#3A3A3A" mt="23px">
           © 2022-23 Harvest WhiteOaks. All Rights Reserved.
