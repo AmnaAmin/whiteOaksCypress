@@ -1,12 +1,13 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from 'firebase/app'
 import { getMessaging, getToken, onMessage } from 'firebase/messaging'
+import { addAlertCount } from 'features/alerts/alerts-service'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-/* const firebaseConfigTestProject = {
+/*const firebaseConfigTestProject = {
   apiKey: 'AIzaSyAAOYgWWEuIcgW8saeZ62WB0a5WTwSUWRM',
   authDomain: 'test-project-cc173.firebaseapp.com',
   projectId: 'test-project-cc173',
@@ -14,9 +15,9 @@ import { getMessaging, getToken, onMessage } from 'firebase/messaging'
   messagingSenderId: '284145334634',
   appId: '1:284145334634:web:461851666da71f09fe0d13',
   measurementId: 'G-4PH32C3Q7S',
-} */
+}
 
-// const vapidKeyTestProject = 'BFpGAm40M8bPfO0zmWKMw1OjItQ0DXVTOZvAYsrnCeIqQQ1Au885ruMAZCAno-oIkTXzshh_Dota1Rd4Yi8VLDw'
+const vapidKeyTestProject = 'BFpGAm40M8bPfO0zmWKMw1OjItQ0DXVTOZvAYsrnCeIqQQ1Au885ruMAZCAno-oIkTXzshh_Dota1Rd4Yi8VLDw'*/
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDubiFzyOj0iar4chN2Z1Fg356LfYDGagQ',
@@ -38,10 +39,11 @@ const messaging = getMessaging(app)
 // subsequent calls to getToken will return from cache.
 export const fetchToken = () => {
   getToken(messaging, {
-    vapidKey: vapidKey,
+    vapidKey,
   })
     .then(currentToken => {
       if (currentToken) {
+        sessionStorage.setItem('fbToken', currentToken)
         console.log(currentToken)
       } else {
         // Show permission request UI
@@ -57,5 +59,7 @@ export const fetchToken = () => {
 
 onMessage(messaging, payload => {
   console.log('Message received. ', payload)
-  // ...
+  const { data = {} } = payload || {}
+  console.debug('Message received. ', payload, (data || {})?.alertHistoryId)
+  addAlertCount((data || {})?.alertHistoryId)
 })

@@ -16,11 +16,10 @@ import {
 } from '@chakra-ui/react'
 import DropdownLanguage from 'translation/DropdownLanguage'
 import React, { useState } from 'react'
-import { FaBell } from 'react-icons/fa'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
 import { RouterLink } from '../router-link/router-link'
-import { Notification } from './notification'
+import { Notification } from './notifications/notification'
 import { useTranslation } from 'react-i18next'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 import LogoIcon from 'icons/header-logo'
@@ -60,6 +59,7 @@ type HeaderProps = {
 const hoverEffect = {
   _focus: { background: '#F7FAFC' },
 }
+
 export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { logout } = useAuth()
   const [show, setShow] = useState(true)
@@ -99,14 +99,6 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
               onClose={() => setShowAlertMenu(false)}
               onOpen={() => setShowAlertMenu(true)}
             >
-              <MenuButton
-                transition="all 0.2s"
-                _active={{ color: '#4E87F8' }}
-                color="#A0AEC0"
-                _hover={{ color: 'gray.500' }}
-              >
-                <FaBell fontSize="16px" />
-              </MenuButton>
               <Notification setShowAlertMenu={setShowAlertMenu} />
 
               {/* {showNotification && (

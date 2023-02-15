@@ -1,14 +1,32 @@
-import { Box, Button, Center, Flex, MenuItem, MenuList, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Center, Flex, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
 import { useFetchUserAlerts, useResolveAlerts, useUpdateAlert } from 'api/alerts'
 import { useTranslation } from 'react-i18next'
-
 import { BiXCircle } from 'react-icons/bi'
 import { useAuth } from 'utils/auth-context'
 import { formatDistanceToNow } from 'date-fns'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { Link } from 'react-router-dom'
-import { AlertStatusModal } from 'features/estimate-details/alerts/alert-status'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { alertCountEvent, getAlertCount } from '../../../features/alerts/alerts-service'
+
+import { FaBell } from 'react-icons/fa'
+
+export const notificationCount = {
+  width: '20px',
+  height: '20px',
+  borderRadius: '100%',
+  color: '#fff',
+  backgroundColor: 'red',
+  display: 'flex',
+  justifyContent: 'center',
+  bottom: '12px',
+  left: '8px',
+  alignItems: 'center',
+  textAlign: 'center',
+  fontWeight: '700',
+  position: 'absolute',
+  fontSize: '12px',
+}
 
 export const Notification = props => {
   const { data } = useAuth()
@@ -19,9 +37,16 @@ export const Notification = props => {
   const { mutate: updateAlert } = useUpdateAlert({ hideToast: true })
   const [notification, setNotification] = useState()
   const showLoadingSlate = isLoading || isResolving
-  const { isOpen: isOpenAlertStatus, onClose: onCloseAlertStatus, onOpen: OnOpenAlertStatus } = useDisclosure()
+  const [alertCount, setAlertCount] = useState(getAlertCount())
+
+  console.log('alertCount', alertCount)
+  //const { isOpen: isOpenAlertStatus, onClose: onCloseAlertStatus, onOpen: OnOpenAlertStatus } = useDisclosure()
   const handeResolve = id => {
     resolveAlerts([id])
+  }
+
+  const handleAlertCountFromFirebase = () => {
+    setAlertCount(getAlertCount())
   }
 
   const handleClick = alert => {
@@ -29,13 +54,26 @@ export const Notification = props => {
     if (!alert?.webSockectRead) {
       updateAlert({ ...alert, webSockectRead: true })
     }
-    OnOpenAlertStatus()
+    //OnOpenAlertStatus()
     setShowAlertMenu(false)
   }
+  console.log(notification)
+
+  useEffect(() => {
+    handleAlertCountFromFirebase()
+    document.addEventListener(alertCountEvent, handleAlertCountFromFirebase, false)
+    return () => {
+      document.removeEventListener(alertCountEvent, handleAlertCountFromFirebase, false)
+    }
+  }, [])
   const { t } = useTranslation()
 
   return (
     <>
+      <MenuButton transition="all 0.2s" _active={{ color: '#4E87F8' }} color="#A0AEC0" _hover={{ color: 'gray.500' }}>
+        <FaBell fontSize="16px" />
+        <Box sx={notificationCount}>{alertCount}</Box>
+      </MenuButton>
       <MenuList borderRadius={8} maxH="542px">
         <Box maxH="489px" border="none" overflow="auto" pb={2}>
           {showLoadingSlate ? (
@@ -119,9 +157,11 @@ export const Notification = props => {
           <Link to="alerts">{t('viewAllNotifications')}</Link>
         </Center>
       </MenuList>
-      {isOpenAlertStatus && (
+      {/*
+      isOpenAlertStatus && (
         <AlertStatusModal isOpen={isOpenAlertStatus} onClose={onCloseAlertStatus} alert={notification} />
       )}
+      */}
     </>
   )
 }

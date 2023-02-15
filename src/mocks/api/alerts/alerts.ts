@@ -25,3 +25,5 @@ export const MANAGED_ALERT = [
     userTypes: ['Accounting'],
   },
 ]
+
+export const TRIGGEREDALERTS = []
