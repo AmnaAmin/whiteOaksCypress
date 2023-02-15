@@ -1,5 +1,4 @@
 import { fireEvent, waitFor, render, screen } from '@testing-library/react'
-import App from 'App'
 import { QueryClientProvider, QueryClient } from 'react-query'
 import { setToken } from 'utils/storage.utils'
 import { act } from 'react-dom/test-utils'
