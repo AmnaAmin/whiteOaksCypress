@@ -26,8 +26,13 @@ import { datePickerFormat } from 'utils/date-time-utils'
 import { SelectOption } from 'types/transaction.type'
 import { NumberInput } from 'components/input/input'
 import { useTranslation } from 'react-i18next'
+import { Project } from 'types/project.type'
+import { PROJECT_STATUS } from 'features/common/status'
 
-const InvoiceAndPayments: React.FC = () => {
+type invoiceAndPaymentProps = {
+  projectData: Project
+}
+const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) => {
   const {
     register,
     control,
@@ -47,6 +52,10 @@ const InvoiceAndPayments: React.FC = () => {
     isPaymentDisabled,
     isStatusInvoiced,
   } = useFieldsDisabled(control)
+
+  const projectStatus = projectData?.projectStatus === PROJECT_STATUS.closed.label ? true : false
+
+  const isPaymentDisabledCheck = isPaymentDisabled || projectStatus
 
   const formValues = getValues()
   const isUploadInvoiceRequired = isStatusInvoiced && !formValues.invoiceLink
@@ -374,7 +383,7 @@ const InvoiceAndPayments: React.FC = () => {
                       onPaymentValueChange(values)
                       field.onChange(values.value)
                     }}
-                    disabled={isPaymentDisabled}
+                    disabled={isPaymentDisabledCheck}
                     customInput={Input}
                     thousandSeparator={true}
                     prefix={'$'}

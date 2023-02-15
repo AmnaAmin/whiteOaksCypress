@@ -89,6 +89,7 @@ export const ReadOnlyInput: React.FC<InputProps & { label: string; testId?: stri
             data-testid={testId}
             variant="unstyled"
             disabled
+            width={'90%'}
             color="gray.600"
             fontSize="14px"
             isTruncated
