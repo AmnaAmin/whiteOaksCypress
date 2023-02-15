@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Box, Button, Container, Flex, FormLabel, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react'
 import { Header } from './header'
 import { Sidebar } from './sidebar'
@@ -9,12 +9,16 @@ import { useRoleBasedMenu } from './constants'
 import { IdleTimeOutModal } from './idle-time-out'
 import { useTranslation } from 'react-i18next'
 import { SIDE_NAV } from './sideNav.i18n'
+import { fetchToken } from 'firebase-sw'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
   const menu = useRoleBasedMenu()
   const { t } = useTranslation()
 
+  useEffect(() => {
+    fetchToken()
+  }, [])
   return (
     <Box width="100%">
       <Box position="fixed" top="0" left="0" right="0" zIndex="sticky" style={{ color: '#A1A6B1' }}>
