@@ -63,7 +63,7 @@ const hoverEffect = {
 export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { logout } = useAuth()
   const [show, setShow] = useState(true)
-  // const [showNotification, setShowNotification] = useState(false)
+  const [showAlertMenu, setShowAlertMenu] = useState(false)
   const { t } = useTranslation()
 
   return (
@@ -95,9 +95,9 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           <Box position="relative">
             <Menu
               closeOnSelect={false}
-              // isOpen={showNotification}
-              // onClose={() => setShowNotification(false)}
-              // onOpen={() => setShowNotification(true)}
+              isOpen={showAlertMenu}
+              onClose={() => setShowAlertMenu(false)}
+              onOpen={() => setShowAlertMenu(true)}
             >
               <MenuButton
                 transition="all 0.2s"
@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
               >
                 <FaBell fontSize="16px" />
               </MenuButton>
-              <Notification />
+              <Notification setShowAlertMenu={setShowAlertMenu} />
 
               {/* {showNotification && (
                 <Suspense fallback={() => <AiOutlineLoading3Quarters className="fa-spin" fontSize="1.5rem" />}>
