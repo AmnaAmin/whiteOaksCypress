@@ -1,5 +1,5 @@
-import { render } from 'utils/test-utils'
-/*import App from './App'
+/* import { render } from 'utils/test-utils'
+import App from './App'
 
 //jest.setTimeout(150000)
 describe('Application level Test cases', () => {
