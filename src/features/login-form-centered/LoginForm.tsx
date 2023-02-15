@@ -24,30 +24,25 @@ type FormValues = {
   password: string
 }
 
-export const LoginForm = (props: HTMLChakraProps<'form'>) => {
-  const { mutate: loginMutation, isError } = useLogin()
+type FormProps =  {
+  onSubmitForm: (val: FormValues) => void
+  isError: boolean
+}
+export const LoginForm = ( props: FormProps ) => {
+  
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm<FormValues>()
 
-  const onSubmit = (values: FormValues) => {
-    loginMutation(
-      { email: values.email, password: values.password },
-      {
-        onError: err => {
-          //const error = typeof err === "string" ? JSON.parse(err as string) : err;
-        },
-      },
-    )
-  }
+  
 
   return (
-    <chakra.form onSubmit={handleSubmit(onSubmit)} {...props}>
+    <chakra.form onSubmit={handleSubmit(props.onSubmitForm)} {...props} data-testid="loginForm">
       <Stack spacing="29px" mx={{ sm: '70px' }} pt="20px">
-        {isError && 
-          <Alert status="error" bg="#fd397a" border="1px solid #fd397a">
+        {props.isError && 
+          <Alert status="error" bg="#fd397a" border="1px solid #fd397a" data-testid="alertError">
             <AlertDescription color="#fff">
             <strong>Failed to sign in!</strong> Please check your credentials and try again.
             </AlertDescription>
@@ -65,12 +60,13 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
             {...register('email', { required: 'This required field' })}
             bg="#FFFFFF"
             outline="1px solid #D9D9D9"
+            data-testid="email"
           />
         </FormControl>
         <VStack pb="20px" alignItems="start" spacing="14px">
           <PasswordField {...register('password', { required: 'This is required field.' })} />
           <Text color="#345587" fontWeight="400" fontSize="12px">
-            <Link to="/account/reset/">Forgot Password?</Link>
+            <Link to="/account/reset/" data-testid="forgotPasswordLink">Forgot Password?</Link>
           </Text>
         </VStack>
         <Button
@@ -82,6 +78,7 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
           fontWeight="600"
           color="#FFFFFF"
           rounded="8px"
+          data-testid="signInButton"
         >
           SIGN IN
         </Button>
@@ -107,6 +104,7 @@ export const LoginForm = (props: HTMLChakraProps<'form'>) => {
           onClick={() => {
             window.location.href = 'vendor/register'
           }}
+          data-testid="registerBtn"
         >
           <Icon as={BiUserCheck} w="32px" h="26px" mr="19px" /> Register As a Vendor
         </Button>
