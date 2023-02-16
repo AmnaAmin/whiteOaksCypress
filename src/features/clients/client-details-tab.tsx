@@ -163,6 +163,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
+                          whiteSpace={"nowrap"}
                             colorScheme="brand"
                             isChecked={field.value}
                             onChange={event => {

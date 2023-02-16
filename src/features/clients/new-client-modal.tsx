@@ -34,13 +34,13 @@ const NewClientModal: React.FC<NewClientModalType> = props => {
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader mb="5px" borderBottom="2px solid #E2E8F0">
+          <ModalHeader  borderBottom="2px solid #E2E8F0">
             <FormLabel variant="strong-label" size="lg">
               {t(`${CLIENTS}.newClient`)}
             </FormLabel>
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
-          <ModalBody>
+          <ModalBody bg='#F2F3F4' px='12px'>
             <ClientDetailsTabs
               clientDetails={props.createdClient}
               setCreatedClientId={props.setCreatedClientId}
