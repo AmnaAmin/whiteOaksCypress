@@ -365,7 +365,7 @@ i18n.use(initReactI18next).init({
         ext: 'Ext',
         secondaryNo: 'Secondary No',
         primaryEmail: 'Primary Email',
-        businessEmail: "Business Email",
+        businessEmail: 'Business Email',
         secondaryEmail: 'Secondary Email',
         coiglExpirationDate: 'COI-GL Expiration Date',
         constructionTrade: 'Construction Trade',
@@ -509,6 +509,7 @@ i18n.use(initReactI18next).init({
         textUser: 'Text User',
         recipientPhoneNo: 'Recipient Phone No',
         WoId: 'WO Id',
+        viewAllNotifications: 'View All Notifications',
         // **** PROJECT COORDINATOR ****//
 
         // PC projectDetails
@@ -616,6 +617,7 @@ i18n.use(initReactI18next).init({
         textUser: 'Usuario de texto',
         recipientPhoneNo: 'Número de teléfono del destinatario',
         WoId: 'WO Id',
+        viewAllNotifications: 'Ver todas las notificaciones',
 
         // Payments tab pc
         lwDate: 'Fecha LW',
