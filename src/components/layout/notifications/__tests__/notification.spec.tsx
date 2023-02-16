@@ -29,8 +29,8 @@ beforeAll(() => {
 })
 
 jest.setTimeout(150000)
-describe('Test Alerts', () => {
-  test('Test Alerts', async () => {
+describe('Bell Notification Test Cases', () => {
+  test('Notifications show up in the bell menu. They are ordered on the basis of most recent notifications.', async () => {
     await renderNotifications({})
     await waitFor(() => {
       expect(screen.getByTestId('alert-0')).toBeInTheDocument()
