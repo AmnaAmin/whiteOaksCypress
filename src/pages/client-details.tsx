@@ -17,6 +17,7 @@ import {
 } from 'api/clients'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { BiErrorCircle } from 'react-icons/bi'
+import { Card } from 'components/card/card'
 
 type ClientDetailsTabsProps = {
   refetch?: () => void
@@ -94,12 +95,15 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit2(onSubmit, err => console.log('err..', err))} id="clientDetails" noValidate>
+        
         <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
-          <TabList>
+          <TabList borderBottom='none'>
+            
             <TabCustom isError={isClientDetailsTabErrors && tabIndex !== 0}>{t('details')}</TabCustom>
             <TabCustom>{t('market')}</TabCustom>
             {clientDetails?.id && <TabCustom>{t('notes')}</TabCustom>}
           </TabList>
+          <Card borderTopLeftRadius='0px !important' borderTopRightRadius='6px'>
           <TabPanels mt="20px">
             <TabPanel p="0px">
               <DetailsTab clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
@@ -111,7 +115,9 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
               <ClientNotes clientDetails={clientDetails} onClose={props.onClose} />
             </TabPanel>
           </TabPanels>
+          </Card>
         </Tabs>
+       
       </form>
       <DevTool control={control} />
     </FormProvider>
