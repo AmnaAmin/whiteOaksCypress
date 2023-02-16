@@ -114,6 +114,7 @@ steps:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'preprod-IntegrationTests'
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
+      REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
 
   - wait
 
@@ -138,6 +139,7 @@ steps:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'preprod'
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
+      REACT_APP_ESTIMATES_URL: 'https://estimates.woaharvest.com'
 
   - wait
 
