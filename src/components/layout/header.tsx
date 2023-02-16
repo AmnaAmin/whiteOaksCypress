@@ -16,11 +16,10 @@ import {
 } from '@chakra-ui/react'
 import DropdownLanguage from 'translation/DropdownLanguage'
 import React, { useState } from 'react'
-import { FaBell } from 'react-icons/fa'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
 import { RouterLink } from '../router-link/router-link'
-import { Notification } from './notification'
+import { Notification } from './notifications/notification'
 import { useTranslation } from 'react-i18next'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 import LogoIcon from 'icons/header-logo'
@@ -60,10 +59,11 @@ type HeaderProps = {
 const hoverEffect = {
   _focus: { background: '#F7FAFC' },
 }
+
 export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
   const { logout } = useAuth()
   const [show, setShow] = useState(true)
-  // const [showNotification, setShowNotification] = useState(false)
+  const [showAlertMenu, setShowAlertMenu] = useState(false)
   const { t } = useTranslation()
 
   return (
@@ -95,19 +95,11 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
           <Box position="relative">
             <Menu
               closeOnSelect={false}
-              // isOpen={showNotification}
-              // onClose={() => setShowNotification(false)}
-              // onOpen={() => setShowNotification(true)}
+              isOpen={showAlertMenu}
+              onClose={() => setShowAlertMenu(false)}
+              onOpen={() => setShowAlertMenu(true)}
             >
-              <MenuButton
-                transition="all 0.2s"
-                _active={{ color: '#4E87F8' }}
-                color="#A0AEC0"
-                _hover={{ color: 'gray.500' }}
-              >
-                <FaBell fontSize="16px" />
-              </MenuButton>
-              <Notification />
+              <Notification setShowAlertMenu={setShowAlertMenu} showAlertMenu={showAlertMenu} />
 
               {/* {showNotification && (
                 <Suspense fallback={() => <AiOutlineLoading3Quarters className="fa-spin" fontSize="1.5rem" />}>
