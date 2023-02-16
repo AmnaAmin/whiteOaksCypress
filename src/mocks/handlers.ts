@@ -9,6 +9,7 @@ import { creatATicketHandlers } from './api/creat-a-ticket/creat-a-ticket-handle
 import { vendorProejectTableHandlers } from './api/vendor-project/project-handlers'
 import { projectFilterTilesHandlers } from './api/vendor-project/project-filter-tiles-handlere'
 import { upcomingPaymentTableHandlers } from './api/dashboard/upcoming-payment-handlere'
+import { alertHandlers } from './api/alerts/alerts-handlers'
 
 export const handlers = [
   ...authenticationHandlers,
@@ -22,4 +23,5 @@ export const handlers = [
   ...vendorProejectTableHandlers,
   ...projectFilterTilesHandlers,
   ...upcomingPaymentTableHandlers,
+  ...alertHandlers,
 ]
