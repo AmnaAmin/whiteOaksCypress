@@ -99,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
               onClose={() => setShowAlertMenu(false)}
               onOpen={() => setShowAlertMenu(true)}
             >
-              <Notification setShowAlertMenu={setShowAlertMenu} />
+              <Notification setShowAlertMenu={setShowAlertMenu} showAlertMenu={showAlertMenu} />
 
               {/* {showNotification && (
                 <Suspense fallback={() => <AiOutlineLoading3Quarters className="fa-spin" fontSize="1.5rem" />}>

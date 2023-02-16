@@ -7,7 +7,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-import { alertCountEvent, getAlertCount } from '../../../features/alerts/alerts-service'
+import { alertCountEvent, getAlertCount, resetAlertCount } from '../../../features/alerts/alerts-service'
 
 import { FaBell } from 'react-icons/fa'
 
@@ -32,32 +32,34 @@ export const Notification = props => {
   const { data } = useAuth()
   const { setShowAlertMenu } = props
   const account = data?.user
-  const { notifiations, isLoading } = useFetchUserAlerts(null, account?.login)
+  const { notifiations, isLoading, refetch: refetchAlerts } = useFetchUserAlerts(null, account?.login)
   const { mutate: resolveAlerts, isLoading: isResolving } = useResolveAlerts({ hideToast: true })
   const { mutate: updateAlert } = useUpdateAlert({ hideToast: true })
-  const [notification, setNotification] = useState()
   const showLoadingSlate = isLoading || isResolving
   const [alertCount, setAlertCount] = useState(getAlertCount())
-
-  console.log('alertCount', alertCount)
-  //const { isOpen: isOpenAlertStatus, onClose: onCloseAlertStatus, onOpen: OnOpenAlertStatus } = useDisclosure()
   const handeResolve = id => {
     resolveAlerts([id])
   }
 
   const handleAlertCountFromFirebase = () => {
-    setAlertCount(getAlertCount())
+    const count = getAlertCount()
+    setAlertCount(count)
+    if (count > 0) {
+      refetchAlerts()
+    }
   }
 
   const handleClick = alert => {
-    setNotification(alert)
     if (!alert?.webSockectRead) {
       updateAlert({ ...alert, webSockectRead: true })
     }
     //OnOpenAlertStatus()
     setShowAlertMenu(false)
   }
-  console.log(notification)
+
+  const handleAlertIconClick = () => {
+    resetAlertCount()
+  }
 
   useEffect(() => {
     handleAlertCountFromFirebase()
@@ -70,9 +72,17 @@ export const Notification = props => {
 
   return (
     <>
-      <MenuButton transition="all 0.2s" _active={{ color: '#4E87F8' }} color="#A0AEC0" _hover={{ color: 'gray.500' }}>
+      <MenuButton
+        onClick={() => {
+          handleAlertIconClick()
+        }}
+        transition="all 0.2s"
+        _active={{ color: '#4E87F8' }}
+        color="#A0AEC0"
+        _hover={{ color: 'gray.500' }}
+      >
         <FaBell fontSize="16px" />
-        <Box sx={notificationCount}>{alertCount}</Box>
+        {alertCount > 0 && <Box sx={notificationCount}>{alertCount}</Box>}
       </MenuButton>
       <MenuList borderRadius={8} maxH="542px">
         <Box maxH="489px" border="none" overflow="auto" pb={2}>

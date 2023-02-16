@@ -1,5 +1,15 @@
 import React, { useEffect } from 'react'
-import { Box, Button, Container, Flex, FormLabel, Stack, Text, useColorModeValue as mode } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  FormLabel,
+  Stack,
+  Text,
+  useColorModeValue as mode,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { Header } from './header'
 import { Sidebar } from './sidebar'
 import { SidebarLink } from './sidebar-link'
@@ -9,16 +19,23 @@ import { useRoleBasedMenu } from './constants'
 import { IdleTimeOutModal } from './idle-time-out'
 import { useTranslation } from 'react-i18next'
 import { SIDE_NAV } from './sideNav.i18n'
-import { fetchToken } from 'firebase-sw'
+import { processRegisteration } from 'integrations/firebase/firebase-config'
+import { DeviceSupported } from 'integrations/firebase/device-support-warning'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
   const menu = useRoleBasedMenu()
   const { t } = useTranslation()
+  const { isOpen: isOpenBrowserWarning, onClose: onCloseBrowserWarning, onOpen: onOpenBrowserWarning } = useDisclosure()
 
   useEffect(() => {
-    fetchToken()
+    processRegisteration().then(result => {
+      if (result === 'Browser Not Supported') {
+        onOpenBrowserWarning()
+      }
+    })
   }, [])
+
   return (
     <Box width="100%">
       <Box position="fixed" top="0" left="0" right="0" zIndex="sticky" style={{ color: '#A1A6B1' }}>
@@ -132,6 +149,7 @@ export const Layout: React.FC = props => {
           {props.children}
         </Box>
       </Container>
+      {isOpenBrowserWarning && <DeviceSupported isOpen={isOpenBrowserWarning} onClose={onCloseBrowserWarning} />}
     </Box>
   )
 }
