@@ -32,7 +32,7 @@ export const Notification = props => {
   const { data } = useAuth()
   const { setShowAlertMenu } = props
   const account = data?.user
-  const { notifiations, isLoading, refetch: refetchAlerts } = useFetchUserAlerts(null, account?.login)
+  const { notifications, isLoading, refetch: refetchAlerts } = useFetchUserAlerts(null, account?.login)
   const { mutate: resolveAlerts, isLoading: isResolving } = useResolveAlerts({ hideToast: true })
   const { mutate: updateAlert } = useUpdateAlert({ hideToast: true })
   const showLoadingSlate = isLoading || isResolving
@@ -103,13 +103,14 @@ export const Notification = props => {
             </>
           ) : (
             <>
-              {notifiations.map(notification => {
+              {notifications.map((notification, index) => {
                 return (
                   <MenuItem
                     _hover={{ bg: 'none' }}
                     _focus={{ bg: 'none' }}
                     key={notification.id}
                     as="div"
+                    data-testid={'alert-' + index}
                     opacity={notification?.webSockectRead ? 0.6 : 1}
                   >
                     <Flex
@@ -135,15 +136,28 @@ export const Notification = props => {
                         _hover={{ bg: 'blue.50' }}
                         w="100%"
                       >
-                        <Text fontSize={16} color="#4A5568" fontWeight={500}>
-                          {notification?.title}
+                        <Text data-testid={'alert-' + index + '-title'} fontSize={16} color="#4A5568" fontWeight={500}>
+                          {notification?.triggeredType}
                         </Text>
 
-                        <Text fontSize={14} fontWeight={400} color="#718096" maxWidth={330} lineHeight="20px">
+                        <Text
+                          data-testid={'alert-' + index + '-message'}
+                          fontSize={14}
+                          fontWeight={400}
+                          color="#718096"
+                          maxWidth={330}
+                          lineHeight="20px"
+                        >
                           {notification?.message}
                         </Text>
 
-                        <Text fontSize={14} fontWeight={400} color="#A0AEC0" lineHeight="20px">
+                        <Text
+                          data-testid={'alert-' + index + '-time'}
+                          fontSize={14}
+                          fontWeight={400}
+                          color="#A0AEC0"
+                          lineHeight="20px"
+                        >
                           {formatDistanceToNow(new Date(notification?.dateCreated as string)) + ' ago'}
                         </Text>
                       </Box>

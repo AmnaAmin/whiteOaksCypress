@@ -5,12 +5,23 @@ import { WORK_ORDERS, PROJECTS, assignedItems, SWO_PROJECT, DOCUMENTS } from 'mo
 import { waitForLoadingToFinish, screen } from 'utils/test-utils'
 import { Notification } from '../notification'
 import { setToken } from 'utils/storage.utils'
+import { Menu } from '@chakra-ui/react'
+import { Header } from 'components/layout/header'
+import { BrowserRouter } from 'react-router-dom'
+import { TRIGGEREDALERTS } from 'mocks/api/alerts/alerts'
+import { formatDistanceToNow } from 'date-fns'
 
-export const renderNotifications = async ({ onSave, onClose, workOrder, projectData }: any) => {
-  await render(<Notification />, {
-    wrapper: Providers,
-  })
-
+export const renderNotifications = async ({}: any) => {
+  await render(
+    <BrowserRouter>
+      <Menu isOpen={true}>
+        <Notification />
+      </Menu>
+    </BrowserRouter>,
+    {
+      wrapper: Providers,
+    },
+  )
   await waitForLoadingToFinish()
 }
 beforeAll(() => {
@@ -18,8 +29,30 @@ beforeAll(() => {
 })
 
 jest.setTimeout(150000)
-describe('Work Order modal showing work order specific details for PC(Super set of PC) users', () => {
-  test('Verify work order modal content for active/pastdue work orders. Verify all completed items can be verified. Save call contains work order start date, expected completion and completed dates', async () => {})
-  test('Verify work order details in completed state', async () => {})
+describe('Test Alerts', () => {
+  test('Test Alerts', async () => {
+    await renderNotifications({})
+    await waitFor(() => {
+      expect(screen.getByTestId('alert-0')).toBeInTheDocument()
+      expect(screen.getByTestId('alert-1')).toBeInTheDocument()
+      expect(screen.getByTestId('alert-2')).toBeInTheDocument()
+
+      expect(screen.getByTestId('alert-0-title').textContent).toEqual('Project')
+      expect(screen.getByTestId('alert-0-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
+      expect(screen.getByTestId('alert-0-time').textContent).toEqual(
+        formatDistanceToNow(new Date('2023-02-16T08:22:25Z')) + ' ago',
+      )
+      expect(screen.getByTestId('alert-1-title').textContent).toEqual('Project')
+      expect(screen.getByTestId('alert-1-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
+      expect(screen.getByTestId('alert-1-time').textContent).toEqual(
+        formatDistanceToNow(new Date('2023-02-13T08:22:26Z')) + ' ago',
+      )
+      expect(screen.getByTestId('alert-2-title').textContent).toEqual('Project')
+      expect(screen.getByTestId('alert-2-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
+      expect(screen.getByTestId('alert-2-time').textContent).toEqual(
+        formatDistanceToNow(new Date('2023-01-16T08:22:26Z')) + ' ago',
+      )
+    })
+  })
 })
 /*eslint-disable */

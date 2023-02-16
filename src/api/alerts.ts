@@ -159,14 +159,15 @@ export const useFetchUserAlerts = (projectId?, accountLogin?) => {
     const response = await client(url, {})
     return response?.data
   })
-  const notifiations = _.orderBy(
+  const notifications = _.orderBy(
     alerts?.filter(a => a.login === accountLogin),
     [
       alert => {
         return alert?.webSockectRead
       },
       alert => {
-        return alert.id
+        const createdDate = new Date(alert?.dateCreated as string)
+        return createdDate
       },
     ],
     ['asc', 'desc'],
@@ -174,7 +175,7 @@ export const useFetchUserAlerts = (projectId?, accountLogin?) => {
 
   return {
     data: alerts,
-    notifiations,
+    notifications,
     ...rest,
   }
 }
