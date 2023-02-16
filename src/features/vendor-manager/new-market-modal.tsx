@@ -173,7 +173,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                   <Input {...register('metroServiceArea')} type="text" variant="required-field" w="215px" />
                 </Box>
 
-                <FormControl w="215px">
+                <FormControl w="225px">
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.state`)}
                   </FormLabel>
@@ -186,7 +186,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                           {...field}
                           options={stateSelectOptions}
                           // size="md"
-                          selectProps={{ isBorderLeft: true }}
+                          selectProps={{ isBorderLeft: true ,menuHeight: '103px'  }}
                           onChange={option => {
                             field.onChange(option)
                           }}

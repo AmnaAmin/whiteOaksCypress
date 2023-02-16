@@ -135,7 +135,7 @@ const ProjectDetailsTab = (props: tabProps) => {
             </TabPanel>
 
             <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '343px'}>
-              <InvoiceAndPayments />
+              <InvoiceAndPayments projectData={projectData} />
             </TabPanel>
 
             <TabPanel p="0" ml="32px" minH={style?.height ? '380px' : '343px'}>

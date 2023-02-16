@@ -139,6 +139,8 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
       ref={ref}
       chakraStyles={chakraStyles}
       {...props}
+      loadingMessage={() => 'Loading'}
+      isLoading={props?.loadingCheck}
       components={{
         IndicatorSeparator: false,
         SingleValue: option => {
