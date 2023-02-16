@@ -17,8 +17,8 @@ export const convertDateTimeFromServer = date => (date ? moment(date).format(APP
 
 export const convertDateTimeToServer = date => (date ? moment(date, APP_LOCAL_DATETIME_FORMAT_Z).toDate() : null)
 
-export const dateFormat = (date: string | Date ): any => {
-  if (date === null || date === "" || !date ) return ''
+export const dateFormat = (date: string | Date): any => {
+  if (date === null || date === '' || !date) return ''
 
   //return dateFormatNew(date);
   return date ? moment.utc(date).format('MM/DD/YYYY') : null
@@ -26,7 +26,7 @@ export const dateFormat = (date: string | Date ): any => {
 }
 
 export const dateFormatNew = (date: string | Date): any => {
-  return dateFormat(date);
+  return dateFormat(date)
   /*if (date === null || date === "") return ''
   
   if ( typeof date === "object" ) {
@@ -87,8 +87,8 @@ export const dateISOFormatWithZeroTime = (date: string | Date | null) => {
 
   //console.log( isoFormatDate );
   //console.log( moment.utc(date).format() )
-  
-  return moment(date).format( 'YYYY-MM-DD') + 'T00:00:00.000Z';
+
+  return moment(date).format('YYYY-MM-DD') + 'T00:00:00.000Z'
   //return isoFormatDate || null
 }
 

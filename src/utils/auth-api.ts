@@ -46,10 +46,11 @@ function handleUserResponse(user: any) {
 }
 
 function login({ email, password }: { email: string; password: string }) {
+  const firebaseToken = sessionStorage.getItem('fbToken')
   return client('authenticate', {
     username: email,
     password,
-    firebaseToken: null,
+    firebaseToken: firebaseToken,
     rememberMe: false,
   }).then(handleUserResponse)
 }

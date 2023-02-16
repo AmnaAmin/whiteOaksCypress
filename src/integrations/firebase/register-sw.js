@@ -1,5 +1,6 @@
 /* eslint-disable camelcase, no-console */
-//import { addAlertCount } from './shared/services/alert-service'
+
+import { addAlertCount } from 'features/alerts/alerts-service'
 
 const registerServiceWorker = () => {
   if ('serviceWorker' in navigator) {
@@ -18,7 +19,7 @@ const registerServiceWorker = () => {
       console.debug('Received a message from service worker: ', event.data, (data || {})?.alertHistoryId)
       switch (postMessageType) {
         case 'alert-notification':
-          // addAlertCount((data || {})?.alertHistoryId)
+          addAlertCount((data || {})?.alertHistoryId)
           break
         default:
           break
