@@ -18,7 +18,7 @@ export const Estimates = () => {
 
   const sendMessage = () => {
 
-    console.log( "John: Sending Message to Estimates From Main Portal." );
+    //console.log( "John: Sending Message to Estimates From Main Portal." );
     
     (document.getElementById('estimatesPortalIframe') as HTMLIFrameElement).contentWindow?.postMessage(
       { token: getToken(), user: user },
@@ -31,7 +31,7 @@ export const Estimates = () => {
 
     (document.getElementById('estimatesPortalIframe') as HTMLIFrameElement).onload = () => {
 
-      console.log( "John: iFrame loaded" );
+      //console.log( "John: iFrame loaded" );
       setTimeout( () => {
         sendMessage();
       }, 300 );
