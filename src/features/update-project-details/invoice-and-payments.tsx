@@ -117,6 +117,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                 render={({ field, fieldState }) => {
                   return (
                     <NumberInput
+                    datatest-id='SowAmount'
                       value={field.value}
                       onChange={event => {
                         field.onChange(event)
@@ -160,6 +161,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
               render={({ field }) => {
                 return (
                   <NumberInput
+                  datatest-id='final-Sow-Amount'
                     value={field.value}
                     onChange={event => {
                       field.onChange(event)
@@ -289,6 +291,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
               {t(`project.projectDetails.woaInvoiceDate`)}
             </FormLabel>
             <Input
+            datatest-id='woa-InvoiceDate'
               isDisabled={isWOAInvoiceDateDisabled}
               id="woaInvoiceDate"
               {...register('woaInvoiceDate', {
@@ -308,6 +311,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
             </FormLabel>
 
             <Input
+            datatest-id='woa-ExpectedDate'
               isDisabled={isWOAExpectedPayDateDisabled}
               id="woaExpectedPay"
               {...register('woaExpectedPayDate')}
@@ -329,6 +333,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
               render={({ field }) => {
                 return (
                   <NumberInput
+                  datatest-id='over-Payment'
                     value={field.value}
                     onChange={e => field.onChange(e.target.value)}
                     disabled={isOverPaymentDisalbed}
@@ -354,6 +359,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
               render={({ field }) => {
                 return (
                   <NumberInput
+                  datatest-id='remaining-Payment'
                     value={field.value}
                     onChange={e => field.onChange(e.target.value)}
                     disabled={isRemainingPaymentDisabled}
@@ -378,6 +384,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
               render={({ field, fieldState }) => {
                 return (
                   <NumberInput
+                  datatest-id='payment-0'
                     value={field.value}
                     onValueChange={(values: NumberFormatValues) => {
                       onPaymentValueChange(values)
