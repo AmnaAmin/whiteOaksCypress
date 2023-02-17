@@ -18,7 +18,7 @@ export const EstimateDetails = () => {
   const user = data?.user
   const { projectId } = useParams<{ projectId: string }>()
   
-  const iframeUrl = process.env.REACT_APP_ESTIMATES_URL + `estimate-details/${projectId}`;
+  const iframeUrl = process.env.REACT_APP_ESTIMATES_URL + `/estimate-details/${projectId}`;
 
   const iframe = useRef<HTMLIFrameElement>(null)
 
