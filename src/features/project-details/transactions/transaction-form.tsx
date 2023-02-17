@@ -13,6 +13,7 @@ import {
   Button,
   Divider,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
@@ -32,6 +33,7 @@ import {
   useProjectWorkOrdersWithChangeOrders,
   useTransaction,
   useTransactionStatusOptions,
+  useTransactionsV1,
   useTransactionTypes,
   useWorkOrderAwardStats,
   useWorkOrderChangeOrders,
@@ -152,6 +154,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   currentWorkOrderId,
 }) => {
   const { t } = useTranslation()
+  const toast = useToast()
   const { isAdmin, isVendor } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
@@ -169,7 +172,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isLoading: isAgainstLoading,
   } = useProjectWorkOrders(projectId, !!selectedTransactionId)
 
-  useEffect(() => {}, [transaction])
   const transactionStatusOptions = useTransactionStatusOptions()
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
@@ -258,6 +260,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
 
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
+  const { transactions } = useTransactionsV1(`${projectId}`)
+
   const { amount } = useTotalAmount(control)
   const againstOptions = useAgainstOptions(
     againstSelectOptions,
@@ -301,8 +305,34 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     resetExpectedCompletionDateFields(option)
   }
 
+  const hasPendingDrawsOnPaymentSave = values => {
+    if (values?.transactionType?.value === TransactionTypeValues.payment) {
+      const pendingDraws = transactions?.filter(
+        t =>
+          [TransactionTypeValues.draw].includes(t.transactionType) &&
+          !t?.parentWorkOrderId &&
+          [TransactionStatusValues.pending].includes(t?.status as TransactionStatusValues),
+      )
+      if (pendingDraws && pendingDraws?.length > 0) {
+        toast({
+          title: 'Payments Error',
+          description: t(`project.projectDetails.paymentError`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        return true
+      }
+    }
+    return false
+  }
+
   const onSubmit = useCallback(
     async (values: FormValues) => {
+      if (hasPendingDrawsOnPaymentSave(values)) {
+        return
+      }
       const queryOptions = {
         onSuccess() {
           onClose()
