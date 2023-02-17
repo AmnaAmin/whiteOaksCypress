@@ -139,6 +139,8 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
       ref={ref}
       chakraStyles={chakraStyles}
       {...props}
+      loadingMessage={() => 'Loading'}
+      isLoading={props?.loadingCheck}
       components={{
         IndicatorSeparator: false,
         SingleValue: option => {
@@ -173,7 +175,7 @@ const MenuList: React.FC<any> = props => {
   }
 
   return (
-    <div style={{ backgroundColor: '#fff', zIndex: 999, height: '200px', overflowY: 'scroll', maxWidth: '250px' }}>
+    <div style={{ backgroundColor: '#fff', zIndex: 999, height: '200px', maxWidth: '250px' }}>
       <List
         width={223}
         height={215}

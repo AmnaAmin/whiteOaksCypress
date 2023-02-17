@@ -146,7 +146,7 @@ export const NewWorkOrder: React.FC<{
   const { swoProject } = useFetchProjectId(projectData?.id)
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
-  const { vendors } = useFilteredVendors(vendorSkillId, projectData?.id)
+  const { vendors, isLoading: vendorsLoading } = useFilteredVendors(vendorSkillId, projectData?.id)
   const toast = useToast()
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
 
@@ -196,6 +196,7 @@ export const NewWorkOrder: React.FC<{
       swoProject={swoProject}
       trades={trades}
       vendors={vendors}
+      vendorsLoading={vendorsLoading}
       setVendorSkillId={setVendorSkillId}
     />
   )
@@ -210,6 +211,7 @@ export const NewWorkOrderForm: React.FC<{
   swoProject: SWOProject
   trades: any
   vendors: any
+  vendorsLoading?: boolean
   setVendorSkillId: (val) => void
   isWorkOrderCreating
 }> = props => {
@@ -222,6 +224,7 @@ export const NewWorkOrderForm: React.FC<{
     swoProject,
     trades,
     vendors,
+    vendorsLoading,
     setVendorSkillId,
     isWorkOrderCreating,
   } = props
@@ -496,6 +499,7 @@ export const NewWorkOrderForm: React.FC<{
                             <>
                               <Select
                                 {...field}
+                                loadingCheck={vendorsLoading}
                                 options={vendorOptions}
                                 size="md"
                                 selectProps={{ isBorderLeft: true }}
