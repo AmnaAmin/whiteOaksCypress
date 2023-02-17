@@ -5,7 +5,6 @@ import numeral from 'numeral'
 import { isDefined } from 'utils'
 import { dateFormat } from 'utils/date-time-utils'
 import { percentageFormatter } from 'utils/string-formatters'
-import { Link } from 'react-router-dom'
 
 export const ESTIMATE_TABLE_QUERIES_KEY = {
   id: 'id.equals',
