@@ -50,7 +50,8 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
   const isAgainstProjectSOWOptionSelected = selectedAgainstId && selectedAgainstId === AGAINST_DEFAULT_VALUE
-  const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.draw
+  const isTransactionTypeDrawAgainstProjectSOWSelected = (selectedTransactionTypeId === TransactionTypeValues.draw || selectedTransactionTypeId === TransactionTypeValues.shippingFee || selectedTransactionTypeId === TransactionTypeValues.carrierFee  || selectedTransactionTypeId === TransactionTypeValues.permitFee)
+  // const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.shipping
   // YK - PSWOA-1243
   // && isAgainstProjectSOWOptionSelected
   const refundCheckbox: TransactionsWithRefundType = {

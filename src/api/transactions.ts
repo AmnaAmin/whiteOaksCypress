@@ -144,6 +144,18 @@ const transactionTypeOptions = [
     value: TransactionTypeValues.factoring,
     label: 'Factoring',
   },
+  {
+    value: TransactionTypeValues.shippingFee,
+    label: 'Shipping Fee',
+  },
+  {
+    value: TransactionTypeValues.carrierFee,
+    label: 'Carrier Fee',
+  },
+  {
+    value: TransactionTypeValues.permitFee,
+    label: 'Permit Fee',
+  },
 ]
 
 export const useTransactionTypes = (screen?: string) => {

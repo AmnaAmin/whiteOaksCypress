@@ -277,6 +277,9 @@ export type ProjectFinancialOverview = {
   revisedVendorWorkOrder: number
   revisedChangeOrder: number
   finalVendorWorkOrder: number
+  carrierFee: number
+  shipFee: number
+  permitFee: number
 }
 
 export type AddressInfo = { address: string; city: string; state: string; zipCode: string }
