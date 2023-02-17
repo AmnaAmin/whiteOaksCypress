@@ -9,7 +9,7 @@ import { ViewLoader } from 'components/page-level-loader'
 import { Box } from '@chakra-ui/layout'
 import { useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
-import { useMutation } from 'react-query' 
+import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 
 type AuthState = {
@@ -17,32 +17,29 @@ type AuthState = {
   token: string
 } | null
 
-
-type LoginPayload  = {
-  email: string;
-  password: string;
+type LoginPayload = {
+  email: string
+  password: string
 }
 
 export const useLogin = () => {
-
   const { setData } = useAsync({})
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return useMutation({
-    mutationFn: async ( loginPayload: LoginPayload ) => {
-      
-      const authLogin = await auth.login(loginPayload);
-      const accountResponse =  await client('/api/account', { token: authLogin.id_token })
-      setToken(authLogin.id_token);
+    mutationFn: async (loginPayload: LoginPayload) => {
+      const authLogin = await auth.login(loginPayload)
+      const accountResponse = await client('/api/account', { token: authLogin.id_token })
+      setToken(authLogin.id_token)
 
       setData({ user: accountResponse?.data?.user, token: authLogin.id_token })
 
-      return accountResponse;
+      return accountResponse
     },
     onSuccess: () => {
-      navigate(0);
-    }
-  });
+      navigate(0)
+    },
+  })
 }
 
 async function bootstrapAppData() {
@@ -99,7 +96,7 @@ function AuthProvider(props: AuthProviderProps) {
         })
         .catch(error => {
           const err = JSON.parse(error)
-          
+
           toast({
             title: err?.title || 'Error',
             description: err?.message ? t(err?.message) : 'Something went wrong',

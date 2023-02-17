@@ -166,6 +166,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                   return (
                     <>
                       <NumberInput
+                      data-testid='OriginalSow'
                         value={field.value}
                         onValueChange={values => {
                           const { floatValue } = values
