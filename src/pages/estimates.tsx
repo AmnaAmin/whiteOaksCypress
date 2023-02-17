@@ -34,7 +34,7 @@ export const Estimates = () => {
       //console.log( "John: iFrame loaded" );
       setTimeout( () => {
         sendMessage();
-      }, 300 );
+      }, 2000 );
 
     }
     
