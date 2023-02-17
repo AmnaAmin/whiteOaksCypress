@@ -8,6 +8,10 @@ document.addEventListener( "DOMContentLoaded", () => {
 
 } );
 
+window.addEventListener( "message", ( event: any ) => {
+  console.log( "John: Event Data Received From Child", event );
+} );
+
 export const Estimates = () => {
   const { data } = useAuth()
   const user = data?.user
@@ -29,15 +33,15 @@ export const Estimates = () => {
 
   useEffect( () => {
 
-    (document.getElementById('estimatesPortalIframe') as HTMLIFrameElement).onload = () => {
+    window.addEventListener( "message", ( event: any ) => {
 
-      //console.log( "John: iFrame loaded" );
-      setTimeout( () => {
+      if ( event.data.estimatesLoaded ) {
         sendMessage();
-      }, 2000 );
+      }
+      console.log( "John: Event Data Received From Child", event );
+    } );
 
-    }
-    
+   
 
   }, [] );
 
