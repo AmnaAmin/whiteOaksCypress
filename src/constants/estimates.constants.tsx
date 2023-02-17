@@ -66,7 +66,7 @@ export const ESTIMATE_COLUMNS: ColumnDef<any>[] = [
           }}
           color="brand.300"
         >
-          <Link to={`/estimate-details/${value}`}>{value}</Link>
+          {value}
         </Box>
       )
     },
