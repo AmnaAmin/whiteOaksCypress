@@ -127,7 +127,7 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
             <FormLabel variant="strong-label" size="md" htmlFor="gateCode">
               {t(`project.projectDetails.gateCode`)}
             </FormLabel>
-            <Input border=" 1px solid #E2E8F0" disabled={isGateCodeDisabled} id="gateCode" {...register('gateCode')} />
+            <Input datatest-id='gate-Code' border=" 1px solid #E2E8F0" disabled={isGateCodeDisabled} id="gateCode" {...register('gateCode')} />
             <FormErrorMessage>{errors.gateCode && errors.gateCode.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -137,6 +137,7 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
               {t(`project.projectDetails.lockBoxCode`)}
             </FormLabel>
             <Input
+             datatest-id='lock-Box-Code'
               border=" 1px solid #E2E8F0"
               disabled={isLockBoxCodeDisabled}
               id="lockBoxCode"
