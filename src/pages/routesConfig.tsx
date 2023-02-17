@@ -118,8 +118,10 @@ export default function useRoutesConfig() {
       ]
     case isOperations:
       return [
+        { path: 'estimates', element: Estimates },
         { path: 'projects', element: Projects },
         { path: 'project-details/:projectId', element: ProjectDetails },
+        { path: 'estimates/estimate-details/:projectId', element: EstimateDetails },
         { path: 'payable', element: Payable },
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
