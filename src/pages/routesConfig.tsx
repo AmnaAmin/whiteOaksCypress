@@ -88,6 +88,7 @@ export default function useRoutesConfig() {
         { path: 'adminDashboard', element: Dashboard },
         { path: 'userManager', element: UserManagement },
         { path: 'estimate-details/:projectId', element: EstimateDetails },
+        { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'projectType', element: ProjectType },
         { path: 'estimates', element: Estimates },
         { path: 'projects', element: Projects },
