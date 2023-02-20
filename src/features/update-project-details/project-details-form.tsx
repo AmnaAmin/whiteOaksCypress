@@ -146,7 +146,7 @@ const ProjectDetailsTab = (props: tabProps) => {
             <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
               {t(`project.projectDetails.invoicingPayment`)}
             </TabCustom>
-            <TabCustom isError={isContactsFormErrors && tabIndex !== 2}>
+            <TabCustom datatest-id='contacts-1' isError={isContactsFormErrors && tabIndex !== 2}>
               {t(`project.projectDetails.contacts`)}
             </TabCustom>
             <TabCustom>{t(`project.projectDetails.location`)}</TabCustom>

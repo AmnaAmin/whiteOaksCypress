@@ -114,20 +114,20 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isPaymentDisabled: !(isStatusClientPaid || isStatusInvoiced || invoiceBackDate) || remainingPayment === 0,
 
     // Contacts field states
-    isProjectCoordinatorDisabled: !isAdmin && !isProjectCoordinator && !isDoc, 
+    isProjectCoordinatorDisabled: !isAdmin && !isDoc && !isAccounting &&isAllTimeDisabled, 
     isProjectCoordinatorPhoneNumberDisabled: isAllTimeDisabled,
     isProjectCoordinatorExtensionDisabled: isAllTimeDisabled,
-    isFieldProjectManagerDisabled: !isAdmin && !isProjectCoordinator && !isDoc && isAllTimeDisabled,
+    isFieldProjectManagerDisabled: !isAdmin && !isProjectCoordinator && !isDoc && !isAccounting && isAllTimeDisabled,
     isFieldProjectManagerPhoneNumberDisabled: isAllTimeDisabled,
     isFieldProjectManagerExtensionDisabled: isAllTimeDisabled,
-    isClientDisabled: !isAdmin,
+    isClientDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
 
     // Location Form fields states
-    isAddressDisabled: !isAdmin,
-    isCityDisabled: !isAdmin,
-    isStateDisabled: !isAdmin,
-    isZipDisabled: !isAdmin,
-    isMarketDisabled: !isAdmin,
+    isAddressDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
+    isCityDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
+    isStateDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
+    isZipDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
+    isMarketDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
     isGateCodeDisabled:
       isFPM || isDoc || isProjectCoordinator || isAccounting || isAdmin
         ? !newActivePunchEnabledFieldStatus

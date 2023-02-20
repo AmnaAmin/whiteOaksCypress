@@ -258,7 +258,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
           </FormControl>
         </GridItem>
         <GridItem>
-          <FormControl w="215px" isInvalid={!!errors.paymentTerms}>
+          <FormControl data-testid="payment-term" w="215px" isInvalid={!!errors.paymentTerms}>
             <FormLabel variant="strong-label" size="md">
               {t(`project.projectDetails.paymentTerms`)}
             </FormLabel>

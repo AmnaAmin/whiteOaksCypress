@@ -129,7 +129,7 @@ const Contact: React.FC<ContactProps> = ({
           <FormControl isInvalid={!!errors?.fieldProjectManagerPhoneNumber}>
             <InputLabel title={'project.projectDetails.phone'} htmlFor={'fieldProjectManagerPhoneNumber'} />
             <Input
-             datatest-id='fpm-Phone-Ext'
+             datatest-id='fpm-Phone'
               placeholder="098-987-2233"
               isDisabled={isFieldProjectManagerPhoneNumberDisabled}
               id="fieldProjectManagerPhoneNumber"
