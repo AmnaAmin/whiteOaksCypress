@@ -135,6 +135,9 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     (firstFinancialRecord?.changeOrder || 0) +
     (firstFinancialRecord?.adjustment || 0)
 
+  const projectExpenses =  (firstFinancialRecord?.shipFee || 0) + (firstFinancialRecord?.permitFee || 0) +  (firstFinancialRecord?.carrierFee || 0)
+
+
   const { vendorAccountPayable, projectTotalCost, materialCost, vendorPayment } = restProjectFinancialOverviews?.reduce(
     (final, curr) => {
       return {
@@ -147,18 +150,20 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     { vendorAccountPayable: 0, projectTotalCost: 0, materialCost: 0, vendorPayment: 0 },
   ) || { vendorAccountPayable: 0, projectTotalCost: 0, materialCost: 0, vendorPayment: 0 }
 
-  const profitMargin = originalSOWAmount === 0 ? 0 : (originalSOWAmount - projectTotalCost) / originalSOWAmount
+  const finalProjectTotalCost = projectTotalCost + projectExpenses;
+
+  const profitMargin = originalSOWAmount === 0 ? 0 : (originalSOWAmount - finalProjectTotalCost) / originalSOWAmount
 
   return {
     finalSOWAmount: numeral(finalSOWAmount).format('$0,0.00'),
     accountPayable: numeral(vendorAccountPayable).format('$0,0.00'),
-    projectTotalCost: numeral(projectTotalCost).format('$0,0.00'),
+    projectTotalCost: numeral(finalProjectTotalCost).format('$0,0.00'),
     revenue: numeral(finalSOWAmount).format('$0,0.00'),
-    profits: numeral(finalSOWAmount - projectTotalCost).format('$0,0.00'),
+    profits: numeral(finalSOWAmount - finalProjectTotalCost).format('$0,0.00'),
     profitMargin: numeral(profitMargin).format('0.00%'),
     material: numeral(materialCost).format('$0,0.00'),
     vendorPayment: numeral(vendorPayment).format('$0,0.00'),
-    projectTotalCostNumber: projectTotalCost,
+    projectTotalCostNumber: finalProjectTotalCost,
     financialOveriewTableData:
       [firstFinancialRecord]?.map(fo => ({
         ...fo,
