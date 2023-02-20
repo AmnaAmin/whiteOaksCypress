@@ -265,11 +265,14 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
             <Controller
               control={control}
               name="paymentTerms"
+              
               rules={{ required: !isPaymentTermsDisabled ? 'This is required field.' : false }}
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
                     {...field}
+                  testId='payment-term'
+
                     isDisabled={isPaymentTermsDisabled}
                     options={PAYMENT_TERMS_OPTIONS}
                     selectProps={{ isBorderLeft: !isPaymentTermsDisabled }}
