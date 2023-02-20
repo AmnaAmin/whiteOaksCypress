@@ -144,6 +144,18 @@ const transactionTypeOptions = [
     value: TransactionTypeValues.factoring,
     label: 'Factoring',
   },
+  {
+    value: TransactionTypeValues.shippingFee,
+    label: 'Shipping Fee',
+  },
+  {
+    value: TransactionTypeValues.carrierFee,
+    label: 'Carrier Fee',
+  },
+  {
+    value: TransactionTypeValues.permitFee,
+    label: 'Permit Fee',
+  },
 ]
 
 export const useTransactionTypes = (screen?: string) => {
@@ -152,7 +164,7 @@ export const useTransactionTypes = (screen?: string) => {
   if (screen === 'WORK_ORDER_TRANSACTION_TABLE_MODAL' && !isVendor) {
     const transactionType = transactionTypeOptions.filter(option => option.label !== 'Payment')
     return {
-      transactionTypeOptions: transactionType.slice(0, 6),
+      transactionTypeOptions: transactionType.slice(0, 5),
     }
   }
   return {

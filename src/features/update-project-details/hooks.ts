@@ -7,7 +7,18 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   const status = useWatch({ name: 'status', control })
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
   const remainingPayment = useWatch({ name: 'remainingPayment', control })
-  const { isFPM, isProjectCoordinator, isDoc, isAccounting, isAdmin, isOperations, isVendor, isClientManager, isConstructionOperations,isVendorManager } = useUserRolesSelector()
+  const {
+    isFPM,
+    isProjectCoordinator,
+    isDoc,
+    isAccounting,
+    isAdmin,
+    isOperations,
+    isVendor,
+    isClientManager,
+    isConstructionOperations,
+    isVendorManager,
+  } = useUserRolesSelector()
 
   const projectStatus = status?.value
 
@@ -42,7 +53,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isWOACompletionDateRequired: isStatusClosed,
     isClientWalkthroughDateRequired: isStatusClosed,
     isClientSignOffDateRequired: isStatusClosed,
-    
+
     isWOAStartDisabled:
       isFPM ||
       isStatusClosed ||
@@ -86,19 +97,9 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
       isStatusPaid ||
       isStatusOverPayment ||
       isStatusInvoiced,
-    isReconcileDisabled:
-      isFPM || 
-      isVendor || 
-      isClientManager ||
-      isConstructionOperations || 
-      isVendorManager,
-    isReconcileAllowed:
-      isAdmin || 
-      isDoc || 
-      isAccounting ||
-      isOperations || 
-      isProjectCoordinator,
-  
+    isReconcileDisabled: isFPM || isVendor || isClientManager || isConstructionOperations || isVendorManager,
+    isReconcileAllowed: isAdmin || isDoc || isAccounting || isOperations || isProjectCoordinator,
+
     // Invoicing and payment form fields states
     isOriginalSOWAmountDisabled: isAllTimeDisabled,
     isFinalSOWAmountDisabled: isAllTimeDisabled,
