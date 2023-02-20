@@ -136,7 +136,7 @@ const PaymentInfoTab = props => {
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
-  const invoicedRquired = workOrder?.statusLabel?.toLowerCase() === 'invoiced'
+  const invoicedRequired = workOrder?.statusLabel?.toLowerCase() === 'invoiced'
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -177,9 +177,9 @@ const PaymentInfoTab = props => {
                     size="md"
                     css={calendarIcon}
                     isDisabled={!dateInvoiceSubmittedEnabled}
-                    variant={invoicedRquired ? 'required-field' : 'outline'}
+                    variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('dateInvoiceSubmitted', {
-                      required: invoicedRquired && 'This is required',
+                      required: invoicedRequired && 'This is required',
                     })}
                     onChange={e => {
                       const dateInvSubmitted = e.target.value
@@ -251,9 +251,9 @@ const PaymentInfoTab = props => {
                     size="md"
                     css={calendarIcon}
                     isDisabled={!paymentTermDateEnabled}
-                    variant={invoicedRquired ? 'required-field' : 'outline'}
+                    variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('paymentTermDate', {
-                      required: invoicedRquired && 'This is required',
+                      required: invoicedRequired && 'This is required',
                     })}
                   />
                   <FormErrorMessage>{errors?.paymentTermDate?.message}</FormErrorMessage>
@@ -270,9 +270,9 @@ const PaymentInfoTab = props => {
                     size="md"
                     css={calendarIcon}
                     isDisabled={!expectedPaymentDateEnabled}
-                    variant={invoicedRquired ? 'required-field' : 'outline'}
+                    variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('expectedPaymentDate', {
-                      required: invoicedRquired && 'This is required',
+                      required: invoicedRequired && 'This is required',
                     })}
                   />
                   <FormErrorMessage>{errors?.expectedPaymentDate?.message}</FormErrorMessage>
@@ -294,9 +294,9 @@ const PaymentInfoTab = props => {
                     size="md"
                     css={calendarIcon}
                     isDisabled={!datePaymentProcessedEnabled}
-                    variant={invoicedRquired ? 'required-field' : 'outline'}
+                    variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('datePaymentProcessed', {
-                      required: invoicedRquired && 'This is required',
+                      required: invoicedRequired && 'This is required',
                     })}
                   />
                   <FormErrorMessage>{errors?.datePaymentProcessed?.message}</FormErrorMessage>
