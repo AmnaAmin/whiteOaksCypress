@@ -13,6 +13,7 @@ import {
   Button,
   Divider,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
@@ -32,6 +33,7 @@ import {
   useProjectWorkOrdersWithChangeOrders,
   useTransaction,
   useTransactionStatusOptions,
+  useTransactionsV1,
   useTransactionTypes,
   useWorkOrderAwardStats,
   useWorkOrderChangeOrders,
@@ -75,6 +77,7 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
+  TRANSACTION_FEILD_DEFAULT,
   TRANSACTION_MARK_AS_OPTIONS_ARRAY,
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
@@ -147,11 +150,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   selectedTransactionId,
   projectId,
   projectStatus,
-  heading,
   screen,
   currentWorkOrderId,
 }) => {
   const { t } = useTranslation()
+  const toast = useToast()
   const { isAdmin, isVendor } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
@@ -213,21 +216,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
   }, [workOrderId, awardPlansStats])
 
-  const { check, isValidForAwardPlan } = useIsAwardSelect(control)
+  useEffect(() => {
+    if (selectedWorkOrderStats && !transaction) {
+      setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
+      setRemainingAmt(false)
+    }
+  }, [selectedWorkOrderStats])
 
-  const showDrawRemainingMsg =
-    !transaction &&
-    transType?.label === 'Draw' &&
-    isValidForAwardPlan &&
-    (selectedWorkOrderStats?.drawRemaining === null ||
-      (selectedWorkOrderStats && selectedWorkOrderStats?.drawRemaining < 1))
-
-  const showMaterialRemainingMsg =
-    !transaction &&
-    transType?.label === 'Material' &&
-    isValidForAwardPlan &&
-    (selectedWorkOrderStats?.materialRemaining === null ||
-      (selectedWorkOrderStats && selectedWorkOrderStats?.materialRemaining < 1))
+  const { check, isValidForAwardPlan, showUpgradeOption } = useIsAwardSelect(
+    control,
+    transaction,
+    selectedWorkOrderStats,
+    remainingAmt,
+  )
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
 
@@ -259,6 +260,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
 
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
+  const { transactions } = useTransactionsV1(`${projectId}`)
+
   const { amount } = useTotalAmount(control)
   const againstOptions = useAgainstOptions(
     againstSelectOptions,
@@ -302,8 +305,34 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     resetExpectedCompletionDateFields(option)
   }
 
+  const hasPendingDrawsOnPaymentSave = values => {
+    if (values?.transactionType?.value === TransactionTypeValues.payment) {
+      const pendingDraws = transactions?.filter(
+        t =>
+          [TransactionTypeValues.draw].includes(t.transactionType) &&
+          !t?.parentWorkOrderId &&
+          [TransactionStatusValues.pending].includes(t?.status as TransactionStatusValues),
+      )
+      if (pendingDraws && pendingDraws?.length > 0) {
+        toast({
+          title: 'Payments Error',
+          description: t(`project.projectDetails.paymentError`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        return true
+      }
+    }
+    return false
+  }
+
   const onSubmit = useCallback(
     async (values: FormValues) => {
+      if (hasPendingDrawsOnPaymentSave(values)) {
+        return
+      }
       const queryOptions = {
         onSuccess() {
           onClose()
@@ -385,17 +414,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {isFormLoading && <ViewLoader />}
       {check && isLienWaiverRequired && <LienWaiverAlert />}
       {!check && isValidForAwardPlan && materialAndDraw ? <ProjectAwardAlert /> : null}
-      {check && showDrawRemainingMsg && (
+      {check && showUpgradeOption && (
         <ProjectTransactionRemainingAlert
           msg="DrawRemaining"
-          onOpen={onProjectAwardOpen}
-          onClose={onClose}
-          isUpgradeProjectAward={true}
-        />
-      )}
-      {check && showMaterialRemainingMsg && (
-        <ProjectTransactionRemainingAlert
-          msg="MaterialRemaining"
           onOpen={onProjectAwardOpen}
           onClose={onClose}
           isUpgradeProjectAward={true}
@@ -878,7 +899,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-            isDisabled={amount === 0 || showDrawRemainingMsg || showMaterialRemainingMsg || !invoicedDate}
+            isDisabled={amount === 0 || showUpgradeOption || !invoicedDate}
             colorScheme="darkPrimary"
             onClick={event => {
               event.stopPropagation()
@@ -903,8 +924,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   isFormSubmitLoading ||
                   isMaterialsLoading ||
                   (!check && isValidForAwardPlan && materialAndDraw) ||
-                  showDrawRemainingMsg ||
-                  showMaterialRemainingMsg ||
+                  showUpgradeOption ||
                   remainingAmt
                 }
               >

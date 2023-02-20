@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router';
 import { useAuth } from 'utils/auth-context';
 import { getToken } from 'utils/storage.utils'
 
@@ -9,20 +10,20 @@ document.addEventListener( "DOMContentLoaded", () => {
 } );
 
 window.addEventListener( "message", ( event: any ) => {
-  console.log( "John: Event Data Received From Child", event );
+  //console.log( "John: Event Data Received From Child", event );
 } );
 
 export const Estimates = () => {
   const { data } = useAuth()
   const user = data?.user
   
-  const iframeUrl = process.env.REACT_APP_ESTIMATES_URL; //? process.env.REACT_APP_ESTIMATES_URL : 'http://localhost:3000/';
+  const iframeUrl = process.env.REACT_APP_ESTIMATES_URL;
+
+  const navigate = useNavigate();
 
   const iframe = useRef<HTMLIFrameElement>(null)
 
   const sendMessage = () => {
-
-    //console.log( "John: Sending Message to Estimates From Main Portal." );
     
     (document.getElementById('estimatesPortalIframe') as HTMLIFrameElement).contentWindow?.postMessage(
       { token: getToken(), user: user },
@@ -34,11 +35,16 @@ export const Estimates = () => {
   useEffect( () => {
 
     window.addEventListener( "message", ( event: any ) => {
-
+  
       if ( event.data.estimatesLoaded ) {
         sendMessage();
       }
-      console.log( "John: Event Data Received From Child", event );
+
+      if ( event.data.isEstimatesDetailsPage ) {
+        navigate(`/${event.data.path}/${event.data.estimatesId}/`);
+        //window.history.pushState(null, '', `/${event.data.path}/${event.data.estimatesId}`);
+      }
+      console.log( "WOA: Event Data Received From Child", event );
     } );
 
    

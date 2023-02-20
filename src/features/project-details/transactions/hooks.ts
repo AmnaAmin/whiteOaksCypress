@@ -157,11 +157,31 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
   }
 }
 
-export const useIsAwardSelect = (control: Control<FormValues, any>) => {
+export const useIsAwardSelect = (
+  control: Control<FormValues, any>,
+  transaction?,
+  selectedWorkOrderStats?,
+  remainingAmt?,
+) => {
   const against = useWatch({ name: 'against', control })
+  const transType = useWatch({ name: 'transactionType', control })
   const check = against?.awardStatus
   const isValidForAwardPlan = against?.isValidForAwardPlan
-  return { check, isValidForAwardPlan }
+  const remainingAmountExceeded = (transType?.label === 'Draw' || transType?.label === 'Material') && remainingAmt
+
+  const drawConsumed =
+    transType?.label === 'Draw' &&
+    (selectedWorkOrderStats?.drawRemaining === null ||
+      (selectedWorkOrderStats && selectedWorkOrderStats?.drawRemaining < 1))
+
+  const materialConsumed =
+    transType?.label === 'Material' &&
+    (selectedWorkOrderStats?.materialRemaining === null ||
+      (selectedWorkOrderStats && selectedWorkOrderStats?.materialRemaining < 1))
+
+  const showUpgradeOption =
+    !transaction && isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
+  return { check, isValidForAwardPlan, showUpgradeOption }
 }
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
