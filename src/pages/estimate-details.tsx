@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from 'utils/auth-context';
 import { getToken } from 'utils/storage.utils'
 
@@ -30,7 +30,7 @@ export const EstimateDetails = () => {
     );
 
   }
-
+  const navigate = useNavigate();
   useEffect( () => {
 
     window.addEventListener( "message", ( event: any ) => {
@@ -42,6 +42,13 @@ export const EstimateDetails = () => {
       if ( event.data.isEstimatesDetailsPage ) {
         //window.history.pushState(null, '', `/${event.data.path}/${event.data.estimatesId}`);
       }
+      if ( event.data.redirectToProjectsPage ) {
+        setTimeout(()=> {
+          window.location.href = `project-details/${event.data.projectId}/`;
+        }, 300)
+        console.log(`project-details/${event.data.projectId}`);
+      }
+
       console.log( "WOA: Event Data Received From Child", event );
     } );
 
