@@ -7,7 +7,18 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
   const status = useWatch({ name: 'status', control })
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
   const remainingPayment = useWatch({ name: 'remainingPayment', control })
-  const { isFPM, isProjectCoordinator, isDoc, isAccounting, isAdmin, isOperations, isVendor, isClientManager, isConstructionOperations,isVendorManager } = useUserRolesSelector()
+  const {
+    isFPM,
+    isProjectCoordinator,
+    isDoc,
+    isAccounting,
+    isAdmin,
+    isOperations,
+    isVendor,
+    isClientManager,
+    isConstructionOperations,
+    isVendorManager,
+  } = useUserRolesSelector()
 
   const projectStatus = status?.value
 
@@ -42,7 +53,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isWOACompletionDateRequired: isStatusClosed,
     isClientWalkthroughDateRequired: isStatusClosed,
     isClientSignOffDateRequired: isStatusClosed,
-    
+
     isWOAStartDisabled:
       isFPM ||
       isStatusClosed ||
@@ -86,19 +97,9 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
       isStatusPaid ||
       isStatusOverPayment ||
       isStatusInvoiced,
-    isReconcileDisabled:
-      isFPM || 
-      isVendor || 
-      isClientManager ||
-      isConstructionOperations || 
-      isVendorManager,
-    isReconcileAllowed:
-      isAdmin || 
-      isDoc || 
-      isAccounting ||
-      isOperations || 
-      isProjectCoordinator,
-  
+    isReconcileDisabled: isFPM || isVendor || isClientManager || isConstructionOperations || isVendorManager,
+    isReconcileAllowed: isAdmin || isDoc || isAccounting || isOperations || isProjectCoordinator,
+
     // Invoicing and payment form fields states
     isOriginalSOWAmountDisabled: isAllTimeDisabled,
     isFinalSOWAmountDisabled: isAllTimeDisabled,
@@ -113,20 +114,20 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isPaymentDisabled: !(isStatusClientPaid || isStatusInvoiced || invoiceBackDate) || remainingPayment === 0,
 
     // Contacts field states
-    isProjectCoordinatorDisabled: !isAdmin,
+    isProjectCoordinatorDisabled: !isAdmin && !isDoc && !isAccounting &&isAllTimeDisabled, 
     isProjectCoordinatorPhoneNumberDisabled: isAllTimeDisabled,
     isProjectCoordinatorExtensionDisabled: isAllTimeDisabled,
-    isFieldProjectManagerDisabled: !isAdmin && isAllTimeDisabled,
+    isFieldProjectManagerDisabled: !isAdmin && !isProjectCoordinator && !isDoc && !isAccounting && isAllTimeDisabled,
     isFieldProjectManagerPhoneNumberDisabled: isAllTimeDisabled,
     isFieldProjectManagerExtensionDisabled: isAllTimeDisabled,
-    isClientDisabled: !isAdmin,
+    isClientDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
 
     // Location Form fields states
-    isAddressDisabled: !isAdmin,
-    isCityDisabled: !isAdmin,
-    isStateDisabled: !isAdmin,
-    isZipDisabled: !isAdmin,
-    isMarketDisabled: !isAdmin,
+    isAddressDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
+    isCityDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
+    isStateDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
+    isZipDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
+    isMarketDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
     isGateCodeDisabled:
       isFPM || isDoc || isProjectCoordinator || isAccounting || isAdmin
         ? !newActivePunchEnabledFieldStatus

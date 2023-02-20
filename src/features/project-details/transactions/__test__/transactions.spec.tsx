@@ -1037,4 +1037,241 @@ describe('Given update transaction', () => {
       expect(onClose).toHaveBeenCalled()
     })
   })
+
+  // Write test suite for when the user create transaction of payment type Material
+  describe('When the user create transaction of shipping type', () => {
+    test('Then User should create Shipping  Fee transaction against Project SOW successfully', async () => {
+      const onClose = jest.fn()
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
+
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
+
+      // User first select Transaction type, one of ['Change Order', 'Draw']
+      await selectOption(screen.getByTestId('transaction-type'), 'Shipping Fee')
+
+      /**
+       * Check the following fields changed properly,
+       * 1- Transaction Type selected with 'Shipping Fee'
+       * 2- Expected Completion Date field visible with already filled value of current Date but disabled
+       * 3- New Expected Completion Date field visible
+       */
+      expect(getByText(screen.getByTestId('transaction-type'), 'Shipping Fee')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
+      await selectOption(screen.getByTestId('payment-term-select'), '20')
+      const totalAmount = screen.getByTestId('total-amount')
+
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
+
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
+
+      await userEvent.type(descriptionField, 'Added')
+      await userEvent.type(amountField, '400')
+
+      expect(totalAmount.textContent).toEqual('Total: -$400.00')
+
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+    test('Then User should create Shipping Fee transaction against Project SOW with refund checkbox checked successfully', async () => {
+      const onClose = jest.fn()
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
+
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
+
+      // User first select Transaction type, one of ['Change Order', 'Draw']
+      await selectOption(screen.getByTestId('transaction-type'), 'Shipping Fee')
+
+      expect(getByText(screen.getByTestId('transaction-type'), 'Shipping Fee')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
+      await selectOption(screen.getByTestId('payment-term-select'), '20')
+      const totalAmount = screen.getByTestId('total-amount')
+
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
+
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
+
+      await userEvent.click(screen.getByTestId('refund-factoring'))
+      await userEvent.type(descriptionField, 'Added')
+      await userEvent.type(amountField, '400')
+
+      expect(totalAmount.textContent).toEqual('Total: $400.00')
+
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+  })
+
+  // Write test suite for when the user create transaction of payment type Carrier Fee
+  describe('When the user create transaction of carrier type', () => {
+    test('Then User should create Carrier Fee transaction against Project SOW successfully', async () => {
+      const onClose = jest.fn()
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
+
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
+
+      // User first select Transaction type, one of ['Change Order', 'Draw']
+      await selectOption(screen.getByTestId('transaction-type'), 'Carrier Fee')
+
+      /**
+       * Check the following fields changed properly,
+       * 1- Transaction Type selected with 'Shipping Fee'
+       * 2- Expected Completion Date field visible with already filled value of current Date but disabled
+       * 3- New Expected Completion Date field visible
+       */
+      expect(getByText(screen.getByTestId('transaction-type'), 'Carrier Fee')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
+      await selectOption(screen.getByTestId('payment-term-select'), '20')
+      const totalAmount = screen.getByTestId('total-amount')
+
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
+
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
+
+      await userEvent.type(descriptionField, 'Added')
+      await userEvent.type(amountField, '400')
+
+      expect(totalAmount.textContent).toEqual('Total: -$400.00')
+
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+    test('Then User should create Carrier Fee transaction against Project SOW with refund checkbox checked successfully', async () => {
+      const onClose = jest.fn()
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
+
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
+
+      // User first select Transaction type, one of ['Change Order', 'Draw']
+      await selectOption(screen.getByTestId('transaction-type'), 'Carrier Fee')
+
+      expect(getByText(screen.getByTestId('transaction-type'), 'Carrier Fee')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
+      await selectOption(screen.getByTestId('payment-term-select'), '20')
+      const totalAmount = screen.getByTestId('total-amount')
+
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
+
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
+
+      await userEvent.click(screen.getByTestId('refund-factoring'))
+      await userEvent.type(descriptionField, 'Added')
+      await userEvent.type(amountField, '400')
+
+      expect(totalAmount.textContent).toEqual('Total: $400.00')
+
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+  })
+
+  // Write test suite for when the user create transaction of payment type Permit
+  describe('When the user create transaction of Permit type', () => {
+    test('Then User should create Permit Fee transaction against Project SOW successfully', async () => {
+      const onClose = jest.fn()
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
+
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
+
+      // User first select Transaction type, one of ['Change Order', 'Draw']
+      await selectOption(screen.getByTestId('transaction-type'), 'Permit Fee')
+
+      /**
+       * Check the following fields changed properly,
+       * 1- Transaction Type selected with 'Shipping Fee'
+       * 2- Expected Completion Date field visible with already filled value of current Date but disabled
+       * 3- New Expected Completion Date field visible
+       */
+      expect(getByText(screen.getByTestId('transaction-type'), 'Permit Fee')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
+      await selectOption(screen.getByTestId('payment-term-select'), '20')
+      const totalAmount = screen.getByTestId('total-amount')
+
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
+
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
+
+      await userEvent.type(descriptionField, 'Added')
+      await userEvent.type(amountField, '400')
+
+      expect(totalAmount.textContent).toEqual('Total: -$400.00')
+
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+    test('Then User should create Permit Fee transaction against Project SOW with refund checkbox checked successfully', async () => {
+      const onClose = jest.fn()
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
+
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
+
+      // User first select Transaction type, one of ['Change Order', 'Draw']
+      await selectOption(screen.getByTestId('transaction-type'), 'Permit Fee')
+
+      expect(getByText(screen.getByTestId('transaction-type'), 'Permit Fee')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
+      await selectOption(screen.getByTestId('payment-term-select'), '20')
+      const totalAmount = screen.getByTestId('total-amount')
+
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
+
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
+
+      await userEvent.click(screen.getByTestId('refund-factoring'))
+      await userEvent.type(descriptionField, 'Added')
+      await userEvent.type(amountField, '400')
+
+      expect(totalAmount.textContent).toEqual('Total: $400.00')
+
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+  })
 })

@@ -74,6 +74,7 @@ const Contact: React.FC<ContactProps> = ({
           <FormControl isInvalid={!!errors?.projectCoordinatorPhoneNumber}>
             <InputLabel title={'project.projectDetails.phone'} htmlFor={'projectCoordinatorPhoneNumber'} />
             <Input
+            datatest-id='pc-Phone'
               placeholder="098-987-2233"
               id="projectCoordinatorPhoneNumber"
               isDisabled={isProjectCoordinatorPhoneNumberDisabled}
@@ -90,6 +91,7 @@ const Contact: React.FC<ContactProps> = ({
               Ext
             </InputLabel>
             <Input
+            datatest-id='pc-Phone-Ext'
               id="projectCoordinatorExtension"
               isDisabled={isProjectCoordinatorExtensionDisabled}
               {...register('projectCoordinatorExtension')}
@@ -127,6 +129,7 @@ const Contact: React.FC<ContactProps> = ({
           <FormControl isInvalid={!!errors?.fieldProjectManagerPhoneNumber}>
             <InputLabel title={'project.projectDetails.phone'} htmlFor={'fieldProjectManagerPhoneNumber'} />
             <Input
+             datatest-id='fpm-Phone'
               placeholder="098-987-2233"
               isDisabled={isFieldProjectManagerPhoneNumberDisabled}
               id="fieldProjectManagerPhoneNumber"
@@ -141,6 +144,7 @@ const Contact: React.FC<ContactProps> = ({
           <FormControl isInvalid={!!errors?.fieldProjectManagerExtension}>
             <InputLabel title={'project.projectDetails.ext'} htmlFor={'fieldProjectManagerExtension'} />
             <Input
+             datatest-id='fpm-Phone-Ext'
               id="fieldProjectManagerExtension"
               isDisabled={isFieldProjectManagerExtensionDisabled}
               {...register('fieldProjectManagerExtension')}

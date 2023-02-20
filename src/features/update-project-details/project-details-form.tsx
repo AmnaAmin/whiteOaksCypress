@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Icon, Stack } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Icon, Stack, useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react'
 import Location from './location'
@@ -30,6 +30,8 @@ import { useProjectExtraAttributes } from 'api/pc-projects'
 import { useMarkets, useStates } from 'api/pc-projects'
 
 import { useTranslation } from 'react-i18next'
+import { useTransactionsV1 } from 'api/transactions'
+import { TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
 
 type tabProps = {
   projectData: Project
@@ -55,8 +57,11 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const { mutate: updateProjectDetails, isLoading } = useProjectDetailsUpdateMutation()
   const projectOverrideStatusSelectOptions = useProjectOverrideStatusSelectOptions(projectData)
+  const { transactions } = useTransactionsV1(`${projectData?.id}`)
 
   const formReturn = useForm<ProjectDetailsFormValues>()
+  const toast = useToast()
+  const { t } = useTranslation()
 
   const {
     control,
@@ -89,7 +94,33 @@ const ProjectDetailsTab = (props: tabProps) => {
     marketSelectOptions?.length,
   ])
 
+  const hasPendingDrawsOnPaymentSave = payment => {
+    if (!!payment) {
+      const pendingDraws = transactions?.filter(
+        t =>
+          [TransactionTypeValues.draw].includes(t.transactionType) &&
+          !t?.parentWorkOrderId &&
+          [TransactionStatusValues.pending].includes(t?.status as TransactionStatusValues),
+      )
+      if (pendingDraws && pendingDraws?.length > 0) {
+        toast({
+          title: 'Payments Error',
+          description: t(`project.projectDetails.paymentError`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        return true
+      }
+    }
+    return false
+  }
+
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
+    if (hasPendingDrawsOnPaymentSave(formValues.payment)) {
+      return
+    }
     const payload = await parseProjectDetailsPayloadFromFormData(formValues, projectData)
     updateProjectDetails(payload)
   }
@@ -97,8 +128,6 @@ const ProjectDetailsTab = (props: tabProps) => {
   const handleTabsChange = index => {
     setTabIndex(index)
   }
-
-  const { t } = useTranslation()
 
   return (
     <FormProvider {...formReturn}>
@@ -117,7 +146,7 @@ const ProjectDetailsTab = (props: tabProps) => {
             <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
               {t(`project.projectDetails.invoicingPayment`)}
             </TabCustom>
-            <TabCustom isError={isContactsFormErrors && tabIndex !== 2}>
+            <TabCustom datatest-id='contacts-1' isError={isContactsFormErrors && tabIndex !== 2}>
               {t(`project.projectDetails.contacts`)}
             </TabCustom>
             <TabCustom>{t(`project.projectDetails.location`)}</TabCustom>

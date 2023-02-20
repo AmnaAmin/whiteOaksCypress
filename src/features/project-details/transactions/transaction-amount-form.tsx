@@ -401,7 +401,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           >
             {isShowCheckboxes && (
               <GridItem id="all-checkbox">
-                <Checkbox 
+                <Checkbox
                   variant="normal"
                   colorScheme="PrimaryCheckBox"
                   isChecked={allChecked}
@@ -432,6 +432,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   TransactionTypeValues.material,
                   TransactionTypeValues.lateFee,
                   TransactionTypeValues.factoring,
+                  TransactionTypeValues.shippingFee,
+                  TransactionTypeValues.carrierFee,
+                  TransactionTypeValues.permitFee,
                 ].some(id => id === values?.transactionType?.value)
                 const isRefund = values?.refundMaterial || values?.refundLateFee || values?.refundFactoring
 
