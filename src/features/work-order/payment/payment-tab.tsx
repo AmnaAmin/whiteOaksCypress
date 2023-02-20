@@ -136,7 +136,7 @@ const PaymentInfoTab = props => {
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
-  const invoicedRequired = workOrder?.statusLabel?.toLowerCase() === 'invoiced'
+  const invoicedRequired = [STATUS.Invoiced, STATUS.Paid].includes(workOrder?.statusLabel?.toLowerCase())
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
