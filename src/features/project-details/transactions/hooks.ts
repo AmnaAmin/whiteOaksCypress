@@ -50,15 +50,24 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
   const isAgainstProjectSOWOptionSelected = selectedAgainstId && selectedAgainstId === AGAINST_DEFAULT_VALUE
-  const isTransactionTypeDrawAgainstProjectSOWSelected = (selectedTransactionTypeId === TransactionTypeValues.draw || selectedTransactionTypeId === TransactionTypeValues.shippingFee || selectedTransactionTypeId === TransactionTypeValues.carrierFee  || selectedTransactionTypeId === TransactionTypeValues.permitFee)
+  const isTransactionTypeDrawAgainstProjectSOWSelected =
+    selectedTransactionTypeId === TransactionTypeValues.draw ||
+    selectedTransactionTypeId === TransactionTypeValues.shippingFee ||
+    selectedTransactionTypeId === TransactionTypeValues.carrierFee ||
+    selectedTransactionTypeId === TransactionTypeValues.permitFee
   // const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.shipping
   // YK - PSWOA-1243
   // && isAgainstProjectSOWOptionSelected
   const refundCheckbox: TransactionsWithRefundType = {
     ...getRefundTransactionType(selectedTransactionTypeId),
-    isVisible: [TransactionTypeValues.material, TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
-      val => val === selectedTransactionTypeId,
-    ),
+    isVisible: [
+      TransactionTypeValues.material,
+      TransactionTypeValues.lateFee,
+      TransactionTypeValues.factoring,
+      TransactionTypeValues.shippingFee,
+      TransactionTypeValues.carrierFee,
+      TransactionTypeValues.permitFee,
+    ].some(val => val === selectedTransactionTypeId),
   }
   const isPaymentTermDisabled = isAgainstWorkOrderOptionSelected && !isAdmin
 
@@ -203,17 +212,16 @@ export const useAgainstOptions = (
   control: Control<FormValues, any>,
   projectStatus,
   transaction,
-  currentWorkOrderId?
+  currentWorkOrderId?,
 ) => {
   const { isVendor } = useUserRolesSelector()
   const transactionType = useWatch({ name: 'transactionType', control })
 
-  
-
   return useMemo(() => {
-
-    if ( currentWorkOrderId ){
-      return isVendor ? againstOptions.filter( (option) => option.value === currentWorkOrderId?.toString() ) : againstOptions.slice(1)?.filter( (option) => option.value === currentWorkOrderId?.toString() );
+    if (currentWorkOrderId) {
+      return isVendor
+        ? againstOptions.filter(option => option.value === currentWorkOrderId?.toString())
+        : againstOptions.slice(1)?.filter(option => option.value === currentWorkOrderId?.toString())
     }
 
     // In case of other users than vendors the first option of againstOptions is the
@@ -241,7 +249,13 @@ export const useAgainstOptions = (
     if (transactionType?.value === TransactionTypeValues.payment) {
       return againstOptions.slice(0, 1)
     }
-
+    if (
+      [TransactionTypeValues.permitFee, TransactionTypeValues.shippingFee, TransactionTypeValues.carrierFee].some(
+        value => transactionType?.value === value,
+      )
+    ) {
+      return [againstOptions[0]]
+    }
     return againstOptions
   }, [transactionType, againstOptions])
 }
