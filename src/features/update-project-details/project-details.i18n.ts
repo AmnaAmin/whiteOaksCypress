@@ -36,6 +36,7 @@ export const project = {
           payment: 'Payment',
           originalSOW: 'Original SOW',
           invoice: 'Invoice',
+          paymentError: `Unable to save payment due to 'Pending' Draws against Project SOW.`,
 
           // Contacts
           contacts: 'Contacts',
@@ -118,6 +119,7 @@ export const project = {
           payment: 'Pago',
           originalSOW: 'SOW original',
           invoice: 'Factura',
+          paymentError: `No se pudo guardar el pago debido a retiros 'pendientes' contra el proyecto SOW.`,
 
           // Contacts
           contacts: 'Contactos',

@@ -38,7 +38,7 @@ const Misc: React.FC = () => {
       <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
         <GridItem>
           <FormControl>
-            <FormLabel variant="strong-label" size="md">
+            <FormLabel datatest-id='abc' variant="strong-label" size="md">
               {t(`project.projectDetails.created`)}
             </FormLabel>
 
@@ -133,7 +133,7 @@ const Misc: React.FC = () => {
             <FormLabel variant="strong-label" size="md" htmlFor="dueDateVariance" noOfLines={1}>
               {t(`project.projectDetails.dueDateVariance`)}
             </FormLabel>
-            <Input value={dueDateVariance as number} isDisabled id="dueDate" {...register('dueDateVariance')} />
+            <Input datatest-id='due-Date' value={dueDateVariance as number} isDisabled id="dueDate" {...register('dueDateVariance')} />
             <FormErrorMessage>{errors.dueDateVariance && errors.dueDateVariance.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -143,7 +143,7 @@ const Misc: React.FC = () => {
               {t(`project.projectDetails.payDateVariance`)}
             </FormLabel>
 
-            <Input value={payDateVariance as number} isDisabled id="payDateVariance" />
+            <Input datatest-id='pay-Variance' value={payDateVariance as number} isDisabled id="payDateVariance" />
           </FormControl>
         </GridItem>
         <GridItem>
