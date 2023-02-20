@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAuth } from 'utils/auth-context';
 import { getToken } from 'utils/storage.utils'
 
@@ -30,7 +30,7 @@ export const EstimateDetails = () => {
     );
 
   }
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   useEffect( () => {
 
     window.addEventListener( "message", ( event: any ) => {
