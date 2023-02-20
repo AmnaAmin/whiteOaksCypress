@@ -1080,7 +1080,7 @@ describe('Given update transaction', () => {
 
       expect(onClose).toHaveBeenCalled()
     })
-    test('Then User should create Shipping Fee transaction against Project SOW with refund material checkbox checked successfully', async () => {
+    test('Then User should create Shipping Fee transaction against Project SOW with refund checkbox checked successfully', async () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
@@ -1159,7 +1159,7 @@ describe('Given update transaction', () => {
 
       expect(onClose).toHaveBeenCalled()
     })
-    test('Then User should create Carrier Fee transaction against Project SOW with refund material checkbox checked successfully', async () => {
+    test('Then User should create Carrier Fee transaction against Project SOW with refund checkbox checked successfully', async () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
@@ -1238,7 +1238,7 @@ describe('Given update transaction', () => {
 
       expect(onClose).toHaveBeenCalled()
     })
-    test('Then User should create Permit Fee transaction against Project SOW with refund material checkbox checked successfully', async () => {
+    test('Then User should create Permit Fee transaction against Project SOW with refund checkbox checked successfully', async () => {
       const onClose = jest.fn()
       await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
