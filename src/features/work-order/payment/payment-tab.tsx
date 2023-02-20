@@ -24,7 +24,7 @@ import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecisi
 import { addDays, nextFriday } from 'date-fns'
 import { useEffect } from 'react'
 import { STATUS } from 'features/common/status'
-import { CustomInput } from 'components/input/input'
+import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
 import { truncateWithEllipsis } from 'utils/string-formatters'
 
@@ -92,6 +92,7 @@ const PaymentInfoTab = props => {
     control,
     formState: { errors },
     clearErrors,
+    trigger,
     getValues,
     setValue,
     watch,
@@ -135,7 +136,7 @@ const PaymentInfoTab = props => {
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
-
+  const invoicedRquired = workOrder?.statusLabel?.toLowerCase() === 'invoiced'
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -166,7 +167,7 @@ const PaymentInfoTab = props => {
           <Box mt={10}>
             <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
               <Box>
-                <FormControl>
+                <FormControl isInvalid={!!errors.dateInvoiceSubmitted}>
                   <FormLabel variant={'strong-label'} size={'md'}>
                     {t('invoicedSubmitted')}
                   </FormLabel>
@@ -176,19 +177,30 @@ const PaymentInfoTab = props => {
                     size="md"
                     css={calendarIcon}
                     isDisabled={!dateInvoiceSubmittedEnabled}
-                    variant="outline"
-                    {...register('dateInvoiceSubmitted')}
+                    variant={invoicedRquired ? 'required-field' : 'outline'}
+                    {...register('dateInvoiceSubmitted', {
+                      required: invoicedRquired && 'This is required',
+                    })}
                     onChange={e => {
                       const dateInvSubmitted = e.target.value
-                      const paymentTermDate = addDays(
-                        new Date(dateInvSubmitted as string),
-                        getValues('paymentTerm')?.value,
-                      )
-                      const expectedPaymentDate = nextFriday(paymentTermDate)
-                      setValue('paymentTermDate', datePickerFormat(paymentTermDate))
-                      setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
+                      if (dateInvSubmitted && dateInvSubmitted !== '') {
+                        const paymentTermDate = addDays(
+                          new Date(dateInvSubmitted as string),
+                          getValues('paymentTerm')?.value,
+                        )
+                        const expectedPaymentDate = nextFriday(paymentTermDate)
+                        setValue('paymentTermDate', datePickerFormat(paymentTermDate))
+                        setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
+                        setValue('dateInvoiceSubmitted', datePickerFormat(dateInvSubmitted))
+                        trigger()
+                      } else {
+                        setValue('paymentTermDate', null)
+                        setValue('expectedPaymentDate', null)
+                        setValue('dateInvoiceSubmitted', null)
+                      }
                     }}
                   />
+                  <FormErrorMessage>{errors?.dateInvoiceSubmitted?.message}</FormErrorMessage>
                 </FormControl>
               </Box>
               <Box>
@@ -229,7 +241,7 @@ const PaymentInfoTab = props => {
               </Box>
 
               <Box>
-                <FormControl>
+                <FormControl isInvalid={!!errors.paymentTermDate}>
                   <FormLabel variant={'strong-label'} size={'md'}>
                     {t('paymentTermDate')}
                   </FormLabel>
@@ -239,13 +251,16 @@ const PaymentInfoTab = props => {
                     size="md"
                     css={calendarIcon}
                     isDisabled={!paymentTermDateEnabled}
-                    variant="outline"
-                    {...register('paymentTermDate')}
+                    variant={invoicedRquired ? 'required-field' : 'outline'}
+                    {...register('paymentTermDate', {
+                      required: invoicedRquired && 'This is required',
+                    })}
                   />
+                  <FormErrorMessage>{errors?.paymentTermDate?.message}</FormErrorMessage>
                 </FormControl>
               </Box>
               <Box>
-                <FormControl>
+                <FormControl isInvalid={!!errors.expectedPaymentDate}>
                   <FormLabel variant={'strong-label'} size={'md'}>
                     {t('expectedPayDate')}
                   </FormLabel>
@@ -255,9 +270,12 @@ const PaymentInfoTab = props => {
                     size="md"
                     css={calendarIcon}
                     isDisabled={!expectedPaymentDateEnabled}
-                    variant="outline"
-                    {...register('expectedPaymentDate')}
+                    variant={invoicedRquired ? 'required-field' : 'outline'}
+                    {...register('expectedPaymentDate', {
+                      required: invoicedRquired && 'This is required',
+                    })}
                   />
+                  <FormErrorMessage>{errors?.expectedPaymentDate?.message}</FormErrorMessage>
                 </FormControl>
               </Box>
             </SimpleGrid>
@@ -266,7 +284,7 @@ const PaymentInfoTab = props => {
           <Box mt={10} mb={10}>
             <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
               <Box>
-                <FormControl>
+                <FormControl isInvalid={!!errors.datePaymentProcessed}>
                   <FormLabel variant={'strong-label'} size={'md'}>
                     {t('paymentProcessed')}
                   </FormLabel>
@@ -276,9 +294,12 @@ const PaymentInfoTab = props => {
                     size="md"
                     css={calendarIcon}
                     isDisabled={!datePaymentProcessedEnabled}
-                    variant="outline"
-                    {...register('datePaymentProcessed')}
+                    variant={invoicedRquired ? 'required-field' : 'outline'}
+                    {...register('datePaymentProcessed', {
+                      required: invoicedRquired && 'This is required',
+                    })}
                   />
+                  <FormErrorMessage>{errors?.datePaymentProcessed?.message}</FormErrorMessage>
                 </FormControl>
               </Box>
 
@@ -300,48 +321,93 @@ const PaymentInfoTab = props => {
               </Box>
 
               <Box>
-                <FormControl>
+                <FormControl isInvalid={!!errors.invoiceAmount}>
                   <FormLabel variant={'strong-label'} size={'md'}>
                     {t('woOriginalAmount')}
                   </FormLabel>
-                  <Input
-                    id="invoiceAmount"
-                    type="text"
-                    size="md"
-                    isDisabled={!invoiceAmountEnabled}
-                    variant="outline"
-                    {...register('invoiceAmount')}
+                  <Controller
+                    control={control}
+                    name="invoiceAmount"
+                    rules={{ required: 'This is required' }}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <>
+                          <NumberFormat
+                            value={field.value}
+                            data-testid="invoice-amount"
+                            thousandSeparator
+                            customInput={CustomRequiredInput}
+                            prefix={'$'}
+                            disabled={!invoiceAmountEnabled}
+                            onValueChange={e => {
+                              field.onChange(e.floatValue ?? '')
+                            }}
+                          />
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </>
+                      )
+                    }}
                   />
                 </FormControl>
               </Box>
               <Box>
-                <FormControl>
+                <FormControl isInvalid={!!errors.clientOriginalApprovedAmount}>
                   <FormLabel variant={'strong-label'} size={'md'}>
                     {t('clientOriginalAmount')}
                   </FormLabel>
-                  <Input
-                    id="clientApprovedAmount"
-                    type="text"
-                    size="md"
-                    isDisabled={!clientOriginalApprovedAmountEnabled}
-                    variant="outline"
-                    {...register('clientOriginalApprovedAmount')}
+                  <Controller
+                    control={control}
+                    name="clientOriginalApprovedAmount"
+                    rules={{ required: 'This is required' }}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <>
+                          <NumberFormat
+                            value={field.value}
+                            data-testid="clientOriginalApprovedAmount"
+                            thousandSeparator
+                            customInput={CustomRequiredInput}
+                            prefix={'$'}
+                            disabled={!clientOriginalApprovedAmountEnabled}
+                            onValueChange={e => {
+                              field.onChange(e.floatValue ?? '')
+                            }}
+                          />
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </>
+                      )
+                    }}
                   />
                 </FormControl>
               </Box>
 
               <Box height="80px">
-                <FormControl>
+                <FormControl isInvalid={!!errors.clientApprovedAmount}>
                   <FormLabel variant={'strong-label'} size={'md'}>
                     {truncateWithEllipsis(t('clientFinalApprovedAmount'), 30)}
                   </FormLabel>
-                  <Input
-                    id="cc"
-                    type="text"
-                    size="md"
-                    isDisabled={!clientApprovedAmountEnabled}
-                    variant="outline"
-                    {...register('clientApprovedAmount')}
+                  <Controller
+                    control={control}
+                    name="clientApprovedAmount"
+                    rules={{ required: 'This is required' }}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <>
+                          <NumberFormat
+                            value={field.value}
+                            data-testid="clientApprovedAmount"
+                            thousandSeparator
+                            customInput={CustomRequiredInput}
+                            prefix={'$'}
+                            disabled={!clientApprovedAmountEnabled}
+                            onValueChange={e => {
+                              field.onChange(e.floatValue ?? '')
+                            }}
+                          />
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </>
+                      )
+                    }}
                   />
                 </FormControl>
               </Box>
