@@ -412,7 +412,7 @@ describe('Given Project Coordinator create new transaction', () => {
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
 
-      await userEvent.click(screen.getByTestId('refund-material'))
+      await userEvent.click(screen.getByTestId('refund'))
       await userEvent.type(descriptionField, 'Added')
       await userEvent.type(amountField, '400')
 
@@ -797,7 +797,7 @@ describe('Given update transaction', () => {
       expect(getByText(screen.getByTestId('status-select-field'), 'Pending')).toBeInTheDocument()
 
       // Mark refund material checkbox as checked
-      const refundMaterialCheckbox = screen.getByTestId('refund-material') as HTMLInputElement
+      const refundMaterialCheckbox = screen.getByTestId('refund') as HTMLInputElement
       // expect(refundMaterialCheckbox.checked).toBe(false)
       await userEvent.click(refundMaterialCheckbox)
 
@@ -1100,7 +1100,7 @@ describe('Given update transaction', () => {
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
 
-      await userEvent.click(screen.getByTestId('refund-factoring'))
+      await userEvent.click(screen.getByTestId('refund'))
       await userEvent.type(descriptionField, 'Added')
       await userEvent.type(amountField, '400')
 
@@ -1179,7 +1179,7 @@ describe('Given update transaction', () => {
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
 
-      await userEvent.click(screen.getByTestId('refund-factoring'))
+      await userEvent.click(screen.getByTestId('refund'))
       await userEvent.type(descriptionField, 'Added')
       await userEvent.type(amountField, '400')
 
@@ -1258,7 +1258,7 @@ describe('Given update transaction', () => {
       const descriptionField = screen.getByTestId('transaction-description-0')
       const amountField = screen.getByTestId('transaction-amount-0')
 
-      await userEvent.click(screen.getByTestId('refund-factoring'))
+      await userEvent.click(screen.getByTestId('refund'))
       await userEvent.type(descriptionField, 'Added')
       await userEvent.type(amountField, '400')
 

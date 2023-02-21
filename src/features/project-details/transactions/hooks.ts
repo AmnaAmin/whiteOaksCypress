@@ -14,7 +14,7 @@ import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
-function getRefundTransactionType(type): TransactionsWithRefundType {
+/*function getRefundTransactionType(type): TransactionsWithRefundType {
   if (type === TransactionTypeValues.material)
     return {
       id: 'refund-material',
@@ -28,12 +28,30 @@ function getRefundTransactionType(type): TransactionsWithRefundType {
       name: 'refundLateFee',
       label: 'Refund late fee',
     }
+  if (type === TransactionTypeValues.permitFee)
+    return {
+      id: 'refund-permit-fee',
+      name: 'refundPermitFee',
+      label: 'Refund Permit fee',
+    }
+  if (type === TransactionTypeValues.carrierFee)
+    return {
+      id: 'refund-carrier-fee',
+      name: 'refundCarrierFee',
+      label: 'Refund Carrier fee',
+    }
+  if (type === TransactionTypeValues.shippingFee)
+    return {
+      id: 'refund-shipping-fee',
+      name: 'refundShippingFee',
+      label: 'Refund Shipping fee',
+    }
   return {
     id: 'refund-factoring',
     name: 'refundFactoring',
     label: 'Refund factoring',
   }
-}
+}*/
 
 export const useFieldShowHideDecision = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
   const transactionType = useWatch({ name: 'transactionType', control })
@@ -59,7 +77,10 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   // YK - PSWOA-1243
   // && isAgainstProjectSOWOptionSelected
   const refundCheckbox: TransactionsWithRefundType = {
-    ...getRefundTransactionType(selectedTransactionTypeId),
+    // ...getRefundTransactionType(selectedTransactionTypeId),
+    id: 'refund',
+    name: 'refund',
+    label: 'Refund',
     isVisible: [
       TransactionTypeValues.material,
       TransactionTypeValues.lateFee,
@@ -116,6 +137,9 @@ export const isManualTransaction = transactionType =>
     TransactionTypeValues.factoring,
     TransactionTypeValues.lateFee,
     TransactionTypeValues.payment,
+    TransactionTypeValues.permitFee,
+    TransactionTypeValues.carrierFee,
+    TransactionTypeValues.shippingFee,
   ].includes(transactionType)
 
 export const useFieldDisabledEnabledDecision = (
