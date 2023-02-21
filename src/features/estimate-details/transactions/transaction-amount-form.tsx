@@ -106,7 +106,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   useEffect(() => {
     if (materialItems.status === 'COMPLETED' && materialItems?.data?.length) {
       setRefetchInterval(0)
-      setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data, values.refundMaterial))
+      setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data, values.refund))
       setMaterialsLoading?.(false)
     }
   }, [materialItems])
@@ -257,11 +257,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             {refundCheckbox.isVisible && (
               <Controller
                 control={control}
-                name={refundCheckbox.name}
+                name={'refund'}
                 render={({ field: { name, value, onChange } }) => {
                   return (
                     <Checkbox
-                      data-testid={refundCheckbox.id}
+                      data-testid={'refundCheckBox'}
                       name={name}
                       variant="link"
                       _focus={{ outline: 'none' }}
@@ -433,7 +433,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   TransactionTypeValues.lateFee,
                   TransactionTypeValues.factoring,
                 ].some(id => id === values?.transactionType?.value)
-                const isRefund = values?.refundMaterial || values?.refundLateFee || values?.refundFactoring
+                const isRefund = values?.refund
 
                 return (
                   <Grid
