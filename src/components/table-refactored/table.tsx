@@ -26,6 +26,7 @@ import { MdClose } from 'react-icons/md'
 import { useLayoutEffect } from 'react'
 import _ from 'lodash'
 import { useStickyState } from 'utils/hooks'
+import { isValidAndNonEmpty } from 'utils'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
@@ -425,7 +426,7 @@ export const Table: React.FC<TableProps> = ({
                               title={cell.getContext()?.getValue() as string}
                               {...getColumnMaxMinWidths(cell.column)}
                             >
-                              {cell?.renderValue() ? value : '_ _ _'}
+                              {isValidAndNonEmpty(cell?.renderValue()) ? value : '_ _ _'}
                             </Td>
                           )
                         })}

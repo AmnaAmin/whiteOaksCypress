@@ -27,7 +27,6 @@ import {
   parseVendorFormDataToAPIData,
   prepareVendorDocumentObject,
   useCreateVendorMutation,
-  useFetchVendorWorkOrders,
   usePaymentMethods,
   useSaveVendorDetails,
   useVendorProfile,
@@ -76,11 +75,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
   const { mutate: createVendor } = useCreateVendorMutation()
-  const {
-    vendorProjects,
-    isFetching: isProjectsFetching,
-    isLoading: isProjectsLoading,
-  } = useFetchVendorWorkOrders(props.vendorId)
 
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState<any>(0)
@@ -197,46 +191,45 @@ export const VendorProfileTabs: React.FC<Props> = props => {
       <Stack width={{ base: '100%' }}>
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
-            
-              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }} height="40px">
-                <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
-                <Tab
-                  _disabled={{ cursor: 'not-allowed' }}
-                  isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
-                  data-testid="documents"
-                  {...tabStyle}
-                >
-                  {t('documents')}
-                </Tab>
-                <Tab
-                  _disabled={{ cursor: 'not-allowed' }}
-                  isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
-                  data-testid="license"
-                  {...tabStyle}
-                >
-                  {t('license')}
-                </Tab>
-                <Tab
-                  _disabled={{ cursor: 'not-allowed' }}
-                  isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
-                  data-testid="tradetab"
-                  {...tabStyle}
-                >
-                  {t('trade')}
-                </Tab>
-                <Tab
-                  _disabled={{ cursor: 'not-allowed' }}
-                  isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
-                  data-testid="markettab"
-                  {...tabStyle}
-                >
-                  {t('market')}
-                </Tab>
-                {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
-                {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
-                {vendorProfileData?.id && <Tab>Users</Tab>}
-              </TabList>
-           
+            <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }} height="40px">
+              <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
+              <Tab
+                _disabled={{ cursor: 'not-allowed' }}
+                isDisabled={reachTabIndex <= 0 && !vendorProfileData?.id}
+                data-testid="documents"
+                {...tabStyle}
+              >
+                {t('documents')}
+              </Tab>
+              <Tab
+                _disabled={{ cursor: 'not-allowed' }}
+                isDisabled={reachTabIndex <= 1 && !vendorProfileData?.id}
+                data-testid="license"
+                {...tabStyle}
+              >
+                {t('license')}
+              </Tab>
+              <Tab
+                _disabled={{ cursor: 'not-allowed' }}
+                isDisabled={reachTabIndex <= 2 && !vendorProfileData?.id}
+                data-testid="tradetab"
+                {...tabStyle}
+              >
+                {t('trade')}
+              </Tab>
+              <Tab
+                _disabled={{ cursor: 'not-allowed' }}
+                isDisabled={reachTabIndex <= 3 && !vendorProfileData?.id}
+                data-testid="markettab"
+                {...tabStyle}
+              >
+                {t('market')}
+              </Tab>
+              {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
+              {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
+              {vendorProfileData?.id && <Tab>Users</Tab>}
+            </TabList>
+
             <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
               <Divider borderWidth="1px" color="#E2E8F0" />
             </Box>
@@ -315,12 +308,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 {!isVendor && (
                   <TabPanel p="0px">
                     {tabIndex === 5 && (
-                      <VendorProjects
-                        isFetching={isProjectsFetching}
-                        isLoading={isProjectsLoading}
-                        vendorProjects={vendorProjects}
-                        onClose={props.onClose}
-                      />
+                      <VendorProjects vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
                     )}
                   </TabPanel>
                 )}
