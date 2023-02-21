@@ -9,12 +9,14 @@ import SummaryIconFirst, {
   SummaryIconEight,
   SummaryIconNinth,
   SummaryIconTenth,
+  SummaryIconEleventh,
 } from 'icons/pc-project-icons'
 import React from 'react'
 import { useProjectCards } from 'api/pc-projects'
 import { ProjectCard } from 'features/common/project-card'
 import { useTranslation } from 'react-i18next'
 import { BiFlag } from 'react-icons/bi'
+
 
 const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, bg }) => {
   return (
@@ -54,7 +56,7 @@ const useProjectCardJson = cards => {
       title: t('projects.projectFilter.reconcile'),
       value: 'reconcile',
       number: cards?.find(c => c.status === 120)?.count || 0,
-      IconElement: <IconElement Icon={SummaryIconThird} bg="#E6FFFA" />,
+      IconElement: <IconElement Icon={SummaryIconEleventh} bg="#F8F6CD" />,
     },
     {
       id: 'closed',
