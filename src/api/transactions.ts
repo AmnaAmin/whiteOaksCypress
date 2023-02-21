@@ -513,9 +513,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     payDateVariance: '',
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
-    refundMaterial: false,
-    refundLateFee: false,
-    refundFactoring: false,
+    refund: false,
   }
 }
 
@@ -592,14 +590,15 @@ export const parseTransactionToFormValues = (
       ? workOrderOptions[0]
       : findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions)
 
-  const isMaterialRefunded =
-    transaction.transactionType === TransactionTypeValues.material && transaction.changeOrderAmount > 0 ? true : false
-
-  const isLateFeeRefunded =
-    transaction.transactionType === TransactionTypeValues.lateFee && transaction.changeOrderAmount > 0
-
-  const isFactoringRefunded =
-    transaction.transactionType === TransactionTypeValues.factoring && transaction.changeOrderAmount > 0
+  const isRefunded =
+    [
+      TransactionTypeValues.material,
+      TransactionTypeValues.lateFee,
+      TransactionTypeValues.factoring,
+      TransactionTypeValues.shippingFee,
+      TransactionTypeValues.permitFee,
+      TransactionTypeValues.carrierFee,
+    ]?.includes(transaction.transactionType) && transaction.changeOrderAmount > 0
 
   const markAs = transaction.markAsRevenue ? TRANSACTION_MARK_AS_OPTIONS.revenue : TRANSACTION_MARK_AS_OPTIONS.paid
   const paidBackDate = transaction.transactionType === TransactionTypeValues.overpayment ? transaction.paidDate : null
@@ -628,9 +627,7 @@ export const parseTransactionToFormValues = (
     paidDate: datePickerFormat(transaction.paidDate as string),
     payDateVariance,
     paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
-    refundMaterial: isMaterialRefunded,
-    refundLateFee: isLateFeeRefunded,
-    refundFactoring: isFactoringRefunded,
+    refund: isRefunded,
     transaction:
       transaction?.lineItems?.map(item => ({
         id: item.id,

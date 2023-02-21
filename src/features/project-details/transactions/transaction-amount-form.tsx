@@ -106,7 +106,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   useEffect(() => {
     if (materialItems.status === 'COMPLETED' && materialItems?.data?.length) {
       setRefetchInterval(0)
-      setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data, values.refundMaterial))
+      setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data, values.refund))
       setMaterialsLoading?.(false)
     }
   }, [materialItems])
@@ -206,7 +206,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     onReplaceMaterialUploadClose()
   }
   const isShowCheckboxes = !isApproved && transactionFields?.length > 1 && !isSysFactoringFee
-
   return (
     <Box overflowX={isApproved ? 'initial' : 'auto'} w="100%">
       <VStack alignItems="start" w="720px">
@@ -257,7 +256,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             {refundCheckbox.isVisible && (
               <Controller
                 control={control}
-                name={refundCheckbox.name}
+                name={'refund'}
                 render={({ field: { name, value, onChange } }) => {
                   return (
                     <Checkbox
@@ -436,7 +435,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   TransactionTypeValues.carrierFee,
                   TransactionTypeValues.permitFee,
                 ].some(id => id === values?.transactionType?.value)
-                const isRefund = values?.refundMaterial || values?.refundLateFee || values?.refundFactoring
+                const isRefund = values?.refund
 
                 return (
                   <Grid
