@@ -15,8 +15,8 @@ import React from 'react'
 import { useProjectCards } from 'api/pc-projects'
 import { ProjectCard } from 'features/common/project-card'
 import { useTranslation } from 'react-i18next'
-import { BiDollar, BiFlag } from 'react-icons/bi'
-import { FaHandshake } from 'react-icons/fa'
+import { BiFlag } from 'react-icons/bi'
+
 
 const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, bg }) => {
   return (
