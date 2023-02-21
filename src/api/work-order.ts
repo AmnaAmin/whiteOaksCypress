@@ -221,6 +221,9 @@ export const parsePaymentValuesToPayload = formValues => {
     datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
     datePaid: dateISOFormat(formValues?.datePaid),
     partialPayment: formValues?.partialPayment,
+    invoiceAmount: formValues?.invoiceAmount,
+    clientOriginalApprovedAmount: formValues?.clientOriginalApprovedAmount,
+    clientApprovedAmount: formValues?.clientApprovedAmount,
     partialPaymentDate: dateISOFormat(formValues?.paymentDate),
   }
 }
@@ -242,9 +245,9 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
     expectedPaymentDate: datePickerFormat(workOrder?.expectedPaymentDate),
     datePaymentProcessed: datePickerFormat(workOrder?.datePaymentProcessed),
     datePaid: datePickerFormat(workOrder?.datePaid),
-    invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
-    clientOriginalApprovedAmount: currencyFormatter(workOrder?.clientOriginalApprovedAmount),
-    clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    invoiceAmount: workOrder?.invoiceAmount,
+    clientOriginalApprovedAmount: workOrder?.clientOriginalApprovedAmount,
+    clientApprovedAmount: workOrder?.clientApprovedAmount,
     partialPayment: 0,
     // paymentDate:datePickerFormat(workOrder?.partialPaymentDate),
     finalInvoiceAmount: currencyFormatter(workOrder?.finalInvoiceAmount),
