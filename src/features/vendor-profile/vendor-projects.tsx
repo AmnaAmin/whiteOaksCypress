@@ -21,6 +21,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
+import Status from 'features/common/status'
 
 type ProjectProps = {
   onClose?: () => void
@@ -52,6 +53,10 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
       {
         header: 'status',
         accessorKey: 'statusLabel',
+        cell: row => {
+          const value = row.cell.getValue() as string
+          return <Status value={value} id={value} />
+        },
       },
       {
         header: 'streetAddress',
@@ -70,8 +75,10 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
       },
     ]
   }, [])
+  const activeStatusFilter = '&status.in=34,36,110,111,114'
+  const paidStatusFilter = '&status.in=68'
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
+  const [filteredUrl, setFilteredUrl] = useState<string | null>(activeStatusFilter)
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
@@ -99,8 +106,8 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
   const [projectStatus, setProjectStatus] = useState('active')
 
   useEffect(() => {
-    if (projectStatus === 'paid') setFilteredUrl(`&status.in=68`)
-    else setFilteredUrl(`&status.in=34,36,110,111,114`)
+    if (projectStatus === 'paid') setFilteredUrl(paidStatusFilter)
+    else setFilteredUrl(activeStatusFilter)
   }, [projectStatus])
 
   const onSave = (columns: any) => {
