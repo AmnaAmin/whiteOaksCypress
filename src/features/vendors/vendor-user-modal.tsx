@@ -34,6 +34,7 @@ import { useAddVendorUser, useVendorUserDetails, useUpdateVendorUser } from 'api
 import { useStates } from 'api/pc-projects'
 import { useAuth } from 'utils/auth-context'
 import { useState, useEffect } from 'react'
+import { Card } from 'components/card/card'
 
 const VendorUserModal = ({
   vendorDetails,
@@ -186,7 +187,8 @@ const VendorUserModal = ({
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           </Box>
-          <ModalBody px="9px" pb="22px" bg="white" borderBottom="1px solid #E2E8F0">
+          <ModalBody bg='#F2F3F4' px='12px'  pb="22px"  borderBottom="1px solid #E2E8F0">
+          <Card borderTopRightRadius='6px' borderTopLeftRadius='6px'>
             <chakra.form
               onSubmit={handleSubmit(onSubmit)}
               autoComplete="off"
@@ -211,6 +213,37 @@ const VendorUserModal = ({
                 },
               }}
             >
+              <Box ml="20px">
+                      <Stack alignItems="center" direction="row" spacing="16px" mt="30px">
+                        <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+                          <FormLabel variant="strong-label" size="md">
+                            Vendor Roles
+                          </FormLabel>
+                          <FormControl>
+                            <HStack spacing="16px">
+                              <Checkbox
+                                {...register('vendorAdmin', {
+                                  onChange: e => {
+                                    if (!e.target.checked) setValue('primaryAdmin', false)
+                                  },
+                                })}
+                                colorScheme="brand"
+                              >
+                                Admin
+                              </Checkbox>
+                              <Checkbox
+                                isChecked={formValues.primaryAdmin}
+                                isDisabled={isPrimaryDisabled}
+                                {...register('primaryAdmin')}
+                              >
+                                <chakra.span position="relative">Primary</chakra.span>
+                              </Checkbox>
+                            </HStack>
+                            <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
+                          </FormControl>
+                        </VStack>
+                      </Stack>
+                    </Box>
               <Box mt="14px">
                 {false ? (
                   <BlankSlate width="60px" />
@@ -368,6 +401,17 @@ const VendorUserModal = ({
                         <Input type="text" {...register('city')} variant="required-field" />
                       </FormControl>
 
+                    </HStack>                 
+                    <HStack
+                      mt="30px"
+                      spacing={15}
+                      sx={{
+                        '@media screen and (max-width: 480px)': {
+                          flexDirection: 'column',
+                          alignItems: 'baseline',
+                        },
+                      }}
+                    >
                       <FormControl w={215}>
                         <FormLabel variant="strong-label" size="md">
                           {t(`${USER_MANAGEMENT}.modal.state`)}
@@ -392,40 +436,8 @@ const VendorUserModal = ({
                         </FormLabel>
                         <Input type="number" {...register('zipCode')} variant="required-field" />
                       </FormControl>
-                    </HStack>
-
-                    <Box>
-                      <Stack alignItems="center" direction="row" spacing="16px" mt="30px">
-                        <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
-                          <FormLabel variant="strong-label" size="md">
-                            Vendor Roles
-                          </FormLabel>
-                          <FormControl>
-                            <HStack spacing="16px">
-                              <Checkbox
-                                {...register('vendorAdmin', {
-                                  onChange: e => {
-                                    if (!e.target.checked) setValue('primaryAdmin', false)
-                                  },
-                                })}
-                                colorScheme="brand"
-                              >
-                                Admin
-                              </Checkbox>
-                              <Checkbox
-                                isChecked={formValues.primaryAdmin}
-                                isDisabled={isPrimaryDisabled}
-                                {...register('primaryAdmin')}
-                              >
-                                <chakra.span position="relative">Primary</chakra.span>
-                              </Checkbox>
-                            </HStack>
-                            <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
-                          </FormControl>
-                        </VStack>
-                      </Stack>
-                    </Box>
-                  </Box>
+                    </HStack>                  
+                  </Box>                 
                 )}
               </Box>
               <Flex borderTop="1px solid #E2E8F0" mt="20px" pt="20px" justifyContent="right">
@@ -446,7 +458,8 @@ const VendorUserModal = ({
                 </HStack>
               </Flex>
             </chakra.form>
-          </ModalBody>
+            </Card>
+          </ModalBody>        
         </ModalContent>
       </Modal>
     </div>
