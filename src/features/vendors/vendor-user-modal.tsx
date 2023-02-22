@@ -421,10 +421,11 @@ const VendorUserModal = ({
                           name="state"
                           render={({ field }) => (
                             <ReactSelect
+                            menuPlacement="top"
                               id="state"
                               {...field}
                               options={stateOptions}
-                              selectProps={{ isBorderLeft: true }}
+                              selectProps={{ isBorderLeft: true, menuHeight: '180px'}}
                             />
                           )}
                         />
