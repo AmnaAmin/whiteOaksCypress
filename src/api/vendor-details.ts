@@ -16,6 +16,7 @@ import {
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
 import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
+import { usePaginationQuery } from 'api'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -635,6 +636,44 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
 
     disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl), //disable logic for next on documents tab.
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
+  }
+}
+
+//vendor projects
+
+export const useVendorWorkOrders = (queryString: string, pageSize: number) => {
+  const { data, ...rest } = usePaginationQuery(
+    ['VendorProjects', queryString],
+    `vendor/workorders/v1?${queryString}`,
+    pageSize,
+  )
+
+  return {
+    vendorProjects: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
+    ...rest,
+  }
+}
+
+export const useFetchAllVendorWorkOrders = queryString => {
+  const client = useClient()
+
+  const { data: vendorProjects, ...rest } = useQuery(
+    ['AllVendorProjects'],
+    async () => {
+      const response = await client(`vendor/workorders/v1?${queryString}`, {})
+
+      return response?.data
+    },
+    {
+      enabled: false,
+    },
+  )
+
+  return {
+    vendorProjects,
+    ...rest,
   }
 }
 

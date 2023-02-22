@@ -312,7 +312,7 @@ export const InvoiceTab = ({
               title={t('dueDate')}
               value={
                 workOrder.paymentTermDate && ![STATUS.Rejected]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                  ? (dateFormatNew(workOrder?.paymentTermDate) as any)
+                  ? (dateFormatNew(workOrder?.expectedPaymentDate) as any)
                   : 'mm/dd/yy'
               }
               icons={BiCalendar}
