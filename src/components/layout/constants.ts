@@ -251,16 +251,12 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: FaHome,
       color: '#ED8936',
     },
-    ...(showForPreProdAndLocal
-      ? [
-          {
-            pathTo: '/estimates',
-            title: `${SIDE_NAV}.estimates`,
-            Icon: MdOnlinePrediction,
-            color: '#ECC94B',
-          },
-        ]
-      : []),
+    {
+      pathTo: '/estimates',
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: '#ECC94B',
+    },
     {
       pathTo: '/projects',
       title: `${SIDE_NAV}.projects`,
