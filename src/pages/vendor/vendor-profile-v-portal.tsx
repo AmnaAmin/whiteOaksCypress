@@ -27,7 +27,6 @@ import {
   parseVendorFormDataToAPIData,
   prepareVendorDocumentObject,
   useCreateVendorMutation,
-  useFetchVendorWorkOrders,
   usePaymentMethods,
   useSaveVendorDetails,
   useVendorProfile,
@@ -78,12 +77,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
   const { mutate: createVendor } = useCreateVendorMutation()
-  const {
-    vendorProjects,
-    isFetching: isProjectsFetching,
-    isLoading: isProjectsLoading,
-  } = useFetchVendorWorkOrders(props.vendorId)
-
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState<any>(0)
   const [reachTabIndex, setReachTabIndex] = useState(0)
@@ -202,7 +195,13 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         </Box>
 
         <form onSubmit={formReturn.handleSubmit(submitForm)}>
-          <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)} w="100%">
+          <Tabs
+            index={tabIndex}
+            variant="enclosed"
+            colorScheme="darkPrimary"
+            onChange={index => setTabIndex(index)}
+            w="100%"
+          >
             <Card
               bg={{ base: 'white', sm: 'transparent' }}
               p={{ base: '12px', sm: '0px !important' }}
@@ -213,7 +212,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               <Box display={{ base: 'block', sm: 'none' }}>
                 <ExpirationAlertMessage data={vendorProfileData} tabIndex={tabIndex} />
               </Box>
-              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }} height={ { sm: "", lg: "40px" }}>
+              <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }} height={{ sm: '', lg: '40px' }}>
                 <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
                 <Tab
                   _disabled={{ cursor: 'not-allowed' }}
@@ -278,30 +277,41 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                       cursor: 'not-allowed',
                       borderColor: 'gray.200',
                     },
-                    ...( !(userInfo?.user as any)?.vendorAdmin && {'button[type="submit"]:disabled' : {
-                      display: 'none !important'
-                    }} ),
-                    ...( !(userInfo?.user as any)?.vendorAdmin && {'button[type="submit"]:disabled' : {
-                      display: 'none !important'
-                    }} ),
-                    ...( !(userInfo?.user as any)?.vendorAdmin && {':disabled .fileUploader p, .fileUploader button' : {
-                      color: 'gray.400',
-                      bg: 'gray.100'
-                    }} ),
-                    ...( !(userInfo?.user as any)?.vendorAdmin && {'.fileUploader' : {
-                      bg: 'gray.100',
-                      color: 'gray.400',
-                      opacity: 0.8,
-                      cursor: 'not-allowed',
-                      borderColor: 'gray.200',
-                    }} ),
-                    ...( !( userInfo?.user as any )?.vendorAdmin && { '.marketCheckBoxCont .checkboxButton' : {
-                      cursor: 'not-allowed'
-                    } } ),
-                    ...( !( userInfo?.user as any )?.vendorAdmin && { ".tradeCheckBoxCont .checkboxButton": {
-                      cursor: 'not-allowed'
-                    } } )
-                  
+                    ...(!(userInfo?.user as any)?.vendorAdmin && {
+                      'button[type="submit"]:disabled': {
+                        display: 'none !important',
+                      },
+                    }),
+                    ...(!(userInfo?.user as any)?.vendorAdmin && {
+                      'button[type="submit"]:disabled': {
+                        display: 'none !important',
+                      },
+                    }),
+                    ...(!(userInfo?.user as any)?.vendorAdmin && {
+                      ':disabled .fileUploader p, .fileUploader button': {
+                        color: 'gray.400',
+                        bg: 'gray.100',
+                      },
+                    }),
+                    ...(!(userInfo?.user as any)?.vendorAdmin && {
+                      '.fileUploader': {
+                        bg: 'gray.100',
+                        color: 'gray.400',
+                        opacity: 0.8,
+                        cursor: 'not-allowed',
+                        borderColor: 'gray.200',
+                      },
+                    }),
+                    ...(!(userInfo?.user as any)?.vendorAdmin && {
+                      '.marketCheckBoxCont .checkboxButton': {
+                        cursor: 'not-allowed',
+                      },
+                    }),
+                    ...(!(userInfo?.user as any)?.vendorAdmin && {
+                      '.tradeCheckBoxCont .checkboxButton': {
+                        cursor: 'not-allowed',
+                      },
+                    }),
                   }}
                 >
                   <TabPanels mt={{ base: '0', sm: '30px' }}>
@@ -375,12 +385,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     {!isVendor && (
                       <TabPanel p="0px">
                         {tabIndex === 5 && (
-                          <VendorProjects
-                            isFetching={isProjectsFetching}
-                            isLoading={isProjectsLoading}
-                            vendorProjects={vendorProjects}
-                            onClose={props.onClose}
-                          />
+                          <VendorProjects vendorProfileData={vendorProfileData} onClose={props.onClose} />
                         )}
                       </TabPanel>
                     )}
