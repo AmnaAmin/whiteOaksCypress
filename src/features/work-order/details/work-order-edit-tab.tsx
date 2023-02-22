@@ -231,7 +231,7 @@ const WorkOrderDetailTab = props => {
   const { vendors } = useFilteredVendors(vendorSkillId, workOrder?.projectId)
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
-
+  const clientStart = projectData?.clientStartDate
   // Set Vendor Type
   const defaultSkill = {
     value: workOrder?.vendorSkillId as number,
@@ -427,13 +427,13 @@ const WorkOrderDetailTab = props => {
                         testId="email"
                         title={t(`${WORK_ORDER}.email`)}
                         date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
-                        customStyle={ { width: "150px", height: "20px" } }
+                        customStyle={{ width: '150px', height: '20px' }}
                       />
                       <InformationCard
                         testId="phone"
                         title={t(`${WORK_ORDER}.phone`)}
                         date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
-                        customStyle={ { width: "150px", height: "20px" } }
+                        customStyle={{ width: '150px', height: '20px' }}
                       />
                     </HStack>
                   </Box>
@@ -501,6 +501,7 @@ const WorkOrderDetailTab = props => {
                     size="md"
                     css={calendarIcon}
                     isDisabled={!workOrderStartDateEnable}
+                    min={clientStart as any}
                     variant="required-field"
                     {...register('workOrderStartDate', {
                       required: 'This is required field.',
