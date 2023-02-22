@@ -143,7 +143,7 @@ const WorkOrderDetailTab = props => {
 
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isOperations } = useUserRolesSelector()
 
   const {
     skillName,
@@ -481,7 +481,7 @@ const WorkOrderDetailTab = props => {
                           <ReactSelect
                             options={CANCEL_WO_OPTIONS}
                             onChange={option => field.onChange(option)}
-                            isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase())}
+                            isDisabled={![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) && !(isAdmin || isOperations)}
                           />
                         </>
                       )}
@@ -540,7 +540,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!completedByVendor}
+                    isDisabled={!completedByVendor && !(isAdmin || isOperations)}
                     variant="outline"
                     {...register('workOrderDateCompleted')}
                   />
