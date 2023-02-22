@@ -27,25 +27,6 @@ export const dateFormat = (date: string | Date): any => {
 
 export const dateFormatNew = (date: string | Date): any => {
   return dateFormat(date)
-  /*if (date === null || date === "") return ''
-  
-  if ( typeof date === "object" ) {
-    date = date.toString().replace("Z","");
-  }
-
-  if ( typeof date === "string" ) {
-    //console.log("Date: ", date);
-
-    if ( date.indexOf("Z") === -1 && date.indexOf("T") === -1 && date.indexOf("/") === -1 ) {
-      date = date+"T00:00:00";
-    } else {
-      date = date.replace("Z","");
-    }
-    
-    //console.log("After Date: ", date);
-  }
-  //console.log("Date:", date);
-  return date ? format(new Date(date), 'MM/dd/yyyy') : ''*/
 }
 
 export const datePickerFormat = (date: any) => {
@@ -134,17 +115,9 @@ monthOptions.unshift({
   month: '-1',
 })
 
-// export const convertDateTimeFromServer = (date: string) => {
-//   return date ? format(new Date(date), 'MM/dd/yyyy') : null
-// }
-
 export const convertDateWithTimeStamp = (date: string) => {
   return date ? format(new Date(date), 'Pp', { locale: enUS }) : null
 }
-
-// export const convertDateTimeToServer = (date: Date) => {
-//   return date ? new Date(format(new Date(date), 'MM/dd/yyyy')) : null
-// }
 
 export const customFormat = (date: Date, dateFormat: string) => {
   return date ? format(new Date(date), dateFormat) : null

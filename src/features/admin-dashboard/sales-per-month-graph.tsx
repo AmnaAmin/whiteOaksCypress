@@ -11,14 +11,13 @@ import {
   ComposedChart,
   Label,
 } from 'recharts'
-import { format } from 'date-fns'
 import { Box, FormLabel, HStack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { enUS } from 'date-fns/locale'
 import { Card } from 'components/card/card'
 import { filterByMonthOptions } from './admin-dashboard.utils'
 import { ADMIN_DASHBOARD } from './admin-dashboard.i18n'
 import { useTranslation } from 'react-i18next'
+import moment from 'moment'
 
 export const SalesPerMonth = ({ data, bar, line }) => {
   const { t } = useTranslation()
@@ -39,7 +38,10 @@ export const SalesPerMonth = ({ data, bar, line }) => {
   const handleFilter = e => {
     const filter = e.value
     if (filter !== '' && filter !== 'All') {
-      setFilterData(originalData?.filter(t => format(new Date(t.date), 'LLL', { locale: enUS }) === filter))
+      const filteredData = originalData?.filter(t => {
+        return moment(t.date).format('MMM') === filter
+      })
+      setFilterData(filteredData?.length > 0 ? filteredData : [])
     } else {
       setFilterData(originalData)
     }
@@ -86,7 +88,7 @@ export const SalesPerMonth = ({ data, bar, line }) => {
   }
 
   const dateFormatter = value => {
-    const date = format(new Date(value), 'MMM yyyy')
+    const date = moment(value).format('MMM YYYY')
     return date
   }
 
