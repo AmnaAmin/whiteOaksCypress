@@ -1209,7 +1209,7 @@ export const useGetLineItemsColumn = ({
               render={({ field, fieldState }) => {
                 return (
                   <VStack spacing="-12px">
-                    <Box py="12px">
+                    <Box py="12px" mr={isVendor?'20' : 'none'}>
                       <UploadImage
                         testId={'upload-' + index}
                         label={`upload`}
