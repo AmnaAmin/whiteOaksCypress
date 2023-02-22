@@ -1,28 +1,43 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Box, Flex, Button, RadioGroup, Stack, Radio, VStack } from '@chakra-ui/react'
-import { VendorProjectType } from 'types/vendor.types'
+import { VendorProfile } from 'types/vendor.types'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { t } from 'i18next'
-import { ColumnDef } from '@tanstack/react-table'
-import { useProjectTypeSelectOptions } from 'api/pc-projects'
-import { WORK_ORDER_STATUS } from 'components/chart/Overview'
-import { isBefore } from 'date-fns'
+import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
 import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { ExportButton } from 'components/table-refactored/export-button'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { TableNames } from 'types/table-column.types'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { useVendorWorkOrders, useFetchAllVendorWorkOrders } from 'api/vendor-details'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentRecordsWithTotalRecords,
+  TablePagination,
+} from 'components/table-refactored/pagination'
+import Status from 'features/common/status'
 
 type ProjectProps = {
   onClose?: () => void
-  vendorProjects: Array<VendorProjectType>
-  isFetching: boolean
-  isLoading: boolean
+  vendorProfileData: VendorProfile | undefined
 }
-export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose, isFetching, isLoading }) => {
-  const { projectTypes } = useProjectTypeSelectOptions()
+
+const VENDOR_PROJECTS_QUERY_KEYS = {
+  projectId: 'projectId.equals',
+  projectType: 'projectType.contains',
+  statusLabel: 'statusLabel.contains',
+  propertyAddress: 'propertyAddress.contains',
+  id: 'id.equals',
+  pendingTransactions: 'pendingTransactions.equals',
+}
+
+export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileData }) => {
   const { isFPM } = useUserRolesSelector()
 
   const VENDOR_PROJECTS_TABLE_COLUMNS: ColumnDef<any>[] = useMemo(() => {
@@ -33,30 +48,54 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
       },
       {
         header: 'type',
-        accessorKey: 'projectTypeValue',
+        accessorKey: 'projectType',
       },
       {
         header: 'status',
         accessorKey: 'statusLabel',
+        cell: row => {
+          const value = row.cell.getValue() as string
+          return <Status value={value} id={value} />
+        },
       },
       {
         header: 'streetAddress',
-        accessorKey: 'streetAddress',
+        accessorKey: 'propertyAddress',
       },
       {
         header: 'pendingTransactions',
-        accessorKey: 'pendingCount',
+        accessorKey: 'pendingTransactions',
+        accessorFn(cellInfo) {
+          return cellInfo.pendingTransactions
+        },
       },
       {
         header: 'WoId',
         accessorKey: 'id',
       },
-      {
-        header: 'pastDue',
-        accessorKey: 'isPastDue',
-      },
     ]
-  }, [projectTypes])
+  }, [])
+  const activeStatusFilter = '&status.in=34,36,110,111,114'
+  const paidStatusFilter = '&status.in=68'
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const [filteredUrl, setFilteredUrl] = useState<string | null>(activeStatusFilter)
+  const [sorting, setSorting] = React.useState<SortingState>([])
+
+  const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
+    useColumnFiltersQueryString({
+      queryStringAPIFilterKeys: VENDOR_PROJECTS_QUERY_KEYS,
+      pagination,
+      setPagination,
+      sorting,
+    })
+
+  const { isLoading: loadingAllVendorProjects, refetch } = useFetchAllVendorWorkOrders(
+    queryStringWithoutPagination + `&vendorId.equals=${vendorProfileData?.id}` + filteredUrl,
+  )
+  const { vendorProjects, isLoading, isFetching, dataCount, totalPages } = useVendorWorkOrders(
+    queryStringWithPagination + `&vendorId.equals=${vendorProfileData?.id}` + filteredUrl,
+    pagination.pageSize,
+  )
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendorProjects)
   const { tableColumns, settingColumns } = useTableColumnSettings(
@@ -65,35 +104,11 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
   )
 
   const [projectStatus, setProjectStatus] = useState('active')
-  const [tableData, setTableData] = useState([])
-
-  const filterProject = project => {
-    if (projectStatus === 'paid' && project.status === WORK_ORDER_STATUS.Paid) return project
-    else if (
-      projectStatus === 'active' &&
-      [WORK_ORDER_STATUS.Active, WORK_ORDER_STATUS.Completed].includes(project.status)
-    )
-      return project
-  }
-
-  const mapToProjectsTable = data => {
-    return data?.map(vp => {
-      return {
-        ...vp,
-        projectId: vp.projectId,
-        projectTypeValue: projectTypes?.find(pt => pt.id === vp?.projectType)?.value,
-        statusLabel: WORK_ORDER_STATUS[vp.status],
-        isPastDue: isBefore(new Date(vp.workOrderExpectedCompletionDate), new Date()) ? 'true' : 'false',
-        pendingCount: vp.childChangeOrders.filter(co => co.status === 'PENDING')?.length || 0,
-      }
-    })
-  }
 
   useEffect(() => {
-    const data = vendorProjects?.filter(filterProject)
-    const mappedData = mapToProjectsTable(data)
-    setTableData(mappedData)
-  }, [vendorProjects, projectStatus])
+    if (projectStatus === 'paid') setFilteredUrl(paidStatusFilter)
+    else setFilteredUrl(activeStatusFilter)
+  }, [projectStatus])
 
   const onSave = (columns: any) => {
     postGridColumn(columns)
@@ -122,20 +137,44 @@ export const VendorProjects: React.FC<ProjectProps> = ({ vendorProjects, onClose
           border="1px solid #CBD5E0"
           rounded="6px"
         >
-          <TableContextProvider data={tableData} columns={tableColumns}>
-            <Table isLoading={isFetching || isLoading} isEmpty={!isFetching && !tableData?.length} />
+          <TableContextProvider
+            data={vendorProjects}
+            columns={tableColumns}
+            totalPages={totalPages}
+            pagination={pagination}
+            setPagination={setPagination}
+            columnFilters={columnFilters}
+            setColumnFilters={setColumnFilters}
+            sorting={sorting}
+            setSorting={setSorting}
+          >
+            <Table
+              isLoading={isLoading || isFetching}
+              isEmpty={!isLoading && !isFetching && !(vendorProjects as Array<any>)?.length}
+            />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <ButtonsWrapper>
-                <ExportButton columns={tableColumns} fetchedData={tableData} colorScheme="brand" fileName="projects" />
+                <ExportButton
+                  columns={tableColumns}
+                  colorScheme="brand"
+                  fileName="vendors"
+                  isLoading={loadingAllVendorProjects}
+                  refetch={refetch}
+                />
                 <CustomDivider />
+
                 {settingColumns && (
-                  <TableColumnSettings
-                    disabled={isFetching || isLoading || isFPM}
-                    onSave={onSave}
-                    columns={settingColumns}
-                  />
+                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
                 )}
               </ButtonsWrapper>
+
+              <TablePagination>
+                <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
+                <GotoFirstPage />
+                <GotoPreviousPage />
+                <GotoNextPage />
+                <GotoLastPage />
+              </TablePagination>
             </TableFooter>
           </TableContextProvider>
         </Box>

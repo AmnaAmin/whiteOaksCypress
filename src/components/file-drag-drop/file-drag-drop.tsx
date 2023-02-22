@@ -1,3 +1,4 @@
+import { CloseIcon } from '@chakra-ui/icons'
 import { Divider, Flex, Text } from '@chakra-ui/react'
 import FileIcon from 'icons/file-icon'
 import numeral from 'numeral'
@@ -96,12 +97,12 @@ export default function FileDragDrop({ onUpload, ...fieldProps }) {
           )
         }}
       </Dropzone>
-      <UploadedFiles files={files} />
+      <UploadedFiles files={files} setFiles = {setFiles}/>
     </Flex>
   )
 }
 
-function UploadedFiles({ files }) {
+function UploadedFiles({ files, setFiles }) {
   if (files?.length > 0) {
     return (
       <Flex direction="column" gap="20px">
@@ -127,10 +128,11 @@ function UploadedFiles({ files }) {
                 backgroundColor: '#F7FAFE',
                 border: '1px solid #E2E8F0',
                 borderRadius: '6px',
-                maxWidth: '407px',
-                padding: '5px 25px',
+                maxWidth: '342px',
+                maxHeight: '35px',
+                padding: '5px 10px',
                 fontSize: '14px',
-                fontWeight: 'bold',
+                fontWeight: 500,
                 lineHeight: '24px',
                 color: '#718096',
               }}
@@ -148,8 +150,11 @@ function UploadedFiles({ files }) {
                   {file.name}
                 </Text>
               </Flex>
-              <Text as="span">{getFileSize(file.size)} MB</Text>     
-            </Flex>
+              <Text as="span">{getFileSize(file.size)} MB</Text>
+              <CloseIcon cursor='pointer' width='7.42px' height='7.42px' color='#4A5568' onClick={() =>{
+                setFiles([])
+              }}/>     
+            </Flex>  
           ))}
         </Flex>
       </Flex>
