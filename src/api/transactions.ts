@@ -156,6 +156,10 @@ const transactionTypeOptions = [
     value: TransactionTypeValues.permitFee,
     label: 'Permit Fee',
   },
+  {
+    value: TransactionTypeValues.deductible,
+    label: 'Deductible',
+  },
 ]
 
 export const useTransactionTypes = (screen?: string) => {
