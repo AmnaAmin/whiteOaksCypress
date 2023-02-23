@@ -113,6 +113,7 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
       ...sortState,
       expanded,
     },
+    filterFromLeafRows: true,
     ...(isExpandable && { onExpandedChange: setExpanded, getSubRows: (row: any) => row.subRows }),
     getExpandedRowModel: getExpandedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
