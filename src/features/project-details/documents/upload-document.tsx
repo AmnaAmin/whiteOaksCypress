@@ -31,6 +31,7 @@ import { createDocumentPayload } from 'utils/file-utils'
 import { useProjectWorkOrders } from 'api/projects'
 import { STATUS } from 'features/common/status'
 import { DOCUMENT_TYPES } from 'constants/documents.constants'
+import { readFileContent } from 'api/vendor-details'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
@@ -66,26 +67,40 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     handleSubmit,
     formState: { errors },
     reset,
+    getValues,
   } = useForm()
+  const values = getValues()
+
+  const creatDocumentsPayload = async (documents: Array<any>, documentType: string) => {
+    const vendorId = values?.against?.value?.vendorId?.toString() || ''
+    const workOrderId = values?.against?.value?.id?.toString() || ''
+    const results = await Promise.all(
+      documents.map(async (document: any, index: number) => {
+        let doc = {}
+        const fileContents = await readFileContent(document)
+        doc = {
+          path: document.name,
+          fileType: document.name,
+          fileObject: fileContents,
+          fileObjectContentType: document.type,
+          documentType,
+          projectId,
+          vendorId,
+          workOrderId,
+        }
+        return doc
+      }),
+    )
+    return results
+  }
 
   const onSubmit = async formValues => {
-    const vendorId = formValues?.against?.value?.vendorId?.toString() || ''
-    const workOrderId = formValues?.against?.value?.id?.toString() || ''
-
-    // const documents = formValues.documents.forEach(async file => {
-    const documentPayload = await createDocumentPayload(
-      formValues.chooseFile[0],
+    const documentPayload = await creatDocumentsPayload(
+      formValues.chooseFile,
       formValues?.documentTypes?.value?.toString(),
     )
 
-    const doc: Document = {
-      ...documentPayload,
-      projectId,
-      vendorId,
-      workOrderId,
-    }
-
-    saveDocument(doc, {
+    saveDocument(documentPayload as any[], {
       onSuccess() {
         onClose()
         reset()
