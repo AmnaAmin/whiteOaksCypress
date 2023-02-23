@@ -38,8 +38,8 @@ beforeAll(() => {
 })
 
 jest.setTimeout(150000)
-describe('Verify creating different alerts for the system ', () => {
-  test('Verify Creating an alert for Project > Project Manager Change', async () => {
+describe('Verify multiple file upload functionality ', () => {
+  test('Verify uploading multiple files, showing them on screen and deleting any single file', async () => {
     const onUpload = jest.fn()
     await renderFileDragDrop({
       onUpload,

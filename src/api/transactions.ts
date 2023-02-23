@@ -137,6 +137,10 @@ const transactionTypeOptions = [
     label: 'Payment',
   },
   {
+    value: TransactionTypeValues.deductible,
+    label: 'Deductible',
+  },
+  {
     value: TransactionTypeValues.lateFee,
     label: 'Late Fee',
   },
