@@ -27,7 +27,6 @@ import { STATUS } from 'features/common/status'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
 import { truncateWithEllipsis } from 'utils/string-formatters'
-import moment from 'moment'
 
 const CalenderCard = props => {
   return (
