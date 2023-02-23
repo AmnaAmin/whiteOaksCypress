@@ -8,7 +8,10 @@ import { TransactionDetailsModal } from './transaction-details-modal'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { ExportButton } from 'components/table-refactored/export-button'
-import { TRANSACTION_TABLE_COLUMNS } from 'features/project-details/transactions/transaction.constants'
+import {
+  TRANSACTION_TABLE_COLUMNS,
+  transDataExpLogic,
+} from 'features/project-details/transactions/transaction.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
@@ -72,23 +75,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
 
   useEffect(() => {
     if (transactions && transactions?.length > 0) {
-      const data = [] as any
-      const dataEmptyID = transactions?.filter(d => !d.parentWorkOrderId)
-      transactions?.forEach(transaction => {
-        if (transaction?.parentWorkOrderId) {
-          const checkData = data?.filter(d => d.parentWorkOrderId === transaction.parentWorkOrderId)?.length > 0
-          if (checkData) {
-            data
-              .find(d => d.parentWorkOrderId === transaction.parentWorkOrderId)
-              ?.['subRows']?.push({ ...transaction, parentWorkOrderId: ' ' })
-          } else {
-            data?.push({ ...transaction, subRows: [] })
-          }
-        }
-      })
-      const nData = data
-      nData.push({ ...dataEmptyID[0], subRows: dataEmptyID.filter((v, i) => i !== 0) })
-      setDataTrans(nData)
+      setDataTrans(transDataExpLogic(transactions as any))
     }
   }, [transactions])
 

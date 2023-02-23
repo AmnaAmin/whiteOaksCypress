@@ -5,6 +5,7 @@ import numeral from 'numeral'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { TRANSACTION } from './transactions.i18n'
 import { BiChevronDown, BiChevronRight } from 'react-icons/bi'
+import { Flex } from '@chakra-ui/react'
 
 export const CHANGE_ORDER_DEFAULT_VALUE = '0'
 export const CHANGE_ORDER_DEFAULT_OPTION = {
@@ -67,51 +68,52 @@ export const TRANSACTION_TABLE_QUERIES_KEY = {
 
 export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
-    accessorKey: 'firstName',
-    header: ({ table }) => (
-      <>
-        <button
-          {...{
-            onClick: table.getToggleAllRowsExpandedHandler(),
-          }}
-        >
-          {/* {table.getIsAllRowsExpanded() ? '👇' : '👉'} */}
-        </button>{' '}
-        Work order ID
-      </>
-    ),
+    header: `${TRANSACTION}.workOrderIdTransTable`,
+    accessorKey: 'workOrderId',
     cell: ({ row, getValue }) => (
-      <div
+      <Flex
         onClick={e => e.stopPropagation()}
         style={{
-          // Since rows are flattened by default,
-          // we can use the row.depth property
-          // and paddingLeft to visually indicate the depth
-          // of the row
           paddingLeft: `${row.depth * 2}rem`,
         }}
       >
         <>
           {row.getCanExpand() ? (
             <button
+              data-testid="expension-&-compression-btn"
               {...{
                 onClick: row.getToggleExpandedHandler(),
                 style: { cursor: 'pointer' },
               }}
             >
-              {row.getIsExpanded() ? <BiChevronDown color="#345EA6" /> : <BiChevronRight color="#A0AEC0" />}
+              {row.getIsExpanded() ? (
+                <BiChevronDown
+                  size={18}
+                  style={{
+                    paddingBottom: '2px',
+                  }}
+                  color="#345EA6"
+                />
+              ) : (
+                <BiChevronRight
+                  style={{
+                    paddingBottom: '2px',
+                  }}
+                  size={18}
+                  color="#A0AEC0"
+                />
+              )}
             </button>
           ) : (
             ''
           )}{' '}
           {getValue()}
         </>
-      </div>
+      </Flex>
     ),
     accessorFn: cellInfo => {
       return cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'
     },
-    footer: props => props.column.id,
   },
   {
     header: 'ID',
@@ -121,13 +123,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: `${TRANSACTION}.type`,
     accessorKey: 'transactionTypeLabel',
   },
-  // {
-  //   header: `${TRANSACTION}.workOrderIdTransTable`,
-  //   accessorKey: 'workOrderId',
-  //   accessorFn: cellInfo => {
-  //     return cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'
-  //   },
-  // },
+
   {
     header: `${TRANSACTION}.trade`,
     accessorKey: 'skillName',
@@ -185,3 +181,27 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     },
   },
 ]
+
+export const transDataExpLogic = (transactions?: any) => {
+  console.log(transactions)
+
+  if (transactions && transactions?.length > 0) {
+    const data = [] as any
+    const dataEmptyID = transactions?.filter(d => !d.parentWorkOrderId)
+    transactions?.forEach(transaction => {
+      if (transaction?.parentWorkOrderId) {
+        const checkData = data?.filter(d => d.parentWorkOrderId === transaction.parentWorkOrderId)?.length > 0
+        if (checkData) {
+          data
+            .find(d => d.parentWorkOrderId === transaction.parentWorkOrderId)
+            ?.['subRows']?.push({ ...transaction, parentWorkOrderId: ' ' })
+        } else {
+          data?.push({ ...transaction, subRows: [] })
+        }
+      }
+    })
+    const nData = data
+    nData.push({ ...dataEmptyID[0], subRows: dataEmptyID.filter((v, i) => i !== 0) })
+    return nData
+  }
+}
