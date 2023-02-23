@@ -16,12 +16,12 @@ import {
 import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { paymentsTerms } from 'api/vendor-projects'
-import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { dateFormat, dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
 import Select from 'components/form/react-select'
 import { useForm, Controller } from 'react-hook-form'
 import { calendarIcon } from 'theme/common-style'
 import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecision } from 'api/work-order'
-import { addDays, nextFriday } from 'date-fns'
+import { addDays, isWednesday, nextFriday, nextWednesday } from 'date-fns'
 import { useEffect } from 'react'
 import { STATUS } from 'features/common/status'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
@@ -185,18 +185,34 @@ const PaymentInfoTab = props => {
                       const dateInvSubmitted = e.target.value
                       if (dateInvSubmitted && dateInvSubmitted !== '') {
                         const paymentTermDate = addDays(
-                          new Date(dateInvSubmitted as string),
+                          new Date(dateISOFormatWithZeroTime(dateInvSubmitted) as string),
                           getValues('paymentTerm')?.value,
                         )
                         const expectedPaymentDate = nextFriday(paymentTermDate)
+                        
                         setValue('paymentTermDate', datePickerFormat(paymentTermDate))
                         setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
                         setValue('dateInvoiceSubmitted', datePickerFormat(dateInvSubmitted))
+
+                        if (!isWednesday(paymentTermDate)) {
+                          setValue('datePaymentProcessed', datePickerFormat(nextWednesday(paymentTermDate)))
+                        }
+
+                        setValue(
+                          'expectedPaymentDate',
+                          datePickerFormat(
+                            nextFriday(
+                              new Date(dateISOFormatWithZeroTime(getValues("datePaymentProcessed") as any) as string)
+                            ),
+                          ),
+                        )
+
                         trigger()
                       } else {
                         setValue('paymentTermDate', null)
                         setValue('expectedPaymentDate', null)
                         setValue('dateInvoiceSubmitted', null)
+                        setValue('datePaymentProcessed', null)
                       }
                     }}
                   />
