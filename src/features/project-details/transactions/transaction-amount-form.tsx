@@ -386,14 +386,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
           minH="36vh"
         >
           <Grid
-            gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
-            px="2"
+            gridTemplateColumns={isShowCheckboxes ? '62px 2fr 1fr' : '20fr 10.5fr'}
             py="3"
             fontSize="14px"
             color="gray.600"
             bg="bgGlobal.50"
-            gap="1rem 4rem"
-            borderWidth="0 0 1px 0"
+            gap="1rem 2em"
+            borderWidth="0 0 px 0"
             borderStyle="solid"
             borderColor="gray.300"
             roundedTop={6}
@@ -401,6 +400,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             {isShowCheckboxes && (
               <GridItem id="all-checkbox">
                 <Checkbox
+                  px="1.5"
                   variant="normal"
                   colorScheme="PrimaryCheckBox"
                   isChecked={allChecked}
@@ -410,8 +410,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 />
               </GridItem>
             )}
-            <GridItem> {t(`${TRANSACTION}.description`)}</GridItem>
-            <GridItem>{t(`${TRANSACTION}.amount`)}</GridItem>
+            <GridItem marginLeft={10}> {t(`${TRANSACTION}.description`)}</GridItem>
+            <GridItem marginLeft={5}>{t(`${TRANSACTION}.amount`)}</GridItem>
           </Grid>
           {isMaterialsLoading ? (
             <Center>
@@ -477,7 +477,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                       </GridItem>
                     )}
                     <GridItem pr="7">
-                      <FormControl isInvalid={!!errors.transaction?.[index]?.description}>
+                      <FormControl px={7} isInvalid={!!errors.transaction?.[index]?.description}>
                         <Tooltip label={transaction?.[index]?.description}>
                           <Input
                             data-testid={`transaction-description-${index}`}
@@ -499,7 +499,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                       </FormControl>
                     </GridItem>
                     <GridItem pr="7">
-                      <FormControl isInvalid={!!errors.transaction?.[index]?.amount}>
+                      <FormControl px={1} isInvalid={!!errors.transaction?.[index]?.amount}>
                         <Controller
                           name={`transaction.${index}.amount` as const}
                           control={control}

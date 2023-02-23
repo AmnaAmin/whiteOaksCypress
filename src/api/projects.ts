@@ -135,8 +135,11 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     (firstFinancialRecord?.changeOrder || 0) +
     (firstFinancialRecord?.adjustment || 0)
 
-  const projectExpenses = (-1) * ((firstFinancialRecord?.shipFee || 0) + (firstFinancialRecord?.permitFee || 0) +  (firstFinancialRecord?.carrierFee || 0))
-
+  const projectExpenses =
+    -1 *
+    ((firstFinancialRecord?.shipFee || 0) +
+      (firstFinancialRecord?.permitFee || 0) +
+      (firstFinancialRecord?.carrierFee || 0))
 
   const { vendorAccountPayable, projectTotalCost, materialCost, vendorPayment } = restProjectFinancialOverviews?.reduce(
     (final, curr) => {
@@ -150,7 +153,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     { vendorAccountPayable: 0, projectTotalCost: 0, materialCost: 0, vendorPayment: 0 },
   ) || { vendorAccountPayable: 0, projectTotalCost: 0, materialCost: 0, vendorPayment: 0 }
 
-  const finalProjectTotalCost = projectTotalCost + projectExpenses;
+  const finalProjectTotalCost = projectTotalCost + projectExpenses
 
   const profitMargin = originalSOWAmount === 0 ? 0 : (originalSOWAmount - finalProjectTotalCost) / originalSOWAmount
 
@@ -170,7 +173,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
         revisedSOWAmount: (fo?.originalAmount || 0) + (fo?.noCoAdjustment || 0),
         revisedChangeOrderAmount: (fo?.changeOrder || 0) + (fo?.coAdjustment || 0),
         finalSOWAmount: fo?.newAmount || 0,
-        accountReceivable: (fo?.newAmount || 0) + (fo?.draw || 0) - (fo?.partialPayment || 0),
+        accountReceivable: (fo?.newAmount || 0) + (fo?.draw || 0) - ((fo?.partialPayment || 0) + (fo?.deductible || 0)),
       })) || [],
     workOrderFinancialOverviews: restProjectFinancialOverviews,
     vendorPaymentPercentage,
