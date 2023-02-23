@@ -44,7 +44,7 @@ export const Estimates = () => {
         navigate(`/${event.data.path}/${event.data.estimatesId}/`);
         //window.history.pushState(null, '', `/${event.data.path}/${event.data.estimatesId}`);
       }
-      console.log( "WOA: Event Data Received From Child", event );
+      //console.log( "WOA: Event Data Received From Child", event );
     } );
 
    

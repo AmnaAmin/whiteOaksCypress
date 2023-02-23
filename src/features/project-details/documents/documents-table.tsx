@@ -79,6 +79,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
             manualPagination={false}
             data={documents}
             columns={tableColumns}
+            isExpandable={true}
           >
             <Table onRowClick={onRowClick} isLoading={isLoading} isEmpty={!isLoading && !documents?.length} />
             <TableFooter position="sticky" bottom="0" left="0" right="0">

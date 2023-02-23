@@ -886,7 +886,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         ) : (
           <Button
             onClick={onModalClose}
-            variant={(!isApproved || isAdminEnabled) && !isSysFactoringFee ? 'outline' : 'solid'}
+            variant={'outline'}
             colorScheme="darkPrimary"
             data-testid="close-transaction-form"
           >
