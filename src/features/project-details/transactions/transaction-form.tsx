@@ -460,7 +460,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               options={transactionTypeOptions}
                               isDisabled={isUpdateForm}
                               size="md"
-                              selectProps={{ isBorderLeft: true, menuHeight: isVendor ? '88px' : '100%' }}
+                              selectProps={{ isBorderLeft: true, menuHeight: isVendor ? '88px' : '250px' }}
                               onChange={async (option: SelectOption) => {
                                 const formValues = { ...defaultValues, transactionType: option }
 

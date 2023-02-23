@@ -17,8 +17,8 @@ export const useUploadDocument = () => {
   const queryClient = useQueryClient()
 
   return useMutation(
-    (docs: Document) => {
-      return client('documents', {
+    (docs: Array<Document> | Document) => {
+      return client('documents/list', {
         data: docs,
       })
     },
