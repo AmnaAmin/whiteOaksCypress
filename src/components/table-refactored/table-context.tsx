@@ -12,6 +12,8 @@ import {
   getPaginationRowModel,
   PaginationState,
   Updater,
+  ExpandedState,
+  getExpandedRowModel,
 } from '@tanstack/react-table'
 import React, { useContext } from 'react'
 
@@ -40,6 +42,7 @@ type TableWrapperProps = {
   manualPagination?: boolean
   sorting?: SortingState
   setSorting?: (updater: Updater<SortingState>) => void
+  isExpandable?: boolean
 }
 
 export const TableContextProvider: React.FC<TableWrapperProps> = ({
@@ -54,9 +57,12 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
   manualPagination = true,
   sorting,
   setSorting,
+  isExpandable,
 }) => {
   const emptyRowsLength = 3
   const emptyRows = Array(emptyRowsLength).fill({})
+  const [expanded, setExpanded] = React.useState<ExpandedState>({})
+
   const [columnFiltersState, setColumnFiltersState] = React.useState<ColumnFiltersState>([])
   const [sortingState, setSortingState] = React.useState<SortingState>([])
 
@@ -105,7 +111,10 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
       ...paginationState,
       ...columnFilterState,
       ...sortState,
+      expanded,
     },
+    ...(isExpandable && { onExpandedChange: setExpanded, getSubRows: (row: any) => row.subRows }),
+    getExpandedRowModel: getExpandedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),

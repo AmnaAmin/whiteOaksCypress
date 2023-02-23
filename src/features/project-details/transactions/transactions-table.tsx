@@ -28,6 +28,7 @@ type TransactionProps = {
 
 export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
   const { projectId } = useParams<'projectId'>()
+  const [dataTrans, setDataTrans] = useState<any>([])
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
@@ -69,6 +70,28 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     }
   }
 
+  useEffect(() => {
+    if (transactions && transactions?.length > 0) {
+      const data = [] as any
+      const dataEmptyID = transactions?.filter(d => !d.parentWorkOrderId)
+      transactions?.forEach(transaction => {
+        if (transaction?.parentWorkOrderId) {
+          const checkData = data?.filter(d => d.parentWorkOrderId === transaction.parentWorkOrderId)?.length > 0
+          if (checkData) {
+            data
+              .find(d => d.parentWorkOrderId === transaction.parentWorkOrderId)
+              ?.['subRows']?.push({ ...transaction, parentWorkOrderId: ' ' })
+          } else {
+            data?.push({ ...transaction, subRows: [] })
+          }
+        }
+      })
+      const nData = data
+      nData.push({ ...dataEmptyID[0], subRows: dataEmptyID.filter((v, i) => i !== 0) })
+      setDataTrans(nData)
+    }
+  }, [transactions])
+
   const { isVendor } = useUserRolesSelector()
   return (
     <>
@@ -89,9 +112,10 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
         >
           <TableContextProvider
             totalPages={transactions?.length ? totalPages : -1}
-            data={transactions}
+            data={dataTrans}
             columns={tableColumns}
             manualPagination={false}
+            isExpandable={true}
           >
             <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
             <TableFooter position="sticky" bottom="0" left="0" right="0">

@@ -4,6 +4,7 @@ import Status from 'features/common/status'
 import numeral from 'numeral'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { TRANSACTION } from './transactions.i18n'
+import { BiChevronDown, BiChevronRight } from 'react-icons/bi'
 
 export const CHANGE_ORDER_DEFAULT_VALUE = '0'
 export const CHANGE_ORDER_DEFAULT_OPTION = {
@@ -66,6 +67,53 @@ export const TRANSACTION_TABLE_QUERIES_KEY = {
 
 export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
+    accessorKey: 'firstName',
+    header: ({ table }) => (
+      <>
+        <button
+          {...{
+            onClick: table.getToggleAllRowsExpandedHandler(),
+          }}
+        >
+          {/* {table.getIsAllRowsExpanded() ? '👇' : '👉'} */}
+        </button>{' '}
+        Work order ID
+      </>
+    ),
+    cell: ({ row, getValue }) => (
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          // Since rows are flattened by default,
+          // we can use the row.depth property
+          // and paddingLeft to visually indicate the depth
+          // of the row
+          paddingLeft: `${row.depth * 2}rem`,
+        }}
+      >
+        <>
+          {row.getCanExpand() ? (
+            <button
+              {...{
+                onClick: row.getToggleExpandedHandler(),
+                style: { cursor: 'pointer' },
+              }}
+            >
+              {row.getIsExpanded() ? <BiChevronDown color="#345EA6" /> : <BiChevronRight color="#A0AEC0" />}
+            </button>
+          ) : (
+            ''
+          )}{' '}
+          {getValue()}
+        </>
+      </div>
+    ),
+    accessorFn: cellInfo => {
+      return cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'
+    },
+    footer: props => props.column.id,
+  },
+  {
     header: 'ID',
     accessorKey: 'name',
   },
@@ -73,13 +121,13 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: `${TRANSACTION}.type`,
     accessorKey: 'transactionTypeLabel',
   },
-  {
-    header: `${TRANSACTION}.workOrderIdTransTable`,
-    accessorKey: 'workOrderId',
-    accessorFn: cellInfo => {
-      return cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'
-    },
-  },
+  // {
+  //   header: `${TRANSACTION}.workOrderIdTransTable`,
+  //   accessorKey: 'workOrderId',
+  //   accessorFn: cellInfo => {
+  //     return cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'
+  //   },
+  // },
   {
     header: `${TRANSACTION}.trade`,
     accessorKey: 'skillName',
