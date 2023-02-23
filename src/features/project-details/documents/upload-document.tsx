@@ -19,15 +19,12 @@ import {
 
 import { useDocumentTypes, useUploadDocument } from 'api/vendor-projects'
 import { useTranslation } from 'react-i18next'
-import { Document } from 'types/vendor.types'
-
 import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 import { Button } from 'components/button/button'
 import { ViewLoader } from 'components/page-level-loader'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import FileDragDrop from 'components/file-drag-drop/file-drag-drop'
-import { createDocumentPayload } from 'utils/file-utils'
 import { useProjectWorkOrders } from 'api/projects'
 import { STATUS } from 'features/common/status'
 import { DOCUMENT_TYPES } from 'constants/documents.constants'
@@ -197,42 +194,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                       </FormControl>
                     </GridItem>
                   )}
-
-                  {/* <GridItem>
-                    <FormControl isInvalid={!!errors?.chooseFile}>
-                      <FormLabel htmlFor="chooseFile" variant="strong-label" size="md">
-                        {t('uploadFile')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        name="chooseFile"
-                        rules={{
-                          validate: file => {
-                            return file?.name?.length > 255 ? 'File name length should be less than 255' : true
-                          },
-                          required: 'Document file is required',
-                        }}
-                        render={({ field, fieldState }) => {
-                          const fileName = field?.value?.name ?? (t('chooseFile') as string)
-                          return (
-                            <>
-                              <ChooseFileField
-                                testId="choose-document"
-                                name={field.name}
-                                value={fileName}
-                                isRequired={true}
-                                isError={!!fieldState.error?.message}
-                                onChange={(file: any) => {
-                                  field.onChange(file)
-                                }}
-                              />
-                              <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem> */}
                 </Grid>
               </HStack>
             )}
