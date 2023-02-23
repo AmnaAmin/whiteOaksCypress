@@ -11,36 +11,19 @@ const getFileSize = byte => {
   return numeral(sizeInMB).format('0,0.00')
 }
 
-// might be needed later for multiple upload
-
-// const formatDocuments = (docs) => {
-//   let documents = [...docs];
-
-//   docs.forEach((file, index) => {
-//     const reader = new FileReader();
-//     reader.readAsDataURL(file);
-//     reader.onload = (event:any) => {
-//       const arry = event.target.result.split(",");
-//       documents[0] = {
-//         id: file.name,
-//         fileObject: arry[1],
-//         fileObjectContentType: file.type,
-//         fileType: file.type,
-//         size: file.size,
-//       };
-//     };
-//   });
-
-//   return documents;
-// };
-
 export default function FileDragDrop({ onUpload, ...fieldProps }) {
-  const [files, setFiles] = useState([])
+  const [files, setFiles] = useState<any>([])
 
   const handleDrop = acceptedFiles => {
-    setFiles(acceptedFiles.map(file => file))
-    const documents = acceptedFiles //formatDocuments(acceptedFiles);
+    setFiles([...files, ...acceptedFiles.map(file => file)])
+    const documents = [...files, ...acceptedFiles.map(file => file)] //formatDocuments(acceptedFiles);
     onUpload(documents)
+  }
+
+  const handleDelete = index => {
+    files.splice(index, 1)
+    setFiles([...files])
+    onUpload([...files])
   }
 
   return (
@@ -97,15 +80,15 @@ export default function FileDragDrop({ onUpload, ...fieldProps }) {
           )
         }}
       </Dropzone>
-      <UploadedFiles files={files} setFiles = {setFiles}/>
+      <UploadedFiles files={files} setFiles={setFiles} handleDelete={handleDelete} />
     </Flex>
   )
 }
 
-function UploadedFiles({ files, setFiles }) {
+function UploadedFiles({ files, setFiles, handleDelete }) {
   if (files?.length > 0) {
     return (
-      <Flex direction="column" gap="20px">
+      <Flex direction="column" gap="20px" maxH={'200px'} overflowY={'scroll'}>
         <Flex alignItems="center">
           <Text width="150px" color="#4A5568" fontSize="14px" fontWeight="500" lineHeight="20px">
             Uploaded Files
@@ -151,10 +134,16 @@ function UploadedFiles({ files, setFiles }) {
                 </Text>
               </Flex>
               <Text as="span">{getFileSize(file.size)} MB</Text>
-              <CloseIcon cursor='pointer' width='7.42px' height='7.42px' color='#4A5568' onClick={() =>{
-                setFiles([])
-              }}/>     
-            </Flex>  
+              <CloseIcon
+                cursor="pointer"
+                width="7.42px"
+                height="7.42px"
+                color="#4A5568"
+                onClick={() => {
+                  handleDelete(index)
+                }}
+              />
+            </Flex>
           ))}
         </Flex>
       </Flex>
