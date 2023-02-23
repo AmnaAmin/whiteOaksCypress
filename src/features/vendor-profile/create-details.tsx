@@ -242,7 +242,7 @@ const CreateVendorDetail: React.FC<{
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true , menuHeight: '180px'}}
                       isDisabled={isFPM}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
