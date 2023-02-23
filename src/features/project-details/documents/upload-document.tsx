@@ -19,18 +19,16 @@ import {
 
 import { useDocumentTypes, useUploadDocument } from 'api/vendor-projects'
 import { useTranslation } from 'react-i18next'
-import { Document } from 'types/vendor.types'
-
 import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 import { Button } from 'components/button/button'
 import { ViewLoader } from 'components/page-level-loader'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import FileDragDrop from 'components/file-drag-drop/file-drag-drop'
-import { createDocumentPayload } from 'utils/file-utils'
 import { useProjectWorkOrders } from 'api/projects'
 import { STATUS } from 'features/common/status'
 import { DOCUMENT_TYPES } from 'constants/documents.constants'
+import { readFileContent } from 'api/vendor-details'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
@@ -66,26 +64,40 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     handleSubmit,
     formState: { errors },
     reset,
+    getValues,
   } = useForm()
+  const values = getValues()
+
+  const creatDocumentsPayload = async (documents: Array<any>, documentType: string) => {
+    const vendorId = values?.against?.value?.vendorId?.toString() || ''
+    const workOrderId = values?.against?.value?.id?.toString() || ''
+    const results = await Promise.all(
+      documents.map(async (document: any, index: number) => {
+        let doc = {}
+        const fileContents = await readFileContent(document)
+        doc = {
+          path: document.name,
+          fileType: document.name,
+          fileObject: fileContents,
+          fileObjectContentType: document.type,
+          documentType,
+          projectId,
+          vendorId,
+          workOrderId,
+        }
+        return doc
+      }),
+    )
+    return results
+  }
 
   const onSubmit = async formValues => {
-    const vendorId = formValues?.against?.value?.vendorId?.toString() || ''
-    const workOrderId = formValues?.against?.value?.id?.toString() || ''
-
-    // const documents = formValues.documents.forEach(async file => {
-    const documentPayload = await createDocumentPayload(
-      formValues.chooseFile[0],
+    const documentPayload = await creatDocumentsPayload(
+      formValues.chooseFile,
       formValues?.documentTypes?.value?.toString(),
     )
 
-    const doc: Document = {
-      ...documentPayload,
-      projectId,
-      vendorId,
-      workOrderId,
-    }
-
-    saveDocument(doc, {
+    saveDocument(documentPayload as any[], {
       onSuccess() {
         onClose()
         reset()
@@ -182,42 +194,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                       </FormControl>
                     </GridItem>
                   )}
-
-                  {/* <GridItem>
-                    <FormControl isInvalid={!!errors?.chooseFile}>
-                      <FormLabel htmlFor="chooseFile" variant="strong-label" size="md">
-                        {t('uploadFile')}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        name="chooseFile"
-                        rules={{
-                          validate: file => {
-                            return file?.name?.length > 255 ? 'File name length should be less than 255' : true
-                          },
-                          required: 'Document file is required',
-                        }}
-                        render={({ field, fieldState }) => {
-                          const fileName = field?.value?.name ?? (t('chooseFile') as string)
-                          return (
-                            <>
-                              <ChooseFileField
-                                testId="choose-document"
-                                name={field.name}
-                                value={fileName}
-                                isRequired={true}
-                                isError={!!fieldState.error?.message}
-                                onChange={(file: any) => {
-                                  field.onChange(file)
-                                }}
-                              />
-                              <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem> */}
                 </Grid>
               </HStack>
             )}
