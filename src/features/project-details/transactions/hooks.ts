@@ -68,11 +68,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
   const isAgainstProjectSOWOptionSelected = selectedAgainstId && selectedAgainstId === AGAINST_DEFAULT_VALUE
-  const isTransactionTypeDrawAgainstProjectSOWSelected =
-    selectedTransactionTypeId === TransactionTypeValues.draw ||
-    selectedTransactionTypeId === TransactionTypeValues.shippingFee ||
-    selectedTransactionTypeId === TransactionTypeValues.carrierFee ||
-    selectedTransactionTypeId === TransactionTypeValues.permitFee
+  const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.draw
   // const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.shipping
   // YK - PSWOA-1243
   // && isAgainstProjectSOWOptionSelected
@@ -150,7 +146,8 @@ export const useFieldDisabledEnabledDecision = (
   transaction?: ChangeOrderType,
   isMaterialsLoading?: boolean,
 ) => {
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isAccounting } = useUserRolesSelector()
+  const isAdminEnabled = isAdmin || isAccounting
   const isUpdateForm = !!transaction || isMaterialsLoading
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
@@ -162,9 +159,8 @@ export const useFieldDisabledEnabledDecision = (
     isUpdateForm,
     isApproved: isStatusApproved,
     isSysFactoringFee: isFactoringFeeSysGenerated,
-    isPaidDateDisabled: !transaction || isStatusApproved,
-    isStatusDisabled:
-      (isStatusApproved && !(isAdmin && isManualTransaction(transaction.transactionType))) || isMaterialsLoading,
+    isPaidDateDisabled: !transaction || (isStatusApproved && !isAdminEnabled),
+    isStatusDisabled: (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading,
   }
 }
 
