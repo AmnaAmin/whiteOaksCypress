@@ -34,6 +34,7 @@ export default function FileDragDrop({ onUpload, ...fieldProps }) {
 
           return (
             <Flex
+              data-testid="drop-zone"
               alignItems="center"
               justifyContent="center"
               {...getRootProps({
@@ -48,7 +49,7 @@ export default function FileDragDrop({ onUpload, ...fieldProps }) {
               }}
               onClick={e => e.stopPropagation()}
             >
-              <input {...getInputProps()} />
+              <input {...getInputProps()} data-testid="chooseFile" />
               <Flex
                 direction="column"
                 gap="10px"
@@ -80,12 +81,12 @@ export default function FileDragDrop({ onUpload, ...fieldProps }) {
           )
         }}
       </Dropzone>
-      <UploadedFiles files={files} setFiles={setFiles} handleDelete={handleDelete} />
+      <UploadedFiles files={files} handleDelete={handleDelete} />
     </Flex>
   )
 }
 
-function UploadedFiles({ files, setFiles, handleDelete }) {
+function UploadedFiles({ files, handleDelete }) {
   if (files?.length > 0) {
     return (
       <Flex direction="column" gap="20px" maxH={'200px'} overflowY={'scroll'}>
@@ -135,6 +136,7 @@ function UploadedFiles({ files, setFiles, handleDelete }) {
               </Flex>
               <Text as="span">{getFileSize(file.size)} MB</Text>
               <CloseIcon
+                data-testid={'delete-' + index}
                 cursor="pointer"
                 width="7.42px"
                 height="7.42px"
