@@ -51,7 +51,7 @@ export const ManageProject: React.FC<{
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
           <GridItem>
             <FormControl>
-              <FormLabel size="md">{t(`${NEW_PROJECT}.fieldProjectManager`)}</FormLabel>
+              <FormLabel  size="md">{t(`${NEW_PROJECT}.fieldProjectManager`)}</FormLabel>
               <Controller
                 control={control}
                 name={`projectManager`}
@@ -59,6 +59,7 @@ export const ManageProject: React.FC<{
                 render={({ field, fieldState }) => (
                   <>
                     <Select
+                    id='project-manager'
                       {...field}
                       options={fieldProjectManagerByMarketOptions}
                       size="md"
