@@ -1093,8 +1093,7 @@ describe('Given update transaction', () => {
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Shipping Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -1127,8 +1126,7 @@ describe('Given update transaction', () => {
 
       expect(getByText(screen.getByTestId('transaction-type'), 'Shipping Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -1172,8 +1170,7 @@ describe('Given update transaction', () => {
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Carrier Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -1206,8 +1203,7 @@ describe('Given update transaction', () => {
 
       expect(getByText(screen.getByTestId('transaction-type'), 'Carrier Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -1251,8 +1247,7 @@ describe('Given update transaction', () => {
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Permit Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -1285,8 +1280,7 @@ describe('Given update transaction', () => {
 
       expect(getByText(screen.getByTestId('transaction-type'), 'Permit Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
