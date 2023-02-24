@@ -150,7 +150,8 @@ export const useFieldDisabledEnabledDecision = (
   transaction?: ChangeOrderType,
   isMaterialsLoading?: boolean,
 ) => {
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isAccounting } = useUserRolesSelector()
+  const isAdminEnabled = isAdmin || isAccounting
   const isUpdateForm = !!transaction || isMaterialsLoading
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
@@ -162,9 +163,8 @@ export const useFieldDisabledEnabledDecision = (
     isUpdateForm,
     isApproved: isStatusApproved,
     isSysFactoringFee: isFactoringFeeSysGenerated,
-    isPaidDateDisabled: !transaction || isStatusApproved,
-    isStatusDisabled:
-      (isStatusApproved && !(isAdmin && isManualTransaction(transaction.transactionType))) || isMaterialsLoading,
+    isPaidDateDisabled: !transaction || (isStatusApproved && !isAdminEnabled),
+    isStatusDisabled: (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading,
   }
 }
 

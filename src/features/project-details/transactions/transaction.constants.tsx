@@ -183,8 +183,6 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
 ]
 
 export const transDataExpLogic = (transactions?: any) => {
-  console.log(transactions)
-
   if (transactions && transactions?.length > 0) {
     const data = [] as any
     const dataEmptyID = transactions?.filter(d => !d.parentWorkOrderId)
