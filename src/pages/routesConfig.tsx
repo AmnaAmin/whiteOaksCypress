@@ -48,6 +48,8 @@ export default function useRoutesConfig() {
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'vendors', element: Vendors },
         { path: 'performance', element: Performance },
+        { path: 'estimate-details/:projectId', element: EstimateDetails },
+        { path: 'estimates', element: Estimates }
       ]
     case isProjectCoordinator:
       return [
@@ -59,6 +61,8 @@ export default function useRoutesConfig() {
         { path: 'clients', element: Clients },
         // { path: 'alerts', element: Alerts },
         // { path: 'pcDashboard', element: ProjectCoordinatorDashboard },
+        { path: 'estimate-details/:projectId', element: EstimateDetails },
+        { path: 'estimates', element: Estimates }
       ]
     case isVendorManager:
       return [
@@ -74,6 +78,8 @@ export default function useRoutesConfig() {
         { path: 'reports', element: Reports },
         { path: 'performance', element: PerformanceTab },
         { path: 'clients', element: Clients },
+        { path: 'estimate-details/:projectId', element: EstimateDetails },
+        { path: 'estimates', element: Estimates }
       ]
 
     case isVendor:
@@ -115,6 +121,8 @@ export default function useRoutesConfig() {
         { path: 'clients', element: Clients },
         { path: 'reports', element: Reports },
         { path: 'performance', element: PerformanceTab },
+        { path: 'estimate-details/:projectId', element: EstimateDetails },
+        { path: 'estimates', element: Estimates }
       ]
     case isOperations:
       return [
@@ -128,6 +136,8 @@ export default function useRoutesConfig() {
         { path: 'clients', element: Clients },
         { path: 'reports', element: Reports },
         { path: 'performance', element: PerformanceTab },
+        { path: 'estimate-details/:projectId', element: EstimateDetails },
+        { path: 'estimates', element: Estimates }
       ]
     case isClientManager:
       return [{ path: 'clients', element: Clients }]
