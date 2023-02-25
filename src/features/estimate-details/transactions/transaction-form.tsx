@@ -775,7 +775,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                 {isShowStatusField && (
                   <GridItem>
-                    <FormControl isInvalid={!!errors.status} data-testid="status-select-field">
+                    <FormControl isInvalid={!!errors.status}>
                       <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
                         {t(`${TRANSACTION}.status`)}
                       </FormLabel>
@@ -793,6 +793,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         }}
                         render={({ field, fieldState }) => (
                           <>
+                          <div  data-testid="status-field">
                             <Select
                               {...field}
                               options={transactionStatusOptions}
@@ -802,6 +803,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               }}
                             />
                             <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </div>
                           </>
                         )}
                       />

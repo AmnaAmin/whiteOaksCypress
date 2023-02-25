@@ -472,6 +472,42 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(onClose).toHaveBeenCalled()
     })
   })
+
+  // write test suite for when the user create transaction of type Deductible
+  describe('When the user create transaction of type Deductible', () => {
+    test('Then User should create Deductible transaction against Project SOW successfully', async () => {
+      const onClose = jest.fn()
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
+
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
+
+      await selectOption(screen.getByTestId('transaction-type'), 'Deductible')
+      expect(getByText(screen.getByTestId('transaction-type'), 'Deductible')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+
+      // add payment received date
+      fireEvent.change(screen.getByTestId('payment-received-date'), { target: { value: '2022-10-01' } })
+
+      const totalAmount = screen.getByTestId('total-amount')
+
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
+
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
+
+      await userEvent.type(descriptionField, 'Added')
+      await userEvent.type(amountField, '400')
+
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+  })
 })
 
 describe('Given update transaction', () => {
@@ -1057,8 +1093,7 @@ describe('Given update transaction', () => {
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Shipping Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -1091,8 +1126,7 @@ describe('Given update transaction', () => {
 
       expect(getByText(screen.getByTestId('transaction-type'), 'Shipping Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -1136,8 +1170,7 @@ describe('Given update transaction', () => {
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Carrier Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -1170,8 +1203,7 @@ describe('Given update transaction', () => {
 
       expect(getByText(screen.getByTestId('transaction-type'), 'Carrier Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -1215,8 +1247,7 @@ describe('Given update transaction', () => {
        */
       expect(getByText(screen.getByTestId('transaction-type'), 'Permit Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')
@@ -1249,8 +1280,7 @@ describe('Given update transaction', () => {
 
       expect(getByText(screen.getByTestId('transaction-type'), 'Permit Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
-      fireEvent.change(screen.getByTestId(`invoice-date`), { target: { value: '2023-02-20' } })
-      await selectOption(screen.getByTestId('payment-term-select'), '20')
+
       const totalAmount = screen.getByTestId('total-amount')
 
       expect(totalAmount.textContent).toEqual('Total: $0.00')

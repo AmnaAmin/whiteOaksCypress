@@ -47,7 +47,6 @@ import {
 } from 'types/transaction.type'
 import { dateFormat } from 'utils/date-time-utils'
 import {
-  isManualTransaction,
   useAgainstOptions,
   useCalculatePayDateVariance,
   useFieldDisabledEnabledDecision,
@@ -155,7 +154,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
-  const { isAdmin, isVendor } = useUserRolesSelector()
+  const { isAdmin, isVendor, isAccounting } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -252,10 +251,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowPaymentRecievedDateField,
     isPaymentTermDisabled,
   } = useFieldShowHideDecision(control, transaction)
-  const isAdminEnabled = isAdmin && isManualTransaction(transaction?.transactionType)
+  const isAdminEnabled = isAdmin || isAccounting
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control)
-  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled, isSysFactoringFee } =
-    useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
+  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
+    control,
+    transaction,
+    isMaterialsLoading,
+  )
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
 
@@ -367,8 +369,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     [workOrdersKeyValues, setValue],
   )
 
-  // Disable selection of future payment received date for all users expect Admin
-  const futureDateDisable = !isAdmin ? format(new Date(), 'yyyy-MM-dd') : ''
+  // Disable selection of future payment received date for all users expect Admin and Accounting
+  const futureDateDisable = !isAdminEnabled ? format(new Date(), 'yyyy-MM-dd') : ''
 
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
@@ -460,7 +462,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               options={transactionTypeOptions}
                               isDisabled={isUpdateForm}
                               size="md"
-                              selectProps={{ isBorderLeft: true, menuHeight: isVendor ? '88px' : '250px' }}
+                              selectProps={{ isBorderLeft: true, menuHeight: isVendor ? '88px' : '187px' }}
                               onChange={async (option: SelectOption) => {
                                 const formValues = { ...defaultValues, transactionType: option }
 
@@ -478,7 +480,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 </GridItem>
 
                 <GridItem>
-                  <FormControl isInvalid={!!errors.against} data-testid="against-select-field">
+                  <FormControl isInvalid={!!errors.against}>
                     <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
                       {t(`${TRANSACTION}.against`)}
                     </FormLabel>
@@ -488,6 +490,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                       rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                       render={({ field, fieldState }) => (
                         <>
+                        <div  data-testid="against-select-field">
                           <Select
                             {...field}
                             selectProps={{ isBorderLeft: true }}
@@ -499,6 +502,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             }}
                           />
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          </div>
                         </>
                       )}
                     />
@@ -507,7 +511,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                 {isShowWorkOrderSelectField && (
                   <GridItem>
-                    <FormControl isInvalid={!!errors.workOrder} data-testid="work-order-select">
+                    <FormControl isInvalid={!!errors.workOrder}>
                       <FormLabel htmlFor="workOrder" fontSize="14px" color="gray.700" fontWeight={500}>
                         {t(`${TRANSACTION}.workOrder`)}
                       </FormLabel>
@@ -517,7 +521,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         rules={{ required: true }}
                         render={({ field, fieldState }) => (
                           <>
+                          <div  data-testid="work-order-select">
                             <Select
+                            
                               {...field}
                               isDisabled={isUpdateForm}
                               selectProps={{ isBorderLeft: true }}
@@ -528,6 +534,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               }}
                             />
                             <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </div>
                           </>
                         )}
                       />
@@ -537,7 +544,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                 {isShowChangeOrderSelectField && (
                   <GridItem>
-                    <FormControl isInvalid={!!errors.changeOrder} data-testid="change-order-select">
+                    <FormControl isInvalid={!!errors.changeOrder} >
                       <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="changeOrder">
                         {t(`${TRANSACTION}.changeOrder`)}
                       </FormLabel>
@@ -547,6 +554,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         rules={{ required: true }}
                         render={({ field, fieldState }) => (
                           <>
+                          <div data-testid="change-order-select">
                             <Select
                               isDisabled={isUpdateForm}
                               options={changeOrderSelectOptions}
@@ -554,6 +562,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               {...field}
                             />
                             <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </div>
                           </>
                         )}
                       />
@@ -620,7 +629,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 {isTransactionTypeDrawAgainstProjectSOWSelected && (
                   <>
                     <GridItem>
-                      <FormControl isInvalid={!!errors.paymentTerm} data-testid="payment-term-select">
+                      <FormControl isInvalid={!!errors.paymentTerm} >
                         <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.700" fontWeight={500}>
                           {t(`${TRANSACTION}.paymentTerm`)}
                         </FormLabel>
@@ -630,6 +639,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           render={({ field, fieldState }) => (
                             <>
+                            <div data-testid="payment-term-select">
                               <Select
                                 {...field}
                                 selectProps={{ isBorderLeft: true }}
@@ -640,6 +650,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 }}
                               />
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </div>
                             </>
                           )}
                         />
@@ -664,7 +675,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           type="date"
                           variant={isInvoicedDateRequired ? 'required-field' : 'outline'}
                           css={calendarIcon}
-                          isDisabled={isApproved}
+                          isDisabled={isApproved && !isAdminEnabled}
                           {...register('invoicedDate', {
                             required: isInvoicedDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
                           })}
@@ -822,7 +833,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                 {isShowStatusField && (
                   <GridItem>
-                    <FormControl isInvalid={!!errors.status} data-testid="status-select-field">
+                    <FormControl isInvalid={!!errors.status} >
                       <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
                         {t(`${TRANSACTION}.status`)}
                       </FormLabel>
@@ -840,15 +851,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         }}
                         render={({ field, fieldState }) => (
                           <>
+                          <div data-testid="status-select-field">
                             <Select
                               {...field}
                               options={transactionStatusOptions}
-                              isDisabled={isStatusDisabled || isSysFactoringFee}
+                              isDisabled={isStatusDisabled}
                               onChange={statusOption => {
                                 field.onChange(statusOption)
                               }}
                             />
                             <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </div>
                           </>
                         )}
                       />
@@ -911,8 +924,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          (!isApproved || isAdminEnabled) &&
-          !isSysFactoringFee && (
+          (!isApproved || isAdminEnabled) && (
             <>
               <Button
                 type="submit"
