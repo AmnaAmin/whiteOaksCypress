@@ -77,6 +77,14 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
     meta: { format: 'currency' },
   },
   {
+    header: `${TRANSACTION}.depreciation`,
+    accessorKey: 'depreciation',
+    accessorFn(row) {
+      return numeral(row.depreciation).format('$0,0.00')
+    },
+    meta: { format: 'currency' },
+  },
+  {
     header: `${TRANSACTION}.AR`,
     accessorKey: 'accountReceivable',
     accessorFn(row) {
