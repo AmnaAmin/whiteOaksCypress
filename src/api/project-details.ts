@@ -648,6 +648,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     remainingPayment: formValues?.remainingPayment,
     payVariance: formValues?.payVariance,
     newPartialPayment: formValues?.payment,
+    newDepreciationPayment: formValues?.depreciation,
 
     // Contacts payload
     projectCordinatorId: formValues?.projectCoordinator?.value,

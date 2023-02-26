@@ -93,6 +93,14 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
     setValue('overPayment', overyPayment < 0 ? 0 : overyPayment)
   }
 
+  
+  const onDepreciationValueChange = (values: NumberFormatValues) => {
+    const depreciation = Number(values.value)
+    const overyPayment = depreciation - (getValues().remainingPayment || 0)
+
+    setValue('overPayment', overyPayment < 0 ? 0 : overyPayment)
+  }
+
   useEffect(() => {
     if (isStatusInvoiced && !formValues.woaInvoiceDate) {
       setValue('woaInvoiceDate', datePickerFormat(new Date()))
@@ -395,6 +403,34 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                     thousandSeparator={true}
                     prefix={'$'}
                     data-testid="payment-field"
+                  />
+                )
+              }}
+            />
+          </FormControl>
+        </GridItem>
+        <GridItem>
+          <FormControl isInvalid={!!errors.payment}>
+            <FormLabel htmlFor="depreciation" variant="strong-label" size="md">
+              {t(`project.projectDetails.depreciation`)}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="depreciation"
+              render={({ field, fieldState }) => {
+                return (
+                  <NumberInput
+                  datatest-id='depreciation-0'
+                    value={field.value}
+                    onValueChange={(values: NumberFormatValues) => {
+                      onDepreciationValueChange(values)
+                      field.onChange(values.value)
+                    }}
+                    disabled={isPaymentDisabledCheck}
+                    customInput={Input}
+                    thousandSeparator={true}
+                    prefix={'$'}
+                    data-testid="depreciation-field"
                   />
                 )
               }}

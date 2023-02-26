@@ -34,6 +34,7 @@ export const project = {
           overpayment: 'Overpayment',
           remainingPayment: 'Remaining Payment',
           payment: 'Payment',
+          depreciation: 'depreciation',
           originalSOW: 'Original SOW',
           invoice: 'Invoice',
           paymentError: `Unable to save payment due to 'Pending' Draws against Project SOW.`,
