@@ -484,12 +484,6 @@ describe('Given Project Coordinator create new transaction', () => {
       // User first select Transaction type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Depreciation')
 
-      /**
-       * Check the following fields changed properly,
-       * 1- Transaction Type selected with 'Payment'
-       * 2- Expected Completion Date field visible with already filled value of current Date but disabled
-       * 3- New Expected Completion Date field visible
-       */
       expect(getByText(screen.getByTestId('transaction-type'), 'Depreciation')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
 
