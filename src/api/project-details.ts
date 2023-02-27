@@ -557,6 +557,7 @@ export const parseFormValuesFromAPIData = ({
     overPayment: overPayment?.sum,
     remainingPayment: remainingPayment < 0 ? 0 : remainingPayment,
     payment: '',
+    depreciation: '',
 
     // Contacts form values
     projectCoordinator: findOptionByValue(projectCoordinatorSelectOptions, project.projectCoordinatorId),
