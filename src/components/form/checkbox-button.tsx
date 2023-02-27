@@ -16,7 +16,8 @@ export const CheckboxButton: React.FC<CheckboxProps> = props => {
         cursor="pointer"
         borderWidth="1px"
         borderRadius="md"
-        bg="gray.200"
+        bg="gray.100"
+        fontcolor="gray.600"
         fontSize="14px"
         color="gray.500"
         _checked={{
