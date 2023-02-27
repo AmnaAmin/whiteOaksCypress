@@ -98,7 +98,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     if (!!payment) {
       const pendingDraws = transactions?.filter(
         t =>
-          [TransactionTypeValues.draw].includes(t.transactionType) &&
+          [TransactionTypeValues.draw,TransactionTypeValues.payment,TransactionTypeValues.depreciation].includes(t.transactionType) &&
           !t?.parentWorkOrderId &&
           [TransactionStatusValues.pending].includes(t?.status as TransactionStatusValues),
       )
@@ -119,6 +119,9 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
     if (hasPendingDrawsOnPaymentSave(formValues.payment)) {
+      return
+    }
+    if (hasPendingDrawsOnPaymentSave(formValues.depreciation)) {
       return
     }
     const payload = await parseProjectDetailsPayloadFromFormData(formValues, projectData)
