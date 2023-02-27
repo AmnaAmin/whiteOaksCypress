@@ -34,7 +34,7 @@ export const project = {
           overpayment: 'Overpayment',
           remainingPayment: 'Remaining Payment',
           payment: 'Payment',
-          depreciation: 'depreciation',
+          depreciation: 'Depreciation',
           originalSOW: 'Original SOW',
           invoice: 'Invoice',
           paymentError: `Unable to save payment due to 'Pending' Draws against Project SOW.`,
@@ -120,6 +120,7 @@ export const project = {
           payment: 'Pago',
           originalSOW: 'SOW original',
           invoice: 'Factura',
+          depreciation: 'Depreciación',
           paymentError: `No se pudo guardar el pago debido a retiros 'pendientes' contra el proyecto SOW.`,
 
           // Contacts
