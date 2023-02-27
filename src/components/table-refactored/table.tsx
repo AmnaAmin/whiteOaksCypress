@@ -363,11 +363,13 @@ export const Table: React.FC<TableProps> = ({
                               borderBottom: '1px solid #CBD5E0',
                             }}
                           >
-                            <Filter
-                              allowStickyFilters={allowStickyFilters}
-                              column={header.column}
-                              table={tableInstance}
-                            />
+                            {header.id !== 'expender' && (
+                              <Filter
+                                allowStickyFilters={allowStickyFilters}
+                                column={header.column}
+                                table={tableInstance}
+                              />
+                            )}
                           </Box>
                         ) : null}
                       </Th>
