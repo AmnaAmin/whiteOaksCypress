@@ -36,12 +36,13 @@ import { TransactionStatusValues, TransactionTypeValues } from 'types/transactio
 type tabProps = {
   projectData: Project
   onClose?: () => void
-  style?: { backgroundColor: string; marginLeft: string; marginRight: string; height: string }
+  style?: { backgroundColor: string; marginLeft: string; marginRight: string; height: string; pt: string }
   tabVariant?: string
+  isRecievable?: boolean
 }
 
 const ProjectDetailsTab = (props: tabProps) => {
-  const { style, onClose, tabVariant, projectData } = props
+  const { style, onClose, tabVariant, projectData, isRecievable } = props
 
   const [tabIndex, setTabIndex] = useState(0)
 
@@ -136,11 +137,13 @@ const ProjectDetailsTab = (props: tabProps) => {
       <form onSubmit={formReturn.handleSubmit(onSubmit)} id="project-details">
         <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={handleTabsChange}>
           <TabList
+            borderBottom={isRecievable ? 0 : '2px solid'}
+            marginBottom="1px"
             bg={style?.backgroundColor ? '' : '#F7FAFC'}
-            rounded="6px 6px 0 0"
-            pt="7"
-            ml={style?.marginLeft || ''}
-            mr={style?.marginRight || ''}
+            rounded="6px 6px 0px 0px"
+            pt={isRecievable ? 2 : 7}
+            //  ml={style?.marginLeft || ''}
+            //  mr={style?.marginRight || ''}
           >
             <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
               {t(`project.projectDetails.projectManagement`)}
@@ -154,83 +157,93 @@ const ProjectDetailsTab = (props: tabProps) => {
             <TabCustom>{t(`project.projectDetails.location`)}</TabCustom>
             <TabCustom>{t(`project.projectDetails.misc`)}</TabCustom>
           </TabList>
+          <Box
+            bg="white"
+            p="15px"
+            boxShadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
+            borderTopRightRadius={isRecievable? '6px' :'0px'}
+            borderBottomRightRadius="4px"
+            borderTopLeftRadius="4px"
+            borderBottomLeftRadius="4px"
+          >
+            <TabPanels mt="31px">
+              <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
+                <ProjectManagement
+                  projectStatusSelectOptions={projectStatusSelectOptions}
+                  projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
+                  projectTypeSelectOptions={projectTypeSelectOptions}
+                  projectData={projectData}
+                />
+              </TabPanel>
 
-          <TabPanels mt="31px">
-            <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '343px'}>
-              <ProjectManagement
-                projectStatusSelectOptions={projectStatusSelectOptions}
-                projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
-                projectTypeSelectOptions={projectTypeSelectOptions}
-                projectData={projectData}
-              />
-            </TabPanel>
+              <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
+                <InvoiceAndPayments projectData={projectData} />
+              </TabPanel>
 
-            <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '343px'}>
-              <InvoiceAndPayments projectData={projectData} />
-            </TabPanel>
+              <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
+                <Contact
+                  projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
+                  projectManagerSelectOptions={fpmSelectOptions}
+                  clientSelectOptions={clientSelectOptions}
+                />
+              </TabPanel>
+              <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
+                <Location stateSelectOptions={stateSelectOptions} marketSelectOptions={marketSelectOptions} />
+              </TabPanel>
 
-            <TabPanel p="0" ml="32px" minH={style?.height ? '380px' : '343px'}>
-              <Contact
-                projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
-                projectManagerSelectOptions={fpmSelectOptions}
-                clientSelectOptions={clientSelectOptions}
-              />
-            </TabPanel>
-            <TabPanel p="0" ml="32px" minH={style?.height ? '290px' : '343px'}>
-              <Location stateSelectOptions={stateSelectOptions} marketSelectOptions={marketSelectOptions} />
-            </TabPanel>
+              <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
+                <Misc />
+              </TabPanel>
+            </TabPanels>
 
-            <TabPanel p="0" ml="32px" minH={style?.height ? '395px' : '343px'}>
-              <Misc />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-        <Stack>
-          <Box mt="3">
-            <Divider border="1px solid" />
-          </Box>
-          <Box h="70px" w="100%" pb="3">
-            <Button
-              mt="8px"
-              mr="32px"
-              float={'right'}
-              variant="solid"
-              colorScheme="brand"
-              type="submit"
-              form="project-details"
-              fontSize="16px"
-              disabled={isSubmitting || isLoading}
-            >
-              {t(`project.projectDetails.save`)}
-            </Button>
-            {onClose && (
-              <>
+            <Stack>
+              <Box mt="3">
+                <Divider border="1px solid" />
+              </Box>
+              <Box h="70px" w="100%" pb="3">
                 <Button
-                  fontSize="16px"
-                  onClick={onClose}
                   mt="8px"
-                  mr="5"
+                  mr="32px"
                   float={'right'}
-                  variant="outline"
+                  variant="solid"
                   colorScheme="brand"
+                  type="submit"
+                  form="project-details"
+                  fontSize="16px"
+                  disabled={isSubmitting || isLoading}
                 >
-                  {t(`project.projectDetails.cancel`)}
+                  {t(`project.projectDetails.save`)}
                 </Button>
-                <Button
-                  mt="8px"
-                  ml="32px"
-                  as={Link}
-                  to={`/project-details/${projectData?.id}`}
-                  variant="outline"
-                  colorScheme="brand"
-                  leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
-                >
-                  {t(`project.projectDetails.seeProjectDetails`)}
-                </Button>
-              </>
-            )}
+                {onClose && (
+                  <>
+                    <Button
+                      fontSize="16px"
+                      onClick={onClose}
+                      mt="8px"
+                      mr="5"
+                      float={'right'}
+                      variant="outline"
+                      colorScheme="brand"
+                    >
+                      {t(`project.projectDetails.cancel`)}
+                    </Button>
+                    <Button
+                      mt="8px"
+                      ml="32px"
+                      as={Link}
+                      to={`/project-details/${projectData?.id}`}
+                      variant="outline"
+                      colorScheme="brand"
+                      leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
+                    >
+                      {t(`project.projectDetails.seeProjectDetails`)}
+                    </Button>
+                  </>
+                )}
+              </Box>
+            </Stack>
           </Box>
-        </Stack>
+        </Tabs>
       </form>
       <DevTool control={control} />
     </FormProvider>
