@@ -281,6 +281,7 @@ export type ProjectFinancialOverview = {
   shipFee: number
   permitFee: number
   deductible: number
+  depreciation:number
 }
 
 export type AddressInfo = { address: string; city: string; state: string; zipCode: string }

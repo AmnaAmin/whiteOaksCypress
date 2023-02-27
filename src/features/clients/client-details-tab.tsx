@@ -127,6 +127,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
+                  <div data-testid='payment_term'>
                     <ReactSelect
                       options={PAYMENT_TERMS_OPTIONS}
                       menuPosition="fixed"
@@ -136,6 +137,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       isDisabled={isProjectCoordinator}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                    </div>
                   </>
                 )}
               />
@@ -302,6 +304,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
+                  <div data-testid='state_id'>
                     <Select
                       {...field}
                       options={stateSelectOptions}
@@ -311,6 +314,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       isDisabled={isProjectCoordinator}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </div>
                   </>
                 )}
               />
@@ -451,6 +455,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                           rules={{ required: 'This is required' }}
                           render={({ field }) => (
                             <>
+                            <div data-testid='market_id'>
                               <Select
                                 {...field}
                                 options={marketSelectOptions}
@@ -460,6 +465,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                                 selectProps={{ isBorderLeft: true }}
                               />
                               <FormErrorMessage>{errors?.contacts?.[index]?.market?.message}</FormErrorMessage>
+                              </div>
                             </>
                           )}
                         />

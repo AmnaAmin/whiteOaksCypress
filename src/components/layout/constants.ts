@@ -64,6 +64,12 @@ export const MENU_ROLE_BASED: Menus = {
     //   color: '#ED8936',
     // },
     {
+      pathTo: '/estimates',
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: '#ECC94B',
+    },
+    {
       pathTo: '/projects',
       title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
@@ -124,6 +130,12 @@ export const MENU_ROLE_BASED: Menus = {
 
   [UserTypes.doc]: [
     {
+      pathTo: '/estimates',
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: '#ECC94B',
+    },
+    {
       pathTo: '/projects',
       title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
@@ -157,6 +169,12 @@ export const MENU_ROLE_BASED: Menus = {
 
   [UserTypes.fpm]: [
     {
+      pathTo: '/estimates',
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: '#ECC94B',
+    },
+    {
       pathTo: '/projects',
       title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
@@ -182,6 +200,12 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.dashboard`,
       Icon: FaHome,
       color: '#ED8936',
+    },
+    {
+      pathTo: '/estimates',
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: '#ECC94B',
     },
     {
       pathTo: '/projects',
@@ -350,6 +374,12 @@ export const MENU_ROLE_BASED: Menus = {
 
   [UserTypes.accounting]: [
     {
+      pathTo: '/estimates',
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: '#ECC94B',
+    },
+    {
       pathTo: '/projects',
       title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
@@ -393,16 +423,12 @@ export const MENU_ROLE_BASED: Menus = {
     },
   ],
   [UserTypes.operations]: [
-    ...(showForPreProdAndLocal
-      ? [
-          {
-            pathTo: '/estimates',
-            title: `${SIDE_NAV}.estimates`,
-            Icon: MdOnlinePrediction,
-            color: '#ECC94B',
-          },
-        ]
-      : []),
+    {
+      pathTo: '/estimates',
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: '#ECC94B',
+    },
     {
       pathTo: '/projects',
       title: `${SIDE_NAV}.projects`,

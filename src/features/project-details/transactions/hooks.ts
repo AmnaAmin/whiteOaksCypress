@@ -68,11 +68,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
   const isAgainstProjectSOWOptionSelected = selectedAgainstId && selectedAgainstId === AGAINST_DEFAULT_VALUE
-  const isTransactionTypeDrawAgainstProjectSOWSelected =
-    selectedTransactionTypeId === TransactionTypeValues.draw ||
-    selectedTransactionTypeId === TransactionTypeValues.shippingFee ||
-    selectedTransactionTypeId === TransactionTypeValues.carrierFee ||
-    selectedTransactionTypeId === TransactionTypeValues.permitFee
+  const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.draw
   // const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.shipping
   // YK - PSWOA-1243
   // && isAgainstProjectSOWOptionSelected
@@ -114,6 +110,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
       TransactionTypeValues.payment,
       TransactionTypeValues.woPaid,
       TransactionTypeValues.deductible,
+      TransactionTypeValues.depreciation,
     ].includes(selectedTransactionTypeId),
     isShowPaidBackDateField: isTransactionTypeOverpaymentSelected && markAsPaid && isStatusNotCancelled,
     isShowMarkAsField: isTransactionTypeOverpaymentSelected && isStatusNotCancelled,
@@ -143,6 +140,7 @@ export const isManualTransaction = transactionType =>
     TransactionTypeValues.carrierFee,
     TransactionTypeValues.shippingFee,
     TransactionTypeValues.deductible,
+    TransactionTypeValues.depreciation,
   ].includes(transactionType)
 
 export const useFieldDisabledEnabledDecision = (
@@ -150,7 +148,8 @@ export const useFieldDisabledEnabledDecision = (
   transaction?: ChangeOrderType,
   isMaterialsLoading?: boolean,
 ) => {
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isAccounting } = useUserRolesSelector()
+  const isAdminEnabled = isAdmin || isAccounting
   const isUpdateForm = !!transaction || isMaterialsLoading
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
@@ -162,9 +161,8 @@ export const useFieldDisabledEnabledDecision = (
     isUpdateForm,
     isApproved: isStatusApproved,
     isSysFactoringFee: isFactoringFeeSysGenerated,
-    isPaidDateDisabled: !transaction || isStatusApproved,
-    isStatusDisabled:
-      (isStatusApproved && !(isAdmin && isManualTransaction(transaction.transactionType))) || isMaterialsLoading,
+    isPaidDateDisabled: !transaction || (isStatusApproved && !isAdminEnabled),
+    isStatusDisabled: (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading,
   }
 }
 
@@ -293,7 +291,7 @@ export const useAgainstOptions = (
       return againstOptions.slice(1)
     }
 
-    if ([TransactionTypeValues.payment, TransactionTypeValues.deductible].includes(transactionType?.value)) {
+    if ([TransactionTypeValues.payment, TransactionTypeValues.deductible,TransactionTypeValues.depreciation].includes(transactionType?.value)) {
       return againstOptions.slice(0, 1)
     }
     if (
