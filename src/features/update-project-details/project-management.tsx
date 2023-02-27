@@ -96,6 +96,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
+                  <div data-testid='proj-status'>
                     <ReactSelect
                       {...field}
                       options={projectStatusSelectOptions}
@@ -106,6 +107,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                       }}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </div>
                   </>
                 )}
               />
