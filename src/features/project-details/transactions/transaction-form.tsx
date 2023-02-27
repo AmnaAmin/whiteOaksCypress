@@ -308,10 +308,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }
 
   const hasPendingDrawsOnPaymentSave = values => {
-    if (values?.transactionType?.value === TransactionTypeValues.payment) {
+    if ([TransactionTypeValues.payment, TransactionTypeValues.depreciation].includes(values?.transactionType?.value)) {
       const pendingDraws = transactions?.filter(
         t =>
-          [TransactionTypeValues.draw].includes(t.transactionType) &&
+          [TransactionTypeValues.draw, TransactionTypeValues.payment, TransactionTypeValues.depreciation].includes(
+            t.transactionType,
+          ) &&
           !t?.parentWorkOrderId &&
           [TransactionStatusValues.pending].includes(t?.status as TransactionStatusValues),
       )
@@ -490,18 +492,18 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                       rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                       render={({ field, fieldState }) => (
                         <>
-                        <div  data-testid="against-select-field">
-                          <Select
-                            {...field}
-                            selectProps={{ isBorderLeft: true }}
-                            options={againstOptions}
-                            isDisabled={isUpdateForm}
-                            onChange={option => {
-                              onAgainstOptionSelect(option)
-                              field.onChange(option)
-                            }}
-                          />
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          <div data-testid="against-select-field">
+                            <Select
+                              {...field}
+                              selectProps={{ isBorderLeft: true }}
+                              options={againstOptions}
+                              isDisabled={isUpdateForm}
+                              onChange={option => {
+                                onAgainstOptionSelect(option)
+                                field.onChange(option)
+                              }}
+                            />
+                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                           </div>
                         </>
                       )}
@@ -521,19 +523,18 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         rules={{ required: true }}
                         render={({ field, fieldState }) => (
                           <>
-                          <div  data-testid="work-order-select">
-                            <Select
-                            
-                              {...field}
-                              isDisabled={isUpdateForm}
-                              selectProps={{ isBorderLeft: true }}
-                              options={workOrderSelectOptions}
-                              onChange={option => {
-                                field.onChange(option)
-                                setSelectedWorkOrderId(option.value)
-                              }}
-                            />
-                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            <div data-testid="work-order-select">
+                              <Select
+                                {...field}
+                                isDisabled={isUpdateForm}
+                                selectProps={{ isBorderLeft: true }}
+                                options={workOrderSelectOptions}
+                                onChange={option => {
+                                  field.onChange(option)
+                                  setSelectedWorkOrderId(option.value)
+                                }}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </div>
                           </>
                         )}
@@ -544,7 +545,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                 {isShowChangeOrderSelectField && (
                   <GridItem>
-                    <FormControl isInvalid={!!errors.changeOrder} >
+                    <FormControl isInvalid={!!errors.changeOrder}>
                       <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="changeOrder">
                         {t(`${TRANSACTION}.changeOrder`)}
                       </FormLabel>
@@ -554,14 +555,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         rules={{ required: true }}
                         render={({ field, fieldState }) => (
                           <>
-                          <div data-testid="change-order-select">
-                            <Select
-                              isDisabled={isUpdateForm}
-                              options={changeOrderSelectOptions}
-                              selectProps={{ isBorderLeft: true }}
-                              {...field}
-                            />
-                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            <div data-testid="change-order-select">
+                              <Select
+                                isDisabled={isUpdateForm}
+                                options={changeOrderSelectOptions}
+                                selectProps={{ isBorderLeft: true }}
+                                {...field}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </div>
                           </>
                         )}
@@ -629,7 +630,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 {isTransactionTypeDrawAgainstProjectSOWSelected && (
                   <>
                     <GridItem>
-                      <FormControl isInvalid={!!errors.paymentTerm} >
+                      <FormControl isInvalid={!!errors.paymentTerm}>
                         <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.700" fontWeight={500}>
                           {t(`${TRANSACTION}.paymentTerm`)}
                         </FormLabel>
@@ -639,17 +640,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           render={({ field, fieldState }) => (
                             <>
-                            <div data-testid="payment-term-select">
-                              <Select
-                                {...field}
-                                selectProps={{ isBorderLeft: true }}
-                                options={PAYMENT_TERMS_OPTIONS}
-                                isDisabled={isPaymentTermDisabled}
-                                onChange={paymentTermOption => {
-                                  field.onChange(paymentTermOption)
-                                }}
-                              />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              <div data-testid="payment-term-select">
+                                <Select
+                                  {...field}
+                                  selectProps={{ isBorderLeft: true }}
+                                  options={PAYMENT_TERMS_OPTIONS}
+                                  isDisabled={isPaymentTermDisabled}
+                                  onChange={paymentTermOption => {
+                                    field.onChange(paymentTermOption)
+                                  }}
+                                />
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                               </div>
                             </>
                           )}
@@ -833,7 +834,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                 {isShowStatusField && (
                   <GridItem>
-                    <FormControl isInvalid={!!errors.status} >
+                    <FormControl isInvalid={!!errors.status}>
                       <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
                         {t(`${TRANSACTION}.status`)}
                       </FormLabel>
@@ -851,16 +852,16 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         }}
                         render={({ field, fieldState }) => (
                           <>
-                          <div data-testid="status-select-field">
-                            <Select
-                              {...field}
-                              options={transactionStatusOptions}
-                              isDisabled={isStatusDisabled}
-                              onChange={statusOption => {
-                                field.onChange(statusOption)
-                              }}
-                            />
-                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            <div data-testid="status-select-field">
+                              <Select
+                                {...field}
+                                options={transactionStatusOptions}
+                                isDisabled={isStatusDisabled}
+                                onChange={statusOption => {
+                                  field.onChange(statusOption)
+                                }}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                             </div>
                           </>
                         )}
