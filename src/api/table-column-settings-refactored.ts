@@ -53,7 +53,7 @@ const sortTableColumnsBasedOnSettingColumnsOrder = (
 }
 
 export const useTableColumnSettings = (
-  columns: TableColumns,
+  columns: TableColumns | any,
   tableName: TableNames,
   filtersInitialValues = {},
   resetFilters: boolean = false,

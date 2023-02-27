@@ -5,6 +5,7 @@ import numeral from 'numeral'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { TRANSACTION } from './transactions.i18n'
 import { Flex } from '@chakra-ui/react'
+import { useEffect, useMemo } from 'react'
 
 const RightArrow = props => (
   <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -236,4 +237,133 @@ export const mapDataForExpandableRows = (transactions?: any) => {
     nData.push({ ...dataEmptyID[0], subRows: dataEmptyID.filter((v, i) => i !== 0) })
     return nData
   }
+}
+
+const handleToggle = (row?: any, transId?: any, dataTrans?: any) => {
+  console.log('transId', transId, 'dataTrans', dataTrans)
+}
+
+export const useTransColumn = (transId?: any, dataTrans?: any) => {
+  let TRANSACTION_TABLE_COLUMNS = useMemo(() => {
+    return [
+      {
+        header: `${TRANSACTION}.workOrderIdTransTable`,
+        accessorKey: 'workOrderId',
+        cell: ({ table, row, getValue }) => (
+          <Flex
+            onClick={e => e.stopPropagation()}
+            style={{
+              paddingLeft: `${row.depth * 1.5}rem`,
+            }}
+          >
+            {table.setExpanded([{ 0: true }])}
+            {handleToggle(row, transId, dataTrans)}
+            <>
+              {row.getCanExpand() ? (
+                <button
+                  data-testid="expension-&-compression-btn"
+                  {...{
+                    onClick: row.getToggleExpandedHandler(),
+                    style: { cursor: 'pointer' },
+                  }}
+                >
+                  {row.getIsExpanded() ? (
+                    <DownArrow
+                      style={{
+                        marginRight: '8px',
+                      }}
+                    />
+                  ) : (
+                    <RightArrow
+                      style={{
+                        marginRight: '8px',
+                      }}
+                    />
+                  )}
+                </button>
+              ) : (
+                ''
+              )}{' '}
+              {getValue()}
+            </>
+          </Flex>
+        ),
+        accessorFn: cellInfo => {
+          return (
+            <div style={{ marginTop: '1px' }}>
+              {' '}
+              {cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'}
+            </div>
+          )
+        },
+      },
+      {
+        header: 'ID',
+        accessorKey: 'name',
+      },
+      {
+        header: `${TRANSACTION}.type`,
+        accessorKey: 'transactionTypeLabel',
+      },
+
+      {
+        header: `${TRANSACTION}.trade`,
+        accessorKey: 'skillName',
+        accessorFn: cellInfo => {
+          return cellInfo.skillName ? cellInfo.skillName : '- - -'
+        },
+        filterFn: 'includesString',
+      },
+      {
+        header: `${TRANSACTION}.vendorGL`,
+        accessorKey: 'parentWorkOrderId',
+        accessorFn: cellInfo => {
+          return cellInfo.parentWorkOrderId ? cellInfo?.vendor || '' : 'Project SOW'
+        },
+      },
+      {
+        header: `${TRANSACTION}.totalAmount`,
+        accessorKey: 'transactionTotal',
+        accessorFn(cellInfo: any) {
+          return cellInfo.transactionTotal?.toString()
+        },
+        filterFn: 'includesString',
+        cell: (row: any) => {
+          const value = row.cell.getValue() as string
+
+          return numeral(value).format('$0,0.00')
+        },
+        meta: { format: 'currency' },
+      },
+      {
+        header: `${TRANSACTION}.transactionStatus`,
+        accessorKey: 'status',
+        cell: row => {
+          const value = row.cell.getValue() as string
+          return <Status value={value} id={value} />
+        },
+      },
+      {
+        header: `${TRANSACTION}.submit`,
+        accessorKey: 'modifiedDate',
+        accessorFn: cellInfo => {
+          return datePickerFormat(cellInfo.modifiedDate)
+        },
+        cell: (row: any) => {
+          const value = row?.row.original?.modifiedDate
+          return dateFormat(value)
+        },
+        meta: { format: 'date' },
+      },
+      {
+        header: `${TRANSACTION}.approvedBy`,
+        accessorKey: 'approvedBy',
+        accessorFn: cellInfo => {
+          return cellInfo.approvedBy ? cellInfo?.approvedBy : '- - -'
+        },
+      },
+    ]
+  }, [transId])
+  // columns = setColumnsByConditions(columns, workOrder, isVendor)
+  return TRANSACTION_TABLE_COLUMNS
 }

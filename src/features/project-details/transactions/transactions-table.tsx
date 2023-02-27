@@ -8,10 +8,7 @@ import { TransactionDetailsModal } from './transaction-details-modal'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { ExportButton } from 'components/table-refactored/export-button'
-import {
-  mapDataForExpandableRows,
-  TRANSACTION_TABLE_COLUMNS,
-} from 'features/project-details/transactions/transaction.constants'
+import { mapDataForExpandableRows, useTransColumn } from 'features/project-details/transactions/transaction.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
@@ -24,9 +21,11 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { AnyARecord } from 'dns'
 
 type TransactionProps = {
   projectStatus: string
+  transId?: AnyARecord
 }
 
 export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
@@ -35,6 +34,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
+  const TRANSACTION_TABLE_COLUMNS = useTransColumn(props?.transId, dataTrans)
   const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
   const { refetch, transactions, isLoading } = useTransactionsV1(projectId)
   const [totalPages, setTotalPages] = useState(0)

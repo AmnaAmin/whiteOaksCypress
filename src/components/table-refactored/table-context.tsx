@@ -62,6 +62,7 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
   const emptyRowsLength = 3
   const emptyRows = Array(emptyRowsLength).fill({})
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
+  console.log(expanded)
 
   const [columnFiltersState, setColumnFiltersState] = React.useState<ColumnFiltersState>([])
   const [sortingState, setSortingState] = React.useState<SortingState>([])
