@@ -256,8 +256,6 @@ export const useTransColumn = (transId?: any, dataTrans?: any) => {
               paddingLeft: `${row.depth * 1.5}rem`,
             }}
           >
-            {table.setExpanded([{ 0: true }])}
-            {handleToggle(row, transId, dataTrans)}
             <>
               {row.getCanExpand() ? (
                 <button

@@ -15,7 +15,7 @@ import {
   ExpandedState,
   getExpandedRowModel,
 } from '@tanstack/react-table'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 
 export type TableInstance = TableType<any>
 export type TableContextState = {
@@ -43,6 +43,7 @@ type TableWrapperProps = {
   sorting?: SortingState
   setSorting?: (updater: Updater<SortingState>) => void
   isExpandable?: boolean
+  expandedState?: ExpandedState
 }
 
 export const TableContextProvider: React.FC<TableWrapperProps> = ({
@@ -58,11 +59,11 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
   sorting,
   setSorting,
   isExpandable,
+  expandedState,
 }) => {
   const emptyRowsLength = 3
   const emptyRows = Array(emptyRowsLength).fill({})
   const [expanded, setExpanded] = React.useState<ExpandedState>({})
-  console.log(expanded)
 
   const [columnFiltersState, setColumnFiltersState] = React.useState<ColumnFiltersState>([])
   const [sortingState, setSortingState] = React.useState<SortingState>([])
@@ -96,6 +97,10 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
         getFilteredRowModel: getFilteredRowModel(),
       }
     : {}
+
+  useEffect(() => {
+    if (expandedState) setExpanded(expandedState)
+  }, [expandedState])
 
   const tableInstance = useReactTable({
     ...filtersConfigurations,

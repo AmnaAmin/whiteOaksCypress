@@ -34,7 +34,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
-  const TRANSACTION_TABLE_COLUMNS = useTransColumn(props?.transId, dataTrans)
+  const TRANSACTION_TABLE_COLUMNS = useTransColumn()
   const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
   const { refetch, transactions, isLoading } = useTransactionsV1(projectId)
   const [totalPages, setTotalPages] = useState(0)
@@ -45,6 +45,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     onOpen: onTransactionDetailsModalOpen,
     onClose: onTransactionDetailsModalClose,
   } = useDisclosure()
+  const [expandedState, setExpandedState] = useState({})
 
   const onRowClick = useCallback(
     row => {
@@ -57,6 +58,10 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   const onSave = columns => {
     postGridColumn(columns)
   }
+
+  useEffect(() => {
+    setExpandedState({ 1: true })
+  }, [props.transId])
 
   useEffect(() => {
     setTotalPages(Math.ceil((transactions?.length ?? 0) / 50))
@@ -103,6 +108,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
             columns={tableColumns}
             manualPagination={false}
             isExpandable={true}
+            expandedState={expandedState}
           >
             <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
