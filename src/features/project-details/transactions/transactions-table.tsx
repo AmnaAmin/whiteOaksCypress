@@ -9,8 +9,8 @@ import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { ExportButton } from 'components/table-refactored/export-button'
 import {
+  mapDataForExpandableRows,
   TRANSACTION_TABLE_COLUMNS,
-  transDataExpLogic,
 } from 'features/project-details/transactions/transaction.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
@@ -75,7 +75,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
 
   useEffect(() => {
     if (transactions && transactions?.length > 0) {
-      setDataTrans(transDataExpLogic(transactions as any))
+      setDataTrans(mapDataForExpandableRows(transactions as any))
     }
   }, [transactions])
 

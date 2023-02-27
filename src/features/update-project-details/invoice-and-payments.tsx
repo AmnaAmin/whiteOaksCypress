@@ -88,7 +88,16 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
 
   const onPaymentValueChange = (values: NumberFormatValues) => {
     const payment = Number(values.value)
-    const overyPayment = payment - (getValues().remainingPayment || 0)
+    const depreciation = Number(getValues()?.depreciation ?? 0)
+    const overyPayment = payment + depreciation - (getValues().remainingPayment || 0)
+
+    setValue('overPayment', overyPayment < 0 ? 0 : overyPayment)
+  }
+
+  const onDepreciationValueChange = (values: NumberFormatValues) => {
+    const depreciation = Number(values.value)
+    const payment = Number(getValues()?.payment ?? 0)
+    const overyPayment = depreciation + payment - (getValues().remainingPayment || 0)
 
     setValue('overPayment', overyPayment < 0 ? 0 : overyPayment)
   }
@@ -117,7 +126,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                 render={({ field, fieldState }) => {
                   return (
                     <NumberInput
-                    datatest-id='SowAmount'
+                      datatest-id="SowAmount"
                       value={field.value}
                       onChange={event => {
                         field.onChange(event)
@@ -161,7 +170,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
               render={({ field }) => {
                 return (
                   <NumberInput
-                  datatest-id='final-Sow-Amount'
+                    datatest-id="final-Sow-Amount"
                     value={field.value}
                     onChange={event => {
                       field.onChange(event)
@@ -291,7 +300,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
               {t(`project.projectDetails.woaInvoiceDate`)}
             </FormLabel>
             <Input
-            datatest-id='woa-InvoiceDate'
+              datatest-id="woa-InvoiceDate"
               isDisabled={isWOAInvoiceDateDisabled}
               id="woaInvoiceDate"
               {...register('woaInvoiceDate', {
@@ -311,7 +320,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
             </FormLabel>
 
             <Input
-            datatest-id='woa-ExpectedDate'
+              datatest-id="woa-ExpectedDate"
               isDisabled={isWOAExpectedPayDateDisabled}
               id="woaExpectedPay"
               {...register('woaExpectedPayDate')}
@@ -333,7 +342,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
               render={({ field }) => {
                 return (
                   <NumberInput
-                  datatest-id='over-Payment'
+                    datatest-id="over-Payment"
                     value={field.value}
                     onChange={e => field.onChange(e.target.value)}
                     disabled={isOverPaymentDisalbed}
@@ -359,7 +368,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
               render={({ field }) => {
                 return (
                   <NumberInput
-                  datatest-id='remaining-Payment'
+                    datatest-id="remaining-Payment"
                     value={field.value}
                     onChange={e => field.onChange(e.target.value)}
                     disabled={isRemainingPaymentDisabled}
@@ -384,7 +393,6 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
               render={({ field, fieldState }) => {
                 return (
                   <NumberInput
-                  datatest-id='payment-0'
                     value={field.value}
                     onValueChange={(values: NumberFormatValues) => {
                       onPaymentValueChange(values)
@@ -395,6 +403,33 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                     thousandSeparator={true}
                     prefix={'$'}
                     data-testid="payment-field"
+                  />
+                )
+              }}
+            />
+          </FormControl>
+        </GridItem>
+        <GridItem>
+          <FormControl isInvalid={!!errors.depreciation}>
+            <FormLabel htmlFor="depreciation" variant="strong-label" size="md">
+              {t(`project.projectDetails.depreciation`)}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="depreciation"
+              render={({ field, fieldState }) => {
+                return (
+                  <NumberInput
+                    value={field.value}
+                    onValueChange={(values: NumberFormatValues) => {
+                      onDepreciationValueChange(values)
+                      field.onChange(values.value)
+                    }}
+                    disabled={isPaymentDisabledCheck}
+                    customInput={Input}
+                    thousandSeparator={true}
+                    prefix={'$'}
+                    data-testid="depreciation-field"
                   />
                 )
               }}

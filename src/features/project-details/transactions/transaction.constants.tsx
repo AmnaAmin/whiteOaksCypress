@@ -4,8 +4,41 @@ import Status from 'features/common/status'
 import numeral from 'numeral'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { TRANSACTION } from './transactions.i18n'
-import { BiChevronDown, BiChevronRight } from 'react-icons/bi'
 import { Flex } from '@chakra-ui/react'
+
+const RightArrow = props => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M13.34 0H2.66C1.2 0 0 1.2 0 2.66v10.68C0 14.8 1.2 16 2.66 16h10.68C14.8 16 16 14.8 16 13.34V2.66C16 1.2 14.8 0 13.34 0Zm1.86 13.34c0 1.02-.84 1.86-1.86 1.86H2.66A1.87 1.87 0 0 1 .8 13.34V2.66C.8 1.64 1.64.8 2.66.8h10.68c1.02 0 1.86.84 1.86 1.86v10.68Z"
+      fill="#CBD5E0"
+    />
+    <path
+      d="M10.761 7.685a.836.836 0 0 1-.203.607L7.455 11.86a.836.836 0 1 1-1.262-1.097l3.104-3.57a.836.836 0 0 1 1.464.49Z"
+      fill="#718096"
+    />
+    <path
+      d="M10.764 7.686a.836.836 0 0 1-1.383.689L5.812 5.272A.836.836 0 0 1 6.91 4.01l3.569 3.103c.167.146.27.351.286.573Z"
+      fill="#718096"
+    />
+  </svg>
+)
+
+const DownArrow = props => (
+  <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <path
+      d="M13.34 0H2.66C1.2 0 0 1.2 0 2.66v10.68C0 14.8 1.2 16 2.66 16h10.68C14.8 16 16 14.8 16 13.34V2.66C16 1.2 14.8 0 13.34 0Zm1.86 13.34c0 1.02-.84 1.86-1.86 1.86H2.66A1.87 1.87 0 0 1 .8 13.34V2.66C.8 1.64 1.64.8 2.66.8h10.68c1.02 0 1.86.84 1.86 1.86v10.68Z"
+      fill="#CBD5E0"
+    />
+    <path
+      d="M7.628 10.373a.836.836 0 0 1-.592-.242l-3.36-3.328a.836.836 0 1 1 1.177-1.188l3.36 3.328a.836.836 0 0 1-.585 1.43Z"
+      fill="#718096"
+    />
+    <path
+      d="M7.625 10.374a.836.836 0 0 1-.598-1.424l3.329-3.36a.836.836 0 0 1 1.187 1.177l-3.328 3.36a.836.836 0 0 1-.59.247Z"
+      fill="#718096"
+    />
+  </svg>
+)
 
 export const CHANGE_ORDER_DEFAULT_VALUE = '0'
 export const CHANGE_ORDER_DEFAULT_OPTION = {
@@ -74,7 +107,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
       <Flex
         onClick={e => e.stopPropagation()}
         style={{
-          paddingLeft: `${row.depth * 2}rem`,
+          paddingLeft: `${row.depth * 1.5}rem`,
         }}
       >
         <>
@@ -87,20 +120,16 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
               }}
             >
               {row.getIsExpanded() ? (
-                <BiChevronDown
-                  size={18}
+                <DownArrow
                   style={{
-                    paddingBottom: '2px',
+                    marginRight: '8px',
                   }}
-                  color="#345EA6"
                 />
               ) : (
-                <BiChevronRight
+                <RightArrow
                   style={{
-                    paddingBottom: '2px',
+                    marginRight: '8px',
                   }}
-                  size={18}
-                  color="#A0AEC0"
                 />
               )}
             </button>
@@ -112,7 +141,12 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
       </Flex>
     ),
     accessorFn: cellInfo => {
-      return cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'
+      return (
+        <div style={{ marginTop: '1px' }}>
+          {' '}
+          {cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'}
+        </div>
+      )
     },
   },
   {
@@ -182,9 +216,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
 ]
 
-export const transDataExpLogic = (transactions?: any) => {
-  console.log(transactions)
-
+export const mapDataForExpandableRows = (transactions?: any) => {
   if (transactions && transactions?.length > 0) {
     const data = [] as any
     const dataEmptyID = transactions?.filter(d => !d.parentWorkOrderId)
@@ -194,7 +226,7 @@ export const transDataExpLogic = (transactions?: any) => {
         if (checkData) {
           data
             .find(d => d.parentWorkOrderId === transaction.parentWorkOrderId)
-            ?.['subRows']?.push({ ...transaction, parentWorkOrderId: ' ' })
+            ?.['subRows']?.push({ ...transaction, parentWorkOrderId: '' })
         } else {
           data?.push({ ...transaction, subRows: [] })
         }

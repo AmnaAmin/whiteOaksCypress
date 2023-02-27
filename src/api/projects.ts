@@ -173,7 +173,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
         revisedSOWAmount: (fo?.originalAmount || 0) + (fo?.noCoAdjustment || 0),
         revisedChangeOrderAmount: (fo?.changeOrder || 0) + (fo?.coAdjustment || 0),
         finalSOWAmount: fo?.newAmount || 0,
-        accountReceivable: (fo?.newAmount || 0) + (fo?.draw || 0) - ((fo?.partialPayment || 0) + (fo?.deductible || 0)),
+        accountReceivable: (fo?.newAmount || 0) + (fo?.draw || 0) - ((fo?.partialPayment || 0) + (fo?.deductible || 0) + (fo?.depreciation || 0)),
       })) || [],
     workOrderFinancialOverviews: restProjectFinancialOverviews,
     vendorPaymentPercentage,

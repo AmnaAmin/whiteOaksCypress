@@ -49,6 +49,7 @@ type ProjectInvoicingAndPaymentFormValues = {
   overPayment: number | null
   remainingPayment: number | null
   payment: number | null
+  depreciation: number | null
 }
 
 type ContactsFormValues = {
@@ -135,6 +136,7 @@ export type ProjectDetailsAPIPayload = {
   expectedPaymentDate: string | null
   overPayment: number | null
   remainingPayment: number | null
+  newDepreciationPayment: number | null
 
   // Contacts payload
   projectCordinatorId: number | null

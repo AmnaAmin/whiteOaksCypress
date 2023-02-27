@@ -94,11 +94,13 @@ const ProjectDetailsTab = (props: tabProps) => {
     marketSelectOptions?.length,
   ])
 
-  const hasPendingDrawsOnPaymentSave = payment => {
-    if (!!payment) {
+  const hasPendingDrawsOnPaymentSave = (payment, depreciation) => {
+    if (!!payment || !!depreciation) {
       const pendingDraws = transactions?.filter(
         t =>
-          [TransactionTypeValues.draw].includes(t.transactionType) &&
+          [TransactionTypeValues.draw, TransactionTypeValues.payment, TransactionTypeValues.depreciation].includes(
+            t.transactionType,
+          ) &&
           !t?.parentWorkOrderId &&
           [TransactionStatusValues.pending].includes(t?.status as TransactionStatusValues),
       )
@@ -118,7 +120,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   }
 
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
-    if (hasPendingDrawsOnPaymentSave(formValues.payment)) {
+    if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
     }
     const payload = await parseProjectDetailsPayloadFromFormData(formValues, projectData)
@@ -146,7 +148,7 @@ const ProjectDetailsTab = (props: tabProps) => {
             <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
               {t(`project.projectDetails.invoicingPayment`)}
             </TabCustom>
-            <TabCustom datatest-id='contacts-1' isError={isContactsFormErrors && tabIndex !== 2}>
+            <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 2}>
               {t(`project.projectDetails.contacts`)}
             </TabCustom>
             <TabCustom>{t(`project.projectDetails.location`)}</TabCustom>

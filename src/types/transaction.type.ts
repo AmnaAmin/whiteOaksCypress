@@ -113,6 +113,7 @@ export enum TransactionTypeValues {
   carrierFee = 1016,
   permitFee = 1017,
   deductible = 1018,
+  depreciation = 1019,
 }
 
 export enum TransactionMarkAsValues {

@@ -209,169 +209,172 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   return (
     <Box overflowX={isApproved ? 'initial' : 'auto'} w="100%">
       <VStack alignItems="start" w="720px">
-        <Flex w="720px" mt="10px" mb="15px">
-          {!isApproved && (
-            <Flex flex="1">
-              <Button
-                data-testid="add-new-row-button"
-                variant="outline"
-                size="sm"
-                colorScheme="darkPrimary"
-                disabled={isMaterialsLoading || isSysFactoringFee}
-                onClick={addRow}
-                color="darkPrimary.300"
-                leftIcon={<BiAddToQueue color="darkPrimary.300" />}
-              >
-                {t(`${TRANSACTION}.addNewRow`)}
-              </Button>
-              <Button
-                data-testid="delete-row-button"
-                variant="outline"
-                size="sm"
-                ml="10px"
-                colorScheme="darkPrimary"
-                _hover={{
-                  _disabled: {
-                    bg: '#EBF8FF',
-                    color: 'darkPrimary.300',
-                    opacity: 0.5,
-                  },
-                }}
-                _disabled={{
-                  bg: '#EBF8FF',
-                  color: 'darkPrimary.300',
-                  opacity: 0.5,
-                }}
-                leftIcon={<RiDeleteBinLine color="darkPrimary.300" />}
-                onClick={onDeleteConfirmationModalOpen}
-                isDisabled={!someChecked}
-              >
-                {t(`${TRANSACTION}.deleteRow`)}
-              </Button>
-            </Flex>
-          )}
-
-          <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
-          <HStack w={!isApproved || !isSysFactoringFee ? 'auto' : '100%'} justifyContent="end">
-            {refundCheckbox.isVisible && (
-              <Controller
-                control={control}
-                name={'refund'}
-                render={({ field: { name, value, onChange } }) => {
-                  return (
-                    <Checkbox
-                      data-testid={refundCheckbox.id}
-                      name={name}
-                      variant="link"
-                      _focus={{ outline: 'none' }}
-                      isChecked={!!value}
-                      colorScheme="darkPrimary"
-                      isDisabled={isApproved || isMaterialsLoading || isSysFactoringFee}
-                      onChange={event => {
-                        const isChecked = event.currentTarget.checked
-                        onToggleRefundCheckbox(isChecked)
-                        onChange(isChecked)
-                      }}
-                    >
-                      {t(`${TRANSACTION}.refund`)}
-                    </Checkbox>
-                  )
-                }}
-              />
-            )}
-            {values?.lienWaiverDocument?.s3Url && (
-              <>
-                <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: 'darkPrimary.300' }}>
-                  <Flex>
-                    <Box mt="3px" color="darkPrimary.300">
-                      <BiDownload fontSize="sm" />
-                    </Box>
-                    <Text
-                      ml="5px"
-                      fontSize="14px"
-                      fontWeight={500}
-                      fontStyle="normal"
-                      color="darkPrimary.300"
-                      maxW="110px"
-                      isTruncated
-                    >
-                      {t(`${TRANSACTION}.lienWaiver`)}
-                    </Text>
-                  </Flex>
-                </a>
-
-                <Divider orientation="vertical" />
-              </>
-            )}
-
-            {values.attachment && values.attachment.s3Url && (
-              <>
-                <a href={values?.attachment?.s3Url} download style={{ color: 'darkPrimary.300' }}>
-                  <Flex>
-                    <Box mt="3px" color="darkPrimary.300">
-                      <BiDownload fontSize="sm" />
-                    </Box>
-                    <Text
-                      ml="5px"
-                      fontSize="14px"
-                      fontWeight={500}
-                      fontStyle="normal"
-                      maxW="110px"
-                      isTruncated
-                      color="darkPrimary.300"
-                      title={values?.attachment?.fileType}
-                    >
-                      {values?.attachment?.fileType}
-                    </Text>
-                  </Flex>
-                </a>
-                {!isApproved && <Divider orientation="vertical" />}
-              </>
-            )}
-
-            {(!isApproved || !isSysFactoringFee) &&
-              (document && !document.s3Url ? (
-                <Box color="#345EA6" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
-                  <HStack spacing="5px" h="31px" padding="10px" align="center">
-                    <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
-                      {document?.name || document.fileType}
-                    </Text>
-                    <MdOutlineCancel
-                      cursor={isMaterialsLoading ? 'default' : 'pointer'}
-                      onClick={() => {
-                        if (isMaterialsLoading) {
-                          return
-                        }
-                        setValue('attachment', null)
-                        setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
-                        if (inputRef.current) inputRef.current.value = ''
-                      }}
-                    />
-                  </HStack>
-                </Box>
-              ) : (
+        <Flex w="100%" mt="10px" mb="15px" justifyContent={'space-between'}>
+          <Box>
+            {!isApproved && (
+              <Flex flex="1">
                 <Button
-                  onClick={e => {
-                    if (isEditMaterialTransaction) {
-                      onReplaceMaterialUploadOpen()
-                    } else {
-                      if (inputRef.current) {
-                        inputRef.current.click()
-                      }
-                    }
-                  }}
-                  leftIcon={<BiFile color="darkPrimary.300" />}
+                  data-testid="add-new-row-button"
                   variant="outline"
                   size="sm"
                   colorScheme="darkPrimary"
+                  disabled={isMaterialsLoading || isSysFactoringFee}
+                  onClick={addRow}
                   color="darkPrimary.300"
-                  border={'1px solid #345EA6'}
-                  isDisabled={isApproved || !values?.transactionType?.value || isSysFactoringFee}
+                  leftIcon={<BiAddToQueue color="darkPrimary.300" />}
                 >
-                  {t(`${TRANSACTION}.attachment`)}
+                  {t(`${TRANSACTION}.addNewRow`)}
                 </Button>
-              ))}
-          </HStack>
+                <Button
+                  data-testid="delete-row-button"
+                  variant="outline"
+                  size="sm"
+                  ml="10px"
+                  colorScheme="darkPrimary"
+                  _hover={{
+                    _disabled: {
+                      bg: '#EBF8FF',
+                      color: 'darkPrimary.300',
+                      opacity: 0.5,
+                    },
+                  }}
+                  _disabled={{
+                    bg: '#EBF8FF',
+                    color: 'darkPrimary.300',
+                    opacity: 0.5,
+                  }}
+                  leftIcon={<RiDeleteBinLine color="darkPrimary.300" />}
+                  onClick={onDeleteConfirmationModalOpen}
+                  isDisabled={!someChecked}
+                >
+                  {t(`${TRANSACTION}.deleteRow`)}
+                </Button>
+              </Flex>
+            )}
+          </Box>
+          <Box>
+            <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
+            <HStack w={!isApproved || !isSysFactoringFee ? 'auto' : '100%'} justifyContent="end">
+              {refundCheckbox.isVisible && (
+                <Controller
+                  control={control}
+                  name={'refund'}
+                  render={({ field: { name, value, onChange } }) => {
+                    return (
+                      <Checkbox
+                        data-testid={refundCheckbox.id}
+                        name={name}
+                        variant="link"
+                        _focus={{ outline: 'none' }}
+                        isChecked={!!value}
+                        colorScheme="darkPrimary"
+                        isDisabled={isApproved || isMaterialsLoading || isSysFactoringFee}
+                        onChange={event => {
+                          const isChecked = event.currentTarget.checked
+                          onToggleRefundCheckbox(isChecked)
+                          onChange(isChecked)
+                        }}
+                      >
+                        {t(`${TRANSACTION}.refund`)}
+                      </Checkbox>
+                    )
+                  }}
+                />
+              )}
+              {values?.lienWaiverDocument?.s3Url && (
+                <>
+                  <a href={values?.lienWaiverDocument?.s3Url} download style={{ color: 'darkPrimary.300' }}>
+                    <Flex>
+                      <Box mt="3px" color="darkPrimary.300">
+                        <BiDownload fontSize="sm" />
+                      </Box>
+                      <Text
+                        ml="5px"
+                        fontSize="14px"
+                        fontWeight={500}
+                        fontStyle="normal"
+                        color="darkPrimary.300"
+                        maxW="110px"
+                        isTruncated
+                      >
+                        {t(`${TRANSACTION}.lienWaiver`)}
+                      </Text>
+                    </Flex>
+                  </a>
+
+                  <Divider orientation="vertical" />
+                </>
+              )}
+
+              {values.attachment && values.attachment.s3Url && (
+                <>
+                  <a href={values?.attachment?.s3Url} download style={{ color: 'darkPrimary.300' }}>
+                    <Flex>
+                      <Box mt="3px" color="darkPrimary.300">
+                        <BiDownload fontSize="sm" />
+                      </Box>
+                      <Text
+                        ml="5px"
+                        fontSize="14px"
+                        fontWeight={500}
+                        fontStyle="normal"
+                        maxW="110px"
+                        isTruncated
+                        color="darkPrimary.300"
+                        title={values?.attachment?.fileType}
+                      >
+                        {values?.attachment?.fileType}
+                      </Text>
+                    </Flex>
+                  </a>
+                  {!isApproved && <Divider orientation="vertical" />}
+                </>
+              )}
+
+              {(!isApproved || !isSysFactoringFee) &&
+                (document && !document.s3Url ? (
+                  <Box color="#345EA6" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
+                    <HStack spacing="5px" h="31px" padding="10px" align="center">
+                      <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
+                        {document?.name || document.fileType}
+                      </Text>
+                      <MdOutlineCancel
+                        cursor={isMaterialsLoading ? 'default' : 'pointer'}
+                        onClick={() => {
+                          if (isMaterialsLoading) {
+                            return
+                          }
+                          setValue('attachment', null)
+                          setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
+                          if (inputRef.current) inputRef.current.value = ''
+                        }}
+                      />
+                    </HStack>
+                  </Box>
+                ) : (
+                  <Button
+                    onClick={e => {
+                      if (isEditMaterialTransaction) {
+                        onReplaceMaterialUploadOpen()
+                      } else {
+                        if (inputRef.current) {
+                          inputRef.current.click()
+                        }
+                      }
+                    }}
+                    leftIcon={<BiFile color="darkPrimary.300" />}
+                    variant="outline"
+                    size="sm"
+                    colorScheme="darkPrimary"
+                    color="darkPrimary.300"
+                    border={'1px solid #345EA6'}
+                    isDisabled={isApproved || !values?.transactionType?.value || isSysFactoringFee}
+                  >
+                    {t(`${TRANSACTION}.attachment`)}
+                  </Button>
+                ))}
+            </HStack>
+          </Box>
         </Flex>
 
         <Flex
