@@ -60,6 +60,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   }
 
   useEffect(() => {
+    // calculate row index
     setExpandedState({ 1: true })
   }, [props.transId])
 
