@@ -1,4 +1,4 @@
-import { Box, Button, Center, Divider, Flex, Icon, Stack, useToast } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Icon, Stack, useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react'
 import Location from './location'
@@ -32,7 +32,6 @@ import { useMarkets, useStates } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { useTransactionsV1 } from 'api/transactions'
 import { TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
-import { Card } from 'components/card/card'
 
 type tabProps = {
   projectData: Project
@@ -137,11 +136,12 @@ const ProjectDetailsTab = (props: tabProps) => {
     <FormProvider {...formReturn}>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} id="project-details">
         <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={handleTabsChange}>
-          <TabList  borderBottom={isRecievable ? 0 : '2px solid'} marginBottom='1px'
+          <TabList
+            borderBottom={isRecievable ? 0 : '2px solid'}
+            marginBottom="1px"
             bg={style?.backgroundColor ? '' : '#F7FAFC'}
             rounded="6px 6px 0px 0px"
-            pt="7"
-
+            pt={isRecievable ? 2 : 7}
             //  ml={style?.marginLeft || ''}
             //  mr={style?.marginRight || ''}
           >
