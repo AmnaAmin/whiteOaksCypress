@@ -363,7 +363,7 @@ export const Table: React.FC<TableProps> = ({
                               borderBottom: '1px solid #CBD5E0',
                             }}
                           >
-                            {header.id !== 'expender' && (
+                            {header.id !== 'expander' && (
                               <Filter
                                 allowStickyFilters={allowStickyFilters}
                                 column={header.column}

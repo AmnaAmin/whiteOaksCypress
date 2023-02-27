@@ -102,7 +102,7 @@ export const TRANSACTION_TABLE_QUERIES_KEY = {
 export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: '',
-    id: 'expender',
+    id: 'expander',
     size: 20,
     cell: ({ row, getValue }) => (
       <Flex
