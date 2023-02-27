@@ -1,13 +1,13 @@
-import { Box, Button, Tab, TabList, TabPanel, TabPanels, Tabs, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Icon, Tab, TabList, TabPanel, TabPanels, Tabs, useDisclosure } from '@chakra-ui/react'
 import { AlertStatusModal } from 'features/alerts/alert-status'
 import { ManagedAlertTable } from 'features/alerts/managed-alert-table'
 import { TriggeredAlertsTable } from 'features/alerts/triggered-alerts-table'
 import { ManagedAlertsModal } from 'features/alerts/managed-alerts-modal'
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AiOutlinePlus } from 'react-icons/ai'
 import { Card } from 'components/card/card'
 import { useManagedAlert, useResolveAlerts } from 'api/alerts'
+import { BiBookAdd } from 'react-icons/bi'
 
 const Alerts = () => {
   const { t } = useTranslation()
@@ -43,7 +43,7 @@ const Alerts = () => {
             )}
 
             {tabIndex === 1 && (
-              <Button colorScheme="brand" onClick={onNewAlertModalOpen} leftIcon={<AiOutlinePlus />}>
+              <Button colorScheme="brand" onClick={onNewAlertModalOpen}  leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
                 {t('newAlert')}
               </Button>
             )}
