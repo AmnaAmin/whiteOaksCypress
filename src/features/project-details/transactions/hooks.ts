@@ -110,6 +110,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
       TransactionTypeValues.payment,
       TransactionTypeValues.woPaid,
       TransactionTypeValues.deductible,
+      TransactionTypeValues.depreciation,
     ].includes(selectedTransactionTypeId),
     isShowPaidBackDateField: isTransactionTypeOverpaymentSelected && markAsPaid && isStatusNotCancelled,
     isShowMarkAsField: isTransactionTypeOverpaymentSelected && isStatusNotCancelled,
@@ -139,6 +140,7 @@ export const isManualTransaction = transactionType =>
     TransactionTypeValues.carrierFee,
     TransactionTypeValues.shippingFee,
     TransactionTypeValues.deductible,
+    TransactionTypeValues.depreciation,
   ].includes(transactionType)
 
 export const useFieldDisabledEnabledDecision = (
@@ -289,7 +291,7 @@ export const useAgainstOptions = (
       return againstOptions.slice(1)
     }
 
-    if ([TransactionTypeValues.payment, TransactionTypeValues.deductible].includes(transactionType?.value)) {
+    if ([TransactionTypeValues.payment, TransactionTypeValues.deductible,TransactionTypeValues.depreciation].includes(transactionType?.value)) {
       return againstOptions.slice(0, 1)
     }
     if (

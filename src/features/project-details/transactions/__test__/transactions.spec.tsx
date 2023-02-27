@@ -473,6 +473,44 @@ describe('Given Project Coordinator create new transaction', () => {
     })
   })
 
+  // write test suite for when the user create transaction of payment type Depreciation
+  describe('When the user create transaction of payment type Depreciation', () => {
+    test('Then User should create Payment transaction against Project SOW successfully', async () => {
+      const onClose = jest.fn()
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
+
+      expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
+
+      // User first select Transaction type, one of ['Change Order', 'Draw']
+      await selectOption(screen.getByTestId('transaction-type'), 'Depreciation')
+
+      expect(getByText(screen.getByTestId('transaction-type'), 'Depreciation')).toBeInTheDocument()
+      expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
+
+      // add payment received date
+      fireEvent.change(screen.getByTestId('payment-received-date'), { target: { value: '2022-10-01' } })
+
+      const totalAmount = screen.getByTestId('total-amount')
+
+      expect(totalAmount.textContent).toEqual('Total: $0.00')
+
+      const descriptionField = screen.getByTestId('transaction-description-0')
+      const amountField = screen.getByTestId('transaction-amount-0')
+
+      await userEvent.type(descriptionField, 'Added')
+      await userEvent.type(amountField, '400')
+
+      // User submit the transaction
+      await act(async () => {
+        await userEvent.click(screen.getByTestId('save-transaction'))
+      })
+
+      await waitForLoadingToFinish()
+
+      expect(onClose).toHaveBeenCalled()
+    })
+  })
+
   // write test suite for when the user create transaction of type Deductible
   describe('When the user create transaction of type Deductible', () => {
     test('Then User should create Deductible transaction against Project SOW successfully', async () => {
