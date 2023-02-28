@@ -61,7 +61,7 @@ export const AlertsNotifyTab = ({ onClose }) => {
 
   return (
     <Box>
-      <Box h={'calc(100vh - 320px)'} overflow={'auto'}>
+      <Box h={'calc(100vh - 400px)'} overflow={'auto'}>
         <TextDivider title={t('userTypes')} />
 
         <HStack mt="30px" spacing="12px">

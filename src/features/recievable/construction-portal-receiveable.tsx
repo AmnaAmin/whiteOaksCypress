@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Flex, FormLabel, Icon, Spacer } from '@chakra-ui/react'
+import { Box, Button, Flex, Icon, Spacer } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReceivableFilter } from 'features/recievable/receivable-filter'
@@ -110,10 +110,10 @@ export const ConstructionPortalReceiveable: React.FC = () => {
   return (
     <>
       <form onSubmit={handleSubmit(Submit)}>
-        <Box pb="2">
-          <FormLabel variant="strong-label" size="lg">
+        <Box pb="20">
+          {/* <FormLabel variant="strong-label" size="lg">
             {t(`${ACCOUNTS}.accountReceivable`)}
-          </FormLabel>
+          </FormLabel> */}
           <Box mb={'12px'}>
             <ReceivableFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
           </Box>
