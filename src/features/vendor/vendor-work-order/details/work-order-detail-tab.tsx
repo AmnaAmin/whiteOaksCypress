@@ -13,7 +13,7 @@ import {
   Spinner,
   Icon,
 } from '@chakra-ui/react'
-import { BiCalendar, BiFile } from 'react-icons/bi'
+import { BiCalendar, BiDownload, BiFile } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 import { dateFormatNew } from 'utils/date-time-utils'
@@ -22,11 +22,12 @@ import { useUpdateWorkOrderMutation } from 'api/work-order'
 import AssignedItems from 'features/work-order/details/assigned-items'
 import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form'
 import { createInvoicePdf, LineItems } from 'features/work-order/details/assignedItems.utils'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { STATUS } from '../../../common/status'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { useUploadDocument } from 'api/vendor-projects'
+import { downloadFile } from 'utils/file-utils'
 
 const SummaryCard = props => {
   return (
@@ -52,6 +53,7 @@ interface FormValues {
 }
 
 const WorkOrderDetailTab = ({
+  documentsData,
   onClose,
   workOrder,
   projectData,
@@ -62,6 +64,7 @@ const WorkOrderDetailTab = ({
   isLoadingLineItems,
 }) => {
   const { t } = useTranslation()
+  const [uploadedWO, setUploadedWO] = useState<any>(null)
   const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({})
   const { mutate: saveDocument } = useUploadDocument()
   const getDefaultValues = () => {
@@ -147,6 +150,15 @@ const WorkOrderDetailTab = ({
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
+
+  useEffect(() => {
+    if (!documentsData?.length) return
+    const uploadedWO = documentsData.find(
+      doc => parseInt(doc.documentType, 10) === 16 && workOrder.id === doc.workOrderId,
+    )
+    setUploadedWO(uploadedWO)
+  }, [documentsData])
+
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -232,6 +244,19 @@ const WorkOrderDetailTab = ({
           </Box>
         </ModalBody>
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+          <HStack justifyContent="start" w="100%">
+            {uploadedWO && uploadedWO?.s3Url && (
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                size="md"
+                onClick={() => downloadFile(uploadedWO?.s3Url)}
+                leftIcon={<BiDownload />}
+              >
+                {t('see')} {t('workOrder')}
+              </Button>
+            )}
+          </HStack>
           <HStack spacing="16px" w="100%" justifyContent="end">
             <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
               {t('cancel')}
