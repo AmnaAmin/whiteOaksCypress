@@ -19,7 +19,7 @@ import React, { useState } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
 import { RouterLink } from '../router-link/router-link'
-import { Notification } from './notifications/notification'
+//import { Notification } from './notifications/notification'
 import { useTranslation } from 'react-i18next'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 import LogoIcon from 'icons/header-logo'
@@ -99,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
               onClose={() => setShowAlertMenu(false)}
               onOpen={() => setShowAlertMenu(true)}
             >
-              <Notification setShowAlertMenu={setShowAlertMenu} showAlertMenu={showAlertMenu} />
+              
 
               {/* {showNotification && (
                 <Suspense fallback={() => <AiOutlineLoading3Quarters className="fa-spin" fontSize="1.5rem" />}>

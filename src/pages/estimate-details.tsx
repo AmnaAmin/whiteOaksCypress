@@ -46,10 +46,10 @@ export const EstimateDetails = () => {
         setTimeout(()=> {
           window.location.href = `project-details/${event.data.projectId}/`;
         }, 300)
-        console.log(`project-details/${event.data.projectId}`);
+        //console.log(`project-details/${event.data.projectId}`);
       }
 
-      console.log( "WOA: Event Data Received From Child", event );
+      //console.log( "WOA: Event Data Received From Child", event );
     } );
 
    
