@@ -147,6 +147,14 @@ const WorkOrderDetailTab = ({
     )
   }
 
+  useEffect(() => {
+    if (!documentsData?.length) return
+    const uploadedWO = documentsData.find(
+      doc => parseInt(doc.documentType, 10) === 16 && workOrder.id === doc.workOrderId,
+    )
+    setUploadedWO(uploadedWO)
+  }, [documentsData])
+
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
