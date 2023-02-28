@@ -83,7 +83,7 @@ export const UPCOMING_PAYMENT_API_KEY = 'upcoming-payment'
 
 const getUpcomingPaymentQueryString = (filterQueryString: string) => {
   return filterQueryString
-    ? filterQueryString + '&status.equals=110&paymentType.equals=WO Payment' + `&sort=expectedPaymentDate,asc`
+    ? filterQueryString + '&status.equals=110&paymentType.equals=WO Payment&sort=expectedPaymentDate,asc'
     : 'sort=expectedPaymentDate,asc'
 }
 type UpcomingPaymentResponse = Array<any>
