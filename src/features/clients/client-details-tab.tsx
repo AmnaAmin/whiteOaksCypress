@@ -164,6 +164,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       }}
                       render={({ field, fieldState }) => (
                         <>
+                        <div data-testid='client_checkbox'>
                           <Checkbox
                           whiteSpace={"nowrap"}
                             colorScheme="brand"
@@ -178,6 +179,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                             {t(`${CLIENTS}.creditCard`)}
                           </Checkbox>
                           <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          </div>
                         </>
                       )}
                     />
