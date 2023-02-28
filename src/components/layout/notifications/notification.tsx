@@ -1,8 +1,8 @@
 import { Box, Button, Center, Flex, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
-import { useFetchUserAlerts, useResolveAlerts, useUpdateAlert } from 'api/alerts'
+import { useHandleNavigation, useResolveAlerts, useUpdateAlert } from 'api/alerts'
 import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
-import { useAuth } from 'utils/auth-context'
+//import { useAuth } from 'utils/auth-context'
 import { formatDistanceToNow } from 'date-fns'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { Link } from 'react-router-dom'
@@ -29,14 +29,140 @@ export const notificationCount = {
 }
 
 export const Notification = props => {
-  const { data } = useAuth()
-  const { setShowAlertMenu } = props
-  const account = data?.user
-  const { notifications, isLoading, refetch: refetchAlerts } = useFetchUserAlerts(null, account?.login)
-  const { mutate: resolveAlerts, isLoading: isResolving } = useResolveAlerts({ hideToast: true })
+  //  const { data } = useAuth()
+  const { setShowAlertMenu, setNavigating } = props
+  //const account = data?.user
+  //const { notifications, isLoading, refetch: refetchAlerts } = useFetchUserAlerts(null, account?.login)
+  const notifications = [
+    {
+      id: 35594,
+      subject: '132 DURHAM RD',
+      message: "Project 'projectType' Changed from  to ",
+      emailStatus: null,
+      webSocketStatus: null,
+      smsStatus: null,
+      webSockectRead: false,
+      retryAttempts: null,
+      errorLog: null,
+      receipientEmail: null,
+      userId: 223,
+      category: 2,
+      dateCreated: '2023-01-16T08:22:26Z',
+      dateModified: null,
+      triggeredId: 6521,
+      triggeredType: 'Project',
+      login: 'pc@woa.com',
+      status: null,
+      attribute: 'Project type',
+      behaviour: 'Change',
+      triggeredAlert: null,
+    },
+    {
+      id: 35595,
+      subject: '132 DURHAM RD',
+      message: "Work Order 'status' Changed from  to ",
+      emailStatus: null,
+      webSocketStatus: null,
+      smsStatus: null,
+      webSockectRead: false,
+      retryAttempts: null,
+      errorLog: null,
+      receipientEmail: null,
+      userId: 225,
+      category: 2,
+      dateCreated: '2023-02-13T08:22:26Z',
+      dateModified: null,
+      triggeredId: 15793,
+      projectId: 6521,
+      triggeredType: 'WorkOrder',
+      login: 'pc@woa.com',
+      status: null,
+      attribute: 'Project type',
+      behaviour: 'Change',
+      triggeredAlert: null,
+    },
+    {
+      id: 35596,
+      subject: '132 DURHAM RD',
+      message: "Vendor 'address' Changed from  to ",
+      emailStatus: null,
+      webSocketStatus: null,
+      smsStatus: null,
+      webSockectRead: false,
+      retryAttempts: null,
+      errorLog: null,
+      receipientEmail: null,
+      userId: 447,
+      category: 2,
+      dateCreated: '2023-02-16T08:22:26Z',
+      dateModified: null,
+      triggeredId: 824,
+      triggeredType: 'Vendor',
+      login: 'accounting@devtek.ai',
+      status: null,
+      attribute: 'Project type',
+      behaviour: 'Change',
+      triggeredAlert: null,
+    },
+    {
+      id: 35590,
+      subject: '132 DURHAM RD',
+      message: "Client 'business' Changed from  to ",
+      emailStatus: null,
+      webSocketStatus: null,
+      smsStatus: null,
+      webSockectRead: false,
+      retryAttempts: null,
+      errorLog: null,
+      receipientEmail: null,
+      userId: 184,
+      category: 2,
+      dateCreated: '2023-02-16T08:22:25Z',
+      dateModified: null,
+      triggeredId: 46,
+      triggeredType: 'Client',
+      login: 'accounts.sajjad.ahmed@devtek.ai',
+      status: null,
+      attribute: 'Project type',
+      behaviour: 'Change',
+      triggeredAlert: null,
+    },
+    {
+      id: 35591,
+      subject: '132 DURHAM RD',
+      message: "Performance 'target' Changed from  to ",
+      emailStatus: null,
+      webSocketStatus: null,
+      smsStatus: null,
+      webSockectRead: false,
+      retryAttempts: null,
+      errorLog: null,
+      receipientEmail: null,
+      userId: 191,
+      category: 2,
+      dateCreated: '2023-02-16T08:22:25Z',
+      dateModified: null,
+      triggeredId: 170,
+      triggeredType: 'Performance',
+      login: 'pc@woa.com',
+      status: null,
+      attribute: 'Project type',
+      behaviour: 'Change',
+      triggeredAlert: null,
+    },
+  ]
+
+  const { mutate: resolveAlerts } = useResolveAlerts({ hideToast: true })
+  const [selectedAlert, setSelectedAlert] = useState<any>()
   const { mutate: updateAlert } = useUpdateAlert({ hideToast: true })
-  const showLoadingSlate = isLoading || isResolving
+  const showLoadingSlate = false //isLoading || isResolving
   const [alertCount, setAlertCount] = useState(getAlertCount())
+  const { isLoading } = useHandleNavigation(selectedAlert)
+
+  useEffect(() => {
+    setNavigating(isLoading)
+  }, [isLoading])
+
   const handeResolve = id => {
     resolveAlerts([id])
   }
@@ -45,15 +171,16 @@ export const Notification = props => {
     const count = getAlertCount()
     setAlertCount(count)
     if (count > 0) {
-      refetchAlerts()
+      //refetchAlerts()
     }
   }
 
   const handleClick = alert => {
+    //eslint-disable-next-line
     if (!alert?.webSockectRead) {
       updateAlert({ ...alert, webSockectRead: true })
     }
-    //OnOpenAlertStatus()
+    setSelectedAlert(alert)
     setShowAlertMenu(false)
   }
 

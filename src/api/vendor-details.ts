@@ -58,13 +58,26 @@ export const useVendorProfile = (vendorId: number) => {
   )
 }
 
-export const useFPMProfile = (FpmId: number) => {
+export const useFPMProfile = (FpmId: number | undefined) => {
   const client = useClient()
 
   return useQuery(
     'vendorProfile',
     async () => {
       const response = await client(`fpm-quota-info/${FpmId}`, {})
+      return response?.data
+    },
+    { enabled: !!FpmId },
+  )
+}
+
+export const useFetchFPMEntity = (FpmId: number | undefined) => {
+  const client = useClient()
+
+  return useQuery(
+    'fpmEntity',
+    async () => {
+      const response = await client(`fpm-quota?&months=2&fpmIds=${FpmId}`, {})
       return response?.data
     },
     { enabled: !!FpmId },

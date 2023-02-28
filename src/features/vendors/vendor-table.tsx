@@ -155,8 +155,9 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
 
 type ProjectProps = {
   selectedCard: string
+  defaultSelected: VendorType
 }
-export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
+export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, defaultSelected }) => {
   const { isFPM } = useUserRolesSelector()
 
   // FPM portal -> Show vendors having same market as the logged in FPM
@@ -185,6 +186,12 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
       setFilteredUrl(null)
     }
   }, [selectedCard])
+
+  useEffect(() => {
+    if (defaultSelected?.id) {
+      setSelectedVendor(defaultSelected)
+    }
+  }, [defaultSelected])
 
   const {
     vendors: allVendors,

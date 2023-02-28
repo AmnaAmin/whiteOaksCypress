@@ -107,25 +107,25 @@ export const ManagedAlertsForm = ({ onSubmit, selectedAlert, onClose, isOpen }) 
             </ModalHeader>
             <ModalCloseButton />
 
-            <ModalBody  bg='#F2F3F4' px='12px'  pb="22px"  borderBottom="1px solid #E2E8F0">
-            <Card borderTopRightRadius='6px' borderTopLeftRadius='6px'>
+            <ModalBody bg="#F2F3F4" px="12px" pb="22px" borderBottom="1px solid #E2E8F0">
               <Tabs variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
                 <TabList>
                   <Tab>{t('details')}</Tab>
                   <Tab isDisabled={disableNext && !selectedAlert}>{t('notify')}</Tab>
                 </TabList>
-                <TabPanels>
-                  <TabPanel p={0}>
-                    <AlertsDetailsTab selectedAlert={selectedAlert} onClose={onClose} setNextTab={setNextTab} />
-                  </TabPanel>
-                  <TabPanel p={0}>
-                    <AlertsNotifyTab onClose={onClose} />
-                  </TabPanel>
-                </TabPanels>
+                <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px">
+                  <TabPanels>
+                    <TabPanel p={0}>
+                      <AlertsDetailsTab selectedAlert={selectedAlert} onClose={onClose} setNextTab={setNextTab} />
+                    </TabPanel>
+                    <TabPanel p={0}>
+                      <AlertsNotifyTab onClose={onClose} />
+                    </TabPanel>
+                  </TabPanels>
+                </Card>
               </Tabs>
-              </Card>
-            </ModalBody>          
-          </ModalContent>        
+            </ModalBody>
+          </ModalContent>
         </form>
         <DevTool control={control} />
       </FormProvider>

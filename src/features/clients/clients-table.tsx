@@ -9,6 +9,7 @@ import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
+  const { defaultSelected } = props
   const { data: clients, isLoading, refetch } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
@@ -25,6 +26,13 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       setSelectedClient(undefined)
     }
   }, [clients])
+
+  useEffect(() => {
+    if (defaultSelected?.id) {
+      setSelectedClient(defaultSelected)
+      onOpen()
+    }
+  }, [defaultSelected])
 
   const columns: ColumnDef<any>[] = [
     {

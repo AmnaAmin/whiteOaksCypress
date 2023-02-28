@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import numeral from 'numeral'
 import { PerformanceType } from 'types/performance.type'
@@ -14,10 +14,17 @@ import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 import { removeCurrencyFormat } from 'utils/string-formatters'
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
-  const { performance, isPerformanceTableLoading } = props
+  const { performance, isPerformanceTableLoading, defaultSelected } = props
 
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
+
+  useEffect(() => {
+    if (defaultSelected?.[0]?.userId) {
+      setSelectedUser(defaultSelected?.[0])
+      onOpen()
+    }
+  }, [defaultSelected])
 
   const PERFORMANCE_COLUMNS: ColumnDef<any>[] = [
     {

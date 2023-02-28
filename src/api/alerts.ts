@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useWatch } from 'react-hook-form'
 import _ from 'lodash'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -24,6 +24,11 @@ import {
   workOrderStatus,
 } from 'types/alert.type'
 import { useClient } from 'utils/auth-context'
+import { useNavigate } from 'react-router-dom'
+import { useFetchWorkOrder } from 'api/work-order'
+import { useVendorEntity } from 'api/vendor-dashboard'
+import { useClientEntity } from 'api/clients'
+import { useFetchFPMEntity } from 'api/vendor-details'
 
 export const useManagedAlert = () => {
   const client = useClient('/alert/api')
@@ -115,9 +120,9 @@ export const getCustomOptions = ({ type, attribute }) => {
 }
 
 export const alertDetailsDefaultValues = ({ selectedAlert }) => {
-  const categoryValue = CATEGORY_OPTIONS?.find(
-    c => c?.label?.toLocaleLowerCase() === selectedAlert?.category?.toLocaleLowerCase(),
-  )
+  const categoryValue =
+    CATEGORY_OPTIONS?.find(c => c?.label?.toLocaleLowerCase() === selectedAlert?.category?.toLocaleLowerCase()) ??
+    CATEGORY_OPTIONS[1]
   const notifyValue = NOTIFY_OPTIONS?.find(n => n?.value === selectedAlert?.notify) ?? NOTIFY_OPTIONS[0]
   const typeSelectionValue = TYPE_SELECTION_OPTIONS?.find(
     t => t?.label?.toLocaleLowerCase() === selectedAlert?.typeSelection?.toLocaleLowerCase(),
@@ -415,4 +420,88 @@ export const useCreateMessageContentAndQuery = control => {
     return query
   }, [watchTypeSelection, watchBehaviorSelection, watchAttributeSelection])
   return { messageContent, alertRuleQuery: alertQuery }
+}
+
+export const useHandleNavigation = selectedAlert => {
+  const navigate = useNavigate()
+  const [workOrderId, setWorkOrderId] = useState(undefined)
+  const [vendorId, setVendorId] = useState(undefined)
+  const [clientId, setClientId] = useState(undefined)
+  const [fpmId, setFpmId] = useState(undefined)
+
+  const { workOrderDetails: workOrder, isFetching: isFetchingWO } = useFetchWorkOrder({
+    workOrderId: workOrderId,
+  })
+  const { data: vendor, isFetching: isFetchingVendor } = useVendorEntity(vendorId)
+  const { data: client, isFetching: isFetchingClient } = useClientEntity(clientId)
+  const { data: fpm, isFetching: isFetchingFpm } = useFetchFPMEntity(fpmId)
+
+  useEffect(() => {
+    if (workOrder?.id) {
+      navigate(`/project-details/${workOrder.projectId}`, { state: { workOrder } })
+    }
+  }, [workOrder])
+
+  useEffect(() => {
+    if (vendor?.id) {
+      navigate(`/vendors`, { state: { vendor } })
+    }
+  }, [vendor])
+
+  useEffect(() => {
+    if (client?.id) {
+      navigate(`/clients`, { state: { client } })
+    }
+  }, [client])
+
+  useEffect(() => {
+    if (fpm?.[0]?.userId) {
+      navigate(`/performance`, { state: { fpm } })
+    }
+  }, [fpm])
+
+  useEffect(() => {
+    switch (selectedAlert?.triggeredType) {
+      case 'Project': {
+        navigate(`/project-details/${selectedAlert?.triggeredId}`)
+        break
+      }
+      case 'WorkOrder':
+        if (workOrder?.id !== Number(selectedAlert?.triggeredId)) {
+          setWorkOrderId(selectedAlert?.triggeredId)
+        } else {
+          navigate(`/project-details/${workOrder.projectId}`, { state: { workOrder } })
+        }
+
+        break
+      case 'Vendor': {
+        if (vendor?.id !== Number(selectedAlert?.triggeredId)) {
+          setVendorId(selectedAlert?.triggeredId)
+        } else {
+          navigate(`/vendors`, { state: { vendor } })
+        }
+        break
+      }
+      case 'Client': {
+        if (client?.id !== Number(selectedAlert?.triggeredId)) {
+          setClientId(selectedAlert?.triggeredId)
+        } else {
+          navigate(`/clients`, { state: { client } })
+        }
+        break
+      }
+      case 'Performance': {
+        if (fpm?.[0]?.userId !== Number(selectedAlert?.triggeredId)) {
+          setFpmId(selectedAlert?.triggeredId)
+        } else {
+          navigate(`/performance`, { state: { fpm } })
+        }
+        break
+      }
+    }
+  }, [selectedAlert])
+
+  return {
+    isLoading: isFetchingVendor || isFetchingClient || isFetchingWO || isFetchingFpm,
+  }
 }
