@@ -178,7 +178,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: `${TRANSACTION}.vendorGL`,
     accessorKey: 'parentWorkOrderId',
     accessorFn: cellInfo => {
-      return cellInfo.parentWorkOrderId ? cellInfo?.vendor || '' : 'Project SOW'
+      return cellInfo.parentWorkOrderId !== null ? cellInfo?.vendor || '' : 'Project SOW'
     },
   },
   {
