@@ -158,6 +158,15 @@ const WorkOrderDetailTab = ({
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
+
+  useEffect(() => {
+    if (!documentsData?.length) return
+    const uploadedWO = documentsData.find(
+      doc => parseInt(doc.documentType, 10) === 16 && workOrder.id === doc.workOrderId,
+    )
+    setUploadedWO(uploadedWO)
+  }, [documentsData])
+
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
