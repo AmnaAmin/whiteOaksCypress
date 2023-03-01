@@ -25,6 +25,7 @@ import {
 } from 'types/alert.type'
 import { useClient } from 'utils/auth-context'
 import { useNavigate } from 'react-router-dom'
+import { usePaginationQuery } from 'api'
 
 export const useManagedAlert = () => {
   const client = useClient('/alert/api')
@@ -153,15 +154,35 @@ export const alertDetailsDefaultValues = ({ selectedAlert }) => {
   return defaultValues
 }
 
-export const useFetchUserAlerts = (projectId?, accountLogin?) => {
+export const useFetchAlerts = (queryString: string, pageSize: number, projectId?) => {
+  const url = !projectId ? `alert-histories?${queryString}` : `alert-histories/project/${projectId}?${{ queryString }}`
+  const { data, ...rest } = usePaginationQuery<AlertType[]>(
+    ['FetchAlerts', queryString],
+    url,
+    pageSize,
+    {},
+    '/alert/api',
+  )
+
+  return {
+    alerts: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
+    ...rest,
+  }
+}
+
+export const useFetchUserAlerts = (filterQueryString, projectId?) => {
   const client = useClient('/alert/api')
-  const url = !projectId ? 'alert-histories' : `alert-histories/project/${projectId}`
-  const { data: alerts, ...rest } = useQuery<AlertType[]>('GetProjectAlerts', async () => {
+  const url = !projectId
+    ? `alert-histories?${filterQueryString}`
+    : `alert-histories/project/${projectId}?${{ filterQueryString }}`
+  const { data: alerts, ...rest } = useQuery<AlertType[]>('FetchAllAlerts', async () => {
     const response = await client(url, {})
     return response?.data
   })
   const notifications = _.orderBy(
-    alerts?.filter(a => a.login === accountLogin),
+    alerts,
     [
       alert => {
         return alert?.webSockectRead
@@ -245,7 +266,7 @@ export const useResolveAlerts = (hideToast?) => {
           })
         }
 
-        queryClient.invalidateQueries('GetProjectAlerts')
+        queryClient.invalidateQueries('FetchAlerts')
       },
       onError(error: any) {
         toast({
@@ -286,7 +307,7 @@ export const useUpdateAlert = (hideToast?) => {
           })
         }
 
-        queryClient.invalidateQueries('GetProjectAlerts')
+        queryClient.invalidateQueries('FetchAlerts')
       },
       onError(error: any) {
         toast({
