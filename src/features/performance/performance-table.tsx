@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import numeral from 'numeral'
 import { PerformanceType } from 'types/performance.type'
@@ -12,12 +12,25 @@ import { TableFooter } from 'components/table-refactored/table-footer'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 import { removeCurrencyFormat } from 'utils/string-formatters'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
   const { performance, isPerformanceTableLoading } = props
 
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
+
+  const location = useLocation()
+  const navigate = useNavigate()
+  const fpm = (location?.state as any)?.data || {}
+
+  useEffect(() => {
+    if (fpm && fpm?.[0]?.userId) {
+      setSelectedUser(fpm?.[0])
+      onOpen()
+      navigate(location.pathname, {})
+    }
+  }, [fpm])
 
   const PERFORMANCE_COLUMNS: ColumnDef<any>[] = [
     {

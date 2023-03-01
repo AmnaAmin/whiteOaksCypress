@@ -2,7 +2,7 @@ import { useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } from '@ch
 
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router'
+import { useLocation, useNavigate, useParams } from 'react-router'
 import { ProjectSummaryCard } from 'features/project-details/project-summary-card'
 import { useTranslation } from 'react-i18next'
 import { TransactionsTable } from 'features/project-details/transactions/transactions-table'
@@ -39,19 +39,7 @@ export const ProjectDetails: React.FC = props => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
   const { ganttChartData, isLoading: isGanttChartLoading } = useGanttChart(projectId)
-  // const [alertRow, selectedAlertRow] = useState(true)
-  // const [firstDate, setFirstDate] = useState(undefined);
   const [formattedGanttData, setFormattedGanttData] = useState<any[]>([])
-  // const [projectTableInstance, setInstance] = useState<any>(null)
-  // const { mutate: postProjectColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
-  // const { tableColumns, resizeElementRef, settingColumns } = useTableColumnSettings(COLUMNS, TableNames.transaction)
-  // const setProjectTableInstance = tableInstance => {
-  //   setInstance(tableInstance)
-  // }
-  // const onSave = columns => {
-  //   postProjectColumn(columns)
-  // }
-  // const [notesCount, setNotesCount] = useState(0)
 
   const {
     isOpen: isOpenTransactionModal,
@@ -72,6 +60,24 @@ export const ProjectDetails: React.FC = props => {
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
   const preventNewTransaction = !!(projectStatus === 'paid' || projectStatus === 'cancelled')
+  const location = useLocation()
+  const navigate = useNavigate()
+  const workOrder = (location?.state as any)?.workOrder || {}
+  const transaction = (location?.state as any)?.transaction || {}
+
+  useEffect(() => {
+    if (workOrder?.id) {
+      setTabIndex(2)
+      navigate(location.pathname, {})
+    }
+  }, [workOrder])
+
+  useEffect(() => {
+    if (transaction?.id) {
+      setTabIndex(0)
+      navigate(location.pathname, {})
+    }
+  }, [transaction])
 
   useEffect(() => {
     if (ganttChartData?.length > 0 && projectData) {
@@ -113,7 +119,13 @@ export const ProjectDetails: React.FC = props => {
         <AmountDetailsCard projectId={projectId} />
 
         <Stack w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
-          <Tabs size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
+          <Tabs
+            index={tabIndex}
+            size="sm"
+            variant="enclosed"
+            colorScheme="brand"
+            onChange={index => setTabIndex(index)}
+          >
             <TabList h={'50px'} alignItems="end" border="none">
               <Flex h={'40px'} py={'1px'}>
                 <Tab>{t('projects.projectDetails.transactions')}</Tab>
@@ -121,17 +133,7 @@ export const ProjectDetails: React.FC = props => {
                 <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
                 <Tab>{t('projects.projectDetails.schedule')}</Tab>
                 <Tab>{t('projects.projectDetails.documents')}</Tab>
-                {/* <Tab>{t('alerts')}</Tab> */}
-                <Tab>
-                  {t('projects.projectDetails.notes')}
-                  {/* Figma update */}
-
-                  {/* <Box ml="5px" style={countInCircle}>
-                  {notesCount}
-                </Box> */}
-
-                  {/* Figma update */}
-                </Tab>
+                <Tab>{t('projects.projectDetails.notes')}</Tab>
                 {<Tab>{t('projects.projectDetails.auditLogs')}</Tab>}
               </Flex>
             </TabList>
@@ -164,12 +166,6 @@ export const ProjectDetails: React.FC = props => {
                     {t('projects.projectDetails.upload')}
                   </Button>
                 )}
-
-                {/* {tabIndex === 4 && (
-                  <Button colorScheme="brand" onClick={onAlertModalOpen}>
-                    Resolve
-                  </Button>
-                )} */}
                 {tabIndex === 0 && (
                   <HStack spacing="16px" mb="10px">
                     <Box mt={'14px'}>
@@ -207,9 +203,10 @@ export const ProjectDetails: React.FC = props => {
                       <TransactionDetails ref={tabsContainerRef} />
                     ) : (
                       <TransactionsTable
-                        transId={createdTransID}
                         ref={tabsContainerRef}
                         projectStatus={projectData?.projectStatus as string}
+                        defaultSelected={transaction}
+                        transId={createdTransID}
                       />
                     )}
                   </Box>
@@ -221,7 +218,7 @@ export const ProjectDetails: React.FC = props => {
                 </TabPanel>
 
                 <TabPanel p="0px">
-                  <WorkOrdersTable ref={tabsContainerRef} />
+                  <WorkOrdersTable ref={tabsContainerRef} defaultSelected={workOrder} />
                 </TabPanel>
                 <TabPanel p="0px" minH="calc(100vh - 409px)">
                   <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />

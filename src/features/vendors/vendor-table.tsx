@@ -31,6 +31,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const VENDOR_TABLE_QUERY_KEYS = {
   statusLabel: 'statusLabel.equals',
@@ -158,6 +159,16 @@ type ProjectProps = {
 }
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const { isFPM } = useUserRolesSelector()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const vendor = (location?.state as any)?.data || {}
+
+  useEffect(() => {
+    if (vendor?.id) {
+      setSelectedVendor(vendor)
+      navigate(location.pathname, {})
+    }
+  }, [vendor])
 
   // FPM portal -> Show vendors having same market as the logged in FPM
   const { data: account } = useAuth()

@@ -39,14 +39,18 @@ export const usePaidWOAmountByYearAndMonthTotal = (year: string, month: string) 
   })
 }
 
-export const useVendorEntity = (vendorId: number, tabIndex?: number) => {
+export const useVendorEntity = (vendorId: number | undefined, tabIndex?: number) => {
   const client = useClient()
 
-  return useQuery<VendorEntity>(['vendorEntity', tabIndex], async () => {
-    const response = await client(`vendors/${vendorId}`, {})
+  return useQuery<VendorEntity>(
+    ['vendorEntity', tabIndex],
+    async () => {
+      const response = await client(`vendors/${vendorId}`, {})
 
-    return response?.data
-  })
+      return response?.data
+    },
+    { enabled: !!vendorId },
+  )
 }
 
 export const useVendorsPerMonth = (vendorId: number) => {

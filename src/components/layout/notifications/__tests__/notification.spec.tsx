@@ -1,21 +1,19 @@
 /*eslint-disable */
-import { fireEvent, render, waitFor } from '@testing-library/react'
+import { render, waitFor } from '@testing-library/react'
 import { Providers } from 'providers'
-import { WORK_ORDERS, PROJECTS, assignedItems, SWO_PROJECT, DOCUMENTS } from 'mocks/api/workorder/data'
 import { waitForLoadingToFinish, screen } from 'utils/test-utils'
 import { Notification } from '../notification'
 import { setToken } from 'utils/storage.utils'
 import { Menu } from '@chakra-ui/react'
-import { Header } from 'components/layout/header'
 import { BrowserRouter } from 'react-router-dom'
-import { TRIGGEREDALERTS } from 'mocks/api/alerts/alerts'
 import { formatDistanceToNow } from 'date-fns'
 
 export const renderNotifications = async ({}: any) => {
+  const setNavigating = jest.fn()
   await render(
     <BrowserRouter>
       <Menu isOpen={true}>
-        <Notification />
+        <Notification setNavigating={setNavigating} />
       </Menu>
     </BrowserRouter>,
     {

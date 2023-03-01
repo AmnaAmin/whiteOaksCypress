@@ -211,7 +211,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
           {showCustomInput && (
             <FormControl isInvalid={!!errors.customAttributeSelection} w={215}>
               <FormLabel variant="strong-label" size="md">
-                {t('name')}
+                {t('customValue')}
               </FormLabel>
               <Input
                 type="text"
@@ -228,11 +228,10 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
       </Box>
 
       <HStack h="78px" mt="30px" borderTop="1px solid #E2E8F0" justifyContent="end" spacing="16px">
-        {
-          <Button onClick={onClose} data-testid="cancel" variant="outline" colorScheme="brand">
-            {t('cancel')}
-          </Button>
-        }
+        <Button onClick={onClose} data-testid="cancel" variant="outline" colorScheme="brand">
+          {t('cancel')}
+        </Button>
+
         {selectedAlert && (
           <Button type="submit" data-testid="saveDetails" form="alertDetails" colorScheme="brand">
             {t('save')}

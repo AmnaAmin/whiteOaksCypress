@@ -1,8 +1,8 @@
 import { Box, Button, Center, Flex, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
-import { useFetchUserAlerts, useResolveAlerts, useUpdateAlert } from 'api/alerts'
+import { useFetchUserAlerts, useHandleNavigation, useResolveAlerts, useUpdateAlert } from 'api/alerts'
 import { useTranslation } from 'react-i18next'
 import { BiXCircle } from 'react-icons/bi'
-import { useAuth } from 'utils/auth-context'
+//import { useAuth } from 'utils/auth-context'
 import { formatDistanceToNow } from 'date-fns'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { Link } from 'react-router-dom'
@@ -29,14 +29,22 @@ export const notificationCount = {
 }
 
 export const Notification = props => {
-  const { data } = useAuth()
-  const { setShowAlertMenu } = props
-  const account = data?.user
-  const { notifications, isLoading, refetch: refetchAlerts } = useFetchUserAlerts(null, account?.login)
-  const { mutate: resolveAlerts, isLoading: isResolving } = useResolveAlerts({ hideToast: true })
+  //  const { data } = useAuth()
+  const { setShowAlertMenu, setNavigating } = props
+  //const account = data?.user
+  const { notifications } = useFetchUserAlerts('page=0&size=20&sort=dateCreated,desc')
+
+  const { mutate: resolveAlerts } = useResolveAlerts({ hideToast: true })
+  const [selectedAlert, setSelectedAlert] = useState<any>()
   const { mutate: updateAlert } = useUpdateAlert({ hideToast: true })
-  const showLoadingSlate = isLoading || isResolving
+  const showLoadingSlate = false //isLoading || isResolving
   const [alertCount, setAlertCount] = useState(getAlertCount())
+  const { navigationLoading } = useHandleNavigation(selectedAlert)
+
+  useEffect(() => {
+    setNavigating(navigationLoading)
+  }, [navigationLoading])
+
   const handeResolve = id => {
     resolveAlerts([id])
   }
@@ -45,15 +53,16 @@ export const Notification = props => {
     const count = getAlertCount()
     setAlertCount(count)
     if (count > 0) {
-      refetchAlerts()
+      //refetchAlerts()
     }
   }
 
   const handleClick = alert => {
+    //eslint-disable-next-line
     if (!alert?.webSockectRead) {
       updateAlert({ ...alert, webSockectRead: true })
     }
-    //OnOpenAlertStatus()
+    setSelectedAlert(alert)
     setShowAlertMenu(false)
   }
 

@@ -108,7 +108,7 @@ const WorkOrderDetails = ({
       setTabIndex(0)
     }
   }, [workOrder, onClose])
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const onSave = values => {
     const payload = { ...workOrder, ...values }
     const { assignedItems } = values

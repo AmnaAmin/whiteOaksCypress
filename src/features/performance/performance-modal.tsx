@@ -42,7 +42,6 @@ const PerformanceModal = ({
   const { mutate: savePerformanceDetails } = useMutatePerformance(performanceDetails?.userId)
   const formReturn = useForm<PerformanceType>()
   const { control, formState, reset } = formReturn
-
   // Setting Dropdown values
   const bonusValue = bonus?.find(b => b?.value === fpmData?.newBonus)
   const badgeValue = badges?.find(b => b?.value === fpmData?.badge)

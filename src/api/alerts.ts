@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useWatch } from 'react-hook-form'
 import _ from 'lodash'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
@@ -24,6 +24,8 @@ import {
   workOrderStatus,
 } from 'types/alert.type'
 import { useClient } from 'utils/auth-context'
+import { useNavigate } from 'react-router-dom'
+import { usePaginationQuery } from 'api'
 
 export const useManagedAlert = () => {
   const client = useClient('/alert/api')
@@ -115,9 +117,9 @@ export const getCustomOptions = ({ type, attribute }) => {
 }
 
 export const alertDetailsDefaultValues = ({ selectedAlert }) => {
-  const categoryValue = CATEGORY_OPTIONS?.find(
-    c => c?.label?.toLocaleLowerCase() === selectedAlert?.category?.toLocaleLowerCase(),
-  )
+  const categoryValue =
+    CATEGORY_OPTIONS?.find(c => c?.label?.toLocaleLowerCase() === selectedAlert?.category?.toLocaleLowerCase()) ??
+    CATEGORY_OPTIONS[1]
   const notifyValue = NOTIFY_OPTIONS?.find(n => n?.value === selectedAlert?.notify) ?? NOTIFY_OPTIONS[0]
   const typeSelectionValue = TYPE_SELECTION_OPTIONS?.find(
     t => t?.label?.toLocaleLowerCase() === selectedAlert?.typeSelection?.toLocaleLowerCase(),
@@ -152,15 +154,35 @@ export const alertDetailsDefaultValues = ({ selectedAlert }) => {
   return defaultValues
 }
 
-export const useFetchUserAlerts = (projectId?, accountLogin?) => {
+export const useFetchAlerts = (queryString: string, pageSize: number, projectId?) => {
+  const url = !projectId ? `alert-histories?${queryString}` : `alert-histories/project/${projectId}?${{ queryString }}`
+  const { data, ...rest } = usePaginationQuery<AlertType[]>(
+    ['FetchAlerts', queryString],
+    url,
+    pageSize,
+    {},
+    '/alert/api',
+  )
+
+  return {
+    alerts: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
+    ...rest,
+  }
+}
+
+export const useFetchUserAlerts = (filterQueryString, projectId?) => {
   const client = useClient('/alert/api')
-  const url = !projectId ? 'alert-histories' : `alert-histories/project/${projectId}`
-  const { data: alerts, ...rest } = useQuery<AlertType[]>('GetProjectAlerts', async () => {
+  const url = !projectId
+    ? `alert-histories?${filterQueryString}`
+    : `alert-histories/project/${projectId}?${{ filterQueryString }}`
+  const { data: alerts, ...rest } = useQuery<AlertType[]>('FetchAllAlerts', async () => {
     const response = await client(url, {})
     return response?.data
   })
   const notifications = _.orderBy(
-    alerts?.filter(a => a.login === accountLogin),
+    alerts,
     [
       alert => {
         return alert?.webSockectRead
@@ -244,7 +266,7 @@ export const useResolveAlerts = (hideToast?) => {
           })
         }
 
-        queryClient.invalidateQueries('GetProjectAlerts')
+        queryClient.invalidateQueries('FetchAlerts')
       },
       onError(error: any) {
         toast({
@@ -285,7 +307,7 @@ export const useUpdateAlert = (hideToast?) => {
           })
         }
 
-        queryClient.invalidateQueries('GetProjectAlerts')
+        queryClient.invalidateQueries('FetchAlerts')
       },
       onError(error: any) {
         toast({
@@ -415,4 +437,88 @@ export const useCreateMessageContentAndQuery = control => {
     return query
   }, [watchTypeSelection, watchBehaviorSelection, watchAttributeSelection])
   return { messageContent, alertRuleQuery: alertQuery }
+}
+
+const useFetchEntity = (fetchQuery: string | null) => {
+  const client = useClient()
+
+  return useQuery(
+    ['fetchEntity', fetchQuery],
+    async () => {
+      const response = await client(fetchQuery, {})
+      return response?.data
+    },
+    { enabled: !!fetchQuery },
+  )
+}
+
+export const useHandleNavigation = selectedAlert => {
+  const navigate = useNavigate()
+  const [fetchEntityQuery, setFetchEntityQuery] = useState<string | null>(null)
+  const currentMonth = new Date().getMonth()
+  const { data, isFetching: isFetchingEntity } = useFetchEntity(fetchEntityQuery)
+
+  const mapAlertTypeToQuery = [
+    { type: 'Project', value: null, url: `/project-details/${selectedAlert?.triggeredId}` },
+    {
+      type: 'WorkOrder',
+      value: `work-orders/${selectedAlert?.triggeredId}`,
+      url: `/project-details/${data?.projectId}`,
+    },
+    {
+      type: 'Transaction',
+      value: `/change-orders/${selectedAlert?.triggeredId}`,
+      url: `/project-details/${data?.projectId}`,
+    },
+    {
+      type: 'Vendor',
+      value: `vendors/${selectedAlert?.triggeredId}`,
+      url: `/vendors`,
+    },
+    {
+      type: 'Client',
+      value: `clients/${selectedAlert?.triggeredId}`,
+      url: '/clients',
+    },
+    {
+      type: 'Performance',
+      value: `fpm-quota?&months=${selectedAlert?.month ?? currentMonth}&fpmIds=${selectedAlert?.triggeredId}`,
+      url: '/performance',
+    },
+  ]
+
+  const navigateLogic = redirectionUrl => {
+    if (selectedAlert?.triggeredType === 'WorkOrder') {
+      navigate(redirectionUrl, { state: { workOrder: data } })
+    } else if (selectedAlert?.triggeredType === 'Transaction') {
+      navigate(redirectionUrl, { state: { transaction: data } })
+    } else {
+      navigate(redirectionUrl, { state: { data } })
+    }
+  }
+  useEffect(() => {
+    const redirectionUrl = mapAlertTypeToQuery?.find(m => m.type === selectedAlert?.triggeredType)?.url as string
+    const isPerformanceAlert = selectedAlert?.triggeredType === 'Performance' && data?.[0]?.userId
+    if (data?.id || isPerformanceAlert) {
+      navigateLogic(redirectionUrl)
+    }
+  }, [data])
+
+  useEffect(() => {
+    if (selectedAlert?.triggeredId) {
+      const redirectionUrl = mapAlertTypeToQuery?.find(m => m.type === selectedAlert?.triggeredType)?.url as string
+      const query = mapAlertTypeToQuery?.find(m => m.type === selectedAlert?.triggeredType)?.value as string
+      if (selectedAlert?.triggeredType === 'Project') {
+        navigate(redirectionUrl)
+      } else if (query === fetchEntityQuery) {
+        navigateLogic(redirectionUrl)
+      } else {
+        setFetchEntityQuery(query)
+      }
+    }
+  }, [selectedAlert])
+
+  return {
+    navigationLoading: isFetchingEntity,
+  }
 }
