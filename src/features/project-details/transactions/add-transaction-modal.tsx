@@ -12,6 +12,7 @@ type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   projectStatus: string
   screen?: string
   currentWorkOrderId?: number
+  setCreatedTransaction?: (val) => void
 }
 
 const AddNewTransactionModal: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const AddNewTransactionModal: React.FC<Props> = ({
   projectStatus,
   screen,
   currentWorkOrderId,
+  setCreatedTransaction,
 }) => {
   const { t } = useTranslation()
   const [isMobile] = useMediaQuery('(max-width: 480px)')
@@ -39,10 +41,7 @@ const AddNewTransactionModal: React.FC<Props> = ({
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize} variant="custom">
       <ModalOverlay />
       <ModalContent minH="700px">
-        <ModalHeader data-testid='new_Transaction'>
-          
-          {t(`${TRANSACTION}.newTransaction`)}
-          </ModalHeader>
+        <ModalHeader>{t(`${TRANSACTION}.newTransaction`)}</ModalHeader>
         <ModalCloseButton _hover={{ bg: 'blue.50' }} _focus={{ outline: 'none' }} />
 
         <ModalBody bg="bgGlobal.50" p={2}>
@@ -50,6 +49,7 @@ const AddNewTransactionModal: React.FC<Props> = ({
             <TransactionForm
               currentWorkOrderId={currentWorkOrderId}
               onClose={onClose}
+              setCreatedTransaction={setCreatedTransaction}
               projectId={projectId}
               projectStatus={projectStatus}
               screen={screen}

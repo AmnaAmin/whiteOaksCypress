@@ -49,6 +49,11 @@ export const ProjectDetails: React.FC = props => {
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
+  const [createdTransID, setCreatedTransID] = useState()
+
+  const setCreatedTransaction = e => {
+    setCreatedTransID(e?.data)
+  }
 
   const [isShowProjectFinancialOverview, setIsShowProjectFinancialOverview] = useState(false)
 
@@ -201,6 +206,7 @@ export const ProjectDetails: React.FC = props => {
                         ref={tabsContainerRef}
                         projectStatus={projectData?.projectStatus as string}
                         defaultSelected={transaction}
+                        transId={createdTransID}
                       />
                     )}
                   </Box>
@@ -247,6 +253,7 @@ export const ProjectDetails: React.FC = props => {
         <AddNewTransactionModal
           isOpen={isOpenTransactionModal}
           onClose={onTransactionModalClose}
+          setCreatedTransaction={setCreatedTransaction}
           projectId={projectId as string}
           projectStatus={projectStatus}
         />
