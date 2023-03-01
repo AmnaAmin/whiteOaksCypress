@@ -248,13 +248,13 @@ export const mapDataForExpandableRows = (transactions?: any) => {
 
 export const mapIndexForExpendingTransRow = (newTrans: any, gridTrans: any, setState) => {
   // calculate row index
-  const noId = gridTrans?.findIndex(d => !d.parentWorkOrderId)
+  const parentOriginalSowIndex = gridTrans?.findIndex(d => !d.parentWorkOrderId)
   // calculate row index
   if (newTrans) {
     if (gridTrans && gridTrans?.length > 0) {
       if (!newTrans?.parentWorkOrderId) {
         setState({
-          [noId]: true,
+          [parentOriginalSowIndex]: true,
         })
       }
       gridTrans?.filter((v, i: number) => {

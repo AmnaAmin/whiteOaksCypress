@@ -142,7 +142,7 @@ export type TransactionFormProps = {
   heading?: string
   screen?: string
   currentWorkOrderId?: number
-  handle?: any
+  setCreatedTransaction?: any
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -152,7 +152,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   projectStatus,
   screen,
   currentWorkOrderId,
-  handle,
+  setCreatedTransaction,
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
@@ -342,7 +342,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       const queryOptions = {
         onSuccess(res) {
           onClose()
-          handle(res)
+          setCreatedTransaction(res)
           reset()
         },
       }

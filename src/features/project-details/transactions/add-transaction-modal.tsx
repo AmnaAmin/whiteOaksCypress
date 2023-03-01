@@ -12,7 +12,7 @@ type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   projectStatus: string
   screen?: string
   currentWorkOrderId?: number
-  handle?: any
+  setCreatedTransaction?: (val) => void
 }
 
 const AddNewTransactionModal: React.FC<Props> = ({
@@ -22,7 +22,7 @@ const AddNewTransactionModal: React.FC<Props> = ({
   projectStatus,
   screen,
   currentWorkOrderId,
-  handle,
+  setCreatedTransaction,
 }) => {
   const { t } = useTranslation()
   const [isMobile] = useMediaQuery('(max-width: 480px)')
@@ -49,7 +49,7 @@ const AddNewTransactionModal: React.FC<Props> = ({
             <TransactionForm
               currentWorkOrderId={currentWorkOrderId}
               onClose={onClose}
-              handle={handle}
+              setCreatedTransaction={setCreatedTransaction}
               projectId={projectId}
               projectStatus={projectStatus}
               screen={screen}

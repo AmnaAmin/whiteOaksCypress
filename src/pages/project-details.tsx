@@ -63,7 +63,7 @@ export const ProjectDetails: React.FC = props => {
   const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
   const [createdTransID, setCreatedTransID] = useState()
 
-  const handler = e => {
+  const setCreatedTransaction = e => {
     setCreatedTransID(e?.data)
   }
 
@@ -256,7 +256,7 @@ export const ProjectDetails: React.FC = props => {
         <AddNewTransactionModal
           isOpen={isOpenTransactionModal}
           onClose={onTransactionModalClose}
-          handle={handler}
+          setCreatedTransaction={setCreatedTransaction}
           projectId={projectId as string}
           projectStatus={projectStatus}
         />
