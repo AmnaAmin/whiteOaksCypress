@@ -84,6 +84,7 @@ export const ManageProject: React.FC<{
                 rules={{ required: 'This is required field' }}
                 render={({ field: { value }, fieldState }) => (
                   <>
+                  <div data-testid='project_Cordinator'>
                     <ReactSelect
                       id="projectCoordinator"
                       options={projectCoordinatorSelectOptions}
@@ -92,6 +93,7 @@ export const ManageProject: React.FC<{
                       selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </div>
                   </>
                 )}
               />

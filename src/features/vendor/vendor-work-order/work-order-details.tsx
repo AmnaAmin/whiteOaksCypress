@@ -172,6 +172,7 @@ export const WorkOrderDetails = ({
                 <TabPanels>
                   <TabPanel p={0}>
                     <WorkOrderDetailTab
+                      documentsData={documentsData}
                       setIsUpdating={setIsUpdating}
                       isUpdating={isUpdating}
                       projectData={projectData}
