@@ -13,7 +13,6 @@ import { Card } from 'components/card/card'
 import { useFPMs } from 'api/pc-projects'
 import { getQueryString } from 'utils/filters-query-utils'
 import { SelectOption } from 'types/transaction.type'
-import { useLocation, useNavigate } from 'react-router-dom'
 
 type GraphData = {
   username: string
@@ -80,16 +79,6 @@ export const PerformanceTab = () => {
   const { monthFilter } = useMapMonths(monthOption)
   const [fpmPerformanceData, setFPMPerformanceData] = useState<Array<FPMMonthlyData> | null>()
   const { fieldProjectManagerOptions } = useFPMs()
-
-  const location = useLocation()
-  const navigate = useNavigate()
-  const fpm = (location?.state as any)?.fpm || {}
-
-  useEffect(() => {
-    if (fpm?.userId) {
-      navigate(location.pathname, {})
-    }
-  }, [fpm])
 
   // create query when year/month or fpms filter change
   const queryString = useMemo(() => {
@@ -238,7 +227,6 @@ export const PerformanceTab = () => {
         <PerformanceTable
           performance={fpmPerformanceData}
           isPerformanceTableLoading={isPerformanceTableLoading || isPerformanceTableFetching}
-          defaultSelected={fpm}
         />
       </Card>
     </Box>

@@ -150,6 +150,30 @@ export const Notification = props => {
       behaviour: 'Change',
       triggeredAlert: null,
     },
+    {
+      id: 35591,
+      subject: '132 DURHAM RD',
+      message: "Transaction 'status' Changed from  to ",
+      emailStatus: null,
+      webSocketStatus: null,
+      smsStatus: null,
+      webSockectRead: false,
+      retryAttempts: null,
+      errorLog: null,
+      receipientEmail: null,
+      userId: 191,
+      category: 2,
+      dateCreated: '2023-02-16T08:22:25Z',
+      dateModified: null,
+      triggeredId: 15824,
+      projectId: 6577,
+      triggeredType: 'Transaction',
+      login: 'pc@woa.com',
+      status: null,
+      attribute: 'Project type',
+      behaviour: 'Change',
+      triggeredAlert: null,
+    },
   ]
 
   const { mutate: resolveAlerts } = useResolveAlerts({ hideToast: true })
@@ -157,11 +181,11 @@ export const Notification = props => {
   const { mutate: updateAlert } = useUpdateAlert({ hideToast: true })
   const showLoadingSlate = false //isLoading || isResolving
   const [alertCount, setAlertCount] = useState(getAlertCount())
-  const { isLoading } = useHandleNavigation(selectedAlert)
+  const { navigationLoading } = useHandleNavigation(selectedAlert)
 
   useEffect(() => {
-    setNavigating(isLoading)
-  }, [isLoading])
+    setNavigating(navigationLoading)
+  }, [navigationLoading])
 
   const handeResolve = id => {
     resolveAlerts([id])

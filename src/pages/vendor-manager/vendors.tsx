@@ -2,28 +2,18 @@ import { HStack, Box, Icon, Button, Spacer, useDisclosure } from '@chakra-ui/rea
 import { VendorFilters } from 'features/vendors/vendor-filter'
 import { VendorTable } from 'features/vendors/vendor-table'
 import NewVendorModal from 'features/vendor-manager/new-vendor-modal'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { BiBookAdd } from 'react-icons/bi'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Card } from 'components/card/card'
-import { useLocation, useNavigate } from 'react-router-dom'
 
 const Vendors = () => {
   const { isOpen: isOpenNewVendorModal, onOpen: onNewVendorModalOpen, onClose: onNewVendorModalClose } = useDisclosure()
   const [selectedCard, setSelectedCard] = useState<string>('')
   const { t } = useTranslation()
   const { isFPM } = useUserRolesSelector()
-  const location = useLocation()
-  const navigate = useNavigate()
-  const vendor = (location?.state as any)?.vendor || {}
-
-  useEffect(() => {
-    if (vendor?.id) {
-      navigate(location.pathname, {})
-    }
-  }, [vendor])
 
   return (
     <Box pb="2">
@@ -44,7 +34,7 @@ const Vendors = () => {
           )}
         </HStack>
 
-        <VendorTable selectedCard={selectedCard as string} defaultSelected={vendor} />
+        <VendorTable selectedCard={selectedCard as string} />
       </Card>
 
       <NewVendorModal isOpen={isOpenNewVendorModal} onClose={onNewVendorModalClose} />

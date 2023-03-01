@@ -12,19 +12,25 @@ import { TableFooter } from 'components/table-refactored/table-footer'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 import { removeCurrencyFormat } from 'utils/string-formatters'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export const PerformanceTable = React.forwardRef((props: any, ref) => {
-  const { performance, isPerformanceTableLoading, defaultSelected } = props
+  const { performance, isPerformanceTableLoading } = props
 
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [selectedUser, setSelectedUser] = useState<PerformanceType>()
 
+  const location = useLocation()
+  const navigate = useNavigate()
+  const fpm = (location?.state as any)?.data || {}
+
   useEffect(() => {
-    if (defaultSelected?.[0]?.userId) {
-      setSelectedUser(defaultSelected?.[0])
+    if (fpm && fpm?.[0]?.userId) {
+      setSelectedUser(fpm?.[0])
       onOpen()
+      navigate(location.pathname, {})
     }
-  }, [defaultSelected])
+  }, [fpm])
 
   const PERFORMANCE_COLUMNS: ColumnDef<any>[] = [
     {

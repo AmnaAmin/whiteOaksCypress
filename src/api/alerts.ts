@@ -25,10 +25,6 @@ import {
 } from 'types/alert.type'
 import { useClient } from 'utils/auth-context'
 import { useNavigate } from 'react-router-dom'
-import { useFetchWorkOrder } from 'api/work-order'
-import { useVendorEntity } from 'api/vendor-dashboard'
-import { useClientEntity } from 'api/clients'
-import { useFetchFPMEntity } from 'api/vendor-details'
 
 export const useManagedAlert = () => {
   const client = useClient('/alert/api')
@@ -422,86 +418,86 @@ export const useCreateMessageContentAndQuery = control => {
   return { messageContent, alertRuleQuery: alertQuery }
 }
 
+const useFetchEntity = (fetchQuery: string | null) => {
+  const client = useClient()
+
+  return useQuery(
+    ['fetchEntity', fetchQuery],
+    async () => {
+      const response = await client(fetchQuery, {})
+      return response?.data
+    },
+    { enabled: !!fetchQuery },
+  )
+}
+
 export const useHandleNavigation = selectedAlert => {
   const navigate = useNavigate()
-  const [workOrderId, setWorkOrderId] = useState(undefined)
-  const [vendorId, setVendorId] = useState(undefined)
-  const [clientId, setClientId] = useState(undefined)
-  const [fpmId, setFpmId] = useState(undefined)
+  const [fetchEntityQuery, setFetchEntityQuery] = useState<string | null>(null)
+  const currentMonth = new Date().getMonth()
+  const { data, isFetching: isFetchingEntity } = useFetchEntity(fetchEntityQuery)
 
-  const { workOrderDetails: workOrder, isFetching: isFetchingWO } = useFetchWorkOrder({
-    workOrderId: workOrderId,
-  })
-  const { data: vendor, isFetching: isFetchingVendor } = useVendorEntity(vendorId)
-  const { data: client, isFetching: isFetchingClient } = useClientEntity(clientId)
-  const { data: fpm, isFetching: isFetchingFpm } = useFetchFPMEntity(fpmId)
+  const mapAlertTypeToQuery = [
+    { type: 'Project', value: null, url: `/project-details/${selectedAlert?.triggeredId}` },
+    {
+      type: 'WorkOrder',
+      value: `work-orders/${selectedAlert?.triggeredId}`,
+      url: `/project-details/${data?.projectId}`,
+    },
+    {
+      type: 'Transaction',
+      value: `/change-orders/${selectedAlert?.triggeredId}`,
+      url: `/project-details/${data?.projectId}`,
+    },
+    {
+      type: 'Vendor',
+      value: `vendors/${selectedAlert?.triggeredId}`,
+      url: `/vendors`,
+    },
+    {
+      type: 'Client',
+      value: `clients/${selectedAlert?.triggeredId}`,
+      url: '/clients',
+    },
+    {
+      type: 'Performance',
+      value: `fpm-quota?&months=${selectedAlert?.month ?? currentMonth}&fpmIds=${selectedAlert?.triggeredId}`,
+      url: '/performance',
+    },
+  ]
 
-  useEffect(() => {
-    if (workOrder?.id) {
-      navigate(`/project-details/${workOrder.projectId}`, { state: { workOrder } })
+  const navigateLogic = redirectionUrl => {
+    if (selectedAlert?.triggeredType === 'WorkOrder') {
+      navigate(redirectionUrl, { state: { workOrder: data } })
+    } else if (selectedAlert?.triggeredType === 'Transaction') {
+      navigate(redirectionUrl, { state: { transaction: data } })
+    } else {
+      navigate(redirectionUrl, { state: { data } })
     }
-  }, [workOrder])
-
+  }
   useEffect(() => {
-    if (vendor?.id) {
-      navigate(`/vendors`, { state: { vendor } })
+    const redirectionUrl = mapAlertTypeToQuery?.find(m => m.type === selectedAlert?.triggeredType)?.url as string
+    const isPerformanceAlert = selectedAlert?.triggeredType === 'Performance' && data?.[0]?.userId
+    if (data?.id || isPerformanceAlert) {
+      navigateLogic(redirectionUrl)
     }
-  }, [vendor])
+  }, [data])
 
   useEffect(() => {
-    if (client?.id) {
-      navigate(`/clients`, { state: { client } })
-    }
-  }, [client])
-
-  useEffect(() => {
-    if (fpm?.[0]?.userId) {
-      navigate(`/performance`, { state: { fpm } })
-    }
-  }, [fpm])
-
-  useEffect(() => {
-    switch (selectedAlert?.triggeredType) {
-      case 'Project': {
-        navigate(`/project-details/${selectedAlert?.triggeredId}`)
-        break
-      }
-      case 'WorkOrder':
-        if (workOrder?.id !== Number(selectedAlert?.triggeredId)) {
-          setWorkOrderId(selectedAlert?.triggeredId)
-        } else {
-          navigate(`/project-details/${workOrder.projectId}`, { state: { workOrder } })
-        }
-
-        break
-      case 'Vendor': {
-        if (vendor?.id !== Number(selectedAlert?.triggeredId)) {
-          setVendorId(selectedAlert?.triggeredId)
-        } else {
-          navigate(`/vendors`, { state: { vendor } })
-        }
-        break
-      }
-      case 'Client': {
-        if (client?.id !== Number(selectedAlert?.triggeredId)) {
-          setClientId(selectedAlert?.triggeredId)
-        } else {
-          navigate(`/clients`, { state: { client } })
-        }
-        break
-      }
-      case 'Performance': {
-        if (fpm?.[0]?.userId !== Number(selectedAlert?.triggeredId)) {
-          setFpmId(selectedAlert?.triggeredId)
-        } else {
-          navigate(`/performance`, { state: { fpm } })
-        }
-        break
+    if (selectedAlert?.triggeredId) {
+      const redirectionUrl = mapAlertTypeToQuery?.find(m => m.type === selectedAlert?.triggeredType)?.url as string
+      const query = mapAlertTypeToQuery?.find(m => m.type === selectedAlert?.triggeredType)?.value as string
+      if (selectedAlert?.triggeredType === 'Project') {
+        navigate(redirectionUrl)
+      } else if (query === fetchEntityQuery) {
+        navigateLogic(redirectionUrl)
+      } else {
+        setFetchEntityQuery(query)
       }
     }
   }, [selectedAlert])
 
   return {
-    isLoading: isFetchingVendor || isFetchingClient || isFetchingWO || isFetchingFpm,
+    navigationLoading: isFetchingEntity,
   }
 }

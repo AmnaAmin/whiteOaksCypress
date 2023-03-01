@@ -71,19 +71,6 @@ export const useFPMProfile = (FpmId: number | undefined) => {
   )
 }
 
-export const useFetchFPMEntity = (FpmId: number | undefined) => {
-  const client = useClient()
-
-  return useQuery(
-    'fpmEntity',
-    async () => {
-      const response = await client(`fpm-quota?&months=2&fpmIds=${FpmId}`, {})
-      return response?.data
-    },
-    { enabled: !!FpmId },
-  )
-}
-
 export const useAccountDetails = () => {
   const client = useClient()
 

@@ -58,6 +58,7 @@ export const ProjectDetails: React.FC = props => {
   const location = useLocation()
   const navigate = useNavigate()
   const workOrder = (location?.state as any)?.workOrder || {}
+  const transaction = (location?.state as any)?.transaction || {}
 
   useEffect(() => {
     if (workOrder?.id) {
@@ -65,6 +66,13 @@ export const ProjectDetails: React.FC = props => {
       navigate(location.pathname, {})
     }
   }, [workOrder])
+
+  useEffect(() => {
+    if (transaction?.id) {
+      setTabIndex(0)
+      navigate(location.pathname, {})
+    }
+  }, [transaction])
 
   useEffect(() => {
     if (ganttChartData?.length > 0 && projectData) {
@@ -189,7 +197,11 @@ export const ProjectDetails: React.FC = props => {
                     {isShowProjectFinancialOverview ? (
                       <TransactionDetails ref={tabsContainerRef} />
                     ) : (
-                      <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
+                      <TransactionsTable
+                        ref={tabsContainerRef}
+                        projectStatus={projectData?.projectStatus as string}
+                        defaultSelected={transaction}
+                      />
                     )}
                   </Box>
                 </TabPanel>

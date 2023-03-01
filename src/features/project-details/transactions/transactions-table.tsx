@@ -24,13 +24,16 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { TransactionType } from 'types/transaction.type'
 
 type TransactionProps = {
   projectStatus: string
+  defaultSelected?: TransactionType
 }
 
 export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
   const { projectId } = useParams<'projectId'>()
+  const { defaultSelected } = props
   const [dataTrans, setDataTrans] = useState<any>([])
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
@@ -45,6 +48,14 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     onOpen: onTransactionDetailsModalOpen,
     onClose: onTransactionDetailsModalClose,
   } = useDisclosure()
+
+  useEffect(() => {
+    if (defaultSelected?.id) {
+      setSelectedTransactionId(defaultSelected?.id)
+      setSelectedTransactionName(defaultSelected?.name)
+      onEditModalOpen()
+    }
+  }, [defaultSelected])
 
   const onRowClick = useCallback(
     row => {

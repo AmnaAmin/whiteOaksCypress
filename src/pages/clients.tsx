@@ -20,7 +20,7 @@ export const Client = () => {
   const [selectedClient, setSelectedClient] = useState<string | null | undefined>(null)
   const location = useLocation()
   const navigate = useNavigate()
-  const client = (location?.state as any)?.client || {}
+  const client = (location?.state as any)?.data || {}
 
   useEffect(() => {
     if (client?.id) {
