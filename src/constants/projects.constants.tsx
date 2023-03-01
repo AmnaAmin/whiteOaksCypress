@@ -50,7 +50,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   drawAmountSow: 'drawAmountSow.equals',
   drawAmountWo: 'drawAmountWo.equals',
   disqualifiedRevenueFlag: 'disqualifiedRevenueFlag.equals',
-  noteFlag: 'noteFlag.equals'
+  noteFlag: 'noteFlag.equals',
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
@@ -69,11 +69,13 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
           }}
           color="brand.300"
         >
-          <chakra.span marginRight={row.row?.original?.noteFlag ? "12px":"26"}>{row.row?.original?.noteFlag && <Icon as={RiFlag2Fill} color="rgba(252, 129, 129, 1)" />}</chakra.span>
+          <chakra.span marginRight={row.row?.original?.noteFlag ? '12px' : '26'}>
+            {row.row?.original?.noteFlag && <Icon as={RiFlag2Fill} color="rgba(252, 129, 129, 1)" />}
+          </chakra.span>
           <Link to={`/project-details/${value}`}>{value}</Link>
         </Box>
       )
-    }
+    },
   },
   {
     header: 'projects.projectTable.generalLabour',
@@ -122,9 +124,9 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'projects.projectTable.accountPayable',
-    accessorKey: 'accountPayable',
+    accessorKey: 'accountPayableInvoiced',
     accessorFn(cellInfo: any) {
-      return numeral(cellInfo.accountPayable).format('$0,0.00')
+      return numeral(cellInfo.accountPayableInvoiced).format('$0,0.00')
     },
     meta: { format: 'currency' },
   },

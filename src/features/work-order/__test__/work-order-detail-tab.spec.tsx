@@ -13,6 +13,7 @@ export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
       <WorkOrderDetailsTab
+        documentsData={projectData}
         onClose={onClose}
         workOrder={workOrder}
         projectData={projectData}
