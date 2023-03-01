@@ -114,20 +114,20 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>) =>
     isPaymentDisabled: !(isStatusClientPaid || isStatusInvoiced || invoiceBackDate) || remainingPayment === 0,
 
     // Contacts field states
-    isProjectCoordinatorDisabled: !isAdmin && !isDoc && !isAccounting &&isAllTimeDisabled, 
+    isProjectCoordinatorDisabled: !isAdmin && !isDoc && !isAccounting && !isOperations &&isAllTimeDisabled, 
     isProjectCoordinatorPhoneNumberDisabled: isAllTimeDisabled,
     isProjectCoordinatorExtensionDisabled: isAllTimeDisabled,
-    isFieldProjectManagerDisabled: !isAdmin && !isProjectCoordinator && !isDoc && !isAccounting && isAllTimeDisabled,
+    isFieldProjectManagerDisabled: !isAdmin && !isProjectCoordinator && !isDoc && !isOperations  && !isAccounting && isAllTimeDisabled,
     isFieldProjectManagerPhoneNumberDisabled: isAllTimeDisabled,
     isFieldProjectManagerExtensionDisabled: isAllTimeDisabled,
-    isClientDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
+    isClientDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations ,
 
     // Location Form fields states
-    isAddressDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
-    isCityDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
-    isStateDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
-    isZipDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
-    isMarketDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc,
+    isAddressDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations ,
+    isCityDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations ,
+    isStateDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations ,
+    isZipDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations ,
+    isMarketDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations ,
     isGateCodeDisabled:
       isFPM || isDoc || isProjectCoordinator || isAccounting || isAdmin
         ? !newActivePunchEnabledFieldStatus

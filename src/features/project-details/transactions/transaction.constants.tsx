@@ -101,8 +101,9 @@ export const TRANSACTION_TABLE_QUERIES_KEY = {
 
 export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
-    header: `${TRANSACTION}.workOrderIdTransTable`,
-    accessorKey: 'workOrderId',
+    header: '',
+    id: 'expander',
+    size: 20,
     cell: ({ row, getValue }) => (
       <Flex
         onClick={e => e.stopPropagation()}
@@ -110,6 +111,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
           paddingLeft: `${row.depth * 1.5}rem`,
         }}
       >
+        {row.getToggleExpandedHandler()}
         <>
           {row.getCanExpand() ? (
             <button
@@ -144,7 +146,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
       return (
         <div style={{ marginTop: '1px' }}>
           {' '}
-          {cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'}
+          {/* {cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'} */}
         </div>
       )
     },
@@ -157,7 +159,13 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: `${TRANSACTION}.type`,
     accessorKey: 'transactionTypeLabel',
   },
-
+  {
+    header: `${TRANSACTION}.workOrderIdTransTable`,
+    accessorKey: 'workOrderId',
+    accessorFn: cellInfo => {
+      return cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'
+    },
+  },
   {
     header: `${TRANSACTION}.trade`,
     accessorKey: 'skillName',
@@ -170,7 +178,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: `${TRANSACTION}.vendorGL`,
     accessorKey: 'parentWorkOrderId',
     accessorFn: cellInfo => {
-      return cellInfo.parentWorkOrderId ? cellInfo?.vendor || '' : 'Project SOW'
+      return cellInfo.parentWorkOrderId !== null ? cellInfo?.vendor || '' : 'Project SOW'
     },
   },
   {

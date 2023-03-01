@@ -363,11 +363,13 @@ export const Table: React.FC<TableProps> = ({
                               borderBottom: '1px solid #CBD5E0',
                             }}
                           >
-                            <Filter
-                              allowStickyFilters={allowStickyFilters}
-                              column={header.column}
-                              table={tableInstance}
-                            />
+                            {header.id !== 'expander' && (
+                              <Filter
+                                allowStickyFilters={allowStickyFilters}
+                                column={header.column}
+                                table={tableInstance}
+                              />
+                            )}
                           </Box>
                         ) : null}
                       </Th>
@@ -419,11 +421,14 @@ export const Table: React.FC<TableProps> = ({
                       >
                         {row.getVisibleCells().map(cell => {
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
+                          const title =
+                            typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
+
                           return (
                             <Td
                               key={cell.id}
                               isTruncated
-                              title={cell.getContext()?.getValue() as string}
+                              title={title as string}
                               {...getColumnMaxMinWidths(cell.column)}
                             >
                               {isValidAndNonEmpty(cell?.renderValue()) ? value : '_ _ _'}

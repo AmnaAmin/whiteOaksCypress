@@ -21,7 +21,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
   const { selectedAlert, onClose } = props
   return (
     <Box>
-      <Box h={'calc(100vh - 320px)'} overflow={'auto'}>
+      <Box h={'calc(100vh - 400px)'} overflow={'auto'}>
         <HStack spacing="16px" mt="30px">
           <FormControl isInvalid={!!errors.title} w={215}>
             <FormLabel variant="strong-label" size="md">
@@ -95,7 +95,8 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                   <>
                     <Select
                       {...field}
-                      menuPlacement={'top'}
+                      
+                      //menuPlacement={'top'}
                       options={TYPE_SELECTION_OPTIONS}
                       size="md"
                       value={field.value}
@@ -105,7 +106,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                         setValue('behaviourSelection', null)
                         setValue('customAttributeSelection', null)
                       }}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true , menuHeight: '112px'}}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -129,14 +130,14 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                       {...field}
                       options={getAttributeOptions(watchTypeSelection?.label)}
                       size="md"
-                      menuPlacement={'top'}
+                      //menuPlacement={'top'}
                       value={field.value}
                       onChange={option => {
                         field.onChange(option)
                         setValue('behaviourSelection', null)
                         setValue('customAttributeSelection', null)
                       }}
-                      selectProps={{ isBorderLeft: true }}
+                      selectProps={{ isBorderLeft: true , menuHeight: '112px' }}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -158,7 +159,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                   <>
                     <Select
                       {...field}
-                      menuPlacement={'top'}
+                      //menuPlacement={'top'}
                       options={getBehaviorOptions(watchAttributeSelection?.type)}
                       size="md"
                       value={field.value}

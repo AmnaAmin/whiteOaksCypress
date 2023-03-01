@@ -25,6 +25,7 @@ import {
   useSaveAlertDetails,
   useUpdateAlertDetails,
 } from 'api/alerts'
+import { Card } from 'components/card/card'
 
 type ManagedAlertsTypes = {
   isOpen: boolean
@@ -105,7 +106,9 @@ export const ManagedAlertsForm = ({ onSubmit, selectedAlert, onClose, isOpen }) 
               </FormLabel>
             </ModalHeader>
             <ModalCloseButton />
-            <ModalBody>
+
+            <ModalBody  bg='#F2F3F4' px='12px'  pb="22px"  borderBottom="1px solid #E2E8F0">
+            <Card borderTopRightRadius='6px' borderTopLeftRadius='6px'>
               <Tabs variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
                 <TabList>
                   <Tab>{t('details')}</Tab>
@@ -120,8 +123,9 @@ export const ManagedAlertsForm = ({ onSubmit, selectedAlert, onClose, isOpen }) 
                   </TabPanel>
                 </TabPanels>
               </Tabs>
-            </ModalBody>
-          </ModalContent>
+              </Card>
+            </ModalBody>          
+          </ModalContent>        
         </form>
         <DevTool control={control} />
       </FormProvider>
