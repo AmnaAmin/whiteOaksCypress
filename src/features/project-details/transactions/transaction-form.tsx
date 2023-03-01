@@ -142,6 +142,7 @@ export type TransactionFormProps = {
   heading?: string
   screen?: string
   currentWorkOrderId?: number
+  setCreatedTransaction?: any
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -151,6 +152,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   projectStatus,
   screen,
   currentWorkOrderId,
+  setCreatedTransaction,
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
@@ -308,10 +310,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }
 
   const hasPendingDrawsOnPaymentSave = values => {
-    if (
-      [TransactionTypeValues.payment, TransactionTypeValues.depreciation].includes(values?.transactionType?.value) &&
-      !transaction
-    ) {
+    if ([TransactionTypeValues.payment, TransactionTypeValues.depreciation].includes(values?.transactionType?.value)) {
       const pendingDraws = transactions?.filter(
         t =>
           [TransactionTypeValues.draw, TransactionTypeValues.payment, TransactionTypeValues.depreciation].includes(
@@ -341,8 +340,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         return
       }
       const queryOptions = {
-        onSuccess() {
+        onSuccess(res) {
           onClose()
+          setCreatedTransaction(res)
           reset()
         },
       }
