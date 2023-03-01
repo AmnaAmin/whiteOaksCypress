@@ -342,7 +342,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       const queryOptions = {
         onSuccess(res) {
           onClose()
-          setCreatedTransaction(res)
+          setCreatedTransaction?.(res)
           reset()
         },
       }
