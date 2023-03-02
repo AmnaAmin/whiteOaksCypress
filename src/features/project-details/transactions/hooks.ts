@@ -277,11 +277,18 @@ export const useAgainstOptions = (
 
     // If the transaction is new and transaction type is draw and project status is invoiced or following state, hide Project SOW againstOption
     if (
-      transactionType?.value === TransactionTypeValues.draw ||
-      (transactionType?.value === TransactionTypeValues.changeOrder &&
-        !isVendor &&
-        !transaction?.id &&
-        !['new', 'active', 'punch', 'closed', 'reconcile'].includes(projectStatus.toLowerCase()))
+      transactionType?.value === TransactionTypeValues.draw &&
+      !isVendor &&
+      !transaction?.id &&
+      !['new', 'active', 'punch', 'closed', 'reconcile'].includes(projectStatus.toLowerCase())
+    ) {
+      return againstOptions.slice(1)
+    }
+
+    if (
+      transactionType?.value === TransactionTypeValues.changeOrder &&
+      !transaction?.id &&
+      ['client paid'].includes(projectStatus.toLowerCase())
     ) {
       return againstOptions.slice(1)
     }
