@@ -1,7 +1,6 @@
 import { useToast } from '@chakra-ui/react'
 import { useEffect, useMemo, useState } from 'react'
 import { useWatch } from 'react-hook-form'
-import _ from 'lodash'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import {
   AlertType,
@@ -172,32 +171,28 @@ export const useFetchAlerts = (queryString: string, pageSize: number, projectId?
   }
 }
 
-export const useFetchUserAlerts = (filterQueryString, projectId?) => {
+type AlertsProps = {
+  query?: string
+  projectId?: string | number | undefined
+  isDisabled?: boolean
+}
+export const useFetchUserAlerts = ({ query: filterQueryString, projectId, isDisabled }: AlertsProps) => {
   const client = useClient('/alert/api')
   const url = !projectId
     ? `alert-histories?${filterQueryString}`
     : `alert-histories/project/${projectId}?${{ filterQueryString }}`
-  const { data: alerts, ...rest } = useQuery<AlertType[]>('FetchAllAlerts', async () => {
-    const response = await client(url, {})
-    return response?.data
-  })
-  const notifications = _.orderBy(
-    alerts,
-    [
-      alert => {
-        return alert?.webSockectRead
-      },
-      alert => {
-        const createdDate = new Date(alert?.dateCreated as string)
-        return createdDate
-      },
-    ],
-    ['asc', 'desc'],
+  const { data: alerts, ...rest } = useQuery<AlertType[]>(
+    'FetchAllAlerts',
+    async () => {
+      const response = await client(url, {})
+      return response?.data
+    },
+    {
+      enabled: !isDisabled,
+    },
   )
-
   return {
     data: alerts,
-    notifications,
     ...rest,
   }
 }
@@ -243,7 +238,6 @@ export const useUpdateAlertDetails = () => {
 
 export const useResolveAlerts = (hideToast?) => {
   const client = useClient('/alert/api')
-  const queryClient = useQueryClient()
   const toast = useToast()
 
   return useMutation(
@@ -265,8 +259,6 @@ export const useResolveAlerts = (hideToast?) => {
             position: 'top-left',
           })
         }
-
-        queryClient.invalidateQueries('FetchAlerts')
       },
       onError(error: any) {
         toast({
@@ -284,7 +276,6 @@ export const useResolveAlerts = (hideToast?) => {
 
 export const useUpdateAlert = (hideToast?) => {
   const client = useClient('/alert/api')
-  const queryClient = useQueryClient()
   const toast = useToast()
 
   return useMutation(
@@ -306,8 +297,6 @@ export const useUpdateAlert = (hideToast?) => {
             position: 'top-left',
           })
         }
-
-        queryClient.invalidateQueries('FetchAlerts')
       },
       onError(error: any) {
         toast({
@@ -481,7 +470,7 @@ export const useHandleNavigation = selectedAlert => {
       url: '/clients',
     },
     {
-      type: 'Performance',
+      type: 'Quota',
       value: `fpm-quota?&months=${selectedAlert?.month ?? currentMonth}&fpmIds=${selectedAlert?.triggeredId}`,
       url: '/performance',
     },
@@ -510,7 +499,7 @@ export const useHandleNavigation = selectedAlert => {
       const query = mapAlertTypeToQuery?.find(m => m.type === selectedAlert?.triggeredType)?.value as string
       if (selectedAlert?.triggeredType === 'Project') {
         navigate(redirectionUrl)
-      } else if (query === fetchEntityQuery) {
+      } else if (query === fetchEntityQuery && data) {
         navigateLogic(redirectionUrl)
       } else {
         setFetchEntityQuery(query)

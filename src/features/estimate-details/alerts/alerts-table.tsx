@@ -50,7 +50,7 @@ export const AlertsTable = React.forwardRef((props: any, ref) => {
   const { data } = useAuth()
   const account = data?.user
   const { projectId } = useParams<'projectId'>()
-  const { data: alerts } = useFetchUserAlerts(projectId)
+  const { data: alerts } = useFetchUserAlerts({ projectId })
   const userAlerts = alerts?.filter(a => a.login === account?.login)
   const { t } = useTranslation()
 

@@ -30,6 +30,7 @@ jest.setTimeout(150000)
 describe('Bell Notification Test Cases', () => {
   test('Notifications show up in the bell menu. They are ordered on the basis of most recent notifications.', async () => {
     await renderNotifications({})
+
     await waitFor(() => {
       expect(screen.getByTestId('alert-0')).toBeInTheDocument()
       expect(screen.getByTestId('alert-1')).toBeInTheDocument()
@@ -38,7 +39,7 @@ describe('Bell Notification Test Cases', () => {
       expect(screen.getByTestId('alert-0-title').textContent).toEqual('Project')
       expect(screen.getByTestId('alert-0-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
       expect(screen.getByTestId('alert-0-time').textContent).toEqual(
-        formatDistanceToNow(new Date('2023-02-16T08:22:25Z')) + ' ago',
+        formatDistanceToNow(new Date('2023-01-16T08:22:26Z')) + ' ago',
       )
       expect(screen.getByTestId('alert-1-title').textContent).toEqual('Project')
       expect(screen.getByTestId('alert-1-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
@@ -48,7 +49,7 @@ describe('Bell Notification Test Cases', () => {
       expect(screen.getByTestId('alert-2-title').textContent).toEqual('Project')
       expect(screen.getByTestId('alert-2-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
       expect(screen.getByTestId('alert-2-time').textContent).toEqual(
-        formatDistanceToNow(new Date('2023-01-16T08:22:26Z')) + ' ago',
+        formatDistanceToNow(new Date('2023-02-16T08:22:25Z')) + ' ago',
       )
     })
   })
