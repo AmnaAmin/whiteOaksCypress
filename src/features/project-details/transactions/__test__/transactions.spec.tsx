@@ -44,7 +44,7 @@ describe('Given Project Coordinator create new transaction', () => {
   describe('When the user create transaction of payment type Change Order', () => {
     test('Then User should create Change Order transaction against vendor successfully', async () => {
       const onClose = jest.fn()
-      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'new' })
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
       expect(screen.getByText('Transaction Type', { selector: 'label' })).toBeInTheDocument()
       expect(screen.getByText('Against', { selector: 'label' })).toBeInTheDocument()
@@ -97,7 +97,7 @@ describe('Given Project Coordinator create new transaction', () => {
     test('Then User should create Change Order transaction against Project SOW of Vendor WorkOrder successfully', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'new' })
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
       // User first select Payment type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Change Order')
@@ -149,7 +149,7 @@ describe('Given Project Coordinator create new transaction', () => {
     test('Then user should create Change Order transaction against Project SOW of work order ignore (not applicable)', async () => {
       const onClose = jest.fn()
 
-      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'new' })
+      await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
       // User first select Payment type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Change Order')

@@ -310,7 +310,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }
 
   const hasPendingDrawsOnPaymentSave = values => {
-    if ([TransactionTypeValues.payment, TransactionTypeValues.depreciation].includes(values?.transactionType?.value)) {
+    if (
+      [TransactionTypeValues.payment, TransactionTypeValues.depreciation].includes(values?.transactionType?.value) &&
+      !transaction
+    ) {
       const pendingDraws = transactions?.filter(
         t =>
           [TransactionTypeValues.draw, TransactionTypeValues.payment, TransactionTypeValues.depreciation].includes(
@@ -342,7 +345,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       const queryOptions = {
         onSuccess(res) {
           onClose()
-          setCreatedTransaction(res)
+          setCreatedTransaction?.(res)
           reset()
         },
       }
