@@ -7,6 +7,7 @@ import NewClientModal from 'features/clients/new-client-modal'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BiBookAdd } from 'react-icons/bi'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const Client = () => {
@@ -17,6 +18,15 @@ export const Client = () => {
   const { isProjectCoordinator } = useUserRolesSelector()
   const [createdClientId, setCreatedClientId] = useState<string | null | undefined>(null)
   const [selectedClient, setSelectedClient] = useState<string | null | undefined>(null)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const client = (location?.state as any)?.data || {}
+
+  useEffect(() => {
+    if (client?.id) {
+      navigate(location.pathname, {})
+    }
+  }, [client])
 
   useEffect(() => {
     if (clients && clients.length > 0 && !!createdClientId) {
@@ -59,7 +69,7 @@ export const Client = () => {
           </Text>
         </Flex>
         <Box>
-          <ClientsTable ref={tabsContainerRef} createdClientId={createdClientId} />
+          <ClientsTable ref={tabsContainerRef} createdClientId={createdClientId} defaultSelected={client} />
         </Box>
       </Card>
       {isOpenNewClientModal && (

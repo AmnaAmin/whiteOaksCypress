@@ -1,13 +1,12 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Box, Checkbox, Flex } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { TableContextProvider } from 'components/table-refactored/table-context'
-import { useAuth } from 'utils/auth-context'
 
-import { TableFooter } from 'components/table-refactored/table-footer'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import Table from 'components/table-refactored/table'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
 import {
   GotoFirstPage,
   GotoLastPage,
@@ -17,7 +16,12 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { difference } from 'lodash'
-import { useFetchUserAlerts } from 'api/alerts'
+import { useFetchAlerts, useFetchUserAlerts } from 'api/alerts'
+import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { ExportButton } from 'components/table-refactored/export-button'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { TableNames } from 'types/table-column.types'
+import TableColumnSettings from 'components/table/table-column-settings'
 
 enum PROJECT_CATEGORY {
   WARNING = 1,
@@ -25,15 +29,30 @@ enum PROJECT_CATEGORY {
   ERROR = 3,
 }
 
+const ALERT_TABLE_QUERY_KEYS = {
+  status: 'status.specified',
+}
+
 export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
   const { selectedAlerts, setSelectedAlerts } = props
-  const { data } = useAuth()
-  const account = data?.user
-  const { data: alerts, isLoading, isFetching } = useFetchUserAlerts()
-  const userAlerts = alerts?.filter(a => a.login === account?.login)
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const { t } = useTranslation()
-  const [totalPages, setTotalPages] = useState(0)
-  const [totalRows, setTotalRows] = useState(0)
+  const [sorting, setSorting] = React.useState<SortingState>([{ id: 'dateCreated', desc: true }])
+
+  const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
+    useColumnFiltersQueryString({
+      queryStringAPIFilterKeys: ALERT_TABLE_QUERY_KEYS,
+      pagination,
+      setPagination,
+      sorting,
+    })
+
+  const { alerts, isLoading, isFetching, totalPages, dataCount } = useFetchAlerts(
+    queryStringWithPagination,
+    pagination.pageSize,
+  )
+  const { refetch: allAlertsFetch, isLoading: isAllExportDataLoading } =
+    useFetchUserAlerts(queryStringWithoutPagination)
 
   const TRIGGERED_ALERTS_COLUMNS: ColumnDef<any>[] = useMemo(() => {
     return [
@@ -46,15 +65,15 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
                 value={'all'}
                 size="lg"
                 isChecked={
-                  userAlerts &&
-                  userAlerts?.length > 0 &&
+                  alerts &&
+                  alerts?.length > 0 &&
                   difference(
-                    userAlerts.map(r => r.id),
+                    alerts.map(r => r.id),
                     selectedAlerts,
                   )?.length < 1
                 }
                 onChange={e => {
-                  const allIds = userAlerts?.map(a => a?.id)
+                  const allIds = alerts?.map(a => a?.id)
                   if (e.currentTarget?.checked) {
                     setSelectedAlerts(allIds ? [...allIds] : [])
                   } else {
@@ -112,6 +131,13 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
         cell: ({ row }) => PROJECT_CATEGORY[row.original.category],
       },
       {
+        header: t('status') as string,
+        accessorKey: 'status',
+        accessorFn: cellInfo => {
+          return cellInfo.webSockectRead ? 'Read' : 'Unread'
+        },
+      },
+      {
         header: t('dateTriggered') as string,
         accessorKey: 'dateCreated',
         accessorFn: row => datePickerFormat(row.dateCreated),
@@ -122,26 +148,13 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
         meta: { format: 'date' },
       },
     ]
-  }, [userAlerts, selectedAlerts, setSelectedAlerts])
+  }, [alerts, selectedAlerts, setSelectedAlerts])
 
-  useEffect(() => {
-    if (!userAlerts?.length) {
-      setTotalPages(1)
-      setTotalRows(0)
-    } else {
-      setTotalPages(Math.ceil((userAlerts?.length ?? 0) / 50))
-      setTotalRows(userAlerts?.length ?? 0)
-    }
-  }, [alerts])
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.alerts)
+  const { tableColumns, settingColumns } = useTableColumnSettings(TRIGGERED_ALERTS_COLUMNS, TableNames.vendors)
 
-  const setPageCount = rows => {
-    if (!rows?.length) {
-      setTotalPages(1)
-      setTotalRows(0)
-    } else {
-      setTotalPages(Math.ceil((rows?.length ?? 0) / 50))
-      setTotalRows(rows?.length ?? 0)
-    }
+  const onSave = columns => {
+    postGridColumn(columns)
   }
 
   return (
@@ -155,17 +168,32 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
       roundedRight={{ base: '0px', sm: '6px' }}
     >
       <TableContextProvider
+        data={alerts}
+        columns={tableColumns}
         totalPages={totalPages}
-        data={userAlerts}
-        columns={TRIGGERED_ALERTS_COLUMNS}
-        manualPagination={false}
+        pagination={pagination}
+        setPagination={setPagination}
+        columnFilters={columnFilters}
+        setColumnFilters={setColumnFilters}
+        sorting={sorting}
+        setSorting={setSorting}
       >
         <Table isLoading={isLoading || isFetching} isEmpty={!isLoading && !isFetching && !alerts?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
-          <Box h="35px" />
+          <ButtonsWrapper>
+            <ExportButton
+              columns={tableColumns}
+              colorScheme="brand"
+              fileName="alerts"
+              refetch={allAlertsFetch}
+              isLoading={isAllExportDataLoading}
+            />
+            <CustomDivider />
 
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+          </ButtonsWrapper>
           <TablePagination>
-            <ShowCurrentRecordsWithTotalRecords dataCount={totalRows} setPageCount={setPageCount} />
+            <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
             <GotoFirstPage />
             <GotoPreviousPage />
             <GotoNextPage />

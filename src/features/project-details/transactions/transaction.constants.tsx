@@ -245,3 +245,26 @@ export const mapDataForExpandableRows = (transactions?: any) => {
     return nData
   }
 }
+
+export const mapIndexForExpendingTransRow = (newTrans: any, gridTrans: any, setState) => {
+  // calculate row index
+  const parentOriginalSowIndex = gridTrans?.findIndex(d => !d.parentWorkOrderId)
+  // calculate row index
+  if (newTrans) {
+    if (gridTrans && gridTrans?.length > 0) {
+      if (!newTrans?.parentWorkOrderId) {
+        setState({
+          [parentOriginalSowIndex]: true,
+        })
+      }
+      gridTrans?.filter((v, i: number) => {
+        if (newTrans?.parentWorkOrderId === v.parentWorkOrderId) {
+          setState({
+            [i]: true,
+          })
+        }
+        return i
+      })
+    }
+  }
+}

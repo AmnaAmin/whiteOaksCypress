@@ -58,7 +58,7 @@ export const useVendorProfile = (vendorId: number) => {
   )
 }
 
-export const useFPMProfile = (FpmId: number) => {
+export const useFPMProfile = (FpmId: number | undefined) => {
   const client = useClient()
 
   return useQuery(

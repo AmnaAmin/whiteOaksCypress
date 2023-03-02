@@ -10,6 +10,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { ExportButton } from 'components/table-refactored/export-button'
 import {
   mapDataForExpandableRows,
+  mapIndexForExpendingTransRow,
   TRANSACTION_TABLE_COLUMNS,
 } from 'features/project-details/transactions/transaction.constants'
 import { TableContextProvider } from 'components/table-refactored/table-context'
@@ -24,13 +25,17 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { TransactionType } from 'types/transaction.type'
 
 type TransactionProps = {
   projectStatus: string
+  defaultSelected?: TransactionType
+  transId?: any
 }
 
 export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
   const { projectId } = useParams<'projectId'>()
+  const { defaultSelected } = props
   const [dataTrans, setDataTrans] = useState<any>([])
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
@@ -45,6 +50,15 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     onOpen: onTransactionDetailsModalOpen,
     onClose: onTransactionDetailsModalClose,
   } = useDisclosure()
+  const [expandedState, setExpandedState] = useState({})
+
+  useEffect(() => {
+    if (defaultSelected?.id) {
+      setSelectedTransactionId(defaultSelected?.id)
+      setSelectedTransactionName(defaultSelected?.name)
+      onEditModalOpen()
+    }
+  }, [defaultSelected])
 
   const onRowClick = useCallback(
     row => {
@@ -57,6 +71,12 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   const onSave = columns => {
     postGridColumn(columns)
   }
+
+  useEffect(() => {
+    if (props.transId) {
+      mapIndexForExpendingTransRow(props.transId, dataTrans, setExpandedState)
+    }
+  }, [props.transId])
 
   useEffect(() => {
     setTotalPages(Math.ceil((transactions?.length ?? 0) / 50))
@@ -103,6 +123,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
             columns={tableColumns}
             manualPagination={false}
             isExpandable={true}
+            expandedState={expandedState}
           >
             <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
             <TableFooter position="sticky" bottom="0" left="0" right="0">

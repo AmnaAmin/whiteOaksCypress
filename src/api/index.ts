@@ -7,9 +7,10 @@ export function usePaginationQuery<TData>(
   endpoint,
   size: number,
   options?: any,
+  clientName?: string,
 ): UseQueryResult<{ data: TData | undefined; totalCount: number; dataCount: number }> {
   const toast = useToast()
-  const client = useClient()
+  const client = useClient(clientName)
 
   return useQuery(
     queryKey,

@@ -19,7 +19,7 @@ import React, { useState } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
 import { RouterLink } from '../router-link/router-link'
-//import { Notification } from './notifications/notification'
+import { Notification } from './notifications/notification'
 import { useTranslation } from 'react-i18next'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 import LogoIcon from 'icons/header-logo'
@@ -54,13 +54,14 @@ const UserInfo: React.FC<{ show: boolean }> = ({ show }) => {
 
 type HeaderProps = {
   toggleMenu?: () => void
+  setNavigating?: (val) => void
 }
 
 const hoverEffect = {
   _focus: { background: '#F7FAFC' },
 }
 
-export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
+export const Header: React.FC<HeaderProps> = ({ toggleMenu, setNavigating }) => {
   const { logout } = useAuth()
   const [show, setShow] = useState(true)
   const [showAlertMenu, setShowAlertMenu] = useState(false)
@@ -99,7 +100,11 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu }) => {
               onClose={() => setShowAlertMenu(false)}
               onOpen={() => setShowAlertMenu(true)}
             >
-              
+              <Notification
+                setShowAlertMenu={setShowAlertMenu}
+                showAlertMenu={showAlertMenu}
+                setNavigating={setNavigating}
+              />
 
               {/* {showNotification && (
                 <Suspense fallback={() => <AiOutlineLoading3Quarters className="fa-spin" fontSize="1.5rem" />}>

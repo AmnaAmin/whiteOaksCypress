@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -21,12 +21,14 @@ import { useTranslation } from 'react-i18next'
 import { SIDE_NAV } from './sideNav.i18n'
 import { processRegisteration } from 'integrations/firebase/firebase-config'
 import { DeviceSupported } from 'integrations/firebase/device-support-warning'
+import { ViewLoader } from 'components/page-level-loader'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
   const menu = useRoleBasedMenu()
   const { t } = useTranslation()
   const { isOpen: isOpenBrowserWarning, onClose: onCloseBrowserWarning, onOpen: onOpenBrowserWarning } = useDisclosure()
+  const [isNavigating, setNavigating] = useState(false)
 
   useEffect(() => {
     processRegisteration().then(result => {
@@ -39,9 +41,9 @@ export const Layout: React.FC = props => {
   return (
     <Box width="100%">
       <Box position="fixed" top="0" left="0" right="0" zIndex="sticky" style={{ color: '#A1A6B1' }}>
-        <Header toggleMenu={toggle} />
+        <Header setNavigating={setNavigating} toggleMenu={toggle} />
       </Box>
-
+      {isNavigating && <ViewLoader />}
       <Container maxW="full" pt="50px" position="relative" sx={{ '--sidebar-width': '12.6rem' }}>
         <IdleTimeOutModal />
         <Flex

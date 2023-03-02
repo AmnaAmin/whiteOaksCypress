@@ -32,7 +32,6 @@ describe('Verify creating different alerts for the system ', () => {
       selectedAlert: null,
     })
     userEvent.type(screen.getByTestId('title'), 'Alert Test')
-    await selectOption(screen.getByTestId('category'), 'ERROR')
 
     await selectOption(screen.getByTestId('typeSelection'), 'Project')
     await selectOption(screen.getByTestId('attributeSelection'), 'Project Manager')
@@ -63,7 +62,6 @@ describe('Verify creating different alerts for the system ', () => {
       selectedAlert: null,
     })
     userEvent.type(screen.getByTestId('title'), 'Alert Test')
-    await selectOption(screen.getByTestId('category'), 'ERROR')
 
     await selectOption(screen.getByTestId('typeSelection'), 'Project')
     await selectOption(screen.getByTestId('attributeSelection'), 'Status')
@@ -93,7 +91,6 @@ describe('Verify creating different alerts for the system ', () => {
       selectedAlert: null,
     })
     userEvent.type(screen.getByTestId('title'), 'Alert Test')
-    await selectOption(screen.getByTestId('category'), 'ERROR')
 
     await selectOption(screen.getByTestId('typeSelection'), 'Vendor')
     await selectOption(screen.getByTestId('attributeSelection'), 'Score')
@@ -124,7 +121,6 @@ describe('Verify creating different alerts for the system ', () => {
       selectedAlert: null,
     })
     userEvent.type(screen.getByTestId('title'), 'Alert Test')
-    await selectOption(screen.getByTestId('category'), 'ERROR')
 
     await selectOption(screen.getByTestId('typeSelection'), 'Transaction')
     await selectOption(screen.getByTestId('attributeSelection'), 'Amount')

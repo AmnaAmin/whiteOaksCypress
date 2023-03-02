@@ -18,7 +18,8 @@ import {
 } from 'components/table-refactored/pagination'
 import { TableFooter } from 'components/table-refactored/table-footer'
 
-export const WorkOrdersTable = React.forwardRef((_, ref) => {
+export const WorkOrdersTable = props => {
+  const { defaultSelected } = props
   const { projectId } = useParams<'projectId'>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [totalPages, setTotalPages] = useState(0)
@@ -37,6 +38,13 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
       }
     }
   }, [workOrders])
+
+  useEffect(() => {
+    if (defaultSelected?.id) {
+      setSelectedWorkOrder(defaultSelected)
+      onOpen()
+    }
+  }, [defaultSelected])
 
   const onRowClick = row => {
     setSelectedWorkOrder(row)
@@ -114,4 +122,4 @@ export const WorkOrdersTable = React.forwardRef((_, ref) => {
       )}
     </Box>
   )
-})
+}
