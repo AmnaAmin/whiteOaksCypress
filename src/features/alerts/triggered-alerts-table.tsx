@@ -51,8 +51,10 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
     queryStringWithPagination,
     pagination.pageSize,
   )
-  const { refetch: allAlertsFetch, isLoading: isAllExportDataLoading } =
-    useFetchUserAlerts(queryStringWithoutPagination)
+  const { refetch: allAlertsFetch, isLoading: isAllExportDataLoading } = useFetchUserAlerts({
+    query: queryStringWithoutPagination,
+    isDisabled: true,
+  })
 
   const TRIGGERED_ALERTS_COLUMNS: ColumnDef<any>[] = useMemo(() => {
     return [

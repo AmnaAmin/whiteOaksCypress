@@ -32,7 +32,9 @@ export const Notification = props => {
   //  const { data } = useAuth()
   const { setShowAlertMenu, setNavigating } = props
   //const account = data?.user
-  const { notifications } = useFetchUserAlerts('page=0&size=20&sort=dateCreated,desc')
+  const { data: notifications, refetch: refetchNotifications } = useFetchUserAlerts({
+    query: 'page=0&size=20&sort=dateCreated,desc',
+  })
 
   const { mutate: resolveAlerts } = useResolveAlerts({ hideToast: true })
   const [selectedAlert, setSelectedAlert] = useState<any>()
@@ -46,21 +48,32 @@ export const Notification = props => {
   }, [navigationLoading])
 
   const handeResolve = id => {
-    resolveAlerts([id])
+    resolveAlerts([id], {
+      onSuccess: () => {
+        refetchNotifications()
+      },
+    })
   }
 
   const handleAlertCountFromFirebase = () => {
     const count = getAlertCount()
     setAlertCount(count)
     if (count > 0) {
-      //refetchAlerts()
+      refetchNotifications()
     }
   }
 
   const handleClick = alert => {
     //eslint-disable-next-line
     if (!alert?.webSockectRead) {
-      updateAlert({ ...alert, webSockectRead: true })
+      updateAlert(
+        { ...alert, webSockectRead: true },
+        {
+          onSuccess: () => {
+            refetchNotifications()
+          },
+        },
+      )
     }
     setSelectedAlert(alert)
     setShowAlertMenu(false)
@@ -112,7 +125,7 @@ export const Notification = props => {
             </>
           ) : (
             <>
-              {notifications.map((notification, index) => {
+              {notifications?.map((notification, index) => {
                 return (
                   <MenuItem
                     _hover={{ bg: 'none' }}
@@ -187,7 +200,14 @@ export const Notification = props => {
           textAlign="center"
           fontSize={14}
         >
-          <Link to="alerts">{t('viewAllNotifications')}</Link>
+          <Link
+            to="alerts"
+            onClick={() => {
+              setShowAlertMenu(false)
+            }}
+          >
+            {t('viewAllNotifications')}
+          </Link>
         </Center>
       </MenuList>
       {/*

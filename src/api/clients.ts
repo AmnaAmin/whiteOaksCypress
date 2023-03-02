@@ -19,22 +19,6 @@ export const useClients = () => {
   })
 }
 
-export const useClientEntity = clientId => {
-  const client = useClient()
-
-  return useQuery(
-    'clientEntity',
-    async () => {
-      const response = await client(`clients/${clientId}`, {})
-
-      return response?.data || {}
-    },
-    {
-      enabled: !!clientId,
-    },
-  )
-}
-
 export const useNotes = ({ clientId }: { clientId: number | undefined }) => {
   const client = useClient()
 
