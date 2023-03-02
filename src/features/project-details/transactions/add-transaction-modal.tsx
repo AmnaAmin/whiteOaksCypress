@@ -41,7 +41,7 @@ const AddNewTransactionModal: React.FC<Props> = ({
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize} variant="custom">
       <ModalOverlay />
       <ModalContent minH="700px">
-        <ModalHeader>{t(`${TRANSACTION}.newTransaction`)}</ModalHeader>
+        <ModalHeader data-testid='new_transaction'>{t(`${TRANSACTION}.newTransaction`)}</ModalHeader>
         <ModalCloseButton _hover={{ bg: 'blue.50' }} _focus={{ outline: 'none' }} />
 
         <ModalBody bg="bgGlobal.50" p={2}>
