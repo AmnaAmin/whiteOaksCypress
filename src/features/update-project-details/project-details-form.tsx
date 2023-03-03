@@ -99,7 +99,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     if (!!payment || !!depreciation) {
       const pendingDraws = transactions?.filter(
         t =>
-          [TransactionTypeValues.draw, TransactionTypeValues.payment, TransactionTypeValues.depreciation].includes(
+          [TransactionTypeValues.draw, TransactionTypeValues.payment, TransactionTypeValues.depreciation,TransactionTypeValues.carrierFee].includes(
             t.transactionType,
           ) &&
           !t?.parentWorkOrderId &&
