@@ -1,8 +1,6 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, FormLabelProps, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { useTranslation } from 'react-i18next'
-
-import React, { useState } from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
@@ -34,9 +32,8 @@ const Contact: React.FC<ContactProps> = ({
     register,
     control,
     formState: { errors },
-    watch,
+    setValue,
   } = useFormContext<ProjectDetailsFormValues>()
-  const formValues = watch()
   const {
     isProjectCoordinatorDisabled,
     isProjectCoordinatorPhoneNumberDisabled,
@@ -46,14 +43,10 @@ const Contact: React.FC<ContactProps> = ({
     isFieldProjectManagerExtensionDisabled,
     isClientDisabled,
   } = useFieldsDisabled(control)
-  const [pcTelephoneNumber, setPcTelephoneNumber] = useState(formValues.projectCoordinatorPhoneNumber)
+
   const { users: pcUsers } = useGetUsersByType(112)
-  const [fpmTelephoneNumber, setFpmTelephoneNumber] = useState(formValues.fieldProjectManagerPhoneNumber)
+
   const { users: fpmUsers } = useGetUsersByType(5)
-  const [pcTelephoneNumberExt, setPcTelephoneNumberExt] = useState(formValues.projectCoordinatorExtension)
-  const { users: pcUsersExt } = useGetUsersByType(112)
-  const [fpmTelephoneNumberExt, setfpmTelephoneNumberExt] = useState(formValues.fieldProjectManagerExtension)
-  const { users: fpmUsersExt } = useGetUsersByType(5)
 
   return (
     <Stack spacing={14} mt="7">
@@ -75,15 +68,10 @@ const Contact: React.FC<ContactProps> = ({
                     onChange={(e: any) => {
                       field.onChange(e)
                       const user = pcUsers?.filter(v => v.id === e.value)[0]
-                      
-                      setPcTelephoneNumber(user?.telephoneNumber as any)
 
-                      const userExt = pcUsersExt?.filter(v => v.id === e.value)[0]
-                      
-                      setPcTelephoneNumberExt(userExt?.telephoneNumberExtension as any)
+                      setValue('projectCoordinatorPhoneNumber', user?.telephoneNumber as string)
+                      setValue('projectCoordinatorExtension', user?.telephoneNumberExtension as string)
                     }}
-                    
-
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -102,7 +90,6 @@ const Contact: React.FC<ContactProps> = ({
               isDisabled={isProjectCoordinatorPhoneNumberDisabled}
               {...register('projectCoordinatorPhoneNumber')}
               w="215px"
-              value={pcTelephoneNumber as string}
             />
             <FormErrorMessage>{errors?.projectCoordinatorPhoneNumber?.message}</FormErrorMessage>
           </FormControl>
@@ -119,7 +106,6 @@ const Contact: React.FC<ContactProps> = ({
               isDisabled={isProjectCoordinatorExtensionDisabled}
               {...register('projectCoordinatorExtension')}
               w="124px"
-              value={pcTelephoneNumberExt as string}
             />
             <FormErrorMessage>{errors?.projectCoordinatorExtension?.message}</FormErrorMessage>
           </FormControl>
@@ -142,19 +128,12 @@ const Contact: React.FC<ContactProps> = ({
                     options={projectManagerSelectOptions}
                     isDisabled={isFieldProjectManagerDisabled}
                     onChange={(e: any) => {
-   
                       field.onChange(e)
                       const user = fpmUsers?.filter(v => v.id === e.value)[0]
-                      
-                      setFpmTelephoneNumber(user?.telephoneNumber as any)
-                      const UsersExt = fpmUsersExt?.filter(v => v.id === e.value)[0]
-                      
-                      setfpmTelephoneNumberExt(UsersExt?.telephoneNumberExtension as any)
+
+                      setValue('fieldProjectManagerPhoneNumber', user?.telephoneNumber as string)
+                      setValue('fieldProjectManagerExtension', user?.telephoneNumberExtension as string)
                     }}
-
-
-
-                    
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -173,7 +152,6 @@ const Contact: React.FC<ContactProps> = ({
               id="fieldProjectManagerPhoneNumber"
               {...register('fieldProjectManagerPhoneNumber')}
               w="215px"
-              value={fpmTelephoneNumber as string}
             />
             <FormErrorMessage>{errors?.fieldProjectManagerPhoneNumber?.message}</FormErrorMessage>
           </FormControl>
@@ -188,7 +166,6 @@ const Contact: React.FC<ContactProps> = ({
               isDisabled={isFieldProjectManagerExtensionDisabled}
               {...register('fieldProjectManagerExtension')}
               w="124px"
-              value={fpmTelephoneNumberExt as string}
             />
             <FormErrorMessage>{errors?.fieldProjectManagerExtension?.message}</FormErrorMessage>
           </FormControl>
