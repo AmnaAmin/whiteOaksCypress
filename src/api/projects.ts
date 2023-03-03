@@ -128,8 +128,8 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
 
   const sowRevisedChangeOrderAmount =
     (firstFinancialRecord?.changeOrder || 0) + (firstFinancialRecord?.coAdjustment || 0)
-  const sowRevisedAmount = (firstFinancialRecord?.originalAmount || 0) + (firstFinancialRecord?.noCoAdjustment || 0)
-  const finalSOWAmount = sowRevisedAmount + sowRevisedChangeOrderAmount
+  const sowRevisedAmount = (firstFinancialRecord?.originalAmount || 0) + (firstFinancialRecord?.noCoAdjustment || 0);
+  const finalSOWAmount = sowRevisedAmount + sowRevisedChangeOrderAmount + (firstFinancialRecord?.carrierFee || 0);
   const originalSOWAmount =
     (firstFinancialRecord?.originalAmount || 0) +
     (firstFinancialRecord?.changeOrder || 0) +
@@ -138,8 +138,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
   const projectExpenses =
     -1 *
     ((firstFinancialRecord?.shipFee || 0) +
-      (firstFinancialRecord?.permitFee || 0) +
-      (firstFinancialRecord?.carrierFee || 0))
+      (firstFinancialRecord?.permitFee || 0))
 
   const { vendorAccountPayable, projectTotalCost, materialCost, vendorPayment } = restProjectFinancialOverviews?.reduce(
     (final, curr) => {
