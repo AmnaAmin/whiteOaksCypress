@@ -147,10 +147,14 @@ const Contact: React.FC<ContactProps> = ({
                       const user = fpmUsers?.filter(v => v.id === e.value)[0]
                       
                       setFpmTelephoneNumber(user?.telephoneNumber as any)
-                      const fpmUsersExt = fpmUsers?.filter(v => v.id === e.value)[0]
+                      const UsersExt = fpmUsersExt?.filter(v => v.id === e.value)[0]
                       
-                      setfpmTelephoneNumberExt(fpmUsersExt?.telephoneNumberExtension as any)
+                      setfpmTelephoneNumberExt(UsersExt?.telephoneNumberExtension as any)
                     }}
+
+
+
+                    
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
