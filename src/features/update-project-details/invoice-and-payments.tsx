@@ -53,12 +53,9 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
     isStatusInvoiced,
   } = useFieldsDisabled(control)
 
-  const projectStatus = projectData?.projectStatus === PROJECT_STATUS.closed.label ? true : false
-
-  const isPaymentDisabledCheck = isPaymentDisabled || projectStatus
-
   const formValues = getValues()
   const isUploadInvoiceRequired = isStatusInvoiced && !formValues.invoiceLink
+  const isDepreciationDisabled = projectData?.projectStatus === PROJECT_STATUS.invoiced.label
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const date = new Date(e.target.value)
@@ -398,7 +395,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                       onPaymentValueChange(values)
                       field.onChange(values.value)
                     }}
-                    disabled={isPaymentDisabledCheck}
+                    disabled={isPaymentDisabled}
                     customInput={Input}
                     thousandSeparator={true}
                     prefix={'$'}
@@ -425,7 +422,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                       onDepreciationValueChange(values)
                       field.onChange(values.value)
                     }}
-                    disabled={isPaymentDisabledCheck}
+                    disabled={!isDepreciationDisabled}
                     customInput={Input}
                     thousandSeparator={true}
                     prefix={'$'}
