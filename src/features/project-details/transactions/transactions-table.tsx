@@ -93,6 +93,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     }
   }
 
+  // sort the array and specify that the value with parentWorkOrder null comes before all other values, and that all other values are equal
   const sortTransData = data => {
     if (data && data?.length > 0) {
       data.sort((x, y) => {

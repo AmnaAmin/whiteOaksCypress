@@ -55,7 +55,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
 
   const formValues = getValues()
   const isUploadInvoiceRequired = isStatusInvoiced && !formValues.invoiceLink
-  const isDepreciationDisabled = projectData?.projectStatus === PROJECT_STATUS.invoiced.label ? true : false
+  const isDepreciationDisabled = projectData?.projectStatus === PROJECT_STATUS.invoiced.label
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const date = new Date(e.target.value)
