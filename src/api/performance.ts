@@ -143,7 +143,7 @@ export const useMutatePerformance = (FPMId: number) => {
 export const usePerformanceSaveDisabled = (control: Control<PerformanceType>, errors): boolean => {
   const formValues = useWatch({ control })
 
-  return !formValues?.newBonus || !formValues?.newTarget || !formValues?.badge || !formValues?.ignoreQuota
+  return !formValues?.newBonus   || !formValues?.badge || !formValues?.ignoreQuota 
 }
 
 // Performance Graph
