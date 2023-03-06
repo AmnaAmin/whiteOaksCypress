@@ -120,7 +120,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   //TODO - Add enums instead of using actual numerical values
   // 59 is for Area FPM
   // 60 is for Regional FPM
-  const showStates = fpmRole?.value === FPMManagerTypes.Area
+  const showStates = fpmRole?.value === FPMManagerTypes.District
   const showRegions = fpmRole?.value === FPMManagerTypes.Regional
 
   const noMarketsSelected = !validateMarket(formValues?.markets)
@@ -153,9 +153,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     }
 
     // filter for market FPM
-    if (fpmRole?.value === FPMManagerTypes.Market && showMarkets)
+    if (fpmRole?.value === FPMManagerTypes.SrFPM && showMarkets)
       return fpmManagerRoleOptions.filter(
-        role => ![FPMManagerTypes.Market, FPMManagerTypes.Regular].includes(role.value),
+        role => ![FPMManagerTypes.SrFPM, FPMManagerTypes.Regular].includes(role.value),
       )
 
     // filter for regular FPM
