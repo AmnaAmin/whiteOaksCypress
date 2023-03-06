@@ -10,10 +10,11 @@ import { formatDistanceToNow } from 'date-fns'
 
 export const renderNotifications = async ({}: any) => {
   const setNavigating = jest.fn()
+  const setAlertCount = jest.fn()
   await render(
     <BrowserRouter>
       <Menu isOpen={true}>
-        <Notification setNavigating={setNavigating} />
+        <Notification setNavigating={setNavigating} setAlertCoun={setAlertCount} />
       </Menu>
     </BrowserRouter>,
     {
