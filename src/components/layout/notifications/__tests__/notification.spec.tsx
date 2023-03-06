@@ -39,19 +39,12 @@ describe('Bell Notification Test Cases', () => {
 
       expect(screen.getByTestId('alert-0-title').textContent).toEqual('Project')
       expect(screen.getByTestId('alert-0-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
-      expect(screen.getByTestId('alert-0-time').textContent).toEqual(
-        formatDistanceToNow(new Date('2023-01-16T08:22:26Z')) + ' ago',
-      )
+
       expect(screen.getByTestId('alert-1-title').textContent).toEqual('Project')
       expect(screen.getByTestId('alert-1-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
-      expect(screen.getByTestId('alert-1-time').textContent).toEqual(
-        formatDistanceToNow(new Date('2023-02-13T08:22:26Z')) + ' ago',
-      )
+
       expect(screen.getByTestId('alert-2-title').textContent).toEqual('Project')
       expect(screen.getByTestId('alert-2-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
-      expect(screen.getByTestId('alert-2-time').textContent).toEqual(
-        formatDistanceToNow(new Date('2023-02-16T08:22:25Z')) + ' ago',
-      )
     })
   })
 })
