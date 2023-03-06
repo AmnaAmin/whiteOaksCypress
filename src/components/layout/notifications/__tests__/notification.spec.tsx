@@ -14,7 +14,7 @@ export const renderNotifications = async ({}: any) => {
   await render(
     <BrowserRouter>
       <Menu isOpen={true}>
-        <Notification setNavigating={setNavigating} setAlertCoun={setAlertCount} />
+        <Notification setNavigating={setNavigating} setAlertCount={setAlertCount} />
       </Menu>
     </BrowserRouter>,
     {
