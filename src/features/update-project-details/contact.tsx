@@ -1,13 +1,12 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, FormLabelProps, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { useTranslation } from 'react-i18next'
-
-import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import { SelectOption } from 'types/transaction.type'
 import NumberFormat from 'react-number-format'
+import { useGetUsersByType } from 'api/project-details'
 
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
@@ -33,8 +32,8 @@ const Contact: React.FC<ContactProps> = ({
     register,
     control,
     formState: { errors },
+    setValue,
   } = useFormContext<ProjectDetailsFormValues>()
-
   const {
     isProjectCoordinatorDisabled,
     isProjectCoordinatorPhoneNumberDisabled,
@@ -44,6 +43,10 @@ const Contact: React.FC<ContactProps> = ({
     isFieldProjectManagerExtensionDisabled,
     isClientDisabled,
   } = useFieldsDisabled(control)
+
+  const { users: pcUsers } = useGetUsersByType(112)
+
+  const { users: fpmUsers } = useGetUsersByType(5)
 
   return (
     <Stack spacing={14} mt="7">
@@ -62,6 +65,13 @@ const Contact: React.FC<ContactProps> = ({
                     selectProps={{ isBorderLeft: !isProjectCoordinatorDisabled }}
                     options={projectCoordinatorSelectOptions}
                     isDisabled={isProjectCoordinatorDisabled}
+                    onChange={(e: any) => {
+                      field.onChange(e)
+                      const user = pcUsers?.filter(v => v.id === e.value)[0]
+
+                      setValue('projectCoordinatorPhoneNumber', user?.telephoneNumber as string)
+                      setValue('projectCoordinatorExtension', user?.telephoneNumberExtension as string)
+                    }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -74,7 +84,7 @@ const Contact: React.FC<ContactProps> = ({
           <FormControl isInvalid={!!errors?.projectCoordinatorPhoneNumber}>
             <InputLabel title={'project.projectDetails.phone'} htmlFor={'projectCoordinatorPhoneNumber'} />
             <Input
-            datatest-id='pc-Phone'
+              datatest-id="pc-Phone"
               placeholder="098-987-2233"
               id="projectCoordinatorPhoneNumber"
               isDisabled={isProjectCoordinatorPhoneNumberDisabled}
@@ -91,7 +101,7 @@ const Contact: React.FC<ContactProps> = ({
               Ext
             </InputLabel>
             <Input
-            datatest-id='pc-Phone-Ext'
+              datatest-id="pc-Phone-Ext"
               id="projectCoordinatorExtension"
               isDisabled={isProjectCoordinatorExtensionDisabled}
               {...register('projectCoordinatorExtension')}
@@ -117,6 +127,13 @@ const Contact: React.FC<ContactProps> = ({
                     selectProps={{ isBorderLeft: true }}
                     options={projectManagerSelectOptions}
                     isDisabled={isFieldProjectManagerDisabled}
+                    onChange={(e: any) => {
+                      field.onChange(e)
+                      const user = fpmUsers?.filter(v => v.id === e.value)[0]
+
+                      setValue('fieldProjectManagerPhoneNumber', user?.telephoneNumber as string)
+                      setValue('fieldProjectManagerExtension', user?.telephoneNumberExtension as string)
+                    }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -129,7 +146,7 @@ const Contact: React.FC<ContactProps> = ({
           <FormControl isInvalid={!!errors?.fieldProjectManagerPhoneNumber}>
             <InputLabel title={'project.projectDetails.phone'} htmlFor={'fieldProjectManagerPhoneNumber'} />
             <Input
-             datatest-id='fpm-Phone'
+              datatest-id="fpm-Phone"
               placeholder="098-987-2233"
               isDisabled={isFieldProjectManagerPhoneNumberDisabled}
               id="fieldProjectManagerPhoneNumber"
@@ -144,7 +161,7 @@ const Contact: React.FC<ContactProps> = ({
           <FormControl isInvalid={!!errors?.fieldProjectManagerExtension}>
             <InputLabel title={'project.projectDetails.ext'} htmlFor={'fieldProjectManagerExtension'} />
             <Input
-             datatest-id='fpm-Phone-Ext'
+              datatest-id="fpm-Phone-Ext"
               id="fieldProjectManagerExtension"
               isDisabled={isFieldProjectManagerExtensionDisabled}
               {...register('fieldProjectManagerExtension')}
@@ -213,7 +230,8 @@ const Contact: React.FC<ContactProps> = ({
             name="client"
             render={({ field, fieldState }) => (
               <>
-                <ReactSelect menuPlacement="top"
+                <ReactSelect
+                  menuPlacement="top"
                   {...field}
                   options={clientSelectOptions}
                   selectProps={{ isBorderLeft: true }}

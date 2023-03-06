@@ -89,6 +89,7 @@ export const useGetUsersByType = (userType: number) => {
 
   return {
     userSelectOptions,
+    users,
     ...rest,
   }
 }
