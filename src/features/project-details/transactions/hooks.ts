@@ -151,7 +151,7 @@ export const useFieldDisabledEnabledDecision = (
   const { isAdmin, isAccounting, isVendor } = useUserRolesSelector()
   const isAdminEnabled = isAdmin || isAccounting
   const isUpdateForm = !!transaction || isMaterialsLoading
-  const lateAndFactoringFee =
+  const lateAndFactoringFeeForVendor =
     isVendor &&
     (transaction?.transactionType === TransactionTypeValues.lateFee ||
       transaction?.transactionType === TransactionTypeValues.factoring)
@@ -167,8 +167,9 @@ export const useFieldDisabledEnabledDecision = (
     isApproved: isStatusApproved,
     isSysFactoringFee: isFactoringFeeSysGenerated,
     isPaidDateDisabled: !transaction || (isStatusApproved && !isAdminEnabled),
-    isStatusDisabled: (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading || lateAndFactoringFee,
-    lateAndFactoringFee: lateAndFactoringFee,
+    isStatusDisabled:
+      (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading || lateAndFactoringFeeForVendor,
+    lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
 }
 

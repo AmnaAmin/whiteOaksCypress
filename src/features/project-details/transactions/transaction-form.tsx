@@ -255,7 +255,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   } = useFieldShowHideDecision(control, transaction)
   const isAdminEnabled = isAdmin || isAccounting
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control)
-  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled, lateAndFactoringFee } =
+  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled, lateAndFactoringFeeForVendor } =
     useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
@@ -933,7 +933,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          ((!isApproved && !lateAndFactoringFee) || isAdminEnabled) && (
+          ((!isApproved && !lateAndFactoringFeeForVendor) || isAdminEnabled) && (
             <>
               <Button
                 type="submit"
