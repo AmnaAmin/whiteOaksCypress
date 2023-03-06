@@ -529,7 +529,7 @@ export const LienWaiverTab: React.FC<any> = props => {
           </Button>
 
           {!isVendor ? (
-            <Button onClick={() => lwUpload()} colorScheme="brand" isDisabled={!document || isUpdating}>
+            <Button onClick={() => lwUpload()} colorScheme="brand" isDisabled={!document || isUpdating} data-testid="cancel-lien-waiver">
               {t('save')}
             </Button>
           ) : (
