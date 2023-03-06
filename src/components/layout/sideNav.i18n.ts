@@ -46,7 +46,7 @@ export const sideNav = {
         alerts: 'Alertas',
         projectType: 'Tipo de proyecto',
         support: 'Apoyo',
-        estimates: 'estimados',
+        estimates: 'Estimados',
         cypressReport: 'Informes de Cypress',
       },
     },
