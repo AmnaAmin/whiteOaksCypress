@@ -18,7 +18,7 @@ export const TransactionsTab = ({ projectData, tabsContainerRef, onClose, projec
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
 
-  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
+  const projectStatus = (workOrder?.statusLabel || '').toLowerCase()
 
   const preventNewTransaction = !!(
     projectStatus === 'paid' ||

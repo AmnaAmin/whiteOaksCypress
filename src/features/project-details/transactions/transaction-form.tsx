@@ -255,11 +255,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   } = useFieldShowHideDecision(control, transaction)
   const isAdminEnabled = isAdmin || isAccounting
   const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control)
-  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
-    control,
-    transaction,
-    isMaterialsLoading,
-  )
+  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled, lateAndFactoringFee } =
+    useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
 
@@ -311,14 +308,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const hasPendingDrawsOnPaymentSave = values => {
     if (
-      [TransactionTypeValues.payment, TransactionTypeValues.depreciation,TransactionTypeValues.carrierFee].includes(values?.transactionType?.value) &&
+      [TransactionTypeValues.payment, TransactionTypeValues.depreciation, TransactionTypeValues.carrierFee].includes(
+        values?.transactionType?.value,
+      ) &&
       !transaction
     ) {
       const pendingDraws = transactions?.filter(
         t =>
-          [TransactionTypeValues.draw, TransactionTypeValues.payment, TransactionTypeValues.depreciation,TransactionTypeValues.carrierFee].includes(
-            t.transactionType,
-          ) &&
+          [
+            TransactionTypeValues.draw,
+            TransactionTypeValues.payment,
+            TransactionTypeValues.depreciation,
+            TransactionTypeValues.carrierFee,
+          ].includes(t.transactionType) &&
           !t?.parentWorkOrderId &&
           [TransactionStatusValues.pending].includes(t?.status as TransactionStatusValues),
       )
@@ -931,7 +933,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          (!isApproved || isAdminEnabled) && (
+          ((!isApproved && !lateAndFactoringFee) || isAdminEnabled) && (
             <>
               <Button
                 type="submit"
