@@ -294,7 +294,10 @@ export const useAgainstOptions = (
     }
 
     if (
-      [TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(value => transactionType?.value === value)
+      [TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
+        value => transactionType?.value === value,
+      ) &&
+      !isVendor
     ) {
       return againstOptions.slice(1)
     }
