@@ -5,8 +5,6 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { PROJECT_STATUS } from 'features/common/status'
 
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, projectData?: any) => {
-  console.log(projectData?.projectStatus)
-
   const status = useWatch({ name: 'status', control })
   const isProjectStatusInvoiced = projectData?.projectStatus === PROJECT_STATUS.invoiced.label
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
