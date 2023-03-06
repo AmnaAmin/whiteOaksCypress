@@ -5,14 +5,6 @@ import { useAuth } from 'utils/auth-context';
 import { getToken } from 'utils/storage.utils'
 
 
-document.addEventListener( "DOMContentLoaded", () => {
-
-} );
-
-window.addEventListener( "message", ( event: any ) => {
-  //console.log( "John: Event Data Received From Child", event );
-} );
-
 export const EstimateDetails = () => {
   const { data } = useAuth()
   const user = data?.user
@@ -30,7 +22,7 @@ export const EstimateDetails = () => {
     );
 
   }
-  //const navigate = useNavigate();
+  
   useEffect( () => {
 
     window.addEventListener( "message", ( event: any ) => {
@@ -46,10 +38,10 @@ export const EstimateDetails = () => {
         setTimeout(()=> {
           window.location.href = `project-details/${event.data.projectId}/`;
         }, 300)
-        //console.log(`project-details/${event.data.projectId}`);
+        
       }
 
-      //console.log( "WOA: Event Data Received From Child", event );
+      
     } );
 
    

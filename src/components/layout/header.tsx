@@ -23,6 +23,9 @@ import { useTranslation } from 'react-i18next'
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 import LogoIcon from 'icons/header-logo'
 import { BiSearch } from 'react-icons/bi'
+import { FaBell } from 'react-icons/fa'
+import { getAlertCount, resetAlertCount } from 'features/alerts/alerts-service'
+import { Notification } from './notifications/notification'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -60,11 +63,33 @@ const hoverEffect = {
   _focus: { background: '#F7FAFC' },
 }
 
+export const notificationCount = {
+  width: '18px',
+  height: '18px',
+  borderRadius: '100%',
+  color: '#fff',
+  backgroundColor: '#F6AD55',
+  display: 'flex',
+  justifyContent: 'center',
+  bottom: '12px',
+  left: '14px',
+  alignItems: 'center',
+  textAlign: 'center',
+  fontWeight: '700',
+  position: 'absolute',
+  fontSize: '12px',
+}
+
 export const Header: React.FC<HeaderProps> = ({ toggleMenu, setNavigating }) => {
   const { logout } = useAuth()
   const [show, setShow] = useState(true)
   const [showAlertMenu, setShowAlertMenu] = useState(false)
   const { t } = useTranslation()
+  const [alertCount, setAlertCount] = useState(getAlertCount())
+
+  const handleAlertIconClick = () => {
+    resetAlertCount()
+  }
 
   return (
     <Box py="8px" pl={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
@@ -99,12 +124,28 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu, setNavigating }) => 
               onClose={() => setShowAlertMenu(false)}
               onOpen={() => setShowAlertMenu(true)}
             >
-              {/* <Notification
-                setShowAlertMenu={setShowAlertMenu}
-                showAlertMenu={showAlertMenu}
-                setNavigating={setNavigating}
-              /> */}
-
+              <>
+                <MenuButton
+                  onClick={() => {
+                    handleAlertIconClick()
+                  }}
+                  transition="all 0.2s"
+                  _active={{ color: '#4E87F8' }}
+                  color="#A0AEC0"
+                  _hover={{ color: 'gray.500' }}
+                >
+                  <FaBell fontSize="16px" />
+                  {alertCount > 0 && <Box sx={notificationCount}>{alertCount}</Box>}
+                </MenuButton>
+                {showAlertMenu && (
+                  <Notification
+                    setShowAlertMenu={setShowAlertMenu}
+                    showAlertMenu={showAlertMenu}
+                    setNavigating={setNavigating}
+                    setAlertCount={setAlertCount}
+                  />
+                )}
+              </>
               {/* {showNotification && (
                 <Suspense fallback={() => <AiOutlineLoading3Quarters className="fa-spin" fontSize="1.5rem" />}>
                   <Notification />
