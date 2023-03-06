@@ -51,7 +51,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
     isRemainingPaymentDisabled,
     isPaymentDisabled,
     isStatusInvoiced,
-  } = useFieldsDisabled(control)
+  } = useFieldsDisabled(control, projectData)
 
   const formValues = getValues()
   const isUploadInvoiceRequired = isStatusInvoiced && !formValues.invoiceLink
