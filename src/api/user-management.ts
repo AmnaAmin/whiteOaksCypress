@@ -15,9 +15,9 @@ import { useMarkets, useRegions, useStates } from './pc-projects'
 import { languageOptions } from './vendor-details'
 
 export enum FPMManagerTypes {
-  Area = 59,
+  District = 59,
   Regular = 61,
-  Market = 221,
+  SrFPM = 221,
   Regional = 60,
 }
 
@@ -160,7 +160,7 @@ export const useDeleteUserDetails = () => {
 export const userMangtPayload = (user: any) => {
   const getFpmStateId = () => {
     return user.accountType?.label === 'Field Project Manager' &&
-      user.fieldProjectManagerRoleId.value === FPMManagerTypes.Area //Area Manager
+      user.fieldProjectManagerRoleId.value === FPMManagerTypes.District //Area Manager
       ? user.states?.find(state => state.checked === true)?.state?.id
       : ''
   }
@@ -284,9 +284,9 @@ export const useAllManagers = () => {
 
 export const useFilteredAvailabelManager = (fieldProjectManagerRoleId, managerRoleId, marketIds?: string) => {
   var managerRoleIdQueryKey = ''
-  if ([FPMManagerTypes.Market, FPMManagerTypes.Regular].includes(Number(fieldProjectManagerRoleId?.value))) {
+  if ([FPMManagerTypes.SrFPM, FPMManagerTypes.Regular].includes(Number(fieldProjectManagerRoleId?.value))) {
     managerRoleIdQueryKey = 'marketIds'
-  } else if (Number(fieldProjectManagerRoleId?.value) === FPMManagerTypes.Area) {
+  } else if (Number(fieldProjectManagerRoleId?.value) === FPMManagerTypes.District) {
     managerRoleIdQueryKey = 'fpmStateId'
   } else {
     managerRoleIdQueryKey = 'region'
