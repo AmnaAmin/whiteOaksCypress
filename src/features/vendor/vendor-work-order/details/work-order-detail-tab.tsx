@@ -12,6 +12,7 @@ import {
   Center,
   Spinner,
   Icon,
+  useToast,
 } from '@chakra-ui/react'
 import { BiCalendar, BiDownload, BiFile } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -62,8 +63,12 @@ const WorkOrderDetailTab = ({
   workOrderAssignedItems,
   isFetchingLineItems,
   isLoadingLineItems,
+  displayAwardPlan,
+  tabIndex,
+  setIsError,
 }) => {
   const { t } = useTranslation()
+  const toast = useToast()
   const [uploadedWO, setUploadedWO] = useState<any>(null)
   const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({})
   const { mutate: saveDocument } = useUploadDocument()
@@ -133,6 +138,23 @@ const WorkOrderDetailTab = ({
 
   const onSubmit = values => {
     const updatedValues = parseAssignedItems(values)
+    const { assignedItems } = values
+    const hasMarkedSomeComplete = assignedItems?.some(item => item.isCompleted)
+
+    if (displayAwardPlan && !workOrder?.awardPlanId && hasMarkedSomeComplete && tabIndex === 0) {
+      setIsError(true)
+      toast({
+        title: 'Work Order',
+        description: 'Award Plan is missing.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+      return
+    } else {
+      setIsError(false)
+    }
     setIsUpdating(true)
     updateWorkOrderDetails(
       { ...workOrder, ...updatedValues },
