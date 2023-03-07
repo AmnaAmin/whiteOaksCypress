@@ -225,6 +225,7 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   modifiedDate1: string | null
   modifiedBy: string
   vendorId: number | null
+  systemGenerated : boolean | null
 }
 
 type LineItem = {
