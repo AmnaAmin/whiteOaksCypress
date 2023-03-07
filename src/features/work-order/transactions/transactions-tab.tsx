@@ -19,6 +19,7 @@ export const TransactionsTab = ({ projectData, tabsContainerRef, onClose, projec
   } = useDisclosure()
 
   const workOrderStatus = (workOrder?.statusLabel || '').toLowerCase()
+  const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
   const preventNewTransaction = !!(
     workOrderStatus === 'paid' ||
@@ -63,7 +64,7 @@ export const TransactionsTab = ({ projectData, tabsContainerRef, onClose, projec
         isOpen={isOpenTransactionModal}
         onClose={onTransactionModalClose}
         projectId={projectId as string}
-        projectStatus={workOrderStatus}
+        projectStatus={projectStatus}
         screen="WORK_ORDER_TRANSACTION_TABLE_MODAL"
         currentWorkOrderId={workOrder.id}
       />
