@@ -14,6 +14,7 @@ import {
   Updater,
   ExpandedState,
   getExpandedRowModel,
+  VisibilityState,
 } from '@tanstack/react-table'
 import React, { useContext, useEffect } from 'react'
 
@@ -44,6 +45,8 @@ type TableWrapperProps = {
   setSorting?: (updater: Updater<SortingState>) => void
   isExpandable?: boolean
   expandedState?: ExpandedState
+  columnVisibility?: VisibilityState
+  setColumnVisibility?: (updater: Updater<VisibilityState>) => void
 }
 
 export const TableContextProvider: React.FC<TableWrapperProps> = ({
@@ -60,6 +63,8 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
   setSorting,
   isExpandable,
   expandedState,
+  columnVisibility,
+  setColumnVisibility,
 }) => {
   const emptyRowsLength = 3
   const emptyRows = Array(emptyRowsLength).fill({})
@@ -118,8 +123,10 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
       ...columnFilterState,
       ...sortState,
       expanded,
+      columnVisibility,
     },
     filterFromLeafRows: true,
+    onColumnVisibilityChange: setColumnVisibility,
     ...(isExpandable && { onExpandedChange: setExpanded, getSubRows: (row: any) => row.subRows }),
     getExpandedRowModel: getExpandedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

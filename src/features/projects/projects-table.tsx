@@ -18,7 +18,7 @@ import {
 import TableColumnSettings from 'components/table/table-column-settings'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
-import { PaginationState, SortingState } from '@tanstack/react-table'
+import { PaginationState, SortingState, VisibilityState } from '@tanstack/react-table'
 import { PROJECT_COLUMNS } from 'constants/projects.constants'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { PROJECT_TABLE_QUERIES_KEY } from 'constants/projects.constants'
@@ -41,7 +41,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   userIds,
   selectedFPM,
   resetFilters,
-  selectedFlagged
+  selectedFlagged,
 }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
@@ -49,6 +49,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [paginationInitialized, setPaginationInitialized] = useState(false)
   const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
@@ -61,7 +62,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       selectedFPM,
       userIds,
       days,
-      selectedFlagged
+      selectedFlagged,
     })
 
   const { projects, isLoading, totalPages, dataCount } = useProjects(
@@ -82,7 +83,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     {
       projectStatus: selectedCard !== 'past due' ? selectedCard : '',
       clientDueDate: days?.find(c => c.dayName === selectedDay)?.dueDate,
-      noteFlag: selectedFlagged
+      noteFlag: selectedFlagged,
     },
     resetFilters,
   )
@@ -148,6 +149,8 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         columnFilters={columnFilters}
         setColumnFilters={setColumnFilters}
         totalPages={totalPages}
+        columnVisibility={columnVisibility}
+        setColumnVisibility={setColumnVisibility}
       >
         <Table
           allowStickyFilters={true}
@@ -164,7 +167,16 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
               fileName="projects"
             />
             <CustomDivider />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns.filter( col => col.colId !== "id" && col.colId !== "flagged" )} />}
+            {settingColumns && (
+              <TableColumnSettings
+                disabled={isLoading}
+                onSave={onSave}
+                columns={settingColumns.filter(
+                  col =>
+                    col.colId !== 'id' && col.colId !== 'flagged' && !(columnVisibility[col?.contentKey] === false),
+                )}
+              />
+            )}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
