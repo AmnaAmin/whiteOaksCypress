@@ -20,6 +20,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   projectTypeLabel: 'projectTypeLabel.contains',
   projectCoordinator: 'projectCoordinator.contains',
   accountPayable: 'accountPayable.equals',
+  accountPayableInvoiced: 'accountPayableInvoiced.equals',
   zipCode: 'zipCode.contains',
   clientName: 'clientName.contains',
   sowOriginalContractAmount: 'sowOriginalContractAmount.equals',
@@ -123,10 +124,18 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'projectCoordinator',
   },
   {
-    header: 'projects.projectTable.accountPayable',
+    header: 'projects.projectTable.accountPayableInvoiced',
     accessorKey: 'accountPayableInvoiced',
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.accountPayableInvoiced).format('$0,0.00')
+    },
+    meta: { format: 'currency' },
+  },
+  {
+    header: 'projects.projectTable.accountPayable',
+    accessorKey: 'accountPayable',
+    accessorFn(cellInfo: any) {
+      return numeral(cellInfo.accountPayable).format('$0,0.00')
     },
     meta: { format: 'currency' },
   },
