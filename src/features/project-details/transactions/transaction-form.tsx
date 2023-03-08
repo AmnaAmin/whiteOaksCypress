@@ -311,7 +311,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const hasPendingDrawsOnPaymentSave = values => {
     if (
-      [TransactionTypeValues.payment, TransactionTypeValues.depreciation,TransactionTypeValues.carrierFee].includes(values?.transactionType?.value) &&
+      [TransactionTypeValues.draw,TransactionTypeValues.payment, TransactionTypeValues.depreciation,TransactionTypeValues.carrierFee].includes(values?.transactionType?.value) &&
       !transaction
     ) {
       const pendingDraws = transactions?.filter(
