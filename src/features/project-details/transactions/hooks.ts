@@ -280,7 +280,7 @@ export const useAgainstOptions = (
       transactionType?.value === TransactionTypeValues.draw &&
       !isVendor &&
       !transaction?.id &&
-      !['new', 'active', 'punch', 'closed', 'reconcile'].includes(projectStatus.toLowerCase())
+      !['new', 'active', 'punch', 'closed', 'reconcile'].includes(projectStatus?.toLowerCase())
     ) {
       return againstOptions.slice(1)
     }
@@ -288,13 +288,16 @@ export const useAgainstOptions = (
     if (
       transactionType?.value === TransactionTypeValues.changeOrder &&
       !transaction?.id &&
-      ['client paid'].includes(projectStatus.toLowerCase())
+      ['client paid'].includes(projectStatus?.toLowerCase())
     ) {
       return againstOptions.slice(1)
     }
 
     if (
-      [TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(value => transactionType?.value === value)
+      [TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
+        value => transactionType?.value === value,
+      ) &&
+      !isVendor
     ) {
       return againstOptions.slice(1)
     }

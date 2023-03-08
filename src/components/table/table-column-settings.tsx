@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 import { MdOutlineSettings } from 'react-icons/md'
 
-type ColumnType = {
+export type ColumnType = {
   id?: number
   field: string
   order: number
