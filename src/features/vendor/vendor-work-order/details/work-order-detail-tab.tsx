@@ -27,7 +27,6 @@ import { useEffect, useState } from 'react'
 import { STATUS } from '../../../common/status'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
-import { useUploadDocument } from 'api/vendor-projects'
 import { downloadFile } from 'utils/file-utils'
 
 const SummaryCard = props => {
@@ -71,7 +70,6 @@ const WorkOrderDetailTab = ({
   const toast = useToast()
   const [uploadedWO, setUploadedWO] = useState<any>(null)
   const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({})
-  const { mutate: saveDocument } = useUploadDocument()
   const getDefaultValues = () => {
     return {
       assignedItems:
@@ -110,12 +108,9 @@ const WorkOrderDetailTab = ({
       projectData,
       assignedItems: values.assignedItems,
       hideAward: true,
-      onSave: saveWorkOrderDocument,
     })
   }
-  const saveWorkOrderDocument = doc => {
-    saveDocument(doc)
-  }
+
   const parseAssignedItems = values => {
     const assignedItems = [
       ...values?.assignedItems?.map((a, index) => {
