@@ -121,7 +121,7 @@ export const useFieldRequiredDecision = (control: Control<FormValues, any>, tran
   const status = useWatch({ name: 'status', control })
   const isStatusApproved = status?.value === TransactionStatusValues.approved
   // const against = useWatch({ name: 'against', control })
-  const transactionType = useWatch({ name: 'transactionType', control })
+  // const transactionType = useWatch({ name: 'transactionType', control })
   return {
     isPaymentTermRequired: !transaction?.id || isStatusApproved, // if new transaction modal or edit modal with approved status.
     isPaidDateRequired: isStatusApproved,
