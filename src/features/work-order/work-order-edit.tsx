@@ -189,7 +189,7 @@ const WorkOrderDetails = ({
               >
                 <TabList color="gray.600" ml="10px" mr="20px">
                   <Tab>{t('workOrderDetails')}</Tab>
-                  <Tab>{t('projects.projectDetails.transactions')}</Tab>
+                  <Tab data-testid='wo_transaction_tab'>{t('projects.projectDetails.transactions')}</Tab>
                   {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
                   <Tab>{t('lienWaiver')}</Tab>
                   <Tab>{t('invoice')}</Tab>
