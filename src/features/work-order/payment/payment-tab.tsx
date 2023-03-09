@@ -136,6 +136,21 @@ const PaymentInfoTab = props => {
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
+
+  const calculatePaymentDates = paymentTermDate => {
+    setValue('paymentTermDate', datePickerFormat(paymentTermDate))
+    if (!isWednesday(paymentTermDate)) {
+      setValue('datePaymentProcessed', datePickerFormat(nextWednesday(paymentTermDate)))
+    } else {
+      setValue('datePaymentProcessed', datePickerFormat(paymentTermDate))
+    }
+    setValue(
+      'expectedPaymentDate',
+      datePickerFormat(
+        nextFriday(new Date(dateISOFormatWithZeroTime(getValues('datePaymentProcessed') as any) as string)),
+      ),
+    )
+  }
   const invoicedRequired = [STATUS.Invoiced, STATUS.Paid].includes(workOrder?.statusLabel?.toLowerCase())
   return (
     <Box>
@@ -188,24 +203,8 @@ const PaymentInfoTab = props => {
                           new Date(dateISOFormatWithZeroTime(dateInvSubmitted) as string),
                           getValues('paymentTerm')?.value,
                         )
-                        const expectedPaymentDate = nextFriday(paymentTermDate)
-                        
-                        setValue('paymentTermDate', datePickerFormat(paymentTermDate))
-                        setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
                         setValue('dateInvoiceSubmitted', datePickerFormat(dateInvSubmitted))
-
-                        if (!isWednesday(paymentTermDate)) {
-                          setValue('datePaymentProcessed', datePickerFormat(nextWednesday(paymentTermDate)))
-                        }
-
-                        setValue(
-                          'expectedPaymentDate',
-                          datePickerFormat(
-                            nextFriday(
-                              new Date(dateISOFormatWithZeroTime(getValues("datePaymentProcessed") as any) as string)
-                            ),
-                          ),
-                        )
+                        calculatePaymentDates(paymentTermDate)
 
                         trigger()
                       } else {
@@ -240,11 +239,15 @@ const PaymentInfoTab = props => {
                             onChange={option => {
                               const dateInvSubmitted = getValues('dateInvoiceSubmitted')
                               field.onChange(option)
-                              if (dateInvSubmitted) {
+                              if (dateInvSubmitted && dateInvSubmitted !== '') {
                                 const paymentTermDate = addDays(new Date(dateInvSubmitted as string), option.value)
-                                const expectedPaymentDate = nextFriday(paymentTermDate)
-                                setValue('paymentTermDate', datePickerFormat(paymentTermDate))
-                                setValue('expectedPaymentDate', datePickerFormat(expectedPaymentDate))
+                                calculatePaymentDates(paymentTermDate)
+                                trigger()
+                              } else {
+                                setValue('paymentTermDate', null)
+                                setValue('expectedPaymentDate', null)
+                                setValue('dateInvoiceSubmitted', null)
+                                setValue('datePaymentProcessed', null)
                               }
                             }}
                           />

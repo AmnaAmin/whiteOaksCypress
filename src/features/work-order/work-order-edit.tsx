@@ -103,6 +103,9 @@ const WorkOrderDetails = ({
       if (!projId) {
         setProjId(workOrder?.projectId?.toString())
       }
+      if (!!workOrder?.awardPlanId && isError) {
+        setIsError(false)
+      }
     } else {
       onClose()
       setTabIndex(0)
@@ -189,7 +192,7 @@ const WorkOrderDetails = ({
               >
                 <TabList color="gray.600" ml="10px" mr="20px">
                   <Tab>{t('workOrderDetails')}</Tab>
-                  <Tab>{t('projects.projectDetails.transactions')}</Tab>
+                  <Tab data-testid='wo_transaction_tab'>{t('projects.projectDetails.transactions')}</Tab>
                   {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
                   <Tab>{t('lienWaiver')}</Tab>
                   <Tab>{t('invoice')}</Tab>
@@ -352,7 +355,7 @@ const WorkOrderDetails = ({
   )
 }
 
-const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }) => {
+export const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }) => {
   return (
     <Tab _focus={{ outline: 'none' }}>
       {isError ? (

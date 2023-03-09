@@ -36,6 +36,7 @@ import { ProjectAwardTab } from 'features/work-order/project-award/project.award
 import { useProjectAward } from 'api/project-award'
 import { Card } from 'features/login-form-centered/Card'
 import { TransactionsTab } from 'features/work-order/transactions/transactions-tab'
+import { TabCustom } from 'features/work-order/work-order-edit'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -69,6 +70,7 @@ export const WorkOrderDetails = ({
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
   const { projectAwardData } = useProjectAward()
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
+  const [isError, setIsError] = useState(false)
 
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
@@ -90,6 +92,9 @@ export const WorkOrderDetails = ({
   useEffect(() => {
     if (workOrder) {
       onOpen()
+      if (!!workOrder?.awardPlanId && isError) {
+        setIsError(false)
+      }
     } else {
       onCloseDisclosure()
     }
@@ -161,7 +166,7 @@ export const WorkOrderDetails = ({
                 <TabList border="none" flexDir={{ base: 'column', md: 'row' }}>
                   <Tab data-testid="workOrderDetails">{t('workOrderDetails')}</Tab>
                   <Tab data-testid="transactions">{t('projects.projectDetails.transactions')}</Tab>
-                  {displayAwardPlan && <Tab>{t('projectAward')}</Tab>}
+                  {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
                   <Tab data-testid="lienWaiver">{t('lienWaiver')}</Tab>
                   <Tab data-testid="invoice">{t('invoice')}</Tab>
                   <Tab data-testid="payments">{t('payments')}</Tab>
@@ -181,6 +186,9 @@ export const WorkOrderDetails = ({
                       workOrderAssignedItems={workOrderAssignedItems}
                       isFetchingLineItems={isFetchingLineItems}
                       isLoadingLineItems={isLoadingLineItems}
+                      displayAwardPlan={displayAwardPlan}
+                      tabIndex={tabIndex}
+                      setIsError={setIsError}
                     />
                   </TabPanel>
                   <TabPanel p={0}>

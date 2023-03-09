@@ -105,7 +105,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
 
   useEffect(() => {
     if (transactions && transactions?.length > 0) {
-      setDataTrans(mapDataForExpandableRows(transactions as any))
+      setDataTrans(mapDataForExpandableRows(transactions as any, isVendor as boolean))
     }
   }, [transactions])
 

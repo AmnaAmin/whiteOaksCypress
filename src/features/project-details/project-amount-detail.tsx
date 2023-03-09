@@ -45,26 +45,34 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
 
   return (
     <Flex py={9} w="100%" bg="white" borderRadius="4px" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
-      <InfoStructureCard amount={finalSOWAmount} title={t('projects.projectAmount.finalSOW')} isLoading={isLoading} />
+      <InfoStructureCard data-testid ='final_sow_amount' amount={finalSOWAmount} title={t('projects.projectAmount.finalSOW')} isLoading={isLoading} />
       <InfoStructureCard
+      data-testid ='account_payable'
         amount={accountPayable}
         isLoading={isLoading}
         title={t('projects.projectAmount.accountPayable')}
       />
       <InfoStructureCard
+      data-testid ='vendor_payment'
         amount={vendorPayment}
         isLoading={isLoading}
         title={t('projects.projectAmount.vendorPayment')}
       />
-      <InfoStructureCard amount={material} isLoading={isLoading} title={t('projects.projectAmount.materials')} />
       <InfoStructureCard
+       data-testid ='Wo_material'
+       amount={material}
+       isLoading={isLoading} 
+       title={t('projects.projectAmount.materials')} />
+      <InfoStructureCard
+      data-testid ='project_total_cost'
         amount={projectTotalCost}
         isLoading={isLoading}
         title={t('projects.projectAmount.projectCost')}
       />
       {/* <InfoStructureCard amount={revenue} isLoading={isLoading} title={t('projects.projectAmount.revenue')} /> */}
-      <InfoStructureCard amount={profits} isLoading={isLoading} title={t('projects.projectAmount.profits')} />
+      <InfoStructureCard  data-testid ='project_profits'  amount={profits} isLoading={isLoading} title={t('projects.projectAmount.profits')} />
       <InfoStructureCard
+      data-testid ='profit_margin'
         amount={profitMargin}
         isLoading={isLoading}
         title={t('projects.projectAmount.profitMargins')}
