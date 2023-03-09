@@ -254,7 +254,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isPaymentTermDisabled,
   } = useFieldShowHideDecision(control, transaction)
   const isAdminEnabled = isAdmin || isAccounting
-  const { isInvoicedDateRequired, isPaidDateRequired } = useFieldRequiredDecision(control)
+  const { isInvoicedDateRequired, isPaidDateRequired, isPaymentTermRequired } = useFieldRequiredDecision(
+    control,
+    transaction,
+  )
   const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled } = useFieldDisabledEnabledDecision(
     control,
     transaction,
@@ -311,14 +314,22 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const hasPendingDrawsOnPaymentSave = values => {
     if (
-      [TransactionTypeValues.payment, TransactionTypeValues.depreciation,TransactionTypeValues.carrierFee].includes(values?.transactionType?.value) &&
+      [
+        TransactionTypeValues.draw,
+        TransactionTypeValues.payment,
+        TransactionTypeValues.depreciation,
+        TransactionTypeValues.carrierFee,
+      ].includes(values?.transactionType?.value) &&
       !transaction
     ) {
       const pendingDraws = transactions?.filter(
         t =>
-          [TransactionTypeValues.draw, TransactionTypeValues.payment, TransactionTypeValues.depreciation,TransactionTypeValues.carrierFee].includes(
-            t.transactionType,
-          ) &&
+          [
+            TransactionTypeValues.draw,
+            TransactionTypeValues.payment,
+            TransactionTypeValues.depreciation,
+            TransactionTypeValues.carrierFee,
+          ].includes(t.transactionType) &&
           !t?.parentWorkOrderId &&
           [TransactionStatusValues.pending].includes(t?.status as TransactionStatusValues),
       )
@@ -643,13 +654,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         <Controller
                           control={control}
                           name="paymentTerm"
-                          rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
+                          rules={{ required: isPaymentTermRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '' }}
                           render={({ field, fieldState }) => (
                             <>
                               <div data-testid="payment-term-select">
                                 <Select
                                   {...field}
-                                  selectProps={{ isBorderLeft: true }}
+                                  selectProps={{ isBorderLeft: isPaymentTermRequired }}
                                   options={PAYMENT_TERMS_OPTIONS}
                                   isDisabled={isPaymentTermDisabled}
                                   onChange={paymentTermOption => {
@@ -768,7 +779,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         size="md"
                         type="date"
                         variant="required-field"
-                        isDisabled={isApproved}
+                        isDisabled={isApproved && !isAdminEnabled}
                         max={futureDateDisable}
                         {...register('paymentRecievedDate', { required: REQUIRED_FIELD_ERROR_MESSAGE })}
                       />

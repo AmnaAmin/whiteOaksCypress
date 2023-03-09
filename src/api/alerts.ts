@@ -1,7 +1,7 @@
 import { useToast } from '@chakra-ui/react'
 import { useEffect, useMemo, useState } from 'react'
 import { useWatch } from 'react-hook-form'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from 'react-query'
 import {
   AlertType,
   behaviorOptionsForNumber,
@@ -189,6 +189,28 @@ export const useFetchUserAlerts = ({ query: filterQueryString, projectId, isDisa
     },
     {
       enabled: !isDisabled,
+    },
+  )
+  return {
+    data: alerts,
+    ...rest,
+  }
+}
+
+export const useFetchUserAlertsInfinite = ({ projectId }: AlertsProps) => {
+  const client = useClient('/alert/api')
+  const { data: alerts, ...rest } = useInfiniteQuery(
+    'FetchAllAlertsInfinit',
+    async ({ pageParam = 0 }) => {
+      const url = !projectId ? `alert-histories` : `alert-histories/project/${projectId}`
+      const response = await client(url + `?page=${pageParam}&size=20&sort=dateCreated,desc`, {})
+      return response?.data
+    },
+    {
+      getNextPageParam: (lastPage, allPages) => {
+        const nextPage = allPages?.length + 1
+        return lastPage?.items?.length !== 0 ? nextPage : undefined
+      },
     },
   )
   return {

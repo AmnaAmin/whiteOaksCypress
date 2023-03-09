@@ -103,6 +103,9 @@ const WorkOrderDetails = ({
       if (!projId) {
         setProjId(workOrder?.projectId?.toString())
       }
+      if (!!workOrder?.awardPlanId && isError) {
+        setIsError(false)
+      }
     } else {
       onClose()
       setTabIndex(0)
@@ -352,7 +355,7 @@ const WorkOrderDetails = ({
   )
 }
 
-const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }) => {
+export const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }) => {
   return (
     <Tab _focus={{ outline: 'none' }}>
       {isError ? (

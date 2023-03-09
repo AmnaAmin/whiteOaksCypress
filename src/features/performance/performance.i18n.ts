@@ -23,7 +23,7 @@ export const performance = {
         // Modal
         previousBonus: 'Previous Bonus',
         tevenue: 'Tevenue',
-        bonusPercentage: 'Bunus %',
+        bonusPercentage: 'Bonus %',
         newTarget: 'New Target',
         badge: 'Badge',
         ignorePerformance: 'Ignore Performance',

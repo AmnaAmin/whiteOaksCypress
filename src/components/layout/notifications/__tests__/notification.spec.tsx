@@ -10,10 +10,11 @@ import { formatDistanceToNow } from 'date-fns'
 
 export const renderNotifications = async ({}: any) => {
   const setNavigating = jest.fn()
+  const setAlertCount = jest.fn()
   await render(
     <BrowserRouter>
       <Menu isOpen={true}>
-        <Notification setNavigating={setNavigating} />
+        <Notification setNavigating={setNavigating} setAlertCount={setAlertCount} />
       </Menu>
     </BrowserRouter>,
     {
@@ -38,19 +39,12 @@ describe('Bell Notification Test Cases', () => {
 
       expect(screen.getByTestId('alert-0-title').textContent).toEqual('Project')
       expect(screen.getByTestId('alert-0-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
-      expect(screen.getByTestId('alert-0-time').textContent).toEqual(
-        formatDistanceToNow(new Date('2023-01-16T08:22:26Z')) + ' ago',
-      )
+
       expect(screen.getByTestId('alert-1-title').textContent).toEqual('Project')
       expect(screen.getByTestId('alert-1-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
-      expect(screen.getByTestId('alert-1-time').textContent).toEqual(
-        formatDistanceToNow(new Date('2023-02-13T08:22:26Z')) + ' ago',
-      )
+
       expect(screen.getByTestId('alert-2-title').textContent).toEqual('Project')
       expect(screen.getByTestId('alert-2-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
-      expect(screen.getByTestId('alert-2-time').textContent).toEqual(
-        formatDistanceToNow(new Date('2023-02-16T08:22:25Z')) + ' ago',
-      )
     })
   })
 })

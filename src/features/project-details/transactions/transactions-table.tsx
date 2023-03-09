@@ -93,9 +93,19 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     }
   }
 
+  // sort the array and specify that the value with parentWorkOrder null comes before all other values, and that all other values are equal
+  const sortTransData = data => {
+    if (data && data?.length > 0) {
+      data.sort((x, y) => {
+        return x?.parentWorkOrderId === null ? -1 : y?.parentWorkOrderId === null ? 1 : 0
+      })
+      return data
+    } else return []
+  }
+
   useEffect(() => {
     if (transactions && transactions?.length > 0) {
-      setDataTrans(mapDataForExpandableRows(transactions as any))
+      setDataTrans(mapDataForExpandableRows(transactions as any, isVendor as boolean))
     }
   }, [transactions])
 
@@ -119,7 +129,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
         >
           <TableContextProvider
             totalPages={transactions?.length ? totalPages : -1}
-            data={dataTrans}
+            data={sortTransData(dataTrans)}
             columns={tableColumns}
             manualPagination={false}
             isExpandable={true}

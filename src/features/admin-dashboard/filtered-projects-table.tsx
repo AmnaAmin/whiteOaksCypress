@@ -16,7 +16,7 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { useNavigate } from 'react-router-dom'
-import { PaginationState } from '@tanstack/react-table'
+import { PaginationState, VisibilityState } from '@tanstack/react-table'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useGetAllProjects, useProjects } from 'api/projects'
 import TableColumnSettings from 'components/table/table-column-settings'
@@ -28,12 +28,7 @@ type ProjectProps = {
 
 export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
   const navigate = useNavigate()
-  useEffect(() => {
-    if (selectedCard) {
-      setFilteredUrl(SELECTED_CARD_MAP_URL[selectedCard])
-      setPagination({ pageIndex: 0, pageSize: 20 })
-    }
-  }, [selectedCard])
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
@@ -63,6 +58,17 @@ export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
   const onSave = (columns: any) => {
     postGridColumn(columns)
   }
+  useEffect(() => {
+    if (selectedCard) {
+      setFilteredUrl(SELECTED_CARD_MAP_URL[selectedCard])
+      setPagination({ pageIndex: 0, pageSize: 20 })
+      if (selectedCard === 'payable') {
+        setColumnVisibility({ accountPayable: false })
+      } else {
+        setColumnVisibility({ accountPayableInvoiced: false })
+      }
+    }
+  }, [selectedCard])
 
   return (
     <Box h={'500px'} overflow="auto">
@@ -74,6 +80,8 @@ export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
         columnFilters={columnFilters}
         setColumnFilters={setColumnFilters}
         totalPages={totalPages}
+        columnVisibility={columnVisibility}
+        setColumnVisibility={setColumnVisibility}
       >
         <Table onRowClick={onRowClick} isLoading={isLoading || isFetching} isEmpty={!isLoading && !projects?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
@@ -86,7 +94,13 @@ export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
               fileName="projects"
             />
             <CustomDivider />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            {settingColumns && (
+              <TableColumnSettings
+                disabled={isLoading}
+                onSave={onSave}
+                columns={settingColumns.filter(col => !(columnVisibility[col?.contentKey] === false))}
+              />
+            )}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
