@@ -27,7 +27,6 @@ import { useEffect, useState } from 'react'
 import { STATUS } from '../../../common/status'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
-import { useUploadDocument } from 'api/vendor-projects'
 import { downloadFile } from 'utils/file-utils'
 
 const SummaryCard = props => {
@@ -60,7 +59,6 @@ const WorkOrderDetailTab = ({
   projectData,
   setIsUpdating,
   isUpdating,
-  workOrderAssignedItems,
   isFetchingLineItems,
   isLoadingLineItems,
   displayAwardPlan,
@@ -71,12 +69,11 @@ const WorkOrderDetailTab = ({
   const toast = useToast()
   const [uploadedWO, setUploadedWO] = useState<any>(null)
   const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({})
-  const { mutate: saveDocument } = useUploadDocument()
   const getDefaultValues = () => {
     return {
       assignedItems:
-        workOrderAssignedItems?.length > 0
-          ? workOrderAssignedItems?.map(e => {
+        workOrder?.assignedItems?.length > 0
+          ? workOrder?.assignedItems?.map(e => {
               return { ...e, uploadedDoc: null, clientAmount: e.price ?? 0 * e.quantity ?? 0 }
             })
           : [],
@@ -85,9 +82,7 @@ const WorkOrderDetailTab = ({
     }
   }
 
-  const formReturn = useForm<FormValues>({
-    defaultValues: getDefaultValues(),
-  })
+  const formReturn = useForm<FormValues>()
 
   const { control, getValues, reset } = formReturn
   const values = getValues()
@@ -97,10 +92,10 @@ const WorkOrderDetailTab = ({
   })
 
   useEffect(() => {
-    if (workOrder?.id && workOrderAssignedItems) {
+    if (workOrder && workOrder?.id) {
       reset(getDefaultValues())
     }
-  }, [workOrder, reset, workOrderAssignedItems?.length])
+  }, [workOrder, reset])
 
   const downloadPdf = () => {
     let doc = new jsPDF()
@@ -110,12 +105,10 @@ const WorkOrderDetailTab = ({
       projectData,
       assignedItems: values.assignedItems,
       hideAward: true,
-      onSave: saveWorkOrderDocument,
+      onSave: null,
     })
   }
-  const saveWorkOrderDocument = doc => {
-    saveDocument(doc)
-  }
+
   const parseAssignedItems = values => {
     const assignedItems = [
       ...values?.assignedItems?.map((a, index) => {

@@ -1208,7 +1208,7 @@ export const useGetLineItemsColumn = ({
               control={control}
               render={({ field, fieldState }) => {
                 return (
-                  <VStack alignItems="start" >
+                  <VStack alignItems="start">
                     <Box py="12px">
                       <UploadImage
                         testId={'upload-' + index}
@@ -1266,7 +1266,7 @@ export const useGetLineItemsColumn = ({
         },
       },
     ]
-  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems, verificationEnabled])
+  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems, verificationEnabled, statusEnabled])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Box, Spinner, Center } from '@chakra-ui/react'
+import { Box, Spinner, Center, useDisclosure } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useTransactions } from 'api/transactions'
 import { useProjectWorkOrders } from 'api/projects'
@@ -25,11 +25,12 @@ interface PropType {
 export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: PropType, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const { transactions = [] } = useTransactions(projectId)
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
 
-  const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
+  const { data: workOrders, isLoading } = useProjectWorkOrders(projectId)
   // Do not show WO which have been cancelled
   const workOrdersNotCancelled = workOrders?.filter(wo => wo.status !== 35)
 
@@ -44,6 +45,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
 
   const onRowClick = (row: any) => {
     setSelectedWorkOrder(row)
+    onOpen()
   }
 
   useEffect(() => {
@@ -63,16 +65,19 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
 
   return (
     <Box>
-      <WorkOrderDetails
-        workOrder={selectedWorkOrder as ProjectWorkOrderType}
-        projectData={projectData}
-        onClose={() => {
-          setSelectedWorkOrder(undefined)
-          refetch()
-        }}
-        transactions={transactions}
-        onProjectTabChange={onTabChange}
-      />
+      {isOpen && (
+        <WorkOrderDetails
+          workOrder={selectedWorkOrder as ProjectWorkOrderType}
+          projectData={projectData}
+          onClose={() => {
+            setSelectedWorkOrder(undefined)
+            onCloseDisclosure()
+          }}
+          isOpen={isOpen}
+          transactions={transactions}
+          onProjectTabChange={onTabChange}
+        />
+      )}
       {isLoading && (
         <Center h="calc(100vh - 300px)">
           <Spinner size="lg" />

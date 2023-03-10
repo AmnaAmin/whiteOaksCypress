@@ -62,9 +62,6 @@ export const useTransactions = (projectId?: string) => {
 
 export const useTransactionsV1 = (projectId?: string) => {
   const client = useClient()
-  console.log(projectId)
-  console.log(!!projectId)
-
   const { data: transactions, ...rest } = useQuery<Array<TransactionType>>(
     [GET_TRANSACTIONS_API_KEY, projectId],
     async () => {
@@ -474,7 +471,7 @@ export const parseChangeOrderAPIPayload = async (
     lineItems,
     documents,
     projectId: projectId ?? '',
-  
+
     ...againstProjectSOWPayload,
   }
 }
@@ -496,7 +493,7 @@ export const parseChangeOrderUpdateAPIPayload = async (
     modifiedDate1: formValues.dateCreated,
     modifiedBy: formValues.createdBy as string,
     vendorId: transaction.vendorId as number,
-    systemGenerated : transaction?.systemGenerated,
+    systemGenerated: transaction?.systemGenerated,
     ...payload,
   }
 }
