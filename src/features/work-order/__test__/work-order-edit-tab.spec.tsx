@@ -73,7 +73,6 @@ describe('Work Order modal showing work order specific details for PC(Super set 
         : 'mm/dd/yyyy',
     )
     expect((screen.getByTestId('workOrderDateCompleted') as HTMLInputElement).value).toEqual('')
-    screen.debug(undefined, 100000000000000000000000000)
 
     expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku1')
     expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
