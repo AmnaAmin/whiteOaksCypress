@@ -11,10 +11,12 @@ import userEvent from '@testing-library/user-event'
 import { setToken } from 'utils/storage.utils'
 
 export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, projectData }: any) => {
+  const assigned = assignedItems.filter(a => a.workOrderId.toString() === workOrder.id.toString())
+  const workOrderWithLineItems = { ...workOrder, assignedItems: assigned }
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
       <WorkOrderEditTab
-        workOrder={workOrder}
+        workOrder={workOrderWithLineItems}
         onSave={onSave}
         navigateToProjectDetails={null}
         isWorkOrderUpdating={false}
@@ -22,7 +24,6 @@ export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, proje
         rejectInvoiceCheck={false}
         projectData={projectData}
         documentsData={DOCUMENTS}
-        workOrderAssignedItems={assignedItems.filter(a => a.workOrderId.toString() === workOrder.id.toString())}
         isLoadingLineItems={false}
         isFetchingLineItems={false}
       />
@@ -72,6 +73,7 @@ describe('Work Order modal showing work order specific details for PC(Super set 
         : 'mm/dd/yyyy',
     )
     expect((screen.getByTestId('workOrderDateCompleted') as HTMLInputElement).value).toEqual('')
+    screen.debug(undefined, 100000000000000000000000000)
 
     expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku1')
     expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
