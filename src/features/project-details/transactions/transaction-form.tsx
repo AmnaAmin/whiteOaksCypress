@@ -313,13 +313,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }
 
   const hasPendingDrawsOnPaymentSave = values => {
+    const isDrawAgainstProject =
+      values?.transactionType?.value === TransactionTypeValues.draw && values?.against?.label === 'Project SOW'
     if (
-      [
-        TransactionTypeValues.draw,
-        TransactionTypeValues.payment,
-        TransactionTypeValues.depreciation,
-        TransactionTypeValues.carrierFee,
-      ].includes(values?.transactionType?.value) &&
+      ([TransactionTypeValues.payment, TransactionTypeValues.depreciation, TransactionTypeValues.carrierFee].includes(
+        values?.transactionType?.value,
+      ) ||
+        isDrawAgainstProject) &&
       !transaction
     ) {
       const pendingDraws = transactions?.filter(
