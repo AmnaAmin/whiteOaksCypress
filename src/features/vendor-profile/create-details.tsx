@@ -62,7 +62,6 @@ const CreateVendorDetail: React.FC<{
   const { isFPM } = useUserRolesSelector()
 
   const capacityError = useWatch({ name: 'capacity', control })
-
   const validatePayment = paymentsMethods?.filter(payment => formValues[payment.name])
 
   // Set Document Status dropdown if Status is Expired
@@ -242,7 +241,7 @@ const CreateVendorDetail: React.FC<{
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}
-                      selectProps={{ isBorderLeft: true , menuHeight: '180px'}}
+                      selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                       isDisabled={isFPM}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
@@ -291,7 +290,6 @@ const CreateVendorDetail: React.FC<{
             <FormControl isInvalid={!!errors.businessPhoneNumber} h="70px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('businessPhoneNo')}
-                
               </FormLabel>
               <Controller
                 control={control}
@@ -304,7 +302,7 @@ const CreateVendorDetail: React.FC<{
                   return (
                     <>
                       <NumberFormat
-                      data-testid = "businessphoneno"
+                        data-testid="businessphoneno"
                         value={field.value}
                         customInput={CustomRequiredInput}
                         format="(###)-###-####"
@@ -421,7 +419,7 @@ const CreateVendorDetail: React.FC<{
                   return (
                     <>
                       <NumberFormat
-                      data-testid = "einnum"
+                        data-testid="einnum"
                         value={field.value}
                         customInput={ssnNumber ? CustomInput : CustomRequiredInput}
                         format="##-#######"
@@ -452,7 +450,7 @@ const CreateVendorDetail: React.FC<{
                   return (
                     <>
                       <NumberFormat
-                      data-testid = "ssnnum"
+                        data-testid="ssnnum"
                         value={field.value}
                         customInput={einNumber ? CustomInput : CustomRequiredInput}
                         format="###-##-####"
@@ -535,16 +533,32 @@ const CreateVendorDetail: React.FC<{
               <FormControl isInvalid={!!errors.Check?.message && !validatePayment?.length}>
                 <HStack spacing="16px">
                   {paymentsMethods?.map((payment, index) => (
-                    <Checkbox
-                      {...register(payment.name, {
-                        required: !validatePayment?.length && 'This is required',
-                      })}
-                      colorScheme="brand"
-                      isDisabled={isFPM}
+                    <Controller
                       key={index}
-                    >
-                      {payment.name}
-                    </Checkbox>
+                      control={control}
+                      name={payment.name}
+                      rules={{
+                        required: !validatePayment?.length && 'This is required',
+                      }}
+                      render={({ field, fieldState }) => (
+                        <>
+                          <div data-testid="client_checkbox">
+                            <Checkbox
+                              colorScheme="brand"
+                              isChecked={field.value}
+                              onChange={event => {
+                                const isChecked = event.target.checked
+                                field.onChange(isChecked)
+                              }}
+                              mr="2px"
+                              isDisabled={isFPM}
+                            >
+                              {payment.name}
+                            </Checkbox>
+                          </div>
+                        </>
+                      )}
+                    />
                   ))}
                 </HStack>
                 <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
@@ -589,7 +603,6 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
   const { setValue, reset } = form
   const { markets } = useMarkets()
   const { data: trades } = useTrades()
-
   useEffect(() => {
     if (!vendorProfileData) {
       setValue('score', first(documentScore))
