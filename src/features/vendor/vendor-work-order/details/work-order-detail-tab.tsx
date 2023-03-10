@@ -105,7 +105,6 @@ const WorkOrderDetailTab = ({
       projectData,
       assignedItems: values.assignedItems,
       hideAward: true,
-      onSave: null,
     })
   }
 

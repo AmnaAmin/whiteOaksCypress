@@ -49,7 +49,6 @@ import { CANCEL_WO_OPTIONS } from 'constants/index'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
-import { useUploadDocument } from 'api/vendor-projects'
 
 const CalenderCard = props => {
   return (
@@ -138,7 +137,6 @@ const WorkOrderDetailTab = props => {
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
   const [uploadedWO, setUploadedWO] = useState<any>(null)
-  const { mutate: saveDocument } = useUploadDocument()
 
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
@@ -174,13 +172,8 @@ const WorkOrderDetailTab = props => {
       projectData,
       assignedItems: assignedItemsWatch,
       hideAward: false,
-      onSave: saveWorkOrderDocument,
     })
   }, [assignedItemsWatch, projectData, workOrder])
-
-  const saveWorkOrderDocument = doc => {
-    saveDocument(doc)
-  }
 
   const setAssignedItems = useCallback(
     items => {
