@@ -25,6 +25,7 @@ import {
   parseMarketAPIDataToFormValues,
   parseTradeAPIDataToFormValues,
   parseVendorAPIDataToFormData,
+  PaymentMethods,
   useMarkets,
   usePaymentMethods,
   useTrades,
@@ -47,7 +48,6 @@ const CreateVendorDetail: React.FC<{
 }> = ({ onClose, vendorProfileData, isActive }) => {
   const { t } = useTranslation()
 
-  const { data: paymentsMethods } = usePaymentMethods()
   const { stateSelectOptions } = useStates()
   const {
     formState: { errors },
@@ -62,8 +62,7 @@ const CreateVendorDetail: React.FC<{
   const { isFPM } = useUserRolesSelector()
 
   const capacityError = useWatch({ name: 'capacity', control })
-  const validatePayment = paymentsMethods?.filter(payment => formValues[payment.name])
-
+  const validatePayment = PaymentMethods?.filter(payment => formValues[payment.value])
   // Set Document Status dropdown if Status is Expired
   const [statusOptions, setStatusOptions] = useState<any>([])
   const documentStatusSelectOptions = useDocumentStatusSelectOptions(vendorProfileData)
@@ -530,38 +529,85 @@ const CreateVendorDetail: React.FC<{
             </Box>
             <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
               <Text>{t('paymentMethods')}</Text>
-              <FormControl isInvalid={!!errors.Check?.message && !validatePayment?.length}>
+              <FormControl isInvalid={!!errors.check?.message && !validatePayment?.length}>
                 <HStack spacing="16px">
-                  {paymentsMethods?.map((payment, index) => (
-                    <Controller
-                      key={index}
-                      control={control}
-                      name={payment.name}
-                      rules={{
-                        required: !validatePayment?.length && 'This is required',
-                      }}
-                      render={({ field, fieldState }) => (
-                        <>
-                          <div data-testid="client_checkbox">
-                            <Checkbox
-                              colorScheme="brand"
-                              isChecked={field.value}
-                              onChange={event => {
-                                const isChecked = event.target.checked
-                                field.onChange(isChecked)
-                              }}
-                              mr="2px"
-                              isDisabled={isFPM}
-                            >
-                              {payment.name}
-                            </Checkbox>
-                          </div>
-                        </>
-                      )}
-                    />
-                  ))}
+                  <Controller
+                    control={control}
+                    name={'check'}
+                    rules={{
+                      required: !validatePayment?.length && 'This is required',
+                    }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <div data-testid="payment_checkbox_check">
+                          <Checkbox
+                            colorScheme="brand"
+                            isChecked={field.value}
+                            onChange={event => {
+                              const isChecked = event.target.checked
+                              field.onChange(isChecked)
+                            }}
+                            mr="2px"
+                            isDisabled={isFPM}
+                          >
+                            {'Check'}
+                          </Checkbox>
+                        </div>
+                      </>
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name={'ach'}
+                    rules={{
+                      required: !validatePayment?.length && 'This is required',
+                    }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <div data-testid="payment_checkbox_ach">
+                          <Checkbox
+                            colorScheme="brand"
+                            isChecked={field.value}
+                            onChange={event => {
+                              const isChecked = event.target.checked
+                              field.onChange(isChecked)
+                            }}
+                            mr="2px"
+                            isDisabled={isFPM}
+                          >
+                            {'ACH'}
+                          </Checkbox>
+                        </div>
+                      </>
+                    )}
+                  />
+                  <Controller
+                    control={control}
+                    name={'creditCard'}
+                    rules={{
+                      required: !validatePayment?.length && 'This is required',
+                    }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <div data-testid="payment_checkbox_credit">
+                          <Checkbox
+                            colorScheme="brand"
+                            isChecked={field.value}
+                            onChange={event => {
+                              const isChecked = event.target.checked
+                              field.onChange(isChecked)
+                            }}
+                            mr="2px"
+                            isDisabled={isFPM}
+                          >
+                            {'Credit Card'}
+                          </Checkbox>
+                        </div>
+                      </>
+                    )}
+                  />
                 </HStack>
-                <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
+                <FormErrorMessage pos="absolute">{errors.check?.message}</FormErrorMessage>
               </FormControl>
             </VStack>
           </Stack>
@@ -603,6 +649,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
   const { setValue, reset } = form
   const { markets } = useMarkets()
   const { data: trades } = useTrades()
+  const { data: paymentsMethods } = usePaymentMethods()
   useEffect(() => {
     if (!vendorProfileData) {
       setValue('score', first(documentScore))
@@ -649,7 +696,28 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
       const tradeFormValues = parseTradeAPIDataToFormValues(trades, vendorProfileData as VendorProfile)
       setValue('trades', tradeFormValues.trades)
     }
-  }, [reset, vendorProfileData, documentScore, documentStatus, states, PAYMENT_TERMS_OPTIONS, markets, trades])
+
+    if (paymentsMethods?.length) {
+      paymentsMethods?.forEach(pm => {
+        const value = PaymentMethods.find(p => p.key === pm.lookupValueId)?.value
+        if (vendorProfileData?.paymentOptions?.filter(op => op.lookupValueId === pm.lookupValueId)?.length > 0) {
+          setValue(value, true)
+        } else {
+          setValue(value, false)
+        }
+      })
+    }
+  }, [
+    reset,
+    vendorProfileData,
+    documentScore,
+    documentStatus,
+    states,
+    PAYMENT_TERMS_OPTIONS,
+    markets,
+    trades,
+    paymentsMethods,
+  ])
 }
 
 export default CreateVendorDetail
