@@ -83,6 +83,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const formReturn = useForm<VendorProfileDetailsFormData>()
   const { control } = formReturn
   useVendorDetails({ form: formReturn, vendorProfileData })
+
   const showError = name => {
     toast({
       description: `Atleast one ${name} must be selected`,

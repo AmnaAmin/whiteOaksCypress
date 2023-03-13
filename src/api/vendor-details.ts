@@ -132,11 +132,23 @@ export const parseFormDataToAPIData = (
   }
 }
 
+export const PaymentMethods = [
+  { key: 107, value: 'check' },
+  { key: 106, value: 'ach' },
+  { key: 105, value: 'creditCard' },
+]
+
 export const parseVendorFormDataToAPIData = (
   formValues: VendorProfileDetailsFormData,
   paymentsMethods,
   vendorProfileData?: VendorProfile,
 ): VendorProfilePayload => {
+  let selectedPaymentMethods = [] as any
+  PaymentMethods?.forEach(pm => {
+    if (formValues[pm.value]) {
+      selectedPaymentMethods.push(pm.key)
+    }
+  })
   return {
     ...vendorProfileData!,
     //ownerName: formValues.ownerName!,
@@ -163,7 +175,7 @@ export const parseVendorFormDataToAPIData = (
     vendorSkills: vendorProfileData?.vendorSkills || [],
     markets: vendorProfileData?.markets || [],
     licenseDocuments: vendorProfileData?.licenseDocuments || [],
-    paymentOptions: paymentsMethods.filter(payment => formValues[payment.name]),
+    paymentOptions: paymentsMethods.filter(payment => selectedPaymentMethods.includes(payment?.lookupValueId)),
     enableVendorPortal: formValues.enableVendorPortal?.value,
   }
 }
@@ -191,7 +203,6 @@ export const parseCreateVendorFormToAPIData = async (
 export const parseVendorAPIDataToFormData = (vendorProfileData): VendorProfileDetailsFormData => {
   return {
     ...vendorProfileData,
-    ...vendorProfileData?.paymentOptions?.reduce((a, payment) => ({ ...a, [payment.name]: true }), {}),
     ...documentCardsDefaultValues(vendorProfileData),
     licenses: licenseDefaultFormValues(vendorProfileData),
     trades: [],
