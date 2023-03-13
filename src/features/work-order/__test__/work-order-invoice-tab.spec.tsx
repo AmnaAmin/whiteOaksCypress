@@ -66,6 +66,10 @@ describe('Work Order Invoice Test Cases', () => {
     await renderInvoice({ onClose, workOrder, documentsData, transactions: TRANSACTIONS, vendorAddress })
     expect(screen.queryByTestId('generateInvoice')).not.toHaveAttribute('disabled')
     expect(screen.queryAllByTestId('invoice-items')).toHaveLength(transactionItems.length)
+    expect(screen.queryByTestId('subTotal')?.textContent).toEqual(currencyFormatter(workOrder?.subTotal as number))
+    expect(screen.queryByTestId('totalAmountPaid')?.textContent).toEqual(
+      currencyFormatter(workOrder?.totalAmountPaid as number),
+    )
     expect(screen.queryByTestId('balanceDue')?.textContent).toEqual(
       workOrder?.finalInvoiceAmount ? currencyFormatter(workOrder?.finalInvoiceAmount) : '$0.00',
     )

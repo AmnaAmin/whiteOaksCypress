@@ -261,6 +261,8 @@ export const WORK_ORDERS = [
     permitLink: null,
     leanwieverLink: 'https://dev.woaharvest.com/documents/vendor@devtek.ai.1658071748193.project.4282.LW8984_V+.pdf',
     lienWaiverAccepted: true,
+    subTotal: 4400,
+    totalAmountPaid: 27.12,
   },
   {
     id: 8985,
