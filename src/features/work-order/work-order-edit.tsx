@@ -75,14 +75,12 @@ const WorkOrderDetails = ({
 
   const [isUpdating, setIsUpdating] = useState(false)
   const [isError, setIsError] = useState(false)
-  const [workOrderWithLineItems, setWorkOrderWithLineItems] = useState<ProjectWorkOrderType | []>([])
 
   const { mutate: updateWorkOrder, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({
     swoProjectId: swoProject?.id,
   })
   const {
     workOrderAssignedItems,
-    refetch: refetchItems,
     awardPlanScopeAmount,
     workOrderDetails,
     displayAwardPlan,
@@ -95,12 +93,7 @@ const WorkOrderDetails = ({
   const tabsContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (workOrderAssignedItems?.length)
-      setWorkOrderWithLineItems({ ...workOrder, assignedItems: workOrderAssignedItems })
-  }, [workOrderAssignedItems?.length])
-
-  useEffect(() => {
-    if (workOrder && workOrder?.id) {
+    if (workOrder) {
       setRejectInvoice(workOrder.status === 111)
       if (workOrder.leanWaiverSubmitted) {
         setRejectLW(!workOrder.lienWaiverAccepted)
@@ -113,7 +106,6 @@ const WorkOrderDetails = ({
       if (!!workOrder?.awardPlanId && isError) {
         setIsError(false)
       }
-      refetchItems()
     } else {
       onClose()
       setTabIndex(0)
@@ -256,13 +248,14 @@ const WorkOrderDetails = ({
                     <TabPanel p={0}>
                       <WorkOrderDetailTab
                         navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                        workOrder={workOrderWithLineItems}
+                        workOrder={workOrder}
                         onClose={onClose}
                         onSave={onSave}
                         isWorkOrderUpdating={isWorkOrderUpdating}
                         swoProject={swoProject}
                         projectData={projectData}
                         documentsData={documentsData}
+                        workOrderAssignedItems={workOrderAssignedItems}
                         isFetchingLineItems={isFetchingLineItems}
                         isLoadingLineItems={isLoadingLineItems}
                       />
