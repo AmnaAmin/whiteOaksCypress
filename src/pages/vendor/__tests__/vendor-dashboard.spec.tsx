@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { Providers } from 'providers'
 import { setToken } from 'utils/storage.utils'
-import { VendorScore } from 'components/VendorScore/vendor-score'
 import { BrowserRouter } from 'react-router-dom'
 import { waitForLoadingToFinishLabelOnly } from 'utils/test-utils'
 import Dashboard from '../dashboard'

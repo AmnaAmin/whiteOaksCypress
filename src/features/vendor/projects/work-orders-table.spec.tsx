@@ -1,7 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { Providers } from 'providers'
-import { Project } from 'types/project.type'
 import { waitForLoadingToFinish } from 'utils/test-utils'
 import { WorkOrdersTable } from '../vendor-work-order/work-orders-table'
 import { PROJECT } from './data'
