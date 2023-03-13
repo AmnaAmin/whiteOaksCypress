@@ -340,10 +340,8 @@ i18n.use(initReactI18next).init({
         market: 'Market',
         prjt: 'Projects',
         businessPhoneNumber: 'Business Phone Number',
+
         // Vendor-profile-details
-        ach: 'ACH',
-        creditCard: 'Credit Card',
-        check: 'Check',
         businessName: 'Business Name',
         score: 'Score',
         portalAccess: 'Portal Access',
@@ -935,9 +933,6 @@ i18n.use(initReactI18next).init({
         enableVendorPortal: 'Enable Vendor Portal',
         verifyProjectDesc: 'Proyecto verificado por',
         verifyProject: 'Proyecto Verificado',
-        ach: 'ACH',
-        creditCard: 'Tarjeta de crédito',
-        check: 'Controlar',
 
         capacity: 'Capacidad',
         last4digits: 'Últimos 4 dígitos del SSN/EIN',
