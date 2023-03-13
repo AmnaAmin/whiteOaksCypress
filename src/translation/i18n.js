@@ -23,7 +23,6 @@ import { projectAwards } from 'features/work-order/project-award/projectAward.i1
 import { globalErrors } from './errors.i18n'
 import { performance } from 'features/performance/performance.i18n'
 
-
 i18n.use(initReactI18next).init({
   resources: {
     en: {
@@ -52,7 +51,6 @@ i18n.use(initReactI18next).init({
         ...projectAwards.en.translation,
         ...globalErrors.en.translation,
         ...performance.en.translation,
-        
 
         // DASHBOARDa
         vendorScore: 'Vendor Score',
@@ -343,6 +341,9 @@ i18n.use(initReactI18next).init({
         prjt: 'Projects',
         businessPhoneNumber: 'Business Phone Number',
         // Vendor-profile-details
+        ach: 'ACH',
+        creditCard: 'Credit Card',
+        check: 'Check',
         businessName: 'Business Name',
         score: 'Score',
         portalAccess: 'Portal Access',
@@ -934,6 +935,9 @@ i18n.use(initReactI18next).init({
         enableVendorPortal: 'Enable Vendor Portal',
         verifyProjectDesc: 'Proyecto verificado por',
         verifyProject: 'Proyecto Verificado',
+        ach: 'ACH',
+        creditCard: 'Tarjeta de crédito',
+        check: 'Controlar',
 
         capacity: 'Capacidad',
         last4digits: 'Últimos 4 dígitos del SSN/EIN',

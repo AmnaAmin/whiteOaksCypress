@@ -531,81 +531,36 @@ const CreateVendorDetail: React.FC<{
               <Text>{t('paymentMethods')}</Text>
               <FormControl isInvalid={!!errors.check?.message && !validatePayment?.length}>
                 <HStack spacing="16px">
-                  <Controller
-                    control={control}
-                    name={'check'}
-                    rules={{
-                      required: !validatePayment?.length && 'This is required',
-                    }}
-                    render={({ field, fieldState }) => (
-                      <>
-                        <div data-testid="payment_checkbox_check">
-                          <Checkbox
-                            colorScheme="brand"
-                            isChecked={field.value}
-                            onChange={event => {
-                              const isChecked = event.target.checked
-                              field.onChange(isChecked)
-                            }}
-                            mr="2px"
-                            isDisabled={isFPM}
-                          >
-                            {'Check'}
-                          </Checkbox>
-                        </div>
-                      </>
-                    )}
-                  />
-                  <Controller
-                    control={control}
-                    name={'ach'}
-                    rules={{
-                      required: !validatePayment?.length && 'This is required',
-                    }}
-                    render={({ field, fieldState }) => (
-                      <>
-                        <div data-testid="payment_checkbox_ach">
-                          <Checkbox
-                            colorScheme="brand"
-                            isChecked={field.value}
-                            onChange={event => {
-                              const isChecked = event.target.checked
-                              field.onChange(isChecked)
-                            }}
-                            mr="2px"
-                            isDisabled={isFPM}
-                          >
-                            {'ACH'}
-                          </Checkbox>
-                        </div>
-                      </>
-                    )}
-                  />
-                  <Controller
-                    control={control}
-                    name={'creditCard'}
-                    rules={{
-                      required: !validatePayment?.length && 'This is required',
-                    }}
-                    render={({ field, fieldState }) => (
-                      <>
-                        <div data-testid="payment_checkbox_credit">
-                          <Checkbox
-                            colorScheme="brand"
-                            isChecked={field.value}
-                            onChange={event => {
-                              const isChecked = event.target.checked
-                              field.onChange(isChecked)
-                            }}
-                            mr="2px"
-                            isDisabled={isFPM}
-                          >
-                            {'Credit Card'}
-                          </Checkbox>
-                        </div>
-                      </>
-                    )}
-                  />
+                  {PaymentMethods.map(payment => {
+                    return (
+                      <Controller
+                        control={control}
+                        // @ts-ignore
+                        name={payment.value as string}
+                        rules={{
+                          required: !validatePayment?.length && 'This is required',
+                        }}
+                        render={({ field, fieldState }) => (
+                          <>
+                            <div data-testid="payment_checkbox_check">
+                              <Checkbox
+                                colorScheme="brand"
+                                isChecked={field.value}
+                                onChange={event => {
+                                  const isChecked = event.target.checked
+                                  field.onChange(isChecked)
+                                }}
+                                mr="2px"
+                                isDisabled={isFPM}
+                              >
+                                {t(payment.value)}
+                              </Checkbox>
+                            </div>
+                          </>
+                        )}
+                      />
+                    )
+                  })}
                 </HStack>
                 <FormErrorMessage pos="absolute">{errors.check?.message}</FormErrorMessage>
               </FormControl>
