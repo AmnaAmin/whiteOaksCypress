@@ -15,11 +15,10 @@ import {
   TabPanels,
   Tabs,
   Text,
-  useDisclosure,
   useMediaQuery,
 } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 import { Project, ProjectWorkOrderType } from 'types/project.type'
@@ -40,28 +39,30 @@ import { TabCustom } from 'features/work-order/work-order-edit'
 
 export const WorkOrderDetails = ({
   workOrder,
-  onClose: close,
+  onClose,
+  isOpen,
   onProjectTabChange,
   projectData,
   transactions,
 }: {
   workOrder: ProjectWorkOrderType
   onClose: () => void
+  isOpen: boolean
   onProjectTabChange?: any
   projectData: Project
   transactions: Array<TransactionType>
 }) => {
   const { t } = useTranslation()
-  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const { projectId } = useParams<'projectId'>()
   const { documents: documentsData = [], isLoading } = useDocuments({
     projectId,
   })
   const {
     workOrderAssignedItems,
-    displayAwardPlan,
+    refetch: refetchItems,
     awardPlanScopeAmount,
     workOrderDetails,
+    displayAwardPlan,
     isFetching: isFetchingLineItems,
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
@@ -70,6 +71,8 @@ export const WorkOrderDetails = ({
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
   const { projectAwardData } = useProjectAward()
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
+  const [workOrderWithLineItems, setWorkOrderWithLineItems] = useState<ProjectWorkOrderType | []>([])
+
   const [isError, setIsError] = useState(false)
 
   const [isMobile] = useMediaQuery('(max-width: 480px)')
@@ -84,21 +87,21 @@ export const WorkOrderDetails = ({
     }
   }, [isMobile])
 
-  const onClose = useCallback(() => {
-    onCloseDisclosure()
-    close()
-  }, [close, onCloseDisclosure])
-
   useEffect(() => {
-    if (workOrder) {
-      onOpen()
+    if (workOrder && workOrder?.id) {
       if (!!workOrder?.awardPlanId && isError) {
         setIsError(false)
       }
+      refetchItems()
     } else {
-      onCloseDisclosure()
+      onClose()
     }
-  }, [onCloseDisclosure, onOpen, workOrder])
+  }, [onClose, workOrder])
+
+  useEffect(() => {
+    if (workOrderAssignedItems?.length)
+      setWorkOrderWithLineItems({ ...workOrder, assignedItems: workOrderAssignedItems })
+  }, [workOrderAssignedItems?.length])
 
   const onSave = updatedValues => {
     const payload = { ...workOrder, ...updatedValues }
@@ -181,9 +184,8 @@ export const WorkOrderDetails = ({
                       setIsUpdating={setIsUpdating}
                       isUpdating={isUpdating}
                       projectData={projectData}
-                      workOrder={workOrder}
+                      workOrder={workOrderWithLineItems}
                       onClose={onClose}
-                      workOrderAssignedItems={workOrderAssignedItems}
                       isFetchingLineItems={isFetchingLineItems}
                       isLoadingLineItems={isLoadingLineItems}
                       displayAwardPlan={displayAwardPlan}
