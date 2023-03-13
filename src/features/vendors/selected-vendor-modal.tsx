@@ -23,11 +23,12 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; 
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorDetails.id)
 
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const onClose = useCallback(() => {
     onCloseDisclosure()
     close()
     queryClient.resetQueries('vendor-users-list')
+    queryClient.removeQueries('vendorProfile')
   }, [close, onCloseDisclosure])
 
   useEffect(() => {
