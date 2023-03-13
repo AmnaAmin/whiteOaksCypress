@@ -112,6 +112,7 @@ const WorkOrderDetailTab = props => {
     swoProject,
     projectData,
     documentsData,
+    workOrderAssignedItems,
     isFetchingLineItems,
     isLoadingLineItems,
   } = props
@@ -311,17 +312,17 @@ const WorkOrderDetailTab = props => {
     const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
 
     /* Finding out items that will be unassigned*/
-    const unAssignedItems = getUnAssignedItems(formValues, workOrder?.assignedItems)
-    const removedItems = getRemovedItems(formValues, workOrder?.assignedItems)
+    const unAssignedItems = getUnAssignedItems(formValues, workOrderAssignedItems)
+    const removedItems = getRemovedItems(formValues, workOrderAssignedItems)
     const payload = parseWODetailValuesToPayload(values)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
 
   useEffect(() => {
     if (workOrder?.id) {
-      reset(defaultValuesWODetails(workOrder, defaultSkill, defaultVendor))
+      reset(defaultValuesWODetails(workOrder, workOrderAssignedItems, defaultSkill, defaultVendor))
     }
-  }, [workOrder, reset])
+  }, [workOrder, reset, workOrderAssignedItems])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
