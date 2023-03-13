@@ -11,16 +11,16 @@ import userEvent from '@testing-library/user-event'
 
 export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }: any) => {
   const setIsError = jest.fn()
-  const workOrderWithLineItems = { ...workOrder, assignedItems }
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
       <WorkOrderDetailsTab
         documentsData={projectData}
         onClose={onClose}
-        workOrder={workOrderWithLineItems}
+        workOrder={workOrder}
         projectData={projectData}
         setIsUpdating={null}
         isUpdating={false}
+        workOrderAssignedItems={assignedItems}
         isFetchingLineItems={false}
         isLoadingLineItems={false}
         displayAwardPlan={true}
@@ -38,13 +38,7 @@ export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }
 export const rendeWorkOrderModal = async ({ onClose, workOrder, projectData, transactions }: any) => {
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
-      <WorkOrderDetails
-        isOpen={true}
-        onClose={onClose}
-        workOrder={workOrder}
-        projectData={projectData}
-        transactions={transactions}
-      />
+      <WorkOrderDetails onClose={onClose} workOrder={workOrder} projectData={projectData} transactions={transactions} />
     </Modal>,
     {
       wrapper: Providers,

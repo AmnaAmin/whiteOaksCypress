@@ -1257,7 +1257,7 @@ export const useGetLineItemsColumn = ({
         },
       },
     ]
-  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems, verificationEnabled, statusEnabled])
+  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems, verificationEnabled])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
 }
