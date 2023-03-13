@@ -50,18 +50,6 @@ export const renderNewWorkOrder = async ({
   await waitForLoadingToFinish()
 }
 
-export const renderProjectDetails = async ({}: any) => {
-  await render(
-    <BrowserRouter>
-      <ProjectDetails />
-    </BrowserRouter>,
-    {
-      wrapper: Providers,
-    },
-  )
-  await waitForLoadingToFinish()
-}
-
 beforeAll(() => {
   setToken('pc')
 })

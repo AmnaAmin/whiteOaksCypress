@@ -1,5 +1,5 @@
 import { rest } from 'msw'
-import { VENDOR_DATA, WO_BY_VENDORS_PER_MONTH, PAID_BY_YEAR_AND_MONTH } from './data'
+import { VENDOR_DATA, WO_BY_VENDORS_PER_MONTH, PAID_BY_YEAR_AND_MONTH, VENDOR_WO_CARD } from './data'
 
 export const vendorDashboardHandlers = [
   rest.get('/api/vendors/:vendorId', (req, res, ctx) => {
@@ -13,5 +13,8 @@ export const vendorDashboardHandlers = [
   }),
   rest.get('/api/project/getPaidWOAmountByYearAndMonthTotal/:year/:month', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(6380))
+  }),
+  rest.get('/api/vendor-wo-Cards', (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json(VENDOR_WO_CARD))
   }),
 ]
