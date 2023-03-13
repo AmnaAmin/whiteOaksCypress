@@ -23,7 +23,6 @@ import { projectAwards } from 'features/work-order/project-award/projectAward.i1
 import { globalErrors } from './errors.i18n'
 import { performance } from 'features/performance/performance.i18n'
 
-
 i18n.use(initReactI18next).init({
   resources: {
     en: {
@@ -52,7 +51,6 @@ i18n.use(initReactI18next).init({
         ...projectAwards.en.translation,
         ...globalErrors.en.translation,
         ...performance.en.translation,
-        
 
         // DASHBOARDa
         vendorScore: 'Vendor Score',
@@ -342,6 +340,7 @@ i18n.use(initReactI18next).init({
         market: 'Market',
         prjt: 'Projects',
         businessPhoneNumber: 'Business Phone Number',
+
         // Vendor-profile-details
         businessName: 'Business Name',
         score: 'Score',
