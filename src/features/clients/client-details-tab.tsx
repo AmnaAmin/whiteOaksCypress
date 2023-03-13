@@ -127,16 +127,16 @@ export const Details: React.FC<clientDetailProps> = props => {
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                  <div data-testid='payment_term'>
-                    <ReactSelect
-                      options={PAYMENT_TERMS_OPTIONS}
-                      menuPosition="fixed"
-                      maxMenuHeight={80}
-                      {...field}
-                      selectProps={{ isBorderLeft: true }}
-                      isDisabled={isProjectCoordinator}
-                    />
-                    <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                    <div data-testid="payment_term">
+                      <ReactSelect
+                        options={PAYMENT_TERMS_OPTIONS}
+                        menuPosition="fixed"
+                        maxMenuHeight={80}
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                        isDisabled={isProjectCoordinator}
+                      />
+                      <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                     </div>
                   </>
                 )}
@@ -164,21 +164,21 @@ export const Details: React.FC<clientDetailProps> = props => {
                       }}
                       render={({ field, fieldState }) => (
                         <>
-                        <div data-testid='client_checkbox'>
-                          <Checkbox
-                          whiteSpace={"nowrap"}
-                            colorScheme="brand"
-                            isChecked={field.value}
-                            onChange={event => {
-                              const isChecked = event.target.checked
-                              field.onChange(isChecked)
-                            }}
-                            mr="2px"
-                            isDisabled={isProjectCoordinator}
-                          >
-                            {t(`${CLIENTS}.creditCard`)}
-                          </Checkbox>
-                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          <div data-testid="client_checkbox">
+                            <Checkbox
+                              whiteSpace={'nowrap'}
+                              colorScheme="brand"
+                              isChecked={field.value}
+                              onChange={event => {
+                                const isChecked = event.target.checked
+                                field.onChange(isChecked)
+                              }}
+                              mr="2px"
+                              isDisabled={isProjectCoordinator}
+                            >
+                              {t(`${CLIENTS}.creditCard`)}
+                            </Checkbox>
+                            <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                           </div>
                         </>
                       )}
@@ -306,16 +306,16 @@ export const Details: React.FC<clientDetailProps> = props => {
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                  <div data-testid='state_id'>
-                    <Select
-                      {...field}
-                      options={stateSelectOptions}
-                      selected={field.value}
-                      onChange={option => field.onChange(option)}
-                      selectProps={{ isBorderLeft: true }}
-                      isDisabled={isProjectCoordinator}
-                    />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    <div data-testid="state_id">
+                      <Select
+                        {...field}
+                        options={stateSelectOptions}
+                        selected={field.value}
+                        onChange={option => field.onChange(option)}
+                        selectProps={{ isBorderLeft: true }}
+                        isDisabled={isProjectCoordinator}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </div>
                   </>
                 )}
@@ -457,16 +457,16 @@ export const Details: React.FC<clientDetailProps> = props => {
                           rules={{ required: 'This is required' }}
                           render={({ field }) => (
                             <>
-                            <div data-testid='market_id'>
-                              <Select
-                                {...field}
-                                options={marketSelectOptions}
-                                selected={field.value}
-                                onChange={option => field.onChange(option)}
-                                isDisabled={isProjectCoordinator}
-                                selectProps={{ isBorderLeft: true }}
-                              />
-                              <FormErrorMessage>{errors?.contacts?.[index]?.market?.message}</FormErrorMessage>
+                              <div data-testid="market_id">
+                                <Select
+                                  {...field}
+                                  options={marketSelectOptions}
+                                  selected={field.value}
+                                  onChange={option => field.onChange(option)}
+                                  isDisabled={isProjectCoordinator}
+                                  selectProps={{ isBorderLeft: true }}
+                                />
+                                <FormErrorMessage>{errors?.contacts?.[index]?.market?.message}</FormErrorMessage>
                               </div>
                             </>
                           )}

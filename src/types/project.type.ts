@@ -196,6 +196,7 @@ export type ProjectWorkOrderType = {
   durationCategory: string
   invoiceNumber: string
   cancel: string
+  assignedItems: any[]
 }
 
 export type ProjectFormValues = {
@@ -281,7 +282,7 @@ export type ProjectFinancialOverview = {
   shipFee: number
   permitFee: number
   deductible: number
-  depreciation:number
+  depreciation: number
 }
 
 export type AddressInfo = { address: string; city: string; state: string; zipCode: string }

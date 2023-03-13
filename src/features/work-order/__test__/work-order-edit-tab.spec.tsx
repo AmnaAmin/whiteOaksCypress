@@ -11,10 +11,12 @@ import userEvent from '@testing-library/user-event'
 import { setToken } from 'utils/storage.utils'
 
 export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, projectData }: any) => {
+  const assigned = assignedItems.filter(a => a.workOrderId.toString() === workOrder.id.toString())
+  const workOrderWithLineItems = { ...workOrder, assignedItems: assigned }
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
       <WorkOrderEditTab
-        workOrder={workOrder}
+        workOrder={workOrderWithLineItems}
         onSave={onSave}
         navigateToProjectDetails={null}
         isWorkOrderUpdating={false}
@@ -22,7 +24,6 @@ export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, proje
         rejectInvoiceCheck={false}
         projectData={projectData}
         documentsData={DOCUMENTS}
-        workOrderAssignedItems={assignedItems.filter(a => a.workOrderId.toString() === workOrder.id.toString())}
         isLoadingLineItems={false}
         isFetchingLineItems={false}
       />
