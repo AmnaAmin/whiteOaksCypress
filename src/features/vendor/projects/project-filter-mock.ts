@@ -3,6 +3,7 @@ export const PastDueWOCardValue = 4
 export const completedCardValue = 1
 export const invoicedCardValue = 1
 export const rejectedCardValue = 1
+export const upcomingInvoiceTotal = 543
 
 export const PROJECT_FILTER_CARDS = [
   {
@@ -24,5 +25,9 @@ export const PROJECT_FILTER_CARDS = [
   {
     label: 'rejected',
     count: rejectedCardValue,
+  },
+  {
+    label: 'upcomingInvoiceTotal',
+    count: upcomingInvoiceTotal,
   },
 ]
