@@ -6,7 +6,6 @@ import { Notification } from '../notification'
 import { setToken } from 'utils/storage.utils'
 import { Menu } from '@chakra-ui/react'
 import { BrowserRouter } from 'react-router-dom'
-import { formatDistanceToNow } from 'date-fns'
 
 export const renderNotifications = async ({}: any) => {
   const setNavigating = jest.fn()

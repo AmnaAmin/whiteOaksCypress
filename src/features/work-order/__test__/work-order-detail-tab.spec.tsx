@@ -11,16 +11,16 @@ import userEvent from '@testing-library/user-event'
 
 export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }: any) => {
   const setIsError = jest.fn()
-  const workOrderWithLineItems = { ...workOrder, assignedItems }
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
       <WorkOrderDetailsTab
         documentsData={projectData}
         onClose={onClose}
-        workOrder={workOrderWithLineItems}
+        workOrder={workOrder}
         projectData={projectData}
         setIsUpdating={null}
         isUpdating={false}
+        workOrderAssignedItems={assignedItems}
         isFetchingLineItems={false}
         isLoadingLineItems={false}
         displayAwardPlan={true}
@@ -38,13 +38,7 @@ export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }
 export const rendeWorkOrderModal = async ({ onClose, workOrder, projectData, transactions }: any) => {
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
-      <WorkOrderDetails
-        isOpen={true}
-        onClose={onClose}
-        workOrder={workOrder}
-        projectData={projectData}
-        transactions={transactions}
-      />
+      <WorkOrderDetails onClose={onClose} workOrder={workOrder} projectData={projectData} transactions={transactions} />
     </Modal>,
     {
       wrapper: Providers,
@@ -89,8 +83,12 @@ describe('Work Order modal showing work order specific details', () => {
       workOrder?.workOrderExpectedCompletionDate ? dateFormat(workOrder?.workOrderExpectedCompletionDate) : 'mm/dd/yy',
     )
     expect(screen.getByTestId('Completed by Vendor').textContent).toEqual('mm/dd/yy')
+
     expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku1')
     expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
+
+    expect(screen.getByTestId('cell-0-vendorAmount').textContent).toEqual('$100.96')
+    expect(screen.getByTestId('cell-1-vendorAmount').textContent).toEqual('$98.00')
 
     await act(async () => {
       await userEvent.click(screen.getByTestId('showMarkAllIsComplete'))
@@ -112,5 +110,10 @@ describe('Work Order modal showing work order specific details', () => {
       workOrder?.workOrderDateCompleted ? dateFormat(workOrder?.workOrderDateCompleted) : 'mm/dd/yy',
     )
     expect(screen.getByTestId('Completed by Vendor').textContent).not.toEqual('mm/dd/yy')
+    expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku1')
+    expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
+
+    expect(screen.queryByTestId('cell-0-vendorAmount')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('cell-1-vendorAmount')).not.toBeInTheDocument()
   })
 })

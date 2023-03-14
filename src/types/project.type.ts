@@ -100,6 +100,8 @@ export type Project = {
   isReconciled: boolean | false
   reconcileDate: string | null
   verifiedDate: string | null
+  disqualifiedRevenueDate: string | Date | null
+  disqualifiedRevenueFlag: boolean | null
   reconciledBy: string | null
   verifiedBy: string | null
   verifiedbyDesc: string | null
@@ -196,7 +198,6 @@ export type ProjectWorkOrderType = {
   durationCategory: string
   invoiceNumber: string
   cancel: string
-  assignedItems: any[]
 }
 
 export type ProjectFormValues = {
@@ -282,7 +283,7 @@ export type ProjectFinancialOverview = {
   shipFee: number
   permitFee: number
   deductible: number
-  depreciation: number
+  depreciation:number
 }
 
 export type AddressInfo = { address: string; city: string; state: string; zipCode: string }

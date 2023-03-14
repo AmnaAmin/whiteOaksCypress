@@ -127,7 +127,7 @@ export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undef
       const response = await client(`work-orders/${workOrderId} `, {})
       return response?.data
     },
-    { enabled: false },
+    { enabled: !!workOrderId },
   )
 
   return {
@@ -310,7 +310,7 @@ export const parseWODetailValuesToPayload = formValues => {
   }
 }
 
-export const defaultValuesWODetails = (workOrder, defaultSkill, defaultVendor) => {
+export const defaultValuesWODetails = (workOrder, woAssignedItems, defaultSkill, defaultVendor) => {
   const defaultValues = {
     cancel: {
       value: '',
@@ -324,8 +324,8 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, defaultVendor) =
     showPrice: workOrder.showPricing ?? false,
     notifyVendor: workOrder.notifyVendor ?? false,
     assignedItems:
-      workOrder?.assignedItems?.length > 0
-        ? workOrder?.assignedItems?.map(e => {
+      woAssignedItems?.length > 0
+        ? woAssignedItems?.map(e => {
             return { ...e, uploadedDoc: null, clientAmount: (e.price ?? 0) * (e.quantity ?? 0) }
           })
         : [],
