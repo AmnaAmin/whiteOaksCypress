@@ -9,6 +9,7 @@ import { currencyFormatter } from 'utils/string-formatters'
 import { addDays, isWednesday, nextFriday, nextWednesday } from 'date-fns'
 import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
+import { setToken } from 'utils/storage.utils'
 
 export const renderPayments = async ({ onClose, workOrder, onSave }: any) => {
   const setTabIndex = jest.fn()
@@ -36,6 +37,10 @@ export const renderPayments = async ({ onClose, workOrder, onSave }: any) => {
 jest.setTimeout(150000)
 
 describe('Work Order Invoice Test Cases', () => {
+  beforeAll(() => {
+    setToken('pc')
+  })
+
   test('Work Order Payment Tab in Past Due State with all fields readonly', async () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.statusLabel === 'PAST DUE')
@@ -58,10 +63,6 @@ describe('Work Order Invoice Test Cases', () => {
     expect(screen.getByTestId('clientApprovedAmount') as HTMLInputElement).toHaveAttribute('disabled')
     expect((screen.getByTestId('clientApprovedAmount') as HTMLInputElement).value).toEqual(
       currencyFormatter(workOrder?.clientApprovedAmount as number),
-    )
-    expect(screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).toHaveAttribute('disabled')
-    expect((screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).value).toEqual(
-      currencyFormatter(workOrder?.finalInvoiceAmount as number),
     )
     expect(screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).toHaveAttribute('disabled')
     expect((screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).value).toEqual(
@@ -96,10 +97,6 @@ describe('Work Order Invoice Test Cases', () => {
     expect(screen.getByTestId('clientApprovedAmount') as HTMLInputElement).toHaveAttribute('disabled')
     expect((screen.getByTestId('clientApprovedAmount') as HTMLInputElement).value).toEqual(
       currencyFormatter(workOrder?.clientApprovedAmount as number),
-    )
-    expect(screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).toHaveAttribute('disabled')
-    expect((screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).value).toEqual(
-      currencyFormatter(workOrder?.finalInvoiceAmount as number),
     )
     expect(screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).toHaveAttribute('disabled')
     expect((screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).value).toEqual(
@@ -148,10 +145,6 @@ describe('Work Order Invoice Test Cases', () => {
     expect((screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).value).toEqual(
       currencyFormatter(workOrder?.finalInvoiceAmount as number),
     )
-    expect(screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).toHaveAttribute('disabled')
-    expect((screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).value).toEqual(
-      currencyFormatter(workOrder?.finalInvoiceAmount as number),
-    )
     expect((screen.getByTestId('partial-payment-field') as HTMLInputElement).value).toEqual('$0')
     expect((screen.getByTestId('partialPaymentDate') as HTMLInputElement).value).toEqual('')
     await act(async () => {
@@ -195,5 +188,51 @@ describe('Work Order Invoice Test Cases', () => {
     await waitFor(() => {
       expect(onSave).toBeCalledTimes(1)
     })
+  })
+  test('Payment Tab in Paid Status', async () => {
+    const onClose = jest.fn()
+    const onSave = jest.fn()
+    const workOrder = WORK_ORDERS.find(w => w.statusLabel === 'Paid')
+    await renderPayments({ onClose, workOrder, onSave })
+    expect((screen.getByTestId('dateInvoiceSubmitted') as HTMLInputElement).value).toEqual(
+      datePickerFormat(workOrder?.dateInvoiceSubmitted),
+    )
+    expect(screen.getByTestId('dateInvoiceSubmitted') as HTMLInputElement).toHaveAttribute('disabled')
+    expect(screen.getByTestId('paymentTermDate') as HTMLInputElement).toHaveAttribute('disabled')
+    expect((screen.getByTestId('paymentTermDate') as HTMLInputElement).value).toEqual(
+      datePickerFormat(workOrder?.paymentTermDate),
+    )
+    expect(screen.getByTestId('expectedPaymentDate') as HTMLInputElement).toHaveAttribute('disabled')
+    expect((screen.getByTestId('expectedPaymentDate') as HTMLInputElement).value).toEqual(
+      datePickerFormat(workOrder?.expectedPaymentDate),
+    )
+    expect(screen.getByTestId('datePaymentProcessed') as HTMLInputElement).toHaveAttribute('disabled')
+    expect((screen.getByTestId('datePaymentProcessed') as HTMLInputElement).value).toEqual(
+      datePickerFormat(workOrder?.datePaymentProcessed),
+    )
+    expect(screen.getByTestId('datePaid') as HTMLInputElement).toHaveAttribute('disabled')
+    expect((screen.getByTestId('datePaid') as HTMLInputElement).value).toEqual(datePickerFormat(workOrder?.datePaid))
+
+    expect((screen.getByTestId('invoiceAmount') as HTMLInputElement).value).toEqual(
+      currencyFormatter(workOrder?.invoiceAmount as number),
+    )
+    expect(screen.getByTestId('invoiceAmount') as HTMLInputElement).toHaveAttribute('disabled')
+    expect((screen.getByTestId('clientOriginalApprovedAmount') as HTMLInputElement).value).toEqual(
+      currencyFormatter(workOrder?.clientOriginalApprovedAmount as number),
+    )
+    expect(screen.getByTestId('clientOriginalApprovedAmount') as HTMLInputElement).toHaveAttribute('disabled')
+    expect(screen.getByTestId('clientApprovedAmount') as HTMLInputElement).toHaveAttribute('disabled')
+    expect((screen.getByTestId('clientApprovedAmount') as HTMLInputElement).value).toEqual(
+      currencyFormatter(workOrder?.clientApprovedAmount as number),
+    )
+    expect(screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).toHaveAttribute('disabled')
+    expect((screen.getByTestId('finalInvoiceAmount') as HTMLInputElement).value).toEqual(
+      currencyFormatter(workOrder?.finalInvoiceAmount as number),
+    )
+    expect(screen.getByTestId('partial-payment-field') as HTMLInputElement).toHaveAttribute('disabled')
+    expect((screen.getByTestId('partial-payment-field') as HTMLInputElement).value).toEqual('$0')
+
+    expect(screen.getByTestId('partialPaymentDate') as HTMLInputElement).toHaveAttribute('disabled')
+    expect((screen.getByTestId('partialPaymentDate') as HTMLInputElement).value).toEqual('')
   })
 })
