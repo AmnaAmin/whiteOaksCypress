@@ -356,7 +356,7 @@ export const WORK_ORDERS = [
     leanWaiverSubmitted: true,
     dateInvoiceSubmitted: '2022-07-20T19:00:00Z',
     dateLeanWaiverSubmitted: '2022-07-21T08:05:49Z',
-    datePaymentProcessed: null,
+    datePaymentProcessed: '2022-11-11T19:00:00Z',
     expectedPaymentDate: '2022-08-11T19:00:00Z',
     paymentTermDate: '2022-08-09T19:00:00Z',
     datePaid: null,
