@@ -15,7 +15,4 @@ export const vendorDashboardHandlers = [
   rest.get('/api/project/getPaidWOAmountByYearAndMonthTotal/:year/:month', (req, res, ctx) => {
     return res(ctx.status(200), ctx.json(6380))
   }),
-  rest.get('/api/vendor-wo-Cards', (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(PROJECT_FILTER_CARDS))
-  }),
 ]

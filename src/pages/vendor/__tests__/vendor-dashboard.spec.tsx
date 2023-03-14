@@ -6,6 +6,7 @@ import { waitForLoadingToFinishLabelOnly } from 'utils/test-utils'
 import Dashboard from '../dashboard'
 import { VENDOR_DATA, VENDOR_WO_CARD } from 'mocks/api/vendor-dashboard/data'
 import { currencyFormatter } from 'utils/string-formatters'
+import { PROJECT_FILTER_CARDS } from 'features/vendor/projects/project-filter-mock'
 
 export const renderNewWorkOrder = async () => {
   await render(
@@ -30,7 +31,7 @@ describe('Verify Vendor Dashboard', () => {
     expect(screen.queryByText('Final Invoice')).toBeInTheDocument()
     expect(screen.getByRole('gridcell', { name: '$543.00' })).toBeInTheDocument()
     expect(screen.getByTestId('upcoming-payments').textContent).toEqual(
-      currencyFormatter(VENDOR_WO_CARD.find(wo => wo.label === 'upcomingInvoiceTotal')?.count as number),
+      currencyFormatter(PROJECT_FILTER_CARDS.find(wo => wo.label === 'upcomingInvoiceTotal')?.count as number),
     )
     expect(screen.getByTestId('vendor-score').textContent).toEqual(VENDOR_DATA.score?.toLocaleString())
   })
