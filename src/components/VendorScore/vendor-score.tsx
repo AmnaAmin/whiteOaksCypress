@@ -103,7 +103,7 @@ export const VendorScore: React.FC<{ vendorId: number }> = ({ vendorId }) => {
                       {isLoading ? (
                         <BlankSlate width="200px" h="20px" />
                       ) : (
-                        <Text fontSize="20px" color="gray.700" fontWeight={700}>
+                        <Text fontSize="20px" color="gray.700" fontWeight={700} data-testid="upcoming-payments">
                           {ammount}
                         </Text>
                       )}

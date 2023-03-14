@@ -434,3 +434,42 @@ export const PAID_BY_YEAR_AND_MONTH = [
     count: 1980,
   },
 ]
+
+export const VENDOR_WO_CARD = [
+  {
+    label: 'pastDue',
+    count: 10,
+  },
+  {
+    label: 'active',
+    count: 2,
+  },
+  {
+    label: 'paid',
+    count: 7,
+  },
+  {
+    label: 'completed',
+    count: 9,
+  },
+  {
+    label: 'completedAndInvoiced',
+    count: 0,
+  },
+  {
+    label: 'notInvoiced',
+    count: 9,
+  },
+  {
+    label: 'invoiced',
+    count: 1,
+  },
+  {
+    label: 'rejected',
+    count: 0,
+  },
+  {
+    label: 'upcomingInvoiceTotal',
+    count: 543,
+  },
+]
