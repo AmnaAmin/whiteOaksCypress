@@ -246,7 +246,7 @@ const Misc: React.FC = () => {
                 return (
                   <Checkbox
                     pt={2}
-                    checked={value!}
+                    //checked={value!}
                     colorScheme="PrimaryCheckBox"
                     variant={'normal'}
                     data-testid="disqualify_CheckBox"
