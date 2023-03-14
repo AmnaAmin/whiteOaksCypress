@@ -1,4 +1,3 @@
-import { PROJECT_FILTER_CARDS } from 'features/vendor/projects/project-filter-mock'
 import { rest } from 'msw'
 import { VENDOR_DATA, WO_BY_VENDORS_PER_MONTH, PAID_BY_YEAR_AND_MONTH } from './data'
 
