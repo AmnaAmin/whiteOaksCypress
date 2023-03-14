@@ -149,9 +149,14 @@ export const useFieldDisabledEnabledDecision = (
   transaction?: ChangeOrderType,
   isMaterialsLoading?: boolean,
 ) => {
-  const { isAdmin, isAccounting } = useUserRolesSelector()
+  const { isAdmin, isAccounting, isVendor } = useUserRolesSelector()
   const isAdminEnabled = isAdmin || isAccounting
   const isUpdateForm = !!transaction || isMaterialsLoading
+  const lateAndFactoringFeeForVendor =
+    isVendor &&
+    (transaction?.transactionType === TransactionTypeValues.lateFee ||
+      transaction?.transactionType === TransactionTypeValues.factoring)
+
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
     transaction?.status === TransactionStatusValues.cancelled
@@ -163,7 +168,9 @@ export const useFieldDisabledEnabledDecision = (
     isApproved: isStatusApproved,
     isSysFactoringFee: isFactoringFeeSysGenerated,
     isPaidDateDisabled: !transaction || (isStatusApproved && !isAdminEnabled),
-    isStatusDisabled: (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading,
+    isStatusDisabled:
+      (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading || lateAndFactoringFeeForVendor,
+    lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
 }
 
