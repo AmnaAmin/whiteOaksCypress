@@ -380,6 +380,7 @@ i18n.use(initReactI18next).init({
         enableVendorPortal: 'Enable Vendor Portal',
         verifyProjectDesc: 'Project verified by ',
         verifyProject: 'Project Verified',
+        disqualifiedRevenue: 'Disqualified Revenue',
         // Vendor-profile-documents
         agreementSignedDate: 'Document Signed',
         uploadAgreement: 'Upload Agreement',

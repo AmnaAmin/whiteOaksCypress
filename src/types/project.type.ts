@@ -100,6 +100,8 @@ export type Project = {
   isReconciled: boolean | false
   reconcileDate: string | null
   verifiedDate: string | null
+  disqualifiedRevenueDate: any
+  disqualifiedRevenueFlag: boolean | null
   reconciledBy: string | null
   verifiedBy: string | null
   verifiedbyDesc: string | null

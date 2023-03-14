@@ -78,6 +78,8 @@ export const project = {
           woaPaid: 'WOA Paid',
           reconcileDate: 'Reconciled',
           verifiedDate: 'Verified',
+          disqualifiedRevenueDate: 'Disqualified Revenue',
+          verifyRevenue: 'Disqualify Revenue',
 
           save: 'Save',
           cancel: 'Cancel',
@@ -162,6 +164,8 @@ export const project = {
           woaPaid: 'WOA pagado',
           reconcileDate: 'Reconciliada',
           verifiedDate: 'Verificada',
+          disqualifiedRevenueDate: 'ingresos descalificados',
+          verifyRevenue: 'verificar ingresos',
 
           save: 'Ahorrar',
           cancel: 'Cancelar',
