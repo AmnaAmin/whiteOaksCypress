@@ -33,7 +33,6 @@ const Misc: React.FC = () => {
     status,
     reconcileDate,
     verifiedDate,
-    disqualifiedRevenueDate,
   } = getValues()
   const { isAdmin} = useUserRolesSelector()
   const { t } = useTranslation()
