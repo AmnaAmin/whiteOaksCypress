@@ -3,10 +3,10 @@ import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
 import { STATUS } from 'features/common/status'
 
 import React from 'react'
-import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { Controller, useFormContext} from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const Misc: React.FC = () => {
@@ -225,9 +225,9 @@ const Misc: React.FC = () => {
               {t(`project.projectDetails.disqualifiedRevenueDate`)}
             </FormLabel>
             <Input
-              asp-format="{0:yyyy-MM-dd}"
+              
               type="date"
-              defaultValue={dateFormat(disqualifiedRevenueDate!)}
+              
               {...register('disqualifiedRevenueDate')}
             />
           </FormControl>
@@ -255,7 +255,7 @@ const Misc: React.FC = () => {
                     onChange={e => {
                       onChange(e)
                       e.target.checked
-                        ? setValue('disqualifiedRevenueDate', new Date().toISOString())
+                        ? setValue('disqualifiedRevenueDate', datePickerFormat(new Date()))
                         : setValue('disqualifiedRevenueDate', null)
                     }}
                     isChecked={!!value}

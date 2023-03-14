@@ -595,7 +595,7 @@ export const parseFormValuesFromAPIData = ({
     disputedDate: getLocalTimeZoneDate(project?.disputedDate as string),
     woaPaidDate: getLocalTimeZoneDate(project.woaPaidDate as string),
     dueDateVariance: project.dueDateVariance,
-    disqualifiedRevenueDate: project.disqualifiedRevenueDate,
+    disqualifiedRevenueDate: datePickerFormat(project.disqualifiedRevenueDate),
     disqualifiedRevenueFlag: project.disqualifiedRevenueFlag,
     
     payDateVariance: project.signoffDateVariance,
