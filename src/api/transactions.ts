@@ -163,7 +163,7 @@ const transactionTypeOptions = [
   {
     value: TransactionTypeValues.depreciation,
     label: 'Depreciation',
-  },
+  }
 ]
 
 export const useTransactionTypes = (screen?: string) => {

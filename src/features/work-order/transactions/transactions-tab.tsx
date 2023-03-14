@@ -18,12 +18,13 @@ export const TransactionsTab = ({ projectData, tabsContainerRef, onClose, projec
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
 
+  const workOrderStatus = (workOrder?.statusLabel || '').toLowerCase()
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
   const preventNewTransaction = !!(
-    projectStatus === 'paid' ||
-    projectStatus === 'cancelled' ||
-    projectStatus === 'invoiced'
+    workOrderStatus === 'paid' ||
+    workOrderStatus === 'cancelled' ||
+    workOrderStatus === 'invoiced'
   )
 
   return (
