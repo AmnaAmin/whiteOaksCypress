@@ -16,6 +16,7 @@ export const projects = {
           type: 'Type',
           projectCoordinator: 'PC',
           accountPayable: 'AP',
+          accountPayableInvoiced: 'AP Invoiced',
           zip: 'Zip',
           client: 'Client',
           sow: 'SOW',
@@ -53,7 +54,7 @@ export const projects = {
           overpayment: 'Overpayment',
           disputed: 'Disputed',
           collection: 'Collection',
-          flagged: "Flagged"
+          flagged: 'Flagged',
         },
         projectSummary: {
           projectID: 'Project ID',
@@ -124,6 +125,7 @@ export const projects = {
           type: 'Tipo',
           projectCoordinator: 'PC',
           accountPayable: 'AP',
+          accountPayableInvoiced: 'AP Facturada',
           zip: 'Código postal',
           client: 'Cliente',
           sow: 'SOW',
@@ -161,7 +163,7 @@ export const projects = {
           overpayment: 'Sobrepago',
           disputed: 'Cuestionado',
           collection: 'Recopilación',
-          flagged: "marcado"
+          flagged: 'marcado',
         },
         projectSummary: {
           projectID: 'Projecto ID',

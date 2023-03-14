@@ -117,14 +117,15 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   }
 }
 
-export const useFieldRequiredDecision = (control: Control<FormValues, any>) => {
+export const useFieldRequiredDecision = (control: Control<FormValues, any>, transaction) => {
   const status = useWatch({ name: 'status', control })
   const isStatusApproved = status?.value === TransactionStatusValues.approved
   // const against = useWatch({ name: 'against', control })
-  const transactionType = useWatch({ name: 'transactionType', control })
+  // const transactionType = useWatch({ name: 'transactionType', control })
   return {
+    isPaymentTermRequired: !transaction?.id || isStatusApproved, // if new transaction modal or edit modal with approved status.
     isPaidDateRequired: isStatusApproved,
-    isInvoicedDateRequired: isStatusApproved || transactionType?.value === TransactionTypeValues?.draw,
+    isInvoicedDateRequired: !transaction?.id || isStatusApproved, // if new transaction modal or edit modal with approved status.
   }
 }
 
@@ -148,9 +149,14 @@ export const useFieldDisabledEnabledDecision = (
   transaction?: ChangeOrderType,
   isMaterialsLoading?: boolean,
 ) => {
-  const { isAdmin, isAccounting } = useUserRolesSelector()
+  const { isAdmin, isAccounting, isVendor } = useUserRolesSelector()
   const isAdminEnabled = isAdmin || isAccounting
   const isUpdateForm = !!transaction || isMaterialsLoading
+  const lateAndFactoringFeeForVendor =
+    isVendor &&
+    (transaction?.transactionType === TransactionTypeValues.lateFee ||
+      transaction?.transactionType === TransactionTypeValues.factoring)
+
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
     transaction?.status === TransactionStatusValues.cancelled
@@ -162,7 +168,9 @@ export const useFieldDisabledEnabledDecision = (
     isApproved: isStatusApproved,
     isSysFactoringFee: isFactoringFeeSysGenerated,
     isPaidDateDisabled: !transaction || (isStatusApproved && !isAdminEnabled),
-    isStatusDisabled: (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading,
+    isStatusDisabled:
+      (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading || lateAndFactoringFeeForVendor,
+    lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
 }
 
@@ -280,7 +288,7 @@ export const useAgainstOptions = (
       transactionType?.value === TransactionTypeValues.draw &&
       !isVendor &&
       !transaction?.id &&
-      !['new', 'active', 'punch', 'closed', 'reconcile'].includes(projectStatus.toLowerCase())
+      !['new', 'active', 'punch', 'closed', 'reconcile'].includes(projectStatus?.toLowerCase())
     ) {
       return againstOptions.slice(1)
     }
@@ -288,13 +296,16 @@ export const useAgainstOptions = (
     if (
       transactionType?.value === TransactionTypeValues.changeOrder &&
       !transaction?.id &&
-      ['client paid'].includes(projectStatus.toLowerCase())
+      ['client paid'].includes(projectStatus?.toLowerCase())
     ) {
       return againstOptions.slice(1)
     }
 
     if (
-      [TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(value => transactionType?.value === value)
+      [TransactionTypeValues.lateFee, TransactionTypeValues.factoring].some(
+        value => transactionType?.value === value,
+      ) &&
+      !isVendor
     ) {
       return againstOptions.slice(1)
     }

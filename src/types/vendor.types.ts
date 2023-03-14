@@ -227,7 +227,7 @@ export type VendorProfileDetailsFormData = {
   paymentTerm?: Select
   creditCard?: boolean
   ach?: boolean
-  Check?: boolean
+  check?: boolean
   agreementSignedDate?: Date
   autoInsuranceExpDate?: Date
   coiGlExpDate?: Date

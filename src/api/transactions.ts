@@ -472,6 +472,7 @@ export const parseChangeOrderAPIPayload = async (
     lineItems,
     documents,
     projectId: projectId ?? '',
+
     ...againstProjectSOWPayload,
   }
 }
@@ -493,6 +494,7 @@ export const parseChangeOrderUpdateAPIPayload = async (
     modifiedDate1: formValues.dateCreated,
     modifiedBy: formValues.createdBy as string,
     vendorId: transaction.vendorId as number,
+    systemGenerated: transaction?.systemGenerated,
     ...payload,
   }
 }

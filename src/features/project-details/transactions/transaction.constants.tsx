@@ -224,7 +224,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
 ]
 
-export const mapDataForExpandableRows = (transactions?: any) => {
+export const mapDataForExpandableRows = (transactions?: any, isVendor?: boolean) => {
   if (transactions && transactions?.length > 0) {
     const data = [] as any
     const dataEmptyID = transactions?.filter(d => !d.parentWorkOrderId)
@@ -241,7 +241,9 @@ export const mapDataForExpandableRows = (transactions?: any) => {
       }
     })
     const nData = data
-    nData.push({ ...dataEmptyID[0], subRows: dataEmptyID.filter((v, i) => i !== 0) })
+    if (!isVendor) {
+      nData.push({ ...dataEmptyID[0], subRows: dataEmptyID.filter((v, i) => i !== 0) })
+    }
     return nData
   }
 }

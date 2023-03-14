@@ -10,6 +10,7 @@ import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 
 export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }: any) => {
+  const setIsError = jest.fn()
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
       <WorkOrderDetailsTab
@@ -22,6 +23,9 @@ export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }
         workOrderAssignedItems={assignedItems}
         isFetchingLineItems={false}
         isLoadingLineItems={false}
+        displayAwardPlan={true}
+        tabIndex={0}
+        setIsError={setIsError}
       />
     </Modal>,
     {
