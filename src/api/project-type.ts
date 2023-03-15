@@ -90,3 +90,41 @@ export const useProjectTypeEditMutation = () => {
     },
   )
 }
+
+export const useProjTypeDelMutation = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    (ProjectTypeDetails: any) => {
+      return client(`project_type/${ProjectTypeDetails?.id}`, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'Delete Project Type',
+          description: `Project Type has been deleted successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        queryClient.invalidateQueries('projectType')
+      },
+
+      onError(error: any) {
+        toast({
+          title: 'Delete Project Type',
+          description: (error.title as string) ?? 'Unable to Delete Project Type.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}

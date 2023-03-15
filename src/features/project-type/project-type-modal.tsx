@@ -16,11 +16,12 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { useProjectTypeEditMutation, useProjectTypeMutation } from 'api/project-type'
+import { useProjectTypeEditMutation, useProjectTypeMutation, useProjTypeDelMutation } from 'api/project-type'
+import { ConfirmationBox } from 'components/Confirmation'
 import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiCalendar, BiDetail } from 'react-icons/bi'
+import { BiCalendar, BiDetail, BiTrash } from 'react-icons/bi'
 import { useAuth } from 'utils/auth-context'
 import { dateFormat } from 'utils/date-time-utils'
 import { PROJECT_TYPE } from './project-type.i18n'
@@ -59,24 +60,21 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
   const { t } = useTranslation()
   const { register, handleSubmit, setValue, watch, reset } = useForm()
   const { mutate: projectTypePayload, isLoading } = useProjectTypeMutation()
+  const { mutate: delProjType, isLoading: loadingDel } = useProjTypeDelMutation()
   const { mutate: projectTypeEditPayload, isLoading: loading } = useProjectTypeEditMutation()
   const { data } = useAuth()
   const typeFieldWatch = watch('type')
   const Loading = isLoading || loading
-  const { onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  const { isOpen: isOpenProjType, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
     close()
   }, [close, onCloseDisclosure])
 
-  useEffect(() => {
-    if (projectTypetDetails) {
-      onOpen()
-    } else {
-      onCloseDisclosure()
-    }
-  }, [onCloseDisclosure, onOpen, projectTypetDetails])
+  const deleteProjectType = () => {
+    delProjType(projectTypetDetails ?? projectTypetDetails, { onSuccess: () => onClose() })
+  }
 
   const onSubmit = value => {
     if (projectTypetDetails) {
@@ -178,28 +176,45 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
             </Box>
           </ModalBody>
           <ModalFooter borderTop="1px solid #E2E8F0" mt="40px">
-            <Button
-              variant="outline"
-              colorScheme="brand"
-              mr={3}
-              onClick={() => {
-                onClose()
-                reset()
-              }}
-              data-testid="cancelModal"
-            >
-              {t(`${PROJECT_TYPE}.cancel`)}
-            </Button>
-            <Button
-              isDisabled={!typeFieldWatch || Loading}
-              colorScheme="brand"
-              type="submit"
-              data-testid="saveProjectType"
-            >
-              {t(`${PROJECT_TYPE}.save`)}
-            </Button>
+            <HStack justifyContent="start" w="100%">
+              {projectTypetDetails && (
+                <Button variant="outline" colorScheme="brand" size="md" onClick={onOpen} leftIcon={<BiTrash />}>
+                  {t(`${PROJECT_TYPE}.deleteType`)}
+                </Button>
+              )}
+            </HStack>
+            <HStack w="100%" justifyContent="end">
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                mr={3}
+                onClick={() => {
+                  onClose()
+                  reset()
+                }}
+                data-testid="cancelModal"
+              >
+                {t(`${PROJECT_TYPE}.cancel`)}
+              </Button>
+              <Button
+                isDisabled={!typeFieldWatch || Loading}
+                colorScheme="brand"
+                type="submit"
+                data-testid="saveProjectType"
+              >
+                {t(`${PROJECT_TYPE}.save`)}
+              </Button>
+            </HStack>
           </ModalFooter>
         </form>
+        <ConfirmationBox
+          title="Project Type"
+          content="Do you really want to delete this Project Type?"
+          isOpen={isOpenProjType}
+          onClose={onCloseDisclosure}
+          isLoading={loadingDel}
+          onConfirm={deleteProjectType}
+        />
       </ModalContent>
     </Modal>
   )
