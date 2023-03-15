@@ -7,6 +7,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const Misc: React.FC = () => {
   const {
@@ -33,8 +34,7 @@ const Misc: React.FC = () => {
     reconcileDate,
     verifiedDate,
   } = getValues()
-  //const { isAdmin } = useUserRolesSelector()
-  const showRevenue = false
+  const { isAdmin } = useUserRolesSelector()
   const { t } = useTranslation()
 
   return (
@@ -217,7 +217,7 @@ const Misc: React.FC = () => {
             />
           </FormControl>
         </GridItem>
-        {showRevenue && (
+        {isAdmin && ( <>
           <>
             <GridItem>
               <FormControl w="215px">
@@ -241,7 +241,6 @@ const Misc: React.FC = () => {
                     return (
                       <Checkbox
                         pt={2}
-                        //checked={value!}
                         colorScheme="PrimaryCheckBox"
                         variant={'normal'}
                         data-testid="disqualify_CheckBox"
@@ -260,7 +259,7 @@ const Misc: React.FC = () => {
               </FormControl>
             </GridItem>
           </>
-        )}
+          </>)}
       </Grid>
     </Stack>
   )
