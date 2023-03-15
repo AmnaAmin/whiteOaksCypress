@@ -28,7 +28,7 @@ type ProjectManagementValues = {
   clientSignOffDate: string | null
   overrideProjectStatus: SelectOption | null
   previousStatus: number | null
-  isReconciled?:  boolean |  false
+  isReconciled?: boolean | false
   reconciledBy: string | null
   verifiedBy: string | null
   verifiedbyDesc: string | null
@@ -93,8 +93,8 @@ type ProjectDetailsMiscFormValues = {
   payVariance: number | null
   reconcileDate: string | null
   verifiedDate: string | null
-  disqualifiedRevenueDate: string | null
-  disqualifiedRevenueFlag: boolean |null
+  disqualifiedRevenueDate?: string | null
+  disqualifiedRevenueFlag?: boolean | null
 }
 
 // Project Details form values types
@@ -179,8 +179,7 @@ export type ProjectDetailsAPIPayload = {
   payDateVariance?: number | null
   payVariance?: number | null
   disqualifiedRevenueDate?: string | null
-  disqualifiedRevenueFlag? :boolean | null
-
+  disqualifiedRevenueFlag?: boolean | null
 
   // Other project Details payload
   signoffDateVariance: string | null
