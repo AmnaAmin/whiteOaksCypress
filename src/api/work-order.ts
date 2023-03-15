@@ -6,7 +6,7 @@ import { ProjectWorkOrder } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
 import { dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
-import { currencyFormatter } from 'utils/string-formatters'
+import { currencyFormatter, removeCurrencyFormat } from 'utils/string-formatters'
 import { useTranslation } from 'react-i18next'
 import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 import { readFileContent } from './vendor-details'
@@ -221,9 +221,9 @@ export const parsePaymentValuesToPayload = formValues => {
     datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
     datePaid: dateISOFormat(formValues?.datePaid),
     partialPayment: formValues?.partialPayment,
-    invoiceAmount: formValues?.invoiceAmount,
-    clientOriginalApprovedAmount: formValues?.clientOriginalApprovedAmount,
-    clientApprovedAmount: formValues?.clientApprovedAmount,
+    invoiceAmount: removeCurrencyFormat(formValues?.invoiceAmount),
+    clientOriginalApprovedAmount: removeCurrencyFormat(formValues?.clientOriginalApprovedAmount),
+    clientApprovedAmount: removeCurrencyFormat(formValues?.clientApprovedAmount),
     partialPaymentDate: dateISOFormat(formValues?.paymentDate),
   }
 }
