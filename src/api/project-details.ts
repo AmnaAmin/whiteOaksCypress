@@ -332,7 +332,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
   let overrideProjectStatusOptions
   const projectStatusId = projectData?.projectStatusId
   const previousProjectStatus = projectData?.previousStatus
-  const selectOption = {value: null, label: 'Select'} 
+  const selectOption = { value: null, label: 'Select' }
 
   return useMemo(() => {
     if (!projectStatusId) return []
@@ -341,15 +341,20 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       overrideProjectStatusOptions = []
       // Project Status -> Active
       if (projectStatusId === Number(PROJECT_STATUS.active.value)) {
-        overrideProjectStatusOptions = [selectOption ,PROJECT_STATUS.new, PROJECT_STATUS.disputed]
+        overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.new, PROJECT_STATUS.disputed]
       }
       // Project Status -> Punch
       else if (projectStatusId === Number(PROJECT_STATUS.punch.value)) {
-        overrideProjectStatusOptions = [selectOption,PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
+        overrideProjectStatusOptions = [
+          selectOption,
+          PROJECT_STATUS.new,
+          PROJECT_STATUS.active,
+          PROJECT_STATUS.disputed,
+        ]
       }
       // Project Status -> Reconcile
       else if (projectStatusId === Number(PROJECT_STATUS.reconcile.value)) {
-        overrideProjectStatusOptions = [selectOption,PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch]
+        overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch]
       }
       // Project Status -> Closed
       else if (projectStatusId === Number(PROJECT_STATUS.closed.value)) {
@@ -402,7 +407,12 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       else if (projectStatusId === Number(PROJECT_STATUS.disputed.value)) {
         // Last Project Status -> Active
         if (previousProjectStatus === Number(PROJECT_STATUS.active.value)) {
-          overrideProjectStatusOptions = [selectOption,PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.disputed]
+          overrideProjectStatusOptions = [
+            selectOption,
+            PROJECT_STATUS.new,
+            PROJECT_STATUS.active,
+            PROJECT_STATUS.disputed,
+          ]
         }
         // Last Project Status -> Punch
         else if (previousProjectStatus === Number(PROJECT_STATUS.punch.value)) {
@@ -597,7 +607,7 @@ export const parseFormValuesFromAPIData = ({
     dueDateVariance: project.dueDateVariance,
     disqualifiedRevenueDate: datePickerFormat(project.disqualifiedRevenueDate),
     disqualifiedRevenueFlag: project.disqualifiedRevenueFlag,
-    
+
     payDateVariance: project.signoffDateVariance,
     payVariance: project.woaPayVariance,
   }

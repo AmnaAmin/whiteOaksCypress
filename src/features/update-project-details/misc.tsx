@@ -3,7 +3,7 @@ import { DatePickerInput } from 'components/react-hook-form-fields/date-picker'
 import { STATUS } from 'features/common/status'
 
 import React from 'react'
-import { Controller, useFormContext} from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
@@ -34,7 +34,7 @@ const Misc: React.FC = () => {
     reconcileDate,
     verifiedDate,
   } = getValues()
-  const { isAdmin} = useUserRolesSelector()
+  const { isAdmin } = useUserRolesSelector()
   const { t } = useTranslation()
 
   return (
@@ -218,60 +218,51 @@ const Misc: React.FC = () => {
           </FormControl>
         </GridItem>
         {isAdmin && ( <>
-        <GridItem>
-          <FormControl w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="disqualifiedRevenueDate">
-              {t(`project.projectDetails.disqualifiedRevenueDate`)}
-            </FormLabel>
-            <Input
-              
-              type="date"
-              
-              {...register('disqualifiedRevenueDate')}
-            />
-          </FormControl>
-        </GridItem>
-      
-        <GridItem>
-        
-          <FormControl maxW="500px">
-            <FormLabel variant="strong-label" size="md">
-              {t(`project.projectDetails.verifyRevenue`)}
-            </FormLabel>
-            
-            <Controller
-              name={`disqualifiedRevenueFlag`}
-              control={control}
-              render={({ field: {onChange, value } }) => {
-                return (
-                  <Checkbox
-                    pt={2}
-                    //checked={value!}
-                    colorScheme="PrimaryCheckBox"
-                    variant={'normal'}
-                    data-testid="disqualify_CheckBox"
-                    size="md"
-                    onChange={e => {
-                      onChange(e)
-                      e.target.checked
-                        ? setValue('disqualifiedRevenueDate', datePickerFormat(new Date()))
-                        : setValue('disqualifiedRevenueDate', null)
-                    }}
-                    isChecked={!!value}
-                  ></Checkbox>
-                  
-                )
-              }}
-            />
-          
-          </FormControl>
-        </GridItem>
-        
-        </>)}
+          <>
+            <GridItem>
+              <FormControl w="215px">
+                <FormLabel variant="strong-label" size="md" htmlFor="disqualifiedRevenueDate">
+                  {t(`project.projectDetails.disqualifiedRevenueDate`)}
+                </FormLabel>
+                <Input type="date" {...register('disqualifiedRevenueDate')} />
+              </FormControl>
+            </GridItem>
+
+            <GridItem>
+              <FormControl maxW="500px">
+                <FormLabel variant="strong-label" size="md">
+                  {t(`project.projectDetails.verifyRevenue`)}
+                </FormLabel>
+
+                <Controller
+                  name={`disqualifiedRevenueFlag`}
+                  control={control}
+                  render={({ field: { onChange, value } }) => {
+                    return (
+                      <Checkbox
+                        pt={2}
+                        colorScheme="PrimaryCheckBox"
+                        variant={'normal'}
+                        data-testid="disqualify_CheckBox"
+                        size="md"
+                        onChange={e => {
+                          onChange(e)
+                          e.target.checked
+                            ? setValue('disqualifiedRevenueDate', datePickerFormat(new Date()))
+                            : setValue('disqualifiedRevenueDate', null)
+                        }}
+                        isChecked={!!value}
+                      ></Checkbox>
+                    )
+                  }}
+                />
+              </FormControl>
+            </GridItem>
+          </>
+          </>)}
       </Grid>
     </Stack>
   )
 }
-
 
 export default Misc
