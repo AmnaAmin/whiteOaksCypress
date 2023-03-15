@@ -45,7 +45,7 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-import { CustomRequiredInput, NumberInput } from 'components/input/input'
+
 
 type UserManagement = {
   onClose: () => void
@@ -140,7 +140,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
     (isVendor && !formValues.vendorId) ||
-    (isFPM && (!fpmRole || !formValues.managerRoleId)) ||
+    (isFPM && (!fpmRole || !formValues.managerRoleId  || !formValues?.newTarget)) ||
     (showMarkets && noMarketsSelected) ||
     (showStates && !validateState(formValues?.states)) ||
     (showRegions && !validateRegions(formValues?.regions))
@@ -570,27 +570,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <FormLabel variant="strong-label" size="md">
                 {t(`${USER_MANAGEMENT}.modal.newTarget`)}
               </FormLabel>
-              <Controller
-                control={control}
-                name={`newTarget`}
-                //rules={{ required: 'This is required field' }}
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberInput
-                       value={field.value}
-                       onValueChange={values => {
-                        const { string } = values
-                        field.onChange(string)
-                      }}
-                        prefix={'$'} 
-                        customInput={CustomRequiredInput}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              />
+              <Input variant="required-field" type="number" {...register('newTarget')} />
            
             </FormControl>
 
