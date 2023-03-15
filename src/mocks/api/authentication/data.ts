@@ -81,6 +81,53 @@ export const ACCOUNT_PC = {
   hfeWage: null,
 }
 
+export const ACCOUNT_ADMIN = {
+  id: 54,
+  login: 'admin@devtek.ai',
+  firstName: 'Admin',
+  lastName: 'DevTek',
+  email: 'admin@devtek.ai',
+  imageUrl: null,
+  activated: true,
+  langKey: 'en',
+  createdBy: 'admin@woa.com',
+  createdDate: '2021-09-12T12:47:35Z',
+  lastModifiedBy: 'admin@devtek.ai',
+  lastModifiedDate: '2023-03-14T13:37:32Z',
+  authorities: ['ROLE_ADMIN'],
+  streetAddress: 'DevTek Inc',
+  city: '',
+  stateId: null,
+  zipCode: '',
+  telephoneNumber: '(123)-223-3332',
+  status: null,
+  userType: 1,
+  userTypeLabel: 'Admin',
+  employeeId: '',
+  vendorId: null,
+  newPassword: null,
+  firebaseToken: null,
+  fieldProjectManagerRoleId: null,
+  managerRoleId: null,
+  parentFieldProjectManagerId: null,
+  telephoneNumberExtension: '',
+  reportingFieldManagers: null,
+  markets: null,
+  newTarget: null,
+  newBonus: null,
+  ignoreQuota: null,
+  removeCards: null,
+  avatar: null,
+  avatarName: null,
+  features: ['Alerting'],
+  regions: null,
+  fpmStateId: null,
+  hfeWage: null,
+  vendorAdmin: false,
+  primaryAdmin: false,
+  parentId: null,
+}
+
 export function getUserData(token: string) {
   if (token === 'Bearer vendor') {
     return ACCOUNT_VENDOR
@@ -88,6 +135,10 @@ export function getUserData(token: string) {
 
   if (token === 'Bearer pc') {
     return ACCOUNT_PC
+  }
+
+  if (token === 'Bearer admin') {
+    return ACCOUNT_ADMIN
   }
 }
 

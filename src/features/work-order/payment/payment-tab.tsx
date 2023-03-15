@@ -188,6 +188,7 @@ const PaymentInfoTab = props => {
                   </FormLabel>
                   <Input
                     id="dateInvoiceSubmitted"
+                    data-testid="dateInvoiceSubmitted"
                     type="date"
                     size="md"
                     css={calendarIcon}
@@ -228,7 +229,7 @@ const PaymentInfoTab = props => {
                     name="paymentTerm"
                     render={({ field, fieldState }) => {
                       return (
-                        <>
+                        <div data-testid="paymentTerms">
                           <Select
                             {...field}
                             options={paymentsTerms}
@@ -252,7 +253,7 @@ const PaymentInfoTab = props => {
                             }}
                           />
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </>
+                        </div>
                       )
                     }}
                   />
@@ -267,6 +268,7 @@ const PaymentInfoTab = props => {
                   <Input
                     id="paymentTermDate"
                     type="date"
+                    data-testid="paymentTermDate"
                     size="md"
                     css={calendarIcon}
                     isDisabled={!paymentTermDateEnabled}
@@ -287,6 +289,7 @@ const PaymentInfoTab = props => {
                     id="expectedPaymentDate"
                     type="date"
                     size="md"
+                    data-testid="expectedPaymentDate"
                     css={calendarIcon}
                     isDisabled={!expectedPaymentDateEnabled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
@@ -311,6 +314,7 @@ const PaymentInfoTab = props => {
                     id="datePaymentProcessed"
                     type="date"
                     size="md"
+                    data-testid="datePaymentProcessed"
                     css={calendarIcon}
                     isDisabled={!datePaymentProcessedEnabled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
@@ -331,6 +335,7 @@ const PaymentInfoTab = props => {
                     id="datePaid"
                     type="date"
                     size="md"
+                    data-testid="datePaid"
                     css={calendarIcon}
                     isDisabled={!datePaidEnabled}
                     variant="outline"
@@ -353,7 +358,7 @@ const PaymentInfoTab = props => {
                         <>
                           <NumberFormat
                             value={field.value}
-                            data-testid="invoice-amount"
+                            data-testid="invoiceAmount"
                             thousandSeparator
                             customInput={CustomRequiredInput}
                             prefix={'$'}
@@ -438,6 +443,7 @@ const PaymentInfoTab = props => {
                   <Input
                     id="finalInvoiceAmount"
                     type="text"
+                    data-testid="finalInvoiceAmount"
                     size="md"
                     isDisabled={!finalInvoiceAmountEnabled}
                     {...register('finalInvoiceAmount')}
@@ -494,6 +500,7 @@ const PaymentInfoTab = props => {
                     id="paymentDate"
                     type="date"
                     size="md"
+                    data-testid="partialPaymentDate"
                     css={calendarIcon}
                     isDisabled={!paymentDateEnabled}
                     variant="outline"
@@ -525,7 +532,7 @@ const PaymentInfoTab = props => {
             <Button data-testid="wo-cancel-btn" variant="outline" onClick={props.onClose} colorScheme="brand">
               {t('close')}
             </Button>
-            <Button type="submit" colorScheme="brand" disabled={isWorkOrderUpdating}>
+            <Button type="submit" data-testid="submit-btn" colorScheme="brand" disabled={isWorkOrderUpdating}>
               {t('save')}
             </Button>
           </HStack>
