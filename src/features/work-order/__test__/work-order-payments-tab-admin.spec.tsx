@@ -1,14 +1,10 @@
-import { fireEvent, getByText, render, screen, waitFor } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { Providers } from 'providers'
 import { WORK_ORDERS } from 'mocks/api/workorder/data'
-import { selectOption, waitForLoadingToFinish } from 'utils/test-utils'
+import { waitForLoadingToFinish } from 'utils/test-utils'
 import { Modal } from '@chakra-ui/react'
 import PaymentInfoTab from '../payment/payment-tab'
-import { datePickerFormat } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
-import { addDays, isWednesday, nextFriday, nextWednesday } from 'date-fns'
-import { act } from 'react-dom/test-utils'
-import userEvent from '@testing-library/user-event'
 import { setToken } from 'utils/storage.utils'
 
 export const renderPayments = async ({ onClose, workOrder, onSave }: any) => {
