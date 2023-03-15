@@ -595,6 +595,9 @@ export const parseFormValuesFromAPIData = ({
     disputedDate: getLocalTimeZoneDate(project?.disputedDate as string),
     woaPaidDate: getLocalTimeZoneDate(project.woaPaidDate as string),
     dueDateVariance: project.dueDateVariance,
+    disqualifiedRevenueDate: datePickerFormat(project.disqualifiedRevenueDate),
+    disqualifiedRevenueFlag: project.disqualifiedRevenueFlag,
+    
     payDateVariance: project.signoffDateVariance,
     payVariance: project.woaPayVariance,
   }
@@ -687,6 +690,8 @@ export const parseProjectDetailsPayloadFromFormData = async (
 
     // Misc payload
     createdDate: dateISOFormat(formValues?.dateCreated),
+    disqualifiedRevenueDate: formValues?.disqualifiedRevenueDate,
+    disqualifiedRevenueFlag: formValues?.disqualifiedRevenueFlag,
   }
 }
 // type.equals=Project&

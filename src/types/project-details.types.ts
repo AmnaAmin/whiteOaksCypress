@@ -93,6 +93,8 @@ type ProjectDetailsMiscFormValues = {
   payVariance: number | null
   reconcileDate: string | null
   verifiedDate: string | null
+  disqualifiedRevenueDate: string | null
+  disqualifiedRevenueFlag: boolean |null
 }
 
 // Project Details form values types
@@ -176,6 +178,9 @@ export type ProjectDetailsAPIPayload = {
   dueDateVariance?: number | null
   payDateVariance?: number | null
   payVariance?: number | null
+  disqualifiedRevenueDate?: string | null
+  disqualifiedRevenueFlag? :boolean | null
+
 
   // Other project Details payload
   signoffDateVariance: string | null

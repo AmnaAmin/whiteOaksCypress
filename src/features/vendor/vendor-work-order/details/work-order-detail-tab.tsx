@@ -59,6 +59,7 @@ const WorkOrderDetailTab = ({
   projectData,
   setIsUpdating,
   isUpdating,
+  workOrderAssignedItems,
   isFetchingLineItems,
   isLoadingLineItems,
   displayAwardPlan,
@@ -72,8 +73,8 @@ const WorkOrderDetailTab = ({
   const getDefaultValues = () => {
     return {
       assignedItems:
-        workOrder?.assignedItems?.length > 0
-          ? workOrder?.assignedItems?.map(e => {
+        workOrderAssignedItems?.length > 0
+          ? workOrderAssignedItems?.map(e => {
               return { ...e, uploadedDoc: null, clientAmount: e.price ?? 0 * e.quantity ?? 0 }
             })
           : [],
@@ -82,7 +83,9 @@ const WorkOrderDetailTab = ({
     }
   }
 
-  const formReturn = useForm<FormValues>()
+  const formReturn = useForm<FormValues>({
+    defaultValues: getDefaultValues(),
+  })
 
   const { control, getValues, reset } = formReturn
   const values = getValues()
@@ -92,10 +95,10 @@ const WorkOrderDetailTab = ({
   })
 
   useEffect(() => {
-    if (workOrder && workOrder?.id) {
+    if (workOrder?.id && workOrderAssignedItems) {
       reset(getDefaultValues())
     }
-  }, [workOrder, reset])
+  }, [workOrder, reset, workOrderAssignedItems?.length])
 
   const downloadPdf = () => {
     let doc = new jsPDF()

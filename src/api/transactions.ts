@@ -62,6 +62,7 @@ export const useTransactions = (projectId?: string) => {
 
 export const useTransactionsV1 = (projectId?: string) => {
   const client = useClient()
+
   const { data: transactions, ...rest } = useQuery<Array<TransactionType>>(
     [GET_TRANSACTIONS_API_KEY, projectId],
     async () => {
@@ -162,7 +163,7 @@ const transactionTypeOptions = [
   {
     value: TransactionTypeValues.depreciation,
     label: 'Depreciation',
-  },
+  }
 ]
 
 export const useTransactionTypes = (screen?: string) => {
