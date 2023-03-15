@@ -45,7 +45,7 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-
+import { NumberInput } from 'components/input/input'
 
 type UserManagement = {
   onClose: () => void
@@ -140,7 +140,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
     (isVendor && !formValues.vendorId) ||
-    (isFPM && (!fpmRole || !formValues.managerRoleId  || !formValues?.newTarget)) ||
+    (isFPM && (!fpmRole || !formValues.managerRoleId || !formValues?.newTarget)) ||
     (showMarkets && noMarketsSelected) ||
     (showStates && !validateState(formValues?.states)) ||
     (showRegions && !validateRegions(formValues?.regions))
@@ -570,8 +570,28 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <FormLabel variant="strong-label" size="md">
                 {t(`${USER_MANAGEMENT}.modal.newTarget`)}
               </FormLabel>
-              <Input variant="required-field" type="number" {...register('newTarget')} />
-           
+              <Controller
+                control={control}
+                name="newTarget"
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberInput
+                        data-testid="new_target"
+                        value={field.value}
+                        onValueChange={values => {
+                          const { floatValue } = values
+                          field.onChange(floatValue)
+                        }}
+                        prefix={'$'}
+                        customInput={Input}
+                        variant="required-field"
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              />
             </FormControl>
 
             <FormControl w="215px">
@@ -617,28 +637,28 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             </FormControl>
             <Box>
               <HStack mt="30px" w="300px">
-                        <FormControl>
-                          <Checkbox
-                            {...register('vendorAdmin', {
-                              onChange: e => {
-                                if (!e.target.checked) setValue('primaryAdmin', false)
-                              },
-                            })}
-                          >
-                            Admin
-                          </Checkbox>
-                        </FormControl>
-                        <FormControl>
-                          <Checkbox
-                            isChecked={formValues.primaryAdmin}
-                            isDisabled={isPrimaryDisabled}
-                            {...register('primaryAdmin')}
-                          >
-                            <chakra.span position="relative">Primary</chakra.span>
-                          </Checkbox>
-                        </FormControl>
-                      </HStack>
-              </Box>
+                <FormControl>
+                  <Checkbox
+                    {...register('vendorAdmin', {
+                      onChange: e => {
+                        if (!e.target.checked) setValue('primaryAdmin', false)
+                      },
+                    })}
+                  >
+                    Admin
+                  </Checkbox>
+                </FormControl>
+                <FormControl>
+                  <Checkbox
+                    isChecked={formValues.primaryAdmin}
+                    isDisabled={isPrimaryDisabled}
+                    {...register('primaryAdmin')}
+                  >
+                    <chakra.span position="relative">Primary</chakra.span>
+                  </Checkbox>
+                </FormControl>
+              </HStack>
+            </Box>
           </HStack>
         </>
       ) : null}
@@ -665,12 +685,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             control={control}
             name="state"
             render={({ field }) => (
-              <ReactSelect
-                id="state"
-                {...field}
-                options={stateOptions}
-                selectProps={{ isBorderLeft: true }}
-              />
+              <ReactSelect id="state" {...field} options={stateOptions} selectProps={{ isBorderLeft: true }} />
             )}
           />
         </FormControl>
@@ -695,6 +710,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               render={({ field }) => {
                 return (
                   <NumberFormat
+                    data-testid="telephone_number"
                     customInput={Input}
                     value={field.value}
                     onChange={e => field.onChange(e)}
