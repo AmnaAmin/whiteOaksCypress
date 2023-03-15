@@ -2,6 +2,8 @@ import { useToast } from '@chakra-ui/react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import orderBy from 'lodash/orderBy'
+import { PROJECT_TYPE } from 'features/project-type/project-type.i18n'
+import { t } from 'i18next'
 
 export const useProjectType = () => {
   const client = useClient()
@@ -105,8 +107,8 @@ export const useProjTypeDelMutation = () => {
     {
       onSuccess() {
         toast({
-          title: 'Delete Project Type',
-          description: `Project Type has been deleted successfully.`,
+          title: t(`${PROJECT_TYPE}.titleDel`),
+          description: t(`${PROJECT_TYPE}.delMsg`),
           status: 'success',
           duration: 9000,
           isClosable: true,
@@ -117,8 +119,8 @@ export const useProjTypeDelMutation = () => {
 
       onError(error: any) {
         toast({
-          title: 'Delete Project Type',
-          description: (error.title as string) ?? 'Unable to Delete Project Type.',
+          title: t(`${PROJECT_TYPE}.titleDel`),
+          description: (error.title as string) ?? t(`${PROJECT_TYPE}.failedMsg`),
           status: 'error',
           duration: 9000,
           isClosable: true,

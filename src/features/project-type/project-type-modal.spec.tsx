@@ -7,8 +7,8 @@ import { ProjectTypeModal } from './project-type-modal'
 
 jest.setTimeout(250000)
 
-const renderNewProjectTypeModal = async ({ onClose, isOpen, projectTypetDetails }) => {
-  await render(<ProjectTypeModal projectTypetDetails={projectTypetDetails} onClose={onClose} isOpen={isOpen} />, {
+const renderNewProjectTypeModal = async ({ onClose, isOpen, projectTypeDetails }) => {
+  await render(<ProjectTypeModal projectTypeDetails={projectTypeDetails} onClose={onClose} isOpen={isOpen} />, {
     wrapper: Providers,
   })
 }
@@ -16,8 +16,8 @@ const renderNewProjectTypeModal = async ({ onClose, isOpen, projectTypetDetails 
 describe('Project type maodal test case', () => {
   test('New Project-Type modal Should render properly and submit button and type input field test case', async () => {
     const onClose = jest.fn()
-    const projectTypetDetails = undefined
-    await renderNewProjectTypeModal({ onClose, isOpen: true, projectTypetDetails })
+    const projectTypeDetails = undefined
+    await renderNewProjectTypeModal({ onClose, isOpen: true, projectTypeDetails })
     expect(screen.getByText('Type')).toBeInTheDocument()
     expect(screen.getByText('Save')).toBeInTheDocument()
     expect(screen.getByText('Cancel')).toBeInTheDocument()
@@ -39,8 +39,8 @@ describe('Project type maodal test case', () => {
 
   test('Edit Project-Type modal Should render properly', async () => {
     const onClose = jest.fn()
-    const projectTypetDetails = PROJECT_TYPE_MODAL_MOCK
-    await renderNewProjectTypeModal({ onClose, isOpen: true, projectTypetDetails })
+    const projectTypeDetails = PROJECT_TYPE_MODAL_MOCK
+    await renderNewProjectTypeModal({ onClose, isOpen: true, projectTypeDetails })
     expect(screen.getByText('Created By')).toBeInTheDocument()
     expect(screen.getByText('Created Date')).toBeInTheDocument()
     expect(screen.getByText('Modified By')).toBeInTheDocument()
@@ -52,8 +52,8 @@ describe('Project type maodal test case', () => {
 
   test('Edit Project-Type modal Submit button and type input feild test case', async () => {
     const onClose = jest.fn()
-    const projectTypetDetails = PROJECT_TYPE_MODAL_MOCK
-    await renderNewProjectTypeModal({ onClose, isOpen: true, projectTypetDetails })
+    const projectTypeDetails = PROJECT_TYPE_MODAL_MOCK
+    await renderNewProjectTypeModal({ onClose, isOpen: true, projectTypeDetails })
     expect(screen.getByTestId('createdBy')).toBeInTheDocument()
     expect(screen.getByTestId('createdDate')).toBeInTheDocument()
     expect(screen.getByTestId('modifiedBy')).toBeInTheDocument()

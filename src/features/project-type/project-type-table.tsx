@@ -54,7 +54,7 @@ export const ProjectTypeTable = () => {
   return (
     <Box overflow="auto" roundedTop={6} border="1px solid #CBD5E0">
       <ProjectTypeModal
-        projectTypetDetails={selectedProjectType}
+        projectTypeDetails={selectedProjectType}
         onClose={() => {
           setSelectedProjectType(undefined)
           onCloseDisclosure()

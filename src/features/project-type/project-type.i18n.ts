@@ -5,6 +5,10 @@ export const projectType = {
       [PROJECT_TYPE]: {
         //Page
         projectType: 'Project Type',
+        titleDel: 'Delete Project Type',
+        delMsg: 'Project Type has been deleted successfully.',
+        failedMsg: 'Unable to Delete Project Type.',
+        delConfirmText: 'Do you really want to delete this Project Type?',
         //Table
         type: 'Type',
         createdBy: 'Created By',
@@ -28,6 +32,10 @@ export const projectType = {
       [PROJECT_TYPE]: {
         //Page
         projectType: 'Tipo de proyecto',
+        titleDel: 'Eliminar tipo de proyecto',
+        delMsg: 'El tipo de proyecto se ha eliminado correctamente.',
+        failedMsg: 'No se puede eliminar el tipo de proyecto.',
+        delConfirmText: 'Realmente desea eliminar este tipo de proyecto?',
         //Type
         type: 'Escribe',
         createdBy: 'Creado por',
