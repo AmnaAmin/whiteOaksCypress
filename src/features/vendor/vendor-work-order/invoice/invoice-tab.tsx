@@ -444,7 +444,7 @@ export const InvoiceTab = ({ onClose, workOrder, projectData, transactions, docu
       </ModalFooter>
       <ConfirmationBox
         title="Invoice"
-        content="Are you sure you want to generate invoice"
+        content={t('invoiceGenerateMsg')}
         isOpen={isGenerateInvoiceOpen}
         onClose={onGenerateInvoiceClose}
         onConfirm={generatePdf}

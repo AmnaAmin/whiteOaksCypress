@@ -16,11 +16,12 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { useProjectTypeEditMutation, useProjectTypeMutation } from 'api/project-type'
+import { useProjectTypeEditMutation, useProjectTypeMutation, useProjTypeDelMutation } from 'api/project-type'
+import { ConfirmationBox } from 'components/Confirmation'
 import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiCalendar, BiDetail } from 'react-icons/bi'
+import { BiCalendar, BiDetail, BiTrash } from 'react-icons/bi'
 import { useAuth } from 'utils/auth-context'
 import { dateFormat } from 'utils/date-time-utils'
 import { PROJECT_TYPE } from './project-type.i18n'
@@ -51,45 +52,42 @@ const ReadonlyFileStructure: React.FC<{ label: string; value: string; icons: Rea
 
 export type ProjectTypeFormTypes = {
   onClose: () => void
-  projectTypetDetails?: any
+  projectTypeDetails?: any
   isOpen: boolean
 }
 
-export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, projectTypetDetails, isOpen }) => {
+export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, projectTypeDetails, isOpen }) => {
   const { t } = useTranslation()
   const { register, handleSubmit, setValue, watch, reset } = useForm()
   const { mutate: projectTypePayload, isLoading } = useProjectTypeMutation()
+  const { mutate: delProjType, isLoading: loadingDel } = useProjTypeDelMutation()
   const { mutate: projectTypeEditPayload, isLoading: loading } = useProjectTypeEditMutation()
   const { data } = useAuth()
   const typeFieldWatch = watch('type')
   const Loading = isLoading || loading
-  const { onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  const { isOpen: isOpenProjType, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
     close()
   }, [close, onCloseDisclosure])
 
-  useEffect(() => {
-    if (projectTypetDetails) {
-      onOpen()
-    } else {
-      onCloseDisclosure()
-    }
-  }, [onCloseDisclosure, onOpen, projectTypetDetails])
+  const deleteProjectType = () => {
+    delProjType(projectTypeDetails, { onSuccess: () => onClose() })
+  }
 
   const onSubmit = value => {
-    if (projectTypetDetails) {
+    if (projectTypeDetails) {
       const editPayload = {
-        createdBy: projectTypetDetails?.createdBy,
-        createdDate: projectTypetDetails?.createdDate,
-        id: projectTypetDetails?.id,
+        createdBy: projectTypeDetails?.createdBy,
+        createdDate: projectTypeDetails?.createdDate,
+        id: projectTypeDetails?.id,
         modifiedDate: null,
         modifiedBy: '',
-        lastModifiedBy: projectTypetDetails?.lastModifiedBy,
+        lastModifiedBy: projectTypeDetails?.lastModifiedBy,
         lastModifiedDate:
-          typeFieldWatch === projectTypetDetails?.value
-            ? projectTypetDetails?.lastModifiedDate
+          typeFieldWatch === projectTypeDetails?.value
+            ? projectTypeDetails?.lastModifiedDate
             : new Date().toISOString(),
         value: value.type,
       }
@@ -99,7 +97,7 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
         createdBy: `${data?.user?.firstName} ${data?.user?.lastName}`,
         value: value.type,
         createdDate: new Date().toISOString(),
-        id: projectTypetDetails?.id,
+        id: projectTypeDetails?.id,
       }
       projectTypePayload(payload, {
         onSuccess: () => {
@@ -111,10 +109,10 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
   }
 
   useEffect(() => {
-    if (projectTypetDetails) {
-      setValue('type', projectTypetDetails?.value)
+    if (projectTypeDetails) {
+      setValue('type', projectTypeDetails?.value)
     }
-  }, [projectTypetDetails])
+  }, [projectTypeDetails])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="3xl" isCentered>
@@ -122,7 +120,7 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
       <ModalContent borderTop="2px solid #4E87F8" rounded={0}>
         <ModalHeader borderBottom="1px solid #E2E8F0">
           <FormLabel variant="strong-label" m={0}>
-            {projectTypetDetails ? t(`${PROJECT_TYPE}.editProjectType`) : t(`${PROJECT_TYPE}.newProjectType`)}
+            {projectTypeDetails ? t(`${PROJECT_TYPE}.editProjectType`) : t(`${PROJECT_TYPE}.newProjectType`)}
           </FormLabel>
         </ModalHeader>
         <ModalCloseButton
@@ -136,29 +134,29 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
           <ModalBody p={0}>
             <Box>
               <Box px={5}>
-                {projectTypetDetails && (
+                {projectTypeDetails && (
                   <HStack h="100px" borderBottom="1px solid #E2E8F0">
                     <ReadonlyFileStructure
                       label={'createdBy'}
-                      value={projectTypetDetails?.createdBy}
+                      value={projectTypeDetails?.createdBy}
                       icons={BiDetail}
                       testid="createdBy"
                     />
                     <ReadonlyFileStructure
                       label={'createdDate'}
-                      value={dateFormat(projectTypetDetails?.createdDate)}
+                      value={dateFormat(projectTypeDetails?.createdDate)}
                       icons={BiCalendar}
                       testid="createdDate"
                     />
                     <ReadonlyFileStructure
                       label={'modifiedBy'}
-                      value={projectTypetDetails?.lastModifiedBy}
+                      value={projectTypeDetails?.lastModifiedBy}
                       icons={BiDetail}
                       testid="modifiedBy"
                     />
                     <ReadonlyFileStructure
                       label={'modifiedDate'}
-                      value={dateFormat(projectTypetDetails?.lastModifiedDate)}
+                      value={dateFormat(projectTypeDetails?.lastModifiedDate)}
                       icons={BiCalendar}
                       testid="modifiedDate"
                     />
@@ -178,28 +176,45 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
             </Box>
           </ModalBody>
           <ModalFooter borderTop="1px solid #E2E8F0" mt="40px">
-            <Button
-              variant="outline"
-              colorScheme="brand"
-              mr={3}
-              onClick={() => {
-                onClose()
-                reset()
-              }}
-              data-testid="cancelModal"
-            >
-              {t(`${PROJECT_TYPE}.cancel`)}
-            </Button>
-            <Button
-              isDisabled={!typeFieldWatch || Loading}
-              colorScheme="brand"
-              type="submit"
-              data-testid="saveProjectType"
-            >
-              {t(`${PROJECT_TYPE}.save`)}
-            </Button>
+            <HStack justifyContent="start" w="100%">
+              {projectTypeDetails && (
+                <Button variant="outline" colorScheme="brand" size="md" onClick={onOpen} leftIcon={<BiTrash />}>
+                  {t(`${PROJECT_TYPE}.deleteType`)}
+                </Button>
+              )}
+            </HStack>
+            <HStack w="100%" justifyContent="end">
+              <Button
+                variant="outline"
+                colorScheme="brand"
+                mr={3}
+                onClick={() => {
+                  onClose()
+                  reset()
+                }}
+                data-testid="cancelModal"
+              >
+                {t(`${PROJECT_TYPE}.cancel`)}
+              </Button>
+              <Button
+                isDisabled={!typeFieldWatch || Loading}
+                colorScheme="brand"
+                type="submit"
+                data-testid="saveProjectType"
+              >
+                {t(`${PROJECT_TYPE}.save`)}
+              </Button>
+            </HStack>
           </ModalFooter>
         </form>
+        <ConfirmationBox
+          title="Project Type"
+          content={t(`${PROJECT_TYPE}.delConfirmText`)}
+          isOpen={isOpenProjType}
+          onClose={onCloseDisclosure}
+          isLoading={loadingDel}
+          onConfirm={deleteProjectType}
+        />
       </ModalContent>
     </Modal>
   )
