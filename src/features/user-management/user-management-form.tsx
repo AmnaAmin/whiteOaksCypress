@@ -37,7 +37,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiErrorCircle } from 'react-icons/bi'
-import NumberFormat from 'react-number-format'
+import NumberFormat, { NumberFormatValues } from 'react-number-format'
 import { UserForm } from 'types/user.types'
 import { parseMarketFormValuesToAPIPayload } from 'utils/markets'
 import { PasswordField } from './password-field'
@@ -45,7 +45,8 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-
+import { CustomRequiredInput, NumberInput } from 'components/input/input'
+import { isValidAndNonEmpty } from 'utils'
 
 type UserManagement = {
   onClose: () => void
@@ -140,7 +141,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
     (isVendor && !formValues.vendorId) ||
-    (isFPM && (!fpmRole || !formValues.managerRoleId || !formValues?.newTarget)) ||
+    (isFPM && (!fpmRole || !formValues.managerRoleId || !isValidAndNonEmpty(formValues?.newTarget))) ||
     (showMarkets && noMarketsSelected) ||
     (showStates && !validateState(formValues?.states)) ||
     (showRegions && !validateRegions(formValues?.regions))
@@ -570,8 +571,32 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <FormLabel variant="strong-label" size="md">
                 {t(`${USER_MANAGEMENT}.modal.newTarget`)}
               </FormLabel>
-             
-              <Input variant="required-field" type="number" {...register('newTarget')} />
+              <Controller
+                control={control}
+                name="newTarget"
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                    
+
+
+<NumberFormat
+                          data-testid="new_target"
+                          customInput={Input}
+                          value={field.value}
+                          onValueChange={e => {
+                            field.onChange(e.floatValue ?? '')
+                          }}
+                          prefix={'$'}
+                          variant="required-field"
+                        />
+
+
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              />
             </FormControl>
 
             <FormControl w="215px">
