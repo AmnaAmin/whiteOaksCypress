@@ -45,7 +45,7 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-import { NumberInput } from 'components/input/input'
+
 
 type UserManagement = {
   onClose: () => void
@@ -570,28 +570,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <FormLabel variant="strong-label" size="md">
                 {t(`${USER_MANAGEMENT}.modal.newTarget`)}
               </FormLabel>
-              <Controller
-                control={control}
-                name="newTarget"
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberInput
-                        data-testid="new_target"
-                        value={field.value}
-                        onValueChange={values => {
-                          const { floatValue } = values
-                          field.onChange(floatValue)
-                        }}
-                        prefix={'$'}
-                        customInput={Input}
-                        variant="required-field"
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              />
+             
+              <Input variant="required-field" type="number" {...register('newTarget')} />
             </FormControl>
 
             <FormControl w="215px">
