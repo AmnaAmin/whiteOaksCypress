@@ -1,9 +1,9 @@
 export const SELECTED_CARD_MAP_URL = {
   workInProgress: 'projectStatusId.in=7,8,9,10,120',
   receivable: 'projectStatusId.in=11',
-  payable: 'numberOfInvoicedWorkorders.greaterThan=0&projectStatusId.notIn=220',
-  material: 'projectStatusId.notIn=33,41,220,119&materialCost.notEquals=0',
-  draw: 'projectStatusId.notIn=33,41,220,119&drawAmountWo.notEquals=0',
+  payable: 'numberOfInvoicedWorkorders.greaterThan=0&projectStatusId.notIn=220,33',
+  material: 'projectStatusId.notIn=33,41,220,11,72&materialCost.notEquals=0',
+  draw: 'projectStatusId.notIn=33,41,220,11,72&drawAmountWo.notEquals=0',
 }
 export const filterByMonthOptions = [
   { value: 'All', label: 'All' },
