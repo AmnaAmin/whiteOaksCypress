@@ -45,8 +45,6 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-import { CustomRequiredInput, NumberInput } from 'components/input/input'
-import { isValidAndNonEmpty } from 'utils'
 
 type UserManagement = {
   onClose: () => void
@@ -141,7 +139,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
     (isVendor && !formValues.vendorId) ||
-    (isFPM && (!fpmRole || !formValues.managerRoleId || !isValidAndNonEmpty(formValues?.newTarget))) ||
+    (isFPM && (!fpmRole || !formValues.managerRoleId || !formValues.newTarget)) ||
     (showMarkets && noMarketsSelected) ||
     (showStates && !validateState(formValues?.states)) ||
     (showRegions && !validateRegions(formValues?.regions))
@@ -333,7 +331,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <ReactSelect
                 {...rest}
                 isDisabled={userInfo && userInfo.userTypeLabel === 'Vendor'}
-                selectProps={{ isBorderLeft: true }}
+                selectProps={{ isBorderLeft: true ,  menuHeight: '180px'}}
                 options={accountTypeOptions}
                 onChange={target => {
                   onChange(target)
@@ -546,7 +544,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 render={({ field: { onChange, ...rest } }) => (
                   <ReactSelect
                     {...rest}
-                    selectProps={{ isBorderLeft: managerRoleOptions.length > 0 }}
+                    selectProps={{isBorderLeft: managerRoleOptions.length > 0 }}
                     options={managerRoleOptions}
                     onChange={param => {
                       onChange(param)
@@ -571,33 +569,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <FormLabel variant="strong-label" size="md">
                 {t(`${USER_MANAGEMENT}.modal.newTarget`)}
               </FormLabel>
-              <Controller
-                control={control}
-                name="newTarget"
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                    
-
-
-<NumberFormat
-                          data-testid="new_target"
-                          customInput={Input}
-                          value={field.value}
-                          onValueChange={e => {
-                            field.onChange(e.floatValue ?? '')
-                          }}
-                          prefix={'$'}
-                          variant="required-field"
-                        />
-
-
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              />
+              <Input variant="required-field" type="number" {...register('newTarget')} />
             </FormControl>
+
 
             <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
@@ -690,7 +664,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             control={control}
             name="state"
             render={({ field }) => (
-              <ReactSelect id="state" {...field} options={stateOptions} selectProps={{ isBorderLeft: true }} />
+              <ReactSelect id="state" {...field} options={stateOptions}  selectProps={{ isBorderLeft: true , menuHeight: '180px' }} />
             )}
           />
         </FormControl>
