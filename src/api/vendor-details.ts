@@ -216,7 +216,7 @@ export const useTrades = () => {
   const client = useClient()
 
   return useQuery<Array<Trade>>('trades', async () => {
-    const response = await client('vendor-skills?includeInactive=false', {})
+    const response = await client('vendor-skills?isActive.in=true', {})
 
     return orderBy(response?.data?.filter(r => r.active) || [], ['id'], ['desc'])
   })
