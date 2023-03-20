@@ -12,7 +12,6 @@ import {
   GotoLastPage,
   GotoNextPage,
   GotoPreviousPage,
-  SelectPageSize,
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
@@ -21,9 +20,6 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { TableNames } from 'types/table-column.types'
 import { ExportButton } from 'components/table-refactored/export-button'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { generateSettingColumn } from 'components/table-refactored/make-data'
-import { useUserProfile } from 'utils/redux-common-selectors'
-import { Account } from 'types/account.types'
 
 export const UserManagementTable = React.forwardRef((props: any, ref) => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
@@ -33,7 +29,6 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.UserManagement)
-  const { email } = useUserProfile() as Account
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
@@ -62,7 +57,7 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
   const onSave = (columns: any) => {
     postGridColumn(columns)
   }
-  const { paginationRecord, columnsWithoutPaginationRecords } = useMemo(() => {
+  const { paginationRecord } = useMemo(() => {
     const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
     const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
 
@@ -71,23 +66,6 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
       columnsWithoutPaginationRecords,
     }
   }, [settingColumns])
-
-  const onPageSizeChange = pageSize => {
-    if (paginationRecord) {
-      postGridColumn([...columnsWithoutPaginationRecords, { ...paginationRecord, field: pageSize }] as any)
-    } else {
-      const paginationSettings = generateSettingColumn({
-        field: pageSize,
-        contentKey: 'pagination' as string,
-        order: USER_MGT_COLUMNS.length,
-        userId: email,
-        type: TableNames.project,
-        hide: true,
-      })
-      settingColumns.push(paginationSettings)
-      postGridColumn(settingColumns as any)
-    }
-  }
 
   useEffect(() => {
     if (!paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord) {
@@ -146,16 +124,7 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
                 fileName="user-managements"
               />
               <CustomDivider />
-              {settingColumns && (
-                <TableColumnSettings
-                  disabled={isLoading}
-                  onSave={onSave}
-                  columns={settingColumns.filter(
-                    col =>
-                      col.colId !== 'id' && col.colId !== 'flagged' && !(columnVisibility[col?.contentKey] === false),
-                  )}
-                />
-              )}
+              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
             </ButtonsWrapper>
             <TablePagination>
               <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
@@ -163,7 +132,6 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
               <GotoPreviousPage />
               <GotoNextPage />
               <GotoLastPage />
-              <SelectPageSize dataCount={dataCount} onPageSizeChange={onPageSizeChange} />
             </TablePagination>
           </TableFooter>
         </TableContextProvider>
