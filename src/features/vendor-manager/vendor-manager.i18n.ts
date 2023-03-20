@@ -21,6 +21,12 @@ export const vendor_manager = {
         newVendorSkills: 'New Vendor Skills',
         skills: 'Skills',
         modifiedDate: 'Modified Date',
+        deleteSkill: 'Delete Skill',
+        delConfirmText: 'Delete Vendor Skill',
+        delConfirmContent: 'Are you sure you want to delete this vendor skill ?',
+        deleteToastTitle: 'Vendor Skill',
+        deleteSuccessMessage: 'Vendor skill deleted successfully.',
+        deleteFailureMessage: 'Unable to delete vendor skill.',
 
         //Markets
         state: 'State',
@@ -52,7 +58,12 @@ export const vendor_manager = {
         newVendorSkills: 'Habilidades de nuevos proveedores',
         skills: 'Habilidades',
         modifiedDate: 'Fecha de modificación',
-
+        deleteSkill: 'Eliminar habilidad',
+        delConfirmText: 'Eliminar habilidad de proveedor',
+        delConfirmContent: '¿Está seguro de que desea eliminar esta habilidad de proveedor?',
+        deleteToastTitle: 'Habilidad de vendedor',
+        deleteSuccessMessage: 'Habilidad de proveedor eliminada con éxito.',
+        deleteFailureMessage: 'No se puede eliminar la habilidad del proveedor.',
         //Market
         state: 'Estado',
 

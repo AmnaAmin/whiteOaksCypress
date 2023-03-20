@@ -7,7 +7,11 @@ import { useTranslation } from 'react-i18next'
 import { BiBookAdd } from 'react-icons/bi'
 
 export const VendorSkills = () => {
-  const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
+  const {
+    isOpen: isOpenVendorSkillModal,
+    onClose: onVendorSkillModalClose,
+    onOpen: onVendorSkillModalOpen,
+  } = useDisclosure()
   const { t } = useTranslation()
 
   return (
@@ -17,13 +21,15 @@ export const VendorSkills = () => {
           <Text fontWeight={600} fontSize="18px" color="gray.600">
             {t(`${VENDOR_MANAGER}.vendorSkills`)}
           </Text>
-          <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onDocumentModalOpen}>
+          <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onVendorSkillModalOpen}>
             {t(`${VENDOR_MANAGER}.newVendorSkills`)}
           </Button>
         </HStack>
         <VendorSkillsTable />
       </Card>
-      <NewVendorSkillsModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} />
+      {isOpenVendorSkillModal && (
+        <NewVendorSkillsModal isOpen={isOpenVendorSkillModal} onClose={onVendorSkillModalClose} />
+      )}
     </>
   )
 }

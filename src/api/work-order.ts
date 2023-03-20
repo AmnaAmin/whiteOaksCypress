@@ -129,6 +129,12 @@ export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undef
     },
     { enabled: !!workOrderId },
   )
+  const workOrderDetails = {
+    ...workOrder,
+    assignedItems: sortBy(workOrder?.assignedItems, e => {
+      return e.orderNo
+    }),
+  }
 
   return {
     workOrderAssignedItems: sortBy(workOrder?.assignedItems, e => {
@@ -136,7 +142,7 @@ export const useFetchWorkOrder = ({ workOrderId }: { workOrderId: number | undef
     }),
     awardPlanScopeAmount: workOrder?.awardPlanScopeAmount,
     displayAwardPlan: workOrder?.displayAwardPlan,
-    workOrderDetails: workOrder,
+    workOrderDetails: workOrderDetails,
     ...rest,
   }
 }
@@ -310,13 +316,13 @@ export const parseWODetailValuesToPayload = formValues => {
   }
 }
 
-export const defaultValuesWODetails = (workOrder, woAssignedItems, defaultSkill, defaultVendor) => {
+export const defaultValuesWODetails = (workOrder, defaultVendor, tradeOptions) => {
   const defaultValues = {
     cancel: {
       value: '',
       label: 'Select',
     },
-    vendorSkillId: defaultSkill,
+    vendorSkillId: tradeOptions?.find(o => o?.value === workOrder?.vendorSkillId),
     vendorId: defaultVendor,
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
@@ -324,8 +330,8 @@ export const defaultValuesWODetails = (workOrder, woAssignedItems, defaultSkill,
     showPrice: workOrder.showPricing ?? false,
     notifyVendor: workOrder.notifyVendor ?? false,
     assignedItems:
-      woAssignedItems?.length > 0
-        ? woAssignedItems?.map(e => {
+      workOrder?.assignedItems?.length > 0
+        ? workOrder?.assignedItems?.map(e => {
             return { ...e, uploadedDoc: null, clientAmount: (e.price ?? 0) * (e.quantity ?? 0) }
           })
         : [],
