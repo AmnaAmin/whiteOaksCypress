@@ -236,7 +236,7 @@ const WorkOrderDetailTab = props => {
     const option = [] as any
     if (trades && trades?.length > 0) {
       trades?.forEach(t => {
-        option.push({ label: t.skill as string, value: t.id as number, title: t.skill })
+        option.push({ label: t.skill as string, value: t.id as number })
       })
     }
     setTradeOptions(option)
