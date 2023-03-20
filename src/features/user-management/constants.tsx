@@ -1,3 +1,8 @@
+import { ColumnDef } from '@tanstack/react-table'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { StatusUserMgt } from './status-user-mgt'
+import { USER_MANAGEMENT } from './user-management.i8n'
+
 //TODO - Move to constants file
 export const BONUS = [
   {
@@ -75,5 +80,78 @@ export const DURATION = [
   {
     value: -1,
     label: 'Indefinitely',
+  },
+]
+
+export const USER_MGT_TABLE_QUERIES_KEY = {
+  email: 'email.contains',
+  firstName: 'firstName.contains',
+  lastName: 'lastName.contains',
+  userTypeLabel: 'userTypeLabel.contains',
+  langKey: 'langKey.contains',
+  activatedLabel: 'activatedLabel.contains',
+  createdDate: 'createdDate.equals',
+  lastModifiedBy: 'lastModifiedBy.contains',
+  lastModifiedDate: 'lastModifiedDate.equals',
+}
+
+export const USER_MGT_COLUMNS: ColumnDef<any>[] = [
+  {
+    header: `${USER_MANAGEMENT}.table.email`,
+    accessorKey: 'email',
+  },
+  {
+    header: `${USER_MANAGEMENT}.table.firstName`,
+    accessorKey: 'firstName',
+  },
+  {
+    header: `${USER_MANAGEMENT}.table.lastName`,
+    accessorKey: 'lastName',
+  },
+  {
+    header: `${USER_MANAGEMENT}.table.account`,
+    accessorKey: 'userTypeLabel',
+  },
+  {
+    header: `${USER_MANAGEMENT}.table.language`,
+    accessorKey: 'langKey',
+  },
+  {
+    header: `${USER_MANAGEMENT}.table.status`,
+    accessorKey: 'activatedLabel',
+    accessorFn: row => {
+      return row?.activated ? 'Activated' : 'Deactivate'
+    },
+    cell: (row: any) => {
+      const value = row?.row.original?.activated
+      return <StatusUserMgt id={value} />
+    },
+  },
+  {
+    header: `${USER_MANAGEMENT}.table.createdDate`,
+    accessorKey: 'createdDate',
+    accessorFn: (cellInfo: any) => {
+      return datePickerFormat(cellInfo.createdDate)
+    },
+    cell: (row: any) => {
+      const value = row?.row.original?.createdDate
+      return dateFormat(value)
+    },
+    meta: { format: 'date' },
+  },
+
+  {
+    header: `${USER_MANAGEMENT}.table.modifiedBy`,
+    accessorKey: 'lastModifiedBy',
+  },
+  {
+    header: `${USER_MANAGEMENT}.table.modifiedDate`,
+    accessorKey: 'lastModifiedDate',
+    accessorFn: (cellInfo: any) => datePickerFormat(cellInfo.lastModifiedDate),
+    cell: (row: any) => {
+      const value = row?.row.original?.lastModifiedDate
+      return dateFormat(value)
+    },
+    meta: { format: 'date' },
   },
 ]
