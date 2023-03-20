@@ -261,6 +261,7 @@ export type Trade = {
   modifiedBy: string
   modifiedDate: string | null
   skill: string
+  active: boolean
 }
 
 type TradeFormValues = {

@@ -16,16 +16,18 @@ import {
   useToast,
   Icon,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react'
-import { BiCalendar, BiDetail } from 'react-icons/bi'
+import { BiCalendar, BiDetail, BiTrash } from 'react-icons/bi'
 import { useForm, useWatch } from 'react-hook-form'
 import { dateFormat, dateISOFormat } from 'utils/date-time-utils'
-import { useAccountDetails, useVendorSkillsMutation } from 'api/vendor-details'
+import { useAccountDetails, useVendorSkillDelete, useVendorSkillsMutation } from 'api/vendor-details'
 import { useQueryClient } from 'react-query'
 import { VENDOR_MANAGER } from './vendor-manager.i18n'
 import { t } from 'i18next'
 import { Market } from 'types/vendor.types'
 import { useTranslation } from 'react-i18next'
+import { ConfirmationBox } from 'components/Confirmation'
 
 const InformationCard: React.FC<{ label: string; value: string; icons: React.ElementType }> = ({
   label,
@@ -60,6 +62,17 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
   const { control, register, handleSubmit, reset, setValue } = useForm()
   const toast = useToast()
   const queryClient = useQueryClient()
+  const { isOpen: isOpenDeleteSkill, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  const { mutate: deleteVendorSkillMutate, isLoading: loadingDelete } = useVendorSkillDelete()
+
+  const deleteVendorSkill = () => {
+    deleteVendorSkillMutate(selectedVendorSkills, {
+      onSuccess: () => {
+        onCloseDisclosure()
+        onClose()
+      },
+    })
+  }
 
   const onSubmit = data => {
     const arg = {
@@ -157,6 +170,13 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
               </Box>
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px">
+              <HStack justifyContent="start" w="100%">
+                {selectedVendorSkills && (
+                  <Button variant="outline" colorScheme="brand" size="md" onClick={onOpen} leftIcon={<BiTrash />}>
+                    {t(`${VENDOR_MANAGER}.deleteSkill`)}
+                  </Button>
+                )}
+              </HStack>
               <HStack spacing="16px">
                 <Button
                   variant="outline"
@@ -173,6 +193,16 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                 </Button>
               </HStack>
             </ModalFooter>
+            {isOpenDeleteSkill && (
+              <ConfirmationBox
+                title={t(`${VENDOR_MANAGER}.delConfirmText`)}
+                content={t(`${VENDOR_MANAGER}.delConfirmContent`)}
+                isOpen={isOpenDeleteSkill}
+                onClose={onCloseDisclosure}
+                isLoading={loadingDelete}
+                onConfirm={deleteVendorSkill}
+              />
+            )}
           </ModalContent>
         </form>
       </Modal>

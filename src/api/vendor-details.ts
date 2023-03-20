@@ -17,6 +17,8 @@ import {
 import { useClient } from 'utils/auth-context'
 import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
 import { usePaginationQuery } from 'api'
+import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
+import { t } from 'i18next'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -214,9 +216,9 @@ export const useTrades = () => {
   const client = useClient()
 
   return useQuery<Array<Trade>>('trades', async () => {
-    const response = await client('vendor-skills', {})
+    const response = await client('vendor-skills?includeInactive=false', {})
 
-    return orderBy(response?.data || [], ['id'], ['desc'])
+    return orderBy(response?.data?.filter(r => r.active) || [], ['id'], ['desc'])
   })
 }
 
@@ -244,6 +246,44 @@ export const useVendorSkillsMutation = () => {
     },
   )
 }
+
+export const useVendorSkillDelete = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+  return useMutation(
+    (vendorSkill: any) => {
+      return client(`vendor-skills/${vendorSkill?.id}`, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: t(`${VENDOR_MANAGER}.deleteToastTitle`),
+          description: t(`${VENDOR_MANAGER}.deleteSuccessMessage`),
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        queryClient.invalidateQueries('projectType')
+      },
+
+      onError(error: any) {
+        toast({
+          title: t(`${VENDOR_MANAGER}.deleteToastTitle`),
+          description: (error.title as string) ?? t(`${VENDOR_MANAGER}.deleteFailureMessage`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
+
 export const useMarketsMutation = () => {
   const client = useClient()
   const toast = useToast()

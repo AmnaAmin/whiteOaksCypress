@@ -23,7 +23,7 @@ export const VendorSkills = () => {
         </HStack>
         <VendorSkillsTable />
       </Card>
-      <NewVendorSkillsModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} />
+      {isOpenDocumentModal && <NewVendorSkillsModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} />}
     </>
   )
 }
