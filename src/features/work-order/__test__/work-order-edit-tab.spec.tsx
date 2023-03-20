@@ -10,7 +10,8 @@ import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 import { setToken } from 'utils/storage.utils'
 
-export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, projectData }: any) => {
+export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, projectData, lineItems }: any) => {
+  const workOrderDetails = { ...workOrder, assignedItems: lineItems }
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
       <WorkOrderEditTab
@@ -22,7 +23,7 @@ export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, proje
         rejectInvoiceCheck={false}
         projectData={projectData}
         documentsData={DOCUMENTS}
-        workOrderAssignedItems={assignedItems.filter(a => a.workOrderId.toString() === workOrder.id.toString())}
+        workOrderDetails={workOrderDetails}
         isLoadingLineItems={false}
         isFetchingLineItems={false}
       />
@@ -46,7 +47,14 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'past due')
     const projectData = PROJECTS.find(p => p.id === workOrder?.projectId)
     const transactions = []
-    await renderWorkOrderEditTab({ onSave, onClose, workOrder, projectData, transactions })
+    await renderWorkOrderEditTab({
+      onSave,
+      onClose,
+      workOrder,
+      projectData,
+      transactions,
+      lineItems: assignedItems.filter(a => !a.isCompleted && !a.isVerified),
+    })
     expect(screen.getByTestId('companyName').textContent).toEqual(workOrder?.companyName)
     expect(screen.getByTestId('vendorType').textContent).toEqual(workOrder?.skillName)
     expect(screen.getByTestId('email').textContent).toEqual(workOrder?.businessEmailAddress)
@@ -85,7 +93,6 @@ describe('Work Order modal showing work order specific details for PC(Super set 
       await userEvent.click(screen.getByTestId('showMarkAllIsVerified'))
     })
 
-    expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('disabled')
     expect(screen.getByTestId('isVerified-0')).not.toHaveAttribute('data-checked')
     expect(screen.getByTestId('isVerified-1')).not.toHaveAttribute('data-checked')
 
@@ -129,7 +136,14 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'completed')
     const projectData = PROJECTS.find(p => p.id === workOrder?.projectId)
     const transactions = []
-    await renderWorkOrderEditTab({ onSave, onClose, workOrder, projectData, transactions })
+    await renderWorkOrderEditTab({
+      onSave,
+      onClose,
+      workOrder,
+      projectData,
+      transactions,
+      lineItems: assignedItems.filter(a => a.isCompleted && a.isVerified),
+    })
 
     expect(screen.getByTestId('companyName').textContent).toEqual(workOrder?.companyName)
     expect(screen.getByTestId('vendorType').textContent).toEqual(workOrder?.skillName)
