@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import { EditUserModal } from './edit-user-modal'
 import { PaginationState, SortingState, VisibilityState } from '@tanstack/react-table'
@@ -25,7 +25,6 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [selectedUser, setSelectedUser] = useState(undefined)
-  const [paginationInitialized, setPaginationInitialized] = useState(false)
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.UserManagement)
@@ -46,39 +45,13 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
 
   const { onOpen } = useDisclosure()
 
-  const {
-    tableColumns,
-    settingColumns,
-    isFetched: tablePreferenceFetched,
-  } = useTableColumnSettings(USER_MGT_COLUMNS, TableNames.UserManagement)
+  const { tableColumns, settingColumns } = useTableColumnSettings(USER_MGT_COLUMNS, TableNames.UserManagement)
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllUserMgt(queryStringWithoutPagination)
 
   const onSave = (columns: any) => {
     postGridColumn(columns)
   }
-  const { paginationRecord } = useMemo(() => {
-    const paginationCol = settingColumns.find(col => col.contentKey === 'pagination')
-    const columnsWithoutPaginationRecords = settingColumns.filter(col => col.contentKey !== 'pagination')
-
-    return {
-      paginationRecord: paginationCol ? { ...paginationCol, field: paginationCol?.field || 0 } : null,
-      columnsWithoutPaginationRecords,
-    }
-  }, [settingColumns])
-
-  useEffect(() => {
-    if (!paginationInitialized && tablePreferenceFetched && settingColumns.length > 0 && !paginationRecord) {
-      setPaginationInitialized(true)
-      setPagination(prevState => ({ ...prevState, pageSize: 25 }))
-    }
-  }, [settingColumns, tablePreferenceFetched])
-
-  useEffect(() => {
-    if (settingColumns && paginationRecord?.field) {
-      setPagination({ pageIndex: pagination.pageIndex, pageSize: Number(paginationRecord?.field) })
-    }
-  }, [settingColumns?.length])
 
   return (
     <>
