@@ -40,5 +40,6 @@ export enum TableNames {
   markets = 'markets',
   estimates = 'estimates',
   performance = 'performance',
-  vendorUsers = "vendor-users"
+  vendorUsers = 'vendor-users',
+  UserManagement = 'user-management',
 }
