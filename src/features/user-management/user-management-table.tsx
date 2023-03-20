@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import { EditUserModal } from './edit-user-modal'
-import { PaginationState, SortingState, VisibilityState } from '@tanstack/react-table'
+import { PaginationState, SortingState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { useGetAllUserMgt, useUsrMgt } from 'pages/admin/user-management'
@@ -25,7 +25,6 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [selectedUser, setSelectedUser] = useState(undefined)
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.UserManagement)
 
@@ -67,7 +66,6 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
 
       <Box overflow={'auto'} h="calc(100vh - 170px)" border="1px solid #CBD5E0" borderRadius="6px">
         <TableContextProvider
-          id="user-managment"
           data={userMgt}
           columns={tableColumns}
           pagination={pagination}
@@ -77,8 +75,6 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
           totalPages={totalPages}
           columnFilters={columnFilters}
           setColumnFilters={setColumnFilters}
-          columnVisibility={columnVisibility}
-          setColumnVisibility={setColumnVisibility}
         >
           <Table
             onRowClick={row => {
