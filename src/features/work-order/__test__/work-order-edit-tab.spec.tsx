@@ -91,7 +91,7 @@ describe('Work Order modal showing work order specific details for PC(Super set 
 
     /* Items can only be verified, if they are completed */
     expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('disabled')
-    screen.debug(undefined, 100000000000000)
+
     await act(async () => {
       await userEvent.click(screen.getByTestId('isCompleted-0'))
       await userEvent.click(screen.getByTestId('isCompleted-1'))
