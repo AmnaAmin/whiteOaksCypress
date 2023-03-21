@@ -316,13 +316,13 @@ export const parseWODetailValuesToPayload = formValues => {
   }
 }
 
-export const defaultValuesWODetails = (workOrder, defaultVendor, tradeOptions) => {
+export const defaultValuesWODetails = (workOrder, defaultVendor, defaultSkill) => {
   const defaultValues = {
     cancel: {
       value: '',
       label: 'Select',
     },
-    vendorSkillId: tradeOptions?.find(o => o?.value === workOrder?.vendorSkillId),
+    vendorSkillId: defaultSkill,
     vendorId: defaultVendor,
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),

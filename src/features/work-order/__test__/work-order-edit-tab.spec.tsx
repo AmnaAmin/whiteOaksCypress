@@ -107,11 +107,10 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     await act(async () => {
       await userEvent.click(screen.getByTestId('showMarkAllIsVerified'))
     })
-    screen.debug(undefined, 1000000000000000000000000)
-    //expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('data-checked')
-    //expect(screen.getByTestId('isVerified-0')).toHaveAttribute('data-checked')
-    //expect(screen.getByTestId('isVerified-1')).toHaveAttribute('data-checked')
-    /* expect((screen.getByTestId('workOrderDateCompleted') as HTMLInputElement).value).toEqual(
+    expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isVerified-0')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isVerified-1')).toHaveAttribute('data-checked')
+    expect((screen.getByTestId('workOrderDateCompleted') as HTMLInputElement).value).toEqual(
       datePickerFormat(new Date()),
     )
     /* Save call includes following object */

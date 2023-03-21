@@ -232,6 +232,13 @@ const WorkOrderDetailTab = props => {
     title: workOrder?.claimantName as string,
   }
 
+  // Set Vendor Skill
+  const defaultSkill = {
+    value: workOrder?.vendorSkillId as number,
+    label: workOrder?.skillName as string,
+    title: workOrder?.skillName as string,
+  }
+
   useEffect(() => {
     const option = [] as any
     if (trades && trades?.length > 0) {
@@ -313,7 +320,7 @@ const WorkOrderDetailTab = props => {
 
   useEffect(() => {
     if (workOrderDetails?.id) {
-      reset(defaultValuesWODetails(workOrderDetails, defaultVendor, tradeOptions))
+      reset(defaultValuesWODetails(workOrderDetails, defaultVendor, defaultSkill))
     }
   }, [workOrderDetails, reset, tradeOptions?.length])
 
