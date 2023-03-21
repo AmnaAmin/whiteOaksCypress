@@ -67,7 +67,7 @@ type ContactsFormValues = {
 }
 
 type ProjectDetailsLocationFormValues = {
-  address: string | null
+  address: SelectOption | null
   city: string | null
   state: SelectOption | null
   zip: string | null
