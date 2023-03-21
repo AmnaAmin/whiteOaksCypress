@@ -8,9 +8,17 @@ type weekdayCardTypes = {
   onSelectDay: (string) => void
   disabled?: boolean
   isLoading?: boolean
+  clear?: any
 }
 
 export const WeekdayCard = (props: weekdayCardTypes) => {
+  const clickHandler = () => {
+    props.onSelectDay(props.selectedDay !== props.id && props.id)
+    if (props.selectedDay === props.id) {
+      props.clear()
+    }
+  }
+
   return (
     <Flex alignItems="center" cursor={props.count === 0 ? 'not-allowed' : ''} m="0 !important">
       <Button
@@ -24,7 +32,7 @@ export const WeekdayCard = (props: weekdayCardTypes) => {
         fontWeight={400}
         alignContent="right"
         color={props.selectedDay === props.id ? 'white' : '#4A5568'}
-        onClick={() => props.onSelectDay(props.selectedDay !== props.id && props.id)}
+        onClick={clickHandler}
         disabled={props.count ? false : true}
         mx="2"
       >

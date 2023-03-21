@@ -92,6 +92,7 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({ onSelectDay, sel
               onSelectDay={onSelectDay}
               selectedDay={selectedDay}
               isLoading={isLoading}
+              clear={clear}
             />
           )
         })}
