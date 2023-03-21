@@ -79,6 +79,7 @@ describe('Work Order modal showing work order specific details for PC(Super set 
         ? datePickerFormat(workOrder?.workOrderExpectedCompletionDate)
         : 'mm/dd/yyyy',
     )
+
     expect((screen.getByTestId('workOrderDateCompleted') as HTMLInputElement).value).toEqual('')
 
     expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku1')
@@ -89,28 +90,24 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     expect(screen.queryByTestId('showMarkAllIsComplete')).toBeInTheDocument()
 
     /* Items can only be verified, if they are completed */
-    await act(async () => {
-      await userEvent.click(screen.getByTestId('showMarkAllIsVerified'))
-    })
+    expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('disabled')
 
-    expect(screen.getByTestId('isVerified-0')).not.toHaveAttribute('data-checked')
-    expect(screen.getByTestId('isVerified-1')).not.toHaveAttribute('data-checked')
-
-    /* Action to complete items */
     await act(async () => {
-      await userEvent.click(screen.getByTestId('showMarkAllIsVerified'))
       await userEvent.click(screen.getByTestId('isCompleted-0'))
       await userEvent.click(screen.getByTestId('isCompleted-1'))
     })
 
-    /*  Mark All verified after marking line items as completed. Now verified items will be checked */
+    expect(screen.getByTestId('isCompleted-0')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isCompleted-1')).toHaveAttribute('data-checked')
+
     await act(async () => {
       await userEvent.click(screen.getByTestId('showMarkAllIsVerified'))
     })
-    // expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('data-checked')
-    // expect(screen.getByTestId('isVerified-0')).toHaveAttribute('data-checked')
-    // expect(screen.getByTestId('isVerified-1')).toHaveAttribute('data-checked')
-    /* expect((screen.getByTestId('workOrderDateCompleted') as HTMLInputElement).value).toEqual(
+
+    expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isVerified-0')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isVerified-1')).toHaveAttribute('data-checked')
+    expect((screen.getByTestId('workOrderDateCompleted') as HTMLInputElement).value).toEqual(
       datePickerFormat(new Date()),
     )
     /* Save call includes following object */
