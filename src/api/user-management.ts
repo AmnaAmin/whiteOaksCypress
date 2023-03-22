@@ -173,8 +173,6 @@ export const userMangtPayload = (user: any) => {
     delete v['title']
   })
 
-  console.log('🚀 ~ file: user-management.ts:169 ~ userMangtPayload ~ directReports:', directReports)
-
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
@@ -389,13 +387,18 @@ export const useUserDirectReports = (
 
   if (states && states.length >= 1) endPoint.searchParams.set('data', states.toString())
 
-  const apiUrl = `users/downstream/${roleId}?regions=${endPoint.searchParams.get('regions')}&data=${endPoint.searchParams.get('data')}`
+  const apiUrl = `users/downstream/${roleId}?regions=${endPoint.searchParams.get(
+    'regions',
+  )}&data=${endPoint.searchParams.get('data')}`
 
   const { data: directReports, ...rest } = useQuery(
     [USER_DIRECT_REPORTS_KEY, roleId, regions, markets, states],
     async () => {
       const response = await client(apiUrl, {})
 
+      if (response?.data) {
+        ;(window as any)._filteringDone = false
+      }
       return response?.data
     },
     {
