@@ -34,7 +34,7 @@ import { languageOptions } from 'api/vendor-details'
 import { ConfirmationBox } from 'components/Confirmation'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import ReactSelect from 'components/form/react-select'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiErrorCircle } from 'react-icons/bi'
@@ -287,6 +287,26 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     directReportMarkets,
     directReportStates,
   )
+
+  useEffect(() => {
+    if (!directReportOptions) return
+
+    if ((window as any)._filteringDone) return
+    if (!showRegions && !showMarkets && !showStates) return
+
+    const userIds = directReportOptions.map(u => u.id)
+
+    const directReports = formValues?.directReports
+
+    if (!directReports?.length) return
+
+    ;(window as any)._filteringDone = true
+
+    setValue(
+      'directReports' as any,
+      directReports.filter(d => userIds?.includes(d.id)),
+    )
+  }, [directReportRegions, directReportStates, directReportMarkets])
 
   return (
     <form
@@ -597,6 +617,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               name={'directReports' as any}
               render={({ field }) => (
                 <ReactSelect
+                  placeholder="Select or Search"
                   selectProps={{ isBorderLeft: false }}
                   closeMenuOnSelect={false}
                   isMulti={true}
