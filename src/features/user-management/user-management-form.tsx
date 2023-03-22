@@ -277,8 +277,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     (isFPM && (!fpmRole || !formValues.managerRoleId)) ||
     (showMarkets && noMarketsSelected) ||
     (showStates && !validateState(formValues?.states)) ||
-    (showRegions && !validateRegions(formValues?.regions)) ||
-    (showDirectReports && !(formValues as any)?.directReports?.length)
+    (showRegions && !validateRegions(formValues?.regions)) /*||
+    (showDirectReports && !(formValues as any)?.directReports?.length)*/
 
   const { directReportOptions } = useUserDirectReports(
     showDirectReports,
@@ -597,7 +597,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               name={'directReports' as any}
               render={({ field }) => (
                 <ReactSelect
-                  selectProps={{ isBorderLeft: true }}
+                  selectProps={{ isBorderLeft: false }}
                   closeMenuOnSelect={false}
                   isMulti={true}
                   {...field}
