@@ -27,6 +27,7 @@ import {
   useSaveUserDetails,
   useUser,
   useUserDetails,
+  useUserDirectReports,
   useViewVendor,
 } from 'api/user-management'
 import { languageOptions } from 'api/vendor-details'
@@ -263,6 +264,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const isPrimaryDisabled = !formValues.vendorAdmin
 
+  const { directReportOptions } = useUserDirectReports();
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -331,7 +334,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <ReactSelect
                 {...rest}
                 isDisabled={userInfo && userInfo.userTypeLabel === 'Vendor'}
-                selectProps={{ isBorderLeft: true ,  menuHeight: '180px'}}
+                selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                 options={accountTypeOptions}
                 onChange={target => {
                   onChange(target)
@@ -391,6 +394,36 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   }}
                 />
               )}
+            />
+          </FormControl>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t(`${USER_MANAGEMENT}.modal.managerRole`)}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="managerRoleId"
+              render={({ field: { onChange, ...rest } }) => (
+                <ReactSelect
+                  {...rest}
+                  selectProps={{ isBorderLeft: managerRoleOptions.length > 0 }}
+                  options={managerRoleOptions}
+                  onChange={param => {
+                    onChange(param)
+                    clearSelectedManager()
+                  }}
+                />
+              )}
+            />
+          </FormControl>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t(`${USER_MANAGEMENT}.modal.parentFieldProjectManagerId`)}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="parentFieldProjectManagerId"
+              render={({ field }) => <ReactSelect {...field} options={managerOptions} />}
             />
           </FormControl>
         </HStack>
@@ -531,49 +564,32 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </VStack>
       ) : null}
 
+      <HStack mt="30px" spacing={15}>
+        <FormControl w="81.9%">
+          <FormLabel variant="strong-label" size="md">
+            {t(`${USER_MANAGEMENT}.modal.directReports`)}
+          </FormLabel>
+          <Controller
+            control={control}
+            name={'directReports' as any}
+            render={({ field }) => (
+              <ReactSelect selectProps={{ isBorderLeft: true }}  closeMenuOnSelect={false} isMulti={true} {...field} options={directReportOptions} />
+            )}
+          />
+        </FormControl>
+      </HStack>
+
       {isFPM ? (
         <>
-          <HStack mt="30px" spacing={15}>
-            <FormControl w="215px">
-              <FormLabel variant="strong-label" size="md">
-                {t(`${USER_MANAGEMENT}.modal.managerRole`)}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="managerRoleId"
-                render={({ field: { onChange, ...rest } }) => (
-                  <ReactSelect
-                    {...rest}
-                    selectProps={{isBorderLeft: managerRoleOptions.length > 0 }}
-                    options={managerRoleOptions}
-                    onChange={param => {
-                      onChange(param)
-                      clearSelectedManager()
-                    }}
-                  />
-                )}
-              />
-            </FormControl>
-            <FormControl w="215px">
-              <FormLabel variant="strong-label" size="md">
-                {t(`${USER_MANAGEMENT}.modal.parentFieldProjectManagerId`)}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="parentFieldProjectManagerId"
-                render={({ field }) => <ReactSelect {...field} options={managerOptions} />}
-              />
-            </FormControl>
-
-            <FormControl w={215}>
+          <HStack mt="30px" spacing={15} display="none">
+            <FormControl w={215} display="none">
               <FormLabel variant="strong-label" size="md">
                 {t(`${USER_MANAGEMENT}.modal.newTarget`)}
               </FormLabel>
               <Input variant="required-field" type="number" {...register('newTarget')} />
             </FormControl>
 
-
-            <FormControl w="215px">
+            <FormControl w="215px" display="none">
               <FormLabel variant="strong-label" size="md">
                 {t(`${USER_MANAGEMENT}.modal.newBonus`)}
               </FormLabel>
@@ -664,7 +680,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             control={control}
             name="state"
             render={({ field }) => (
-              <ReactSelect id="state" {...field} options={stateOptions}  selectProps={{ isBorderLeft: true , menuHeight: '180px' }} />
+              <ReactSelect
+                id="state"
+                {...field}
+                options={stateOptions}
+                selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
+              />
             )}
           />
         </FormControl>
