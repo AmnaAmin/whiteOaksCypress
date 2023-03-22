@@ -288,9 +288,24 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     directReportStates,
   )
 
-  useEffect(() => {
-    if (!directReportOptions) return
+  useEffect( () => {
 
+    if ( showRegions && noRegionSelected   ) {
+      setValue("directReports", [])
+    }
+    if ( showMarkets && noMarketsSelected   ) {
+      setValue("directReports", [])
+    }
+    if ( showStates && noStatesSelected  ) {
+      setValue("directReports", [])
+    }
+
+  }, [noRegionSelected, noMarketsSelected, noStatesSelected] );
+
+  useEffect(() => {
+
+    if (!directReportOptions) return
+ 
     if ((window as any)._filteringDone) return
     if (!showRegions && !showMarkets && !showStates) return
 
