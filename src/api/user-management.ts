@@ -164,6 +164,17 @@ export const userMangtPayload = (user: any) => {
       ? user.states?.find(state => state.checked === true)?.state?.id
       : ''
   }
+
+  const directReports = user.directReports
+
+  directReports?.forEach(v => {
+    delete v['value']
+    delete v['label']
+    delete v['title']
+  })
+
+  console.log('🚀 ~ file: user-management.ts:169 ~ userMangtPayload ~ directReports:', directReports)
+
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
@@ -180,11 +191,13 @@ export const userMangtPayload = (user: any) => {
     ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
     newBonus: user.newBonus?.label ? user.newBonus?.value : '',
     vendorAdmin: user.vendorAdmin,
-    primaryAdmin: user.primaryAdmin
+    primaryAdmin: user.primaryAdmin,
+    directChild: directReports,
   }
   delete userObj.states
   delete userObj.state
   delete userObj.accountType
+  delete userObj.directReports
 
   return userObj
 }
@@ -321,6 +334,7 @@ const parseUserFormData = ({
   markets,
   states,
   regions,
+  directReports,
   allManagersOptions,
   accountTypeOptions,
   viewVendorsOptions,
@@ -333,6 +347,7 @@ const parseUserFormData = ({
     states: states || [],
     regions: regions || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
+    directReports: directReports || [],
     accountType: accountTypeOptions?.find(a => a.value === userInfo?.userType),
     vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
     langKey: languageOptions?.find(l => l.value === userInfo?.langKey),
@@ -346,7 +361,63 @@ const parseUserFormData = ({
       manager => manager.value === userInfo?.parentFieldProjectManagerId,
     ),
     vendorAdmin: userInfo.vendorAdmin,
-    primaryAdmin: userInfo.primaryAdmin
+    primaryAdmin: userInfo.primaryAdmin,
+  }
+}
+
+export const USER_DIRECT_REPORTS_KEY = 'userDirectReports'
+
+export const useUserDirectReports = (
+  enabled: boolean,
+  fpmRole: number,
+  regions: Array<string>,
+  markets: Array<string>,
+  states: Array<string>,
+) => {
+  const client = useClient()
+
+  const roleId = fpmRole
+
+  const endPoint = new URL('users/downstream/', window.location.origin)
+
+  endPoint.searchParams.set('regions', '')
+  endPoint.searchParams.set('data', '')
+
+  if (regions && regions.length >= 1) endPoint.searchParams.set('regions', regions.toString())
+
+  if (markets && markets.length >= 1) endPoint.searchParams.set('data', markets.toString())
+
+  if (states && states.length >= 1) endPoint.searchParams.set('data', states.toString())
+
+  const apiUrl = `users/downstream/${roleId}?regions=${endPoint.searchParams.get('regions')}&data=${endPoint.searchParams.get('data')}`
+
+  const { data: directReports, ...rest } = useQuery(
+    [USER_DIRECT_REPORTS_KEY, roleId, regions, markets, states],
+    async () => {
+      const response = await client(apiUrl, {})
+
+      return response?.data
+    },
+    {
+      enabled: enabled,
+    },
+  )
+
+  const directReportOptions =
+    directReports?.map(user => ({
+      value: user?.id,
+      label: user?.firstName + ' ' + user?.lastName,
+      id: user?.id,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      login: user?.login,
+      email: user?.email,
+    })) || []
+
+  return {
+    directReportOptions,
+    directReports,
+    ...rest,
   }
 }
 
@@ -364,6 +435,17 @@ export const useUserDetails = ({ form, userInfo }) => {
   const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
   const formattedStates = parseStatesAPIDataToFormValues(stateOptions, userInfo?.fpmStateId || [])
 
+  const directReportOptions =
+    userInfo?.directChild?.map(user => ({
+      value: user?.id,
+      label: user?.firstName + ' ' + user?.lastName,
+      id: user?.id,
+      firstName: user?.firstName,
+      lastName: user?.lastName,
+      login: user?.login,
+      email: user?.email,
+    })) || []
+
   useEffect(() => {
     if (!userInfo) {
       setValue('markets', formattedMarkets)
@@ -371,6 +453,7 @@ export const useUserDetails = ({ form, userInfo }) => {
       setValue('regions', formattedRegions)
       setValue('activated', true)
       setValue('langKey', languageOptions[0])
+      setValue('directReports', directReportOptions)
     } else {
       reset(
         parseUserFormData({
@@ -379,6 +462,7 @@ export const useUserDetails = ({ form, userInfo }) => {
           markets: formattedMarkets,
           states: formattedStates,
           regions: formattedRegions,
+          directReports: directReportOptions,
           allManagersOptions,
           accountTypeOptions,
           viewVendorsOptions,

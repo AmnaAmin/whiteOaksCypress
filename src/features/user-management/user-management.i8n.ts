@@ -56,6 +56,7 @@ export const userManagementTranslation = {
           updateUserSuccess: 'User Updated Successfully',
           userUpdateFailed: 'Unable to Update User!',
           userAddFailed: 'Unable to Add User!',
+          directReports: "Direct Reports"
         },
       },
     },
@@ -114,6 +115,7 @@ export const userManagementTranslation = {
           updateUser: 'Actualización de usuario',
           updateUserSuccess: 'Usuario actualizado con éxito',
           userUpdateFailed: '¡No se puede actualizar el usuario!',
+          directReports: "Reportes directos"
         },
       },
     },
