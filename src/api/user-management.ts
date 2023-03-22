@@ -173,8 +173,6 @@ export const userMangtPayload = (user: any) => {
     delete v['title']
   })
 
- 
-
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
@@ -398,9 +396,8 @@ export const useUserDirectReports = (
     async () => {
       const response = await client(apiUrl, {})
 
-      if ( response?.data ) {
-          
-          ;(window as any)._filteringDone = false;
+      if (response?.data) {
+        ;(window as any)._filteringDone = false
       }
       return response?.data
     },
@@ -419,8 +416,6 @@ export const useUserDirectReports = (
       login: user?.login,
       email: user?.email,
     })) || []
-
-  
 
   return {
     directReportOptions,
