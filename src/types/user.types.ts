@@ -50,4 +50,6 @@ export type UserForm = {
   vendorId?: number | null
   vendorAdmin?: boolean | null
   primaryAdmin?: boolean | undefined
+
+  directReports?: any
 }
