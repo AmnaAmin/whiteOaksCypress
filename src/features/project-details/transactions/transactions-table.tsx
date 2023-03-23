@@ -141,7 +141,11 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                 <ExportButton columns={tableColumns} refetch={refetch} isLoading={isLoading} fileName="transactions" />
                 <CustomDivider />
                 {settingColumns && (
-                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                  <TableColumnSettings
+                    disabled={isLoading}
+                    onSave={onSave}
+                    columns={settingColumns?.filter(t => !!t.contentKey)}
+                  />
                 )}
               </ButtonsWrapper>
               <TablePagination>
