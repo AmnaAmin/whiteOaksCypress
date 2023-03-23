@@ -77,7 +77,7 @@ const validateRegions = regions => {
 export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) => {
   const { t } = useTranslation()
   const form = useForm<UserForm>()
-  const { stateSelectOptions: stateOptions } = useStates()
+  const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
   const { options: accountTypeOptions } = useActiveAccountTypes()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
@@ -236,7 +236,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const onSubmit = useCallback(
     async formData => {
-      let formattedPayload = userMangtPayload(formData)
+      let formattedPayload = userMangtPayload(formData, statesDTO)
       const mutation = userInfo?.id ? updateUser : addUser
       mutation(parseMarketFormValuesToAPIPayload(formattedPayload), {
         onSuccess() {

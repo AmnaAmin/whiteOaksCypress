@@ -157,12 +157,19 @@ export const useDeleteUserDetails = () => {
   )
 }
 
-export const userMangtPayload = (user: any) => {
+export const userMangtPayload = (user: any, statesDTO?: any) => {
   const getFpmStateId = () => {
     return user.accountType?.label === 'Field Project Manager' &&
       user.fieldProjectManagerRoleId.value === FPMManagerTypes.District //Area Manager
       ? user.states?.find(state => state.checked === true)?.state?.id
       : ''
+  }
+
+  const getFpmStates = () => {
+    return user.accountType?.label === 'Field Project Manager' &&
+      user.fieldProjectManagerRoleId.value === FPMManagerTypes.District //Area Manager
+      ? user.states?.filter(state => state.checked === true)?.map(s => s?.state)
+      : []
   }
 
   const directReports = user.directReports
@@ -185,6 +192,7 @@ export const userMangtPayload = (user: any) => {
     regions: user.regions?.filter(region => region.checked).map(region => region.region.label) || [],
     stateId: user.state?.id || '',
     fpmStateId: getFpmStateId(),
+    fpmStates: statesDTO?.filter(s => getFpmStates().find(fs => fs.id === s.id)) || [],
     userType: user.accountType?.value,
     ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
     newBonus: user.newBonus?.label ? user.newBonus?.value : '',
@@ -436,7 +444,8 @@ export const useUserDetails = ({ form, userInfo }) => {
 
   const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
   const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
-  const formattedStates = parseStatesAPIDataToFormValues(stateOptions, userInfo?.fpmStateId || [])
+
+  const formattedStates = parseStatesAPIDataToFormValues(stateOptions, userInfo?.fpmStates || [])
 
   const directReportOptions =
     userInfo?.directChild?.map(user => ({
