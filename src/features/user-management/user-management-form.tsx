@@ -277,7 +277,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     (isFPM && (!fpmRole || !formValues.managerRoleId)) ||
     (showMarkets && noMarketsSelected) ||
     (showStates && !validateState(formValues?.states)) ||
-    (showRegions && !validateRegions(formValues?.regions)) /*||
+    (showRegions && !validateRegions(formValues?.regions)) ||
+    (managerOptions?.length > 0 && !formValues?.parentFieldProjectManagerId)
+  /*||
     (showDirectReports && !(formValues as any)?.directReports?.length)*/
 
   const { directReportOptions } = useUserDirectReports(
@@ -288,24 +290,37 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     directReportStates,
   )
 
-  useEffect( () => {
-
-    if ( showRegions && noRegionSelected   ) {
-      setValue("directReports", [])
+  useEffect(() => {
+    if (showRegions && noRegionSelected) {
+      setValue('directReports', [])
+      clearSelectedManager()
     }
-    if ( showMarkets && noMarketsSelected   ) {
-      setValue("directReports", [])
+    if (showMarkets && noMarketsSelected) {
+      setValue('directReports', [])
+      clearSelectedManager()
     }
-    if ( showStates && noStatesSelected  ) {
-      setValue("directReports", [])
+    if (showStates && noStatesSelected) {
+      setValue('directReports', [])
+      clearSelectedManager()
     }
-
-  }, [noRegionSelected, noMarketsSelected, noStatesSelected] );
+  }, [noRegionSelected, noMarketsSelected, noStatesSelected])
 
   useEffect(() => {
+    if ( ! managerOptions?.length || ! formValues?.parentFieldProjectManagerId  ) return;
 
+    if (
+      (showRegions && !noRegionSelected) ||
+      (showMarkets && !noMarketsSelected) ||
+      (showStates && !noStatesSelected)
+    ) {
+      if ( !managerOptions?.find( m => m.value === (formValues?.parentFieldProjectManagerId as any)?.value ) )
+        clearSelectedManager()
+    }
+  }, [noRegionSelected, noMarketsSelected, noStatesSelected, managerOptions, formValues?.parentFieldProjectManagerId])
+
+  useEffect(() => {
     if (!directReportOptions) return
- 
+
     if ((window as any)._filteringDone) return
     if (!showRegions && !showMarkets && !showStates) return
 
@@ -314,7 +329,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     const directReports = formValues?.directReports
 
     if (!directReports?.length) return
-
     ;(window as any)._filteringDone = true
 
     setValue(
@@ -480,7 +494,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             <Controller
               control={control}
               name="parentFieldProjectManagerId"
-              render={({ field }) => <ReactSelect {...field} options={managerOptions} />}
+              rules={{ required: managerOptions.length > 0 ? 'This is required' : false }}
+              render={({ field }) => (
+                <ReactSelect
+                  {...field}
+                  options={managerOptions}
+                  selectProps={{ isBorderLeft: managerOptions.length > 0 }}
+                />
+              )}
             />
           </FormControl>
         </HStack>
@@ -517,7 +538,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                         onChange={event => {
                           const checked = event.target.checked
                           onChange({ ...market, checked })
-                          clearSelectedManager()
+                          //clearSelectedManager()
                         }}
                       >
                         {value.market?.metropolitanServiceArea}
@@ -562,7 +583,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                         onChange={event => {
                           const checked = event.target.checked
                           onChange({ ...state, checked })
-                          clearSelectedManager()
+                          //clearSelectedManager()
                         }}
                       >
                         {value.state?.label}
@@ -607,7 +628,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                         onChange={event => {
                           const checked = event.target.checked
                           onChange({ ...region, checked })
-                          clearSelectedManager()
+                          //clearSelectedManager()
                         }}
                       >
                         {value.region?.value}
