@@ -364,7 +364,7 @@ const WorkOrderDetailTab = props => {
                         <Box w="215px" mt={-7}>
                           <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
                             <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
-                              {t('type')}
+                              {t('trade')}
                             </FormLabel>
                             <Controller
                               control={control}
