@@ -256,7 +256,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             )}
           </Box>
           <Box>
-            <input type="file" ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
+            <input type="file" name='smart_reciept' ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
             <HStack
               w={!isApproved || !isSysFactoringFee || !lateAndFactoringFeeForVendor ? 'auto' : '100%'}
               justifyContent="end"
