@@ -7,7 +7,6 @@ import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import Select, { CreatableSelect } from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
-import { createFilter } from 'chakra-react-select'
 
 type LocationProps = {
   stateSelectOptions: SelectOption[]
