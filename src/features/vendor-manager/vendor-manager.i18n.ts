@@ -17,9 +17,9 @@ export const vendor_manager = {
         newVendor: 'New Vendor',
 
         //Vendor Skills
-        vendorSkills: 'Vendor Skills',
-        newVendorSkills: 'New Vendor Skills',
-        skills: 'Skills',
+        vendorSkills: 'Vendor Trades',
+        newVendorSkills: 'New Vendor Trade',
+        skills: 'Trades',
         modifiedDate: 'Modified Date',
         deleteSkill: 'Delete Skill',
         delConfirmText: 'Delete Vendor Skill',
@@ -54,9 +54,9 @@ export const vendor_manager = {
         save: 'Ahorrar',
         newVendor: 'Nuevo vendedor',
         //Vendor Skills
-        vendorSkills: 'Habilidades del proveedor',
-        newVendorSkills: 'Habilidades de nuevos proveedores',
-        skills: 'Habilidades',
+        vendorSkills: 'Comercios de proveedores',
+        newVendorSkills: 'Nuevos intercambios de proveedores',
+        skills: 'Vientos alisios',
         modifiedDate: 'Fecha de modificación',
         deleteSkill: 'Eliminar habilidad',
         delConfirmText: 'Eliminar habilidad de proveedor',
