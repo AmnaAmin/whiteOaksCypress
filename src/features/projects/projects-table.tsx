@@ -161,6 +161,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
+              data-testid='project_export'
               columns={tableColumns}
               refetch={refetch}
               isLoading={isExportDataLoading}
