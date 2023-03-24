@@ -631,7 +631,6 @@ export const parseProjectDetailsPayloadFromFormData = async (
   if (formValues?.invoiceAttachment) {
     documents[0] = await createDocumentPayload(formValues.invoiceAttachment)
   }
-
   return {
     ...projectPayload,
     // Project Management payload
@@ -699,6 +698,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
       state: formValues?.state?.value,
       zipCode: formValues?.zip,
     },
+    propertyId: formValues?.address?.value,
 
     // Misc payload
     createdDate: dateISOFormat(formValues?.dateCreated),
