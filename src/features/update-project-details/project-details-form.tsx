@@ -25,7 +25,7 @@ import {
 import { DevTool } from '@hookform/devtools'
 import { Link } from 'react-router-dom'
 import { useSubFormErrors } from './hooks'
-import { useProjectExtraAttributes } from 'api/pc-projects'
+import { useProjectExtraAttributes, useProperties } from 'api/pc-projects'
 // import { PROJECT_DETAILS } from './projectDetails.i18n'
 import { useMarkets, useStates } from 'api/pc-projects'
 
@@ -45,7 +45,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { style, onClose, tabVariant, projectData, isRecievable } = props
 
   const [tabIndex, setTabIndex] = useState(0)
-
+  const { propertySelectOptions } = useProperties()
   const { data: projectExtraAttributes } = useProjectExtraAttributes(projectData?.id as number)
   const { projectTypeSelectOptions } = useGetProjectTypeSelectOptions()
   const { userSelectOptions: fpmSelectOptions } = useGetUsersByType(5)
@@ -81,6 +81,7 @@ const ProjectDetailsTab = (props: tabProps) => {
       clientSelectOptions,
       stateSelectOptions,
       marketSelectOptions,
+      propertySelectOptions,
     })
     formReturn.reset(formValues)
   }, [
@@ -93,15 +94,19 @@ const ProjectDetailsTab = (props: tabProps) => {
     overPayment,
     stateSelectOptions?.length,
     marketSelectOptions?.length,
+    propertySelectOptions?.length,
   ])
 
   const hasPendingDrawsOnPaymentSave = (payment, depreciation) => {
     if (!!payment || !!depreciation) {
       const pendingDraws = transactions?.filter(
         t =>
-          [TransactionTypeValues.draw, TransactionTypeValues.payment, TransactionTypeValues.depreciation,TransactionTypeValues.carrierFee].includes(
-            t.transactionType,
-          ) &&
+          [
+            TransactionTypeValues.draw,
+            TransactionTypeValues.payment,
+            TransactionTypeValues.depreciation,
+            TransactionTypeValues.carrierFee,
+          ].includes(t.transactionType) &&
           !t?.parentWorkOrderId &&
           [TransactionStatusValues.pending].includes(t?.status as TransactionStatusValues),
       )
@@ -161,7 +166,7 @@ const ProjectDetailsTab = (props: tabProps) => {
             bg="white"
             p="15px"
             boxShadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
-            borderTopRightRadius={isRecievable? '6px' :'0px'}
+            borderTopRightRadius={isRecievable ? '6px' : '0px'}
             borderBottomRightRadius="4px"
             borderTopLeftRadius="4px"
             borderBottomLeftRadius="4px"
@@ -188,7 +193,11 @@ const ProjectDetailsTab = (props: tabProps) => {
                 />
               </TabPanel>
               <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
-                <Location stateSelectOptions={stateSelectOptions} marketSelectOptions={marketSelectOptions} />
+                <Location
+                  stateSelectOptions={stateSelectOptions}
+                  marketSelectOptions={marketSelectOptions}
+                  propertySelectOptions={propertySelectOptions}
+                />
               </TabPanel>
 
               <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>

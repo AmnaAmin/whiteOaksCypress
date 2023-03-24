@@ -499,6 +499,7 @@ export const parseFormValuesFromAPIData = ({
   overPayment,
   stateSelectOptions,
   marketSelectOptions,
+  propertySelectOptions,
 }: {
   project?: Project
   projectExtraAttributes?: ProjectExtraAttributesType
@@ -509,6 +510,7 @@ export const parseFormValuesFromAPIData = ({
   clientSelectOptions?: SelectOption[]
   stateSelectOptions?: any
   marketSelectOptions?: SelectOption[]
+  propertySelectOptions: SelectOption[]
 }): ProjectDetailsFormValues | Object => {
   if (
     !project ||
@@ -584,7 +586,7 @@ export const parseFormValuesFromAPIData = ({
     client: findOptionByValue(clientSelectOptions, project.clientName),
 
     // Location Form values
-    address: project.streetAddress,
+    address: findOptionByValue(propertySelectOptions, project?.propertyId),
     city: project.city,
     state: stateValue ? stateValue : stateIdValue,
     zip: project.zipCode,
@@ -629,7 +631,6 @@ export const parseProjectDetailsPayloadFromFormData = async (
   if (formValues?.invoiceAttachment) {
     documents[0] = await createDocumentPayload(formValues.invoiceAttachment)
   }
-
   return {
     ...projectPayload,
     // Project Management payload
@@ -680,7 +681,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientName: formValues?.client?.label || null,
 
     // Location
-    streetAddress: formValues?.address,
+    streetAddress: formValues?.address?.label || null,
     city: formValues?.city,
     state: formValues?.state?.value || null,
     zipCode: formValues?.zip,
@@ -692,11 +693,12 @@ export const parseProjectDetailsPayloadFromFormData = async (
     hoaEmailAddress: formValues?.hoaContactEmail,
     woaPayVariance: null,
     property: {
-      streetAddress: formValues?.address,
+      streetAddress: formValues?.address?.label || null,
       city: formValues?.city,
       state: formValues?.state?.value,
       zipCode: formValues?.zip,
     },
+    propertyId: formValues?.address?.value,
 
     // Misc payload
     createdDate: dateISOFormat(formValues?.dateCreated),
