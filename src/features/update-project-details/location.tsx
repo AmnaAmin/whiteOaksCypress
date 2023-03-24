@@ -1,20 +1,20 @@
 import { FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 
-import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
-import Select from 'components/form/react-select'
+import Select, { CreatableSelect } from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 
 type LocationProps = {
   stateSelectOptions: SelectOption[]
   marketSelectOptions: SelectOption[]
+  propertySelectOptions: SelectOption[]
 }
 
-const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOptions}) => {
+const Location: React.FC<LocationProps> = ({ stateSelectOptions, marketSelectOptions, propertySelectOptions }) => {
   const {
     register,
     control,
@@ -32,7 +32,7 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
   } = useFieldsDisabled(control)
 
   const { t } = useTranslation()
- 
+
   return (
     <Stack>
       <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
@@ -41,8 +41,31 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
             <FormLabel variant="strong-label" size="md" htmlFor="address">
               {t(`project.projectDetails.address`)}
             </FormLabel>
-            <Input variant="required-field" isDisabled={isAddressDisabled} id="address" {...register('address')} />
-            <FormErrorMessage>{errors?.address?.message}</FormErrorMessage>
+            <Controller
+              control={control}
+              name={`address`}
+              rules={{ required: 'This is required field' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <CreatableSelect
+                    id="address"
+                    isDisabled={isAddressDisabled}
+                    options={propertySelectOptions}
+                    // selected={field.value}
+                    placeholder="Type address here.."
+                    value={field.value}
+                    onChange={option => {
+                      field.onChange(option)
+                    }}
+                    // onChange={setAddressValues}
+                    selectProps={{ isBorderLeft: true }}
+                    inputProps={{ autoComplete: 'off', autoCorrect: 'off', spellCheck: 'off' }}
+                    // filterOption={createFilter({ ignoreAccents: false })}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
           </FormControl>
         </GridItem>
         <GridItem>
@@ -53,7 +76,6 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
             <Input variant="required-field" isDisabled={isCityDisabled} id="city" {...register('city')} />
             <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
           </FormControl>
-          
         </GridItem>
         <GridItem>
           <FormControl isInvalid={!!errors.state} w="215px">
@@ -100,26 +122,26 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
             </FormLabel>
             {/* <Input isDisabled={isMarketDisabled} id="market" {...register('market')} /> */}
             <Controller
-                  control={control}
-                  name={`market`}
-                  rules={{ required: 'This is required field' }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Select
-                        {...field}
-                        options={marketSelectOptions}
-                        size="md"
-                        value={field.value}
-                        selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
-                        isDisabled={isMarketDisabled}
-                        onChange={option => {
-                          field.onChange(option)
-                        }}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )}
-                />
+              control={control}
+              name={`market`}
+              rules={{ required: 'This is required field' }}
+              render={({ field, fieldState }) => (
+                <>
+                  <Select
+                    {...field}
+                    options={marketSelectOptions}
+                    size="md"
+                    value={field.value}
+                    selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
+                    isDisabled={isMarketDisabled}
+                    onChange={option => {
+                      field.onChange(option)
+                    }}
+                  />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
           </FormControl>
         </GridItem>
         <GridItem>
@@ -127,7 +149,13 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
             <FormLabel variant="strong-label" size="md" htmlFor="gateCode">
               {t(`project.projectDetails.gateCode`)}
             </FormLabel>
-            <Input datatest-id='gate-Code' border=" 1px solid #E2E8F0" disabled={isGateCodeDisabled} id="gateCode" {...register('gateCode')} />
+            <Input
+              datatest-id="gate-Code"
+              border=" 1px solid #E2E8F0"
+              disabled={isGateCodeDisabled}
+              id="gateCode"
+              {...register('gateCode')}
+            />
             <FormErrorMessage>{errors.gateCode && errors.gateCode.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -137,7 +165,7 @@ const Location: React.FC<LocationProps> = ({stateSelectOptions, marketSelectOpti
               {t(`project.projectDetails.lockBoxCode`)}
             </FormLabel>
             <Input
-             datatest-id='lock-Box-Code'
+              datatest-id="lock-Box-Code"
               border=" 1px solid #E2E8F0"
               disabled={isLockBoxCodeDisabled}
               id="lockBoxCode"
