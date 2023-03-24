@@ -13,6 +13,7 @@ import { parseRegionsAPIDataToFormValues } from 'utils/regions'
 import { parseStatesAPIDataToFormValues } from 'utils/states'
 import { useMarkets, useRegions, useStates } from './pc-projects'
 import { languageOptions } from './vendor-details'
+import { USER_MGT_QUERY_KEY } from 'pages/admin/user-management'
 
 export enum FPMManagerTypes {
   District = 59,
@@ -62,6 +63,7 @@ export const useCreateUserMutation = () => {
     },
     {
       onSuccess() {
+        queryClient.invalidateQueries(USER_MGT_QUERY_KEY);
         queryClient.invalidateQueries('users')
         toast({
           title: t(`${USER_MANAGEMENT}.modal.addUser`),
@@ -99,6 +101,7 @@ export const useSaveUserDetails = () => {
     },
     {
       onSuccess() {
+        queryClient.invalidateQueries(USER_MGT_QUERY_KEY);
         queryClient.invalidateQueries('users')
         toast({
           title: t(`${USER_MANAGEMENT}.modal.updateUser`),
