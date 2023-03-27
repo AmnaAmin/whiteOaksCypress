@@ -36,13 +36,13 @@ describe('Bell Notification Test Cases', () => {
       expect(screen.getByTestId('alert-1')).toBeInTheDocument()
       expect(screen.getByTestId('alert-2')).toBeInTheDocument()
 
-      expect(screen.getByTestId('alert-0-title').textContent).toEqual('Project')
+      expect(screen.getByTestId('alert-0-title').textContent).toEqual('Project - 6919')
       expect(screen.getByTestId('alert-0-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
 
-      expect(screen.getByTestId('alert-1-title').textContent).toEqual('Project')
+      expect(screen.getByTestId('alert-1-title').textContent).toEqual('Project - 6919')
       expect(screen.getByTestId('alert-1-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
 
-      expect(screen.getByTestId('alert-2-title').textContent).toEqual('Project')
+      expect(screen.getByTestId('alert-2-title').textContent).toEqual('Project - 6919')
       expect(screen.getByTestId('alert-2-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
     })
   })

@@ -26,11 +26,14 @@ import { BiWind } from 'react-icons/bi'
 export const Notification = props => {
   const { setShowAlertMenu, setNavigating, setAlertCount, navigationLoading, setSelectedAlert } = props
   const { mutate: updateAlert } = useUpdateAlert({ hideToast: true })
-  const showLoadingSlate = false //isLoading || isResolving
-  const { data: notifications, refetch: refetchNotifications } = useFetchUserAlerts({
+  const {
+    data: notifications,
+    refetch: refetchNotifications,
+    isLoading: alertsLoading,
+  } = useFetchUserAlerts({
     query: 'page=0&size=20&sort=dateCreated,desc',
   })
-
+  const showLoadingSlate = navigationLoading || alertsLoading
   useEffect(() => {
     setNavigating(navigationLoading)
   }, [navigationLoading])
@@ -93,7 +96,7 @@ export const Notification = props => {
           <Box maxH="489px" border="none" overflow="auto" mb={2}>
             {showLoadingSlate ? (
               <>
-                <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} as="div">
+                <MenuItem width="397px" _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} as="div">
                   <Flex
                     borderRadius={8}
                     width="480px"
