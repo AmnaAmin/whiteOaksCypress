@@ -48,7 +48,7 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
       {props.label}
     </FormLabel>
     {props.dateFormat && !props.claimantsSignature && (
-      <Text fontSize="12px" pl={'45px'} color={'#4A5568'}>
+      <Text fontSize="12px" pl={'18px'} mt={'16px'} color={'#4A5568'}>
         {props.dateFormat}
       </Text>
     )}

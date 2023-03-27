@@ -238,7 +238,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
               placeholder=""
               register={register}
               name={`lienWaiver.dateOfSignature`}
-              dateFormat="dd/mm/yy"
+              dateFormat="mm/dd/yy"
               claimantsSignature={formValues?.claimantsSignature}
               elementStyle={{
                 bg: 'white',
