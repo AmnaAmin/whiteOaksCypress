@@ -134,7 +134,6 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     meta: { hideTitle: true },
     cell: (row: any) => {
       const value = row.cell.getValue()
-      console.log(value)
 
       return (
         <Popover trigger="hover">
