@@ -429,7 +429,7 @@ export const Table: React.FC<TableProps> = ({
                             <Td
                               key={cell.id}
                               isTruncated
-                              title={!metaData.hideTitle ? (title as string) : ''}
+                              title={!metaData?.hideTitle ? (title as string) : ''}
                               {...getColumnMaxMinWidths(cell.column)}
                             >
                               {isValidAndNonEmpty(cell?.renderValue()) ? value : '_ _ _'}
