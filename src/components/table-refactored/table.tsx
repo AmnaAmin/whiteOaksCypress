@@ -423,12 +423,13 @@ export const Table: React.FC<TableProps> = ({
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
                           const title =
                             typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
+                          const metaData: any = cell.column.columnDef?.meta as any
 
                           return (
                             <Td
                               key={cell.id}
                               isTruncated
-                              title={title as string}
+                              title={!metaData.hideTitle ? (title as string) : ''}
                               {...getColumnMaxMinWidths(cell.column)}
                             >
                               {isValidAndNonEmpty(cell?.renderValue()) ? value : '_ _ _'}

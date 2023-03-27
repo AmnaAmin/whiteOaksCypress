@@ -1,4 +1,16 @@
-import { Box, chakra, Icon } from '@chakra-ui/react'
+import {
+  Box,
+  chakra,
+  Icon,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Portal,
+  Text,
+} from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/react-table'
 import Status from 'features/common/status'
 import numeral from 'numeral'
@@ -17,6 +29,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   city: 'city.contains',
   clientStartDate: 'clientStartDate.equals',
   clientDueDate: 'clientDueDate.equals',
+  notes: 'notes.contains',
   projectTypeLabel: 'projectTypeLabel.contains',
   projectCoordinator: 'projectCoordinator.contains',
   accountPayable: 'accountPayable.equals',
@@ -114,6 +127,32 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'clientDueDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientDueDate),
     meta: { format: 'date' },
+  },
+  {
+    header: 'projects.projectDetails.notes',
+    accessorKey: 'notes',
+    meta: { hideTitle: true },
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      console.log(value)
+
+      return (
+        <Popover trigger="hover">
+          <PopoverTrigger>
+            <Box isTruncated>{value}</Box>
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent textOverflow={'ellipsis'}>
+              <PopoverArrow />
+              <PopoverHeader color={'#2D3748'}>Notes</PopoverHeader>
+              <PopoverBody>
+                <Text color={'#4A5568'}>{value}</Text>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
+      )
+    },
   },
   {
     header: 'projects.projectTable.type',
