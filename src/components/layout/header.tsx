@@ -26,6 +26,7 @@ import { BiSearch } from 'react-icons/bi'
 import { FaBell } from 'react-icons/fa'
 import { getAlertCount, resetAlertCount } from 'features/alerts/alerts-service'
 import { Notification } from './notifications/notification'
+import { useHandleNavigation } from 'api/alerts'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -86,6 +87,8 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu, setNavigating }) => 
   const [showAlertMenu, setShowAlertMenu] = useState(false)
   const { t } = useTranslation()
   const [alertCount, setAlertCount] = useState(getAlertCount())
+  const [selectedAlert, setSelectedAlert] = useState<any>()
+  const { navigationLoading } = useHandleNavigation(selectedAlert)
 
   const handleAlertIconClick = () => {
     resetAlertCount()
@@ -143,6 +146,8 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu, setNavigating }) => 
                     showAlertMenu={showAlertMenu}
                     setNavigating={setNavigating}
                     setAlertCount={setAlertCount}
+                    navigationLoading={navigationLoading}
+                    setSelectedAlert={setSelectedAlert}
                   />
                 )}
               </>

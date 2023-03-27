@@ -506,6 +506,8 @@ i18n.use(initReactI18next).init({
         recipientPhoneNo: 'Recipient Phone No',
         WoId: 'WO Id',
         viewAllNotifications: 'View All Notifications',
+        alertsAndNotifications: 'Alerts & Notifications',
+        emptyNotifications: `You don't have any notifications.`,
         // **** PROJECT COORDINATOR ****//
 
         // PC projectDetails
@@ -611,6 +613,8 @@ i18n.use(initReactI18next).init({
         recipientPhoneNo: 'Número de teléfono del destinatario',
         WoId: 'WO Id',
         viewAllNotifications: 'Ver todas las notificaciones',
+        alertsAndNotifications: 'Alertas y notificaciones',
+        emptyNotifications: 'No tienes notificaciones.',
 
         // Payments tab pc
         lwDate: 'Fecha LW',
