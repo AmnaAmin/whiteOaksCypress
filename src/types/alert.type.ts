@@ -71,6 +71,7 @@ export type AlertType = {
   login?: string
   webSockectRead?: boolean | null
   triggeredType?: string
+  triggeredId?: string
 }
 
 export const enum TriggerType {
