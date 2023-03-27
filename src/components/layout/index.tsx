@@ -102,6 +102,7 @@ export const Layout: React.FC = props => {
                         <SidebarLink
                           pathTo={item.pathTo}
                           title={t(item.title)}
+                          testId={item.testId}
                           icon={<item.Icon color={item.color} />}
                         />
                       </Box>
