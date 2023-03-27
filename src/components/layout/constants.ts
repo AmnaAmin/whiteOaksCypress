@@ -24,6 +24,7 @@ type Menu = {
   title: string
   Icon: React.ElementType
   color: string
+  testId?: string
 }
 
 type Menus = {
@@ -119,6 +120,7 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
+      testId: 'vendorTrade',
     },
     {
       pathTo: '/markets',
@@ -260,12 +262,14 @@ export const MENU_ROLE_BASED: Menus = {
       title: 'Project type',
       Icon: BiDockTop,
       color: '#9B2C2C',
+      testId: 'projectTypeLink',
     },
     {
       pathTo: '/vendorSkills',
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
+      testId: 'vendorTrade',
     },
   ],
   [UserTypes.admin]: [
@@ -329,6 +333,7 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.userMgmt`,
       Icon: BiUserPlus,
       color: '#ECC94B',
+      testId: 'userManager',
     },
     {
       pathTo: '/markets',
@@ -341,12 +346,14 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.projectType`,
       Icon: BiDockTop,
       color: '#9B2C2C',
+      testId: 'projectTypeLink',
     },
     {
       pathTo: '/vendorSkills',
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
       color: '#4E87F8',
+      testId: 'vendorTrade',
     },
     {
       pathTo: '/support-tickets',
