@@ -94,20 +94,20 @@ const VendorUserModal = ({
 
   const onSubmit = values => {
     const userPayload = {
-      login: formValues.email,
-      email: formValues.email,
-      firstName: formValues.firstName,
-      lastName: formValues.lastName,
-      vendorAdmin: formValues.vendorAdmin,
-      primaryAdmin: formValues.primaryAdmin,
-      langKey: formValues.langKey?.value || '',
-      telephoneNumber: formValues.telephoneNumber,
+      login: values.email,
+      email: values.email,
+      firstName: values.firstName,
+      lastName: values.lastName,
+      vendorAdmin: values.vendorAdmin,
+      primaryAdmin: values.primaryAdmin,
+      langKey: values.langKey?.value || '',
+      telephoneNumber: values.telephoneNumber,
       vendorId: parentVendorId,
-      city: formValues.city,
-      streetAddress: formValues.streetAddress,
-      stateId: formValues.state?.id || '',
-      zipCode: formValues.zipCode,
-      activated: formValues.activated,
+      city: values.city,
+      streetAddress: values.streetAddress,
+      stateId: values.state?.id || '',
+      zipCode: values.zipCode,
+      activated: values.activated,
       parentId: userInfo?.user.id,
     } as any
 
@@ -115,8 +115,8 @@ const VendorUserModal = ({
       userPayload.id = vendorDetails?.id
     }
 
-    if (formValues.newPassword !== '' && formValues.newPassword.length >= 4) {
-      userPayload.password = formValues.newPassword
+    if (values.newPassword !== '' && values.newPassword.length >= 4) {
+      userPayload.password = values.newPassword
     }
 
     if (isEditUser) {
