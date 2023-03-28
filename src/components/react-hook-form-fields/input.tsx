@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { FormErrorMessage, FormControl, FormLabel, Input, Box, InputGroup, Text } from '@chakra-ui/react'
+import { FormErrorMessage, FormControl, FormLabel, Input, Box, InputGroup } from '@chakra-ui/react'
 import { UseFormRegister } from 'react-hook-form'
 
 type InputProps = {
