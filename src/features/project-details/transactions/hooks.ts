@@ -195,12 +195,14 @@ export const useIsAwardSelect = (
   transaction?,
   selectedWorkOrderStats?,
   remainingAmt?,
+  isRefund?,
 ) => {
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
   const check = against?.awardStatus
   const isValidForAwardPlan = against?.isValidForAwardPlan
-  const remainingAmountExceeded = (transType?.label === 'Draw' || transType?.label === 'Material') && remainingAmt
+  const remainingAmountExceeded =
+    (transType?.label === 'Draw' || (transType?.label === 'Material' && !isRefund)) && remainingAmt
 
   const drawConsumed =
     transType?.label === 'Draw' &&
@@ -209,6 +211,7 @@ export const useIsAwardSelect = (
 
   const materialConsumed =
     transType?.label === 'Material' &&
+    !isRefund &&
     (selectedWorkOrderStats?.materialRemaining === null ||
       (selectedWorkOrderStats && selectedWorkOrderStats?.materialRemaining < 1))
 
