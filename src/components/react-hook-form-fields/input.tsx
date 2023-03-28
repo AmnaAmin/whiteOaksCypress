@@ -25,8 +25,6 @@ type InputProps = {
   testId?: string
   variant?: string
   fontSize?: string
-  dateFormat?: string
-  claimantsSignature?: any
 }
 
 export const FormInput = React.forwardRef((props: InputProps, ref) => (
@@ -47,11 +45,7 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
 
       {props.label}
     </FormLabel>
-    {props.dateFormat && !props.claimantsSignature && (
-      <Text fontSize="12px" pl={'18px'} mt={'16px'} color={'#4A5568'}>
-        {props.dateFormat}
-      </Text>
-    )}
+
     <InputGroup>
       <Input
         color="gray.500"

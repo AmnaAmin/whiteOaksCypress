@@ -235,11 +235,9 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
               icon={<BiCalendar />}
               errorMessage={errors.dateOfSignature && errors.dateOfSignature?.message}
               label={t(`${TRANSACTION}.dateOfSignature`)}
-              placeholder=""
+              placeholder="mm/dd/yy"
               register={register}
               name={`lienWaiver.dateOfSignature`}
-              dateFormat="mm/dd/yy"
-              claimantsSignature={formValues?.claimantsSignature}
               elementStyle={{
                 bg: 'white',
                 borderWidth: '0 0 1px 0',
