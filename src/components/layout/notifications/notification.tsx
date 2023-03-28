@@ -1,4 +1,4 @@
-import { useHandleNavigation, useUpdateAlert, useFetchUserAlerts } from 'api/alerts'
+import { useUpdateAlert, useFetchUserAlerts } from 'api/alerts'
 import {
   Divider,
   Box,
@@ -17,20 +17,23 @@ import { useTranslation } from 'react-i18next'
 import { format } from 'date-fns'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { alertCountEvent, getAlertCount } from '../../../features/alerts/alerts-service'
 
 import { enUS } from 'date-fns/locale'
 import { BiWind } from 'react-icons/bi'
 
 export const Notification = props => {
-  const { setShowAlertMenu, setNavigating, setAlertCount } = props
-  const [selectedAlert, setSelectedAlert] = useState<any>()
+  const { setShowAlertMenu, setNavigating, setAlertCount, navigationLoading, setSelectedAlert } = props
   const { mutate: updateAlert } = useUpdateAlert({ hideToast: true })
-  const showLoadingSlate = false //isLoading || isResolving
-  const { navigationLoading } = useHandleNavigation(selectedAlert)
-  const { data: notifications } = useFetchUserAlerts({ query: 'page=0&size=20&sort=dateCreated,desc' })
-
+  const {
+    data: notifications,
+    refetch: refetchNotifications,
+    isLoading: alertsLoading,
+  } = useFetchUserAlerts({
+    query: 'page=0&size=20&sort=dateCreated,desc',
+  })
+  const showLoadingSlate = navigationLoading || alertsLoading
   useEffect(() => {
     setNavigating(navigationLoading)
   }, [navigationLoading])
@@ -47,7 +50,7 @@ export const Notification = props => {
     const count = getAlertCount()
     setAlertCount(count)
     if (count > 0) {
-      // refetchNotifications()
+      refetchNotifications()
     }
   }
 
@@ -58,13 +61,13 @@ export const Notification = props => {
         { ...alert, webSockectRead: true },
         {
           onSuccess: () => {
-            // refetchNotifications()
+            refetchNotifications()
           },
         },
       )
     }
     setSelectedAlert(alert)
-    // setShowAlertMenu(false)
+    setShowAlertMenu(false)
   }
 
   useEffect(() => {
@@ -87,13 +90,13 @@ export const Notification = props => {
         <VStack>
           <Box padding="15px" w="100%" borderBottom={'1px solid #2D3748'}>
             <Heading w="100%" color="#2D3748" fontWeight={500} fontSize={16}>
-              Alerts & Notifications
+              {t('alertsAndNotifications')}
             </Heading>
           </Box>
           <Box maxH="489px" border="none" overflow="auto" mb={2}>
             {showLoadingSlate ? (
               <>
-                <MenuItem _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} as="div">
+                <MenuItem width="397px" _hover={{ bg: 'none' }} _focus={{ bg: 'none' }} as="div">
                   <Flex
                     borderRadius={8}
                     width="480px"
@@ -118,7 +121,7 @@ export const Notification = props => {
                           key={notification.id}
                           as="div"
                           mb="2px"
-                          width="400px"
+                          width="397px"
                           data-testid={'alert-' + index}
                           backgroundColor={notification?.webSockectRead ? '#FFF' : '#FFF5E4'}
                           onClick={() => {
@@ -126,31 +129,31 @@ export const Notification = props => {
                           }}
                           cursor="pointer"
                         >
-                          <HStack width="400px" minH="90px">
+                          <HStack width="400px" h="68px">
                             <Center w="68px">
                               <VStack color="gray.500">
-                                <Box fontSize={12} fontWeight={400}>
+                                <Box fontSize={11} fontWeight={400}>
                                   {format(new Date(), 'LLL', { locale: enUS })}
                                 </Box>
-                                <Box fontSize={16} mt="0px !important" fontWeight={600}>
+                                <Box fontSize={13} mt="0px !important" fontWeight={600}>
                                   {new Date(notification?.dateCreated as string).getDate()}
                                 </Box>
                               </VStack>
                             </Center>
-                            <Divider orientation="vertical" borderWidth={'2px'} borderColor="#F6AD55" h="80px" />
+                            <Divider orientation="vertical" borderWidth={'2px'} borderColor="#F6AD55" h="48px" />
                             <VStack flexDir="column" alignItems={'start'} p="5px" w="100%">
                               <Heading
                                 as="h2"
                                 data-testid={'alert-' + index + '-title'}
-                                fontSize={'14px'}
+                                fontSize={'12px'}
                                 color="blue.600"
                                 fontWeight={600}
                               >
-                                {notification?.triggeredType}
+                                {notification?.triggeredType + ' - ' + notification?.triggeredId}
                               </Heading>
                               <Text
                                 data-testid={'alert-' + index + '-message'}
-                                fontSize={'13px'}
+                                fontSize={'11px'}
                                 fontWeight={400}
                                 color="gray.600"
                                 maxWidth={330}
@@ -169,7 +172,7 @@ export const Notification = props => {
                     <VStack h="250px" justifyContent={'center'}>
                       <BiWind size={'60px'} color="#718096" />
                       <FormLabel variant={'light-label'} size="md">
-                        You don't have any notifications.
+                        {t('emptyNotifications')}
                       </FormLabel>
                     </VStack>
                   </Box>
