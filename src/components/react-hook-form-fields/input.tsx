@@ -45,6 +45,7 @@ export const FormInput = React.forwardRef((props: InputProps, ref) => (
 
       {props.label}
     </FormLabel>
+
     <InputGroup>
       <Input
         color="gray.500"
