@@ -26,12 +26,18 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     let projectStatusFilter
     let clientDueDateFilter
     let finalFilters: ColumnFiltersState = [...columnFilters]
-
+    let val: any;
+    let fData =""; 
     // This filter will apply when user select a card from the card list
     if (selectedCard) {
       if (selectedCard === 'past due') {
+           
+        val = columnFilters;
+        if(val.length === 0){ fData ='new,active,punch'; }
+        else { fData = val[0].value; }
+        console.log("value", columnFilters);
         const pastDueFilters = [{ id: 'pastDue', value: '1' }]
-        const projectStatus = [{ id: 'projectStatus', value: 'new,active,punch' }]
+        const projectStatus = [{ id: 'projectStatus', value: fData}]
         finalFilters = [...finalFilters, ...pastDueFilters, ...projectStatus]
 
         // Account Payable Cards contains 1, 2, 3, 4, 5, 6, which represents
@@ -39,7 +45,8 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       } else if (['1', '2', '3', '4', '5', '6'].includes(selectedCard)) {
         const durationCategoryFilters = [{ id: 'durationCategory', value: selectedCard }]
         finalFilters = [...finalFilters, ...durationCategoryFilters]
-      } else {
+      } 
+      else {
         projectStatusFilter =
           selectedCard !== 'past due' ? { id: 'projectStatus', value: selectedCard } : { id: 'pastDue', value: true }
         finalFilters = [...columnFilters, projectStatusFilter]
@@ -49,6 +56,9 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     if ( selectedFlagged ) {
       finalFilters = [...columnFilters, { id: 'noteFlag', value: selectedFlagged }]
     }
+
+   
+    
 
     // This filter will apply when user select a day from the project due days list
     if (selectedDay && days?.length) {
