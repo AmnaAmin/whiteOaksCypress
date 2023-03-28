@@ -31,6 +31,7 @@ import { GetHelpText } from 'utils/lien-waiver'
 import SignatureModal from 'features/vendor/vendor-work-order/lien-waiver/signature-modal'
 import { useTranslation } from 'react-i18next'
 import { TRANSACTION } from './transactions.i18n'
+import { inputBorderLeftStyle } from 'theme/common-style'
 
 type LienWaiverProps = {
   onClose?: () => void
@@ -161,10 +162,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
               label={t(`${TRANSACTION}.claimantsTitle`)}
               placeholder=""
               register={register}
-              elementStyle={{
-                bg: 'white',
-                borderLeft: '2px solid #4E87F8',
-              }}
+              elementStyle={inputBorderLeftStyle}
               rules={{ required: 'This is required field' }}
               name={`lienWaiver.claimantTitle`}
             />
@@ -182,8 +180,8 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
                 borderRadius="6px"
                 bg="white"
                 height={'40px'}
-                borderLeftWidth={'2px'}
-                borderLeftColor="CustomPrimaryColor.50"
+                borderLeftWidth={'2.5px'}
+                borderLeftColor="#345EA6"
                 alignItems="center"
                 px={4}
                 ml={0}
@@ -237,7 +235,7 @@ export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
               icon={<BiCalendar />}
               errorMessage={errors.dateOfSignature && errors.dateOfSignature?.message}
               label={t(`${TRANSACTION}.dateOfSignature`)}
-              placeholder=""
+              placeholder="mm/dd/yy"
               register={register}
               name={`lienWaiver.dateOfSignature`}
               elementStyle={{
