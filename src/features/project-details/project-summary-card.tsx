@@ -28,16 +28,12 @@ export const ProjectSummaryCard: React.FC<{
   projectData: Project
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
-  const [showLogic, setShowLogic] = useState(1)
+  const [summaryPanelShow, setSummaryPanel] = useState(1)
   const { t } = useTranslation()
-
-  const clickHandler = n => {
-    setShowLogic(n)
-  }
 
   return (
     <>
-      {showLogic === 1 ? (
+      {summaryPanelShow === 1 ? (
         <Flex>
           <Flex
             py={6}
@@ -111,7 +107,7 @@ export const ProjectSummaryCard: React.FC<{
                 _focus={{ border: 'none', bg: 'none' }}
                 _hover={{ border: 'none', bg: 'none' }}
                 onClick={() => {
-                  clickHandler(2)
+                  setSummaryPanel(2)
                 }}
               >
                 <Box mt="35px">
@@ -123,7 +119,7 @@ export const ProjectSummaryCard: React.FC<{
         </Flex>
       ) : (
         <ProjectSummaryCardDetails
-          setShowLogic={setShowLogic}
+          setSummaryPanel={setSummaryPanel}
           projectData={projectData as Project}
           isLoading={isLoading}
         />

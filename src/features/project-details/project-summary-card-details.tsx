@@ -25,8 +25,8 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
 export const ProjectSummaryCardDetails: React.FC<{
   projectData: Project
   isLoading: boolean
-  setShowLogic?: any
-}> = ({ projectData, isLoading, setShowLogic }) => {
+  setSummaryPanel?: any
+}> = ({ projectData, isLoading, setSummaryPanel }) => {
   const { data } = useAuth()
   const account = data?.user
   const { t } = useTranslation()
@@ -101,7 +101,7 @@ export const ProjectSummaryCardDetails: React.FC<{
           _focus={{ border: 'none', bg: 'none' }}
           _hover={{ border: 'none', bg: 'none' }}
           onClick={() => {
-            setShowLogic(1)
+            setSummaryPanel(1)
           }}
         >
           <Box mt="35px">
