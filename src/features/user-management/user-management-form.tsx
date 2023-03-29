@@ -297,29 +297,31 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     }
     if (showMarkets && noMarketsSelected) {
       setValue('directReports', [])
+
       clearSelectedManager()
     }
     if (showStates && noStatesSelected) {
       setValue('directReports', [])
+
       clearSelectedManager()
     }
   }, [noRegionSelected, noMarketsSelected, noStatesSelected])
 
   useEffect(() => {
-    if ( ! managerOptions?.length || ! formValues?.parentFieldProjectManagerId  ) return;
+    if (!managerOptions?.length || !formValues?.parentFieldProjectManagerId) return
 
     if (
       (showRegions && !noRegionSelected) ||
       (showMarkets && !noMarketsSelected) ||
       (showStates && !noStatesSelected)
     ) {
-      if ( !managerOptions?.find( m => m.value === (formValues?.parentFieldProjectManagerId as any)?.value ) )
+      if (!managerOptions?.find(m => m.value === (formValues?.parentFieldProjectManagerId as any)?.value))
         clearSelectedManager()
     }
   }, [noRegionSelected, noMarketsSelected, noStatesSelected, managerOptions, formValues?.parentFieldProjectManagerId])
 
   useEffect(() => {
-    if (!directReportOptions) return
+    if (!directReportOptions.length) return
 
     if ((window as any)._filteringDone) return
     if (!showRegions && !showMarkets && !showStates) return
@@ -335,7 +337,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       'directReports' as any,
       directReports.filter(d => userIds?.includes(d.id)),
     )
-  }, [directReportRegions, directReportStates, directReportMarkets])
+  }, [directReportRegions, directReportStates, directReportMarkets, directReportOptions])
 
   return (
     <form
