@@ -119,12 +119,8 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
       <VStack px="11px" gap="20px" mb="14px">
         <RadioGroup w="100%" justifyContent={'flex-start'} onChange={setProjectStatus} value={projectStatus}>
           <Stack direction="row">
-            <Radio value="active" isDisabled={isFPM}>
-              {t('active')}
-            </Radio>
-            <Radio value="paid" isDisabled={isFPM}>
-              {t('paid')}
-            </Radio>
+            <Radio value="active">{t('active')}</Radio>
+            <Radio value="paid">{t('paid')}</Radio>
           </Stack>
         </RadioGroup>
         <Box
