@@ -212,6 +212,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const transType = useWatch({ name: 'transactionType', control })
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
+  const isRefund = getValues()?.refund
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
@@ -229,6 +230,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     transaction,
     selectedWorkOrderStats,
     remainingAmt,
+    isRefund,
   )
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'

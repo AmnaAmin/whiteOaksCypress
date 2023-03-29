@@ -15,13 +15,20 @@ type UseColumnFiltersQueryStringProps = {
   selectedFlagged?: any
 }
 export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryStringProps) => {
-  
-  const { queryStringAPIFilterKeys, pagination, setPagination, selectedCard, selectedDay, userIds, days, sorting, selectedFlagged } =
-    options
+  const {
+    queryStringAPIFilterKeys,
+    pagination,
+    setPagination,
+    selectedCard,
+    selectedDay,
+    userIds,
+    days,
+    sorting,
+    selectedFlagged,
+  } = options
   const { pageIndex, pageSize } = pagination || {}
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-
   const fitlersQueryString = useMemo(() => {
     let projectStatusFilter
     let clientDueDateFilter
@@ -31,7 +38,9 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     if (selectedCard) {
       if (selectedCard === 'past due') {
         const pastDueFilters = [{ id: 'pastDue', value: '1' }]
-        const projectStatus = [{ id: 'projectStatus', value: 'new,active,punch' }]
+        const projectStatusValue = columnFilters?.find(c => c.id === 'projectStatus')?.value
+        const projectStatus = [{ id: 'projectStatus', value: projectStatusValue ?? 'new,active,punch' }]
+
         finalFilters = [...finalFilters, ...pastDueFilters, ...projectStatus]
 
         // Account Payable Cards contains 1, 2, 3, 4, 5, 6, which represents
@@ -46,7 +55,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       }
     }
 
-    if ( selectedFlagged ) {
+    if (selectedFlagged) {
       finalFilters = [...columnFilters, { id: 'noteFlag', value: selectedFlagged }]
     }
 

@@ -63,9 +63,9 @@ const SignatureModal = ({
                   _focus={{ outline: 'none' }}
                   pl={0}
                   _selected={{
-                    color: 'button.300',
+                    color: '#345EA6',
                     borderBottom: '2.5px solid',
-                    borderBottomColor: 'button.300',
+                    borderBottomColor: '#345EA6',
                   }}
                 >
                   <BiText size={22} />
