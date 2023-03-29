@@ -8,15 +8,29 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { enUS } from 'date-fns/locale'
 import { BiWind } from 'react-icons/bi'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useQueryClient } from 'react-query'
 
 export const Notifications = () => {
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } = useFetchUserAlertsInfinite({})
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    refetch: fetchNotifications,
+  } = useFetchUserAlertsInfinite({})
   const notifications = data?.pages?.flat()
   const [selectedAlert, setSelectedAlert] = useState<any>()
   const { navigationLoading } = useHandleNavigation(selectedAlert)
   const { mutate: updateAlert } = useUpdateAlert({ hideToast: true })
   const showLoadingSlate = navigationLoading
   const observerElem = useRef(null)
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    queryClient.resetQueries('FetchAllAlertsInfinit')?.then(() => {
+      fetchNotifications()
+    })
+  }, [])
 
   const handleObserver = useCallback(
     entries => {
@@ -59,24 +73,10 @@ export const Notifications = () => {
   const handleClick = alert => {
     //eslint-disable-next-line
     if (!alert?.webSockectRead) {
-      updateAlert(
-        { ...alert, webSockectRead: true },
-        {
-          onSuccess: () => {
-            //refetchNotifications()
-          },
-        },
-      )
+      updateAlert({ ...alert, webSockectRead: true })
     }
     setSelectedAlert(alert)
   }
-  /* const handeResolve = id => {
-    resolveAlerts([id], {
-      onSuccess: () => {
-        refetchNotifications()
-      },
-    })
-  } */
 
   const { t } = useTranslation()
 
@@ -184,11 +184,6 @@ export const Notifications = () => {
           </Box>
         </VStack>
       </Box>
-      {/*
-      isOpenAlertStatus && (
-        <AlertStatusModal isOpen={isOpenAlertStatus} onClose={onCloseAlertStatus} alert={notification} />
-      )}
-      */}
     </>
   )
 }
