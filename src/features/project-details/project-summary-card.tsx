@@ -104,7 +104,7 @@ export const ProjectSummaryCard: React.FC<{
             </InfoStructureCard>
           </Flex>
           {!isLoading && (
-            <Box border={'1px solid #E5E5E5'} borderRadius="5px" w="25px" bg="blue.50">
+            <Box border={'1px solid #E5E5E5'} borderRadius="3px" w="25px" bg="blue.50">
               <Box
                 color="blue.100"
                 border="none"
