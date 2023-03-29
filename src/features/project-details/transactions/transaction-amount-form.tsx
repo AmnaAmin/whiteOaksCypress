@@ -48,6 +48,7 @@ type TransactionAmountFormProps = {
   setMaterialsLoading?: (value) => void
   onSetTotalRemainingAmount?: any
   selectedTransactionId?: string | number | undefined
+  setRemainingAmt?: (val) => void
 }
 
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
@@ -57,6 +58,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   isMaterialsLoading,
   setMaterialsLoading,
   selectedTransactionId,
+  setRemainingAmt,
 }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -200,6 +202,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
       // @ts-ignore
       setValue(`transaction.${index}.amount`, amountValue)
     })
+    if (values?.transactionType?.value === TransactionTypeValues.material && isChecked) {
+      setRemainingAmt?.(false)
+    }
   }
 
   const openFileDialog = () => {
@@ -256,7 +261,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
             )}
           </Box>
           <Box>
-            <input type="file" name='smart_reciept' ref={inputRef} style={{ display: 'none' }} onChange={onFileChange}></input>
+            <input
+              type="file"
+              name="smart_reciept"
+              ref={inputRef}
+              style={{ display: 'none' }}
+              onChange={onFileChange}
+            ></input>
             <HStack
               w={!isApproved || !isSysFactoringFee || !lateAndFactoringFeeForVendor ? 'auto' : '100%'}
               justifyContent="end"
