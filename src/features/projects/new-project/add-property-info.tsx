@@ -227,6 +227,7 @@ export const AddPropertyInfo: React.FC<{
                   render={({ field, fieldState }) => (
                     <>
                       <Select
+                        id="addressState"
                         {...field}
                         options={stateSelectOptions}
                         size="md"
@@ -277,6 +278,7 @@ export const AddPropertyInfo: React.FC<{
                   render={({ field, fieldState }) => (
                     <>
                       <Select
+                        id="addressMarket"
                         {...field}
                         options={marketSelectOptions}
                         size="md"
