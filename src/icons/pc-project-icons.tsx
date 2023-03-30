@@ -213,7 +213,6 @@ function SummaryIconEleventh(props: SVGAttributes<SVGElement>) {
     </svg>
   )
 }
-
 export default SummaryIconFirst
 export {
   SummaryIconSecond,
