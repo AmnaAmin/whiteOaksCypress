@@ -18,22 +18,22 @@ export const FPMVendorFilters = ({ onSelectCard, selectedCard }) => {
       switch (userInfo?.fieldProjectManagerRoleId) {
         case FPMManagerTypes.District: {
           const states = userInfo?.fpmStates?.map(m => m.code)?.join(',')
-          setFilteredUrl('state.in=' + states)
+          setFilteredUrl('states=' + states)
           break
         }
         case FPMManagerTypes.Regional: {
           const regions = userInfo?.regions?.join(',')
-          setFilteredUrl('region.in=' + regions)
+          setFilteredUrl('regions=' + regions)
           break
         }
         case FPMManagerTypes.Regular: {
           const marketIds = userInfo?.markets?.map(m => m.id)?.join(',')
-          setFilteredUrl('marketIds.in=' + marketIds)
+          setFilteredUrl('marketIds=' + marketIds)
           break
         }
         case FPMManagerTypes.SrFPM: {
           const marketIds = userInfo?.markets?.map(m => m.id)?.join(',')
-          setFilteredUrl('marketIds.in=' + marketIds)
+          setFilteredUrl('marketIds=' + marketIds)
           break
         }
       }
