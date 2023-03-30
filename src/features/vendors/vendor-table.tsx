@@ -170,7 +170,6 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
       pagination,
       setPagination,
       sorting,
-      selectedCard,
     })
 
   useEffect(() => {
