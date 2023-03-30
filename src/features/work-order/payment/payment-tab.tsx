@@ -50,7 +50,7 @@ const InformationCard = props => {
     <Flex>
       <Box pr={4}>
         {/* <Icon as={<BiFile/>} fontSize="23px" color="#718096" /> */}
-        <BiFile size={23} color="#4A5568" />
+        <BiFile size={23} color="gray.600" />
       </Box>
       <Box lineHeight="20px">
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
@@ -355,7 +355,6 @@ const PaymentInfoTab = props => {
                         <>
                           <NumberFormat
                             value={field.value}
-                            color={'#4A5568'}
                             data-testid="invoiceAmount"
                             thousandSeparator
                             customInput={CustomRequiredInput}
@@ -388,7 +387,6 @@ const PaymentInfoTab = props => {
                             value={field.value}
                             data-testid="clientOriginalApprovedAmount"
                             thousandSeparator
-                            color={'#4A5568'}
                             customInput={CustomRequiredInput}
                             prefix={'$'}
                             disabled={!clientOriginalApprovedAmountEnabled}
@@ -420,7 +418,6 @@ const PaymentInfoTab = props => {
                             value={field.value}
                             data-testid="clientApprovedAmount"
                             thousandSeparator
-                            color={'#4A5568'}
                             customInput={CustomRequiredInput}
                             prefix={'$'}
                             disabled={!clientApprovedAmountEnabled}
@@ -469,7 +466,6 @@ const PaymentInfoTab = props => {
                             value={field.value}
                             data-testid="partial-payment-field"
                             thousandSeparator
-                            color={'#4A5568'}
                             customInput={CustomInput}
                             prefix={'$'}
                             disabled={!partialPaymentEnabled}
