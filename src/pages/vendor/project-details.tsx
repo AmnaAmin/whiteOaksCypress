@@ -7,7 +7,6 @@ import { TransactionsTable } from 'features/project-details/transactions/transac
 import AddNewTransactionModal from 'features/project-details/transactions/add-transaction-modal'
 import { VendorDocumentsTable } from 'features/project-details/documents/documents-table'
 import { WorkOrdersTable } from 'features/vendor/vendor-work-order/work-orders-table'
-import { AlertStatusModal } from 'features/alerts/alert-status'
 import { UploadDocumentModal } from 'features/project-details/documents/upload-document'
 import { useParams } from 'react-router'
 import { TransactionInfoCard } from 'features/project-details/transactions/transaction-info-card'
@@ -15,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { useProject } from 'api/projects'
 import { Project } from 'types/project.type'
 import { BiAddToQueue, BiUpload } from 'react-icons/bi'
-import { TriggeredAlertsTable } from 'features/alerts/triggered-alerts-table'
+// import { TriggeredAlertsTable } from 'features/alerts/view-notifications'
 import { Card } from 'features/login-form-centered/Card'
 import { STATUS } from 'features/common/status'
 
@@ -29,14 +28,12 @@ const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = useProject(`${projectId}`)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState<number>(1)
-  const [alertRow, selectedAlertRow] = useState(true)
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
-  const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
   const vendorWOStatusValue = (projectData?.vendorWOStatusValue || '').toLowerCase()
 
   const isNewTransactionAllow = vendorWOStatusValue
@@ -147,7 +144,7 @@ const ProjectDetails: React.FC = props => {
                 <TabPanel p="0px">
                   <VendorDocumentsTable ref={tabsContainerRef} />
                 </TabPanel>
-                <TabPanel p="0px">
+                {/*<TabPanel p="0px">
                   <TriggeredAlertsTable
                     onRowClick={(e, row) => {
                       selectedAlertRow(row.values)
@@ -155,13 +152,12 @@ const ProjectDetails: React.FC = props => {
                     }}
                     ref={tabsContainerRef}
                   />
-                </TabPanel>
+                </TabPanel>*/}
               </TabPanels>
             </Card>
           </Tabs>
         </Stack>
       </Stack>
-      <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
       {isOpenDocumentModal && (
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
       )}

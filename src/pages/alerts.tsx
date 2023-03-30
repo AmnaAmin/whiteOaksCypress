@@ -1,23 +1,17 @@
 import { Box, Button, Icon, Tab, TabList, TabPanel, TabPanels, Tabs, useDisclosure } from '@chakra-ui/react'
-import { AlertStatusModal } from 'features/alerts/alert-status'
 import { ManagedAlertTable } from 'features/alerts/managed-alert-table'
-import { TriggeredAlertsTable } from 'features/alerts/triggered-alerts-table'
+import { Notifications } from 'features/alerts/view-notifications'
 import { ManagedAlertsModal } from 'features/alerts/managed-alerts-modal'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
-import { useManagedAlert, useResolveAlerts } from 'api/alerts'
+import { useManagedAlert } from 'api/alerts'
 import { BiBookAdd } from 'react-icons/bi'
 
 const Alerts = () => {
   const { t } = useTranslation()
-  const { isOpen: isOpenAlertModal, onClose: onAlertModalClose, onOpen: onAlertModalOpen } = useDisclosure()
   const { isOpen: isOpenNewAlertModal, onClose: onNewAlertModalClose, onOpen: onNewAlertModalOpen } = useDisclosure()
   const [tabIndex, setTabIndex] = useState<number>(0)
-  const [alertRow, selectedAlertRow] = useState(true)
-  const tabsContainerRef = useRef<HTMLDivElement>(null)
-  const { mutate: resolveAlerts, isLoading: isLoadingResolve } = useResolveAlerts()
-  const [selectedAlerts, setSelectedAlerts] = useState<(number | string | undefined)[]>([])
 
   const { data: managedAlerts, refetch, isLoading } = useManagedAlert()
 
@@ -30,35 +24,15 @@ const Alerts = () => {
         </TabList>
         <Card rounded="0px" roundedRight={{ base: '0px', md: '6px' }} roundedBottom="6px" pr={{ base: 0, sm: '15px' }}>
           <Box w="100%" display="flex" justifyContent="end" position="relative">
-            {tabIndex === 0 && (
-              <Button
-                colorScheme="brand"
-                onClick={() => {
-                  resolveAlerts(selectedAlerts)
-                }}
-                disabled={isLoadingResolve}
-              >
-                {t('resolve')}
-              </Button>
-            )}
-
             {tabIndex === 1 && (
-              <Button colorScheme="brand" onClick={onNewAlertModalOpen}  leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
+              <Button colorScheme="brand" onClick={onNewAlertModalOpen} leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
                 {t('newAlert')}
               </Button>
             )}
           </Box>
           <TabPanels>
             <TabPanel px={0}>
-              <TriggeredAlertsTable
-                selectedAlerts={selectedAlerts}
-                setSelectedAlerts={setSelectedAlerts}
-                onRowClick={(e, row) => {
-                  selectedAlertRow(row.values)
-                  onAlertModalOpen()
-                }}
-                ref={tabsContainerRef}
-              />
+              <Notifications />
             </TabPanel>
             <TabPanel px={0}>
               <ManagedAlertTable managedAlerts={managedAlerts} isLoading={isLoading} refetch={refetch} />
@@ -67,7 +41,6 @@ const Alerts = () => {
         </Card>
       </Tabs>
 
-      <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} />
       {isOpenNewAlertModal && (
         <ManagedAlertsModal isOpen={isOpenNewAlertModal} onClose={onNewAlertModalClose} selectedAlert={null} />
       )}
