@@ -5,8 +5,9 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useGetProjectFinancialOverview } from 'api/projects'
 import { BiCoinStack, BiDollar, BiDollarCircle, BiPaintRoll, BiStats } from 'react-icons/bi'
 import { RiMoneyDollarBoxLine } from 'react-icons/ri'
+import { IconType } from 'react-icons'
 
-const InfoStructureCard: React.FC<{ amount; isLoading: boolean, icon: any} & CenterProps> = ({
+const InfoStructureCard: React.FC<{ amount; isLoading: boolean, icon: IconType} & CenterProps> = ({
   amount,
   children,
   isLoading,

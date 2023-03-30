@@ -170,14 +170,14 @@ export const ProjectDetails: React.FC = props => {
                   <HStack spacing="16px" mb="10px">
                     <Box mt={'14px'}>
                       <FormControl display="flex" alignItems="center">
-                        <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" color="#718096"  size="md">
+                        <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" color="gray.500"  size="md">
                           {t('projects.projectDetails.viewDetails')}
                         </FormLabel>
                         <Switch
                           size="sm"
                           id="view-details"
                           outline="4px solid white"
-                          color="#345EA6"
+                          color="brand.300"
                           rounded="full"
                           isChecked={isShowProjectFinancialOverview}
                           onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
