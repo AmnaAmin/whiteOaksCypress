@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useGetProjectFinancialOverview } from 'api/projects'
 import { BiCoinStack, BiDollar, BiDollarCircle, BiPaintRoll, BiStats } from 'react-icons/bi'
-import { SummaryIconTwelve } from 'icons/pc-project-icons'
+import { RiMoneyDollarBoxLine } from 'react-icons/ri'
 
 const InfoStructureCard: React.FC<{ amount; isLoading: boolean, icon: any} & CenterProps> = ({
   amount,
@@ -80,7 +80,7 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
        />
 
       <InfoStructureCard
-      icon={SummaryIconTwelve}
+      icon={RiMoneyDollarBoxLine}
       data-testid ='project_total_cost'
         amount={projectTotalCost}
         isLoading={isLoading}
