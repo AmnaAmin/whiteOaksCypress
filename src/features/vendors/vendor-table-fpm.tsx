@@ -52,22 +52,22 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
       switch (userInfo?.fieldProjectManagerRoleId) {
         case FPMManagerTypes.District: {
           const states = userInfo?.fpmStates?.map(m => m.code)?.join(',')
-          filterUrl = 'state.in=' + states
+          filterUrl = 'stateCode.in=' + states
           break
         }
         case FPMManagerTypes.Regional: {
           const regions = userInfo?.regions?.join(',')
-          filterUrl = 'region.in=' + regions
+          filterUrl = 'regionId.in=' + regions
           break
         }
         case FPMManagerTypes.Regular: {
           const marketIds = userInfo?.markets?.map(m => m.id)?.join(',')
-          filterUrl = 'marketIds.in=' + marketIds
+          filterUrl = 'marketId.in=' + marketIds
           break
         }
         case FPMManagerTypes.SrFPM: {
           const marketIds = userInfo?.markets?.map(m => m.id)?.join(',')
-          filterUrl = 'marketIds.in=' + marketIds
+          filterUrl = 'marketId.in=' + marketIds
           break
         }
       }
