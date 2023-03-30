@@ -242,7 +242,6 @@ const WorkOrderDetails = ({
                           onChange={() => setRejectInvoice(!rejectInvoice)}
                           isChecked={rejectInvoice}
                           disabled={workOrder.status === 111}
-                          color="#2D3748"
                           fontSize="14px"
                           fontWeight={500}
                         >

@@ -31,7 +31,7 @@ const CalenderCard = props => {
   return (
     <Flex>
       <Box pr={4}>
-        <BiCalendar size={23} color="#4A5568" />
+        <BiCalendar size={23} color="gray.600" />
       </Box>
       <Box lineHeight="20px">
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.700" mb="1">
@@ -188,7 +188,6 @@ const PaymentInfoTab = props => {
                     id="dateInvoiceSubmitted"
                     data-testid="dateInvoiceSubmitted"
                     type="date"
-                    color={'#4A5568'}
                     size="md"
                     css={calendarIcon}
                     isDisabled={!dateInvoiceSubmittedEnabled}
@@ -269,7 +268,6 @@ const PaymentInfoTab = props => {
                     type="date"
                     data-testid="paymentTermDate"
                     size="md"
-                    color={'#4A5568'}
                     css={calendarIcon}
                     isDisabled={!paymentTermDateEnabled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
@@ -289,7 +287,6 @@ const PaymentInfoTab = props => {
                     id="expectedPaymentDate"
                     type="date"
                     size="md"
-                    color={'#4A5568'}
                     data-testid="expectedPaymentDate"
                     css={calendarIcon}
                     isDisabled={!expectedPaymentDateEnabled}
@@ -315,7 +312,6 @@ const PaymentInfoTab = props => {
                     id="datePaymentProcessed"
                     type="date"
                     size="md"
-                    color={'#4A5568'}
                     data-testid="datePaymentProcessed"
                     css={calendarIcon}
                     isDisabled={!datePaymentProcessedEnabled}
@@ -337,7 +333,6 @@ const PaymentInfoTab = props => {
                     id="datePaid"
                     type="date"
                     size="md"
-                    color={'#4A5568'}
                     data-testid="datePaid"
                     css={calendarIcon}
                     isDisabled={!datePaidEnabled}
@@ -450,7 +445,6 @@ const PaymentInfoTab = props => {
                     type="text"
                     data-testid="finalInvoiceAmount"
                     size="md"
-                    color={'#4A5568'}
                     isDisabled={!finalInvoiceAmountEnabled}
                     {...register('finalInvoiceAmount')}
                     variant="outline"
@@ -509,7 +503,6 @@ const PaymentInfoTab = props => {
                     size="md"
                     data-testid="partialPaymentDate"
                     css={calendarIcon}
-                    color={'#4A5568'}
                     isDisabled={!paymentDateEnabled}
                     variant="outline"
                     {...register('paymentDate', {
