@@ -60,7 +60,9 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
     <Box>
       <Box>
         <Flex direction="row" mt={2}>
-          
+          <Box width={'34%'} flexWrap={'wrap'}>
+            <FieldInfoCard title={'bonus'} value={currencyFormatter(fpmData?.currentBonus)} />
+          </Box>
           <Box width={'34%'} flexWrap={'wrap'}>
             <FieldInfoCard title={'previousBonus'} value={currencyFormatter(fpmData?.previousBonus)} />
           </Box>
@@ -71,7 +73,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
             <FieldInfoCard title={'revenue'} value={currencyFormatter(fpmData?.revenue)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={'disqualifiedRevenue'} value={currencyFormatter(fpmData?.disqualifiedRevenue)} />
+            <FieldInfoCard title={'target'} value={currencyFormatter(fpmData?.target)} />
           </Box>
         </Flex>
         <Divider mt={4} mb={5} />
@@ -104,6 +106,35 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
+                {t(`${PERFORMANCE}.newTarget`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={`newTarget`}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberInput
+                        value={field.value}
+                        onValueChange={values => {
+                          const { floatValue } = values
+                          field.onChange(floatValue)
+                        }}
+                        customInput={CustomRequiredInput}
+                        thousandSeparator={true}
+                        prefix={'$'}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
                 {t(`${PERFORMANCE}.badge`)}
               </FormLabel>
               <Controller
@@ -125,6 +156,8 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
               />
             </FormControl>
           </GridItem>
+        </Grid>
+        <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
