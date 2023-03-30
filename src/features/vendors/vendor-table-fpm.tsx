@@ -73,7 +73,6 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
       }
       if (selectedCard) {
         setFilteredUrl(filterUrl + '&' + VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
-        setColumnFilters([...columnFilters, { id: 'statusLabel', value: selectedCard }])
         setPagination({ pageIndex: 0, pageSize: 20 })
       } else {
         setFilteredUrl(filterUrl)
