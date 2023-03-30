@@ -224,14 +224,20 @@ export const useVendorCards = () => {
   })
 }
 
-export const useFPMVendorCards = marketIds => {
+export const useFPMVendorCards = filteredUrl => {
   const client = useClient()
+  const vendorCardsApi = `vendorsCards/v1?` + filteredUrl
+  return useQuery<Vendors>(
+    ['vendorsCards'],
+    async () => {
+      const response = await client(vendorCardsApi, {})
 
-  return useQuery<Vendors>(['vendorsCards', marketIds], async () => {
-    const response = await client(`vendorsCards/v1?marketIds=${marketIds}`, {})
-
-    return response?.data
-  })
+      return response?.data
+    },
+    {
+      enabled: !!filteredUrl,
+    },
+  )
 }
 
 export const useProperties = () => {
@@ -474,13 +480,13 @@ export const useGetAllVendors = (filterQueryString: string) => {
   }
 }
 
-export const useGetAllFPMVendors = (marketIds, filterQueryString: string) => {
+export const useGetAllFPMVendors = (filterQueryString: string) => {
   const client = useClient()
 
   const { data, ...rest } = useQuery<Array<Project>>(
-    ['all_fpm_vendors', marketIds],
+    ['all_fpm_vendors'],
     async () => {
-      const response = await client(`view-vendors/v1?marketId.in=${marketIds}&${filterQueryString}`, {})
+      const response = await client(`view-vendors/v1?${filterQueryString}`, {})
 
       return response?.data
     },
@@ -494,13 +500,14 @@ export const useGetAllFPMVendors = (marketIds, filterQueryString: string) => {
     ...rest,
   }
 }
-export const useFPMVendor = (marketIds, queryString, pageSize, isFPM) => {
-  const apiQueryString = getVendorsQueryString(queryString)
+export const useFPMVendor = (filteredUrl, queryString, pageSize, isFPM) => {
+  const query = filteredUrl + '&' + queryString
+  const apiQueryString = getVendorsQueryString(query)
   const { data, ...rest } = usePaginationQuery<vendors>(
-    ['fpm-vendors', apiQueryString, marketIds],
-    `view-vendors/v1?marketId.in=${marketIds}&${apiQueryString}`,
+    ['fpm-vendors', apiQueryString],
+    `view-vendors/v1?${apiQueryString}`,
     pageSize,
-    { enabled: marketIds && isFPM },
+    { enabled: !!filteredUrl && isFPM },
   )
 
   return {

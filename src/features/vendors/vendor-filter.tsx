@@ -1,17 +1,11 @@
 import { Grid, Icon } from '@chakra-ui/react'
-
-import React from 'react'
 import { BiClipboard, BiFile, BiHourglass, BiMessageSquareError } from 'react-icons/bi'
-import { useFPMVendorCards, useVendorCards } from 'api/pc-projects'
+import { useVendorCards } from 'api/pc-projects'
 import VendorFilterCard from './vendor-filter-card'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useTranslation } from 'react-i18next'
 
-import { useUser } from 'api/user-management'
-import { useAuth } from 'utils/auth-context'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
-
-const useVendorCardJson = cards => {
+export const useVendorCardJson = cards => {
   const { t } = useTranslation()
 
   return [
@@ -47,28 +41,8 @@ const useVendorCardJson = cards => {
 }
 
 export const VendorFilters = ({ onSelectCard, selectedCard }) => {
-  // FPM portal -> Show vendors having same market as the logged in FPM
-  const { data: account } = useAuth()
-  const { data: userInfo } = useUser(account?.user?.email)
-  let marketIDs = userInfo?.markets?.map(m => m.id)
-  let ids = userInfo?.markets?.map(m => m.id)
-  if (ids === 'undefined') marketIDs = 0
-  else if (ids === '') marketIDs = 0
-  else if (ids === ' ') marketIDs = 0
-  else userInfo?.markets?.map(m => m.id)
-  /*const marketIDs = "undefined" ? "0" 
-    : "" ? "0" 
-    : " " ? "0" 
-    : userInfo?.markets?.map(m => m.id);*/
-
-  const { isFPM } = useUserRolesSelector()
-
   const { data: valuesVendor } = useVendorCards()
-  const { data: valuesFPMVendor } = useFPMVendorCards(marketIDs ? marketIDs : 0)
-
-  const values = isFPM ? valuesFPMVendor : valuesVendor
-
-  const cards = useVendorCardJson(values)
+  const cards = useVendorCardJson(valuesVendor)
 
   return (
     <Grid justifyContent="space-between" w="100%" templateColumns="repeat(auto-fit, minmax(250px, 1fr))" gap="6">
