@@ -4,11 +4,16 @@ import { useClient } from 'utils/auth-context'
 import numeral from 'numeral'
 import { orderBy } from 'lodash'
 import { usePaginationQuery } from 'api/index'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const PROJECTS_QUERY_KEY = 'projects'
 export const useProjects = (filterQueryString?: string, page?: number, size: number = 0) => {
   const queryKey = [PROJECTS_QUERY_KEY, filterQueryString]
-  const endpoint = `v1/projects?${filterQueryString || ''}`
+  const { isFPM } = useUserRolesSelector()
+  const fpmRestrictedProjects = 'projectStatus.notIn=paid,clientpaid,overpayment'
+  const endpoint = isFPM
+    ? `v1/projects?${fpmRestrictedProjects}&${filterQueryString || ''}`
+    : `v1/projects?${filterQueryString || ''}`
 
   const { data, ...rest } = usePaginationQuery<Array<Project>>(queryKey, endpoint, size || 10, { enabled: size > 0 })
 
@@ -23,11 +28,16 @@ export const useProjects = (filterQueryString?: string, page?: number, size: num
 export const ALL_PROJECTS_QUERY_KEY = 'all_projects'
 export const useGetAllProjects = (filterQueryString: string) => {
   const client = useClient()
+  const { isFPM } = useUserRolesSelector()
+  const fpmRestrictedProjects = 'projectStatus.notIn=paid,clientpaid,overpayment'
+  const endpoint = isFPM
+    ? `v1/projects?${fpmRestrictedProjects}&${filterQueryString || ''}`
+    : `v1/projects?${filterQueryString || ''}`
 
   const { data, ...rest } = useQuery<Array<Project>>(
     ALL_PROJECTS_QUERY_KEY,
     async () => {
-      const response = await client(`v1/projects?${filterQueryString}`, {})
+      const response = await client(endpoint, {})
 
       return response?.data
     },
@@ -128,17 +138,14 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
 
   const sowRevisedChangeOrderAmount =
     (firstFinancialRecord?.changeOrder || 0) + (firstFinancialRecord?.coAdjustment || 0)
-  const sowRevisedAmount = (firstFinancialRecord?.originalAmount || 0) + (firstFinancialRecord?.noCoAdjustment || 0);
-  const finalSOWAmount = sowRevisedAmount + sowRevisedChangeOrderAmount + (firstFinancialRecord?.carrierFee || 0);
+  const sowRevisedAmount = (firstFinancialRecord?.originalAmount || 0) + (firstFinancialRecord?.noCoAdjustment || 0)
+  const finalSOWAmount = sowRevisedAmount + sowRevisedChangeOrderAmount + (firstFinancialRecord?.carrierFee || 0)
   const originalSOWAmount =
     (firstFinancialRecord?.originalAmount || 0) +
     (firstFinancialRecord?.changeOrder || 0) +
     (firstFinancialRecord?.adjustment || 0)
 
-  const projectExpenses =
-    -1 *
-    ((firstFinancialRecord?.shipFee || 0) +
-      (firstFinancialRecord?.permitFee || 0))
+  const projectExpenses = -1 * ((firstFinancialRecord?.shipFee || 0) + (firstFinancialRecord?.permitFee || 0))
 
   const { vendorAccountPayable, projectTotalCost, materialCost, vendorPayment } = restProjectFinancialOverviews?.reduce(
     (final, curr) => {
@@ -172,7 +179,10 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
         revisedSOWAmount: (fo?.originalAmount || 0) + (fo?.noCoAdjustment || 0),
         revisedChangeOrderAmount: (fo?.changeOrder || 0) + (fo?.coAdjustment || 0),
         finalSOWAmount: fo?.newAmount || 0,
-        accountReceivable: (fo?.newAmount || 0) + (fo?.draw || 0) - ((fo?.partialPayment || 0) + (fo?.deductible || 0) + (fo?.depreciation || 0)),
+        accountReceivable:
+          (fo?.newAmount || 0) +
+          (fo?.draw || 0) -
+          ((fo?.partialPayment || 0) + (fo?.deductible || 0) + (fo?.depreciation || 0)),
       })) || [],
     workOrderFinancialOverviews: restProjectFinancialOverviews,
     vendorPaymentPercentage,
