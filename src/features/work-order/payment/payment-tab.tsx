@@ -11,9 +11,8 @@ import {
   ModalFooter,
   ModalBody,
   HStack,
-  Icon,
 } from '@chakra-ui/react'
-import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
+import { BiCalendar, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { paymentsTerms } from 'api/vendor-projects'
 import { dateFormat, dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
@@ -32,13 +31,13 @@ const CalenderCard = props => {
   return (
     <Flex>
       <Box pr={4}>
-        <BiCalendar size={23} color="#718096" />
+        <BiCalendar size={23} color="#4A5568" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
+        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.700" mb="1">
           {props.title}
         </Text>
-        <Text minH={'20px'} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text minH={'20px'} color="gray.600" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props?.date}
         </Text>
       </Box>
@@ -49,16 +48,15 @@ const CalenderCard = props => {
 const InformationCard = props => {
   return (
     <Flex>
-      {props?.icon && (
-        <Box pr={4}>
-          <Icon as={props?.icon} fontSize="23px" color="#718096" />
-        </Box>
-      )}
+      <Box pr={4}>
+        {/* <Icon as={<BiFile/>} fontSize="23px" color="#718096" /> */}
+        <BiFile size={23} color="#4A5568" />
+      </Box>
       <Box lineHeight="20px">
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text minH={'20px'} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text minH={'20px'} color="gray.600" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props.date}
         </Text>
       </Box>
@@ -190,6 +188,7 @@ const PaymentInfoTab = props => {
                     id="dateInvoiceSubmitted"
                     data-testid="dateInvoiceSubmitted"
                     type="date"
+                    color={'#4A5568'}
                     size="md"
                     css={calendarIcon}
                     isDisabled={!dateInvoiceSubmittedEnabled}
@@ -270,6 +269,7 @@ const PaymentInfoTab = props => {
                     type="date"
                     data-testid="paymentTermDate"
                     size="md"
+                    color={'#4A5568'}
                     css={calendarIcon}
                     isDisabled={!paymentTermDateEnabled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
@@ -289,6 +289,7 @@ const PaymentInfoTab = props => {
                     id="expectedPaymentDate"
                     type="date"
                     size="md"
+                    color={'#4A5568'}
                     data-testid="expectedPaymentDate"
                     css={calendarIcon}
                     isDisabled={!expectedPaymentDateEnabled}
@@ -314,6 +315,7 @@ const PaymentInfoTab = props => {
                     id="datePaymentProcessed"
                     type="date"
                     size="md"
+                    color={'#4A5568'}
                     data-testid="datePaymentProcessed"
                     css={calendarIcon}
                     isDisabled={!datePaymentProcessedEnabled}
@@ -335,6 +337,7 @@ const PaymentInfoTab = props => {
                     id="datePaid"
                     type="date"
                     size="md"
+                    color={'#4A5568'}
                     data-testid="datePaid"
                     css={calendarIcon}
                     isDisabled={!datePaidEnabled}
@@ -343,7 +346,6 @@ const PaymentInfoTab = props => {
                   />
                 </FormControl>
               </Box>
-
               <Box>
                 <FormControl isInvalid={!!errors.invoiceAmount}>
                   <FormLabel variant={'strong-label'} size={'md'}>
@@ -358,6 +360,7 @@ const PaymentInfoTab = props => {
                         <>
                           <NumberFormat
                             value={field.value}
+                            color={'#4A5568'}
                             data-testid="invoiceAmount"
                             thousandSeparator
                             customInput={CustomRequiredInput}
@@ -390,6 +393,7 @@ const PaymentInfoTab = props => {
                             value={field.value}
                             data-testid="clientOriginalApprovedAmount"
                             thousandSeparator
+                            color={'#4A5568'}
                             customInput={CustomRequiredInput}
                             prefix={'$'}
                             disabled={!clientOriginalApprovedAmountEnabled}
@@ -421,6 +425,7 @@ const PaymentInfoTab = props => {
                             value={field.value}
                             data-testid="clientApprovedAmount"
                             thousandSeparator
+                            color={'#4A5568'}
                             customInput={CustomRequiredInput}
                             prefix={'$'}
                             disabled={!clientApprovedAmountEnabled}
@@ -445,6 +450,7 @@ const PaymentInfoTab = props => {
                     type="text"
                     data-testid="finalInvoiceAmount"
                     size="md"
+                    color={'#4A5568'}
                     isDisabled={!finalInvoiceAmountEnabled}
                     {...register('finalInvoiceAmount')}
                     variant="outline"
@@ -469,6 +475,7 @@ const PaymentInfoTab = props => {
                             value={field.value}
                             data-testid="partial-payment-field"
                             thousandSeparator
+                            color={'#4A5568'}
                             customInput={CustomInput}
                             prefix={'$'}
                             disabled={!partialPaymentEnabled}
@@ -502,6 +509,7 @@ const PaymentInfoTab = props => {
                     size="md"
                     data-testid="partialPaymentDate"
                     css={calendarIcon}
+                    color={'#4A5568'}
                     isDisabled={!paymentDateEnabled}
                     variant="outline"
                     {...register('paymentDate', {
@@ -530,7 +538,7 @@ const PaymentInfoTab = props => {
           </HStack>
           <HStack justifyContent="end">
             <Button data-testid="wo-cancel-btn" variant="outline" onClick={props.onClose} colorScheme="brand">
-              {t('close')}
+              {t('cancel')}
             </Button>
             <Button type="submit" data-testid="submit-btn" colorScheme="brand" disabled={isWorkOrderUpdating}>
               {t('save')}
