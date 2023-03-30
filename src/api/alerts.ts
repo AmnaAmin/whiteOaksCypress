@@ -211,6 +211,7 @@ export const useFetchUserAlertsInfinite = ({ projectId }: AlertsProps) => {
         const nextPage = allPages?.length + 1
         return lastPage?.items?.length !== 0 ? nextPage : undefined
       },
+      enabled: false,
     },
   )
   return {
