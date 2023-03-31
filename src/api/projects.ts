@@ -29,7 +29,7 @@ export const ALL_PROJECTS_QUERY_KEY = 'all_projects'
 export const useGetAllProjects = (filterQueryString: string) => {
   const client = useClient()
   const { isFPM } = useUserRolesSelector()
-  const fpmRestrictedProjects = 'projectStatus.notIn=paid,clientpaid,overpayment'
+  const fpmRestrictedProjects = 'projectStatusId.notIn=41,72,109' // paid -> 41 , ClientPAid -> 72 , Overpayment -> 109
   const endpoint = isFPM
     ? `v1/projects?${fpmRestrictedProjects}&${filterQueryString || ''}`
     : `v1/projects?${filterQueryString || ''}`
