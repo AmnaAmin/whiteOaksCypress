@@ -164,10 +164,18 @@ const WorkOrderDetails = ({
             <ModalHeader bg="white">
               <HStack spacing={4}>
                 <HStack fontSize="16px" fontWeight={500}>
-                  <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
+                  <Text
+                    color={'gray.600'}
+                    fontWeight="400"
+                    fontSize={'16px'}
+                    borderRight="1px solid #E2E8F0"
+                    lineHeight="22px"
+                    h="22px"
+                    pr={2}
+                  >
                     WO {workOrder?.id}
                   </Text>
-                  <Text lineHeight="22px" h="22px">
+                  <Text fontSize="16px" color={'gray.600'} fontWeight="400" lineHeight="22px" h="22px">
                     {workOrder?.companyName}
                   </Text>
                 </HStack>
@@ -230,10 +238,10 @@ const WorkOrderDetails = ({
                     ) && (
                       <Center w="100%" justifyContent="end">
                         <Checkbox
+                          variant={'outLinePrimary'}
                           onChange={() => setRejectInvoice(!rejectInvoice)}
                           isChecked={rejectInvoice}
                           disabled={workOrder.status === 111}
-                          color="#4A5568"
                           fontSize="14px"
                           fontWeight={500}
                         >

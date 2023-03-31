@@ -15,7 +15,7 @@ const input = {
           ...chakraTheme.components.Input.variants.outline(props),
           field: {
             borderRadius: '6px',
-            color: 'gray.500',
+            color: 'gray.600',
             bg: 'white',
             _focus: inputFocusStateStyle,
             _disabled: inputDisableStyle,
@@ -28,7 +28,7 @@ const input = {
             ...chakraTheme.components.Input.variants.outline(props).field,
             ...inputBorderLeftStyle,
             borderRadius: '6px',
-            color: 'gray.500',
+            color: 'gray.600',
             bg: 'white',
             _focus: requiredInputFocusStateStyle,
             _disabled: {
