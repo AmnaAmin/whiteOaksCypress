@@ -22,7 +22,7 @@ import {
   workOrderAttributes,
   workOrderStatus,
 } from 'types/alert.type'
-import { useClient } from 'utils/auth-context'
+import { useAuth, useClient } from 'utils/auth-context'
 import { useNavigate } from 'react-router-dom'
 import { usePaginationQuery } from 'api'
 
@@ -177,10 +177,12 @@ type AlertsProps = {
   isDisabled?: boolean
 }
 export const useFetchUserAlerts = ({ query: filterQueryString, projectId, isDisabled }: AlertsProps) => {
+  const { data: userInfo } = useAuth()
+  const user = userInfo?.user
   const client = useClient('/alert/api')
   const url = !projectId
-    ? `alert-histories?${filterQueryString}`
-    : `alert-histories/project/${projectId}?${{ filterQueryString }}`
+    ? `alert-histories?${filterQueryString}&userId.equals=${user?.id}`
+    : `alert-histories/project/${projectId}?${{ filterQueryString }}&userId.equals=${user?.id}`
   const { data: alerts, ...rest } = useQuery<AlertType[]>(
     'FetchAllAlerts',
     async () => {
@@ -199,11 +201,17 @@ export const useFetchUserAlerts = ({ query: filterQueryString, projectId, isDisa
 
 export const useFetchUserAlertsInfinite = ({ projectId }: AlertsProps) => {
   const client = useClient('/alert/api')
+  const { data: userInfo } = useAuth()
+  const user = userInfo?.user
+
   const { data: alerts, ...rest } = useInfiniteQuery(
     'FetchAllAlertsInfinit',
     async ({ pageParam = 0 }) => {
       const url = !projectId ? `alert-histories` : `alert-histories/project/${projectId}`
-      const response = await client(url + `?page=${pageParam}&size=20&sort=dateCreated,desc`, {})
+      const response = await client(
+        url + `?page=${pageParam}&size=20&sort=dateCreated,desc&userId.equals=${user?.id}`,
+        {},
+      )
       return response?.data
     },
     {
@@ -300,6 +308,7 @@ export const useResolveAlerts = (hideToast?) => {
 export const useUpdateAlert = (hideToast?) => {
   const client = useClient('/alert/api')
   const toast = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation(
     updatedAlert => {
@@ -320,6 +329,7 @@ export const useUpdateAlert = (hideToast?) => {
             position: 'top-left',
           })
         }
+        queryClient.invalidateQueries('FetchAllAlerts')
       },
       onError(error: any) {
         toast({
