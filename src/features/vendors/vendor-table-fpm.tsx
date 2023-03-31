@@ -11,7 +11,6 @@ import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { Vendor as VendorType } from 'types/vendor.types'
 import Vendor from './selected-vendor-modal'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { FPMManagerTypes, useUser } from 'api/user-management'
 import { useAuth } from 'utils/auth-context'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
@@ -30,7 +29,6 @@ type ProjectProps = {
   selectedCard: string
 }
 export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
-  const { isFPM } = useUserRolesSelector()
   const location = useLocation()
   const navigate = useNavigate()
   const vendor = (location?.state as any)?.data || {}
@@ -96,7 +94,7 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
     isLoading: isFPMVendorLoading,
     dataCount: fpmDataCount,
     totalPages: fpmTotalPages,
-  } = useFPMVendor(fpmBasedQueryParams, queryStringWithPagination, pagination.pageSize, isFPM)
+  } = useFPMVendor(fpmBasedQueryParams, queryStringWithPagination, pagination.pageSize)
 
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
 

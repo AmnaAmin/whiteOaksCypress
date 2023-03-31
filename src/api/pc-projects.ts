@@ -500,14 +500,14 @@ export const useGetAllFPMVendors = (fpmBasedQueryParams, queryStringWithOutPagin
     ...rest,
   }
 }
-export const useFPMVendor = (fpmBasedQueryParams, queryStringWithPagination, pageSize, isFPM) => {
+export const useFPMVendor = (fpmBasedQueryParams, queryStringWithPagination, pageSize) => {
   const query = fpmBasedQueryParams + '&' + queryStringWithPagination
   const apiQueryString = getVendorsQueryString(query)
   const { data, ...rest } = usePaginationQuery<vendors>(
     ['fpm-vendors', apiQueryString],
     `view-vendors/v1?${apiQueryString}`,
     pageSize,
-    { enabled: !!fpmBasedQueryParams && isFPM },
+    { enabled: !!fpmBasedQueryParams },
   )
 
   return {
