@@ -62,7 +62,7 @@ const Contact: React.FC<ContactProps> = ({
                 <>
                   <ReactSelect
                     {...field}
-                    selectProps={{ isBorderLeft: !isProjectCoordinatorDisabled }}
+                    selectProps={{ isBorderLeft: !isProjectCoordinatorDisabled, menuHeight: '180px' }}
                     options={projectCoordinatorSelectOptions}
                     isDisabled={isProjectCoordinatorDisabled}
                     onChange={(e: any) => {
@@ -124,7 +124,7 @@ const Contact: React.FC<ContactProps> = ({
                 <>
                   <ReactSelect
                     {...field}
-                    selectProps={{ isBorderLeft: true }}
+                    selectProps={{ isBorderLeft: true , menuHeight: '180px' }}
                     options={projectManagerSelectOptions}
                     isDisabled={isFieldProjectManagerDisabled}
                     onChange={(e: any) => {
@@ -234,7 +234,7 @@ const Contact: React.FC<ContactProps> = ({
                   menuPlacement="top"
                   {...field}
                   options={clientSelectOptions}
-                  selectProps={{ isBorderLeft: true }}
+                  selectProps={{ isBorderLeft: true, menuHeight: '180px'  }}
                   isDisabled={isClientDisabled}
                 />
                 <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
