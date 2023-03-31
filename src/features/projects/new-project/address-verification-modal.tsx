@@ -95,6 +95,7 @@ export const AddressVerificationModal: React.FC<AddressVerificationModalProps> =
                 <Text fontSize="14px">Address verification failed. Please fix the address & try again</Text>
                 <Flex justifyContent="end" alignItems="center" mt="15px">
                   <Button
+                  data-testid="usps_save"
                     variant="outline"
                     colorScheme="brand"
                     size="sm"
