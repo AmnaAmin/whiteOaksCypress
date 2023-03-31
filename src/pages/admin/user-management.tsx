@@ -2,7 +2,7 @@ import { Button, HStack, useDisclosure, Text } from '@chakra-ui/react'
 import { usePaginationQuery } from 'api'
 import { Card } from 'components/card/card'
 import { EditUserModal } from 'features/user-management/edit-user-modal'
-import { UserManagementTable } from 'features/user-management/user-management-table'
+import { UserManagementTabs } from 'features/user-management/user-management-tabs'
 import { USER_MANAGEMENT } from 'features/user-management/user-management.i8n'
 import { useTranslation } from 'react-i18next'
 import { BiAddToQueue } from 'react-icons/bi'
@@ -23,7 +23,7 @@ export const UserManagement = () => {
           {t(`${USER_MANAGEMENT}.modal.addUser`)}
         </Button>
       </HStack>
-      <UserManagementTable />
+      <UserManagementTabs />
       {isOpen && <EditUserModal isOpen={isOpen} onClose={onClose} />}
     </Card>
   )

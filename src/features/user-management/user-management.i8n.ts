@@ -15,6 +15,9 @@ export const userManagementTranslation = {
           modifiedBy: 'Modified By',
           modifiedDate: 'Modified Date',
           users: 'Users',
+          vendorUsers: 'Vendors',
+          woaUsers: 'WOA Users',
+          devtekUsers: 'Devtek Users',
         },
         modal: {
           vendorManagerUser: 'Vendor Manager User',
@@ -56,7 +59,7 @@ export const userManagementTranslation = {
           updateUserSuccess: 'User Updated Successfully',
           userUpdateFailed: 'Unable to Update User!',
           userAddFailed: 'Unable to Add User!',
-          directReports: "Direct Reports"
+          directReports: 'Direct Reports',
         },
       },
     },
@@ -75,6 +78,9 @@ export const userManagementTranslation = {
           modifiedBy: 'Modificado por',
           modifiedDate: 'Fecha de modificación',
           user: 'Usuaria',
+          vendorUsers: 'Vendedores',
+          woaUsers: 'Usuarios de WOA',
+          devtekUsers: 'Usuarios de Devtek',
         },
         modal: {
           vendorManagerUser: 'Usuario administrador de proveedores',
@@ -115,7 +121,7 @@ export const userManagementTranslation = {
           updateUser: 'Actualización de usuario',
           updateUserSuccess: 'Usuario actualizado con éxito',
           userUpdateFailed: '¡No se puede actualizar el usuario!',
-          directReports: "Reportes directos"
+          directReports: 'Reportes directos',
         },
       },
     },
