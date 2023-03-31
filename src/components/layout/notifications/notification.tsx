@@ -80,7 +80,7 @@ export const Notification = props => {
                       return (
                         <MenuItem
                           _hover={{ bg: '#F5F5F5' }}
-                          _focus={{ bg: 'none' }}
+                          _focus={{ bg: notification?.webSockectRead ? '#FFF' : '#FFF5E4' }}
                           key={notification.id}
                           as="div"
                           mb="2px"
