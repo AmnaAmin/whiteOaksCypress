@@ -224,18 +224,18 @@ export const useVendorCards = () => {
   })
 }
 
-export const useFPMVendorCards = filteredUrl => {
+export const useFPMVendorCards = fpmBasedFilters => {
   const client = useClient()
-  const vendorCardsApi = `vendorsCards/v1?` + filteredUrl
+  const vendorCardsApi = `vendorsCards/v1?` + fpmBasedFilters
   return useQuery<Vendors>(
-    ['vendorsCards'],
+    ['vendorsCards', fpmBasedFilters],
     async () => {
       const response = await client(vendorCardsApi, {})
 
       return response?.data
     },
     {
-      enabled: !!filteredUrl,
+      enabled: !!fpmBasedFilters,
     },
   )
 }
@@ -480,13 +480,13 @@ export const useGetAllVendors = (filterQueryString: string) => {
   }
 }
 
-export const useGetAllFPMVendors = (filterQueryString: string) => {
+export const useGetAllFPMVendors = (fpmBasedQueryParams, queryStringWithOutPagination: string) => {
   const client = useClient()
-
+  const query = fpmBasedQueryParams + '&' + queryStringWithOutPagination
   const { data, ...rest } = useQuery<Array<Project>>(
     ['all_fpm_vendors'],
     async () => {
-      const response = await client(`view-vendors/v1?${filterQueryString}`, {})
+      const response = await client(`view-vendors/v1?${query}`, {})
 
       return response?.data
     },
@@ -500,14 +500,14 @@ export const useGetAllFPMVendors = (filterQueryString: string) => {
     ...rest,
   }
 }
-export const useFPMVendor = (filteredUrl, queryString, pageSize, isFPM) => {
-  const query = filteredUrl + '&' + queryString
+export const useFPMVendor = (fpmBasedQueryParams, queryStringWithPagination, pageSize, isFPM) => {
+  const query = fpmBasedQueryParams + '&' + queryStringWithPagination
   const apiQueryString = getVendorsQueryString(query)
   const { data, ...rest } = usePaginationQuery<vendors>(
     ['fpm-vendors', apiQueryString],
     `view-vendors/v1?${apiQueryString}`,
     pageSize,
-    { enabled: !!filteredUrl && isFPM },
+    { enabled: !!fpmBasedQueryParams && isFPM },
   )
 
   return {

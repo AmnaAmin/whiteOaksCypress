@@ -35,6 +35,10 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
   const navigate = useNavigate()
   const vendor = (location?.state as any)?.data || {}
 
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const [fpmBasedQueryParams, setFpmBasedQueryParams] = useState<string | null>(null)
+  const [sorting, setSorting] = React.useState<SortingState>([])
+
   useEffect(() => {
     if (vendor?.id) {
       setSelectedVendor(vendor)
@@ -42,47 +46,42 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
     }
   }, [vendor])
 
-  // FPM portal -> Show vendors having same market as the logged in FPM
   const { data: account } = useAuth()
   const { data: userInfo } = useUser(account?.user?.email)
 
   useEffect(() => {
     if (userInfo?.id) {
-      let filterUrl = ''
+      let fpmBasedFilters = ''
       switch (userInfo?.fieldProjectManagerRoleId) {
         case FPMManagerTypes.District: {
           const states = userInfo?.fpmStates?.map(m => m.code)?.join(',')
-          filterUrl = 'stateCode.in=' + states
+          fpmBasedFilters = 'stateCode.in=' + states
           break
         }
         case FPMManagerTypes.Regional: {
           const regions = userInfo?.regions?.join(',')
-          filterUrl = 'regionId.in=' + regions
+          fpmBasedFilters = 'regionId.in=' + regions
           break
         }
         case FPMManagerTypes.Regular: {
           const marketIds = userInfo?.markets?.map(m => m.id)?.join(',')
-          filterUrl = 'marketId.in=' + marketIds
+          fpmBasedFilters = 'marketId.in=' + marketIds
           break
         }
         case FPMManagerTypes.SrFPM: {
           const marketIds = userInfo?.markets?.map(m => m.id)?.join(',')
-          filterUrl = 'marketId.in=' + marketIds
+          fpmBasedFilters = 'marketId.in=' + marketIds
           break
         }
       }
       if (selectedCard) {
-        setFilteredUrl(filterUrl + '&' + VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
+        setFpmBasedQueryParams(fpmBasedFilters + '&' + VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
         setPagination({ pageIndex: 0, pageSize: 20 })
       } else {
-        setFilteredUrl(filterUrl)
+        setFpmBasedQueryParams(fpmBasedFilters)
       }
     }
   }, [userInfo, selectedCard])
-
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
-  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
@@ -97,12 +96,13 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
     isLoading: isFPMVendorLoading,
     dataCount: fpmDataCount,
     totalPages: fpmTotalPages,
-  } = useFPMVendor(filteredUrl, queryStringWithPagination, pagination.pageSize, isFPM)
+  } = useFPMVendor(fpmBasedQueryParams, queryStringWithPagination, pagination.pageSize, isFPM)
 
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
 
   const { refetch: fpmVendorsRefetch, isLoading: isFPMExportDataLoading } = useGetAllFPMVendors(
-    filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
+    fpmBasedQueryParams,
+    queryStringWithoutPagination,
   )
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendors)

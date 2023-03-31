@@ -11,36 +11,36 @@ export const FPMVendorFilters = ({ onSelectCard, selectedCard }) => {
   // FPM portal -> Show vendors having same market as the logged in FPM
   const { data: account } = useAuth()
   const { data: userInfo } = useUser(account?.user?.email)
-  const [filteredUrl, setFilteredUrl] = useState<null | string>(null)
+  const [fpmBasedQueryParams, setFpmBasedQueryParams] = useState<null | string>(null)
 
   useEffect(() => {
     if (userInfo?.id) {
       switch (userInfo?.fieldProjectManagerRoleId) {
         case FPMManagerTypes.District: {
           const states = userInfo?.fpmStates?.map(m => m.code)?.join(',')
-          setFilteredUrl('states=' + states)
+          setFpmBasedQueryParams('states=' + states)
           break
         }
         case FPMManagerTypes.Regional: {
           const regions = userInfo?.regions?.join(',')
-          setFilteredUrl('regions=' + regions)
+          setFpmBasedQueryParams('regions=' + regions)
           break
         }
         case FPMManagerTypes.Regular: {
           const marketIds = userInfo?.markets?.map(m => m.id)?.join(',')
-          setFilteredUrl('marketIds=' + marketIds)
+          setFpmBasedQueryParams('marketIds=' + marketIds)
           break
         }
         case FPMManagerTypes.SrFPM: {
           const marketIds = userInfo?.markets?.map(m => m.id)?.join(',')
-          setFilteredUrl('marketIds=' + marketIds)
+          setFpmBasedQueryParams('marketIds=' + marketIds)
           break
         }
       }
     }
   }, [userInfo])
 
-  const { data: valuesFPMVendor } = useFPMVendorCards(filteredUrl)
+  const { data: valuesFPMVendor } = useFPMVendorCards(fpmBasedQueryParams)
   const cards = useVendorCardJson(valuesFPMVendor)
 
   return (
