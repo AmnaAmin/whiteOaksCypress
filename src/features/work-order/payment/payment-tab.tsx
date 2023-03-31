@@ -11,9 +11,8 @@ import {
   ModalFooter,
   ModalBody,
   HStack,
-  Icon,
 } from '@chakra-ui/react'
-import { BiCalendar, BiSpreadsheet } from 'react-icons/bi'
+import { BiCalendar, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { paymentsTerms } from 'api/vendor-projects'
 import { dateFormat, dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
@@ -32,13 +31,13 @@ const CalenderCard = props => {
   return (
     <Flex>
       <Box pr={4}>
-        <BiCalendar size={23} color="#718096" />
+        <BiCalendar size={23} color="gray.600" />
       </Box>
       <Box lineHeight="20px">
-        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
+        <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.700" mb="1">
           {props.title}
         </Text>
-        <Text minH={'20px'} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text minH={'20px'} color="gray.600" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props?.date}
         </Text>
       </Box>
@@ -49,16 +48,15 @@ const CalenderCard = props => {
 const InformationCard = props => {
   return (
     <Flex>
-      {props?.icon && (
-        <Box pr={4}>
-          <Icon as={props?.icon} fontSize="23px" color="#718096" />
-        </Box>
-      )}
+      <Box pr={4}>
+        {/* <Icon as={<BiFile/>} fontSize="23px" color="#718096" /> */}
+        <BiFile size={23} color="gray.600" />
+      </Box>
       <Box lineHeight="20px">
         <Text fontWeight={500} fontSize="14px" fontStyle="normal" color="gray.600" mb="1">
           {props.title}
         </Text>
-        <Text minH={'20px'} color="gray.500" fontSize="14px" fontStyle="normal" fontWeight={400}>
+        <Text minH={'20px'} color="gray.600" fontSize="14px" fontStyle="normal" fontWeight={400}>
           {props.date}
         </Text>
       </Box>
@@ -343,7 +341,6 @@ const PaymentInfoTab = props => {
                   />
                 </FormControl>
               </Box>
-
               <Box>
                 <FormControl isInvalid={!!errors.invoiceAmount}>
                   <FormLabel variant={'strong-label'} size={'md'}>
@@ -530,7 +527,7 @@ const PaymentInfoTab = props => {
           </HStack>
           <HStack justifyContent="end">
             <Button data-testid="wo-cancel-btn" variant="outline" onClick={props.onClose} colorScheme="brand">
-              {t('close')}
+              {t('cancel')}
             </Button>
             <Button type="submit" data-testid="submit-btn" colorScheme="brand" disabled={isWorkOrderUpdating}>
               {t('save')}

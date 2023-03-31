@@ -373,26 +373,26 @@ export const InvoiceTab = ({
                   <VStack alignItems="end" fontSize="14px" fontWeight={500} color="gray.600">
                     <Box>
                       <HStack w={300} height="35px" justifyContent="space-between">
-                        <Text fontWeight={500} color={'gray.800'}>
+                        <Text fontWeight={500} color={'gray.600'}>
                           {t('subTotal')}:
                         </Text>
-                        <Text fontWeight={500} color={'gray.800'} data-testid={'subTotal'}>
+                        <Text fontWeight={500} color={'gray.600'} data-testid={'subTotal'}>
                           {currencyFormatter(workOrder.subTotal)}
                         </Text>
                       </HStack>
                       <HStack w={300} height="35px" justifyContent="space-between">
-                        <Text fontWeight={500} color={'gray.800'}>
+                        <Text fontWeight={500} color={'gray.600'}>
                           {t('totalAmountPaid')}:
                         </Text>
-                        <Text fontWeight={500} color={'gray.800'} data-testid={'totalAmountPaid'}>
+                        <Text fontWeight={500} color={'gray.600'} data-testid={'totalAmountPaid'}>
                           {currencyFormatter(workOrder.totalAmountPaid)}
                         </Text>
                       </HStack>
                       <HStack w={300} height="35px" justifyContent="space-between">
-                        <Text fontWeight={500} color={'gray.800'}>
+                        <Text fontWeight={500} color={'gray.600'}>
                           {t('balanceDue')}
                         </Text>
-                        <Text fontWeight={500} color={'gray.800'} data-testid={'balanceDue'}>
+                        <Text fontWeight={500} color={'gray.600'} data-testid={'balanceDue'}>
                           {currencyFormatter(workOrder.finalInvoiceAmount)}
                         </Text>
                       </HStack>
@@ -452,15 +452,15 @@ export const InvoiceTab = ({
         <HStack justifyContent="end">
           {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced && !isVendor ? (
             <>
+              <Button onClick={onClose} colorScheme="darkPrimary" variant="outline">
+                {t('cancel')}
+              </Button>
               <Button
                 disabled={!rejectInvoiceCheck || isWorkOrderUpdating}
                 onClick={() => rejectInvoice()}
                 colorScheme="darkPrimary"
               >
                 {t('save')}
-              </Button>
-              <Button onClick={onClose} colorScheme="darkPrimary" variant="outline">
-                {t('cancel')}
               </Button>
             </>
           ) : (

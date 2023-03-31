@@ -529,7 +529,12 @@ export const LienWaiverTab: React.FC<any> = props => {
           </Button>
 
           {!isVendor ? (
-            <Button onClick={() => lwUpload()} colorScheme="brand" isDisabled={!document || isUpdating} data-testid="cancel-lien-waiver">
+            <Button
+              onClick={() => lwUpload()}
+              colorScheme="brand"
+              isDisabled={!document || isUpdating}
+              data-testid="cancel-lien-waiver"
+            >
               {t('save')}
             </Button>
           ) : (
@@ -569,7 +574,7 @@ const HelpText = ({ children }) => {
     <>
       {!isReadMore ? (
         <Link onClick={toggleReadMore} style={{ color: 'gray.700' }}>
-          <Flex fontStyle="normal" fontWeight={500} fontSize="14px">
+          <Flex color={'#345EA6'} fontStyle="normal" fontWeight={500} fontSize="14px">
             <Box>{t('readMore')}</Box>
             <Box ml="3px" mt="3px">
               <BiCaretDown />
@@ -578,7 +583,7 @@ const HelpText = ({ children }) => {
         </Link>
       ) : (
         <Link onClick={toggleReadMore}>
-          <Flex fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: 'gray.700' }}>
+          <Flex color={'#345EA6'} fontStyle="normal" fontWeight={500} fontSize="14px" style={{ color: 'gray.700' }}>
             <Box>{t('readLess')}</Box>
             <Box ml="3px" mt="4px">
               <BiCaretUp />
