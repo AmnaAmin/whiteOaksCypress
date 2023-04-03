@@ -258,6 +258,8 @@ i18n.use(initReactI18next).init({
         MaterialRemaining:
           'WO has reached its allowed limits under the selected award plan. In order to continue with this transaction, you can upgrade to the next available plan by choosing the upgrade option.',
         PaymentRemaining: 'Remaining payment amount exceeded.',
+        PlanLimitExceed:
+          'WO has reached its allowed limits under the selected award plan, No more Labor Draw Or Material Draw transactions can be created.',
         nameofClaimant: 'Name of Claimant',
         customerName: 'Customer Name',
         jobLocation: 'Job Location',
@@ -849,6 +851,8 @@ i18n.use(initReactI18next).init({
         DrawRemaining: 'Tienes 0 sorteos restantes.',
         MaterialRemaining: 'Tienes 0 Material Restante.',
         PaymentRemaining: 'Monto de pago restante excedido.',
+        PlanLimitExceed:
+          'WO ha alcanzado sus límites permitidos según el plan de adjudicación seleccionado, no se pueden crear más transacciones de extracción de mano de obra o extracción de material.',
         nameofClaimant: 'Nombre del Reclamante',
         customerName: 'Nombre del Cliente',
         jobLocation: 'Locación de Trabajo',
