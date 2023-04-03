@@ -215,9 +215,22 @@ export const useIsAwardSelect = (
     (selectedWorkOrderStats?.materialRemaining === null ||
       (selectedWorkOrderStats && selectedWorkOrderStats?.materialRemaining < 1))
 
-  const showUpgradeOption =
+  const isPlanExhausted =
     !transaction && isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
-  return { check, isValidForAwardPlan, showUpgradeOption }
+
+  const showUpgradeOption =
+    isPlanExhausted &&
+    selectedWorkOrderStats &&
+    selectedWorkOrderStats?.drawConsume < 4 &&
+    selectedWorkOrderStats &&
+    selectedWorkOrderStats?.materialConsume < 4
+
+  const showLimitReached =
+    isPlanExhausted &&
+    ((selectedWorkOrderStats && selectedWorkOrderStats?.drawConsume === 4) ||
+      (selectedWorkOrderStats && selectedWorkOrderStats?.materialConsume === 4))
+
+  return { check, isValidForAwardPlan, isPlanExhausted, showUpgradeOption, showLimitReached }
 }
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
