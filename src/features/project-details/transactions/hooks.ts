@@ -218,17 +218,12 @@ export const useIsAwardSelect = (
   const isPlanExhausted =
     !transaction && isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
 
-  const showUpgradeOption =
-    isPlanExhausted &&
-    selectedWorkOrderStats &&
-    selectedWorkOrderStats?.drawConsume < 4 &&
-    selectedWorkOrderStats &&
-    selectedWorkOrderStats?.materialConsume < 4
+  const isNotFinalPlan =
+    selectedWorkOrderStats && selectedWorkOrderStats?.drawConsume < 4 && selectedWorkOrderStats?.materialConsume < 4
 
-  const showLimitReached =
-    isPlanExhausted &&
-    ((selectedWorkOrderStats && selectedWorkOrderStats?.drawConsume === 4) ||
-      (selectedWorkOrderStats && selectedWorkOrderStats?.materialConsume === 4))
+  const showUpgradeOption = isPlanExhausted && isNotFinalPlan
+
+  const showLimitReached = isPlanExhausted && !isNotFinalPlan
 
   return { check, isValidForAwardPlan, isPlanExhausted, showUpgradeOption, showLimitReached }
 }
