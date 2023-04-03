@@ -21,7 +21,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
   const { selectedAlert, onClose } = props
   return (
     <Box>
-      <Box h={'calc(100vh - 400px)'} overflow={'auto'}>
+      <Box h={'calc(100vh - 250px)'} overflowY={'auto'}>
         <HStack spacing="16px" mt="30px">
           <FormControl isInvalid={!!errors.title} w={215}>
             <FormLabel variant="strong-label" size="md">
@@ -80,8 +80,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
           </FormLabel>
           <Input type="text" {...register('conditionSelection')} disabled />
         </Box>
-
-        <HStack spacing="16px" mt="30px">
+        <HStack h="200px" alignItems={'flex-start'} spacing="16px" mt="30px">
           <FormControl isInvalid={!!errors.typeSelection} data-testid="typeSelection" w={215}>
             <FormLabel variant="strong-label" size="md">
               {t('type')}
@@ -95,7 +94,6 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                   <>
                     <Select
                       {...field}
-                      
                       //menuPlacement={'top'}
                       options={TYPE_SELECTION_OPTIONS}
                       size="md"
@@ -106,7 +104,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                         setValue('behaviourSelection', null)
                         setValue('customAttributeSelection', null)
                       }}
-                      selectProps={{ isBorderLeft: true , menuHeight: '112px'}}
+                      selectProps={{ isBorderLeft: true, menuHeight: '112px' }}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -137,7 +135,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                         setValue('behaviourSelection', null)
                         setValue('customAttributeSelection', null)
                       }}
-                      selectProps={{ isBorderLeft: true , menuHeight: '112px' }}
+                      selectProps={{ isBorderLeft: true, menuHeight: '112px' }}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
