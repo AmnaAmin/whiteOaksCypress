@@ -16,6 +16,7 @@ import {
   quotaAttributes,
   transactionAttributes,
   transactionStatus,
+  transactionType,
   TYPE_SELECTION_OPTIONS,
   vendorAttributes,
   vendorStatus,
@@ -25,13 +26,23 @@ import {
 import { useAuth, useClient } from 'utils/auth-context'
 import { useNavigate } from 'react-router-dom'
 import { usePaginationQuery } from 'api'
+import orderBy from 'lodash/orderBy'
 
 export const useManagedAlert = () => {
   const client = useClient('/alert/api')
 
   return useQuery<AlertType[]>('alert-details', async () => {
     const response = await client(`alert-definitions?cacheBuster=${new Date().valueOf()}`, {})
-    return response?.data
+    return orderBy(
+      response?.data,
+      [
+        item => {
+          const dateCreated = new Date(item.dateCreated)
+          return dateCreated
+        },
+      ],
+      ['desc'],
+    )
   })
 }
 export const getAttributeOptions = option => {
@@ -91,6 +102,9 @@ export const getCustomOptions = ({ type, attribute }) => {
       if (attribute === 'Status') {
         return transactionStatus
       }
+      if (attribute === 'Type') {
+        return transactionType
+      }
       break
     }
     case 'Vendor': {
@@ -123,6 +137,7 @@ export const alertDetailsDefaultValues = ({ selectedAlert }) => {
   const typeSelectionValue = TYPE_SELECTION_OPTIONS?.find(
     t => t?.label?.toLocaleLowerCase() === selectedAlert?.typeSelection?.toLocaleLowerCase(),
   )
+  console.log(typeSelectionValue)
   const attributeSelections = getAttributeOptions(typeSelectionValue?.label)
   const attributeSelectionValue = attributeSelections?.find(
     a => a?.label?.toLocaleLowerCase() === selectedAlert?.attributeSelection?.toLocaleLowerCase(),

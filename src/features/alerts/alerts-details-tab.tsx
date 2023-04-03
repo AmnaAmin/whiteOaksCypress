@@ -21,7 +21,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
   const { selectedAlert, onClose } = props
   return (
     <Box>
-      <Box h={'calc(100vh - 250px)'} overflow={'auto'}>
+      <Box h={'calc(100vh - 250px)'} overflowY={'auto'}>
         <HStack spacing="16px" mt="30px">
           <FormControl isInvalid={!!errors.title} w={215}>
             <FormLabel variant="strong-label" size="md">
@@ -80,8 +80,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
           </FormLabel>
           <Input type="text" {...register('conditionSelection')} disabled />
         </Box>
-
-        <HStack spacing="16px" mt="30px">
+        <HStack h="200px" alignItems={'flex-start'} spacing="16px" mt="30px">
           <FormControl isInvalid={!!errors.typeSelection} data-testid="typeSelection" w={215}>
             <FormLabel variant="strong-label" size="md">
               {t('type')}

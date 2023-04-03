@@ -173,6 +173,13 @@ export const workOrderStatus = [
   { label: 'Paid', value: 68 },
 ]
 export const transactionStatus = [
+  { label: 'PENDING', value: 'PENDING' },
+  { label: 'CANCELLED', value: 'CANCELLED' },
+  { label: 'APPROVED', value: 'APPROVED' },
+  { label: 'DENIED', value: 'DENIED' },
+]
+
+export const transactionType = [
   { label: 'Vendor Work Order', value: 27 },
   { label: 'Original SOW', value: 28 },
   { label: 'Change Order', value: 29 },
