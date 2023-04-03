@@ -41,5 +41,7 @@ export enum TableNames {
   estimates = 'estimates',
   performance = 'performance',
   vendorUsers = 'vendor-users',
-  UserManagement = 'user-management',
+  vendorUsersTable = 'vendor-users-table',
+  woaUsersTable = 'woa-users-table',
+  devtekUsersTable = 'devtek-users-table',
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
-import { Box, useDisclosure } from '@chakra-ui/react'
-import { EditUserModal } from './edit-user-modal'
+import { Box } from '@chakra-ui/react'
 import { PaginationState, SortingState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
@@ -21,12 +20,12 @@ import { TableNames } from 'types/table-column.types'
 import { ExportButton } from 'components/table-refactored/export-button'
 import TableColumnSettings from 'components/table/table-column-settings'
 
-export const UserManagementTable = React.forwardRef((props: any, ref) => {
+export const DevtekUsersTable = React.forwardRef((props: any, ref) => {
+  const { setSelectedUser, onOpen } = props
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const [selectedUser, setSelectedUser] = useState(undefined)
 
-  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.UserManagement)
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.devtekUsersTable)
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
@@ -37,16 +36,16 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
     })
 
   const { userMgt, isLoading, totalPages, dataCount } = useUsrMgt(
-    queryStringWithPagination,
+    queryStringWithPagination + '&devAccount.equals=true',
     pagination.pageIndex,
     pagination.pageSize,
   )
 
-  const { onOpen } = useDisclosure()
+  const { tableColumns, settingColumns } = useTableColumnSettings(USER_MGT_COLUMNS, TableNames.devtekUsersTable)
 
-  const { tableColumns, settingColumns } = useTableColumnSettings(USER_MGT_COLUMNS, TableNames.UserManagement)
-
-  const { refetch, isLoading: isExportDataLoading } = useGetAllUserMgt(queryStringWithoutPagination)
+  const { refetch, isLoading: isExportDataLoading } = useGetAllUserMgt(
+    queryStringWithoutPagination + 'devAccount.equals=true',
+  )
 
   const onSave = (columns: any) => {
     postGridColumn(columns)
@@ -54,16 +53,6 @@ export const UserManagementTable = React.forwardRef((props: any, ref) => {
 
   return (
     <>
-      {selectedUser && (
-        <EditUserModal
-          user={selectedUser}
-          isOpen={selectedUser ? true : false}
-          onClose={() => {
-            setSelectedUser(undefined)
-          }}
-        />
-      )}
-
       <Box overflow={'auto'} h="calc(100vh - 170px)" border="1px solid #CBD5E0" borderRadius="6px">
         <TableContextProvider
           data={userMgt}
