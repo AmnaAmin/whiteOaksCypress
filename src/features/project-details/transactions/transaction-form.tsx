@@ -225,7 +225,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }, [selectedWorkOrderStats])
 
-  const { check, isValidForAwardPlan, showUpgradeOption } = useIsAwardSelect(
+  const { check, isValidForAwardPlan, isPlanExhausted, showUpgradeOption, showLimitReached } = useIsAwardSelect(
     control,
     transaction,
     selectedWorkOrderStats,
@@ -435,7 +435,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
-      {check && isLienWaiverRequired && <LienWaiverAlert />}
+      {check && isLienWaiverRequired && !isPlanExhausted && <LienWaiverAlert />}
       {projectAwardCheck ? <ProjectAwardAlert /> : null}
       {check && showUpgradeOption && (
         <ProjectTransactionRemainingAlert
@@ -445,6 +445,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           isUpgradeProjectAward={true}
         />
       )}
+
+      {check && showLimitReached && <ProjectTransactionRemainingAlert msg="PlanLimitExceed" />}
+
       {remainingAmt && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
 
       {isFormSubmitLoading && (
@@ -933,7 +936,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-            isDisabled={amount === 0 || showUpgradeOption || !invoicedDate}
+            isDisabled={amount === 0 || isPlanExhausted || !invoicedDate}
             colorScheme="darkPrimary"
             onClick={event => {
               event.stopPropagation()
@@ -954,7 +957,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 colorScheme="darkPrimary"
                 variant="solid"
                 disabled={
-                  isFormSubmitLoading || isMaterialsLoading || projectAwardCheck || showUpgradeOption || remainingAmt
+                  isFormSubmitLoading || isMaterialsLoading || projectAwardCheck || isPlanExhausted || remainingAmt
                 }
               >
                 {t(`${TRANSACTION}.save`)}
