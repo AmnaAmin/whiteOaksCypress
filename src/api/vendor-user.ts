@@ -80,7 +80,7 @@ export const useUpdateVendorUser = () => {
     userPayload => {
       return client('vendor/user/portal', {
         data: userPayload,
-        method: 'POST',
+        method: 'PUT',
       })
     },
     {

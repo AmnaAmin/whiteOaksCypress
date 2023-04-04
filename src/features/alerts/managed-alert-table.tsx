@@ -50,7 +50,7 @@ export const MANAGED_ALERTS_COLUMNS: ColumnDef<any>[] = [
     },
   },
   {
-    header: 'dateTriggered' as string,
+    header: 'dateCreated' as string,
     accessorKey: 'dateCreated',
     accessorFn: row => datePickerFormat(row.dateCreated),
     cell: (row: any) => {

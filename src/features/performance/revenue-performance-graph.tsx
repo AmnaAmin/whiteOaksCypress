@@ -87,7 +87,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
               font: 'inter',
               fontWeight: 600,
               fontSize: '12px',
-              fontColor: 'gray/600',
+              fill: '#4A5568',
             }}
           >
             {/* -- If vendorData does not have any data for the specific month, empty graph message will show -- */}

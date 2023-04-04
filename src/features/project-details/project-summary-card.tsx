@@ -4,10 +4,9 @@ import { dateFormat } from 'utils/date-time-utils'
 import Status from 'features/common/status'
 import { Project } from 'types/project.type'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
-import { BiCaretDown, BiCaretUp } from 'react-icons/bi'
+import { BiCaretRight } from 'react-icons/bi'
 import { useState } from 'react'
 import { ProjectSummaryCardDetails } from './project-summary-card-details'
-import { Button } from 'components/button/button'
 import { useTranslation } from 'react-i18next'
 
 const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
@@ -29,105 +28,103 @@ export const ProjectSummaryCard: React.FC<{
   projectData: Project
   isLoading: boolean
 }> = ({ projectData, isLoading }) => {
-  const [isSeeMore, setSeeMore] = useState(true)
-  const [isSeeLess, setSeeLess] = useState(false)
-  const [isShowMoreDetails, setShowMoreDetails] = useState(false)
+  const [summaryPanelShow, setSummaryPanel] = useState(1)
   const { t } = useTranslation()
 
   return (
     <>
-      <Flex
-        py={6}
-        h={{ base: 'unset', xl: '97px' }}
-        w="100%"
-        bg="white"
-        borderRadius="4px"
-        box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
-        marginBottom={isShowMoreDetails ? '-32px' : ''}
-        borderBottom={isShowMoreDetails ? '1px solid #E5E5E5' : 'none'}
-      >
-        <InfoStructureCard title={t('projects.projectSummary.projectID')} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md">
-            {projectData?.id}{' '}
-          </FormLabel>
-        </InfoStructureCard>
-        <InfoStructureCard title={t('projects.projectSummary.status')} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md">
-            <Box>
-              {projectData?.projectStatus ? (
-                <Status value={projectData?.projectStatus} id={projectData?.projectStatus} />
-              ) : (
-                <FormLabel>--</FormLabel>
-              )}
-            </Box>
-          </FormLabel>
-        </InfoStructureCard>
-        <InfoStructureCard title={t('projects.projectSummary.client')} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.clientName}`}>
-            {projectData?.clientName}
-          </FormLabel>
-        </InfoStructureCard>
-        <InfoStructureCard title={t('projects.projectSummary.projectDue')} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1}>
-            {dateFormat(projectData?.clientDueDate as string)}
-          </FormLabel>
-        </InfoStructureCard>
-        <InfoStructureCard title={t('projects.projectSummary.fpmName')} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManager}`}>
-            {projectData?.projectManager}
-          </FormLabel>
-        </InfoStructureCard>
-        <InfoStructureCard title={t('projects.projectSummary.fpmContact')} isLoading={isLoading}>
-          <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManagerPhoneNumber}`}>
-            {projectData?.projectManagerPhoneNumber}
-          </FormLabel>
-        </InfoStructureCard>
-        <InfoStructureCard title={t('projects.projectSummary.address')} isLoading={isLoading}>
-          <FormLabel
-            variant="light-label"
-            size="md"
-            noOfLines={1}
-            title={`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.state}/${projectData?.zipCode}`}
+      {summaryPanelShow === 1 ? (
+        <Flex>
+          <Flex
+            py={6}
+            h={{ base: 'unset', xl: '97px' }}
+            w="100%"
+            bg="white"
+            border="1px solid #CBD5E0"
+            borderRadius="4px"
+            box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
           >
-            {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.state}/${projectData?.zipCode}`}
-          </FormLabel>
-        </InfoStructureCard>
-        <InfoStructureCard isLoading={isLoading} title="" border="none">
-          {isSeeMore && (
-            <Button
-              color="#4E87F8"
-              border="none"
-              bg="none"
-              _focus={{ border: 'none', bg: 'none' }}
-              _hover={{ border: 'none', bg: 'none' }}
-              onClick={() => {
-                setSeeMore(false)
-                setSeeLess(true)
-                setShowMoreDetails(true)
-              }}
+            <InfoStructureCard title={t('projects.projectSummary.projectID')} isLoading={isLoading}>
+              <FormLabel variant="light-label" size="md">
+                {projectData?.id}{' '}
+              </FormLabel>
+            </InfoStructureCard>
+            <InfoStructureCard title={t('projects.projectSummary.status')} isLoading={isLoading}>
+              <FormLabel variant="light-label" size="md">
+                <Box>
+                  {projectData?.projectStatus ? (
+                    <Status value={projectData?.projectStatus} id={projectData?.projectStatus} />
+                  ) : (
+                    <FormLabel>--</FormLabel>
+                  )}
+                </Box>
+              </FormLabel>
+            </InfoStructureCard>
+            <InfoStructureCard title={t('projects.projectSummary.client')} isLoading={isLoading}>
+              <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.clientName}`}>
+                {projectData?.clientName}
+              </FormLabel>
+            </InfoStructureCard>
+            <InfoStructureCard title={t('projects.projectSummary.projectDue')} isLoading={isLoading}>
+              <FormLabel variant="light-label" size="md" noOfLines={1}>
+                {dateFormat(projectData?.clientDueDate as string)}
+              </FormLabel>
+            </InfoStructureCard>
+            <InfoStructureCard title={t('projects.projectSummary.fpmName')} isLoading={isLoading}>
+              <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManager}`}>
+                {projectData?.projectManager}
+              </FormLabel>
+            </InfoStructureCard>
+            <InfoStructureCard title={t('projects.projectSummary.fpmContact')} isLoading={isLoading}>
+              <FormLabel
+                variant="light-label"
+                size="md"
+                noOfLines={1}
+                title={`${projectData?.projectManagerPhoneNumber}`}
+              >
+                {projectData?.projectManagerPhoneNumber}
+              </FormLabel>
+            </InfoStructureCard>
+            <InfoStructureCard
+              borderRight="1px solid white"
+              title={t('projects.projectSummary.address')}
+              isLoading={isLoading}
             >
-              {t('projects.projectSummary.seeMore')} <BiCaretDown />
-            </Button>
+              <FormLabel
+                variant="light-label"
+                size="md"
+                noOfLines={1}
+                title={`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.state}/${projectData?.zipCode}`}
+              >
+                {`${projectData?.streetAddress}, ${projectData?.city}, ${projectData?.state}/${projectData?.zipCode}`}
+              </FormLabel>
+            </InfoStructureCard>
+          </Flex>
+          {!isLoading && (
+            <Box border={'1px solid #E5E5E5'} borderRadius="3px" w="25px" bg="blue.50">
+              <Box
+                color="blue.100"
+                border="none"
+                _focus={{ border: 'none', bg: 'none' }}
+                _hover={{ border: 'none', bg: 'none' }}
+                onClick={() => {
+                  setSummaryPanel(2)
+                }}
+              >
+                <Box mt="35px">
+                  <BiCaretRight size={25} />
+                </Box>
+              </Box>
+            </Box>
           )}
-          {isSeeLess && (
-            <Button
-              color="#4E87F8"
-              border="none"
-              bg="none"
-              _focus={{ border: 'none', bg: 'none' }}
-              _hover={{ border: 'none', bg: 'none' }}
-              onClick={() => {
-                setSeeMore(true)
-                setSeeLess(false)
-                setShowMoreDetails(false)
-              }}
-            >
-              {t('projects.projectSummary.seeLess')} <BiCaretUp />
-            </Button>
-          )}
-        </InfoStructureCard>
-      </Flex>
-      {isShowMoreDetails && <ProjectSummaryCardDetails projectData={projectData as Project} isLoading={isLoading} />}
+        </Flex>
+      ) : (
+        <ProjectSummaryCardDetails
+          setSummaryPanel={setSummaryPanel}
+          projectData={projectData as Project}
+          isLoading={isLoading}
+        />
+      )}
     </>
   )
 }

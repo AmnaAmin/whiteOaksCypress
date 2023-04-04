@@ -15,7 +15,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import DropdownLanguage from 'translation/DropdownLanguage'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { GiHamburgerMenu } from 'react-icons/gi'
 import { useAuth } from 'utils/auth-context'
 import { RouterLink } from '../router-link/router-link'
@@ -24,8 +24,9 @@ import { HiChevronDown, HiChevronUp } from 'react-icons/hi'
 import LogoIcon from 'icons/header-logo'
 import { BiSearch } from 'react-icons/bi'
 import { FaBell } from 'react-icons/fa'
-import { getAlertCount, resetAlertCount } from 'features/alerts/alerts-service'
+import { alertCountEvent, getAlertCount, resetAlertCount } from 'features/alerts/alerts-service'
 import { Notification } from './notifications/notification'
+import { useFetchUserAlerts, useHandleNavigation } from 'api/alerts'
 
 // const Notification = React.lazy(() => import("./notification"));
 
@@ -86,10 +87,35 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu, setNavigating }) => 
   const [showAlertMenu, setShowAlertMenu] = useState(false)
   const { t } = useTranslation()
   const [alertCount, setAlertCount] = useState(getAlertCount())
+  const [selectedAlert, setSelectedAlert] = useState<any>()
+  const { navigationLoading } = useHandleNavigation(selectedAlert)
+  const {
+    data: notifications,
+    refetch: refetchNotifications,
+    isLoading: alertsLoading,
+  } = useFetchUserAlerts({
+    query: 'page=0&size=20&sort=dateCreated,desc',
+  })
 
   const handleAlertIconClick = () => {
     resetAlertCount()
   }
+
+  const handleAlertCountFromFirebase = () => {
+    const count = getAlertCount()
+    setAlertCount(count)
+    if (count > 0) {
+      refetchNotifications()
+    }
+  }
+
+  useEffect(() => {
+    handleAlertCountFromFirebase()
+    document.addEventListener(alertCountEvent, handleAlertCountFromFirebase, false)
+    return () => {
+      document.removeEventListener(alertCountEvent, handleAlertCountFromFirebase, false)
+    }
+  }, [])
 
   return (
     <Box py="8px" pl={{ base: '1', md: '3' }} bg={mode('#22375B', 'black')} w="100%">
@@ -140,9 +166,11 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu, setNavigating }) => 
                 {showAlertMenu && (
                   <Notification
                     setShowAlertMenu={setShowAlertMenu}
-                    showAlertMenu={showAlertMenu}
                     setNavigating={setNavigating}
-                    setAlertCount={setAlertCount}
+                    navigationLoading={navigationLoading}
+                    setSelectedAlert={setSelectedAlert}
+                    notifications={notifications}
+                    alertsLoading={alertsLoading}
                   />
                 )}
               </>

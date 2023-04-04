@@ -1,4 +1,4 @@
-import { Box, Flex, FormLabel, Icon, Spacer } from '@chakra-ui/react'
+import { Box, Flex, Icon, Spacer } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
 // import { usePayableWeeklyCount } from 'features/recievable/hook'
@@ -90,9 +90,6 @@ export const Payable = () => {
   return (
     <form onSubmit={handleSubmit(Submit)}>
       <Box pb="2">
-        <FormLabel variant="strong-label" size="lg">
-          {t(`${ACCOUNTS}.accountPayable`)}
-        </FormLabel>
         <Box mb={'12px'}>
           <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
         </Box>

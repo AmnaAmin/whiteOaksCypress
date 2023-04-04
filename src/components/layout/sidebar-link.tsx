@@ -8,6 +8,7 @@ interface SidebarLinkProps extends BoxProps {
   icon?: React.ReactElement
   title: string
   pathTo: string
+  testId: string | undefined
 }
 
 const useCheckPathSelected = (pathTo: string) => {
@@ -23,7 +24,7 @@ const useCheckPathSelected = (pathTo: string) => {
 }
 
 export const SidebarLink: React.FC<SidebarLinkProps> = props => {
-  const { pathTo, title, icon = <ArrowRight />, ...rest } = props
+  const { pathTo, title, testId, icon = <ArrowRight />, ...rest } = props
   const { isLinkSelected } = useCheckPathSelected(pathTo)
   const selectedLinkStyle = useMemo(() => {
     return {
@@ -64,6 +65,7 @@ export const SidebarLink: React.FC<SidebarLinkProps> = props => {
       {...linkState}
       {...rest}
       rounded={6}
+      data-testid={testId}
     >
       <HStack spacing="16px">
         <Box _groupHover={{ opacity: 1 }} fontSize="20px">

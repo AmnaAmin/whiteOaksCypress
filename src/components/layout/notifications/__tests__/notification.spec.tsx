@@ -6,14 +6,21 @@ import { Notification } from '../notification'
 import { setToken } from 'utils/storage.utils'
 import { Menu } from '@chakra-ui/react'
 import { BrowserRouter } from 'react-router-dom'
+import { TRIGGEREDALERTS } from 'mocks/api/alerts/alerts'
 
 export const renderNotifications = async ({}: any) => {
   const setNavigating = jest.fn()
-  const setAlertCount = jest.fn()
   await render(
     <BrowserRouter>
       <Menu isOpen={true}>
-        <Notification setNavigating={setNavigating} setAlertCount={setAlertCount} />
+        <Notification
+          setShowAlertMenu={true}
+          setNavigating={setNavigating}
+          navigationLoading={false}
+          setSelectedAlert={null}
+          notifications={TRIGGEREDALERTS}
+          alertsLoading={false}
+        />
       </Menu>
     </BrowserRouter>,
     {
@@ -36,13 +43,13 @@ describe('Bell Notification Test Cases', () => {
       expect(screen.getByTestId('alert-1')).toBeInTheDocument()
       expect(screen.getByTestId('alert-2')).toBeInTheDocument()
 
-      expect(screen.getByTestId('alert-0-title').textContent).toEqual('Project')
+      expect(screen.getByTestId('alert-0-title').textContent).toEqual('Project - 6919')
       expect(screen.getByTestId('alert-0-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
 
-      expect(screen.getByTestId('alert-1-title').textContent).toEqual('Project')
+      expect(screen.getByTestId('alert-1-title').textContent).toEqual('Project - 6919')
       expect(screen.getByTestId('alert-1-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
 
-      expect(screen.getByTestId('alert-2-title').textContent).toEqual('Project')
+      expect(screen.getByTestId('alert-2-title').textContent).toEqual('Project - 6919')
       expect(screen.getByTestId('alert-2-message').textContent).toEqual(`Project 'projectType' Changed from  to `)
     })
   })

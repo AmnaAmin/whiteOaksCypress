@@ -191,7 +191,7 @@ const AssignedItems = (props: AssignedItemType) => {
             flexWrap="wrap"
             w={{ base: '100%', lg: 'unset' }}
           >
-            <Text fontWeight={500} color="gray.700" fontSize={'18px'} whiteSpace="nowrap">
+            <Text fontWeight={500} color="gray.700" fontSize={'16px'} whiteSpace="nowrap">
               {t(`${WORK_ORDER}.assignedLineItems`)}
             </Text>
             {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (

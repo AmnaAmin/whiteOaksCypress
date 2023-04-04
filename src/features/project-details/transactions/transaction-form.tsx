@@ -212,6 +212,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const transType = useWatch({ name: 'transactionType', control })
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
+  const isRefund = getValues()?.refund
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
@@ -224,17 +225,20 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }, [selectedWorkOrderStats])
 
-  const { check, isValidForAwardPlan, showUpgradeOption } = useIsAwardSelect(
+  const { check, isValidForAwardPlan, isPlanExhausted, showUpgradeOption, showLimitReached } = useIsAwardSelect(
     control,
     transaction,
     selectedWorkOrderStats,
     remainingAmt,
+    isRefund,
   )
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
 
+  const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
+
   const methodForPayment = e => {
-    if (e > selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw) {
+    if (e > selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw && !isRefund) {
       setRemainingAmt(true)
     } else {
       setRemainingAmt(false)
@@ -431,8 +435,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
-      {check && isLienWaiverRequired && <LienWaiverAlert />}
-      {!check && isValidForAwardPlan && materialAndDraw ? <ProjectAwardAlert /> : null}
+      {check && isLienWaiverRequired && !isPlanExhausted && <LienWaiverAlert />}
+      {projectAwardCheck ? <ProjectAwardAlert /> : null}
       {check && showUpgradeOption && (
         <ProjectTransactionRemainingAlert
           msg="DrawRemaining"
@@ -441,6 +445,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           isUpgradeProjectAward={true}
         />
       )}
+
+      {check && showLimitReached && <ProjectTransactionRemainingAlert msg="PlanLimitExceed" />}
+
       {remainingAmt && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
 
       {isFormSubmitLoading && (
@@ -893,6 +900,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 isMaterialsLoading={isMaterialsLoading}
                 setMaterialsLoading={setMaterialsLoading}
                 selectedTransactionId={selectedTransactionId}
+                setRemainingAmt={setRemainingAmt}
               />
             </Flex>
           ) : (
@@ -928,7 +936,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-            isDisabled={amount === 0 || showUpgradeOption || !invoicedDate}
+            isDisabled={amount === 0 || isPlanExhausted || !invoicedDate}
             colorScheme="darkPrimary"
             onClick={event => {
               event.stopPropagation()
@@ -949,11 +957,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 colorScheme="darkPrimary"
                 variant="solid"
                 disabled={
-                  isFormSubmitLoading ||
-                  isMaterialsLoading ||
-                  (!check && isValidForAwardPlan && materialAndDraw) ||
-                  showUpgradeOption ||
-                  remainingAmt
+                  isFormSubmitLoading || isMaterialsLoading || projectAwardCheck || isPlanExhausted || remainingAmt
                 }
               >
                 {t(`${TRANSACTION}.save`)}
