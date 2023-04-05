@@ -51,29 +51,29 @@ export const PerformanceInfoCards: React.FC<{
                   <Box>{t(`${PERFORMANCE}.revenue`)}</Box>
                 </FormLabel>
                 <FormLabel variant="strong-label" size="md">
-                  {currencyFormatter(revenue)}
+                  <Box  data-testid="revenue_value">{currencyFormatter(revenue)} </Box>
                 </FormLabel>
               </Flex>
             </Center>
             <Center width={'33%'} borderRight="1px solid #E5E5E5" px={4}>
               <IconElement Icon={DisqualifiedRevenueIcon} isLoading={isPerformanceLoading} />
               <Flex flexDir={'column'} ml={3}>
-                <FormLabel variant="light-label" size="md">
+                <FormLabel  variant="light-label" size="md">
                   <Box>{t(`${PERFORMANCE}.disqualifiedRevenue`)}</Box>
                 </FormLabel>
-                <FormLabel variant="strong-label" size="md">
-                  {currencyFormatter(disqualifiedRevenue)}
+                <FormLabel   variant="strong-label" size="md">
+                 <Box data-testid="disqualifiedrevenue_value"> {currencyFormatter(disqualifiedRevenue)} </Box>
                 </FormLabel>
               </Flex>
             </Center>
             <Center width={'33%'}>
               <IconElement Icon={ProfitIcon} isLoading={isPerformanceLoading} />
               <Flex flexDir={'column'} ml={3}>
-                <FormLabel variant="light-label" size="md">
-                  <Box>{t(`${PERFORMANCE}.profit`)}</Box>
+                <FormLabel  variant="light-label" size="md">
+                  <Box> {t(`${PERFORMANCE}.profit`)}</Box>
                 </FormLabel>
                 <FormLabel variant="strong-label" size="md">
-                  <Box>{currencyFormatter(profit)}</Box>
+                  <Box data-testid="profit_value">{currencyFormatter(profit)}</Box>
                 </FormLabel>
               </Flex>
             </Center>
