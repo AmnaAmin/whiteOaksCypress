@@ -495,6 +495,12 @@ export const MENU_ROLE_BASED: Menus = {
   ],
   [UserTypes.constructionOperations]: [
     {
+      pathTo: '/estimates',
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: '#ECC94B',
+    },
+    {
       pathTo: '/projects',
       title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
