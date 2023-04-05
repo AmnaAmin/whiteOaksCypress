@@ -115,6 +115,15 @@ const ButtonVariants = {
           cursor: 'auto',
         }
       },
+      green: props => {
+        return {
+          ...chakraTheme.components.Button.variants.ghost(props),
+          background: 'green.100',
+          color: `${props.colorScheme}.500`,
+          cursor: 'auto',
+          fontWeight: '500',
+        }
+      },
     },
 
     sizes: {
