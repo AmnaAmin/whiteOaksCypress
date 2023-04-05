@@ -34,11 +34,6 @@ export const EstimateDetails = () => {
           window.location.href = `project-details/${event.data.projectId}/`
         }, 300)
       }
-      if (event.data.redirectToEstimatesPage) {
-        setTimeout(() => {
-          window.location.href = `estimate-details/${event.data.projectId}/`
-        }, 300)
-      }
     })
   }, [])
 
