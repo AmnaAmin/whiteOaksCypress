@@ -148,6 +148,7 @@ export default function useRoutesConfig() {
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'vendors', element: Vendors },
         { path: 'estimates', element: Estimates },
+        { path: 'estimate-details/:projectId', element: EstimateDetails },
       ]
 
     default:
