@@ -7,11 +7,12 @@ import { BiCoinStack, BiDollar, BiDollarCircle, BiPaintRoll, BiStats } from 'rea
 import { RiMoneyDollarBoxLine } from 'react-icons/ri'
 import { IconType } from 'react-icons'
 
-const InfoStructureCard: React.FC<{ amount; isLoading: boolean, icon: IconType} & CenterProps> = ({
+const InfoStructureCard: React.FC<{ amount; isLoading: boolean, icon: IconType, testId: string} & CenterProps> = ({
   amount,
   children,
   isLoading,
   title,
+  testId,
   icon,
   ...rest
 }) => {
@@ -27,7 +28,7 @@ const InfoStructureCard: React.FC<{ amount; isLoading: boolean, icon: IconType} 
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
-          <Text color="#4A5568" marginLeft={8} fontSize="18px" fontStyle="normal" fontWeight="600" top="71px">
+          <Text data-testid={testId} color="#4A5568" marginLeft={8} fontSize="18px" fontStyle="normal" fontWeight="600" top="71px">
             {amount}
           </Text>
         )}
@@ -54,53 +55,60 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
     <Flex py={9} w="100%" bg="white" borderRadius="4px" border="1px solid #E5E5E5" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
       <InfoStructureCard 
        icon={BiDollarCircle}
-      data-testid ='final_sow_amount' 
+      //data-testid ='final_sow_amount' 
       amount={finalSOWAmount} 
       title={t('projects.projectAmount.finalSOW')} 
+      testId={'final_sow_quicklookup'}
       isLoading={isLoading} />
       <InfoStructureCard
       icon={BiDollarCircle}
-      data-testid ='account_payable'
+      //data-testid ='account_payable'
         amount={accountPayable}
+        testId={'acc_payable_quicklookup'}
         isLoading={isLoading}
         title={t('projects.projectAmount.accountPayable')}
       />
       <InfoStructureCard
       icon={BiCoinStack}
-      data-testid ='vendor_payment'
+      //data-testid ='vendor_payment'
         amount={vendorPayment}
         isLoading={isLoading}
+        testId={'vendor_payment_quicklookup'}
         title={t('projects.projectAmount.vendorPayment')}
       />
       <InfoStructureCard
       icon={BiPaintRoll }
-       data-testid ='Wo_material'
+       //data-testid ='Wo_material'
        amount={material}
        isLoading={isLoading} 
+       testId={'material_quicklookup'}
        title={t('projects.projectAmount.materials')} 
        />
 
       <InfoStructureCard
       icon={RiMoneyDollarBoxLine}
-      data-testid ='project_total_cost'
+      //data-testid ='project_total_cost'
         amount={projectTotalCost}
         isLoading={isLoading}
+        testId={'cost_quicklookup'}
         title={t('projects.projectAmount.projectCost')}
         />
      
       <InfoStructureCard 
        icon={BiDollar} 
-       data-testid ='project_profits'  
+       //data-testid ='project_profits'  
        amount={profits} 
-       isLoading={isLoading} 
+       isLoading={isLoading}
+       testId={'profit_quicklookup'}
        title={t('projects.projectAmount.profits')}
         />
 
       <InfoStructureCard
        icon={BiStats}
-       data-testid ='profit_margin'
+       //data-testid ='profit_margin'
         amount={profitMargin}
         isLoading={isLoading}
+        testId={'profit_margin_quicklookup'}
         title={t('projects.projectAmount.profitMargins')}
         border="none"
       />

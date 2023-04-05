@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, {  useRef } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -15,8 +15,19 @@ import {
   Divider,
   useToast,
   FormControl,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  useDisclosure,
+  Text,
+  Icon,
+  Spacer,
+  AlertDialogCloseButton,
 } from '@chakra-ui/react'
-import { BiCalendar, BiDetail } from 'react-icons/bi'
+import { BiCalendar, BiDetail, BiTrash } from 'react-icons/bi'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 import { dateFormat } from 'utils/date-time-utils'
 import { convertDateTimeToServerISO } from 'components/table/util'
@@ -27,6 +38,7 @@ import Select from 'components/form/react-select'
 import { useAccountDetails, useMarketsMutation } from 'api/vendor-details'
 import { useStates } from 'api/pc-projects'
 import { Market } from 'types/vendor.types'
+import { MARKET_KEY, useDeleteMarket } from 'api/market'
 
 const InformationCard: React.FC<{
   Icon: React.ElementType
@@ -63,10 +75,22 @@ type newVendorSkillsTypes = {
 export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedMarket }) => {
   const { data: account } = useAccountDetails()
   const { mutate: createMarkets } = useMarketsMutation()
-  const { control, register, handleSubmit, reset, setValue } = useForm()
+  const { control, register, handleSubmit, reset } = useForm<any>({
+    defaultValues: {
+      state: { label: selectedMarket?.stateName, id: selectedMarket?.stateId },
+      metroServiceArea: selectedMarket?.metropolitanServiceArea,
+    },
+  })
   const toast = useToast()
   const queryClient = useQueryClient()
   const { stateSelectOptions } = useStates()
+
+  const { mutate: deleteMarket } = useDeleteMarket()
+
+  const onDelete = () => {
+    deleteMarket(selectedMarket)
+    onClose()
+  }
 
   const onSubmit = data => {
     const arg = {
@@ -82,7 +106,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
 
     createMarkets(arg, {
       onSuccess() {
-        queryClient.invalidateQueries('markets')
+        queryClient.invalidateQueries(MARKET_KEY)
         toast({
           title: `Market ${selectedMarket?.id ? 'Updated' : ' Created'}`,
           description: `Market have been ${selectedMarket?.id ? 'Updated' : ' Created'} Successfully.`,
@@ -104,12 +128,13 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
     name: 'state',
   })
 
-  useEffect(() => {
-    if (selectedMarket) {
-      setValue('state', { label: selectedMarket?.stateName, id: selectedMarket?.stateId })
-      setValue('metroServiceArea', selectedMarket?.metropolitanServiceArea)
-    }
-  }, [selectedMarket])
+  const {
+    isOpen: confirmationDialogIsOpen,
+    onOpen: confirmationDialogOpen,
+    onClose: confirmationDialogClose,
+  } = useDisclosure()
+
+  const cancelRef = useRef()
 
   return (
     <>
@@ -186,7 +211,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                           {...field}
                           options={stateSelectOptions}
                           // size="md"
-                          selectProps={{ isBorderLeft: true ,menuHeight: '103px'  }}
+                          selectProps={{ isBorderLeft: true, menuHeight: '103px' }}
                           onChange={option => {
                             field.onChange(option)
                           }}
@@ -197,7 +222,19 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 </FormControl>
               </HStack>
             </ModalBody>
-            <ModalFooter borderTop="1px solid #E2E8F0" mt="30px">
+            <ModalFooter borderTop="1px solid #E2E8F0" mt="30px" justifyContent="space-between">
+              <HStack spacing="16px">
+                <Button
+                  variant="outline"
+                  colorScheme="brand"
+                  onClick={() => {
+                    confirmationDialogOpen()
+                    reset()
+                  }}
+                >
+                  {t(`${VENDOR_MANAGER}.deleteMarket`)}
+                </Button>
+              </HStack>
               <HStack spacing="16px">
                 <Button
                   variant="outline"
@@ -217,6 +254,45 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
           </ModalContent>
         </form>
       </Modal>
+      <AlertDialog
+        isOpen={confirmationDialogIsOpen}
+        leastDestructiveRef={cancelRef as any}
+        onClose={confirmationDialogClose}
+        motionPreset="slideInBottom"
+        isCentered={true}
+      >
+        <AlertDialogOverlay />
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize="lg" fontWeight="bold" borderBottom="1px solid #A0AEC0" paddingBottom="3">
+            <HStack>
+              <Icon as={BiTrash} color="gray/600" />
+              <Text color="gray/600" fontWeight="500" fontSize="14px" letterSpacing="0.5" lineHeight="28px">
+                {t(`${VENDOR_MANAGER}.deleteMarketAlertTitle`)}
+              </Text>
+              <Spacer />
+            </HStack>
+          </AlertDialogHeader>
+          <AlertDialogCloseButton />
+
+          <AlertDialogBody mt="10px">
+            <Text color="gray/600" as="h3" fontSize="14px" letterSpacing="0.5" lineHeight="28px">
+              {t(`${VENDOR_MANAGER}.deleteMarketAlertMessage`)}
+            </Text>
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            {selectedMarket && (
+              <Button colorScheme="brand" onClick={onDelete} mr={3} ml={5}>
+                Delete
+              </Button>
+            )}
+
+            <Button variant="outline" colorScheme="brand" ref={cancelRef as any} onClick={confirmationDialogClose}>
+              Cancel
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   )
 }
