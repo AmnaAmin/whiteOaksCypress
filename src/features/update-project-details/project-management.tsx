@@ -97,7 +97,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     }
   }, [watchStatus?.label, watchOverrideProjectStatus?.label, projectData?.projectStatusId])
 
-  const redirectToProjectDetails = pId => {
+  const redirectToEstimateDetails = pId => {
     window.location.href = `estimate-details/${pId}/`
   }
 
@@ -338,7 +338,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                         color="brand.300"
                         fontWeight={'500'}
                         onClick={() => {
-                          redirectToProjectDetails(projectData?.estimateId)
+                          redirectToEstimateDetails(projectData?.estimateId)
                         }}
                       >
                         Id: {projectData?.estimateId}
