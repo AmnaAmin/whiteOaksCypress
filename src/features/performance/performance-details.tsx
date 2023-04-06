@@ -24,10 +24,10 @@ type FieldInfoCardProps = {
   title: string
   value: string
   icon?: React.ElementType
-  testid?: string
+  testId?: string
 }
 
-const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testid }) => {
+const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testId }) => {
   const { t } = useTranslation()
   return (
     <Box>
@@ -36,7 +36,7 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
           <Text color="#4A5568" fontWeight={500} fontSize="16px" lineHeight="24px" fontStyle="inter" noOfLines={1}>
             {t(`${PERFORMANCE}.${title}`)}
           </Text>
-          <Text color="#718096" fontSize="16px" fontWeight={400} fontStyle="inter" lineHeight={'24px'}>
+          <Text data-testid={testId} color="#718096" fontSize="16px" fontWeight={400} fontStyle="inter" lineHeight={'24px'}>
             {value}
           </Text>
         </VStack>
@@ -61,19 +61,19 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
       <Box>
         <Flex direction="row" mt={2}>
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={'bonus'} value={currencyFormatter(fpmData?.currentBonus)} />
+            <FieldInfoCard title={'bonus'} value={currencyFormatter(fpmData?.currentBonus)} testId="fpm_Bonus"/>
           </Box>
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={'previousBonus'} value={currencyFormatter(fpmData?.previousBonus)} />
+            <FieldInfoCard title={'previousBonus'} value={currencyFormatter(fpmData?.previousBonus)} testId="fpmB_prev_onus" />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'} ml={8}>
-            <FieldInfoCard title={'profit'} value={currencyFormatter(fpmData?.profit)} />
+            <FieldInfoCard title={'profit'} value={currencyFormatter(fpmData?.profit)} testId="fpm_Profit" />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={'revenue'} value={currencyFormatter(fpmData?.revenue)} />
+            <FieldInfoCard title={'revenue'} value={currencyFormatter(fpmData?.revenue)} testId="fpm_Revenue" />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={'target'} value={currencyFormatter(fpmData?.target)} />
+            <FieldInfoCard title={'target'} value={currencyFormatter(fpmData?.target)} testId="fpm_Target"/>
           </Box>
         </Flex>
         <Divider mt={4} mb={5} />
