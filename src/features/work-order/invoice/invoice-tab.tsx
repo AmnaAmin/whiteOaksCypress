@@ -92,8 +92,6 @@ export const InvoiceTab = ({
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
-  const [subTotal, setSubTotal] = useState(0)
-  const [amountPaid, setAmountPaid] = useState(0)
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
@@ -134,39 +132,6 @@ export const InvoiceTab = ({
         co => co.status === TSV.approved && co.parentWorkOrderId === workOrder.id,
       )
       setItems(transactionItems)
-      setSubTotal(workOrder.subTotal)
-      setAmountPaid(workOrder.totalAmountPaid)
-
-      // Change Orders And Original Amount
-      // const changeOrders = transactionItems.filter(
-      //   it =>
-      //     ![TransactionTypeValues.draw, TransactionTypeValues.material, TransactionTypeValues.woPaid].includes(
-      //       it.transactionType,
-      //     ),
-      // )
-      // // Draws and maetrials
-      // const drawTransactions = transactionItems?.filter(it =>
-      //   [TransactionTypeValues.draw, TransactionTypeValues.material].includes(it.transactionType),
-      // )
-
-      // Sum of all approved (:not paid) transactions (Change Orders & Original Amount)
-      // if (changeOrders && changeOrders.length > 0) {
-      //   setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x))
-      // }
-
-      // WO Paid Transaction
-      // const paidTransactionAmount =
-      //   transactionItems?.find(it => it.transactionType === TransactionTypeValues.woPaid)?.changeOrderAmount ?? 0
-
-      // let sumOfDrawTransaction = 0
-
-      // if (drawTransactions && drawTransactions.length > 0) {
-      //   sumOfDrawTransaction = drawTransactions?.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x)
-      // }
-
-      // Sum of all Draws (Material (+Refund), Draws and WOPaid)
-      // const amountPaid = Math.abs(sumOfDrawTransaction) + paidTransactionAmount
-      // setAmountPaid(amountPaid)
     }
   }, [transactions])
 
@@ -202,7 +167,14 @@ export const InvoiceTab = ({
   const generateInvoice = async () => {
     let form = new jsPDF()
     const updatedWorkOrder = prepareInvoicePayload()
-    form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid }, vendorAddress)
+    form = await createInvoice(
+      form,
+      updatedWorkOrder,
+      projectData,
+      items,
+      { subTotal: workOrder?.subTotal, amountPaid: workOrder?.totalAmountPaid },
+      vendorAddress,
+    )
     const pdfUri = form.output('datauristring')
     updateWorkOrder(
       {
