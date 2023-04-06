@@ -19,6 +19,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { percentageFormatter } from 'utils/string-formatters'
 import { Link } from 'react-router-dom'
 import { RiFlag2Fill } from 'react-icons/ri'
+import { t } from 'i18next'
 
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
@@ -144,6 +145,31 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
             <PopoverContent textOverflow={'ellipsis'}>
               <PopoverArrow />
               <PopoverHeader color={'#2D3748'}>Notes</PopoverHeader>
+              <PopoverBody>
+                <Text color={'#4A5568'}>{value}</Text>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
+      )
+    },
+  },
+  {
+    header: 'projects.projectDetails.completion',
+    accessorKey: 'percentageCompletion',
+    meta: { hideTitle: true },
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+
+      return (
+        <Popover trigger="hover">
+          <PopoverTrigger>
+            <Box isTruncated>{value}</Box>
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent textOverflow={'ellipsis'}>
+              <PopoverArrow />
+              <PopoverHeader color={'#2D3748'}>{t('projects.projectDetails.completion')}</PopoverHeader>
               <PopoverBody>
                 <Text color={'#4A5568'}>{value}</Text>
               </PopoverBody>

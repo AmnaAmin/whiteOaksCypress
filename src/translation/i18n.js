@@ -337,6 +337,7 @@ i18n.use(initReactI18next).init({
         // Project - Notes
         notes: 'Notes',
         enterNewNote: 'Enter New Note Here',
+        completeion: '% Completion',
 
         // VENDOR
         details: 'Details',
@@ -929,6 +930,7 @@ i18n.use(initReactI18next).init({
         // Project - Notes
         notes: 'Notas',
         enterNewNote: 'Ingrese una nueva nota aquí',
+        completeion: '% Terminación',
 
         // VENDOR-PROFILE
         details: 'Detalles',
