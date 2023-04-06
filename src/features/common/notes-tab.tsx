@@ -82,6 +82,7 @@ type NotesProps = {
   navigateToProjectDetails?: any
   isNotesLoading?: boolean
   projectData?: any
+  projectCompletion?: boolean
 }
 
 export const NotesTab = (props: NotesProps) => {
@@ -99,6 +100,7 @@ export const NotesTab = (props: NotesProps) => {
     navigateToProjectDetails,
     isNotesLoading,
     projectData,
+    projectCompletion,
   } = props
   const { handleSubmit, register, setValue, reset, control } = useForm()
   const { data: account } = useAccountDetails()
@@ -131,12 +133,14 @@ export const NotesTab = (props: NotesProps) => {
       {isNotesLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
       <form onSubmit={handleSubmit(Submit)}>
         <Flex flexDirection={'column'} justifyContent="space-between" {...contentStyle}>
-          <FormControl w="215px">
-            <FormLabel fontSize="16px" color="gray.600" fontWeight={500} htmlFor="percentageCompletion">
-              {t('completeion')}
-            </FormLabel>
-            <Input type={'number'} {...register('percentageCompletion')} />
-          </FormControl>
+          {projectCompletion && (
+            <FormControl w="215px">
+              <FormLabel fontSize="16px" color="gray.600" fontWeight={500} htmlFor="percentageCompletion">
+                {t('completeion')}
+              </FormLabel>
+              <Input type={'number'} {...register('percentageCompletion')} />
+            </FormControl>
+          )}
           <Box {...chatListStyle} overflow="auto">
             {notes && notes.length > 0 && (
               <Box>
