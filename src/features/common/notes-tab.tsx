@@ -1,4 +1,16 @@
-import { Avatar, Box, Flex, Textarea, WrapItem, FormLabel, Text, HStack, FormControl, Progress } from '@chakra-ui/react'
+import {
+  Avatar,
+  Box,
+  Flex,
+  Textarea,
+  WrapItem,
+  FormLabel,
+  Text,
+  HStack,
+  FormControl,
+  Progress,
+  Input,
+} from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -69,6 +81,7 @@ type NotesProps = {
   hideFooter?: boolean
   navigateToProjectDetails?: any
   isNotesLoading?: boolean
+  projectData?: any
 }
 
 export const NotesTab = (props: NotesProps) => {
@@ -85,8 +98,9 @@ export const NotesTab = (props: NotesProps) => {
     hideFooter,
     navigateToProjectDetails,
     isNotesLoading,
+    projectData,
   } = props
-  const { handleSubmit, register, reset, control } = useForm()
+  const { handleSubmit, register, setValue, reset, control } = useForm()
   const { data: account } = useAccountDetails()
   const { t } = useTranslation()
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
@@ -99,6 +113,8 @@ export const NotesTab = (props: NotesProps) => {
   }, [notes])
 
   const message = useWatch({ name: 'message', control })
+  const completion = useWatch({ name: 'percentageCompletion', control })
+
   const Submit = data => {
     if (saveNote) {
       saveNote(data)
@@ -106,11 +122,21 @@ export const NotesTab = (props: NotesProps) => {
     reset()
   }
 
+  useEffect(() => {
+    if (projectData?.percentageCompletion) setValue('percentageCompletion', projectData?.percentageCompletion)
+  }, [projectData])
+
   return (
     <Box {...pageLayoutStyle}>
       {isNotesLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
       <form onSubmit={handleSubmit(Submit)}>
         <Flex flexDirection={'column'} justifyContent="space-between" {...contentStyle}>
+          <FormControl w="215px">
+            <FormLabel fontSize="16px" color="gray.600" fontWeight={500} htmlFor="percentageCompletion">
+              {t('completeion')}
+            </FormLabel>
+            <Input type={'number'} {...register('percentageCompletion')} />
+          </FormControl>
           <Box {...chatListStyle} overflow="auto">
             {notes && notes.length > 0 && (
               <Box>
@@ -154,7 +180,11 @@ export const NotesTab = (props: NotesProps) => {
                 </Button>
               )}
               {!hideSave && (
-                <Button type="submit" colorScheme="darkPrimary" isDisabled={!message || !!isNotesLoading}>
+                <Button
+                  type="submit"
+                  colorScheme="darkPrimary"
+                  isDisabled={(!message && !completion) || !!isNotesLoading}
+                >
                   {t('submit')}
                 </Button>
               )}

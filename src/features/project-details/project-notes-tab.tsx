@@ -6,7 +6,7 @@ import { NotesTab } from 'features/common/notes-tab'
 import { useProjectNotes } from 'api/projects'
 
 export const ProjectNotes: React.FC<any> = props => {
-  const { setNotesCount, projectId } = props
+  const { setNotesCount, projectId, projectData } = props
 
   const { mutate: createNotes } = useNoteMutation(projectId)
   const { data: account } = useAccountDetails()
@@ -25,12 +25,14 @@ export const ProjectNotes: React.FC<any> = props => {
     const payload = {
       comment: data.message,
       projectId: projectId,
+      percentageCompletion: data.percentageCompletion,
     }
     createNotes(payload)
   }
   return (
     <NotesTab
       saveNote={saveNote}
+      projectData={projectData}
       notes={notes}
       contentStyle={{ padding: '25px', maxHeight: '450px' }}
       pageLayoutStyle={{ bg: 'white', rounded: 6, pb: 2 }}

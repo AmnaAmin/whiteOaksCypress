@@ -161,6 +161,7 @@ export const useNoteMutation = projectId => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['notes', projectId])
+        queryClient.invalidateQueries(['project', projectId])
         toast({
           title: 'Note',
           description: 'Note has been saved successfully.',
