@@ -322,14 +322,14 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               </Checkbox>
             </FormControl>
           </GridItem>
-          <GridItem colSpan={2}>
-            <FormControl>
-              <HStack fontSize="16px" fontWeight={500}>
-                <Button variant="green" colorScheme="green" size="md" rightIcon={<CheckIcon />}>
-                  {t(`project.projectDetails.estimated`)}
-                </Button>
+          {!!projectData?.estimateId && (
+            <GridItem colSpan={2}>
+              <FormControl>
+                <HStack fontSize="16px" fontWeight={500}>
+                  <Button variant="green" colorScheme="green" size="md" rightIcon={<CheckIcon />}>
+                    {t(`project.projectDetails.estimated`)}
+                  </Button>
 
-                {!!projectData?.estimateId && (
                   <>
                     <Divider orientation={'vertical'} height="30px" borderLeft={'1px solid #CBD5E0'} />
                     <Text w="250px" lineHeight="22px" h="40px" color="gray.500" fontSize={'10px'} fontWeight={400}>
@@ -345,10 +345,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                       </LinkChakra>
                     </Text>
                   </>
-                )}
-              </HStack>
-            </FormControl>
-          </GridItem>
+                </HStack>
+              </FormControl>
+            </GridItem>
+          )}
         </Grid>
       </Stack>
     </Box>
