@@ -51,7 +51,10 @@ function Filter({
   const tableId = table?.options?.meta?.id
   const columnKey = tableId ? tableId + '.' + column.id : column.id
   const [stickyFilter, setStickyFilter] = useStickyState(null, allowStickyFilters ? columnKey + '.' + column.id : null)
-  const filterInitialState = metaData?.filterInitialState || stickyFilter || null
+  const filterInitialState =
+    metaData?.filterInitialState !== null || metaData?.filterInitialState !== undefined
+      ? metaData?.filterInitialState
+      : stickyFilter
   const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date') || column.id.includes('date')
   const sortedUniqueValues = React.useMemo(

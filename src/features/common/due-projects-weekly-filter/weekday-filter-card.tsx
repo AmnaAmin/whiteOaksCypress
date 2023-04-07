@@ -8,14 +8,15 @@ type weekdayCardTypes = {
   onSelectDay: (string) => void
   disabled?: boolean
   isLoading?: boolean
-  clear?: any
+  clear?: () => void
 }
 
 export const WeekdayCard = (props: weekdayCardTypes) => {
   const clickHandler = () => {
-    props.onSelectDay(props.selectedDay !== props.id && props.id)
     if (props.selectedDay === props.id) {
-      props.clear()
+      props?.clear?.()
+    } else {
+      props.onSelectDay(props.selectedDay !== props.id && props.id)
     }
   }
 
