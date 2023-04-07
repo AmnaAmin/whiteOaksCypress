@@ -122,7 +122,7 @@ export const workOrderAttributes = [
 
 export const transactionAttributes = [
   { value: 'changeOrderAmount', label: 'Amount', type: 'number' },
-  { value: 'transactionType', label: 'Type', type: 'string' },
+  //{ value: 'transactionType', label: 'Type', type: 'string' },
   { value: 'status', label: 'Status', type: 'custom' },
 ]
 
