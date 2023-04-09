@@ -88,6 +88,8 @@ export default function useRoutesConfig() {
         { path: 'projects', element: VendorProjects },
         { path: 'project-details/:projectId', element: VendorProjectDetails },
         { path: 'vendors', element: VendorProfilePage },
+        { path: 'estimate-details/:projectId', element: EstimateDetails },
+        { path: 'estimates', element: Estimates },
       ]
     case isAdmin:
       return [
