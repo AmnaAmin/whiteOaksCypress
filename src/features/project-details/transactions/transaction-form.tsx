@@ -208,6 +208,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     reset, //  isTruncated title={label}
   } = formReturn
 
+  const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
@@ -231,6 +232,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     selectedWorkOrderStats,
     remainingAmt,
     isRefund,
+    selectedWorkOrder,
   )
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
@@ -268,7 +270,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
 
-  const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
   const { transactions } = useTransactionsV1(`${projectId}`)
 
   const { amount } = useTotalAmount(control)
@@ -437,7 +438,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {isFormLoading && <ViewLoader />}
       {check && isLienWaiverRequired && !isPlanExhausted && <LienWaiverAlert />}
       {projectAwardCheck ? <ProjectAwardAlert /> : null}
-      {check && showUpgradeOption && (
+      {check && showUpgradeOption && !remainingAmt && (
         <ProjectTransactionRemainingAlert
           msg="DrawRemaining"
           onOpen={onProjectAwardOpen}

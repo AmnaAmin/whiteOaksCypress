@@ -257,7 +257,8 @@ i18n.use(initReactI18next).init({
           'WO has reached its allowed limits under the selected award plan. In order to continue with this transaction, you can upgrade to the next available plan by choosing the upgrade option.',
         MaterialRemaining:
           'WO has reached its allowed limits under the selected award plan. In order to continue with this transaction, you can upgrade to the next available plan by choosing the upgrade option.',
-        PaymentRemaining: 'Remaining payment amount exceeded.',
+        PaymentRemaining:
+          'WO has reached its allowed NTE Max under the selected award plan. No more Labor Draw Or Material Draw transactions can be created.',
         PlanLimitExceed:
           'WO has reached its allowed limits under the selected award plan, No more Labor Draw Or Material Draw transactions can be created.',
         nameofClaimant: 'Name of Claimant',
@@ -851,7 +852,8 @@ i18n.use(initReactI18next).init({
         AwardRq: 'Debe seleccionar el plan de premios.',
         DrawRemaining: 'Tienes 0 sorteos restantes.',
         MaterialRemaining: 'Tienes 0 Material Restante.',
-        PaymentRemaining: 'Monto de pago restante excedido.',
+        PaymentRemaining:
+          'WO ha alcanzado su NTE Max permitido bajo el plan de adjudicación seleccionado. No se pueden crear más transacciones de Retiro de mano de obra o Retiro de materiales.',
         PlanLimitExceed:
           'WO ha alcanzado sus límites permitidos según el plan de adjudicación seleccionado, no se pueden crear más transacciones de extracción de mano de obra o extracción de material.',
         nameofClaimant: 'Nombre del Reclamante',

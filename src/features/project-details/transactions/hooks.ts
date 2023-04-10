@@ -196,6 +196,7 @@ export const useIsAwardSelect = (
   selectedWorkOrderStats?,
   remainingAmt?,
   isRefund?,
+  selectedWorkOrder?,
 ) => {
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
@@ -215,11 +216,12 @@ export const useIsAwardSelect = (
     (selectedWorkOrderStats?.materialRemaining === null ||
       (selectedWorkOrderStats && selectedWorkOrderStats?.materialRemaining < 1))
 
-  const isPlanExhausted =
-    !transaction && isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
+  const isNotFinalPlan = selectedWorkOrder?.awardPlanId < 4
 
-  const isNotFinalPlan =
-    selectedWorkOrderStats && selectedWorkOrderStats?.drawConsume < 4 && selectedWorkOrderStats?.materialConsume < 4
+  const isPlanExhausted =
+    !transaction &&
+    isValidForAwardPlan &&
+    (drawConsumed || materialConsumed || (remainingAmountExceeded && isNotFinalPlan))
 
   const showUpgradeOption = isPlanExhausted && isNotFinalPlan
 
