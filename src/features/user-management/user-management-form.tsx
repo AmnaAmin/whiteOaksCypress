@@ -272,7 +272,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         },
       })
     },
-    [userInfo, isVendor, addUser, updateUser, userMangtPayload],
+    [userInfo, isVendor, addUser, updateUser, userMangtPayload, fpmRoleIds, statesDTO],
   )
 
   const isPrimaryDisabled = !formValues.vendorAdmin
@@ -633,7 +633,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
       {isFPM ? (
         <HStack mt="30px" spacing={15}>
-          { /* TO BE REMOVED <FormControl w="215px" display="none">
+          {/* TO BE REMOVED <FormControl w="215px" display="none">
             <FormLabel variant="strong-label" size="md">
               {t(`${USER_MANAGEMENT}.modal.fieldProjectManagerRole`)}
             </FormLabel>
