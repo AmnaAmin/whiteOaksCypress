@@ -46,6 +46,7 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
+import CustomSelect from './CustomSelect'
 
 type UserManagement = {
   onClose: () => void
@@ -79,8 +80,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const form = useForm<UserForm>()
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
+
   const { options: accountTypeOptions } = useActiveAccountTypes()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
+
+  useEffect(() => {
+    console.log()
+  }, [fpmManagerRoleOptions])
+
   const {
     register,
     handleSubmit,
@@ -107,7 +114,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const isEditUser = !!(user && user.id)
   const isVendor = accountType?.label === 'Vendor'
   const isProjectCoordinator = accountType?.label === 'Project Coordinator'
-  const isFPM = accountType?.label === 'Field Project Manager'
+
+  const fpmRoleIds =
+    fpmManagerRoleOptions
+      ?.filter(role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value))
+      .map(o => o?.value) || []
+
+  const isFPM = fpmRoleIds.includes(accountType?.value)
 
   // We only show markets when account type is either market fpm, regular fpm or it is project cordinator
   const showMarkets = useMemo(() => {
@@ -192,10 +205,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   }, [availableManagerOptions?.length])
   // Clear any input field which is being conditionally rendered when user
   // changes account type
-  const handleChangeAccountType = () => {
+  const handleChangeAccountType = target => {
+    if (fpmRoleIds.includes(target.value)) {
+      setValue('fieldProjectManagerRoleId', target)
+    } else {
+      setValue('fieldProjectManagerRoleId', undefined)
+    }
     setValue('parentFieldProjectManagerId', null)
     setValue('managerRoleId', null)
-    setValue('fieldProjectManagerRoleId', undefined)
     setValue('newTarget', undefined)
     setValue('newBonus', undefined)
     setValue('ignoreQuota', undefined)
@@ -208,9 +225,17 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       'states',
       formValues.states?.map(state => ({ ...state, checked: false })),
     )
+    setValue(
+      'regions',
+      formValues.regions?.map(region => ({ ...region, checked: false })),
+    )
     setValue('vendorId', undefined)
+
+    setValue('directReports' as any, [])
   }
 
+  /*
+  TO BE REMOVED
   const handleChangeFpmRole = () => {
     setValue(
       'markets',
@@ -228,7 +253,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     setValue('parentFieldProjectManagerId', null)
 
     setValue('directReports' as any, [])
-  }
+  }*/
 
   const clearSelectedManager = () => {
     setValue('parentFieldProjectManagerId', null)
@@ -236,7 +261,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const onSubmit = useCallback(
     async formData => {
-      let formattedPayload = userMangtPayload(formData, statesDTO)
+      let formattedPayload = userMangtPayload(formData, statesDTO, fpmRoleIds)
       const mutation = userInfo?.id ? updateUser : addUser
       mutation(parseMarketFormValuesToAPIPayload(formattedPayload), {
         onSuccess() {
@@ -396,7 +421,18 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       </HStack>
 
       <HStack mt="30px" spacing={15}>
-        <FormControl w="215px">
+        <FormControl
+          w="215px"
+          sx={{
+            '.collapsed': {
+              display: 'none',
+            },
+            '.sub-menu-item:before': {
+              content: '""',
+              ml: '10px',
+            },
+          }}
+        >
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.accountType`)}
           </FormLabel>
@@ -404,14 +440,29 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             control={control}
             name="accountType"
             render={({ field: { onChange, ...rest } }) => (
-              <ReactSelect
+              <CustomSelect
                 {...rest}
                 isDisabled={userInfo && userInfo.userTypeLabel === 'Vendor'}
                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
-                options={accountTypeOptions}
+                options={[
+                  ...accountTypeOptions.filter(account => account?.value !== 5),
+                  {
+                    label: 'Field Project Manager',
+                    options: [
+                      ...fpmManagerRoleOptions
+                        ?.filter(
+                          role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value),
+                        )
+                        .map(option => {
+                          option.subItem = true
+                          return option
+                        }),
+                    ],
+                  },
+                ]}
                 onChange={target => {
                   onChange(target)
-                  handleChangeAccountType()
+                  handleChangeAccountType(target)
                 }}
               />
             )}
@@ -444,70 +495,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           </Checkbox>
         </FormControl>
       </HStack>
-
-      {isFPM ? (
-        <HStack mt="30px" spacing={15}>
-          <FormControl w="215px">
-            <FormLabel variant="strong-label" size="md">
-              {t(`${USER_MANAGEMENT}.modal.fieldProjectManagerRole`)}
-            </FormLabel>
-            <Controller
-              control={control}
-              name="fieldProjectManagerRoleId"
-              render={({ field: { onChange, ...rest } }) => (
-                <ReactSelect
-                  {...rest}
-                  selectProps={{ isBorderLeft: true }}
-                  options={fpmManagerRoleOptions?.filter(
-                    role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value),
-                  )}
-                  onChange={target => {
-                    onChange(target)
-                    handleChangeFpmRole()
-                  }}
-                />
-              )}
-            />
-          </FormControl>
-          <FormControl w="215px">
-            <FormLabel variant="strong-label" size="md">
-              {t(`${USER_MANAGEMENT}.modal.managerRole`)}
-            </FormLabel>
-            <Controller
-              control={control}
-              name="managerRoleId"
-              render={({ field: { onChange, ...rest } }) => (
-                <ReactSelect
-                  {...rest}
-                  selectProps={{ isBorderLeft: managerRoleOptions.length > 0 }}
-                  options={managerRoleOptions}
-                  onChange={param => {
-                    onChange(param)
-                    clearSelectedManager()
-                  }}
-                />
-              )}
-            />
-          </FormControl>
-          <FormControl w="215px">
-            <FormLabel variant="strong-label" size="md">
-              {t(`${USER_MANAGEMENT}.modal.parentFieldProjectManagerId`)}
-            </FormLabel>
-            <Controller
-              control={control}
-              name="parentFieldProjectManagerId"
-              rules={{ required: managerOptions.length > 0 ? 'This is required' : false }}
-              render={({ field }) => (
-                <ReactSelect
-                  {...field}
-                  options={managerOptions}
-                  selectProps={{ isBorderLeft: managerOptions.length > 0 }}
-                />
-              )}
-            />
-          </FormControl>
-        </HStack>
-      ) : null}
 
       {showMarkets ? (
         <VStack mt="30px" spacing={15} alignItems="start">
@@ -642,6 +629,70 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             })}
           </Flex>
         </VStack>
+      ) : null}
+
+      {isFPM ? (
+        <HStack mt="30px" spacing={15}>
+          { /* TO BE REMOVED <FormControl w="215px" display="none">
+            <FormLabel variant="strong-label" size="md">
+              {t(`${USER_MANAGEMENT}.modal.fieldProjectManagerRole`)}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="fieldProjectManagerRoleId"
+              render={({ field: { onChange, ...rest } }) => (
+                <ReactSelect
+                  {...rest}
+                  selectProps={{ isBorderLeft: true }}
+                  options={fpmManagerRoleOptions?.filter(
+                    role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value),
+                  )}
+                  onChange={target => {
+                    onChange(target)
+                    handleChangeFpmRole()
+                  }}
+                />
+              )}
+                /> 
+          </FormControl> */}
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t(`${USER_MANAGEMENT}.modal.managerRole`)}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="managerRoleId"
+              render={({ field: { onChange, ...rest } }) => (
+                <ReactSelect
+                  {...rest}
+                  selectProps={{ isBorderLeft: managerRoleOptions.length > 0 }}
+                  options={managerRoleOptions}
+                  onChange={param => {
+                    onChange(param)
+                    clearSelectedManager()
+                  }}
+                />
+              )}
+            />
+          </FormControl>
+          <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md">
+              {t(`${USER_MANAGEMENT}.modal.parentFieldProjectManagerId`)}
+            </FormLabel>
+            <Controller
+              control={control}
+              name="parentFieldProjectManagerId"
+              rules={{ required: managerOptions.length > 0 ? 'This is required' : false }}
+              render={({ field }) => (
+                <ReactSelect
+                  {...field}
+                  options={managerOptions}
+                  selectProps={{ isBorderLeft: managerOptions.length > 0 }}
+                />
+              )}
+            />
+          </FormControl>
+        </HStack>
       ) : null}
 
       {showDirectReports && (
