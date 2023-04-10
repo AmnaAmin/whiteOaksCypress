@@ -48,7 +48,6 @@ export const processRegisteration = async () => {
 }
 
 onMessage(messaging, payload => {
-  console.log('Message received. ', payload)
   const { data = {} } = payload || {}
   console.debug('Message received. ', payload, (data || {})?.alertHistoryId)
   addAlertCount((data || {})?.alertHistoryId)

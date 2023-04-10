@@ -88,7 +88,9 @@ export const theme = extendTheme({
       500: '#022c7c',
     },
     green: {
+      100: '#E7F8EC',
       300: '#38B2AC',
+      500: '#38A169',
     },
     barColor: {
       50: '#4E87F8',

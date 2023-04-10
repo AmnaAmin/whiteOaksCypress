@@ -363,7 +363,7 @@ const WorkOrderDetailTab = props => {
                       {inProgress ? (
                         <Box w="215px" mt={-7}>
                           <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
-                            <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                            <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
                               {t('trade')}
                             </FormLabel>
                             <Controller
@@ -397,7 +397,7 @@ const WorkOrderDetailTab = props => {
                       {inProgress ? (
                         <Box w="215px">
                           <FormControl isInvalid={!!errors.vendorId} data-testid="vendorId">
-                            <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                            <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
                               {t('companyName')}
                             </FormLabel>
                             <Controller

@@ -40,6 +40,7 @@ export const ProjectSummaryCard: React.FC<{
             h={{ base: 'unset', xl: '97px' }}
             w="100%"
             bg="white"
+            border="1px solid #CBD5E0"
             borderRadius="4px"
             box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
           >

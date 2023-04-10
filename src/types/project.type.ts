@@ -1,6 +1,7 @@
 import { SelectOption } from './transaction.type'
 
 export type Project = {
+  estimateId?: number | string | null | undefined
   accountRecievable: number | null
   accountPayable: number | null
   changeordersTotal: string | null
@@ -283,7 +284,7 @@ export type ProjectFinancialOverview = {
   shipFee: number
   permitFee: number
   deductible: number
-  depreciation:number
+  depreciation: number
 }
 
 export type AddressInfo = { address: string; city: string; state: string; zipCode: string }

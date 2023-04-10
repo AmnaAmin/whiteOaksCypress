@@ -16,22 +16,33 @@ import {
   quotaAttributes,
   transactionAttributes,
   transactionStatus,
+  transactionType,
   TYPE_SELECTION_OPTIONS,
   vendorAttributes,
   vendorStatus,
   workOrderAttributes,
   workOrderStatus,
 } from 'types/alert.type'
-import { useClient } from 'utils/auth-context'
+import { useAuth, useClient } from 'utils/auth-context'
 import { useNavigate } from 'react-router-dom'
 import { usePaginationQuery } from 'api'
+import orderBy from 'lodash/orderBy'
 
 export const useManagedAlert = () => {
   const client = useClient('/alert/api')
 
   return useQuery<AlertType[]>('alert-details', async () => {
     const response = await client(`alert-definitions?cacheBuster=${new Date().valueOf()}`, {})
-    return response?.data
+    return orderBy(
+      response?.data,
+      [
+        item => {
+          const dateCreated = new Date(item.dateCreated)
+          return dateCreated
+        },
+      ],
+      ['desc'],
+    )
   })
 }
 export const getAttributeOptions = option => {
@@ -91,6 +102,9 @@ export const getCustomOptions = ({ type, attribute }) => {
       if (attribute === 'Status') {
         return transactionStatus
       }
+      if (attribute === 'Type') {
+        return transactionType
+      }
       break
     }
     case 'Vendor': {
@@ -123,6 +137,7 @@ export const alertDetailsDefaultValues = ({ selectedAlert }) => {
   const typeSelectionValue = TYPE_SELECTION_OPTIONS?.find(
     t => t?.label?.toLocaleLowerCase() === selectedAlert?.typeSelection?.toLocaleLowerCase(),
   )
+  console.log(typeSelectionValue)
   const attributeSelections = getAttributeOptions(typeSelectionValue?.label)
   const attributeSelectionValue = attributeSelections?.find(
     a => a?.label?.toLocaleLowerCase() === selectedAlert?.attributeSelection?.toLocaleLowerCase(),
@@ -177,10 +192,12 @@ type AlertsProps = {
   isDisabled?: boolean
 }
 export const useFetchUserAlerts = ({ query: filterQueryString, projectId, isDisabled }: AlertsProps) => {
+  const { data: userInfo } = useAuth()
+  const user = userInfo?.user
   const client = useClient('/alert/api')
   const url = !projectId
-    ? `alert-histories?${filterQueryString}`
-    : `alert-histories/project/${projectId}?${{ filterQueryString }}`
+    ? `alert-histories?${filterQueryString}&userId.equals=${user?.id}`
+    : `alert-histories/project/${projectId}?${{ filterQueryString }}&userId.equals=${user?.id}`
   const { data: alerts, ...rest } = useQuery<AlertType[]>(
     'FetchAllAlerts',
     async () => {
@@ -199,11 +216,17 @@ export const useFetchUserAlerts = ({ query: filterQueryString, projectId, isDisa
 
 export const useFetchUserAlertsInfinite = ({ projectId }: AlertsProps) => {
   const client = useClient('/alert/api')
+  const { data: userInfo } = useAuth()
+  const user = userInfo?.user
+
   const { data: alerts, ...rest } = useInfiniteQuery(
     'FetchAllAlertsInfinit',
     async ({ pageParam = 0 }) => {
       const url = !projectId ? `alert-histories` : `alert-histories/project/${projectId}`
-      const response = await client(url + `?page=${pageParam}&size=20&sort=dateCreated,desc`, {})
+      const response = await client(
+        url + `?page=${pageParam}&size=20&sort=dateCreated,desc&userId.equals=${user?.id}`,
+        {},
+      )
       return response?.data
     },
     {
@@ -211,6 +234,7 @@ export const useFetchUserAlertsInfinite = ({ projectId }: AlertsProps) => {
         const nextPage = allPages?.length + 1
         return lastPage?.items?.length !== 0 ? nextPage : undefined
       },
+      enabled: false,
     },
   )
   return {
@@ -299,6 +323,7 @@ export const useResolveAlerts = (hideToast?) => {
 export const useUpdateAlert = (hideToast?) => {
   const client = useClient('/alert/api')
   const toast = useToast()
+  const queryClient = useQueryClient()
 
   return useMutation(
     updatedAlert => {
@@ -319,6 +344,7 @@ export const useUpdateAlert = (hideToast?) => {
             position: 'top-left',
           })
         }
+        queryClient.invalidateQueries('FetchAllAlerts')
       },
       onError(error: any) {
         toast({

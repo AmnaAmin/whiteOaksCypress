@@ -170,13 +170,21 @@ export const ProjectDetails: React.FC = props => {
                   <HStack spacing="16px" mb="10px">
                     <Box mt={'14px'}>
                       <FormControl display="flex" alignItems="center">
-                        <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" size="md">
+                        <FormLabel
+                          fontWeight="600"
+                          htmlFor="view-details"
+                          mb="0"
+                          variant="light-label"
+                          color="gray.500"
+                          size="md"
+                        >
                           {t('projects.projectDetails.viewDetails')}
                         </FormLabel>
                         <Switch
                           size="sm"
                           id="view-details"
                           outline="4px solid white"
+                          color="brand.300"
                           rounded="full"
                           isChecked={isShowProjectFinancialOverview}
                           onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
@@ -238,7 +246,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel> */}
 
                 <TabPanel p="0" minH="calc(100vh - 408px)">
-                  <ProjectNotes projectId={projectId} />
+                  <ProjectNotes projectData={projectData} projectId={projectId} />
                 </TabPanel>
                 {
                   <TabPanel p="0px" minH="calc(100vh - 450px)">

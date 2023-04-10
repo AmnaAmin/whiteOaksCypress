@@ -36,7 +36,7 @@ const checkbox = {
       outLinePrimary: props => {
         return {
           label: {
-            color: 'gray.600',
+            color: 'gray.700',
 
             fontWeight: '500',
 

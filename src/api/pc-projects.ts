@@ -224,14 +224,20 @@ export const useVendorCards = () => {
   })
 }
 
-export const useFPMVendorCards = marketIds => {
+export const useFPMVendorCards = fpmBasedFilters => {
   const client = useClient()
+  const vendorCardsApi = `vendorsCards/v1?` + fpmBasedFilters
+  return useQuery<Vendors>(
+    ['vendorsCards', fpmBasedFilters],
+    async () => {
+      const response = await client(vendorCardsApi, {})
 
-  return useQuery<Vendors>(['vendorsCards', marketIds], async () => {
-    const response = await client(`vendorsCards/v1?marketIds=${marketIds}`, {})
-
-    return response?.data
-  })
+      return response?.data
+    },
+    {
+      enabled: !!fpmBasedFilters,
+    },
+  )
 }
 
 export const useProperties = () => {
@@ -474,13 +480,13 @@ export const useGetAllVendors = (filterQueryString: string) => {
   }
 }
 
-export const useGetAllFPMVendors = (marketIds, filterQueryString: string) => {
+export const useGetAllFPMVendors = (fpmBasedQueryParams, queryStringWithOutPagination: string) => {
   const client = useClient()
-
+  const query = fpmBasedQueryParams + '&' + queryStringWithOutPagination
   const { data, ...rest } = useQuery<Array<Project>>(
-    ['all_fpm_vendors', marketIds],
+    ['all_fpm_vendors'],
     async () => {
-      const response = await client(`view-vendors/v1?marketId.in=${marketIds}&${filterQueryString}`, {})
+      const response = await client(`view-vendors/v1?${query}`, {})
 
       return response?.data
     },
@@ -494,13 +500,14 @@ export const useGetAllFPMVendors = (marketIds, filterQueryString: string) => {
     ...rest,
   }
 }
-export const useFPMVendor = (marketIds, queryString, pageSize, isFPM) => {
-  const apiQueryString = getVendorsQueryString(queryString)
+export const useFPMVendor = (fpmBasedQueryParams, queryStringWithPagination, pageSize) => {
+  const query = fpmBasedQueryParams + '&' + queryStringWithPagination
+  const apiQueryString = getVendorsQueryString(query)
   const { data, ...rest } = usePaginationQuery<vendors>(
-    ['fpm-vendors', apiQueryString, marketIds],
-    `view-vendors/v1?marketId.in=${marketIds}&${apiQueryString}`,
+    ['fpm-vendors', apiQueryString],
+    `view-vendors/v1?${apiQueryString}`,
     pageSize,
-    { enabled: marketIds && isFPM },
+    { enabled: !!fpmBasedQueryParams },
   )
 
   return {

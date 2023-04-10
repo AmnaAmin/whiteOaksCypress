@@ -1,10 +1,26 @@
-import { Text, Box, Checkbox, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import { CheckIcon } from '@chakra-ui/icons'
+import {
+  Text,
+  Box,
+  Checkbox,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  Input,
+  Stack,
+  HStack,
+  Button,
+  Divider,
+  Link as LinkChakra,
+} from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { STATUS } from 'features/common/status'
 import React, { useEffect } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { ProjectDetailsFormValues} from 'types/project-details.types'
+import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat, dateFormat } from 'utils/date-time-utils'
@@ -44,7 +60,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
   const watchIsReconciled = useWatch({ name: 'isReconciled', control })
-  const watchForm = useWatch({control })
+  const watchForm = useWatch({ control })
 
   const {
     isWOAStartDisabled,
@@ -81,6 +97,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     }
   }, [watchStatus?.label, watchOverrideProjectStatus?.label, projectData?.projectStatusId])
 
+  const redirectToEstimateDetails = pId => {
+    window.location.href = `estimate-details/${pId}/`
+  }
+
   return (
     <Box>
       <Stack>
@@ -96,17 +116,17 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                  <div data-testid='proj-status'>
-                    <ReactSelect
-                      {...field}
-                      options={projectStatusSelectOptions}
-                      isOptionDisabled={option => option.disabled}
-                      onChange={option => {
-                        clearErrors()
-                        field.onChange(option)
-                      }}
-                    />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    <div data-testid="proj-status">
+                      <ReactSelect
+                        {...field}
+                        options={projectStatusSelectOptions}
+                        isOptionDisabled={option => option.disabled}
+                        onChange={option => {
+                          clearErrors()
+                          field.onChange(option)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </div>
                   </>
                 )}
@@ -279,13 +299,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormErrorMessage>{errors?.clientSignOffDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-          <GridItem></GridItem>
-        </Grid>
-        
-        <Grid>
-        
+
           <GridItem>
-            <FormControl maxW="500px">
+            <FormControl w="280px">
               <FormLabel variant="strong-label" size="md">
                 {t(`verifyProject`)}
               </FormLabel>
@@ -294,14 +310,45 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 isChecked={watchIsReconciled === null ? false : watchIsReconciled}
                 variant={'normal'}
                 data-testid="notifyVendorCheckBox"
-                disabled={isReconcileDisabled || watchStatus?.label !== STATUS.Reconcile.toUpperCase() }
+                disabled={isReconcileDisabled || watchStatus?.label !== STATUS.Reconcile.toUpperCase()}
                 size="md"
                 {...register('isReconciled')}
               >
-              <Text color='#000'>{watchForm.verifiedDate? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`: ""}</Text>
+                <Text color="#000">
+                  {watchForm.verifiedDate
+                    ? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`
+                    : ''}
+                </Text>
               </Checkbox>
             </FormControl>
           </GridItem>
+          {!!projectData?.estimateId && (
+            <GridItem colSpan={2}>
+              <FormControl>
+                <HStack fontSize="16px" fontWeight={500}>
+                  <Button variant="green" colorScheme="green" size="md" rightIcon={<CheckIcon />}>
+                    {t(`project.projectDetails.estimated`)}
+                  </Button>
+
+                  <>
+                    <Divider orientation={'vertical'} height="30px" borderLeft={'1px solid #CBD5E0'} />
+                    <Text w="250px" lineHeight="22px" h="40px" color="gray.500" fontSize={'10px'} fontWeight={400}>
+                      {t(`project.projectDetails.estimatedText`)}{' '}
+                      <LinkChakra
+                        color="brand.300"
+                        fontWeight={'500'}
+                        onClick={() => {
+                          redirectToEstimateDetails(projectData?.estimateId)
+                        }}
+                      >
+                        Id: {projectData?.estimateId}
+                      </LinkChakra>
+                    </Text>
+                  </>
+                </HStack>
+              </FormControl>
+            </GridItem>
+          )}
         </Grid>
       </Stack>
     </Box>
