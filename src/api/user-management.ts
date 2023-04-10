@@ -63,7 +63,7 @@ export const useCreateUserMutation = () => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries(USER_MGT_QUERY_KEY);
+        queryClient.invalidateQueries(USER_MGT_QUERY_KEY)
         queryClient.invalidateQueries('users')
         toast({
           title: t(`${USER_MANAGEMENT}.modal.addUser`),
@@ -101,7 +101,7 @@ export const useSaveUserDetails = () => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries(USER_MGT_QUERY_KEY);
+        queryClient.invalidateQueries(USER_MGT_QUERY_KEY)
         queryClient.invalidateQueries('users')
         toast({
           title: t(`${USER_MANAGEMENT}.modal.updateUser`),
@@ -160,21 +160,7 @@ export const useDeleteUserDetails = () => {
   )
 }
 
-export const userMangtPayload = (user: any, statesDTO?: any) => {
-  const getFpmStateId = () => {
-    return user.accountType?.label === 'Field Project Manager' &&
-      user.fieldProjectManagerRoleId.value === FPMManagerTypes.District //Area Manager
-      ? user.states?.find(state => state.checked === true)?.state?.id
-      : ''
-  }
-
-  const getFpmStates = () => {
-    return user.accountType?.label === 'Field Project Manager' &&
-      user.fieldProjectManagerRoleId.value === FPMManagerTypes.District //Area Manager
-      ? user.states?.filter(state => state.checked === true)?.map(s => s?.state)
-      : []
-  }
-
+export const userMangtPayload = (user: any, statesDTO?: any, fpmRoleIds?: any) => {
   const directReports = user.directReports
 
   directReports?.forEach(v => {
@@ -182,6 +168,22 @@ export const userMangtPayload = (user: any, statesDTO?: any) => {
     delete v['label']
     delete v['title']
   })
+
+  const isFPM = fpmRoleIds.includes(user.accountType?.value)
+
+  const FPM_USER_TYPE = 5
+
+  const getFpmStateId = () => {
+    return isFPM && user.fieldProjectManagerRoleId.value === FPMManagerTypes.District //Area Manager
+      ? user.states?.find(state => state.checked === true)?.state?.id
+      : ''
+  }
+
+  const getFpmStates = () => {
+    return isFPM && user.fieldProjectManagerRoleId.value === FPMManagerTypes.District //Area Manager
+      ? user.states?.filter(state => state.checked === true)?.map(s => s?.state)
+      : []
+  }
 
   const userObj = {
     ...user,
@@ -196,13 +198,14 @@ export const userMangtPayload = (user: any, statesDTO?: any) => {
     stateId: user.state?.id || '',
     fpmStateId: getFpmStateId(),
     fpmStates: statesDTO?.filter(s => getFpmStates().find(fs => fs.id === s.id)) || [],
-    userType: user.accountType?.value,
+    userType: isFPM ? FPM_USER_TYPE : user.accountType?.value,
     ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
     newBonus: user.newBonus?.label ? user.newBonus?.value : '',
     vendorAdmin: user.vendorAdmin,
     primaryAdmin: user.primaryAdmin,
     directChild: directReports,
   }
+
   delete userObj.states
   delete userObj.state
   delete userObj.accountType
@@ -350,6 +353,33 @@ const parseUserFormData = ({
   languageOptions,
   fpmManagerRoleOptions,
 }) => {
+  let _accountType = accountTypeOptions
+    ?.concat(
+      ...([
+        ...fpmManagerRoleOptions
+          ?.filter(role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value))
+          .map(option => {
+            option.subItem = true
+            return option
+          }),
+      ] || []),
+    )
+    .find(a => a.value === userInfo?.userType)
+
+  if (fpmManagerRoleOptions?.find(fpmManager => fpmManager.value === userInfo?.fieldProjectManagerRoleId)) {
+    _accountType = accountTypeOptions
+      ?.concat(
+        ...([
+          ...fpmManagerRoleOptions
+            ?.filter(role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value))
+            .map(option => {
+              option.subItem = true
+              return option
+            }),
+        ] || []),
+      )
+      .find(a => a.value === userInfo?.fieldProjectManagerRoleId)
+  }
   return {
     ...userInfo,
     markets: markets || [],
@@ -357,7 +387,7 @@ const parseUserFormData = ({
     regions: regions || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
     directReports: directReports || [],
-    accountType: accountTypeOptions?.find(a => a.value === userInfo?.userType),
+    accountType: _accountType,
     vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
     langKey: languageOptions?.find(l => l.value === userInfo?.langKey),
     newBonus: BONUS.find(bonus => bonus.value === userInfo?.newBonus),
