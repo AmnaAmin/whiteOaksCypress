@@ -171,6 +171,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
     isLoading: isAgainstLoading,
+    refetch: refetchWOKey,
   } = useProjectWorkOrders(projectId, !!selectedTransactionId)
 
   const transactionStatusOptions = useTransactionStatusOptions()
@@ -971,6 +972,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           onClose={onProjectAwardClose}
           selectedWorkOrder={selectedWorkOrder}
           refetchAwardStats={refetchAwardStats}
+          refetchWOKey={refetchWOKey}
         />
       </HStack>
     </Flex>

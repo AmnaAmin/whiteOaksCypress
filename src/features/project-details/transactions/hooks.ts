@@ -221,8 +221,7 @@ export const useIsAwardSelect = (
   const isPlanExhausted =
     !transaction && isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
 
-  //added !remainingAmt for now as selectedWorkOrder.awardPlanId is not updating on upgrqding plan, its update while clicking new transaction btn. discussion required.
-  const showUpgradeOption = isPlanExhausted && isNotFinalPlan && !remainingAmt
+  const showUpgradeOption = isPlanExhausted && isNotFinalPlan
 
   const showLimitReached = isPlanExhausted && !isNotFinalPlan
 

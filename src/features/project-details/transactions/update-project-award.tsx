@@ -11,10 +11,11 @@ type projectAwardProps = {
   onClose: () => void
   selectedWorkOrder: any
   refetchAwardStats: () => void
+  refetchWOKey: () => void
 }
 
 const UpdateProjectAward: React.FC<projectAwardProps> = props => {
-  const { isOpen, onClose, selectedWorkOrder, refetchAwardStats } = props
+  const { isOpen, onClose, selectedWorkOrder, refetchAwardStats, refetchWOKey } = props
   const { projectAwardData } = useProjectAward()
   const [isUpdating, setIsUpdating] = useState<boolean>()
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
@@ -31,6 +32,7 @@ const UpdateProjectAward: React.FC<projectAwardProps> = props => {
       onSuccess: () => {
         setIsUpdating(false)
         refetchAwardStats()
+        refetchWOKey()
         onClose()
       },
       onError: () => {
