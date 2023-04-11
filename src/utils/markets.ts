@@ -10,6 +10,7 @@ export const parseMarketAPIDataToFormValues = (markets: Market[], selectedMarket
 }
 
 export const parseMarketFormValuesToAPIPayload = (formValues): any => {
+
   return {
     ...formValues,
     markets: formValues.markets
