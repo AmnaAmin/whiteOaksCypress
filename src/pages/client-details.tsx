@@ -80,6 +80,14 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
           ...c,
           market: c.market?.value,
         })),
+        carrier: values?.carrier?.map(c => {
+          return {
+            id: c.id,
+            name: c.name,
+            email: c.emailAddress,
+            phone: c.phoneNumber,
+          }
+        }),
       }
       if (values?.id) {
         editClientDetails(clientPayload, queryOptions)

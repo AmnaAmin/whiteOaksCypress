@@ -109,6 +109,14 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
         ]
       : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }]
 
+  const carrier = clientDetails?.carrier?.map(c => {
+    return {
+      id: c.id,
+      name: c.name,
+      emailAddress: c.email,
+      phoneNumber: c.phone,
+    }
+  })
   const defaultValues = {
     ...clientDetails,
     paymentTerm: paymentTermsValue || { label: '20', value: '20' },
@@ -116,6 +124,7 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
     markets: marketList,
     contacts: contactsMarketsValue,
     accountPayableContactInfos: accPayInfoValue,
+    carrier,
   }
   return defaultValues
 }
