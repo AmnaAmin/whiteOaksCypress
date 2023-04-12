@@ -109,7 +109,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
               <TabPanel p="0px">
                 <DetailsTab clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
               </TabPanel>
-              <TabPanel>
+              <TabPanel p="0px">
                 <CarrierTab clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab}></CarrierTab>
               </TabPanel>
               <TabPanel p="0px">
@@ -130,14 +130,16 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
 const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }) => {
   return (
     <Tab>
-      {isError ? (
-        <Flex alignItems="center">
-          <Icon as={BiErrorCircle} size="18px" color="red.400" mr="1" />
-          <Box color="red.400">{children}</Box>
-        </Flex>
-      ) : (
-        children
-      )}
+      <>
+        {isError ? (
+          <Flex alignItems="center">
+            <Icon as={BiErrorCircle} size="18px" color="red.400" mr="1" />
+            <Box color="red.400">{children}</Box>
+          </Flex>
+        ) : (
+          children
+        )}
+      </>
     </Tab>
   )
 }

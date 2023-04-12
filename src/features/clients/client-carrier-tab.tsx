@@ -47,24 +47,26 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
 
   return (
     <Box>
-      <Box overflow={'auto'} height={380}>
-        {!isProjectCoordinator && (
-          <Button
-            variant="outline"
-            colorScheme="brand"
-            onClick={() => {
-              append({
-                name: '',
-                emailAddress: '',
-                phoneNumber: '',
-              })
-            }}
-            mb={'10px'}
-            leftIcon={<BiPlus />}
-          >
-            {t(`${CLIENTS}.addCarrier`)}
-          </Button>
-        )}
+      <Box overflow={'auto'} height={400}>
+        <>
+          {!isProjectCoordinator && (
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              onClick={() => {
+                append({
+                  name: '',
+                  emailAddress: '',
+                  phoneNumber: '',
+                })
+              }}
+              mb={'10px'}
+              leftIcon={<BiPlus />}
+            >
+              {t(`${CLIENTS}.addCarrier`)}
+            </Button>
+          )}
+        </>
         {isProjectCoordinator && carrierField.length < 1 && (
           <Box width="100%" p={5}>
             {isProjectCoordinator && (
