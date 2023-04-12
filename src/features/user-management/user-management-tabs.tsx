@@ -27,8 +27,8 @@ export const UserManagementTabs = React.forwardRef((props: any, ref) => {
       )}
       <Tabs variant="enclosed" colorScheme="brand">
         <TabList whiteSpace="nowrap" border="none">
-          <Tab>{t(`${USER_MANAGEMENT}.table.vendorUsers`)}</Tab>
           <Tab>{t(`${USER_MANAGEMENT}.table.woaUsers`)}</Tab>
+          <Tab>{t(`${USER_MANAGEMENT}.table.vendorUsers`)}</Tab>
           <Tab>{t(`${USER_MANAGEMENT}.table.devtekUsers`)}</Tab>
         </TabList>
         <Card rounded="0px" roundedRight={{ base: '0px', md: '6px' }} roundedBottom="6px" pr={{ base: 0, sm: '15px' }}>
