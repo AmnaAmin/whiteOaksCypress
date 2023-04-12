@@ -43,12 +43,14 @@ export const Client = () => {
     <>
       <Card pt="16px" pb="26px" px="10px" rounded="6px">
         <Flex mb="16px" alignItems="center" justifyContent="flex-end">
-          {!isProjectCoordinator && (
-            <Button onClick={onNewClientModalOpen} colorScheme="brand" fontSize="14px">
-              <Icon as={BiBookAdd} fontSize="18px" mr={2} />
-              {t(`${CLIENTS}.newClient`)}
-            </Button>
-          )}
+          <>
+            {!isProjectCoordinator && (
+              <Button onClick={onNewClientModalOpen} colorScheme="brand" fontSize="14px">
+                <Icon as={BiBookAdd} fontSize="18px" mr={2} />
+                {t(`${CLIENTS}.newClient`)}
+              </Button>
+            )}
+          </>
         </Flex>
         <Flex
           px={7}
