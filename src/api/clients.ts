@@ -241,5 +241,6 @@ export const useSubFormErrors = (errors: FieldErrors<ClientFormValues>) => {
       !!errors?.accountPayableContactInfos?.[0]?.emailAddress ||
       !!errors?.accountPayableContactInfos?.[0]?.phoneNumber ||
       !!errors?.accountPayableContactInfos?.[0]?.comments,
+    isCarrierTabErrors: errors?.carrier,
   }
 }

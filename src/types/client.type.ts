@@ -54,6 +54,13 @@ export type Contact = {
   city?: string
 }
 
+export type Carrier = {
+  id: number
+  name: string
+  emailAddress: string
+  phoneNumber: string
+}
+
 export type ClientFormValues = {
   id?: number
   companyName?: string
@@ -84,4 +91,5 @@ export type ClientFormValues = {
   paymentCheck?: boolean
   paymentCreditCard?: boolean
   paymentWired?: boolean
+  carrier?: Carrier[]
 }

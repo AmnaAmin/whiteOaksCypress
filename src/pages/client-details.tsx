@@ -18,6 +18,8 @@ import {
 import { useMarkets, useStates } from 'api/pc-projects'
 import { BiErrorCircle } from 'react-icons/bi'
 import { Card } from 'components/card/card'
+import { CLIENTS } from 'features/clients/clients.i18n'
+import { CarrierTab } from 'features/clients/client-carrier-tab'
 
 type ClientDetailsTabsProps = {
   refetch?: () => void
@@ -52,7 +54,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
     formState: { errors },
   } = methods
 
-  const { isClientDetailsTabErrors } = useSubFormErrors(errors)
+  const { isClientDetailsTabErrors, isCarrierTabErrors } = useSubFormErrors(errors)
 
   useEffect(() => {
     if (clientDetails) {
@@ -95,29 +97,30 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   return (
     <FormProvider {...methods}>
       <form onSubmit={handleSubmit2(onSubmit, err => console.log('err..', err))} id="clientDetails" noValidate>
-        
         <Tabs size="md" variant="enclosed" colorScheme="brand" index={tabIndex} onChange={index => setTabIndex(index)}>
-          <TabList borderBottom='none'>
-            
+          <TabList borderBottom="none">
             <TabCustom isError={isClientDetailsTabErrors && tabIndex !== 0}>{t('details')}</TabCustom>
+            <TabCustom isError={isCarrierTabErrors && tabIndex !== 1}>{t(`${CLIENTS}.carrier`)}</TabCustom>
             <TabCustom>{t('market')}</TabCustom>
             {clientDetails?.id && <TabCustom>{t('notes')}</TabCustom>}
           </TabList>
-          <Card borderTopLeftRadius='0px !important' borderTopRightRadius='6px'>
-          <TabPanels mt="20px">
-            <TabPanel p="0px">
-              <DetailsTab clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
-            </TabPanel>
-            <TabPanel p="0px">
-              <Market clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
-            </TabPanel>
-            <TabPanel p="0px">
-              <ClientNotes clientDetails={clientDetails} onClose={props.onClose} />
-            </TabPanel>
-          </TabPanels>
+          <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px">
+            <TabPanels mt="20px">
+              <TabPanel p="0px">
+                <DetailsTab clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
+              </TabPanel>
+              <TabPanel>
+                <CarrierTab clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab}></CarrierTab>
+              </TabPanel>
+              <TabPanel p="0px">
+                <Market clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
+              </TabPanel>
+              <TabPanel p="0px">
+                <ClientNotes clientDetails={clientDetails} onClose={props.onClose} />
+              </TabPanel>
+            </TabPanels>
           </Card>
         </Tabs>
-       
       </form>
       <DevTool control={control} />
     </FormProvider>
