@@ -34,10 +34,10 @@ export const UserManagementTabs = React.forwardRef((props: any, ref) => {
         <Card rounded="0px" roundedRight={{ base: '0px', md: '6px' }} roundedBottom="6px" pr={{ base: 0, sm: '15px' }}>
           <TabPanels>
             <TabPanel px={0}>
-              <VendorUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} />
+              <WOAUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} />
             </TabPanel>
             <TabPanel px={0}>
-              <WOAUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} />
+              <VendorUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} />
             </TabPanel>
             <TabPanel px={0}>
               <DevtekUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} />
