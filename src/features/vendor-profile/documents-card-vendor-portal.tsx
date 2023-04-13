@@ -48,7 +48,6 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
-  
 
   const {
     formState: { errors },
@@ -118,7 +117,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
 
   return (
     <>
-      <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px">
+      <VStack h="614px" w="100%" alignItems="start" spacing="10px">
         <HStack
           flexDir={{ base: 'column', sm: 'row' }}
           spacing="16px"
@@ -578,7 +577,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             Cancel
           </Button>
         )}
-        
+
         <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="darkPrimary">
           {vendor?.id ? t('save') : t('next')}
         </Button>
