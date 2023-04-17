@@ -9,12 +9,12 @@ import { useState } from 'react'
 import { ProjectSummaryCardDetails } from './project-summary-card-details'
 import { useTranslation } from 'react-i18next'
 
-const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
+const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, fontSize, ...rest }) => {
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
       <Box fontSize="14px" color="gray.500">
         <Tooltip label={title} color="black" placement="top">
-          <FormLabel variant="strong-label" size="md" noOfLines={1}>
+          <FormLabel fontSize={fontSize} variant="strong-label" size="md" noOfLines={1}>
             {title}
           </FormLabel>
         </Tooltip>
@@ -44,12 +44,12 @@ export const ProjectSummaryCard: React.FC<{
             borderRadius="4px"
             box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
           >
-            <InfoStructureCard title={t('projects.projectSummary.projectID')} isLoading={isLoading}>
+            <InfoStructureCard title={t('projects.projectSummary.projectID')} isLoading={isLoading} fontSize="12px">
               <FormLabel variant="light-label" size="md">
                 {projectData?.id}{' '}
               </FormLabel>
             </InfoStructureCard>
-            <InfoStructureCard title={t('projects.projectSummary.status')} isLoading={isLoading}>
+            <InfoStructureCard title={t('projects.projectSummary.status')} isLoading={isLoading} fontSize="12px">
               <FormLabel variant="light-label" size="md">
                 <Box>
                   {projectData?.projectStatus ? (
@@ -60,22 +60,22 @@ export const ProjectSummaryCard: React.FC<{
                 </Box>
               </FormLabel>
             </InfoStructureCard>
-            <InfoStructureCard title={t('projects.projectSummary.client')} isLoading={isLoading}>
+            <InfoStructureCard title={t('projects.projectSummary.client')} isLoading={isLoading} fontSize="12px">
               <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.clientName}`}>
                 {projectData?.clientName}
               </FormLabel>
             </InfoStructureCard>
-            <InfoStructureCard title={t('projects.projectSummary.projectDue')} isLoading={isLoading}>
+            <InfoStructureCard title={t('projects.projectSummary.projectDue')} isLoading={isLoading} fontSize="12px">
               <FormLabel variant="light-label" size="md" noOfLines={1}>
                 {dateFormat(projectData?.clientDueDate as string)}
               </FormLabel>
             </InfoStructureCard>
-            <InfoStructureCard title={t('projects.projectSummary.fpmName')} isLoading={isLoading}>
+            <InfoStructureCard title={t('projects.projectSummary.fpmName')} isLoading={isLoading} fontSize="12px">
               <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManager}`}>
                 {projectData?.projectManager}
               </FormLabel>
             </InfoStructureCard>
-            <InfoStructureCard title={t('projects.projectSummary.fpmContact')} isLoading={isLoading}>
+            <InfoStructureCard title={t('projects.projectSummary.fpmContact')} isLoading={isLoading} fontSize="12px">
               <FormLabel
                 variant="light-label"
                 size="md"
