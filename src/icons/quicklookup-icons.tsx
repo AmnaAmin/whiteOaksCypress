@@ -1,6 +1,6 @@
 import React, { SVGAttributes } from 'react'
 
-function QuickLookupFirstIcon(props: SVGAttributes<SVGElement>) {
+function finalSowcon(props: SVGAttributes<SVGElement>) {
   return (
     <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="13.5" cy="13.5" r="13.5" fill="#E6F8EE"/>
@@ -12,7 +12,7 @@ function QuickLookupFirstIcon(props: SVGAttributes<SVGElement>) {
   )
 }
 
-function QuickLookupSecoundIcon(props: SVGAttributes<SVGElement>) {
+function accountPayableIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="13.5" cy="13.5" r="13.5" fill="#E0F3FD"/>
@@ -25,7 +25,7 @@ function QuickLookupSecoundIcon(props: SVGAttributes<SVGElement>) {
     )
   }
 
-  function QuickLookupThirdIcon(props: SVGAttributes<SVGElement>) {
+  function projectCostIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="13.5" cy="13.5" r="13.5" fill="#FFE4E4"/>
@@ -38,7 +38,7 @@ function QuickLookupSecoundIcon(props: SVGAttributes<SVGElement>) {
       
     )
   }
-  function QuickLookupFourthIcon(props: SVGAttributes<SVGElement>) {
+  function vendorPaymentIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="32" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="13.5" cy="13.5" r="13.5" fill="#EBDEFC"/>
@@ -52,7 +52,7 @@ function QuickLookupSecoundIcon(props: SVGAttributes<SVGElement>) {
     )
   }
 
-  function QuickLookupFifthIcon(props: SVGAttributes<SVGElement>) {
+  function materialIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="13.5" cy="13.5" r="13.5" fill="#FEEBCB"/>
@@ -67,7 +67,7 @@ function QuickLookupSecoundIcon(props: SVGAttributes<SVGElement>) {
       
     )
   }
-  function QuickLookupSixthIcon(props: SVGAttributes<SVGElement>) {
+  function profitIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="13.5" cy="13.5" r="13.5" fill="#E4F9FC"/>
@@ -83,7 +83,7 @@ function QuickLookupSecoundIcon(props: SVGAttributes<SVGElement>) {
     )
   }
 
-  function QuickLookupSeventhIcon(props: SVGAttributes<SVGElement>) {
+  function profitMarginIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle cx="13.5" cy="13.5" r="13.5" fill="#C4F1F9"/>
@@ -101,13 +101,13 @@ function QuickLookupSecoundIcon(props: SVGAttributes<SVGElement>) {
   }
 
 
-export default QuickLookupFirstIcon
+export default finalSowcon
 export {
-    QuickLookupFirstIcon,
-    QuickLookupSecoundIcon,
-    QuickLookupThirdIcon,
-    QuickLookupFourthIcon,
-    QuickLookupFifthIcon,
-    QuickLookupSixthIcon,
-    QuickLookupSeventhIcon,
+  finalSowcon,
+  accountPayableIcon,
+  projectCostIcon,
+  vendorPaymentIcon,
+  materialIcon,
+  profitIcon,
+  profitMarginIcon,
 }
