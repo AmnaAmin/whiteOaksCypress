@@ -88,7 +88,7 @@ export const ProjectSummaryCard: React.FC<{
             <InfoStructureCard
               borderRight="1px solid white"
               title={t('projects.projectSummary.address')}
-              isLoading={isLoading}
+              isLoading={isLoading} fontSize="12px"
             >
               <FormLabel
                 variant="light-label"
