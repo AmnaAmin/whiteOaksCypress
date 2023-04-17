@@ -220,7 +220,7 @@ const WorkOrderDetailTab = props => {
 
   // Enable Vendor Type and Company Name for Admin User
   const [tradeOptions, setTradeOptions] = useState([])
-  const [vendorOptions, setVendorOptions] = useState<any>([])
+  const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
   const [selectedVendorId, setSelectedVendorId] = useState<SelectVendorOption[]>([])
 
   const { data: trades } = useTrades()
