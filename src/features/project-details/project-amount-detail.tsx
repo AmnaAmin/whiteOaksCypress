@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useGetProjectFinancialOverview } from 'api/projects'
 import { IconType } from 'react-icons'
-import finalSowcon, { materialIcon, vendorPaymentIcon, accountPayableIcon, profitMarginIcon, profitIcon, projectCostIcon } from 'icons/quicklookup-icons'
+import { VendorPaymentIcon, MaterialIcon, ProjectCostIcon, ProfitIcon, FinalSowIcon, AccountPayableIcon, ProfitMarginIcon } from 'icons/quicklookup-icons'
 
 const InfoStructureCard: React.FC<{ amount; isLoading: boolean, icon: IconType, testId: string, iconColor?: string, bg?: string} & CenterProps> = ({
   amount,
@@ -56,7 +56,7 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
     <Flex py={3} h={{ base: 'unset', xl: '97px' }} w="100%" bg="white" borderRadius="4px" border="1px solid #E5E5E5" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
      <InfoStructureCard
      bg='42CA7E'
-  icon={finalSowcon}
+  icon={FinalSowIcon}
   iconColor="#42CA7E"
   amount={finalSOWAmount} 
   title={t('projects.projectAmount.finalSOW')} 
@@ -64,7 +64,7 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
   isLoading={isLoading}
 />
       <InfoStructureCard
-      icon={accountPayableIcon} 
+      icon={AccountPayableIcon} 
       iconColor="#43A9E3"
       //data-testid ='account_payable'
         amount={accountPayable}
@@ -73,7 +73,7 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
         title={t('projects.projectAmount.accountPayable')}
       />
       <InfoStructureCard
-      icon={vendorPaymentIcon}
+      icon={VendorPaymentIcon}
       iconColor="#F86060"
       //data-testid ='vendor_payment'
         amount={vendorPayment}
@@ -82,7 +82,7 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
         title={t('projects.projectAmount.vendorPayment')}
       />
       <InfoStructureCard
-      icon={materialIcon}
+      icon={MaterialIcon}
       iconColor="#9869D4"
        //data-testid ='Wo_material'
        amount={material}
@@ -92,7 +92,7 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
        />
 
       <InfoStructureCard
-      icon={projectCostIcon}
+      icon={ProjectCostIcon}
       iconColor="#D79526"
       //data-testid ='project_total_cost'
         amount={projectTotalCost}
@@ -102,7 +102,7 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
         />
      
       <InfoStructureCard 
-       icon={profitIcon}
+       icon={ProfitIcon}
        iconColor="#345EA6" 
        //data-testid ='project_profits'  
        amount={profits} 
@@ -112,7 +112,7 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
         />
 
       <InfoStructureCard
-       icon={profitMarginIcon}
+       icon={ProfitMarginIcon}
        iconColor="#0BC5EA"
        //data-testid ='profit_margin'
         amount={profitMargin}

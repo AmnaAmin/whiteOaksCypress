@@ -1,6 +1,6 @@
 import React, { SVGAttributes } from 'react'
 
-function finalSowcon(props: SVGAttributes<SVGElement>) {
+function FinalSowIcon(props: SVGAttributes<SVGElement>) {
   return (
     <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="13.5" cy="13.5" r="13.5" fill="#E6F8EE"/>
@@ -12,7 +12,7 @@ function finalSowcon(props: SVGAttributes<SVGElement>) {
   )
 }
 
-function accountPayableIcon(props: SVGAttributes<SVGElement>) {
+function AccountPayableIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="13.5" cy="13.5" r="13.5" fill="#E0F3FD"/>
@@ -25,7 +25,7 @@ function accountPayableIcon(props: SVGAttributes<SVGElement>) {
     )
   }
 
-  function projectCostIcon(props: SVGAttributes<SVGElement>) {
+  function ProjectCostIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="13.5" cy="13.5" r="13.5" fill="#FFE4E4"/>
@@ -38,7 +38,7 @@ function accountPayableIcon(props: SVGAttributes<SVGElement>) {
       
     )
   }
-  function vendorPaymentIcon(props: SVGAttributes<SVGElement>) {
+  function VendorPaymentIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="32" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="13.5" cy="13.5" r="13.5" fill="#EBDEFC"/>
@@ -52,7 +52,7 @@ function accountPayableIcon(props: SVGAttributes<SVGElement>) {
     )
   }
 
-  function materialIcon(props: SVGAttributes<SVGElement>) {
+  function MaterialIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="13.5" cy="13.5" r="13.5" fill="#FEEBCB"/>
@@ -67,7 +67,7 @@ function accountPayableIcon(props: SVGAttributes<SVGElement>) {
       
     )
   }
-  function profitIcon(props: SVGAttributes<SVGElement>) {
+  function ProfitIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="13.5" cy="13.5" r="13.5" fill="#E4F9FC"/>
@@ -83,7 +83,7 @@ function accountPayableIcon(props: SVGAttributes<SVGElement>) {
     )
   }
 
-  function profitMarginIcon(props: SVGAttributes<SVGElement>) {
+  function ProfitMarginIcon(props: SVGAttributes<SVGElement>) {
     return (
         <svg width="27" height="27" viewBox="0 0 27 27" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle cx="13.5" cy="13.5" r="13.5" fill="#C4F1F9"/>
@@ -101,13 +101,13 @@ function accountPayableIcon(props: SVGAttributes<SVGElement>) {
   }
 
 
-export default finalSowcon
+export default FinalSowIcon
 export {
-  finalSowcon,
-  accountPayableIcon,
-  projectCostIcon,
-  vendorPaymentIcon,
-  materialIcon,
-  profitIcon,
-  profitMarginIcon,
+  FinalSowIcon,
+  AccountPayableIcon,
+  ProjectCostIcon,
+  VendorPaymentIcon,
+  MaterialIcon,
+  ProfitIcon,
+  ProfitMarginIcon,
 }
