@@ -214,7 +214,7 @@ const WorkOrderDetailTab = props => {
 
   // Enable Vendor Type and Company Name for Admin User
   const [tradeOptions, setTradeOptions] = useState([])
-  const [vendorOptions, setVendorOptions] = useState([])
+  const [vendorOptions, setVendorOptions] = useState<any>([])
   const [selectedVendorId, setSelectedVendorId] = useState<any>([])
 
   const { data: trades } = useTrades()
@@ -224,13 +224,6 @@ const WorkOrderDetailTab = props => {
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
   const clientStart = projectData?.clientStartDate
-
-  // Set Vendor Names
-  const defaultVendor = {
-    value: workOrder?.vendorId as number,
-    label: workOrder?.claimantName as string,
-    title: workOrder?.claimantName as string,
-  }
 
   // Set Vendor Skill
   const defaultSkill = {
@@ -320,6 +313,18 @@ const WorkOrderDetailTab = props => {
 
   useEffect(() => {
     if (workOrderDetails?.id) {
+      const defaultVendor = [] as any
+      if (vendorOptions && vendorOptions?.length > 0) {
+        vendorOptions?.forEach(v => {
+          if (workOrder?.vendorId === v?.value) {
+            defaultVendor.push({
+              label: v.label as string,
+              value: v.value as number,
+              title: v.label as string,
+            })
+          }
+        })
+      }
       reset(defaultValuesWODetails(workOrderDetails, defaultVendor, defaultSkill))
     }
   }, [workOrderDetails, reset, tradeOptions?.length])
