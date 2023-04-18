@@ -41,7 +41,11 @@ export const VendorUsersTable = React.forwardRef((props: any, ref) => {
     pagination.pageSize,
   )
 
-  const { tableColumns, settingColumns } = useTableColumnSettings(USER_MGT_COLUMNS, TableNames.vendorUsersTable)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(USER_MGT_COLUMNS, TableNames.vendorUsersTable)
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllUserMgt(
     queryStringWithoutPagination + '&userType.equals=6&devAccount.equals=false',
@@ -82,7 +86,14 @@ export const VendorUsersTable = React.forwardRef((props: any, ref) => {
                 fileName="user-managements"
               />
               <CustomDivider />
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+              {settingColumns && (
+                <TableColumnSettings
+                  refetch={refetchColumns}
+                  disabled={isLoading}
+                  onSave={onSave}
+                  columns={settingColumns}
+                />
+              )}
             </ButtonsWrapper>
             <TablePagination>
               <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />

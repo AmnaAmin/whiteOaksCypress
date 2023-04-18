@@ -38,9 +38,10 @@ interface TableColumnSettingsProps {
   columns: ColumnType[]
   isOpen?: boolean
   disabled?: boolean
+  refetch?: any
 }
 
-const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnSettingsProps) => {
+const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: TableColumnSettingsProps) => {
   const [columnRecords, setColumnRecords] = useState(columns)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { t } = useTranslation()
@@ -85,6 +86,11 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
       return items
     })
   }, [])
+
+  const closeSetting = () => {
+    onClose()
+    refetch()
+  }
 
   return (
     <>
@@ -206,7 +212,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false }: TableColumnS
             p="0px"
           >
             <HStack spacing="16px" mr="13px" my="16px">
-              <Button variant="ghost" colorScheme="darkPrimary" onClick={onClose} border="1px solid" size="md">
+              <Button variant="ghost" colorScheme="darkPrimary" onClick={closeSetting} border="1px solid" size="md">
                 {t('cancel')}
               </Button>
               <Button colorScheme="darkPrimary" onClick={saveModal} size="md">

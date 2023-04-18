@@ -58,7 +58,11 @@ export const VendorSkillsTable: React.FC<{}> = () => {
   const { data: VendorSkills, isLoading, refetch } = useTrades()
   const [selectedVendorSkills, setSelectedVendorSkills] = useState<Market>()
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendorSkills)
-  const { tableColumns, settingColumns } = useTableColumnSettings(VENDORSKILLS_COLUMNS, TableNames.vendorSkills)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(VENDORSKILLS_COLUMNS, TableNames.vendorSkills)
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
 
   const onSave = columns => {
@@ -97,7 +101,14 @@ export const VendorSkillsTable: React.FC<{}> = () => {
               />
               <CustomDivider />
 
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+              {settingColumns && (
+                <TableColumnSettings
+                  refetch={refetchColumns}
+                  disabled={isLoading}
+                  onSave={onSave}
+                  columns={settingColumns}
+                />
+              )}
             </ButtonsWrapper>
           </TableFooter>
         </TableContextProvider>

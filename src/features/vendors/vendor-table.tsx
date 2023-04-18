@@ -197,7 +197,11 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   )
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendors)
-  const { tableColumns, settingColumns } = useTableColumnSettings(
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(
     VENDOR_COLUMNS,
     TableNames.vendors,
     //  { statusLabel: selectedCard ? selectedCard : ''}
@@ -247,7 +251,12 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
               <CustomDivider />
 
               {settingColumns && (
-                <TableColumnSettings disabled={vendorsLoading} onSave={onSave} columns={settingColumns} />
+                <TableColumnSettings
+                  refetch={refetchColumns}
+                  disabled={vendorsLoading}
+                  onSave={onSave}
+                  columns={settingColumns}
+                />
               )}
             </ButtonsWrapper>
 
