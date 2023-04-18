@@ -4,6 +4,7 @@ import { BiDownArrowCircle } from 'react-icons/bi'
 import { Text, Flex, Box, Icon, Spacer } from '@chakra-ui/react'
 import { downloadFileOnly } from 'utils/file-utils'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { relative } from 'path'
 
 export const DOCUMENT_TYPES = {
   ORIGINAL_SOW: 39,
@@ -80,17 +81,33 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
     meta: { format: 'date' },
     cell(cellInfo) {
       return (
-        <Flex>
+        <Flex position="relative">
           <Box mr={2}>{dateFormat(cellInfo.getValue() as string)}</Box>
           <Spacer w="90px" />
-          <Icon
-            as={BiDownArrowCircle}
-            color="#345EA6"
-            fontSize={24}
+          <Box
+            left="81%"
+            top="-85%"
+            w="39px"
+            h="46px"
+            position="absolute"
             onClick={() => {
               downloadFileOnly(cellInfo.row.original)
             }}
-          />
+            _hover={{ cursor: 'pointer', backgroundColor: '#CFEDFD' }}
+          >
+            <Icon
+              p="1px"
+              as={BiDownArrowCircle}
+              color="#345EA6"
+              fontSize={24}
+              position="relative"
+              top="10px"
+              // bottom="0"
+              left="8px"
+              // right="0"
+              // m="auto"
+            />
+          </Box>
         </Flex>
       )
     },
