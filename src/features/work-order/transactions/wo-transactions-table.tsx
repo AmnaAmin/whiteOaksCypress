@@ -34,7 +34,11 @@ export const WOTransactionsTable = React.forwardRef((props: TransactionProps, re
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
-  const { tableColumns, settingColumns } = useTableColumnSettings(
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(
     TRANSACTION_TABLE_COLUMNS.filter(col => col['accessorKey'] !== 'workOrderId'),
     TableNames.transaction,
   )
@@ -104,7 +108,12 @@ export const WOTransactionsTable = React.forwardRef((props: TransactionProps, re
                 <ExportButton columns={tableColumns} refetch={refetch} isLoading={isLoading} fileName="transactions" />
                 <CustomDivider />
                 {settingColumns && (
-                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                  <TableColumnSettings
+                    refetch={refetchColumns}
+                    disabled={isLoading}
+                    onSave={onSave}
+                    columns={settingColumns}
+                  />
                 )}
               </ButtonsWrapper>
               <TablePagination>

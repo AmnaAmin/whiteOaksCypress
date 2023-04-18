@@ -11,7 +11,11 @@ import { TableNames } from 'types/table-column.types'
 
 export const AuditLogsTable = ({ auditLogs, isLoading, refetch }) => {
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.auditLogs)
-  const { tableColumns, settingColumns } = useTableColumnSettings(AUDIT_LOGS_COLUMNS, TableNames.auditLogs)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(AUDIT_LOGS_COLUMNS, TableNames.auditLogs)
 
   const onRowClick = row => {}
   const onSave = columns => {
@@ -49,7 +53,12 @@ export const AuditLogsTable = ({ auditLogs, isLoading, refetch }) => {
                 />
                 <CustomDivider />
                 {settingColumns && (
-                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                  <TableColumnSettings
+                    refetch={refetchColumns}
+                    disabled={isLoading}
+                    onSave={onSave}
+                    columns={settingColumns}
+                  />
                 )}
               </ButtonsWrapper>
             </TableFooter>

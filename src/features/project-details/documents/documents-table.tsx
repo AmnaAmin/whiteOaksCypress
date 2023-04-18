@@ -29,10 +29,12 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const [totalRows, setTotalRows] = useState(0)
 
   const { mutate: postDocumentColumn } = useTableColumnSettingsUpdateMutation(TableNames.document)
-  const { tableColumns, settingColumns, isLoading } = useTableColumnSettings(
-    DOCUMENTS_TABLE_COLUMNS,
-    TableNames.document,
-  )
+  const {
+    tableColumns,
+    settingColumns,
+    isLoading,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(DOCUMENTS_TABLE_COLUMNS, TableNames.document)
 
   const onSave = columns => {
     postDocumentColumn(columns)
@@ -87,7 +89,12 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
                 <ExportCustomButton columns={tableColumns} data={documents} fileName="documents" />
                 <CustomDivider />
                 {settingColumns && (
-                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                  <TableColumnSettings
+                    refetch={refetchColumns}
+                    disabled={isLoading}
+                    onSave={onSave}
+                    columns={settingColumns}
+                  />
                 )}
               </ButtonsWrapper>
               <TablePagination>

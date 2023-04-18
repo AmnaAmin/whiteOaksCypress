@@ -41,7 +41,11 @@ export const WOAUsersTable = React.forwardRef((props: any, ref) => {
     pagination.pageSize,
   )
 
-  const { tableColumns, settingColumns } = useTableColumnSettings(USER_MGT_COLUMNS, TableNames.woaUsersTable)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(USER_MGT_COLUMNS, TableNames.woaUsersTable)
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllUserMgt(
     queryStringWithoutPagination + '&userType.notIn=6&devAccount.equals=false',
@@ -82,7 +86,14 @@ export const WOAUsersTable = React.forwardRef((props: any, ref) => {
                 fileName="user-managements"
               />
               <CustomDivider />
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+              {settingColumns && (
+                <TableColumnSettings
+                  refetch={refetchColumns}
+                  disabled={isLoading}
+                  onSave={onSave}
+                  columns={settingColumns}
+                />
+              )}
             </ButtonsWrapper>
             <TablePagination>
               <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />

@@ -72,7 +72,11 @@ export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({ managedA
 
   const [selectedAlert, setSelectedAlert] = useState<ProjectAlertType>()
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.alerts)
-  const { tableColumns, settingColumns } = useTableColumnSettings(MANAGED_ALERTS_COLUMNS, TableNames.alerts)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(MANAGED_ALERTS_COLUMNS, TableNames.alerts)
 
   const onSave = columns => {
     postGridColumn(columns)
@@ -107,7 +111,14 @@ export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({ managedA
               />
               <CustomDivider />
 
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+              {settingColumns && (
+                <TableColumnSettings
+                  refetch={refetchColumns}
+                  disabled={isLoading}
+                  onSave={onSave}
+                  columns={settingColumns}
+                />
+              )}
             </ButtonsWrapper>
           </TableFooter>
         </TableContextProvider>

@@ -19,10 +19,11 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
   const { transactions = [], isLoading } = useOverPaymentTransaction(TransactionTypeValues.overpayment)
-  const { tableColumns, settingColumns } = useTableColumnSettings(
-    PAYABLE_OVERPAYMENT_TABLE_COLUMNS,
-    TableNames.transaction,
-  )
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(PAYABLE_OVERPAYMENT_TABLE_COLUMNS, TableNames.transaction)
 
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
   const {
@@ -56,7 +57,12 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
                 <ExportCustomButton columns={[]} data={exportData} colorScheme="brand" fileName="transactions" />
 
                 {settingColumns && (
-                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                  <TableColumnSettings
+                    refetch={refetchColumns}
+                    disabled={isLoading}
+                    onSave={onSave}
+                    columns={settingColumns}
+                  />
                 )}
               </ButtonsWrapper>
             </TableFooter>

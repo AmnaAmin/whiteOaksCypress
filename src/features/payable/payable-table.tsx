@@ -76,6 +76,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
       tableColumns,
       settingColumns,
       isFetched: tablePreferenceFetched,
+      refetch: refetchColumns,
     } = useTableColumnSettings(payableColumns, TableNames.payable)
 
     const { paginationRecord, columnsWithoutPaginationRecords } = useMemo(() => {
@@ -201,7 +202,12 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
                   fileName="payable"
                 />
                 {settingColumns && (
-                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                  <TableColumnSettings
+                    refetch={refetchColumns}
+                    disabled={isLoading}
+                    onSave={onSave}
+                    columns={settingColumns}
+                  />
                 )}
               </ButtonsWrapper>
               <TablePagination>

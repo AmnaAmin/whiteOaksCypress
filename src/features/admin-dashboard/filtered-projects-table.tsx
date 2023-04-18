@@ -46,7 +46,11 @@ export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
   )
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.adminDashboard)
-  const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.adminDashboard)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.adminDashboard)
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(
     filteredUrl + '&' + queryStringWithoutPagination,
@@ -96,6 +100,7 @@ export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
             <CustomDivider />
             {settingColumns && (
               <TableColumnSettings
+                refetch={refetchColumns}
                 disabled={isLoading}
                 onSave={onSave}
                 columns={settingColumns.filter(col => !(columnVisibility[col?.contentKey] === false))}
