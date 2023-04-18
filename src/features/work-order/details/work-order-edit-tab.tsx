@@ -50,12 +50,6 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
 
-export type SelectVendorOption = {
-  label: string
-  value: any
-  title: any
-}
-
 const CalenderCard = props => {
   return (
     <Flex>
@@ -220,8 +214,8 @@ const WorkOrderDetailTab = props => {
 
   // Enable Vendor Type and Company Name for Admin User
   const [tradeOptions, setTradeOptions] = useState([])
-  const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
-  const [selectedVendorId, setSelectedVendorId] = useState<SelectVendorOption[]>([])
+  const [vendorOptions, setVendorOptions] = useState([])
+  const [selectedVendorId, setSelectedVendorId] = useState<any>([])
 
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
@@ -230,6 +224,13 @@ const WorkOrderDetailTab = props => {
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
   const clientStart = projectData?.clientStartDate
+
+  // Set Vendor Names
+  const defaultVendor = {
+    value: workOrder?.vendorId as number,
+    label: workOrder?.claimantName as string,
+    title: workOrder?.claimantName as string,
+  }
 
   // Set Vendor Skill
   const defaultSkill = {
@@ -319,21 +320,9 @@ const WorkOrderDetailTab = props => {
 
   useEffect(() => {
     if (workOrderDetails?.id) {
-      const defaultVendor = [] as SelectVendorOption[]
-      if (vendorOptions && vendorOptions?.length > 0) {
-        vendorOptions?.forEach(v => {
-          if (workOrder?.vendorId === v?.value) {
-            defaultVendor.push({
-              label: v.label as string,
-              value: v.value as number,
-              title: v.label as string,
-            })
-          }
-        })
-      }
       reset(defaultValuesWODetails(workOrderDetails, defaultVendor, defaultSkill))
     }
-  }, [workOrderDetails, reset, tradeOptions?.length, vendorOptions?.length])
+  }, [workOrderDetails, reset, tradeOptions?.length])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
