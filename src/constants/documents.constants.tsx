@@ -4,7 +4,6 @@ import { BiDownArrowCircle } from 'react-icons/bi'
 import { Text, Flex, Box, Icon, Spacer } from '@chakra-ui/react'
 import { downloadFileOnly } from 'utils/file-utils'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
-import { relative } from 'path'
 
 export const DOCUMENT_TYPES = {
   ORIGINAL_SOW: 39,
