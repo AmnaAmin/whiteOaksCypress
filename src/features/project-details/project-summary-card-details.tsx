@@ -7,12 +7,12 @@ import { useAuth } from 'utils/auth-context'
 import { useTranslation } from 'react-i18next'
 import { BiCaretLeft } from 'react-icons/bi'
 
-const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
+const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title,fontSize, ...rest }) => {
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
       <Box fontSize="14px" color="gray.500">
         <Tooltip label={title} color="black" placement="top">
-          <FormLabel variant="strong-label" size="md" noOfLines={1}>
+          <FormLabel fontSize={fontSize} variant="strong-label" size="md" noOfLines={1}>
             {title}
           </FormLabel>
         </Tooltip>
@@ -41,43 +41,43 @@ export const ProjectSummaryCardDetails: React.FC<{
         borderRadius="4px"
         box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
       >
-        <InfoStructureCard title={t('projects.projectSummary.lockBoxCode')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.lockBoxCode')} isLoading={isLoading} fontSize="12px" >
           <FormLabel variant="light-label" size="md" noOfLines={1}>
             {projectData?.lockBoxCode ? projectData?.lockBoxCode : '-------'}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.projectType')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.projectType')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md">
             {projectData?.projectTypeLabel}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.clientStart')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.clientStart')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md">
             {projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate as string) : '-------'}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.clientEnd')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.clientEnd')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md">
             {projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate as string) : '-------'}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.woaStart')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.woaStart')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md">
             {projectData?.woaStartDate ? dateFormat(projectData?.woaStartDate as string) : '-------'}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.woaEnd')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.woaEnd')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md">
             {projectData?.woaCompletionDate ? dateFormat(projectData?.woaCompletionDate as string) : '-------'}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.pcName')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.pcName')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md" noOfLines={1}>
             {projectData?.projectCoordinator}
           </FormLabel>
@@ -87,6 +87,7 @@ export const ProjectSummaryCardDetails: React.FC<{
           title={t('projects.projectSummary.pcContact')}
           isLoading={isLoading}
           borderRight="1px solid white"
+          fontSize="12px"
         >
           <FormLabel variant="light-label" size="md" noOfLines={1}>
             {account?.telephoneNumber}
