@@ -319,15 +319,15 @@ const WorkOrderDetailTab = props => {
 
   useEffect(() => {
     if (workOrderDetails?.id) {
-      const defaultVendor = [] as SelectVendorOption[]
+      let defaultVendor
       if (vendorOptions && vendorOptions?.length > 0) {
         vendorOptions?.forEach(v => {
           if (workOrder?.vendorId === v?.value) {
-            defaultVendor.push({
+            defaultVendor = {
               label: v.label as string,
               value: v.value as number,
               title: v.label as string,
-            })
+            }
           }
         })
       }

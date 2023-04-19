@@ -312,7 +312,7 @@ export const parseWODetailValuesToPayload = formValues => {
     showPricing: formValues.showPrice,
     assignedItems: [...assignedItems],
     notifyVendor: formValues.notifyVendor,
-    vendorId: formValues.vendorId[0]?.value,
+    vendorId: formValues.vendorId?.value,
     vendorSkillId: formValues.vendorSkillId?.value,
   }
 }
