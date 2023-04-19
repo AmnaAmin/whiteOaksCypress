@@ -1,12 +1,16 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, FormLabelProps, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { useTranslation } from 'react-i18next'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import { SelectOption } from 'types/transaction.type'
 import NumberFormat from 'react-number-format'
 import { useGetUsersByType } from 'api/project-details'
+import { useEffect, useState } from 'react'
+import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
+import { t } from 'i18next'
+import Select from 'components/form/react-select'
 
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
@@ -34,6 +38,20 @@ const Contact: React.FC<ContactProps> = ({
     formState: { errors },
     setValue,
   } = useFormContext<ProjectDetailsFormValues>()
+  const clientWatch = useWatch({ name: 'client', control })
+  const [carrierOption, setCarrierOption] = useState<SelectOption[] | null | undefined>()
+
+  useEffect(() => {
+    setCarrierOption(
+      clientWatch?.carrier?.map(c => {
+        return {
+          label: c.name,
+          value: c.id,
+        }
+      }),
+    )
+  }, [clientWatch])
+
   const {
     isProjectCoordinatorDisabled,
     isProjectCoordinatorPhoneNumberDisabled,
@@ -49,7 +67,7 @@ const Contact: React.FC<ContactProps> = ({
   const { users: fpmUsers } = useGetUsersByType(5)
 
   return (
-    <Stack spacing={14} mt="7">
+    <Stack spacing={14} mt="7" minH="600px">
       <HStack spacing="16px">
         <Box h="40px">
           <FormControl w="215px" isInvalid={!!errors.projectCoordinator}>
@@ -124,7 +142,7 @@ const Contact: React.FC<ContactProps> = ({
                 <>
                   <ReactSelect
                     {...field}
-                    selectProps={{ isBorderLeft: true , menuHeight: '180px' }}
+                    selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                     options={projectManagerSelectOptions}
                     isDisabled={isFieldProjectManagerDisabled}
                     onChange={(e: any) => {
@@ -234,8 +252,12 @@ const Contact: React.FC<ContactProps> = ({
                   menuPlacement="top"
                   {...field}
                   options={clientSelectOptions}
-                  selectProps={{ isBorderLeft: true, menuHeight: '180px'  }}
+                  selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                   isDisabled={isClientDisabled}
+                  onChange={option => {
+                    field.onChange(option)
+                    setValue('carrier', null)
+                  }}
                 />
                 <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
               </>
@@ -243,6 +265,105 @@ const Contact: React.FC<ContactProps> = ({
           />
         </FormControl>
       </Box>
+      <HStack spacing="16px">
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.superName}>
+            <InputLabel title={t(`${NEW_PROJECT}.carrier`)} htmlFor={'carrier'} />
+            <Controller
+              control={control}
+              name={`carrier`}
+              render={({ field, fieldState }) => (
+                <>
+                  <Select isDisabled={isFieldProjectManagerDisabled} options={carrierOption} {...field} />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+            <FormErrorMessage>{errors?.superName?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.agentName}>
+            <InputLabel title={t(`${NEW_PROJECT}.agentName`)} htmlFor={'agentName'} />
+            <Input isDisabled={isFieldProjectManagerDisabled} id="agentName" {...register('agentName')} />
+            <FormErrorMessage>{errors?.agentName?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.agentPhone}>
+            <InputLabel title={t(`${NEW_PROJECT}.phone`)} htmlFor={'agentPhone'} />
+            <Controller
+              control={control}
+              name="agentPhone"
+              render={({ field, fieldState }) => {
+                return (
+                  <>
+                    <NumberFormat
+                      isDisabled={isFieldProjectManagerDisabled}
+                      customInput={Input}
+                      value={field.value}
+                      onChange={e => field.onChange(e)}
+                      format="(###)-###-####"
+                      mask="_"
+                      placeholder="(___)-___-____"
+                    />
+                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                  </>
+                )
+              }}
+            />
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.agentEmail}>
+            <InputLabel title={t(`${NEW_PROJECT}.email`)} htmlFor={'agentEmail'} />
+            <Input isDisabled={isFieldProjectManagerDisabled} id="agentEmail" {...register('agentEmail')} />
+            <FormErrorMessage>{errors?.agentEmail?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+      </HStack>
+
+      <HStack spacing="16px">
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.homeOwnerName}>
+            <InputLabel title={t(`${NEW_PROJECT}.homeOwner`)} htmlFor={'homeOwnerName'} />
+            <Input isDisabled={isFieldProjectManagerDisabled} id="homeOwnerName" {...register('homeOwnerName')} />
+            <FormErrorMessage>{errors?.homeOwnerName?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.homeOwnerPhone}>
+            <InputLabel title={t(`${NEW_PROJECT}.phone`)} htmlFor={'homeOwnerPhone'} />
+            <Controller
+              control={control}
+              name="homeOwnerPhone"
+              render={({ field, fieldState }) => {
+                return (
+                  <>
+                    <NumberFormat
+                      customInput={Input}
+                      value={field.value}
+                      isDisabled={isFieldProjectManagerDisabled}
+                      onChange={e => field.onChange(e)}
+                      format="(###)-###-####"
+                      mask="_"
+                      placeholder="(___)-___-____"
+                    />
+                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                  </>
+                )
+              }}
+            />
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.homeOwnerEmail}>
+            <InputLabel title={t(`${NEW_PROJECT}.email`)} htmlFor={'homeOwnerEmail'} />
+            <Input isDisabled={isFieldProjectManagerDisabled} id="homeOwnerEmail" {...register('homeOwnerEmail')} />
+            <FormErrorMessage>{errors?.homeOwnerEmail?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+      </HStack>
     </Stack>
   )
 }

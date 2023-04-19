@@ -93,6 +93,13 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       woaCompletionDate: '',
       propertyId: 0,
       property: '',
+      homeOwnerName: '',
+      homeOwnerPhone: '',
+      homeOwnerEmail: '',
+      carrier: null,
+      agentName: '',
+      agentPhone: '',
+      agentEmail: '',
     },
   })
 
@@ -155,6 +162,13 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         superPhoneNumber: values.superPhoneNumber,
         superPhoneNumberExtension: values.superPhoneNumberExtension,
         propertyId: values.propertyId,
+        homeOwnerName: values.homeOwnerName,
+        homeOwnerPhone: values.homeOwnerPhone,
+        homeOwnerEmail: values.homeOwnerEmail,
+        carrierId: values.carrier?.value,
+        agentName: values.agentName,
+        agentPhone: values.agentPhone,
+        agentEmail: values.agentEmail,
       }
 
       saveProjectDetails(newProjectPayload, {

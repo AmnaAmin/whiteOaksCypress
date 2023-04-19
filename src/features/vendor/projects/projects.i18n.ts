@@ -47,6 +47,11 @@ export const projects = {
         ext: 'Ext',
         cancel: 'Cancel',
         next: 'Next',
+        homeOwner: 'Home Owner',
+        phone: 'Phone Number',
+        email: 'Email',
+        agentName: 'Agent Name',
+        carrier: 'Carrier',
 
         // Project Management Form
         fieldProjectManager: 'Field Project Manager',
@@ -104,6 +109,11 @@ export const projects = {
         hoaContactEmail: 'Correo de Contacto de HOA',
         cancel: 'Cancelar',
         next: 'Siguiente',
+        homeOwner: 'Propietario de casa',
+        phone: 'Número de teléfono',
+        email: 'Correo electrónico',
+        agentName: 'Nombre de la agente',
+        carrier: 'Transportadora',
 
         // Project Management Form
         fieldProjectManager: 'Gerente de Proyecto',
