@@ -64,6 +64,13 @@ type ContactsFormValues = {
   superPhoneNumberExtension: string | null
   superEmail: string | null
   client: SelectOption | null
+  homeOwnerName: string
+  homeOwnerPhone: string
+  homeOwnerEmail: string
+  carrier: SelectOption | null
+  agentName: string
+  agentPhone: string
+  agentEmail: string
 }
 
 type ProjectDetailsLocationFormValues = {
@@ -153,6 +160,13 @@ export type ProjectDetailsAPIPayload = {
   superPhoneNumberExtension: string | null
   superEmailAddress: string | null
   clientName: string | null
+  homeOwnerName: string | null
+  homeOwnerPhone: string | null
+  homeOwnerEmail: string | null
+  carrierId: string | number | null
+  agentName: string | null
+  agentPhone: string | null
+  agentEmail: string | null
 
   // Location
   streetAddress: string | null

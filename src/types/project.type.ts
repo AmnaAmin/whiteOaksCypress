@@ -116,6 +116,13 @@ export type Project = {
   collectionDate?: string | null
   documents: any[] | null
   vendorWODueDate?: string
+  homeOwnerName: string | null
+  homeOwnerPhone: string | null
+  homeOwnerEmail: string | null
+  carrierId: string | number | null
+  agentName: string | null
+  agentPhone: string | null
+  agentEmail: string | null
 }
 
 export type ProjectExtraAttributesType = {
@@ -129,6 +136,13 @@ export type ProjectExtraAttributesType = {
   createdBy: string | null
   lastModifiedBy: string | null
   lastModifiedDate: string | null
+  homeOwnerName: string
+  homeOwnerPhone: string
+  homeOwnerEmail: string
+  carrier: SelectOption | null
+  agentName: string
+  agentPhone: string
+  agentEmail: string
 }
 
 export type ProjectColumnType = {
@@ -241,6 +255,13 @@ export type ProjectFormValues = {
   woaCompletionDate?: string
   propertyId?: number
   property?: any
+  homeOwnerName: string | null
+  homeOwnerPhone: string | null
+  homeOwnerEmail: string | null
+  carrier: string | number | null
+  agentName: string | null
+  agentPhone: string | null
+  agentEmail: string | null
 }
 
 export type Market = {

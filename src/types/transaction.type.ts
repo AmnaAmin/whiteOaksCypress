@@ -1,3 +1,4 @@
+import { Carrier } from './common.types'
 import { Document } from './vendor.types'
 
 export type ProjectWorkOrder = {
@@ -129,10 +130,11 @@ export enum TransactionStatusValues {
 }
 
 export type SelectOption = {
-  label: string
+  label: string | undefined
   value: any
   awardStatus?: any
   isValidForAwardPlan?: any
+  carrier?: Carrier[]
 }
 
 export type TransactionFormValues = {
@@ -225,7 +227,7 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   modifiedDate1: string | null
   modifiedBy: string
   vendorId: number | null
-  systemGenerated : boolean | null
+  systemGenerated: boolean | null
 }
 
 type LineItem = {

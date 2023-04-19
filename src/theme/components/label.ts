@@ -7,6 +7,12 @@ const label = {
       color: 'gray.600',
     },
     variants: {
+      'bold-label': {
+        fontStyle: 'normal',
+        fontWeight: 600,
+        lineHeight: '28px',
+        color: 'gray.700',
+      },
       'strong-label': {
         fontStyle: 'normal',
         fontWeight: 500,
