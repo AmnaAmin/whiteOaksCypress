@@ -104,7 +104,11 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
   )
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendors)
-  const { tableColumns, settingColumns } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
 
   const onSave = columns => {
     postGridColumn(columns)
@@ -150,7 +154,12 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
               <CustomDivider />
 
               {settingColumns && (
-                <TableColumnSettings disabled={isFPMVendorLoading} onSave={onSave} columns={settingColumns} />
+                <TableColumnSettings
+                  refetch={refetchColumns}
+                  disabled={isFPMVendorLoading}
+                  onSave={onSave}
+                  columns={settingColumns}
+                />
               )}
             </ButtonsWrapper>
 

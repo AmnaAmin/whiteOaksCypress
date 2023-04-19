@@ -63,7 +63,11 @@ export const MarketsTable: React.FC<{}> = () => {
   const { markets, isLoading, refetch } = useMarkets()
   const [selectedMarket, setSelectedMarket] = useState<Market>()
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.markets)
-  const { tableColumns, settingColumns } = useTableColumnSettings(MARKET_COLUMNS, TableNames.markets)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(MARKET_COLUMNS, TableNames.markets)
 
   const onSave = columns => {
     postGridColumn(columns)
@@ -98,7 +102,14 @@ export const MarketsTable: React.FC<{}> = () => {
               />
               <CustomDivider />
 
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+              {settingColumns && (
+                <TableColumnSettings
+                  refetch={refetchColumns}
+                  disabled={isLoading}
+                  onSave={onSave}
+                  columns={settingColumns}
+                />
+              )}
             </ButtonsWrapper>
           </TableFooter>
         </TableContextProvider>

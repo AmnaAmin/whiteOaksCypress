@@ -89,6 +89,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     tableColumns,
     settingColumns,
     isFetched: tablePreferenceFetched,
+    refetch: refetchColumns,
   } = useTableColumnSettings(receivableColumns, TableNames.receivable)
 
   const { paginationRecord, columnsWithoutPaginationRecords } = useMemo(() => {
@@ -161,7 +162,14 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
               isLoading={isExportDataLoading}
               fileName="receivable"
             />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            {settingColumns && (
+              <TableColumnSettings
+                refetch={refetchColumns}
+                disabled={isLoading}
+                onSave={onSave}
+                columns={settingColumns}
+              />
+            )}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />

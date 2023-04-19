@@ -100,7 +100,11 @@ export const UpcomingPaymentTable = () => {
     postGridColumn(columns)
   }
 
-  const { tableColumns, settingColumns } = useTableColumnSettings(UPCOMING_PAYMENT_COLUMNS, TableNames.upcomingPayment)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(UPCOMING_PAYMENT_COLUMNS, TableNames.upcomingPayment)
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllUpcomingPaymentWorkOrders(queryStringWithoutPagination)
 
@@ -130,7 +134,14 @@ export const UpcomingPaymentTable = () => {
               fileName="upcoming-payment"
             />
             <CustomDivider />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            {settingColumns && (
+              <TableColumnSettings
+                refetch={refetchColumns}
+                disabled={isLoading}
+                onSave={onSave}
+                columns={settingColumns}
+              />
+            )}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />
