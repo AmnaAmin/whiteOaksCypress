@@ -172,7 +172,7 @@ const ProjectDetailsTab = (props: tabProps) => {
             borderBottomLeftRadius="4px"
           >
             <TabPanels mt="31px">
-              <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
+              <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
                 <ProjectManagement
                   projectStatusSelectOptions={projectStatusSelectOptions}
                   projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
@@ -181,18 +181,18 @@ const ProjectDetailsTab = (props: tabProps) => {
                 />
               </TabPanel>
 
-              <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
+              <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
                 <InvoiceAndPayments projectData={projectData} />
               </TabPanel>
 
-              <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
+              <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
                 <Contact
                   projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
                   projectManagerSelectOptions={fpmSelectOptions}
                   clientSelectOptions={clientSelectOptions}
                 />
               </TabPanel>
-              <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
+              <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
                 <Location
                   stateSelectOptions={stateSelectOptions}
                   marketSelectOptions={marketSelectOptions}
@@ -200,7 +200,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                 />
               </TabPanel>
 
-              <TabPanel p="0" ml="32px" minH={style?.height ? '450px' : '343px'}>
+              <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
                 <Misc />
               </TabPanel>
             </TabPanels>

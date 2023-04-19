@@ -220,7 +220,7 @@ export const ProjectDetails: React.FC = props => {
                   </Box>
                 </TabPanel>
                 <TabPanel p="0px">
-                  <Card rounded="6px" padding="0">
+                  <Card rounded="6px" padding="0" h="100%">
                     <ProjectDetailsTab projectData={projectData as Project} />
                   </Card>
                 </TabPanel>

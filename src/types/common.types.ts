@@ -90,6 +90,14 @@ export type Client = {
   createdDate: string | null
   modifiedBy: string | null
   modifiedDate: string | null
+  carrier: Carrier[]
+}
+
+export type Carrier = {
+  id: number
+  name?: string
+  phone?: string
+  email?: string
 }
 
 export type Language = 'English' | 'Spanish'

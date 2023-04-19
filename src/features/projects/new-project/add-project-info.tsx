@@ -60,7 +60,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
 
   return (
     <Flex flexDir="column">
-      <Box px="6" minH="300px">
+      <Box px="6" h="calc(100vh - 400px)" overflow={'auto'}>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
           <GridItem>
             <FormControl isInvalid={!!errors?.name}>
@@ -166,7 +166,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                   return (
                     <>
                       <NumberInput
-                      data-testid='OriginalSow'
+                        data-testid="OriginalSow"
                         value={field.value}
                         onValueChange={values => {
                           const { floatValue } = values
