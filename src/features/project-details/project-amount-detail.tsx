@@ -53,7 +53,7 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
   } = useGetProjectFinancialOverview(projectId) // revenue
 
   return (
-    <Flex py={3} h={{ base: 'unset', xl: '97px' }} w="100%" bg="white" borderRadius="4px" border="1px solid #E5E5E5" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
+    <Flex marginTop="9px !important" py={3} h={{ base: 'unset', xl: '97px' }} w="100%" bg="white" borderRadius="4px" border="1px solid #E5E5E5" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
      <InfoStructureCard
      bg='42CA7E'
   icon={FinalSowIcon}
