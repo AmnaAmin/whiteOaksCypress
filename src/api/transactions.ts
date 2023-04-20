@@ -70,7 +70,7 @@ export const useTransactionsV1 = (projectId?: string) => {
 
       return response?.data
     },
-    { enabled: !!projectId },
+    { enabled: projectId !== 'undefined' },
   )
 
   return {
@@ -95,7 +95,7 @@ export const useWOTransactionsV1 = (workOrderId: string, projectId?: string) => 
 
       return response?.data
     },
-    { enabled: !!projectId },
+    { enabled: projectId !== 'undefined' },
   )
 
   return {

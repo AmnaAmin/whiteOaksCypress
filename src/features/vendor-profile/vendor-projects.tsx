@@ -98,10 +98,11 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
   )
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendorProjects)
-  const { tableColumns, settingColumns } = useTableColumnSettings(
-    VENDOR_PROJECTS_TABLE_COLUMNS,
-    TableNames.vendorProjects,
-  )
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(VENDOR_PROJECTS_TABLE_COLUMNS, TableNames.vendorProjects)
 
   const [projectStatus, setProjectStatus] = useState('active')
 
@@ -160,7 +161,12 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
                 <CustomDivider />
 
                 {settingColumns && (
-                  <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />
+                  <TableColumnSettings
+                    refetch={refetchColumns}
+                    disabled={isLoading}
+                    onSave={onSave}
+                    columns={settingColumns}
+                  />
                 )}
               </ButtonsWrapper>
 

@@ -77,6 +77,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     tableColumns,
     settingColumns,
     isFetched: tablePreferenceFetched,
+    refetch: refetchColumns,
   } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.project,
@@ -172,6 +173,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
               <TableColumnSettings
                 disabled={isLoading}
                 onSave={onSave}
+                refetch={refetchColumns}
                 columns={settingColumns.filter(
                   col =>
                     col.colId !== 'id' && col.colId !== 'flagged' && !(columnVisibility[col?.contentKey] === false),

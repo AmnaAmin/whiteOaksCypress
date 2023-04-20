@@ -153,7 +153,11 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
   }, [alerts, selectedAlerts, setSelectedAlerts])
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.alerts)
-  const { tableColumns, settingColumns } = useTableColumnSettings(TRIGGERED_ALERTS_COLUMNS, TableNames.vendors)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(TRIGGERED_ALERTS_COLUMNS, TableNames.vendors)
 
   const onSave = columns => {
     postGridColumn(columns)
@@ -192,7 +196,14 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
             />
             <CustomDivider />
 
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            {settingColumns && (
+              <TableColumnSettings
+                refetch={refetchColumns}
+                disabled={isLoading}
+                onSave={onSave}
+                columns={settingColumns}
+              />
+            )}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />

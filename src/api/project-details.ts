@@ -125,6 +125,7 @@ export const useGetClientSelectOptions = () => {
     clients?.map((client: Client) => ({
       value: client.companyName,
       label: client.companyName,
+      carrier: client.carrier,
     })) || []
 
   return { clientSelectOptions, ...rest }
@@ -535,6 +536,9 @@ export const parseFormValuesFromAPIData = ({
 
   const projectStatusSelectOptions = getProjectStatusSelectOptions()
   const remainingPayment = project.accountRecievable || 0
+  const carrier = findOptionByValue(clientSelectOptions, project.clientName)?.carrier?.find(
+    c => c.id === project.carrierId,
+  )
   return {
     // Project Management form values
     status: findOptionByValue(projectStatusSelectOptions, project.projectStatusId),
@@ -584,6 +588,13 @@ export const parseFormValuesFromAPIData = ({
     superPhoneNumberExtension: project.superPhoneNumberExtension,
     superEmail: project.superEmailAddress,
     client: findOptionByValue(clientSelectOptions, project.clientName),
+    homeOwnerName: project.homeOwnerName,
+    homeOwnerPhone: project.homeOwnerPhone,
+    homeOwnerEmail: project.homeOwnerEmail,
+    carrier: !!carrier ? { label: carrier?.name, value: carrier?.id } : null,
+    agentName: project.agentName,
+    agentPhone: project.agentPhone,
+    agentEmail: project.agentEmail,
 
     // Location Form values
     address: findOptionByValue(propertySelectOptions, project?.propertyId),
@@ -679,6 +690,13 @@ export const parseProjectDetailsPayloadFromFormData = async (
     superPhoneNumberExtension: formValues?.superPhoneNumberExtension,
     superEmailAddress: formValues?.superEmail,
     clientName: formValues?.client?.label || null,
+    homeOwnerName: formValues.homeOwnerName,
+    homeOwnerPhone: formValues.homeOwnerPhone,
+    homeOwnerEmail: formValues.homeOwnerEmail,
+    carrierId: formValues.carrier?.value,
+    agentName: formValues.agentName,
+    agentPhone: formValues.agentPhone,
+    agentEmail: formValues.agentEmail,
 
     // Location
     streetAddress: formValues?.address?.label || null,

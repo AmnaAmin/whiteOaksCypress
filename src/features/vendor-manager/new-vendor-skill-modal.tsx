@@ -83,6 +83,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
       skill: data?.skill,
       id: selectedVendorSkills?.id,
       method: selectedVendorSkills ? 'PUT' : 'POST',
+      active: selectedVendorSkills?.active,
     }
 
     createVendorSkills(arg, {

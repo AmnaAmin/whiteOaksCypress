@@ -414,6 +414,7 @@ export const useClients = () => {
     clients?.map(client => ({
       value: client.id,
       label: client.companyName,
+      carrier: client.carrier,
     })) || []
 
   return {
