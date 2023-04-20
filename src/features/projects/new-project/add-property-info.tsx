@@ -144,7 +144,7 @@ export const AddPropertyInfo: React.FC<{
   return (
     <>
       <Flex flexDir="column">
-        <Box px="6" h="calc(100vh - 400px)" overflow={'auto'}>
+        <Box px="6" h="300px" overflow={'auto'}>
           {isDuplicateAddress && (
             <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
               <AlertIcon />
