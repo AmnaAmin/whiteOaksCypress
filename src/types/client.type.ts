@@ -37,6 +37,7 @@ export type Market = {
   stateId: number
   stateName: string
   checked?: boolean
+  lienDueIn?: number
 }
 
 export type Contact = {
@@ -92,4 +93,5 @@ export type ClientFormValues = {
   paymentCreditCard?: boolean
   paymentWired?: boolean
   carrier?: Carrier[]
+  selectedMarkets?: Market[] | undefined
 }

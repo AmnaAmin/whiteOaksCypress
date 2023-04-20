@@ -284,6 +284,7 @@ export type Market = {
   stateId: number
   stateName: string
   skill: string
+  lienDueIn: number
 }
 
 type MarketFormValues = {
