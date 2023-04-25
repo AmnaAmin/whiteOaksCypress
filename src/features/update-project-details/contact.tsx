@@ -11,6 +11,7 @@ import { useEffect, useState } from 'react'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { t } from 'i18next'
 import Select from 'components/form/react-select'
+import { useFPMsByMarket } from 'api/pc-projects'
 
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
@@ -24,22 +25,20 @@ const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
 
 type ContactProps = {
   projectCoordinatorSelectOptions: SelectOption[]
-  projectManagerSelectOptions: SelectOption[]
   clientSelectOptions: SelectOption[]
 }
-const Contact: React.FC<ContactProps> = ({
-  projectCoordinatorSelectOptions,
-  projectManagerSelectOptions,
-  clientSelectOptions,
-}) => {
+const Contact: React.FC<ContactProps> = ({ projectCoordinatorSelectOptions, clientSelectOptions }) => {
   const {
     register,
     control,
     formState: { errors },
     setValue,
+    getValues,
   } = useFormContext<ProjectDetailsFormValues>()
+  const values = getValues()
   const clientWatch = useWatch({ name: 'client', control })
   const [carrierOption, setCarrierOption] = useState<SelectOption[] | null | undefined>()
+  const { fieldProjectManagerByMarketOptions } = useFPMsByMarket(values.market?.value)
 
   useEffect(() => {
     setCarrierOption(
@@ -143,7 +142,7 @@ const Contact: React.FC<ContactProps> = ({
                   <ReactSelect
                     {...field}
                     selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
-                    options={projectManagerSelectOptions}
+                    options={fieldProjectManagerByMarketOptions}
                     isDisabled={isFieldProjectManagerDisabled}
                     onChange={(e: any) => {
                       field.onChange(e)
