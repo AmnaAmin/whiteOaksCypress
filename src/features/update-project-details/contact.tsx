@@ -33,12 +33,13 @@ const Contact: React.FC<ContactProps> = ({ projectCoordinatorSelectOptions, clie
     control,
     formState: { errors },
     setValue,
-    getValues,
   } = useFormContext<ProjectDetailsFormValues>()
-  const values = getValues()
+
+  const marketWatch = useWatch({ name: 'market', control })
+
   const clientWatch = useWatch({ name: 'client', control })
   const [carrierOption, setCarrierOption] = useState<SelectOption[] | null | undefined>()
-  const { fieldProjectManagerByMarketOptions } = useFPMsByMarket(values.market?.value)
+  const { fieldProjectManagerByMarketOptions } = useFPMsByMarket(marketWatch?.value)
 
   useEffect(() => {
     setCarrierOption(
