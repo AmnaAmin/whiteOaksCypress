@@ -15,9 +15,9 @@ export const userManagementTranslation = {
           modifiedBy: 'Modified By',
           modifiedDate: 'Modified Date',
           users: 'Users',
-          vendorUsers: 'Vendor Users',
-          woaUsers: 'WOA Users',
-          devtekUsers: 'Devtek Users',
+          vendorUsers: 'Vendor',
+          woaUsers: 'WOA',
+          devtekUsers: 'Devtek',
         },
         modal: {
           vendorManagerUser: 'Vendor Manager User',
