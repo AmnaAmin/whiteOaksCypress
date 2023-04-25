@@ -123,6 +123,7 @@ export type Project = {
   agentName: string | null
   agentPhone: string | null
   agentEmail: string | null
+  lienFiled: Date | string | null
 }
 
 export type ProjectExtraAttributesType = {

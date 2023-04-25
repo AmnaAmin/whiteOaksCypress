@@ -23,9 +23,10 @@ import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
-import { datePickerFormat, dateFormat } from 'utils/date-time-utils'
+import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
+import { addDays } from 'date-fns'
 
 type ProjectManagerProps = {
   projectStatusSelectOptions: SelectOption[]
@@ -261,6 +262,13 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 {...register('woaCompletionDate', {
                   required: isWOACompletionDateRequired ? 'This is required field.' : false,
                 })}
+                onChange={e => {
+                  const woaCompletion = e.target.value
+                  if (woaCompletion && woaCompletion !== '') {
+                    const lienExpiryDate = addDays(new Date(dateISOFormatWithZeroTime(woaCompletion) as string), 20)
+                    setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
+                  }
+                }}
               />
               <FormErrorMessage>{errors?.woaCompletionDate?.message}</FormErrorMessage>
             </FormControl>
@@ -320,6 +328,24 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                     : ''}
                 </Text>
               </Checkbox>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors?.lienExpiryDate}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.lienRightsExpires`)}
+              </FormLabel>
+              <Input type="date" isDisabled={true} {...register('lienExpiryDate')} />
+              <FormErrorMessage>{errors?.lienExpiryDate?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors?.lienFiled}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.lienFiled`)}
+              </FormLabel>
+              <Input variant="required-field" type="date" required {...register('lienFiled')} />
+              <FormErrorMessage>{errors?.lienFiled?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           {!!projectData?.estimateId && (

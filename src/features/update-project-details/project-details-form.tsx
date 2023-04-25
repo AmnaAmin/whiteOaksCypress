@@ -66,6 +66,7 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const {
     control,
+    getValues,
     formState: { errors, isSubmitting },
   } = formReturn
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors } =
@@ -137,6 +138,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     setTabIndex(index)
   }
 
+  console.log(getValues())
   return (
     <FormProvider {...formReturn}>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} id="project-details">
