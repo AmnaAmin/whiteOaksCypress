@@ -190,7 +190,6 @@ const ProjectDetailsTab = (props: tabProps) => {
               <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
                 <Contact
                   projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
-                  projectManagerSelectOptions={fpmSelectOptions}
                   clientSelectOptions={clientSelectOptions}
                 />
               </TabPanel>
