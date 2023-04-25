@@ -58,7 +58,7 @@ export const ManageProject: React.FC<{
 
   return (
     <Box>
-      <Box px="6" h="calc(100vh - 400px)" overflow={'auto'}>
+      <Box px="6" h="300px" overflow={'auto'}>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
           <GridItem>
             <FormControl>
