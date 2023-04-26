@@ -551,8 +551,7 @@ export const useFilteredVendors = (vendorSkillId, projectId) => {
     '&status.equals=' +
     status_active +
     '&projectsId.equals=' +
-    projectId +
-    '&page=0&sort=id,desc&sort=createdDate,asc&size=2000'
+    projectId
   const { data, ...rest } = useQuery<Array<Vendors>>(
     ['FETCH_FILTERED_VENDORS', vendorSkillId],
     async () => {
