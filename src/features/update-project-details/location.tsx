@@ -8,35 +8,39 @@ import { useFieldsDisabled } from './hooks'
 import Select, { CreatableSelect } from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 
-type markets = {
-  active: boolean
-  id: number
-  metropolitanServiceArea: string
-  createdBy: string
-  createdDate: string
-  modifiedBy: string
-  modifiedDate: string
-  stateId: number
-  stateName: string
-}
+type Market = [
+  {
+    active: boolean
+    id: number
+    metropolitanServiceArea: string
+    createdBy: string
+    createdDate: string
+    modifiedBy: string
+    modifiedDate: string
+    stateId: number
+    stateName: string
+  },
+]
 
-type state = {
-  id: number
-  name: string
-  region: string
-  code: string
-  createdBy: string
-  createdDate: string
-  modifiedBy: string
-  modifiedDate: string
-}
+type State = [
+  {
+    id: number
+    name: string
+    region: string
+    code: string
+    createdBy: string
+    createdDate: string
+    modifiedBy: string
+    modifiedDate: string
+  },
+]
 
 type LocationProps = {
   stateSelectOptions: SelectOption[]
   marketSelectOptions: SelectOption[]
   propertySelectOptions: SelectOption[]
-  markets: markets | any
-  states: state | any
+  markets: Market
+  states: State
 }
 
 const Location: React.FC<LocationProps> = ({
