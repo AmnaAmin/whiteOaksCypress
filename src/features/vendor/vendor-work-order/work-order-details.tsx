@@ -44,12 +44,14 @@ export const WorkOrderDetails = ({
   onProjectTabChange,
   projectData,
   transactions,
+  isVendorExpired,
 }: {
   workOrder: ProjectWorkOrderType
   onClose: () => void
   onProjectTabChange?: any
   projectData: Project
   transactions: Array<TransactionType>
+  isVendorExpired?: boolean
 }) => {
   const { t } = useTranslation()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
@@ -196,6 +198,7 @@ export const WorkOrderDetails = ({
                       <BlankSlate />
                     ) : (
                       <TransactionsTab
+                        isVendorExpired={isVendorExpired}
                         projectId={projectId as string}
                         tabsContainerRef={tabsContainerRef}
                         projectData={projectData}
@@ -246,6 +249,7 @@ export const WorkOrderDetails = ({
                         navigateToProjectDetails={null}
                         onSave={null}
                         isWorkOrderUpdating={null}
+                        isVendorExpired={isVendorExpired}
                       />
                     )}
                   </TabPanel>
