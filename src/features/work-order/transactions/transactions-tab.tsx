@@ -75,6 +75,7 @@ export const TransactionsTab = ({
         projectStatus={projectStatus}
         screen="WORK_ORDER_TRANSACTION_TABLE_MODAL"
         currentWorkOrderId={workOrder.id}
+        isVendorExpired={isVendorExpired}
       />
     </>
   )
