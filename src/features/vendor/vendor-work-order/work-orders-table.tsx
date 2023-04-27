@@ -21,8 +21,9 @@ import { TableFooter } from 'components/table-refactored/table-footer'
 interface PropType {
   onTabChange?: any
   projectData: Project
+  isVendorExpired?: boolean
 }
-export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: PropType, ref) => {
+export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData, isVendorExpired }: PropType, ref) => {
   const { projectId } = useParams<'projectId'>()
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
   const { transactions = [] } = useTransactions(projectId)
@@ -66,6 +67,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData }: P
       <WorkOrderDetails
         workOrder={selectedWorkOrder as ProjectWorkOrderType}
         projectData={projectData}
+        isVendorExpired={isVendorExpired}
         onClose={() => {
           setSelectedWorkOrder(undefined)
           refetch()
