@@ -20,7 +20,7 @@ const UpdateTransactionModal: React.FC<Props> = ({
   selectedTransactionId,
   projectId,
   projectStatus,
-  screen
+  screen,
 }) => {
   const [isMobile] = useMediaQuery('(max-width: 480px)')
   const [modalSize, setModalSize] = useState<string>('3xl')

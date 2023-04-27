@@ -24,6 +24,7 @@ export const renderInvoice = async ({ onClose, workOrder, documentsData, transac
         navigateToProjectDetails={null}
         isWorkOrderUpdating={false}
         vendorAddress={vendorAddress}
+        isVendorExpired={false}
       />
     </Modal>,
     {

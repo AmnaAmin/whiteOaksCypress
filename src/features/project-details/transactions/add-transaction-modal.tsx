@@ -13,6 +13,7 @@ type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   screen?: string
   currentWorkOrderId?: number
   setCreatedTransaction?: (val) => void
+  isVendorExpired?: boolean
 }
 
 const AddNewTransactionModal: React.FC<Props> = ({
@@ -23,6 +24,7 @@ const AddNewTransactionModal: React.FC<Props> = ({
   screen,
   currentWorkOrderId,
   setCreatedTransaction,
+  isVendorExpired,
 }) => {
   const { t } = useTranslation()
   const [isMobile] = useMediaQuery('(max-width: 480px)')
@@ -41,7 +43,7 @@ const AddNewTransactionModal: React.FC<Props> = ({
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize} variant="custom">
       <ModalOverlay />
       <ModalContent minH="700px">
-        <ModalHeader data-testid='new_transaction'>{t(`${TRANSACTION}.newTransaction`)}</ModalHeader>
+        <ModalHeader data-testid="new_transaction">{t(`${TRANSACTION}.newTransaction`)}</ModalHeader>
         <ModalCloseButton _hover={{ bg: 'blue.50' }} _focus={{ outline: 'none' }} />
 
         <ModalBody bg="bgGlobal.50" p={2}>
@@ -53,6 +55,7 @@ const AddNewTransactionModal: React.FC<Props> = ({
               projectId={projectId}
               projectStatus={projectStatus}
               screen={screen}
+              isVendorExpired={isVendorExpired}
             />
           </Card>
         </ModalBody>
