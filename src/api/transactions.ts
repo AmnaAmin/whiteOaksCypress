@@ -245,8 +245,8 @@ const AGAINST_DEFAULT_OPTION = {
   isValidForAwardPlan: null,
 }
 
-export const createAgainstLabel = (companyName: string, skillName: string) => {
-  return `${companyName} (${skillName})`
+export const createAgainstLabel = (companyName: string, woId?: string) => {
+  return ` WO ${woId} ${companyName} `
 }
 
 export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
@@ -270,7 +270,7 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
           return !(status === 'paid' || status === 'cancelled' || status === 'invoiced') || isUpdating
         })
         .map(workOrder => ({
-          label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
+          label: createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
           awardStatus: workOrder?.assignAwardPlan,
           value: `${workOrder.id}`,
           isValidForAwardPlan: workOrder?.validForAwardPlan,
