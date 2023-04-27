@@ -24,6 +24,7 @@ export const useDocumentLicenseMessage = ({ data }) => {
   return {
     expiredLicenseDateProfile,
     expiredInsuranceDateProfile,
+    hasExpiredDocumentOrLicense: expiredInsuranceDateProfile || expiredLicenseDateProfile,
   }
 }
 
