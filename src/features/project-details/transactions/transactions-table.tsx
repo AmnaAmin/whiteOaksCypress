@@ -31,9 +31,11 @@ type TransactionProps = {
   projectStatus: string
   defaultSelected?: TransactionType
   transId?: any
+  isVendorExpired?: boolean
 }
 
 export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
+  // const { isVendorExpired } = props
   const { projectId } = useParams<'projectId'>()
   const { defaultSelected } = props
   const [dataTrans, setDataTrans] = useState<any>([])

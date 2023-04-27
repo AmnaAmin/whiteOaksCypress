@@ -3,6 +3,7 @@ import AddNewTransactionModal from 'features/project-details/transactions/add-tr
 import { WOTransactionsTable } from './wo-transactions-table'
 import { t } from 'i18next'
 import { BiAddToQueue } from 'react-icons/bi'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 interface Props {
   projectData: any
@@ -10,22 +11,29 @@ interface Props {
   projectId: string
   onClose: any
   workOrder: any
+  isVendorExpired?: boolean
 }
-export const TransactionsTab = ({ projectData, tabsContainerRef, onClose, projectId, workOrder }: Props) => {
+export const TransactionsTab = ({
+  projectData,
+  tabsContainerRef,
+  onClose,
+  projectId,
+  workOrder,
+  isVendorExpired,
+}: Props) => {
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
+  const { isAdmin } = useUserRolesSelector()
 
   const workOrderStatus = (workOrder?.statusLabel || '').toLowerCase()
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
-  const preventNewTransaction = !!(
-    workOrderStatus === 'paid' ||
-    workOrderStatus === 'cancelled' ||
-    workOrderStatus === 'invoiced'
-  )
+  const preventNewTransaction =
+    !!(workOrderStatus === 'paid' || workOrderStatus === 'cancelled' || workOrderStatus === 'invoiced') ||
+    (isVendorExpired && !isAdmin)
 
   return (
     <>
@@ -67,6 +75,7 @@ export const TransactionsTab = ({ projectData, tabsContainerRef, onClose, projec
         projectStatus={projectStatus}
         screen="WORK_ORDER_TRANSACTION_TABLE_MODAL"
         currentWorkOrderId={workOrder.id}
+        isVendorExpired={isVendorExpired}
       />
     </>
   )

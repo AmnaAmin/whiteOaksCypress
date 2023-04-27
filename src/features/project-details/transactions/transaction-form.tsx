@@ -143,6 +143,7 @@ export type TransactionFormProps = {
   screen?: string
   currentWorkOrderId?: number
   setCreatedTransaction?: any
+  isVendorExpired?: boolean
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -153,6 +154,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   screen,
   currentWorkOrderId,
   setCreatedTransaction,
+  isVendorExpired,
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
