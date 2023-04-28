@@ -250,7 +250,7 @@ export const createAgainstLabel = (companyName: string, skillName: string) => {
 }
 
 export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAdmin } = useUserRolesSelector()
   const client = useClient()
   const VENDOR_EXPIRED = 15
 
@@ -268,10 +268,9 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
       workOrders
         ?.filter(wo => {
           const status = wo.statusLabel?.toLowerCase()
+          const vendorExpiryCheck = wo.vendorStatusId !== VENDOR_EXPIRED || isAdmin
           return (
-            (!(status === 'paid' || status === 'cancelled' || status === 'invoiced') &&
-              wo.vendorStatusId !== VENDOR_EXPIRED) ||
-            isUpdating
+            (!(status === 'paid' || status === 'cancelled' || status === 'invoiced') && vendorExpiryCheck) || isUpdating
           )
         })
         .map(workOrder => ({
