@@ -245,8 +245,8 @@ const AGAINST_DEFAULT_OPTION = {
   isValidForAwardPlan: null,
 }
 
-export const createAgainstLabel = (companyName: string, woId?: string) => {
-  return ` WO ${woId} ${companyName} `
+export const createAgainstLabel = (companyName: string, woId: string) => {
+  return `WO ${woId} ${companyName}`
 }
 
 export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
