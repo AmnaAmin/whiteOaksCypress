@@ -252,6 +252,7 @@ export const createAgainstLabel = (companyName: string, woId: string) => {
 export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
   const { isVendor } = useUserRolesSelector()
   const client = useClient()
+  const VENDOR_EXPIRED = 15
 
   const { data: workOrders, ...rest } = useQuery<Array<ProjectWorkOrder>>(
     ['projectWorkOrders', projectId],
@@ -267,7 +268,11 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
       workOrders
         ?.filter(wo => {
           const status = wo.statusLabel?.toLowerCase()
-          return !(status === 'paid' || status === 'cancelled' || status === 'invoiced') || isUpdating
+          return (
+            (!(status === 'paid' || status === 'cancelled' || status === 'invoiced') &&
+              wo.vendorStatusId !== VENDOR_EXPIRED) ||
+            isUpdating
+          )
         })
         .map(workOrder => ({
           label: createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
@@ -295,6 +300,7 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
   )
 
   const againstOptions: SelectOption[] = useMemo(() => {
+    console.log(workOrderOptions)
     if (isVendor) {
       return workOrderOptions || []
     } else {

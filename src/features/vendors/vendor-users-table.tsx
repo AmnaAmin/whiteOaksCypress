@@ -163,7 +163,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
 
   const [isMobile] = useMediaQuery("(max-width: 480px)")
 
-  
+  const{isFPM}=useUserRolesSelector()
 
   return (
     <>
@@ -195,11 +195,13 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormControl>
           )}
           { ! isMobile && <Spacer /> }
+          {! isFPM &&(
           <Box display="flex" alignItems={{ sm: '', lg: 'flex-end' }}>
             <Button onClick={openNewUserForm} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
               New User
             </Button>
           </Box>
+          )}
         </HStack>
         <VStack px="11px" gap="20px" mb="14px" sx={{
           "@media screen and (max-width: 480px)": {
