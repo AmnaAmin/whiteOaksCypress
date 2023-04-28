@@ -335,6 +335,10 @@ const WorkOrderDetailTab = props => {
           }
         })
       }
+      // if vendor is not in vendoroptions list, assign it value coming from work order.
+      if (!defaultVendor) {
+        defaultVendor = { value: workOrder?.vendorId }
+      }
       reset(defaultValuesWODetails(workOrderDetails, defaultVendor, defaultSkill))
     }
   }, [workOrderDetails, reset, tradeOptions?.length, vendorOptions?.length])
