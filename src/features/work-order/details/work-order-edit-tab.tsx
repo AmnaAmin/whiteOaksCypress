@@ -317,7 +317,7 @@ const WorkOrderDetailTab = props => {
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrderDetails?.assignedItems)
     const removedItems = getRemovedItems(formValues, workOrderDetails?.assignedItems)
-    const payload = parseWODetailValuesToPayload(values)
+    const payload = parseWODetailValuesToPayload(values, workOrderDetails)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
 
@@ -334,10 +334,6 @@ const WorkOrderDetailTab = props => {
             }
           }
         })
-      }
-      // if vendor is not in vendoroptions list, assign it value coming from work order.
-      if (!defaultVendor) {
-        defaultVendor = { value: workOrder?.vendorId }
       }
       reset(defaultValuesWODetails(workOrderDetails, defaultVendor, defaultSkill))
     }
