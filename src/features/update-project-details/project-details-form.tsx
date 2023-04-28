@@ -53,8 +53,8 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { clientSelectOptions } = useGetClientSelectOptions()
   const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData)
   const { data: overPayment } = useGetOverpayment(projectData?.id)
-  const { stateSelectOptions } = useStates()
-  const { marketSelectOptions } = useMarkets()
+  const { stateSelectOptions, states } = useStates()
+  const { marketSelectOptions, markets } = useMarkets()
 
   const { mutate: updateProjectDetails, isLoading } = useProjectDetailsUpdateMutation()
   const projectOverrideStatusSelectOptions = useProjectOverrideStatusSelectOptions(projectData)
@@ -198,6 +198,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                   stateSelectOptions={stateSelectOptions}
                   marketSelectOptions={marketSelectOptions}
                   propertySelectOptions={propertySelectOptions}
+                  markets={markets}
+                  states={states}
                 />
               </TabPanel>
 
