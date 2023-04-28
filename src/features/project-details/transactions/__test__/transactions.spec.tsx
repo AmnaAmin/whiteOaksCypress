@@ -55,7 +55,7 @@ describe('Given Project Coordinator create new transaction', () => {
       // User first select Against, one of ['Project SOW', 'Vendor']
       await selectOption(
         screen.getByTestId('against-select-field'),
-        createAgainstLabel(workOrder.companyName, workOrder.skillName),
+        createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
       )
 
       /**
@@ -213,7 +213,7 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(
         getByText(
           screen.getByTestId('against-select-field'),
-          createAgainstLabel(workOrder.companyName, workOrder.skillName),
+          createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
         ),
       ).toBeInTheDocument()
 
@@ -358,7 +358,7 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(
         getByText(
           screen.getByTestId('against-select-field'),
-          createAgainstLabel(workOrder.companyName, workOrder.skillName),
+          createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
         ),
       ).toBeInTheDocument()
       const totalAmount = screen.getByTestId('total-amount')
@@ -402,7 +402,7 @@ describe('Given Project Coordinator create new transaction', () => {
       expect(
         getByText(
           screen.getByTestId('against-select-field'),
-          createAgainstLabel(workOrder.companyName, workOrder.skillName),
+          createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
         ),
       ).toBeInTheDocument()
       const totalAmount = screen.getByTestId('total-amount')
