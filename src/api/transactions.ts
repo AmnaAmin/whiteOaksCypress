@@ -245,13 +245,14 @@ const AGAINST_DEFAULT_OPTION = {
   isValidForAwardPlan: null,
 }
 
-export const createAgainstLabel = (companyName: string, skillName: string) => {
-  return `${companyName} (${skillName})`
+export const createAgainstLabel = (companyName: string, woId: string) => {
+  return `WO ${woId} ${companyName}`
 }
 
 export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAdmin } = useUserRolesSelector()
   const client = useClient()
+  const VENDOR_EXPIRED = 15
 
   const { data: workOrders, ...rest } = useQuery<Array<ProjectWorkOrder>>(
     ['projectWorkOrders', projectId],
@@ -267,10 +268,13 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
       workOrders
         ?.filter(wo => {
           const status = wo.statusLabel?.toLowerCase()
-          return !(status === 'paid' || status === 'cancelled' || status === 'invoiced') || isUpdating
+          const vendorExpiryCheck = wo.vendorStatusId !== VENDOR_EXPIRED || isAdmin
+          return (
+            (!(status === 'paid' || status === 'cancelled' || status === 'invoiced') && vendorExpiryCheck) || isUpdating
+          )
         })
         .map(workOrder => ({
-          label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
+          label: createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
           awardStatus: workOrder?.assignAwardPlan,
           value: `${workOrder.id}`,
           isValidForAwardPlan: workOrder?.validForAwardPlan,
@@ -295,6 +299,7 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
   )
 
   const againstOptions: SelectOption[] = useMemo(() => {
+    console.log(workOrderOptions)
     if (isVendor) {
       return workOrderOptions || []
     } else {

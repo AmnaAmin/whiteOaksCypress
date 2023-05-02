@@ -276,16 +276,18 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px" justifyContent="space-between">
               <HStack spacing="16px">
-                <Button
-                  variant="outline"
-                  colorScheme="brand"
-                  onClick={() => {
-                    confirmationDialogOpen()
-                    reset()
-                  }}
-                >
-                  {t(`${VENDOR_MANAGER}.deleteMarket`)}
-                </Button>
+                {selectedMarket && (
+                  <Button
+                    variant="outline"
+                    colorScheme="brand"
+                    onClick={() => {
+                      confirmationDialogOpen()
+                      reset()
+                    }}
+                  >
+                    {t(`${VENDOR_MANAGER}.deleteMarket`)}
+                  </Button>
+                )}
               </HStack>
               <HStack spacing="16px">
                 <Button

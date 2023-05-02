@@ -205,7 +205,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientStartDate}>
+            <FormControl isInvalid={!!errors?.clientStartDate}  w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.clientStart`)}
               </FormLabel>
@@ -220,7 +220,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientDueDate}>
+            <FormControl isInvalid={!!errors?.clientDueDate}  w="215px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t(`project.projectDetails.clientDue`)}
               </FormLabel>
@@ -236,8 +236,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.woaStartDate}>
-              <FormLabel variant="strong-label" size="md">
+            <FormControl isInvalid={!!errors?.woaStartDate}  w="215px">
+              <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t(`project.projectDetails.woaStart`)}
               </FormLabel>
               <Input
@@ -250,7 +250,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.woaCompletionDate}>
+            <FormControl isInvalid={!!errors?.woaCompletionDate}  w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.woaCompletion`)}
               </FormLabel>
@@ -274,7 +274,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientWalkthroughDate}>
+            <FormControl isInvalid={!!errors?.clientWalkthroughDate} w="215px">
               <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
                 {t(`project.projectDetails.clientWalkthrough`)}
               </FormLabel>
@@ -291,7 +291,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientSignOffDate}>
+            <FormControl isInvalid={!!errors?.clientSignOffDate}  w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.clientSignOff`)}
               </FormLabel>
@@ -309,7 +309,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
           </GridItem>
 
           <GridItem>
-            <FormControl w="280px">
+            <FormControl>
               <FormLabel variant="strong-label" size="md">
                 {t(`verifyProject`)}
               </FormLabel>

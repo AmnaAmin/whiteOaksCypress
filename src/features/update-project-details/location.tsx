@@ -8,17 +8,53 @@ import { useFieldsDisabled } from './hooks'
 import Select, { CreatableSelect } from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 
+type Market = [
+  {
+    active: boolean
+    id: number
+    metropolitanServiceArea: string
+    createdBy: string
+    createdDate: string
+    modifiedBy: string
+    modifiedDate: string
+    stateId: number
+    stateName: string
+  },
+]
+
+type State = [
+  {
+    id: number
+    name: string
+    region: string
+    code: string
+    createdBy: string
+    createdDate: string
+    modifiedBy: string
+    modifiedDate: string
+  },
+]
+
 type LocationProps = {
   stateSelectOptions: SelectOption[]
   marketSelectOptions: SelectOption[]
   propertySelectOptions: SelectOption[]
+  markets: Market
+  states: State
 }
 
-const Location: React.FC<LocationProps> = ({ stateSelectOptions, marketSelectOptions, propertySelectOptions }) => {
+const Location: React.FC<LocationProps> = ({
+  stateSelectOptions,
+  marketSelectOptions,
+  propertySelectOptions,
+  markets,
+  states,
+}) => {
   const {
     register,
     control,
     formState: { errors },
+    setValue,
   } = useFormContext<ProjectDetailsFormValues>()
 
   const {
@@ -32,6 +68,18 @@ const Location: React.FC<LocationProps> = ({ stateSelectOptions, marketSelectOpt
   } = useFieldsDisabled(control)
 
   const { t } = useTranslation()
+
+  const setAddressValues = option => {
+    const property = option?.property
+    const market = markets.find(m => m?.id === property?.marketId)
+    const state = states.find(s => s?.code === property?.state)
+
+    setValue('address', property?.streetAddress || option.label)
+    setValue('city', property?.city)
+    setValue('zip', property?.zipCode)
+    setValue('market', { label: market?.metropolitanServiceArea, value: market?.id })
+    setValue('state', { label: state?.name, value: state?.code })
+  }
 
   return (
     <Stack>
@@ -55,6 +103,7 @@ const Location: React.FC<LocationProps> = ({ stateSelectOptions, marketSelectOpt
                     placeholder="Type address here.."
                     value={field.value}
                     onChange={option => {
+                      setAddressValues(option)
                       field.onChange(option)
                     }}
                     // onChange={setAddressValues}
@@ -73,7 +122,12 @@ const Location: React.FC<LocationProps> = ({ stateSelectOptions, marketSelectOpt
             <FormLabel variant="strong-label" size="md" htmlFor="city">
               {t(`project.projectDetails.city`)}
             </FormLabel>
-            <Input variant="required-field" isDisabled={isCityDisabled} id="city" {...register('city')} />
+            <Input
+              variant="required-field"
+              isDisabled={isCityDisabled}
+              id="city"
+              {...register('city', { required: 'This is required field' })}
+            />
             <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -111,7 +165,12 @@ const Location: React.FC<LocationProps> = ({ stateSelectOptions, marketSelectOpt
             <FormLabel variant="strong-label" size="md" htmlFor="zip">
               {t(`project.projectDetails.zip`)}
             </FormLabel>
-            <Input variant="required-field" isDisabled={isZipDisabled} id="zip" {...register('zip')} />
+            <Input
+              variant="required-field"
+              isDisabled={isZipDisabled}
+              id="zip"
+              {...register('zip', { required: 'This is required field' })}
+            />
             <FormErrorMessage>{errors.zip && errors.zip.message}</FormErrorMessage>
           </FormControl>
         </GridItem>

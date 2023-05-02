@@ -53,8 +53,8 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { clientSelectOptions } = useGetClientSelectOptions()
   const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData)
   const { data: overPayment } = useGetOverpayment(projectData?.id)
-  const { stateSelectOptions } = useStates()
-  const { marketSelectOptions } = useMarkets()
+  const { stateSelectOptions, states } = useStates()
+  const { marketSelectOptions, markets } = useMarkets()
 
   const { mutate: updateProjectDetails, isLoading } = useProjectDetailsUpdateMutation()
   const projectOverrideStatusSelectOptions = useProjectOverrideStatusSelectOptions(projectData)
@@ -69,7 +69,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     getValues,
     formState: { errors, isSubmitting },
   } = formReturn
-  const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors } =
+  const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
     useSubFormErrors(errors)
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
@@ -161,7 +161,9 @@ const ProjectDetailsTab = (props: tabProps) => {
             <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 2}>
               {t(`project.projectDetails.contacts`)}
             </TabCustom>
-            <TabCustom>{t(`project.projectDetails.location`)}</TabCustom>
+            <TabCustom isError={isLocationFormErrors && tabIndex !== 3}>
+              {t(`project.projectDetails.location`)}
+            </TabCustom>
             <TabCustom>{t(`project.projectDetails.misc`)}</TabCustom>
           </TabList>
           <Box
@@ -190,7 +192,6 @@ const ProjectDetailsTab = (props: tabProps) => {
               <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
                 <Contact
                   projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
-                  projectManagerSelectOptions={fpmSelectOptions}
                   clientSelectOptions={clientSelectOptions}
                 />
               </TabPanel>
@@ -199,6 +200,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                   stateSelectOptions={stateSelectOptions}
                   marketSelectOptions={marketSelectOptions}
                   propertySelectOptions={propertySelectOptions}
+                  markets={markets}
+                  states={states}
                 />
               </TabPanel>
 

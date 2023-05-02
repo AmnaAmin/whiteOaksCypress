@@ -277,7 +277,7 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
   }
 }
 
-export const parseWODetailValuesToPayload = formValues => {
+export const parseWODetailValuesToPayload = (formValues, workOrder) => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
   const cancelWorkOrder = formValues?.cancel.value === 35
@@ -312,7 +312,7 @@ export const parseWODetailValuesToPayload = formValues => {
     showPricing: formValues.showPrice,
     assignedItems: [...assignedItems],
     notifyVendor: formValues.notifyVendor,
-    vendorId: formValues.vendorId?.value,
+    vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
   }
 }

@@ -44,6 +44,8 @@ import { Card } from 'components/card/card'
 import { BiErrorCircle } from 'react-icons/bi'
 import { TransactionsTab } from './transactions/transactions-tab'
 import { useQueryClient } from 'react-query'
+import { useVendorEntity } from 'api/vendor-dashboard'
+import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -89,6 +91,8 @@ const WorkOrderDetails = ({
 
   const navigate = useNavigate()
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
+  const { data: vendorEntity } = useVendorEntity(workOrder?.vendorId)
+  const { hasExpiredDocumentOrLicense } = useDocumentLicenseMessage({ data: vendorEntity })
   const tabsContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -277,6 +281,7 @@ const WorkOrderDetails = ({
                           projectData={projectData}
                           onClose={onClose}
                           workOrder={workOrder}
+                          isVendorExpired={hasExpiredDocumentOrLicense}
                         />
                       )}
                     </TabPanel>
@@ -323,6 +328,7 @@ const WorkOrderDetails = ({
                           onSave={onSave}
                           setTabIndex={setTabIndex}
                           projectData={projectData}
+                          isVendorExpired={hasExpiredDocumentOrLicense}
                         />
                       )}
                     </TabPanel>

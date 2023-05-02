@@ -90,10 +90,11 @@ export const UpdateDetails: React.FC<{
             />
           </GridItem>
           <GridItem>
-            <FieldInfoCard title={t('capacity')} value={`${vendorProfileData?.capacity}`} icon={BiUser} />
+            <FieldInfoCard testid="vendor_capacity" title={t('capacity')} value={`${vendorProfileData?.capacity}`} icon={BiUser} />
           </GridItem>
           <GridItem>
             <FieldInfoCard
+            testid="last4digit_vendor"
               title={t('last4digits')}
               value={`${vendorProfileData?.ssnNumber?.slice(-4) ?? ''} ${
                 vendorProfileData?.ssnNumber && vendorProfileData?.einNumber ? '/' : ''
@@ -103,6 +104,7 @@ export const UpdateDetails: React.FC<{
           </GridItem>
           <GridItem>
             <FieldInfoCard
+            testid="payment_Method"
               title={t('paymentMethods')}
               value={
                 vendorProfileData?.paymentOptions?.length > 0
@@ -125,13 +127,13 @@ export const UpdateDetails: React.FC<{
             />
           </GridItem>
           <GridItem>
-            <FieldInfoCard title={t('state')} value={`${vendorProfileData?.state}`} icon={BiTrip} />
+            <FieldInfoCard testid="vendor_state" title={t('state')} value={`${vendorProfileData?.state}`} icon={BiTrip} />
           </GridItem>
           <GridItem>
-            <FieldInfoCard title={t('city')} value={`${vendorProfileData?.city}`} icon={HiOutlineLocationMarker} />
+            <FieldInfoCard testid="vendor_city" title={t('city')} value={`${vendorProfileData?.city}`} icon={HiOutlineLocationMarker} />
           </GridItem>
           <GridItem>
-            <FieldInfoCard title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
+            <FieldInfoCard testid="city_zip" title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
           </GridItem>
         </Grid>
         <DetailsForm isActive={isActive} vendorProfileData={vendorProfileData} onClose={props.onClose} />
@@ -217,6 +219,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                       {t('businessPhoneNo')}
                     </FormLabel>
                     <Controller
+                    data-testid="business_PhoneNo"
                       control={control}
                       rules={{
                         required: isActive && 'This is required',
@@ -227,6 +230,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                         return (
                           <>
                             <NumberFormat
+                            data-testid="business_PhoneNo"
                               value={field.value}
                               customInput={CustomRequiredInput}
                               format="(###) ###-####"

@@ -54,6 +54,7 @@ export type ProjectWorkOrder = {
   workOrderPayDateVariance: string | null
   workOrderStartDate: string
   awardPlanPayTerm: string
+  vendorStatusId?: number
 }
 
 export type WorkOrderAwardStats = {
