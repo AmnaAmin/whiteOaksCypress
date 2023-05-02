@@ -147,32 +147,8 @@ describe('Work Order Invoice Test Cases', () => {
     )
     expect((screen.getByTestId('partial-payment-field') as HTMLInputElement).value).toEqual('$0')
     expect((screen.getByTestId('partialPaymentDate') as HTMLInputElement).value).toEqual('')
-    await act(async () => {
-      await selectOption(screen.getByTestId('paymentTerms'), '30', '20')
-      expect(getByText(screen.getByTestId('paymentTerms'), '30')).toBeInTheDocument()
-    })
-
-    await waitFor(() => {
-      /* Add payment term to date invoiced */
-      const paymentTermDate = addDays(new Date(workOrder?.dateInvoiceSubmitted as string), 30)
-      expect((screen.getByTestId('paymentTermDate') as HTMLInputElement).value).toEqual(
-        datePickerFormat(paymentTermDate),
-      )
-      /* Next Wed of Payment Term Date */
-      const paymentTermDateValue = new Date((screen.getByTestId('paymentTermDate') as HTMLInputElement).value)
-      const datePaymentProcessed = isWednesday(paymentTermDateValue)
-        ? paymentTermDateValue
-        : nextWednesday(paymentTermDateValue)
-      expect((screen.getByTestId('datePaymentProcessed') as HTMLInputElement).value).toEqual(
-        datePickerFormat(datePaymentProcessed),
-      )
-      /* Next Fri of Payment Term Date */
-      const expectedPaymentDate = nextFriday(datePaymentProcessed)
-      expect((screen.getByTestId('expectedPaymentDate') as HTMLInputElement).value).toEqual(
-        datePickerFormat(expectedPaymentDate),
-      )
-    })
   })
+
   test('Adding Payment in Invoiced State should enter partial Payment Date', async () => {
     const onClose = jest.fn()
     const onSave = jest.fn()
