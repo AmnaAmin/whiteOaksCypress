@@ -20,7 +20,6 @@ import { BiErrorCircle } from 'react-icons/bi'
 import { Card } from 'components/card/card'
 import { CLIENTS } from 'features/clients/clients.i18n'
 import { CarrierTab } from 'features/clients/client-carrier-tab'
-import { LienRights } from 'features/clients/client-lien-rights-tab'
 
 type ClientDetailsTabsProps = {
   refetch?: () => void
@@ -111,7 +110,6 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
             <TabCustom isError={isClientDetailsTabErrors && tabIndex !== 0}>{t('details')}</TabCustom>
             <TabCustom isError={isCarrierTabErrors && tabIndex !== 1}>{t(`${CLIENTS}.carrier`)}</TabCustom>
             <TabCustom>{t('market')}</TabCustom>
-            <TabCustom>{t(`${CLIENTS}.lienRights`)}</TabCustom>
             {clientDetails?.id && <TabCustom>{t('notes')}</TabCustom>}
           </TabList>
           <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px">
@@ -124,9 +122,6 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
               </TabPanel>
               <TabPanel p="0px">
                 <Market clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
-              </TabPanel>
-              <TabPanel p="0px">
-                <LienRights clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
               </TabPanel>
               <TabPanel p="0px">
                 <ClientNotes clientDetails={clientDetails} onClose={props.onClose} />

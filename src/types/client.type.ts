@@ -93,5 +93,4 @@ export type ClientFormValues = {
   paymentCreditCard?: boolean
   paymentWired?: boolean
   carrier?: Carrier[]
-  selectedMarkets?: Market[] | undefined
 }

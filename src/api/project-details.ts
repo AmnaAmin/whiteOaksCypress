@@ -541,7 +541,8 @@ export const parseFormValuesFromAPIData = ({
     c => c.id === project.carrierId,
   )
   const woaDate = new Date(dateISOFormatWithZeroTime(project.woaCompletionDate) as string)
-  const lienExpiryDate = addDays(woaDate, 20)
+  const lienDue = stateSelectOptions?.find(s => s.value === project?.state)?.lienDue
+  const lienExpiryDate = !!project.woaCompletionDate ? addDays(woaDate, lienDue) : null
 
   return {
     // Project Management form values

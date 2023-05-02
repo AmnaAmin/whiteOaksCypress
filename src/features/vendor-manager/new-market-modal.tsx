@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import {
   Modal,
   ModalOverlay,
