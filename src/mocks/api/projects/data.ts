@@ -106,7 +106,7 @@ export const CHANGE_ORDERS = [
   },
 ]
 
-export const AGAINST_SELECTED_OPTION = 'WO 6269 360 Management Services'
+export const AGAINST_SELECTED_OPTION = 'WO 6269 (360 Management Services)'
 const WORK_ORDER_ID = 6269
 export const WORK_ORDERS = [
   {
