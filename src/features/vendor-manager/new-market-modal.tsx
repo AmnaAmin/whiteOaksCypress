@@ -29,7 +29,7 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react'
 import { BiCalendar, BiDetail, BiTrash } from 'react-icons/bi'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { dateFormat } from 'utils/date-time-utils'
 import { convertDateTimeToServerISO } from 'components/table/util'
 import { useQueryClient } from 'react-query'
@@ -88,7 +88,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
     }
   }, [stateSelectOptions])
 
-  const { control, register, handleSubmit, reset, setValue } = useForm<{
+  const { control, register, handleSubmit, reset, setValue, watch } = useForm<{
     state: SelectOption
     metroServiceArea: string
     lienDue: string | number
@@ -142,18 +142,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
       },
     })
   }
-  const metroValue = useWatch({
-    control,
-    name: 'metroServiceArea',
-  })
-  const stateValue = useWatch({
-    control,
-    name: 'state',
-  })
-  const lienDue = useWatch({
-    control,
-    name: 'lienDue',
-  })
+  const [metroValue, stateValue, lienDueValue] = watch(['metroServiceArea', 'state', 'lienDue'])
 
   const {
     isOpen: confirmationDialogIsOpen,
@@ -300,7 +289,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 >
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
-                <Button isDisabled={!metroValue || !stateValue || !lienDue} type="submit" colorScheme="brand">
+                <Button isDisabled={!metroValue || !stateValue || !lienDueValue} type="submit" colorScheme="brand">
                   {t(`${VENDOR_MANAGER}.save`)}
                 </Button>
               </HStack>

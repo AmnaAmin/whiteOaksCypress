@@ -277,6 +277,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                       lienDue ?? 0,
                     )
                     setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
+                  } else {
+                    setValue('lienExpiryDate', null)
                   }
                   setValue('woaCompletionDate', datePickerFormat(woaCompletion))
                 }}

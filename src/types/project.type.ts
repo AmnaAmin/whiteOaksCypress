@@ -123,7 +123,8 @@ export type Project = {
   agentName: string | null
   agentPhone: string | null
   agentEmail: string | null
-  lienFiled: Date | string | null
+  lienRightFileDate: Date | string | null
+  lienRightExpireDate: Date | string | null
 }
 
 export type ProjectExtraAttributesType = {

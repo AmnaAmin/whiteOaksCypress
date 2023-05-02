@@ -55,7 +55,11 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       }
     }
     if (selectedFlagged) {
-      finalFilters = [...columnFilters, { id: 'noteFlag', value: selectedFlagged }]
+      finalFilters = [
+        ...columnFilters,
+        { id: 'noteFlag', value: selectedFlagged },
+        { id: 'lienDueFlag', value: selectedFlagged },
+      ]
     }
 
     // This filter will apply when user select a day from the project due days list

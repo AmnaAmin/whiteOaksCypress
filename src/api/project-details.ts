@@ -14,14 +14,13 @@ import {
 import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
-import { dateISOFormat, dateISOFormatWithZeroTime, datePickerFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
+import { dateISOFormat, datePickerFormat, getLocalTimeZoneDate } from 'utils/date-time-utils'
 import { createDocumentPayload } from 'utils/file-utils'
 import { PROJECT_EXTRA_ATTRIBUTES } from './pc-projects'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { GET_TRANSACTIONS_API_KEY } from './transactions'
 import { AuditLogType } from 'types/common.types'
 import { PROJECT_STATUS } from 'features/common/status'
-import { addDays } from 'date-fns'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -540,9 +539,6 @@ export const parseFormValuesFromAPIData = ({
   const carrier = findOptionByValue(clientSelectOptions, project.clientName)?.carrier?.find(
     c => c.id === project.carrierId,
   )
-  const woaDate = new Date(dateISOFormatWithZeroTime(project.woaCompletionDate) as string)
-  const lienDue = stateSelectOptions?.find(s => s.value === project?.state)?.lienDue
-  const lienExpiryDate = !!project.woaCompletionDate ? addDays(woaDate, lienDue) : null
 
   return {
     // Project Management form values
@@ -565,8 +561,8 @@ export const parseFormValuesFromAPIData = ({
     verifiedBy: project.verifiedBy as string,
     verifiedbyDesc: project.verifiedbyDesc as string,
     reconciledbyDesc: project.reconciledbyDesc as string,
-    lienFiled: project.lienFiled as string,
-    lienExpiryDate: datePickerFormat(lienExpiryDate),
+    lienFiled: datePickerFormat(project.lienRightFileDate),
+    lienExpiryDate: datePickerFormat(project?.lienRightExpireDate),
 
     // Project Invoice and Payment form values
     originalSOWAmount: project.sowOriginalContractAmount,
@@ -670,8 +666,8 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
     isReconciled: formValues.isReconciled === null ? false : formValues.isReconciled,
-    lienFiled: dateISOFormat(formValues.lienFiled),
-    lienExpiry: dateISOFormat(formValues.lienExpiryDate),
+    lienRightFileDate: dateISOFormat(formValues.lienFiled),
+    lienRightExpireDate: dateISOFormat(formValues.lienExpiryDate),
 
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,

@@ -135,8 +135,8 @@ export type ProjectDetailsAPIPayload = {
   clientWalkthroughDate: string | null
   overrideProjectStatus: SelectOption | null
   isReconciled?: boolean | false
-  lienFiled: string | null
-  lienExpiry: string | null
+  lienRightFileDate: string | null
+  lienRightExpireDate: string | null
 
   // invoicing and payment payload
   sowOriginalContractAmount: number | null
