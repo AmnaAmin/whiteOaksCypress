@@ -136,6 +136,7 @@ export type SelectOption = {
   awardStatus?: any
   isValidForAwardPlan?: any
   carrier?: Carrier[]
+  lienDue?: number | undefined
 }
 
 export type TransactionFormValues = {

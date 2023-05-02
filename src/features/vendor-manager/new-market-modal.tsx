@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -26,9 +26,10 @@ import {
   Icon,
   Spacer,
   AlertDialogCloseButton,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import { BiCalendar, BiDetail, BiTrash } from 'react-icons/bi'
-import { Controller, useForm, useWatch } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { dateFormat } from 'utils/date-time-utils'
 import { convertDateTimeToServerISO } from 'components/table/util'
 import { useQueryClient } from 'react-query'
@@ -39,6 +40,9 @@ import { useAccountDetails, useMarketsMutation } from 'api/vendor-details'
 import { useStates } from 'api/pc-projects'
 import { Market } from 'types/vendor.types'
 import { MARKET_KEY, useDeleteMarket } from 'api/market'
+import NumberFormat from 'react-number-format'
+import { CustomRequiredInput } from 'components/input/input'
+import { SelectOption } from 'types/transaction.type'
 
 const InformationCard: React.FC<{
   Icon: React.ElementType
@@ -75,15 +79,33 @@ type newVendorSkillsTypes = {
 export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedMarket }) => {
   const { data: account } = useAccountDetails()
   const { mutate: createMarkets } = useMarketsMutation()
-  const { control, register, handleSubmit, reset } = useForm<any>({
-    defaultValues: {
+  const { stateSelectOptions } = useStates()
+  const defaultValues: any = useMemo(() => {
+    return {
       state: { label: selectedMarket?.stateName, id: selectedMarket?.stateId },
       metroServiceArea: selectedMarket?.metropolitanServiceArea,
-    },
-  })
+      lienDue: stateSelectOptions?.find(s => s.id === selectedMarket?.stateId)?.lienDue,
+    }
+  }, [stateSelectOptions])
+
+  const { control, register, handleSubmit, reset, setValue, watch } = useForm<{
+    state: SelectOption
+    metroServiceArea: string
+    lienDue: string | number
+    createdBy: string
+    createdDate: string
+    modifiedBy: string
+    modifiedDate: string
+  }>()
+
+  useEffect(() => {
+    reset({
+      ...defaultValues,
+    })
+  }, [reset, stateSelectOptions?.length])
+
   const toast = useToast()
   const queryClient = useQueryClient()
-  const { stateSelectOptions } = useStates()
 
   const { mutate: deleteMarket } = useDeleteMarket()
 
@@ -102,6 +124,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
       stateId: data?.state.id,
       id: selectedMarket ? selectedMarket.id : '',
       method: selectedMarket ? 'PUT' : 'POST',
+      lienDue: data?.lienDue,
     }
 
     createMarkets(arg, {
@@ -119,14 +142,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
       },
     })
   }
-  const metroValue = useWatch({
-    control,
-    name: 'metroServiceArea',
-  })
-  const stateValue = useWatch({
-    control,
-    name: 'state',
-  })
+  const [metroValue, stateValue, lienDueValue] = watch(['metroServiceArea', 'state', 'lienDue'])
 
   const {
     isOpen: confirmationDialogIsOpen,
@@ -214,10 +230,35 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                           selectProps={{ isBorderLeft: true, menuHeight: '103px' }}
                           onChange={option => {
                             field.onChange(option)
+                            setValue('lienDue', stateSelectOptions?.find(s => s.id === option?.id)?.lienDue)
                           }}
                         />
                       </>
                     )}
+                  />
+                </FormControl>
+                <FormControl w="225px">
+                  <FormLabel variant="strong-label" size="md" htmlFor="lienDue" noOfLines={1}>
+                    {t(`${VENDOR_MANAGER}.lienDue`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="lienDue"
+                    render={({ field, fieldState }) => {
+                      return (
+                        <>
+                          <NumberFormat
+                            customInput={CustomRequiredInput}
+                            value={field.value}
+                            onValueChange={values => {
+                              const { floatValue } = values
+                              field.onChange(floatValue ?? '')
+                            }}
+                          />
+                          <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                        </>
+                      )
+                    }}
                   />
                 </FormControl>
               </HStack>
@@ -248,7 +289,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 >
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
-                <Button isDisabled={!metroValue || !stateValue} type="submit" colorScheme="brand">
+                <Button isDisabled={!metroValue || !stateValue || !lienDueValue} type="submit" colorScheme="brand">
                   {t(`${VENDOR_MANAGER}.save`)}
                 </Button>
               </HStack>

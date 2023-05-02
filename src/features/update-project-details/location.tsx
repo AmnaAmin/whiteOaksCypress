@@ -1,12 +1,14 @@
 import { FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
 
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import Select, { CreatableSelect } from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
+import { addDays } from 'date-fns'
+import { dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
 
 type Market = [
   {
@@ -68,6 +70,7 @@ const Location: React.FC<LocationProps> = ({
   } = useFieldsDisabled(control)
 
   const { t } = useTranslation()
+  const woaCompletionDate = useWatch({ name: 'woaCompletionDate', control })
 
   const setAddressValues = option => {
     const property = option?.property
@@ -150,6 +153,11 @@ const Location: React.FC<LocationProps> = ({
                     isDisabled={isStateDisabled}
                     selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                     onChange={option => {
+                      const lienExpiryDate = addDays(
+                        new Date(dateISOFormatWithZeroTime(woaCompletionDate) as string),
+                        option?.lienDue ?? 0,
+                      )
+                      setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
                       field.onChange(option)
                     }}
                   />

@@ -17,15 +17,16 @@ import {
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { STATUS } from 'features/common/status'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
-import { datePickerFormat, dateFormat } from 'utils/date-time-utils'
+import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
+import { addDays } from 'date-fns'
 
 type ProjectManagerProps = {
   projectStatusSelectOptions: SelectOption[]
@@ -54,13 +55,14 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   } = useFormContext<ProjectDetailsFormValues>()
 
   const watchStatus = useWatch({ name: 'status', control })
-
   const watchOverrideProjectStatus = useWatch({ name: 'overrideProjectStatus', control })
+  const watchState = useWatch({ name: 'state', control })
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
   const watchIsReconciled = useWatch({ name: 'isReconciled', control })
   const watchForm = useWatch({ control })
+  const [lienDue, setLienDue] = useState<number | undefined>()
 
   const {
     isWOAStartDisabled,
@@ -87,6 +89,12 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
       setValue('woaStartDate', 'mm/dd/yyyy')
     }
   }, [watchStatus?.label])
+
+  useEffect(() => {
+    if (watchState) {
+      setLienDue(watchState?.lienDue)
+    }
+  }, [watchState])
 
   useEffect(() => {
     if (
@@ -204,7 +212,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientStartDate}  w="215px">
+            <FormControl isInvalid={!!errors?.clientStartDate} w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.clientStart`)}
               </FormLabel>
@@ -219,7 +227,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientDueDate}  w="215px">
+            <FormControl isInvalid={!!errors?.clientDueDate} w="215px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t(`project.projectDetails.clientDue`)}
               </FormLabel>
@@ -235,7 +243,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.woaStartDate}  w="215px">
+            <FormControl isInvalid={!!errors?.woaStartDate} w="215px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t(`project.projectDetails.woaStart`)}
               </FormLabel>
@@ -249,7 +257,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.woaCompletionDate}  w="215px">
+            <FormControl isInvalid={!!errors?.woaCompletionDate} w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.woaCompletion`)}
               </FormLabel>
@@ -261,6 +269,19 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 {...register('woaCompletionDate', {
                   required: isWOACompletionDateRequired ? 'This is required field.' : false,
                 })}
+                onChange={e => {
+                  const woaCompletion = e.target.value
+                  if (woaCompletion && woaCompletion !== '') {
+                    const lienExpiryDate = addDays(
+                      new Date(dateISOFormatWithZeroTime(woaCompletion) as string),
+                      lienDue ?? 0,
+                    )
+                    setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
+                  } else {
+                    setValue('lienExpiryDate', null)
+                  }
+                  setValue('woaCompletionDate', datePickerFormat(woaCompletion))
+                }}
               />
               <FormErrorMessage>{errors?.woaCompletionDate?.message}</FormErrorMessage>
             </FormControl>
@@ -283,7 +304,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientSignOffDate}  w="215px">
+            <FormControl isInvalid={!!errors?.clientSignOffDate} w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.clientSignOff`)}
               </FormLabel>
@@ -320,6 +341,24 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                     : ''}
                 </Text>
               </Checkbox>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors?.lienExpiryDate}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.lienRightsExpires`)}
+              </FormLabel>
+              <Input type="date" isDisabled={true} {...register('lienExpiryDate')} />
+              <FormErrorMessage>{errors?.lienExpiryDate?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors?.lienFiled}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.lienFiled`)}
+              </FormLabel>
+              <Input type="date" {...register('lienFiled')} />
+              <FormErrorMessage>{errors?.lienFiled?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           {!!projectData?.estimateId && (
