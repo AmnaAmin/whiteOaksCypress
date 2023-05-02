@@ -205,10 +205,10 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
     dateInvoiceSubmittedEnabled: defaultStatus || isAdmin,
-    paymentTermEnabled: defaultStatus || invoicedState || isAdmin || (workOrder?.assignAwardPlan && isAdmin),
+    paymentTermEnabled: defaultStatus || (workOrder?.assignAwardPlan && isAdmin),
     paymentTermDateEnabled: defaultStatus || isAdmin,
     expectedPaymentDateEnabled: defaultStatus || isAdmin,
-    datePaymentProcessedEnabled: defaultStatus || invoicedState || isAdmin,
+    datePaymentProcessedEnabled: defaultStatus || isAdmin,
     datePaidEnabled: defaultStatus || invoicedState || isAdmin,
     invoiceAmountEnabled: defaultStatus || isAdmin,
     clientOriginalApprovedAmountEnabled: defaultStatus || isAdmin,
