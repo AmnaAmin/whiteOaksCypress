@@ -539,6 +539,7 @@ export const parseFormValuesFromAPIData = ({
   const carrier = findOptionByValue(clientSelectOptions, project.clientName)?.carrier?.find(
     c => c.id === project.carrierId,
   )
+
   return {
     // Project Management form values
     status: findOptionByValue(projectStatusSelectOptions, project.projectStatusId),
@@ -560,6 +561,9 @@ export const parseFormValuesFromAPIData = ({
     verifiedBy: project.verifiedBy as string,
     verifiedbyDesc: project.verifiedbyDesc as string,
     reconciledbyDesc: project.reconciledbyDesc as string,
+    lienFiled: datePickerFormat(project.lienRightFileDate),
+    lienExpiryDate: datePickerFormat(project?.lienRightExpireDate),
+
     // Project Invoice and Payment form values
     originalSOWAmount: project.sowOriginalContractAmount,
     sowLink: project.sowLink,
@@ -662,6 +666,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
     isReconciled: formValues.isReconciled === null ? false : formValues.isReconciled,
+    lienRightFileDate: dateISOFormat(formValues.lienFiled),
+    lienRightExpireDate: dateISOFormat(formValues.lienExpiryDate),
+
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,
     sowNewAmount: formValues?.finalSOWAmount,

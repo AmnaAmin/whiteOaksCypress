@@ -118,7 +118,7 @@ export const ProjectDetails: React.FC = props => {
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
         <AmountDetailsCard projectId={projectId} />
 
-        <Stack  marginTop="-1px !important" w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
+        <Stack marginTop="-1px !important" w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
           <Tabs
             index={tabIndex}
             size="sm"

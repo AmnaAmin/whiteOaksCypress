@@ -37,6 +37,7 @@ export type Market = {
   stateId: number
   stateName: string
   checked?: boolean
+  lienDueIn?: number
 }
 
 export type Contact = {
