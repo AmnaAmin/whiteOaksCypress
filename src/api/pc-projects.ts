@@ -277,6 +277,7 @@ export const useStates = () => {
       value: state?.code,
       label: state?.name,
       id: state?.id,
+      lienDue: state?.lienDue,
     })) || []
 
   return {

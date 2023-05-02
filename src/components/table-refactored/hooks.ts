@@ -53,8 +53,6 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
           selectedCard !== 'past due' ? { id: 'projectStatus', value: selectedCard } : { id: 'pastDue', value: true }
         finalFilters = [...columnFilters, projectStatusFilter]
       }
-    } else {
-      finalFilters = [...finalFilters.filter(f => !['projectStatus', 'pastDue', 'durationCategory'].includes(f.id))]
     }
     if (selectedFlagged) {
       finalFilters = [...columnFilters, { id: 'noteFlag', value: selectedFlagged }]
