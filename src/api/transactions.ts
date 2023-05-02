@@ -246,7 +246,7 @@ const AGAINST_DEFAULT_OPTION = {
 }
 
 export const createAgainstLabel = (companyName: string, woId: string) => {
-  return `WO ${woId} ${companyName}`
+  return `WO ${woId} (${companyName})`
 }
 
 export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
