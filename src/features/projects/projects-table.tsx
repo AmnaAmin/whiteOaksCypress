@@ -85,6 +85,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       projectStatus: selectedCard !== 'past due' ? selectedCard : '',
       clientDueDate: days?.find(c => c.dayName === selectedDay)?.dueDate,
       noteFlag: selectedFlagged,
+      lienDueFlag: selectedFlagged,
     },
     resetFilters,
   )

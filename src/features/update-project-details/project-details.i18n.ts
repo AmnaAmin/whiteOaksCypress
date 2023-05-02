@@ -19,6 +19,8 @@ export const project = {
           clientWalkthrough: 'Client Walkthrough',
           clientSignOff: 'Client Sign Off',
           overrideStatus: 'Override Status',
+          lienRightsExpires: 'Lien Rights Expires',
+          lienFiled: 'Lien Filed',
 
           // Invoicing & Payment
 
@@ -108,6 +110,8 @@ export const project = {
           clientWalkthrough: 'Fecha de recorrido del cliente',
           clientSignOff: 'Fecha de cierre del cliente',
           overrideStatus: 'Anular estado',
+          lienRightsExpires: 'Los derechos de gravamen expiran',
+          lienFiled: 'Gravamen Presentado',
 
           // Invoicing & Payment
           invoicingPayment: 'Facturación y pago',
