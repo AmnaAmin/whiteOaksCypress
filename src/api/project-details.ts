@@ -152,6 +152,8 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries([PROJECT_EXTRA_ATTRIBUTES, project?.data?.id])
         queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
+        queryClient.invalidateQueries(['audit-logs', projectId])
+        
 
         toast({
           title: 'Project Details Updated',
@@ -735,7 +737,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
 export const useProjectAuditLogs = projectId => {
   const client = useClient('/audit/api')
 
-  const { data: auditLogs, ...rest } = useQuery('audit-logs', async () => {
+  const { data: auditLogs, ...rest } = useQuery(['audit-logs', projectId], async () => {
     const response = await client(`audit-trails?groupId.equals=${projectId}&page=0&size=10000000&sort=id,desc`, {})
 
     return response?.data
