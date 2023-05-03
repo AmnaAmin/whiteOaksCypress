@@ -383,6 +383,7 @@ export const WORK_ORDERS = [
     permitLink: null,
     leanwieverLink: 'https://dev.woaharvest.com/documents/vendor@devtek.ai.1657996889510.project.4301.LW9006_V+.pdf',
     lienWaiverAccepted: true,
+    assignAwardPlan: true,
   },
   {
     id: 9007,
