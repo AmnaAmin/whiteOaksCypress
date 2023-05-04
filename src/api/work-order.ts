@@ -43,6 +43,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
+        queryClient.invalidateQueries(['audit-logs', projectId])
         if (!hideToast) {
           toast({
             title: 'Work Order',
@@ -92,6 +93,7 @@ export const useCreateWorkOrderMutation = () => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['projectSchedule', projectId])
+        queryClient.invalidateQueries(['audit-logs', projectId])
 
         toast({
           title: 'Work Order',
@@ -162,6 +164,7 @@ export const useNoteMutation = projectId => {
       onSuccess() {
         queryClient.invalidateQueries(['notes', projectId])
         queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['audit-logs', projectId])
         toast({
           title: 'Note',
           description: 'Note has been saved successfully.',
