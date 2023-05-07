@@ -273,6 +273,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'state',
   },
   {
+    header: 'projects.projectTable.ownerName',
+    accessorKey: 'homeOwnerName',
+  },
+  {
     header: 'projects.projectTable.woaFinish',
     accessorKey: 'woaCompletionDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaCompletionDate),
