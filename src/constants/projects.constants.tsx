@@ -29,6 +29,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
   clientStartDate: 'clientStartDate.equals',
+  homeOwnerName: 'homeOwnerName.contains',
   clientDueDate: 'clientDueDate.equals',
   notes: 'notes.contains',
   projectTypeLabel: 'projectTypeLabel.contains',
@@ -271,6 +272,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.state',
     accessorKey: 'state',
+  },
+  {
+    header: 'projects.projectTable.ownerName',
+    accessorKey: 'homeOwnerName',
   },
   {
     header: 'projects.projectTable.woaFinish',
