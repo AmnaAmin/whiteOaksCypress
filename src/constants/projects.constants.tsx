@@ -29,6 +29,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
   clientStartDate: 'clientStartDate.equals',
+  homeOwnerName: 'homeOwnerName.contains',
   clientDueDate: 'clientDueDate.equals',
   notes: 'notes.contains',
   projectTypeLabel: 'projectTypeLabel.contains',
