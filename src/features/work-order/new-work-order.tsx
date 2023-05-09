@@ -146,7 +146,11 @@ export const NewWorkOrder: React.FC<{
   const { swoProject } = useFetchProjectId(projectData?.id)
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
-  const { vendors, isLoading: vendorsLoading } = useFilteredVendors(vendorSkillId, projectData?.id)
+  const { vendors, isLoading: vendorsLoading } = useFilteredVendors({
+    vendorSkillId,
+    projectId: projectData?.id,
+    showExpired: false,
+  })
   const toast = useToast()
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
 

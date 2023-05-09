@@ -39,7 +39,13 @@ const VENDOR_PROJECTS_QUERY_KEYS = {
 
 export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileData }) => {
   const { isFPM } = useUserRolesSelector()
-
+  const activeStatusFilter = '&status.in=34,36,110,111,114'
+  const paidStatusFilter = '&status.in=68'
+  const [projectStatus, setProjectStatus] = useState('active')
+  useEffect(() => {
+    if (projectStatus === 'paid') setFilteredUrl(paidStatusFilter)
+    else setFilteredUrl(activeStatusFilter)
+  }, [projectStatus])
   const VENDOR_PROJECTS_TABLE_COLUMNS: ColumnDef<any>[] = useMemo(() => {
     return [
       {
@@ -73,10 +79,19 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
         header: 'WoId',
         accessorKey: 'id',
       },
-    ]
-  }, [])
-  const activeStatusFilter = '&status.in=34,36,110,111,114'
-  const paidStatusFilter = '&status.in=68'
+     
+    ...(projectStatus === 'paid'
+    ? [
+        {
+          header: 'Total Paid',
+          accessorKey: 'totalAmountPaid',
+        },
+      ]
+    : []),
+]
+}, [projectStatus])
+  
+  
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(activeStatusFilter)
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -104,12 +119,9 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
     refetch: refetchColumns,
   } = useTableColumnSettings(VENDOR_PROJECTS_TABLE_COLUMNS, TableNames.vendorProjects)
 
-  const [projectStatus, setProjectStatus] = useState('active')
+  
 
-  useEffect(() => {
-    if (projectStatus === 'paid') setFilteredUrl(paidStatusFilter)
-    else setFilteredUrl(activeStatusFilter)
-  }, [projectStatus])
+ 
 
   const onSave = (columns: any) => {
     postGridColumn(columns)

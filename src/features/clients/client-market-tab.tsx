@@ -61,13 +61,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isProjectCoordinator && (
-          <Button
-            colorScheme="brand"
-            type="submit"
-            form="clientDetails"
-            ml={2}
-            disabled={!validateMarket(markets)}
-          >
+          <Button colorScheme="brand" type="submit" form="clientDetails" ml={2} disabled={!validateMarket(markets)}>
             {t(`${CLIENTS}.save`)}
           </Button>
         )}

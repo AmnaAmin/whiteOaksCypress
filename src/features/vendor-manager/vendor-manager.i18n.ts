@@ -34,6 +34,7 @@ export const vendor_manager = {
         deleteMarketAlertTitle: 'Do you really want to delete this Market?',
         deleteMarketAlertMessage:
           'After deleting this market, You will need to re-assign market to PCs, FPMs and projects.',
+        lienDue: 'Lien Due',
 
         //Cards
         active: 'Active',
@@ -74,6 +75,7 @@ export const vendor_manager = {
         deleteMarketAlertTitle: '¿Realmente desea eliminar este mercado?',
         deleteMarketAlertMessage:
           'Después de eliminar este mercado, deberá volver a asignar el mercado a PC, FPM y proyectos.',
+        lienDue: 'gravamen adeudado',
 
         //Cards
         active: 'Activo',
