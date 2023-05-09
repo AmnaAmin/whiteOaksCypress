@@ -252,7 +252,7 @@ export const InvoiceTab = ({
 
   return (
     <Box>
-      <ModalBody mx={{ base: 0, lg: '25px' }} h={'calc(100vh - 300px)'} overflow={'auto'}>
+      <ModalBody mx={{ base: 0, lg: '25px' }} h={'calc(100vh - 300px)'}>
         {isVendorExpired && (
           <Box pt="15px">
             <AlertError

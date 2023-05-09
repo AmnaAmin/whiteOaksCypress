@@ -245,12 +245,12 @@ const AGAINST_DEFAULT_OPTION = {
   isValidForAwardPlan: null,
 }
 
-export const createAgainstLabel = (companyName: string, skillName: string) => {
-  return `${companyName} (${skillName})`
+export const createAgainstLabel = (companyName: string, woId: string) => {
+  return `WO ${woId} (${companyName})`
 }
 
 export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAdmin } = useUserRolesSelector()
   const client = useClient()
   const VENDOR_EXPIRED = 15
 
@@ -268,14 +268,13 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
       workOrders
         ?.filter(wo => {
           const status = wo.statusLabel?.toLowerCase()
+          const vendorExpiryCheck = wo.vendorStatusId !== VENDOR_EXPIRED || isAdmin
           return (
-            (!(status === 'paid' || status === 'cancelled' || status === 'invoiced') &&
-              wo.vendorStatusId !== VENDOR_EXPIRED) ||
-            isUpdating
+            (!(status === 'paid' || status === 'cancelled' || status === 'invoiced') && vendorExpiryCheck) || isUpdating
           )
         })
         .map(workOrder => ({
-          label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
+          label: createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
           awardStatus: workOrder?.assignAwardPlan,
           value: `${workOrder.id}`,
           isValidForAwardPlan: workOrder?.validForAwardPlan,
@@ -676,6 +675,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['changeOrder', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+        queryClient.invalidateQueries(['audit-logs', projectId])
 
         toast({
           title: 'New Transaction.',
@@ -723,6 +723,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         queryClient.invalidateQueries(GET_PAGINATED_RECEIVABLE_QUERY_KEY)
+        queryClient.invalidateQueries(['audit-logs', projectId])
 
         toast({
           title: 'Update Transaction.',

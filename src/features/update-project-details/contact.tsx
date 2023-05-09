@@ -39,7 +39,7 @@ const Contact: React.FC<ContactProps> = ({ projectCoordinatorSelectOptions, clie
 
   const clientWatch = useWatch({ name: 'client', control })
   const [carrierOption, setCarrierOption] = useState<SelectOption[] | null | undefined>()
-  const { fieldProjectManagerByMarketOptions } = useFPMsByMarket(marketWatch?.value)
+  const { fieldProjectManagerByMarketOptions, isLoading } = useFPMsByMarket(marketWatch?.value)
 
   useEffect(() => {
     setCarrierOption(
@@ -65,6 +65,12 @@ const Contact: React.FC<ContactProps> = ({ projectCoordinatorSelectOptions, clie
   const { users: pcUsers } = useGetUsersByType(112)
 
   const { users: fpmUsers } = useGetUsersByType(5)
+
+  useEffect(() => {
+    if (fieldProjectManagerByMarketOptions.length === 0 && !isLoading) {
+      setValue('fieldProjectManager', null)
+    }
+  }, [fieldProjectManagerByMarketOptions])
 
   return (
     <Stack spacing={14} mt="7" minH="600px">

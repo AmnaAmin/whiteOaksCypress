@@ -317,7 +317,7 @@ const WorkOrderDetailTab = props => {
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrderDetails?.assignedItems)
     const removedItems = getRemovedItems(formValues, workOrderDetails?.assignedItems)
-    const payload = parseWODetailValuesToPayload(values)
+    const payload = parseWODetailValuesToPayload(values, workOrderDetails)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
 
@@ -565,7 +565,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!completedByVendor && !(isAdmin || isAccounting)}
+                    isDisabled={!completedByVendor}
                     variant="outline"
                     {...register('workOrderDateCompleted')}
                   />
