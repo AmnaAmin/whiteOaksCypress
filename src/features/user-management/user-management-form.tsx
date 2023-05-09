@@ -47,7 +47,6 @@ import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import CustomSelect from './CustomSelect'
-import { cloneDeep } from 'lodash'
 
 type UserManagement = {
   onClose: () => void
