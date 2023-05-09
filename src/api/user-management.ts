@@ -352,9 +352,6 @@ const parseUserFormData = ({
   viewVendorsOptions,
   languageOptions,
   fpmManagerRoleOptions,
-  directStates,
-  directRegions,
-  directMarkets
 }) => {
   let _accountType = accountTypeOptions
     ?.concat(
@@ -383,6 +380,7 @@ const parseUserFormData = ({
       )
       .find(a => a.value === userInfo?.fieldProjectManagerRoleId)
   }
+
   return {
     ...userInfo,
     markets: markets || [],
@@ -404,9 +402,17 @@ const parseUserFormData = ({
     ),
     vendorAdmin: userInfo.vendorAdmin,
     primaryAdmin: userInfo.primaryAdmin,
-    directStates: directStates,
-    directRegions: directRegions,
-    directMarkets: directMarkets
+    directStates: states?.filter(o => o.checked)?.map(fo => { return { value: fo.state.id, label: fo.state.label } }) || [],
+    directRegions: regions?.filter(o => o.checked)?.map(fo => fo?.region) || [],
+    directMarkets:
+      markets
+        ?.filter(o => o.checked)
+        ?.map(fo => {
+          return {
+            value: fo.market.id,
+            label: fo.market.metropolitanServiceArea,
+          }
+        }) || [],
   }
 }
 
@@ -501,12 +507,15 @@ export const useUserDetails = ({ form, userInfo }) => {
 
   const directRegions = formattedRegions?.filter(o => o.checked)?.map(fo => fo?.region) || []
 
-  const directMarkets = formattedMarkets?.filter(o => o.checked)?.map(fo => {
-    return {
-      value: fo.market.id,
-      label: fo.market.metropolitanServiceArea
-    }
-  }) || []  
+  const directMarkets =
+    formattedMarkets
+      ?.filter(o => o.checked)
+      ?.map(fo => {
+        return {
+          value: fo.market.id,
+          label: fo.market.metropolitanServiceArea,
+        }
+      }) || []
 
   useEffect(() => {
     if (!userInfo) {
@@ -534,9 +543,6 @@ export const useUserDetails = ({ form, userInfo }) => {
           viewVendorsOptions,
           languageOptions,
           fpmManagerRoleOptions,
-          directStates,
-          directRegions,
-          directMarkets
         }),
       )
     }
@@ -549,5 +555,6 @@ export const useUserDetails = ({ form, userInfo }) => {
     allManagersOptions?.length,
     accountTypeOptions?.length,
     viewVendorsOptions?.length,
+    directStates?.length
   ])
 }

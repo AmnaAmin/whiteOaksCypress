@@ -47,6 +47,7 @@ import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import CustomSelect from './CustomSelect'
+import { cloneDeep } from 'lodash'
 
 type UserManagement = {
   onClose: () => void
@@ -62,6 +63,7 @@ const validateMarket = markets => {
 }
 const validateState = states => {
   const checkedStates = states?.filter(state => state.checked)
+
   if (!(checkedStates && checkedStates.length > 0)) {
     return false
   }
@@ -139,7 +141,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const noMarketsSelected = !validateMarket(formValues?.markets)
   const noStatesSelected = !validateState(formValues?.states)
-  
+
   const noRegionSelected = !validateRegions(formValues?.regions)
   const invalidTelePhone =
     validateTelePhoneNumber(formValues?.telephoneNumber as string) || !formValues?.telephoneNumber
@@ -374,14 +376,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const watchMultiRegions = useWatch({ control, name: 'directRegions' as any })
   const watchMultiMarkets = useWatch({ control, name: 'directMarkets' as any })
 
-  
   useEffect(() => {
-    if (!showStates || ! watchMultiStates) return
-    
+    if (!showStates || !watchMultiStates) return
+
     setValue(
       'states',
       formValues?.states?.map(s => {
-        if (watchMultiStates?.find(ms => ms.value === s.state.id)) s.checked = true
+        if (watchMultiStates?.find(ms => ms.label === s.state.label)) s.checked = true
         else s.checked = false
 
         return s
@@ -389,8 +390,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     )
   }, [watchMultiStates, showStates])
 
- useEffect(() => {
-    if (!showRegions || ! watchMultiRegions) return
+  useEffect(() => {
+    if (!showRegions || !watchMultiRegions) return
 
     setValue(
       'regions',
@@ -404,7 +405,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   }, [watchMultiRegions, showRegions])
 
   useEffect(() => {
-    if (!showMarkets || ! watchMultiMarkets) return
+    if (!showMarkets || !watchMultiMarkets) return
 
     setValue(
       'markets',
@@ -630,7 +631,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       )}
 
       {showStates ? (
-        <VStack mt="30px" spacing={15} alignItems="start" display="none"> 
+        <VStack mt="30px" spacing={15} alignItems="start" display="none">
           <Flex alignItems="center">
             <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
               {t(`${USER_MANAGEMENT}.modal.state`)}
