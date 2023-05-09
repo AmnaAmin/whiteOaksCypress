@@ -43,6 +43,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
+        queryClient.invalidateQueries(['audit-logs', projectId])
         if (!hideToast) {
           toast({
             title: 'Work Order',
@@ -92,6 +93,7 @@ export const useCreateWorkOrderMutation = () => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['projectSchedule', projectId])
+        queryClient.invalidateQueries(['audit-logs', projectId])
 
         toast({
           title: 'Work Order',
@@ -162,6 +164,7 @@ export const useNoteMutation = projectId => {
       onSuccess() {
         queryClient.invalidateQueries(['notes', projectId])
         queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['audit-logs', projectId])
         toast({
           title: 'Note',
           description: 'Note has been saved successfully.',
@@ -205,10 +208,10 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
     dateInvoiceSubmittedEnabled: defaultStatus || isAdmin,
-    paymentTermEnabled: defaultStatus || invoicedState || isAdmin || (workOrder?.assignAwardPlan && isAdmin),
+    paymentTermEnabled: defaultStatus || (workOrder?.assignAwardPlan && isAdmin),
     paymentTermDateEnabled: defaultStatus || isAdmin,
     expectedPaymentDateEnabled: defaultStatus || isAdmin,
-    datePaymentProcessedEnabled: defaultStatus || invoicedState || isAdmin,
+    datePaymentProcessedEnabled: defaultStatus || isAdmin,
     datePaidEnabled: defaultStatus || invoicedState || isAdmin,
     invoiceAmountEnabled: defaultStatus || isAdmin,
     clientOriginalApprovedAmountEnabled: defaultStatus || isAdmin,
@@ -277,7 +280,7 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
   }
 }
 
-export const parseWODetailValuesToPayload = formValues => {
+export const parseWODetailValuesToPayload = (formValues, workOrder) => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
   const cancelWorkOrder = formValues?.cancel.value === 35
@@ -312,7 +315,7 @@ export const parseWODetailValuesToPayload = formValues => {
     showPricing: formValues.showPrice,
     assignedItems: [...assignedItems],
     notifyVendor: formValues.notifyVendor,
-    vendorId: formValues.vendorId?.value,
+    vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
   }
 }

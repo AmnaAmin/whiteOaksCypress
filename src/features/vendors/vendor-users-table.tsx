@@ -161,9 +161,10 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
 
   const queryClient = useQueryClient()
 
-  const [isMobile] = useMediaQuery("(max-width: 480px)")
+  const [isMobile] = useMediaQuery('(max-width: 480px)')
 
-  
+  const { isFPM } = useUserRolesSelector()
+  console.log(tableData)
 
   return (
     <>
@@ -190,22 +191,30 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
                   data-testid="deactivate-vendors"
                   onChange={handleActivationSwitch}
                   isChecked={toggleSwitchVendors}
+                  disabled={!tableData || tableData.length === 0}
                 />
               </chakra.span>
             </FormControl>
           )}
-          { ! isMobile && <Spacer /> }
-          <Box display="flex" alignItems={{ sm: '', lg: 'flex-end' }}>
-            <Button onClick={openNewUserForm} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
-              New User
-            </Button>
-          </Box>
+          {!isMobile && <Spacer />}
+          {!isFPM && (
+            <Box display="flex" alignItems={{ sm: '', lg: 'flex-end' }}>
+              <Button onClick={openNewUserForm} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
+                New User
+              </Button>
+            </Box>
+          )}
         </HStack>
-        <VStack px="11px" gap="20px" mb="14px" sx={{
-          "@media screen and (max-width: 480px)": {
-            width: "320px"
-          }
-        }}>
+        <VStack
+          px="11px"
+          gap="20px"
+          mb="14px"
+          sx={{
+            '@media screen and (max-width: 480px)': {
+              width: '320px',
+            },
+          }}
+        >
           <Box
             overflow={'auto'}
             w="100%"

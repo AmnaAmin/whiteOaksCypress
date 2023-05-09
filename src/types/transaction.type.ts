@@ -54,6 +54,7 @@ export type ProjectWorkOrder = {
   workOrderPayDateVariance: string | null
   workOrderStartDate: string
   awardPlanPayTerm: string
+  vendorStatusId?: number
 }
 
 export type WorkOrderAwardStats = {
@@ -135,6 +136,7 @@ export type SelectOption = {
   awardStatus?: any
   isValidForAwardPlan?: any
   carrier?: Carrier[]
+  lienDue?: number | undefined
 }
 
 export type TransactionFormValues = {

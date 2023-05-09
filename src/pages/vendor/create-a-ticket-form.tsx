@@ -32,7 +32,6 @@ import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { Button } from 'components/button/button'
 import { useTranslation } from 'react-i18next'
-import { Card } from 'components/card/card'
 import ReactSelect from 'components/form/react-select'
 import { SUPPORT } from 'features/support/support.i18n'
 import { BiCalendar, BiDetail, BiDownload } from 'react-icons/bi'
@@ -227,210 +226,208 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
   }
 
   return (
-    <Card py="0" rounded={supportDetail || supportPage ? 0 : 'xl'}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Box mt="40px" ml="20px" h="calc(100vh - 333px)" overflow="auto">
-          <Box>
-            {!supportPage && !supportDetail && (
-              <FormLabel variant="strong-label" size="lg" color="gray.600" mb="8" w="100%">
-                <HStack w="100%">
-                  <Box fontSize="18px" whiteSpace="nowrap">
-                    {t(`${SUPPORT}.createTicket`)}
-                  </Box>
-                  <Divider width="90%" />
-                </HStack>
-              </FormLabel>
-            )}
-            <Grid templateColumns="repeat(1, 1fr)" gap={5} maxWidth="700px">
-              {supportDetail && (
-                <HStack spacing="58px" borderBottom="1px solid #E2E8F0" pb="27px">
-                  <ReadonlyInfoCard
-                    icon={BiCalendar}
-                    value={dateFormat(supportDetail?.createdDate)}
-                    title={'dateCreated'}
-                  />
-                  <ReadonlyInfoCard icon={BiDetail} value={supportDetail?.createdBy} title={'createdBy'} />
-                </HStack>
-              )}
-              <HStack spacing={3}>
-                <FormControl isInvalid={!!errors.issueType} w="215px" data-testid="issue-Type">
-                  <FormLabel htmlFor="issueType" variant="strong-label" color="gray.600">
-                    {t(`${SUPPORT}.issueType`)}
-                  </FormLabel>
-                  <Controller
-                    control={control}
-                    name="issueType"
-                    rules={{ required: 'This is required field' }}
-                    render={({ field, fieldState }) => (
-                      <>
-                        <ReactSelect
-                          id="issueType"
-                          options={ISSUE_TYPE_OPTIONS}
-                          {...field}
-                          selectProps={{ isBorderLeft: true }}
-                        />
-                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                      </>
-                    )}
-                  />
-                </FormControl>
-
-                <FormControl isInvalid={!!errors.severity} w="215px" data-testid="severity">
-                  <FormLabel htmlFor="severity" variant="strong-label" color="gray.600">
-                    {t(`${SUPPORT}.severity`)}
-                  </FormLabel>
-                  <Controller
-                    control={control}
-                    name="severity"
-                    rules={{ required: 'This is required field' }}
-                    render={({ field, fieldState }) => (
-                      <>
-                        <ReactSelect
-                          id="severity"
-                          options={SEVERITY_OPTIONS}
-                          {...field}
-                          selectProps={{ isBorderLeft: true }}
-                        />
-                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                      </>
-                    )}
-                  />
-                </FormControl>
-
-                <FormControl w="215px" data-testid="status">
-                  <FormLabel htmlFor="status" variant="strong-label" color="gray.600">
-                    {t(`${SUPPORT}.status`)}
-                  </FormLabel>
-                  <Controller
-                    control={control}
-                    name="status"
-                    render={({ field, fieldState }) => (
-                      <>
-                        <ReactSelect
-                          id="status"
-                          options={STATUS_OPTIONS}
-                          {...field}
-                          selectProps={{ isBorderLeft: true }}
-                          isDisabled={!isAdmin}
-                        />
-                      </>
-                    )}
-                  />
-                </FormControl>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Box mt="40px" ml="20px" h="calc(100vh - 333px)" overflow="auto">
+        <Box>
+          {!supportPage && !supportDetail && (
+            <FormLabel variant="strong-label" size="lg" color="gray.600" mb="8" w="100%">
+              <HStack w="100%">
+                <Box fontSize="18px" whiteSpace="nowrap">
+                  {t(`${SUPPORT}.createTicket`)}
+                </Box>
+                <Divider width="90%" />
               </HStack>
-
-              <FormControl isInvalid={!!errors.title?.message} w="449px">
-                <FormLabel htmlFor="title" variant="strong-label" color="gray.600">
-                  {t(`${SUPPORT}.title`)}
-                </FormLabel>
-
-                <Input
-                  h="40px"
-                  id="Title"
-                  type="text"
-                  bg="white"
-                  {...register('title', {
-                    required: 'This is required field',
-                  })}
-                  data-testid="title-input"
-                  borderLeft={'2px solid #345EA6'}
-                  _hover={{
-                    borderLeft: '2px solid #345EA6 !important',
-                  }}
+            </FormLabel>
+          )}
+          <Grid templateColumns="repeat(1, 1fr)" gap={5} maxWidth="700px">
+            {supportDetail && (
+              <HStack spacing="58px" borderBottom="1px solid #E2E8F0" pb="27px">
+                <ReadonlyInfoCard
+                  icon={BiCalendar}
+                  value={dateFormat(supportDetail?.createdDate)}
+                  title={'dateCreated'}
                 />
-
-                <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
+                <ReadonlyInfoCard icon={BiDetail} value={supportDetail?.createdBy} title={'createdBy'} />
+              </HStack>
+            )}
+            <HStack spacing={3}>
+              <FormControl isInvalid={!!errors.issueType} w="215px" data-testid="issue-Type">
+                <FormLabel htmlFor="issueType" variant="strong-label" color="gray.600">
+                  {t(`${SUPPORT}.issueType`)}
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="issueType"
+                  rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <ReactSelect
+                        id="issueType"
+                        options={ISSUE_TYPE_OPTIONS}
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                />
               </FormControl>
-            </Grid>
-          </Box>
 
-          <Box w="449px" mt="30px">
-            <FormControl isInvalid={!!errors.description?.message}>
-              <FormLabel htmlFor="description" variant="strong-label" color="gray.600">
-                {t(`${SUPPORT}.descriptions`)}
+              <FormControl isInvalid={!!errors.severity} w="215px" data-testid="severity">
+                <FormLabel htmlFor="severity" variant="strong-label" color="gray.600">
+                  {t(`${SUPPORT}.severity`)}
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="severity"
+                  rules={{ required: 'This is required field' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <ReactSelect
+                        id="severity"
+                        options={SEVERITY_OPTIONS}
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                />
+              </FormControl>
+
+              <FormControl w="215px" data-testid="status">
+                <FormLabel htmlFor="status" variant="strong-label" color="gray.600">
+                  {t(`${SUPPORT}.status`)}
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="status"
+                  render={({ field, fieldState }) => (
+                    <>
+                      <ReactSelect
+                        id="status"
+                        options={STATUS_OPTIONS}
+                        {...field}
+                        selectProps={{ isBorderLeft: true }}
+                        isDisabled={!isAdmin}
+                      />
+                    </>
+                  )}
+                />
+              </FormControl>
+            </HStack>
+
+            <FormControl isInvalid={!!errors.title?.message} w="449px">
+              <FormLabel htmlFor="title" variant="strong-label" color="gray.600">
+                {t(`${SUPPORT}.title`)}
               </FormLabel>
-              <Textarea
-                size="lg"
+
+              <Input
+                h="40px"
+                id="Title"
+                type="text"
                 bg="white"
-                h="100px"
-                id="description"
-                {...register('description', {
+                {...register('title', {
                   required: 'This is required field',
                 })}
-                data-testid="descriptions"
+                data-testid="title-input"
                 borderLeft={'2px solid #345EA6'}
                 _hover={{
                   borderLeft: '2px solid #345EA6 !important',
                 }}
-                fontSize="12px"
-                color="gray.600"
               />
-              <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
-            </FormControl>
-          </Box>
 
-          <Box w="449px" mt="30px">
-            <FormControl>
-              <FormLabel htmlFor="resolution" variant="strong-label" color="gray.600">
-                {t(`${SUPPORT}.resolution`)}
-              </FormLabel>
-              <Textarea
-                isDisabled={!isAdmin}
-                _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }}
-                size="lg"
-                bg="white"
-                h="100px"
-                id="resolution"
-                {...register('resolution')}
-                fontSize="12px"
-                color="gray.600"
-              />
+              <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
             </FormControl>
-          </Box>
+          </Grid>
+        </Box>
 
-          <FormControl mt="30px" w="290px">
-            <FormLabel variant="strong-label" color="gray.600" mb={1}>
-              {t(`${SUPPORT}.fileUpload`)}
+        <Box w="449px" mt="30px">
+          <FormControl isInvalid={!!errors.description?.message}>
+            <FormLabel htmlFor="description" variant="strong-label" color="gray.600">
+              {t(`${SUPPORT}.descriptions`)}
             </FormLabel>
-            <Controller
-              name="attachment"
-              control={control}
-              render={({ field, fieldState }) => {
-                return (
-                  <VStack alignItems="baseline">
-                    <Box>
-                      <ChooseFileField
-                        testId="file-Upload"
-                        name={field.name}
-                        value={field.value ? field.value?.name : t('chooseFile')}
-                        isError={!!fieldState.error?.message}
-                        onChange={(file: any) => {
-                          onFileChange(file)
-                          field.onChange(file)
-                        }}
-                        onClear={() => setValue(field.name, null)}
-                        inputStyle={{ borderLeft: '2px solid #E2E8F0' }}
-                      ></ChooseFileField>
-                    </Box>
-                    {supportDetail?.s3Url && downloadDocument(supportDetail?.s3Url, supportDetail?.s3Url)}
-                  </VStack>
-                )
+            <Textarea
+              size="lg"
+              bg="white"
+              h="100px"
+              id="description"
+              {...register('description', {
+                required: 'This is required field',
+              })}
+              data-testid="descriptions"
+              borderLeft={'2px solid #345EA6'}
+              _hover={{
+                borderLeft: '2px solid #345EA6 !important',
               }}
+              fontSize="12px"
+              color="gray.600"
+            />
+            <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+
+        <Box w="449px" mt="30px">
+          <FormControl>
+            <FormLabel htmlFor="resolution" variant="strong-label" color="gray.600">
+              {t(`${SUPPORT}.resolution`)}
+            </FormLabel>
+            <Textarea
+              isDisabled={!isAdmin}
+              _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }}
+              size="lg"
+              bg="white"
+              h="100px"
+              id="resolution"
+              {...register('resolution')}
+              fontSize="12px"
+              color="gray.600"
             />
           </FormControl>
         </Box>
-        <HStack w="100%" h="100px" mt="20px" justifyContent="end" borderTop="2px solid #E2E8F0">
-          {(supportDetail || supportPage) && (
-            <Button variant="outline" onClick={onClose} colorScheme="brand">
-              {t(`${SUPPORT}.cancel`)}
-            </Button>
-          )}
-          <Button type="submit" colorScheme="brand" data-testid="save" isDisabled={watchRequiredField || Lodings}>
-            {t(`${SUPPORT}.save`)}
+
+        <FormControl mt="30px" w="290px">
+          <FormLabel variant="strong-label" color="gray.600" mb={1}>
+            {t(`${SUPPORT}.fileUpload`)}
+          </FormLabel>
+          <Controller
+            name="attachment"
+            control={control}
+            render={({ field, fieldState }) => {
+              return (
+                <VStack alignItems="baseline">
+                  <Box>
+                    <ChooseFileField
+                      testId="file-Upload"
+                      name={field.name}
+                      value={field.value ? field.value?.name : t('chooseFile')}
+                      isError={!!fieldState.error?.message}
+                      onChange={(file: any) => {
+                        onFileChange(file)
+                        field.onChange(file)
+                      }}
+                      onClear={() => setValue(field.name, null)}
+                      inputStyle={{ borderLeft: '2px solid #E2E8F0' }}
+                    ></ChooseFileField>
+                  </Box>
+                  {supportDetail?.s3Url && downloadDocument(supportDetail?.s3Url, supportDetail?.s3Url)}
+                </VStack>
+              )
+            }}
+          />
+        </FormControl>
+      </Box>
+      <HStack w="100%" h="100px" mt="20px" justifyContent="end" borderTop="2px solid #E2E8F0">
+        {(supportDetail || supportPage) && (
+          <Button variant="outline" onClick={onClose} colorScheme="brand">
+            {t(`${SUPPORT}.cancel`)}
           </Button>
-        </HStack>
-      </form>
-    </Card>
+        )}
+        <Button type="submit" colorScheme="brand" data-testid="save" isDisabled={watchRequiredField || Lodings}>
+          {t(`${SUPPORT}.save`)}
+        </Button>
+      </HStack>
+    </form>
   )
 }
 

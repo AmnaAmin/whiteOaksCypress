@@ -29,6 +29,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
   clientStartDate: 'clientStartDate.equals',
+  homeOwnerName: 'homeOwnerName.contains',
   clientDueDate: 'clientDueDate.equals',
   notes: 'notes.contains',
   projectTypeLabel: 'projectTypeLabel.contains',
@@ -66,6 +67,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   drawAmountWo: 'drawAmountWo.equals',
   disqualifiedRevenueFlag: 'disqualifiedRevenueFlag.equals',
   noteFlag: 'noteFlag.equals',
+  lienDueFlag: 'lienDueFlag.equals',
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
@@ -75,6 +77,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     size: 100,
     cell: (row: any) => {
       const value = row.cell.getValue()
+      const isFlagged = row.row?.original?.lienDueFlag || row.row?.original?.noteFlag
       return (
         <Box
           fontWeight={'500'}
@@ -84,8 +87,11 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
           }}
           color="brand.300"
         >
-          <chakra.span marginRight={row.row?.original?.noteFlag ? '12px' : '26'}>
-            {row.row?.original?.noteFlag && <Icon as={RiFlag2Fill} color="rgba(252, 129, 129, 1)" />}
+          <chakra.span marginRight={isFlagged ? '12px' : '26'}>
+            {row.row?.original?.noteFlag && <Icon title="Note Flag" as={RiFlag2Fill} color="rgba(252, 129, 129, 1)" />}
+            {row.row?.original?.lienDueFlag && (
+              <Icon title="Lien Due Expiry Flag" as={RiFlag2Fill} color="rgb(236, 201, 75,1)" />
+            )}
           </chakra.span>
           <Link to={`/project-details/${value}`}>{value}</Link>
         </Box>
@@ -266,6 +272,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.state',
     accessorKey: 'state',
+  },
+  {
+    header: 'projects.projectTable.ownerName',
+    accessorKey: 'homeOwnerName',
   },
   {
     header: 'projects.projectTable.woaFinish',

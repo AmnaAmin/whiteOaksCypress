@@ -277,6 +277,7 @@ export const useStates = () => {
       value: state?.code,
       label: state?.name,
       id: state?.id,
+      lienDue: state?.lienDue,
     })) || []
 
   return {
@@ -537,9 +538,11 @@ export const useGanttChart = (projectId?: string): any => {
   }
 }
 
-export const useFilteredVendors = (vendorSkillId, projectId) => {
+export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired }) => {
   const status_active = 12
+  const status_expired = 15
   const capacity = 1 // sfor new workorder capacity is fixed
+  const statusAttrib = '&status.in=' + status_active + (showExpired ? `,${status_expired}` : '')
   const client = useClient()
   const requestUrl =
     'view-vendors?generalLabor.equals=' +
@@ -548,8 +551,7 @@ export const useFilteredVendors = (vendorSkillId, projectId) => {
     vendorSkillId +
     '&capacity.greaterThanOrEqual=' +
     capacity +
-    '&status.equals=' +
-    status_active +
+    statusAttrib +
     '&projectsId.equals=' +
     projectId
   const { data, ...rest } = useQuery<Array<Vendors>>(

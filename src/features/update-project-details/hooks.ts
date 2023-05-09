@@ -172,6 +172,7 @@ export const useSubFormErrors = (errors: FieldErrors<ProjectDetailsFormValues>) 
     isProjectManagementFormErrors:
       !!errors.woaCompletionDate || !!errors.clientWalkthroughDate || !!errors.clientSignOffDate || !!errors.type,
     isContactsFormErrors: !!errors.projectCoordinator || !!errors.fieldProjectManager || !!errors.client,
+    isLocationFormErrors: !!errors.zip || !!errors.city || !!errors.market || !!errors.address || !!errors.state,
   }
 }
 

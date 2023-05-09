@@ -226,7 +226,7 @@ const WorkOrderDetailTab = props => {
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
 
-  const { vendors } = useFilteredVendors(vendorSkillId, workOrder?.projectId)
+  const { vendors } = useFilteredVendors({ vendorSkillId, projectId: workOrder?.projectId, showExpired: true })
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
   const clientStart = projectData?.clientStartDate
@@ -252,7 +252,11 @@ const WorkOrderDetailTab = props => {
     const option = [] as any
     if (vendors && vendors?.length > 0) {
       vendors?.forEach(v => {
-        option.push({ label: v.companyName as string, value: v.id as number })
+        option.push({
+          label:
+            v.statusLabel?.toLocaleLowerCase() === 'expired' ? v.companyName + ' (Expired)' : (v.companyName as string),
+          value: v.id as number,
+        })
       })
     }
     setVendorOptions(option)
@@ -313,7 +317,7 @@ const WorkOrderDetailTab = props => {
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrderDetails?.assignedItems)
     const removedItems = getRemovedItems(formValues, workOrderDetails?.assignedItems)
-    const payload = parseWODetailValuesToPayload(values)
+    const payload = parseWODetailValuesToPayload(values, workOrderDetails)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
 
@@ -561,7 +565,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!completedByVendor && !(isAdmin || isAccounting)}
+                    isDisabled={!completedByVendor}
                     variant="outline"
                     {...register('workOrderDateCompleted')}
                   />

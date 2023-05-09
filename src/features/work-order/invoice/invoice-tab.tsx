@@ -34,6 +34,8 @@ import { createInvoice } from 'api/vendor-projects'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { ConfirmationBox } from 'components/Confirmation'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { WORK_ORDER } from '../workOrder.i18n'
+import { AlertError } from 'components/AlertError'
 
 export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({
   title,
@@ -88,6 +90,7 @@ export const InvoiceTab = ({
   projectData,
   isWorkOrderUpdating,
   vendorAddress,
+  isVendorExpired,
 }) => {
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
@@ -96,7 +99,7 @@ export const InvoiceTab = ({
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
   const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAdmin } = useUserRolesSelector()
 
   const {
     isOpen: isGenerateInvoiceOpen,
@@ -240,10 +243,28 @@ export const InvoiceTab = ({
       generateInvoice()
     }
   }, [items, workOrder, projectData, vendorAddress])
+  const disableGenerateInvoice =
+    !(
+      workOrder?.statusLabel?.toLowerCase() === WOstatus.Rejected ||
+      workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
+    ) ||
+    (isVendorExpired && !isAdmin)
 
   return (
     <Box>
-      <ModalBody mx={{ base: 0, lg: '25px' }}>
+      <ModalBody mx={{ base: 0, lg: '25px' }} h={'calc(100vh - 300px)'}>
+        {isVendorExpired && (
+          <Box pt="15px">
+            <AlertError
+              styleBox={{ width: 'max-content' }}
+              msg={
+                isVendor
+                  ? `${WORK_ORDER}.expirationInvoiceMessageForVendor`
+                  : `${WORK_ORDER}.expirationInvoiceMessageForAdmin`
+              }
+            />
+          </Box>
+        )}
         <Grid
           templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(150px,1fr))' }}
           gap={5}
@@ -406,12 +427,7 @@ export const InvoiceTab = ({
             <Button
               variant="outline"
               data-testid="generateInvoice"
-              disabled={
-                !(
-                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Rejected ||
-                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
-                )
-              }
+              disabled={disableGenerateInvoice}
               colorScheme="darkPrimary"
               size="md"
               leftIcon={<BiSpreadsheet />}

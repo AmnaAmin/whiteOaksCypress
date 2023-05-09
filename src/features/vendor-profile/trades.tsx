@@ -41,7 +41,7 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
   return (
     <>
       <Box h="584px" overflow="auto">
-        <Flex maxW="900px" wrap="wrap" gridGap={3}>
+        <Flex  id="Vendor_Trades" maxW="900px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes?.map((checkbox, index) => {
             return (
               <Controller

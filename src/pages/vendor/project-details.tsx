@@ -17,6 +17,10 @@ import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 // import { TriggeredAlertsTable } from 'features/alerts/view-notifications'
 import { Card } from 'features/login-form-centered/Card'
 import { STATUS } from 'features/common/status'
+import { useUserProfile } from 'utils/redux-common-selectors'
+import { Account } from 'types/account.types'
+import { useVendorEntity } from 'api/vendor-dashboard'
+import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
 
 const tabesStyle = {
   h: { base: '52px', sm: 'unset' },
@@ -35,6 +39,9 @@ const ProjectDetails: React.FC = props => {
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
   const vendorWOStatusValue = (projectData?.vendorWOStatusValue || '').toLowerCase()
+  const { vendorId } = useUserProfile() as Account
+  const { data: vendorEntity } = useVendorEntity(vendorId)
+  const { hasExpiredDocumentOrLicense } = useDocumentLicenseMessage({ data: vendorEntity })
 
   const isNewTransactionAllow = vendorWOStatusValue
     ? ![STATUS.Paid, STATUS.Cancelled, STATUS.Invoiced].includes(vendorWOStatusValue?.toLocaleLowerCase() as STATUS)
@@ -112,7 +119,7 @@ const ProjectDetails: React.FC = props => {
                 )}
               )} */}
 
-                {tabIndex === 0 && (
+                {tabIndex === 0 && !hasExpiredDocumentOrLicense && (
                   <Button
                     data-testid="new-transaction-button"
                     onClick={onTransactionModalOpen}
@@ -130,10 +137,15 @@ const ProjectDetails: React.FC = props => {
 
               <TabPanels h="100%">
                 <TabPanel p="0px">
-                  <TransactionsTable ref={tabsContainerRef} projectStatus={projectData?.projectStatus as string} />
+                  <TransactionsTable
+                    isVendorExpired={hasExpiredDocumentOrLicense}
+                    ref={tabsContainerRef}
+                    projectStatus={projectData?.projectStatus as string}
+                  />
                 </TabPanel>
                 <TabPanel p="0px">
                   <WorkOrdersTable
+                    isVendorExpired={hasExpiredDocumentOrLicense}
                     projectData={projectData as Project}
                     onTabChange={n => {
                       setTabIndex(n)
