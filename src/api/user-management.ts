@@ -352,6 +352,9 @@ const parseUserFormData = ({
   viewVendorsOptions,
   languageOptions,
   fpmManagerRoleOptions,
+  directStates,
+  directRegions,
+  directMarkets
 }) => {
   let _accountType = accountTypeOptions
     ?.concat(
@@ -401,6 +404,9 @@ const parseUserFormData = ({
     ),
     vendorAdmin: userInfo.vendorAdmin,
     primaryAdmin: userInfo.primaryAdmin,
+    directStates: directStates,
+    directRegions: directRegions,
+    directMarkets: directMarkets
   }
 }
 
@@ -491,6 +497,17 @@ export const useUserDetails = ({ form, userInfo }) => {
       email: user?.email,
     })) || []
 
+  const directStates = formattedStates?.filter(o => o.checked)?.map(fo => fo?.state) || []
+
+  const directRegions = formattedRegions?.filter(o => o.checked)?.map(fo => fo?.region) || []
+
+  const directMarkets = formattedMarkets?.filter(o => o.checked)?.map(fo => {
+    return {
+      value: fo.market.id,
+      label: fo.market.metropolitanServiceArea
+    }
+  }) || []  
+
   useEffect(() => {
     if (!userInfo) {
       setValue('markets', formattedMarkets)
@@ -499,6 +516,10 @@ export const useUserDetails = ({ form, userInfo }) => {
       setValue('activated', true)
       setValue('langKey', languageOptions[0])
       setValue('directReports', directReportOptions)
+
+      setValue('directStates', directStates)
+      setValue('directRegions', directRegions)
+      setValue('directMarkets', directMarkets)
     } else {
       reset(
         parseUserFormData({
@@ -513,6 +534,9 @@ export const useUserDetails = ({ form, userInfo }) => {
           viewVendorsOptions,
           languageOptions,
           fpmManagerRoleOptions,
+          directStates,
+          directRegions,
+          directMarkets
         }),
       )
     }
