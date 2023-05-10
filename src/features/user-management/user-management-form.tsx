@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
+
 import {
   FPMManagerTypes,
   useActiveAccountTypes,
@@ -35,7 +36,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import ReactSelect from 'components/form/react-select'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiErrorCircle } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
@@ -62,6 +63,7 @@ const validateMarket = markets => {
 }
 const validateState = states => {
   const checkedStates = states?.filter(state => state.checked)
+
   if (!(checkedStates && checkedStates.length > 0)) {
     return false
   }
@@ -139,6 +141,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const noMarketsSelected = !validateMarket(formValues?.markets)
   const noStatesSelected = !validateState(formValues?.states)
+
   const noRegionSelected = !validateRegions(formValues?.regions)
   const invalidTelePhone =
     validateTelePhoneNumber(formValues?.telephoneNumber as string) || !formValues?.telephoneNumber
@@ -232,6 +235,10 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     setValue('vendorId', undefined)
 
     setValue('directReports' as any, [])
+
+    setValue('directStates' as any, [])
+    setValue('directRegions' as any, [])
+    setValue('directMarkets' as any, [])
   }
 
   /*
@@ -318,6 +325,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   useEffect(() => {
     if (showRegions && noRegionSelected) {
       setValue('directReports', [])
+
       clearSelectedManager()
     }
     if (showMarkets && noMarketsSelected) {
@@ -363,6 +371,52 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       directReports.filter(d => userIds?.includes(d.id)),
     )
   }, [directReportRegions, directReportStates, directReportMarkets, directReportOptions])
+
+  const watchMultiStates = useWatch({ control, name: 'directStates' as any })
+  const watchMultiRegions = useWatch({ control, name: 'directRegions' as any })
+  const watchMultiMarkets = useWatch({ control, name: 'directMarkets' as any })
+
+  useEffect(() => {
+    if (!showStates || !watchMultiStates) return
+
+    setValue(
+      'states',
+      formValues?.states?.map(s => {
+        if (watchMultiStates?.find(ms => ms.label === s.state.label)) s.checked = true
+        else s.checked = false
+
+        return s
+      }),
+    )
+  }, [watchMultiStates, showStates])
+
+  useEffect(() => {
+    if (!showRegions || !watchMultiRegions) return
+
+    setValue(
+      'regions',
+      formValues?.regions?.map(r => {
+        if (watchMultiRegions?.find(mr => mr.value === r.region.value)) r.checked = true
+        else r.checked = false
+
+        return r
+      }),
+    )
+  }, [watchMultiRegions, showRegions])
+
+  useEffect(() => {
+    if (!showMarkets || !watchMultiMarkets) return
+
+    setValue(
+      'markets',
+      formValues?.markets?.map(m => {
+        if (watchMultiMarkets?.find(mm => mm.value === m.market.id)) m.checked = true
+        else m.checked = false
+
+        return m
+      }),
+    )
+  }, [watchMultiMarkets, showMarkets])
 
   return (
     <form
@@ -497,7 +551,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       </HStack>
 
       {showMarkets ? (
-        <VStack mt="30px" spacing={15} alignItems="start">
+        <VStack mt="30px" spacing={15} alignItems="start" display="none">
           <Flex alignItems="center">
             <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
               {t(`${USER_MANAGEMENT}.modal.markets`)}
@@ -541,8 +595,43 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </VStack>
       ) : null}
 
+      {showMarkets && (
+        <FormControl w="81.9%">
+          <Flex alignItems="center" mt="30px">
+            <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
+              {t(`${USER_MANAGEMENT}.modal.markets`)}
+            </FormLabel>
+            {noMarketsSelected && (
+              <Flex alignItems="center">
+                <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                <Text as="span" color="red.400" fontSize="12px">
+                  Select one market atleast
+                </Text>
+              </Flex>
+            )}
+          </Flex>
+
+          <Controller
+            control={control}
+            name={'directMarkets' as any}
+            render={({ field }) => (
+              <ReactSelect
+                placeholder="Select or Search"
+                selectProps={{ isBorderLeft: false }}
+                closeMenuOnSelect={false}
+                isMulti={true}
+                {...field}
+                options={formValues?.markets?.map(s => {
+                  return { value: s.market.id, label: s.market.metropolitanServiceArea }
+                })}
+              />
+            )}
+          />
+        </FormControl>
+      )}
+
       {showStates ? (
-        <VStack mt="30px" spacing={15} alignItems="start">
+        <VStack mt="30px" spacing={15} alignItems="start" display="none">
           <Flex alignItems="center">
             <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
               {t(`${USER_MANAGEMENT}.modal.state`)}
@@ -586,8 +675,43 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </VStack>
       ) : null}
 
+      {showStates && (
+        <FormControl w="81.9%">
+          <Flex alignItems="center" mt="30px">
+            <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
+              {t(`${USER_MANAGEMENT}.modal.state`)}
+            </FormLabel>
+            {noStatesSelected && (
+              <Flex alignItems="center">
+                <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                <Text as="span" color="red.400" fontSize="12px">
+                  Select one state atleast
+                </Text>
+              </Flex>
+            )}
+          </Flex>
+
+          <Controller
+            control={control}
+            name={'directStates' as any}
+            render={({ field }) => (
+              <ReactSelect
+                placeholder="Select or Search"
+                selectProps={{ isBorderLeft: false }}
+                closeMenuOnSelect={false}
+                isMulti={true}
+                {...field}
+                options={formValues?.states?.map(s => {
+                  return { value: s.state.id, label: s.state.label }
+                })}
+              />
+            )}
+          />
+        </FormControl>
+      )}
+
       {showRegions ? (
-        <VStack mt="30px" spacing={15} alignItems="start">
+        <VStack mt="30px" spacing={15} alignItems="start" display="none">
           <Flex alignItems="center">
             <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
               {t(`${USER_MANAGEMENT}.modal.regions`)}
@@ -630,6 +754,41 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           </Flex>
         </VStack>
       ) : null}
+
+      {showRegions && (
+        <FormControl w="81.9%">
+          <Flex alignItems="center" mt="30px">
+            <FormLabel variant="strong-label" size="md" alignSelf="start" margin="0">
+              {t(`${USER_MANAGEMENT}.modal.regions`)}
+            </FormLabel>
+            {noRegionSelected && (
+              <Flex alignItems="center">
+                <Icon as={BiErrorCircle} width="12px" height="12px" color="red.400" ml="10px" mr="2px" />
+                <Text as="span" color="red.400" fontSize="12px">
+                  Select one region atleast
+                </Text>
+              </Flex>
+            )}
+          </Flex>
+
+          <Controller
+            control={control}
+            name={'directRegions' as any}
+            render={({ field }) => (
+              <ReactSelect
+                placeholder="Select or Search"
+                selectProps={{ isBorderLeft: false }}
+                closeMenuOnSelect={false}
+                isMulti={true}
+                {...field}
+                options={formValues?.regions?.map(s => {
+                  return { value: s.region.value, label: s.region.value }
+                })}
+              />
+            )}
+          />
+        </FormControl>
+      )}
 
       {isFPM ? (
         <HStack mt="30px" spacing={15}>

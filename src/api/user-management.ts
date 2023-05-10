@@ -380,6 +380,7 @@ const parseUserFormData = ({
       )
       .find(a => a.value === userInfo?.fieldProjectManagerRoleId)
   }
+
   return {
     ...userInfo,
     markets: markets || [],
@@ -401,6 +402,17 @@ const parseUserFormData = ({
     ),
     vendorAdmin: userInfo.vendorAdmin,
     primaryAdmin: userInfo.primaryAdmin,
+    directStates: states?.filter(o => o.checked)?.map(fo => { return { value: fo.state.id, label: fo.state.label } }) || [],
+    directRegions: regions?.filter(o => o.checked)?.map(fo => fo?.region) || [],
+    directMarkets:
+      markets
+        ?.filter(o => o.checked)
+        ?.map(fo => {
+          return {
+            value: fo.market.id,
+            label: fo.market.metropolitanServiceArea,
+          }
+        }) || [],
   }
 }
 
@@ -491,6 +503,20 @@ export const useUserDetails = ({ form, userInfo }) => {
       email: user?.email,
     })) || []
 
+  const directStates = formattedStates?.filter(o => o.checked)?.map(fo => fo?.state) || []
+
+  const directRegions = formattedRegions?.filter(o => o.checked)?.map(fo => fo?.region) || []
+
+  const directMarkets =
+    formattedMarkets
+      ?.filter(o => o.checked)
+      ?.map(fo => {
+        return {
+          value: fo.market.id,
+          label: fo.market.metropolitanServiceArea,
+        }
+      }) || []
+
   useEffect(() => {
     if (!userInfo) {
       setValue('markets', formattedMarkets)
@@ -499,6 +525,10 @@ export const useUserDetails = ({ form, userInfo }) => {
       setValue('activated', true)
       setValue('langKey', languageOptions[0])
       setValue('directReports', directReportOptions)
+
+      setValue('directStates', directStates)
+      setValue('directRegions', directRegions)
+      setValue('directMarkets', directMarkets)
     } else {
       reset(
         parseUserFormData({
@@ -525,5 +555,6 @@ export const useUserDetails = ({ form, userInfo }) => {
     allManagersOptions?.length,
     accountTypeOptions?.length,
     viewVendorsOptions?.length,
+    directStates?.length
   ])
 }
