@@ -47,7 +47,6 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-import CustomSelect from './CustomSelect'
 
 type UserManagement = {
   onClose: () => void
@@ -213,6 +212,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       setValue('fieldProjectManagerRoleId', target)
     } else {
       setValue('fieldProjectManagerRoleId', undefined)
+      if (target.value === 5) {
+        setValue('fieldProjectManagerRoleId', { ...target, value: 61 })
+      }
     }
     setValue('parentFieldProjectManagerId', null)
     setValue('managerRoleId', null)
@@ -494,25 +496,24 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             control={control}
             name="accountType"
             render={({ field: { onChange, ...rest } }) => (
-              <CustomSelect
+              <ReactSelect
                 {...rest}
                 isDisabled={userInfo && userInfo.userTypeLabel === 'Vendor'}
                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                 options={[
-                  ...accountTypeOptions.filter(account => account?.value !== 5),
-                  {
-                    label: 'Field Project Manager',
-                    options: [
-                      ...fpmManagerRoleOptions
-                        ?.filter(
-                          role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value),
-                        )
-                        .map(option => {
-                          option.subItem = true
-                          return option
-                        }),
-                    ],
-                  },
+                  ...accountTypeOptions.concat([
+                    ...fpmManagerRoleOptions
+                      ?.filter(
+                        role =>
+                          ![UserTypes.directorOfConstruction, UserTypes.operations, UserTypes.regularManager].includes(
+                            role?.value,
+                          ),
+                      )
+                      .map(option => {
+                        option.subItem = true
+                        return option
+                      }),
+                  ]),
                 ]}
                 onChange={target => {
                   onChange(target)

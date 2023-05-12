@@ -26,6 +26,7 @@ export enum UserTypes {
   operations = 38,
   clientManager = 1011,
   constructionOperations = 1012,
+  regularManager = 61,
 }
 
 export const useUserRolesSelector = (): UserRoles => {
