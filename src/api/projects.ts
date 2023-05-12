@@ -150,10 +150,10 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
   const { vendorAccountPayable, projectTotalCost, materialCost, vendorPayment } = restProjectFinancialOverviews?.reduce(
     (final, curr) => {
       return {
-        vendorAccountPayable: final.vendorAccountPayable + (curr.accountPayable || 0),
-        projectTotalCost: final.projectTotalCost + (curr.workOrderNewAmount || 0),
-        materialCost: final.materialCost + curr.material,
-        vendorPayment: final.vendorPayment + curr.vendorPayment,
+        vendorAccountPayable: final.vendorAccountPayable + (curr?.accountPayable || 0),
+        projectTotalCost: final.projectTotalCost + (curr?.workOrderNewAmount || 0),
+        materialCost: final.materialCost + (curr?.material || 0),
+        vendorPayment: final.vendorPayment + (curr?.vendorPayment || 0),
       }
     },
     { vendorAccountPayable: 0, projectTotalCost: 0, materialCost: 0, vendorPayment: 0 },
