@@ -121,7 +121,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       ?.filter(role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value))
       .map(o => o?.value) || []
 
-  const isFPM = fpmRoleIds.includes(accountType?.value)
+  const isFPM = fpmRoleIds.includes(accountType?.value) || accountType?.value === 5
 
   // We only show markets when account type is either market fpm, regular fpm or it is project cordinator
   const showMarkets = useMemo(() => {
@@ -211,9 +211,10 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     if (fpmRoleIds.includes(target.value)) {
       setValue('fieldProjectManagerRoleId', target)
     } else {
-      setValue('fieldProjectManagerRoleId', undefined)
       if (target.value === 5) {
         setValue('fieldProjectManagerRoleId', { ...target, value: 61 })
+      } else {
+        setValue('fieldProjectManagerRoleId', undefined)
       }
     }
     setValue('parentFieldProjectManagerId', null)
