@@ -185,6 +185,16 @@ export const userMangtPayload = (user: any, statesDTO?: any, fpmRoleIds?: any) =
       : []
   }
 
+  let userTypeLabel = user?.userTypeLabel
+
+  if (user.fieldProjectManagerRoleId?.value === 60) userTypeLabel = 'Regional Manager'
+
+  if (user.fieldProjectManagerRoleId?.value === 61) userTypeLabel = 'Field Project Manager'
+
+  if (user.fieldProjectManagerRoleId?.value === 221) userTypeLabel = 'Sr Field Project Manager'
+
+  if (user.fieldProjectManagerRoleId?.value === 59) userTypeLabel = 'District Manager'
+
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
@@ -204,6 +214,7 @@ export const userMangtPayload = (user: any, statesDTO?: any, fpmRoleIds?: any) =
     vendorAdmin: user.vendorAdmin,
     primaryAdmin: user.primaryAdmin,
     directChild: directReports,
+    ...(isFPM ? { userTypeLabel: userTypeLabel } : {}),
   }
 
   delete userObj.states
@@ -366,7 +377,13 @@ const parseUserFormData = ({
     )
     .find(a => a.value === userInfo?.userType)
 
-  if (fpmManagerRoleOptions?.find(fpmManager => fpmManager.value === userInfo?.fieldProjectManagerRoleId)) {
+  if (
+    fpmManagerRoleOptions?.find(
+      fpmManager =>
+        fpmManager.value === userInfo?.fieldProjectManagerRoleId &&
+        userInfo?.fieldProjectManagerRoleId !== UserTypes.regularManager,
+    )
+  ) {
     _accountType = accountTypeOptions
       ?.concat(
         ...([
@@ -402,7 +419,12 @@ const parseUserFormData = ({
     ),
     vendorAdmin: userInfo.vendorAdmin,
     primaryAdmin: userInfo.primaryAdmin,
-    directStates: states?.filter(o => o.checked)?.map(fo => { return { value: fo.state.id, label: fo.state.label } }) || [],
+    directStates:
+      states
+        ?.filter(o => o.checked)
+        ?.map(fo => {
+          return { value: fo.state.id, label: fo.state.label }
+        }) || [],
     directRegions: regions?.filter(o => o.checked)?.map(fo => fo?.region) || [],
     directMarkets:
       markets
@@ -555,6 +577,6 @@ export const useUserDetails = ({ form, userInfo }) => {
     allManagersOptions?.length,
     accountTypeOptions?.length,
     viewVendorsOptions?.length,
-    directStates?.length
+    directStates?.length,
   ])
 }
