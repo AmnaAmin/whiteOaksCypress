@@ -763,9 +763,10 @@ export const NewWorkOrderForm: React.FC<{
                         accept="application/pdf, image/png, image/jpg, image/jpeg"
                       />
                       {formValues.uploadWO ? (
-                        <Box color="barColor.100" border="1px solid #4E87F8" borderRadius="4px" fontSize="14px">
+                        <Box color="barColor.100" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
                           <HStack spacing="5px" h="38px" padding="10px" align="center">
                             <Text
+                            color="#345EA6"
                               as="span"
                               maxW="120px"
                               data-testid="uploadedSOW"
@@ -775,6 +776,7 @@ export const NewWorkOrderForm: React.FC<{
                               {formValues.uploadWO?.name || formValues.uploadWO?.fileType}
                             </Text>
                             <MdOutlineCancel
+                            color="#345EA6"
                               cursor="pointer"
                               data-testid="removeSOW"
                               onClick={() => {
