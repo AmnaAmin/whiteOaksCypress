@@ -45,9 +45,10 @@ const MessageWrapper: React.FC<BoxProps> = ({ children, ...props }) => {
 type AddressVerificationModalProps = {
   isOpen: boolean
   onClose: () => void
-  onSave: () => void
+  onSave?: () => void
   isAddressVerified: boolean
   isLoading: boolean
+  setSave?: any
 }
 
 // create chakra modal for address verification confirmation
@@ -57,6 +58,7 @@ export const AddressVerificationModal: React.FC<AddressVerificationModalProps> =
   onSave,
   isAddressVerified,
   isLoading,
+  setSave,
 }) => {
   const [isContinue, setIsContinue] = React.useState(false)
 
@@ -95,16 +97,17 @@ export const AddressVerificationModal: React.FC<AddressVerificationModalProps> =
                 <Text fontSize="14px">Address verification failed. Please fix the address & try again</Text>
                 <Flex justifyContent="end" alignItems="center" mt="15px">
                   <Button
-                  data-testid="usps_save"
+                    data-testid="usps_save"
                     variant="outline"
                     colorScheme="brand"
                     size="sm"
                     mr="4"
                     isDisabled={!isContinue}
                     onClick={() => {
-                      onSave()
+                      onSave?.()
                       onClose()
                       setIsContinue(false)
+                      setSave(true)
                     }}
                   >
                     Save
@@ -136,7 +139,7 @@ export const AddressVerificationModal: React.FC<AddressVerificationModalProps> =
                     size="sm"
                     mr="4"
                     onClick={() => {
-                      onSave()
+                      onSave?.()
                       onClose()
                     }}
                   >

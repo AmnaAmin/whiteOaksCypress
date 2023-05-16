@@ -153,7 +153,6 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['audit-logs', projectId])
-        
 
         toast({
           title: 'Project Details Updated',
@@ -648,6 +647,12 @@ export const parseProjectDetailsPayloadFromFormData = async (
   if (formValues?.invoiceAttachment) {
     documents[0] = await createDocumentPayload(formValues.invoiceAttachment)
   }
+  const property = {
+    streetAddress: formValues?.address?.label || null,
+    city: formValues?.city,
+    state: formValues?.state?.value,
+    zipCode: formValues?.zip,
+  }
   return {
     ...projectPayload,
     // Project Management payload
@@ -719,13 +724,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
     hoaPhoneNumberExtension: formValues?.hoaContactExtension,
     hoaEmailAddress: formValues?.hoaContactEmail,
     woaPayVariance: null,
-    property: {
-      streetAddress: formValues?.address?.label || null,
-      city: formValues?.city,
-      state: formValues?.state?.value,
-      zipCode: formValues?.zip,
-    },
-    propertyId: formValues?.address?.value,
+    newProperty: formValues?.address?.__isNew__ ? property : null,
+    property,
+    propertyId: formValues?.address?.__isNew__ ? null : formValues?.address?.value,
 
     // Misc payload
     createdDate: dateISOFormat(formValues?.dateCreated),

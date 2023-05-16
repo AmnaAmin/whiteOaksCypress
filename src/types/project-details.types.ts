@@ -111,7 +111,8 @@ export type ProjectDetailsFormValues = ProjectManagementValues &
   ProjectInvoicingAndPaymentFormValues &
   ContactsFormValues &
   ProjectDetailsLocationFormValues &
-  ProjectDetailsMiscFormValues
+  ProjectDetailsMiscFormValues &
+  any
 
 export type DocumentPayload = {
   fileType: string
@@ -184,6 +185,7 @@ export type ProjectDetailsAPIPayload = {
   hoaPhoneNumberExtension: string | null
   hoaEmailAddress: string | null
   woaPayVariance: number | null
+  newProperty: any
 
   // Misc payload
   createdDate: string | null
