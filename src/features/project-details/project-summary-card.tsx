@@ -9,7 +9,13 @@ import { useState } from 'react'
 import { ProjectSummaryCardDetails } from './project-summary-card-details'
 import { useTranslation } from 'react-i18next'
 
-const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, fontSize, ...rest }) => {
+const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({
+  children,
+  isLoading,
+  title,
+  fontSize,
+  ...rest
+}) => {
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
       <Box fontSize="14px" color="gray.500">
@@ -40,7 +46,7 @@ export const ProjectSummaryCard: React.FC<{
             h={{ base: 'unset', xl: '97px' }}
             w="100%"
             bg="white"
-            border="1px solid #CBD5E0"
+            border="1px solid #E5E5E5"
             borderRadius="4px"
             box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
           >
@@ -88,7 +94,8 @@ export const ProjectSummaryCard: React.FC<{
             <InfoStructureCard
               borderRight="1px solid white"
               title={t('projects.projectSummary.address')}
-              isLoading={isLoading} fontSize="12px"
+              isLoading={isLoading}
+              fontSize="12px"
             >
               <FormLabel
                 variant="light-label"
@@ -101,7 +108,7 @@ export const ProjectSummaryCard: React.FC<{
             </InfoStructureCard>
           </Flex>
           {!isLoading && (
-            <Box border={'1px solid #E5E5E5'} borderRadius="3px" w="25px" bg="blue.50">
+            <Box borderRadius="3px" w="25px" bg="#A9D8F6">
               <Box
                 color="blue.100"
                 border="none"
@@ -112,7 +119,7 @@ export const ProjectSummaryCard: React.FC<{
                 }}
               >
                 <Box mt="35px">
-                  <BiCaretRight size={25} />
+                  <BiCaretRight color="white" size={25} />
                 </Box>
               </Box>
             </Box>
