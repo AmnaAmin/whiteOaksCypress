@@ -68,7 +68,7 @@ export const PerformanceInfoCards: React.FC<{
                 </FormLabel>
               </Flex>
             </Center>
-            <Center width={'33%'}>
+            <Center width={'33%'} borderRight="1px solid #E5E5E5">
               <IconElement Icon={ProfitIcon} isLoading={isPerformanceLoading} />
               <Flex flexDir={'column'} ml={3}>
                 <FormLabel variant="light-label" size="md">
