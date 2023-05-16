@@ -47,7 +47,7 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-import CustomSelect from './CustomSelect'
+import { cloneDeep } from 'lodash'
 
 type UserManagement = {
   onClose: () => void
@@ -122,7 +122,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       ?.filter(role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value))
       .map(o => o?.value) || []
 
-  const isFPM = fpmRoleIds.includes(accountType?.value)
+  const isFPM = fpmRoleIds.includes(accountType?.value) || accountType?.value === 5
 
   // We only show markets when account type is either market fpm, regular fpm or it is project cordinator
   const showMarkets = useMemo(() => {
@@ -212,7 +212,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     if (fpmRoleIds.includes(target.value)) {
       setValue('fieldProjectManagerRoleId', target)
     } else {
-      setValue('fieldProjectManagerRoleId', undefined)
+      if (target.value === 5) {
+        setValue('fieldProjectManagerRoleId', { ...target, value: 61 })
+      } else {
+        setValue('fieldProjectManagerRoleId', undefined)
+      }
     }
     setValue('parentFieldProjectManagerId', null)
     setValue('managerRoleId', null)
@@ -418,6 +422,30 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     )
   }, [watchMultiMarkets, showMarkets])
 
+
+  
+  const accountTypeSelectOptions = useMemo( () => {
+    const options = cloneDeep(accountTypeOptions)
+    options.splice(
+      accountTypeOptions.indexOf(accountTypeOptions.find(a => a.value === 5)),
+      0,
+     ...fpmManagerRoleOptions
+          ?.filter(
+            role =>
+              ![
+                UserTypes.directorOfConstruction,
+                UserTypes.operations,
+                UserTypes.regularManager,
+              ].includes(role?.value),
+          )
+          .map(option => {
+            option.subItem = true
+            return option
+          }),
+    )
+    return options;
+  }, [accountTypeOptions] ); 
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -490,30 +518,16 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.accountType`)}
           </FormLabel>
+          
           <Controller
             control={control}
             name="accountType"
             render={({ field: { onChange, ...rest } }) => (
-              <CustomSelect
+              <ReactSelect
                 {...rest}
                 isDisabled={userInfo && userInfo.userTypeLabel === 'Vendor'}
                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
-                options={[
-                  ...accountTypeOptions.filter(account => account?.value !== 5),
-                  {
-                    label: 'Field Project Manager',
-                    options: [
-                      ...fpmManagerRoleOptions
-                        ?.filter(
-                          role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value),
-                        )
-                        .map(option => {
-                          option.subItem = true
-                          return option
-                        }),
-                    ],
-                  },
-                ]}
+                options={accountTypeSelectOptions}
                 onChange={target => {
                   onChange(target)
                   handleChangeAccountType(target)
