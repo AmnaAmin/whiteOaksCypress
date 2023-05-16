@@ -195,7 +195,11 @@ const PaymentInfoTab = props => {
                     onChange={e => {
                       const dateInvSubmitted = e.target.value
                       if (dateInvSubmitted && dateInvSubmitted !== '') {
-                        const paymentTermDate = moment(dateInvSubmitted).add(getValues('paymentTerm')?.value, 'days')
+                        //using moment here to convert to date, to avoid shifting due to timezone
+                        const paymentTermDate = moment(dateInvSubmitted).add(
+                          parseInt(getValues('paymentTerm')?.value, 10),
+                          'days',
+                        )
                         setValue('dateInvoiceSubmitted', datePickerFormat(dateInvSubmitted))
                         calculatePaymentDates(paymentTermDate?.toDate())
                         trigger()
@@ -272,31 +276,6 @@ const PaymentInfoTab = props => {
                 </FormControl>
               </Box>
               <Box>
-                <FormControl isInvalid={!!errors.expectedPaymentDate}>
-                  <FormLabel variant={'strong-label'} size={'md'}>
-                    {t('expectedPayDate')}
-                  </FormLabel>
-                  <Input
-                    id="expectedPaymentDate"
-                    type="date"
-                    size="md"
-                    data-testid="expectedPaymentDate"
-                    css={calendarIcon}
-                    isDisabled={!expectedPaymentDateEnabled}
-                    variant={invoicedRequired ? 'required-field' : 'outline'}
-                    {...register('expectedPaymentDate', {
-                      required: invoicedRequired && 'This is required',
-                    })}
-                  />
-                  <FormErrorMessage>{errors?.expectedPaymentDate?.message}</FormErrorMessage>
-                </FormControl>
-              </Box>
-            </SimpleGrid>
-          </Box>
-
-          <Box mt={10} mb={10}>
-            <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
-              <Box>
                 <FormControl isInvalid={!!errors.datePaymentProcessed}>
                   <FormLabel variant={'strong-label'} size={'md'}>
                     {t('paymentProcessed')}
@@ -316,7 +295,31 @@ const PaymentInfoTab = props => {
                   <FormErrorMessage>{errors?.datePaymentProcessed?.message}</FormErrorMessage>
                 </FormControl>
               </Box>
+            </SimpleGrid>
+          </Box>
 
+          <Box mt={10} mb={10}>
+            <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
+              <Box>
+                <FormControl isInvalid={!!errors.expectedPaymentDate}>
+                  <FormLabel variant={'strong-label'} size={'md'}>
+                    {t('expectedPayDate')}
+                  </FormLabel>
+                  <Input
+                    id="expectedPaymentDate"
+                    type="date"
+                    size="md"
+                    data-testid="expectedPaymentDate"
+                    css={calendarIcon}
+                    isDisabled={!expectedPaymentDateEnabled}
+                    variant={invoicedRequired ? 'required-field' : 'outline'}
+                    {...register('expectedPaymentDate', {
+                      required: invoicedRequired && 'This is required',
+                    })}
+                  />
+                  <FormErrorMessage>{errors?.expectedPaymentDate?.message}</FormErrorMessage>
+                </FormControl>
+              </Box>
               <Box>
                 <FormControl>
                   <FormLabel variant={'strong-label'} size={'md'}>
