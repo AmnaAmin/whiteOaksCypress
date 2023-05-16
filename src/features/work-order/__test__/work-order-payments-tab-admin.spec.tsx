@@ -9,6 +9,7 @@ import { setToken } from 'utils/storage.utils'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { act } from 'react-dom/test-utils'
 import { addDays, isWednesday, nextFriday, nextWednesday } from 'date-fns'
+import moment from 'moment'
 
 export const renderPayments = async ({ onClose, workOrder, onSave }: any) => {
   const setTabIndex = jest.fn()
@@ -117,12 +118,12 @@ describe('Work Order Invoice Test Cases', () => {
 
     await waitFor(() => {
       /* Add payment term to date invoiced */
-      const paymentTermDate = addDays(new Date(workOrder?.dateInvoiceSubmitted as string), 30)
+      const paymentTermDate = addDays(moment(workOrder?.dateInvoiceSubmitted as string).toDate(), 30)
       expect((screen.getByTestId('paymentTermDate') as HTMLInputElement).value).toEqual(
         datePickerFormat(paymentTermDate),
       )
       /* Next Wed of Payment Term Date */
-      const paymentTermDateValue = new Date((screen.getByTestId('paymentTermDate') as HTMLInputElement).value)
+      const paymentTermDateValue = moment((screen.getByTestId('paymentTermDate') as HTMLInputElement).value).toDate()
       const datePaymentProcessed = isWednesday(paymentTermDateValue)
         ? paymentTermDateValue
         : nextWednesday(paymentTermDateValue)
