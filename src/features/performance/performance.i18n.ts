@@ -8,6 +8,7 @@ export const performance = {
         revenue: 'Revenue',
         disqualifiedRevenue: 'Disqualified Revenue',
         profit: 'Profit',
+        profitMargin: 'Profit Margins',
 
         // Table
         name: 'Name',
@@ -41,6 +42,7 @@ export const performance = {
         revenue: 'Ingresos',
         disqualifiedRevenue: 'Ingresos descalificados',
         profit: 'Lucro',
+        profitMargin: 'Márgenes de beneficio',
 
         // Table
         name: 'Nombre',
