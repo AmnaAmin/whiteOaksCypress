@@ -86,8 +86,18 @@ type ProjectDetailsLocationFormValues = {
   hoaContactPhoneNumber: string | null
   hoaContactExtension: string | null
   hoaContactEmail: string | null
+  acknowledgeCheck: boolean | null
+  property: PropertyAddress
+  newMarket: SelectOption
 }
 
+type PropertyAddress = {
+  address: string
+  city: string
+  zip?: string
+  market?: SelectOption
+  state?: SelectOption
+}
 type ProjectDetailsMiscFormValues = {
   dateCreated: string | null
   activeDate: string | null
@@ -111,8 +121,7 @@ export type ProjectDetailsFormValues = ProjectManagementValues &
   ProjectInvoicingAndPaymentFormValues &
   ContactsFormValues &
   ProjectDetailsLocationFormValues &
-  ProjectDetailsMiscFormValues &
-  any
+  ProjectDetailsMiscFormValues
 
 export type DocumentPayload = {
   fileType: string
