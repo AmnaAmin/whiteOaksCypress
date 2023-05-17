@@ -310,4 +310,4 @@ export type ProjectFinancialOverview = {
   depreciation: number
 }
 
-export type AddressInfo = { address: string; city: string; state: string; zipCode: string }
+export type AddressInfo = { address: string | any; city: string; state: string; zipCode: string }

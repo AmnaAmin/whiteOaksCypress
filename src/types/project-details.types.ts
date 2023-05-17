@@ -86,8 +86,18 @@ type ProjectDetailsLocationFormValues = {
   hoaContactPhoneNumber: string | null
   hoaContactExtension: string | null
   hoaContactEmail: string | null
+  acknowledgeCheck: boolean | null
+  property: PropertyAddress
+  newMarket: SelectOption
 }
 
+type PropertyAddress = {
+  address: string
+  city: string
+  zip?: string
+  market?: SelectOption
+  state?: SelectOption
+}
 type ProjectDetailsMiscFormValues = {
   dateCreated: string | null
   activeDate: string | null
@@ -124,6 +134,7 @@ export type ProjectDetailsAPIPayload = {
 
   // Project Management payload
   projectStatus: string | null
+  newMarketId: number | null
   projectType: string | null
   woNumber: string | null
   poNumber: string | null
@@ -184,6 +195,7 @@ export type ProjectDetailsAPIPayload = {
   hoaPhoneNumberExtension: string | null
   hoaEmailAddress: string | null
   woaPayVariance: number | null
+  newProperty: any
 
   // Misc payload
   createdDate: string | null
