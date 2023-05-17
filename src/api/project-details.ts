@@ -153,7 +153,6 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['audit-logs', projectId])
-        
 
         toast({
           title: 'Project Details Updated',
@@ -408,6 +407,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       // Project Status -> Disputed
       // In case of disputed, all the cases will be implemented on the basis of previous Status
       else if (projectStatusId === Number(PROJECT_STATUS.disputed.value)) {
+        overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.reconcile]
         // Last Project Status -> Active
         if (previousProjectStatus === Number(PROJECT_STATUS.active.value)) {
           overrideProjectStatusOptions = [
