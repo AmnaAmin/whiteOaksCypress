@@ -173,13 +173,15 @@ const parseXmlResponse = async (response: any) => {
 
 export const useGetAddressVerification = (addressInfo: AddressInfo) => {
   const { address, city, state, zipCode } = addressInfo || { address: '', city: '', state: '', zipCode: '' }
+  const addressAccordingly = address.__isNew__ ? address.value : address
+
   const client = useClient()
 
   return useQuery(
     ['addressVerification', address, city, state, zipCode],
     async () => {
       const response = await client(
-        `addressVerification?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`,
+        `addressVerification?address=${addressAccordingly}&city=${city}&state=${state}&zipCode=${zipCode}`,
         {},
       )
       const parsed = await parseXmlResponse(response)

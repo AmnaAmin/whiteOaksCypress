@@ -1,4 +1,19 @@
-import { FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Box,
+  Checkbox,
+  Divider,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  Input,
+  Stack,
+  Text,
+} from '@chakra-ui/react'
 
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -9,6 +24,11 @@ import Select, { CreatableSelect } from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 import { addDays } from 'date-fns'
 import { dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
+import { useState } from 'react'
+
+import { STATUS } from 'features/common/status'
+import { useProjects } from 'api/projects'
+import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 
 type Market = [
   {
@@ -58,6 +78,10 @@ const Location: React.FC<LocationProps> = ({
     formState: { errors },
     setValue,
   } = useFormContext<ProjectDetailsFormValues>()
+  const { projects } = useProjects()
+  const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
+  const [existProperty, setExistProperty] = useState([{ id: 0, status: '' }])
+  const [check, setCheck] = useState(false)
 
   const {
     isAddressDisabled,
@@ -72,6 +96,13 @@ const Location: React.FC<LocationProps> = ({
   const { t } = useTranslation()
   const woaCompletionDate = useWatch({ name: 'woaCompletionDate', control })
 
+  // Continue unverified Check
+  const handleCheck = () => {
+    setCheck(!check)
+    setIsDuplicateAddress(false)
+    setValue('acknowledgeCheck', true)
+  }
+
   const setAddressValues = option => {
     const property = option?.property
     const market = markets.find(m => m?.id === property?.marketId)
@@ -82,212 +113,254 @@ const Location: React.FC<LocationProps> = ({
     setValue('zip', property?.zipCode)
     setValue('market', { label: market?.metropolitanServiceArea, value: market?.id })
     setValue('state', { label: state?.name, value: state?.code })
+    setValue('property', property)
+    setValue('newMarket', { label: market?.metropolitanServiceArea, value: market?.id })
+
+    // Check for duplicate address
+    const duplicatedInProjects =
+      projects?.filter(
+        p =>
+          p.propertyId === property?.id &&
+          [STATUS.New, STATUS.Active, STATUS.Punch, STATUS.Closed].includes(p.projectStatus?.toLowerCase() as STATUS),
+      ) || []
+    setIsDuplicateAddress(false)
+    setValue('acknowledgeCheck', false)
+
+    if (duplicatedInProjects?.length > 0) {
+      setIsDuplicateAddress(true)
+      setExistProperty(duplicatedInProjects.map(p => ({ id: p.id as number, status: p.projectStatus as string })))
+    }
   }
 
   return (
     <Stack>
-      <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
-        <GridItem>
-          <FormControl isInvalid={!!errors.address} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="address">
-              {t(`project.projectDetails.address`)}
-            </FormLabel>
-            <Controller
-              control={control}
-              name={`address`}
-              rules={{ required: 'This is required field' }}
-              render={({ field, fieldState }) => (
-                <>
-                  <CreatableSelect
-                    id="address"
-                    isDisabled={isAddressDisabled}
-                    options={propertySelectOptions}
-                    // selected={field.value}
-                    placeholder="Type address here.."
-                    value={field.value}
-                    onChange={option => {
-                      setAddressValues(option)
-                      field.onChange(option)
-                    }}
-                    // onChange={setAddressValues}
-                    selectProps={{ isBorderLeft: true }}
-                    inputProps={{ autoComplete: 'off', autoCorrect: 'off', spellCheck: 'off' }}
-                    // filterOption={createFilter({ ignoreAccents: false })}
-                  />
-                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                </>
-              )}
-            />
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isInvalid={!!errors.city} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="city">
-              {t(`project.projectDetails.city`)}
-            </FormLabel>
-            <Input
-              variant="required-field"
-              isDisabled={isCityDisabled}
-              id="city"
-              {...register('city', { required: 'This is required field' })}
-            />
-            <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isInvalid={!!errors.state} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="state">
-              {t(`project.projectDetails.state`)}
-            </FormLabel>
-            <Controller
-              control={control}
-              name={`state`}
-              rules={{ required: 'This is required field' }}
-              render={({ field, fieldState }) => (
-                <>
-                  <Select
-                    {...field}
-                    options={stateSelectOptions}
-                    size="md"
-                    value={field.value}
-                    isDisabled={isStateDisabled}
-                    selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
-                    onChange={option => {
-                      const lienExpiryDate = addDays(
-                        new Date(dateISOFormatWithZeroTime(woaCompletionDate) as string),
-                        option?.lienDue ?? 0,
-                      )
-                      setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
-                      field.onChange(option)
-                    }}
-                  />
-                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                </>
-              )}
-            />
-            {/* <Input isDisabled={isCityDisabled} id="state" {...register('state')} /> */}
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isInvalid={!!errors.zip} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="zip">
-              {t(`project.projectDetails.zip`)}
-            </FormLabel>
-            <Input
-              variant="required-field"
-              isDisabled={isZipDisabled}
-              id="zip"
-              {...register('zip', { required: 'This is required field' })}
-            />
-            <FormErrorMessage>{errors.zip && errors.zip.message}</FormErrorMessage>
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isInvalid={!!errors.market} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="market">
-              {t(`project.projectDetails.market`)}
-            </FormLabel>
-            {/* <Input isDisabled={isMarketDisabled} id="market" {...register('market')} /> */}
-            <Controller
-              control={control}
-              name={`market`}
-              rules={{ required: 'This is required field' }}
-              render={({ field, fieldState }) => (
-                <>
-                  <Select
-                    {...field}
-                    options={marketSelectOptions}
-                    size="md"
-                    value={field.value}
-                    selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
-                    isDisabled={isMarketDisabled}
-                    onChange={option => {
-                      field.onChange(option)
-                    }}
-                  />
-                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                </>
-              )}
-            />
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isInvalid={!!errors.gateCode} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="gateCode">
-              {t(`project.projectDetails.gateCode`)}
-            </FormLabel>
-            <Input
-              datatest-id="gate-Code"
-              border=" 1px solid #E2E8F0"
-              disabled={isGateCodeDisabled}
-              id="gateCode"
-              {...register('gateCode')}
-            />
-            <FormErrorMessage>{errors.gateCode && errors.gateCode.message}</FormErrorMessage>
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isInvalid={!!errors.lockBoxCode} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="lockBoxCode" noOfLines={1}>
-              {t(`project.projectDetails.lockBoxCode`)}
-            </FormLabel>
-            <Input
-              datatest-id="lock-Box-Code"
-              border=" 1px solid #E2E8F0"
-              disabled={isLockBoxCodeDisabled}
-              id="lockBoxCode"
-              {...register('lockBoxCode')}
-            />
-            <FormErrorMessage>{errors.lockBoxCode && errors.lockBoxCode.message}</FormErrorMessage>
-          </FormControl>
-        </GridItem>
-        <GridItem></GridItem>
-        <GridItem>
-          <FormControl isInvalid={!!errors.hoaContactPhoneNumber} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="hoaContactPhoneNumber" noOfLines={1}>
-              {t(`project.projectDetails.hoaContactPhone`)}
-            </FormLabel>
-            <Controller
-              control={control}
-              name="hoaContactPhoneNumber"
-              render={({ field, fieldState }) => {
-                return (
+      <Box px="6" h="300px" overflow={'auto'}>
+        {isDuplicateAddress && (
+          <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
+            <AlertIcon />
+            <AlertDescription>
+              <Text color="red" fontSize="sm">
+                {existProperty &&
+                  existProperty?.map(
+                    p => 'Project ID ' + p.id + ' using this address already exist & is in ' + p.status + ' state. ',
+                  )}
+              </Text>
+            </AlertDescription>
+            <Divider orientation="vertical" h={6} marginLeft={6} />
+            <Checkbox
+              name={`acknowledgeCheck`}
+              type="checkbox"
+              marginTop={1}
+              marginLeft={6}
+              color="#4E87F8"
+              onChange={handleCheck}
+            >
+              {t(`${NEW_PROJECT}.acknowledged`)}
+            </Checkbox>
+          </Alert>
+        )}
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
+          <GridItem>
+            <FormControl isInvalid={!!errors.address} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="address">
+                {t(`project.projectDetails.address`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={`address`}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => (
                   <>
-                    <NumberFormat
-                      customInput={Input}
+                    <CreatableSelect
+                      id="address"
+                      isDisabled={isAddressDisabled}
+                      options={propertySelectOptions}
+                      // selected={field.value}
+                      placeholder="Type address here.."
                       value={field.value}
-                      onChange={e => field.onChange(e)}
-                      format="(###)-###-####"
-                      mask="_"
-                      placeholder="(___)-___-____"
+                      onChange={option => {
+                        setAddressValues(option)
+                        field.onChange(option)
+                      }}
+                      // onChange={setAddressValues}
+                      selectProps={{ isBorderLeft: true }}
+                      inputProps={{ autoComplete: 'off', autoCorrect: 'off', spellCheck: 'off' }}
                     />
-                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
-                )
-              }}
-            />
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isInvalid={!!errors.hoaContactExtension} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="hoaContactExtension">
-              {t(`project.projectDetails.ext`)}
-            </FormLabel>
-            <Input border=" 1px solid #E2E8F0" id="hoaContactExtension" {...register('hoaContactExtension')} />
-            <FormErrorMessage>{errors?.hoaContactExtension?.message}</FormErrorMessage>
-          </FormControl>
-        </GridItem>
-        <GridItem>
-          <FormControl isInvalid={!!errors.hoaContactEmail} w="215px">
-            <FormLabel variant="strong-label" size="md" htmlFor="hoaContactEmail" noOfLines={1}>
-              {t(`project.projectDetails.hoaContactEmail`)}
-            </FormLabel>
-            <Input border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')} />
-            <FormErrorMessage>{errors.hoaContactEmail && errors.hoaContactEmail.message}</FormErrorMessage>
-          </FormControl>
-        </GridItem>
-        <GridItem></GridItem>
-      </Grid>
+                )}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.city} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="city">
+                {t(`project.projectDetails.city`)}
+              </FormLabel>
+              <Input
+                variant="required-field"
+                isDisabled={isCityDisabled}
+                id="city"
+                {...register('city', { required: 'This is required field' })}
+              />
+              <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.state} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="state">
+                {t(`project.projectDetails.state`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={`state`}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={stateSelectOptions}
+                      size="md"
+                      value={field.value}
+                      isDisabled={isStateDisabled}
+                      selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
+                      onChange={option => {
+                        const lienExpiryDate = addDays(
+                          new Date(dateISOFormatWithZeroTime(woaCompletionDate) as string),
+                          option?.lienDue ?? 0,
+                        )
+                        setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
+                        field.onChange(option)
+                      }}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
+              {/* <Input isDisabled={isCityDisabled} id="state" {...register('state')} /> */}
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.zip} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="zip">
+                {t(`project.projectDetails.zip`)}
+              </FormLabel>
+              <Input
+                variant="required-field"
+                isDisabled={isZipDisabled}
+                id="zip"
+                {...register('zip', { required: 'This is required field' })}
+              />
+              <FormErrorMessage>{errors.zip && errors.zip.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.market} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="market">
+                {t(`project.projectDetails.market`)}
+              </FormLabel>
+              {/* <Input isDisabled={isMarketDisabled} id="market" {...register('market')} /> */}
+              <Controller
+                control={control}
+                name={`market`}
+                rules={{ required: 'This is required field' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Select
+                      {...field}
+                      options={marketSelectOptions}
+                      size="md"
+                      value={field.value}
+                      selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
+                      isDisabled={isMarketDisabled}
+                      onChange={option => {
+                        field.onChange(option)
+                      }}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.gateCode} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="gateCode">
+                {t(`project.projectDetails.gateCode`)}
+              </FormLabel>
+              <Input
+                datatest-id="gate-Code"
+                border=" 1px solid #E2E8F0"
+                disabled={isGateCodeDisabled}
+                id="gateCode"
+                {...register('gateCode')}
+              />
+              <FormErrorMessage>{errors.gateCode && errors.gateCode.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.lockBoxCode} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="lockBoxCode" noOfLines={1}>
+                {t(`project.projectDetails.lockBoxCode`)}
+              </FormLabel>
+              <Input
+                datatest-id="lock-Box-Code"
+                border=" 1px solid #E2E8F0"
+                disabled={isLockBoxCodeDisabled}
+                id="lockBoxCode"
+                {...register('lockBoxCode')}
+              />
+              <FormErrorMessage>{errors.lockBoxCode && errors.lockBoxCode.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem></GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.hoaContactPhoneNumber} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="hoaContactPhoneNumber" noOfLines={1}>
+                {t(`project.projectDetails.hoaContactPhone`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="hoaContactPhoneNumber"
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        customInput={Input}
+                        value={field.value}
+                        onChange={e => field.onChange(e)}
+                        format="(###)-###-####"
+                        mask="_"
+                        placeholder="(___)-___-____"
+                      />
+                      <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.hoaContactExtension} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="hoaContactExtension">
+                {t(`project.projectDetails.ext`)}
+              </FormLabel>
+              <Input border=" 1px solid #E2E8F0" id="hoaContactExtension" {...register('hoaContactExtension')} />
+              <FormErrorMessage>{errors?.hoaContactExtension?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.hoaContactEmail} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="hoaContactEmail" noOfLines={1}>
+                {t(`project.projectDetails.hoaContactEmail`)}
+              </FormLabel>
+              <Input border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')} />
+              <FormErrorMessage>{errors.hoaContactEmail && errors.hoaContactEmail.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem></GridItem>
+        </Grid>
+      </Box>
     </Stack>
   )
 }
