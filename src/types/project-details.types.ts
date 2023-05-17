@@ -125,6 +125,7 @@ export type ProjectDetailsAPIPayload = {
 
   // Project Management payload
   projectStatus: string | null
+  newMarketId: number | null
   projectType: string | null
   woNumber: string | null
   poNumber: string | null

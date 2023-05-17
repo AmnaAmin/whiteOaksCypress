@@ -648,6 +648,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
   if (formValues?.invoiceAttachment) {
     documents[0] = await createDocumentPayload(formValues.invoiceAttachment)
   }
+
+  const isNewAddress = formValues?.address?.__isNew__
+
   const property = {
     streetAddress: formValues?.address?.label || null,
     city: formValues?.city,
@@ -725,9 +728,10 @@ export const parseProjectDetailsPayloadFromFormData = async (
     hoaPhoneNumberExtension: formValues?.hoaContactExtension,
     hoaEmailAddress: formValues?.hoaContactEmail,
     woaPayVariance: null,
-    newProperty: formValues?.address?.__isNew__ ? property : null,
+    newProperty: isNewAddress ? property : undefined,
     property,
-    propertyId: formValues?.address?.__isNew__ ? null : formValues?.address?.value,
+    newMarketId: isNewAddress ? formValues.market?.value : undefined,
+    propertyId: isNewAddress ? undefined : formValues?.address?.value,
 
     // Misc payload
     createdDate: dateISOFormat(formValues?.dateCreated),
