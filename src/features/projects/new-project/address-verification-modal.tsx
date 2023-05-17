@@ -141,6 +141,7 @@ export const AddressVerificationModal: React.FC<AddressVerificationModalProps> =
                     onClick={() => {
                       onSave?.()
                       onClose()
+                      setSave(true)
                     }}
                   >
                     Continue
