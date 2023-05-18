@@ -10,9 +10,7 @@ import { VendorSkills } from 'pages/vendor-manager/vendor-skills'
 import { Markets } from 'pages/vendor-manager/markets'
 import Alerts from './alerts'
 // import { ProjectCoordinatorDashboard } from 'pages/dashboard'
-
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { Performance } from './fpm/performance'
+// import { Performance } from './fpm/performance' fpm performance is hidden
 import { PerformanceTab } from 'features/performance/performance'
 import { UserManagement } from './admin/user-management'
 import Dashboard from './admin/dashboard'
@@ -29,131 +27,28 @@ const VendorProfilePage = lazy(() => import('pages/vendor/vendor-profile-v-porta
 const VendorProjectDetails = lazy(() => import('pages/vendor/project-details'))
 
 export default function useRoutesConfig() {
-  const {
-    isFPM,
-    isProjectCoordinator,
-    isVendor,
-    isVendorManager,
-    isDoc,
-    isAdmin,
-    isAccounting,
-    isOperations,
-    isClientManager,
-    isConstructionOperations,
-  } = useUserRolesSelector()
-  switch (true) {
-    case isFPM:
-      return [
-        { path: 'projects', element: Projects },
-        { path: 'project-details/:projectId', element: ProjectDetails },
-        { path: 'vendors', element: Vendors },
-        { path: 'performance', element: Performance },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
-        { path: 'estimates', element: Estimates },
-      ]
-    case isProjectCoordinator:
-      return [
-        { path: 'projects', element: Projects },
-        { path: 'project-details/:projectId', element: ProjectDetails },
-        { path: 'payable', element: Payable },
-        { path: 'receivable', element: Receivable },
-        { path: 'vendors', element: Vendors },
-        { path: 'clients', element: Clients },
-        // { path: 'alerts', element: Alerts },
-        // { path: 'pcDashboard', element: ProjectCoordinatorDashboard },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
-        { path: 'estimates', element: Estimates },
-      ]
-    case isVendorManager:
-      return [
-        { path: 'vendors', element: Vendors },
-        { path: 'vendorSkills', element: VendorSkills },
-        { path: 'markets', element: Markets },
-      ]
-    case isDoc:
-      return [
-        { path: 'projects', element: Projects },
-        { path: 'project-details/:projectId', element: ProjectDetails },
-        { path: 'vendors', element: Vendors },
-        { path: 'reports', element: Reports },
-        { path: 'performance', element: PerformanceTab },
-        { path: 'clients', element: Clients },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
-        { path: 'estimates', element: Estimates },
-      ]
-
-    case isVendor:
-      return [
-        { path: 'vendorDashboard', element: VendorDashboard },
-        { path: 'projects', element: VendorProjects },
-        { path: 'project-details/:projectId', element: VendorProjectDetails },
-        { path: 'vendors', element: VendorProfilePage },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
-        { path: 'estimates', element: Estimates },
-      ]
-    case isAdmin:
-      return [
-        { path: 'adminDashboard', element: Dashboard },
-        { path: 'userManager', element: UserManagement },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
-        { path: 'project-details/:projectId', element: ProjectDetails },
-        { path: 'projectType', element: ProjectType },
-        { path: 'estimates', element: Estimates },
-        { path: 'projects', element: Projects },
-        { path: 'payable', element: Payable },
-        { path: 'support-tickets', element: SupportTickets },
-        { path: 'receivable', element: Receivable },
-        { path: 'vendors', element: Vendors },
-        { path: 'clients', element: Clients },
-        { path: 'reports', element: Reports },
-        { path: 'markets', element: Markets },
-        { path: 'performance', element: PerformanceTab },
-        { path: 'vendorSkills', element: VendorSkills },
-        { path: 'alerts', element: Alerts },
-        { path: 'cypressReport', element: CypressReport },
-      ]
-
-    case isAccounting:
-      return [
-        { path: 'projects', element: Projects },
-        { path: 'project-details/:projectId', element: ProjectDetails },
-        { path: 'payable', element: Payable },
-        { path: 'receivable', element: Receivable },
-        { path: 'vendors', element: Vendors },
-        { path: 'clients', element: Clients },
-        { path: 'reports', element: Reports },
-        { path: 'performance', element: PerformanceTab },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
-        { path: 'estimates', element: Estimates },
-      ]
-    case isOperations:
-      return [
-        { path: 'estimates', element: Estimates },
-        { path: 'projects', element: Projects },
-        { path: 'project-details/:projectId', element: ProjectDetails },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
-        { path: 'payable', element: Payable },
-        { path: 'receivable', element: Receivable },
-        { path: 'vendors', element: Vendors },
-        { path: 'clients', element: Clients },
-        { path: 'reports', element: Reports },
-        { path: 'performance', element: PerformanceTab },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
-        { path: 'estimates', element: Estimates },
-      ]
-    case isClientManager:
-      return [{ path: 'clients', element: Clients }]
-
-    case isConstructionOperations:
-      return [
-        { path: 'projects', element: Projects },
-        { path: 'project-details/:projectId', element: ProjectDetails },
-        { path: 'vendors', element: Vendors },
-        { path: 'estimates', element: Estimates },
-        { path: 'estimate-details/:projectId', element: EstimateDetails },
-      ]
-
-    default:
-      return []
-  }
+  return [
+    { path: 'adminDashboard', element: Dashboard, permission: 'MENU.ADMINDASHBOARD' },
+    { path: 'vendorDashboard', element: VendorDashboard, permission: 'MENU.VENDORDASHBOARD' },
+    { path: 'projects', element: Projects, permission: 'MENU.PROJECTS' },
+    { path: 'project-details/:projectId', element: ProjectDetails, permission: 'MENU.PROJECTS' },
+    { path: 'estimates', element: Estimates, permission: 'MENU.ESTIMATES' },
+    { path: 'estimate-details/:projectId', element: EstimateDetails, permission: 'MENU.ESTIMATES' },
+    { path: 'userManager', element: UserManagement, permission: 'MENU.USERMANAGER' },
+    { path: 'projectType', element: ProjectType, permission: 'MENU.PROJECTTYPE' },
+    { path: 'payable', element: Payable, permission: 'MENU.PAYABLE' },
+    { path: 'support-tickets', element: SupportTickets, permission: 'MENU.SUPPORT' },
+    { path: 'receivable', element: Receivable, permission: 'MENU.RECEIVABLE' },
+    { path: 'vendors', element: Vendors, permission: 'MENU.VENDORS' },
+    { path: 'clients', element: Clients, permission: 'MENU.CLIENTS' },
+    { path: 'reports', element: Reports, permission: 'MENU.REPORTS' },
+    { path: 'markets', element: Markets, permission: 'MENU.MARKETS' },
+    { path: 'performance', element: PerformanceTab, permission: 'MENU.PERFORMANCE' },
+    { path: 'vendorSkills', element: VendorSkills, permission: 'MENU.VENDORSKILLS' },
+    { path: 'alerts', element: Alerts, permission: 'MENU.ALERTS' },
+    { path: 'cypressReport', element: CypressReport, permission: 'MENU.CYPRESSREPORT' },
+    { path: 'projects', element: VendorProjects, permission: 'MENU.VENDORPROJECTS' },
+    { path: 'project-details/:projectId', element: VendorProjectDetails, permission: 'MENU.PROJECTS' },
+    { path: 'vendors', element: VendorProfilePage, permission: 'MENU.PROJECTS' },
+  ]
 }

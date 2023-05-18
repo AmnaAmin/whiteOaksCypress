@@ -15,7 +15,7 @@ import { Sidebar } from './sidebar'
 import { SidebarLink } from './sidebar-link'
 import { useMobileMenuState } from 'utils/hooks/useMobileMenuState'
 import { AiOutlineVerticalLeft, AiOutlineVerticalRight } from 'react-icons/ai'
-import { Menus, useRoleBasedMenu } from './constants'
+import { MenusList, useRoleBasedMenu } from './constants'
 import { IdleTimeOutModal } from './idle-time-out'
 import { useTranslation } from 'react-i18next'
 import { SIDE_NAV } from './sideNav.i18n'
@@ -26,6 +26,7 @@ import { ViewLoader } from 'components/page-level-loader'
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
   const permissions = useRoleBasedMenu()
+  const menus = MenusList?.filter(m => permissions.includes(m.permission))
   const { t } = useTranslation()
   const { isOpen: isOpenBrowserWarning, onClose: onCloseBrowserWarning, onOpen: onOpenBrowserWarning } = useDisclosure()
   const [isNavigating, setNavigating] = useState(false)
@@ -69,47 +70,45 @@ export const Layout: React.FC = props => {
                   <FormLabel ml={6} color="#A1A6B1" size="sm" letterSpacing="1px">
                     {t(`${SIDE_NAV}.menu`)}
                   </FormLabel>
-                  {Menus?.map((item, index) => (
+                  {menus?.map((item, index) => (
                     <>
-                      {permissions?.some(pr => item.permissions?.includes(pr)) && (
-                        <React.Fragment key={index}>
-                          {item.title === `${SIDE_NAV}.userMgmt` && (
-                            <Flex
-                              alignItems="center"
-                              h="43px"
-                              w="201px"
+                      <React.Fragment key={index}>
+                        {item.title === `${SIDE_NAV}.userMgmt` && (
+                          <Flex
+                            alignItems="center"
+                            h="43px"
+                            w="201px"
+                            style={{
+                              borderTop: '1px solid rgb(237, 242, 247, 0.25)',
+                              borderBottom: '1px solid rgb(237, 242, 247, 0.25)',
+                              paddingLeft: '26px',
+                              marginBottom: '21px',
+                              marginTop: '28px',
+                            }}
+                          >
+                            <Text
+                              as="span"
                               style={{
-                                borderTop: '1px solid rgb(237, 242, 247, 0.25)',
-                                borderBottom: '1px solid rgb(237, 242, 247, 0.25)',
-                                paddingLeft: '26px',
-                                marginBottom: '21px',
-                                marginTop: '28px',
+                                fontWeight: 6500,
+                                fontSize: '13px',
+                                lineHeight: '28px',
+                                color: '#A1A6B1',
+                                letterSpacing: '1px',
                               }}
                             >
-                              <Text
-                                as="span"
-                                style={{
-                                  fontWeight: 6500,
-                                  fontSize: '13px',
-                                  lineHeight: '28px',
-                                  color: '#A1A6B1',
-                                  letterSpacing: '1px',
-                                }}
-                              >
-                                {t(`${SIDE_NAV}.administration`)}
-                              </Text>
-                            </Flex>
-                          )}
-                          <Box w="201px" key={item.pathTo}>
-                            <SidebarLink
-                              pathTo={item.pathTo}
-                              title={t(item.title)}
-                              testId={item.testId}
-                              icon={<item.Icon color={item.color} />}
-                            />
-                          </Box>
-                        </React.Fragment>
-                      )}
+                              {t(`${SIDE_NAV}.administration`)}
+                            </Text>
+                          </Flex>
+                        )}
+                        <Box w="201px" key={item.pathTo}>
+                          <SidebarLink
+                            pathTo={item.pathTo}
+                            title={t(item.title)}
+                            testId={item.testId}
+                            icon={<item.Icon color={item.color} />}
+                          />
+                        </Box>
+                      </React.Fragment>
                     </>
                   ))}
                 </Stack>
