@@ -20,7 +20,7 @@ import { MdOnlinePrediction } from 'react-icons/md'
 type Menu = {
   pathTo: string
   title: string
-  Icon?: React.ElementType
+  Icon: React.ElementType
   color?: string
   testId?: string
   permissions: string[]

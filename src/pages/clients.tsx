@@ -8,14 +8,15 @@ import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BiBookAdd } from 'react-icons/bi'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const Client = () => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
   const { data: clients } = useClients()
   const { isOpen: isOpenNewClientModal, onClose: onNewClientModalClose, onOpen: onNewClientModalOpen } = useDisclosure()
-  const { isProjectCoordinator } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.includes('CLIENTS.READ')
+
   const [createdClientId, setCreatedClientId] = useState<string | null | undefined>(null)
   const [selectedClient, setSelectedClient] = useState<string | null | undefined>(null)
   const location = useLocation()
@@ -44,7 +45,7 @@ export const Client = () => {
       <Card pt="16px" pb="26px" px="10px" rounded="6px">
         <Flex mb="16px" alignItems="center" justifyContent="flex-end">
           <>
-            {!isProjectCoordinator && (
+            {!isReadOnly && (
               <Button onClick={onNewClientModalOpen} colorScheme="brand" fontSize="14px">
                 <Icon as={BiBookAdd} fontSize="18px" mr={2} />
                 {t(`${CLIENTS}.newClient`)}

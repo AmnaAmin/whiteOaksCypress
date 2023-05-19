@@ -22,7 +22,7 @@ import { useTranslation } from 'react-i18next'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { ClientFormValues } from 'types/client.type'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import Select from 'components/form/react-select'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { MdOutlineCancel } from 'react-icons/md'
@@ -44,7 +44,7 @@ export const Details: React.FC<clientDetailProps> = props => {
   const { t } = useTranslation()
   const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
-  const { isProjectCoordinator } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.includes('CLIENTS.READ')
 
   const btnStyle = {
     alignItems: 'center',
@@ -109,7 +109,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <Input
                 id="companyName"
                 {...register('companyName', { required: 'This is required' })}
-                isDisabled={isProjectCoordinator}
+                isDisabled={isReadOnly}
                 variant={'required-field'}
                 onKeyPress={e => preventSpecialCharacter(e)}
               />
@@ -134,7 +134,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                         maxMenuHeight={80}
                         {...field}
                         selectProps={{ isBorderLeft: true }}
-                        isDisabled={isProjectCoordinator}
+                        isDisabled={isReadOnly}
                       />
                       <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                     </div>
@@ -174,7 +174,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                                 field.onChange(isChecked)
                               }}
                               mr="2px"
-                              isDisabled={isProjectCoordinator}
+                              isDisabled={isReadOnly}
                             >
                               {t(`${CLIENTS}.creditCard`)}
                             </Checkbox>
@@ -200,7 +200,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                               field.onChange(isChecked)
                             }}
                             mr="2px"
-                            isDisabled={isProjectCoordinator}
+                            isDisabled={isReadOnly}
                           >
                             {t(`${CLIENTS}.check`)}
                           </Checkbox>
@@ -225,7 +225,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                               field.onChange(isChecked)
                             }}
                             mr="2px"
-                            isDisabled={isProjectCoordinator}
+                            isDisabled={isReadOnly}
                           >
                             {t(`${CLIENTS}.ach`)}
                           </Checkbox>
@@ -250,7 +250,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                               field.onChange(isChecked)
                             }}
                             mr="2px"
-                            isDisabled={isProjectCoordinator}
+                            isDisabled={isReadOnly}
                           >
                             {t(`${CLIENTS}.wired`)}
                           </Checkbox>
@@ -275,7 +275,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 id="streetAddress"
                 {...register('streetAddress', { required: 'This is required' })}
                 style={disabledTextStyle}
-                isDisabled={isProjectCoordinator}
+                isDisabled={isReadOnly}
                 variant={'required-field'}
               />
               <FormErrorMessage>{errors?.streetAddress && errors?.streetAddress?.message}</FormErrorMessage>
@@ -289,7 +289,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <Input
                 id="city"
                 {...register('city', { required: 'This is required' })}
-                isDisabled={isProjectCoordinator}
+                isDisabled={isReadOnly}
                 variant={'required-field'}
               />
               <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
@@ -313,7 +313,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                         selected={field.value}
                         onChange={option => field.onChange(option)}
                         selectProps={{ isBorderLeft: true }}
-                        isDisabled={isProjectCoordinator}
+                        isDisabled={isReadOnly}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </div>
@@ -327,12 +327,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.zipCode`)}
               </FormLabel>
-              <Input
-                id="zipCode"
-                {...register('zipCode')}
-                style={disabledTextStyle}
-                isDisabled={isProjectCoordinator}
-              />
+              <Input id="zipCode" {...register('zipCode')} style={disabledTextStyle} isDisabled={isReadOnly} />
             </FormControl>
           </GridItem>
         </Grid>
@@ -355,7 +350,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       id="contact"
                       {...register(`contacts.${index}.contact`, { required: 'This is required' })}
                       style={disabledTextStyle}
-                      isDisabled={isProjectCoordinator}
+                      isDisabled={isReadOnly}
                       variant={'required-field'}
                       type="text"
                       onKeyPress={e => preventSpecialCharacter(e)}
@@ -389,7 +384,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                               format="(###)-###-####"
                               mask="_"
                               placeholder="(___)-___-____"
-                              isDisabled={isProjectCoordinator}
+                              isDisabled={isReadOnly}
                               variant={'required-field'}
                               getInputRef={phoneNumberRef}
                             />
@@ -416,7 +411,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       id="phoneNumberExtension"
                       {...register(`contacts.${index}.phoneNumberExtension`)}
                       style={disabledTextStyle}
-                      isDisabled={isProjectCoordinator}
+                      isDisabled={isReadOnly}
                       type="number"
                     />
                     <FormErrorMessage>{errors?.contacts?.[index]?.phoneNumberExtension?.message}</FormErrorMessage>
@@ -438,7 +433,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       })}
                       variant={'required-field'}
                       style={disabledTextStyle}
-                      isDisabled={isProjectCoordinator}
+                      isDisabled={isReadOnly}
                       type="email"
                     />
                     <FormErrorMessage>{errors?.contacts?.[index]?.emailAddress?.message}</FormErrorMessage>
@@ -463,7 +458,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                                   options={marketSelectOptions}
                                   selected={field.value}
                                   onChange={option => field.onChange(option)}
-                                  isDisabled={isProjectCoordinator}
+                                  isDisabled={isReadOnly}
                                   selectProps={{ isBorderLeft: true }}
                                 />
                                 <FormErrorMessage>{errors?.contacts?.[index]?.market?.message}</FormErrorMessage>
@@ -472,7 +467,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                           )}
                         />
                       </Box>
-                      {!isProjectCoordinator && index > 0 && (
+                      {!isReadOnly && index > 0 && (
                         <Box color="barColor.100" fontSize="15px">
                           <Center>
                             <Icon
@@ -492,7 +487,7 @@ export const Details: React.FC<clientDetailProps> = props => {
             </>
           )
         })}
-        {!isProjectCoordinator && (
+        {!isReadOnly && (
           <Button
             variant="outline"
             colorScheme="brand"
@@ -528,7 +523,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     id="contact"
                     {...register(`accountPayableContactInfos.${index}.contact`, { required: 'This is required' })}
                     style={disabledTextStyle}
-                    isDisabled={isProjectCoordinator}
+                    isDisabled={isReadOnly}
                     variant={'required-field'}
                     type="text"
                     onKeyPress={e => preventSpecialCharacter(e)}
@@ -562,7 +557,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                             format="(###)-###-####"
                             mask="_"
                             placeholder="(___)-___-____"
-                            isDisabled={isProjectCoordinator}
+                            isDisabled={isReadOnly}
                             variant={'required-field'}
                             getInputRef={phoneNumberRef2}
                           />
@@ -589,7 +584,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     id="phoneNumberExtension"
                     {...register(`accountPayableContactInfos.${index}.phoneNumberExtension`)}
                     style={disabledTextStyle}
-                    isDisabled={isProjectCoordinator}
+                    isDisabled={isReadOnly}
                     type="number"
                   />
                   <FormErrorMessage>
@@ -613,7 +608,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     })}
                     variant={'required-field'}
                     style={disabledTextStyle}
-                    isDisabled={isProjectCoordinator}
+                    isDisabled={isReadOnly}
                     type="email"
                   />
                   <FormErrorMessage>
@@ -633,14 +628,14 @@ export const Details: React.FC<clientDetailProps> = props => {
                         id="comments"
                         {...register(`accountPayableContactInfos.${index}.comments`, { required: 'This is required' })}
                         style={disabledTextStyle}
-                        isDisabled={isProjectCoordinator}
+                        isDisabled={isReadOnly}
                         variant={'required-field'}
                       />
                       <FormErrorMessage>
                         {errors?.accountPayableContactInfos?.[index]?.comments?.message}
                       </FormErrorMessage>
                     </FormControl>
-                    {!isProjectCoordinator && index > 0 && (
+                    {!isReadOnly && index > 0 && (
                       <Box color="barColor.100" fontSize="15px">
                         <Center>
                           <Icon
@@ -659,7 +654,7 @@ export const Details: React.FC<clientDetailProps> = props => {
             </Grid>
           )
         })}
-        {!isProjectCoordinator && (
+        {!isReadOnly && (
           <Button
             variant="outline"
             colorScheme="brand"
@@ -673,17 +668,17 @@ export const Details: React.FC<clientDetailProps> = props => {
             }
             mt={2}
             leftIcon={<BiPlus />}
-            disabled={isProjectCoordinator}
+            disabled={isReadOnly}
           >
             {t(`${CLIENTS}.addContact`)}
           </Button>
         )}
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
-        <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
+        <Button variant={!isReadOnly ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
           {t(`${CLIENTS}.cancel`)}
         </Button>
-        {!isProjectCoordinator && (
+        {!isReadOnly && (
           <Button
             isDisabled={isNewClientDetails || isContactSection || isAccountPayableSection}
             colorScheme="brand"
