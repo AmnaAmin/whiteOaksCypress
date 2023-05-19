@@ -15,18 +15,19 @@ import { Sidebar } from './sidebar'
 import { SidebarLink } from './sidebar-link'
 import { useMobileMenuState } from 'utils/hooks/useMobileMenuState'
 import { AiOutlineVerticalLeft, AiOutlineVerticalRight } from 'react-icons/ai'
-import { MenusList, useRoleBasedMenu } from './constants'
+import { MenusList } from './constants'
 import { IdleTimeOutModal } from './idle-time-out'
 import { useTranslation } from 'react-i18next'
 import { SIDE_NAV } from './sideNav.i18n'
 import { processRegisteration } from 'integrations/firebase/firebase-config'
 import { DeviceSupported } from 'integrations/firebase/device-support-warning'
 import { ViewLoader } from 'components/page-level-loader'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
-  const permissions = useRoleBasedMenu()
-  const menus = MenusList?.filter(m => permissions.includes(m.permission))
+  const permissions = useRoleBasedPermissions()
+  const menus = MenusList?.filter(m => permissions.some(p => m.permissions.includes(p))) //filter Menu List based on Permissions for the user.
   const { t } = useTranslation()
   const { isOpen: isOpenBrowserWarning, onClose: onCloseBrowserWarning, onOpen: onOpenBrowserWarning } = useDisclosure()
   const [isNavigating, setNavigating] = useState(false)

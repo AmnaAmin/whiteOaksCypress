@@ -53,3 +53,71 @@ export const useUserProfile = (): Account | undefined => {
   const { data } = useAuth()
   return data?.user
 }
+
+export const useRoleBasedPermissions = (): Array<string> => {
+  const { data } = useAuth()
+  const { userTypeLabel } = data?.user as Account
+  const permissions = MENU_PERMISSIONS[userTypeLabel] || []
+  return permissions
+}
+
+export enum ROLE {
+  Vendor = 'Vendor',
+  PC = 'Project Coordinator',
+  VendorManager = 'Vendor Manager',
+  DOC = 'Director Of Construction',
+  FPM = 'Field Project Manager',
+  CO = 'Construction Operations',
+  ClientManager = 'Client Manager',
+  Accounting = 'Accounting',
+  Operations = 'Operational',
+  Admin = 'Admin',
+}
+
+const MENU_PERMISSIONS = {
+  [ROLE.Vendor]: ['VENDORDASHBOARD.EDIT', 'ESTIMATES.EDIT', 'VENDORPROJECTS.EDIT', 'VENDORPROFILE.EDIT'],
+  [ROLE.PC]: ['ESTIMATES.EDIT', 'PROJECTS.EDIT', 'PAYABLE.EDIT', 'RECEIVABLE.EDIT', 'VENDORS.EDIT', 'CLIENTS.EDIT'],
+  [ROLE.VendorManager]: ['VENDORS.EDIT', 'VENDORSKILLS.EDIT', 'MARKETS.EDIT'],
+  [ROLE.DOC]: ['ESTIMATES.EDIT', 'PROJECTS.EDIT', 'VENDORS.EDIT', 'CLIENTS.EDIT', 'REPORTS.EDIT', 'PERFORMANCE.EDIT'],
+  [ROLE.FPM]: ['ESTIMATES.EDIT', 'PROJECTS.EDIT', 'VENDORS.EDIT'],
+  [ROLE.CO]: ['ESTIMATES.EDIT', 'PROJECTS.EDIT', 'VENDORS.EDIT'],
+  [ROLE.ClientManager]: ['CLIENTS.EDIT'],
+  [ROLE.Operations]: [
+    'ESTIMATES.EDIT',
+    'PROJECTS.EDIT',
+    'PAYABLE.EDIT',
+    'RECEIVABLE.EDIT',
+    'VENDORS.EDIT',
+    'CLIENTS.EDIT',
+    'REPORTS.EDIT',
+    'PERFORMANCE.EDIT',
+  ],
+  [ROLE.Accounting]: [
+    'ESTIMATES.EDIT',
+    'PROJECTS.EDIT',
+    'PAYABLE.EDIT',
+    'RECEIVABLE.EDIT',
+    'VENDORS.EDIT',
+    'CLIENTS.EDIT',
+    'REPORTS.EDIT',
+    'PERFORMANCE.EDIT',
+  ],
+  [ROLE.Admin]: [
+    'ADMINDASHBOARD.EDIT',
+    'ESTIMATES.EDIT',
+    'PROJECTS.EDIT',
+    'PAYABLE.EDIT',
+    'RECEIVABLE.EDIT',
+    'VENDORS.EDIT',
+    'CLIENTS.EDIT',
+    'REPORTS.EDIT',
+    'PERFORMANCE.EDIT',
+    'USERMANAGER.EDIT',
+    'MARKETS.EDIT',
+    'PROJECTTYPE.EDIT',
+    'VENDORSKILLS.EDIT',
+    'ALERTS.EDIT',
+    'CYPRESSREPORT.EDIT',
+    'SUPPORT.EDIT',
+  ],
+}
