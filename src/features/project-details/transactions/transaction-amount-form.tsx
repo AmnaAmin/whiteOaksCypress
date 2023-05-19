@@ -502,7 +502,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     )}
                     <GridItem pr="7">
                       <FormControl px={7} isInvalid={!!errors.transaction?.[index]?.description}>
-                        <Tooltip label={transaction?.[index]?.description}>
+                        <Tooltip label={transaction?.[index]?.description}  placement="top" bg='white' color='black'>
                           <Input
                             data-testid={`transaction-description-${index}`}
                             type="text"
