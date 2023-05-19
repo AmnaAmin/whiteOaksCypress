@@ -19,7 +19,7 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
       <Box fontSize="14px" color="gray.500">
-        <Tooltip label={title} color="black" placement="top" bg='white'>
+        <Tooltip label={title} color="black" placement="top" bg='#ffffff'>
           <FormLabel fontSize={fontSize} variant="strong-label" size="md" noOfLines={1}>
             {title}
           </FormLabel>
