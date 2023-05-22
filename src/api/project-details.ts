@@ -116,7 +116,7 @@ export const useGetClientSelectOptions = () => {
   const client = useClient()
 
   const { data: clients, ...rest } = useQuery<Client[]>('clients', async () => {
-    const response = await client(`clients`, {})
+    const response = await client(`clients?sort=companyName,asc`, {})
 
     return response?.data
   })
