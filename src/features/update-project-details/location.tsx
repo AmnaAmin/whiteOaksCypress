@@ -225,11 +225,13 @@ const Location: React.FC<LocationProps> = ({
                       isDisabled={isStateDisabled}
                       selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                       onChange={option => {
-                        const lienExpiryDate = addDays(
-                          new Date(dateISOFormatWithZeroTime(woaCompletionDate) as string),
-                          option?.lienDue ?? 0,
-                        )
-                        setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
+                        if (woaCompletionDate) {
+                          const lienExpiryDate = addDays(
+                            new Date(dateISOFormatWithZeroTime(woaCompletionDate) as string),
+                            option?.lienDue ?? 0,
+                          )
+                          setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
+                        }
                         field.onChange(option)
                       }}
                     />

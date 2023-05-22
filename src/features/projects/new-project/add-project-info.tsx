@@ -151,6 +151,17 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormErrorMessage>{errors.woaStartDate && errors.woaStartDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel isTruncated title={t(`${NEW_PROJECT}.emailNotificationDate`)} size="md">
+                {t(`${NEW_PROJECT}.emailNotificationDate`)}
+              </FormLabel>
+              <Input variant="required-field" type="date" {...register('emailNotificationDate')} />
+              <FormErrorMessage>
+                {errors.emailNotificationDate && errors.emailNotificationDate?.message}
+              </FormErrorMessage>
+            </FormControl>
+          </GridItem>
         </Grid>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
