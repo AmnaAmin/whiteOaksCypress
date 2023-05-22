@@ -181,7 +181,7 @@ export const useProjectDetailsUpdateMutation = () => {
 export const getProjectStatusSelectOptions = () => {
   return Object.entries(ProjectStatus).map(([key, value]) => ({
     value: value,
-    label: key.toUpperCase(),
+    label: key.charAt(0).toUpperCase() + key.slice(1).toLowerCase()
   }))
 }
 
