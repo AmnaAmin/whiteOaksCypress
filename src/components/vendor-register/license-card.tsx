@@ -122,6 +122,7 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
     fontWeight: 500,
     color: 'gray.700',
   }
+  const [minDate] = useState(new Date());
 
   return (
     <Box w={{ base: '100%', sm: 'Calc(100% + 30px)' }}>
@@ -215,6 +216,7 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
                       {t('expiryDate')}
                     </FormLabel>
                     <Input
+                    min={minDate.toISOString().split('T')[0]}
                       w={{ base: '100%', md: '150px' }}
                       type="date"
                       variant="required-field"
