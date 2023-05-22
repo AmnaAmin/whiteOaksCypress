@@ -27,6 +27,7 @@ import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/d
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 import { addDays } from 'date-fns'
+import moment from 'moment'
 
 type ProjectManagerProps = {
   projectStatusSelectOptions: SelectOption[]
@@ -61,6 +62,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
   const watchIsReconciled = useWatch({ name: 'isReconciled', control })
+
   const watchForm = useWatch({ control })
   const [lienDue, setLienDue] = useState<number | undefined>()
 
@@ -108,6 +110,16 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const redirectToEstimateDetails = pId => {
     window.location.href = `estimate-details/${pId}/`
   }
+  const updateProjCloseDueDate = op => {
+    //checking if project status selected is reconcile from dropdown then set its value accordingly
+    if (op.value === 120) {
+      setValue('projectClosedDueDate', datePickerFormat(moment().add(2, 'd')))
+    }
+    //checking if project status selected is active,punch from dropdown then set Closed Due Date null
+    if (op.value === 8 || op.value === 9) {
+      setValue('projectClosedDueDate', null)
+    }
+  }
 
   return (
     <Box>
@@ -131,6 +143,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                         isOptionDisabled={option => option.disabled}
                         onChange={option => {
                           clearErrors()
+                          updateProjCloseDueDate(option)
                           field.onChange(option)
                         }}
                       />
@@ -193,6 +206,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                       isDisabled={!isAdmin}
                       isOptionDisabled={option => option.disabled}
                       onChange={option => {
+                        setValue('projectClosedDueDate', null)
+
                         clearErrors()
                         field.onChange(option)
                       }}
@@ -341,6 +356,15 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                     : ''}
                 </Text>
               </Checkbox>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors?.projectClosedDueDate}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.closedDueDate`)}
+              </FormLabel>
+              <Input type="date" isDisabled={!isAdmin ?? true} {...register('projectClosedDueDate')} />
+              <FormErrorMessage>{errors?.projectClosedDueDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
