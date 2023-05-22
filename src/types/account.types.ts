@@ -16,6 +16,7 @@ export enum UserTypes {
 
 export type Account = {
   id: number
+  permissions: string[]
   login: string
   firstName: string
   lastName: string
