@@ -6,6 +6,8 @@ import { FormValues } from 'types/transaction.type'
 import { transactionDefaultFormValues } from 'api/transactions'
 import { TransactionAmountForm } from '../transaction-amount-form'
 import { QueryClient, QueryClientProvider } from 'react-query'
+import { ChakraProvider } from '@chakra-ui/react'
+import { theme } from 'theme/theme'
 
 const TransactionForm = () => {
   const queryClient = new QueryClient({})
@@ -19,7 +21,9 @@ const TransactionForm = () => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TransactionAmountForm formReturn={form} />
+      <ChakraProvider theme={theme}>
+        <TransactionAmountForm formReturn={form} />
+      </ChakraProvider>
     </QueryClientProvider>
   )
 }
