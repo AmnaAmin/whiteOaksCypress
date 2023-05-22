@@ -105,6 +105,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
     fontWeight: 500,
     color: 'gray.700',
   }
+  const minDate = new Date()
   return (
     <>
       <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px">
@@ -126,6 +127,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                   type="date"
                   {...register('w9DocumentDate')}
                   data-testid="w9DocumentDate"
+                  min={minDate.toISOString().split('T')[0]}
                 />
                 <FormErrorMessage>{errors.w9DocumentDate && errors.w9DocumentDate.message}</FormErrorMessage>
               </FormControl>
@@ -184,6 +186,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 <Input
                   type="date"
                   w="215px"
+                  min={minDate.toISOString().split('T')[0]}
                   {...(!!watchAgreementFile && { borderLeft: '2px solid #345EA6' })}
                   data-testid="agreementSignedDate"
                   {...register('agreementSignedDate', {
@@ -273,7 +276,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 >
                   {t('autoInsuranceExpDate')}
                 </FormLabel>
-                <Input type="date" w="215px" {...register('autoInsuranceExpDate')} data-testid="autoInsuranceExpDate" />
+                <Input min={minDate.toISOString().split('T')[0]} type="date" w="215px" {...register('autoInsuranceExpDate')} data-testid="autoInsuranceExpDate" />
                 <FormErrorMessage>
                   {errors.autoInsuranceExpDate && errors.autoInsuranceExpDate.message}
                 </FormErrorMessage>
@@ -335,7 +338,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 <FormLabel variant="strong-label" sx={formLabeStyle}>
                   {t('COIGLExpDate')}
                 </FormLabel>
-                <Input type="date" w="215px" {...register('coiGlExpDate')} data-testid="coiGlExpDate" />
+                <Input min={minDate.toISOString().split('T')[0]} type="date" w="215px" {...register('coiGlExpDate')} data-testid="coiGlExpDate" />
                 <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
               </FormControl>
             </Box>
@@ -397,7 +400,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('COIWCExpDate')}
                 </FormLabel>
-                <Input type="date" w="215px" {...register('coiWcExpDate')} data-testid="coiWcExpDate" />
+                <Input min={minDate.toISOString().split('T')[0]} type="date" w="215px" {...register('coiWcExpDate')} data-testid="coiWcExpDate" />
                 <FormErrorMessage>{errors.coiWcExpDate && errors.coiWcExpDate?.message}</FormErrorMessage>
               </FormControl>
             </Box>
