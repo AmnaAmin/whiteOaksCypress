@@ -108,7 +108,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const redirectToEstimateDetails = pId => {
     window.location.href = `estimate-details/${pId}/`
   }
-
+const sentenceCaseReconcile= STATUS.Reconcile.charAt(0).toUpperCase() + STATUS.Reconcile.slice(1).toLowerCase()
   return (
     <Box>
       <Stack>
@@ -331,7 +331,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 isChecked={watchIsReconciled === null ? false : watchIsReconciled}
                 variant={'normal'}
                 data-testid="notifyVendorCheckBox"
-                disabled={isReconcileDisabled || watchStatus?.label !== STATUS.Reconcile.toUpperCase()}
+                disabled={isReconcileDisabled || watchStatus?.label !== sentenceCaseReconcile}
                 size="md"
                 {...register('isReconciled')}
               >
