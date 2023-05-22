@@ -122,7 +122,7 @@ export const LicenseForm = ({ isActive }: licenseFormProps) => {
     fontWeight: 500,
     color: 'gray.700',
   }
-  const [minDate] = useState(new Date());
+  const minDate = new Date();
 
   return (
     <Box w={{ base: '100%', sm: 'Calc(100% + 30px)' }}>

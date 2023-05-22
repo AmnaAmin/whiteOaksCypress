@@ -105,7 +105,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
     fontWeight: 500,
     color: 'gray.700',
   }
-  const [minDate] = useState(new Date());
+  const minDate = new Date()
   return (
     <>
       <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px">
