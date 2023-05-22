@@ -121,6 +121,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     }
   }
 
+const sentenceCaseReconcile= STATUS.Reconcile.charAt(0).toUpperCase() + STATUS.Reconcile.slice(1).toLowerCase()
   return (
     <Box>
       <Stack>
@@ -222,7 +223,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="projectName">
                 {t(`project.projectDetails.projectName`)}
               </FormLabel>
-              <Input placeholder="PC project 1" id="projectName" {...register('projectName')} autoComplete="off" />
+              <Input size ='md' placeholder="PC project 1" id="projectName" {...register('projectName')} autoComplete="off" />
               <FormErrorMessage>{errors.projectName && errors.projectName.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -346,11 +347,11 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 isChecked={watchIsReconciled === null ? false : watchIsReconciled}
                 variant={'normal'}
                 data-testid="notifyVendorCheckBox"
-                disabled={isReconcileDisabled || watchStatus?.label !== STATUS.Reconcile.toUpperCase()}
+                disabled={isReconcileDisabled || watchStatus?.label !== sentenceCaseReconcile}
                 size="md"
                 {...register('isReconciled')}
               >
-                <Text color="#000">
+                <Text color="#4A5568" fontWeight='400' fontSize='14px'>
                   {watchForm.verifiedDate
                     ? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`
                     : ''}
