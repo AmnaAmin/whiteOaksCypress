@@ -10,6 +10,7 @@ export const useProjectInformationNextButtonDisabled = (control: Control<Project
     !formValues?.projectType ||
     !formValues?.clientStartDate ||
     !formValues?.clientDueDate ||
+    !formValues?.emailNotificationDate ||
     !isValidAndNonEmpty(formValues?.sowOriginalContractAmount) ||
     !formValues?.documents ||
     !!errors.documents
