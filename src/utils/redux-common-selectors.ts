@@ -56,8 +56,7 @@ export const useUserProfile = (): Account | undefined => {
 
 export const useRoleBasedPermissions = (): Array<string> => {
   const { data } = useAuth()
-  const { userTypeLabel } = data?.user as Account
-  const permissions = MENU_PERMISSIONS[userTypeLabel] || []
+  const { permissions } = data?.user as Account
   return permissions
 }
 
@@ -72,52 +71,4 @@ export enum ROLE {
   Accounting = 'Accounting',
   Operations = 'Operational',
   Admin = 'Admin',
-}
-
-const MENU_PERMISSIONS = {
-  [ROLE.Vendor]: ['VENDORDASHBOARD.EDIT', 'ESTIMATES.EDIT', 'VENDORPROJECTS.EDIT', 'VENDORPROFILE.EDIT'],
-  [ROLE.PC]: ['ESTIMATES.EDIT', 'PROJECTS.EDIT', 'PAYABLE.EDIT', 'RECEIVABLE.EDIT', 'VENDORS.EDIT', 'CLIENTS.READ'],
-  [ROLE.VendorManager]: ['VENDORS.EDIT', 'VENDORSKILLS.EDIT', 'MARKETS.EDIT'],
-  [ROLE.DOC]: ['ESTIMATES.EDIT', 'PROJECTS.EDIT', 'VENDORS.EDIT', 'CLIENTS.EDIT', 'REPORTS.EDIT', 'PERFORMANCE.EDIT'],
-  [ROLE.FPM]: ['ESTIMATES.EDIT', 'PROJECTS.EDIT', 'VENDORS.EDIT'],
-  [ROLE.CO]: ['ESTIMATES.EDIT', 'PROJECTS.EDIT', 'VENDORS.EDIT'],
-  [ROLE.ClientManager]: ['CLIENTS.EDIT'],
-  [ROLE.Operations]: [
-    'ESTIMATES.EDIT',
-    'PROJECTS.EDIT',
-    'PAYABLE.EDIT',
-    'RECEIVABLE.EDIT',
-    'VENDORS.EDIT',
-    'CLIENTS.EDIT',
-    'REPORTS.EDIT',
-    'PERFORMANCE.EDIT',
-  ],
-  [ROLE.Accounting]: [
-    'ESTIMATES.EDIT',
-    'PROJECTS.EDIT',
-    'PAYABLE.EDIT',
-    'RECEIVABLE.EDIT',
-    'VENDORS.EDIT',
-    'CLIENTS.EDIT',
-    'REPORTS.EDIT',
-    'PERFORMANCE.EDIT',
-  ],
-  [ROLE.Admin]: [
-    'ADMINDASHBOARD.EDIT',
-    'ESTIMATES.EDIT',
-    'PROJECTS.EDIT',
-    'PAYABLE.EDIT',
-    'RECEIVABLE.EDIT',
-    'VENDORS.EDIT',
-    'CLIENTS.EDIT',
-    'REPORTS.EDIT',
-    'PERFORMANCE.EDIT',
-    'USERMANAGER.EDIT',
-    'MARKETS.EDIT',
-    'PROJECTTYPE.EDIT',
-    'VENDORSKILLS.EDIT',
-    'ALERTS.EDIT',
-    'CYPRESSREPORT.EDIT',
-    'SUPPORT.EDIT',
-  ],
 }
