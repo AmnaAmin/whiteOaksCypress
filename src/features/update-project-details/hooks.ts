@@ -100,7 +100,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
       isStatusOverPayment ||
       isStatusInvoiced,
     isReconcileDisabled: isFPM || isVendor || isClientManager || isConstructionOperations || isVendorManager,
-    isReconcileAllowed: isAdmin || isDoc || isAccounting || isOperations || isProjectCoordinator,
+    //isReconcileAllowed: isAdmin || isDoc || isAccounting || isOperations || isProjectCoordinator,
 
     // Invoicing and payment form fields states
     isOriginalSOWAmountDisabled: isAllTimeDisabled,
