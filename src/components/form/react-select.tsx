@@ -39,7 +39,7 @@ export const chakraStyles = {
 
   singleValue: (provider: any) => ({
     ...provider,
-    color: 'gray.500',
+    color: 'gray.600',
     fontWeight: '400',
   }),
   menu: (provided: any) => ({

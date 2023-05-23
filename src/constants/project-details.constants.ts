@@ -3,47 +3,47 @@ import { ProjectStatus } from 'types/project-details.types'
 const OPTIONS = {
   [ProjectStatus.New]: {
     value: ProjectStatus.New,
-    label: 'NEW',
+    label: 'New',
   },
   [ProjectStatus.Active]: {
     value: ProjectStatus.Active,
-    label: 'ACTIVE',
+    label: 'Active',
   },
   [ProjectStatus.Punch]: {
     value: ProjectStatus.Punch,
-    label: 'PUNCH',
+    label: 'Punch',
   },
   [ProjectStatus.Reconcile]: {
     value: ProjectStatus.Reconcile,
-    label: 'RECONCILE',
+    label: 'Reconcile',
   },
   [ProjectStatus.Closed]: {
     value: ProjectStatus.Closed,
-    label: 'CLOSED',
+    label: 'Closed',
   },
   [ProjectStatus.Invoiced]: {
     value: ProjectStatus.Invoiced,
-    label: 'INVOICED',
+    label: 'Invoiced',
   },
   [ProjectStatus.ClientPaid]: {
     value: ProjectStatus.ClientPaid,
-    label: 'CLIENT PAID',
+    label: 'Client Paid',
   },
   [ProjectStatus.Overpayment]: {
     value: ProjectStatus.Overpayment,
-    label: 'OVERPAYMENT',
+    label: 'OverPayment',
   },
   [ProjectStatus.Cancelled]: {
     value: ProjectStatus.Cancelled,
-    label: 'CANCELLED',
+    label: 'Cancelled',
   },
   [ProjectStatus.Paid]: {
     value: ProjectStatus.Paid,
-    label: 'PAID',
+    label: 'Paid',
   },
   [ProjectStatus.Disputed]: {
     value: ProjectStatus.Disputed,
-    label: 'DISPUTED',
+    label: 'Disputed',
   },
 }
 
@@ -78,7 +78,6 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
   ],
   [ProjectStatus.Invoiced]: [
     OPTIONS[ProjectStatus.Invoiced],
-    OPTIONS[ProjectStatus.Reconcile],
     OPTIONS[ProjectStatus.ClientPaid],
     OPTIONS[ProjectStatus.Disputed],
   ],

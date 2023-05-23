@@ -223,6 +223,7 @@ export type ProjectFormValues = {
   projectType?: SelectOption | null
   woNumber?: string
   poNumber?: string
+  emailNotificationDate?: string
   clientStartDate?: string
   clientDueDate?: string
   clientSignoffDate?: string

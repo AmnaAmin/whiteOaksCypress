@@ -42,17 +42,17 @@ const input = {
     sizes: {
       sm: {
         field: {
-          fontSize: '13px',
+          fontSize: '13px !important',
         },
       },
       md: {
         field: {
-          fontSize: '14px',
+          fontSize: '14px !important',
         },
       },
       lg: {
         field: {
-          fontSize: '16px',
+          fontSize: '16px !important',
         },
       },
     },
