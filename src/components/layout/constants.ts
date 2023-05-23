@@ -29,7 +29,8 @@ export type Menu = {
 
 // Show tab on preprod only
 const showForPreProd = window.location.href.includes('preprod')
-const showForPreProdAndLocal = showForPreProd || window.location.href.includes('localhost:')
+const showForPreProdAndLocal =
+  showForPreProd || window.location.href.includes('localhost:') || window.location.href.includes('dev')
 
 export const MenusList: Menu[] = [
   {
@@ -100,7 +101,7 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.reports`,
     Icon: BiBarChartSquare,
     color: '#FC8181',
-    permissions: ['REPORT.READ'],
+    permissions: ['REPORT.READ', 'REPORT.EDIT'],
   },
   {
     pathTo: '/performance',
