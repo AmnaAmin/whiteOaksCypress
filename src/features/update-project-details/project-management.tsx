@@ -83,11 +83,16 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     isClientSignOffDateRequired,
   } = useFieldsRequired(control)
 
+  const sentenceCaseActive = STATUS.Active.charAt(0).toUpperCase() + STATUS.Active.slice(1).toLowerCase()
+
+  const sentenceCaseNew = STATUS.New.charAt(0).toUpperCase() + STATUS.New.slice(1).toLowerCase()
+  console.log(watchStatus?.label, watchStatus?.label === sentenceCaseActive)
+
   useEffect(() => {
-    if (watchStatus?.label === STATUS.Active.toUpperCase()) {
+    if (watchStatus?.label === sentenceCaseActive) {
       setValue('woaStartDate', datePickerFormat(new Date()))
     }
-    if (watchStatus?.label === STATUS.New.toUpperCase()) {
+    if (watchStatus?.label === sentenceCaseNew) {
       setValue('woaStartDate', 'mm/dd/yyyy')
     }
   }, [watchStatus?.label])
