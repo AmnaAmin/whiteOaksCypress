@@ -172,6 +172,7 @@ const Location: React.FC<LocationProps> = ({
                 render={({ field, fieldState }) => (
                   <>
                     <CreatableSelect
+                    color='#2D3748 !important'
                       id="address"
                       isDisabled={isAddressDisabled}
                       options={propertySelectOptions}
@@ -198,6 +199,7 @@ const Location: React.FC<LocationProps> = ({
                 {t(`project.projectDetails.city`)}
               </FormLabel>
               <Input
+              size ='md'
                 variant="required-field"
                 isDisabled={isCityDisabled}
                 id="city"
@@ -225,11 +227,13 @@ const Location: React.FC<LocationProps> = ({
                       isDisabled={isStateDisabled}
                       selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                       onChange={option => {
-                        const lienExpiryDate = addDays(
-                          new Date(dateISOFormatWithZeroTime(woaCompletionDate) as string),
-                          option?.lienDue ?? 0,
-                        )
-                        setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
+                        if (woaCompletionDate) {
+                          const lienExpiryDate = addDays(
+                            new Date(dateISOFormatWithZeroTime(woaCompletionDate) as string),
+                            option?.lienDue ?? 0,
+                          )
+                          setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
+                        }
                         field.onChange(option)
                       }}
                     />
@@ -246,6 +250,7 @@ const Location: React.FC<LocationProps> = ({
                 {t(`project.projectDetails.zip`)}
               </FormLabel>
               <Input
+              size ='md'
                 variant="required-field"
                 isDisabled={isZipDisabled}
                 id="zip"
@@ -289,6 +294,7 @@ const Location: React.FC<LocationProps> = ({
                 {t(`project.projectDetails.gateCode`)}
               </FormLabel>
               <Input
+              size ='md'
                 datatest-id="gate-Code"
                 border=" 1px solid #E2E8F0"
                 disabled={isGateCodeDisabled}
@@ -304,6 +310,7 @@ const Location: React.FC<LocationProps> = ({
                 {t(`project.projectDetails.lockBoxCode`)}
               </FormLabel>
               <Input
+               size ='md'
                 datatest-id="lock-Box-Code"
                 border=" 1px solid #E2E8F0"
                 disabled={isLockBoxCodeDisabled}
@@ -326,6 +333,7 @@ const Location: React.FC<LocationProps> = ({
                   return (
                     <>
                       <NumberFormat
+                       size ='md'
                         customInput={Input}
                         value={field.value}
                         onChange={e => field.onChange(e)}
@@ -345,7 +353,7 @@ const Location: React.FC<LocationProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="hoaContactExtension">
                 {t(`project.projectDetails.ext`)}
               </FormLabel>
-              <Input border=" 1px solid #E2E8F0" id="hoaContactExtension" {...register('hoaContactExtension')} />
+              <Input size ='md' border=" 1px solid #E2E8F0" id="hoaContactExtension" {...register('hoaContactExtension')} />
               <FormErrorMessage>{errors?.hoaContactExtension?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -354,7 +362,7 @@ const Location: React.FC<LocationProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="hoaContactEmail" noOfLines={1}>
                 {t(`project.projectDetails.hoaContactEmail`)}
               </FormLabel>
-              <Input border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')} />
+              <Input size ='md' border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')} />
               <FormErrorMessage>{errors.hoaContactEmail && errors.hoaContactEmail.message}</FormErrorMessage>
             </FormControl>
           </GridItem>

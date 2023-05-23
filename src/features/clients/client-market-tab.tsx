@@ -2,7 +2,7 @@ import { Box, Flex, Button } from '@chakra-ui/react'
 import React from 'react'
 import { CheckboxButton } from 'components/form/checkbox-button'
 import { useTranslation } from 'react-i18next'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { ClientFormValues } from 'types/client.type'
 import { CLIENTS } from './clients.i18n'
@@ -17,7 +17,7 @@ type clientDetailProps = {
 
 export const Market = React.forwardRef((props: clientDetailProps) => {
   const { t } = useTranslation()
-  const { isProjectCoordinator } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.includes('CLIENTS.READ')
   const { control } = useFormContext<ClientFormValues>()
   const markets = useWatch({ control, name: 'markets' })
   const btnStyle = {
@@ -45,7 +45,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
                         const checked = event.target.checked
                         onChange({ ...market, checked })
                       }}
-                      isDisabled={isProjectCoordinator}
+                      isDisabled={isReadOnly}
                     >
                       {market.metropolitanServiceArea}
                     </CheckboxButton>
@@ -57,10 +57,10 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
         </Flex>
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
-        <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
+        <Button variant={!isReadOnly ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
           {t(`${CLIENTS}.cancel`)}
         </Button>
-        {!isProjectCoordinator && (
+        {!isReadOnly && (
           <Button colorScheme="brand" type="submit" form="clientDetails" ml={2} disabled={!validateMarket(markets)}>
             {t(`${CLIENTS}.save`)}
           </Button>

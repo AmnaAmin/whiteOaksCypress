@@ -135,6 +135,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         projectType: `${values.projectType?.value}`,
         woNumber: values.woNumber,
         poNumber: values.poNumber,
+        emailNotificationDate: values.emailNotificationDate,
         clientStartDate: values.clientStartDate,
         clientDueDate: values.clientDueDate,
         woaStartDate: values.woaStartDate,
