@@ -20,7 +20,7 @@ import { STATUS } from 'features/common/status'
 import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { ProjectDetailsFormValues } from 'types/project-details.types'
+import { ProjectDetailsFormValues, ProjectStatus } from 'types/project-details.types'
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
@@ -112,11 +112,11 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   }
   const updateProjCloseDueDate = op => {
     //checking if project status selected is reconcile from dropdown then set its value accordingly
-    if (op.value === 120) {
+    if (op.value === ProjectStatus.Reconcile) {
       setValue('projectClosedDueDate', datePickerFormat(moment().add(2, 'd')))
     }
     //checking if project status selected is active,punch from dropdown then set Closed Due Date null
-    if (op.value === 8 || op.value === 9) {
+    if (op.value === ProjectStatus.Active || op.value === ProjectStatus.Punch) {
       setValue('projectClosedDueDate', null)
     }
   }
