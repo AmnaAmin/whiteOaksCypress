@@ -71,7 +71,7 @@ export const Layout: React.FC = props => {
                   <FormLabel ml={6} color="#A1A6B1" size="sm" letterSpacing="1px">
                     {t(`${SIDE_NAV}.menu`)}
                   </FormLabel>
-                  {menus?.map((item, index) => (
+                  {menus?.map((item: any, index) => (
                     <>
                       <React.Fragment key={index}>
                         {item.title === `${SIDE_NAV}.userMgmt` && (

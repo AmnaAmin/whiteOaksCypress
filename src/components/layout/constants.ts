@@ -16,11 +16,12 @@ import { SiCypress } from 'react-icons/si'
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { SIDE_NAV } from './sideNav.i18n'
 import { MdOnlinePrediction } from 'react-icons/md'
+import { IconType } from 'react-icons'
 
-type Menu = {
+export type Menu = {
   pathTo: string
   title: string
-  Icon?: React.ElementType
+  Icon?: IconType
   color?: string
   testId?: string
   permissions: string[]
