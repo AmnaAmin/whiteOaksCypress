@@ -564,6 +564,7 @@ export const parseFormValuesFromAPIData = ({
     verifiedBy: project.verifiedBy as string,
     verifiedbyDesc: project.verifiedbyDesc as string,
     reconciledbyDesc: project.reconciledbyDesc as string,
+    projectClosedDueDate: datePickerFormat(project.projectClosedDueDate),
     lienFiled: datePickerFormat(project.lienRightFileDate),
     lienExpiryDate: datePickerFormat(project?.lienRightExpireDate),
 
@@ -679,6 +680,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
     isReconciled: formValues.isReconciled === null ? false : formValues.isReconciled,
     lienRightFileDate: dateISOFormat(formValues.lienFiled),
+    projectClosedDueDate: dateISOFormat(formValues.projectClosedDueDate),
     lienRightExpireDate: dateISOFormat(formValues.lienExpiryDate),
 
     // Invoicing and payment payload
