@@ -627,6 +627,7 @@ export const parseFormValuesFromAPIData = ({
     woaPaidDate: getLocalTimeZoneDate(project.woaPaidDate as string),
     dueDateVariance: project.dueDateVariance,
     disqualifiedRevenueDate: datePickerFormat(project.disqualifiedRevenueDate),
+    emailNotificationDate: datePickerFormat(project.emailNotificationDate),
     disqualifiedRevenueFlag: project.disqualifiedRevenueFlag,
 
     payDateVariance: project.signoffDateVariance,
