@@ -73,7 +73,6 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
   [ProjectStatus.Closed]: [
     OPTIONS[ProjectStatus.Closed],
     OPTIONS[ProjectStatus.Invoiced],
-    OPTIONS[ProjectStatus.Reconcile],
     OPTIONS[ProjectStatus.Disputed],
   ],
   [ProjectStatus.Invoiced]: [
