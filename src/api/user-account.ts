@@ -1,5 +1,5 @@
 import { useClient } from 'utils/auth-context'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 
 export const usePasswordUpdateMutation = () => {
   const client = useClient()
@@ -9,4 +9,19 @@ export const usePasswordUpdateMutation = () => {
       data: payload,
     })
   })
+}
+
+export const useAccountData = () => {
+  const client = useClient()
+
+  const { data, ...rest } = useQuery('acc', async () => {
+    const response = await client(`account`, {})
+
+    return response?.data
+  })
+
+  return {
+    data,
+    ...rest,
+  }
 }

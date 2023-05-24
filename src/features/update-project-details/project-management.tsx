@@ -86,7 +86,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const sentenceCaseActive = STATUS.Active.charAt(0).toUpperCase() + STATUS.Active.slice(1).toLowerCase()
 
   const sentenceCaseNew = STATUS.New.charAt(0).toUpperCase() + STATUS.New.slice(1).toLowerCase()
-  console.log(watchStatus?.label, watchStatus?.label === sentenceCaseActive)
 
   useEffect(() => {
     if (watchStatus?.label === sentenceCaseActive) {
