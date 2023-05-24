@@ -127,6 +127,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   }
 
   const sentenceCaseReconcile = STATUS.Reconcile.charAt(0).toUpperCase() + STATUS.Reconcile.slice(1).toLowerCase()
+const overrideProjectStatusOptionsLowercase = projectOverrideStatusSelectOptions.map(option => {
+  return { ...option, label: option.label.charAt(0).toUpperCase() +  option.label.slice(1).toLowerCase() };
+});
   return (
     <Box>
       <Stack>
@@ -208,7 +211,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                   <>
                     <ReactSelect
                       {...field}
-                      options={projectOverrideStatusSelectOptions} // {overrideProjectStatusOptions}
+                      options={overrideProjectStatusOptionsLowercase} // {overrideProjectStatusOptions}
                       isDisabled={!isAdmin}
                       isOptionDisabled={option => option.disabled}
                       onChange={option => {
