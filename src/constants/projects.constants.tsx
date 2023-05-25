@@ -68,16 +68,18 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   disqualifiedRevenueFlag: 'disqualifiedRevenueFlag.equals',
   noteFlag: 'noteFlag.equals',
   lienDueFlag: 'lienDueFlag.equals',
+  displayId: 'displayId.contains'
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'ID',
-    accessorKey: 'id',
-    size: 100,
+    accessorKey: 'displayId',
+    size: 120,
     cell: (row: any) => {
       const value = row.cell.getValue()
       const isFlagged = row.row?.original?.lienDueFlag || row.row?.original?.noteFlag
+      const id = row.row?.original?.id
       return (
         <Box
           fontWeight={'500'}
@@ -93,7 +95,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
               <Icon title="Lien Due Expiry Flag" as={RiFlag2Fill} color="rgb(236, 201, 75,1)" />
             )}
           </chakra.span>
-          <Link to={`/project-details/${value}`}>{value}</Link>
+          <Link to={`/project-details/${id}`}>{value}</Link>
         </Box>
       )
     },
