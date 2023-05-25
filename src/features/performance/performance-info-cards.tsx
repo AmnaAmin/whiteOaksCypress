@@ -7,7 +7,7 @@ import ProfitIcon from 'icons/profit-icon'
 import DisqualifiedRevenueIcon from 'icons/disqualified-revenue-icon'
 import { PERFORMANCE } from './performance.i18n'
 import { useTranslation } from 'react-i18next'
-import { ProfitMarginIcon } from 'icons/quicklookup-icons'
+import ProfitMargin from 'icons/ProfitMargin'
 
 const IconElement: React.FC<{ Icon: React.ElementType; isLoading: boolean }> = ({ Icon }) => {
   return (
@@ -80,13 +80,13 @@ export const PerformanceInfoCards: React.FC<{
               </Flex>
             </Center>
             <Center width={'33%'}>
-              <IconElement Icon={ProfitMarginIcon} isLoading={isPerformanceLoading} />
+              <IconElement Icon={ProfitMargin} isLoading={isPerformanceLoading} />
               <Flex flexDir={'column'} ml={3}>
                 <FormLabel variant="light-label" size="md">
                   <Box> {t(`${PERFORMANCE}.profitMargin`)}</Box>
                 </FormLabel>
                 <FormLabel variant="strong-label" size="md">
-                  <Box data-testid="profit_margins">{currencyFormatter(profitMargin)}</Box>
+                  <Box data-testid="profit_margins">{profitMargin ? profitMargin?.toFixed(2) : 0}%</Box>
                 </FormLabel>
               </Flex>
             </Center>
