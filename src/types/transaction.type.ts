@@ -116,7 +116,7 @@ export enum TransactionTypeValues {
   permitFee = 1017,
   deductible = 1018,
   depreciation = 1019,
-  legalFee = 1021,
+  legalFee = 1024,
 }
 
 export enum TransactionMarkAsValues {
