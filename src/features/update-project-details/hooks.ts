@@ -90,7 +90,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
       isStatusOverPayment ||
       isStatusInvoiced,
     isReconcileDisabled: !permissions?.includes('PROJECTDETAIL.MGMT.PROJECTVERIFIED.EDIT'),
-
+    
     // Invoicing and payment form fields states
     isOriginalSOWAmountDisabled: isAllTimeDisabled,
     isFinalSOWAmountDisabled: isAllTimeDisabled,

@@ -16,11 +16,12 @@ import { SiCypress } from 'react-icons/si'
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { SIDE_NAV } from './sideNav.i18n'
 import { MdOnlinePrediction } from 'react-icons/md'
+import { IconType } from 'react-icons'
 
-type Menu = {
+export type Menu = {
   pathTo: string
   title: string
-  Icon: React.ElementType
+  Icon?: IconType
   color?: string
   testId?: string
   permissions: string[]
@@ -28,7 +29,8 @@ type Menu = {
 
 // Show tab on preprod only
 const showForPreProd = window.location.href.includes('preprod')
-const showForPreProdAndLocal = showForPreProd || window.location.href.includes('localhost:')
+const showForPreProdAndLocal =
+  showForPreProd || window.location.href.includes('localhost:') || window.location.href.includes('dev')
 
 export const MenusList: Menu[] = [
   {
@@ -50,14 +52,14 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.estimates`,
     Icon: MdOnlinePrediction,
     color: '#ECC94B',
-    permissions: ['ESTIMATES.EDIT', 'ESTIMATES.READ'],
+    permissions: ['ESTIMATE.EDIT', 'ESTIMATE.READ'],
   },
   {
     pathTo: '/projects',
     title: `${SIDE_NAV}.projects`,
     Icon: FaAlignCenter,
     color: '#4E87F8',
-    permissions: ['PROJECTS.EDIT', 'PROJECTS.READ', 'VENDORPROJECTS.READ', 'VENDORPROJECTS.EDIT'],
+    permissions: ['PROJECT.EDIT', 'PROJECT.READ', 'VENDORPROJECT.READ', 'VENDORPROJECT.EDIT'],
   },
   {
     pathTo: '/payable',
@@ -78,7 +80,7 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.vendors`,
     Icon: BiUserPin,
     color: '#9F7AEA',
-    permissions: ['VENDORS.EDIT', 'VENDORS.READ'],
+    permissions: ['VENDOR.EDIT', 'VENDOR.READ'],
   },
   {
     pathTo: '/vendors',
@@ -92,14 +94,14 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.clients`,
     Icon: BiGroup,
     color: '#0BC5EA',
-    permissions: ['CLIENTS.EDIT', 'CLIENTS.READ'],
+    permissions: ['CLIENT.EDIT', 'CLIENT.READ'],
   },
   {
     pathTo: '/reports',
     title: `${SIDE_NAV}.reports`,
     Icon: BiBarChartSquare,
     color: '#FC8181',
-    permissions: ['REPORTS.READ'],
+    permissions: ['REPORT.READ', 'REPORT.EDIT'],
   },
   {
     pathTo: '/performance',
@@ -131,14 +133,14 @@ export const MenusList: Menu[] = [
     Icon: BiAlignMiddle,
     color: '#4E87F8',
     testId: 'vendorTrade',
-    permissions: ['VENDORSKILLS.EDIT', 'VENDORSKILLS.READ'],
+    permissions: ['VENDORSKILL.EDIT', 'VENDORSKILL.READ'],
   },
   {
     pathTo: '/markets',
     title: `${SIDE_NAV}.markets`,
     Icon: BiStats,
     color: '#68D391',
-    permissions: ['MARKETS.EDIT', 'MARKETS.READ'],
+    permissions: ['MARKET.EDIT', 'MARKET.READ'],
   },
   {
     pathTo: '/support-tickets',
@@ -154,7 +156,7 @@ export const MenusList: Menu[] = [
           title: `${SIDE_NAV}.alerts`,
           Icon: BiError,
           color: '#ED64A6',
-          permissions: ['ALERTS.EDIT', 'ALERTS.READ'],
+          permissions: ['ALERT.EDIT', 'ALERT.READ'],
         },
         {
           pathTo: '/cypressReport',
