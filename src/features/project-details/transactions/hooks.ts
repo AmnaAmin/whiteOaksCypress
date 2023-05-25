@@ -63,7 +63,8 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const { isAdmin } = useUserRolesSelector()
 
   const isTransactionTypeChangeOrderSelected =
-    selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.changeOrder
+    selectedTransactionTypeId &&
+    [TransactionTypeValues.changeOrder, TransactionTypeValues.legalFee].includes(selectedTransactionTypeId)
   const isTransactionTypeOverpaymentSelected =
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
