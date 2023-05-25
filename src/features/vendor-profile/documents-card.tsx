@@ -22,7 +22,7 @@ import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { AdminPortalVerifyDocument } from './verify-documents'
 
 type DocumentsProps = {
@@ -47,7 +47,7 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
-  const { isFPM } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
   const { isAdmin } = useUserRolesSelector()
 
   const {
@@ -173,7 +173,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 control={control}
                 render={({ field, fieldState }) => {
                   return (
-                    <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
+                    <VStack alignItems="baseline" pointerEvents={isReadOnly ? 'none' : 'auto'}>
                       <Box>
                         <ChooseFileField
                           name={field.name}
@@ -193,7 +193,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                               vendor?.w9DocumentDate ? datePickerFormat(vendor?.w9DocumentDate) : null,
                             )
                           }}
-                          disabled={isFPM}
+                          disabled={isReadOnly}
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
@@ -237,7 +237,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   {...register('agreementSignedDate', {
                     required: isAgreementRequired && 'This is required',
                   })}
-                  isDisabled={isFPM}
+                  isDisabled={isReadOnly}
                   {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
                 />
                 <FormErrorMessage>{errors.agreementSignedDate && errors.agreementSignedDate.message}</FormErrorMessage>
@@ -263,7 +263,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
+                      <VStack alignItems="baseline" pointerEvents={isReadOnly ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -345,7 +345,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                     required: isInsuranceRequired && 'This is required field',
                   })}
                   {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
-                  isDisabled={isFPM}
+                  isDisabled={isReadOnly}
                   data-testid="autoInsuranceExpDate"
                 />
                 <FormErrorMessage>
@@ -376,7 +376,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
+                      <VStack alignItems="baseline" pointerEvents={isReadOnly ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -433,7 +433,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                     required: isCoiGlExp && 'This is required field',
                   })}
                   data-testid="coiGlExpDate"
-                  isDisabled={isFPM}
+                  isDisabled={isReadOnly}
                   {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
                 />
                 <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
@@ -462,7 +462,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
+                      <VStack alignItems="baseline" pointerEvents={isReadOnly ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -519,7 +519,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                     required: isCoiWcExp && 'This is required field',
                   })}
                   data-testid="coiWcExpDate"
-                  isDisabled={isFPM}
+                  isDisabled={isReadOnly}
                   {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
                 />
                 <FormErrorMessage>{errors.coiWcExpDate && errors.coiWcExpDate.message}</FormErrorMessage>
@@ -548,7 +548,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                   }}
                   render={({ field, fieldState }) => {
                     return (
-                      <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
+                      <VStack alignItems="baseline" pointerEvents={isReadOnly ? 'none' : 'auto'}>
                         <Box>
                           <ChooseFileField
                             name={field.name}
@@ -598,22 +598,28 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
         justifyContent="end"
       >
         {isAllFiledWatch && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3" isDisabled={isFPM}>
+          <Button
+            variant="outline"
+            colorScheme="darkPrimary"
+            onClick={() => resetFields()}
+            mr="3"
+            isDisabled={isReadOnly}
+          >
             {t(`${VENDORPROFILE}.discardChanges`)}
           </Button>
         )}
         {onClose && (
-          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={isReadOnly ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        {!isFPM && (
+        {!isReadOnly && (
           <Button
             type="submit"
             data-testid="saveDocumentCards"
             variant="solid"
             colorScheme="darkPrimary"
-            isDisabled={isFPM}
+            isDisabled={isReadOnly}
           >
             {vendor?.id ? t('save') : t('next')}
           </Button>

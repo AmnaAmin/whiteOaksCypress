@@ -15,6 +15,7 @@ const Vendors = () => {
   const { isOpen: isOpenNewVendorModal, onOpen: onNewVendorModalOpen, onClose: onNewVendorModalClose } = useDisclosure()
   const [selectedCard, setSelectedCard] = useState<string>('')
   const { t } = useTranslation()
+  // change this logic based on access control requirements
   const { isFPM } = useUserRolesSelector()
 
   return (

@@ -27,7 +27,7 @@ import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 import { checkIsLicenseChanged } from './hook'
 import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { AdminPortalVerifyLicense } from './verify-license'
 import { datePickerFormat } from 'utils/date-time-utils'
 
@@ -51,7 +51,8 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
-  const { isFPM, isAdmin } = useUserRolesSelector()
+  const { isAdmin } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
 
   // HK|PSWOA-1567|after save license document lines swap
   vendor?.licenseDocuments?.sort((a, b) => (a.id < b.id ? -1 : 1))
@@ -149,7 +150,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
             }
             leftIcon={<BiAddToQueue />}
             width={{ base: '100%', md: 'auto' }}
-            isDisabled={isFPM}
+            isDisabled={isReadOnly}
           >
             {t('addLicense')}
           </Button>
@@ -176,7 +177,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   color="#345EA6"
                   fontSize="15px"
                   m={{ base: '4%', md: 0 }}
-                  pointerEvents={isFPM ? 'none' : 'auto'}
+                  pointerEvents={isReadOnly ? 'none' : 'auto'}
                 >
                   <Center>
                     <Icon
@@ -191,7 +192,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                 </Box>
 
                 <FormSelect
-                  disable={!!license.licenseType || isFPM}
+                  disable={!!license.licenseType || isReadOnly}
                   bg={license?.expirationFile ? 'gray.50' : 'white'}
                   errorMessage={errors.licenses && errors.licenses[index]?.licenseType?.message}
                   label={t('licenseType')}
@@ -224,7 +225,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
                   variant="required-field"
-                  disabled={isFPM}
+                  disabled={isReadOnly}
                 />
                 <Box h="105px">
                   <FormControl>
@@ -237,7 +238,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                       variant="required-field"
                       {...register(`licenses.${index}.expiryDate`)}
                       data-testid={`expiryDate-` + index}
-                      isDisabled={isFPM}
+                      isDisabled={isReadOnly}
                       {...(!isAdmin && { min: datePickerFormat(new Date()) as string })}
                     />
                   </FormControl>
@@ -260,7 +261,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                       }
                       render={({ field, fieldState }) => {
                         return (
-                          <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
+                          <VStack alignItems="baseline" pointerEvents={isReadOnly ? 'none' : 'auto'}>
                             <Box w="100%">
                               <ChooseFileField
                                 testId={`expirationFile-` + index}
@@ -272,7 +273,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                                   field.onChange(file)
                                 }}
                                 onClear={() => setValue(field.name, null)}
-                                disabled={isFPM}
+                                disabled={isReadOnly}
                               ></ChooseFileField>
                               <FormErrorMessage bottom="5px" pos="absolute">
                                 {fieldState.error?.message}
@@ -320,19 +321,25 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         borderTop="2px solid #CBD5E0"
       >
         {watchChangeFields && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3" isDisabled={isFPM}>
+          <Button
+            variant="outline"
+            colorScheme="darkPrimary"
+            onClick={() => resetFields()}
+            mr="3"
+            isDisabled={isReadOnly}
+          >
             {t(`${VENDORPROFILE}.discardChanges`)}
           </Button>
         )}
 
         {onClose && (
-          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={isReadOnly ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
-        {!isFPM && (
+        {!isReadOnly && (
           <Button
-            disabled={disableLicenseNext || isFPM}
+            disabled={disableLicenseNext || isReadOnly}
             type="submit"
             variant="solid"
             colorScheme="darkPrimary"
