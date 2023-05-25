@@ -10,7 +10,7 @@ import { ExportButton } from 'components/table-refactored/export-button'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { TableNames } from 'types/table-column.types'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useVendorWorkOrders, useFetchAllVendorWorkOrders } from 'api/vendor-details'
 import {
@@ -38,7 +38,7 @@ const VENDOR_PROJECTS_QUERY_KEYS = {
 }
 
 export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileData }) => {
-  const { isFPM } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
   const activeStatusFilter = '&status.in=34,36,110,111,114'
   const paidStatusFilter = '&status.in=68'
   const [projectStatus, setProjectStatus] = useState('active')
@@ -79,19 +79,18 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
         header: 'WoId',
         accessorKey: 'id',
       },
-     
-    ...(projectStatus === 'paid'
-    ? [
-        {
-          header: 'Total Paid',
-          accessorKey: 'totalAmountPaid',
-        },
-      ]
-    : []),
-]
-}, [projectStatus])
-  
-  
+
+      ...(projectStatus === 'paid'
+        ? [
+            {
+              header: 'Total Paid',
+              accessorKey: 'totalAmountPaid',
+            },
+          ]
+        : []),
+    ]
+  }, [projectStatus])
+
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(activeStatusFilter)
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -119,10 +118,6 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
     refetch: refetchColumns,
   } = useTableColumnSettings(VENDOR_PROJECTS_TABLE_COLUMNS, TableNames.vendorProjects)
 
-  
-
- 
-
   const onSave = (columns: any) => {
     postGridColumn(columns)
   }
@@ -142,7 +137,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
           h="530px"
           position="relative"
           roundedTop={6}
-          pointerEvents={isFPM ? 'none' : 'auto'}
+          pointerEvents={isReadOnly ? 'none' : 'auto'}
           border="1px solid #CBD5E0"
           rounded="6px"
         >
@@ -203,12 +198,12 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
         justifyContent="end"
       >
         {onClose && (
-          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant={isReadOnly ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
-        {!isFPM && (
-          <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets" isDisabled={isFPM}>
+        {!isReadOnly && (
+          <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets" isDisabled={isReadOnly}>
             {t('save')}
           </Button>
         )}

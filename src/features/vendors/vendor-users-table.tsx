@@ -33,7 +33,7 @@ import { useToggleVendorActivation, useVendorUsers } from 'api/vendor-user'
 import { StatusUserMgt } from 'features/user-management/status-user-mgt'
 import { useAuth } from 'utils/auth-context'
 import { useQueryClient } from 'react-query'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 type UserProps = {
   onClose?: () => void
@@ -42,10 +42,7 @@ type UserProps = {
 export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose }) => {
   //eslint-disable-next-line
   const mainVendorId = vendorProfileData?.id
-
-  const { isAdmin, isDoc, isAccounting, isProjectCoordinator, isOperations } = useUserRolesSelector()
-
-  const isAppAdmin = isAdmin || isDoc || isAccounting || isProjectCoordinator || isOperations
+  const permissions = useRoleBasedPermissions()
 
   const VENDOR_USERS_TABLE_COLUMNS: ColumnDef<any>[] = useMemo(() => {
     return [
@@ -163,8 +160,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
 
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
-  const { isFPM } = useUserRolesSelector()
-  console.log(tableData)
+  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
 
   return (
     <>
@@ -180,7 +176,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
       />
       <Box w="100%">
         <HStack px="11px" gap="20px" mb="14px">
-          {isAppAdmin && (
+          {permissions.includes('VENDOR.DEACTIVEVENDOR') && (
             <FormControl display="flex">
               <FormLabel variant="strong-label" size="md">
                 Deactivate Vendors
@@ -197,7 +193,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormControl>
           )}
           {!isMobile && <Spacer />}
-          {!isFPM && (
+          {!isReadOnly && (
             <Box display="flex" alignItems={{ sm: '', lg: 'flex-end' }}>
               <Button onClick={openNewUserForm} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
                 New User

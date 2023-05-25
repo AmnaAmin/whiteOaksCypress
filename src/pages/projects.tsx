@@ -17,7 +17,7 @@ import { AddNewProjectModal } from 'features/projects/new-project/add-project'
 import { WeekDayFilters } from 'features/common/due-projects-weekly-filter/weekday-filters'
 import { BiBookAdd, BiChevronRight, BiChevronDown } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
 import { useFPMUsers } from 'api/pc-projects'
 import { useStickyState } from 'utils/hooks'
@@ -36,6 +36,7 @@ export const Projects = () => {
     onOpen: onNewProjectModalOpen,
   } = useDisclosure()
   const { isFPM } = useUserRolesSelector()
+  const hideCreateProject = useRoleBasedPermissions()?.includes('PROJECT.CREATE.HIDE')
   const { fpmUsers = [], setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
 
   const [resetAllFilters, setResetAllFilters] = useState(false)
@@ -91,7 +92,6 @@ export const Projects = () => {
             <Box ml="2">
               <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
             </Box>
-
             <WeekDayFilters
               selectedFPM={selectedFPM}
               clearAll={clearAll}
@@ -105,12 +105,13 @@ export const Projects = () => {
             />
             {/* </Flex> */}
             <Spacer />
-            {!isFPM && (
+            {!hideCreateProject && (
               <Button onClick={onNewProjectModalOpen} colorScheme="brand" fontSize="14px" minW={'140px'}>
                 <Icon as={BiBookAdd} fontSize="18px" mr={2} />
                 {t('projects.newProjects')}
               </Button>
             )}
+            {/*change this logic based on access control requirements*/}
             {fpmUsers?.length > 0 && isFPM && (
               <FormControl w="215px">
                 <ReactSelect
