@@ -142,7 +142,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
           h="530px"
           position="relative"
           roundedTop={6}
-          pointerEvents={isFPM ? 'none' : 'auto'}
+          pointerEvents={'auto'}
           border="1px solid #CBD5E0"
           rounded="6px"
         >
