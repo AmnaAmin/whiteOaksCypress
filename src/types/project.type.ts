@@ -102,6 +102,7 @@ export type Project = {
   reconcileDate: string | null
   verifiedDate: string | null
   disqualifiedRevenueDate: string | Date | null
+  emailNotificationDate: string | Date | null
   disqualifiedRevenueFlag: boolean | null
   reconciledBy: string | null
   verifiedBy: string | null
