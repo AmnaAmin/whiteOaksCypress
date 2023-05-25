@@ -86,7 +86,7 @@ export const PerformanceInfoCards: React.FC<{
                   <Box> {t(`${PERFORMANCE}.profitMargin`)}</Box>
                 </FormLabel>
                 <FormLabel variant="strong-label" size="md">
-                  <Box data-testid="profit_margins">{profitMargin > 0 ? `${profitMargin.toFixed(2)}%` : `0%`}</Box>
+                  <Box data-testid="profit_margins">{profitMargin ? profitMargin?.toFixed(2) : 0}%</Box>
                 </FormLabel>
               </Flex>
             </Center>
