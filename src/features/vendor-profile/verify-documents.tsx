@@ -26,7 +26,7 @@ enum VERIFICATION_STATUS {
 }
 
 export const VendorPortalVerifyDocument = (props: VendorPortalVerifyDocumentProps): JSX.Element => {
-  const [verificationStatus, setVerificationStatus] = useState<any>(null)
+  const [verificationStatus, setVerificationStatus] = useState<VERIFICATION_STATUS | null>(null)
 
   useEffect(() => {
     if (props.fieldName === 'CoiWcExp') {
@@ -148,7 +148,7 @@ interface AdminVerifyDocumentProps {
 }
 
 export const AdminPortalVerifyDocument = (props: AdminVerifyDocumentProps): JSX.Element => {
-  const [verificationStatus, setVerificationStatus] = useState<VERIFICATION_STATUS>(VERIFICATION_STATUS.UNVERIFIED)
+  const [verificationStatus, setVerificationStatus] = useState<VERIFICATION_STATUS | null>(null)
   const { isFPM } = useUserRolesSelector()
 
   useEffect(() => {
