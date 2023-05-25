@@ -82,6 +82,7 @@ export const project = {
           reconcileDate: 'Reconciled',
           verifiedDate: 'Verified',
           disqualifiedRevenueDate: 'Disqualified Revenue',
+          emailNotificationDate: 'Email Date',
           verifyRevenue: 'Disqualify Revenue',
 
           save: 'Save',
@@ -173,6 +174,7 @@ export const project = {
           reconcileDate: 'Reconciliada',
           verifiedDate: 'Verificada',
           disqualifiedRevenueDate: 'ingresos descalificados',
+          emailNotificationDate: 'Fecha de correo electrónico',
           verifyRevenue: 'verificar ingresos',
 
           save: 'Ahorrar',

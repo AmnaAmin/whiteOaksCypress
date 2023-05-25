@@ -114,6 +114,7 @@ type ProjectDetailsMiscFormValues = {
   reconcileDate: string | null
   verifiedDate: string | null
   disqualifiedRevenueDate?: string | null
+  emailNotificationDate? :string | null
   disqualifiedRevenueFlag?: boolean | null
 }
 

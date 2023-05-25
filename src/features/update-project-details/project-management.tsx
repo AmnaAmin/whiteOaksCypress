@@ -28,6 +28,7 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 import { addDays } from 'date-fns'
 import moment from 'moment'
+import { capitalize } from 'utils/string-formatters'
 
 type ProjectManagerProps = {
   projectStatusSelectOptions: SelectOption[]
@@ -86,7 +87,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const sentenceCaseActive = STATUS.Active.charAt(0).toUpperCase() + STATUS.Active.slice(1).toLowerCase()
 
   const sentenceCaseNew = STATUS.New.charAt(0).toUpperCase() + STATUS.New.slice(1).toLowerCase()
-  console.log(watchStatus?.label, watchStatus?.label === sentenceCaseActive)
 
   useEffect(() => {
     if (watchStatus?.label === sentenceCaseActive) {
@@ -126,7 +126,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     }
   }
 
-  const sentenceCaseReconcile = STATUS.Reconcile.charAt(0).toUpperCase() + STATUS.Reconcile.slice(1).toLowerCase()
+  const sentenceCaseReconcile = capitalize(STATUS.Reconcile)
+  const overrideProjectStatusOptionsLowercase = projectOverrideStatusSelectOptions.map(option => {
+  return { ...option, label: capitalize(option.label) };
+});
   return (
     <Box>
       <Stack>
@@ -208,7 +211,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                   <>
                     <ReactSelect
                       {...field}
-                      options={projectOverrideStatusSelectOptions} // {overrideProjectStatusOptions}
+                      options={overrideProjectStatusOptionsLowercase} // {overrideProjectStatusOptions}
                       isDisabled={!isAdmin}
                       isOptionDisabled={option => option.disabled}
                       onChange={option => {

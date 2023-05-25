@@ -32,6 +32,7 @@ const Misc: React.FC = () => {
     payVariance,
     status,
     reconcileDate,
+    emailNotificationDate,
     verifiedDate,
   } = getValues()
   const { isAdmin } = useUserRolesSelector()
@@ -205,6 +206,17 @@ const Misc: React.FC = () => {
             />
           </FormControl>
         </GridItem>
+        <GridItem>
+              <FormControl w="215px">
+                <FormLabel variant="strong-label" size="md" htmlFor="emailNotificationDate">
+                  {t(`project.projectDetails.emailNotificationDate`)}
+                </FormLabel>
+                <DatePickerInput
+                  value={emailNotificationDate ? dateFormat(emailNotificationDate) : 'mm/dd/yyyy'}
+                  disable
+                  />
+              </FormControl>
+            </GridItem>
         <GridItem>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="verifiedDate">
