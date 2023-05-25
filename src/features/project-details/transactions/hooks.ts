@@ -329,9 +329,12 @@ export const useAgainstOptions = (
       return againstOptions.slice(0, 1)
     }
     if (
-      [TransactionTypeValues.permitFee, TransactionTypeValues.shippingFee, TransactionTypeValues.carrierFee].some(
-        value => transactionType?.value === value,
-      )
+      [
+        TransactionTypeValues.permitFee,
+        TransactionTypeValues.shippingFee,
+        TransactionTypeValues.carrierFee,
+        TransactionTypeValues.legalFee,
+      ].some(value => transactionType?.value === value)
     ) {
       return [againstOptions[0]]
     }

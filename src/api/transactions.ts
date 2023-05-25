@@ -157,12 +157,16 @@ const transactionTypeOptions = [
     label: 'Permit Fee',
   },
   {
+    value: TransactionTypeValues.depreciation,
+    label: 'Depreciation',
+  },
+  {
     value: TransactionTypeValues.deductible,
     label: 'Deductible',
   },
   {
-    value: TransactionTypeValues.depreciation,
-    label: 'Depreciation',
+    value: TransactionTypeValues.legalFee,
+    label: 'Legal Fee',
   },
 ]
 
