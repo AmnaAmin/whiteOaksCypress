@@ -139,7 +139,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
   const sowRevisedChangeOrderAmount =
     (firstFinancialRecord?.changeOrder || 0) + (firstFinancialRecord?.coAdjustment || 0)
   const sowRevisedAmount = (firstFinancialRecord?.originalAmount || 0) + (firstFinancialRecord?.noCoAdjustment || 0)
-  const finalSOWAmount = sowRevisedAmount + sowRevisedChangeOrderAmount + (firstFinancialRecord?.carrierFee || 0)
+  const finalSOWAmount = sowRevisedAmount + sowRevisedChangeOrderAmount + (firstFinancialRecord?.carrierFee || 0) + (firstFinancialRecord?.legalFee || 0)
   const originalSOWAmount =
     (firstFinancialRecord?.originalAmount || 0) +
     (firstFinancialRecord?.changeOrder || 0) +

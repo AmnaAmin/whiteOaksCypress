@@ -53,6 +53,14 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
     },
     meta: { format: 'currency' },
   },
+  {
+    header: `${TRANSACTION}.legalFee`,
+    accessorKey: 'legalFee',
+    accessorFn(row) {
+      return numeral(row.legalFee).format('$0,0.00')
+    },
+    meta: { format: 'currency' },
+  },
   // {
   //   header: `${TRANSACTION}.adjustment`,
   //   accessorKey: 'adjustment',
