@@ -205,26 +205,15 @@ describe('Given Project Coordinator create new transaction', () => {
 
       await renderTransactionForm({ onClose, projectId: '1212', projectStatus: 'invoiced' })
 
-      // User first select Payment type, one of ['Change Order', 'Draw']
       await selectOption(screen.getByTestId('transaction-type'), 'Legal Fee')
 
-      // User first select Against, one of ['Project SOW', 'Vendor']
-      //await selectOption(screen.getByTestId('against-select-field'), 'Project SOW', 'Project SOW')
-      /**
-       * Check the following fields changed properly,
-       * 1- Transaction Type selected with 'Change Order'
-       * 2- Expected Completion Date field visible with already filled value of current Date but disabled
-       * 3- New Expected Completion Date field visible
-       */
       expect(getByText(screen.getByTestId('transaction-type'), 'Legal Fee')).toBeInTheDocument()
       expect(getByText(screen.getByTestId('against-select-field'), 'Project SOW')).toBeInTheDocument()
 
-      // User first select Work Order, one of ['SOW-1', 'SOW-2']
       const workOrderOptionLabel = 'ignore (Not applicable)'
       await selectOption(screen.getByTestId('work-order-select'), workOrderOptionLabel)
       expect(getByText(screen.getByTestId('work-order-select'), workOrderOptionLabel)).toBeInTheDocument()
 
-      // User first select Change Order, one of ['Change Order-1', 'Change Order-2']
       const changeOrderOptionLabel = '$0.00'
       await selectOption(screen.getByTestId('change-order-select'), changeOrderOptionLabel)
       expect(getByText(screen.getByTestId('change-order-select'), changeOrderOptionLabel)).toBeInTheDocument()
