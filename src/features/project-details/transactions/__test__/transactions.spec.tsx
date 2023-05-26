@@ -1,5 +1,5 @@
 import { act, getByText, screen, selectOption, waitForLoadingToFinish } from 'utils/test-utils'
-import { render, fireEvent, getByRole, findByText, queryByText } from '@testing-library/react'
+import { render, fireEvent, getByRole } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { setToken } from 'utils/storage.utils'
 import { TransactionForm, TransactionFormProps } from '../transaction-form'
