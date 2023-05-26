@@ -160,15 +160,15 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
   ) || { vendorAccountPayable: 0, projectTotalCost: 0, materialCost: 0, vendorPayment: 0 }
 
   const finalProjectTotalCost = projectTotalCost + projectExpenses
-  const profits = finalSOWAmount - finalProjectTotalCost;
-  const profitMargin = (profits / finalSOWAmount );
+
+  const profitMargin = originalSOWAmount === 0 ? 0 : (finalSOWAmount - finalProjectTotalCost) / finalSOWAmount;
 
   return {
     finalSOWAmount: numeral(finalSOWAmount).format('$0,0.00'),
     accountPayable: numeral(vendorAccountPayable).format('$0,0.00'),
     projectTotalCost: numeral(finalProjectTotalCost).format('$0,0.00'),
     revenue: numeral(finalSOWAmount).format('$0,0.00'),
-    profits: numeral(profits).format('$0,0.00'),
+    profits: numeral(finalSOWAmount - finalProjectTotalCost).format('$0,0.00'),
     profitMargin: numeral(profitMargin).format('0.00%'),
     material: numeral(materialCost).format('$0,0.00'),
     vendorPayment: numeral(vendorPayment).format('$0,0.00'),
