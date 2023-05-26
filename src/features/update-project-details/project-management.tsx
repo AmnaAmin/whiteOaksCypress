@@ -20,13 +20,15 @@ import { STATUS } from 'features/common/status'
 import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { ProjectDetailsFormValues } from 'types/project-details.types'
+import { ProjectDetailsFormValues, ProjectStatus } from 'types/project-details.types'
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 import { addDays } from 'date-fns'
+import moment from 'moment'
+import { capitalize } from 'utils/string-formatters'
 
 type ProjectManagerProps = {
   projectStatusSelectOptions: SelectOption[]
@@ -61,6 +63,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const minOfWoaStartDate = useWOAStartDateMin(control)
 
   const watchIsReconciled = useWatch({ name: 'isReconciled', control })
+
   const watchForm = useWatch({ control })
   const [lienDue, setLienDue] = useState<number | undefined>()
 
@@ -81,11 +84,15 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     isClientSignOffDateRequired,
   } = useFieldsRequired(control)
 
+  const sentenceCaseActive = STATUS.Active.charAt(0).toUpperCase() + STATUS.Active.slice(1).toLowerCase()
+
+  const sentenceCaseNew = STATUS.New.charAt(0).toUpperCase() + STATUS.New.slice(1).toLowerCase()
+
   useEffect(() => {
-    if (watchStatus?.label === STATUS.Active.toUpperCase()) {
+    if (watchStatus?.label === sentenceCaseActive) {
       setValue('woaStartDate', datePickerFormat(new Date()))
     }
-    if (watchStatus?.label === STATUS.New.toUpperCase()) {
+    if (watchStatus?.label === sentenceCaseNew) {
       setValue('woaStartDate', 'mm/dd/yyyy')
     }
   }, [watchStatus?.label])
@@ -108,7 +115,21 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const redirectToEstimateDetails = pId => {
     window.location.href = `estimate-details/${pId}/`
   }
-const sentenceCaseReconcile= STATUS.Reconcile.charAt(0).toUpperCase() + STATUS.Reconcile.slice(1).toLowerCase()
+  const updateProjCloseDueDate = op => {
+    //checking if project status selected is reconcile from dropdown then set its value accordingly
+    if (op.value === ProjectStatus.Reconcile) {
+      setValue('projectClosedDueDate', datePickerFormat(moment().add(2, 'd')))
+    }
+    //checking if project status selected is active,punch from dropdown then set Closed Due Date null
+    if (op.value === ProjectStatus.Active || op.value === ProjectStatus.Punch) {
+      setValue('projectClosedDueDate', null)
+    }
+  }
+
+  const sentenceCaseReconcile = capitalize(STATUS.Reconcile)
+  const overrideProjectStatusOptionsLowercase = projectOverrideStatusSelectOptions.map(option => {
+  return { ...option, label: capitalize(option.label) };
+});
   return (
     <Box>
       <Stack>
@@ -131,6 +152,7 @@ const sentenceCaseReconcile= STATUS.Reconcile.charAt(0).toUpperCase() + STATUS.R
                         isOptionDisabled={option => option.disabled}
                         onChange={option => {
                           clearErrors()
+                          updateProjCloseDueDate(option)
                           field.onChange(option)
                         }}
                       />
@@ -189,10 +211,12 @@ const sentenceCaseReconcile= STATUS.Reconcile.charAt(0).toUpperCase() + STATUS.R
                   <>
                     <ReactSelect
                       {...field}
-                      options={projectOverrideStatusSelectOptions} // {overrideProjectStatusOptions}
+                      options={overrideProjectStatusOptionsLowercase} // {overrideProjectStatusOptions}
                       isDisabled={!isAdmin}
                       isOptionDisabled={option => option.disabled}
                       onChange={option => {
+                        setValue('projectClosedDueDate', null)
+
                         clearErrors()
                         field.onChange(option)
                       }}
@@ -207,7 +231,13 @@ const sentenceCaseReconcile= STATUS.Reconcile.charAt(0).toUpperCase() + STATUS.R
               <FormLabel variant="strong-label" size="md" htmlFor="projectName">
                 {t(`project.projectDetails.projectName`)}
               </FormLabel>
-              <Input size ='md' placeholder="PC project 1" id="projectName" {...register('projectName')} autoComplete="off" />
+              <Input
+                size="md"
+                placeholder="PC project 1"
+                id="projectName"
+                {...register('projectName')}
+                autoComplete="off"
+              />
               <FormErrorMessage>{errors.projectName && errors.projectName.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -335,12 +365,21 @@ const sentenceCaseReconcile= STATUS.Reconcile.charAt(0).toUpperCase() + STATUS.R
                 size="md"
                 {...register('isReconciled')}
               >
-                <Text color="#4A5568" fontWeight='400' fontSize='14px'>
+                <Text color="#4A5568" fontWeight="400" fontSize="14px">
                   {watchForm.verifiedDate
                     ? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`
                     : ''}
                 </Text>
               </Checkbox>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors?.projectClosedDueDate}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.closedDueDate`)}
+              </FormLabel>
+              <Input type="date" isDisabled={!isAdmin ?? true} {...register('projectClosedDueDate')} />
+              <FormErrorMessage>{errors?.projectClosedDueDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>

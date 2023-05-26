@@ -19,6 +19,7 @@ export const project = {
           clientWalkthrough: 'Client Walkthrough',
           clientSignOff: 'Client Sign Off',
           overrideStatus: 'Override Status',
+          closedDueDate: 'Closed Due Date',
           lienRightsExpires: 'Lien Rights Expires',
           lienFiled: 'Lien Filed',
 
@@ -81,6 +82,7 @@ export const project = {
           reconcileDate: 'Reconciled',
           verifiedDate: 'Verified',
           disqualifiedRevenueDate: 'Disqualified Revenue',
+          emailNotificationDate: 'Email Date',
           verifyRevenue: 'Disqualify Revenue',
 
           save: 'Save',
@@ -110,6 +112,7 @@ export const project = {
           clientWalkthrough: 'Fecha de recorrido del cliente',
           clientSignOff: 'Fecha de cierre del cliente',
           overrideStatus: 'Anular estado',
+          closedDueDate: 'Fecha de vencimiento cerrada',
           lienRightsExpires: 'Los derechos de gravamen expiran',
           lienFiled: 'Gravamen Presentado',
 
@@ -171,6 +174,7 @@ export const project = {
           reconcileDate: 'Reconciliada',
           verifiedDate: 'Verificada',
           disqualifiedRevenueDate: 'ingresos descalificados',
+          emailNotificationDate: 'Fecha de correo electrónico',
           verifyRevenue: 'verificar ingresos',
 
           save: 'Ahorrar',

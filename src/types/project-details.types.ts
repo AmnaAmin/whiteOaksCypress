@@ -33,6 +33,7 @@ type ProjectManagementValues = {
   verifiedBy: string | null
   verifiedbyDesc: string | null
   reconciledbyDesc: string | null
+  projectClosedDueDate: string | null
   lienExpiryDate: string | null
   lienFiled: Date | string | null
 }
@@ -113,6 +114,7 @@ type ProjectDetailsMiscFormValues = {
   reconcileDate: string | null
   verifiedDate: string | null
   disqualifiedRevenueDate?: string | null
+  emailNotificationDate? :string | null
   disqualifiedRevenueFlag?: boolean | null
 }
 
@@ -146,6 +148,7 @@ export type ProjectDetailsAPIPayload = {
   clientWalkthroughDate: string | null
   overrideProjectStatus: SelectOption | null
   isReconciled?: boolean | false
+  projectClosedDueDate: string | null
   lienRightFileDate: string | null
   lienRightExpireDate: string | null
 

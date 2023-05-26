@@ -116,7 +116,7 @@ export const useGetClientSelectOptions = () => {
   const client = useClient()
 
   const { data: clients, ...rest } = useQuery<Client[]>('clients', async () => {
-    const response = await client(`clients`, {})
+    const response = await client(`clients?sort=companyName,asc`, {})
 
     return response?.data
   })
@@ -564,6 +564,7 @@ export const parseFormValuesFromAPIData = ({
     verifiedBy: project.verifiedBy as string,
     verifiedbyDesc: project.verifiedbyDesc as string,
     reconciledbyDesc: project.reconciledbyDesc as string,
+    projectClosedDueDate: datePickerFormat(project.projectClosedDueDate),
     lienFiled: datePickerFormat(project.lienRightFileDate),
     lienExpiryDate: datePickerFormat(project?.lienRightExpireDate),
 
@@ -626,6 +627,7 @@ export const parseFormValuesFromAPIData = ({
     woaPaidDate: getLocalTimeZoneDate(project.woaPaidDate as string),
     dueDateVariance: project.dueDateVariance,
     disqualifiedRevenueDate: datePickerFormat(project.disqualifiedRevenueDate),
+    emailNotificationDate: datePickerFormat(project.emailNotificationDate),
     disqualifiedRevenueFlag: project.disqualifiedRevenueFlag,
 
     payDateVariance: project.signoffDateVariance,
@@ -679,6 +681,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
     isReconciled: formValues.isReconciled === null ? false : formValues.isReconciled,
     lienRightFileDate: dateISOFormat(formValues.lienFiled),
+    projectClosedDueDate: dateISOFormat(formValues.projectClosedDueDate),
     lienRightExpireDate: dateISOFormat(formValues.lienExpiryDate),
 
     // Invoicing and payment payload

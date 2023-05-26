@@ -102,6 +102,7 @@ export type Project = {
   reconcileDate: string | null
   verifiedDate: string | null
   disqualifiedRevenueDate: string | Date | null
+  emailNotificationDate: string | Date | null
   disqualifiedRevenueFlag: boolean | null
   reconciledBy: string | null
   verifiedBy: string | null
@@ -123,6 +124,7 @@ export type Project = {
   agentName: string | null
   agentPhone: string | null
   agentEmail: string | null
+  projectClosedDueDate: Date | string | null
   lienRightFileDate: Date | string | null
   lienRightExpireDate: Date | string | null
 }
