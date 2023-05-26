@@ -309,7 +309,6 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
   )
 
   const againstOptions: SelectOption[] = useMemo(() => {
-    console.log(workOrderOptions)
     if (isVendor) {
       return workOrderOptions || []
     } else {
