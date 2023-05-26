@@ -38,6 +38,7 @@ import {
   TRANSACTION_STATUS_OPTIONS,
 } from 'features/project-details/transactions/transaction.constants'
 import { ACCONT_PAYABLE_API_KEY } from './account-payable'
+import { STATUS } from 'features/common/status'
 
 export const GET_TRANSACTIONS_API_KEY = 'transactions'
 
@@ -177,6 +178,11 @@ export const useTransactionTypes = (screen?: string, projectStatus?: string) => 
     const transactionType = transactionTypeOptions.filter(option => option.label !== 'Payment')
     return {
       transactionTypeOptions: transactionType.slice(0, 5),
+    }
+  }
+  if (projectStatus && [STATUS.Cancelled, STATUS.ClientPaid, STATUS.Paid].includes(projectStatus as STATUS)) {
+    return {
+      transactionTypeOptions: transactionTypeOptions.filter(t => t.label !== 'Legal Fee'),
     }
   }
   return {
