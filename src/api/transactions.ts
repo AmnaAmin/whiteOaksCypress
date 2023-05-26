@@ -170,7 +170,7 @@ const transactionTypeOptions = [
   },
 ]
 
-export const useTransactionTypes = (screen?: string) => {
+export const useTransactionTypes = (screen?: string, projectStatus?: string) => {
   const { isVendor } = useUserRolesSelector()
 
   if (screen === 'WORK_ORDER_TRANSACTION_TABLE_MODAL' && !isVendor) {
