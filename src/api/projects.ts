@@ -139,7 +139,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
   const sowRevisedChangeOrderAmount =
     (firstFinancialRecord?.changeOrder || 0) + (firstFinancialRecord?.coAdjustment || 0)
   const sowRevisedAmount = (firstFinancialRecord?.originalAmount || 0) + (firstFinancialRecord?.noCoAdjustment || 0)
-  const finalSOWAmount = sowRevisedAmount + sowRevisedChangeOrderAmount + (firstFinancialRecord?.carrierFee || 0)
+  const finalSOWAmount = sowRevisedAmount + sowRevisedChangeOrderAmount + (firstFinancialRecord?.carrierFee || 0) + (firstFinancialRecord?.legalFee || 0)
   const originalSOWAmount =
     (firstFinancialRecord?.originalAmount || 0) +
     (firstFinancialRecord?.changeOrder || 0) +
@@ -161,7 +161,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
 
   const finalProjectTotalCost = projectTotalCost + projectExpenses
 
-  const profitMargin = originalSOWAmount === 0 ? 0 : (originalSOWAmount - finalProjectTotalCost) / originalSOWAmount
+  const profitMargin = originalSOWAmount === 0 ? 0 : (finalSOWAmount - finalProjectTotalCost) / finalSOWAmount;
 
   return {
     finalSOWAmount: numeral(finalSOWAmount).format('$0,0.00'),

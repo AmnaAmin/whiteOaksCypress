@@ -165,7 +165,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [remainingAmt, setRemainingAmt] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
   // const [document, setDocument] = useState<File | null>(null)
-  const { transactionTypeOptions } = useTransactionTypes(screen)
+  const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
 
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
