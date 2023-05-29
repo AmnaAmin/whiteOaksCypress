@@ -68,7 +68,6 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   disqualifiedRevenueFlag: 'disqualifiedRevenueFlag.equals',
   noteFlag: 'noteFlag.equals',
   lienDueFlag: 'lienDueFlag.equals',
-  
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
