@@ -53,8 +53,17 @@ type ProjectInvoicingAndPaymentFormValues = {
   remainingPayment: number | null
   payment: number | null
   depreciation: number | null
+  resubmittedInvoice: Array<ResubmissionInvoice>
 }
-
+type ResubmissionInvoice = {
+  notificationDate: string | null
+  resubmissionDate: string | null
+  paymentTerms: SelectOption | null
+  dueDate: string | null
+  invoiceNumber: string | null
+  uploadedInvoice: File
+  id
+}
 type ContactsFormValues = {
   projectCoordinator: SelectOption | null
   projectCoordinatorPhoneNumber: string | null
@@ -114,7 +123,7 @@ type ProjectDetailsMiscFormValues = {
   reconcileDate: string | null
   verifiedDate: string | null
   disqualifiedRevenueDate?: string | null
-  emailNotificationDate? :string | null
+  emailNotificationDate?: string | null
   disqualifiedRevenueFlag?: boolean | null
 }
 
@@ -164,6 +173,7 @@ export type ProjectDetailsAPIPayload = {
   overPayment: number | null
   remainingPayment: number | null
   newDepreciationPayment: number | null
+  resubmissionList: ResubmissionListItem[]
 
   // Contacts payload
   projectCordinatorId: number | null
@@ -259,6 +269,16 @@ export type ProjectDetailsAPIPayload = {
     zipCode: string | null
   }
   projectStartDate: string | null
+}
+
+export type ResubmissionListItem = {
+  resubmissionNotificationDate: string | null
+  resubmissionDate: string | null
+  resubmissionPaymentTerm: number
+  resubmissionDueDate: string | null
+  resubmissionInvoiceNumber: string
+  documentDTO: any
+  id: any
 }
 
 export type OverPaymentType = {

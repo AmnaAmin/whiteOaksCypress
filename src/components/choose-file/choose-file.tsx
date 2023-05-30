@@ -11,6 +11,7 @@ type ChooseFileProps = React.InputHTMLAttributes<HTMLInputElement> & {
   inputStyle?: any
   uploadIconStyle?: any
   textContStyle?: any
+  disabled?: boolean
 }
 
 const ChooseFileField: React.FC<ChooseFileProps> = ({
@@ -24,6 +25,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
   inputStyle,
   uploadIconStyle,
   textContStyle,
+  disabled,
   ...inputProps
 }) => {
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -82,6 +84,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
         type="button"
         variant="ghost"
         size="xl"
+        disabled={disabled}
         onClick={() => inputRef?.current?.click()}
         _active={{ bg: 'none' }}
         _hover={{ bg: 'none' }}
@@ -142,7 +145,7 @@ const ChooseFileField: React.FC<ChooseFileProps> = ({
                 },
               }}
             >
-              <BiUpload />
+              <BiUpload cursor={disabled ? 'not-allowed' : 'pointer'} />
             </Button>
           </Flex>
         )}

@@ -127,6 +127,7 @@ export type Project = {
   projectClosedDueDate: Date | string | null
   lienRightFileDate: Date | string | null
   lienRightExpireDate: Date | string | null
+  resubmissionDTOList: any[]
 }
 
 export type ProjectExtraAttributesType = {
