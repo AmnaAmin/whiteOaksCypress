@@ -32,12 +32,13 @@ const PROJECT_TABLE_QUERY_KEYS = {
   skillName: 'skillName.contains',
   workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',
   expectedPaymentDate: 'expectedPaymentDate.equals',
+  displayId: 'displayId.contains'
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projectID',
-    accessorKey: 'projectId',
+    accessorKey: 'displayId',
     cell: (row: any) => {
       const value = row.cell.getValue()
       return (
