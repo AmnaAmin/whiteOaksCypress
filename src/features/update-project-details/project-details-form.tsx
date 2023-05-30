@@ -166,7 +166,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     onClose: onAddressVerificationModalClose,
   } = useDisclosure()
 
-  const USPSCheck = dirtyFields.address || dirtyFields.city || dirtyFields.zip || dirtyFields.state
+  const USPSCheck = dirtyFields.address === true || dirtyFields.city || dirtyFields.zip || dirtyFields.state === true
 
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
