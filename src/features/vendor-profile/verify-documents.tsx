@@ -26,11 +26,11 @@ enum VERIFICATION_STATUS {
 }
 
 export const VendorPortalVerifyDocument = (props: VendorPortalVerifyDocumentProps): JSX.Element => {
-  const [verificationStatus, setVerificationStatus] = useState<VERIFICATION_STATUS>(VERIFICATION_STATUS.UNVERIFIED)
+  const [verificationStatus, setVerificationStatus] = useState<VERIFICATION_STATUS | null>(null)
 
   useEffect(() => {
     if (props.fieldName === 'CoiWcExp') {
-      if (props.vendor.coiWCStatus === null || props.vendor.coiWCStatus === VERIFICATION_STATUS.UNVERIFIED) {
+      if (!props.vendor.coiWCStatus || props.vendor.coiWCStatus === VERIFICATION_STATUS.UNVERIFIED) {
         setVerificationStatus(VERIFICATION_STATUS.UNVERIFIED)
       }
 
