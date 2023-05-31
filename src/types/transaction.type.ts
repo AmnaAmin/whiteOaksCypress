@@ -139,6 +139,7 @@ export type SelectOption = {
   carrier?: Carrier[]
   lienDue?: number | undefined
   __isNew__?: boolean
+  property?: any
 }
 
 export type TransactionFormValues = {

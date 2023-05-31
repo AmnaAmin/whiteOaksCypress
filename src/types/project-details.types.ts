@@ -88,7 +88,7 @@ type ProjectDetailsLocationFormValues = {
   hoaContactExtension: string | null
   hoaContactEmail: string | null
   acknowledgeCheck: boolean | null
-  property: PropertyAddress
+  property: PropertyAddress | null
   newMarket: SelectOption
 }
 
@@ -114,7 +114,7 @@ type ProjectDetailsMiscFormValues = {
   reconcileDate: string | null
   verifiedDate: string | null
   disqualifiedRevenueDate?: string | null
-  emailNotificationDate? :string | null
+  emailNotificationDate?: string | null
   disqualifiedRevenueFlag?: boolean | null
 }
 
