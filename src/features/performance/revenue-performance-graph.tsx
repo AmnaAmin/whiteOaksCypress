@@ -150,6 +150,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             contentStyle={{ borderRadius: '6px' }}
             cursor={{ fill: 'transparent' }}
           />
+           <Bar barSize={50} dataKey="Bonus" fill="#FB8832" radius={[5, 5, 0, 0]} hide={barProps['Bonus'] === true} />
           <Bar
             barSize={50}
             dataKey="Revenue"
@@ -157,7 +158,7 @@ export const OverviewGraph = ({ vendorData, width, height, hasUsers, monthCheck 
             radius={[5, 5, 0, 0]}
             hide={barProps['Revenue'] === true}
           />
-          <Bar barSize={30} dataKey="Bonus" fill="#FB8832" radius={[10, 10, 0, 0]} hide={barProps['Bonus'] === true} />
+          
           <Bar barSize={50} dataKey="Profit" fill="#949AC2" radius={[5, 5, 0, 0]} hide={barProps['Profit'] === true} />
           <Legend
             onClick={selectBar}

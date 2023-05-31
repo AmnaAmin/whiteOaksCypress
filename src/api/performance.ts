@@ -123,8 +123,10 @@ export const useMutatePerformance = (FPMId: number) => {
           isClosable: true,
           position: 'top-left',
         })
+       
         queryClient.invalidateQueries('performance-list')
         queryClient.invalidateQueries('fpm-details')
+        queryClient.invalidateQueries('performance')
       },
       onError(error: ErrorType) {
         toast({
