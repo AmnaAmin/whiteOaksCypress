@@ -182,3 +182,9 @@ export const useWOAStartDateMin = (control: Control<ProjectDetailsFormValues>) =
 
   return new Date(clientStartDate).toISOString().split('T')[0]
 }
+
+// Current date
+export const useCurrentDate = () => {
+  let date = new Date().toISOString().split('T')[0]
+  return date
+}
