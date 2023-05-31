@@ -62,7 +62,6 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
 
   const formValues = getValues()
 
-  console.log(formValues)
   const isUploadInvoiceRequired = isStatusInvoiced && !formValues.invoiceLink
   const isDepreciationDisabled = projectData?.projectStatus === PROJECT_STATUS.invoiced.label
 
@@ -119,15 +118,19 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
     STATUS.ClientPaid?.toUpperCase(),
     STATUS.Invoiced.toUpperCase(),
     STATUS.Paid?.toUpperCase(),
-    STATUS.Overpayment,
+    STATUS.Overpayment?.toUpperCase(),
+    STATUS.Disputed?.toUpperCase(),
   ].includes(projectData?.projectStatus as string)
+
   const { t } = useTranslation()
 
   return (
     <HStack gap="8" alignItems={'flex-start'} overflowX="auto" width="100%">
       <Box>
         <Grid templateColumns="repeat(4,1fr)" gap={4} rowGap="32px" columnGap="8px" w="100%" overflowX={'auto'}>
-          <GridItem colSpan={4} minH="8px"></GridItem>
+          {projectData?.projectStatus === STATUS.Invoiced?.toUpperCase() && (
+            <GridItem colSpan={4} minH="8px"></GridItem>
+          )}
           <GridItem>
             <VStack alignItems="end" spacing="0px" position="relative">
               <FormControl w="215px" isInvalid={!!errors.originalSOWAmount}>
@@ -477,33 +480,34 @@ const RevisedAmounts = ({ formControl, project }) => {
 
   const { t } = useTranslation()
   const watchResubmissions = watch('resubmittedInvoice')
-  console.log('watchResubmissions', watchResubmissions)
   const { isAdmin } = useUserRolesSelector()
 
   return (
     <Box borderLeft={'1px solid #CBD5E0'} minH="500px">
-      <HStack
-        pl="20px"
-        pb="10px"
-        onClick={() => {
-          append({
-            notificationDate: null,
-            resubmissionDate: datePickerFormat(moment.now()),
-            paymentTerms: null,
-            dueDate: null,
-            invoiceNumber: '',
-            uploadedInvoice: null,
-            id: null,
-          })
-        }}
-      >
-        <Button colorScheme="darkPrimary" size="square-sm" variant="cubicle">
-          +
-        </Button>
-        <FormLabel variant={'clickable-label'} size="md">
-          {t(`newRow`)}
-        </FormLabel>
-      </HStack>
+      {project?.projectStatus === STATUS.Invoiced?.toUpperCase() && (
+        <HStack
+          pl="20px"
+          pb="10px"
+          onClick={() => {
+            append({
+              notificationDate: null,
+              resubmissionDate: datePickerFormat(moment.now()),
+              paymentTerms: null,
+              dueDate: null,
+              invoiceNumber: '',
+              uploadedInvoice: null,
+              id: null,
+            })
+          }}
+        >
+          <Button colorScheme="darkPrimary" size="square-sm" variant="cubicle">
+            +
+          </Button>
+          <FormLabel variant={'clickable-label'} size="md">
+            {t(`newRow`)}
+          </FormLabel>
+        </HStack>
+      )}
       <VStack minH="500px" alignItems={'flex-start'} w="100%" pl="20px" pr="20px" overflow={'auto'} gap={'4px'}>
         {resubmittedInvoice.map((resubmit, index) => {
           return (
@@ -539,11 +543,13 @@ const RevisedAmounts = ({ formControl, project }) => {
                       variant={'required-field'}
                       css={calendarIcon}
                       disabled={!!watchResubmissions?.[index].id}
-                      {...register(`resubmittedInvoice.${index}.notificationDate`, { required: true })}
+                      {...register(`resubmittedInvoice.${index}.notificationDate`, {
+                        required: 'This is a required field',
+                      })}
                     />
                     <Box minH="20px" mt="3px">
                       <FormErrorMessage whiteSpace="nowrap">
-                        {errors.revisedAmounts?.[index]?.notificationDate?.message}
+                        {errors.resubmittedInvoice?.[index]?.notificationDate?.message}
                       </FormErrorMessage>
                     </Box>
                   </FormControl>
@@ -556,10 +562,12 @@ const RevisedAmounts = ({ formControl, project }) => {
                       id="resubmissionDate"
                       type="date"
                       size="md"
-                      disabled={!isAdmin || !!resubmittedInvoice?.[index]?.id}
+                      disabled={!isAdmin || !!watchResubmissions?.[index]?.id}
                       variant={'required-field'}
                       css={calendarIcon}
-                      {...register(`resubmittedInvoice.${index}.resubmissionDate`, { required: true })}
+                      {...register(`resubmittedInvoice.${index}.resubmissionDate`, {
+                        required: 'This is a required field',
+                      })}
                     />
 
                     <Box minH="20px" mt="3px">
@@ -571,7 +579,7 @@ const RevisedAmounts = ({ formControl, project }) => {
 
                   <FormControl
                     w={{ base: '100%', md: '215px' }}
-                    isInvalid={!!errors.resubmittedInvoice?.[index]?.paymentTerm}
+                    isInvalid={!!errors.resubmittedInvoice?.[index]?.paymentTerms}
                   >
                     <FormLabel size="md" color="#2D3748">
                       {t('project.projectDetails.paymentTerms')}
@@ -579,7 +587,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                     <Controller
                       control={control}
                       name={`resubmittedInvoice.${index}.paymentTerms`}
-                      rules={{ required: !!resubmittedInvoice?.[index]?.id }}
+                      rules={{ required: 'This is a required field' }}
                       render={({ field, fieldState }) => (
                         <>
                           <ReactSelect
@@ -597,7 +605,6 @@ const RevisedAmounts = ({ formControl, project }) => {
                               }
                             }}
                           />
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </>
                       )}
                     />
@@ -641,7 +648,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                       variant={'required-field'}
                       css={calendarIcon}
                       disabled={true}
-                      {...register(`resubmittedInvoice.${index}.dueDate`, { required: true })}
+                      {...register(`resubmittedInvoice.${index}.dueDate`, { required: 'This is a required field' })}
                     />
 
                     <Box minH="20px" mt="3px">
@@ -662,7 +669,9 @@ const RevisedAmounts = ({ formControl, project }) => {
                       size="md"
                       disabled={!!watchResubmissions?.[index].id}
                       variant={'required-field'}
-                      {...register(`resubmittedInvoice.${index}.invoiceNumber`, { required: true })}
+                      {...register(`resubmittedInvoice.${index}.invoiceNumber`, {
+                        required: 'This is a required field',
+                      })}
                     />
                     <Box minH="20px" mt="3px">
                       <FormErrorMessage whiteSpace="nowrap">
@@ -670,37 +679,43 @@ const RevisedAmounts = ({ formControl, project }) => {
                       </FormErrorMessage>
                     </Box>
                   </FormControl>
-                  <VStack alignItems="end">
-                    <FormControl
-                      w={{ base: '100%', md: '215px' }}
-                      isInvalid={!!errors.resubmittedInvoice?.[index]?.uploadedInvoice}
-                    >
-                      <FormLabel size="md" color="#2D3748">
-                        {t(`project.projectDetails.uploadInvoice`)}
-                      </FormLabel>
-                      <Controller
-                        name={`resubmittedInvoice.${index}.uploadedInvoice`}
-                        control={control}
-                        rules={{
-                          required: false,
-                        }}
-                        render={({ field, fieldState }) => {
-                          const fileName = field?.value?.name ?? (t('chooseFile') as string)
 
-                          return (
-                            <VStack alignItems="end" spacing="0px">
-                              <Box>
-                                <ChooseFileField
-                                  name={field.name}
-                                  value={fileName}
-                                  isRequired={true}
-                                  disabled={!!watchResubmissions?.[index].id}
-                                  isError={!!fieldState.error?.message}
-                                  onChange={(file: any) => {
-                                    field.onChange(file)
-                                  }}
-                                />
-                                <Box minH="20px" display="flex" justifyContent={'flex-end'}>
+                  <FormControl
+                    w={{ base: '100%', md: '215px' }}
+                    isInvalid={!!errors.resubmittedInvoice?.[index]?.uploadedInvoice}
+                  >
+                    <FormLabel size="md" variant="strong-label">
+                      {t(`project.projectDetails.uploadInvoice`)}
+                    </FormLabel>
+                    <Controller
+                      name={`resubmittedInvoice.${index}.uploadedInvoice`}
+                      control={control}
+                      rules={{
+                        required:
+                          !watchResubmissions?.[index]?.uploadedInvoice && !watchResubmissions?.[index].docUrl
+                            ? 'This is a required field'
+                            : false,
+                      }}
+                      render={({ field, fieldState }) => {
+                        const fileName = field?.value?.name ?? (t('chooseFile') as string)
+
+                        return (
+                          <VStack alignItems="end" spacing="0px">
+                            <Box>
+                              <ChooseFileField
+                                name={field.name}
+                                value={fileName}
+                                isRequired={
+                                  !watchResubmissions?.[index]?.uploadedInvoice && !watchResubmissions?.[index].docUrl
+                                }
+                                disabled={!!watchResubmissions?.[index].id}
+                                isError={!!fieldState.error?.message}
+                                onChange={(file: any) => {
+                                  field.onChange(file)
+                                }}
+                              />
+                              <Box minH="20px" mt="3px">
+                                <Box display="flex" justifyContent={'flex-end'}>
                                   {!!watchResubmissions?.[index].docUrl && (
                                     <Link
                                       href={watchResubmissions?.[index].docUrl || ''}
@@ -718,13 +733,16 @@ const RevisedAmounts = ({ formControl, project }) => {
                                     </Link>
                                   )}
                                 </Box>
+                                <FormErrorMessage whiteSpace="nowrap">
+                                  {errors.resubmittedInvoice?.[index]?.dueDate?.message}
+                                </FormErrorMessage>
                               </Box>
-                            </VStack>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </VStack>
+                            </Box>
+                          </VStack>
+                        )
+                      }}
+                    />
+                  </FormControl>
                 </HStack>
               </VStack>
             </VStack>
