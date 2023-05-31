@@ -62,7 +62,9 @@ type ResubmissionInvoice = {
   dueDate: string | null
   invoiceNumber: string | null
   uploadedInvoice: File
-  id
+  id: number | string | null
+  docUrl: string | null
+  docId: number | null
 }
 type ContactsFormValues = {
   projectCoordinator: SelectOption | null
@@ -278,7 +280,10 @@ export type ResubmissionListItem = {
   resubmissionDueDate: string | null
   resubmissionInvoiceNumber: string
   documentDTO: any
-  id: any
+  id: number | string | null
+  docId?: number | null
+  docUrl?: string | null
+  projectId?: string | number | null
 }
 
 export type OverPaymentType = {

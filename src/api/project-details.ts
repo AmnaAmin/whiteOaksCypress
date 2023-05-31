@@ -588,11 +588,13 @@ export const parseFormValuesFromAPIData = ({
     resubmittedInvoice: project?.resubmissionDTOList?.map(r => {
       return {
         id: r.id,
+        docId: r.docId,
+        docUrl: r.docUrl,
+        projectId: r.projectId,
         notificationDate: datePickerFormat(r.resubmissionNotificationDate),
         resubmissionDate: datePickerFormat(r.resubmissionDate),
         paymentTerms: findOptionByValue(PAYMENT_TERMS_OPTIONS, r.resubmissionPaymentTerm),
         dueDate: datePickerFormat(r.resubmissionDueDate),
-        docUrl: r.docUrl,
         invoiceNumber: r.resubmissionInvoiceNumber,
       }
     }),
@@ -687,7 +689,10 @@ export const parseProjectDetailsPayloadFromFormData = async (
         }
       }
       return {
+        docId: r.docId,
+        docUrl: r.docUrl,
         id: r.id,
+        projectId: project?.id,
         resubmissionNotificationDate: r.notificationDate,
         resubmissionDate: r.resubmissionDate,
         resubmissionDueDate: r.dueDate,

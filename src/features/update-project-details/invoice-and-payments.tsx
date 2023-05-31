@@ -700,17 +700,16 @@ const RevisedAmounts = ({ formControl, project }) => {
                                     field.onChange(file)
                                   }}
                                 />
-                                <Box>
+                                <Box minH="20px" display="flex" justifyContent={'flex-end'}>
                                   {!!watchResubmissions?.[index].docUrl && (
                                     <Link
                                       href={watchResubmissions?.[index].docUrl || ''}
                                       download
-                                      display={'flex'}
+                                      display="flex"
                                       target="_blank"
                                       color="#4E87F8"
                                       fontSize="xs"
-                                      alignItems={'center'}
-                                      mt="2"
+                                      alignItems={'flex-end'}
                                       position={'absolute'}
                                       top={'76px'}
                                     >
@@ -718,11 +717,6 @@ const RevisedAmounts = ({ formControl, project }) => {
                                       <Text ml="1">{t(`project.projectDetails.invoice`)}</Text>
                                     </Link>
                                   )}
-                                </Box>
-                                <Box minH="20px" mt="3px">
-                                  <FormErrorMessage whiteSpace="nowrap">
-                                    {errors.resubmittedInvoice?.[index]?.invoiceNumber?.message}
-                                  </FormErrorMessage>
                                 </Box>
                               </Box>
                             </VStack>
