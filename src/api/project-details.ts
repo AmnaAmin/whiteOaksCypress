@@ -587,7 +587,7 @@ export const parseFormValuesFromAPIData = ({
     depreciation: '',
     resubmittedInvoice: project?.resubmissionDTOList?.map(r => {
       return {
-        ...r,
+        id: r.id,
         notificationDate: datePickerFormat(r.resubmissionNotificationDate),
         resubmissionDate: datePickerFormat(r.resubmissionDate),
         paymentTerms: findOptionByValue(PAYMENT_TERMS_OPTIONS, r.resubmissionPaymentTerm),
@@ -676,7 +676,16 @@ export const parseProjectDetailsPayloadFromFormData = async (
 
   const resubmissionList = await Promise.all(
     formValues?.resubmittedInvoice?.map(async r => {
-      const uploadedInvoice = await readFileContent(r?.uploadedInvoice)
+      let documentDTO
+      if (r?.uploadedInvoice) {
+        const uploadedInvoice = await readFileContent(r?.uploadedInvoice)
+        documentDTO = {
+          documentType: 39,
+          fileObjectContentType: r.uploadedInvoice.type,
+          fileType: r.uploadedInvoice.name,
+          fileObject: uploadedInvoice,
+        }
+      }
       return {
         id: r.id,
         resubmissionNotificationDate: r.notificationDate,
@@ -684,12 +693,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
         resubmissionDueDate: r.dueDate,
         resubmissionPaymentTerm: r.paymentTerms?.value,
         resubmissionInvoiceNumber: r.invoiceNumber,
-        documentDTO: {
-          documentType: 39,
-          fileObjectContentType: r.uploadedInvoice.type,
-          fileType: r.uploadedInvoice.name,
-          fileObject: uploadedInvoice,
-        },
+        documentDTO: documentDTO,
       } as ResubmissionListItem
     }),
   )

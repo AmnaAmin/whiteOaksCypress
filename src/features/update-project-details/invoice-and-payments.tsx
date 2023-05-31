@@ -474,8 +474,10 @@ const RevisedAmounts = ({ formControl, project }) => {
     control,
     name: 'resubmittedInvoice',
   })
+
   const { t } = useTranslation()
   const watchResubmissions = watch('resubmittedInvoice')
+  console.log('watchResubmissions', watchResubmissions)
   const { isAdmin } = useUserRolesSelector()
 
   return (
@@ -577,14 +579,14 @@ const RevisedAmounts = ({ formControl, project }) => {
                     <Controller
                       control={control}
                       name={`resubmittedInvoice.${index}.paymentTerms`}
-                      rules={{ required: 'This is required field.' }}
+                      rules={{ required: !!resubmittedInvoice?.[index]?.id }}
                       render={({ field, fieldState }) => (
                         <>
                           <ReactSelect
                             {...field}
                             options={PAYMENT_TERMS_OPTIONS}
                             selectProps={{ isBorderLeft: true }}
-                            disabled={!!resubmittedInvoice?.[index]?.id}
+                            isDisabled={!!watchResubmissions?.[index]?.id}
                             onChange={(option: SelectOption) => {
                               field.onChange(option)
                               if (option?.value && watchResubmissions?.[index]?.resubmissionDate) {
@@ -668,7 +670,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                       </FormErrorMessage>
                     </Box>
                   </FormControl>
-                  <VStack>
+                  <VStack alignItems="end">
                     <FormControl
                       w={{ base: '100%', md: '215px' }}
                       isInvalid={!!errors.resubmittedInvoice?.[index]?.uploadedInvoice}
@@ -679,12 +681,14 @@ const RevisedAmounts = ({ formControl, project }) => {
                       <Controller
                         name={`resubmittedInvoice.${index}.uploadedInvoice`}
                         control={control}
-                        rules={{ required: true }}
+                        rules={{
+                          required: false,
+                        }}
                         render={({ field, fieldState }) => {
                           const fileName = field?.value?.name ?? (t('chooseFile') as string)
 
                           return (
-                            <VStack alignItems="baseline">
+                            <VStack alignItems="end" spacing="0px">
                               <Box>
                                 <ChooseFileField
                                   name={field.name}
@@ -696,9 +700,29 @@ const RevisedAmounts = ({ formControl, project }) => {
                                     field.onChange(file)
                                   }}
                                 />
-
+                                <Box>
+                                  {!!watchResubmissions?.[index].docUrl && (
+                                    <Link
+                                      href={watchResubmissions?.[index].docUrl || ''}
+                                      download
+                                      display={'flex'}
+                                      target="_blank"
+                                      color="#4E87F8"
+                                      fontSize="xs"
+                                      alignItems={'center'}
+                                      mt="2"
+                                      position={'absolute'}
+                                      top={'76px'}
+                                    >
+                                      <Icon as={BiDownload} fontSize="14px" />
+                                      <Text ml="1">{t(`project.projectDetails.invoice`)}</Text>
+                                    </Link>
+                                  )}
+                                </Box>
                                 <Box minH="20px" mt="3px">
-                                  <FormErrorMessage whiteSpace="nowrap">{fieldState.error?.message}</FormErrorMessage>
+                                  <FormErrorMessage whiteSpace="nowrap">
+                                    {errors.resubmittedInvoice?.[index]?.invoiceNumber?.message}
+                                  </FormErrorMessage>
                                 </Box>
                               </Box>
                             </VStack>
