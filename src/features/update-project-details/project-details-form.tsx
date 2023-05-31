@@ -68,7 +68,7 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const {
     control,
-    formState: { errors, isSubmitting, dirtyFields },
+    formState: { errors, isSubmitting },
   } = formReturn
 
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
@@ -166,14 +166,20 @@ const ProjectDetailsTab = (props: tabProps) => {
     onClose: onAddressVerificationModalClose,
   } = useDisclosure()
 
-  const USPSCheck = dirtyFields.address === true || dirtyFields.city || dirtyFields.zip || dirtyFields.state === true
-
+  const hasAddressChanged = formValues => {
+    const isChanged =
+      formValues.address?.label !== projectData.streetAddress ||
+      formValues.city !== projectData.city ||
+      formValues.state.value !== projectData.state ||
+      formValues.zip !== projectData.zipCode
+    return isChanged
+  }
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
     }
 
-    if (addressShouldBeVerified && !saveNewAddress && USPSCheck) {
+    if (addressShouldBeVerified && !saveNewAddress && hasAddressChanged(formValues)) {
       refetch()
       onAddressVerificationModalOpen()
     } else {
