@@ -32,7 +32,6 @@ import { useMarkets, useStates } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { useTransactionsV1 } from 'api/transactions'
 import { TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
-import { useAddressShouldBeVerified } from 'features/projects/new-project/hooks'
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 
 type tabProps = {
@@ -134,7 +133,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     state: '',
     zipCode: '',
   })
-  const [saveNewAddress, setSaveNewAddress] = useState(false)
+  const [isVerifiedAddress, setVerifiedAddress] = useState(true)
 
   // Get all values of Address Info
   const watchAddress = useWatch({ name: 'address', control })
@@ -158,8 +157,6 @@ const ProjectDetailsTab = (props: tabProps) => {
     isLoading: addressVerificationLoading,
   } = useGetAddressVerification(addressInfo)
 
-  const isNewAddress = useAddressShouldBeVerified(control)
-
   const {
     isOpen: isAddressVerficationModalOpen,
     onOpen: onAddressVerificationModalOpen,
@@ -171,13 +168,13 @@ const ProjectDetailsTab = (props: tabProps) => {
       return
     }
 
-    if (isNewAddress && !saveNewAddress) {
+    if (!isVerifiedAddress) {
       refetch()
       onAddressVerificationModalOpen()
     } else {
       const payload = await parseProjectDetailsPayloadFromFormData(formValues, projectData)
       updateProjectDetails(payload)
-      setSaveNewAddress(false)
+      setVerifiedAddress(true)
     }
   }
 
@@ -247,6 +244,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                     propertySelectOptions={propertySelectOptions}
                     markets={markets}
                     states={states}
+                    setVerifiedAddress={setVerifiedAddress}
                   />
                 </TabPanel>
 
@@ -311,7 +309,7 @@ const ProjectDetailsTab = (props: tabProps) => {
         onClose={onAddressVerificationModalClose}
         isAddressVerified={isAddressVerified}
         isLoading={addressVerificationLoading}
-        setSave={setSaveNewAddress}
+        setSave={setVerifiedAddress}
       />
     </>
   )
