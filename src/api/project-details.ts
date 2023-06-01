@@ -630,6 +630,7 @@ export const parseFormValuesFromAPIData = ({
     hoaContactEmail: project.hoaEmailAddress,
     hoaContactPhoneNumber: project.hoaPhone,
     hoaContactExtension: project.hoaPhoneNumberExtension,
+    property: findOptionByValue(propertySelectOptions, project?.propertyId)?.property,
 
     // Misc form values
     dateCreated: getLocalTimeZoneDate(project.createdDate as string),

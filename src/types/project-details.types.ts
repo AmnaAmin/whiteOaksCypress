@@ -99,7 +99,7 @@ type ProjectDetailsLocationFormValues = {
   hoaContactExtension: string | null
   hoaContactEmail: string | null
   acknowledgeCheck: boolean | null
-  property: PropertyAddress
+  property: PropertyAddress | null
   newMarket: SelectOption
 }
 

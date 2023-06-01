@@ -158,7 +158,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     isLoading: addressVerificationLoading,
   } = useGetAddressVerification(addressInfo)
 
-  const addressShouldBeVerified = useAddressShouldBeVerified(control)
+  const isNewAddress = useAddressShouldBeVerified(control)
 
   const {
     isOpen: isAddressVerficationModalOpen,
@@ -166,20 +166,12 @@ const ProjectDetailsTab = (props: tabProps) => {
     onClose: onAddressVerificationModalClose,
   } = useDisclosure()
 
-  const hasAddressChanged = formValues => {
-    const isChanged =
-      formValues.address?.label !== projectData.streetAddress ||
-      formValues.city !== projectData.city ||
-      formValues.state.value !== projectData.state ||
-      formValues.zip !== projectData.zipCode
-    return isChanged
-  }
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
     }
 
-    if (addressShouldBeVerified && !saveNewAddress && hasAddressChanged(formValues)) {
+    if (isNewAddress && !saveNewAddress) {
       refetch()
       onAddressVerificationModalOpen()
     } else {

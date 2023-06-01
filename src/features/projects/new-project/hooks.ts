@@ -40,6 +40,8 @@ export const usePropertyInformationNextDisabled = (
   )
 }
 
+/* Property is undefined for any new address. When a new street address is created or current street locality (state, zip, city) is changed, property is undefined.*/
+/* When property is undefined the address needs to ver verified through usps*/
 export const useAddressShouldBeVerified = (control: Control<any>): boolean => {
   const property = useWatch({ name: 'property', control })
 
