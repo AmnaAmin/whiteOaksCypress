@@ -41,9 +41,6 @@ export const AdminPortalVerifyLicense = (props: AdminVerifyLicenseProps): JSX.El
       {(!verificationStatus || VERIFICATION_STATUS.UNVERIFIED) && (
   <Checkbox
     color="#E2E8F0"
-    // bgColor="#FFFFFF"
-    // borderColor="#E2E8F0"
-    // borderWidth="2px"
     {...props.registerToFormField(props.fieldName as any)}
   >
     <Text fontSize="14px" lineHeight="20px" color="#718096">
