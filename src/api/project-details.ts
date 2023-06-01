@@ -10,6 +10,7 @@ import {
   ProjectDetailsAPIPayload,
   ProjectDetailsFormValues,
   ProjectStatus,
+  ResubmissionListItem,
 } from 'types/project-details.types'
 import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
@@ -21,6 +22,7 @@ import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { GET_TRANSACTIONS_API_KEY } from './transactions'
 import { AuditLogType } from 'types/common.types'
 import { PROJECT_STATUS } from 'features/common/status'
+import { readFileContent } from './vendor-details'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -583,6 +585,19 @@ export const parseFormValuesFromAPIData = ({
     remainingPayment: remainingPayment < 0 ? 0 : remainingPayment,
     payment: '',
     depreciation: '',
+    resubmittedInvoice: project?.resubmissionDTOList?.map(r => {
+      return {
+        id: r.id,
+        docId: r.docId,
+        docUrl: r.docUrl,
+        projectId: r.projectId,
+        notificationDate: datePickerFormat(r.resubmissionNotificationDate),
+        resubmissionDate: datePickerFormat(r.resubmissionDate),
+        paymentTerms: findOptionByValue(PAYMENT_TERMS_OPTIONS, r.resubmissionPaymentTerm),
+        dueDate: datePickerFormat(r.resubmissionDueDate),
+        invoiceNumber: r.resubmissionInvoiceNumber,
+      }
+    }),
 
     // Contacts form values
     projectCoordinator: findOptionByValue(projectCoordinatorSelectOptions, project.projectCoordinatorId),
@@ -661,6 +676,34 @@ export const parseProjectDetailsPayloadFromFormData = async (
     state: formValues?.state?.value,
     zipCode: formValues?.zip,
   }
+
+  const resubmissionList = await Promise.all(
+    formValues?.resubmittedInvoice?.map(async r => {
+      let documentDTO
+      if (r?.uploadedInvoice) {
+        const uploadedInvoice = await readFileContent(r?.uploadedInvoice)
+        documentDTO = {
+          documentType: 39,
+          fileObjectContentType: r.uploadedInvoice.type,
+          fileType: r.uploadedInvoice.name,
+          fileObject: uploadedInvoice,
+        }
+      }
+      return {
+        docId: r.docId,
+        docUrl: r.docUrl,
+        id: r.id,
+        projectId: project?.id,
+        resubmissionNotificationDate: r.notificationDate,
+        resubmissionDate: r.resubmissionDate,
+        resubmissionDueDate: r.dueDate,
+        resubmissionPaymentTerm: r.paymentTerms?.value,
+        resubmissionInvoiceNumber: r.invoiceNumber,
+        documentDTO: documentDTO,
+      } as ResubmissionListItem
+    }),
+  )
+
   return {
     ...projectPayload,
     // Project Management payload
@@ -699,6 +742,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     payVariance: formValues?.payVariance,
     newPartialPayment: formValues?.payment,
     newDepreciationPayment: formValues?.depreciation,
+    resubmissionList,
 
     // Contacts payload
     projectCordinatorId: formValues?.projectCoordinator?.value,
