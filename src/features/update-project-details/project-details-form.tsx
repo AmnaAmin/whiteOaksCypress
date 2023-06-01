@@ -68,7 +68,7 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const {
     control,
-    formState: { errors, isSubmitting, dirtyFields },
+    formState: { errors, isSubmitting },
   } = formReturn
 
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
@@ -158,7 +158,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     isLoading: addressVerificationLoading,
   } = useGetAddressVerification(addressInfo)
 
-  const addressShouldBeVerified = useAddressShouldBeVerified(control)
+  const isNewAddress = useAddressShouldBeVerified(control)
 
   const {
     isOpen: isAddressVerficationModalOpen,
@@ -166,14 +166,12 @@ const ProjectDetailsTab = (props: tabProps) => {
     onClose: onAddressVerificationModalClose,
   } = useDisclosure()
 
-  const USPSCheck = dirtyFields.address || dirtyFields.city || dirtyFields.zip || dirtyFields.state
-
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
     }
 
-    if (addressShouldBeVerified && !saveNewAddress && USPSCheck) {
+    if (isNewAddress && !saveNewAddress) {
       refetch()
       onAddressVerificationModalOpen()
     } else {
@@ -190,7 +188,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   return (
     <>
       <FormProvider {...formReturn}>
-        <form onSubmit={formReturn.handleSubmit(onSubmit)} id="project-details">
+        <form onSubmit={formReturn.handleSubmit(onSubmit, err => console.log('err..', err))} id="project-details">
           <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={handleTabsChange}>
             <TabList
               borderBottom={isRecievable ? 0 : '2px solid'}

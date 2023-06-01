@@ -15,15 +15,13 @@ import {
   Text,
 } from '@chakra-ui/react'
 
-import { Controller, useFormContext, useWatch } from 'react-hook-form'
+import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import Select, { CreatableSelect } from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
-import { addDays } from 'date-fns'
-import { dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
 import { useState } from 'react'
 
 import { STATUS } from 'features/common/status'
@@ -94,7 +92,6 @@ const Location: React.FC<LocationProps> = ({
   } = useFieldsDisabled(control)
 
   const { t } = useTranslation()
-  const woaCompletionDate = useWatch({ name: 'woaCompletionDate', control })
 
   // Continue unverified Check
   const handleCheck = () => {
@@ -172,7 +169,7 @@ const Location: React.FC<LocationProps> = ({
                 render={({ field, fieldState }) => (
                   <>
                     <CreatableSelect
-                    color='#2D3748 !important'
+                      color="#2D3748 !important"
                       id="address"
                       isDisabled={isAddressDisabled}
                       options={propertySelectOptions}
@@ -199,11 +196,16 @@ const Location: React.FC<LocationProps> = ({
                 {t(`project.projectDetails.city`)}
               </FormLabel>
               <Input
-              size ='md'
+                size="md"
                 variant="required-field"
                 isDisabled={isCityDisabled}
                 id="city"
-                {...register('city', { required: 'This is required field' })}
+                {...register('city', {
+                  required: 'This is required field',
+                  onChange: e => {
+                    setValue('property', null)
+                  },
+                })}
               />
               <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
             </FormControl>
@@ -227,13 +229,7 @@ const Location: React.FC<LocationProps> = ({
                       isDisabled={isStateDisabled}
                       selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                       onChange={option => {
-                        if (woaCompletionDate) {
-                          const lienExpiryDate = addDays(
-                            new Date(dateISOFormatWithZeroTime(woaCompletionDate) as string),
-                            option?.lienDue ?? 0,
-                          )
-                          setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
-                        }
+                        setValue('property', null)
                         field.onChange(option)
                       }}
                     />
@@ -250,11 +246,16 @@ const Location: React.FC<LocationProps> = ({
                 {t(`project.projectDetails.zip`)}
               </FormLabel>
               <Input
-              size ='md'
+                size="md"
                 variant="required-field"
                 isDisabled={isZipDisabled}
                 id="zip"
-                {...register('zip', { required: 'This is required field' })}
+                {...register('zip', {
+                  required: 'This is required field',
+                  onChange: e => {
+                    setValue('property', null)
+                  },
+                })}
               />
               <FormErrorMessage>{errors.zip && errors.zip.message}</FormErrorMessage>
             </FormControl>
@@ -294,7 +295,7 @@ const Location: React.FC<LocationProps> = ({
                 {t(`project.projectDetails.gateCode`)}
               </FormLabel>
               <Input
-              size ='md'
+                size="md"
                 datatest-id="gate-Code"
                 border=" 1px solid #E2E8F0"
                 disabled={isGateCodeDisabled}
@@ -310,7 +311,7 @@ const Location: React.FC<LocationProps> = ({
                 {t(`project.projectDetails.lockBoxCode`)}
               </FormLabel>
               <Input
-               size ='md'
+                size="md"
                 datatest-id="lock-Box-Code"
                 border=" 1px solid #E2E8F0"
                 disabled={isLockBoxCodeDisabled}
@@ -333,7 +334,7 @@ const Location: React.FC<LocationProps> = ({
                   return (
                     <>
                       <NumberFormat
-                       size ='md'
+                        size="md"
                         customInput={Input}
                         value={field.value}
                         onChange={e => field.onChange(e)}
@@ -353,7 +354,12 @@ const Location: React.FC<LocationProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="hoaContactExtension">
                 {t(`project.projectDetails.ext`)}
               </FormLabel>
-              <Input size ='md' border=" 1px solid #E2E8F0" id="hoaContactExtension" {...register('hoaContactExtension')} />
+              <Input
+                size="md"
+                border=" 1px solid #E2E8F0"
+                id="hoaContactExtension"
+                {...register('hoaContactExtension')}
+              />
               <FormErrorMessage>{errors?.hoaContactExtension?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -362,7 +368,7 @@ const Location: React.FC<LocationProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="hoaContactEmail" noOfLines={1}>
                 {t(`project.projectDetails.hoaContactEmail`)}
               </FormLabel>
-              <Input size ='md' border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')} />
+              <Input size="md" border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')} />
               <FormErrorMessage>{errors.hoaContactEmail && errors.hoaContactEmail.message}</FormErrorMessage>
             </FormControl>
           </GridItem>

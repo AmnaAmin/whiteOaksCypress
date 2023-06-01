@@ -1,3 +1,4 @@
+import { ResubmissionListItem } from './project-details.types'
 import { SelectOption } from './transaction.type'
 
 export type Project = {
@@ -128,6 +129,7 @@ export type Project = {
   projectClosedDueDate: Date | string | null
   lienRightFileDate: Date | string | null
   lienRightExpireDate: Date | string | null
+  resubmissionDTOList: ResubmissionListItem[]
 }
 
 export type ProjectExtraAttributesType = {

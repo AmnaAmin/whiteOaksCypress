@@ -25,6 +25,13 @@ const label = {
         lineHeight: '20px',
         color: 'gray.600',
       },
+      'clickable-label': {
+        fontStyle: 'normal',
+        fontWeight: 500,
+        lineHeight: '28px',
+        color: 'brand.300',
+        cursor: 'pointer',
+      },
     },
     sizes: {
       sm: {
