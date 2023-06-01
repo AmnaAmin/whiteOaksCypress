@@ -188,7 +188,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   return (
     <>
       <FormProvider {...formReturn}>
-        <form onSubmit={formReturn.handleSubmit(onSubmit)} id="project-details">
+        <form onSubmit={formReturn.handleSubmit(onSubmit, err => console.log('err..', err))} id="project-details">
           <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={handleTabsChange}>
             <TabList
               borderBottom={isRecievable ? 0 : '2px solid'}
