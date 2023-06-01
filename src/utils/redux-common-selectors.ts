@@ -54,10 +54,13 @@ export const useUserProfile = (): Account | undefined => {
   return data?.user
 }
 
-export const useRoleBasedPermissions = (): Array<string> => {
+export const useRoleBasedPermissions = (): { permissions: Array<string>; isAdmin: boolean } => {
   const { data } = useAuth()
-  const { permissions } = data?.user as Account
-  return permissions
+  const { permissions, userType } = data?.user as Account
+  return {
+    permissions: permissions,
+    isAdmin: userType === UserTypes.admin,
+  }
 }
 
 export enum ROLE {

@@ -149,7 +149,7 @@ interface AdminVerifyDocumentProps {
 
 export const AdminPortalVerifyDocument = (props: AdminVerifyDocumentProps): JSX.Element => {
   const [verificationStatus, setVerificationStatus] = useState<VERIFICATION_STATUS>(VERIFICATION_STATUS.UNVERIFIED)
-  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('VENDOR.READ')
 
   useEffect(() => {
     if (props.fieldName === 'CoiWcExpCheckbox') {

@@ -27,7 +27,7 @@ import { BiAddToQueue, BiDownload } from 'react-icons/bi'
 import { checkIsLicenseChanged } from './hook'
 import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
-import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { AdminPortalVerifyLicense } from './verify-license'
 import { datePickerFormat } from 'utils/date-time-utils'
 
@@ -51,8 +51,8 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
-  const { isAdmin } = useUserRolesSelector()
-  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
+  const { isAdmin, permissions } = useRoleBasedPermissions()
+  const isReadOnly = permissions?.includes('VENDOR.READ')
 
   // HK|PSWOA-1567|after save license document lines swap
   vendor?.licenseDocuments?.sort((a, b) => (a.id < b.id ? -1 : 1))

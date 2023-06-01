@@ -59,7 +59,7 @@ const CreateVendorDetail: React.FC<{
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
 
   const formValues = useWatch({ control })
-  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('VENDOR.READ')
 
   const capacityError = useWatch({ name: 'capacity', control })
   const validatePayment = PaymentMethods?.filter(payment => formValues[payment.value])

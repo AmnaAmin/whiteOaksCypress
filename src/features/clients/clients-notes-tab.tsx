@@ -20,7 +20,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
   const { t } = useTranslation()
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
   const { data: account } = useAccountDetails()
-  const isReadOnly = useRoleBasedPermissions()?.includes('CLIENTS.READ')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('CLIENTS.READ')
   const { mutate: createNotes } = useClientNoteMutation(clientDetails?.id)
 
   const { notes = [] } = useNotes({

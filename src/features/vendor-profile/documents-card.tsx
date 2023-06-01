@@ -22,7 +22,7 @@ import { SaveChangedFieldAlert } from './save-change-field'
 import { VENDORPROFILE } from './vendor-profile.i18n'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
-import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { AdminPortalVerifyDocument } from './verify-documents'
 
 type DocumentsProps = {
@@ -47,8 +47,8 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
-  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, permissions } = useRoleBasedPermissions()
+  const isReadOnly = permissions?.includes('VENDOR.READ')
 
   const {
     formState: { errors, isSubmitSuccessful },

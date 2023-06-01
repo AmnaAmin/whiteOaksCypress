@@ -1,7 +1,7 @@
 import { ProjectStatus as STATUS } from 'types/project-details.types'
 import { Control, useWatch, FieldErrors } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
-import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { PROJECT_STATUS } from 'features/common/status'
 
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, projectData?: any) => {
@@ -9,8 +9,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
   const isProjectStatusInvoiced = projectData?.projectStatus === PROJECT_STATUS.invoiced.label
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
   const remainingPayment = useWatch({ name: 'remainingPayment', control })
-  const permissions = useRoleBasedPermissions()
-  const { isAdmin } = useUserRolesSelector()
+  const { permissions, isAdmin } = useRoleBasedPermissions()
 
   const projectStatus = status?.value
 
@@ -47,10 +46,10 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isClientSignOffDateRequired: isStatusClosed,
 
     isWOAStartDisabled:
-      !permissions.includes('PROJECTDETAIL.MGMT.WOASTART.EDIT') ||
+      !(permissions.includes('PROJECTDETAIL.MGMT.WOASTART.EDIT') || isAdmin) ||
       isStatusClosed ||
       isStatusInvoiced ||
-      (isStatusClientPaid && !isAdmin) ||
+      isStatusClientPaid ||
       isStatusPaid ||
       isStatusOverPayment,
     isWOACompletionDisabled:
@@ -62,17 +61,17 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
       isStatusPaid ||
       isStatusOverPayment,
     isClientStartDateDisabled:
-      !permissions.includes('PROJECTDETAIL.MGMT.CLIENTSTART.EDIT') ||
+      !(permissions.includes('PROJECTDETAIL.MGMT.CLIENTSTART.EDIT') || isAdmin) ||
       isStatusClosed ||
       isStatusInvoiced ||
-      (isStatusClientPaid && !isAdmin) ||
+      isStatusClientPaid ||
       isStatusPaid ||
       isStatusOverPayment,
     isClientDueDateDisabled:
-      !permissions.includes('PROJECTDETAIL.MGMT.CLIENTDUEDATE.EDIT') ||
+      !(permissions.includes('PROJECTDETAIL.MGMT.CLIENTDUEDATE.EDIT') || isAdmin) ||
       isStatusClosed ||
       isStatusInvoiced ||
-      (isStatusClientPaid && !isAdmin) ||
+      isStatusClientPaid ||
       isStatusPaid ||
       isStatusOverPayment,
     isClientWalkthroughDisabled:
@@ -89,8 +88,8 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
       isStatusPaid ||
       isStatusOverPayment ||
       isStatusInvoiced,
-    isReconcileDisabled: !permissions?.includes('PROJECTDETAIL.MGMT.PROJECTVERIFIED.EDIT'),
-    
+    isReconcileDisabled: !(permissions?.includes('PROJECTDETAIL.MGMT.PROJECTVERIFIED.EDIT') || isAdmin),
+
     // Invoicing and payment form fields states
     isOriginalSOWAmountDisabled: isAllTimeDisabled,
     isFinalSOWAmountDisabled: isAllTimeDisabled,
@@ -105,26 +104,28 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isPaymentDisabled: !(isStatusClientPaid || isProjectStatusInvoiced || invoiceBackDate) || remainingPayment === 0,
 
     // Contacts field states
-    isProjectCoordinatorDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.PC.EDIT'),
+    isProjectCoordinatorDisabled: !(permissions.includes('PROJECTDETAIL.CONTACT.PC.EDIT') || isAdmin),
     isProjectCoordinatorPhoneNumberDisabled: isAllTimeDisabled,
     isProjectCoordinatorExtensionDisabled: isAllTimeDisabled,
-    isFieldProjectManagerDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.FPM.EDIT'),
+    isFieldProjectManagerDisabled: !(permissions.includes('PROJECTDETAIL.CONTACT.FPM.EDIT') || isAdmin),
     isFieldProjectManagerPhoneNumberDisabled: isAllTimeDisabled,
     isFieldProjectManagerExtensionDisabled: isAllTimeDisabled,
     isClientDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.CLIENT.EDIT'),
 
     // Location Form fields states
-    isAddressDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT'),
-    isCityDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT'),
-    isStateDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT'),
-    isZipDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT'),
-    isMarketDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.MARKET.EDIT'),
-    isGateCodeDisabled: permissions.includes('PROJECTDETAIL.CONTACT.GATECODE.EDIT')
-      ? !newActivePunchEnabledFieldStatus
-      : isAllTimeDisabled,
-    isLockBoxCodeDisabled: permissions.includes('PROJECTDETAIL.CONTACT.LOCKBOX.EDIT')
-      ? !newActivePunchEnabledFieldStatus
-      : isAllTimeDisabled,
+    isAddressDisabled: !(permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT') || isAdmin),
+    isCityDisabled: !(permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT') || isAdmin),
+    isStateDisabled: !(permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT') || isAdmin),
+    isZipDisabled: !(permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT') || isAdmin),
+    isMarketDisabled: !(permissions.includes('PROJECTDETAIL.CONTACT.MARKET.EDIT') || isAdmin),
+    isGateCodeDisabled:
+      permissions.includes('PROJECTDETAIL.CONTACT.GATECODE.EDIT') || isAdmin
+        ? !newActivePunchEnabledFieldStatus
+        : isAllTimeDisabled,
+    isLockBoxCodeDisabled:
+      permissions.includes('PROJECTDETAIL.CONTACT.LOCKBOX.EDIT') || isAdmin
+        ? !newActivePunchEnabledFieldStatus
+        : isAllTimeDisabled,
   }
 }
 
