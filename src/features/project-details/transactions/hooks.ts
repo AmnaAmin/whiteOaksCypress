@@ -219,8 +219,7 @@ export const useIsAwardSelect = (
 
   const isNotFinalPlan = selectedWorkOrder?.awardPlanId < 4
 
-  const isPlanExhausted =
-    !transaction && isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
+  const isPlanExhausted = isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
 
   const showUpgradeOption = isPlanExhausted && isNotFinalPlan
 
