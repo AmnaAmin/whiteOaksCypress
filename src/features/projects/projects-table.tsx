@@ -177,7 +177,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
                 refetch={refetchColumns}
                 columns={settingColumns.filter(
                   col =>
-                    col.colId !== 'id' && col.colId !== 'flagged' && !(columnVisibility[col?.contentKey] === false),
+                    col.colId !== 'displayId' && col.colId !== 'flagged' && !(columnVisibility[col?.contentKey] === false),
                 )}
               />
             )}
