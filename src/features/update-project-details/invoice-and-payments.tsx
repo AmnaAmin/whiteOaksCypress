@@ -508,7 +508,7 @@ const RevisedAmounts = ({ formControl, project }) => {
           </FormLabel>
         </HStack>
       )}
-      <VStack minH="500px" alignItems={'flex-start'} w="100%" pl="20px" pr="20px" overflow={'auto'} gap={'4px'}>
+      <VStack minH="auto" alignItems={'flex-start'} w="100%" pl="20px" pr="20px" overflow={'auto'} gap={'4px'}>
         {resubmittedInvoice.map((resubmit, index) => {
           return (
             <VStack alignItems={'flex-start'}>
