@@ -483,7 +483,7 @@ const RevisedAmounts = ({ formControl, project }) => {
   const { isAdmin } = useUserRolesSelector()
 
   return (
-    <Box borderLeft={'1px solid #CBD5E0'} minH="500px">
+    <Box borderLeft={'1px solid #CBD5E0'} h="420px" overflowY="auto">
       {project?.projectStatus === STATUS.Invoiced?.toUpperCase() && (
         <HStack
           pl="20px"
@@ -503,12 +503,12 @@ const RevisedAmounts = ({ formControl, project }) => {
           <Button colorScheme="darkPrimary" size="square-sm" variant="cubicle">
             +
           </Button>
-          <FormLabel variant={'clickable-label'} size="md">
+          <FormLabel w="150px" variant={'clickable-label'} size="md">
             {t(`newRow`)}
           </FormLabel>
         </HStack>
       )}
-      <VStack minH="500px" alignItems={'flex-start'} w="100%" pl="20px" pr="20px" overflow={'auto'} gap={'4px'}>
+      <VStack minH="auto" alignItems={'flex-start'} w="100%" pl="20px" pr="20px" overflow={'auto'} gap={'4px'}>
         {resubmittedInvoice.map((resubmit, index) => {
           return (
             <VStack alignItems={'flex-start'}>
