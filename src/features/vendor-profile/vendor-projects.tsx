@@ -38,7 +38,7 @@ const VENDOR_PROJECTS_QUERY_KEYS = {
 }
 
 export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileData }) => {
-  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('VENDOR.READ')
   const activeStatusFilter = '&status.in=34,36,110,111,114'
   const paidStatusFilter = '&status.in=68'
   const [projectStatus, setProjectStatus] = useState('active')

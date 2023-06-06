@@ -32,7 +32,6 @@ import { useMarkets, useStates } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { useTransactionsV1 } from 'api/transactions'
 import { TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
-import { useAddressShouldBeVerified } from 'features/projects/new-project/hooks'
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 
 type tabProps = {
@@ -68,7 +67,7 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const {
     control,
-    formState: { errors, isSubmitting, dirtyFields },
+    formState: { errors, isSubmitting },
   } = formReturn
 
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
@@ -134,7 +133,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     state: '',
     zipCode: '',
   })
-  const [saveNewAddress, setSaveNewAddress] = useState(false)
+  const [isVerifiedAddress, setVerifiedAddress] = useState(true)
 
   // Get all values of Address Info
   const watchAddress = useWatch({ name: 'address', control })
@@ -158,28 +157,24 @@ const ProjectDetailsTab = (props: tabProps) => {
     isLoading: addressVerificationLoading,
   } = useGetAddressVerification(addressInfo)
 
-  const addressShouldBeVerified = useAddressShouldBeVerified(control)
-
   const {
     isOpen: isAddressVerficationModalOpen,
     onOpen: onAddressVerificationModalOpen,
     onClose: onAddressVerificationModalClose,
   } = useDisclosure()
 
-  const USPSCheck = dirtyFields.address || dirtyFields.city || dirtyFields.zip || dirtyFields.state
-
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
     }
 
-    if (addressShouldBeVerified && !saveNewAddress && USPSCheck) {
+    if (!isVerifiedAddress) {
       refetch()
       onAddressVerificationModalOpen()
     } else {
       const payload = await parseProjectDetailsPayloadFromFormData(formValues, projectData)
       updateProjectDetails(payload)
-      setSaveNewAddress(false)
+      setVerifiedAddress(true)
     }
   }
 
@@ -190,7 +185,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   return (
     <>
       <FormProvider {...formReturn}>
-        <form onSubmit={formReturn.handleSubmit(onSubmit)} id="project-details">
+        <form onSubmit={formReturn.handleSubmit(onSubmit, err => console.log('err..', err))} id="project-details">
           <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={handleTabsChange}>
             <TabList
               borderBottom={isRecievable ? 0 : '2px solid'}
@@ -249,6 +244,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                     propertySelectOptions={propertySelectOptions}
                     markets={markets}
                     states={states}
+                    setVerifiedAddress={setVerifiedAddress}
                   />
                 </TabPanel>
 
@@ -313,7 +309,7 @@ const ProjectDetailsTab = (props: tabProps) => {
         onClose={onAddressVerificationModalClose}
         isAddressVerified={isAddressVerified}
         isLoading={addressVerificationLoading}
-        setSave={setSaveNewAddress}
+        setSave={setVerifiedAddress}
       />
     </>
   )

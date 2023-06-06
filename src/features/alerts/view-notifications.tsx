@@ -27,7 +27,7 @@ export const Notifications = () => {
   const queryClient = useQueryClient()
 
   useEffect(() => {
-    queryClient.resetQueries('FetchAllAlertsInfinit')?.then(() => {
+    queryClient?.resetQueries('FetchAllAlertsInfinit')?.then(() => {
       fetchNotifications()
     })
   }, [])
@@ -35,7 +35,7 @@ export const Notifications = () => {
   const handleObserver = useCallback(
     entries => {
       const [target] = entries
-      if (target.isIntersecting && hasNextPage) {
+      if (target?.isIntersecting && hasNextPage) {
         fetchNextPage()
       }
     },
@@ -60,7 +60,7 @@ export const Notifications = () => {
       const { scrollHeight, scrollTop, clientHeight } = e.target.scrollingElement
       if (!fetching && scrollHeight - scrollTop <= clientHeight * 1.2) {
         fetching = true
-        if (hasNextPage) await fetchNextPage()
+        if (hasNextPage) await fetchNextPage?.()
         fetching = false
       }
     }
@@ -102,14 +102,14 @@ export const Notifications = () => {
               </>
             ) : (
               <>
-                {notifications && notifications?.length > 0 ? (
+                {notifications && !!notifications?.[0] ? (
                   <>
                     {notifications?.map((notification, index) => {
                       return (
                         <Box
                           _hover={{ bg: '#F5F5F5' }}
                           _focus={{ bg: 'none' }}
-                          key={notification.id}
+                          key={notification?.id}
                           as="div"
                           mb="2px"
                           width="100%"
@@ -165,7 +165,14 @@ export const Notifications = () => {
                           <Spinner size="lg" />
                         </Center>
                       ) : (
-                        <>{'All Caught Up'}</>
+                        <Box w="100%">
+                          <VStack h="400px" justifyContent={'center'}>
+                            <BiWind size={'60px'} color="#718096" />
+                            <FormLabel variant={'light-label'} size="md">
+                              {t('emptyNotifications')}
+                            </FormLabel>
+                          </VStack>
+                        </Box>
                       )}
                     </Box>
                   </>

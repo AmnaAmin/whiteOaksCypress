@@ -15,7 +15,7 @@ export const Client = () => {
   const { t } = useTranslation()
   const { data: clients } = useClients()
   const { isOpen: isOpenNewClientModal, onClose: onNewClientModalClose, onOpen: onNewClientModalOpen } = useDisclosure()
-  const isReadOnly = useRoleBasedPermissions()?.includes('CLIENT.READ')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('CLIENT.READ')
 
   const [createdClientId, setCreatedClientId] = useState<string | null | undefined>(null)
   const [selectedClient, setSelectedClient] = useState<string | null | undefined>(null)

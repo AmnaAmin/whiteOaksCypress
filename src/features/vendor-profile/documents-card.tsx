@@ -47,8 +47,9 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
-  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
+  const { permissions } = useRoleBasedPermissions()
   const { isAdmin } = useUserRolesSelector()
+  const isReadOnly = permissions?.includes('VENDOR.READ')
 
   const {
     formState: { errors, isSubmitSuccessful },

@@ -56,7 +56,7 @@ export const TransactionInfoCard: React.FC<{
         }}
       >
         <Text h="20px" color="gray.500">
-          {projectData?.id}
+          {projectData?.displayId}
         </Text>
       </InfoStructureCard>
 

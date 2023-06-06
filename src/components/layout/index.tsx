@@ -26,7 +26,7 @@ import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
-  const permissions = useRoleBasedPermissions()
+  const { permissions } = useRoleBasedPermissions()
   const menus = MenusList?.filter(m => permissions.some(p => m.permissions.includes(p))) //filter Menu List based on Permissions for the user.
   const { t } = useTranslation()
   const { isOpen: isOpenBrowserWarning, onClose: onCloseBrowserWarning, onOpen: onOpenBrowserWarning } = useDisclosure()

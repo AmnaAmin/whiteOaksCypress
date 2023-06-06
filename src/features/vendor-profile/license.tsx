@@ -51,8 +51,9 @@ export const License = React.forwardRef((props: LicenseProps, ref) => {
 export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => {
   const [startDate] = useState(null)
   const { t } = useTranslation()
+  const { permissions } = useRoleBasedPermissions()
   const { isAdmin } = useUserRolesSelector()
-  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
+  const isReadOnly = permissions?.includes('VENDOR.READ')
 
   // HK|PSWOA-1567|after save license document lines swap
   vendor?.licenseDocuments?.sort((a, b) => (a.id < b.id ? -1 : 1))

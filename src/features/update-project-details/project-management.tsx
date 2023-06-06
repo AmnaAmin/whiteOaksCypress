@@ -25,7 +25,7 @@ import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
+import { useCurrentDate, useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 import { addDays } from 'date-fns'
 import moment from 'moment'
 import { capitalize } from 'utils/string-formatters'
@@ -61,7 +61,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const watchState = useWatch({ name: 'state', control })
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
-
+  const currentDate = useCurrentDate()
   const watchIsReconciled = useWatch({ name: 'isReconciled', control })
 
   const watchForm = useWatch({ control })
@@ -128,8 +128,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 
   const sentenceCaseReconcile = capitalize(STATUS.Reconcile)
   const overrideProjectStatusOptionsLowercase = projectOverrideStatusSelectOptions.map(option => {
-  return { ...option, label: capitalize(option.label) };
-});
+    return { ...option, label: capitalize(option.label) }
+  })
   return (
     <Box>
       <Stack>
@@ -268,6 +268,13 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 required
                 min={minOfWoaStartDate}
                 {...register('clientDueDate')}
+                onChange={e => {
+                  const enteredDate = e.target.value
+                  if (enteredDate < currentDate) {
+                    setValue('disqualifiedRevenueFlag', true)
+                    setValue('disqualifiedRevenueDate', datePickerFormat(moment(enteredDate).add(2, 'days')))
+                  }
+                }}
               />
               <FormErrorMessage>{errors?.clientDueDate?.message}</FormErrorMessage>
             </FormControl>

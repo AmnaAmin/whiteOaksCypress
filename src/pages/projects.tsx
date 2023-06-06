@@ -36,7 +36,7 @@ export const Projects = () => {
     onOpen: onNewProjectModalOpen,
   } = useDisclosure()
   const { isFPM } = useUserRolesSelector()
-  const hideCreateProject = useRoleBasedPermissions()?.includes('PROJECT.CREATE.HIDE')
+  const hideCreateProject = useRoleBasedPermissions()?.permissions?.includes('PROJECT.CREATE.HIDE')
   const { fpmUsers = [], setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
 
   const [resetAllFilters, setResetAllFilters] = useState(false)

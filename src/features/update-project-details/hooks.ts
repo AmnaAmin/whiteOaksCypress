@@ -9,7 +9,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
   const isProjectStatusInvoiced = projectData?.projectStatus === PROJECT_STATUS.invoiced.label
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
   const remainingPayment = useWatch({ name: 'remainingPayment', control })
-  const permissions = useRoleBasedPermissions()
+  const { permissions } = useRoleBasedPermissions()
   const { isAdmin } = useUserRolesSelector()
 
   const projectStatus = status?.value
@@ -47,10 +47,10 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isClientSignOffDateRequired: isStatusClosed,
 
     isWOAStartDisabled:
-      !permissions.includes('PROJECTDETAIL.MGMT.WOASTART.EDIT') ||
+      !permissions.some(p => ['PROJECTDETAIL.MGMT.WOASTART.EDIT', 'ALL'].includes(p)) ||
       isStatusClosed ||
       isStatusInvoiced ||
-      (isStatusClientPaid && !isAdmin) ||
+      isStatusClientPaid ||
       isStatusPaid ||
       isStatusOverPayment,
     isWOACompletionDisabled:
@@ -62,17 +62,17 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
       isStatusPaid ||
       isStatusOverPayment,
     isClientStartDateDisabled:
-      !permissions.includes('PROJECTDETAIL.MGMT.CLIENTSTART.EDIT') ||
+      !permissions.some(p => ['PROJECTDETAIL.MGMT.CLIENTSTART.EDIT', 'ALL'].includes(p)) ||
       isStatusClosed ||
       isStatusInvoiced ||
-      (isStatusClientPaid && !isAdmin) ||
+      isStatusClientPaid ||
       isStatusPaid ||
       isStatusOverPayment,
     isClientDueDateDisabled:
-      !permissions.includes('PROJECTDETAIL.MGMT.CLIENTDUEDATE.EDIT') ||
+      !permissions.some(p => ['PROJECTDETAIL.MGMT.CLIENTDUEDATE.EDIT', 'ALL'].includes(p)) ||
       isStatusClosed ||
       isStatusInvoiced ||
-      (isStatusClientPaid && !isAdmin) ||
+      isStatusClientPaid ||
       isStatusPaid ||
       isStatusOverPayment,
     isClientWalkthroughDisabled:
@@ -89,8 +89,8 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
       isStatusPaid ||
       isStatusOverPayment ||
       isStatusInvoiced,
-    isReconcileDisabled: !permissions?.includes('PROJECTDETAIL.MGMT.PROJECTVERIFIED.EDIT'),
-    
+    isReconcileDisabled: !permissions.some(p => ['PROJECTDETAIL.MGMT.PROJECTVERIFIED.EDIT', 'ALL'].includes(p)),
+
     // Invoicing and payment form fields states
     isOriginalSOWAmountDisabled: isAllTimeDisabled,
     isFinalSOWAmountDisabled: isAllTimeDisabled,
@@ -105,24 +105,25 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isPaymentDisabled: !(isStatusClientPaid || isProjectStatusInvoiced || invoiceBackDate) || remainingPayment === 0,
 
     // Contacts field states
-    isProjectCoordinatorDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.PC.EDIT'),
+    isProjectCoordinatorDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.PC.EDIT', 'ALL'].includes(p)),
     isProjectCoordinatorPhoneNumberDisabled: isAllTimeDisabled,
     isProjectCoordinatorExtensionDisabled: isAllTimeDisabled,
-    isFieldProjectManagerDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.FPM.EDIT'),
+    isFieldProjectManagerDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.FPM.EDIT', 'ALL'].includes(p)),
     isFieldProjectManagerPhoneNumberDisabled: isAllTimeDisabled,
     isFieldProjectManagerExtensionDisabled: isAllTimeDisabled,
-    isClientDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.CLIENT.EDIT'),
+    isClientDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.CLIENT.EDIT', 'ALL'].includes(p)),
 
     // Location Form fields states
-    isAddressDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT'),
-    isCityDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT'),
-    isStateDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT'),
-    isZipDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.ADDRESS.EDIT'),
-    isMarketDisabled: !permissions.includes('PROJECTDETAIL.CONTACT.MARKET.EDIT'),
-    isGateCodeDisabled: permissions.includes('PROJECTDETAIL.CONTACT.GATECODE.EDIT')
+    isAddressDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.ADDRESS.EDIT', 'ALL'].includes(p)),
+
+    isCityDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.ADDRESS.EDIT', 'ALL'].includes(p)),
+    isStateDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.ADDRESS.EDIT', 'ALL'].includes(p)),
+    isZipDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.ADDRESS.EDIT', 'ALL'].includes(p)),
+    isMarketDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.MARKET.EDIT', 'ALL'].includes(p)),
+    isGateCodeDisabled: permissions.some(p => ['PROJECTDETAIL.CONTACT.GATECODE.EDIT', 'ALL'].includes(p))
       ? !newActivePunchEnabledFieldStatus
       : isAllTimeDisabled,
-    isLockBoxCodeDisabled: permissions.includes('PROJECTDETAIL.CONTACT.LOCKBOX.EDIT')
+    isLockBoxCodeDisabled: permissions.some(p => ['PROJECTDETAIL.CONTACT.LOCKBOX.EDIT', 'ALL'].includes(p))
       ? !newActivePunchEnabledFieldStatus
       : isAllTimeDisabled,
   }
@@ -167,4 +168,10 @@ export const useWOAStartDateMin = (control: Control<ProjectDetailsFormValues>) =
   const clientStartDate = useWatch({ name: 'clientStartDate', control }) ?? new Date().toString()
 
   return new Date(clientStartDate).toISOString().split('T')[0]
+}
+
+// Current date
+export const useCurrentDate = () => {
+  let date = new Date().toISOString().split('T')[0]
+  return date
 }

@@ -36,7 +36,7 @@ export const TradeList: React.FC<{ vendorProfileData: VendorProfile; onClose?: (
 
 export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: tradesFormProps) => {
   const { control } = useFormContext<VendorTradeFormValues>()
-  const isReadOnly = useRoleBasedPermissions()?.includes('VENDOR.READ')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('VENDOR.READ')
   const tradeCheckboxes = useWatch({ control, name: 'trades' })
   return (
     <>

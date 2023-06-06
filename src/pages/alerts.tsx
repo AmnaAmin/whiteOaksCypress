@@ -35,7 +35,11 @@ const Alerts = () => {
               <Notifications />
             </TabPanel>
             <TabPanel px={0}>
-              <ManagedAlertTable managedAlerts={managedAlerts} isLoading={isLoading} refetch={refetch} />
+              <ManagedAlertTable
+                managedAlerts={managedAlerts && managedAlerts?.length > 1 ? managedAlerts : []}
+                isLoading={isLoading}
+                refetch={refetch}
+              />
             </TabPanel>
           </TabPanels>
         </Card>
