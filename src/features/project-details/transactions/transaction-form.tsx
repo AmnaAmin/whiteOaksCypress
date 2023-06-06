@@ -441,7 +441,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {isFormLoading && <ViewLoader />}
       {check && isLienWaiverRequired && !isPlanExhausted && <LienWaiverAlert />}
       {projectAwardCheck ? <ProjectAwardAlert /> : null}
-      {check && showUpgradeOption && (
+      {check && showUpgradeOption && !isApproved && (
         <ProjectTransactionRemainingAlert
           msg="DrawRemaining"
           onOpen={onProjectAwardOpen}
