@@ -52,7 +52,7 @@ export const ProjectSummaryCard: React.FC<{
           >
             <InfoStructureCard title={t('projects.projectSummary.projectID')} isLoading={isLoading} fontSize="12px">
               <FormLabel variant="light-label" size="md">
-                {projectData?.id}{' '}
+                {projectData?.displayId}{' '}
               </FormLabel>
             </InfoStructureCard>
             <InfoStructureCard title={t('projects.projectSummary.status')} isLoading={isLoading} fontSize="12px">

@@ -1,3 +1,4 @@
+import { ResubmissionListItem } from './project-details.types'
 import { SelectOption } from './transaction.type'
 
 export type Project = {
@@ -26,6 +27,7 @@ export type Project = {
   hoaPhone: string | null
   hoaPhoneNumberExtension: string | null
   id: number | null
+  displayId: string | null
   invoiceNumber: string | null
   invoiceLink: string | null
   lastCompletedWorkOrder: string | null
@@ -127,6 +129,7 @@ export type Project = {
   projectClosedDueDate: Date | string | null
   lienRightFileDate: Date | string | null
   lienRightExpireDate: Date | string | null
+  resubmissionDTOList: ResubmissionListItem[]
 }
 
 export type ProjectExtraAttributesType = {
