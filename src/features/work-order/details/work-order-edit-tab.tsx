@@ -46,7 +46,7 @@ import { WORK_ORDER } from '../workOrder.i18n'
 import { downloadFile } from 'utils/file-utils'
 import ReactSelect from 'components/form/react-select'
 import { CANCEL_WO_OPTIONS } from 'constants/index'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
 
@@ -146,7 +146,9 @@ const WorkOrderDetailTab = props => {
 
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
-  const { isAdmin, isAccounting } = useUserRolesSelector()
+  const { isAdmin } = useUserRolesSelector()
+  const { permissions } = useRoleBasedPermissions()
+  const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
 
   const {
     skillName,
@@ -489,7 +491,7 @@ const WorkOrderDetailTab = props => {
           </Stack>
           <Box mt="32px" mx="32px">
             <HStack spacing="16px">
-              {isAdmin && !isCancelled && (
+              {cancelPermissions && !isCancelled && (
                 <Box w="215px">
                   <FormControl zIndex="2">
                     <FormLabel variant="strong-label" size="md">
@@ -505,7 +507,7 @@ const WorkOrderDetailTab = props => {
                             onChange={option => field.onChange(option)}
                             isDisabled={
                               ![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) &&
-                              !(isAdmin || isAccounting)
+                              !cancelPermissions
                             }
                           />
                         </>

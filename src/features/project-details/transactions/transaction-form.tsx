@@ -55,6 +55,7 @@ import {
   useIsAwardSelect,
   useIsLienWaiverRequired,
   useLienWaiverFormValues,
+  usePermissionBasedDecision,
   useSelectedWorkOrder,
   useTotalAmount,
 } from './hooks'
@@ -158,7 +159,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
-  const { isAdmin, isVendor, isAccounting } = useUserRolesSelector()
+  const { isVendor } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -262,8 +263,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowPaymentRecievedDateField,
     isPaymentTermDisabled,
   } = useFieldShowHideDecision(control, transaction)
-  const isAdminEnabled = isAdmin || isAccounting
 
+  const { editInvoiceDate, editPaymentReceived, enableFutureDate, allowSaveOnApproved } = usePermissionBasedDecision()
   const { isInvoicedDateRequired, isPaidDateRequired, isPaymentTermRequired } = useFieldRequiredDecision(
     control,
     transaction,
@@ -395,7 +396,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   )
 
   // Disable selection of future payment received date for all users expect Admin and Accounting
-  const futureDateDisable = !isAdminEnabled ? format(new Date(), 'yyyy-MM-dd') : ''
+  const futureDateDisable = !enableFutureDate ? format(new Date(), 'yyyy-MM-dd') : ''
 
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
@@ -702,7 +703,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           type="date"
                           variant={isInvoicedDateRequired ? 'required-field' : 'outline'}
                           css={calendarIcon}
-                          isDisabled={isApproved && !isAdminEnabled}
+                          isDisabled={isApproved && !editInvoiceDate}
                           {...register('invoicedDate', {
                             required: isInvoicedDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
                           })}
@@ -788,7 +789,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         size="md"
                         type="date"
                         variant="required-field"
-                        isDisabled={isApproved && !isAdminEnabled}
+                        isDisabled={isApproved && !editPaymentReceived}
                         max={futureDateDisable}
                         {...register('paymentRecievedDate', { required: REQUIRED_FIELD_ERROR_MESSAGE })}
                       />
@@ -952,7 +953,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          ((!isApproved && !lateAndFactoringFeeForVendor) || isAdminEnabled) && (
+          ((!isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
             <>
               <Button
                 type="submit"
