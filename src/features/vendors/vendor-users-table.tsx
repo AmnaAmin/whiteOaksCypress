@@ -42,7 +42,7 @@ type UserProps = {
 export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose }) => {
   //eslint-disable-next-line
   const mainVendorId = vendorProfileData?.id
-  const { permissions, isAdmin } = useRoleBasedPermissions()
+  const { permissions } = useRoleBasedPermissions()
 
   const VENDOR_USERS_TABLE_COLUMNS: ColumnDef<any>[] = useMemo(() => {
     return [
@@ -176,7 +176,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
       />
       <Box w="100%">
         <HStack px="11px" gap="20px" mb="14px">
-          {(permissions?.includes('VENDOR.DEACTIVEVENDOR') || isAdmin) && (
+          {permissions.some(p => ['VENDOR.DEACTIVEVENDOR', 'ALL'].includes(p)) && (
             <FormControl display="flex">
               <FormLabel variant="strong-label" size="md">
                 Deactivate Vendors

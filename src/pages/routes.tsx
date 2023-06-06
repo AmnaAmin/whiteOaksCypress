@@ -10,10 +10,8 @@ import { CreateATicketForm } from './vendor/create-a-ticket-form'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export default function ProjectCordinatorRoutes() {
-  const { permissions, isAdmin } = useRoleBasedPermissions()
-  const routes = isAdmin
-    ? routesConfig()
-    : routesConfig()?.filter(r => permissions.some(p => r.permissions.includes(p)))
+  const { permissions } = useRoleBasedPermissions()
+  const routes = routesConfig()?.filter(r => permissions.some(p => r.permissions.includes(p)))
   const route = first(routes)
   return (
     <Routes>
