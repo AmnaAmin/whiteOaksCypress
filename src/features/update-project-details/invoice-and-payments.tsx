@@ -593,7 +593,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                           <ReactSelect
                             {...field}
                             options={PAYMENT_TERMS_OPTIONS}
-                            selectProps={{ isBorderLeft: true }}
+                            selectProps={{ isBorderLeft: true , menuHeight: '105px'}}
                             isDisabled={!!watchResubmissions?.[index]?.id}
                             onChange={(option: SelectOption) => {
                               field.onChange(option)
