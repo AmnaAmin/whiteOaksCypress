@@ -61,6 +61,7 @@ type LocationProps = {
   propertySelectOptions: SelectOption[]
   markets: Market
   states: State
+  setVerifiedAddress: (val: boolean) => void
 }
 
 const Location: React.FC<LocationProps> = ({
@@ -69,6 +70,7 @@ const Location: React.FC<LocationProps> = ({
   propertySelectOptions,
   markets,
   states,
+  setVerifiedAddress,
 }) => {
   const {
     register,
@@ -105,6 +107,7 @@ const Location: React.FC<LocationProps> = ({
     const market = markets.find(m => m?.id === property?.marketId)
     const state = states.find(s => s?.code === property?.state)
 
+    setVerifiedAddress(!!property)
     setValue('address', property?.streetAddress || option.label)
     setValue('city', property?.city)
     setValue('zip', property?.zipCode)
@@ -203,7 +206,7 @@ const Location: React.FC<LocationProps> = ({
                 {...register('city', {
                   required: 'This is required field',
                   onChange: e => {
-                    setValue('property', null)
+                    setVerifiedAddress(false)
                   },
                 })}
               />
@@ -229,7 +232,7 @@ const Location: React.FC<LocationProps> = ({
                       isDisabled={isStateDisabled}
                       selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                       onChange={option => {
-                        setValue('property', null)
+                        setVerifiedAddress(false)
                         field.onChange(option)
                       }}
                     />
@@ -253,7 +256,7 @@ const Location: React.FC<LocationProps> = ({
                 {...register('zip', {
                   required: 'This is required field',
                   onChange: e => {
-                    setValue('property', null)
+                    setVerifiedAddress(false)
                   },
                 })}
               />
