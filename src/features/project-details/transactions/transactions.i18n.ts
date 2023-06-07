@@ -5,7 +5,7 @@ export const transaction = {
     translation: {
       [TRANSACTION]: {
         type: 'Type',
-        trade: 'Trade',
+        trade: 'Skill',
         vendorGL: 'Name',
         totalAmount: 'Total Amount',
         transactionStatus: 'Transaction Status',
@@ -119,7 +119,7 @@ export const transaction = {
         contactNo: 'Número de Contacto',
         WODueDate: 'Fecha de vencimiento de OT',
         DueDateWO: 'Fecha de vencimiento OT',
-        trade: 'Comercio',
+        trade: 'Habilidad',
         auditLogs: 'Registros de auditoría',
         totalAmount: 'Cantidad Total',
         submit: 'Entregar',

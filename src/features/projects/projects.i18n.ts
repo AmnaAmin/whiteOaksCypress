@@ -89,7 +89,7 @@ export const projects = {
         },
         ganttChart: {
           name: 'Name',
-          trade: 'Trade',
+          trade: 'Skill',
           startDate: 'Start Date',
           endDate: 'End Date',
         },

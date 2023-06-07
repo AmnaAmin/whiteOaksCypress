@@ -11,7 +11,7 @@ export const sideNav = {
         receivable: 'Receivable',
         vendors: 'Vendors',
         clients: 'Clients',
-        vendorsSkills: 'Vendors Trades',
+        vendorsSkills: 'Vendors Skills',
         markets: 'Markets',
         reports: 'Reports',
         performance: 'Performance',
