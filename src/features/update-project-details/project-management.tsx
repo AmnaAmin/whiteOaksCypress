@@ -426,7 +426,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                           redirectToEstimateDetails(projectData?.estimateId)
                         }}
                       >
-                        Id: {projectData?.estimateId}
+                        Id: E{projectData?.estimateId}
                       </LinkChakra>
                     </Text>
                   </>
