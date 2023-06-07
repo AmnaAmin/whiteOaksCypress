@@ -298,7 +298,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                       {...field}
                       isDisabled={isPaymentTermsDisabled}
                       options={PAYMENT_TERMS_OPTIONS}
-                      selectProps={{ isBorderLeft: !isPaymentTermsDisabled }}
+                      selectProps={{ isBorderLeft: !isPaymentTermsDisabled , menuHeight :'100px'}}
                       onChange={(option: SelectOption) => {
                         onPaymentTermChange(option)
                         field.onChange(option)
