@@ -30,7 +30,7 @@ import { NumberInput } from 'components/input/input'
 import { useTranslation } from 'react-i18next'
 import { Project } from 'types/project.type'
 import { PROJECT_STATUS, STATUS } from 'features/common/status'
-import { MdOutlineCancel } from 'react-icons/md'
+import { MdOutlineCancel, MdOutlineEmail } from 'react-icons/md'
 import { calendarIcon } from 'theme/common-style'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import moment from 'moment'
@@ -513,23 +513,23 @@ const RevisedAmounts = ({ formControl, project }) => {
           return (
             <VStack alignItems={'flex-start'}>
               <VStack gap="32px" alignItems={'flex-start'}>
-                {/* {project?.estimateRevise?.[index]?.id && (
-                <Text
-                  display="flex"
-                  fontStyle={'italic'}
-                  fontSize="12px"
-                  fontWeight={400}
-                  pl="3px"
-                  pr="5px"
-                  background={'blue.50'}
-                  color={'gray.500'}
-                >
-                  <Box as="span" mt="2px">
-                    <Icon as={MdOutlineEmail} boxSize={3} mr="3px" />
-                  </Box>
-                  {project?.estimateRevise?.[index]?.modifiedBy}
-                </Text>
-              )}*/}
+                {project?.resubmissionDTOList?.[index]?.id && (
+                  <Text
+                    display="flex"
+                    fontStyle={'italic'}
+                    fontSize="12px"
+                    fontWeight={400}
+                    pl="3px"
+                    pr="5px"
+                    background={'blue.50'}
+                    color={'gray.500'}
+                  >
+                    <Box as="span" mt="2px">
+                      <Icon as={MdOutlineEmail} boxSize={3} mr="3px" />
+                    </Box>
+                    {project?.modifiedBy}
+                  </Text>
+                )}
                 <HStack>
                   <FormControl w={'215px'} isInvalid={!!errors.resubmittedInvoice?.[index]?.notificationDate}>
                     <FormLabel variant="strong-label" size="md">
