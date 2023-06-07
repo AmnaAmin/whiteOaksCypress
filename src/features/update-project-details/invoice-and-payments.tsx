@@ -480,6 +480,7 @@ const RevisedAmounts = ({ formControl, project }) => {
 
   const { t } = useTranslation()
   const watchResubmissions = watch('resubmittedInvoice')
+
   const { isAdmin } = useUserRolesSelector()
 
   return (
@@ -567,6 +568,15 @@ const RevisedAmounts = ({ formControl, project }) => {
                     {...register(`resubmittedInvoice.${index}.resubmissionDate`, {
                       required: 'This is a required field',
                     })}
+                    onChange={option => {
+                      const resubmissionDate = option.target.value
+                      if (resubmissionDate && watchResubmissions?.[index]?.paymentTerms) {
+                        const dueDate = moment(resubmissionDate)
+                          .add(parseInt(watchResubmissions?.[index]?.paymentTerms.value, 10), 'days')
+                          ?.toDate()
+                        setValue(`resubmittedInvoice.${index}.dueDate`, datePickerFormat(dueDate))
+                      }
+                    }}
                   />
 
                   <Box minH="20px" mt="3px">
