@@ -11,6 +11,7 @@ import {
   BiUserPin,
   BiUserPlus,
   BiError,
+  BiTrendingUp,
 } from 'react-icons/bi'
 import { SiCypress } from 'react-icons/si'
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
@@ -118,6 +119,14 @@ export const MenusList: Menu[] = [
     color: '#ECC94B',
     testId: 'userManager',
     permissions: ['USERMANAGER.EDIT', 'USERMANAGER.READ', 'ALL'],
+  },
+  {
+    pathTo: '/roles',
+    title: `${SIDE_NAV}.accessControl`,
+    Icon: BiTrendingUp,
+    color: '#D487F8',
+    testId: 'accessControl',
+    permissions: ['ALL'],
   },
   {
     pathTo: '/projectType',

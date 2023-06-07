@@ -32,6 +32,33 @@ const TableVariants = {
           },
         }
       },
+      striped: props => {
+        return {
+          // @ts-ignore
+          ...chakraTheme.components.Table.variants.striped(props),
+          thead: {
+            tr: {
+              fontStyle: 'normal',
+              fontWeight: 500,
+              fontSize: '18px',
+              color: '#4A5568',
+            },
+          },
+          tbody: {
+            tr: {
+              minH: '45px',
+              fontFamily: 'Poppins',
+              fontStyle: 'normal',
+              fontWeight: 400,
+              fontSize: '14px',
+              color: 'gray.600',
+              _odd: {
+                background: '#EDF2F7',
+              },
+            },
+          },
+        }
+      },
     },
   },
 }
