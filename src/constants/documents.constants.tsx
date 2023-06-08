@@ -51,7 +51,7 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
 
   {
     id: 'workOrderName',
-    header: 'trade',
+    header: 'Skill',
     accessorKey: 'workOrderName',
     cell: withPreviewCell,
     filterFn: 'includesString',

@@ -34,7 +34,7 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
     },
   },
   {
-    header: 'trade',
+    header: 'Skill',
     accessorKey: 'skillName',
   },
   {
