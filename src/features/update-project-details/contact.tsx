@@ -73,7 +73,7 @@ const Contact: React.FC<ContactProps> = ({ projectCoordinatorSelectOptions, clie
   }, [fieldProjectManagerByMarketOptions])
 
   return (
-    <Stack spacing={14} mt="7" minH="600px">
+    <Stack spacing={14}  minH="600px">
       <HStack spacing="16px">
         <Box h="40px">
           <FormControl w="215px" isInvalid={!!errors.projectCoordinator}>
