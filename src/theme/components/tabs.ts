@@ -26,7 +26,7 @@ const tabsVariants = {
             _disabled: {
               cursor: 'not-allowed',
               _hover: {
-                bg: `transparent`,
+                bg: `#EBF8FF`,
               },
             },
           },
