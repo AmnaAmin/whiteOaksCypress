@@ -527,7 +527,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                   <Box as="span" mt="2px">
                     <Icon as={MdOutlineEmail} boxSize={3} mr="3px" />
                   </Box>
-                  {project?.modifiedBy}
+                  {project?.resubmissionDTOList?.[index]?.modifiedBy}
                 </Text>
               )}
               <HStack>
