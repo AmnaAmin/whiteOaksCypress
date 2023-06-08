@@ -217,7 +217,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               borderTopLeftRadius="4px"
               borderBottomLeftRadius="4px"
             >
-              <TabPanels mt="31px">
+              <TabPanels>
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
                   <ProjectManagement
                     projectStatusSelectOptions={projectStatusSelectOptions}
