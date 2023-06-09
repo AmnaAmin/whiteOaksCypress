@@ -28,19 +28,33 @@ export const useFetchRolesPermissions = roleName => {
 }
 
 export const SECTIONS = [
-  { value: 'DASHBOARD', label: 'Dashboard' },
+  { value: 'ADMINDASHBOARD', label: 'Dashboard' },
   { value: 'ESTIMATE', label: 'Estimates' },
   { value: 'PROJECT', label: 'Projects' },
   { value: 'PAYABLE', label: 'Payable' },
   { value: 'RECEIVABLE', label: 'Receivable' },
-  { value: 'VENDORS', label: 'Vendors' },
-  { value: 'CLIENTS', label: 'Clients' },
-  { value: 'REPORTS', label: 'Reports' },
+  { value: 'VENDOR', label: 'Vendors' },
+  { value: 'CLIENT', label: 'Clients' },
+  { value: 'REPORT', label: 'Reports' },
   { value: 'PERFORMANCE', label: 'Performance' },
-  { value: 'USER', label: 'Users' },
+  { value: 'USERMANAGER', label: 'Users' },
   { value: 'MARKET', label: 'Markets' },
-  { value: 'VENDORSKILLs', label: 'Vendor Skills' },
+  { value: 'VENDORSKILL', label: 'Vendor Skills' },
   { value: 'SUPPORT', label: 'Support' },
   { value: 'ALERT', label: 'Alerts' },
-  { value: 'CYPRESS', label: 'Cypress Report' },
+  { value: 'CYPRESSREPORT', label: 'Cypress Report' },
+]
+
+export const LOCATIONS = [
+  { value: 'All', label: 'All' },
+  { value: 'AREA', label: 'Area' },
+  { value: 'REGION', label: 'Region' },
+  { value: 'STATE', label: 'State' },
+  { value: 'MARKET', label: 'Market' },
+]
+
+export const ASSIGNMENTS = [
+  { value: 'All', label: 'All' },
+  { value: 'FPM', label: 'FPM' },
+  { value: 'PC', label: 'Project Coordinator' },
 ]
