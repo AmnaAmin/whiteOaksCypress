@@ -32,6 +32,35 @@ const TableVariants = {
           },
         }
       },
+      'striped-list': props => {
+        return {
+          thead: {
+            tr: {
+              fontStyle: 'normal',
+              fontWeight: 500,
+              fontSize: '18px',
+              color: '#4A5568',
+            },
+            td: {
+              borderBottom: '1px solid #CBD5E0 !important',
+            },
+          },
+
+          tbody: {
+            tr: {
+              fontFamily: 'Poppins',
+              fontStyle: 'normal',
+              fontWeight: 400,
+              fontSize: '14px',
+              color: 'gray.600',
+              letterSpacing: '0.5px',
+              _odd: {
+                background: '#EDF2F7',
+              },
+            },
+          },
+        }
+      },
     },
   },
 }

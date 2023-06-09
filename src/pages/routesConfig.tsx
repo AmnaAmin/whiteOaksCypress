@@ -20,6 +20,7 @@ import { SupportTickets } from './admin/support-tickets'
 import { Estimates } from 'pages/estimates'
 import { EstimateDetails } from 'pages/estimate-details'
 import CypressReport from './cypress-report'
+import { AccessControl } from './access-control'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -47,6 +48,7 @@ export default function useRoutesConfig() {
       permissions: ['ESTIMATE.READ', 'ESTIMATE.EDIT', 'ALL'],
     },
     { path: 'userManager', element: UserManagement, permissions: ['USERMANAGER.READ', 'USERMANAGER.EDIT', 'ALL'] },
+    { path: 'roles', element: AccessControl, permissions: ['ALL'] },
     { path: 'projectType', element: ProjectType, permissions: ['PROJECTTYPE.READ', 'PROJECTTYPE,EDIT', 'ALL'] },
     { path: 'payable', element: Payable, permissions: ['PAYABLE.READ', 'PAYABLE.EDIT', 'ALL'] },
     { path: 'support-tickets', element: SupportTickets, permissions: ['SUPPORT.READ', 'SUPPORT.EDIT', 'ALL'] },
