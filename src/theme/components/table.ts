@@ -32,10 +32,8 @@ const TableVariants = {
           },
         }
       },
-      striped: props => {
+      'striped-list': props => {
         return {
-          // @ts-ignore
-          ...chakraTheme.components.Table.variants.striped(props),
           thead: {
             tr: {
               fontStyle: 'normal',
@@ -43,15 +41,19 @@ const TableVariants = {
               fontSize: '18px',
               color: '#4A5568',
             },
+            td: {
+              borderBottom: '1px solid #CBD5E0 !important',
+            },
           },
+
           tbody: {
             tr: {
-              minH: '45px',
               fontFamily: 'Poppins',
               fontStyle: 'normal',
               fontWeight: 400,
               fontSize: '14px',
               color: 'gray.600',
+              letterSpacing: '0.5px',
               _odd: {
                 background: '#EDF2F7',
               },
