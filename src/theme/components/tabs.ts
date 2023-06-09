@@ -49,7 +49,6 @@ const tabsVariants = {
               color: `${props.colorScheme}.300`,
               _hover: {
                 bg: `${props.colorScheme}.50`,
-                
               },
             },
           },
