@@ -385,7 +385,6 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                 render={({ field }) => {
                   return (
                     <NumberInput
-                      datatest-id="remaining-Payment"
                       value={field.value}
                       onChange={e => field.onChange(e.target.value)}
                       disabled={isRemainingPaymentDisabled}
@@ -527,7 +526,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                   <Box as="span" mt="2px">
                     <Icon as={MdOutlineEmail} boxSize={3} mr="3px" />
                   </Box>
-                  {project?.resubmissionDTOList?.[index]?.modifiedBy}
+                  {project?.resubmissionDTOList?.[index]?.createdBy}
                 </Text>
               )}
               <HStack>
