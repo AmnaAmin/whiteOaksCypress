@@ -392,7 +392,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                       customInput={Input}
                       thousandSeparator={true}
                       prefix={'$'}
-                      data-testid="RemainingPayment-field"
+                      
                     />
                   )
                 }}
@@ -527,7 +527,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                   <Box as="span" mt="2px">
                     <Icon as={MdOutlineEmail} boxSize={3} mr="3px" />
                   </Box>
-                  {project?.resubmissionDTOList?.[index]?.modifiedBy}
+                  {project?.resubmissionDTOList?.[index]?.createdBy}
                 </Text>
               )}
               <HStack>
