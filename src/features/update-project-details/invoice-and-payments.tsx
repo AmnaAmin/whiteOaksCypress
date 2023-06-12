@@ -385,7 +385,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                 render={({ field }) => {
                   return (
                     <NumberInput
-                      datatest-id="remaining-Payment"
+                      data-testid="remaining-Payment"
                       value={field.value}
                       onChange={e => field.onChange(e.target.value)}
                       disabled={isRemainingPaymentDisabled}
