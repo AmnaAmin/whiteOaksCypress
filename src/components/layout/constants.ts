@@ -11,13 +11,13 @@ import {
   BiUserPin,
   BiUserPlus,
   BiError,
-  BiTrendingUp,
 } from 'react-icons/bi'
 import { SiCypress } from 'react-icons/si'
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { SIDE_NAV } from './sideNav.i18n'
 import { MdOnlinePrediction } from 'react-icons/md'
 import { IconType } from 'react-icons'
+import { AccessControlIcon } from './icons/icon-access-control'
 
 export type Menu = {
   pathTo: string
@@ -123,7 +123,7 @@ export const MenusList: Menu[] = [
   {
     pathTo: '/roles',
     title: `${SIDE_NAV}.accessControl`,
-    Icon: BiTrendingUp,
+    Icon: AccessControlIcon,
     color: '#D487F8',
     testId: 'accessControl',
     permissions: ['ALL'],
