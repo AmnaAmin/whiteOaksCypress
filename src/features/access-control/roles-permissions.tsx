@@ -199,7 +199,7 @@ const PermissionsTable = ({ formControl }) => {
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
-                            colorScheme="brand"
+                            colorScheme="PrimaryCheckBox"
                             isChecked={field.value}
                             style={{ background: 'white', border: '#DFDFDF' }}
                             data-dis={{ background: 'red !important' }}
@@ -207,7 +207,7 @@ const PermissionsTable = ({ formControl }) => {
                             onChange={value => {
                               field.onChange(value)
                             }}
-                            disabled={watchPermissions?.[index]?.read || watchPermissions?.[index]?.edit}
+                            // disabled={watchPermissions?.[index]?.read || watchPermissions?.[index]?.edit}
                           ></Checkbox>
                         </>
                       )}
@@ -221,14 +221,14 @@ const PermissionsTable = ({ formControl }) => {
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
-                            colorScheme="brand"
+                            colorScheme="PrimaryCheckBox"
                             isChecked={field.value}
                             style={{ background: 'white', border: '#DFDFDF' }}
                             mr="2px"
                             onChange={value => {
                               field.onChange(value)
                             }}
-                            disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.edit}
+                            // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.edit}
                           ></Checkbox>
                         </>
                       )}
@@ -242,14 +242,14 @@ const PermissionsTable = ({ formControl }) => {
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
-                            colorScheme="brand"
+                            colorScheme="PrimaryCheckBox"
                             isChecked={field.value}
                             style={{ background: 'white', border: '#DFDFDF' }}
                             mr="2px"
                             onChange={value => {
                               field.onChange(value)
                             }}
-                            disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                            // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                           ></Checkbox>
                         </>
                       )}
