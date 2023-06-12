@@ -1,4 +1,4 @@
-// import * as authApi from './auth-api'
+import * as authApi from './auth-api'
 
 async function client(endpoint: string, httpConfig: any | undefined = {}) {
   const { data, token, headers: customHeaders, ...customConfig } = httpConfig
@@ -17,10 +17,10 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
     const contentType = response.headers.get(`content-type`)
 
     if (response.status === 401) {
-      // await authApi.logout()
+      await authApi.logout()
       // refresh the page for them
       // @ts-ignore
-      return Promise.reject({ message: `User is unauthorized to access ${endpoint}` })
+      // return Promise.reject({ message: `User is unauthorized to access ${endpoint}` })
     }
 
     if (response.statusText === 'No Content') {
