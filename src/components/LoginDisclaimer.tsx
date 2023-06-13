@@ -43,7 +43,7 @@ export function DisclaimerModal({ isOpen, isLoading = false, onClose, onConfirm 
         <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
         <ModalBody>
           <Text
-            data-testid="confirmation-message"
+            data-testid="disclaimer-message"
             color="#2D3748"
             fontSize="16px"
             fontWeight={400}
