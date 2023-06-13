@@ -12,26 +12,46 @@ export const AccessControl: React.FC = () => {
   const { t } = useTranslation()
   const [selectedRole, setSelectedRole] = useState<string | null>()
   const { data: permissions, isLoading: isLoadingPermissions } = useFetchRolesPermissions(selectedRole)
+  const [newRole, setNewRole] = useState(false)
   return (
-    <Card>
-      <VStack w="70%" gap="20px">
-        <HStack justifyContent="space-between" w="100%">
-          <Text data-testid="access-control" fontSize="18px" fontWeight={600} color="#4A5568">
-            {t(`${ACCESS_CONTROL}.accessControl`)}
-          </Text>
-          <Button onClick={() => {}} colorScheme="brand" leftIcon={<BiAddToQueue />}>
+    <Card minH="100%">
+      {!newRole ? (
+        <VStack w="70%" gap="20px">
+          <HStack justifyContent="space-between" w="100%">
+            <Text data-testid="access-control" fontSize="18px" fontWeight={600} color="#4A5568">
+              {t(`${ACCESS_CONTROL}.accessControl`)}
+            </Text>
+            <Button
+              onClick={() => {
+                setNewRole(true)
+              }}
+              colorScheme="brand"
+              leftIcon={<BiAddToQueue />}
+            >
+              {t(`${ACCESS_CONTROL}.newRole`)}
+            </Button>
+          </HStack>
+          <RolesList setSelectedRole={setSelectedRole} selectedRole={selectedRole} />
+          {isLoadingPermissions ? (
+            <Center height={350}>
+              <Spinner size="lg" />
+            </Center>
+          ) : (
+            <>
+              {selectedRole && (
+                <RolesPermissions permissions={permissions} setNewRole={null} setSelectedRole={setSelectedRole} />
+              )}
+            </>
+          )}
+        </VStack>
+      ) : (
+        <VStack w="70%" gap="20px">
+          <Text w="100%" data-testid="access-control" fontSize="18px" fontWeight={600} color="#4A5568">
             {t(`${ACCESS_CONTROL}.newRole`)}
-          </Button>
-        </HStack>
-        <RolesList setSelectedRole={setSelectedRole} />
-        {isLoadingPermissions ? (
-          <Center height={350}>
-            <Spinner size="lg" />
-          </Center>
-        ) : (
-          <>{selectedRole && <RolesPermissions permissions={permissions} />}</>
-        )}
-      </VStack>
+          </Text>
+          <RolesPermissions permissions={null} setNewRole={setNewRole} setSelectedRole={setSelectedRole} />
+        </VStack>
+      )}
     </Card>
   )
 }
