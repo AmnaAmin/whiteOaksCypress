@@ -23,7 +23,15 @@ import { useTranslation } from 'react-i18next'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import Select from 'components/form/react-select'
 import { useEffect } from 'react'
-import { ASSIGNMENTS, LOCATIONS, SECTIONS } from 'api/access-control'
+import {
+  ASSIGNMENTS,
+  LOCATIONS,
+  mapFormValuestoPayload,
+  mapPermissionsToFormValues,
+  useCreateNewRoleMutation,
+  useFetchAllPermissions,
+  useUpdateRoleMutation,
+} from 'api/access-control'
 
 interface PemissionFormValues {
   roleName: string
@@ -32,8 +40,14 @@ interface PemissionFormValues {
   permissions: Array<{ name: string; edit: boolean; hide: boolean; read: boolean }>
 }
 
-export const RolesPermissions = ({ permissions }) => {
+export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) => {
   const formReturn = useForm<PemissionFormValues>()
+  const {
+    formState: { errors },
+  } = formReturn
+  const { data: allPermissions } = useFetchAllPermissions()
+  const { mutate: createRole } = useCreateNewRoleMutation()
+  const { mutate: updateRole } = useUpdateRoleMutation(permissions?.[0]?.name)
   const { control, register, reset } = formReturn
   const { t } = useTranslation()
   useEffect(() => {
@@ -50,37 +64,32 @@ export const RolesPermissions = ({ permissions }) => {
     }
   }
 
-  const mapPermissionsToFormValues = permissionsArray => {
-    const permissions = permissionsArray?.map(p => {
-      const permissionKey = p.key
-      const splitPermission = permissionKey.split('.')
-      return { section: splitPermission?.[0], action: splitPermission?.[splitPermission?.length - 1] }
-    })
-
-    const sectionWisePermissions = [] as any
-    SECTIONS?.forEach(s => {
-      const permissionObj = permissions?.find(p => s.value === p.section)
-      sectionWisePermissions?.push({
-        name: s.value,
-        edit: permissionObj?.action === 'EDIT',
-        read: permissionObj?.action === 'READ',
-        hide: !permissionObj,
+  const onSubmit = values => {
+    let payload = mapFormValuestoPayload(values, allPermissions)
+    if (!permissions) {
+      createRole(payload as any, {
+        onSuccess: () => {
+          setNewRole?.(false)
+        },
       })
-    })
-    return sectionWisePermissions
+    } else {
+      payload['id'] = permissions?.[0]?.id
+      updateRole(payload as any)
+    }
   }
-
-  const onSubmit = values => {}
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
   return (
     <Box w="100%">
-      <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
+      <form
+        onSubmit={formReturn.handleSubmit(onSubmit, err => console.log('err..', err))}
+        onKeyDown={e => checkKeyDown(e)}
+      >
         <VStack justifyContent={'start'} gap="20px">
           <HStack w="100%" gap="10px">
             <Box w="215px">
-              <FormControl>
+              <FormControl isInvalid={!!errors.roleName}>
                 <FormLabel variant="strong-label" size="md">
                   {t(`${ACCESS_CONTROL}.roleName`)}
                 </FormLabel>
@@ -93,17 +102,18 @@ export const RolesPermissions = ({ permissions }) => {
                     required: 'This is required field.',
                   })}
                 />
+                <FormErrorMessage>{errors?.roleName && errors?.roleName?.message}</FormErrorMessage>
               </FormControl>
             </Box>
             <Box w="215px">
-              <FormControl>
+              <FormControl isInvalid={!!errors.assignment}>
                 <FormLabel variant="strong-label" size="md">
                   {t(`${ACCESS_CONTROL}.assignment`)}
                 </FormLabel>
                 <Controller
                   control={control}
                   name="assignment"
-                  rules={{ required: true }}
+                  rules={{ required: 'This is required field' }}
                   render={({ field, fieldState }) => (
                     <>
                       <div data-testid="assignment">
@@ -116,14 +126,14 @@ export const RolesPermissions = ({ permissions }) => {
               </FormControl>
             </Box>
             <Box w="215px">
-              <FormControl>
+              <FormControl isInvalid={!!errors.location}>
                 <FormLabel variant="strong-label" size="md">
                   {t(`${ACCESS_CONTROL}.location`)}
                 </FormLabel>
                 <Controller
                   control={control}
                   name="location"
-                  rules={{ required: true }}
+                  rules={{ required: 'This is required field' }}
                   render={({ field, fieldState }) => (
                     <>
                       <div data-testid="locations">
@@ -142,10 +152,17 @@ export const RolesPermissions = ({ permissions }) => {
             </Text>
             <PermissionsTable formControl={formReturn} />
             <Flex gap="10px" w="100%" justifyContent={'flex-end'}>
-              <Button variant={'outline'} colorScheme="brand" onClick={() => {}}>
+              <Button
+                variant={'outline'}
+                colorScheme="brand"
+                onClick={() => {
+                  setNewRole?.(false)
+                  setSelectedRole?.(null)
+                }}
+              >
                 {t(`cancel`)}
               </Button>
-              <Button colorScheme="brand" onClick={() => {}}>
+              <Button colorScheme="brand" type="submit">
                 {t(`save`)}
               </Button>
             </Flex>
@@ -158,7 +175,7 @@ export const RolesPermissions = ({ permissions }) => {
 
 const PermissionsTable = ({ formControl }) => {
   const { t } = useTranslation()
-  const { control, watch, getValues } = formControl
+  const { control, watch, setValue } = formControl
 
   const { fields: permissions } = useFieldArray({
     control,
@@ -166,7 +183,6 @@ const PermissionsTable = ({ formControl }) => {
   })
 
   const watchPermissions = watch('permissions')
-  console.log(getValues())
 
   return (
     <TableContainer w="100%" borderRadius={'6px'} border="1px solid #CBD5E0">
@@ -195,7 +211,6 @@ const PermissionsTable = ({ formControl }) => {
                     <Controller
                       control={control}
                       name={`permissions.${index}.hide`}
-                      rules={{ required: 'This is a required field' }}
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
@@ -206,6 +221,8 @@ const PermissionsTable = ({ formControl }) => {
                             mr="2px"
                             onChange={value => {
                               field.onChange(value)
+                              setValue(`permissions.${index}.edit`, false)
+                              setValue(`permissions.${index}.read`, false)
                             }}
                             // disabled={watchPermissions?.[index]?.read || watchPermissions?.[index]?.edit}
                           ></Checkbox>
@@ -217,7 +234,6 @@ const PermissionsTable = ({ formControl }) => {
                     <Controller
                       control={control}
                       name={`permissions.${index}.read`}
-                      rules={{ required: 'This is a required field' }}
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
@@ -227,6 +243,8 @@ const PermissionsTable = ({ formControl }) => {
                             mr="2px"
                             onChange={value => {
                               field.onChange(value)
+                              setValue(`permissions.${index}.hide`, false)
+                              setValue(`permissions.${index}.edit`, false)
                             }}
                             // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.edit}
                           ></Checkbox>
@@ -238,7 +256,6 @@ const PermissionsTable = ({ formControl }) => {
                     <Controller
                       control={control}
                       name={`permissions.${index}.edit`}
-                      rules={{ required: 'This is a required field' }}
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
@@ -248,6 +265,8 @@ const PermissionsTable = ({ formControl }) => {
                             mr="2px"
                             onChange={value => {
                               field.onChange(value)
+                              setValue(`permissions.${index}.hide`, false)
+                              setValue(`permissions.${index}.read`, false)
                             }}
                             // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                           ></Checkbox>

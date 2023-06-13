@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { BiEditAlt, BiTrash } from 'react-icons/bi'
 import { useFetchRoles } from 'api/access-control'
 
-export const RolesList = ({ setSelectedRole }) => {
+export const RolesList = ({ setSelectedRole, selectedRole }) => {
   const { t } = useTranslation()
   const { data: roles } = useFetchRoles()
 
@@ -23,14 +23,8 @@ export const RolesList = ({ setSelectedRole }) => {
               <>
                 <Tr
                   minH="45px"
-                  _hover={{
-                    cursor: 'pointer',
-                    bg: '#F3F8FF',
-                  }}
-                  onClick={() => {
-                    setSelectedRole(role.name)
-                  }}
-                  _odd={{ _hover: { cursor: 'pointer', bg: '#F3F8FF' } }}
+                  {...(selectedRole === role.name && { bg: '#F3F8FF !important' })}
+                  // _odd={{ _hover: { cursor: 'pointer', bg: '#F3F8FF' } }}
                 >
                   <Td lineHeight="28px" w="50%" borderRight="1px solid #CBD5E0">
                     {role.name}
@@ -44,6 +38,9 @@ export const RolesList = ({ setSelectedRole }) => {
                         color="gray.500"
                         fontWeight={'400'}
                         fontStyle={'normal'}
+                        onClick={() => {
+                          setSelectedRole(role.name)
+                        }}
                       >
                         <BiEditAlt></BiEditAlt>
                         <Text>{t(`${ACCESS_CONTROL}.edit`)}</Text>
