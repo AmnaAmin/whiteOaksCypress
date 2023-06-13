@@ -17,10 +17,13 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
     const contentType = response.headers.get(`content-type`)
 
     if (response.status === 401) {
-      await authApi.logout()
-      // refresh the page for them
-      // @ts-ignore
-      // return Promise.reject({ message: `User is unauthorized to access ${endpoint}` })
+      // For any other API if we get 401 logout.
+      // api/account returns 401 when user has been logged out.
+      if (!response.url?.includes('api/account')) {
+        await authApi.logout()
+      } else {
+        return Promise.reject({ message: `User is unauthorized to access ${endpoint}` })
+      }
     }
 
     if (response.statusText === 'No Content') {
