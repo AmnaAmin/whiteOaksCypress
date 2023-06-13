@@ -29,7 +29,7 @@ export const ConstructionPortalReceiveable: React.FC = () => {
   //   setSelectedDay('')
   // }
 
-  const { handleSubmit, register, reset, control, setValue } = useForm()
+  const { handleSubmit, register, reset, control, setValue, watch } = useForm()
 
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = useState<SortingState>([])
@@ -107,9 +107,11 @@ export const ConstructionPortalReceiveable: React.FC = () => {
     setIsBatchClick(false)
   }
 
+  const formValues = watch();
+
   return (
     <>
-      <form onSubmit={handleSubmit(Submit)}>
+      <form method='post'>
         <Box pb="20">
           {/* <FormLabel variant="strong-label" size="lg">
             {t(`${ACCOUNTS}.accountReceivable`)}
@@ -135,8 +137,9 @@ export const ConstructionPortalReceiveable: React.FC = () => {
                 alignContent="right"
                 // onClick={onNewProjectModalOpen}
                 colorScheme="brand"
-                type="submit"
+                type="button"
                 minW={'140px'}
+                onClick={ () => Submit(formValues) }
               >
                 <Icon as={BiSync} fontSize="18px" mr={2} />
                 {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
