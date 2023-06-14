@@ -68,7 +68,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   disqualifiedRevenueFlag: 'disqualifiedRevenueFlag.equals',
   noteFlag: 'noteFlag.equals',
   lienDueFlag: 'lienDueFlag.equals',
-  displayId: 'displayId.contains'
+  displayId: 'displayId.contains',
+  percentageCompletion: 'percentageCompletion.equals'
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
