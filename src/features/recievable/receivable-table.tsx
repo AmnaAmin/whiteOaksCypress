@@ -84,14 +84,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     dataCount,
   } = usePaginatedAccountReceivables(queryStringWithPagination, pagination.pageSize)
 
-  useEffect(() => {
-    if (!receivables?.length) return
-
-    console.log("reset checkboxes");
-
-   // receivables.forEach((r, i) => setFormValue(`id.${i}`, null))
-  }, [receivables?.length])
-
+  
   const { isLoading: isExportDataLoading, refetch } = useGetAllAccountReceivables(queryStringWithoutPagination)
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)
