@@ -83,7 +83,9 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     TableNames.project,
     {
       projectStatus: selectedCard !== 'past due' ? selectedCard : '',
-      clientDueDate: days?.find(c => c.dayName === selectedDay)?.dueDate,
+      clientDueDate: !!days?.find(c => c.dayName === selectedDay)
+        ? days?.find(c => c.dayName === selectedDay)?.dueDate
+        : '',
       noteFlag: selectedFlagged,
       lienDueFlag: selectedFlagged,
     },
@@ -177,7 +179,9 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
                 refetch={refetchColumns}
                 columns={settingColumns.filter(
                   col =>
-                    col.colId !== 'displayId' && col.colId !== 'flagged' && !(columnVisibility[col?.contentKey] === false),
+                    col.colId !== 'displayId' &&
+                    col.colId !== 'flagged' &&
+                    !(columnVisibility[col?.contentKey] === false),
                 )}
               />
             )}
