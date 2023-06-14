@@ -34,7 +34,6 @@ type ReceivableProps = {
   queryStringWithoutPagination: string
   sorting: SortingState
   setSorting: (updater: Updater<SortingState>) => void
-  setFormValue: any
 }
 
 export const ReceivableTable: React.FC<ReceivableProps> = ({
@@ -46,7 +45,6 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   setSorting,
   queryStringWithPagination,
   queryStringWithoutPagination,
-  setFormValue,
 }) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
