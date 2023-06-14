@@ -1,7 +1,7 @@
 import { useToast } from '@chakra-ui/react'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS } from 'constants/project-details.constants'
-import { useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Client, ErrorType, ProjectType, State, User } from 'types/common.types'
 import {
@@ -23,6 +23,7 @@ import { GET_TRANSACTIONS_API_KEY } from './transactions'
 import { AuditLogType } from 'types/common.types'
 import { PROJECT_STATUS } from 'features/common/status'
 import { readFileContent } from './vendor-details'
+import { ReceivableContext } from 'features/recievable/construction-portal-receiveable'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -138,6 +139,8 @@ export const useProjectDetailsUpdateMutation = () => {
   const toast = useToast()
   const queryClient = useQueryClient()
 
+  const receiveableFormReturn = useContext(ReceivableContext)
+
   return useMutation(
     (payload: ProjectDetailsAPIPayload) => {
       return client(`projects`, {
@@ -156,6 +159,12 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['audit-logs', projectId])
         queryClient.invalidateQueries(['properties'])
+
+        receiveableFormReturn.resetField('id')
+        receiveableFormReturn.setValue("selected", []);
+        receiveableFormReturn.resetField('selected')
+
+        console.log(receiveableFormReturn.getValues())
 
         toast({
           title: 'Project Details Updated',
