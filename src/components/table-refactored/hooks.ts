@@ -67,10 +67,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       const selectedDayData = days.find(day => day.dayName === selectedDay)
       clientDueDateFilter = { id: 'clientDueDate', value: selectedDayData?.dueDate }
       finalFilters = [...columnFilters, clientDueDateFilter]
-    } else {
-      finalFilters = [...finalFilters?.filter(c => !['clientDueDate'].includes(c.id))]
     }
-
     // This filter will apply when user select a FPM from the FPM list
     if (userIds?.length) {
       finalFilters = [...finalFilters, { id: 'projectManagerId', value: userIds.join(',') }]
