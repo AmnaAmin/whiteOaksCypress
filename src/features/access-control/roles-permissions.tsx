@@ -17,12 +17,20 @@ import {
   Input,
   FormErrorMessage,
   Checkbox,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  useDisclosure,
+  PopoverHeader,
+  PopoverBody,
 } from '@chakra-ui/react'
 import { ACCESS_CONTROL } from 'features/access-control/access-control.i18n'
 import { useTranslation } from 'react-i18next'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import Select from 'components/form/react-select'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   ASSIGNMENTS,
   LOCATIONS,
@@ -32,6 +40,10 @@ import {
   useFetchAllPermissions,
   useUpdateRoleMutation,
 } from 'api/access-control'
+import { EditIcon } from '@chakra-ui/icons'
+import { FocusLock } from '@chakra-ui/focus-lock'
+import { IoMdMore } from 'react-icons/io'
+import { CgMoreVerticalAlt } from 'react-icons/cg'
 
 interface PemissionFormValues {
   roleName: string
@@ -61,6 +73,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
       location: LOCATIONS?.find(l => l.value === permission?.location),
       assignment: ASSIGNMENTS?.find(a => a.value === permission?.assignment),
       permissions: mapPermissionsToFormValues(permission?.permissions),
+      fpmEdit: permission?.permissions?.map(p => p.key)?.includes('PROJECTDETAIL.CONTACT.FPM.EDIT'),
     }
   }
 
@@ -176,6 +189,8 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
 const PermissionsTable = ({ formControl }) => {
   const { t } = useTranslation()
   const { control, watch, setValue } = formControl
+  const { isOpen, onToggle, onClose } = useDisclosure()
+  const [selectedRow, setSelectedRow] = useState<number | null>()
 
   const { fields: permissions } = useFieldArray({
     control,
@@ -197,13 +212,25 @@ const PermissionsTable = ({ formControl }) => {
               {t(`${ACCESS_CONTROL}.read`)}
             </Td>
             <Td textAlign={'center'}>{t(`${ACCESS_CONTROL}.edit`)}</Td>
+            <Td></Td>
           </Tr>
         </Thead>
         <Tbody>
           {permissions?.map((permission, index) => {
             return (
               <>
-                <Tr minH="45px">
+                <Tr
+                  minH="45px"
+                  onClick={() => {
+                    if (index === selectedRow) {
+                      setSelectedRow(null)
+                    } else {
+                      setSelectedRow(index)
+                    }
+                  }}
+                  _hover={{ background: '#F3F8FF !important', cursor: 'pointer' }}
+                  {...(selectedRow === index && { bg: '#F3F8FF !important' })}
+                >
                   <Td w="50%" lineHeight="28px" borderRight="1px solid #CBD5E0">
                     {watchPermissions?.[index].name}
                   </Td>
@@ -274,6 +301,35 @@ const PermissionsTable = ({ formControl }) => {
                       )}
                     />
                   </Td>
+                  <Td w="5px">
+                    <Popover
+                      returnFocusOnClose={false}
+                      isOpen={selectedRow === index}
+                      onClose={onClose}
+                      closeOnBlur={false}
+                      placement="right"
+                    >
+                      <PopoverTrigger>
+                        <Box></Box>
+                      </PopoverTrigger>
+                      <PopoverContent border="1px solid #CBD5E0" borderRadius={'6px'} minW="300px" h="600px">
+                        <PopoverArrow />
+                        <PopoverCloseButton
+                          onClick={() => {
+                            setSelectedRow(null)
+                          }}
+                        />
+                        <PopoverHeader bg="#F7FAFE" color="gray.500" fontWeight={500}>
+                          {watchPermissions?.[index].name}
+                        </PopoverHeader>
+                        <PopoverBody fontSize="12px" color="gray.600">
+                          {watchPermissions?.[index].name === 'PROJECT' && (
+                            <AdvancedPermissionsProject control={control} />
+                          )}
+                        </PopoverBody>
+                      </PopoverContent>
+                    </Popover>
+                  </Td>
                 </Tr>
               </>
             )
@@ -281,5 +337,32 @@ const PermissionsTable = ({ formControl }) => {
         </Tbody>
       </Table>
     </TableContainer>
+  )
+}
+
+const AdvancedPermissionsProject = ({ control }) => {
+  return (
+    <>
+      <Controller
+        control={control}
+        name={`fpmEdit`}
+        render={({ field, fieldState }) => (
+          <>
+            <Checkbox
+              colorScheme="PrimaryCheckBox"
+              isChecked={field.value}
+              style={{ background: 'white', border: '#DFDFDF' }}
+              mr="2px"
+              onChange={value => {
+                field.onChange(value)
+              }}
+              // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+            >
+              Allow Editing FPM
+            </Checkbox>
+          </>
+        )}
+      />
+    </>
   )
 }
