@@ -174,7 +174,7 @@ i18n.use(initReactI18next).init({
         contactNo: 'Contact No',
         WODueDate: 'WO Due Date',
         dueDateWO: 'Due Date WO',
-        trade: 'Trade',
+        trade: 'Skill',
         auditLogs: 'Audit Logs',
         totalAmount: 'Total Amount',
         submit: 'Submit',

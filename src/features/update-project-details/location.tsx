@@ -159,7 +159,7 @@ const Location: React.FC<LocationProps> = ({
             </Checkbox>
           </Alert>
         )}
-        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px" ml='-22px'>
           <GridItem>
             <FormControl isInvalid={!!errors.address} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="address">

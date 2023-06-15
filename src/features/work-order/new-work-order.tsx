@@ -150,6 +150,7 @@ export const NewWorkOrder: React.FC<{
     vendorSkillId,
     projectId: projectData?.id,
     showExpired: false,
+    currentVendorId : 0
   })
   const toast = useToast()
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })

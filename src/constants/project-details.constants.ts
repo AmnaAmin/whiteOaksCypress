@@ -85,11 +85,9 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
     OPTIONS[ProjectStatus.Paid],
     OPTIONS[ProjectStatus.Disputed],
   ],
-  [ProjectStatus.Overpayment]: [
-    OPTIONS[ProjectStatus.Overpayment],
-    OPTIONS[ProjectStatus.Paid],
-    OPTIONS[ProjectStatus.Disputed],
-  ],
+
+  [ProjectStatus.Overpayment]: [OPTIONS[ProjectStatus.Overpayment], OPTIONS[ProjectStatus.Disputed]],
+
   [ProjectStatus.Paid]: [OPTIONS[ProjectStatus.Paid], OPTIONS[ProjectStatus.Disputed]],
   [ProjectStatus.Cancelled]: [OPTIONS[ProjectStatus.Cancelled]],
   [ProjectStatus.Disputed]: [OPTIONS[ProjectStatus.Disputed]],
