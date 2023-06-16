@@ -6,7 +6,7 @@ import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { TRANSACTION } from './transactions.i18n'
 import { Flex } from '@chakra-ui/react'
 
-const RightArrow = props => (
+export const RightArrow = props => (
   <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       d="M13.34 0H2.66C1.2 0 0 1.2 0 2.66v10.68C0 14.8 1.2 16 2.66 16h10.68C14.8 16 16 14.8 16 13.34V2.66C16 1.2 14.8 0 13.34 0Zm1.86 13.34c0 1.02-.84 1.86-1.86 1.86H2.66A1.87 1.87 0 0 1 .8 13.34V2.66C.8 1.64 1.64.8 2.66.8h10.68c1.02 0 1.86.84 1.86 1.86v10.68Z"
@@ -23,7 +23,7 @@ const RightArrow = props => (
   </svg>
 )
 
-const DownArrow = props => (
+export const DownArrow = props => (
   <svg width={16} height={16} fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       d="M13.34 0H2.66C1.2 0 0 1.2 0 2.66v10.68C0 14.8 1.2 16 2.66 16h10.68C14.8 16 16 14.8 16 13.34V2.66C16 1.2 14.8 0 13.34 0Zm1.86 13.34c0 1.02-.84 1.86-1.86 1.86H2.66A1.87 1.87 0 0 1 .8 13.34V2.66C.8 1.64 1.64.8 2.66.8h10.68c1.02 0 1.86.84 1.86 1.86v10.68Z"
@@ -227,9 +227,13 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
 export const mapDataForExpandableRows = (transactions?: any, isVendor?: boolean) => {
   if (transactions && transactions?.length > 0) {
     const data = [] as any
+    //putting aside data of transactions whose parentWOid is null
     const dataEmptyID = transactions?.filter(d => !d.parentWorkOrderId)
+
+    // looping transactions
     transactions?.forEach(transaction => {
       if (transaction?.parentWorkOrderId) {
+        // filter array with data having same parentWOid
         const checkData = data?.filter(d => d.parentWorkOrderId === transaction.parentWorkOrderId)?.length > 0
         if (checkData) {
           data
@@ -237,6 +241,28 @@ export const mapDataForExpandableRows = (transactions?: any, isVendor?: boolean)
             ?.['subRows']?.push({ ...transaction, parentWorkOrderId: '' })
         } else {
           data?.push({ ...transaction, subRows: [] })
+        }
+      }
+    })
+    const nData = data
+    if (!isVendor) {
+      nData.push({ ...dataEmptyID[0], subRows: dataEmptyID.filter((v, i) => i !== 0) })
+    }
+    return nData
+  }
+}
+
+export const mapDataForDocxExpandableRows = (documents?: any, isVendor?: boolean) => {
+  if (documents && documents?.length > 0) {
+    const data = [] as any
+    const dataEmptyID = documents?.filter(d => !d.workOrderId)
+    documents?.forEach(document => {
+      if (document?.workOrderId) {
+        const checkData = data?.filter(d => d.workOrderId === document.workOrderId)?.length > 0
+        if (checkData) {
+          data.find(d => d.workOrderId === document.workOrderId)?.['subRows']?.push({ ...document })
+        } else {
+          data?.push({ ...document, subRows: [] })
         }
       }
     })
