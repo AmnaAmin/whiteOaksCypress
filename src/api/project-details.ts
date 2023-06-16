@@ -160,9 +160,9 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries(['audit-logs', projectId])
         queryClient.invalidateQueries(['properties'])
 
-        receiveableFormReturn.resetField('id')
-        receiveableFormReturn.setValue('selected', [])
-        receiveableFormReturn.resetField('selected')
+        receiveableFormReturn?.resetField('id')
+        receiveableFormReturn?.setValue('selected', [])
+        receiveableFormReturn?.resetField('selected')
 
         toast({
           title: 'Project Details Updated',
