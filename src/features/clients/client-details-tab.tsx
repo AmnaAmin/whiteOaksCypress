@@ -45,7 +45,6 @@ export const Details: React.FC<clientDetailProps> = props => {
   const { stateSelectOptions } = useStates()
   const { marketSelectOptions } = useMarkets()
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('CLIENT.READ')
-  console.log(isReadOnly)
 
   const btnStyle = {
     alignItems: 'center',
