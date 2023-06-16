@@ -171,8 +171,6 @@ export const userMangtPayload = (user: any, statesDTO?: any, fpmRoleIds?: any) =
 
   const isFPM = fpmRoleIds.includes(user.accountType?.value)
 
-  const FPM_USER_TYPE = 5
-
   const getFpmStateId = () => {
     return isFPM && user.fieldProjectManagerRoleId.value === FPMManagerTypes.District //Area Manager
       ? user.states?.find(state => state.checked === true)?.state?.id
@@ -208,12 +206,13 @@ export const userMangtPayload = (user: any, statesDTO?: any, fpmRoleIds?: any) =
     stateId: user.state?.id || '',
     fpmStateId: getFpmStateId(),
     fpmStates: statesDTO?.filter(s => getFpmStates().find(fs => fs.id === s.id)) || [],
-    userType: isFPM ? FPM_USER_TYPE : user.accountType?.value,
+    userType: 1011,
     ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
     newBonus: user.newBonus?.label ? user.newBonus?.value : '',
     vendorAdmin: user.vendorAdmin,
     primaryAdmin: user.primaryAdmin,
     directChild: directReports,
+    authorities: [user.accountType?.label],
     ...(isFPM ? { userTypeLabel: userTypeLabel } : {}),
   }
 

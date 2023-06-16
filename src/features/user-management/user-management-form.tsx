@@ -19,7 +19,6 @@ import { useStates } from 'api/pc-projects'
 
 import {
   FPMManagerTypes,
-  useActiveAccountTypes,
   useCreateUserMutation,
   useDeleteUserDetails,
   useFilteredAvailabelManager,
@@ -47,7 +46,7 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { BONUS, DURATION } from './constants'
 import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
-import { cloneDeep } from 'lodash'
+import { useFetchRoles } from 'api/access-control'
 
 type UserManagement = {
   onClose: () => void
@@ -83,7 +82,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
 
-  const { options: accountTypeOptions } = useActiveAccountTypes()
+  // const { options: accountTypeOptions } = useActiveAccountTypes()
+  const { options: roles } = useFetchRoles()
   const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
 
   useEffect(() => {
@@ -115,7 +115,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const isEditUser = !!(user && user.id)
   const isVendor = accountType?.label === 'Vendor'
-  const isProjectCoordinator = accountType?.label === 'Project Coordinator'
+  //const isProjectCoordinator = accountType?.label === 'Project Coordinator'
 
   const fpmRoleIds =
     fpmManagerRoleOptions
@@ -127,17 +127,27 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   // We only show markets when account type is either market fpm, regular fpm or it is project cordinator
   const showMarkets = useMemo(() => {
     //TODO - Add enums instead of using actual numerical values
-    if ([61, 221].includes(fpmRole?.value)) {
+    if (accountType?.location === 'MARKET') {
       return true
     }
-    return isProjectCoordinator
-  }, [isProjectCoordinator, fpmRole])
+    return false
+  }, [accountType])
 
-  //TODO - Add enums instead of using actual numerical values
-  // 59 is for Area FPM
-  // 60 is for Regional FPM
-  const showStates = fpmRole?.value === FPMManagerTypes.District
-  const showRegions = fpmRole?.value === FPMManagerTypes.Regional
+  const showStates = useMemo(() => {
+    //TODO - Add enums instead of using actual numerical values
+    if (accountType?.location === 'STATE') {
+      return true
+    }
+    return false
+  }, [accountType])
+
+  const showRegions = useMemo(() => {
+    //TODO - Add enums instead of using actual numerical values
+    if (accountType?.location === 'REGION') {
+      return true
+    }
+    return false
+  }, [accountType])
 
   const noMarketsSelected = !validateMarket(formValues?.markets)
   const noStatesSelected = !validateState(formValues?.states)
@@ -209,21 +219,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   // Clear any input field which is being conditionally rendered when user
   // changes account type
   const handleChangeAccountType = target => {
-    if (fpmRoleIds.includes(target.value)) {
-      setValue('fieldProjectManagerRoleId', target)
-    } else {
-      if (target.value === 5) {
-        setValue('fieldProjectManagerRoleId', { ...target, value: 61 })
-      } else {
-        setValue('fieldProjectManagerRoleId', undefined)
-      }
-    }
-    setValue('parentFieldProjectManagerId', null)
-    setValue('managerRoleId', null)
-    setValue('newTarget', undefined)
-    setValue('newBonus', undefined)
-    setValue('ignoreQuota', undefined)
-    setValue('directReports' as any, [])
     setValue(
       'markets',
       formValues.markets?.map(market => ({ ...market, checked: false })),
@@ -422,29 +417,23 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     )
   }, [watchMultiMarkets, showMarkets])
 
-
-  
-  const accountTypeSelectOptions = useMemo( () => {
+  /*const accountTypeSelectOptions = useMemo(() => {
     const options = cloneDeep(accountTypeOptions)
     options.splice(
       accountTypeOptions.indexOf(accountTypeOptions.find(a => a.value === 5)),
       0,
-     ...fpmManagerRoleOptions
-          ?.filter(
-            role =>
-              ![
-                UserTypes.directorOfConstruction,
-                UserTypes.operations,
-                UserTypes.regularManager,
-              ].includes(role?.value),
-          )
-          .map(option => {
-            option.subItem = true
-            return option
-          }),
+      ...fpmManagerRoleOptions
+        ?.filter(
+          role =>
+            ![UserTypes.directorOfConstruction, UserTypes.operations, UserTypes.regularManager].includes(role?.value),
+        )
+        .map(option => {
+          option.subItem = true
+          return option
+        }),
     )
-    return options;
-  }, [accountTypeOptions] ); 
+    return options
+  }, [accountTypeOptions])*/
 
   return (
     <form
@@ -518,7 +507,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.accountType`)}
           </FormLabel>
-          
+
           <Controller
             control={control}
             name="accountType"
@@ -527,7 +516,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 {...rest}
                 isDisabled={userInfo && userInfo.userTypeLabel === 'Vendor'}
                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
-                options={accountTypeSelectOptions}
+                options={roles}
                 onChange={target => {
                   onChange(target)
                   handleChangeAccountType(target)

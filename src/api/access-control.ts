@@ -5,11 +5,17 @@ import { useClient } from 'utils/auth-context'
 export const useFetchRoles = () => {
   const client = useClient()
 
-  return useQuery('get-roles', async () => {
+  const { data, ...rest } = useQuery('get-roles', async () => {
     const response = await client(`authorities/list`, {})
-
     return response?.data
   })
+  const options =
+    data?.map(res => ({
+      value: res?.name,
+      label: res?.name,
+      location: res?.location,
+    })) || []
+  return { data, options, ...rest }
 }
 
 export const useFetchRolesPermissions = roleName => {
