@@ -41,7 +41,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
     control,
   } = useFormContext<ClientFormValues>()
   const phoneNumberRef = useRef<any>()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('CLIENTS.READ')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('CLIENT.READ')
 
   const { fields: carrierField, append, remove } = useFieldArray({ control, name: 'carrier' })
 
