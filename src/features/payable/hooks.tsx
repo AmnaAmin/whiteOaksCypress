@@ -34,6 +34,7 @@ const WEEK_FILTERS = [
     date: null,
     count: 0,
   },
+  
   {
     id: 'Friday',
     title: 'Fri',
