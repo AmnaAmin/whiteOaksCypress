@@ -17,9 +17,9 @@ export const vendor_manager = {
         newVendor: 'New Vendor',
 
         //Vendor Skills
-        vendorSkills: 'Vendor Trades',
-        newVendorSkills: 'New Vendor Trade',
-        skills: 'Trades',
+        vendorSkills: 'Vendor Skills',
+        newVendorSkills: 'New Vendor Skill',
+        skills: 'Skill',
         modifiedDate: 'Modified Date',
         deleteSkill: 'Delete Skill',
         delConfirmText: 'Delete Vendor Skill',

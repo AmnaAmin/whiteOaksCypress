@@ -72,7 +72,7 @@ export function ReceivableConfirmationBox({
                         <HStack color="gray.500" fontSize="12px" fontWeight={400}>
                           <Text>{t(`${ACCOUNTS}.batchSuccessMsg`)}</Text>
                           <Text color="#345EA6">
-                            {t(`${ACCOUNTS}.projectID`) + b.value + '.'}
+                            {t(`${ACCOUNTS}.projectID`) + 'C'+ b.value + '.'}
                             <br></br>
                           </Text>
                         </HStack>

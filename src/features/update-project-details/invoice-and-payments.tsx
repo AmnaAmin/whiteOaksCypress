@@ -30,7 +30,7 @@ import { NumberInput } from 'components/input/input'
 import { useTranslation } from 'react-i18next'
 import { Project } from 'types/project.type'
 import { PROJECT_STATUS, STATUS } from 'features/common/status'
-import { MdOutlineCancel } from 'react-icons/md'
+import { MdOutlineCancel, MdOutlineEmail } from 'react-icons/md'
 import { calendarIcon } from 'theme/common-style'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import moment from 'moment'
@@ -298,7 +298,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                       {...field}
                       isDisabled={isPaymentTermsDisabled}
                       options={PAYMENT_TERMS_OPTIONS}
-                      selectProps={{ isBorderLeft: !isPaymentTermsDisabled }}
+                      selectProps={{ isBorderLeft: !isPaymentTermsDisabled, menuHeight: '100px' }}
                       onChange={(option: SelectOption) => {
                         onPaymentTermChange(option)
                         field.onChange(option)
@@ -385,14 +385,14 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                 render={({ field }) => {
                   return (
                     <NumberInput
-                      datatest-id="remaining-Payment"
+                      data-testid="remaining-Payment"
                       value={field.value}
                       onChange={e => field.onChange(e.target.value)}
                       disabled={isRemainingPaymentDisabled}
                       customInput={Input}
                       thousandSeparator={true}
                       prefix={'$'}
-                      data-testid="RemainingPayment-field"
+                      
                     />
                   )
                 }}
@@ -480,6 +480,7 @@ const RevisedAmounts = ({ formControl, project }) => {
 
   const { t } = useTranslation()
   const watchResubmissions = watch('resubmittedInvoice')
+
   const { isAdmin } = useUserRolesSelector()
 
   return (
@@ -511,9 +512,8 @@ const RevisedAmounts = ({ formControl, project }) => {
       <VStack minH="auto" alignItems={'flex-start'} w="100%" pl="20px" pr="20px" overflow={'auto'} gap={'4px'}>
         {resubmittedInvoice.map((resubmit, index) => {
           return (
-            <VStack alignItems={'flex-start'}>
-              <VStack gap="32px" alignItems={'flex-start'}>
-                {/* {project?.estimateRevise?.[index]?.id && (
+            <VStack alignItems={'flex-start'} borderBottom="1px solid #E5E5E5">
+              {project?.resubmissionDTOList?.[index]?.id && (
                 <Text
                   display="flex"
                   fontStyle={'italic'}
@@ -527,110 +527,118 @@ const RevisedAmounts = ({ formControl, project }) => {
                   <Box as="span" mt="2px">
                     <Icon as={MdOutlineEmail} boxSize={3} mr="3px" />
                   </Box>
-                  {project?.estimateRevise?.[index]?.modifiedBy}
+                  {project?.resubmissionDTOList?.[index]?.createdBy}
                 </Text>
-              )}*/}
-                <HStack>
-                  <FormControl w={'215px'} isInvalid={!!errors.resubmittedInvoice?.[index]?.notificationDate}>
-                    <FormLabel variant="strong-label" size="md">
-                      {t('project.projectDetails.notificationDate')}
-                    </FormLabel>
-                    <Input
-                      data-testid="notification-date"
-                      id="notification"
-                      type="date"
-                      size="md"
-                      variant={'required-field'}
-                      css={calendarIcon}
-                      disabled={!!watchResubmissions?.[index].id}
-                      {...register(`resubmittedInvoice.${index}.notificationDate`, {
-                        required: 'This is a required field',
-                      })}
-                    />
-                    <Box minH="20px" mt="3px">
-                      <FormErrorMessage whiteSpace="nowrap">
-                        {errors.resubmittedInvoice?.[index]?.notificationDate?.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </FormControl>
-                  <FormControl w={'215px'} isInvalid={!!errors.resubmittedInvoice?.[index]?.resubmissionDate}>
-                    <FormLabel variant="strong-label" size="md">
-                      {t('project.projectDetails.resubmissionDate')}
-                    </FormLabel>
-                    <Input
-                      data-testid="resubmission-date"
-                      id="resubmissionDate"
-                      type="date"
-                      size="md"
-                      disabled={!isAdmin || !!watchResubmissions?.[index]?.id}
-                      variant={'required-field'}
-                      css={calendarIcon}
-                      {...register(`resubmittedInvoice.${index}.resubmissionDate`, {
-                        required: 'This is a required field',
-                      })}
-                    />
+              )}
+              <HStack>
+                <FormControl w={'215px'} isInvalid={!!errors.resubmittedInvoice?.[index]?.notificationDate}>
+                  <FormLabel variant="strong-label" size="md">
+                    {t('project.projectDetails.notificationDate')}
+                  </FormLabel>
+                  <Input
+                    data-testid="notification-date"
+                    id="notification"
+                    type="date"
+                    size="md"
+                    variant={'required-field'}
+                    css={calendarIcon}
+                    disabled={!!watchResubmissions?.[index].id}
+                    {...register(`resubmittedInvoice.${index}.notificationDate`, {
+                      required: 'This is a required field',
+                    })}
+                  />
+                  <Box minH="20px" mt="3px">
+                    <FormErrorMessage whiteSpace="nowrap">
+                      {errors.resubmittedInvoice?.[index]?.notificationDate?.message}
+                    </FormErrorMessage>
+                  </Box>
+                </FormControl>
+                <FormControl w={'215px'} isInvalid={!!errors.resubmittedInvoice?.[index]?.resubmissionDate}>
+                  <FormLabel variant="strong-label" size="md">
+                    {t('project.projectDetails.resubmissionDate')}
+                  </FormLabel>
+                  <Input
+                    data-testid="resubmission-date"
+                    id="resubmissionDate"
+                    type="date"
+                    size="md"
+                    disabled={!isAdmin || !!watchResubmissions?.[index]?.id}
+                    variant={'required-field'}
+                    css={calendarIcon}
+                    {...register(`resubmittedInvoice.${index}.resubmissionDate`, {
+                      required: 'This is a required field',
+                    })}
+                    onChange={option => {
+                      const resubmissionDate = option.target.value
+                      if (resubmissionDate && watchResubmissions?.[index]?.paymentTerms) {
+                        const dueDate = moment(resubmissionDate)
+                          .add(parseInt(watchResubmissions?.[index]?.paymentTerms.value, 10), 'days')
+                          ?.toDate()
+                        setValue(`resubmittedInvoice.${index}.dueDate`, datePickerFormat(dueDate))
+                      }
+                    }}
+                  />
 
-                    <Box minH="20px" mt="3px">
-                      <FormErrorMessage whiteSpace="nowrap">
-                        {errors.resubmittedInvoice?.[index]?.resubmissionDate?.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </FormControl>
+                  <Box minH="20px" mt="3px">
+                    <FormErrorMessage whiteSpace="nowrap">
+                      {errors.resubmittedInvoice?.[index]?.resubmissionDate?.message}
+                    </FormErrorMessage>
+                  </Box>
+                </FormControl>
 
-                  <FormControl
-                    w={{ base: '100%', md: '215px' }}
-                    isInvalid={!!errors.resubmittedInvoice?.[index]?.paymentTerms}
-                  >
-                    <FormLabel size="md" color="#2D3748">
-                      {t('project.projectDetails.paymentTerms')}
-                    </FormLabel>
-                    <Controller
-                      control={control}
-                      name={`resubmittedInvoice.${index}.paymentTerms`}
-                      rules={{ required: 'This is a required field' }}
-                      render={({ field, fieldState }) => (
-                        <>
-                          <ReactSelect
-                            {...field}
-                            options={PAYMENT_TERMS_OPTIONS}
-                            selectProps={{ isBorderLeft: true }}
-                            isDisabled={!!watchResubmissions?.[index]?.id}
-                            onChange={(option: SelectOption) => {
-                              field.onChange(option)
-                              if (option?.value && watchResubmissions?.[index]?.resubmissionDate) {
-                                const dueDate = moment(watchResubmissions?.[index]?.resubmissionDate)
-                                  .add(parseInt(option?.value, 10), 'days')
-                                  ?.toDate()
-                                setValue(`resubmittedInvoice.${index}.dueDate`, datePickerFormat(dueDate))
-                              }
-                            }}
-                          />
-                        </>
-                      )}
-                    />
-                    <Box minH="20px" mt="3px">
-                      <FormErrorMessage whiteSpace="nowrap">
-                        {errors.resubmittedInvoice?.[index]?.paymentTerms?.message}
-                      </FormErrorMessage>
-                    </Box>
-                  </FormControl>
-
-                  {!watchResubmissions?.[index]?.id && (
-                    <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }}>
-                      <Center>
-                        <Icon
-                          as={MdOutlineCancel}
-                          onClick={() => remove(index)}
-                          data-testid={`removeResubmittedInvoice-` + index}
-                          cursor="pointer"
-                          boxSize={5}
-                          mt="6px"
+                <FormControl
+                  w={{ base: '100%', md: '215px' }}
+                  isInvalid={!!errors.resubmittedInvoice?.[index]?.paymentTerms}
+                >
+                  <FormLabel size="md" color="#2D3748">
+                    {t('project.projectDetails.paymentTerms')}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name={`resubmittedInvoice.${index}.paymentTerms`}
+                    rules={{ required: 'This is a required field' }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <ReactSelect
+                          {...field}
+                          options={PAYMENT_TERMS_OPTIONS}
+                          selectProps={{ isBorderLeft: true, menuHeight: '105px' }}
+                          isDisabled={!!watchResubmissions?.[index]?.id}
+                          onChange={(option: SelectOption) => {
+                            field.onChange(option)
+                            if (option?.value && watchResubmissions?.[index]?.resubmissionDate) {
+                              const dueDate = moment(watchResubmissions?.[index]?.resubmissionDate)
+                                .add(parseInt(option?.value, 10), 'days')
+                                ?.toDate()
+                              setValue(`resubmittedInvoice.${index}.dueDate`, datePickerFormat(dueDate))
+                            }
+                          }}
                         />
-                      </Center>
-                    </Box>
-                  )}
-                </HStack>
-              </VStack>
+                      </>
+                    )}
+                  />
+                  <Box minH="20px" mt="3px">
+                    <FormErrorMessage whiteSpace="nowrap">
+                      {errors.resubmittedInvoice?.[index]?.paymentTerms?.message}
+                    </FormErrorMessage>
+                  </Box>
+                </FormControl>
+
+                {!watchResubmissions?.[index]?.id && (
+                  <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }}>
+                    <Center>
+                      <Icon
+                        as={MdOutlineCancel}
+                        onClick={() => remove(index)}
+                        data-testid={`removeResubmittedInvoice-` + index}
+                        cursor="pointer"
+                        boxSize={5}
+                        mt="6px"
+                      />
+                    </Center>
+                  </Box>
+                )}
+              </HStack>
               <VStack alignItems={'flex-start'}>
                 <HStack>
                   <FormControl
