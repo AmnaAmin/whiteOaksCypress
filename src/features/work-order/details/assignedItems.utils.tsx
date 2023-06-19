@@ -1171,6 +1171,7 @@ export const useGetLineItemsColumn = ({
               ml='8px'
                borderColor='#3A5EA6'
                 data-testid="complete_checkbox"
+                disabled={!statusEnabled}
                 onChange={e => {
                   assignedItems.forEach((item, index) => {
                     setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
