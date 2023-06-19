@@ -787,6 +787,9 @@ export const useGetLineItemsColumn = ({
       ...watchFieldArray[index],
     }
   })
+  const markAllCompleted = controlledAssignedItems?.length > 0 && controlledAssignedItems.every(l => l.isCompleted)
+  const allVerified =
+    controlledAssignedItems?.length > 0 && controlledAssignedItems?.every(l => l.isCompleted && l.isVerified)
 
   const handleItemQtyChange = useCallback(
     (e, index) => {
@@ -1158,9 +1161,30 @@ export const useGetLineItemsColumn = ({
         },
       },
       {
-        header: `${WORK_ORDER}.complete`,
+        // header: `${WORK_ORDER}.complete`,
         accessorKey: 'isCompleted',
         enableSorting: false,
+        header: () => {
+          return (
+            <>
+              <Checkbox
+              ml='8px'
+               borderColor='#3A5EA6'
+                data-testid="complete_checkbox"
+                onChange={e => {
+                  assignedItems.forEach((item, index) => {
+                    setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
+                    if (!e.target.checked) {
+                      setValue(`assignedItems.${index}.isVerified`, false)
+                    }
+                  })
+                }}
+                isChecked={markAllCompleted}
+              ></Checkbox>
+              {t(`${WORK_ORDER}.complete`)}
+            </>
+          )
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1178,6 +1202,51 @@ export const useGetLineItemsColumn = ({
                       if (!e.target.checked) {
                         setValue(`assignedItems.${index}.isVerified`, false)
                       }
+                      field.onChange(e.currentTarget.checked)
+                    }}
+                  ></CustomCheckBox>
+                )}
+              ></Controller>
+            </HStack>
+          )
+        },
+      },
+      {
+        accessorKey: 'isVerified',
+        enableSorting: false,
+        header: () => {
+          return (
+            <>
+              <Checkbox
+              borderColor='#3A5EA6'
+                data-testid="verified_checkbox"
+                onChange={e => {
+                  assignedItems.forEach((item, index) => {
+                    if (controlledAssignedItems?.[index]?.isCompleted) {
+                      setValue(`assignedItems.${index}.isVerified`, e.currentTarget.checked)
+                    }
+                  })
+                }}
+                disabled={!verificationEnabled}
+                isChecked={allVerified}
+              ></Checkbox>
+              {t(`${WORK_ORDER}.verification`)}
+            </>
+          )
+        },
+        cell: cellInfo => {
+          const index = cellInfo?.row?.index
+          return (
+            <HStack justifyContent={'center'} h="50px">
+              <Controller
+                control={control}
+                name={`assignedItems.${index}.isVerified`}
+                render={({ field, fieldState }) => (
+                  <CustomCheckBox
+                    disabled={!(values.assignedItems?.[index]?.isCompleted && verificationEnabled)}
+                    isChecked={field.value}
+                    testid={`isVerified-` + index}
+                    onChange={e => {
                       field.onChange(e.currentTarget.checked)
                     }}
                   ></CustomCheckBox>
@@ -1229,35 +1298,18 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
-      {
-        header: `${WORK_ORDER}.verification`,
-        accessorKey: 'isVerified',
-        enableSorting: false,
-        cell: cellInfo => {
-          const index = cellInfo?.row?.index
-          return (
-            <HStack justifyContent={'center'} h="50px">
-              <Controller
-                control={control}
-                name={`assignedItems.${index}.isVerified`}
-                render={({ field, fieldState }) => (
-                  <CustomCheckBox
-                    text="Verified"
-                    disabled={!(values.assignedItems?.[index]?.isCompleted && verificationEnabled)}
-                    isChecked={field.value}
-                    testid={`isVerified-` + index}
-                    onChange={e => {
-                      field.onChange(e.currentTarget.checked)
-                    }}
-                  ></CustomCheckBox>
-                )}
-              ></Controller>
-            </HStack>
-          )
-        },
-      },
     ]
-  }, [selectedCell, setSelectedCell, unassignedItems, setUnAssignedItems, verificationEnabled, statusEnabled])
+  }, [
+    selectedCell,
+    setSelectedCell,
+    unassignedItems,
+    setUnAssignedItems,
+    verificationEnabled,
+    statusEnabled,
+    markAllCompleted,
+    allVerified,
+    
+  ])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
 }

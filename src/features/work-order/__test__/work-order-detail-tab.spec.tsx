@@ -91,10 +91,10 @@ describe('Work Order modal showing work order specific details', () => {
     expect(screen.getByTestId('cell-1-vendorAmount').textContent).toEqual('$98.00')
 
     await act(async () => {
-      await userEvent.click(screen.getByTestId('showMarkAllIsComplete'))
+      await userEvent.click(screen.getByTestId('complete_checkbox'))
     })
 
-    expect(screen.getByTestId('showMarkAllIsComplete')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('complete_checkbox')).toHaveAttribute('data-checked')
     expect(screen.getByTestId('isCompleted-0')).toHaveAttribute('data-checked')
     expect(screen.getByTestId('isCompleted-1')).toHaveAttribute('data-checked')
   })
