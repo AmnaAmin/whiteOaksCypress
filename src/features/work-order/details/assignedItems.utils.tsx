@@ -1243,7 +1243,6 @@ export const useGetLineItemsColumn = ({
                 name={`assignedItems.${index}.isVerified`}
                 render={({ field, fieldState }) => (
                   <CustomCheckBox
-                    text="Verified"
                     disabled={!(values.assignedItems?.[index]?.isCompleted && verificationEnabled)}
                     isChecked={field.value}
                     testid={`isVerified-` + index}
