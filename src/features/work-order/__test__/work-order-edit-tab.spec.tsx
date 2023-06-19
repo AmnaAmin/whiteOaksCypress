@@ -86,8 +86,8 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
 
     expect(screen.getByTestId('showPriceCheckBox')).toBeInTheDocument()
-    expect(screen.getByTestId('showMarkAllIsVerified')).toBeInTheDocument()
-    expect(screen.queryByTestId('showMarkAllIsComplete')).toBeInTheDocument()
+    expect(screen.getByTestId('verified_checkbox')).toBeInTheDocument()
+    expect(screen.queryByTestId('complete_checkbox')).toBeInTheDocument()
 
     /* Items can only be verified, if they are completed */
     expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('disabled')
