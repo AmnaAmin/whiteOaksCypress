@@ -1,4 +1,7 @@
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
   Button,
   Flex,
@@ -150,7 +153,7 @@ export const NewWorkOrder: React.FC<{
     vendorSkillId,
     projectId: projectData?.id,
     showExpired: false,
-    currentVendorId : 0
+    currentVendorId: 0,
   })
   const toast = useToast()
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
@@ -427,6 +430,12 @@ export const NewWorkOrderForm: React.FC<{
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           {isWorkOrderCreating && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
           <ModalBody overflow={'auto'} justifyContent="center">
+            {swoProject?.status && ['FAILED'].includes(swoProject?.status.toUpperCase()) && (
+              <Alert status="info" variant="custom" size="sm">
+                <AlertIcon />
+                <AlertDescription>{t(`${WORK_ORDER}.swoParsingFailure`)}</AlertDescription>
+              </Alert>
+            )}
             <Box>
               <SimpleGrid columns={6} spacing={1} borderBottom="1px solid  #E2E8F0" minH="110px" alignItems={'center'}>
                 <CalenderCard
@@ -767,7 +776,7 @@ export const NewWorkOrderForm: React.FC<{
                         <Box color="barColor.100" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
                           <HStack spacing="5px" h="38px" padding="10px" align="center">
                             <Text
-                            color="#345EA6"
+                              color="#345EA6"
                               as="span"
                               maxW="120px"
                               data-testid="uploadedSOW"
@@ -777,7 +786,7 @@ export const NewWorkOrderForm: React.FC<{
                               {formValues.uploadWO?.name || formValues.uploadWO?.fileType}
                             </Text>
                             <MdOutlineCancel
-                            color="#345EA6"
+                              color="#345EA6"
                               cursor="pointer"
                               data-testid="removeSOW"
                               onClick={() => {

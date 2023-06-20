@@ -132,7 +132,7 @@ export const useFetchProjectId = (projectId?: string | number | null) => {
     async () => {
       const response = await client(`projects/projectId/` + projectId + `?portal=C`, {})
 
-      if (!response?.data || (response?.data && response?.data?.status === 'COMPLETED')) {
+      if (!response?.data || (response?.data && ['COMPLETED', 'FAILED'].includes(response?.data?.status))) {
         setRefetchInterval(0)
       }
       return response?.data
@@ -307,7 +307,7 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   // commenting this out but this condition will be used in upcoming stories.
   //const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
 
-  const isAssignmentAllowed = !workOrder && swoProject?.status?.toUpperCase() === 'COMPLETED'
+  const isAssignmentAllowed = !workOrder && ['COMPLETED', 'FAILED'].includes(swoProject?.status?.toUpperCase())
   return { isAssignmentAllowed }
 }
 
@@ -1168,8 +1168,8 @@ export const useGetLineItemsColumn = ({
           return (
             <>
               <Checkbox
-              ml='8px'
-               borderColor='#3A5EA6'
+                ml="8px"
+                borderColor="#3A5EA6"
                 data-testid="complete_checkbox"
                 disabled={!statusEnabled}
                 onChange={e => {
@@ -1219,7 +1219,7 @@ export const useGetLineItemsColumn = ({
           return (
             <>
               <Checkbox
-              borderColor='#3A5EA6'
+                borderColor="#3A5EA6"
                 data-testid="verified_checkbox"
                 onChange={e => {
                   assignedItems.forEach((item, index) => {
@@ -1309,7 +1309,6 @@ export const useGetLineItemsColumn = ({
     statusEnabled,
     markAllCompleted,
     allVerified,
-    
   ])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
