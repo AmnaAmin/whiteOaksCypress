@@ -100,7 +100,6 @@ const AssignedItems = (props: AssignedItemType) => {
 
   const lineItems = useWatch({ name: 'assignedItems', control })
   const watchUploadWO = watch('uploadWO')
- 
 
   useEffect(() => {
     const allVerified = lineItems?.length > 0 && lineItems?.every(l => l.isCompleted && l.isVerified)
@@ -109,15 +108,13 @@ const AssignedItems = (props: AssignedItemType) => {
       if (!workOrder?.workOrderDateCompleted) {
         setValue('workOrderDateCompleted', datePickerFormat(new Date()))
       }
-     
     }
   }, [lineItems])
 
   const { showPriceCheckBox, notifyVendorCheckBox } = useActionsShowDecision({ workOrder })
 
- 
   const { isVendor } = useUserRolesSelector()
-  
+
   const allowEdit = !isVendor && !workOrder
 
   const ASSIGNED_ITEMS_COLUMNS = useGetLineItemsColumn({
@@ -183,19 +180,18 @@ const AssignedItems = (props: AssignedItemType) => {
             <Text fontWeight={500} color="gray.700" fontSize={'16px'} whiteSpace="nowrap">
               {t(`${WORK_ORDER}.assignedLineItems`)}
             </Text>
-            {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
+            {swoProject?.status && ['PROCESSING'].includes(swoProject?.status.toUpperCase()) && (
               <>
                 <Box pl="2" pr="1" display={{ base: 'none', sm: 'unset' }}>
                   <Divider size="lg" orientation="vertical" h="25px" />
                 </Box>
                 <Button
+                  loadingText={t(`${WORK_ORDER}.itemsLoading`)}
                   variant="unClickable"
                   onClick={e => e.preventDefault()}
                   colorScheme="brand"
-                  leftIcon={<FaSpinner />}
-                >
-                  {t(`${WORK_ORDER}.itemsLoading`)}
-                </Button>
+                  isLoading={true}
+                ></Button>
               </>
             )}
 
@@ -246,7 +242,6 @@ const AssignedItems = (props: AssignedItemType) => {
                 {t(`${WORK_ORDER}.sendNotification`)}
               </Checkbox>
             )}
-           
 
             {downloadPdf && (
               <Button
