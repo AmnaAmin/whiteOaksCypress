@@ -156,6 +156,7 @@ export const ConstructionPortalReceiveable: React.FC = () => {
             <Box>
               {loading && <ViewLoader />}
               <ReceivableTable
+                setFormValue={setValue}
                 receivableColumns={receivableTableColumns}
                 setPagination={setPagination}
                 setColumnFilters={setColumnFilters}

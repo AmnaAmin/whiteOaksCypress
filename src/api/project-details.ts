@@ -161,7 +161,7 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries(['properties'])
 
         receiveableFormReturn?.resetField('id')
-        receiveableFormReturn?.setValue('selected', [])
+        receiveableFormReturn?.setValue("selected", []);
         receiveableFormReturn?.resetField('selected')
 
         toast({
