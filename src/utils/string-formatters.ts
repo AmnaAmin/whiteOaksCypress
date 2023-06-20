@@ -75,10 +75,8 @@ export const preventSpecialCharacter = e => {
   if (/[^a-zA-Z\s]/g.test(e.key)) {
     e.preventDefault()
   }
-
-
 }
 
-export const capitalize = (text) => {
-  return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
-  }
+export const capitalize = text => {
+  return text?.charAt(0)?.toUpperCase() + text?.slice(1)?.toLowerCase()
+}

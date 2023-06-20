@@ -7,13 +7,12 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { isDefined } from 'utils'
 import { useClient } from 'utils/auth-context'
 import { parseMarketAPIDataToFormValues } from 'utils/markets'
-import { UserTypes } from 'utils/redux-common-selectors'
-import { UserTypes as UserTypeLabel } from 'types/account.types'
 import { parseRegionsAPIDataToFormValues } from 'utils/regions'
 import { parseStatesAPIDataToFormValues } from 'utils/states'
 import { useMarkets, useRegions, useStates } from './pc-projects'
 import { languageOptions } from './vendor-details'
-import { USER_MGT_QUERY_KEY } from 'pages/admin/user-management'
+import { USER_MGT_QUERY_KEY, useUsrMgt } from 'pages/admin/user-management'
+import { useFetchRoles } from './access-control'
 
 export enum FPMManagerTypes {
   District = 59,
@@ -160,47 +159,20 @@ export const useDeleteUserDetails = () => {
   )
 }
 
-export const userMangtPayload = (user: any, statesDTO?: any, fpmRoleIds?: any) => {
-  const directReports = user.directReports
-
-  directReports?.forEach(v => {
-    delete v['value']
-    delete v['label']
-    delete v['title']
-  })
-
-  const isFPM = fpmRoleIds.includes(user.accountType?.value)
-
+export const userMangtPayload = (user: any, statesDTO?: any) => {
   const getFpmStateId = () => {
-    return isFPM && user.fieldProjectManagerRoleId.value === FPMManagerTypes.District //Area Manager
-      ? user.states?.find(state => state.checked === true)?.state?.id
-      : ''
+    return user.states?.find(state => state.checked === true)?.state?.id
   }
 
   const getFpmStates = () => {
-    return isFPM && user.fieldProjectManagerRoleId.value === FPMManagerTypes.District //Area Manager
-      ? user.states?.filter(state => state.checked === true)?.map(s => s?.state)
-      : []
+    return user.states?.filter(state => state.checked === true)?.map(s => s?.state)
   }
-
-  let userTypeLabel = user?.userTypeLabel
-
-  if (user.fieldProjectManagerRoleId?.value === 60) userTypeLabel = 'Regional Manager'
-
-  if (user.fieldProjectManagerRoleId?.value === 61) userTypeLabel = 'Field Project Manager'
-
-  if (user.fieldProjectManagerRoleId?.value === 221) userTypeLabel = 'Sr Field Project Manager'
-
-  if (user.fieldProjectManagerRoleId?.value === 59) userTypeLabel = 'District Manager'
 
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
     langKey: user.langKey?.value || '',
     vendorId: user.vendorId?.value || '',
-    managerRoleId: user.managerRoleId?.value || '',
-    fieldProjectManagerRoleId: user.fieldProjectManagerRoleId?.value || '',
-    parentFieldProjectManagerId: user.parentFieldProjectManagerId?.value || '',
     markets: user.markets?.filter(market => market.checked) || [],
     regions: user.regions?.filter(region => region.checked).map(region => region.region.label) || [],
     stateId: user.state?.id || '',
@@ -211,9 +183,9 @@ export const userMangtPayload = (user: any, statesDTO?: any, fpmRoleIds?: any) =
     newBonus: user.newBonus?.label ? user.newBonus?.value : '',
     vendorAdmin: user.vendorAdmin,
     primaryAdmin: user.primaryAdmin,
-    directChild: directReports,
+    directChild: user?.directReports?.map(d => d.value),
+    managers: user?.managers?.map(d => d.value),
     authorities: [user.accountType?.label],
-    ...(isFPM ? { userTypeLabel: userTypeLabel } : {}),
   }
 
   delete userObj.states
@@ -277,6 +249,7 @@ export const useActiveAccountTypes = () => {
   }
 }
 
+/* obsolete after Access Control 
 export const useFPMManagerRoles = () => {
   const client = useClient()
   const { data, ...rest } = useQuery('fpm-manager-roles', async () => {
@@ -295,7 +268,7 @@ export const useFPMManagerRoles = () => {
     options,
     ...rest,
   }
-}
+}*/
 
 export const useAllManagers = () => {
   const client = useClient()
@@ -356,46 +329,12 @@ const parseUserFormData = ({
   markets,
   states,
   regions,
-  directReports,
-  allManagersOptions,
-  accountTypeOptions,
+  usersList,
+  roles,
   viewVendorsOptions,
   languageOptions,
-  fpmManagerRoleOptions,
 }) => {
-  let _accountType = accountTypeOptions
-    ?.concat(
-      ...([
-        ...fpmManagerRoleOptions
-          ?.filter(role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value))
-          .map(option => {
-            option.subItem = true
-            return option
-          }),
-      ] || []),
-    )
-    .find(a => a.value === userInfo?.userType)
-
-  if (
-    fpmManagerRoleOptions?.find(
-      fpmManager =>
-        fpmManager.value === userInfo?.fieldProjectManagerRoleId &&
-        userInfo?.fieldProjectManagerRoleId !== UserTypes.regularManager,
-    )
-  ) {
-    _accountType = accountTypeOptions
-      ?.concat(
-        ...([
-          ...fpmManagerRoleOptions
-            ?.filter(role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value))
-            .map(option => {
-              option.subItem = true
-              return option
-            }),
-        ] || []),
-      )
-      .find(a => a.value === userInfo?.fieldProjectManagerRoleId)
-  }
+  let _accountType = roles?.find(r => r.label === userInfo?.authorities?.[0])
 
   return {
     ...userInfo,
@@ -403,19 +342,29 @@ const parseUserFormData = ({
     states: states || [],
     regions: regions || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
-    directReports: directReports || [],
+    directReports:
+      usersList
+        ?.find(us => userInfo?.directReports?.includes(us))
+        ?.map(u => {
+          return {
+            label: u.firstName + ' ' + u.lastName,
+            value: u.id,
+          }
+        }) || [],
+    managers:
+      usersList
+        ?.find(us => userInfo?.managers?.includes(us))
+        ?.map(u => {
+          return {
+            label: u.firstName + ' ' + u.lastName,
+            value: u.id,
+          }
+        }) || [],
     accountType: _accountType,
     vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
     langKey: languageOptions?.find(l => l.value === userInfo?.langKey),
     newBonus: BONUS.find(bonus => bonus.value === userInfo?.newBonus),
     ignoreQuota: DURATION.find(quotaDuration => quotaDuration.value === userInfo?.ignoreQuota),
-    fieldProjectManagerRoleId: fpmManagerRoleOptions?.find(
-      fpmManager => fpmManager.value === userInfo?.fieldProjectManagerRoleId,
-    ),
-    managerRoleId: fpmManagerRoleOptions?.find(fpmManager => fpmManager.value === userInfo?.managerRoleId),
-    parentFieldProjectManagerId: allManagersOptions?.find(
-      manager => manager.value === userInfo?.parentFieldProjectManagerId,
-    ),
     vendorAdmin: userInfo.vendorAdmin,
     primaryAdmin: userInfo.primaryAdmin,
     directStates:
@@ -503,26 +452,14 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { stateSelectOptions: stateOptions } = useStates()
   const { markets } = useMarkets()
   const { regionSelectOptions } = useRegions()
-  const { options: allManagersOptions } = useAllManagers()
-  const { options: accountTypeOptions } = useActiveAccountTypes()
+  const { options: roles } = useFetchRoles()
   const { options: viewVendorsOptions } = useViewVendor()
-  const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
+  const { options: usersList } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
 
   const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
   const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
 
   const formattedStates = parseStatesAPIDataToFormValues(stateOptions, userInfo?.fpmStates || [])
-
-  const directReportOptions =
-    userInfo?.directChild?.map(user => ({
-      value: user?.id,
-      label: user?.firstName + ' ' + user?.lastName,
-      id: user?.id,
-      firstName: user?.firstName,
-      lastName: user?.lastName,
-      login: user?.login,
-      email: user?.email,
-    })) || []
 
   const directStates = formattedStates?.filter(o => o.checked)?.map(fo => fo?.state) || []
 
@@ -545,8 +482,8 @@ export const useUserDetails = ({ form, userInfo }) => {
       setValue('regions', formattedRegions)
       setValue('activated', true)
       setValue('langKey', languageOptions[0])
-      setValue('directReports', directReportOptions)
-
+      setValue('directReports', [])
+      setValue('managers', [])
       setValue('directStates', directStates)
       setValue('directRegions', directRegions)
       setValue('directMarkets', directMarkets)
@@ -558,12 +495,10 @@ export const useUserDetails = ({ form, userInfo }) => {
           markets: formattedMarkets,
           states: formattedStates,
           regions: formattedRegions,
-          directReports: directReportOptions,
-          allManagersOptions,
-          accountTypeOptions,
+          usersList,
+          roles,
           viewVendorsOptions,
           languageOptions,
-          fpmManagerRoleOptions,
         }),
       )
     }
@@ -573,8 +508,8 @@ export const useUserDetails = ({ form, userInfo }) => {
     stateOptions?.length,
     markets?.length,
     regionSelectOptions?.length,
-    allManagersOptions?.length,
-    accountTypeOptions?.length,
+    usersList?.length,
+    roles?.length,
     viewVendorsOptions?.length,
     directStates?.length,
   ])
