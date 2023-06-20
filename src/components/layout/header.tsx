@@ -45,7 +45,7 @@ const UserInfo: React.FC<{ show: boolean }> = ({ show }) => {
           </Text>
         </Flex>
         <Text fontSize="12px" fontStyle="normal" fontWeight={400} color="white" whiteSpace="nowrap">
-          {account?.userTypeLabel}
+          {account?.authorities?.[0]}
         </Text>
       </VStack>
       <Box position="relative" bottom=" 8.5px" px="4px" color="white" fontSize="20px">

@@ -132,7 +132,6 @@ export const SECTIONS = [
   { value: 'VENDORSKILL', label: 'Vendor Skills' },
   { value: 'SUPPORT', label: 'Support' },
   { value: 'ALERT', label: 'Alerts' },
-  { value: 'CYPRESSREPORT', label: 'Cypress Report' },
 ]
 
 export const LOCATIONS = [
@@ -148,8 +147,9 @@ export const ASSIGNMENTS = [
   { value: 'PC', label: 'Project Coordinator' },
 ]
 
-export const mapPermissionsToFormValues = permissionsArray => {
-  const permissions = permissionsArray
+export const mapPermissionsToFormValues = permission => {
+  const isAdmin = permission.name === 'ROLE_ADMIN'
+  const permissions = permission?.permissions
     ?.filter(p => {
       // select all permissions that are at module level like VENDOR.EDIT, PROJECT.EDIT
       const permissionKey = p.key
@@ -167,9 +167,9 @@ export const mapPermissionsToFormValues = permissionsArray => {
     const permissionObj = permissions?.find(p => s.value === p.section && ['READ', 'EDIT'].includes(p.action))
     sectionWisePermissions?.push({
       name: s.value,
-      edit: permissionObj?.action === 'EDIT',
+      edit: permissionObj?.action === 'EDIT' || isAdmin,
       read: permissionObj?.action === 'READ',
-      hide: !permissionObj,
+      hide: !permissionObj && !isAdmin,
     })
   })
   return sectionWisePermissions
@@ -220,31 +220,31 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
 
 export const permissionsDefaultValues = ({ permissions }) => {
   const permission = permissions?.[0]
-  const permissionSet = permission?.permissions?.map(p => p.key)
+  const permissionSet = permission?.name === 'ROLE_ADMIN' ? ['ALL'] : permission?.permissions?.map(p => p.key)
   return {
     roleName: permission?.name ?? '',
     location: LOCATIONS?.find(l => l.value === permission?.location) ?? LOCATIONS[0],
     assignment: ASSIGNMENTS?.find(a => a.value === permission?.assignment) ?? ASSIGNMENTS[0],
-    permissions: mapPermissionsToFormValues(permission?.permissions),
+    permissions: mapPermissionsToFormValues(permission),
     advancedPermissions: {
-      fpmEdit: permissionSet?.includes(ADV_PERMISSIONS.fpmEdit),
-      pcEdit: permissionSet?.includes(ADV_PERMISSIONS.pcEdit),
-      clientEdit: permissionSet?.includes(ADV_PERMISSIONS.clientEdit),
-      addressEdit: permissionSet?.includes(ADV_PERMISSIONS.addressEdit),
-      marketEdit: permissionSet?.includes(ADV_PERMISSIONS.marketEdit),
-      gateCodeEdit: permissionSet?.includes(ADV_PERMISSIONS.gateCodeEdit),
-      lockBoxEdit: permissionSet?.includes(ADV_PERMISSIONS.lockBoxEdit),
-      clientDueEdit: permissionSet?.includes(ADV_PERMISSIONS.clientDueEdit),
-      clientStartEdit: permissionSet?.includes(ADV_PERMISSIONS.clientStartEdit),
-      woaStartEdit: permissionSet?.includes(ADV_PERMISSIONS.woaStartEdit),
-      verifyProjectEnable: permissionSet?.includes(ADV_PERMISSIONS.verifyProjectEnable),
-      deactivateVendor: permissionSet?.includes(ADV_PERMISSIONS.deactivateVendor),
-      transStatusEdit: permissionSet?.includes(ADV_PERMISSIONS.transStatusEdit),
-      transPaidDateEdit: permissionSet?.includes(ADV_PERMISSIONS.transPaidDateEdit),
-      transPaymentReceivedEdit: permissionSet?.includes(ADV_PERMISSIONS.transPaymentReceivedEdit),
-      transInvoicedDateEdit: permissionSet?.includes(ADV_PERMISSIONS.transInvoicedDateEdit),
-      futureDateEnabled: permissionSet?.includes(ADV_PERMISSIONS.futureDateEnabled),
-      cancelWorkOrderEnable: permissionSet?.includes(ADV_PERMISSIONS.cancelWorkOrderEnable),
+      fpmEdit: permissionSet?.some(p => [ADV_PERMISSIONS.fpmEdit, 'ALL'].includes(p)),
+      pcEdit: permissionSet?.some(p => [ADV_PERMISSIONS.pcEdit, 'ALL'].includes(p)),
+      clientEdit: permissionSet?.some(p => [ADV_PERMISSIONS.clientEdit, 'ALL'].includes(p)),
+      addressEdit: permissionSet?.some(p => [ADV_PERMISSIONS.addressEdit, 'ALL'].includes(p)),
+      marketEdit: permissionSet?.some(p => [ADV_PERMISSIONS.marketEdit, 'ALL'].includes(p)),
+      gateCodeEdit: permissionSet?.some(p => [ADV_PERMISSIONS.gateCodeEdit, 'ALL'].includes(p)),
+      lockBoxEdit: permissionSet?.some(p => [ADV_PERMISSIONS.lockBoxEdit, 'ALL'].includes(p)),
+      clientDueEdit: permissionSet?.some(p => [ADV_PERMISSIONS.clientDueEdit, 'ALL'].includes(p)),
+      clientStartEdit: permissionSet?.some(p => [ADV_PERMISSIONS.clientStartEdit, 'ALL'].includes(p)),
+      woaStartEdit: permissionSet?.some(p => [ADV_PERMISSIONS.woaStartEdit, 'ALL'].includes(p)),
+      verifyProjectEnable: permissionSet?.some(p => [ADV_PERMISSIONS.verifyProjectEnable, 'ALL'].includes(p)),
+      deactivateVendor: permissionSet?.some(p => [ADV_PERMISSIONS.deactivateVendor, 'ALL'].includes(p)),
+      transStatusEdit: permissionSet?.some(p => [ADV_PERMISSIONS.transStatusEdit, 'ALL'].includes(p)),
+      transPaidDateEdit: permissionSet?.some(p => [ADV_PERMISSIONS.transPaidDateEdit, 'ALL'].includes(p)),
+      transPaymentReceivedEdit: permissionSet?.some(p => [ADV_PERMISSIONS.transPaymentReceivedEdit, 'ALL'].includes(p)),
+      transInvoicedDateEdit: permissionSet?.some(p => [ADV_PERMISSIONS.transInvoicedDateEdit, 'ALL'].includes(p)),
+      futureDateEnabled: permissionSet?.some(p => [ADV_PERMISSIONS.futureDateEnabled, 'ALL'].includes(p)),
+      cancelWorkOrderEnable: permissionSet?.some(p => [ADV_PERMISSIONS.cancelWorkOrderEnable, 'ALL'].includes(p)),
     },
   }
 }

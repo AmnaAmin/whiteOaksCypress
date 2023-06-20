@@ -51,5 +51,6 @@ export type UserForm = {
   vendorAdmin?: boolean | null
   primaryAdmin?: boolean | undefined
 
-  directReports?: any
+  directReports?: any[]
+  managers?: any[]
 }

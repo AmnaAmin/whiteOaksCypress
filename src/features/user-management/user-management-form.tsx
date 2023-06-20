@@ -18,16 +18,12 @@ import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 
 import {
-  FPMManagerTypes,
   useCreateUserMutation,
   useDeleteUserDetails,
-  useFilteredAvailabelManager,
-  useFPMManagerRoles,
   userMangtPayload,
   useSaveUserDetails,
   useUser,
   useUserDetails,
-  useUserDirectReports,
   useViewVendor,
 } from 'api/user-management'
 import { languageOptions } from 'api/vendor-details'
@@ -43,10 +39,9 @@ import { UserForm } from 'types/user.types'
 import { parseMarketFormValuesToAPIPayload } from 'utils/markets'
 import { PasswordField } from './password-field'
 import { USER_MANAGEMENT } from './user-management.i8n'
-import { BONUS, DURATION } from './constants'
-import { UserTypes } from 'utils/redux-common-selectors'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useFetchRoles } from 'api/access-control'
+import { useUsrMgt } from 'pages/admin/user-management'
 
 type UserManagement = {
   onClose: () => void
@@ -81,14 +76,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const form = useForm<UserForm>()
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
-
-  // const { options: accountTypeOptions } = useActiveAccountTypes()
   const { options: roles } = useFetchRoles()
-  const { options: fpmManagerRoleOptions } = useFPMManagerRoles()
-
-  useEffect(() => {
-    console.log()
-  }, [fpmManagerRoleOptions])
+  const { options: usersList, isLoading: loadingUsersList } = useUsrMgt(
+    'userType.notIn=6&devAccount.equals=false',
+    0,
+    100000000,
+  )
 
   const {
     register,
@@ -111,22 +104,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const formValues = watch()
 
   const accountType: any = formValues?.accountType
-  const fpmRole: any = formValues?.fieldProjectManagerRoleId
+  const managersSelected = formValues?.managers
+  const directReportsSelected = formValues?.directReports
 
   const isEditUser = !!(user && user.id)
-  const isVendor = accountType?.label === 'Vendor'
-  //const isProjectCoordinator = accountType?.label === 'Project Coordinator'
+  const isVendor = accountType?.label?.toLowerCase() === 'vendor'
 
-  const fpmRoleIds =
-    fpmManagerRoleOptions
-      ?.filter(role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value))
-      .map(o => o?.value) || []
-
-  const isFPM = fpmRoleIds.includes(accountType?.value) || accountType?.value === 5
-
-  // We only show markets when account type is either market fpm, regular fpm or it is project cordinator
   const showMarkets = useMemo(() => {
-    //TODO - Add enums instead of using actual numerical values
     if (accountType?.location === 'MARKET') {
       return true
     }
@@ -134,7 +118,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   }, [accountType])
 
   const showStates = useMemo(() => {
-    //TODO - Add enums instead of using actual numerical values
     if (accountType?.location === 'STATE') {
       return true
     }
@@ -142,7 +125,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   }, [accountType])
 
   const showRegions = useMemo(() => {
-    //TODO - Add enums instead of using actual numerical values
     if (accountType?.location === 'REGION') {
       return true
     }
@@ -156,68 +138,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const invalidTelePhone =
     validateTelePhoneNumber(formValues?.telephoneNumber as string) || !formValues?.telephoneNumber
 
-  const managerRoleOptions = useMemo(() => {
-    // filter for Regional Manager
-    if (showRegions) {
-      return fpmManagerRoleOptions.filter(role =>
-        [UserTypes.directorOfConstruction, UserTypes.operations].includes(role.value),
-      )
-    }
-
-    // filter for market FPM
-    if (fpmRole?.value === FPMManagerTypes.SrFPM && showMarkets)
-      return fpmManagerRoleOptions.filter(
-        role => ![FPMManagerTypes.SrFPM, FPMManagerTypes.Regular].includes(role.value),
-      )
-
-    // filter for regular FPM
-    if (showMarkets) return fpmManagerRoleOptions.filter(role => ![FPMManagerTypes.Regular].includes(role.value))
-
-    // filter for area FPM
-    if (showStates)
-      return fpmManagerRoleOptions.filter(role =>
-        [UserTypes.directorOfConstruction, UserTypes.operations, FPMManagerTypes.Regional].includes(role.value),
-      )
-    return fpmManagerRoleOptions
-  }, [fpmManagerRoleOptions])
-
-  const selectedLocations = useMemo(() => {
-    let locations = ''
-    if (showStates) {
-      locations =
-        formValues?.states
-          ?.filter(state => state.checked)
-          .map(s => s.state.id)
-          .toString() || ''
-    }
-    if (showMarkets && formValues?.markets && formValues.markets?.length > 0) {
-      locations =
-        formValues.markets
-          .filter(market => market.checked)
-          .map(m => m.market.id)
-          .toString() || ''
-    }
-    if (showRegions && formValues?.regions && formValues.regions?.length > 0) {
-      locations =
-        formValues.regions
-          .filter(regions => regions.checked)
-          .map(r => r.region?.value)
-          .toString() || ''
-    }
-    return locations
-  }, [formValues])
-
-  const { options: availableManagerOptions } = useFilteredAvailabelManager(
-    formValues?.fieldProjectManagerRoleId,
-    formValues?.managerRoleId,
-    selectedLocations,
-  )
-
-  const managerOptions = useMemo(() => {
-    return availableManagerOptions
-  }, [availableManagerOptions?.length])
-  // Clear any input field which is being conditionally rendered when user
-  // changes account type
   const handleChangeAccountType = target => {
     setValue(
       'markets',
@@ -240,34 +160,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     setValue('directMarkets' as any, [])
   }
 
-  /*
-  TO BE REMOVED
-  const handleChangeFpmRole = () => {
-    setValue(
-      'markets',
-      formValues.markets?.map(market => ({ ...market, checked: false })),
-    )
-    setValue(
-      'states',
-      formValues.states?.map(state => ({ ...state, checked: false })),
-    )
-    setValue(
-      'regions',
-      formValues.regions?.map(region => ({ ...region, checked: false })),
-    )
-    setValue('managerRoleId', null)
-    setValue('parentFieldProjectManagerId', null)
-
-    setValue('directReports' as any, [])
-  }*/
-
   const clearSelectedManager = () => {
     setValue('parentFieldProjectManagerId', null)
   }
 
   const onSubmit = useCallback(
     async formData => {
-      let formattedPayload = userMangtPayload(formData, statesDTO, fpmRoleIds)
+      let formattedPayload = userMangtPayload(formData, statesDTO)
       const mutation = userInfo?.id ? updateUser : addUser
       mutation(parseMarketFormValuesToAPIPayload(formattedPayload), {
         onSuccess() {
@@ -278,22 +177,10 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         },
       })
     },
-    [userInfo, isVendor, addUser, updateUser, userMangtPayload, fpmRoleIds, statesDTO],
+    [userInfo, isVendor, addUser, updateUser, userMangtPayload, statesDTO],
   )
 
   const isPrimaryDisabled = !formValues.vendorAdmin
-
-  const showDirectReports =
-    (showStates ||
-      showRegions ||
-      (fpmRole?.value !== FPMManagerTypes.Regular && fpmRole?.value === FPMManagerTypes.SrFPM)) &&
-    (noMarketsSelected !== true || noStatesSelected !== true || noRegionSelected !== true)
-
-  const directReportRegions = formValues?.regions?.filter(r => r.checked)?.map(r => r.region.value) || ([] as string[])
-
-  const directReportMarkets = formValues?.markets?.filter(r => r.checked)?.map(r => r.market.id) || ([] as string[])
-
-  const directReportStates = formValues?.states?.filter(r => r.checked)?.map(r => r.state.id) || ([] as string[])
 
   const watchRequiredField =
     !formValues?.email ||
@@ -305,21 +192,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
     (isVendor && !formValues.vendorId) ||
-    (isFPM && (!fpmRole || !formValues.managerRoleId)) ||
     (showMarkets && noMarketsSelected) ||
     (showStates && !validateState(formValues?.states)) ||
-    (showRegions && !validateRegions(formValues?.regions)) ||
-    (managerOptions?.length > 0 && !formValues?.parentFieldProjectManagerId)
-  /*||
-    (showDirectReports && !(formValues as any)?.directReports?.length)*/
-
-  const { directReportOptions } = useUserDirectReports(
-    showDirectReports,
-    fpmRole?.value,
-    directReportRegions,
-    directReportMarkets,
-    directReportStates,
-  )
+    (showRegions && !validateRegions(formValues?.regions))
 
   useEffect(() => {
     if (showRegions && noRegionSelected) {
@@ -338,38 +213,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       clearSelectedManager()
     }
   }, [noRegionSelected, noMarketsSelected, noStatesSelected])
-
-  useEffect(() => {
-    if (!managerOptions?.length || !formValues?.parentFieldProjectManagerId) return
-
-    if (
-      (showRegions && !noRegionSelected) ||
-      (showMarkets && !noMarketsSelected) ||
-      (showStates && !noStatesSelected)
-    ) {
-      if (!managerOptions?.find(m => m.value === (formValues?.parentFieldProjectManagerId as any)?.value))
-        clearSelectedManager()
-    }
-  }, [noRegionSelected, noMarketsSelected, noStatesSelected, managerOptions, formValues?.parentFieldProjectManagerId])
-
-  useEffect(() => {
-    if (!directReportOptions.length) return
-
-    if ((window as any)._filteringDone) return
-    if (!showRegions && !showMarkets && !showStates) return
-
-    const userIds = directReportOptions.map(u => u.id)
-
-    const directReports = formValues?.directReports
-
-    if (!directReports?.length) return
-    ;(window as any)._filteringDone = true
-
-    setValue(
-      'directReports' as any,
-      directReports.filter(d => userIds?.includes(d.id)),
-    )
-  }, [directReportRegions, directReportStates, directReportMarkets, directReportOptions])
 
   const watchMultiStates = useWatch({ control, name: 'directStates' as any })
   const watchMultiRegions = useWatch({ control, name: 'directRegions' as any })
@@ -416,24 +259,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
       }),
     )
   }, [watchMultiMarkets, showMarkets])
-
-  /*const accountTypeSelectOptions = useMemo(() => {
-    const options = cloneDeep(accountTypeOptions)
-    options.splice(
-      accountTypeOptions.indexOf(accountTypeOptions.find(a => a.value === 5)),
-      0,
-      ...fpmManagerRoleOptions
-        ?.filter(
-          role =>
-            ![UserTypes.directorOfConstruction, UserTypes.operations, UserTypes.regularManager].includes(role?.value),
-        )
-        .map(option => {
-          option.subItem = true
-          return option
-        }),
-    )
-    return options
-  }, [accountTypeOptions])*/
 
   return (
     <form
@@ -793,71 +618,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </FormControl>
       )}
 
-      {isFPM ? (
-        <HStack mt="30px" spacing={15}>
-          {/* TO BE REMOVED <FormControl w="215px" display="none">
-            <FormLabel variant="strong-label" size="md">
-              {t(`${USER_MANAGEMENT}.modal.fieldProjectManagerRole`)}
-            </FormLabel>
-            <Controller
-              control={control}
-              name="fieldProjectManagerRoleId"
-              render={({ field: { onChange, ...rest } }) => (
-                <ReactSelect
-                  {...rest}
-                  selectProps={{ isBorderLeft: true }}
-                  options={fpmManagerRoleOptions?.filter(
-                    role => ![UserTypes.directorOfConstruction, UserTypes.operations].includes(role?.value),
-                  )}
-                  onChange={target => {
-                    onChange(target)
-                    handleChangeFpmRole()
-                  }}
-                />
-              )}
-                /> 
-          </FormControl> */}
-          <FormControl w="215px">
-            <FormLabel variant="strong-label" size="md">
-              {t(`${USER_MANAGEMENT}.modal.managerRole`)}
-            </FormLabel>
-            <Controller
-              control={control}
-              name="managerRoleId"
-              render={({ field: { onChange, ...rest } }) => (
-                <ReactSelect
-                  {...rest}
-                  selectProps={{ isBorderLeft: managerRoleOptions.length > 0 }}
-                  options={managerRoleOptions}
-                  onChange={param => {
-                    onChange(param)
-                    clearSelectedManager()
-                  }}
-                />
-              )}
-            />
-          </FormControl>
-          <FormControl w="215px">
-            <FormLabel variant="strong-label" size="md">
-              {t(`${USER_MANAGEMENT}.modal.parentFieldProjectManagerId`)}
-            </FormLabel>
-            <Controller
-              control={control}
-              name="parentFieldProjectManagerId"
-              rules={{ required: managerOptions.length > 0 ? 'This is required' : false }}
-              render={({ field }) => (
-                <ReactSelect
-                  {...field}
-                  options={managerOptions}
-                  selectProps={{ isBorderLeft: managerOptions.length > 0 }}
-                />
-              )}
-            />
-          </FormControl>
-        </HStack>
-      ) : null}
-
-      {showDirectReports && (
+      {!isVendor && (
         <HStack mt="30px" spacing={15}>
           <FormControl w="81.9%">
             <FormLabel variant="strong-label" size="md">
@@ -872,50 +633,41 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   selectProps={{ isBorderLeft: false }}
                   closeMenuOnSelect={false}
                   isMulti={true}
+                  loadingCheck={loadingUsersList}
                   {...field}
-                  options={directReportOptions}
+                  options={usersList?.filter(ul => !managersSelected?.map(m => m.value)?.some(s => s === ul.value))} //Donot include in direct reports the users selected for managers
                 />
               )}
             />
           </FormControl>
         </HStack>
       )}
-
-      {isFPM ? (
-        <>
-          <HStack mt="30px" spacing={15} display="none">
-            <FormControl w={215} display="none">
-              <FormLabel variant="strong-label" size="md">
-                {t(`${USER_MANAGEMENT}.modal.newTarget`)}
-              </FormLabel>
-              <Input variant="required-field" type="number" {...register('newTarget')} />
-            </FormControl>
-
-            <FormControl w="215px" display="none">
-              <FormLabel variant="strong-label" size="md">
-                {t(`${USER_MANAGEMENT}.modal.newBonus`)}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="newBonus"
-                render={({ field }) => <ReactSelect {...field} options={BONUS} />}
-              />
-            </FormControl>
-          </HStack>
-          <HStack mt="30px" spacing={15} display="none">
-            <FormControl w={215}>
-              <FormLabel variant="strong-label" size="md">
-                {t(`${USER_MANAGEMENT}.modal.ignoreQuota`)}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="ignoreQuota"
-                render={({ field }) => <ReactSelect {...field} options={DURATION} />}
-              />
-            </FormControl>
-          </HStack>
-        </>
-      ) : null}
+      {!isVendor && (
+        <HStack mt="30px" spacing={15}>
+          <FormControl w="81.9%">
+            <FormLabel variant="strong-label" size="md">
+              {t(`${USER_MANAGEMENT}.modal.manager`)}
+            </FormLabel>
+            <Controller
+              control={control}
+              name={'managers' as any}
+              render={({ field }) => (
+                <ReactSelect
+                  placeholder="Select or Search"
+                  selectProps={{ isBorderLeft: false }}
+                  closeMenuOnSelect={false}
+                  isMulti={true}
+                  {...field}
+                  loadingCheck={loadingUsersList}
+                  options={usersList?.filter(
+                    ul => !directReportsSelected?.map(d => d.value)?.some(s => s === ul.value),
+                  )} //Donot include in managers the users selected for direct reports
+                />
+              )}
+            />
+          </FormControl>
+        </HStack>
+      )}
 
       {isVendor ? (
         <>
