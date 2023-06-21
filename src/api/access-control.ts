@@ -148,7 +148,7 @@ export const ASSIGNMENTS = [
 ]
 
 export const mapPermissionsToFormValues = permission => {
-  const isAdmin = permission.name === 'ROLE_ADMIN'
+  const isAdmin = permission?.name === 'ROLE_ADMIN'
   const permissions = permission?.permissions
     ?.filter(p => {
       // select all permissions that are at module level like VENDOR.EDIT, PROJECT.EDIT

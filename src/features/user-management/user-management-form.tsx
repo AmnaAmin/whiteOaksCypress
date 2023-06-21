@@ -77,11 +77,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
   const { options: roles } = useFetchRoles()
-  const { options: usersList, isLoading: loadingUsersList } = useUsrMgt(
-    'userType.notIn=6&devAccount.equals=false',
-    0,
-    100000000,
-  )
+  const {
+    options: usersList,
+    isLoading: loadingUsersList,
+    userMgt: userData,
+  } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
 
   const {
     register,
@@ -104,7 +104,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const formValues = watch()
 
   const accountType: any = formValues?.accountType
-  const managersSelected = formValues?.managers
+  const managerSelected = formValues?.parentFieldProjectManagerId
   const directReportsSelected = formValues?.directReports
 
   const isEditUser = !!(user && user.id)
@@ -166,7 +166,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const onSubmit = useCallback(
     async formData => {
-      let formattedPayload = userMangtPayload(formData, statesDTO)
+      let formattedPayload = userMangtPayload(formData, statesDTO, userData)
       const mutation = userInfo?.id ? updateUser : addUser
       mutation(parseMarketFormValuesToAPIPayload(formattedPayload), {
         onSuccess() {
@@ -635,7 +635,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   isMulti={true}
                   loadingCheck={loadingUsersList}
                   {...field}
-                  options={usersList?.filter(ul => !managersSelected?.map(m => m.value)?.some(s => s === ul.value))} //Donot include in direct reports the users selected for managers
+                  options={usersList?.filter(ul => ul.value !== managerSelected?.value)} //Donot include in direct reports the users selected for managers
                 />
               )}
             />
@@ -650,13 +650,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             </FormLabel>
             <Controller
               control={control}
-              name={'managers' as any}
+              name={'parentFieldProjectManagerId'}
               render={({ field }) => (
                 <ReactSelect
                   placeholder="Select or Search"
                   selectProps={{ isBorderLeft: false }}
                   closeMenuOnSelect={false}
-                  isMulti={true}
                   {...field}
                   loadingCheck={loadingUsersList}
                   options={usersList?.filter(
