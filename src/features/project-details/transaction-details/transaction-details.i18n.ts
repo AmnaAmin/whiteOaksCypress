@@ -4,7 +4,7 @@ export const transactionDetailI18n = {
   en: {
     translation: {
       vendor: 'Vendor',
-      trade: 'Trade',
+      trade: 'Skill',
       clientApprovedAmount: 'Client Approved Amount',
       finalClientApprovedAmount: 'Final Client Approved Amount',
       originalVendorWOs: 'Original Vendor WOs',
@@ -22,7 +22,7 @@ export const transactionDetailI18n = {
   es: {
     translation: {
       vendor: 'Proveedor',
-      trade: 'Trabajo',
+      trade: 'Habilidad',
       clientApprovedAmount: 'Monto Aprobado por el Cliente',
       finalClientApprovedAmount: 'Monto Final Aprobado por el Cliente',
       originalVendorWOs: 'Ordenes de Trabajo Originales del Proveedor',

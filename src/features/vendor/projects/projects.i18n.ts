@@ -24,6 +24,7 @@ export const projects = {
         woNumber: 'WO Number',
         poNumber: 'PO Number',
         clientStartDate: 'Client Start Date',
+        emailNotificationDate: 'Email Date',
         clientDueDate: 'Client Due Date',
         woStartDate: 'WOA Start Date',
         originalSOWAmount: 'Original SOW Amount',
@@ -47,6 +48,11 @@ export const projects = {
         ext: 'Ext',
         cancel: 'Cancel',
         next: 'Next',
+        homeOwner: 'Home Owner',
+        phone: 'Phone Number',
+        email: 'Email',
+        agentName: 'Agent Name',
+        carrier: 'Carrier',
 
         // Project Management Form
         fieldProjectManager: 'Field Project Manager',
@@ -82,6 +88,7 @@ export const projects = {
         woNumber: 'Número de WO',
         poNumber: 'Número de PO',
         clientStartDate: 'Fecha de Inicio del Cliente',
+        emailNotificationDate: 'Fecha de correo electrónico',
         clientDueDate: 'Fecha de Vencimiento del Cliente',
         woStartDate: 'Fecha de Inicio del WOA',
         originalSOWAmount: 'Monto Original del SOW',
@@ -104,6 +111,11 @@ export const projects = {
         hoaContactEmail: 'Correo de Contacto de HOA',
         cancel: 'Cancelar',
         next: 'Siguiente',
+        homeOwner: 'Propietario de casa',
+        phone: 'Número de teléfono',
+        email: 'Correo electrónico',
+        agentName: 'Nombre de la agente',
+        carrier: 'Transportadora',
 
         // Project Management Form
         fieldProjectManager: 'Gerente de Proyecto',

@@ -25,7 +25,7 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
         {...rest}
       >
         <Box fontSize="14px" fontWeight={400} fontFamily="poppins">
-          <Tooltip label={title} color="gray.700" placement="top">
+          <Tooltip label={title} color="black" bg='white' placement="top">
             <Text color="gray.700" whiteSpace={{ base: 'nowrap', md: 'unset' }} noOfLines={[0, 1]}>
               {title}
             </Text>
@@ -56,7 +56,7 @@ export const TransactionInfoCard: React.FC<{
         }}
       >
         <Text h="20px" color="gray.500">
-          {projectData?.id}
+          {projectData?.displayId}
         </Text>
       </InfoStructureCard>
 

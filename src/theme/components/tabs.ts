@@ -26,7 +26,7 @@ const tabsVariants = {
             _disabled: {
               cursor: 'not-allowed',
               _hover: {
-                bg: `transparent`,
+                bg: `#EBF8FF`,
               },
             },
           },
@@ -39,6 +39,7 @@ const tabsVariants = {
           tab: {
             roundedTopEnd: '6px',
             roundedTopStart: '6px',
+            fontSize: '14px',
             _hover: {
               bg: `${props.colorScheme}.50`,
             },
@@ -48,6 +49,7 @@ const tabsVariants = {
               color: `${props.colorScheme}.300`,
               _hover: {
                 bg: `${props.colorScheme}.50`,
+                
               },
             },
           },

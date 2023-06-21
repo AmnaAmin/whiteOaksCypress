@@ -77,13 +77,17 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     tableColumns,
     settingColumns,
     isFetched: tablePreferenceFetched,
+    refetch: refetchColumns,
   } = useTableColumnSettings(
     PROJECT_COLUMNS,
     TableNames.project,
     {
       projectStatus: selectedCard !== 'past due' ? selectedCard : '',
-      clientDueDate: days?.find(c => c.dayName === selectedDay)?.dueDate,
+      clientDueDate: !!days?.find(c => c.dayName === selectedDay)
+        ? days?.find(c => c.dayName === selectedDay)?.dueDate
+        : '',
       noteFlag: selectedFlagged,
+      lienDueFlag: selectedFlagged,
     },
     resetFilters,
   )
@@ -161,7 +165,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
-              data-testid='project_export'
+              data-testid="project_export"
               columns={tableColumns}
               refetch={refetch}
               isLoading={isExportDataLoading}
@@ -172,9 +176,12 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
               <TableColumnSettings
                 disabled={isLoading}
                 onSave={onSave}
+                refetch={refetchColumns}
                 columns={settingColumns.filter(
                   col =>
-                    col.colId !== 'id' && col.colId !== 'flagged' && !(columnVisibility[col?.contentKey] === false),
+                    col.colId !== 'displayId' &&
+                    col.colId !== 'flagged' &&
+                    !(columnVisibility[col?.contentKey] === false),
                 )}
               />
             )}

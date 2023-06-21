@@ -275,6 +275,7 @@ export type VendorTradeFormValues = {
 }
 
 export type Market = {
+  active: boolean
   createdBy: string
   createdDate: string | null
   id: number
@@ -284,6 +285,7 @@ export type Market = {
   stateId: number
   stateName: string
   skill: string
+  lienDueIn: number
 }
 
 type MarketFormValues = {

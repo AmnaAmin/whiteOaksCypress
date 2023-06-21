@@ -5,7 +5,7 @@ import { dateFormat } from 'utils/date-time-utils'
 export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'id',
-    accessorKey: 'projectId',
+    accessorKey: 'displayId',
   },
   {
     header: 'client',
@@ -93,4 +93,5 @@ export const RECEIVABLE_TABLE_QUERY_KEYS = {
   woNumber: 'woNumber.contains',
   type: 'type.contains',
   isReceivable: 'isReceivable.equals',
+  displayId: 'displayId.contains'
 }

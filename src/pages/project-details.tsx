@@ -118,7 +118,7 @@ export const ProjectDetails: React.FC = props => {
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
         <AmountDetailsCard projectId={projectId} />
 
-        <Stack w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
+        <Stack marginTop="-1px !important" w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
           <Tabs
             index={tabIndex}
             size="sm"
@@ -170,13 +170,21 @@ export const ProjectDetails: React.FC = props => {
                   <HStack spacing="16px" mb="10px">
                     <Box mt={'14px'}>
                       <FormControl display="flex" alignItems="center">
-                        <FormLabel fontWeight="600" htmlFor="view-details" mb="0" variant="light-label" size="md">
+                        <FormLabel
+                          fontWeight="600"
+                          htmlFor="view-details"
+                          mb="0"
+                          variant="light-label"
+                          color="gray.500"
+                          size="md"
+                        >
                           {t('projects.projectDetails.viewDetails')}
                         </FormLabel>
                         <Switch
                           size="sm"
                           id="view-details"
                           outline="4px solid white"
+                          color="brand.300"
                           rounded="full"
                           isChecked={isShowProjectFinancialOverview}
                           onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
@@ -212,7 +220,7 @@ export const ProjectDetails: React.FC = props => {
                   </Box>
                 </TabPanel>
                 <TabPanel p="0px">
-                  <Card rounded="6px" padding="0">
+                  <Card rounded="6px" padding="0" h="100%">
                     <ProjectDetailsTab projectData={projectData as Project} />
                   </Card>
                 </TabPanel>
@@ -238,7 +246,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel> */}
 
                 <TabPanel p="0" minH="calc(100vh - 408px)">
-                  <ProjectNotes projectId={projectId} />
+                  <ProjectNotes projectData={projectData} projectId={projectId} />
                 </TabPanel>
                 {
                   <TabPanel p="0px" minH="calc(100vh - 450px)">

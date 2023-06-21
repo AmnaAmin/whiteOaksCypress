@@ -32,6 +32,7 @@ const Misc: React.FC = () => {
     payVariance,
     status,
     reconcileDate,
+    emailNotificationDate,
     verifiedDate,
   } = getValues()
   const { isAdmin } = useUserRolesSelector()
@@ -207,6 +208,14 @@ const Misc: React.FC = () => {
         </GridItem>
         <GridItem>
           <FormControl w="215px">
+            <FormLabel variant="strong-label" size="md" htmlFor="emailNotificationDate">
+              {t(`project.projectDetails.emailNotificationDate`)}
+            </FormLabel>
+            <DatePickerInput value={emailNotificationDate ? dateFormat(emailNotificationDate) : 'mm/dd/yyyy'} disable />
+          </FormControl>
+        </GridItem>
+        <GridItem>
+          <FormControl w="215px">
             <FormLabel variant="strong-label" size="md" htmlFor="verifiedDate">
               {t(`project.projectDetails.verifiedDate`)}
             </FormLabel>
@@ -217,49 +226,51 @@ const Misc: React.FC = () => {
             />
           </FormControl>
         </GridItem>
-        {isAdmin && ( <>
+        {isAdmin && (
           <>
-            <GridItem>
-              <FormControl w="215px">
-                <FormLabel variant="strong-label" size="md" htmlFor="disqualifiedRevenueDate">
-                  {t(`project.projectDetails.disqualifiedRevenueDate`)}
-                </FormLabel>
-                <Input type="date" {...register('disqualifiedRevenueDate')} />
-              </FormControl>
-            </GridItem>
+            <>
+              <GridItem>
+                <FormControl w="215px">
+                  <FormLabel variant="strong-label" size="md" htmlFor="disqualifiedRevenueDate">
+                    {t(`project.projectDetails.disqualifiedRevenueDate`)}
+                  </FormLabel>
+                  <Input type="date" {...register('disqualifiedRevenueDate')} />
+                </FormControl>
+              </GridItem>
 
-            <GridItem>
-              <FormControl maxW="500px">
-                <FormLabel variant="strong-label" size="md">
-                  {t(`project.projectDetails.verifyRevenue`)}
-                </FormLabel>
+              <GridItem>
+                <FormControl maxW="500px">
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`project.projectDetails.verifyRevenue`)}
+                  </FormLabel>
 
-                <Controller
-                  name={`disqualifiedRevenueFlag`}
-                  control={control}
-                  render={({ field: { onChange, value } }) => {
-                    return (
-                      <Checkbox
-                        pt={2}
-                        colorScheme="PrimaryCheckBox"
-                        variant={'normal'}
-                        data-testid="disqualify_CheckBox"
-                        size="md"
-                        onChange={e => {
-                          onChange(e)
-                          e.target.checked
-                            ? setValue('disqualifiedRevenueDate', datePickerFormat(new Date()))
-                            : setValue('disqualifiedRevenueDate', null)
-                        }}
-                        isChecked={!!value}
-                      ></Checkbox>
-                    )
-                  }}
-                />
-              </FormControl>
-            </GridItem>
+                  <Controller
+                    name={`disqualifiedRevenueFlag`}
+                    control={control}
+                    render={({ field: { onChange, value } }) => {
+                      return (
+                        <Checkbox
+                          pt={2}
+                          colorScheme="PrimaryCheckBox"
+                          variant={'normal'}
+                          data-testid="disqualify_CheckBox"
+                          size="md"
+                          onChange={e => {
+                            onChange(e)
+                            e.target.checked
+                              ? setValue('disqualifiedRevenueDate', datePickerFormat(new Date()))
+                              : setValue('disqualifiedRevenueDate', null)
+                          }}
+                          isChecked={!!value}
+                        ></Checkbox>
+                      )
+                    }}
+                  />
+                </FormControl>
+              </GridItem>
+            </>
           </>
-          </>)}
+        )}
       </Grid>
     </Stack>
   )

@@ -1,15 +1,34 @@
-import { Text, Box, Checkbox, FormControl, FormErrorMessage, FormLabel, Grid, GridItem, Input, Stack } from '@chakra-ui/react'
+import { CheckIcon } from '@chakra-ui/icons'
+import {
+  Text,
+  Box,
+  Checkbox,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  Input,
+  Stack,
+  HStack,
+  Button,
+  Divider,
+  Link as LinkChakra,
+} from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { STATUS } from 'features/common/status'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { ProjectDetailsFormValues} from 'types/project-details.types'
+import { ProjectDetailsFormValues, ProjectStatus } from 'types/project-details.types'
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
-import { datePickerFormat, dateFormat } from 'utils/date-time-utils'
+import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
+import { useCurrentDate, useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
+import { addDays } from 'date-fns'
+import moment from 'moment'
+import { capitalize } from 'utils/string-formatters'
 
 type ProjectManagerProps = {
   projectStatusSelectOptions: SelectOption[]
@@ -38,13 +57,15 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   } = useFormContext<ProjectDetailsFormValues>()
 
   const watchStatus = useWatch({ name: 'status', control })
-
   const watchOverrideProjectStatus = useWatch({ name: 'overrideProjectStatus', control })
+  const watchState = useWatch({ name: 'state', control })
 
   const minOfWoaStartDate = useWOAStartDateMin(control)
-
+  const currentDate = useCurrentDate()
   const watchIsReconciled = useWatch({ name: 'isReconciled', control })
-  const watchForm = useWatch({control })
+
+  const watchForm = useWatch({ control })
+  const [lienDue, setLienDue] = useState<number | undefined>()
 
   const {
     isWOAStartDisabled,
@@ -63,14 +84,24 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     isClientSignOffDateRequired,
   } = useFieldsRequired(control)
 
+  const sentenceCaseActive = STATUS.Active.charAt(0).toUpperCase() + STATUS.Active.slice(1).toLowerCase()
+
+  const sentenceCaseNew = STATUS.New.charAt(0).toUpperCase() + STATUS.New.slice(1).toLowerCase()
+
   useEffect(() => {
-    if (watchStatus?.label === STATUS.Active.toUpperCase()) {
+    if (watchStatus?.label === sentenceCaseActive) {
       setValue('woaStartDate', datePickerFormat(new Date()))
     }
-    if (watchStatus?.label === STATUS.New.toUpperCase()) {
+    if (watchStatus?.label === sentenceCaseNew) {
       setValue('woaStartDate', 'mm/dd/yyyy')
     }
   }, [watchStatus?.label])
+
+  useEffect(() => {
+    if (watchState) {
+      setLienDue(watchState?.lienDue)
+    }
+  }, [watchState])
 
   useEffect(() => {
     if (
@@ -81,6 +112,24 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     }
   }, [watchStatus?.label, watchOverrideProjectStatus?.label, projectData?.projectStatusId])
 
+  const redirectToEstimateDetails = pId => {
+    window.location.href = `estimate-details/${pId}/`
+  }
+  const updateProjCloseDueDate = op => {
+    //checking if project status selected is reconcile from dropdown then set its value accordingly
+    if (op.value === ProjectStatus.Reconcile) {
+      setValue('projectClosedDueDate', datePickerFormat(moment().add(2, 'd')))
+    }
+    //checking if project status selected is active,punch from dropdown then set Closed Due Date null
+    if (op.value === ProjectStatus.Active || op.value === ProjectStatus.Punch) {
+      setValue('projectClosedDueDate', null)
+    }
+  }
+
+  const sentenceCaseReconcile = capitalize(STATUS.Reconcile)
+  const overrideProjectStatusOptionsLowercase = projectOverrideStatusSelectOptions.map(option => {
+    return { ...option, label: capitalize(option.label) }
+  })
   return (
     <Box>
       <Stack>
@@ -96,17 +145,18 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                  <div data-testid='proj-status'>
-                    <ReactSelect
-                      {...field}
-                      options={projectStatusSelectOptions}
-                      isOptionDisabled={option => option.disabled}
-                      onChange={option => {
-                        clearErrors()
-                        field.onChange(option)
-                      }}
-                    />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    <div data-testid="proj-status">
+                      <ReactSelect
+                        {...field}
+                        options={projectStatusSelectOptions}
+                        isOptionDisabled={option => option.disabled}
+                        onChange={option => {
+                          clearErrors()
+                          updateProjCloseDueDate(option)
+                          field.onChange(option)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </div>
                   </>
                 )}
@@ -161,10 +211,12 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                   <>
                     <ReactSelect
                       {...field}
-                      options={projectOverrideStatusSelectOptions} // {overrideProjectStatusOptions}
+                      options={overrideProjectStatusOptionsLowercase} // {overrideProjectStatusOptions}
                       isDisabled={!isAdmin}
                       isOptionDisabled={option => option.disabled}
                       onChange={option => {
+                        setValue('projectClosedDueDate', null)
+
                         clearErrors()
                         field.onChange(option)
                       }}
@@ -179,12 +231,18 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="projectName">
                 {t(`project.projectDetails.projectName`)}
               </FormLabel>
-              <Input placeholder="PC project 1" id="projectName" {...register('projectName')} autoComplete="off" />
+              <Input
+                size="md"
+                placeholder="PC project 1"
+                id="projectName"
+                {...register('projectName')}
+                autoComplete="off"
+              />
               <FormErrorMessage>{errors.projectName && errors.projectName.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientStartDate}>
+            <FormControl isInvalid={!!errors?.clientStartDate} w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.clientStart`)}
               </FormLabel>
@@ -199,7 +257,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientDueDate}>
+            <FormControl isInvalid={!!errors?.clientDueDate} w="215px">
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t(`project.projectDetails.clientDue`)}
               </FormLabel>
@@ -210,13 +268,20 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 required
                 min={minOfWoaStartDate}
                 {...register('clientDueDate')}
+                onChange={e => {
+                  const enteredDate = e.target.value
+                  if (enteredDate < currentDate) {
+                    setValue('disqualifiedRevenueFlag', true)
+                    setValue('disqualifiedRevenueDate', datePickerFormat(moment(enteredDate).add(2, 'days')))
+                  }
+                }}
               />
               <FormErrorMessage>{errors?.clientDueDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.woaStartDate}>
-              <FormLabel variant="strong-label" size="md">
+            <FormControl isInvalid={!!errors?.woaStartDate} w="215px">
+              <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t(`project.projectDetails.woaStart`)}
               </FormLabel>
               <Input
@@ -229,7 +294,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.woaCompletionDate}>
+            <FormControl isInvalid={!!errors?.woaCompletionDate} w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.woaCompletion`)}
               </FormLabel>
@@ -241,12 +306,25 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 {...register('woaCompletionDate', {
                   required: isWOACompletionDateRequired ? 'This is required field.' : false,
                 })}
+                onChange={e => {
+                  const woaCompletion = e.target.value
+                  if (woaCompletion && woaCompletion !== '') {
+                    const lienExpiryDate = addDays(
+                      new Date(dateISOFormatWithZeroTime(woaCompletion) as string),
+                      lienDue ?? 0,
+                    )
+                    setValue('lienExpiryDate', datePickerFormat(lienExpiryDate))
+                  } else {
+                    setValue('lienExpiryDate', null)
+                  }
+                  setValue('woaCompletionDate', datePickerFormat(woaCompletion))
+                }}
               />
               <FormErrorMessage>{errors?.woaCompletionDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientWalkthroughDate}>
+            <FormControl isInvalid={!!errors?.clientWalkthroughDate} w="215px">
               <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
                 {t(`project.projectDetails.clientWalkthrough`)}
               </FormLabel>
@@ -263,7 +341,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.clientSignOffDate}>
+            <FormControl isInvalid={!!errors?.clientSignOffDate} w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.clientSignOff`)}
               </FormLabel>
@@ -279,13 +357,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormErrorMessage>{errors?.clientSignOffDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-          <GridItem></GridItem>
-        </Grid>
-        
-        <Grid>
-        
+
           <GridItem>
-            <FormControl maxW="500px">
+            <FormControl>
               <FormLabel variant="strong-label" size="md">
                 {t(`verifyProject`)}
               </FormLabel>
@@ -294,14 +368,72 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 isChecked={watchIsReconciled === null ? false : watchIsReconciled}
                 variant={'normal'}
                 data-testid="notifyVendorCheckBox"
-                disabled={isReconcileDisabled || watchStatus?.label !== STATUS.Reconcile.toUpperCase() }
+                disabled={isReconcileDisabled || watchStatus?.label !== sentenceCaseReconcile}
                 size="md"
                 {...register('isReconciled')}
               >
-              <Text color='#000'>{watchForm.verifiedDate? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`: ""}</Text>
+                <Text color="#4A5568" fontWeight="400" fontSize="14px">
+                  {watchForm.verifiedDate
+                    ? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`
+                    : ''}
+                </Text>
               </Checkbox>
             </FormControl>
           </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors?.projectClosedDueDate}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.closedDueDate`)}
+              </FormLabel>
+              <Input type="date" isDisabled={!isAdmin ?? true} {...register('projectClosedDueDate')} />
+              <FormErrorMessage>{errors?.projectClosedDueDate?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors?.lienExpiryDate}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.lienRightsExpires`)}
+              </FormLabel>
+              <Input type="date" isDisabled={true} {...register('lienExpiryDate')} />
+              <FormErrorMessage>{errors?.lienExpiryDate?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors?.lienFiled}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.lienFiled`)}
+              </FormLabel>
+              <Input type="date" {...register('lienFiled')} />
+              <FormErrorMessage>{errors?.lienFiled?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          {!!projectData?.estimateId && (
+            <GridItem colSpan={2}>
+              <FormControl>
+                <HStack fontSize="16px" fontWeight={500}>
+                  <Button variant="green" colorScheme="green" size="md" rightIcon={<CheckIcon />}>
+                    {t(`project.projectDetails.estimated`)}
+                  </Button>
+
+                  <>
+                    <Divider orientation={'vertical'} height="30px" borderLeft={'1px solid #CBD5E0'} />
+                    <Text w="250px" lineHeight="22px" h="40px" color="gray.500" fontSize={'10px'} fontWeight={400}>
+                      {t(`project.projectDetails.estimatedText`)}{' '}
+                      <LinkChakra
+                        color="brand.300"
+                        fontWeight={'500'}
+                        onClick={() => {
+                          redirectToEstimateDetails(projectData?.estimateId)
+                        }}
+                      >
+                        Id: E{projectData?.estimateId}
+                      </LinkChakra>
+                    </Text>
+                  </>
+                </HStack>
+              </FormControl>
+            </GridItem>
+          )}
         </Grid>
       </Stack>
     </Box>

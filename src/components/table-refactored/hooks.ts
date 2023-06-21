@@ -35,7 +35,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     let finalFilters: ColumnFiltersState = [...columnFilters]
 
     // This filter will apply when user select a card from the card list
-    if (selectedCard) {
+    if (!!selectedCard) {
       if (selectedCard === 'past due') {
         const pastDueFilters = [{ id: 'pastDue', value: '1' }]
         const projectStatusValue = columnFilters?.find(c => c.id === 'projectStatus')?.value
@@ -54,18 +54,20 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
         finalFilters = [...columnFilters, projectStatusFilter]
       }
     }
-
     if (selectedFlagged) {
-      finalFilters = [...columnFilters, { id: 'noteFlag', value: selectedFlagged }]
+      finalFilters = [
+        ...columnFilters,
+        { id: 'noteFlag', value: selectedFlagged },
+        { id: 'lienDueFlag', value: selectedFlagged },
+      ]
     }
 
     // This filter will apply when user select a day from the project due days list
-    if (selectedDay && days?.length) {
+    if (!!selectedDay && days?.length) {
       const selectedDayData = days.find(day => day.dayName === selectedDay)
       clientDueDateFilter = { id: 'clientDueDate', value: selectedDayData?.dueDate }
       finalFilters = [...columnFilters, clientDueDateFilter]
     }
-
     // This filter will apply when user select a FPM from the FPM list
     if (userIds?.length) {
       finalFilters = [...finalFilters, { id: 'projectManagerId', value: userIds.join(',') }]

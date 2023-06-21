@@ -31,16 +31,22 @@ type TransactionProps = {
   projectStatus: string
   defaultSelected?: TransactionType
   transId?: any
+  isVendorExpired?: boolean
 }
 
 export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
+  // const { isVendorExpired } = props
   const { projectId } = useParams<'projectId'>()
   const { defaultSelected } = props
   const [dataTrans, setDataTrans] = useState<any>([])
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.transaction)
-  const { tableColumns, settingColumns } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
   const { refetch, transactions, isLoading } = useTransactionsV1(projectId)
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
@@ -142,6 +148,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                 <CustomDivider />
                 {settingColumns && (
                   <TableColumnSettings
+                    refetch={refetchColumns}
                     disabled={isLoading}
                     onSave={onSave}
                     columns={settingColumns?.filter(t => !!t.contentKey)} //Adding this check to avoid 'Expander' column from showing in the settings.

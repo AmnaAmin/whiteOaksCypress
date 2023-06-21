@@ -34,6 +34,7 @@ type ReceivableProps = {
   queryStringWithoutPagination: string
   sorting: SortingState
   setSorting: (updater: Updater<SortingState>) => void
+  setFormValue: any
 }
 
 export const ReceivableTable: React.FC<ReceivableProps> = ({
@@ -45,6 +46,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   setSorting,
   queryStringWithPagination,
   queryStringWithoutPagination,
+  setFormValue,
 }) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
@@ -82,6 +84,12 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     dataCount,
   } = usePaginatedAccountReceivables(queryStringWithPagination, pagination.pageSize)
 
+  useEffect(() => {
+    if (!receivables?.length) return
+
+   // receivables.forEach((r, i) => setFormValue(`id.${i}`, null))
+  }, [receivables?.length])
+
   const { isLoading: isExportDataLoading, refetch } = useGetAllAccountReceivables(queryStringWithoutPagination)
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.receivable)
@@ -89,6 +97,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     tableColumns,
     settingColumns,
     isFetched: tablePreferenceFetched,
+    refetch: refetchColumns,
   } = useTableColumnSettings(receivableColumns, TableNames.receivable)
 
   const { paginationRecord, columnsWithoutPaginationRecords } = useMemo(() => {
@@ -161,7 +170,14 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
               isLoading={isExportDataLoading}
               fileName="receivable"
             />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            {settingColumns && (
+              <TableColumnSettings
+                refetch={refetchColumns}
+                disabled={isLoading}
+                onSave={onSave}
+                columns={settingColumns}
+              />
+            )}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />

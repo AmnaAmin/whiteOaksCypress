@@ -20,8 +20,8 @@ export const workOrder = {
         addRow: 'Add Row',
         details: 'Description',
         status: 'Status',
-        complete: 'Complete',
-        verification: 'Verification',
+        complete: '  Complete',
+        verification: '  Verify',
         showPrice: 'Show Price to Vendor',
         sendNotification: 'Send Notification',
         markAllVerified: 'Mark All Verified',
@@ -55,7 +55,10 @@ export const workOrder = {
         completionVariance: 'Completion Variance',
         claimantSignature: 'Claimant Signature',
         dateOfSignature: 'Date Of Signature',
-
+        expirationInvoiceMessageForVendor:
+          'Your Insurance/License has expired. Please renew expiry to generate invoice.',
+        expirationInvoiceMessageForAdmin: `Vendor's Insurance/License has expired. Expiry needs to be renewed to generate invoice.`,
+        swoParsingFailure: 'System can not read SOW at this time. Please manually add line items to the Work Order.',
         // New Work Order
 
         clientStart: 'Client Start',
@@ -125,6 +128,11 @@ export const workOrder = {
         completionVariance: 'Variación de finalización',
         claimantSignature: 'Firma del reclamante',
         dateOfSignature: 'Fecha de la firma',
+        expirationInvoiceMessageForVendor:
+          'Su Seguro/Licencia ha expirado. Renueve el vencimiento para generar la factura.',
+        expirationInvoiceMessageForAdmin: `El seguro/licencia del proveedor ha vencido. El vencimiento debe renovarse para generar la factura.`,
+        swoParsingFailure:
+          'El sistema no puede leer SOW en este momento. Agregue manualmente elementos de línea a la orden de trabajo.',
 
         // New Work Order
 

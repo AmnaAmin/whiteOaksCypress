@@ -38,6 +38,7 @@ import {
   TRANSACTION_STATUS_OPTIONS,
 } from 'features/project-details/transactions/transaction.constants'
 import { ACCONT_PAYABLE_API_KEY } from './account-payable'
+import { STATUS } from 'features/common/status'
 
 export const GET_TRANSACTIONS_API_KEY = 'transactions'
 
@@ -70,7 +71,7 @@ export const useTransactionsV1 = (projectId?: string) => {
 
       return response?.data
     },
-    { enabled: !!projectId },
+    { enabled: projectId !== 'undefined' },
   )
 
   return {
@@ -95,7 +96,7 @@ export const useWOTransactionsV1 = (workOrderId: string, projectId?: string) => 
 
       return response?.data
     },
-    { enabled: !!projectId },
+    { enabled: projectId !== 'undefined' },
   )
 
   return {
@@ -157,22 +158,31 @@ const transactionTypeOptions = [
     label: 'Permit Fee',
   },
   {
+    value: TransactionTypeValues.depreciation,
+    label: 'Depreciation',
+  },
+  {
     value: TransactionTypeValues.deductible,
     label: 'Deductible',
   },
   {
-    value: TransactionTypeValues.depreciation,
-    label: 'Depreciation',
-  }
+    value: TransactionTypeValues.legalFee,
+    label: 'Legal Fee',
+  },
 ]
 
-export const useTransactionTypes = (screen?: string) => {
+export const useTransactionTypes = (screen?: string, projectStatus?: string) => {
   const { isVendor } = useUserRolesSelector()
 
   if (screen === 'WORK_ORDER_TRANSACTION_TABLE_MODAL' && !isVendor) {
     const transactionType = transactionTypeOptions.filter(option => option.label !== 'Payment')
     return {
       transactionTypeOptions: transactionType.slice(0, 5),
+    }
+  }
+  if (projectStatus && [STATUS.Cancelled, STATUS.ClientPaid, STATUS.Paid].includes(projectStatus as STATUS)) {
+    return {
+      transactionTypeOptions: transactionTypeOptions.filter(t => t.label !== 'Legal Fee'),
     }
   }
   return {
@@ -245,13 +255,14 @@ const AGAINST_DEFAULT_OPTION = {
   isValidForAwardPlan: null,
 }
 
-export const createAgainstLabel = (companyName: string, skillName: string) => {
-  return `${companyName} (${skillName})`
+export const createAgainstLabel = (companyName: string, woId: string) => {
+  return `WO ${woId} (${companyName})`
 }
 
 export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) => {
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAdmin } = useUserRolesSelector()
   const client = useClient()
+  const VENDOR_EXPIRED = 15
 
   const { data: workOrders, ...rest } = useQuery<Array<ProjectWorkOrder>>(
     ['projectWorkOrders', projectId],
@@ -267,10 +278,13 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
       workOrders
         ?.filter(wo => {
           const status = wo.statusLabel?.toLowerCase()
-          return !(status === 'paid' || status === 'cancelled' || status === 'invoiced') || isUpdating
+          const vendorExpiryCheck = wo.vendorStatusId !== VENDOR_EXPIRED || isAdmin
+          return (
+            (!(status === 'paid' || status === 'cancelled' || status === 'invoiced') && vendorExpiryCheck) || isUpdating
+          )
         })
         .map(workOrder => ({
-          label: createAgainstLabel(workOrder.companyName, workOrder.skillName),
+          label: createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
           awardStatus: workOrder?.assignAwardPlan,
           value: `${workOrder.id}`,
           isValidForAwardPlan: workOrder?.validForAwardPlan,
@@ -670,6 +684,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['changeOrder', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+        queryClient.invalidateQueries(['audit-logs', projectId])
 
         toast({
           title: 'New Transaction.',
@@ -717,6 +732,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         queryClient.invalidateQueries(GET_PAGINATED_RECEIVABLE_QUERY_KEY)
+        queryClient.invalidateQueries(['audit-logs', projectId])
 
         toast({
           title: 'Update Transaction.',

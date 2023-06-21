@@ -63,7 +63,8 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const { isAdmin } = useUserRolesSelector()
 
   const isTransactionTypeChangeOrderSelected =
-    selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.changeOrder
+    selectedTransactionTypeId &&
+    [TransactionTypeValues.changeOrder, TransactionTypeValues.legalFee].includes(selectedTransactionTypeId)
   const isTransactionTypeOverpaymentSelected =
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
@@ -196,6 +197,7 @@ export const useIsAwardSelect = (
   selectedWorkOrderStats?,
   remainingAmt?,
   isRefund?,
+  selectedWorkOrder?,
 ) => {
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
@@ -215,9 +217,15 @@ export const useIsAwardSelect = (
     (selectedWorkOrderStats?.materialRemaining === null ||
       (selectedWorkOrderStats && selectedWorkOrderStats?.materialRemaining < 1))
 
-  const showUpgradeOption =
-    !transaction && isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
-  return { check, isValidForAwardPlan, showUpgradeOption }
+  const isNotFinalPlan = selectedWorkOrder?.awardPlanId < 4
+
+  const isPlanExhausted = isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
+
+  const showUpgradeOption = isPlanExhausted && isNotFinalPlan
+
+  const showLimitReached = isPlanExhausted && !isNotFinalPlan
+
+  return { check, isValidForAwardPlan, isPlanExhausted, showUpgradeOption, showLimitReached }
 }
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
@@ -321,9 +329,12 @@ export const useAgainstOptions = (
       return againstOptions.slice(0, 1)
     }
     if (
-      [TransactionTypeValues.permitFee, TransactionTypeValues.shippingFee, TransactionTypeValues.carrierFee].some(
-        value => transactionType?.value === value,
-      )
+      [
+        TransactionTypeValues.permitFee,
+        TransactionTypeValues.shippingFee,
+        TransactionTypeValues.carrierFee,
+        TransactionTypeValues.legalFee,
+      ].some(value => transactionType?.value === value)
     ) {
       return [againstOptions[0]]
     }

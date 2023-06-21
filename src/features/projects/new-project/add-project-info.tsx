@@ -60,7 +60,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
 
   return (
     <Flex flexDir="column">
-      <Box px="6" minH="300px">
+      <Box px="6" h="300px" overflow={'auto'}>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} pb="3">
           <GridItem>
             <FormControl isInvalid={!!errors?.name}>
@@ -151,6 +151,17 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormErrorMessage>{errors.woaStartDate && errors.woaStartDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel isTruncated title={t(`${NEW_PROJECT}.emailNotificationDate`)} size="md">
+                {t(`${NEW_PROJECT}.emailNotificationDate`)}
+              </FormLabel>
+              <Input variant="required-field" type="date" {...register('emailNotificationDate')} />
+              <FormErrorMessage>
+                {errors.emailNotificationDate && errors.emailNotificationDate?.message}
+              </FormErrorMessage>
+            </FormControl>
+          </GridItem>
         </Grid>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
@@ -166,7 +177,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                   return (
                     <>
                       <NumberInput
-                      data-testid='OriginalSow'
+                        data-testid="OriginalSow"
                         value={field.value}
                         onValueChange={values => {
                           const { floatValue } = values

@@ -1,4 +1,4 @@
-import { useUpdateAlert, useFetchUserAlerts } from 'api/alerts'
+import { useUpdateAlert } from 'api/alerts'
 import {
   Divider,
   Box,
@@ -18,65 +18,28 @@ import { format } from 'date-fns'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { Link } from 'react-router-dom'
 import { useEffect } from 'react'
-import { alertCountEvent, getAlertCount } from '../../../features/alerts/alerts-service'
 
 import { enUS } from 'date-fns/locale'
 import { BiWind } from 'react-icons/bi'
 
 export const Notification = props => {
-  const { setShowAlertMenu, setNavigating, setAlertCount, navigationLoading, setSelectedAlert } = props
+  const { setShowAlertMenu, setNavigating, navigationLoading, setSelectedAlert, alertsLoading, notifications } = props
   const { mutate: updateAlert } = useUpdateAlert({ hideToast: true })
-  const {
-    data: notifications,
-    refetch: refetchNotifications,
-    isLoading: alertsLoading,
-  } = useFetchUserAlerts({
-    query: 'page=0&size=20&sort=dateCreated,desc',
-  })
+
   const showLoadingSlate = navigationLoading || alertsLoading
   useEffect(() => {
     setNavigating(navigationLoading)
   }, [navigationLoading])
 
-  /* const handeResolve = id => {
-    resolveAlerts([id], {
-      onSuccess: () => {
-        refetchNotifications()
-      },
-    })
-  } */
-
-  const handleAlertCountFromFirebase = () => {
-    const count = getAlertCount()
-    setAlertCount(count)
-    if (count > 0) {
-      refetchNotifications()
-    }
-  }
-
   const handleClick = alert => {
     //eslint-disable-next-line
     if (!alert?.webSockectRead) {
-      updateAlert(
-        { ...alert, webSockectRead: true },
-        {
-          onSuccess: () => {
-            refetchNotifications()
-          },
-        },
-      )
+      updateAlert({ ...alert, webSockectRead: true })
     }
     setSelectedAlert(alert)
     setShowAlertMenu(false)
   }
 
-  useEffect(() => {
-    handleAlertCountFromFirebase()
-    document.addEventListener(alertCountEvent, handleAlertCountFromFirebase, false)
-    return () => {
-      document.removeEventListener(alertCountEvent, handleAlertCountFromFirebase, false)
-    }
-  }, [])
   const { t } = useTranslation()
 
   return (
@@ -117,7 +80,7 @@ export const Notification = props => {
                       return (
                         <MenuItem
                           _hover={{ bg: '#F5F5F5' }}
-                          _focus={{ bg: 'none' }}
+                          _focus={{ bg: notification?.webSockectRead ? '#FFF' : '#FFF5E4' }}
                           key={notification.id}
                           as="div"
                           mb="2px"

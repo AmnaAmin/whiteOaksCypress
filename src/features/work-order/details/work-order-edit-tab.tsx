@@ -50,6 +50,12 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
 
+export type SelectVendorOption = {
+  label: string
+  value: any
+  title: any
+}
+
 const CalenderCard = props => {
   return (
     <Flex>
@@ -214,23 +220,16 @@ const WorkOrderDetailTab = props => {
 
   // Enable Vendor Type and Company Name for Admin User
   const [tradeOptions, setTradeOptions] = useState([])
-  const [vendorOptions, setVendorOptions] = useState([])
-  const [selectedVendorId, setSelectedVendorId] = useState<any>([])
+  const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
+  const [selectedVendorId, setSelectedVendorId] = useState<SelectVendorOption[]>([])
 
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
 
-  const { vendors } = useFilteredVendors(vendorSkillId, workOrder?.projectId)
+  const { vendors } = useFilteredVendors({ vendorSkillId, projectId: workOrder?.projectId, showExpired: true  , currentVendorId:  workOrder?.vendorId})
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
   const clientStart = projectData?.clientStartDate
-
-  // Set Vendor Names
-  const defaultVendor = {
-    value: workOrder?.vendorId as number,
-    label: workOrder?.claimantName as string,
-    title: workOrder?.claimantName as string,
-  }
 
   // Set Vendor Skill
   const defaultSkill = {
@@ -253,7 +252,11 @@ const WorkOrderDetailTab = props => {
     const option = [] as any
     if (vendors && vendors?.length > 0) {
       vendors?.forEach(v => {
-        option.push({ label: v.companyName as string, value: v.id as number })
+        option.push({
+          label:
+            v.statusLabel?.toLocaleLowerCase() === 'expired' ? v.companyName + ' (Expired)' : (v.companyName as string),
+          value: v.id as number,
+        })
       })
     }
     setVendorOptions(option)
@@ -314,15 +317,27 @@ const WorkOrderDetailTab = props => {
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrderDetails?.assignedItems)
     const removedItems = getRemovedItems(formValues, workOrderDetails?.assignedItems)
-    const payload = parseWODetailValuesToPayload(values)
+    const payload = parseWODetailValuesToPayload(values, workOrderDetails)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
 
   useEffect(() => {
     if (workOrderDetails?.id) {
+      let defaultVendor
+      if (vendorOptions && vendorOptions?.length > 0) {
+        vendorOptions?.forEach(v => {
+          if (workOrder?.vendorId === v?.value) {
+            defaultVendor = {
+              label: v.label as string,
+              value: v.value as number,
+              title: v.label as string,
+            }
+          }
+        })
+      }
       reset(defaultValuesWODetails(workOrderDetails, defaultVendor, defaultSkill))
     }
-  }, [workOrderDetails, reset, tradeOptions?.length])
+  }, [workOrderDetails, reset, tradeOptions?.length, vendorOptions?.length])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
@@ -363,7 +378,7 @@ const WorkOrderDetailTab = props => {
                       {inProgress ? (
                         <Box w="215px" mt={-7}>
                           <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
-                            <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                            <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
                               {t('trade')}
                             </FormLabel>
                             <Controller
@@ -397,7 +412,7 @@ const WorkOrderDetailTab = props => {
                       {inProgress ? (
                         <Box w="215px">
                           <FormControl isInvalid={!!errors.vendorId} data-testid="vendorId">
-                            <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
+                            <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
                               {t('companyName')}
                             </FormLabel>
                             <Controller
@@ -550,7 +565,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!completedByVendor && !(isAdmin || isAccounting)}
+                    isDisabled={!completedByVendor}
                     variant="outline"
                     {...register('workOrderDateCompleted')}
                   />

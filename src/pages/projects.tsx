@@ -61,16 +61,16 @@ export const Projects = () => {
       <VStack alignItems="start" minH="calc(100vh - 160px)" pb="2">
         <Box w="100%" mb="5px">
           <ProjectFilters
-            clear={clearAll}
+            clear={() => {
+              setSelectedCard('')
+            }}
             onSelectCard={selection => {
-              setSelectedDay(null)
               setSelectedFlagged(null)
               setSelectedCard(selection)
             }}
             selectedCard={selectedCard}
             selectedFPM={selectedFPM}
             onSelectFlagged={selection => {
-              setSelectedDay(null)
               setSelectedCard(null)
               setSelectedFlagged(selection)
             }}
@@ -94,9 +94,11 @@ export const Projects = () => {
 
             <WeekDayFilters
               selectedFPM={selectedFPM}
-              clear={clearAll}
+              clearAll={clearAll}
+              clear={() => {
+                setSelectedDay('')
+              }}
               onSelectDay={selection => {
-                setSelectedCard(null)
                 setSelectedDay(selection)
               }}
               selectedDay={selectedDay}

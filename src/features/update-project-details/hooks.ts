@@ -149,11 +149,12 @@ export const useFieldsRequired = (control: Control<ProjectDetailsFormValues>) =>
   const isStatusActive = projectStatus === STATUS.Active
   const isStatusClosed = projectStatus === STATUS.Closed
   const isStatusPunch = projectStatus === STATUS.Punch
+  const isStatusReconcile = projectStatus === STATUS.Reconcile
 
   return {
     // Project Management form fields states
     isWOAStartDateRequired: isStatusActive,
-    isWOACompletionDateRequired: isStatusClosed || isStatusPunch,
+    isWOACompletionDateRequired: isStatusClosed || isStatusPunch || isStatusReconcile,
     isClientWalkthroughDateRequired: isStatusClosed,
     isClientSignOffDateRequired: isStatusClosed,
   }
@@ -172,6 +173,7 @@ export const useSubFormErrors = (errors: FieldErrors<ProjectDetailsFormValues>) 
     isProjectManagementFormErrors:
       !!errors.woaCompletionDate || !!errors.clientWalkthroughDate || !!errors.clientSignOffDate || !!errors.type,
     isContactsFormErrors: !!errors.projectCoordinator || !!errors.fieldProjectManager || !!errors.client,
+    isLocationFormErrors: !!errors.zip || !!errors.city || !!errors.market || !!errors.address || !!errors.state,
   }
 }
 
@@ -180,4 +182,10 @@ export const useWOAStartDateMin = (control: Control<ProjectDetailsFormValues>) =
   const clientStartDate = useWatch({ name: 'clientStartDate', control }) ?? new Date().toString()
 
   return new Date(clientStartDate).toISOString().split('T')[0]
+}
+
+// Current date
+export const useCurrentDate = () => {
+  let date = new Date().toISOString().split('T')[0]
+  return date
 }

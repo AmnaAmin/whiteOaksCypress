@@ -1,6 +1,8 @@
+import { ResubmissionListItem } from './project-details.types'
 import { SelectOption } from './transaction.type'
 
 export type Project = {
+  estimateId?: number | string | null | undefined
   accountRecievable: number | null
   accountPayable: number | null
   changeordersTotal: string | null
@@ -25,6 +27,7 @@ export type Project = {
   hoaPhone: string | null
   hoaPhoneNumberExtension: string | null
   id: number | null
+  displayId: string | null
   invoiceNumber: string | null
   invoiceLink: string | null
   lastCompletedWorkOrder: string | null
@@ -101,6 +104,7 @@ export type Project = {
   reconcileDate: string | null
   verifiedDate: string | null
   disqualifiedRevenueDate: string | Date | null
+  emailNotificationDate: string | Date | null
   disqualifiedRevenueFlag: boolean | null
   reconciledBy: string | null
   verifiedBy: string | null
@@ -115,6 +119,17 @@ export type Project = {
   collectionDate?: string | null
   documents: any[] | null
   vendorWODueDate?: string
+  homeOwnerName: string | null
+  homeOwnerPhone: string | null
+  homeOwnerEmail: string | null
+  carrierId: string | number | null
+  agentName: string | null
+  agentPhone: string | null
+  agentEmail: string | null
+  projectClosedDueDate: Date | string | null
+  lienRightFileDate: Date | string | null
+  lienRightExpireDate: Date | string | null
+  resubmissionDTOList: ResubmissionListItem[]
 }
 
 export type ProjectExtraAttributesType = {
@@ -128,6 +143,13 @@ export type ProjectExtraAttributesType = {
   createdBy: string | null
   lastModifiedBy: string | null
   lastModifiedDate: string | null
+  homeOwnerName: string
+  homeOwnerPhone: string
+  homeOwnerEmail: string
+  carrier: SelectOption | null
+  agentName: string
+  agentPhone: string
+  agentEmail: string
 }
 
 export type ProjectColumnType = {
@@ -206,6 +228,7 @@ export type ProjectFormValues = {
   projectType?: SelectOption | null
   woNumber?: string
   poNumber?: string
+  emailNotificationDate?: string
   clientStartDate?: string
   clientDueDate?: string
   clientSignoffDate?: string
@@ -240,6 +263,13 @@ export type ProjectFormValues = {
   woaCompletionDate?: string
   propertyId?: number
   property?: any
+  homeOwnerName: string | null
+  homeOwnerPhone: string | null
+  homeOwnerEmail: string | null
+  carrier: string | number | null
+  agentName: string | null
+  agentPhone: string | null
+  agentEmail: string | null
 }
 
 export type Market = {
@@ -283,7 +313,8 @@ export type ProjectFinancialOverview = {
   shipFee: number
   permitFee: number
   deductible: number
-  depreciation:number
+  depreciation: number
+  legalFee: number
 }
 
-export type AddressInfo = { address: string; city: string; state: string; zipCode: string }
+export type AddressInfo = { address: string | any; city: string; state: string; zipCode: string }

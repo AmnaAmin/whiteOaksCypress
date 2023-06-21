@@ -19,6 +19,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { percentageFormatter } from 'utils/string-formatters'
 import { Link } from 'react-router-dom'
 import { RiFlag2Fill } from 'react-icons/ri'
+import { t } from 'i18next'
 
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
@@ -28,6 +29,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
   clientStartDate: 'clientStartDate.equals',
+  homeOwnerName: 'homeOwnerName.contains',
   clientDueDate: 'clientDueDate.equals',
   notes: 'notes.contains',
   projectTypeLabel: 'projectTypeLabel.contains',
@@ -65,15 +67,20 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   drawAmountWo: 'drawAmountWo.equals',
   disqualifiedRevenueFlag: 'disqualifiedRevenueFlag.equals',
   noteFlag: 'noteFlag.equals',
+  lienDueFlag: 'lienDueFlag.equals',
+  displayId: 'displayId.contains',
+  percentageCompletion: 'percentageCompletion.equals'
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'ID',
-    accessorKey: 'id',
+    accessorKey: 'displayId',
     size: 100,
     cell: (row: any) => {
       const value = row.cell.getValue()
+      const isFlagged = row.row?.original?.lienDueFlag || row.row?.original?.noteFlag
+      const id= row.row?.original?.id
       return (
         <Box
           fontWeight={'500'}
@@ -83,10 +90,13 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
           }}
           color="brand.300"
         >
-          <chakra.span marginRight={row.row?.original?.noteFlag ? '12px' : '26'}>
-            {row.row?.original?.noteFlag && <Icon as={RiFlag2Fill} color="rgba(252, 129, 129, 1)" />}
+          <chakra.span marginRight={isFlagged ? '12px' : '26'}>
+            {row.row?.original?.noteFlag && <Icon title="Note Flag" as={RiFlag2Fill} color="rgba(252, 129, 129, 1)" />}
+            {row.row?.original?.lienDueFlag && (
+              <Icon title="Lien Due Expiry Flag" as={RiFlag2Fill} color="rgb(236, 201, 75,1)" />
+            )}
           </chakra.span>
-          <Link to={`/project-details/${value}`}>{value}</Link>
+          <Link to={`/project-details/${id}`}>{value}</Link>
         </Box>
       )
     },
@@ -144,6 +154,31 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
             <PopoverContent textOverflow={'ellipsis'}>
               <PopoverArrow />
               <PopoverHeader color={'#2D3748'}>Notes</PopoverHeader>
+              <PopoverBody>
+                <Text color={'#4A5568'}>{value}</Text>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
+      )
+    },
+  },
+  {
+    header: 'projects.projectDetails.completion',
+    accessorKey: 'percentageCompletion',
+    meta: { hideTitle: true },
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+
+      return (
+        <Popover trigger="hover">
+          <PopoverTrigger>
+            <Box isTruncated>{value}</Box>
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent textOverflow={'ellipsis'}>
+              <PopoverArrow />
+              <PopoverHeader color={'#2D3748'}>{t('projects.projectDetails.completion')}</PopoverHeader>
               <PopoverBody>
                 <Text color={'#4A5568'}>{value}</Text>
               </PopoverBody>
@@ -240,6 +275,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.state',
     accessorKey: 'state',
+  },
+  {
+    header: 'projects.projectTable.ownerName',
+    accessorKey: 'homeOwnerName',
   },
   {
     header: 'projects.projectTable.woaFinish',

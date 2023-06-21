@@ -1,26 +1,35 @@
 import React from 'react'
-import { Box, Center, CenterProps, Flex, Text } from '@chakra-ui/react'
+import { Box, Center, CenterProps, Flex, Icon, Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useGetProjectFinancialOverview } from 'api/projects'
+import { IconType } from 'react-icons'
+import { VendorPaymentIcon, MaterialIcon, ProjectCostIcon, ProfitIcon, FinalSowIcon, AccountPayableIcon, ProfitMarginIcon } from 'icons/quicklookup-icons'
 
-const InfoStructureCard: React.FC<{ amount; isLoading: boolean } & CenterProps> = ({
+const InfoStructureCard: React.FC<{ amount; isLoading: boolean, icon: IconType, testId: string, iconColor?: string, bg?: string} & CenterProps> = ({
   amount,
   children,
   isLoading,
   title,
+  testId,
+  icon,
+  iconColor,
+  bg,
   ...rest
 }) => {
   return (
-    <Center flexDir="column" borderRight="1px solid #E5E5E5" px={5} flex={rest.flex || 1} {...rest}>
-      <Box fontSize="16px" fontWeight={400} color="gray.500">
-        <Text color="gray.600" noOfLines={1}>
-          {title}
-        </Text>
+    <Center flexDir="column"  bg={bg} borderRight="1px solid  #E5E5E5" height="68px" marginBottom={5} marginTop={0} px={4} flex={rest.flex || 1} {...rest}>
+      <Box fontSize="16px" fontWeight={500} color="#4A5568" >
+      <Flex alignItems="center">
+    <Icon as={icon} boxSize={6} marginLeft={2} color={iconColor}/>
+    <Text fontSize="12px"  marginLeft={2} >
+      {title}
+    </Text>
+  </Flex>
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
-          <Text color="#4A5568" fontSize="18px" fontStyle="normal" fontWeight="600" top="71px">
+          <Text data-testid={testId}  color="#4A5568" marginLeft={7} fontSize="20px" fontStyle="medium" fontWeight="500" >
             {amount}
           </Text>
         )}
@@ -44,37 +53,71 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
   } = useGetProjectFinancialOverview(projectId) // revenue
 
   return (
-    <Flex py={9} w="100%" bg="white" borderRadius="4px" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
-      <InfoStructureCard data-testid ='final_sow_amount' amount={finalSOWAmount} title={t('projects.projectAmount.finalSOW')} isLoading={isLoading} />
+    <Flex marginTop="9px !important" py={3} h={{ base: 'unset', xl: '97px' }} w="100%" bg="white" borderRadius="4px" border="1px solid #E5E5E5" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
+     <InfoStructureCard
+     bg='42CA7E'
+  icon={FinalSowIcon}
+  iconColor="#42CA7E"
+  amount={finalSOWAmount} 
+  title={t('projects.projectAmount.finalSOW')} 
+  testId={'final_sow_quicklookup'}
+  isLoading={isLoading}
+/>
       <InfoStructureCard
-      data-testid ='account_payable'
+      icon={AccountPayableIcon} 
+      iconColor="#43A9E3"
+      //data-testid ='account_payable'
         amount={accountPayable}
+        testId={'acc_payable_quicklookup'}
         isLoading={isLoading}
         title={t('projects.projectAmount.accountPayable')}
       />
       <InfoStructureCard
-      data-testid ='vendor_payment'
+      icon={VendorPaymentIcon}
+      iconColor="#F86060"
+      //data-testid ='vendor_payment'
         amount={vendorPayment}
         isLoading={isLoading}
+        testId={'vendor_payment_quicklookup'}
         title={t('projects.projectAmount.vendorPayment')}
       />
       <InfoStructureCard
-       data-testid ='Wo_material'
+      icon={MaterialIcon}
+      iconColor="#9869D4"
+       //data-testid ='Wo_material'
        amount={material}
        isLoading={isLoading} 
-       title={t('projects.projectAmount.materials')} />
+       testId={'material_quicklookup'}
+       title={t('projects.projectAmount.materials')} 
+       />
+
       <InfoStructureCard
-      data-testid ='project_total_cost'
+      icon={ProjectCostIcon}
+      iconColor="#D79526"
+      //data-testid ='project_total_cost'
         amount={projectTotalCost}
         isLoading={isLoading}
+        testId={'cost_quicklookup'}
         title={t('projects.projectAmount.projectCost')}
-      />
-      {/* <InfoStructureCard amount={revenue} isLoading={isLoading} title={t('projects.projectAmount.revenue')} /> */}
-      <InfoStructureCard  data-testid ='project_profits'  amount={profits} isLoading={isLoading} title={t('projects.projectAmount.profits')} />
+        />
+     
+      <InfoStructureCard 
+       icon={ProfitIcon}
+       iconColor="#345EA6" 
+       //data-testid ='project_profits'  
+       amount={profits} 
+       isLoading={isLoading}
+       testId={'profit_quicklookup'}
+       title={t('projects.projectAmount.profits')}
+        />
+
       <InfoStructureCard
-      data-testid ='profit_margin'
+       icon={ProfitMarginIcon}
+       iconColor="#0BC5EA"
+       //data-testid ='profit_margin'
         amount={profitMargin}
         isLoading={isLoading}
+        testId={'profit_margin_quicklookup'}
         title={t('projects.projectAmount.profitMargins')}
         border="none"
       />

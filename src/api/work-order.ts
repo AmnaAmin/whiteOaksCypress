@@ -4,7 +4,7 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { ProjectWorkOrder } from 'types/transaction.type'
 import { useClient } from 'utils/auth-context'
-import { dateISOFormat, datePickerFormat } from 'utils/date-time-utils'
+import { dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { currencyFormatter, removeCurrencyFormat } from 'utils/string-formatters'
 import { useTranslation } from 'react-i18next'
@@ -43,6 +43,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
+        queryClient.invalidateQueries(['audit-logs', projectId])
         if (!hideToast) {
           toast({
             title: 'Work Order',
@@ -92,6 +93,7 @@ export const useCreateWorkOrderMutation = () => {
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['projectSchedule', projectId])
+        queryClient.invalidateQueries(['audit-logs', projectId])
 
         toast({
           title: 'Work Order',
@@ -161,6 +163,8 @@ export const useNoteMutation = projectId => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['notes', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['audit-logs', projectId])
         toast({
           title: 'Note',
           description: 'Note has been saved successfully.',
@@ -204,10 +208,10 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
     dateInvoiceSubmittedEnabled: defaultStatus || isAdmin,
-    paymentTermEnabled: defaultStatus || invoicedState || isAdmin || (workOrder?.assignAwardPlan && isAdmin),
+    paymentTermEnabled: defaultStatus || (workOrder?.assignAwardPlan && isAdmin),
     paymentTermDateEnabled: defaultStatus || isAdmin,
     expectedPaymentDateEnabled: defaultStatus || isAdmin,
-    datePaymentProcessedEnabled: defaultStatus || invoicedState || isAdmin,
+    datePaymentProcessedEnabled: defaultStatus || isAdmin,
     datePaidEnabled: defaultStatus || invoicedState || isAdmin,
     invoiceAmountEnabled: defaultStatus || isAdmin,
     clientOriginalApprovedAmountEnabled: defaultStatus || isAdmin,
@@ -220,17 +224,17 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
 
 export const parsePaymentValuesToPayload = formValues => {
   return {
-    dateInvoiceSubmitted: dateISOFormat(formValues?.dateInvoiceSubmitted),
+    dateInvoiceSubmitted: dateISOFormatWithZeroTime(formValues?.dateInvoiceSubmitted),
     paymentTerm: formValues?.paymentTerm?.value,
-    paymentTermDate: dateISOFormat(formValues?.paymentTermDate),
-    expectedPaymentDate: formValues?.expectedPaymentDate,
-    datePaymentProcessed: dateISOFormat(formValues?.datePaymentProcessed),
-    datePaid: dateISOFormat(formValues?.datePaid),
+    paymentTermDate: dateISOFormatWithZeroTime(formValues?.paymentTermDate),
+    expectedPaymentDate: dateISOFormatWithZeroTime(formValues?.expectedPaymentDate),
+    datePaymentProcessed: dateISOFormatWithZeroTime(formValues?.datePaymentProcessed),
+    datePaid: dateISOFormatWithZeroTime(formValues?.datePaid),
     partialPayment: formValues?.partialPayment,
     invoiceAmount: removeCurrencyFormat(formValues?.invoiceAmount),
     clientOriginalApprovedAmount: removeCurrencyFormat(formValues?.clientOriginalApprovedAmount),
     clientApprovedAmount: removeCurrencyFormat(formValues?.clientApprovedAmount),
-    partialPaymentDate: dateISOFormat(formValues?.paymentDate),
+    partialPaymentDate: dateISOFormatWithZeroTime(formValues?.paymentDate),
   }
 }
 
@@ -276,7 +280,7 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
   }
 }
 
-export const parseWODetailValuesToPayload = formValues => {
+export const parseWODetailValuesToPayload = (formValues, workOrder) => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
   const cancelWorkOrder = formValues?.cancel.value === 35
@@ -311,7 +315,7 @@ export const parseWODetailValuesToPayload = formValues => {
     showPricing: formValues.showPrice,
     assignedItems: [...assignedItems],
     notifyVendor: formValues.notifyVendor,
-    vendorId: formValues.vendorId?.value,
+    vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
   }
 }

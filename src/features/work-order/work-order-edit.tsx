@@ -44,6 +44,8 @@ import { Card } from 'components/card/card'
 import { BiErrorCircle } from 'react-icons/bi'
 import { TransactionsTab } from './transactions/transactions-tab'
 import { useQueryClient } from 'react-query'
+import { useVendorEntity } from 'api/vendor-dashboard'
+import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -89,6 +91,8 @@ const WorkOrderDetails = ({
 
   const navigate = useNavigate()
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
+  const { data: vendorEntity } = useVendorEntity(workOrder?.vendorId)
+  const { hasExpiredDocumentOrLicense } = useDocumentLicenseMessage({ data: vendorEntity })
   const tabsContainerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -118,7 +122,7 @@ const WorkOrderDetails = ({
 
     if (
       displayAwardPlan &&
-      !workOrder?.awardPlanId &&
+      !workOrderDetails?.awardPlanId &&
       (values?.workOrderDateCompleted || hasMarkedSomeComplete) &&
       tabIndex === 0
     ) {
@@ -164,10 +168,18 @@ const WorkOrderDetails = ({
             <ModalHeader bg="white">
               <HStack spacing={4}>
                 <HStack fontSize="16px" fontWeight={500}>
-                  <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
+                  <Text
+                    color={'gray.600'}
+                    fontWeight="400"
+                    fontSize={'16px'}
+                    borderRight="1px solid #E2E8F0"
+                    lineHeight="22px"
+                    h="22px"
+                    pr={2}
+                  >
                     WO {workOrder?.id}
                   </Text>
-                  <Text lineHeight="22px" h="22px">
+                  <Text fontSize="16px" color={'gray.600'} fontWeight="400" lineHeight="22px" h="22px">
                     {workOrder?.companyName}
                   </Text>
                 </HStack>
@@ -230,10 +242,10 @@ const WorkOrderDetails = ({
                     ) && (
                       <Center w="100%" justifyContent="end">
                         <Checkbox
+                          variant={'outLinePrimary'}
                           onChange={() => setRejectInvoice(!rejectInvoice)}
                           isChecked={rejectInvoice}
                           disabled={workOrder.status === 111}
-                          color="#4A5568"
                           fontSize="14px"
                           fontWeight={500}
                         >
@@ -245,7 +257,7 @@ const WorkOrderDetails = ({
                 <Card mx="10px" mb="10px" roundedTopLeft={0} p={0}>
                   <TabPanels>
                     <TabPanel p={0}>
-                      <WorkOrderDetailTab
+                      {projectData && <WorkOrderDetailTab 
                         navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                         workOrder={workOrder}
                         workOrderDetails={workOrderDetails}
@@ -258,6 +270,7 @@ const WorkOrderDetails = ({
                         isFetchingLineItems={isFetchingLineItems}
                         isLoadingLineItems={isLoadingLineItems}
                       />
+}
                     </TabPanel>
                     <TabPanel p={0}>
                       {isProjectLoading ? (
@@ -269,6 +282,7 @@ const WorkOrderDetails = ({
                           projectData={projectData}
                           onClose={onClose}
                           workOrder={workOrder}
+                          isVendorExpired={hasExpiredDocumentOrLicense}
                         />
                       )}
                     </TabPanel>
@@ -315,6 +329,7 @@ const WorkOrderDetails = ({
                           onSave={onSave}
                           setTabIndex={setTabIndex}
                           projectData={projectData}
+                          isVendorExpired={hasExpiredDocumentOrLicense}
                         />
                       )}
                     </TabPanel>

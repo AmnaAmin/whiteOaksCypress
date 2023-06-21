@@ -173,13 +173,15 @@ const parseXmlResponse = async (response: any) => {
 
 export const useGetAddressVerification = (addressInfo: AddressInfo) => {
   const { address, city, state, zipCode } = addressInfo || { address: '', city: '', state: '', zipCode: '' }
+  const addressAccordingly = address.__isNew__ ? address.value : address
+
   const client = useClient()
 
   return useQuery(
     ['addressVerification', address, city, state, zipCode],
     async () => {
       const response = await client(
-        `addressVerification?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`,
+        `addressVerification?address=${addressAccordingly}&city=${city}&state=${state}&zipCode=${zipCode}`,
         {},
       )
       const parsed = await parseXmlResponse(response)
@@ -224,14 +226,20 @@ export const useVendorCards = () => {
   })
 }
 
-export const useFPMVendorCards = marketIds => {
+export const useFPMVendorCards = fpmBasedFilters => {
   const client = useClient()
+  const vendorCardsApi = `vendorsCards/v1?` + fpmBasedFilters
+  return useQuery<Vendors>(
+    ['vendorsCards', fpmBasedFilters],
+    async () => {
+      const response = await client(vendorCardsApi, {})
 
-  return useQuery<Vendors>(['vendorsCards', marketIds], async () => {
-    const response = await client(`vendorsCards/v1?marketIds=${marketIds}`, {})
-
-    return response?.data
-  })
+      return response?.data
+    },
+    {
+      enabled: !!fpmBasedFilters,
+    },
+  )
 }
 
 export const useProperties = () => {
@@ -271,6 +279,7 @@ export const useStates = () => {
       value: state?.code,
       label: state?.name,
       id: state?.id,
+      lienDue: state?.lienDue,
     })) || []
 
   return {
@@ -408,6 +417,7 @@ export const useClients = () => {
     clients?.map(client => ({
       value: client.id,
       label: client.companyName,
+      carrier: client.carrier,
     })) || []
 
   return {
@@ -474,13 +484,13 @@ export const useGetAllVendors = (filterQueryString: string) => {
   }
 }
 
-export const useGetAllFPMVendors = (marketIds, filterQueryString: string) => {
+export const useGetAllFPMVendors = (fpmBasedQueryParams, queryStringWithOutPagination: string) => {
   const client = useClient()
-
+  const query = fpmBasedQueryParams + '&' + queryStringWithOutPagination
   const { data, ...rest } = useQuery<Array<Project>>(
-    ['all_fpm_vendors', marketIds],
+    ['all_fpm_vendors'],
     async () => {
-      const response = await client(`view-vendors/v1?marketId.in=${marketIds}&${filterQueryString}`, {})
+      const response = await client(`view-vendors/v1?${query}`, {})
 
       return response?.data
     },
@@ -494,13 +504,14 @@ export const useGetAllFPMVendors = (marketIds, filterQueryString: string) => {
     ...rest,
   }
 }
-export const useFPMVendor = (marketIds, queryString, pageSize, isFPM) => {
-  const apiQueryString = getVendorsQueryString(queryString)
+export const useFPMVendor = (fpmBasedQueryParams, queryStringWithPagination, pageSize) => {
+  const query = fpmBasedQueryParams + '&' + queryStringWithPagination
+  const apiQueryString = getVendorsQueryString(query)
   const { data, ...rest } = usePaginationQuery<vendors>(
-    ['fpm-vendors', apiQueryString, marketIds],
-    `view-vendors/v1?marketId.in=${marketIds}&${apiQueryString}`,
+    ['fpm-vendors', apiQueryString],
+    `view-vendors/v1?${apiQueryString}`,
     pageSize,
-    { enabled: marketIds && isFPM },
+    { enabled: !!fpmBasedQueryParams },
   )
 
   return {
@@ -529,9 +540,11 @@ export const useGanttChart = (projectId?: string): any => {
   }
 }
 
-export const useFilteredVendors = (vendorSkillId, projectId) => {
+export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired , currentVendorId }) => {
   const status_active = 12
+  const status_expired = 15
   const capacity = 1 // sfor new workorder capacity is fixed
+  const statusAttrib = '&status.in=' + status_active + (showExpired ? `,${status_expired}` : '')
   const client = useClient()
   const requestUrl =
     'view-vendors?generalLabor.equals=' +
@@ -540,10 +553,11 @@ export const useFilteredVendors = (vendorSkillId, projectId) => {
     vendorSkillId +
     '&capacity.greaterThanOrEqual=' +
     capacity +
-    '&status.equals=' +
-    status_active +
+    statusAttrib +
     '&projectsId.equals=' +
-    projectId
+    projectId + 
+     '&currentVendorId.equals='  + currentVendorId;
+    ;
   const { data, ...rest } = useQuery<Array<Vendors>>(
     ['FETCH_FILTERED_VENDORS', vendorSkillId],
     async () => {

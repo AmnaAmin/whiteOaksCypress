@@ -27,13 +27,15 @@ const VendorFilterCard: React.FC<{
         <Center bg={props.bgColor} p="10px" rounded="full">
           {props.IconElement}
         </Center>
-
+        {props.title}
         <HStack alignItems="center" spacing={1} w="calc(100%)">
-          <Text fontSize="14px" fontWeight={400} color="gray.700">
+          <Text fontSize="14px"  fontWeight={400} color="gray.700">
             {props.title}
           </Text>
+          
           <Spacer />
-          <Text fontSize="20px" fontWeight={600} color="gray.700">
+         
+          <Text fontSize="20px"  data-testid={`value-of-${props.title.toLocaleLowerCase()}`} fontWeight={600} color="gray.700">
             {props.number}
           </Text>
         </HStack>

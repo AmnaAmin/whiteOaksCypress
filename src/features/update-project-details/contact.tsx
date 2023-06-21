@@ -1,12 +1,17 @@
 import { Box, FormControl, FormErrorMessage, FormLabel, FormLabelProps, HStack, Input, Stack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { useTranslation } from 'react-i18next'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useFieldsDisabled } from './hooks'
 import { SelectOption } from 'types/transaction.type'
 import NumberFormat from 'react-number-format'
 import { useGetUsersByType } from 'api/project-details'
+import { useEffect, useState } from 'react'
+import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
+import { t } from 'i18next'
+import Select from 'components/form/react-select'
+import { useFPMsByMarket } from 'api/pc-projects'
 
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
@@ -20,20 +25,33 @@ const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
 
 type ContactProps = {
   projectCoordinatorSelectOptions: SelectOption[]
-  projectManagerSelectOptions: SelectOption[]
   clientSelectOptions: SelectOption[]
 }
-const Contact: React.FC<ContactProps> = ({
-  projectCoordinatorSelectOptions,
-  projectManagerSelectOptions,
-  clientSelectOptions,
-}) => {
+const Contact: React.FC<ContactProps> = ({ projectCoordinatorSelectOptions, clientSelectOptions }) => {
   const {
     register,
     control,
     formState: { errors },
     setValue,
   } = useFormContext<ProjectDetailsFormValues>()
+
+  const marketWatch = useWatch({ name: 'market', control })
+
+  const clientWatch = useWatch({ name: 'client', control })
+  const [carrierOption, setCarrierOption] = useState<SelectOption[] | null | undefined>()
+  const { fieldProjectManagerByMarketOptions, isLoading } = useFPMsByMarket(marketWatch?.value)
+
+  useEffect(() => {
+    setCarrierOption(
+      clientWatch?.carrier?.map(c => {
+        return {
+          label: c.name,
+          value: c.id,
+        }
+      }),
+    )
+  }, [clientWatch])
+
   const {
     isProjectCoordinatorDisabled,
     isProjectCoordinatorPhoneNumberDisabled,
@@ -48,8 +66,14 @@ const Contact: React.FC<ContactProps> = ({
 
   const { users: fpmUsers } = useGetUsersByType(5)
 
+  useEffect(() => {
+    if (fieldProjectManagerByMarketOptions.length === 0 && !isLoading) {
+      setValue('fieldProjectManager', null)
+    }
+  }, [fieldProjectManagerByMarketOptions])
+
   return (
-    <Stack spacing={14} mt="7">
+    <Stack spacing={14} minH="600px">
       <HStack spacing="16px">
         <Box h="40px">
           <FormControl w="215px" isInvalid={!!errors.projectCoordinator}>
@@ -62,7 +86,7 @@ const Contact: React.FC<ContactProps> = ({
                 <>
                   <ReactSelect
                     {...field}
-                    selectProps={{ isBorderLeft: !isProjectCoordinatorDisabled }}
+                    selectProps={{ isBorderLeft: !isProjectCoordinatorDisabled, menuHeight: '180px' }}
                     options={projectCoordinatorSelectOptions}
                     isDisabled={isProjectCoordinatorDisabled}
                     onChange={(e: any) => {
@@ -84,6 +108,7 @@ const Contact: React.FC<ContactProps> = ({
           <FormControl isInvalid={!!errors?.projectCoordinatorPhoneNumber}>
             <InputLabel title={'project.projectDetails.phone'} htmlFor={'projectCoordinatorPhoneNumber'} />
             <Input
+            size='md'
               datatest-id="pc-Phone"
               placeholder="098-987-2233"
               id="projectCoordinatorPhoneNumber"
@@ -101,6 +126,7 @@ const Contact: React.FC<ContactProps> = ({
               Ext
             </InputLabel>
             <Input
+              size ='md'
               datatest-id="pc-Phone-Ext"
               id="projectCoordinatorExtension"
               isDisabled={isProjectCoordinatorExtensionDisabled}
@@ -124,8 +150,8 @@ const Contact: React.FC<ContactProps> = ({
                 <>
                   <ReactSelect
                     {...field}
-                    selectProps={{ isBorderLeft: true }}
-                    options={projectManagerSelectOptions}
+                    selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
+                    options={fieldProjectManagerByMarketOptions}
                     isDisabled={isFieldProjectManagerDisabled}
                     onChange={(e: any) => {
                       field.onChange(e)
@@ -146,6 +172,7 @@ const Contact: React.FC<ContactProps> = ({
           <FormControl isInvalid={!!errors?.fieldProjectManagerPhoneNumber}>
             <InputLabel title={'project.projectDetails.phone'} htmlFor={'fieldProjectManagerPhoneNumber'} />
             <Input
+              size ='md'
               datatest-id="fpm-Phone"
               placeholder="098-987-2233"
               isDisabled={isFieldProjectManagerPhoneNumberDisabled}
@@ -161,6 +188,7 @@ const Contact: React.FC<ContactProps> = ({
           <FormControl isInvalid={!!errors?.fieldProjectManagerExtension}>
             <InputLabel title={'project.projectDetails.ext'} htmlFor={'fieldProjectManagerExtension'} />
             <Input
+              size ='md'
               datatest-id="fpm-Phone-Ext"
               id="fieldProjectManagerExtension"
               isDisabled={isFieldProjectManagerExtensionDisabled}
@@ -176,7 +204,7 @@ const Contact: React.FC<ContactProps> = ({
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superName}>
             <InputLabel title={'project.projectDetails.superName'} htmlFor={'superName'} />
-            <Input id="superName" {...register('superName')} w="215px" />
+            <Input size ='md'id="superName" {...register('superName')} w="215px" />
             <FormErrorMessage>{errors?.superName?.message}</FormErrorMessage>
           </FormControl>
         </Box>
@@ -191,6 +219,7 @@ const Contact: React.FC<ContactProps> = ({
                 return (
                   <>
                     <NumberFormat
+                    size ='md'
                       customInput={Input}
                       value={field.value}
                       onChange={e => field.onChange(e)}
@@ -208,7 +237,7 @@ const Contact: React.FC<ContactProps> = ({
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superPhoneNumberExtension}>
             <InputLabel title={'project.projectDetails.ext'} htmlFor={'superPhoneNumberExtension'} />
-            <Input id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" />
+            <Input size ='md'id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" />
             <FormErrorMessage>{errors?.superPhoneNumberExtension?.message}</FormErrorMessage>
           </FormControl>
         </Box>
@@ -216,13 +245,13 @@ const Contact: React.FC<ContactProps> = ({
         <Box h="40px">
           <FormControl isInvalid={!!errors.superEmail}>
             <InputLabel title={'project.projectDetails.superEmail'} htmlFor={'superEmail'} />
-            <Input id="superEmail" {...register('superEmail')} w="215px" />
+            <Input size ='md' id="superEmail" {...register('superEmail')} w="215px" />
             <FormErrorMessage>{errors?.superEmail?.message}</FormErrorMessage>
           </FormControl>
         </Box>
       </HStack>
 
-      <Box h="80px">
+      <Box h="40px">
         <FormControl w="215px" isInvalid={!!errors.client}>
           <InputLabel title={'project.projectDetails.client'} htmlFor={'client'} />
           <Controller
@@ -234,8 +263,12 @@ const Contact: React.FC<ContactProps> = ({
                   menuPlacement="top"
                   {...field}
                   options={clientSelectOptions}
-                  selectProps={{ isBorderLeft: true }}
+                  selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                   isDisabled={isClientDisabled}
+                  onChange={option => {
+                    field.onChange(option)
+                    setValue('carrier', null)
+                  }}
                 />
                 <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
               </>
@@ -243,6 +276,107 @@ const Contact: React.FC<ContactProps> = ({
           />
         </FormControl>
       </Box>
+      <HStack spacing="16px">
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.superName}>
+            <InputLabel title={t(`${NEW_PROJECT}.carrier`)} htmlFor={'carrier'} />
+            <Controller
+              control={control}
+              name={`carrier`}
+              render={({ field, fieldState }) => (
+                <>
+                  <Select isDisabled={isFieldProjectManagerDisabled} options={carrierOption} {...field} />
+                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                </>
+              )}
+            />
+            <FormErrorMessage>{errors?.superName?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.agentName}>
+            <InputLabel title={t(`${NEW_PROJECT}.agentName`)} htmlFor={'agentName'} />
+            <Input size ='md'isDisabled={isFieldProjectManagerDisabled} id="agentName" {...register('agentName')} />
+            <FormErrorMessage>{errors?.agentName?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.agentPhone}>
+            <InputLabel title={t(`${NEW_PROJECT}.phone`)} htmlFor={'agentPhone'} />
+            <Controller
+              control={control}
+              name="agentPhone"
+              render={({ field, fieldState }) => {
+                return (
+                  <>
+                    <NumberFormat
+                  size ='md'
+                      isDisabled={isFieldProjectManagerDisabled}
+                      customInput={Input}
+                      value={field.value}
+                      onChange={e => field.onChange(e)}
+                      format="(###)-###-####"
+                      mask="_"
+                      placeholder="(___)-___-____"
+                    />
+                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                  </>
+                )
+              }}
+            />
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.agentEmail}>
+            <InputLabel title={t(`${NEW_PROJECT}.email`)} htmlFor={'agentEmail'} />
+            <Input size ='md' isDisabled={isFieldProjectManagerDisabled} id="agentEmail" {...register('agentEmail')} />
+            <FormErrorMessage>{errors?.agentEmail?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+      </HStack>
+
+      <HStack spacing="16px">
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.homeOwnerName}>
+            <InputLabel title={t(`${NEW_PROJECT}.homeOwner`)} htmlFor={'homeOwnerName'} />
+            <Input size ='md' isDisabled={isFieldProjectManagerDisabled} id="homeOwnerName" {...register('homeOwnerName')} />
+            <FormErrorMessage>{errors?.homeOwnerName?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.homeOwnerPhone}>
+            <InputLabel title={t(`${NEW_PROJECT}.phone`)} htmlFor={'homeOwnerPhone'} />
+            <Controller
+              control={control}
+              name="homeOwnerPhone"
+              render={({ field, fieldState }) => {
+                return (
+                  <>
+                    <NumberFormat
+                     size ='md'
+                      customInput={Input}
+                      value={field.value}
+                      isDisabled={isFieldProjectManagerDisabled}
+                      onChange={e => field.onChange(e)}
+                      format="(###)-###-####"
+                      mask="_"
+                      placeholder="(___)-___-____"
+                    />
+                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                  </>
+                )
+              }}
+            />
+          </FormControl>
+        </Box>
+        <Box h="40px">
+          <FormControl w="215px" isInvalid={!!errors?.homeOwnerEmail}>
+            <InputLabel title={t(`${NEW_PROJECT}.email`)} htmlFor={'homeOwnerEmail'} />
+            <Input size ='md' isDisabled={isFieldProjectManagerDisabled} id="homeOwnerEmail" {...register('homeOwnerEmail')} />
+            <FormErrorMessage>{errors?.homeOwnerEmail?.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+      </HStack>
     </Stack>
   )
 }

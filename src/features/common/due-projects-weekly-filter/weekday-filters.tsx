@@ -54,10 +54,17 @@ export type WeekDayFiltersProps = {
   onSelectDay: (string) => void
   selectedDay: string
   clear?: () => void
+  clearAll?: () => void
   selectedFPM?: any
 }
 
-export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({ onSelectDay, selectedDay, clear, selectedFPM }) => {
+export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({
+  onSelectDay,
+  selectedDay,
+  clear,
+  selectedFPM,
+  clearAll,
+}) => {
   const { data: values, isLoading } = useWeekDayProjectsDue(selectedFPM?.id)
   const days = useWeekdayCardJson(values)
 
@@ -98,7 +105,7 @@ export const WeekDayFilters: React.FC<WeekDayFiltersProps> = ({ onSelectDay, sel
         })}
 
         {/* <Divider orientation="vertical" height="23px" border="1px solid #A0AEC0 !important" /> */}
-        <Button variant="ghost" colorScheme="brand" onClick={clear}>
+        <Button variant="ghost" colorScheme="brand" onClick={clearAll}>
           {t('clearFilter')}
         </Button>
       </Stack>

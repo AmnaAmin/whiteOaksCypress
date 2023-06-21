@@ -6,14 +6,21 @@ import { Notification } from '../notification'
 import { setToken } from 'utils/storage.utils'
 import { Menu } from '@chakra-ui/react'
 import { BrowserRouter } from 'react-router-dom'
+import { TRIGGEREDALERTS } from 'mocks/api/alerts/alerts'
 
 export const renderNotifications = async ({}: any) => {
   const setNavigating = jest.fn()
-  const setAlertCount = jest.fn()
   await render(
     <BrowserRouter>
       <Menu isOpen={true}>
-        <Notification setNavigating={setNavigating} setAlertCount={setAlertCount} />
+        <Notification
+          setShowAlertMenu={true}
+          setNavigating={setNavigating}
+          navigationLoading={false}
+          setSelectedAlert={null}
+          notifications={TRIGGEREDALERTS}
+          alertsLoading={false}
+        />
       </Menu>
     </BrowserRouter>,
     {

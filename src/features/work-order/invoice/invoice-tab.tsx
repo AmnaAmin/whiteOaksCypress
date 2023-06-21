@@ -34,6 +34,8 @@ import { createInvoice } from 'api/vendor-projects'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { ConfirmationBox } from 'components/Confirmation'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { WORK_ORDER } from '../workOrder.i18n'
+import { AlertError } from 'components/AlertError'
 
 export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({
   title,
@@ -88,17 +90,16 @@ export const InvoiceTab = ({
   projectData,
   isWorkOrderUpdating,
   vendorAddress,
+  isVendorExpired,
 }) => {
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
-  const [subTotal, setSubTotal] = useState(0)
-  const [amountPaid, setAmountPaid] = useState(0)
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
   const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAdmin } = useUserRolesSelector()
 
   const {
     isOpen: isGenerateInvoiceOpen,
@@ -134,39 +135,6 @@ export const InvoiceTab = ({
         co => co.status === TSV.approved && co.parentWorkOrderId === workOrder.id,
       )
       setItems(transactionItems)
-      setSubTotal(workOrder.subTotal)
-      setAmountPaid(workOrder.totalAmountPaid)
-
-      // Change Orders And Original Amount
-      // const changeOrders = transactionItems.filter(
-      //   it =>
-      //     ![TransactionTypeValues.draw, TransactionTypeValues.material, TransactionTypeValues.woPaid].includes(
-      //       it.transactionType,
-      //     ),
-      // )
-      // // Draws and maetrials
-      // const drawTransactions = transactionItems?.filter(it =>
-      //   [TransactionTypeValues.draw, TransactionTypeValues.material].includes(it.transactionType),
-      // )
-
-      // Sum of all approved (:not paid) transactions (Change Orders & Original Amount)
-      // if (changeOrders && changeOrders.length > 0) {
-      //   setSubTotal(changeOrders.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x))
-      // }
-
-      // WO Paid Transaction
-      // const paidTransactionAmount =
-      //   transactionItems?.find(it => it.transactionType === TransactionTypeValues.woPaid)?.changeOrderAmount ?? 0
-
-      // let sumOfDrawTransaction = 0
-
-      // if (drawTransactions && drawTransactions.length > 0) {
-      //   sumOfDrawTransaction = drawTransactions?.map(t => parseFloat(t.changeOrderAmount))?.reduce((sum, x) => sum + x)
-      // }
-
-      // Sum of all Draws (Material (+Refund), Draws and WOPaid)
-      // const amountPaid = Math.abs(sumOfDrawTransaction) + paidTransactionAmount
-      // setAmountPaid(amountPaid)
     }
   }, [transactions])
 
@@ -202,7 +170,14 @@ export const InvoiceTab = ({
   const generateInvoice = async () => {
     let form = new jsPDF()
     const updatedWorkOrder = prepareInvoicePayload()
-    form = await createInvoice(form, updatedWorkOrder, projectData, items, { subTotal, amountPaid }, vendorAddress)
+    form = await createInvoice(
+      form,
+      updatedWorkOrder,
+      projectData,
+      items,
+      { subTotal: workOrder?.subTotal, amountPaid: workOrder?.totalAmountPaid },
+      vendorAddress,
+    )
     const pdfUri = form.output('datauristring')
     updateWorkOrder(
       {
@@ -268,10 +243,28 @@ export const InvoiceTab = ({
       generateInvoice()
     }
   }, [items, workOrder, projectData, vendorAddress])
+  const disableGenerateInvoice =
+    !(
+      workOrder?.statusLabel?.toLowerCase() === WOstatus.Rejected ||
+      workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
+    ) ||
+    (isVendorExpired && !isAdmin)
 
   return (
     <Box>
-      <ModalBody mx={{ base: 0, lg: '25px' }}>
+      <ModalBody mx={{ base: 0, lg: '25px' }} h={'calc(100vh - 300px)'}>
+        {isVendorExpired && (
+          <Box pt="15px">
+            <AlertError
+              styleBox={{ width: 'max-content' }}
+              msg={
+                isVendor
+                  ? `${WORK_ORDER}.expirationInvoiceMessageForVendor`
+                  : `${WORK_ORDER}.expirationInvoiceMessageForAdmin`
+              }
+            />
+          </Box>
+        )}
         <Grid
           templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(150px,1fr))' }}
           gap={5}
@@ -373,26 +366,26 @@ export const InvoiceTab = ({
                   <VStack alignItems="end" fontSize="14px" fontWeight={500} color="gray.600">
                     <Box>
                       <HStack w={300} height="35px" justifyContent="space-between">
-                        <Text fontWeight={500} color={'gray.800'}>
+                        <Text fontWeight={500} color={'gray.600'}>
                           {t('subTotal')}:
                         </Text>
-                        <Text fontWeight={500} color={'gray.800'} data-testid={'subTotal'}>
+                        <Text fontWeight={500} color={'gray.600'} data-testid={'subTotal'}>
                           {currencyFormatter(workOrder.subTotal)}
                         </Text>
                       </HStack>
                       <HStack w={300} height="35px" justifyContent="space-between">
-                        <Text fontWeight={500} color={'gray.800'}>
+                        <Text fontWeight={500} color={'gray.600'}>
                           {t('totalAmountPaid')}:
                         </Text>
-                        <Text fontWeight={500} color={'gray.800'} data-testid={'totalAmountPaid'}>
+                        <Text fontWeight={500} color={'gray.600'} data-testid={'totalAmountPaid'}>
                           {currencyFormatter(workOrder.totalAmountPaid)}
                         </Text>
                       </HStack>
                       <HStack w={300} height="35px" justifyContent="space-between">
-                        <Text fontWeight={500} color={'gray.800'}>
+                        <Text fontWeight={500} color={'gray.600'}>
                           {t('balanceDue')}
                         </Text>
-                        <Text fontWeight={500} color={'gray.800'} data-testid={'balanceDue'}>
+                        <Text fontWeight={500} color={'gray.600'} data-testid={'balanceDue'}>
                           {currencyFormatter(workOrder.finalInvoiceAmount)}
                         </Text>
                       </HStack>
@@ -434,12 +427,7 @@ export const InvoiceTab = ({
             <Button
               variant="outline"
               data-testid="generateInvoice"
-              disabled={
-                !(
-                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Rejected ||
-                  workOrder?.statusLabel?.toLowerCase() === WOstatus.Completed
-                )
-              }
+              disabled={disableGenerateInvoice}
               colorScheme="darkPrimary"
               size="md"
               leftIcon={<BiSpreadsheet />}
@@ -452,15 +440,15 @@ export const InvoiceTab = ({
         <HStack justifyContent="end">
           {workOrder?.statusLabel?.toLocaleLowerCase() === STATUS.Invoiced && !isVendor ? (
             <>
+              <Button onClick={onClose} colorScheme="darkPrimary" variant="outline">
+                {t('cancel')}
+              </Button>
               <Button
                 disabled={!rejectInvoiceCheck || isWorkOrderUpdating}
                 onClick={() => rejectInvoice()}
                 colorScheme="darkPrimary"
               >
                 {t('save')}
-              </Button>
-              <Button onClick={onClose} colorScheme="darkPrimary" variant="outline">
-                {t('cancel')}
               </Button>
             </>
           ) : (

@@ -17,7 +17,7 @@ describe('Vendor Work Orders Table', () => {
       // Work Order Columns
       expect(screen.queryByText('ID')).toBeInTheDocument()
       expect(screen.queryByText('WO Status')).toBeInTheDocument()
-      expect(screen.queryByText('Trade')).toBeInTheDocument()
+      expect(screen.queryByText('Skill')).toBeInTheDocument()
       expect(screen.queryByText('Name')).toBeInTheDocument()
       expect(screen.queryByText('Email')).toBeInTheDocument()
       expect(screen.queryByText('Phone')).toBeInTheDocument()

@@ -63,14 +63,18 @@ export const MarketsTable: React.FC<{}> = () => {
   const { markets, isLoading, refetch } = useMarkets()
   const [selectedMarket, setSelectedMarket] = useState<Market>()
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.markets)
-  const { tableColumns, settingColumns } = useTableColumnSettings(MARKET_COLUMNS, TableNames.markets)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(MARKET_COLUMNS, TableNames.markets)
 
   const onSave = columns => {
     postGridColumn(columns)
   }
 
   return (
-    <Box overflow="auto">
+    <Box overflow="auto"borderBottomRadius="6px" borderTopRadius="6px"  border="1px solid #CBD5E0">
       {selectedMarket && (
         <NewMarketModal
           isOpen={selectedMarket ? true : false}
@@ -80,7 +84,7 @@ export const MarketsTable: React.FC<{}> = () => {
           selectedMarket={selectedMarket}
         />
       )}
-      <Box overflow={'auto'} h="calc(100vh - 170px)" border="1px solid #CBD5E0" borderBottomRadius="6px">
+      <Box overflow={'auto'} h="calc(100vh - 170px)"  borderBottomRadius="6px" borderTopRadius="6px">
         <TableContextProvider data={markets} columns={tableColumns} sorting={sorting} setSorting={setSorting}>
           <Table
             onRowClick={row => setSelectedMarket(row)}
@@ -98,7 +102,14 @@ export const MarketsTable: React.FC<{}> = () => {
               />
               <CustomDivider />
 
-              {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+              {settingColumns && (
+                <TableColumnSettings
+                  refetch={refetchColumns}
+                  disabled={isLoading}
+                  onSave={onSave}
+                  columns={settingColumns}
+                />
+              )}
             </ButtonsWrapper>
           </TableFooter>
         </TableContextProvider>

@@ -17,9 +17,9 @@ export const vendor_manager = {
         newVendor: 'New Vendor',
 
         //Vendor Skills
-        vendorSkills: 'Vendor Trades',
-        newVendorSkills: 'New Vendor Trade',
-        skills: 'Trades',
+        vendorSkills: 'Vendor Skills',
+        newVendorSkills: 'New Vendor Skill',
+        skills: 'Skill',
         modifiedDate: 'Modified Date',
         deleteSkill: 'Delete Skill',
         delConfirmText: 'Delete Vendor Skill',
@@ -30,6 +30,11 @@ export const vendor_manager = {
 
         //Markets
         state: 'State',
+        deleteMarket: 'Delete Market',
+        deleteMarketAlertTitle: 'Do you really want to delete this Market?',
+        deleteMarketAlertMessage:
+          'After deleting this market, You will need to re-assign market to PCs, FPMs and projects.',
+        lienDue: 'Lien Due',
 
         //Cards
         active: 'Active',
@@ -66,6 +71,11 @@ export const vendor_manager = {
         deleteFailureMessage: 'No se puede eliminar la habilidad del proveedor.',
         //Market
         state: 'Estado',
+        deleteMarket: 'Eliminar mercado',
+        deleteMarketAlertTitle: '¿Realmente desea eliminar este mercado?',
+        deleteMarketAlertMessage:
+          'Después de eliminar este mercado, deberá volver a asignar el mercado a PC, FPM y proyectos.',
+        lienDue: 'gravamen adeudado',
 
         //Cards
         active: 'Activo',

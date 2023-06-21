@@ -7,12 +7,18 @@ import { useAuth } from 'utils/auth-context'
 import { useTranslation } from 'react-i18next'
 import { BiCaretLeft } from 'react-icons/bi'
 
-const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ children, isLoading, title, ...rest }) => {
+const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({
+  children,
+  isLoading,
+  title,
+  fontSize,
+  ...rest
+}) => {
   return (
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
       <Box fontSize="14px" color="gray.500">
-        <Tooltip label={title} color="black" placement="top">
-          <FormLabel variant="strong-label" size="md" noOfLines={1}>
+        <Tooltip label={title} color="black" bg='white' placement="top">
+          <FormLabel fontSize={fontSize} variant="strong-label" size="md" noOfLines={1}>
             {title}
           </FormLabel>
         </Tooltip>
@@ -39,45 +45,46 @@ export const ProjectSummaryCardDetails: React.FC<{
         w="100%"
         bg="white"
         borderRadius="4px"
+        border="1px solid #E5E5E5"
         box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
       >
-        <InfoStructureCard title={t('projects.projectSummary.lockBoxCode')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.lockBoxCode')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md" noOfLines={1}>
             {projectData?.lockBoxCode ? projectData?.lockBoxCode : '-------'}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.projectType')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.projectType')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md">
             {projectData?.projectTypeLabel}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.clientStart')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.clientStart')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md">
             {projectData?.clientStartDate ? dateFormat(projectData?.clientStartDate as string) : '-------'}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.clientEnd')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.clientEnd')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md">
             {projectData?.clientDueDate ? dateFormat(projectData?.clientDueDate as string) : '-------'}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.woaStart')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.woaStart')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md">
             {projectData?.woaStartDate ? dateFormat(projectData?.woaStartDate as string) : '-------'}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.woaEnd')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.woaEnd')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md">
             {projectData?.woaCompletionDate ? dateFormat(projectData?.woaCompletionDate as string) : '-------'}
           </FormLabel>
         </InfoStructureCard>
 
-        <InfoStructureCard title={t('projects.projectSummary.pcName')} isLoading={isLoading}>
+        <InfoStructureCard title={t('projects.projectSummary.pcName')} isLoading={isLoading} fontSize="12px">
           <FormLabel variant="light-label" size="md" noOfLines={1}>
             {projectData?.projectCoordinator}
           </FormLabel>
@@ -87,13 +94,14 @@ export const ProjectSummaryCardDetails: React.FC<{
           title={t('projects.projectSummary.pcContact')}
           isLoading={isLoading}
           borderRight="1px solid white"
+          fontSize="12px"
         >
           <FormLabel variant="light-label" size="md" noOfLines={1}>
             {account?.telephoneNumber}
           </FormLabel>
         </InfoStructureCard>
       </Flex>
-      <Box border={'1px solid #E5E5E5'} borderRadius="3px" w="25px" bg="blue.50">
+      <Box borderRadius="3px" w="25px" bg="#A9D8F6">
         <Box
           color="blue.100"
           border="none"
@@ -104,7 +112,7 @@ export const ProjectSummaryCardDetails: React.FC<{
             setSummaryPanel(1)
           }}
         >
-          <Box mt="35px">
+          <Box color={'white'} mt="35px">
             <BiCaretLeft size={25} />
           </Box>
         </Box>

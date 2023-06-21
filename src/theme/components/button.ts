@@ -115,9 +115,37 @@ const ButtonVariants = {
           cursor: 'auto',
         }
       },
+      cubicle: props => {
+        return {
+          ...chakraTheme.components.Button.variants.ghost(props),
+          _hover: { bg: '#4E87F8', color: 'white', border: 'none' },
+          _focus: { border: 'none' },
+          fontSize: '16px',
+          fontStyle: 'normal',
+          fontWeight: 500,
+          alignContent: 'center',
+          color: '#345EA6',
+          background: '#F2F3F4',
+          border: '1px solid #CBD5E0',
+          borderRadius: '4px',
+        }
+      },
+      green: props => {
+        return {
+          ...chakraTheme.components.Button.variants.ghost(props),
+          background: 'green.100',
+          color: `${props.colorScheme}.500`,
+          cursor: 'auto',
+          fontWeight: '500',
+        }
+      },
     },
 
     sizes: {
+      'square-sm': {
+        w: '20px',
+        h: '20px',
+      },
       xs: {
         minW: '55px',
         h: '24px',

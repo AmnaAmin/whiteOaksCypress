@@ -32,12 +32,13 @@ const PROJECT_TABLE_QUERY_KEYS = {
   skillName: 'skillName.contains',
   workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',
   expectedPaymentDate: 'expectedPaymentDate.equals',
+  displayId: 'displayId.contains'
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projectID',
-    accessorKey: 'projectId',
+    accessorKey: 'displayId',
     cell: (row: any) => {
       const value = row.cell.getValue()
       return (
@@ -59,7 +60,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'statusLabel',
     cell: (row: any) => {
       let value = row.cell.getValue() as string
-      
+
       return <Status value={value} id={value} />
     },
   },
@@ -123,7 +124,11 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   )
 
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
-  const { tableColumns, settingColumns } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
   const filtersInitialValues = {
     statusLabel: selectedCard !== 'pastDue' ? selectedCard : 'past Due',
   }
@@ -154,7 +159,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   }
 
   return (
-    <Box  overflowX={'auto'} minH="calc(100vh - 250px)">
+    <Box overflowX={'auto'} minH="calc(100vh - 250px)">
       <TableContextProvider
         data={workOrderData}
         columns={tableColumnsWithFilters}
@@ -174,7 +179,14 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
               fileName="workOrders"
             />
             <CustomDivider />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} />}
+            {settingColumns && (
+              <TableColumnSettings
+                refetch={refetchColumns}
+                disabled={isLoading}
+                onSave={onSave}
+                columns={settingColumns}
+              />
+            )}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentRecordsWithTotalRecords dataCount={dataCount} />

@@ -155,6 +155,7 @@ export const PerformanceTab = () => {
             quarter: getQuarterByMonth(monthIndex),
             Revenue: nameMonthData[nameKey]?.revenue,
             Profit: nameMonthData[nameKey]?.profit,
+            Bonus: nameMonthData[nameKey]?.bonus,
           }
         })
         graphs.push(...userMonthData)

@@ -64,13 +64,14 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     handleSubmit,
     formState: { errors },
     reset,
-    getValues,
+    watch,
+    setValue,
   } = useForm()
-  const values = getValues()
+  const values = watch('against')
 
   const creatDocumentsPayload = async (documents: Array<any>, documentType: string) => {
-    const vendorId = values?.against?.value?.vendorId?.toString() || ''
-    const workOrderId = values?.against?.value?.id?.toString() || ''
+    const vendorId = values?.value?.vendorId?.toString() || ''
+    const workOrderId = values?.value?.id?.toString() || ''
     const results = await Promise.all(
       documents.map(async (document: any, index: number) => {
         let doc = {}
@@ -149,14 +150,17 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         control={control}
                         name="documentTypes"
                         rules={{ required: 'Document type is required' }}
-                        render={({ field: { onChange, value, name, ref }, fieldState }) => {
+                        render={({ field, fieldState }) => {
                           return (
                             <>
                               <ReactSelect
                                 options={docTypes}
                                 selectProps={{ isBorderLeft: true, menuHeight: '200px' }}
                                 value={documentType}
-                                onChange={onChange}
+                                onChange={(file: any) => {
+                                  field.onChange(file)
+                                  setValue('against', null)
+                                }}
                               />
 
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>

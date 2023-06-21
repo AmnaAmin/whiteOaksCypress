@@ -12,6 +12,7 @@ import {
   Input,
   Flex,
   Box,
+  VStack,
 } from '@chakra-ui/react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { AddressInfo, ProjectFormValues } from 'types/project.type'
@@ -143,7 +144,7 @@ export const AddPropertyInfo: React.FC<{
   return (
     <>
       <Flex flexDir="column">
-        <Box px="6" minH="300px">
+        <Box px="6" h="300px" overflow={'auto'}>
           {isDuplicateAddress && (
             <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
               <AlertIcon />
@@ -370,6 +371,67 @@ export const AddPropertyInfo: React.FC<{
               </FormControl>
             </GridItem>
           </Grid>
+          <VStack alignItems={'flex-start'} mt="10px">
+            <FormLabel variant="bold-label" size="md">
+              {t(`${NEW_PROJECT}.homeOwner`)}
+            </FormLabel>
+            <Grid templateColumns="repeat(3, 225px)" gap={'1rem 1.5rem'} m="0px">
+              <GridItem>
+                <FormControl isInvalid={!!errors?.name} height="100px">
+                  <FormLabel isTruncated title={t(`${NEW_PROJECT}.name`)} size="md" htmlFor="name">
+                    {t(`${NEW_PROJECT}.name`)}
+                  </FormLabel>
+                  <Input id="homeOwnerName" {...register('homeOwnerName', {})} autoComplete="off" />
+                </FormControl>
+              </GridItem>
+              <GridItem>
+                <FormControl isInvalid={!!errors?.hoaPhone}>
+                  <FormLabel htmlFor="phone" size="md">
+                    {t(`${NEW_PROJECT}.phone`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="homeOwnerPhone"
+                    render={({ field, fieldState }) => {
+                      return (
+                        <>
+                          <NumberFormat
+                            id="homeOwnerPhone"
+                            customInput={Input}
+                            value={field.value}
+                            onChange={e => {
+                              field.onChange(e)
+                            }}
+                            format="(###)-###-####"
+                            mask="_"
+                            placeholder="(___)-___-____"
+                          />
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </>
+                      )
+                    }}
+                  />
+                </FormControl>
+              </GridItem>
+              <GridItem>
+                <FormControl isInvalid={!!errors?.homeOwnerEmail} height="100px">
+                  <FormLabel isTruncated title={t(`${NEW_PROJECT}.email`)} size="md" htmlFor="name">
+                    {t(`${NEW_PROJECT}.email`)}
+                  </FormLabel>
+                  <Input
+                    id="homeOwnerEmail"
+                    {...register('homeOwnerEmail', {
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                        message: 'Invalid Email Address',
+                      },
+                    })}
+                  />
+                  <FormErrorMessage>{errors?.homeOwnerEmail?.message}</FormErrorMessage>
+                </FormControl>
+              </GridItem>
+            </Grid>
+          </VStack>
         </Box>
 
         <Flex display="flex" justifyContent="end" borderTop="1px solid #E2E8F0" pt="5" px="6">

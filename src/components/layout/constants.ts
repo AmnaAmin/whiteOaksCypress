@@ -44,6 +44,12 @@ export const MENU_ROLE_BASED: Menus = {
       color: '#F6AD55',
     },
     {
+      pathTo: '/estimates',
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: '#ECC94B',
+    },
+    {
       pathTo: '/projects',
       title: `${SIDE_NAV}.projects`,
       Icon: FaAlignCenter,
@@ -187,12 +193,6 @@ export const MENU_ROLE_BASED: Menus = {
       title: `${SIDE_NAV}.vendors`,
       Icon: BiUserPin,
       color: '#9F7AEA',
-    },
-    {
-      pathTo: '/performance',
-      title: `${SIDE_NAV}.performance`,
-      Icon: BiLineChart,
-      color: '#68D391',
     },
   ],
 
@@ -494,6 +494,12 @@ export const MENU_ROLE_BASED: Menus = {
     },
   ],
   [UserTypes.constructionOperations]: [
+    {
+      pathTo: '/estimates',
+      title: `${SIDE_NAV}.estimates`,
+      Icon: MdOnlinePrediction,
+      color: '#ECC94B',
+    },
     {
       pathTo: '/projects',
       title: `${SIDE_NAV}.projects`,

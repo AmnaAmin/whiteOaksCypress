@@ -122,7 +122,7 @@ export const workOrderAttributes = [
 
 export const transactionAttributes = [
   { value: 'changeOrderAmount', label: 'Amount', type: 'number' },
-  { value: 'transactionType', label: 'Type', type: 'string' },
+  //{ value: 'transactionType', label: 'Type', type: 'string' },
   { value: 'status', label: 'Status', type: 'custom' },
 ]
 
@@ -167,11 +167,19 @@ export const vendorStatus = [
 ]
 export const workOrderStatus = [
   { label: 'Active', value: 34 },
-  { label: 'InActive', value: 35 },
-  { label: 'Do Not Use', value: 36 },
-  { label: 'Expired', value: 37 },
+  { label: 'Completed', value: 36 },
+  { label: 'Invoiced', value: 110 },
+  { label: 'Rejected', value: 111 },
+  { label: 'Paid', value: 68 },
 ]
 export const transactionStatus = [
+  { label: 'PENDING', value: 'PENDING' },
+  { label: 'CANCELLED', value: 'CANCELLED' },
+  { label: 'APPROVED', value: 'APPROVED' },
+  { label: 'DENIED', value: 'DENIED' },
+]
+
+export const transactionType = [
   { label: 'Vendor Work Order', value: 27 },
   { label: 'Original SOW', value: 28 },
   { label: 'Change Order', value: 29 },
