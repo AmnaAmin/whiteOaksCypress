@@ -17,7 +17,7 @@ export const Sidebar: React.FC<BoxProps> = props => {
           bg: 'transparent',
         },
         '&::-webkit-scrollbar': {
-          width: '4px',
+          width: '10px',
         },
         '&::-webkit-scrollbar-thumb': {
           bg: mode('blue.600', 'gray.700'),

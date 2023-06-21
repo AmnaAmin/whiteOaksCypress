@@ -346,7 +346,7 @@ const parseUserFormData = ({
   languageOptions,
 }) => {
   let _accountType = roles?.find(r => r.label === userInfo?.authorities?.[0])
-
+  const managerUser = userData?.find(us => userInfo?.parentFieldProjectManagerId === us.id)
   return {
     ...userInfo,
     markets: markets || [],
@@ -360,15 +360,12 @@ const parseUserFormData = ({
           value: u.id,
         }
       }) || [],
-    parentFieldProjectManagerId:
-      userData
-        ?.filter(us => userInfo?.parentFieldProjectManagerId === us.id)
-        ?.map(u => {
-          return {
-            label: u.firstName + ' ' + u.lastName,
-            value: u.id,
-          }
-        }) || [],
+    parentFieldProjectManagerId: managerUser
+      ? {
+          label: managerUser?.firstName + ' ' + managerUser?.lastName,
+          value: managerUser?.id,
+        }
+      : null,
     accountType: _accountType,
     vendorId: viewVendorsOptions?.find(vendor => vendor.value === userInfo?.vendorId),
     langKey: languageOptions?.find(l => l.value === userInfo?.langKey),
