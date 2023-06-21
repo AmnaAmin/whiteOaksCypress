@@ -354,7 +354,7 @@ const parseUserFormData = ({
     regions: regions || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
     directReports:
-      userInfo?.directReports.map(u => {
+      userInfo?.directReports?.map(u => {
         return {
           label: u.firstName + ' ' + u.lastName,
           value: u.id,
@@ -362,7 +362,7 @@ const parseUserFormData = ({
       }) || [],
     parentFieldProjectManagerId:
       userData
-        ?.find(us => userInfo?.parentFieldProjectManagerId === us.id)
+        ?.filter(us => userInfo?.parentFieldProjectManagerId === us.id)
         ?.map(u => {
           return {
             label: u.firstName + ' ' + u.lastName,
