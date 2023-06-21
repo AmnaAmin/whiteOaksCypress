@@ -159,7 +159,7 @@ export const useDeleteUserDetails = () => {
   )
 }
 
-export const userMangtPayload = (user: any, statesDTO?: any) => {
+export const userMangtPayload = (user: any, statesDTO?: any, usersData?: any) => {
   const getFpmStateId = () => {
     return user.states?.find(state => state.checked === true)?.state?.id
   }
@@ -168,6 +168,7 @@ export const userMangtPayload = (user: any, statesDTO?: any) => {
     return user.states?.filter(state => state.checked === true)?.map(s => s?.state)
   }
 
+  const directReportIds = user?.directReports?.map(d => d.value)
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
@@ -183,8 +184,18 @@ export const userMangtPayload = (user: any, statesDTO?: any) => {
     newBonus: user.newBonus?.label ? user.newBonus?.value : '',
     vendorAdmin: user.vendorAdmin,
     primaryAdmin: user.primaryAdmin,
-    directChild: user?.directReports?.map(d => d.value),
-    managers: user?.managers?.map(d => d.value),
+    directChild: usersData
+      ?.filter(u => directReportIds.includes(u.id))
+      ?.map(u => {
+        return {
+          id: u?.id,
+          email: u?.email,
+          firstName: u?.firstName,
+          lastName: u?.lastName,
+          login: u?.login,
+        }
+      }),
+    parentFieldProjectManagerId: user?.parentFieldProjectManagerId?.value,
     authorities: [user.accountType?.label],
   }
 
@@ -329,7 +340,7 @@ const parseUserFormData = ({
   markets,
   states,
   regions,
-  usersList,
+  userData,
   roles,
   viewVendorsOptions,
   languageOptions,
@@ -343,17 +354,15 @@ const parseUserFormData = ({
     regions: regions || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
     directReports:
-      usersList
-        ?.find(us => userInfo?.directReports?.includes(us))
-        ?.map(u => {
-          return {
-            label: u.firstName + ' ' + u.lastName,
-            value: u.id,
-          }
-        }) || [],
-    managers:
-      usersList
-        ?.find(us => userInfo?.managers?.includes(us))
+      userInfo?.directReports.map(u => {
+        return {
+          label: u.firstName + ' ' + u.lastName,
+          value: u.id,
+        }
+      }) || [],
+    parentFieldProjectManagerId:
+      userData
+        ?.find(us => userInfo?.parentFieldProjectManagerId === us.id)
         ?.map(u => {
           return {
             label: u.firstName + ' ' + u.lastName,
@@ -454,8 +463,8 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { regionSelectOptions } = useRegions()
   const { options: roles } = useFetchRoles()
   const { options: viewVendorsOptions } = useViewVendor()
-  const { options: usersList } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
-
+  const { userMgt: userData } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
+  console.log(userData)
   const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
   const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
 
@@ -495,7 +504,7 @@ export const useUserDetails = ({ form, userInfo }) => {
           markets: formattedMarkets,
           states: formattedStates,
           regions: formattedRegions,
-          usersList,
+          userData,
           roles,
           viewVendorsOptions,
           languageOptions,
@@ -508,7 +517,7 @@ export const useUserDetails = ({ form, userInfo }) => {
     stateOptions?.length,
     markets?.length,
     regionSelectOptions?.length,
-    usersList?.length,
+    userData?.length,
     roles?.length,
     viewVendorsOptions?.length,
     directStates?.length,
