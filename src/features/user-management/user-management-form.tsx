@@ -177,7 +177,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         },
       })
     },
-    [userInfo, isVendor, addUser, updateUser, userMangtPayload, statesDTO],
+    [userInfo, isVendor, addUser, updateUser, userMangtPayload, statesDTO, userData?.length],
   )
 
   const isPrimaryDisabled = !formValues.vendorAdmin
