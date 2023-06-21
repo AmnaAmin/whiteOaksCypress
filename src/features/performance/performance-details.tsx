@@ -16,7 +16,6 @@ import { useTranslation } from 'react-i18next'
 import { currencyFormatter } from 'utils/string-formatters'
 import { badges, bonus, ignorePerformance, useFPMDetails } from 'api/performance'
 import { Controller, UseFormReturn } from 'react-hook-form'
-import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import Select from 'components/form/react-select'
 import { PERFORMANCE } from './performance.i18n'
 
