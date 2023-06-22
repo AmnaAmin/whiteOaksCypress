@@ -354,7 +354,7 @@ const parseUserFormData = ({
     regions: regions || [],
     state: stateOptions?.find(s => s.id === userInfo?.stateId),
     directReports:
-      userInfo?.directReports?.map(u => {
+      userInfo?.directChild?.map(u => {
         return {
           label: u.firstName + ' ' + u.lastName,
           value: u.id,
@@ -461,7 +461,7 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { options: roles } = useFetchRoles()
   const { options: viewVendorsOptions } = useViewVendor()
   const { userMgt: userData } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
-  console.log(userData)
+
   const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
   const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
 
