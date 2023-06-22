@@ -241,6 +241,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
 
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
+  const allowSave = (projectAwardCheck || isPlanExhausted || remainingAmt) && !isAdmin
 
   const methodForPayment = e => {
     if (e > selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw && !isRefund) {
@@ -960,9 +961,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 data-testid="save-transaction"
                 colorScheme="darkPrimary"
                 variant="solid"
-                disabled={
-                  isFormSubmitLoading || isMaterialsLoading || projectAwardCheck || isPlanExhausted || remainingAmt
-                }
+                disabled={isFormSubmitLoading || isMaterialsLoading || allowSave}
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>
