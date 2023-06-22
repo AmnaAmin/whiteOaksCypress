@@ -36,7 +36,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { Alert, AlertDescription, AlertIcon } from '@chakra-ui/alert'
 import { CloseButton } from '@chakra-ui/react'
 import { orderBy } from 'lodash'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { MdOutlineCancel } from 'react-icons/md'
 import { readFileContent } from 'api/vendor-details'
 import { truncateWithEllipsis } from 'utils/string-formatters'
@@ -57,7 +57,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { isVendor } = useUserRolesSelector()
   const { isFieldsDisabled } = useLWFieldsStatusDecision({ workOrder: workOrder })
   const inputRef = useRef<HTMLInputElement | null>(null)
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
   type FormValueType = {
     claimantName: string | null | undefined
     customerName: string | null | undefined
@@ -527,17 +527,16 @@ export const LienWaiverTab: React.FC<any> = props => {
           <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
             {t('cancel')}
           </Button>
-
-          {!isVendor ? (
-            <Button
-              onClick={() => lwUpload()}
-              colorScheme="brand"
-              isDisabled={!document || isUpdating}
-              data-testid="cancel-lien-waiver"
-            >
-              {t('save')}
-            </Button>
-          ) : (
+          {!isReadOnly && !isVendor ? (
+  <Button
+    onClick={() => lwUpload()}
+    colorScheme="brand"
+    isDisabled={!document || isUpdating}
+    data-testid="cancel-lien-waiver"
+  >
+    {t('save')}
+  </Button>
+) : null}
             <>
               {[STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
                 workOrder?.statusLabel?.toLocaleLowerCase(),
@@ -548,7 +547,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   </Button>
                 )}
             </>
-          )}
+          
         </HStack>
       </ModalFooter>
       <ConfirmationBox

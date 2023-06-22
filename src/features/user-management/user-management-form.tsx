@@ -42,6 +42,7 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useFetchRoles } from 'api/access-control'
 import { useUsrMgt } from 'pages/admin/user-management'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 type UserManagement = {
   onClose: () => void
@@ -77,6 +78,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
   const { options: roles } = useFetchRoles()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   const { options: usersList, isLoading: loadingUsersList } = useUsrMgt(
     'userType.notIn=6&devAccount.equals=false',
     0,
@@ -809,7 +811,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         mt="30px"
       >
         <>
-          {user && (
+          {!isReadOnly && user && (
             <Button
               variant="outline"
               isDisabled={user?.activated ? true : false}
@@ -832,10 +834,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         >
           {t(`${USER_MANAGEMENT}.modal.cancel`)}
         </Button>
-
+        <>
+        {!isReadOnly && (
         <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
           {t(`${USER_MANAGEMENT}.modal.save`)}
         </Button>
+        )}
+        </>
         <ConfirmationBox
           title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}
           content={t(`${USER_MANAGEMENT}.modal.deleteUserContent`)}

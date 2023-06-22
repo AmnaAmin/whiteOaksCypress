@@ -18,6 +18,7 @@ import { useAccountDetails } from 'api/vendor-details'
 import { convertDateWithTimeStamp } from 'utils/date-time-utils'
 import React, { useRef, useEffect } from 'react'
 import { BiSpreadsheet } from 'react-icons/bi'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
@@ -103,6 +104,7 @@ export const NotesTab = (props: NotesProps) => {
     projectCompletion,
   } = props
   const { handleSubmit, register, setValue, reset, control } = useForm()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
   const { data: account } = useAccountDetails()
   const { t } = useTranslation()
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
@@ -183,7 +185,7 @@ export const NotesTab = (props: NotesProps) => {
                   {t('cancel')}
                 </Button>
               )}
-              {!hideSave && (
+              {!isReadOnly && !hideSave && (
                 <Button
                   type="submit"
                   colorScheme="darkPrimary"

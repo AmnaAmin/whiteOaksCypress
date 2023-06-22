@@ -60,7 +60,7 @@ import {
   useTotalAmount,
 } from './hooks'
 import { TransactionAmountForm } from './transaction-amount-form'
-import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
@@ -165,6 +165,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   const [remainingAmt, setRemainingAmt] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
+  const isReadOnly =  useRoleBasedPermissions()?.permissions?.some(p => ['PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
 
@@ -953,7 +954,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          ((!isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
+          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
             <>
               <Button
                 type="submit"

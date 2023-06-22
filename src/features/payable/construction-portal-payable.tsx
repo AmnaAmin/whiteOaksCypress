@@ -20,12 +20,14 @@ import { DevTool } from '@hookform/devtools'
 import { ACCOUNTS } from 'pages/accounts.i18n'
 import { Card } from 'components/card/card'
 import { usePayableColumns } from './hooks'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 //All commented Code will be used later
 export const ConstructionPortalPayable = () => {
   const [loading, setLoading] = useState(false)
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
   const [
     selectedDay,
     // setSelectedDay
@@ -84,7 +86,7 @@ export const ConstructionPortalPayable = () => {
   const onNotificationClose = () => {
     setIsBatchClick(false)
   }
-
+  
   // const { weekDayFilters } = usePayableWeeklyCount({ pagination, queryStringWithPagination })
 
   return (
@@ -110,10 +112,14 @@ export const ConstructionPortalPayable = () => {
             clear={clearAll}
           /> */}
             <Spacer />
+            <>
+            {!isReadOnly && (
             <Button alignContent="right" colorScheme="brand" type="submit" disabled={selectedCard === '6'} minW="140px">
               <Icon as={BiSync} fontSize="18px" mr={2} />
               {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
             </Button>
+            )}
+            </>
           </Flex>
 
           {/* -- If overpayment card is not selected, then show payable table. (Overpayment Card Id is 6) -- */}
