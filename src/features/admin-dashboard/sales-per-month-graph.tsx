@@ -157,13 +157,14 @@ export const SalesPerMonth = ({ data, bar, line }) => {
               <YAxis
                 axisLine={false}
                 label={{
-                  value: 'sales amount',
+                  value: 'Sales amount',
                   angle: -90,
                   position: 'insideLeft',
                   offset: -35,
                   fontSize: '14px',
-                  fontWeight: 600,
-                  font: 'inter',
+                  fontWeight: 500,
+                  font: 'poppins',
+                  style: { color: '#2D3748', fill: '#2D3748' }
                 }}
                 tickFormatter={value => `$${value}`}
                 tick={{
