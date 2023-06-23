@@ -440,7 +440,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                       label="Claimant Signature"
                       InputElem={
                         workOrder?.lienWaiverAccepted && claimantsSignature ? (
-                          <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
+                          <Image mt='19px' hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
                         ) : (
                           <></>
                         )
