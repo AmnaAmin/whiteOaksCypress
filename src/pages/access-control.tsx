@@ -22,6 +22,7 @@ export const AccessControl: React.FC = () => {
               {t(`${ACCESS_CONTROL}.accessControl`)}
             </Text>
             <Button
+              data-testid={'newRole'}
               onClick={() => {
                 setNewRole(true)
               }}
