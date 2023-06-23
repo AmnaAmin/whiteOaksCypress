@@ -34,6 +34,7 @@ import {
 import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
 import { VendorUsersTab } from 'features/vendors/vendor-users-table'
+import { VendorAccounts } from 'features/vendors/vendor-accounts'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -146,15 +147,18 @@ export const VendorProfileTabs: React.FC<Props> = props => {
       } else {
         //Create Vendor
         switch (tabIndex) {
+          case 5:
+            const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
+            createVendor(createPayload, {
+              onSuccess() {
+                props.onClose?.()
+              },
+            })
+            break
           case 4:
             //create vendor: market tab
             if (validateMarket(formData?.markets)) {
-              const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
-              createVendor(createPayload, {
-                onSuccess() {
-                  props.onClose?.()
-                },
-              })
+              setTabIndex(i => i + 1)
             } else {
               showError('Market')
             }
@@ -185,11 +189,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
       setTabIndex(state)
     }
   }, [state])
-
+  console.log('vendorProfileData', vendorProfileData?.id)
   return (
     <FormProvider {...formReturn}>
       <Stack width={{ base: '100%' }}>
-        <form onSubmit={formReturn.handleSubmit(submitForm)}>
+        <form onSubmit={formReturn.handleSubmit(submitForm, err => console.log('err..', err))}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
             <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }} height="40px">
               <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
@@ -227,7 +231,10 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               </Tab>
               {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
               {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
-              {vendorProfileData?.id && <Tab>Users</Tab>}
+              {!!vendorProfileData?.id && <Tab>Users</Tab>}
+              <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id}>
+                {t('accounts')}
+              </Tab>
             </TabList>
 
             <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
@@ -305,18 +312,27 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   )}
                 </TabPanel>
 
-                {!isVendor && (
+                {!isVendor && vendorProfileData?.id && (
                   <TabPanel p="0px">
                     {tabIndex === 5 && (
                       <VendorProjects vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
                     )}
                   </TabPanel>
                 )}
-                {vendorProfileData?.id && (
+                {!!vendorProfileData?.id && (
                   <TabPanel p="0px">
                     <VendorUsersTab vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
                   </TabPanel>
                 )}
+
+                <TabPanel p="0px">
+                  <VendorAccounts
+                    isActive={vendorProfileData?.id ? tabIndex === 7 : tabIndex === 5}
+                    vendorProfileData={vendorProfileData as VendorProfile}
+                    onClose={props.onClose}
+                  />
+                </TabPanel>
+
                 {/* <TabPanel p="0px">
                 <Box overflow="auto">
                 <AuditLogs

@@ -50,6 +50,8 @@ export type Vendor = {
   autoInsuranceExpirationDate: string | null
   agreementSignedDate: string | null
   vendorAgreementSigned: boolean
+  voidedCheckDate: string | null
+  voidedCheckUrl: string | null
   isSsn: false
   ssnNumber: string | null
   otherInsuranceExpirationDate: string | null
@@ -222,12 +224,7 @@ export type VendorProfileDetailsFormData = {
   city?: string
   zipCode?: string
   capacity?: null | number
-  einNumber?: string
-  ssnNumber?: string
   paymentTerm?: Select
-  creditCard?: boolean
-  ach?: boolean
-  check?: boolean
   agreementSignedDate?: Date
   autoInsuranceExpDate?: Date
   coiGlExpDate?: Date
@@ -263,7 +260,40 @@ export type Trade = {
   skill: string
   active: boolean
 }
-
+export type VendorAccountsFormValues = {
+  einNumber?: string
+  ssnNumber?: string
+  creditCard?: boolean
+  ach?: boolean
+  check?: boolean
+  businessPhoneNumber: string
+  businessNumberExtention: string
+  businessPhoneNumberExtension?: string
+  businessEmailAddress: string
+  ownerName?: string
+  companyName?: string
+  streetAddress?: string
+  state?: Select
+  city?: string
+  zipCode?: string
+  bankName?: string
+  banksPrimaryContact?: string
+  bankEmail?: string
+  bankPhoneNumber: string
+  bankAddress?: string
+  bankCity?: string
+  bankState?: string
+  bankZipCode?: string
+  routingNumber?: string
+  accountingNumber?: string
+  checking?: boolean
+  saving?: boolean
+  voidedCheckFile?: File
+  voidedCheckDate?: string | null
+  voidedCheckStatus?: boolean
+  ownersSignature: any
+  dateOfSignature: string | Date | null
+}
 type TradeFormValues = {
   trade: Trade
   checked: boolean
@@ -359,4 +389,31 @@ export type Vendors = {
   market: string
   businessEmailAddress: string
   businessPhoneNumber: string
+}
+
+export const preventNumber = e => {
+  let keyCode = e.keyCode ? e.keyCode : e.which
+  //  to prevent the special characters and Numbers
+  if (
+    (keyCode > 47 && keyCode < 58) ||
+    keyCode === 36 ||
+    keyCode === 34 ||
+    keyCode === 35 ||
+    keyCode === 37 ||
+    keyCode === 38 ||
+    keyCode === 39 ||
+    keyCode === 40 ||
+    keyCode === 41 ||
+    keyCode === 42 ||
+    keyCode === 43 ||
+    keyCode === 44 ||
+    keyCode === 45 ||
+    keyCode === 46 ||
+    keyCode === 47 ||
+    keyCode === 64 ||
+    keyCode === 94 ||
+    keyCode === 63
+  ) {
+    e.preventDefault()
+  }
 }

@@ -1,12 +1,10 @@
 import {
   Box,
-  Checkbox,
   Grid,
   GridItem,
   HStack,
   Input,
   Stack,
-  VStack,
   Text,
   FormControl,
   FormLabel,
@@ -18,7 +16,7 @@ import ReactSelect from 'components/form/react-select'
 import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
+import { VendorProfile, VendorProfileDetailsFormData, preventNumber } from 'types/vendor.types'
 import { useStates } from 'api/pc-projects'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
@@ -53,16 +51,14 @@ const CreateVendorDetail: React.FC<{
     formState: { errors },
     control,
     register,
+    setValue,
   } = useFormContext<VendorProfileDetailsFormData>()
   const { disableDetailsNext } = useVendorNext({ control })
-  const einNumber = useWatch({ name: 'einNumber', control })
-  const ssnNumber = useWatch({ name: 'ssnNumber', control })
 
-  const formValues = useWatch({ control })
   const { isFPM } = useUserRolesSelector()
 
   const capacityError = useWatch({ name: 'capacity', control })
-  const validatePayment = PaymentMethods?.filter(payment => formValues[payment.value])
+
   // Set Document Status dropdown if Status is Expired
   const [statusOptions, setStatusOptions] = useState<any>([])
   const documentStatusSelectOptions = useDocumentStatusSelectOptions(vendorProfileData)
@@ -74,33 +70,6 @@ const CreateVendorDetail: React.FC<{
       setStatusOptions(documentStatus)
     }
   })
-
-  const preventNumber = e => {
-    let keyCode = e.keyCode ? e.keyCode : e.which
-    //  to prevent the special characters and Numbers
-    if (
-      (keyCode > 47 && keyCode < 58) ||
-      keyCode === 36 ||
-      keyCode === 34 ||
-      keyCode === 35 ||
-      keyCode === 37 ||
-      keyCode === 38 ||
-      keyCode === 39 ||
-      keyCode === 40 ||
-      keyCode === 41 ||
-      keyCode === 42 ||
-      keyCode === 43 ||
-      keyCode === 44 ||
-      keyCode === 45 ||
-      keyCode === 46 ||
-      keyCode === 47 ||
-      keyCode === 64 ||
-      keyCode === 94 ||
-      keyCode === 63
-    ) {
-      e.preventDefault()
-    }
-  }
 
   return (
     <Stack spacing={3}>
@@ -116,6 +85,9 @@ const CreateVendorDetail: React.FC<{
               variant="required-field"
               {...register('companyName', {
                 required: isActive && 'This is required',
+                onChange: e => {
+                  setValue('companyName', e.target.value)
+                },
               })}
               size="md"
               isDisabled={isFPM}
@@ -197,6 +169,9 @@ const CreateVendorDetail: React.FC<{
                 type="text"
                 {...register('streetAddress', {
                   required: isActive && 'This is required',
+                  onChange: e => {
+                    setValue('streetAddress', e.target.value)
+                  },
                 })}
                 w="215px"
                 variant="required-field"
@@ -215,6 +190,9 @@ const CreateVendorDetail: React.FC<{
                 type="text"
                 {...register('city', {
                   required: isActive && 'This is required',
+                  onChange: e => {
+                    setValue('city', e.target.value)
+                  },
                 })}
                 w="215px"
                 variant="required-field"
@@ -258,6 +236,9 @@ const CreateVendorDetail: React.FC<{
                 type="number"
                 {...register('zipCode', {
                   required: isActive && 'This is required',
+                  onChange: e => {
+                    setValue('zipCode', e.target.value)
+                  },
                 })}
                 w="215px"
                 variant="required-field"
@@ -277,7 +258,11 @@ const CreateVendorDetail: React.FC<{
               </FormLabel>
               <Input
                 type="email"
-                {...register('businessEmailAddress')}
+                {...register('businessEmailAddress', {
+                  onChange: e => {
+                    setValue('businessEmailAddress', e.target.value)
+                  },
+                })}
                 variant="required-field"
                 size="md"
                 isDisabled={isFPM}
@@ -325,7 +310,11 @@ const CreateVendorDetail: React.FC<{
               </FormLabel>
 
               <Input
-                {...register('businessPhoneNumberExtension')}
+                {...register('businessPhoneNumberExtension', {
+                  onChange: e => {
+                    setValue('businessPhoneNumberExtension', e.target.value)
+                  },
+                })}
                 w="121px"
                 variant="outline"
                 size="md"
@@ -385,6 +374,27 @@ const CreateVendorDetail: React.FC<{
 
         <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px" mt="30px">
           <GridItem>
+            <FormControl w="215px" isInvalid={!!errors.companyName}>
+              <FormLabel variant="strong-label" size="md">
+                {t('ownersName')}
+              </FormLabel>
+              <Input
+                type="text"
+                id="ownerName"
+                variant="required-field"
+                {...register('ownerName', {
+                  required: isActive && 'This is required',
+                  onChange: e => {
+                    setValue('ownerName', e.target.value)
+                  },
+                })}
+                size="md"
+                isDisabled={isFPM}
+              />
+              <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
             <FormControl isInvalid={!!errors.capacity}>
               <FormLabel variant="strong-label" size="md">
                 {t('capacity')}
@@ -404,68 +414,6 @@ const CreateVendorDetail: React.FC<{
             <Text fontSize="14px" color="red">
               {capacityError! > 500 ? 'capacity should not be greater than 500' : ''}
             </Text>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={!!errors.einNumber}>
-              <FormLabel variant="strong-label" size="md">
-                {t('ein')}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="einNumber"
-                rules={{ required: ssnNumber ? '' : isActive && 'This is required' }}
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberFormat
-                        data-testid="einnum"
-                        value={field.value}
-                        customInput={ssnNumber ? CustomInput : CustomRequiredInput}
-                        format="##-#######"
-                        mask="_"
-                        onValueChange={e => {
-                          field.onChange(e.value)
-                        }}
-                        isDisabled={isFPM}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              ></Controller>
-              <FormErrorMessage pos="absolute">{errors.einNumber?.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={!!errors.ssnNumber}>
-              <FormLabel variant="strong-label" size="md">
-                {t('sin')}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="ssnNumber"
-                rules={{ required: einNumber ? '' : isActive && 'This is required' }}
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberFormat
-                        data-testid="ssnnum"
-                        value={field.value}
-                        customInput={einNumber ? CustomInput : CustomRequiredInput}
-                        format="###-##-####"
-                        mask="_"
-                        onValueChange={e => {
-                          field.onChange(e.value)
-                        }}
-                        isDisabled={isFPM}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              ></Controller>
-              <FormErrorMessage pos="absolute">{errors.ssnNumber?.message}</FormErrorMessage>
-            </FormControl>
           </GridItem>
           <GridItem></GridItem>
           <GridItem></GridItem>
@@ -527,44 +475,6 @@ const CreateVendorDetail: React.FC<{
                 />
               </FormControl>
             </Box>
-            <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
-              <Text>{t('paymentMethods')}</Text>
-              <FormControl isInvalid={!!errors.check?.message && !validatePayment?.length}>
-                <HStack spacing="16px">
-                  {PaymentMethods.map(payment => {
-                    return (
-                      <Controller
-                        control={control}
-                        // @ts-ignore
-                        name={payment.value as string}
-                        rules={{
-                          required: !validatePayment?.length && 'This is required',
-                        }}
-                        render={({ field, fieldState }) => (
-                          <>
-                            <div data-testid="payment_checkbox_check">
-                              <Checkbox
-                                colorScheme="brand"
-                                isChecked={field.value}
-                                onChange={event => {
-                                  const isChecked = event.target.checked
-                                  field.onChange(isChecked)
-                                }}
-                                mr="2px"
-                                isDisabled={isFPM}
-                              >
-                                {t(payment.value)}
-                              </Checkbox>
-                            </div>
-                          </>
-                        )}
-                      />
-                    )
-                  })}
-                </HStack>
-                <FormErrorMessage pos="absolute">{errors.check?.message}</FormErrorMessage>
-              </FormControl>
-            </VStack>
           </Stack>
         </Box>
       </Box>

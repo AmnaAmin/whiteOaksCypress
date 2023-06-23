@@ -140,6 +140,11 @@ export const PaymentMethods = [
   { key: 105, value: 'creditCard' },
 ]
 
+export const AccountingType = [
+  { key: 'checking', value: 'checking' },
+  { key: 'saving', value: 'saving' },
+]
+
 export const parseVendorFormDataToAPIData = (
   formValues: VendorProfileDetailsFormData,
   paymentsMethods,
@@ -165,8 +170,6 @@ export const parseVendorFormDataToAPIData = (
     city: formValues.city!,
     zipCode: formValues.zipCode!,
     capacity: formValues.capacity!,
-    einNumber: formValues.einNumber!,
-    ssnNumber: formValues.ssnNumber!,
     //secondEmailAddress: formValues.secondEmailAddress!,
     score: formValues.score?.value,
     status: formValues.status?.value,
@@ -384,6 +387,7 @@ export const DOCUMENTS_TYPES = {
   AGREEMENT_SIGNED_DOCUMENT: { value: 'Signed Agreement', id: 40 },
   AUTH_INSURANCE_EXPIRATION: { value: 'Auto Insurance', id: 22 },
   W9_DOCUMENT: { value: 'W9 Document', id: 99 },
+  VOIDED_CHECK: { value: 'Voided Check', id: 100 },
 }
 
 export const useSaveVendorDetails = (name: string) => {
@@ -531,6 +535,10 @@ export const documentCardsDefaultValues = (vendor: any) => {
     coiWcExpDate: datePickerFormat(vendor.coiWcExpirationDate),
     coiWcExpFile: null,
     coiWcExpUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_WC.value)?.s3Url,
+    voidedCheckDate: datePickerFormat(vendor.voidedCheckDate),
+    voidedCheckFile: null,
+    voidedCheckUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.VOIDED_CHECK.value)
+      ?.s3Url,
   }
   return documentCards
 }
@@ -660,9 +668,9 @@ export const useSaveLanguage = () => {
 }
 
 export const useVendorNext = ({ control, documents }: { control: any; documents?: any }) => {
-  const [ein, ssn, ...detailfields] = useWatch({
+  const [...detailfields] = useWatch({
     control,
-    name: ['einNumber', 'ssnNumber', 'city', 'companyName', 'state', 'streetAddress', 'zipCode'],
+    name: ['city', 'companyName', 'state', 'streetAddress', 'zipCode'],
   })
 
   const businessPhoneNumber = useWatch({ name: 'businessPhoneNumber', control })
@@ -677,13 +685,12 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   })
   const licensesArray = licenseField?.length > 0 ? licenseField[0] : []
   const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10
-  const isSSNNumber = ssn?.replace(/\D+/g, '').length! === 9
-  const isEinNumber = ein?.replace(/\D+/g, '').length! === 9
+
   // const isEmail = isValidEmail(businessEmailAddress)
   const isCapacity = capacity <= 500
 
   return {
-    disableDetailsNext: detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo || !isCapacity,
+    disableDetailsNext: detailfields.some(n => !n) || !isBusinessPhNo || !isCapacity,
 
     disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl), //disable logic for next on documents tab.
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),

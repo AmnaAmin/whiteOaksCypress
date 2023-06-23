@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Divider, HStack, Icon, Text, Flex, Checkbox } from '@chakra-ui/react'
 import { BiCheckSquare } from 'react-icons/bi'
 import { AiFillExclamationCircle } from 'react-icons/ai'
-import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
+import { VendorProfile } from 'types/vendor.types'
 import { UseFormRegister } from 'react-hook-form'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
@@ -144,7 +144,7 @@ export const VendorPortalVerifyDocument = (props: VendorPortalVerifyDocumentProp
 interface AdminVerifyDocumentProps {
   vendor: NewVendorProfile
   fieldName: string
-  registerToFormField: UseFormRegister<DocumentsCardFormValues>
+  registerToFormField: UseFormRegister<any>
 }
 
 export const AdminPortalVerifyDocument = (props: AdminVerifyDocumentProps): JSX.Element => {
