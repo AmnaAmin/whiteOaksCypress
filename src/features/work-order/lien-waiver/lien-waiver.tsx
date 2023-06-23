@@ -57,7 +57,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { isVendor } = useUserRolesSelector()
   const { isFieldsDisabled } = useLWFieldsStatusDecision({ workOrder: workOrder })
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   type FormValueType = {
     claimantName: string | null | undefined
     customerName: string | null | undefined

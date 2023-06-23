@@ -165,7 +165,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   const [remainingAmt, setRemainingAmt] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
-  const isReadOnly =  useRoleBasedPermissions()?.permissions?.some(p => ['PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
 

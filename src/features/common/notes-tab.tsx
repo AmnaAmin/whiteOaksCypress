@@ -104,7 +104,6 @@ export const NotesTab = (props: NotesProps) => {
     projectCompletion,
   } = props
   const { handleSubmit, register, setValue, reset, control } = useForm()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
   const { data: account } = useAccountDetails()
   const { t } = useTranslation()
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
@@ -185,7 +184,7 @@ export const NotesTab = (props: NotesProps) => {
                   {t('cancel')}
                 </Button>
               )}
-              {!isReadOnly && !hideSave && (
+              {!hideSave && (
                 <Button
                   type="submit"
                   colorScheme="darkPrimary"

@@ -12,7 +12,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
   const { isUpdating, projectAwardData, isUpgradeProjectAward } = props
   const { isAdmin } = useUserRolesSelector()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   const [selectedCard, setSelectedCard] = useState(null)
 
   interface FormValues {
@@ -67,7 +67,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               {t('cancel')}
             </Button>
 
-            { !isReadOnly && props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward ? (
+            { !isReadOnly && (props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward) ? (
               <Button type="submit" colorScheme="brand" disabled={isUpdating}>
                 {t('save')}
               </Button>

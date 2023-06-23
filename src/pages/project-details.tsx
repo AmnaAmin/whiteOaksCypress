@@ -51,7 +51,7 @@ export const ProjectDetails: React.FC = props => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
   const [createdTransID, setCreatedTransID] = useState()
-  const isReadOnly =  useRoleBasedPermissions()?.permissions?.some(p => ['PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   const setCreatedTransaction = e => {
     setCreatedTransID(e?.data)
   }

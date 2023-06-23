@@ -45,7 +45,7 @@ type tabProps = {
 
 const ProjectDetailsTab = (props: tabProps) => {
   const { style, onClose, tabVariant, projectData, isRecievable } = props
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['RECEIVABLE.READ', 'PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['RECEIVABLE.READ', 'PROJECT.READ']?.includes(p))
   const [tabIndex, setTabIndex] = useState(0)
   const { propertySelectOptions } = useProperties()
   const { data: projectExtraAttributes } = useProjectExtraAttributes(projectData?.id as number)

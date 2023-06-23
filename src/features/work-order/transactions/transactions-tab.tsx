@@ -30,7 +30,7 @@ export const TransactionsTab = ({
 
   const workOrderStatus = (workOrder?.statusLabel || '').toLowerCase()
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
-  const isReadOnly =  useRoleBasedPermissions()?.permissions?.some(p => ['PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   const preventNewTransaction =
     !!(workOrderStatus === 'paid' || workOrderStatus === 'cancelled' || workOrderStatus === 'invoiced') ||
     (isVendorExpired && !isAdmin)

@@ -102,7 +102,7 @@ const PaymentInfoTab = props => {
   })
   const watchPartialPayment = watch('partialPayment')
   const watchPaymentDate = watch('paymentDate')
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ','ADMINDASHBOARD.READ']?.includes(p))
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   useEffect(() => {
     if ([STATUS.Rejected]?.includes(workOrder?.statusLabel?.toLowerCase())) {
       setValue('dateInvoiceSubmitted', null)
