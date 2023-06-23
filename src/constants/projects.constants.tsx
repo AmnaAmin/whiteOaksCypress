@@ -69,7 +69,26 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   noteFlag: 'noteFlag.equals',
   lienDueFlag: 'lienDueFlag.equals',
   displayId: 'displayId.contains',
-  percentageCompletion: 'percentageCompletion.equals'
+  percentageCompletion: 'percentageCompletion.equals',
+}
+
+const PopoverTooltip = ({ value, title }) => {
+  return (
+    <Popover trigger="hover">
+      <PopoverTrigger>
+        <Box isTruncated>{value}</Box>
+      </PopoverTrigger>
+      <Portal>
+        <PopoverContent textOverflow={'ellipsis'}>
+          <PopoverArrow />
+          <PopoverHeader color={'#2D3748'}>{t(title)}</PopoverHeader>
+          <PopoverBody>
+            <Text color={'#4A5568'}>{value}</Text>
+          </PopoverBody>
+        </PopoverContent>
+      </Portal>
+    </Popover>
+  )
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
@@ -80,7 +99,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     cell: (row: any) => {
       const value = row.cell.getValue()
       const isFlagged = row.row?.original?.lienDueFlag || row.row?.original?.noteFlag
-      const id= row.row?.original?.id
+      const id = row.row?.original?.id
       return (
         <Box
           fontWeight={'500'}
@@ -121,6 +140,11 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.address',
     accessorKey: 'streetAddress',
+    meta: { hideTitle: true },
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return <PopoverTooltip value={value} title={'projects.projectTable.address'} />
+    },
   },
   {
     header: 'projects.projectTable.city',
@@ -144,23 +168,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     meta: { hideTitle: true },
     cell: (row: any) => {
       const value = row.cell.getValue()
-
-      return (
-        <Popover trigger="hover">
-          <PopoverTrigger>
-            <Box isTruncated>{value}</Box>
-          </PopoverTrigger>
-          <Portal>
-            <PopoverContent textOverflow={'ellipsis'}>
-              <PopoverArrow />
-              <PopoverHeader color={'#2D3748'}>Notes</PopoverHeader>
-              <PopoverBody>
-                <Text color={'#4A5568'}>{value}</Text>
-              </PopoverBody>
-            </PopoverContent>
-          </Portal>
-        </Popover>
-      )
+      return <PopoverTooltip value={value} title={'projects.projectDetails.notes'} />
     },
   },
   {
@@ -169,23 +177,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     meta: { hideTitle: true },
     cell: (row: any) => {
       const value = row.cell.getValue()
-
-      return (
-        <Popover trigger="hover">
-          <PopoverTrigger>
-            <Box isTruncated>{value}</Box>
-          </PopoverTrigger>
-          <Portal>
-            <PopoverContent textOverflow={'ellipsis'}>
-              <PopoverArrow />
-              <PopoverHeader color={'#2D3748'}>{t('projects.projectDetails.completion')}</PopoverHeader>
-              <PopoverBody>
-                <Text color={'#4A5568'}>{value}</Text>
-              </PopoverBody>
-            </PopoverContent>
-          </Portal>
-        </Popover>
-      )
+      return <PopoverTooltip value={value} title={'projects.projectDetails.completion'} />
     },
   },
   {
@@ -279,6 +271,12 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.ownerName',
     accessorKey: 'homeOwnerName',
+    meta: { hideTitle: true },
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+
+      return <PopoverTooltip value={value} title={'projects.projectTable.ownerName'} />
+    },
   },
   {
     header: 'projects.projectTable.woaFinish',
