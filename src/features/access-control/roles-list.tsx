@@ -35,6 +35,7 @@ export const RolesList = ({ setSelectedRole, selectedRole }) => {
                         gap="5px"
                         _hover={{ color: 'brand.600', cursor: 'pointer' }}
                         fontSize={'14px'}
+                        data-testid={'edit-' + role.name}
                         color="gray.500"
                         fontWeight={'400'}
                         fontStyle={'normal'}
@@ -49,6 +50,7 @@ export const RolesList = ({ setSelectedRole, selectedRole }) => {
                         gap="5px"
                         _hover={{ color: 'brand.600', cursor: 'pointer' }}
                         fontSize={'14px'}
+                        data-testid={'remove-' + role.name}
                         color="gray.500"
                         fontWeight={'400'}
                         fontStyle={'normal'}

@@ -178,7 +178,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
                 {t(`cancel`)}
               </Button>
               {allowEdit && (
-                <Button colorScheme="brand" type="submit">
+                <Button colorScheme="brand" type="submit" data-testid="saveBtn">
                   {t(`save`)}
                 </Button>
               )}
@@ -244,10 +244,10 @@ const PermissionsTable = ({ formControl }) => {
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
+                            data-testid={watchPermissions?.[index].name + '.hide'}
                             colorScheme="PrimaryCheckBox"
                             isChecked={field.value}
                             style={{ background: 'white', border: '#DFDFDF' }}
-                            data-dis={{ background: 'red !important' }}
                             mr="2px"
                             onChange={value => {
                               field.onChange(value)
@@ -267,6 +267,7 @@ const PermissionsTable = ({ formControl }) => {
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
+                            data-testid={watchPermissions?.[index].name + '.read'}
                             colorScheme="PrimaryCheckBox"
                             isChecked={field.value}
                             style={{ background: 'white', border: '#DFDFDF' }}
@@ -289,6 +290,7 @@ const PermissionsTable = ({ formControl }) => {
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
+                            data-testid={watchPermissions?.[index].name + '.edit'}
                             colorScheme="PrimaryCheckBox"
                             isChecked={field.value}
                             style={{ background: 'white', border: '#DFDFDF' }}
