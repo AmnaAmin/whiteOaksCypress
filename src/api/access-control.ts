@@ -98,7 +98,7 @@ export const useUpdateRoleMutation = roleName => {
         queryClient.invalidateQueries(['get-roles-permissions', roleName])
         toast({
           title: 'Access Control',
-          description: 'New Role has been updated successfully',
+          description: 'Role has been updated successfully',
           status: 'success',
           isClosable: true,
           position: 'top-left',
@@ -148,7 +148,7 @@ export const ASSIGNMENTS = [
 ]
 
 export const mapPermissionsToFormValues = permission => {
-  const isAdmin = permission.name === 'ROLE_ADMIN'
+  const isAdmin = permission?.name === 'ROLE_ADMIN'
   const permissions = permission?.permissions
     ?.filter(p => {
       // select all permissions that are at module level like VENDOR.EDIT, PROJECT.EDIT

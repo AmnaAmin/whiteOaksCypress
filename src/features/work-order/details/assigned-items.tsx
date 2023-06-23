@@ -17,17 +17,9 @@ import { FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiDownload } from 'react-icons/bi'
 import { WORK_ORDER } from '../workOrder.i18n'
-import {
-  LineItems,
-  SWOProject,
-  useActionsShowDecision,
-  useFieldEnableDecision,
-  useGetLineItemsColumn,
-} from './assignedItems.utils'
-import { FaSpinner } from 'react-icons/fa'
+import { LineItems, SWOProject, useActionsShowDecision, useGetLineItemsColumn } from './assignedItems.utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { ProjectWorkOrderType } from 'types/project.type'
-import { RiErrorWarningLine } from 'react-icons/ri'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
@@ -107,28 +99,21 @@ const AssignedItems = (props: AssignedItemType) => {
 
   const lineItems = useWatch({ name: 'assignedItems', control })
   const watchUploadWO = watch('uploadWO')
-  const markAllCompleted = lineItems?.length > 0 && lineItems.every(l => l.isCompleted)
 
   useEffect(() => {
     const allVerified = lineItems?.length > 0 && lineItems?.every(l => l.isCompleted && l.isVerified)
-    const isAnyItemComplete = lineItems?.length > 0 && lineItems?.some(l => l.isCompleted)
+
     if (allVerified) {
       if (!workOrder?.workOrderDateCompleted) {
         setValue('workOrderDateCompleted', datePickerFormat(new Date()))
       }
-      setMarkAllVerified(true)
-    }
-    if (!isAnyItemComplete) {
-      setMarkAllVerified(false)
     }
   }, [lineItems])
 
-  const { showPriceCheckBox, notifyVendorCheckBox, showMarkAllIsVerified, showMarkAllIsCompleted } =
-    useActionsShowDecision({ workOrder })
+  const { showPriceCheckBox, notifyVendorCheckBox } = useActionsShowDecision({ workOrder })
 
-  const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, lineItems })
   const { isVendor } = useUserRolesSelector()
-  const [markAllVerified, setMarkAllVerified] = useState<boolean>()
+
   const allowEdit = !isVendor && !workOrder
 
   const ASSIGNED_ITEMS_COLUMNS = useGetLineItemsColumn({
@@ -194,19 +179,18 @@ const AssignedItems = (props: AssignedItemType) => {
             <Text fontWeight={500} color="gray.700" fontSize={'16px'} whiteSpace="nowrap">
               {t(`${WORK_ORDER}.assignedLineItems`)}
             </Text>
-            {swoProject?.status && swoProject?.status.toUpperCase() !== 'COMPLETED' && (
+            {swoProject?.status && ['PROCESSING'].includes(swoProject?.status.toUpperCase()) && (
               <>
                 <Box pl="2" pr="1" display={{ base: 'none', sm: 'unset' }}>
                   <Divider size="lg" orientation="vertical" h="25px" />
                 </Box>
                 <Button
+                  loadingText={t(`${WORK_ORDER}.itemsLoading`)}
                   variant="unClickable"
                   onClick={e => e.preventDefault()}
                   colorScheme="brand"
-                  leftIcon={<FaSpinner />}
-                >
-                  {t(`${WORK_ORDER}.itemsLoading`)}
-                </Button>
+                  isLoading={true}
+                ></Button>
               </>
             )}
 
@@ -257,51 +241,6 @@ const AssignedItems = (props: AssignedItemType) => {
                 {t(`${WORK_ORDER}.sendNotification`)}
               </Checkbox>
             )}
-            {showMarkAllIsCompleted && (
-              <Checkbox
-                data-testid="showMarkAllIsComplete"
-                size="md"
-                disabled={!statusEnabled}
-                isChecked={markAllCompleted}
-                variant={'outLinePrimary'}
-                onChange={e => {
-                  assignedItems.forEach((item, index) => {
-                    setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
-                  })
-                }}
-                whiteSpace="nowrap"
-              >
-                {t(`${WORK_ORDER}.markAllCompleted`)}
-              </Checkbox>
-            )}
-            {showMarkAllIsVerified && (
-              <HStack spacing={'2px'}>
-                <Checkbox
-                  data-testid="showMarkAllIsVerified"
-                  size="md"
-                  variant={'outLinePrimary'}
-                  disabled={!verificationEnabled}
-                  isChecked={markAllVerified}
-                  onChange={e => {
-                    assignedItems.forEach((item, index) => {
-                      if (values?.assignedItems?.[index]?.isCompleted) {
-                        setValue(`assignedItems.${index}.isVerified`, e.currentTarget.checked)
-                      }
-                    })
-                    setMarkAllVerified(e.target.checked)
-                  }}
-                  whiteSpace="nowrap"
-                >
-                  {t(`${WORK_ORDER}.markAllVerified`)}
-                </Checkbox>
-                <Icon
-                  as={RiErrorWarningLine}
-                  title="Only completed items can be verified"
-                  color="#4299E1"
-                  boxSize={4}
-                />
-              </HStack>
-            )}
 
             {downloadPdf && (
               <Button
@@ -327,7 +266,7 @@ const AssignedItems = (props: AssignedItemType) => {
           borderRight="1px solid #CBD5E0"
           borderLeft="1px solid #CBD5E0"
         >
-          <TableContextProvider data={values.assignedItems} columns={ASSIGNED_ITEMS_COLUMNS}>
+          <TableContextProvider data={values.assignedItems} columns={ASSIGNED_ITEMS_COLUMNS as any}>
             <Table
               handleOnDrag={handleOnDragEnd}
               handleOnDragStart={handleOnDragStart}

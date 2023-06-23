@@ -40,8 +40,8 @@ export const ConstructionPortalPayable = () => {
   //   setSelectedDay('')
   // }
 
-  const { handleSubmit, register, reset, control } = useForm()
-
+  
+  const { register, reset, control, watch } = useForm()
   const payableColumns = usePayableColumns(control, register)
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: PAYABLE_TABLE_QUERY_KEYS,
@@ -86,11 +86,11 @@ export const ConstructionPortalPayable = () => {
   const onNotificationClose = () => {
     setIsBatchClick(false)
   }
-  
+  const formValues = watch();
   // const { weekDayFilters } = usePayableWeeklyCount({ pagination, queryStringWithPagination })
 
   return (
-    <form onSubmit={handleSubmit(Submit)}>
+    <form method='post'>
       <Box pb="2">
         <Box mb={'12px'}>
           <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
@@ -145,9 +145,8 @@ export const ConstructionPortalPayable = () => {
 
       <ConfirmationBox
         title={t(`${ACCOUNTS}.batchProcess`)}
-        content={t(`${ACCOUNTS}.batchSuccess`)}
         isOpen={!loading && isBatchClick}
-        onClose={onNotificationClose}
+        onClose={onNotificationClose}content={t(`${ACCOUNTS}.batchSuccess`)}
         onConfirm={onNotificationClose}
         yesButtonText={t(`${ACCOUNTS}.close`)}
         showNoButton={false}
