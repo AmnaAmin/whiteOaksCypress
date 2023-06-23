@@ -18,7 +18,7 @@ import { useAccountDetails } from 'api/vendor-details'
 import { convertDateWithTimeStamp } from 'utils/date-time-utils'
 import React, { useRef, useEffect } from 'react'
 import { BiSpreadsheet } from 'react-icons/bi'
-import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+
 
 export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
