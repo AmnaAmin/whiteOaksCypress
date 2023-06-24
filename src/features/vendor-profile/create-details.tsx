@@ -535,6 +535,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
     if (!vendorProfileData) return
     reset(parseVendorAPIDataToFormData(vendorProfileData))
     const state = states?.find(s => s.code === vendorProfileData.state)
+    const bankState = states?.find(s => s.code === vendorProfileData.bankState)
     setValue(
       'score',
       documentScore.find(s => s.value === vendorProfileData.score),
@@ -548,6 +549,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
       documentStatus.find(s => s.value === vendorProfileData.status),
     )
     setValue('state', { label: state?.name, value: state?.code })
+    setValue('bankState', { label: bankState?.name, value: bankState?.code })
     setValue(
       'paymentTerm',
       PAYMENT_TERMS_OPTIONS.find(s => s.value === vendorProfileData.paymentTerm),

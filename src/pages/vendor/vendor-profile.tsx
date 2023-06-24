@@ -19,6 +19,7 @@ import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import {
   createVendorPayload,
+  parseAccountsFormDataToAPIData,
   parseCreateVendorFormToAPIData,
   parseDocumentCardsValues,
   parseLicenseValues,
@@ -75,6 +76,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveProfile } = useSaveVendorDetails('Profile')
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
+  const { mutate: saveAccounts } = useSaveVendorDetails('Accounts')
   const { mutate: createVendor } = useCreateVendorMutation()
 
   const { data: paymentsMethods } = usePaymentMethods()
@@ -96,12 +98,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   }, [tabIndex])
 
   const submitForm = useCallback(
-    async (formData: VendorProfileDetailsFormData) => {
+    async formData => {
       if (vendorProfileData?.id) {
         switch (tabIndex) {
           case 0:
             //detail
-            const profilePayload = parseVendorFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
+            const profilePayload = parseVendorFormDataToAPIData(formData, vendorProfileData)
             saveProfile(profilePayload)
             break
 
@@ -139,6 +141,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             } else {
               showError('Market')
             }
+            break
+
+          case 7:
+            //Accounts
+            const accountsPayload = await parseAccountsFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
+            saveAccounts(accountsPayload)
             break
 
           default:
@@ -189,7 +197,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
       setTabIndex(state)
     }
   }, [state])
-  console.log('vendorProfileData', vendorProfileData?.id)
+
   return (
     <FormProvider {...formReturn}>
       <Stack width={{ base: '100%' }}>

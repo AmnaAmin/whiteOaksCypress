@@ -148,6 +148,18 @@ export type VendorProfilePayload = {
   autoInsuranceStatus?: string | boolean
   w9Status?: string | boolean
   enableVendorPortal?: boolean
+  bankAddress?: string
+  bankCity?: string
+  bankEmail?: string
+  bankName?: string
+  bankPhoneNumber?: string
+  bankState?: string
+  banksPrimaryContact?: string
+  checking?: boolean
+  saving?: boolean
+  voidedCheckDate?: string | null
+  voidedCheckStatus?: string
+  dateOfSignature?: string | null | Date
 }
 
 export type LicenseDocument = {

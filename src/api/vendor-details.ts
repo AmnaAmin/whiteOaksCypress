@@ -147,7 +147,6 @@ export const AccountingType = [
 
 export const parseVendorFormDataToAPIData = (
   formValues: VendorProfileDetailsFormData,
-  paymentsMethods,
   vendorProfileData?: VendorProfile,
 ): VendorProfilePayload => {
   let selectedPaymentMethods = [] as any
@@ -158,7 +157,7 @@ export const parseVendorFormDataToAPIData = (
   })
   return {
     ...vendorProfileData!,
-    //ownerName: formValues.ownerName!,
+    ownerName: formValues.ownerName!,
     secondName: formValues.secondName!,
     businessPhoneNumber: formValues.businessPhoneNumber,
     businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
@@ -174,14 +173,66 @@ export const parseVendorFormDataToAPIData = (
     score: formValues.score?.value,
     status: formValues.status?.value,
     state: formValues.state?.value,
-    isSsn: false,
     //paymentTerm: formValues.paymentTerm?.value,
     documents: [],
     vendorSkills: vendorProfileData?.vendorSkills || [],
     markets: vendorProfileData?.markets || [],
     licenseDocuments: vendorProfileData?.licenseDocuments || [],
-    paymentOptions: paymentsMethods.filter(payment => selectedPaymentMethods.includes(payment?.lookupValueId)),
     enableVendorPortal: formValues.enableVendorPortal?.value,
+  }
+}
+
+export const parseAccountsFormDataToAPIData = async (
+  formValues,
+  paymentsMethods,
+  vendorProfileData?: VendorProfile,
+): Promise<VendorProfilePayload> => {
+  let selectedPaymentMethods = [] as any
+  PaymentMethods?.forEach(pm => {
+    if (formValues[pm.value]) {
+      selectedPaymentMethods.push(pm.key)
+    }
+  })
+  let documents = [] as any[]
+  if (formValues?.voidedCheckFile) {
+    const voidedCheckFile = await readFileContent(formValues?.voidedCheckFile)
+    documents.push({
+      documentType: 39,
+      fileObjectContentType: formValues?.voidedCheckFile.type,
+      fileType: formValues?.voidedCheckFile.name,
+      fileObject: voidedCheckFile,
+    })
+    if (formValues?.ownersSignature) {
+      documents.push(formValues?.ownersSignature)
+    }
+  }
+
+  return {
+    ...vendorProfileData!,
+    ownerName: formValues.ownerName!,
+    businessPhoneNumber: formValues.businessPhoneNumber,
+    businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
+    businessEmailAddress: formValues.businessEmailAddress!,
+    companyName: formValues.companyName!,
+    streetAddress: formValues.streetAddress!,
+    city: formValues.city!,
+    zipCode: formValues.zipCode!,
+    state: formValues.state?.value,
+    isSsn: false,
+    documents,
+    paymentOptions: paymentsMethods.filter(payment => selectedPaymentMethods.includes(payment?.lookupValueId)),
+    bankAddress: formValues?.bankAddress,
+    bankCity: formValues?.bankCity,
+    bankEmail: formValues?.bankEmail,
+    bankName: formValues?.bankName,
+    bankPhoneNumber: formValues?.bankPhoneNumber,
+    bankState: formValues?.bankState?.value,
+    banksPrimaryContact: formValues?.banksPrimaryContact,
+    checking: formValues?.checking,
+    saving: formValues?.saving,
+    voidedCheckDate: formValues?.voidedCheckDate,
+    voidedCheckStatus: formValues?.voidedCheckStatus ? 'VERIFIED' : 'UNVERIFIED',
+    dateOfSignature: formValues?.dateOfSignature,
   }
 }
 
@@ -190,14 +241,16 @@ export const parseCreateVendorFormToAPIData = async (
   paymentsMethods,
   vendorProfileData?: VendorProfile,
 ) => {
-  const profilePayload = parseVendorFormDataToAPIData(formValues, paymentsMethods, vendorProfileData)
+  const profilePayload = parseVendorFormDataToAPIData(formValues, vendorProfileData)
   const documentsPayload = await parseDocumentCardsValues(formValues)
-  const updatedObject = prepareVendorDocumentObject(documentsPayload, formValues)
+  const updatedObject = await prepareVendorDocumentObject(documentsPayload, formValues)
   const licensePayload = await parseLicenseValues(formValues, vendorProfileData?.licenseDocuments)
   const tradePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData!)
   const marketsPayload = parseMarketFormValuesToAPIPayload(formValues, vendorProfileData!)
+  const accountsPayload = await parseAccountsFormDataToAPIData(formValues, paymentsMethods, vendorProfileData!)
   return {
     ...profilePayload,
+    ...accountsPayload,
     licenseDocuments: licensePayload,
     ...tradePayload,
     ...marketsPayload,
@@ -388,6 +441,7 @@ export const DOCUMENTS_TYPES = {
   AUTH_INSURANCE_EXPIRATION: { value: 'Auto Insurance', id: 22 },
   W9_DOCUMENT: { value: 'W9 Document', id: 99 },
   VOIDED_CHECK: { value: 'Voided Check', id: 100 },
+  OWNERS_SIGNATURE: { value: 'Owners Signature', id: 101 },
 }
 
 export const useSaveVendorDetails = (name: string) => {
@@ -539,17 +593,23 @@ export const documentCardsDefaultValues = (vendor: any) => {
     voidedCheckFile: null,
     voidedCheckUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.VOIDED_CHECK.value)
       ?.s3Url,
+    dateOfSignature: datePickerFormat(vendor?.dateOfSignature),
+    ownersSignature: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.OWNERS_SIGNATURE.value)
+      ?.s3Url,
   }
   return documentCards
 }
+export const accountsDefaultValues = (vendor: any) => {
+  const accounts = {}
+  return accounts
+}
 
-export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
+export const prepareVendorDocumentObject = async (vendorProfilePayload, formData) => {
   /* console.log( formData.coiGLExpCheckBox  ? "VERIFIED" : ( formData as any ).coiGLStatus );
   console.log( formData.CoiWcExpCheckbox  ? "VERIFIED" : ( formData as any ).coiWCStatus );
   console.log( formData.agreementSignCheckBox  ? "VERIFIED" : ( formData as any ).agreementSignedStatus );
   console.log( formData.autoInsuranceCheckBox  ?   "VERIFIED" : ( formData as any ).autoInsuranceStatus );
   console.log( formData.W9DocumentCheckBox ? "VERIFIED" : ( formData as any ).w9Status );*/
-
   return {
     documents: vendorProfilePayload,
     agreementSignedDate: formData.agreementSignedDate!,
@@ -591,8 +651,13 @@ export const parseDocumentCardsValues = async (values: any) => {
       file: values.coiWcExpFile,
       type: DOCUMENTS_TYPES.COI_WC.id,
     })
+  values.voidedCheckFile &&
+    documentsList.push({
+      file: values.voidedCheckFile,
+      type: DOCUMENTS_TYPES.VOIDED_CHECK,
+    })
 
-  const results = await Promise.all(
+  let results = await Promise.all(
     documentsList.map(async (doc, index) => {
       const fileContents = await readFileContent(doc.file)
       const document = {
@@ -604,6 +669,10 @@ export const parseDocumentCardsValues = async (values: any) => {
       return document
     }),
   )
+  if (values?.ownersSignature) {
+    results.push(values?.ownersSignature)
+  }
+  console.log(results)
   return results
 }
 

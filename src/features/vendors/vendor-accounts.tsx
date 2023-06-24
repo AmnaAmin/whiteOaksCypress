@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Box,
   Flex,
@@ -632,87 +632,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               </FormControl>
             </HStack>
           </GridItem>
-          <GridItem>
-            <HStack
-              flexDir={{ base: 'column', sm: 'row' }}
-              spacing="16px"
-              alignItems="flex-start"
-              marginTop={{ base: '20px', md: '0' }}
-            >
-              <Flex w="215px">
-                <Box>
-                  <FormControl isInvalid={!!errors.voidedCheckDate}>
-                    <FormLabel variant="strong-label" size="md" color="#2D3748">
-                      {t('voidedCheckFile')}
-                    </FormLabel>
-                    <Input w="215px" {...register('voidedCheckDate')} type="date" data-testid="voidedCheckDate" />
-                    <FormErrorMessage>{errors.voidedCheckDate && errors.voidedCheckDate.message}</FormErrorMessage>
-                  </FormControl>
-                </Box>
-              </Flex>
-              <HStack
-                sx={{
-                  '@media screen and (max-width: 480px)': {
-                    ms: '0 !important',
-                    mt: '20px !important',
-                  },
-                }}
-              >
-                <FormControl w="215px" isInvalid={!!errors.voidedCheckFile?.message}>
-                  <FormLabel variant="strong-label" size="md" color="#2D3748">
-                    {t('fileUpload')}
-                  </FormLabel>
-                  <Controller
-                    name="voidedCheckFile"
-                    control={control}
-                    render={({ field, fieldState }) => {
-                      return (
-                        <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
-                          <Box>
-                            <ChooseFileField
-                              name={field.name}
-                              value={field.value?.name ? field.value?.name : t('chooseFile')}
-                              isError={!!fieldState.error?.message}
-                              onChange={(file: any) => {
-                                if (file) {
-                                  setValue('voidedCheckDate', datePickerFormat(new Date()))
-                                }
-                                field.onChange(file)
-                              }}
-                              onClear={() => {
-                                setValue(field.name, undefined)
-                                setValue(
-                                  'voidedCheckDate',
-                                  vendorProfileData?.voidedCheckDate
-                                    ? datePickerFormat(vendorProfileData?.voidedCheckDate)
-                                    : null,
-                                )
-                              }}
-                              disabled={isFPM}
-                            ></ChooseFileField>
-                            <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                          </Box>
-                          <Box overflow="hidden" top={16} h="18px">
-                            {vendorProfileData?.voidedCheckUrl &&
-                              downloadDocument(vendorProfileData?.voidedCheckUrl, t('voidedCheck'), 'voidedCheckLink')}
-                          </Box>
-                        </VStack>
-                      )
-                    }}
-                  />
-                </FormControl>
-                <AdminPortalVerifyDocument
-                  vendor={VendorDetails as any}
-                  fieldName="voidedCheckStatus"
-                  registerToFormField={register}
-                />
-              </HStack>
-            </HStack>
+          <GridItem colSpan={4}>
+            <VoidedCheckFields formReturn={formReturn} vendorProfileData={vendorProfileData} isFPM={isFPM} />
           </GridItem>
-          <GridItem></GridItem>
-          <GridItem></GridItem>
-          <GridItem></GridItem>
-          <SignatureFields formReturn={formReturn} />
+          <GridItem colSpan={2}>
+            <SignatureFields isActive={isActive} formReturn={formReturn} />
+          </GridItem>
         </Grid>
       </Box>
       <Flex
@@ -739,31 +664,126 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   )
 }
 
-const SignatureFields = ({ formReturn }) => {
+const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM }) => {
   const {
     formState: { errors },
     setValue,
     register,
     control,
+    getValues,
   } = formReturn
+  const { t } = useTranslation()
+  const documents = getValues()
+  return (
+    <HStack
+      flexDir={{ base: 'column', sm: 'row' }}
+      spacing="16px"
+      alignItems="flex-start"
+      marginTop={{ base: '20px', md: '0' }}
+    >
+      <Flex w="215px">
+        <Box>
+          <FormControl isInvalid={!!errors.voidedCheckDate}>
+            <FormLabel variant="strong-label" size="md" color="#2D3748">
+              {t('voidedCheckFile')}
+            </FormLabel>
+            <Input w="215px" {...register('voidedCheckDate')} type="date" data-testid="voidedCheckDate" />
+            <FormErrorMessage>{errors.voidedCheckDate && errors.voidedCheckDate.message}</FormErrorMessage>
+          </FormControl>
+        </Box>
+      </Flex>
+      <HStack
+        sx={{
+          '@media screen and (max-width: 480px)': {
+            ms: '0 !important',
+            mt: '20px !important',
+          },
+        }}
+      >
+        <FormControl w="215px" isInvalid={!!errors.voidedCheckFile?.message}>
+          <FormLabel variant="strong-label" size="md" color="#2D3748">
+            {t('fileUpload')}
+          </FormLabel>
+          <Controller
+            name="voidedCheckFile"
+            control={control}
+            render={({ field, fieldState }) => {
+              return (
+                <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
+                  <Box>
+                    <ChooseFileField
+                      name={field.name}
+                      value={field.value?.name ? field.value?.name : t('chooseFile')}
+                      isError={!!fieldState.error?.message}
+                      onChange={(file: any) => {
+                        if (file) {
+                          setValue('voidedCheckDate', datePickerFormat(new Date()))
+                        }
+                        field.onChange(file)
+                      }}
+                      onClear={() => {
+                        setValue(field.name, undefined)
+                        setValue(
+                          'voidedCheckDate',
+                          vendorProfileData?.voidedCheckDate
+                            ? datePickerFormat(vendorProfileData?.voidedCheckDate)
+                            : null,
+                        )
+                      }}
+                      disabled={isFPM}
+                    ></ChooseFileField>
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </Box>
+                  <Box overflow="hidden" top={16} h="18px">
+                    {documents?.voidedCheckUrl &&
+                      downloadDocument(documents?.voidedCheckUrl, t('voidedCheck'), 'voidedCheckLink')}
+                  </Box>
+                </VStack>
+              )
+            }}
+          />
+        </FormControl>
+        <AdminPortalVerifyDocument
+          vendor={VendorDetails as any}
+          fieldName="voidedCheckStatus"
+          registerToFormField={register}
+        />
+      </HStack>
+    </HStack>
+  )
+}
+
+const SignatureFields = ({ formReturn, isActive }) => {
+  const {
+    formState: { errors },
+    setValue,
+    register,
+    control,
+    watch,
+  } = formReturn
+
+  const watchOwnersSignature = watch('ownersSignature')
+  useEffect(() => {
+    if (ownersSignature) {
+      setOwnersSignature(ownersSignature)
+    }
+  }, [watchOwnersSignature])
 
   const [ownersSignature, setOwnersSignature] = useState('')
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const sigRef = useRef<HTMLImageElement>(null)
   const [openSignature, setOpenSignature] = useState(false)
-  const [, setSignatureDocument] = useState<any>()
   const formValues = useWatch({ control })
   const { t } = useTranslation()
 
   const convertSignatureTextToImage = value => {
     const uri = imgUtility.generateTextToImage(canvasRef, value)
-    setSignatureDocument({
+    setValue('ownersSignature', {
       documentType: 108,
       fileObject: uri?.split(',')[1],
       fileObjectContentType: 'image/png',
       fileType: 'Owners-Signature.png',
     })
-    setValue('ownersSignature', uri)
     setOwnersSignature(uri)
   }
 
@@ -778,52 +798,63 @@ const SignatureFields = ({ formReturn }) => {
   }
 
   return (
-    <>
-      <GridItem>
-        <FormControl isInvalid={!ownersSignature}>
-          <FormLabel fontWeight={500} fontSize="14px" color="gray.700">
-            {t('ownersSignature')}
-          </FormLabel>
-          <Button
-            pos="relative"
-            border={'1px solid'}
-            borderColor="gray.200"
-            borderRadius="6px"
-            bg="white"
-            height={'40px'}
-            borderLeftWidth={'2.5px'}
-            borderLeftColor="#345EA6"
-            alignItems="center"
-            px={4}
-            ml={0}
-            justifyContent="left"
-            variant="ghost"
-            w="100%"
-            _hover={{ bg: 'white' }}
-            _active={{ bg: 'white' }}
-            _disabled={{
-              bg: 'gray.100',
-              _hover: { bg: 'gray.100' },
-              _active: { bg: 'gray.100' },
-            }}
-            disabled={false}
-            onClick={() => {
-              setOpenSignature(true)
-            }}
-          >
-            <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
-            <Image
-              data-testid="ownersSignature"
-              hidden={!ownersSignature}
-              maxW={'100%'}
-              src={ownersSignature}
-              {...register('ownersSignature', {
-                required: 'This is required field',
-              })}
-              ref={sigRef}
-            />
-            {!false && (
-              <HStack pos={'absolute'} right="10px" top="11px" spacing={3}>
+    <HStack gap="20px" alignItems={'start'}>
+      <FormControl isInvalid={!ownersSignature}>
+        <FormLabel fontWeight={500} fontSize="14px" color="gray.700">
+          {t('ownersSignature')}
+        </FormLabel>
+        <Button
+          pos="relative"
+          border={'1px solid'}
+          borderColor="gray.200"
+          borderRadius="6px"
+          bg="white"
+          height={'40px'}
+          borderLeftWidth={'2.5px'}
+          borderLeftColor="#345EA6"
+          alignItems="center"
+          px={4}
+          ml={0}
+          justifyContent="left"
+          variant="ghost"
+          w="100%"
+          _hover={{ bg: 'white' }}
+          _active={{ bg: 'white' }}
+          _disabled={{
+            bg: 'gray.100',
+            _hover: { bg: 'gray.100' },
+            _active: { bg: 'gray.100' },
+          }}
+          disabled={false}
+          onClick={() => {
+            setOpenSignature(true)
+          }}
+        >
+          <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
+          <Image
+            data-testid="ownersSignature"
+            hidden={!ownersSignature}
+            maxW={'100%'}
+            src={ownersSignature}
+            {...register('ownersSignature', {
+              required: isActive && 'This is required field',
+            })}
+            ref={sigRef}
+          />
+          {!false && (
+            <HStack pos={'absolute'} right="10px" top="11px" spacing={3}>
+              <IconButton
+                aria-label="open-signature"
+                variant="ghost"
+                minW="auto"
+                height="auto"
+                _hover={{ bg: 'inherit' }}
+                disabled={false}
+                data-testid="openSignature"
+              >
+                <BiAddToQueue color="#A0AEC0" />
+              </IconButton>
+              {ownersSignature && (
                 <IconButton
                   aria-label="open-signature"
                   variant="ghost"
@@ -831,34 +862,21 @@ const SignatureFields = ({ formReturn }) => {
                   height="auto"
                   _hover={{ bg: 'inherit' }}
                   disabled={false}
-                  data-testid="openSignature"
+                  data-testid="removeSignature"
+                  onClick={e => {
+                    onRemoveSignature()
+                    e.stopPropagation()
+                  }}
                 >
-                  <BiAddToQueue color="#A0AEC0" />
+                  <BiTrash className="mr-1" color="#A0AEC0" />
                 </IconButton>
-                {ownersSignature && (
-                  <IconButton
-                    aria-label="open-signature"
-                    variant="ghost"
-                    minW="auto"
-                    height="auto"
-                    _hover={{ bg: 'inherit' }}
-                    disabled={false}
-                    data-testid="removeSignature"
-                    onClick={e => {
-                      onRemoveSignature()
-                      e.stopPropagation()
-                    }}
-                  >
-                    <BiTrash className="mr-1" color="#A0AEC0" />
-                  </IconButton>
-                )}
-              </HStack>
-            )}
-          </Button>
-          {errors?.ownersSignature?.message && <FormErrorMessage>This is required field</FormErrorMessage>}
-        </FormControl>
-      </GridItem>
-      <GridItem>
+              )}
+            </HStack>
+          )}
+        </Button>
+        {errors?.ownersSignature?.message && <FormErrorMessage>This is required field</FormErrorMessage>}
+      </FormControl>
+      <FormControl>
         <FormInput
           errorMessage={errors?.dateOfSignature?.message}
           label={t('dateOfSignature')}
@@ -874,11 +892,11 @@ const SignatureFields = ({ formReturn }) => {
             rounded: '0',
             paddingLeft: 0,
           }}
-          rules={{ required: 'This is required field' }}
+          rules={{ required: isActive && 'This is required field' }}
           readOnly
         />
-      </GridItem>
+      </FormControl>
       <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
-    </>
+    </HStack>
   )
 }
