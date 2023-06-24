@@ -68,7 +68,7 @@ const tabStyle = {
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAdmin } = useUserRolesSelector()
   const { t } = useTranslation()
   const toast = useToast()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
@@ -84,6 +84,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const [reachTabIndex, setReachTabIndex] = useState(0)
   const formReturn = useForm<VendorProfileDetailsFormData>()
   const { control } = formReturn
+
   useVendorDetails({ form: formReturn, vendorProfileData })
   const showError = name => {
     toast({
@@ -240,9 +241,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
               {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
               {!!vendorProfileData?.id && <Tab>Users</Tab>}
-              <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id}>
-                {t('accounts')}
-              </Tab>
+              {isAdmin && (
+                <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id}>
+                  {t('accounts')}
+                </Tab>
+              )}
             </TabList>
 
             <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
@@ -333,13 +336,15 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   </TabPanel>
                 )}
 
-                <TabPanel p="0px">
-                  <VendorAccounts
-                    isActive={vendorProfileData?.id ? tabIndex === 7 : tabIndex === 5}
-                    vendorProfileData={vendorProfileData as VendorProfile}
-                    onClose={props.onClose}
-                  />
-                </TabPanel>
+                {isAdmin && (
+                  <TabPanel p="0px">
+                    <VendorAccounts
+                      isActive={vendorProfileData?.id ? tabIndex === 7 : tabIndex === 5}
+                      vendorProfileData={vendorProfileData as VendorProfile}
+                      onClose={props.onClose}
+                    />
+                  </TabPanel>
+                )}
 
                 {/* <TabPanel p="0px">
                 <Box overflow="auto">

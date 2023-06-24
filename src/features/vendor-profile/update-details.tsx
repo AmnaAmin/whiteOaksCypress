@@ -76,7 +76,7 @@ export const UpdateDetails: React.FC<{
 }> = props => {
   const { vendorProfileData, isActive } = props
   const { t } = useTranslation()
-  
+
   return (
     <>
       <Flex direction="column">
@@ -90,11 +90,16 @@ export const UpdateDetails: React.FC<{
             />
           </GridItem>
           <GridItem>
-            <FieldInfoCard testid="vendor_capacity" title={t('capacity')} value={`${vendorProfileData?.capacity}`} icon={BiUser} />
+            <FieldInfoCard
+              testid="vendor_capacity"
+              title={t('capacity')}
+              value={`${vendorProfileData?.capacity}`}
+              icon={BiUser}
+            />
           </GridItem>
           <GridItem>
             <FieldInfoCard
-            testid="last4digit_vendor"
+              testid="last4digit_vendor"
               title={t('last4digits')}
               value={`${vendorProfileData?.ssnNumber?.slice(-4) ?? ''} ${
                 vendorProfileData?.ssnNumber && vendorProfileData?.einNumber ? '/' : ''
@@ -104,7 +109,7 @@ export const UpdateDetails: React.FC<{
           </GridItem>
           <GridItem>
             <FieldInfoCard
-            testid="payment_Method"
+              testid="payment_Method"
               title={t('paymentMethods')}
               value={
                 vendorProfileData?.paymentOptions?.length > 0
@@ -127,13 +132,28 @@ export const UpdateDetails: React.FC<{
             />
           </GridItem>
           <GridItem>
-            <FieldInfoCard testid="vendor_state" title={t('state')} value={`${vendorProfileData?.state}`} icon={BiTrip} />
+            <FieldInfoCard
+              testid="vendor_state"
+              title={t('state')}
+              value={`${vendorProfileData?.state}`}
+              icon={BiTrip}
+            />
           </GridItem>
           <GridItem>
-            <FieldInfoCard testid="vendor_city" title={t('city')} value={`${vendorProfileData?.city}`} icon={HiOutlineLocationMarker} />
+            <FieldInfoCard
+              testid="vendor_city"
+              title={t('city')}
+              value={`${vendorProfileData?.city}`}
+              icon={HiOutlineLocationMarker}
+            />
           </GridItem>
           <GridItem>
-            <FieldInfoCard testid="city_zip" title={t('zip')} value={`${vendorProfileData?.zipCode}`} icon={HiOutlineMap} />
+            <FieldInfoCard
+              testid="city_zip"
+              title={t('zip')}
+              value={`${vendorProfileData?.zipCode}`}
+              icon={HiOutlineMap}
+            />
           </GridItem>
         </Grid>
         <DetailsForm isActive={isActive} vendorProfileData={vendorProfileData} onClose={props.onClose} />
@@ -160,16 +180,14 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
             <VStack alignItems="start" spacing="32px" h={{ sm: '', md: '353px' }}>
               <Box>
                 <Stack spacing={4} direction={['column', 'row']}>
-                  <FormControl w="215px" isInvalid={!!errors.ownerName} display="none">
-                    <FormLabel sx={textStyle}>{t('primaryContact')}</FormLabel>
+                  <FormControl w="215px" isInvalid={!!errors.ownerName}>
+                    <FormLabel sx={textStyle}>{t('ownersName')}</FormLabel>
                     <Input
-                      data-testid="primaryContact"
-                      id="primaryContact"
+                      data-testid="ownersName"
+                      id="ownersName"
                       type="text"
                       variant="required-field"
-                      {...register('ownerName', {
-                        
-                      })}
+                      {...register('ownerName', {})}
                     />
                     <FormErrorMessage>{errors.ownerName && errors.ownerName.message}</FormErrorMessage>
                   </FormControl>
@@ -219,7 +237,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                       {t('businessPhoneNo')}
                     </FormLabel>
                     <Controller
-                    data-testid="business_PhoneNo"
+                      data-testid="business_PhoneNo"
                       control={control}
                       rules={{
                         required: isActive && 'This is required',
@@ -230,7 +248,7 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
                         return (
                           <>
                             <NumberFormat
-                            data-testid="business_PhoneNo"
+                              data-testid="business_PhoneNo"
                               value={field.value}
                               customInput={CustomRequiredInput}
                               format="(###) ###-####"
@@ -314,7 +332,6 @@ export const DetailsForm = ({ vendorProfileData, onClose, isActive }: detailsFor
               <Button type="submit" data-testid="saveDetails" variant="solid" colorScheme="darkPrimary">
                 {t('save')}
               </Button>
-              
             </Flex>
           </Flex>
         </Box>

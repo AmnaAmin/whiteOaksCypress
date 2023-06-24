@@ -57,7 +57,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const formValues = useWatch({ control })
   const validatePayment = PaymentMethods?.filter(payment => formValues[payment.value])
   const validateAccountType = AccountingType?.filter(acct => formValues[acct.value])
-  const { isFPM } = useUserRolesSelector()
+  const { isFPM, isAdmin } = useUserRolesSelector()
 
   const { stateSelectOptions } = useStates()
   return (
@@ -223,6 +223,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="email"
                 {...register('businessEmailAddress', {
+                  required: isActive && 'This is required',
                   onChange: e => {
                     setValue('businessEmailAddress', e.target.value)
                   },
@@ -633,10 +634,15 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </HStack>
           </GridItem>
           <GridItem colSpan={4}>
-            <VoidedCheckFields formReturn={formReturn} vendorProfileData={vendorProfileData} isFPM={isFPM} />
+            <VoidedCheckFields
+              formReturn={formReturn}
+              vendorProfileData={vendorProfileData}
+              isFPM={isFPM}
+              isAdmin={isAdmin}
+            />
           </GridItem>
           <GridItem colSpan={2}>
-            <SignatureFields isActive={isActive} formReturn={formReturn} />
+            <SignatureFields isActive={isActive} formReturn={formReturn} isAdmin={isAdmin} />
           </GridItem>
         </Grid>
       </Box>
@@ -664,7 +670,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   )
 }
 
-const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM }) => {
+const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) => {
   const {
     formState: { errors },
     setValue,
@@ -743,17 +749,19 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM }) => {
             }}
           />
         </FormControl>
-        <AdminPortalVerifyDocument
-          vendor={VendorDetails as any}
-          fieldName="voidedCheckStatus"
-          registerToFormField={register}
-        />
+        {isAdmin && (
+          <AdminPortalVerifyDocument
+            vendor={VendorDetails as any}
+            fieldName="voidedCheckStatus"
+            registerToFormField={register}
+          />
+        )}
       </HStack>
     </HStack>
   )
 }
 
-const SignatureFields = ({ formReturn, isActive }) => {
+const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
   const {
     formState: { errors },
     setValue,
@@ -825,7 +833,7 @@ const SignatureFields = ({ formReturn, isActive }) => {
             _hover: { bg: 'gray.100' },
             _active: { bg: 'gray.100' },
           }}
-          disabled={false}
+          disabled={isAdmin}
           onClick={() => {
             setOpenSignature(true)
           }}
@@ -841,7 +849,7 @@ const SignatureFields = ({ formReturn, isActive }) => {
             })}
             ref={sigRef}
           />
-          {!false && (
+          {!isAdmin && (
             <HStack pos={'absolute'} right="10px" top="11px" spacing={3}>
               <IconButton
                 aria-label="open-signature"
@@ -861,7 +869,7 @@ const SignatureFields = ({ formReturn, isActive }) => {
                   minW="auto"
                   height="auto"
                   _hover={{ bg: 'inherit' }}
-                  disabled={false}
+                  disabled={isAdmin}
                   data-testid="removeSignature"
                   onClick={e => {
                     onRemoveSignature()

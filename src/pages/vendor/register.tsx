@@ -447,7 +447,6 @@ export const VendorRegister = () => {
       isSsn: ssnEinTabIndex === 1 ? true : false,
     }
 
-    
     createVendorAccount(vendorObj)
   }
 
@@ -986,6 +985,22 @@ export const VendorRegister = () => {
                                   {errors?.businessEmailAddress && errors?.businessEmailAddress?.message}
                                 </FormErrorMessage>
                               </FormControl>
+                              {/*<FormControl isInvalid={errors?.ownerName}>
+                                <FormLabel htmlFor="secondEmailAddress" sx={formLabeStyle}>
+                                  Owner's Name
+                                </FormLabel>
+                                <Input
+                                  id="ownerName"
+                                  type="text"
+                                  fontSize="14px"
+                                  color="#252F40"
+                                  _placeholder={placeholderStyle}
+                                  {...register('ownerName')}
+                                />
+                                <FormErrorMessage>
+                                  {errors?.secondEmailAddress && errors?.secondEmailAddress?.message}
+                                </FormErrorMessage>
+                                </FormControl>*/}
                             </VStack>
 
                             <VStack

@@ -19,6 +19,7 @@ import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import {
   createVendorPayload,
+  parseAccountsFormDataToAPIData,
   parseCreateVendorFormToAPIData,
   parseDocumentCardsValues,
   parseLicenseValues,
@@ -36,6 +37,7 @@ import { VendorProjects } from 'features/vendor-profile/vendor-projects'
 import { ExpirationAlertMessage } from 'features/common/expiration-alert-message'
 import { VendorUsersTab } from 'features/vendors/vendor-users-table'
 import { useAuth } from 'utils/auth-context'
+import { VendorAccounts } from 'features/vendors/vendor-accounts'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -76,6 +78,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveProfile } = useSaveVendorDetails('Profile')
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
+  const { mutate: saveAccounts } = useSaveVendorDetails('Accounts')
   const { mutate: createVendor } = useCreateVendorMutation()
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState<any>(0)
@@ -138,6 +141,11 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             } else {
               showError('Market')
             }
+            break
+          case 7:
+            //Accounts
+            const accountsPayload = await parseAccountsFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
+            saveAccounts(accountsPayload)
             break
 
           default:
@@ -250,6 +258,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
                 {!isVendor && <Tab>{t('prjt')}</Tab>}
                 {(userInfo?.user as any)?.vendorAdmin ? <Tab>Users</Tab> : null}
+                {(userInfo?.user as any)?.vendorAdmin ? <Tab>{t('accounts')}</Tab> : null}
               </TabList>
             </Card>
             <Box pt="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
@@ -388,6 +397,16 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                         {tabIndex === 5 && (
                           <VendorProjects vendorProfileData={vendorProfileData} onClose={props.onClose} />
                         )}
+                      </TabPanel>
+                    )}
+
+                    {(userInfo?.user as any)?.vendorAdmin && (
+                      <TabPanel p="0px">
+                        <VendorAccounts
+                          isActive={tabIndex === 5}
+                          vendorProfileData={vendorProfileData as VendorProfile}
+                          onClose={props.onClose}
+                        />
                       </TabPanel>
                     )}
                     {/* <TabPanel p="0px">
