@@ -440,8 +440,8 @@ export const DOCUMENTS_TYPES = {
   AGREEMENT_SIGNED_DOCUMENT: { value: 'Signed Agreement', id: 40 },
   AUTH_INSURANCE_EXPIRATION: { value: 'Auto Insurance', id: 22 },
   W9_DOCUMENT: { value: 'W9 Document', id: 99 },
-  VOIDED_CHECK: { value: 'Voided Check', id: 100 },
-  OWNERS_SIGNATURE: { value: 'Owners Signature', id: 101 },
+  VOIDED_CHECK: { value: 'Voided Check', id: 1025 },
+  OWNERS_SIGNATURE: { value: 'Owners Signature', id: 1026 },
 }
 
 export const useSaveVendorDetails = (name: string) => {
