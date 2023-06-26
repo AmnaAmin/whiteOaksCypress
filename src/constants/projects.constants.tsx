@@ -70,6 +70,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   lienDueFlag: 'lienDueFlag.equals',
   displayId: 'displayId.contains',
   percentageCompletion: 'percentageCompletion.equals',
+  flag: 'flag.contains',
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -161,6 +162,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'clientDueDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientDueDate),
     meta: { format: 'date' },
+  },
+  {
+    header: 'projects.projectTable.flag',
+    accessorKey: 'flag',
   },
   {
     header: 'projects.projectDetails.notes',
