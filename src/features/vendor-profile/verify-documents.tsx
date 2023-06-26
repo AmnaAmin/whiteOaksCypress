@@ -105,6 +105,22 @@ export const VendorPortalVerifyDocument = (props: VendorPortalVerifyDocumentProp
         setVerificationStatus(VERIFICATION_STATUS.VERIFIED)
       }
     }
+    if (props.fieldName === 'bankVoidedCheckStatus') {
+      if (
+        props.vendor.bankVoidedCheckStatus === null ||
+        props.vendor.bankVoidedCheckStatus === VERIFICATION_STATUS.UNVERIFIED
+      ) {
+        setVerificationStatus(VERIFICATION_STATUS.UNVERIFIED)
+      }
+
+      if (props.vendor.bankVoidedCheckStatus === VERIFICATION_STATUS.EXPIRED) {
+        setVerificationStatus(VERIFICATION_STATUS.EXPIRED)
+      }
+
+      if (props.vendor.bankVoidedCheckStatus === VERIFICATION_STATUS.VERIFIED) {
+        setVerificationStatus(VERIFICATION_STATUS.VERIFIED)
+      }
+    }
   }, [props.vendor])
 
   return (

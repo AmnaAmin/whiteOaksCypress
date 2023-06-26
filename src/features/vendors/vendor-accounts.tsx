@@ -29,11 +29,13 @@ import ChooseFileField from 'components/choose-file/choose-file'
 import { dateFormatNew, datePickerFormat } from 'utils/date-time-utils'
 import VendorDetails from './vendor-detail-tab'
 import { downloadDocument } from 'features/vendor-profile/documents-card'
-import { AdminPortalVerifyDocument } from 'features/vendor-profile/verify-documents'
+import { AdminPortalVerifyDocument, VendorPortalVerifyDocument } from 'features/vendor-profile/verify-documents'
 import { BiAddToQueue, BiTrash } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import SignatureModal from 'features/vendor/vendor-work-order/lien-waiver/signature-modal'
 import { imgUtility } from 'utils/file-utils'
+import { watch } from 'fs'
+import { set } from 'date-fns'
 
 type UserProps = {
   onClose?: () => void
@@ -46,18 +48,17 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     formState: { errors },
     control,
     setValue,
-    getValues,
     register,
   } = formReturn
 
   const { t } = useTranslation()
-  console.log(getValues())
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
   const formValues = useWatch({ control })
   const validatePayment = PaymentMethods?.filter(payment => formValues[payment.value])
   const validateAccountType = AccountingType?.filter(acct => formValues[acct.key])
-  const { isFPM, isAdmin } = useUserRolesSelector()
+  const { isAdmin, isVendor } = useUserRolesSelector()
+  const isVendorRequired = isActive && isVendor
 
   const { stateSelectOptions } = useStates()
   return (
@@ -85,7 +86,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
-                        isDisabled={isFPM}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -115,7 +115,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
-                        isDisabled={isFPM}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -151,7 +150,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                                   field.onChange(isChecked)
                                 }}
                                 mr="2px"
-                                isDisabled={isFPM}
                               >
                                 {t(payment.value)}
                               </Checkbox>
@@ -187,7 +185,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   },
                 })}
                 size="md"
-                isDisabled={isFPM}
               />
               <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
             </FormControl>
@@ -208,7 +205,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   },
                 })}
                 size="md"
-                isDisabled={isFPM}
               />
               <FormErrorMessage pos="absolute">{errors.ownerName && errors.ownerName?.message}</FormErrorMessage>
             </FormControl>
@@ -230,7 +226,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 })}
                 variant="required-field"
                 size="md"
-                isDisabled={isFPM}
               />
               <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
             </FormControl>
@@ -259,7 +254,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
-                        isDisabled={isFPM}
                       />
                       <FormErrorMessage>{fieldState.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
                     </>
@@ -283,7 +277,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="121px"
                 variant="outline"
                 size="md"
-                isDisabled={isFPM}
                 type="number"
               />
             </FormControl>
@@ -305,7 +298,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant="required-field"
                 size="md"
-                isDisabled={isFPM}
               />
               <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
             </FormControl>
@@ -326,7 +318,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant="required-field"
                 size="md"
-                isDisabled={isFPM}
                 onKeyPress={preventNumber}
               />
               <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
@@ -348,7 +339,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                       options={stateSelectOptions}
                       {...field}
                       selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
-                      isDisabled={isFPM}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -372,7 +362,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant="required-field"
                 size="md"
-                isDisabled={isFPM}
               />
               <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
@@ -390,12 +379,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="text"
                 id="bankName"
-                variant="required-field"
+                variant={isVendorRequired ? 'required-field' : 'outline'}
                 {...register('bankName', {
-                  required: isActive && 'This is required',
+                  required: isVendorRequired && 'This is required',
                 })}
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isAdmin}
               />
               <FormErrorMessage pos="absolute">{errors.bankName && errors.bankName?.message}</FormErrorMessage>
             </FormControl>
@@ -408,12 +397,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="text"
                 id="banksrimaryContact"
-                variant="required-field"
+                variant={isVendorRequired ? 'required-field' : 'outline'}
                 {...register('bankPrimaryContact', {
-                  required: isActive && 'This is required',
+                  required: isVendorRequired && 'This is required',
                 })}
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isAdmin}
               />
               <FormErrorMessage pos="absolute">
                 {errors.bankPrimaryContact && errors.bankPrimaryContact?.message}
@@ -430,11 +419,11 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="email"
                 {...register('bankEmail', {
-                  required: isActive && 'This is required',
+                  required: isVendorRequired && 'This is required',
                 })}
-                variant="required-field"
+                variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isAdmin}
               />
               <FormErrorMessage pos={'absolute'}>{errors.bankEmail?.message}</FormErrorMessage>
             </FormControl>
@@ -447,8 +436,8 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Controller
                 control={control}
                 rules={{
-                  required: isActive && 'This is required',
-                  validate: (number: string) => !isActive || validateTelePhoneNumber(number),
+                  required: isVendorRequired && 'This is required',
+                  validate: (number: string) => !isVendorRequired || validateTelePhoneNumber(number),
                 }}
                 name="bankPhoneNumber"
                 render={({ field, fieldState }) => {
@@ -457,13 +446,13 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                       <NumberFormat
                         data-testid="bankPhoneNumber"
                         value={field.value}
-                        customInput={CustomRequiredInput}
+                        customInput={isVendorRequired ? CustomRequiredInput : CustomInput}
                         format="(###)-###-####"
                         mask="_"
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
-                        isDisabled={isFPM}
+                        isDisabled={isAdmin}
                       />
                       <FormErrorMessage>{fieldState.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
                     </>
@@ -482,12 +471,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="text"
                 {...register('bankAddress', {
-                  required: isActive && 'This is required',
+                  required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
-                variant="required-field"
+                variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isAdmin}
               />
               <FormErrorMessage pos="absolute">{errors.bankAddress?.message}</FormErrorMessage>
             </FormControl>
@@ -500,12 +489,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="text"
                 {...register('bankCity', {
-                  required: isActive && 'This is required',
+                  required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
-                variant="required-field"
+                variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isAdmin}
                 onKeyPress={preventNumber}
               />
               <FormErrorMessage pos="absolute">{errors.bankCity?.message}</FormErrorMessage>
@@ -519,15 +508,15 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Controller
                 control={control}
                 name="bankState"
-                rules={{ required: isActive && 'This is required' }}
+                rules={{ required: isVendorRequired && 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}
-                      selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
-                      isDisabled={isFPM}
+                      selectProps={{ isBorderLeft: isVendorRequired, menuHeight: '180px' }}
+                      isDisabled={isAdmin}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -543,12 +532,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="number"
                 {...register('bankZipCode', {
-                  required: isActive && 'This is required',
+                  required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
-                variant="required-field"
+                variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isAdmin}
               />
               <FormErrorMessage pos="absolute">{errors.bankZipCode?.message}</FormErrorMessage>
             </FormControl>
@@ -561,12 +550,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="number"
                 {...register('bankRoutingNo', {
-                  required: isActive && 'This is required',
+                  required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
-                variant="required-field"
+                variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isAdmin}
               />
               <FormErrorMessage pos="absolute">{errors.bankRoutingNo?.message}</FormErrorMessage>
             </FormControl>
@@ -579,12 +568,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="number"
                 {...register('bankAccountingNo', {
-                  required: isActive && 'This is required',
+                  required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
-                variant="required-field"
+                variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isAdmin}
               />
               <FormErrorMessage pos="absolute">{errors.bankAccountingNo?.message}</FormErrorMessage>
             </FormControl>
@@ -605,7 +594,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                         // @ts-ignore
                         name={account.key as string}
                         rules={{
-                          required: !validateAccountType?.length && isActive && 'This is required',
+                          required: !validateAccountType?.length && isVendorRequired && 'This is required',
                         }}
                         render={({ field, fieldState }) => (
                           <>
@@ -618,7 +607,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                                   field.onChange(isChecked)
                                 }}
                                 mr="2px"
-                                isDisabled={isFPM}
+                                isDisabled={isAdmin}
                               >
                                 {t(account?.value)}
                               </Checkbox>
@@ -637,7 +626,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             <VoidedCheckFields
               formReturn={formReturn}
               vendorProfileData={vendorProfileData}
-              isFPM={isFPM}
+              isVendor={isVendor}
               isAdmin={isAdmin}
             />
           </GridItem>
@@ -656,21 +645,20 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
         justifyContent="end"
       >
         {onClose && (
-          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
+          <Button colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
-        {!isFPM && (
-          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-            {t('save')}
-          </Button>
-        )}
+
+        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+          {t('save')}
+        </Button>
       </Flex>
     </>
   )
 }
 
-const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) => {
+const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin }) => {
   const {
     formState: { errors },
     setValue,
@@ -680,6 +668,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
   } = formReturn
   const { t } = useTranslation()
   const documents = getValues()
+
   return (
     <HStack
       flexDir={{ base: 'column', sm: 'row' }}
@@ -693,7 +682,17 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
             <FormLabel variant="strong-label" size="md" color="#2D3748">
               {t('voidedCheckFile')}
             </FormLabel>
-            <Input w="215px" {...register('bankVoidedCheckDate')} type="date" data-testid="bankVoidedCheckDate" />
+            <Input
+              w="215px"
+              {...register('bankVoidedCheckDate', {
+                onChange: e => {
+                  setValue('bankVoidedCheckDate', e.target.value)
+                  setValue('bankVoidedCheckStatus', null)
+                },
+              })}
+              type="date"
+              data-testid="bankVoidedCheckDate"
+            />
             <FormErrorMessage>{errors.bankVoidedCheckDate && errors.bankVoidedCheckDate.message}</FormErrorMessage>
           </FormControl>
         </Box>
@@ -715,7 +714,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
             control={control}
             render={({ field, fieldState }) => {
               return (
-                <VStack alignItems="baseline" pointerEvents={isFPM ? 'none' : 'auto'}>
+                <VStack alignItems="baseline">
                   <Box>
                     <ChooseFileField
                       name={field.name}
@@ -724,6 +723,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
                       onChange={(file: any) => {
                         if (file) {
                           setValue('bankVoidedCheckDate', datePickerFormat(new Date()))
+                          setValue('bankVoidedCheckStatus', null)
                         }
                         field.onChange(file)
                       }}
@@ -736,7 +736,6 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
                             : null,
                         )
                       }}
-                      disabled={isFPM}
                     ></ChooseFileField>
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </Box>
@@ -751,11 +750,12 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
         </FormControl>
         {isAdmin && (
           <AdminPortalVerifyDocument
-            vendor={VendorDetails as any}
+            vendor={vendorProfileData as any}
             fieldName="bankVoidedCheckStatus"
             registerToFormField={register}
           />
         )}
+        {isVendor && <VendorPortalVerifyDocument vendor={vendorProfileData as any} fieldName="bankVoidedCheckStatus" />}
       </HStack>
     </HStack>
   )
@@ -772,8 +772,8 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
 
   const watchOwnersSignature = watch('ownersSignature')
   useEffect(() => {
-    if (ownersSignature) {
-      setOwnersSignature(ownersSignature)
+    if (watchOwnersSignature) {
+      setOwnersSignature(watchOwnersSignature)
     }
   }, [watchOwnersSignature])
 
@@ -797,7 +797,7 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
 
   const onSignatureChange = value => {
     convertSignatureTextToImage(value)
-    setValue('bankDateSignature', new Date(), { shouldValidate: true })
+    setValue('bankDateSignature', dateFormatNew(new Date().toISOString().split('T')[0]), { shouldValidate: true })
   }
   const onRemoveSignature = () => {
     setOwnersSignature('')
@@ -855,7 +855,7 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
                 minW="auto"
                 height="auto"
                 _hover={{ bg: 'inherit' }}
-                disabled={false}
+                disabled={isAdmin}
                 data-testid="openSignature"
               >
                 <BiAddToQueue color="#A0AEC0" />
@@ -890,7 +890,7 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
           placeholder="mm/dd/yy"
           register={register}
           name={`bankDateSignature`}
-          value={dateFormatNew(formValues?.bankDateSignature as string)}
+          value={formValues?.bankDateSignature}
           elementStyle={{
             bg: 'white',
             borderWidth: '0 0 1px 0',

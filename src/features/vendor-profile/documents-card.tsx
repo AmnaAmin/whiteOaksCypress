@@ -46,7 +46,13 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
 
 export const downloadDocument = (link, text, testid?) => {
   return (
-    <a href={link} data-testid={testid} download style={{ minWidth: '20em', marginTop: '5px', color: '#345EA6' }}>
+    <a
+      href={link}
+      data-testid={testid}
+      target={'_blank'}
+      download
+      style={{ minWidth: '20em', marginTop: '5px', color: '#345EA6' }}
+    >
       <Flex ml={1}>
         <BiDownload fontSize="sm" />
         <Text ml="5px" fontSize="12px" fontStyle="normal" w="170px" isTruncated>

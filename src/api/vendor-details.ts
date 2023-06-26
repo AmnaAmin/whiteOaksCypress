@@ -15,7 +15,7 @@ import {
   VendorTradeFormValues,
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
-import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
+import { datePickerFormat, dateISOFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 import { usePaginationQuery } from 'api'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { t } from 'i18next'
@@ -203,9 +203,9 @@ export const parseAccountsFormDataToAPIData = async (
       fileType: formValues?.voidedCheckFile.name,
       fileObject: voidedCheckFile,
     })
-    if (formValues?.ownersSignature) {
-      documents.push(formValues?.ownersSignature)
-    }
+  }
+  if (formValues?.ownersSignature) {
+    documents.push(formValues?.ownersSignature)
   }
 
   return {
@@ -228,13 +228,13 @@ export const parseAccountsFormDataToAPIData = async (
     bankName: formValues?.bankName,
     bankPhoneNumber: formValues?.bankPhoneNumber,
     bankState: formValues?.bankState?.value,
-    bankZipCode: formValues?.bankZipCode?.value,
+    bankZipCode: formValues?.bankZipCode,
     bankPrimaryContact: formValues?.bankPrimaryContact,
     bankChecking: formValues?.bankChecking,
     bankSaving: formValues?.bankSaving,
     bankVoidedCheckDate: formValues?.bankVoidedCheckDate,
-    bankVoidedCheckStatus: formValues?.bankVoidedCheckStatus ? 'VERIFIED' : 'UNVERIFIED',
-    bankDateSignature: formValues?.bankDateSignature,
+    bankVoidedCheckStatus: formValues?.bankVoidedCheckStatus ? 'VERIFIED' : formValues?.bankVoidedCheckStatus,
+    bankDateSignature: dateISOFormatWithZeroTime(formValues?.bankDateSignature),
     bankRoutingNo: formValues?.bankRoutingNo,
     bankAccountingNo: formValues?.bankAccountingNo,
   }
@@ -597,7 +597,7 @@ export const documentCardsDefaultValues = (vendor: any) => {
     voidedCheckFile: null,
     voidedCheckUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.VOIDED_CHECK.value)
       ?.s3Url,
-    bankDateSignature: datePickerFormat(vendor?.bankDateSignature),
+    bankDateSignature: dateFormat(vendor?.bankDateSignature),
     ownersSignature: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.OWNERS_SIGNATURE.value)
       ?.s3Url,
   }
@@ -676,7 +676,6 @@ export const parseDocumentCardsValues = async (values: any) => {
   if (values?.ownersSignature) {
     results.push(values?.ownersSignature)
   }
-  console.log(results)
   return results
 }
 

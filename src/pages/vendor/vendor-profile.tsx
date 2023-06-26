@@ -111,7 +111,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           case 1:
             //document
             const documentsPayload = await parseDocumentCardsValues(formData)
-            const updatedObject = prepareVendorDocumentObject(documentsPayload, formData)
+            const updatedObject = await prepareVendorDocumentObject(documentsPayload, formData)
 
             saveDocuments(createVendorPayload(updatedObject, vendorProfileData))
             break
