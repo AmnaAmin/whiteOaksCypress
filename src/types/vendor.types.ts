@@ -50,7 +50,7 @@ export type Vendor = {
   autoInsuranceExpirationDate: string | null
   agreementSignedDate: string | null
   vendorAgreementSigned: boolean
-  voidedCheckDate: string | null
+  bankVoidedCheckStatus: string | null
   voidedCheckUrl: string | null
   isSsn: false
   ssnNumber: string | null
@@ -154,12 +154,12 @@ export type VendorProfilePayload = {
   bankName?: string
   bankPhoneNumber?: string
   bankState?: string
-  banksPrimaryContact?: string
-  checking?: boolean
-  saving?: boolean
-  voidedCheckDate?: string | null
-  voidedCheckStatus?: string
-  dateOfSignature?: string | null | Date
+  bankPrimaryContact?: string
+  bankChecking?: boolean
+  bankSaving?: boolean
+  bankVoidedCheckDate?: string | null
+  bankVoidedCheckStatus?: string | null | undefined
+  bankDateSignature?: string | null | Date
 }
 
 export type LicenseDocument = {
@@ -289,22 +289,22 @@ export type VendorAccountsFormValues = {
   city?: string
   zipCode?: string
   bankName?: string
-  banksPrimaryContact?: string
+  bankPrimaryContact?: string
   bankEmail?: string
   bankPhoneNumber: string
   bankAddress?: string
   bankCity?: string
   bankState?: string
   bankZipCode?: string
-  routingNumber?: string
-  accountingNumber?: string
-  checking?: boolean
-  saving?: boolean
+  bankRoutingNo?: string
+  bankAccountingNo?: string
+  bankChecking?: boolean
+  bankSaving?: boolean
   voidedCheckFile?: File
-  voidedCheckDate?: string | null
-  voidedCheckStatus?: boolean
+  bankVoidedCheckDate?: string | null
+  bankVoidedCheckStatus?: boolean
   ownersSignature: any
-  dateOfSignature: string | Date | null
+  bankDateSignature: string | Date | null
 }
 type TradeFormValues = {
   trade: Trade

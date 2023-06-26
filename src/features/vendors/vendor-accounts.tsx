@@ -56,7 +56,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
   const formValues = useWatch({ control })
   const validatePayment = PaymentMethods?.filter(payment => formValues[payment.value])
-  const validateAccountType = AccountingType?.filter(acct => formValues[acct.value])
+  const validateAccountType = AccountingType?.filter(acct => formValues[acct.key])
   const { isFPM, isAdmin } = useUserRolesSelector()
 
   const { stateSelectOptions } = useStates()
@@ -401,22 +401,22 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl w="215px" isInvalid={!!errors.banksPrimaryContact}>
+            <FormControl w="215px" isInvalid={!!errors.bankPrimaryContact}>
               <FormLabel variant="strong-label" size="md">
-                {t('banksPrimaryContact')}
+                {t('bankPrimaryContact')}
               </FormLabel>
               <Input
                 type="text"
-                id="banksPrimaryContact"
+                id="banksrimaryContact"
                 variant="required-field"
-                {...register('banksPrimaryContact', {
+                {...register('bankPrimaryContact', {
                   required: isActive && 'This is required',
                 })}
                 size="md"
                 isDisabled={isFPM}
               />
               <FormErrorMessage pos="absolute">
-                {errors.banksPrimaryContact && errors.banksPrimaryContact?.message}
+                {errors.bankPrimaryContact && errors.bankPrimaryContact?.message}
               </FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -554,13 +554,13 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.routingNumber}>
+            <FormControl isInvalid={!!errors.bankRoutingNo}>
               <FormLabel variant="strong-label" size="md">
-                {t('routingNumber')}
+                {t('bankRoutingNo')}
               </FormLabel>
               <Input
                 type="number"
-                {...register('routingNumber', {
+                {...register('bankRoutingNo', {
                   required: isActive && 'This is required',
                 })}
                 w="215px"
@@ -568,17 +568,17 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 size="md"
                 isDisabled={isFPM}
               />
-              <FormErrorMessage pos="absolute">{errors.routingNumber?.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.bankRoutingNo?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.accountingNumber}>
+            <FormControl isInvalid={!!errors.bankAccountingNo}>
               <FormLabel variant="strong-label" size="md">
-                {t('accountingNumber')}
+                {t('bankAccountingNo')}
               </FormLabel>
               <Input
                 type="number"
-                {...register('accountingNumber', {
+                {...register('bankAccountingNo', {
                   required: isActive && 'This is required',
                 })}
                 w="215px"
@@ -586,7 +586,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 size="md"
                 isDisabled={isFPM}
               />
-              <FormErrorMessage pos="absolute">{errors.accountingNumber?.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.bankAccountingNo?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem />
@@ -603,7 +603,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                       <Controller
                         control={control}
                         // @ts-ignore
-                        name={account.value as string}
+                        name={account.key as string}
                         rules={{
                           required: !validateAccountType?.length && isActive && 'This is required',
                         }}
@@ -689,12 +689,12 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
     >
       <Flex w="215px">
         <Box>
-          <FormControl isInvalid={!!errors.voidedCheckDate}>
+          <FormControl isInvalid={!!errors.bankVoidedCheckStatus}>
             <FormLabel variant="strong-label" size="md" color="#2D3748">
               {t('voidedCheckFile')}
             </FormLabel>
-            <Input w="215px" {...register('voidedCheckDate')} type="date" data-testid="voidedCheckDate" />
-            <FormErrorMessage>{errors.voidedCheckDate && errors.voidedCheckDate.message}</FormErrorMessage>
+            <Input w="215px" {...register('bankVoidedCheckStatus')} type="date" data-testid="bankVoidedCheckStatus" />
+            <FormErrorMessage>{errors.bankVoidedCheckStatus && errors.bankVoidedCheckStatus.message}</FormErrorMessage>
           </FormControl>
         </Box>
       </Flex>
@@ -723,16 +723,16 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
                       isError={!!fieldState.error?.message}
                       onChange={(file: any) => {
                         if (file) {
-                          setValue('voidedCheckDate', datePickerFormat(new Date()))
+                          setValue('bankVoidedCheckStatus', datePickerFormat(new Date()))
                         }
                         field.onChange(file)
                       }}
                       onClear={() => {
                         setValue(field.name, undefined)
                         setValue(
-                          'voidedCheckDate',
-                          vendorProfileData?.voidedCheckDate
-                            ? datePickerFormat(vendorProfileData?.voidedCheckDate)
+                          'bankVoidedCheckStatus',
+                          vendorProfileData?.bankVoidedCheckStatus
+                            ? datePickerFormat(vendorProfileData?.bankVoidedCheckStatus)
                             : null,
                         )
                       }}
@@ -752,7 +752,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
         {isAdmin && (
           <AdminPortalVerifyDocument
             vendor={VendorDetails as any}
-            fieldName="voidedCheckStatus"
+            fieldName="bankVoidedCheckStatus"
             registerToFormField={register}
           />
         )}
@@ -797,12 +797,12 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
 
   const onSignatureChange = value => {
     convertSignatureTextToImage(value)
-    setValue('dateOfSignature', new Date(), { shouldValidate: true })
+    setValue('bankDateSignature', new Date(), { shouldValidate: true })
   }
   const onRemoveSignature = () => {
     setOwnersSignature('')
     setValue('ownersSignature', null)
-    setValue('dateOfSignature', null)
+    setValue('bankDateSignature', null)
   }
 
   return (
@@ -844,9 +844,7 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
             hidden={!ownersSignature}
             maxW={'100%'}
             src={ownersSignature}
-            {...register('ownersSignature', {
-              required: isActive && 'This is required field',
-            })}
+            {...register('ownersSignature')}
             ref={sigRef}
           />
           {!isAdmin && (
@@ -886,13 +884,13 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
       </FormControl>
       <FormControl>
         <FormInput
-          errorMessage={errors?.dateOfSignature?.message}
-          label={t('dateOfSignature')}
+          errorMessage={errors?.bankDateSignature?.message}
+          label={t('bankDateSignature')}
           testId="signature-date"
           placeholder="mm/dd/yy"
           register={register}
-          name={`dateOfSignature`}
-          value={dateFormatNew(formValues?.dateOfSignature as string)}
+          name={`bankDateSignature`}
+          value={dateFormatNew(formValues?.bankDateSignature as string)}
           elementStyle={{
             bg: 'white',
             borderWidth: '0 0 1px 0',
@@ -900,7 +898,6 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
             rounded: '0',
             paddingLeft: 0,
           }}
-          rules={{ required: isActive && 'This is required field' }}
           readOnly
         />
       </FormControl>

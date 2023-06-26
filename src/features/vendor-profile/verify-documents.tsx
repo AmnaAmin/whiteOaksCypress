@@ -12,7 +12,7 @@ interface NewVendorProfile extends VendorProfile {
   agreementSignedStatus: string | null
   autoInsuranceStatus: string | null
   w9Status: string | null
-  voidedCheckStatus: string | null
+  bankVoidedCheckStatus: string | null
 }
 
 interface VendorPortalVerifyDocumentProps {
@@ -228,19 +228,19 @@ export const AdminPortalVerifyDocument = (props: AdminVerifyDocumentProps): JSX.
         setVerificationStatus(VERIFICATION_STATUS.VERIFIED)
       }
     }
-    if (props.fieldName === 'voidedCheckStatus') {
+    if (props.fieldName === 'bankVoidedCheckStatus') {
       if (
-        props.vendor?.voidedCheckStatus === null ||
-        props.vendor?.voidedCheckStatus === VERIFICATION_STATUS.UNVERIFIED
+        props.vendor?.bankVoidedCheckStatus === null ||
+        props.vendor?.bankVoidedCheckStatus === VERIFICATION_STATUS.UNVERIFIED
       ) {
         setVerificationStatus(VERIFICATION_STATUS.UNVERIFIED)
       }
 
-      if (props.vendor?.voidedCheckStatus === VERIFICATION_STATUS.EXPIRED) {
+      if (props.vendor?.bankVoidedCheckStatus === VERIFICATION_STATUS.EXPIRED) {
         setVerificationStatus(VERIFICATION_STATUS.EXPIRED)
       }
 
-      if (props.vendor?.voidedCheckStatus === VERIFICATION_STATUS.VERIFIED) {
+      if (props.vendor?.bankVoidedCheckStatus === VERIFICATION_STATUS.VERIFIED) {
         setVerificationStatus(VERIFICATION_STATUS.VERIFIED)
       }
     }

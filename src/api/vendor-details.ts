@@ -141,8 +141,8 @@ export const PaymentMethods = [
 ]
 
 export const AccountingType = [
-  { key: 'checking', value: 'checking' },
-  { key: 'saving', value: 'saving' },
+  { key: 'bankChecking', value: 'checking' },
+  { key: 'bankSaving', value: 'saving' },
 ]
 
 export const parseVendorFormDataToAPIData = (
@@ -227,12 +227,12 @@ export const parseAccountsFormDataToAPIData = async (
     bankName: formValues?.bankName,
     bankPhoneNumber: formValues?.bankPhoneNumber,
     bankState: formValues?.bankState?.value,
-    banksPrimaryContact: formValues?.banksPrimaryContact,
-    checking: formValues?.checking,
-    saving: formValues?.saving,
-    voidedCheckDate: formValues?.voidedCheckDate,
-    voidedCheckStatus: formValues?.voidedCheckStatus ? 'VERIFIED' : 'UNVERIFIED',
-    dateOfSignature: formValues?.dateOfSignature,
+    bankPrimaryContact: formValues?.bankPrimaryContact,
+    bankChecking: formValues?.bankChecking,
+    bankSaving: formValues?.bankSaving,
+    bankVoidedCheckDate: formValues?.bankVoidedCheckDate,
+    bankVoidedCheckStatus: formValues?.bankVoidedCheckStatus ? 'VERIFIED' : 'UNVERIFIED',
+    bankDateSignature: formValues?.bankDateSignature,
   }
 }
 
@@ -589,11 +589,11 @@ export const documentCardsDefaultValues = (vendor: any) => {
     coiWcExpDate: datePickerFormat(vendor.coiWcExpirationDate),
     coiWcExpFile: null,
     coiWcExpUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_WC.value)?.s3Url,
-    voidedCheckDate: datePickerFormat(vendor.voidedCheckDate),
+    bankVoidedCheckDate: datePickerFormat(vendor.bankVoidedCheckDate),
     voidedCheckFile: null,
     voidedCheckUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.VOIDED_CHECK.value)
       ?.s3Url,
-    dateOfSignature: datePickerFormat(vendor?.dateOfSignature),
+    bankDateSignature: datePickerFormat(vendor?.bankDateSignature),
     ownersSignature: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.OWNERS_SIGNATURE.value)
       ?.s3Url,
   }
