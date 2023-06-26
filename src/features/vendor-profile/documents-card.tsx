@@ -50,6 +50,7 @@ export const downloadDocument = (link, text, testid?) => {
       href={link}
       data-testid={testid}
       target={'_blank'}
+      rel="noreferrer"
       download
       style={{ minWidth: '20em', marginTop: '5px', color: '#345EA6' }}
     >
