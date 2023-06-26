@@ -12,7 +12,6 @@ interface NewVendorProfile extends VendorProfile {
   agreementSignedStatus: string | null
   autoInsuranceStatus: string | null
   w9Status: string | null
-  bankVoidedCheckStatus: string | null
 }
 
 interface VendorPortalVerifyDocumentProps {
