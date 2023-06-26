@@ -66,6 +66,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     watchVoidCheckDate !== datePickerFormat(vendorProfileData?.bankVoidedCheckDate) || watchVoidCheckFile
   const resetFields = () => {
     setValue('bankVoidedCheckDate', datePickerFormat(vendorProfileData?.bankVoidedCheckDate!))
+    setValue('bankVoidedCheckStatus', vendorProfileData?.bankVoidedCheckStatus)
     setValue('voidedCheckFile', undefined)
   }
   const { stateSelectOptions } = useStates()
@@ -654,14 +655,14 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
         alignItems="center"
         justifyContent="end"
       >
-        {isVoidedCheckChange && (
+        {isVoidedCheckChange && isAdmin && (
           <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3">
             {t(`${VENDORPROFILE}.discardChanges`)}
           </Button>
         )}
 
         {onClose && (
-          <Button colorScheme="brand" onClick={onClose} mr="3">
+          <Button colorScheme="brand" variant="outline" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
@@ -764,7 +765,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin, i
             }}
           />
         </FormControl>
-        {isVoidedCheckChange ? (
+        {isVoidedCheckChange && isAdmin ? (
           <SaveChangedFieldAlert />
         ) : (
           <>

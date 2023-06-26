@@ -204,7 +204,7 @@ export const parseAccountsFormDataToAPIData = async (
       fileObject: voidedCheckFile,
     })
   }
-  if (formValues?.ownersSignature) {
+  if (formValues?.ownersSignature?.fileObject) {
     documents.push(formValues?.ownersSignature)
   }
 
@@ -237,6 +237,8 @@ export const parseAccountsFormDataToAPIData = async (
     bankDateSignature: dateISOFormatWithZeroTime(formValues?.bankDateSignature),
     bankRoutingNo: formValues?.bankRoutingNo,
     bankAccountingNo: formValues?.bankAccountingNo,
+    einNumber: formValues?.einNumber,
+    ssnNumber: formValues?.ssnNumber,
   }
 }
 

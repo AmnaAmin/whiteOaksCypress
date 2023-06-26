@@ -50,7 +50,7 @@ export type Vendor = {
   autoInsuranceExpirationDate: string | null
   agreementSignedDate: string | null
   vendorAgreementSigned: boolean
-  bankVoidedCheckStatus: string | null
+  bankVoidedCheckStatus: string | boolean | undefined
   bankVoidedCheckDate: string | null | undefined
   voidedCheckUrl: string | null
   isSsn: false
@@ -161,7 +161,7 @@ export type VendorProfilePayload = {
   bankChecking?: boolean
   bankSaving?: boolean
   bankVoidedCheckDate?: string | null
-  bankVoidedCheckStatus?: string | null | undefined
+  bankVoidedCheckStatus?: string | null | boolean
   bankDateSignature?: string | null | Date
   bankRoutingNo?: number | string | null
   bankAccountingNo?: number | string | null
@@ -307,7 +307,7 @@ export type VendorAccountsFormValues = {
   bankSaving?: boolean
   voidedCheckFile?: File
   bankVoidedCheckDate?: string | null
-  bankVoidedCheckStatus?: boolean
+  bankVoidedCheckStatus?: boolean | string | null
   ownersSignature: any
   bankDateSignature: string | Date | null
 }
