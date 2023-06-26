@@ -51,6 +51,7 @@ export type Vendor = {
   agreementSignedDate: string | null
   vendorAgreementSigned: boolean
   bankVoidedCheckStatus: string | null
+  bankVoidedCheckDate: string | null | undefined
   voidedCheckUrl: string | null
   isSsn: false
   ssnNumber: string | null

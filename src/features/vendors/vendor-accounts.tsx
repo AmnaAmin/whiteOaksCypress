@@ -27,15 +27,14 @@ import { useStates } from 'api/pc-projects'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import ChooseFileField from 'components/choose-file/choose-file'
 import { dateFormatNew, datePickerFormat } from 'utils/date-time-utils'
-import VendorDetails from './vendor-detail-tab'
 import { downloadDocument } from 'features/vendor-profile/documents-card'
 import { AdminPortalVerifyDocument, VendorPortalVerifyDocument } from 'features/vendor-profile/verify-documents'
 import { BiAddToQueue, BiTrash } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import SignatureModal from 'features/vendor/vendor-work-order/lien-waiver/signature-modal'
 import { imgUtility } from 'utils/file-utils'
-import { watch } from 'fs'
-import { set } from 'date-fns'
+import { VENDORPROFILE } from 'features/vendor-profile/vendor-profile.i18n'
+import { SaveChangedFieldAlert } from 'features/vendor-profile/save-change-field'
 
 type UserProps = {
   onClose?: () => void
@@ -49,6 +48,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     control,
     setValue,
     register,
+    watch,
   } = formReturn
 
   const { t } = useTranslation()
@@ -59,8 +59,17 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const validateAccountType = AccountingType?.filter(acct => formValues[acct.key])
   const { isAdmin, isVendor } = useUserRolesSelector()
   const isVendorRequired = isActive && isVendor
+  const watchVoidCheckDate = watch('bankVoidedCheckDate')
+  const watchVoidCheckFile = watch('voidedCheckFile')
 
+  const isVoidedCheckChange =
+    watchVoidCheckDate !== datePickerFormat(vendorProfileData?.bankVoidedCheckDate) || watchVoidCheckFile
+  const resetFields = () => {
+    setValue('bankVoidedCheckDate', datePickerFormat(vendorProfileData?.bankVoidedCheckDate!))
+    setValue('voidedCheckFile', undefined)
+  }
   const { stateSelectOptions } = useStates()
+
   return (
     <>
       <Box maxH={'450px'} overflowY={'scroll'}>
@@ -628,6 +637,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               vendorProfileData={vendorProfileData}
               isVendor={isVendor}
               isAdmin={isAdmin}
+              isVoidedCheckChange={isVoidedCheckChange}
             />
           </GridItem>
           <GridItem colSpan={2}>
@@ -644,6 +654,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
         alignItems="center"
         justifyContent="end"
       >
+        {isVoidedCheckChange && (
+          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3">
+            {t(`${VENDORPROFILE}.discardChanges`)}
+          </Button>
+        )}
+
         {onClose && (
           <Button colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
@@ -658,7 +674,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   )
 }
 
-const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin }) => {
+const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin, isVoidedCheckChange }) => {
   const {
     formState: { errors },
     setValue,
@@ -748,14 +764,22 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin })
             }}
           />
         </FormControl>
-        {isAdmin && (
-          <AdminPortalVerifyDocument
-            vendor={vendorProfileData as any}
-            fieldName="bankVoidedCheckStatus"
-            registerToFormField={register}
-          />
+        {isVoidedCheckChange ? (
+          <SaveChangedFieldAlert />
+        ) : (
+          <>
+            {isAdmin && (
+              <AdminPortalVerifyDocument
+                vendor={vendorProfileData as any}
+                fieldName="bankVoidedCheckStatus"
+                registerToFormField={register}
+              />
+            )}
+            {isVendor && (
+              <VendorPortalVerifyDocument vendor={vendorProfileData as any} fieldName="bankVoidedCheckStatus" />
+            )}
+          </>
         )}
-        {isVendor && <VendorPortalVerifyDocument vendor={vendorProfileData as any} fieldName="bankVoidedCheckStatus" />}
       </HStack>
     </HStack>
   )
