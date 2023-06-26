@@ -141,8 +141,8 @@ export const PaymentMethods = [
 ]
 
 export const AccountingType = [
-  { key: 'bankChecking', value: 'checking' },
-  { key: 'bankSaving', value: 'saving' },
+  { key: 'bankChecking', value: 'Checking' },
+  { key: 'bankSaving', value: 'Saving' },
 ]
 
 export const parseVendorFormDataToAPIData = (
@@ -197,7 +197,7 @@ export const parseAccountsFormDataToAPIData = async (
   if (formValues?.voidedCheckFile) {
     const voidedCheckFile = await readFileContent(formValues?.voidedCheckFile)
     documents.push({
-      documentType: 39,
+      documentType: DOCUMENTS_TYPES.VOIDED_CHECK?.id,
       fileObjectContentType: formValues?.voidedCheckFile.type,
       fileType: formValues?.voidedCheckFile.name,
       fileObject: voidedCheckFile,
@@ -233,6 +233,8 @@ export const parseAccountsFormDataToAPIData = async (
     bankVoidedCheckDate: formValues?.bankVoidedCheckDate,
     bankVoidedCheckStatus: formValues?.bankVoidedCheckStatus ? 'VERIFIED' : 'UNVERIFIED',
     bankDateSignature: formValues?.bankDateSignature,
+    bankRoutingNo: formValues?.bankRoutingNo,
+    bankAccountingNo: formValues?.bankAccountingNo,
   }
 }
 

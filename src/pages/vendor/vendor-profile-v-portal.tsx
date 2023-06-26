@@ -142,7 +142,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               showError('Market')
             }
             break
-          case 7:
+          case 6:
             //Accounts
             const accountsPayload = await parseAccountsFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
             saveAccounts(accountsPayload)
@@ -403,7 +403,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     {(userInfo?.user as any)?.vendorAdmin && (
                       <TabPanel p="0px">
                         <VendorAccounts
-                          isActive={tabIndex === 5}
+                          isActive={tabIndex === 6}
                           vendorProfileData={vendorProfileData as VendorProfile}
                           onClose={props.onClose}
                         />

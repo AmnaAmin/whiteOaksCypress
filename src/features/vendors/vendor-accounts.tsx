@@ -21,7 +21,7 @@ import NumberFormat from 'react-number-format'
 import { useTranslation } from 'react-i18next'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { AccountingType, PaymentMethods } from 'api/vendor-details'
+import { AccountingType, DOCUMENTS_TYPES, PaymentMethods } from 'api/vendor-details'
 import ReactSelect from 'components/form/react-select'
 import { useStates } from 'api/pc-projects'
 import { validateTelePhoneNumber } from 'utils/form-validation'
@@ -596,8 +596,8 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <FormLabel variant="strong-label" size="md" w="150px">
                 {t('accountingType')}
               </FormLabel>
-              <FormControl isInvalid={!!errors.check?.message && !validatePayment?.length}>
-                <HStack spacing="16px">
+              <FormControl isInvalid={!!errors.bankChecking?.message && !validateAccountType?.length}>
+                <HStack h="25px" spacing="16px">
                   {AccountingType.map(account => {
                     return (
                       <Controller
@@ -629,7 +629,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                     )
                   })}
                 </HStack>
-                <FormErrorMessage pos="absolute">{errors.check?.message}</FormErrorMessage>
+                <FormErrorMessage pos="absolute">{errors.bankChecking?.message}</FormErrorMessage>
               </FormControl>
             </HStack>
           </GridItem>
@@ -689,12 +689,12 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
     >
       <Flex w="215px">
         <Box>
-          <FormControl isInvalid={!!errors.bankVoidedCheckStatus}>
+          <FormControl isInvalid={!!errors.bankVoidedCheckDate}>
             <FormLabel variant="strong-label" size="md" color="#2D3748">
               {t('voidedCheckFile')}
             </FormLabel>
-            <Input w="215px" {...register('bankVoidedCheckStatus')} type="date" data-testid="bankVoidedCheckStatus" />
-            <FormErrorMessage>{errors.bankVoidedCheckStatus && errors.bankVoidedCheckStatus.message}</FormErrorMessage>
+            <Input w="215px" {...register('bankVoidedCheckDate')} type="date" data-testid="bankVoidedCheckDate" />
+            <FormErrorMessage>{errors.bankVoidedCheckDate && errors.bankVoidedCheckDate.message}</FormErrorMessage>
           </FormControl>
         </Box>
       </Flex>
@@ -723,16 +723,16 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isFPM, isAdmin }) =>
                       isError={!!fieldState.error?.message}
                       onChange={(file: any) => {
                         if (file) {
-                          setValue('bankVoidedCheckStatus', datePickerFormat(new Date()))
+                          setValue('bankVoidedCheckDate', datePickerFormat(new Date()))
                         }
                         field.onChange(file)
                       }}
                       onClear={() => {
                         setValue(field.name, undefined)
                         setValue(
-                          'bankVoidedCheckStatus',
-                          vendorProfileData?.bankVoidedCheckStatus
-                            ? datePickerFormat(vendorProfileData?.bankVoidedCheckStatus)
+                          'bankVoidedCheckDate',
+                          vendorProfileData?.bankVoidedCheckDate
+                            ? datePickerFormat(vendorProfileData?.bankVoidedCheckDate)
                             : null,
                         )
                       }}
@@ -787,7 +787,7 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
   const convertSignatureTextToImage = value => {
     const uri = imgUtility.generateTextToImage(canvasRef, value)
     setValue('ownersSignature', {
-      documentType: 108,
+      documentType: DOCUMENTS_TYPES?.OWNERS_SIGNATURE?.id,
       fileObject: uri?.split(',')[1],
       fileObjectContentType: 'image/png',
       fileType: 'Owners-Signature.png',
@@ -818,8 +818,8 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
           borderRadius="6px"
           bg="white"
           height={'40px'}
-          borderLeftWidth={'2.5px'}
-          borderLeftColor="#345EA6"
+          //borderLeftWidth={'2.5px'}
+          //borderLeftColor="#345EA6"
           alignItems="center"
           px={4}
           ml={0}

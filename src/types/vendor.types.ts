@@ -160,6 +160,8 @@ export type VendorProfilePayload = {
   bankVoidedCheckDate?: string | null
   bankVoidedCheckStatus?: string | null | undefined
   bankDateSignature?: string | null | Date
+  bankRoutingNo?: number | string | null
+  bankAccountingNo?: number | string | null
 }
 
 export type LicenseDocument = {
