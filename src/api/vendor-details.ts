@@ -15,7 +15,7 @@ import {
   VendorTradeFormValues,
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
-import { datePickerFormat, dateISOFormat } from 'utils/date-time-utils'
+import { datePickerFormat, dateISOFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 import { usePaginationQuery } from 'api'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { t } from 'i18next'
@@ -140,9 +140,13 @@ export const PaymentMethods = [
   { key: 105, value: 'creditCard' },
 ]
 
+export const AccountingType = [
+  { key: 'bankChecking', value: 'Checking' },
+  { key: 'bankSaving', value: 'Saving' },
+]
+
 export const parseVendorFormDataToAPIData = (
   formValues: VendorProfileDetailsFormData,
-  paymentsMethods,
   vendorProfileData?: VendorProfile,
 ): VendorProfilePayload => {
   let selectedPaymentMethods = [] as any
@@ -153,7 +157,8 @@ export const parseVendorFormDataToAPIData = (
   })
   return {
     ...vendorProfileData!,
-    //ownerName: formValues.ownerName!,
+    ownerName: formValues.ownerName!,
+    primaryContact: formValues.primaryContact,
     secondName: formValues.secondName!,
     businessPhoneNumber: formValues.businessPhoneNumber,
     businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
@@ -165,20 +170,75 @@ export const parseVendorFormDataToAPIData = (
     city: formValues.city!,
     zipCode: formValues.zipCode!,
     capacity: formValues.capacity!,
-    einNumber: formValues.einNumber!,
-    ssnNumber: formValues.ssnNumber!,
     //secondEmailAddress: formValues.secondEmailAddress!,
     score: formValues.score?.value,
     status: formValues.status?.value,
     state: formValues.state?.value,
-    isSsn: false,
     //paymentTerm: formValues.paymentTerm?.value,
     documents: [],
     vendorSkills: vendorProfileData?.vendorSkills || [],
     markets: vendorProfileData?.markets || [],
     licenseDocuments: vendorProfileData?.licenseDocuments || [],
-    paymentOptions: paymentsMethods.filter(payment => selectedPaymentMethods.includes(payment?.lookupValueId)),
     enableVendorPortal: formValues.enableVendorPortal?.value,
+  }
+}
+
+export const parseAccountsFormDataToAPIData = async (
+  formValues,
+  paymentsMethods,
+  vendorProfileData?: VendorProfile,
+): Promise<VendorProfilePayload> => {
+  let selectedPaymentMethods = [] as any
+  PaymentMethods?.forEach(pm => {
+    if (formValues[pm.value]) {
+      selectedPaymentMethods.push(pm.key)
+    }
+  })
+  let documents = [] as any[]
+  if (formValues?.voidedCheckFile) {
+    const voidedCheckFile = await readFileContent(formValues?.voidedCheckFile)
+    documents.push({
+      documentType: DOCUMENTS_TYPES.VOIDED_CHECK?.id,
+      fileObjectContentType: formValues?.voidedCheckFile.type,
+      fileType: formValues?.voidedCheckFile.name,
+      fileObject: voidedCheckFile,
+    })
+  }
+  if (formValues?.ownersSignature?.fileObject) {
+    documents.push(formValues?.ownersSignature)
+  }
+
+  return {
+    ...vendorProfileData!,
+    ownerName: formValues.ownerName!,
+    businessPhoneNumber: formValues.businessPhoneNumber,
+    businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
+    businessEmailAddress: formValues.businessEmailAddress!,
+    companyName: formValues.companyName!,
+    streetAddress: formValues.streetAddress!,
+    city: formValues.city!,
+    zipCode: formValues.zipCode!,
+    state: formValues.state?.value,
+    isSsn: false,
+    documents,
+    paymentOptions: paymentsMethods.filter(payment => selectedPaymentMethods.includes(payment?.lookupValueId)),
+    bankAddress: formValues?.bankAddress,
+    bankCity: formValues?.bankCity,
+    bankEmail: formValues?.bankEmail,
+    bankName: formValues?.bankName,
+    bankPhoneNumber: formValues?.bankPhoneNumber,
+    bankState: formValues?.bankState?.value,
+    bankZipCode: formValues?.bankZipCode,
+    bankPrimaryContact: formValues?.bankPrimaryContact,
+    bankChecking: formValues?.bankChecking,
+    bankSaving: formValues?.bankSaving,
+    bankVoidedCheckDate: formValues?.bankVoidedCheckDate,
+    bankVoidedCheckStatus: formValues?.bankVoidedCheckStatus ? 'VERIFIED' : formValues?.bankVoidedCheckStatus,
+    bankDateSignature: dateISOFormatWithZeroTime(formValues?.bankDateSignature),
+    bankRoutingNo: formValues?.bankRoutingNo,
+    bankAccountingNo: formValues?.bankAccountingNo,
+    einNumber: formValues?.einNumber,
+    ssnNumber: formValues?.ssnNumber,
   }
 }
 
@@ -187,14 +247,16 @@ export const parseCreateVendorFormToAPIData = async (
   paymentsMethods,
   vendorProfileData?: VendorProfile,
 ) => {
-  const profilePayload = parseVendorFormDataToAPIData(formValues, paymentsMethods, vendorProfileData)
+  const profilePayload = parseVendorFormDataToAPIData(formValues, vendorProfileData)
   const documentsPayload = await parseDocumentCardsValues(formValues)
-  const updatedObject = prepareVendorDocumentObject(documentsPayload, formValues)
+  const updatedObject = await prepareVendorDocumentObject(documentsPayload, formValues)
   const licensePayload = await parseLicenseValues(formValues, vendorProfileData?.licenseDocuments)
   const tradePayload = parseTradeFormValuesToAPIPayload(formValues, vendorProfileData!)
   const marketsPayload = parseMarketFormValuesToAPIPayload(formValues, vendorProfileData!)
+  const accountsPayload = await parseAccountsFormDataToAPIData(formValues, paymentsMethods, vendorProfileData!)
   return {
     ...profilePayload,
+    ...accountsPayload,
     licenseDocuments: licensePayload,
     ...tradePayload,
     ...marketsPayload,
@@ -384,6 +446,8 @@ export const DOCUMENTS_TYPES = {
   AGREEMENT_SIGNED_DOCUMENT: { value: 'Signed Agreement', id: 40 },
   AUTH_INSURANCE_EXPIRATION: { value: 'Auto Insurance', id: 22 },
   W9_DOCUMENT: { value: 'W9 Document', id: 99 },
+  VOIDED_CHECK: { value: 'Voided Check', id: 1025 },
+  OWNERS_SIGNATURE: { value: 'Owner Signature', id: 1026 },
 }
 
 export const useSaveVendorDetails = (name: string) => {
@@ -531,17 +595,27 @@ export const documentCardsDefaultValues = (vendor: any) => {
     coiWcExpDate: datePickerFormat(vendor.coiWcExpirationDate),
     coiWcExpFile: null,
     coiWcExpUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.COI_WC.value)?.s3Url,
+    bankVoidedCheckDate: datePickerFormat(vendor.bankVoidedCheckDate),
+    voidedCheckFile: null,
+    voidedCheckUrl: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.VOIDED_CHECK.value)
+      ?.s3Url,
+    bankDateSignature: dateFormat(vendor?.bankDateSignature),
+    ownersSignature: vendor?.documents?.find((d: any) => d.documentTypelabel === DOCUMENTS_TYPES.OWNERS_SIGNATURE.value)
+      ?.s3Url,
   }
   return documentCards
 }
+export const accountsDefaultValues = (vendor: any) => {
+  const accounts = {}
+  return accounts
+}
 
-export const prepareVendorDocumentObject = (vendorProfilePayload, formData) => {
+export const prepareVendorDocumentObject = async (vendorProfilePayload, formData) => {
   /* console.log( formData.coiGLExpCheckBox  ? "VERIFIED" : ( formData as any ).coiGLStatus );
   console.log( formData.CoiWcExpCheckbox  ? "VERIFIED" : ( formData as any ).coiWCStatus );
   console.log( formData.agreementSignCheckBox  ? "VERIFIED" : ( formData as any ).agreementSignedStatus );
   console.log( formData.autoInsuranceCheckBox  ?   "VERIFIED" : ( formData as any ).autoInsuranceStatus );
   console.log( formData.W9DocumentCheckBox ? "VERIFIED" : ( formData as any ).w9Status );*/
-
   return {
     documents: vendorProfilePayload,
     agreementSignedDate: formData.agreementSignedDate!,
@@ -583,8 +657,13 @@ export const parseDocumentCardsValues = async (values: any) => {
       file: values.coiWcExpFile,
       type: DOCUMENTS_TYPES.COI_WC.id,
     })
+  values.voidedCheckFile &&
+    documentsList.push({
+      file: values.voidedCheckFile,
+      type: DOCUMENTS_TYPES.VOIDED_CHECK,
+    })
 
-  const results = await Promise.all(
+  let results = await Promise.all(
     documentsList.map(async (doc, index) => {
       const fileContents = await readFileContent(doc.file)
       const document = {
@@ -596,6 +675,9 @@ export const parseDocumentCardsValues = async (values: any) => {
       return document
     }),
   )
+  if (values?.ownersSignature) {
+    results.push(values?.ownersSignature)
+  }
   return results
 }
 
@@ -660,9 +742,9 @@ export const useSaveLanguage = () => {
 }
 
 export const useVendorNext = ({ control, documents }: { control: any; documents?: any }) => {
-  const [ein, ssn, ...detailfields] = useWatch({
+  const [...detailfields] = useWatch({
     control,
-    name: ['einNumber', 'ssnNumber', 'city', 'companyName', 'state', 'streetAddress', 'zipCode'],
+    name: ['city', 'companyName', 'state', 'streetAddress', 'zipCode'],
   })
 
   const businessPhoneNumber = useWatch({ name: 'businessPhoneNumber', control })
@@ -677,13 +759,12 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   })
   const licensesArray = licenseField?.length > 0 ? licenseField[0] : []
   const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10
-  const isSSNNumber = ssn?.replace(/\D+/g, '').length! === 9
-  const isEinNumber = ein?.replace(/\D+/g, '').length! === 9
+
   // const isEmail = isValidEmail(businessEmailAddress)
   const isCapacity = capacity <= 500
 
   return {
-    disableDetailsNext: detailfields.some(n => !n) || !(isEinNumber || isSSNNumber) || !isBusinessPhNo || !isCapacity,
+    disableDetailsNext: detailfields.some(n => !n) || !isBusinessPhNo || !isCapacity,
 
     disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl), //disable logic for next on documents tab.
     disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
