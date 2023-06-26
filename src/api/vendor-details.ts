@@ -158,6 +158,7 @@ export const parseVendorFormDataToAPIData = (
   return {
     ...vendorProfileData!,
     ownerName: formValues.ownerName!,
+    primaryContact: formValues.primaryContact,
     secondName: formValues.secondName!,
     businessPhoneNumber: formValues.businessPhoneNumber,
     businessPhoneNumberExtension: formValues.businessPhoneNumberExtension!,
@@ -227,6 +228,7 @@ export const parseAccountsFormDataToAPIData = async (
     bankName: formValues?.bankName,
     bankPhoneNumber: formValues?.bankPhoneNumber,
     bankState: formValues?.bankState?.value,
+    bankZipCode: formValues?.bankZipCode?.value,
     bankPrimaryContact: formValues?.bankPrimaryContact,
     bankChecking: formValues?.bankChecking,
     bankSaving: formValues?.bankSaving,
@@ -443,7 +445,7 @@ export const DOCUMENTS_TYPES = {
   AUTH_INSURANCE_EXPIRATION: { value: 'Auto Insurance', id: 22 },
   W9_DOCUMENT: { value: 'W9 Document', id: 99 },
   VOIDED_CHECK: { value: 'Voided Check', id: 1025 },
-  OWNERS_SIGNATURE: { value: 'Owners Signature', id: 1026 },
+  OWNERS_SIGNATURE: { value: 'Owner Signature', id: 1026 },
 }
 
 export const useSaveVendorDetails = (name: string) => {

@@ -106,6 +106,7 @@ export type VendorProfilePayload = {
   secondName: string | null
   statusLabel: string
   ownerName: string
+  primaryContact?: string | null
   businessEmailAddress: string
   businessPhoneNumber: string
   coiglExpirationDate: string | null
@@ -154,6 +155,7 @@ export type VendorProfilePayload = {
   bankName?: string
   bankPhoneNumber?: string
   bankState?: string
+  bankZipCode?: string
   bankPrimaryContact?: string
   bankChecking?: boolean
   bankSaving?: boolean
