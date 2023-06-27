@@ -23,10 +23,10 @@ type FieldInfoCardProps = {
   title: string
   value: string
   icon?: React.ElementType
-  testid?: string
+  testId?: string
 }
 
-const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testid }) => {
+const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testId }) => {
   const { t } = useTranslation()
   return (
     <Box>
@@ -35,7 +35,7 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testi
           <Text color="#4A5568" fontWeight={500} fontSize="16px" lineHeight="24px" fontStyle="inter" noOfLines={1}>
             {t(`${PERFORMANCE}.${title}`)}
           </Text>
-          <Text color="#718096" fontSize="16px" fontWeight={400} fontStyle="inter" lineHeight={'24px'}>
+          <Text  data-testid={testId} color="#718096" fontSize="16px" fontWeight={400} fontStyle="inter" lineHeight={'24px'}>
             {value}
           </Text>
         </VStack>
@@ -64,13 +64,13 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
             <FieldInfoCard title={'previousBonus'} value={currencyFormatter(fpmData?.previousBonus)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'} ml={8}>
-            <FieldInfoCard title={'profit'} value={currencyFormatter(fpmData?.profit)} />
+            <FieldInfoCard title={'profit'} value={currencyFormatter(fpmData?.profit)} testId="fpm_Profit"/>
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={'revenue'} value={currencyFormatter(fpmData?.revenue)} />
+            <FieldInfoCard data-testid='abc' title={'revenue'} value={currencyFormatter(fpmData?.revenue)} testId="fpm_Revenue"  />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={'disqualifiedRevenue'} value={currencyFormatter(fpmData?.disqualifiedRevenue)} />
+            <FieldInfoCard title={'disqualifiedRevenue'} value={currencyFormatter(fpmData?.disqualifiedRevenue)} testId="fpm_disRevenue"  />
           </Box>
         </Flex>
         <Divider mt={4} mb={5} />
