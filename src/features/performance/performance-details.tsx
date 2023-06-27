@@ -67,7 +67,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
             <FieldInfoCard title={'profit'} value={currencyFormatter(fpmData?.profit)} testId="fpm_Profit"/>
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard data-testid='abc' title={'revenue'} value={currencyFormatter(fpmData?.revenue)} testId="fpm_Revenue"  />
+            <FieldInfoCard title={'revenue'} value={currencyFormatter(fpmData?.revenue)} testId="fpm_Revenue"  />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
             <FieldInfoCard title={'disqualifiedRevenue'} value={currencyFormatter(fpmData?.disqualifiedRevenue)} testId="fpm_disRevenue"  />
