@@ -15,7 +15,13 @@ import {
   VendorTradeFormValues,
 } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
-import { datePickerFormat, dateISOFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
+import {
+  datePickerFormat,
+  dateISOFormat,
+  dateFormat,
+  dateISOFormatWithZeroTime,
+  dateFormatNew,
+} from 'utils/date-time-utils'
 import { usePaginationQuery } from 'api'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { t } from 'i18next'
@@ -939,7 +945,11 @@ export const createACHForm = (form, values, signatureDimention, signature) => {
     form.setFont(basicFont, 'bold')
     form.text(`Date`, startx + 100, signatureYStart + 15)
     form.setFont(basicFont, 'normal')
-    form.text(values?.bankDateSignature ?? '', startx + 120, signatureYStart + 15)
+    form.text(
+      values?.bankDateSignature ? dateFormatNew(values?.bankDateSignature) : '',
+      startx + 120,
+      signatureYStart + 15,
+    )
     form.text(note1, startx, signatureYStart + 30)
     form.text(note2, startx, signatureYStart + 35)
     form.setTextColor(211, 211, 211)
