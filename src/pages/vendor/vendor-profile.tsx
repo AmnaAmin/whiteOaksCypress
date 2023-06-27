@@ -243,7 +243,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {!!vendorProfileData?.id && <Tab>Users</Tab>}
               {isAdmin && (
                 <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id}>
-                  {t('accounts')}
+                  {t('vendorProfileAccount')}
                 </Tab>
               )}
             </TabList>
