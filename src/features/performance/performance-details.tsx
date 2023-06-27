@@ -10,6 +10,7 @@ import {
   HStack,
   VStack,
   FormErrorMessage,
+  Tooltip,
 } from '@chakra-ui/react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -32,10 +33,12 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testI
     <Box>
       <HStack alignItems="start">
         <VStack spacing={1} alignItems="start">
+        <Tooltip label={t(`${PERFORMANCE}.${title}`)} color="black" placement="top" bg="#ffffff">
           <Text color="#4A5568" fontWeight={500} fontSize="16px" lineHeight="24px" fontStyle="inter" noOfLines={1}>
             {t(`${PERFORMANCE}.${title}`)}
           </Text>
-          <Text  data-testid={testId} color="#718096" fontSize="16px" fontWeight={400} fontStyle="inter" lineHeight={'24px'}>
+          </Tooltip>
+          <Text data-testid={testId} color="#718096" fontSize="16px" fontWeight={400} fontStyle="inter" lineHeight={'24px'}>
             {value}
           </Text>
         </VStack>
