@@ -7,7 +7,6 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { Card } from 'features/login-form-centered/Card'
 import CreateDetails, { useVendorDetails } from 'features/vendor-profile/create-details'
 import { UpdateDetails } from 'features/vendor-profile/update-details'
-import { DocumentsCard } from 'features/vendor-profile/documents-card-vendor-portal'
 import { License } from 'features/vendor-profile/license-vendor-portal'
 import { MarketList } from 'features/vendor-profile/markets'
 import { TradeList } from 'features/vendor-profile/trades'
@@ -38,6 +37,7 @@ import { ExpirationAlertMessage } from 'features/common/expiration-alert-message
 import { VendorUsersTab } from 'features/vendors/vendor-users-table'
 import { useAuth } from 'utils/auth-context'
 import { VendorAccounts } from 'features/vendors/vendor-accounts'
+import { DocumentsCard } from 'features/vendor-profile/documents-card'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -258,7 +258,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
                 {!isVendor && <Tab>{t('prjt')}</Tab>}
                 {(userInfo?.user as any)?.vendorAdmin ? <Tab>Users</Tab> : null}
-                {(userInfo?.user as any)?.vendorAdmin ? <Tab>{t('accounts')}</Tab> : null}
+                {(userInfo?.user as any)?.vendorAdmin ? <Tab>{t('vendorProfileAccount')}</Tab> : null}
               </TabList>
             </Card>
             <Box pt="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
