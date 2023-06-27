@@ -19,6 +19,7 @@ import { datePickerFormat, dateISOFormat, dateFormat, dateISOFormatWithZeroTime 
 import { usePaginationQuery } from 'api'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { t } from 'i18next'
+import { format } from 'date-fns'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -829,5 +830,123 @@ export const useFetchVendorWorkOrders = (vendorId: string | number | undefined) 
   return {
     vendorProjects,
     ...rest,
+  }
+}
+
+export const createACHForm = (form, values, signatureDimention, signature) => {
+  const basicFont = undefined
+  const heading = 'Vendor ACH Form'
+  const vendorDetailsHeading = 'Vendor Automated Request Form'
+  const bankInformationHeading = 'Bank Information'
+  const disclaimer = 'Please attach copy of VOIDED CHECK with company information'
+  const note1 = 'Signature above authorizes White Oaks Aligned, LLC to make direct deposit payments'
+  const note2 = 'into the account listed above.'
+  const footer = '4 14th Street * Suite 601 * Hoboken, NJ 07030 *** 128 E. Hargett St * Suite 204 * Raleigh, NC 27601'
+  const startx = 15
+  const centerX1 = (form.internal.pageSize.getWidth() - form.getTextWidth(vendorDetailsHeading)) / 2
+  const centerX2 = (form.internal.pageSize.getWidth() - form.getTextWidth(bankInformationHeading)) / 2
+
+  const VendorInfo = [
+    { label: 'Company Name:', value: values?.companyName ?? '' },
+    { label: 'Primary Contact:', value: values?.primaryContact ?? '' },
+    { label: `Owner's Name:`, value: values?.ownerName ?? '' },
+    {
+      label: 'Address:',
+      value:
+        (values?.streetAddress ?? '') +
+        ' ' +
+        (values?.city ?? '') +
+        ' ' +
+        (values?.state ?? '') +
+        ' , ' +
+        (values?.zipCode ?? ''),
+    },
+    { label: 'Telephone:', value: values?.businessPhoneNumber ?? '' },
+    { label: 'Email Address:', value: values?.businessEmailAddress ?? '' },
+  ]
+  const BankInfo = [
+    { label: 'Bank Name:', value: values?.bankName ?? '' },
+    { label: 'Primary Contact:', value: values?.bankPrimaryContact ?? '' },
+    {
+      label: `Address:`,
+      value: values?.bankAddress + ' ' + values?.bankCity + ' ' + values?.bankState + ' , ' + values?.bankZipCode,
+    },
+    { label: 'Telephone:', value: values?.bankPhoneNumber ?? '' },
+    { label: 'Email Address:', value: values?.bankEmail ?? '' },
+    { label: 'Routing Number:', value: values?.bankRoutingNo ?? '' },
+    { label: 'Account Number:', value: values?.bankAccountacingNo ?? '' },
+    {
+      label: 'Account Type:',
+      value:
+        (values?.bankSaving ? 'Saving' : '') +
+        (values?.bankSaving && values?.bankChecking ? ',' : '') +
+        (values?.bankChecking ? 'Checking' : ''),
+    },
+  ]
+  var img = new Image()
+  img.src = 'wo-logo-tree.png'
+  img.onload = function () {
+    form.addImage(img, 'png', 160, 5, 35, 35)
+    form.setFontSize(16)
+    form.setFont(basicFont, 'bold')
+    form.text(heading, startx, 40)
+    form.setDrawColor(128, 0, 0)
+    form.setLineWidth(1)
+    form.line(10, 45, 200, 45)
+    form.text(vendorDetailsHeading, centerX1, 55)
+    form.setFontSize(12)
+    form.setFont(basicFont, 'normal')
+    var vendorInfoYStart = 65
+    VendorInfo.forEach(info => {
+      form.text(info.label, startx, vendorInfoYStart + 5)
+      form.text(info.value, startx + 45, vendorInfoYStart + 5)
+      vendorInfoYStart = vendorInfoYStart + 8
+    })
+    form.setFont(basicFont, 'bold')
+    form.setFontSize(16)
+    form.text(bankInformationHeading, centerX2, vendorInfoYStart + 10)
+    form.setFontSize(12)
+    form.setFont(basicFont, 'normal')
+    var bankInfoYStart = vendorInfoYStart + 20
+    BankInfo.forEach(info => {
+      if (info.label === 'Account Number:') {
+        vendorInfoYStart = vendorInfoYStart + 8
+        return
+      }
+      form.text(info.label, startx, bankInfoYStart + 5)
+      form.text(info.value, startx + 45, bankInfoYStart + 5)
+      if (info.label === 'Routing Number:') {
+        form.text('Account Number:', startx + 100, bankInfoYStart + 5)
+        form.text(values?.bankAccountingNo ?? '', startx + 135, bankInfoYStart + 5)
+      }
+      bankInfoYStart = bankInfoYStart + 8
+    })
+    var signatureYStart = bankInfoYStart + 15
+    form.setFillColor(253, 255, 50)
+    form.rect(startx + 14, signatureYStart - 5, 125, 8, 'F')
+    form.text(disclaimer, startx + 15, signatureYStart)
+    form.setFont(basicFont, 'bold')
+    form.text(`Owner's Signature`, startx, signatureYStart + 15)
+    form.setFont(basicFont, 'normal')
+    form.addImage(
+      signature,
+      'png',
+      startx + 45,
+      signatureYStart + 12,
+      signatureDimention.width / 4,
+      signatureDimention.height / 4,
+    )
+    form.setFont(basicFont, 'bold')
+    form.text(`Date`, startx + 100, signatureYStart + 15)
+    form.setFont(basicFont, 'normal')
+    form.text(values?.bankDateSignature ?? '', startx + 120, signatureYStart + 15)
+    form.text(note1, startx, signatureYStart + 30)
+    form.text(note2, startx, signatureYStart + 35)
+    form.setTextColor(211, 211, 211)
+    form.setFontSize(10)
+    form.text(footer, startx + 15, signatureYStart + 75)
+
+    form.save('Vendor ACH Form')
+    return format
   }
 }
