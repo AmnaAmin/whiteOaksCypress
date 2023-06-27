@@ -88,7 +88,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     }
 
     convertImageToDataURL(watchOwnersSignature, (dataUrl: string) => {
-      createACHForm(form, { ...formValues }, dimention, dataUrl)
+      createACHForm(form, { ...vendorProfileData }, dimention, dataUrl)
     })
   }
 
