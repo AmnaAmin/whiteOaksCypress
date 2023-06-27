@@ -70,12 +70,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     isAgreementSignedDateChanged,
     watchAgreementFile,
     isAutoInsuranceExpDateChanged,
+    watchAutoInsuranceExpDate,
     watchInsuranceFile,
     isCoiGlExpDateChanged,
+    watchCoiGlExpDate,
     watchCoiGlExpFile,
     isCoiWcExpDateChanged,
+    watchCoiWcExpDate,
     watchCoiWcExpFile,
     isAllFiledWatch,
+    watchAgreementSignedDate,
   } = useWatchDocumentFeild(control, vendor)
   const isAgreementRequired = !!watchAgreementFile || !!documents.agreementUrl
 
@@ -265,6 +269,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             onFileChange(file)
                             field.onChange(file)
                           }}
+                          isRequired={!!isAgreementSignedDateChanged || !!watchAgreementSignedDate}
                           onClear={() => setValue(field.name, null)}
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -368,6 +373,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             field.onChange(file)
                           }}
                           onClear={() => setValue(field.name, null)}
+                          isRequired={!!isAutoInsuranceExpDateChanged || !!watchAutoInsuranceExpDate}
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
@@ -455,6 +461,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             field.onChange(file)
                           }}
                           onClear={() => setValue(field.name, null)}
+                          isRequired={!!isCoiGlExpDateChanged || !!watchCoiGlExpDate}
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </Box>
@@ -535,6 +542,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             onFileChange(file)
                             field.onChange(file)
                           }}
+                          isRequired={!!isCoiWcExpDateChanged || !!watchCoiWcExpDate}
                           onClear={() => setValue(field.name, null)}
                         ></ChooseFileField>
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>

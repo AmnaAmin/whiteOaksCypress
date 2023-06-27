@@ -23,7 +23,7 @@ import { VENDORPROFILE } from './vendor-profile.i18n'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { AdminPortalVerifyDocument } from './verify-documents'
+import { AdminPortalVerifyDocument, VendorPortalVerifyDocument } from './verify-documents'
 
 type DocumentsProps = {
   vendor: VendorProfile
@@ -67,7 +67,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
   const { isFPM } = useUserRolesSelector()
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isVendor } = useUserRolesSelector()
 
   const {
     formState: { errors, isSubmitSuccessful },
@@ -106,6 +106,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     watchCoiWcExpDate,
     isAllFiledWatch,
   } = useWatchDocumentFeild(control, vendor)
+  console.log(getValues())
 
   // const isW9DocRequired = !!watchW9DocumentFile || !!documents.w9DocumentUrl
   const isAgreementRequired = !!watchAgreementFile || !!documents.agreementUrl
@@ -216,11 +217,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             {isW9DocumentDateChanged || watchW9DocumentFile ? (
               <SaveChangedFieldAlert />
             ) : (
-              <AdminPortalVerifyDocument
-                vendor={vendor as any}
-                fieldName="W9DocumentCheckBox"
-                registerToFormField={register}
-              />
+              <>
+                {isAdmin && (
+                  <AdminPortalVerifyDocument
+                    vendor={vendor as any}
+                    fieldName="W9DocumentCheckBox"
+                    registerToFormField={register}
+                  />
+                )}
+                {isVendor && <VendorPortalVerifyDocument vendor={vendor as any} fieldName="W9Document" />}
+              </>
             )}
           </HStack>
         </HStack>
@@ -298,11 +304,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {isAgreementSignedDateChanged || watchAgreementFile ? (
                 <SaveChangedFieldAlert />
               ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="agreementSignCheckBox"
-                  registerToFormField={register}
-                />
+                <>
+                  {isAdmin && (
+                    <AdminPortalVerifyDocument
+                      vendor={vendor as any}
+                      fieldName="agreementSignCheckBox"
+                      registerToFormField={register}
+                    />
+                  )}
+                  {isVendor && <VendorPortalVerifyDocument vendor={vendor as any} fieldName="agreementSign" />}
+                </>
               )}
             </HStack>
           </HStack>
@@ -411,11 +422,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {isAutoInsuranceExpDateChanged || watchInsuranceFile ? (
                 <SaveChangedFieldAlert />
               ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="autoInsuranceCheckBox"
-                  registerToFormField={register}
-                />
+                <>
+                  {isAdmin && (
+                    <AdminPortalVerifyDocument
+                      vendor={vendor as any}
+                      fieldName="autoInsuranceCheckBox"
+                      registerToFormField={register}
+                    />
+                  )}
+                  {isVendor && <VendorPortalVerifyDocument vendor={vendor as any} fieldName="autoInsurance" />}
+                </>
               )}
             </HStack>
           </HStack>
@@ -497,11 +513,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {isCoiGlExpDateChanged || watchCoiGlExpFile ? (
                 <SaveChangedFieldAlert />
               ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="coiGLExpCheckBox"
-                  registerToFormField={register}
-                />
+                <>
+                  {isAdmin && (
+                    <AdminPortalVerifyDocument
+                      vendor={vendor as any}
+                      fieldName="coiGLExpCheckBox"
+                      registerToFormField={register}
+                    />
+                  )}
+                  {isVendor && <VendorPortalVerifyDocument vendor={vendor as any} fieldName="coiGLExp" />}
+                </>
               )}
             </HStack>
           </HStack>
@@ -583,11 +604,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {isCoiWcExpDateChanged || watchCoiWcExpFile ? (
                 <SaveChangedFieldAlert />
               ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="CoiWcExpCheckbox"
-                  registerToFormField={register}
-                />
+                <>
+                  {isAdmin && (
+                    <AdminPortalVerifyDocument
+                      vendor={vendor as any}
+                      fieldName="CoiWcExpCheckbox"
+                      registerToFormField={register}
+                    />
+                  )}
+                  {isVendor && <VendorPortalVerifyDocument vendor={vendor as any} fieldName="CoiWcExp" />}
+                </>
               )}
             </HStack>
           </HStack>
