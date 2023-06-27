@@ -69,6 +69,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     setValue('bankVoidedCheckStatus', vendorProfileData?.bankVoidedCheckStatus)
     setValue('voidedCheckFile', undefined)
   }
+  const showDiscardChangeBtn = isVoidedCheckChange && isAdmin && vendorProfileData?.id
   const { stateSelectOptions } = useStates()
 
   return (
@@ -655,7 +656,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
         alignItems="center"
         justifyContent="end"
       >
-        {isVoidedCheckChange && isAdmin && (
+        {showDiscardChangeBtn && (
           <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3">
             {t(`${VENDORPROFILE}.discardChanges`)}
           </Button>
@@ -685,6 +686,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin, i
   } = formReturn
   const { t } = useTranslation()
   const documents = getValues()
+  const showSaveChangeAlert = isVoidedCheckChange && isAdmin && vendorProfileData?.id
 
   return (
     <HStack
@@ -765,7 +767,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin, i
             }}
           />
         </FormControl>
-        {isVoidedCheckChange && isAdmin ? (
+        {showSaveChangeAlert ? (
           <SaveChangedFieldAlert />
         ) : (
           <>

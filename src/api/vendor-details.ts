@@ -660,7 +660,7 @@ export const parseDocumentCardsValues = async (values: any) => {
   values.voidedCheckFile &&
     documentsList.push({
       file: values.voidedCheckFile,
-      type: DOCUMENTS_TYPES.VOIDED_CHECK,
+      type: DOCUMENTS_TYPES.VOIDED_CHECK?.id,
     })
 
   let results = await Promise.all(
