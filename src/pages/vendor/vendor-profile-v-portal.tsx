@@ -258,7 +258,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
                 {!isVendor && <Tab>{t('prjt')}</Tab>}
                 {(userInfo?.user as any)?.vendorAdmin ? <Tab>Users</Tab> : null}
-                {(userInfo?.user as any)?.vendorAdmin ? <Tab>{t('accounts')}</Tab> : null}
+                {(userInfo?.user as any)?.vendorAdmin ? <Tab>{t('vendorProfileAccount')}</Tab> : null}
               </TabList>
             </Card>
             <Box pt="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>

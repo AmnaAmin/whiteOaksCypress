@@ -741,23 +741,19 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin, i
                       isError={!!fieldState.error?.message}
                       onChange={(file: any) => {
                         if (file) {
-                          setValue('bankVoidedCheckDate', datePickerFormat(new Date()))
                           setValue('bankVoidedCheckStatus', null)
                         }
+
                         field.onChange(file)
                       }}
                       onClear={() => {
                         setValue(field.name, undefined)
-                        setValue(
-                          'bankVoidedCheckDate',
-                          vendorProfileData?.bankVoidedCheckDate
-                            ? datePickerFormat(vendorProfileData?.bankVoidedCheckDate)
-                            : null,
-                        )
                       }}
                     ></ChooseFileField>
+
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </Box>
+
                   <Box overflow="hidden" top={16} h="18px">
                     {documents?.voidedCheckUrl &&
                       downloadDocument(documents?.voidedCheckUrl, t('voidedCheck'), 'voidedCheckLink')}
