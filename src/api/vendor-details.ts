@@ -675,7 +675,7 @@ export const parseDocumentCardsValues = async (values: any) => {
       return document
     }),
   )
-  if (values?.ownersSignature) {
+  if (values?.ownersSignature?.fileObject) {
     results.push(values?.ownersSignature)
   }
   return results
