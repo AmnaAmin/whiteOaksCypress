@@ -68,6 +68,7 @@ export const ConstructionPortalPayable = () => {
 
   return (
     <form method='post'>
+      
       <Box pb="2">
         <Box mb={'12px'}>
           <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
