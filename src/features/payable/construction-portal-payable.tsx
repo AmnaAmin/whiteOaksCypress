@@ -9,8 +9,6 @@ import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiSync } from 'react-icons/bi'
-import { compact } from 'lodash'
-import { useBatchProcessingMutation, useCheckBatch } from 'api/account-payable'
 import { ViewLoader } from 'components/page-level-loader'
 import { OverPaymentTransactionsTable } from 'features/project-details/transactions/overpayment-transactions-table'
 import { PaginationState, SortingState } from '@tanstack/react-table'
@@ -24,7 +22,7 @@ import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 //All commented Code will be used later
 export const ConstructionPortalPayable = () => {
-  const [loading, setLoading] = useState(false)
+  const [loading] = useState(false)
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
@@ -41,7 +39,7 @@ export const ConstructionPortalPayable = () => {
   // }
 
   
-  const { register, reset, control, watch } = useForm()
+  const { register, reset, control} = useForm()
   const payableColumns = usePayableColumns(control, register)
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: PAYABLE_TABLE_QUERY_KEYS,
@@ -52,8 +50,8 @@ export const ConstructionPortalPayable = () => {
     sorting,
   })
 
-  const { mutate: batchCall } = useBatchProcessingMutation()
-  const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
+ 
+ 
 
   useEffect(() => {
     if (!loading) {
@@ -61,36 +59,16 @@ export const ConstructionPortalPayable = () => {
     }
   }, [loading])
 
-  const Submit = formValues => {
-    const payableProjects = compact(formValues.id).map(id => ({
-      id: parseInt(id as string),
-      type: '',
-    }))
-
-    const obj = {
-      typeCode: 'AP',
-      entities: payableProjects,
-    }
-
-    if (payableProjects.length === 0) return
-
-    setLoading(true)
-    setIsBatchClick(true)
-
-    batchCall(obj as any, {
-      onSuccess: () => {
-        refetch()
-      },
-    })
-  }
+ 
   const onNotificationClose = () => {
     setIsBatchClick(false)
   }
-  const formValues = watch();
+  
   // const { weekDayFilters } = usePayableWeeklyCount({ pagination, queryStringWithPagination })
 
   return (
     <form method='post'>
+      
       <Box pb="2">
         <Box mb={'12px'}>
           <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
