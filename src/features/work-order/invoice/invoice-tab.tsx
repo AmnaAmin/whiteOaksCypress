@@ -33,7 +33,7 @@ import { addDays, isWednesday, nextFriday, nextWednesday } from 'date-fns'
 import { createInvoice } from 'api/vendor-projects'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { ConfirmationBox } from 'components/Confirmation'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { AlertError } from 'components/AlertError'
 
@@ -100,7 +100,7 @@ export const InvoiceTab = ({
   const toast = useToast()
   const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
   const { isVendor, isAdmin } = useUserRolesSelector()
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   const {
     isOpen: isGenerateInvoiceOpen,
     onClose: onGenerateInvoiceClose,
@@ -443,6 +443,7 @@ export const InvoiceTab = ({
               <Button onClick={onClose} colorScheme="darkPrimary" variant="outline">
                 {t('cancel')}
               </Button>
+              {!isReadOnly && (
               <Button
                 disabled={!rejectInvoiceCheck || isWorkOrderUpdating}
                 onClick={() => rejectInvoice()}
@@ -450,6 +451,7 @@ export const InvoiceTab = ({
               >
                 {t('save')}
               </Button>
+              )}
             </>
           ) : (
             <Button onClick={onClose} variant="outline" colorScheme="darkPrimary">

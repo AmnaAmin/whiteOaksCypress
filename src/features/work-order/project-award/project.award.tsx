@@ -5,14 +5,14 @@ import { useForm } from 'react-hook-form'
 import { ProjectAwardCard, TextCard } from './project-award-card'
 import { PROJECT_AWARD } from './projectAward.i18n'
 import { useTranslation } from 'react-i18next'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 // import { ProjectAwardCard, TextCard } from './project-award-card'
 
 export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
   const { isUpdating, projectAwardData, isUpgradeProjectAward } = props
   const { isAdmin } = useUserRolesSelector()
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   const [selectedCard, setSelectedCard] = useState(null)
 
   interface FormValues {
@@ -67,7 +67,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               {t('cancel')}
             </Button>
 
-            {props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward ? (
+            { !isReadOnly && (props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward) ? (
               <Button type="submit" colorScheme="brand" disabled={isUpdating}>
                 {t('save')}
               </Button>

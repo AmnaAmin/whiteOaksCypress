@@ -232,7 +232,7 @@ const WorkOrderDetailTab = props => {
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
   const clientStart = projectData?.clientStartDate
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   // Set Vendor Skill
   const defaultSkill = {
     value: workOrder?.vendorSkillId as number,
@@ -627,9 +627,13 @@ const WorkOrderDetailTab = props => {
             <Button data-testid="wo-cancel-btn" onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>
+            <>
+            {!isReadOnly && (
             <Button data-testid="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
               {t('save')}
             </Button>
+            )}
+            </>
           </HStack>
         </ModalFooter>
       </form>

@@ -17,6 +17,7 @@ import { RECEIVABLE_TABLE_QUERY_KEYS } from 'features/recievable/receivable.cons
 import { ReceivableConfirmationBox } from 'features/recievable/receivable-confirmation-box'
 import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const ReceivableContext = React.createContext<any>(null);
 
@@ -34,7 +35,7 @@ export const ConstructionPortalReceiveable: React.FC = () => {
   const formReturn = useForm()
 
   const { register, reset, control, setValue, watch } = formReturn;
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('RECEIVABLE.READ')
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = useState<SortingState>([])
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
@@ -138,6 +139,8 @@ export const ConstructionPortalReceiveable: React.FC = () => {
               clear={clearAll}
             /> */}
               <Spacer />
+              <>
+              {!isReadOnly && (
               <Button
                 alignContent="right"
                 // onClick={onNewProjectModalOpen}
@@ -149,6 +152,8 @@ export const ConstructionPortalReceiveable: React.FC = () => {
                 <Icon as={BiSync} fontSize="18px" mr={2} />
                 {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
               </Button>
+              )}
+              </>
             </Flex>
 
             {/* {batchRunStatus && <Box>{failedRun?.description}</Box>} */}

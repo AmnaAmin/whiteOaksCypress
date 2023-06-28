@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { BiBookAdd } from 'react-icons/bi'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useTranslation } from 'react-i18next'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Card } from 'components/card/card'
 import { FPMVendors } from 'features/vendors/vendor-table-fpm'
 import { FPMVendorFilters } from 'features/vendors/vendor-filters-fpm'
@@ -15,6 +15,7 @@ const Vendors = () => {
   const { isOpen: isOpenNewVendorModal, onOpen: onNewVendorModalOpen, onClose: onNewVendorModalClose } = useDisclosure()
   const [selectedCard, setSelectedCard] = useState<string>('')
   const { t } = useTranslation()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('VENDOR.READ')
   // change this logic based on access control requirements
   const { isFPM } = useUserRolesSelector()
 
@@ -32,7 +33,7 @@ const Vendors = () => {
           {t('clearFilter')}
         </Button> */}
           <Spacer />
-          {!isFPM && (
+          {!isReadOnly &&!isFPM && (
             <Box>
               <Button onClick={onNewVendorModalOpen} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
                 {t(`${VENDOR_MANAGER}.newVendor`)}
