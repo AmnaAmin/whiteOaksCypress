@@ -100,7 +100,7 @@ export const InvoiceTab = ({
   const toast = useToast()
   const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
   const { isVendor, isAdmin } = useUserRolesSelector()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   const {
     isOpen: isGenerateInvoiceOpen,
     onClose: onGenerateInvoiceClose,

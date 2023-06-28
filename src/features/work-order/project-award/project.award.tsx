@@ -12,7 +12,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
   const { isUpdating, projectAwardData, isUpgradeProjectAward } = props
   const { isAdmin } = useUserRolesSelector()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   const [selectedCard, setSelectedCard] = useState(null)
 
   interface FormValues {
