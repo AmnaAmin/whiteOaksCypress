@@ -233,7 +233,7 @@ export const parseAccountsFormDataToAPIData = async (
     bankChecking: formValues?.bankChecking,
     bankSaving: formValues?.bankSaving,
     bankVoidedCheckDate: formValues?.bankVoidedCheckDate,
-    bankVoidedCheckStatus: formValues?.bankVoidedCheckStatus ? 'VERIFIED' : formValues?.bankVoidedCheckStatus,
+    bankVoidedCheckStatus: formValues?.bankVoidedCheckStatus ? 'VERIFIED' :  null,
     bankDateSignature: dateISOFormatWithZeroTime(formValues?.bankDateSignature),
     bankRoutingNo: formValues?.bankRoutingNo,
     bankAccountingNo: formValues?.bankAccountingNo,
