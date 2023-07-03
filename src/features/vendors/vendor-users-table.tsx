@@ -164,7 +164,6 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
   const { isFPM } = useUserRolesSelector()
-  console.log(tableData)
 
   return (
     <>

@@ -37,7 +37,7 @@ export const MarketList: React.FC<{ vendorProfileData: VendorProfile; onClose?: 
 export const MarketForm = ({ vendorProfileData, onClose, isActive }: marketFormProps) => {
   const { control } = useFormContext<VendorMarketFormValues>()
   const tradeCheckboxes = useWatch({ control, name: 'markets' })
-  const { isFPM } = useUserRolesSelector()
+  const { isFPM, isAdmin } = useUserRolesSelector()
 
   return (
     <>
@@ -93,7 +93,7 @@ export const MarketForm = ({ vendorProfileData, onClose, isActive }: marketFormP
             colorScheme="darkPrimary"
             data-testid="saveMarkets"
           >
-            {vendorProfileData?.id ? t('save') : t('next')}
+            {vendorProfileData?.id || (!vendorProfileData?.id && !isAdmin) ? t('save') : t('next')}
           </Button>
         )}
       </Flex>
