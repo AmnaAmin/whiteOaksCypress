@@ -143,6 +143,7 @@ export const isManualTransaction = transactionType =>
     TransactionTypeValues.shippingFee,
     TransactionTypeValues.deductible,
     TransactionTypeValues.depreciation,
+    TransactionTypeValues.legalFee,
   ].includes(transactionType)
 
 export const useFieldDisabledEnabledDecision = (
