@@ -66,9 +66,9 @@ export const downloadDocument = (link, text, testid?) => {
 export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
-  const { isFPM } = useUserRolesSelector()
-  const { isAdmin, isVendor } = useUserRolesSelector()
-
+  const { isAdmin, isVendor, isProjectCoordinator, isDoc, isAccounting, isOperations, isVendorManager, isFPM } =
+    useUserRolesSelector()
+  const adminRole = isAdmin || isProjectCoordinator || isDoc || isAccounting || isOperations || isVendorManager || isFPM
   const {
     formState: { errors, isSubmitSuccessful },
     control,
@@ -218,7 +218,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               <SaveChangedFieldAlert />
             ) : (
               <>
-                {isAdmin && (
+                {adminRole && (
                   <AdminPortalVerifyDocument
                     vendor={vendor as any}
                     fieldName="W9DocumentCheckBox"
@@ -305,7 +305,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <SaveChangedFieldAlert />
               ) : (
                 <>
-                  {isAdmin && (
+                  {adminRole && (
                     <AdminPortalVerifyDocument
                       vendor={vendor as any}
                       fieldName="agreementSignCheckBox"
@@ -423,7 +423,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <SaveChangedFieldAlert />
               ) : (
                 <>
-                  {isAdmin && (
+                  {adminRole && (
                     <AdminPortalVerifyDocument
                       vendor={vendor as any}
                       fieldName="autoInsuranceCheckBox"
@@ -514,7 +514,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <SaveChangedFieldAlert />
               ) : (
                 <>
-                  {isAdmin && (
+                  {adminRole && (
                     <AdminPortalVerifyDocument
                       vendor={vendor as any}
                       fieldName="coiGLExpCheckBox"
@@ -605,7 +605,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <SaveChangedFieldAlert />
               ) : (
                 <>
-                  {isAdmin && (
+                  {adminRole && (
                     <AdminPortalVerifyDocument
                       vendor={vendor as any}
                       fieldName="CoiWcExpCheckbox"
