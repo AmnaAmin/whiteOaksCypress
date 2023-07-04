@@ -167,7 +167,16 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           case 4:
             //create vendor: market tab
             if (validateMarket(formData?.markets)) {
-              setTabIndex(i => i + 1)
+              if (isAdmin) {
+                setTabIndex(i => i + 1)
+              } else {
+                const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
+                createVendor(createPayload, {
+                  onSuccess() {
+                    props.onClose?.()
+                  },
+                })
+              }
             } else {
               showError('Market')
             }
@@ -243,7 +252,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {!!vendorProfileData?.id && <Tab>Users</Tab>}
               {isAdmin && (
                 <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id}>
-                  {t('accounts')}
+                  {t('vendorProfileAccount')}
                 </Tab>
               )}
             </TabList>

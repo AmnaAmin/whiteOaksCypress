@@ -21,7 +21,7 @@ import NumberFormat from 'react-number-format'
 import { useTranslation } from 'react-i18next'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { AccountingType, DOCUMENTS_TYPES, PaymentMethods } from 'api/vendor-details'
+import { AccountingType, DOCUMENTS_TYPES, PaymentMethods, createACHForm } from 'api/vendor-details'
 import ReactSelect from 'components/form/react-select'
 import { useStates } from 'api/pc-projects'
 import { validateTelePhoneNumber } from 'utils/form-validation'
@@ -29,12 +29,14 @@ import ChooseFileField from 'components/choose-file/choose-file'
 import { dateFormatNew, datePickerFormat } from 'utils/date-time-utils'
 import { downloadDocument } from 'features/vendor-profile/documents-card'
 import { AdminPortalVerifyDocument, VendorPortalVerifyDocument } from 'features/vendor-profile/verify-documents'
-import { BiAddToQueue, BiTrash } from 'react-icons/bi'
+import { BiAddToQueue, BiDownload, BiTrash } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import SignatureModal from 'features/vendor/vendor-work-order/lien-waiver/signature-modal'
 import { imgUtility } from 'utils/file-utils'
 import { VENDORPROFILE } from 'features/vendor-profile/vendor-profile.i18n'
 import { SaveChangedFieldAlert } from 'features/vendor-profile/save-change-field'
+import jsPDF from 'jspdf'
+import { convertImageToDataURL } from 'components/table/util'
 
 type UserProps = {
   onClose?: () => void
@@ -51,6 +53,10 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     watch,
   } = formReturn
 
+  const hasOwnerSignature = vendorProfileData?.documents?.find(
+    (d: any) => d.documentTypelabel === DOCUMENTS_TYPES.OWNERS_SIGNATURE.value,
+  )?.s3Url
+
   const { t } = useTranslation()
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
@@ -61,6 +67,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const isVendorRequired = isActive && isVendor
   const watchVoidCheckDate = watch('bankVoidedCheckDate')
   const watchVoidCheckFile = watch('voidedCheckFile')
+  const watchOwnersSignature = watch('ownersSignature')
 
   const isVoidedCheckChange =
     watchVoidCheckDate !== datePickerFormat(vendorProfileData?.bankVoidedCheckDate) || watchVoidCheckFile
@@ -71,6 +78,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   }
   const showDiscardChangeBtn = isVoidedCheckChange && isAdmin && vendorProfileData?.id
   const { stateSelectOptions } = useStates()
+  const sigRef = useRef<HTMLImageElement>(null)
+
+  const downloadACFForm = () => {
+    let form = new jsPDF()
+    const dimention = {
+      width: sigRef?.current?.width,
+      height: sigRef?.current?.height,
+    }
+
+    convertImageToDataURL(watchOwnersSignature, (dataUrl: string) => {
+      createACHForm(form, { ...vendorProfileData }, dimention, dataUrl)
+    })
+  }
 
   return (
     <>
@@ -643,7 +663,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             />
           </GridItem>
           <GridItem colSpan={2}>
-            <SignatureFields isActive={isActive} formReturn={formReturn} isAdmin={isAdmin} />
+            <SignatureFields sigRef={sigRef} formReturn={formReturn} isAdmin={isAdmin} />
           </GridItem>
         </Grid>
       </Box>
@@ -654,23 +674,32 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
         id="footer"
         borderTop="1px solid #E2E8F0"
         alignItems="center"
-        justifyContent="end"
+        justifyContent="space-between"
       >
-        {showDiscardChangeBtn && (
-          <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()} mr="3">
-            {t(`${VENDORPROFILE}.discardChanges`)}
-          </Button>
-        )}
+        <Box>
+          {hasOwnerSignature && (
+            <Button onClick={downloadACFForm} leftIcon={<BiDownload />} variant="outline" size="md" colorScheme="brand">
+              {t(`${VENDORPROFILE}.downloadACFForm`)}
+            </Button>
+          )}
+        </Box>
+        <HStack>
+          {showDiscardChangeBtn && (
+            <Button variant="outline" colorScheme="darkPrimary" onClick={() => resetFields()}>
+              {t(`${VENDORPROFILE}.discardChanges`)}
+            </Button>
+          )}
 
-        {onClose && (
-          <Button colorScheme="brand" variant="outline" onClick={onClose} mr="3">
-            {t('cancel')}
-          </Button>
-        )}
+          {onClose && (
+            <Button colorScheme="brand" variant="outline" onClick={onClose}>
+              {t('cancel')}
+            </Button>
+          )}
 
-        <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
-          {t('save')}
-        </Button>
+          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+            {t('save')}
+          </Button>
+        </HStack>
       </Flex>
     </>
   )
@@ -741,23 +770,19 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin, i
                       isError={!!fieldState.error?.message}
                       onChange={(file: any) => {
                         if (file) {
-                          setValue('bankVoidedCheckDate', datePickerFormat(new Date()))
                           setValue('bankVoidedCheckStatus', null)
                         }
+
                         field.onChange(file)
                       }}
                       onClear={() => {
                         setValue(field.name, undefined)
-                        setValue(
-                          'bankVoidedCheckDate',
-                          vendorProfileData?.bankVoidedCheckDate
-                            ? datePickerFormat(vendorProfileData?.bankVoidedCheckDate)
-                            : null,
-                        )
                       }}
                     ></ChooseFileField>
+
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </Box>
+
                   <Box overflow="hidden" top={16} h="18px">
                     {documents?.voidedCheckUrl &&
                       downloadDocument(documents?.voidedCheckUrl, t('voidedCheck'), 'voidedCheckLink')}
@@ -788,7 +813,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin, i
   )
 }
 
-const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
+const SignatureFields = ({ formReturn, isAdmin, sigRef }) => {
   const {
     formState: { errors },
     setValue,
@@ -806,7 +831,6 @@ const SignatureFields = ({ formReturn, isActive, isAdmin }) => {
 
   const [ownersSignature, setOwnersSignature] = useState('')
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const sigRef = useRef<HTMLImageElement>(null)
   const [openSignature, setOpenSignature] = useState(false)
   const formValues = useWatch({ control })
   const { t } = useTranslation()
