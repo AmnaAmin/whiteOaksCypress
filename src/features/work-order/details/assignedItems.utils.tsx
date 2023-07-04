@@ -1173,7 +1173,7 @@ export const useGetLineItemsColumn = ({
                 data-testid="complete_checkbox"
                 disabled={!statusEnabled}
                 onChange={e => {
-                  assignedItems.forEach((item, index) => {
+                  controlledAssignedItems.forEach((item, index) => {
                     setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
                     if (!e.target.checked) {
                       setValue(`assignedItems.${index}.isVerified`, false)
@@ -1309,6 +1309,8 @@ export const useGetLineItemsColumn = ({
     statusEnabled,
     markAllCompleted,
     allVerified,
+    controlledAssignedItems?.length,
+    
   ])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
