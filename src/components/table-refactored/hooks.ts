@@ -66,17 +66,9 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     if (!!selectedDay && days?.length) {
       const selectedDayData = days.find(day => day.dayName === selectedDay)
       clientDueDateFilter = { id: 'clientDueDate', value: selectedDayData?.dueDate }
+      finalFilters = [...finalFilters, clientDueDateFilter]
 
-      if (selectedFlagged) {
-        finalFilters = [
-          ...columnFilters,
-          clientDueDateFilter,
-          { id: 'noteFlag', value: selectedFlagged },
-          { id: 'lienDueFlag', value: selectedFlagged },
-        ];
-      } else {
-        finalFilters = [...finalFilters, clientDueDateFilter];
-      }
+  
       
     }
     // This filter will apply when user select a FPM from the FPM list
