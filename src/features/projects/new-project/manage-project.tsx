@@ -211,7 +211,10 @@ export const ManageProject: React.FC<{
                 name={`carrier`}
                 render={({ field, fieldState }) => (
                   <>
-                    <Select options={carrierOption} {...field} />
+                    <Select  
+                    menuPlacement="top"
+                    selectProps={{ menuHeight: '180px' }} 
+                    options={carrierOption} {...field} />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
