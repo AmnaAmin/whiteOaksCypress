@@ -21,6 +21,7 @@ export const projects = {
         // Project Information Form
         name: 'Name',
         type: 'Type',
+        clientType: 'Client Type',
         woNumber: 'WO Number',
         poNumber: 'PO Number',
         clientStartDate: 'Client Start Date',
@@ -85,6 +86,7 @@ export const projects = {
         // Project Information Form
         name: 'Nombre',
         type: 'Tipo',
+        clientType: 'Tipo de Cliente',
         woNumber: 'Número de WO',
         poNumber: 'Número de PO',
         clientStartDate: 'Fecha de Inicio del Cliente',

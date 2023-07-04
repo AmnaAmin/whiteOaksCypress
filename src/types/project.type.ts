@@ -270,6 +270,7 @@ export type ProjectFormValues = {
   agentName: string | null
   agentPhone: string | null
   agentEmail: string | null
+  clientType: string | null
 }
 
 export type Market = {
