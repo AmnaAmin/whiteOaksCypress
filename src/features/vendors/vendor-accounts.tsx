@@ -14,6 +14,7 @@ import {
   Checkbox,
   Image,
   IconButton,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { VendorAccountsFormValues, VendorProfile, preventNumber } from 'types/vendor.types'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
@@ -37,6 +38,8 @@ import { VENDORPROFILE } from 'features/vendor-profile/vendor-profile.i18n'
 import { SaveChangedFieldAlert } from 'features/vendor-profile/save-change-field'
 import jsPDF from 'jspdf'
 import { convertImageToDataURL } from 'components/table/util'
+import { useDeleteDocument } from 'api/vendor-projects'
+import { ConfirmationBox } from 'components/Confirmation'
 
 type UserProps = {
   onClose?: () => void
@@ -53,10 +56,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     watch,
   } = formReturn
 
-  const hasOwnerSignature = vendorProfileData?.documents?.find(
-    (d: any) => d.documentTypelabel === DOCUMENTS_TYPES.OWNERS_SIGNATURE.value,
-  )?.s3Url
-
   const { t } = useTranslation()
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
@@ -68,6 +67,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const watchVoidCheckDate = watch('bankVoidedCheckDate')
   const watchVoidCheckFile = watch('voidedCheckFile')
   const watchOwnersSignature = watch('ownersSignature')
+  const hasOwnerSignature = !!watchOwnersSignature && !watchOwnersSignature?.fileObject // signature has saved s3url and not fileobject
 
   const isVoidedCheckChange =
     watchVoidCheckDate !== datePickerFormat(vendorProfileData?.bankVoidedCheckDate) || watchVoidCheckFile
@@ -663,7 +663,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             />
           </GridItem>
           <GridItem colSpan={2}>
-            <SignatureFields sigRef={sigRef} formReturn={formReturn} isAdmin={isAdmin} />
+            <SignatureFields
+              vendorProfileData={vendorProfileData}
+              sigRef={sigRef}
+              formReturn={formReturn}
+              isAdmin={isAdmin}
+            />
           </GridItem>
         </Grid>
       </Box>
@@ -813,7 +818,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, isAdmin, i
   )
 }
 
-const SignatureFields = ({ formReturn, isAdmin, sigRef }) => {
+const SignatureFields = ({ vendorProfileData, formReturn, isAdmin, sigRef }) => {
   const {
     formState: { errors },
     setValue,
@@ -821,8 +826,17 @@ const SignatureFields = ({ formReturn, isAdmin, sigRef }) => {
     control,
     watch,
   } = formReturn
-
+  const { mutate: deleteSignature } = useDeleteDocument()
   const watchOwnersSignature = watch('ownersSignature')
+  const signatureDocument = vendorProfileData?.documents?.find(
+    (d: any) => d.documentTypelabel === DOCUMENTS_TYPES.OWNERS_SIGNATURE.value,
+  )
+  const {
+    isOpen: isDeleteConfirmationModalOpen,
+    onClose: onDeleteConfirmationModalClose,
+    onOpen: onDeleteConfirmationModalOpen,
+  } = useDisclosure()
+
   useEffect(() => {
     if (watchOwnersSignature) {
       setOwnersSignature(watchOwnersSignature)
@@ -851,9 +865,13 @@ const SignatureFields = ({ formReturn, isAdmin, sigRef }) => {
     setValue('bankDateSignature', dateFormatNew(new Date().toISOString().split('T')[0]), { shouldValidate: true })
   }
   const onRemoveSignature = () => {
+    onDeleteConfirmationModalClose()
     setOwnersSignature('')
     setValue('ownersSignature', null)
     setValue('bankDateSignature', null)
+    if (signatureDocument?.id) {
+      deleteSignature(signatureDocument?.id)
+    }
   }
 
   return (
@@ -921,7 +939,7 @@ const SignatureFields = ({ formReturn, isAdmin, sigRef }) => {
                   disabled={isAdmin}
                   data-testid="removeSignature"
                   onClick={e => {
-                    onRemoveSignature()
+                    onDeleteConfirmationModalOpen()
                     e.stopPropagation()
                   }}
                 >
@@ -953,6 +971,13 @@ const SignatureFields = ({ formReturn, isAdmin, sigRef }) => {
         />
       </FormControl>
       <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
+      <ConfirmationBox
+        title="Remove Signature?"
+        content="Are you sure you want to remove Signature? This action cannot be undone."
+        isOpen={isDeleteConfirmationModalOpen}
+        onClose={onDeleteConfirmationModalClose}
+        onConfirm={onRemoveSignature}
+      />
     </HStack>
   )
 }
