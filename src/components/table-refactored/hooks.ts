@@ -75,7 +75,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
           { id: 'lienDueFlag', value: selectedFlagged },
         ];
       } else {
-        finalFilters = [...columnFilters, clientDueDateFilter];
+        finalFilters = [...finalFilters, clientDueDateFilter];
       }
       
     }
