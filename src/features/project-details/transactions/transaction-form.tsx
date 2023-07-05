@@ -165,7 +165,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [remainingAmt, setRemainingAmt] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
   // const [document, setDocument] = useState<File | null>(null)
-  const { transactionTypeOptions } = useTransactionTypes(screen)
+  const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
 
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
@@ -241,6 +241,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
 
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
+  const allowSave = (projectAwardCheck || isPlanExhausted || remainingAmt) && !isAdmin
 
   const methodForPayment = e => {
     if (e > selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw && !isRefund) {
@@ -441,7 +442,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {isFormLoading && <ViewLoader />}
       {check && isLienWaiverRequired && !isPlanExhausted && <LienWaiverAlert />}
       {projectAwardCheck ? <ProjectAwardAlert /> : null}
-      {check && showUpgradeOption && (
+      {check && showUpgradeOption && !isApproved && (
         <ProjectTransactionRemainingAlert
           msg="DrawRemaining"
           onOpen={onProjectAwardOpen}
@@ -960,9 +961,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 data-testid="save-transaction"
                 colorScheme="darkPrimary"
                 variant="solid"
-                disabled={
-                  isFormSubmitLoading || isMaterialsLoading || projectAwardCheck || isPlanExhausted || remainingAmt
-                }
+                disabled={isFormSubmitLoading || isMaterialsLoading || allowSave}
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>

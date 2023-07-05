@@ -173,13 +173,15 @@ const parseXmlResponse = async (response: any) => {
 
 export const useGetAddressVerification = (addressInfo: AddressInfo) => {
   const { address, city, state, zipCode } = addressInfo || { address: '', city: '', state: '', zipCode: '' }
+  const addressAccordingly = address.__isNew__ ? address.value : address
+
   const client = useClient()
 
   return useQuery(
     ['addressVerification', address, city, state, zipCode],
     async () => {
       const response = await client(
-        `addressVerification?address=${address}&city=${city}&state=${state}&zipCode=${zipCode}`,
+        `addressVerification?address=${addressAccordingly}&city=${city}&state=${state}&zipCode=${zipCode}`,
         {},
       )
       const parsed = await parseXmlResponse(response)
@@ -538,7 +540,7 @@ export const useGanttChart = (projectId?: string): any => {
   }
 }
 
-export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired }) => {
+export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired , currentVendorId }) => {
   const status_active = 12
   const status_expired = 15
   const capacity = 1 // sfor new workorder capacity is fixed
@@ -553,7 +555,9 @@ export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired }) =>
     capacity +
     statusAttrib +
     '&projectsId.equals=' +
-    projectId
+    projectId + 
+     '&currentVendorId.equals='  + currentVendorId;
+    ;
   const { data, ...rest } = useQuery<Array<Vendors>>(
     ['FETCH_FILTERED_VENDORS', vendorSkillId],
     async () => {

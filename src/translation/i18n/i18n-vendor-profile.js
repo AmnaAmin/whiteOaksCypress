@@ -7,7 +7,7 @@ i18n.use(initReactI18next).init({
       translation: {
         details: 'Details',
         documents: 'Documents',
-        trade: 'Trade',
+        trade: 'Skill',
         market: 'Market',
         businessName: 'Business Name',
         capacity: 'Capacity',
@@ -30,7 +30,7 @@ i18n.use(initReactI18next).init({
       translation: {
         details: 'Details 2',
         documents: 'Documents 2',
-        trade: 'Trade 2',
+        trade: 'Skill 2',
         market: 'Market 2',
         businessName: 'Business Name 2',
         capacity: 'Capacity 2',

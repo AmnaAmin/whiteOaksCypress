@@ -18,12 +18,14 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   workOrderIssueDate: 'workOrderIssueDate.equals',
   durationCategory: 'durationCategory.equals',
   type: 'type.contains',
+  displayId: 'displayId.contains',
+  clientName: 'clientName.contains',
 }
 
 export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'id',
-    accessorKey: 'projectId',
+    accessorKey: 'displayId',
   },
   {
     header: 'vendorName',
@@ -36,6 +38,10 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'vendorAddress',
     accessorKey: 'vendorAddress',
+  },
+  {
+    header: 'projects.projectTable.client',
+    accessorKey: 'clientName',
   },
   {
     header: 'paymentTerms',

@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Icon, Stack, useToast } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Icon, Stack, useDisclosure, useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react'
 import Location from './location'
@@ -7,9 +7,9 @@ import ProjectManagement from './project-management'
 import Misc from './misc'
 import InvoiceAndPayments from './invoice-and-payments'
 import { BiErrorCircle, BiSpreadsheet } from 'react-icons/bi'
-import { Project } from 'types/project.type'
+import { AddressInfo, Project } from 'types/project.type'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
-import { FormProvider, useForm } from 'react-hook-form'
+import { FormProvider, useForm, useWatch } from 'react-hook-form'
 import {
   // getProjectStatusSelectOptions,
   parseFormValuesFromAPIData,
@@ -25,13 +25,14 @@ import {
 import { DevTool } from '@hookform/devtools'
 import { Link } from 'react-router-dom'
 import { useSubFormErrors } from './hooks'
-import { useProjectExtraAttributes, useProperties } from 'api/pc-projects'
+import { useGetAddressVerification, useProjectExtraAttributes, useProperties } from 'api/pc-projects'
 // import { PROJECT_DETAILS } from './projectDetails.i18n'
 import { useMarkets, useStates } from 'api/pc-projects'
 
 import { useTranslation } from 'react-i18next'
 import { useTransactionsV1 } from 'api/transactions'
 import { TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
+import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 
 type tabProps = {
   projectData: Project
@@ -68,6 +69,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     control,
     formState: { errors, isSubmitting },
   } = formReturn
+
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
     useSubFormErrors(errors)
   useEffect(() => {
@@ -125,12 +127,55 @@ const ProjectDetailsTab = (props: tabProps) => {
     return false
   }
 
+  const [addressInfo, setAddressInfo] = useState<AddressInfo>({
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+  })
+  const [isVerifiedAddress, setVerifiedAddress] = useState(true)
+
+  // Get all values of Address Info
+  const watchAddress = useWatch({ name: 'address', control })
+  const watchCity = useWatch({ name: 'city', control })
+  const watchState = useWatch({ name: 'state', control })
+  const watchZipCode = useWatch({ name: 'zip', control })
+
+  // Set all values of Address Info
+  useEffect(() => {
+    setAddressInfo({
+      address: (watchAddress as any) || '',
+      city: watchCity || '',
+      state: watchState?.label || '',
+      zipCode: watchZipCode || '',
+    })
+  }, [watchAddress, watchCity, watchState, watchZipCode])
+
+  const {
+    data: isAddressVerified,
+    refetch,
+    isLoading: addressVerificationLoading,
+  } = useGetAddressVerification(addressInfo)
+
+  const {
+    isOpen: isAddressVerficationModalOpen,
+    onOpen: onAddressVerificationModalOpen,
+    onClose: onAddressVerificationModalClose,
+  } = useDisclosure()
+
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
     }
-    const payload = await parseProjectDetailsPayloadFromFormData(formValues, projectData)
-    updateProjectDetails(payload)
+
+    if (!isVerifiedAddress) {
+      refetch()
+      onAddressVerificationModalOpen()
+    } else {
+      const payload = await parseProjectDetailsPayloadFromFormData(formValues, projectData)
+      updateProjectDetails(payload)
+      setVerifiedAddress(true)
+    }
   }
 
   const handleTabsChange = index => {
@@ -138,127 +183,135 @@ const ProjectDetailsTab = (props: tabProps) => {
   }
 
   return (
-    <FormProvider {...formReturn}>
-      <form onSubmit={formReturn.handleSubmit(onSubmit)} id="project-details">
-        <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={handleTabsChange}>
-          <TabList
-            borderBottom={isRecievable ? 0 : '2px solid'}
-            marginBottom="1px"
-            bg={style?.backgroundColor ? '' : '#F7FAFC'}
-            rounded="6px 6px 0px 0px"
-            pt={isRecievable ? 2 : 7}
-            //  ml={style?.marginLeft || ''}
-            //  mr={style?.marginRight || ''}
-          >
-            <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
-              {t(`project.projectDetails.projectManagement`)}
-            </TabCustom>
-            <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
-              {t(`project.projectDetails.invoicingPayment`)}
-            </TabCustom>
-            <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 2}>
-              {t(`project.projectDetails.contacts`)}
-            </TabCustom>
-            <TabCustom isError={isLocationFormErrors && tabIndex !== 3}>
-              {t(`project.projectDetails.location`)}
-            </TabCustom>
-            <TabCustom>{t(`project.projectDetails.misc`)}</TabCustom>
-          </TabList>
-          <Box
-            bg="white"
-            p="15px"
-            boxShadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
-            borderTopRightRadius={isRecievable ? '6px' : '0px'}
-            borderBottomRightRadius="4px"
-            borderTopLeftRadius="4px"
-            borderBottomLeftRadius="4px"
-          >
-            <TabPanels mt="31px">
-              <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                <ProjectManagement
-                  projectStatusSelectOptions={projectStatusSelectOptions}
-                  projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
-                  projectTypeSelectOptions={projectTypeSelectOptions}
-                  projectData={projectData}
-                />
-              </TabPanel>
+    <>
+      <FormProvider {...formReturn}>
+        <form onSubmit={formReturn.handleSubmit(onSubmit, err => console.log('err..', err))} id="project-details">
+          <Tabs variant={tabVariant || 'line'} colorScheme="brand" onChange={handleTabsChange}>
+            <TabList
+              borderBottom={isRecievable ? 0 : '2px solid'}
+              marginBottom="1px"
+              bg={style?.backgroundColor ? '' : '#F7FAFC'}
+              rounded="6px 6px 0px 0px"
+              pt={isRecievable ? 2 : 7}
+            >
+              <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
+                {t(`project.projectDetails.projectManagement`)}
+              </TabCustom>
+              <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
+                {t(`project.projectDetails.invoicingPayment`)}
+              </TabCustom>
+              <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 2}>
+                {t(`project.projectDetails.contacts`)}
+              </TabCustom>
+              <TabCustom isError={isLocationFormErrors && tabIndex !== 3}>
+                {t(`project.projectDetails.location`)}
+              </TabCustom>
+              <TabCustom>{t(`project.projectDetails.misc`)}</TabCustom>
+            </TabList>
+            <Box
+              bg="white"
+              p="15px"
+              boxShadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
+              borderTopRightRadius={isRecievable ? '6px' : '0px'}
+              borderBottomRightRadius="4px"
+              borderTopLeftRadius="4px"
+              borderBottomLeftRadius="4px"
+            >
+              <TabPanels>
+                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
+                  <ProjectManagement
+                    projectStatusSelectOptions={projectStatusSelectOptions}
+                    projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
+                    projectTypeSelectOptions={projectTypeSelectOptions}
+                    projectData={projectData}
+                  />
+                </TabPanel>
 
-              <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                <InvoiceAndPayments projectData={projectData} />
-              </TabPanel>
+                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
+                  <InvoiceAndPayments projectData={projectData} />
+                </TabPanel>
 
-              <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
-                <Contact
-                  projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
-                  clientSelectOptions={clientSelectOptions}
-                />
-              </TabPanel>
-              <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                <Location
-                  stateSelectOptions={stateSelectOptions}
-                  marketSelectOptions={marketSelectOptions}
-                  propertySelectOptions={propertySelectOptions}
-                  markets={markets}
-                  states={states}
-                />
-              </TabPanel>
+                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
+                  <Contact
+                    projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
+                    clientSelectOptions={clientSelectOptions}
+                  />
+                </TabPanel>
+                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
+                  <Location
+                    stateSelectOptions={stateSelectOptions}
+                    marketSelectOptions={marketSelectOptions}
+                    propertySelectOptions={propertySelectOptions}
+                    markets={markets}
+                    states={states}
+                    setVerifiedAddress={setVerifiedAddress}
+                  />
+                </TabPanel>
 
-              <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                <Misc />
-              </TabPanel>
-            </TabPanels>
+                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
+                  <Misc />
+                </TabPanel>
+              </TabPanels>
 
-            <Stack>
-              <Box mt="3">
-                <Divider border="1px solid" />
-              </Box>
-              <Box h="70px" w="100%" pb="3">
-                <Button
-                  mt="8px"
-                  mr="32px"
-                  float={'right'}
-                  variant="solid"
-                  colorScheme="brand"
-                  type="submit"
-                  form="project-details"
-                  fontSize="16px"
-                  disabled={isSubmitting || isLoading}
-                >
-                  {t(`project.projectDetails.save`)}
-                </Button>
-                {onClose && (
-                  <>
-                    <Button
-                      fontSize="16px"
-                      onClick={onClose}
-                      mt="8px"
-                      mr="5"
-                      float={'right'}
-                      variant="outline"
-                      colorScheme="brand"
-                    >
-                      {t(`project.projectDetails.cancel`)}
-                    </Button>
-                    <Button
-                      mt="8px"
-                      ml="32px"
-                      as={Link}
-                      to={`/project-details/${projectData?.id}`}
-                      variant="outline"
-                      colorScheme="brand"
-                      leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
-                    >
-                      {t(`project.projectDetails.seeProjectDetails`)}
-                    </Button>
-                  </>
-                )}
-              </Box>
-            </Stack>
-          </Box>
-        </Tabs>
-      </form>
-      <DevTool control={control} />
-    </FormProvider>
+              <Stack>
+                <Box mt="3">
+                  <Divider border="1px solid" />
+                </Box>
+                <Box h="70px" w="100%" pb="3">
+                  <Button
+                    mt="8px"
+                    mr="32px"
+                    float={'right'}
+                    variant="solid"
+                    colorScheme="brand"
+                    type="submit"
+                    form="project-details"
+                    fontSize="16px"
+                    disabled={isSubmitting || isLoading}
+                  >
+                    {t(`project.projectDetails.save`)}
+                  </Button>
+                  {onClose && (
+                    <>
+                      <Button
+                        fontSize="16px"
+                        onClick={onClose}
+                        mt="8px"
+                        mr="5"
+                        float={'right'}
+                        variant="outline"
+                        colorScheme="brand"
+                      >
+                        {t(`project.projectDetails.cancel`)}
+                      </Button>
+                      <Button
+                        mt="8px"
+                        ml="32px"
+                        as={Link}
+                        to={`/project-details/${projectData?.id}`}
+                        variant="outline"
+                        colorScheme="brand"
+                        leftIcon={<Icon boxSize={6} as={BiSpreadsheet} mb="0.5" />}
+                      >
+                        {t(`project.projectDetails.seeProjectDetails`)}
+                      </Button>
+                    </>
+                  )}
+                </Box>
+              </Stack>
+            </Box>
+          </Tabs>
+        </form>
+        <DevTool control={control} />
+      </FormProvider>
+      <AddressVerificationModal
+        isOpen={isAddressVerficationModalOpen}
+        onClose={onAddressVerificationModalClose}
+        isAddressVerified={isAddressVerified}
+        isLoading={addressVerificationLoading}
+        setSave={setVerifiedAddress}
+      />
+    </>
   )
 }
 

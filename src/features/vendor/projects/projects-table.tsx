@@ -32,12 +32,13 @@ const PROJECT_TABLE_QUERY_KEYS = {
   skillName: 'skillName.contains',
   workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',
   expectedPaymentDate: 'expectedPaymentDate.equals',
+  displayId: 'displayId.contains',
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projectID',
-    accessorKey: 'projectId',
+    accessorKey: 'displayId',
     cell: (row: any) => {
       const value = row.cell.getValue()
       return (
@@ -122,12 +123,12 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
   )
 
-  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendorProject)
   const {
     tableColumns,
     settingColumns,
     refetch: refetchColumns,
-  } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
+  } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.vendorProject)
   const filtersInitialValues = {
     statusLabel: selectedCard !== 'pastDue' ? selectedCard : 'past Due',
   }

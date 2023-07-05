@@ -34,8 +34,11 @@ export default {
 export const WithAllComponents = () => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
   const { isLoading, users, totalPages, dataCount } = useTodos(pagination)
-  const { tableColumns, settingColumns } = useTableColumnSettingsForFakeData(columnsWithPagination, TableNames.project)
-  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutationForFakeData(TableNames.project)
+  const { tableColumns, settingColumns } = useTableColumnSettingsForFakeData(
+    columnsWithPagination,
+    TableNames.testProject,
+  )
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutationForFakeData(TableNames.testProject)
 
   const onSave = columns => {
     postGridColumn(columns)
@@ -112,8 +115,11 @@ export const WithPagination = () => {
 
 export const WithExportAndColumnSettings = () => {
   const { isLoading, users } = useTodos()
-  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutationForFakeData(TableNames.project)
-  const { tableColumns, settingColumns } = useTableColumnSettingsForFakeData(columnsWithPagination, TableNames.project)
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutationForFakeData(TableNames.testProject)
+  const { tableColumns, settingColumns } = useTableColumnSettingsForFakeData(
+    columnsWithPagination,
+    TableNames.testProject,
+  )
 
   const onSave = columns => {
     postGridColumn(columns)
@@ -145,8 +151,11 @@ export const TableFooterComponent = () => {
 
 export const TableInsideScrollableElement = () => {
   const { isLoading, users } = useTodos()
-  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutationForFakeData(TableNames.project)
-  const { tableColumns, settingColumns } = useTableColumnSettingsForFakeData(columnsWithPagination, TableNames.project)
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutationForFakeData(TableNames.testProject)
+  const { tableColumns, settingColumns } = useTableColumnSettingsForFakeData(
+    columnsWithPagination,
+    TableNames.testProject,
+  )
 
   const onSave = columns => {
     postGridColumn(columns)

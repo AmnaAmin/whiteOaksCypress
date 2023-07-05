@@ -5,7 +5,6 @@ import ReactSelect from 'components/form/react-select'
 import { documentScore, documentStatus, documentTerm } from 'api/vendor-projects'
 
 const VendorDetails = props => {
-  
   return (
     <Box>
       <Flex minH="100px" gap="15px">

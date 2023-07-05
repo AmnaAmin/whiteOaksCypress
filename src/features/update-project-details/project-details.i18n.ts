@@ -19,6 +19,7 @@ export const project = {
           clientWalkthrough: 'Client Walkthrough',
           clientSignOff: 'Client Sign Off',
           overrideStatus: 'Override Status',
+          closedDueDate: 'Closed Due Date',
           lienRightsExpires: 'Lien Rights Expires',
           lienFiled: 'Lien Filed',
 
@@ -40,6 +41,8 @@ export const project = {
           originalSOW: 'Original SOW',
           invoice: 'Invoice',
           paymentError: `Unable to save payment due to 'Pending' Draw/Payment/Depreciation/Carrier Fee transaction against Project SOW.`,
+          resubmissionDate: 'Resubmission Date',
+          notificationDate: 'Notification Date',
 
           // Contacts
           contacts: 'Contacts',
@@ -81,6 +84,7 @@ export const project = {
           reconcileDate: 'Reconciled',
           verifiedDate: 'Verified',
           disqualifiedRevenueDate: 'Disqualified Revenue',
+          emailNotificationDate: 'Email Date',
           verifyRevenue: 'Disqualify Revenue',
 
           save: 'Save',
@@ -110,6 +114,7 @@ export const project = {
           clientWalkthrough: 'Fecha de recorrido del cliente',
           clientSignOff: 'Fecha de cierre del cliente',
           overrideStatus: 'Anular estado',
+          closedDueDate: 'Fecha de vencimiento cerrada',
           lienRightsExpires: 'Los derechos de gravamen expiran',
           lienFiled: 'Gravamen Presentado',
 
@@ -130,6 +135,8 @@ export const project = {
           invoice: 'Factura',
           depreciation: 'Depreciación',
           paymentError: `No se pudo guardar el pago debido a una transacción de Retiro/Pago/Depreciación 'Pendiente' contra el Proyecto SOW.`,
+          resubmissionDate: 'Fecha de reenvío',
+          notificationDate: 'Fecha de notificación',
 
           // Contacts
           contacts: 'Contactos',
@@ -171,6 +178,7 @@ export const project = {
           reconcileDate: 'Reconciliada',
           verifiedDate: 'Verificada',
           disqualifiedRevenueDate: 'ingresos descalificados',
+          emailNotificationDate: 'Fecha de correo electrónico',
           verifyRevenue: 'verificar ingresos',
 
           save: 'Ahorrar',

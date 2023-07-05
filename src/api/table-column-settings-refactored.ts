@@ -5,6 +5,7 @@ import { TableColumnSetting, TableNames } from 'types/table-column.types'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 import { useTranslation } from 'react-i18next'
+import orderBy from 'lodash/orderBy'
 
 type generateSettingColumnProps = {
   field: string
@@ -73,7 +74,7 @@ export const useTableColumnSettings = (
         return generateSettingColumn({
           field: t(col.field),
           contentKey: col.contentKey as string,
-          order: index,
+          order: col.order,
           userId: email,
           type: tableName,
           hide: col.hide,
@@ -120,7 +121,7 @@ export const useTableColumnSettings = (
   })
   return {
     tableColumns: tableColumnsWithFilters,
-    settingColumns,
+    settingColumns: orderBy(settingColumns || [], ['order'], ['asc']),
     ...rest,
   }
 }

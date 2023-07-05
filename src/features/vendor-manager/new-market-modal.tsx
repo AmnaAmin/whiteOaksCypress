@@ -267,6 +267,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
               <HStack spacing="16px">
                 {selectedMarket && (
                   <Button
+                  data-testid='delete-Market-btn'
                     variant="outline"
                     colorScheme="brand"
                     onClick={() => {

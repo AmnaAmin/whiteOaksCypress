@@ -19,6 +19,7 @@ import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
 import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import {
   createVendorPayload,
+  parseAccountsFormDataToAPIData,
   parseCreateVendorFormToAPIData,
   parseDocumentCardsValues,
   parseLicenseValues,
@@ -34,6 +35,7 @@ import {
 import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
 import { VendorUsersTab } from 'features/vendors/vendor-users-table'
+import { VendorAccounts } from 'features/vendors/vendor-accounts'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -66,7 +68,7 @@ const tabStyle = {
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAdmin } = useUserRolesSelector()
   const { t } = useTranslation()
   const toast = useToast()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
@@ -74,6 +76,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveProfile } = useSaveVendorDetails('Profile')
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
+  const { mutate: saveAccounts } = useSaveVendorDetails('Accounts')
   const { mutate: createVendor } = useCreateVendorMutation()
 
   const { data: paymentsMethods } = usePaymentMethods()
@@ -81,6 +84,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const [reachTabIndex, setReachTabIndex] = useState(0)
   const formReturn = useForm<VendorProfileDetailsFormData>()
   const { control } = formReturn
+
   useVendorDetails({ form: formReturn, vendorProfileData })
   const showError = name => {
     toast({
@@ -95,19 +99,19 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   }, [tabIndex])
 
   const submitForm = useCallback(
-    async (formData: VendorProfileDetailsFormData) => {
+    async formData => {
       if (vendorProfileData?.id) {
         switch (tabIndex) {
           case 0:
             //detail
-            const profilePayload = parseVendorFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
+            const profilePayload = parseVendorFormDataToAPIData(formData, vendorProfileData)
             saveProfile(profilePayload)
             break
 
           case 1:
             //document
             const documentsPayload = await parseDocumentCardsValues(formData)
-            const updatedObject = prepareVendorDocumentObject(documentsPayload, formData)
+            const updatedObject = await prepareVendorDocumentObject(documentsPayload, formData)
 
             saveDocuments(createVendorPayload(updatedObject, vendorProfileData))
             break
@@ -140,21 +144,39 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             }
             break
 
+          case 7:
+            //Accounts
+            const accountsPayload = await parseAccountsFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
+            saveAccounts(accountsPayload)
+            break
+
           default:
             break
         }
       } else {
         //Create Vendor
         switch (tabIndex) {
+          case 5:
+            const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
+            createVendor(createPayload, {
+              onSuccess() {
+                props.onClose?.()
+              },
+            })
+            break
           case 4:
             //create vendor: market tab
             if (validateMarket(formData?.markets)) {
-              const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
-              createVendor(createPayload, {
-                onSuccess() {
-                  props.onClose?.()
-                },
-              })
+              if (isAdmin) {
+                setTabIndex(i => i + 1)
+              } else {
+                const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
+                createVendor(createPayload, {
+                  onSuccess() {
+                    props.onClose?.()
+                  },
+                })
+              }
             } else {
               showError('Market')
             }
@@ -189,7 +211,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   return (
     <FormProvider {...formReturn}>
       <Stack width={{ base: '100%' }}>
-        <form onSubmit={formReturn.handleSubmit(submitForm)}>
+        <form onSubmit={formReturn.handleSubmit(submitForm, err => console.log('err..', err))}>
           <Tabs index={tabIndex} variant="enclosed" colorScheme="darkPrimary" onChange={index => setTabIndex(index)}>
             <TabList border="none" w="100%" flexDir={{ base: 'column', sm: 'row' }} height="40px">
               <Tab py={{ base: '14px', sm: '0' }}>{t('details')}</Tab>
@@ -227,7 +249,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               </Tab>
               {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
               {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
-              {vendorProfileData?.id && <Tab>Users</Tab>}
+              {!!vendorProfileData?.id && <Tab>Users</Tab>}
+              {isAdmin && (
+                <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id}>
+                  {t('vendorProfileAccount')}
+                </Tab>
+              )}
             </TabList>
 
             <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
@@ -305,18 +332,29 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   )}
                 </TabPanel>
 
-                {!isVendor && (
+                {!isVendor && vendorProfileData?.id && (
                   <TabPanel p="0px">
                     {tabIndex === 5 && (
                       <VendorProjects vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
                     )}
                   </TabPanel>
                 )}
-                {vendorProfileData?.id && (
+                {!!vendorProfileData?.id && (
                   <TabPanel p="0px">
                     <VendorUsersTab vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
                   </TabPanel>
                 )}
+
+                {isAdmin && (
+                  <TabPanel p="0px">
+                    <VendorAccounts
+                      isActive={vendorProfileData?.id ? tabIndex === 7 : tabIndex === 5}
+                      vendorProfileData={vendorProfileData as VendorProfile}
+                      onClose={props.onClose}
+                    />
+                  </TabPanel>
+                )}
+
                 {/* <TabPanel p="0px">
                 <Box overflow="auto">
                 <AuditLogs

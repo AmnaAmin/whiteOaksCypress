@@ -4,6 +4,7 @@ import { BiDownArrowCircle } from 'react-icons/bi'
 import { Text, Flex, Box, Icon, Spacer } from '@chakra-ui/react'
 import { downloadFileOnly } from 'utils/file-utils'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { DownArrow, RightArrow } from 'components/expension-grid-arrows'
 
 export const DOCUMENT_TYPES = {
   ORIGINAL_SOW: 39,
@@ -17,6 +18,57 @@ const withPreviewCell = cellInfo => {
 }
 
 export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
+  {
+    header: '',
+    id: 'expander',
+    size: 20,
+    cell: ({ row, getValue }) => (
+      <Flex
+        onClick={e => e.stopPropagation()}
+        style={{
+          paddingLeft: `${row.depth * 1.5}rem`,
+        }}
+      >
+        {row.getToggleExpandedHandler()}
+        <>
+          {row.getCanExpand() ? (
+            <button
+              data-testid="expension-&-compression-btn"
+              {...{
+                onClick: row.getToggleExpandedHandler(),
+                style: { cursor: 'pointer' },
+              }}
+            >
+              {row.getIsExpanded() ? (
+                <DownArrow
+                  style={{
+                    marginRight: '8px',
+                  }}
+                />
+              ) : (
+                <RightArrow
+                  style={{
+                    marginRight: '8px',
+                  }}
+                />
+              )}
+            </button>
+          ) : (
+            ''
+          )}
+          {getValue()}
+        </>
+      </Flex>
+    ),
+    accessorFn: cellInfo => {
+      return (
+        <div style={{ marginTop: '1px' }}>
+          {/* {cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'} */}
+        </div>
+      )
+    },
+  },
+
   {
     id: 'workOrderId',
     header: 'workOrderId',
@@ -51,7 +103,7 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
 
   {
     id: 'workOrderName',
-    header: 'trade',
+    header: 'Skill',
     accessorKey: 'workOrderName',
     cell: withPreviewCell,
     filterFn: 'includesString',

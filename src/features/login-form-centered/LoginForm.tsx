@@ -5,47 +5,51 @@ import {
   FormLabel,
   Input,
   Stack,
-  VStack,
   Icon,
   Divider,
   Text,
   Alert,
-  AlertDescription
+  AlertDescription,
+  useDisclosure,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { PasswordField } from './PasswordField'
 import { BiUserCheck } from 'react-icons/bi'
 import { Link } from 'react-router-dom'
+import { DisclaimerModal } from 'components/LoginDisclaimer'
 
 type FormValues = {
   email: string
   password: string
 }
 
-type FormProps =  {
+type FormProps = {
   onSubmitForm: (val: FormValues) => void
   isError: boolean
 }
-export const LoginForm = ( props: FormProps ) => {
-  
+
+export const LoginForm = (props: FormProps) => {
   const {
     handleSubmit,
     register,
     formState: { errors },
+    watch,
+    trigger,
   } = useForm<FormValues>()
-
-  
-
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const watchEmail = watch('email')
+  const watchPassword = watch('password')
   return (
-    <chakra.form onSubmit={handleSubmit(props.onSubmitForm)} {...props} data-testid="loginForm">
+    <chakra.form id="loginForm" {...props} data-testid="loginForm">
       <Stack spacing="29px" mx={{ sm: '70px' }} pt="20px">
-        {props.isError && 
+        {props.isError && (
           <Alert status="error" bg="#fd397a" border="1px solid #fd397a" data-testid="alertError">
             <AlertDescription color="#fff">
-            <strong>Failed to sign in!</strong> Please check your credentials and try again.
+              <strong>Failed to sign in!</strong> Please check your credentials and try again.
             </AlertDescription>
           </Alert>
-        }
+        )}
         <FormControl id="email" isInvalid={!!errors?.email?.message}>
           <FormLabel fontSize="12px" fontWeight="700" color="#252F40">
             Username
@@ -60,15 +64,18 @@ export const LoginForm = ( props: FormProps ) => {
             outline="1px solid #D9D9D9"
             data-testid="email"
           />
+          <FormErrorMessage>{errors.email && errors.email?.message}</FormErrorMessage>
         </FormControl>
-        <VStack pb="20px" alignItems="start" spacing="14px">
+        <FormControl id="password" isInvalid={!!errors?.password?.message}>
           <PasswordField {...register('password', { required: 'This is required field.' })} />
-          <Text color="#345587" fontWeight="400" fontSize="12px">
-            <Link to="/account/reset/" data-testid="forgotPasswordLink">Forgot Password?</Link>
+          <FormErrorMessage>{errors.password && errors.password?.message}</FormErrorMessage>
+          <Text mt="5px" color="#345587" fontWeight="400" fontSize="12px">
+            <Link to="/account/reset/" data-testid="forgotPasswordLink">
+              Forgot Password?
+            </Link>
           </Text>
-        </VStack>
+        </FormControl>
         <Button
-          type="submit"
           _hover={{ bg: 'blue.700' }}
           bg="#345587"
           size="md"
@@ -77,6 +84,10 @@ export const LoginForm = ( props: FormProps ) => {
           color="#FFFFFF"
           rounded="8px"
           data-testid="signInButton"
+          onClick={() => {
+            if (!!watchPassword && !!watchEmail) onOpen()
+            else trigger()
+          }}
         >
           SIGN IN
         </Button>
@@ -107,6 +118,14 @@ export const LoginForm = ( props: FormProps ) => {
           <Icon as={BiUserCheck} w="32px" h="26px" mr="19px" /> Register As a Vendor
         </Button>
       </Stack>
+      <DisclaimerModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirm={handleSubmit(values => {
+          props.onSubmitForm(values)
+          onClose()
+        })}
+      />
     </chakra.form>
   )
 }

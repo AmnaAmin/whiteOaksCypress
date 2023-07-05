@@ -10,13 +10,13 @@ import {
   HStack,
   VStack,
   FormErrorMessage,
+  Tooltip,
 } from '@chakra-ui/react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { currencyFormatter } from 'utils/string-formatters'
 import { badges, bonus, ignorePerformance, useFPMDetails } from 'api/performance'
 import { Controller, UseFormReturn } from 'react-hook-form'
-import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import Select from 'components/form/react-select'
 import { PERFORMANCE } from './performance.i18n'
 
@@ -33,9 +33,11 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testI
     <Box>
       <HStack alignItems="start">
         <VStack spacing={1} alignItems="start">
+        <Tooltip label={t(`${PERFORMANCE}.${title}`)} color="black" placement="top" bg="#ffffff">
           <Text color="#4A5568" fontWeight={500} fontSize="16px" lineHeight="24px" fontStyle="inter" noOfLines={1}>
             {t(`${PERFORMANCE}.${title}`)}
           </Text>
+          </Tooltip>
           <Text data-testid={testId} color="#718096" fontSize="16px" fontWeight={400} fontStyle="inter" lineHeight={'24px'}>
             {value}
           </Text>
@@ -60,20 +62,18 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
     <Box>
       <Box>
         <Flex direction="row" mt={2}>
+          
           <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={'bonus'} value={currencyFormatter(fpmData?.currentBonus)} testId="fpm_Bonus"/>
-          </Box>
-          <Box width={'34%'} flexWrap={'wrap'}>
-            <FieldInfoCard title={'previousBonus'} value={currencyFormatter(fpmData?.previousBonus)} testId="fpmB_prev_onus" />
+            <FieldInfoCard title={'previousBonus'} value={currencyFormatter(fpmData?.previousBonus)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'} ml={8}>
-            <FieldInfoCard title={'profit'} value={currencyFormatter(fpmData?.profit)} testId="fpm_Profit" />
+            <FieldInfoCard title={'profit'} value={currencyFormatter(fpmData?.profit)} testId="fpm_Profit"/>
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={'revenue'} value={currencyFormatter(fpmData?.revenue)} testId="fpm_Revenue" />
+            <FieldInfoCard title={'revenue'} value={currencyFormatter(fpmData?.revenue)} testId="fpm_Revenue"  />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={'target'} value={currencyFormatter(fpmData?.target)} testId="fpm_Target"/>
+            <FieldInfoCard title={'disqualifiedRevenue'} value={currencyFormatter(fpmData?.disqualifiedRevenue)} testId="fpm_disRevenue"  />
           </Box>
         </Flex>
         <Divider mt={4} mb={5} />
@@ -106,35 +106,6 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
-                {t(`${PERFORMANCE}.newTarget`)}
-              </FormLabel>
-              <Controller
-                control={control}
-                name={`newTarget`}
-                rules={{ required: 'This is required field' }}
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberInput
-                        value={field.value}
-                        onValueChange={values => {
-                          const { floatValue } = values
-                          field.onChange(floatValue)
-                        }}
-                        customInput={CustomRequiredInput}
-                        thousandSeparator={true}
-                        prefix={'$'}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
                 {t(`${PERFORMANCE}.badge`)}
               </FormLabel>
               <Controller
@@ -156,8 +127,6 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
               />
             </FormControl>
           </GridItem>
-        </Grid>
-        <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">

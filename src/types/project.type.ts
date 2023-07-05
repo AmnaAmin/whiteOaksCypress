@@ -1,3 +1,4 @@
+import { ResubmissionListItem } from './project-details.types'
 import { SelectOption } from './transaction.type'
 
 export type Project = {
@@ -26,6 +27,7 @@ export type Project = {
   hoaPhone: string | null
   hoaPhoneNumberExtension: string | null
   id: number | null
+  displayId: string | null
   invoiceNumber: string | null
   invoiceLink: string | null
   lastCompletedWorkOrder: string | null
@@ -102,6 +104,7 @@ export type Project = {
   reconcileDate: string | null
   verifiedDate: string | null
   disqualifiedRevenueDate: string | Date | null
+  emailNotificationDate: string | Date | null
   disqualifiedRevenueFlag: boolean | null
   reconciledBy: string | null
   verifiedBy: string | null
@@ -123,8 +126,10 @@ export type Project = {
   agentName: string | null
   agentPhone: string | null
   agentEmail: string | null
+  projectClosedDueDate: Date | string | null
   lienRightFileDate: Date | string | null
   lienRightExpireDate: Date | string | null
+  resubmissionDTOList: ResubmissionListItem[]
 }
 
 export type ProjectExtraAttributesType = {
@@ -223,6 +228,7 @@ export type ProjectFormValues = {
   projectType?: SelectOption | null
   woNumber?: string
   poNumber?: string
+  emailNotificationDate?: string
   clientStartDate?: string
   clientDueDate?: string
   clientSignoffDate?: string
@@ -308,6 +314,7 @@ export type ProjectFinancialOverview = {
   permitFee: number
   deductible: number
   depreciation: number
+  legalFee: number
 }
 
-export type AddressInfo = { address: string; city: string; state: string; zipCode: string }
+export type AddressInfo = { address: string | any; city: string; state: string; zipCode: string }

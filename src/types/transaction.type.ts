@@ -116,6 +116,7 @@ export enum TransactionTypeValues {
   permitFee = 1017,
   deductible = 1018,
   depreciation = 1019,
+  legalFee = 1024,
 }
 
 export enum TransactionMarkAsValues {
@@ -137,6 +138,8 @@ export type SelectOption = {
   isValidForAwardPlan?: any
   carrier?: Carrier[]
   lienDue?: number | undefined
+  __isNew__?: boolean
+  property?: any
 }
 
 export type TransactionFormValues = {

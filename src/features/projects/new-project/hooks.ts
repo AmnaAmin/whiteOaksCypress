@@ -10,6 +10,7 @@ export const useProjectInformationNextButtonDisabled = (control: Control<Project
     !formValues?.projectType ||
     !formValues?.clientStartDate ||
     !formValues?.clientDueDate ||
+    !formValues?.emailNotificationDate ||
     !isValidAndNonEmpty(formValues?.sowOriginalContractAmount) ||
     !formValues?.documents ||
     !!errors.documents
@@ -39,7 +40,9 @@ export const usePropertyInformationNextDisabled = (
   )
 }
 
-export const useAddressShouldBeVerified = (control: Control<ProjectFormValues>): boolean => {
+/* Property is undefined for any new address. When a new street address is created or current street locality (state, zip, city) is changed, property is undefined.*/
+/* When property is undefined the address needs to ver verified through usps*/
+export const useAddressShouldBeVerified = (control: Control<any>): boolean => {
   const property = useWatch({ name: 'property', control })
 
   return !property

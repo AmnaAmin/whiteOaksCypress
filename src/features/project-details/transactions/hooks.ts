@@ -63,7 +63,8 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const { isAdmin } = useUserRolesSelector()
 
   const isTransactionTypeChangeOrderSelected =
-    selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.changeOrder
+    selectedTransactionTypeId &&
+    [TransactionTypeValues.changeOrder, TransactionTypeValues.legalFee].includes(selectedTransactionTypeId)
   const isTransactionTypeOverpaymentSelected =
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
@@ -142,6 +143,7 @@ export const isManualTransaction = transactionType =>
     TransactionTypeValues.shippingFee,
     TransactionTypeValues.deductible,
     TransactionTypeValues.depreciation,
+    TransactionTypeValues.legalFee,
   ].includes(transactionType)
 
 export const useFieldDisabledEnabledDecision = (
@@ -218,8 +220,7 @@ export const useIsAwardSelect = (
 
   const isNotFinalPlan = selectedWorkOrder?.awardPlanId < 4
 
-  const isPlanExhausted =
-    !transaction && isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
+  const isPlanExhausted = isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
 
   const showUpgradeOption = isPlanExhausted && isNotFinalPlan
 
@@ -329,9 +330,12 @@ export const useAgainstOptions = (
       return againstOptions.slice(0, 1)
     }
     if (
-      [TransactionTypeValues.permitFee, TransactionTypeValues.shippingFee, TransactionTypeValues.carrierFee].some(
-        value => transactionType?.value === value,
-      )
+      [
+        TransactionTypeValues.permitFee,
+        TransactionTypeValues.shippingFee,
+        TransactionTypeValues.carrierFee,
+        TransactionTypeValues.legalFee,
+      ].some(value => transactionType?.value === value)
     ) {
       return [againstOptions[0]]
     }

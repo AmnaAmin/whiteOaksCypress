@@ -1,7 +1,7 @@
 import { useToast } from '@chakra-ui/react'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS } from 'constants/project-details.constants'
-import { useMemo } from 'react'
+import { useContext, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Client, ErrorType, ProjectType, State, User } from 'types/common.types'
 import {
@@ -10,6 +10,7 @@ import {
   ProjectDetailsAPIPayload,
   ProjectDetailsFormValues,
   ProjectStatus,
+  ResubmissionListItem,
 } from 'types/project-details.types'
 import { Market, Project, ProjectExtraAttributesType } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
@@ -21,6 +22,8 @@ import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
 import { GET_TRANSACTIONS_API_KEY } from './transactions'
 import { AuditLogType } from 'types/common.types'
 import { PROJECT_STATUS } from 'features/common/status'
+import { readFileContent } from './vendor-details'
+import { ReceivableContext } from 'features/recievable/construction-portal-receiveable'
 
 export const useGetOverpayment = (projectId: number | null) => {
   const client = useClient()
@@ -116,7 +119,7 @@ export const useGetClientSelectOptions = () => {
   const client = useClient()
 
   const { data: clients, ...rest } = useQuery<Client[]>('clients', async () => {
-    const response = await client(`clients`, {})
+    const response = await client(`clients?sort=companyName,asc`, {})
 
     return response?.data
   })
@@ -136,6 +139,8 @@ export const useProjectDetailsUpdateMutation = () => {
   const toast = useToast()
   const queryClient = useQueryClient()
 
+  const receiveableFormReturn = useContext(ReceivableContext)
+
   return useMutation(
     (payload: ProjectDetailsAPIPayload) => {
       return client(`projects`, {
@@ -153,7 +158,11 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['audit-logs', projectId])
-        
+        queryClient.invalidateQueries(['properties'])
+
+        receiveableFormReturn?.resetField('id')
+        receiveableFormReturn?.setValue("selected", []);
+        receiveableFormReturn?.resetField('selected')
 
         toast({
           title: 'Project Details Updated',
@@ -181,7 +190,7 @@ export const useProjectDetailsUpdateMutation = () => {
 export const getProjectStatusSelectOptions = () => {
   return Object.entries(ProjectStatus).map(([key, value]) => ({
     value: value,
-    label: key.toUpperCase(),
+    label: key.charAt(0).toUpperCase() + key.slice(1).toLowerCase(),
   }))
 }
 
@@ -408,6 +417,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       // Project Status -> Disputed
       // In case of disputed, all the cases will be implemented on the basis of previous Status
       else if (projectStatusId === Number(PROJECT_STATUS.disputed.value)) {
+        overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.reconcile]
         // Last Project Status -> Active
         if (previousProjectStatus === Number(PROJECT_STATUS.active.value)) {
           overrideProjectStatusOptions = [
@@ -563,6 +573,7 @@ export const parseFormValuesFromAPIData = ({
     verifiedBy: project.verifiedBy as string,
     verifiedbyDesc: project.verifiedbyDesc as string,
     reconciledbyDesc: project.reconciledbyDesc as string,
+    projectClosedDueDate: datePickerFormat(project.projectClosedDueDate),
     lienFiled: datePickerFormat(project.lienRightFileDate),
     lienExpiryDate: datePickerFormat(project?.lienRightExpireDate),
 
@@ -581,6 +592,19 @@ export const parseFormValuesFromAPIData = ({
     remainingPayment: remainingPayment < 0 ? 0 : remainingPayment,
     payment: '',
     depreciation: '',
+    resubmittedInvoice: project?.resubmissionDTOList?.map(r => {
+      return {
+        id: r.id,
+        docId: r.docId,
+        docUrl: r.docUrl,
+        projectId: r.projectId,
+        notificationDate: datePickerFormat(r.resubmissionNotificationDate),
+        resubmissionDate: datePickerFormat(r.resubmissionDate),
+        paymentTerms: findOptionByValue(PAYMENT_TERMS_OPTIONS, r.resubmissionPaymentTerm),
+        dueDate: datePickerFormat(r.resubmissionDueDate),
+        invoiceNumber: r.resubmissionInvoiceNumber,
+      }
+    }),
 
     // Contacts form values
     projectCoordinator: findOptionByValue(projectCoordinatorSelectOptions, project.projectCoordinatorId),
@@ -613,6 +637,7 @@ export const parseFormValuesFromAPIData = ({
     hoaContactEmail: project.hoaEmailAddress,
     hoaContactPhoneNumber: project.hoaPhone,
     hoaContactExtension: project.hoaPhoneNumberExtension,
+    property: findOptionByValue(propertySelectOptions, project?.propertyId)?.property,
 
     // Misc form values
     dateCreated: getLocalTimeZoneDate(project.createdDate as string),
@@ -625,6 +650,7 @@ export const parseFormValuesFromAPIData = ({
     woaPaidDate: getLocalTimeZoneDate(project.woaPaidDate as string),
     dueDateVariance: project.dueDateVariance,
     disqualifiedRevenueDate: datePickerFormat(project.disqualifiedRevenueDate),
+    emailNotificationDate: datePickerFormat(project.emailNotificationDate),
     disqualifiedRevenueFlag: project.disqualifiedRevenueFlag,
 
     payDateVariance: project.signoffDateVariance,
@@ -648,6 +674,43 @@ export const parseProjectDetailsPayloadFromFormData = async (
   if (formValues?.invoiceAttachment) {
     documents[0] = await createDocumentPayload(formValues.invoiceAttachment)
   }
+
+  const isNewAddress = formValues?.address?.__isNew__
+
+  const property = {
+    streetAddress: formValues?.address?.label || null,
+    city: formValues?.city,
+    state: formValues?.state?.value,
+    zipCode: formValues?.zip,
+  }
+
+  const resubmissionList = await Promise.all(
+    formValues?.resubmittedInvoice?.map(async r => {
+      let documentDTO
+      if (r?.uploadedInvoice) {
+        const uploadedInvoice = await readFileContent(r?.uploadedInvoice)
+        documentDTO = {
+          documentType: 39,
+          fileObjectContentType: r.uploadedInvoice.type,
+          fileType: r.uploadedInvoice.name,
+          fileObject: uploadedInvoice,
+        }
+      }
+      return {
+        docId: r.docId,
+        docUrl: r.docUrl,
+        id: r.id,
+        projectId: project?.id,
+        resubmissionNotificationDate: r.notificationDate,
+        resubmissionDate: r.resubmissionDate,
+        resubmissionDueDate: r.dueDate,
+        resubmissionPaymentTerm: r.paymentTerms?.value,
+        resubmissionInvoiceNumber: r.invoiceNumber,
+        documentDTO: documentDTO,
+      } as ResubmissionListItem
+    }),
+  )
+
   return {
     ...projectPayload,
     // Project Management payload
@@ -669,6 +732,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
     isReconciled: formValues.isReconciled === null ? false : formValues.isReconciled,
     lienRightFileDate: dateISOFormat(formValues.lienFiled),
+    projectClosedDueDate: dateISOFormat(formValues.projectClosedDueDate),
     lienRightExpireDate: dateISOFormat(formValues.lienExpiryDate),
 
     // Invoicing and payment payload
@@ -685,6 +749,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     payVariance: formValues?.payVariance,
     newPartialPayment: formValues?.payment,
     newDepreciationPayment: formValues?.depreciation,
+    resubmissionList,
 
     // Contacts payload
     projectCordinatorId: formValues?.projectCoordinator?.value,
@@ -719,13 +784,10 @@ export const parseProjectDetailsPayloadFromFormData = async (
     hoaPhoneNumberExtension: formValues?.hoaContactExtension,
     hoaEmailAddress: formValues?.hoaContactEmail,
     woaPayVariance: null,
-    property: {
-      streetAddress: formValues?.address?.label || null,
-      city: formValues?.city,
-      state: formValues?.state?.value,
-      zipCode: formValues?.zip,
-    },
-    propertyId: formValues?.address?.value,
+    newProperty: isNewAddress ? property : undefined,
+    property,
+    newMarketId: isNewAddress ? formValues.market?.value : undefined,
+    propertyId: isNewAddress ? undefined : formValues?.address?.value,
 
     // Misc payload
     createdDate: dateISOFormat(formValues?.dateCreated),

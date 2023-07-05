@@ -15,17 +15,18 @@ import {
 import { BiCalendar, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { paymentsTerms } from 'api/vendor-projects'
-import { dateFormat, dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import Select from 'components/form/react-select'
 import { useForm, Controller } from 'react-hook-form'
 import { calendarIcon } from 'theme/common-style'
 import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecision } from 'api/work-order'
-import { addDays, isWednesday, nextFriday, nextWednesday } from 'date-fns'
+import { isWednesday, nextFriday, nextWednesday } from 'date-fns'
 import { useEffect } from 'react'
 import { STATUS } from 'features/common/status'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
 import { truncateWithEllipsis } from 'utils/string-formatters'
+import moment from 'moment'
 
 const CalenderCard = props => {
   return (
@@ -142,12 +143,8 @@ const PaymentInfoTab = props => {
     } else {
       setValue('datePaymentProcessed', datePickerFormat(paymentTermDate))
     }
-    setValue(
-      'expectedPaymentDate',
-      datePickerFormat(
-        nextFriday(new Date(dateISOFormatWithZeroTime(getValues('datePaymentProcessed') as any) as string)),
-      ),
-    )
+    const expectedPaymentDate = moment(getValues('datePaymentProcessed') as string)?.toDate()
+    setValue('expectedPaymentDate', datePickerFormat(nextFriday(expectedPaymentDate)))
   }
   const invoicedRequired = [STATUS.Invoiced, STATUS.Paid].includes(workOrder?.statusLabel?.toLowerCase())
   return (
@@ -198,13 +195,13 @@ const PaymentInfoTab = props => {
                     onChange={e => {
                       const dateInvSubmitted = e.target.value
                       if (dateInvSubmitted && dateInvSubmitted !== '') {
-                        const paymentTermDate = addDays(
-                          new Date(dateISOFormatWithZeroTime(dateInvSubmitted) as string),
-                          getValues('paymentTerm')?.value,
+                        //using moment here to convert to date, to avoid shifting due to timezone
+                        const paymentTermDate = moment(dateInvSubmitted).add(
+                          parseInt(getValues('paymentTerm')?.value, 10),
+                          'days',
                         )
                         setValue('dateInvoiceSubmitted', datePickerFormat(dateInvSubmitted))
-                        calculatePaymentDates(paymentTermDate)
-
+                        calculatePaymentDates(paymentTermDate?.toDate())
                         trigger()
                       } else {
                         setValue('paymentTermDate', null)
@@ -239,8 +236,8 @@ const PaymentInfoTab = props => {
                               const dateInvSubmitted = getValues('dateInvoiceSubmitted')
                               field.onChange(option)
                               if (dateInvSubmitted && dateInvSubmitted !== '') {
-                                const paymentTermDate = addDays(new Date(dateInvSubmitted as string), option.value)
-                                calculatePaymentDates(paymentTermDate)
+                                const paymentTermDate = moment(dateInvSubmitted).add(option.value, 'days')
+                                calculatePaymentDates(paymentTermDate?.toDate())
                                 trigger()
                               } else {
                                 setValue('paymentTermDate', null)
@@ -279,31 +276,6 @@ const PaymentInfoTab = props => {
                 </FormControl>
               </Box>
               <Box>
-                <FormControl isInvalid={!!errors.expectedPaymentDate}>
-                  <FormLabel variant={'strong-label'} size={'md'}>
-                    {t('expectedPayDate')}
-                  </FormLabel>
-                  <Input
-                    id="expectedPaymentDate"
-                    type="date"
-                    size="md"
-                    data-testid="expectedPaymentDate"
-                    css={calendarIcon}
-                    isDisabled={!expectedPaymentDateEnabled}
-                    variant={invoicedRequired ? 'required-field' : 'outline'}
-                    {...register('expectedPaymentDate', {
-                      required: invoicedRequired && 'This is required',
-                    })}
-                  />
-                  <FormErrorMessage>{errors?.expectedPaymentDate?.message}</FormErrorMessage>
-                </FormControl>
-              </Box>
-            </SimpleGrid>
-          </Box>
-
-          <Box mt={10} mb={10}>
-            <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
-              <Box>
                 <FormControl isInvalid={!!errors.datePaymentProcessed}>
                   <FormLabel variant={'strong-label'} size={'md'}>
                     {t('paymentProcessed')}
@@ -323,7 +295,31 @@ const PaymentInfoTab = props => {
                   <FormErrorMessage>{errors?.datePaymentProcessed?.message}</FormErrorMessage>
                 </FormControl>
               </Box>
+            </SimpleGrid>
+          </Box>
 
+          <Box mt={10} mb={10}>
+            <SimpleGrid w="80%" columns={4} spacingX={6} spacingY={12}>
+              <Box>
+                <FormControl isInvalid={!!errors.expectedPaymentDate}>
+                  <FormLabel variant={'strong-label'} size={'md'}>
+                    {t('expectedPayDate')}
+                  </FormLabel>
+                  <Input
+                    id="expectedPaymentDate"
+                    type="date"
+                    size="md"
+                    data-testid="expectedPaymentDate"
+                    css={calendarIcon}
+                    isDisabled={!expectedPaymentDateEnabled}
+                    variant={invoicedRequired ? 'required-field' : 'outline'}
+                    {...register('expectedPaymentDate', {
+                      required: invoicedRequired && 'This is required',
+                    })}
+                  />
+                  <FormErrorMessage>{errors?.expectedPaymentDate?.message}</FormErrorMessage>
+                </FormControl>
+              </Box>
               <Box>
                 <FormControl>
                   <FormLabel variant={'strong-label'} size={'md'}>
@@ -475,7 +471,7 @@ const PaymentInfoTab = props => {
                             }}
                             onBlur={e => {
                               if (!watchPaymentDate) {
-                                if (watchPartialPayment && watchPartialPayment > 0) {
+                                if (watchPartialPayment && (watchPartialPayment as number) > 0) {
                                   setValue('paymentDate', datePickerFormat(new Date()))
                                 }
                               }
@@ -502,7 +498,7 @@ const PaymentInfoTab = props => {
                     isDisabled={!paymentDateEnabled}
                     variant="outline"
                     {...register('paymentDate', {
-                      required: watchPartialPayment && watchPartialPayment > 0 ? 'This is required' : false,
+                      required: watchPartialPayment && (watchPartialPayment as number) > 0 ? 'This is required' : false,
                     })}
                   />
                   <FormErrorMessage>{errors?.paymentDate?.message}</FormErrorMessage>

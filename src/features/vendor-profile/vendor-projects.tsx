@@ -35,6 +35,7 @@ const VENDOR_PROJECTS_QUERY_KEYS = {
   propertyAddress: 'propertyAddress.contains',
   id: 'id.equals',
   pendingTransactions: 'pendingTransactions.equals',
+  displayId: 'displayId.contains'
 }
 
 export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileData }) => {
@@ -50,7 +51,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
     return [
       {
         header: 'projectId',
-        accessorKey: 'projectId',
+        accessorKey: 'displayId',
       },
       {
         header: 'type',
@@ -142,7 +143,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
           h="530px"
           position="relative"
           roundedTop={6}
-          pointerEvents={isFPM ? 'none' : 'auto'}
+          pointerEvents={'auto'}
           border="1px solid #CBD5E0"
           rounded="6px"
         >

@@ -122,7 +122,7 @@ const WorkOrderDetails = ({
 
     if (
       displayAwardPlan &&
-      !workOrder?.awardPlanId &&
+      !workOrderDetails?.awardPlanId &&
       (values?.workOrderDateCompleted || hasMarkedSomeComplete) &&
       tabIndex === 0
     ) {
@@ -257,7 +257,7 @@ const WorkOrderDetails = ({
                 <Card mx="10px" mb="10px" roundedTopLeft={0} p={0}>
                   <TabPanels>
                     <TabPanel p={0}>
-                      <WorkOrderDetailTab
+                      {projectData && <WorkOrderDetailTab 
                         navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                         workOrder={workOrder}
                         workOrderDetails={workOrderDetails}
@@ -270,6 +270,7 @@ const WorkOrderDetails = ({
                         isFetchingLineItems={isFetchingLineItems}
                         isLoadingLineItems={isLoadingLineItems}
                       />
+}
                     </TabPanel>
                     <TabPanel p={0}>
                       {isProjectLoading ? (
