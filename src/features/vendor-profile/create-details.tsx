@@ -167,6 +167,7 @@ const CreateVendorDetail: React.FC<{
               </FormLabel>
               <Input
                 type="text"
+                data-testid="streetAddress"
                 {...register('streetAddress', {
                   required: isActive && 'This is required',
                   onChange: e => {
@@ -197,6 +198,7 @@ const CreateVendorDetail: React.FC<{
                 w="215px"
                 variant="required-field"
                 size="md"
+                data-testid="vendorCity"
                 isDisabled={isFPM}
                 onKeyPress={preventNumber}
               />
@@ -243,6 +245,7 @@ const CreateVendorDetail: React.FC<{
                 w="215px"
                 variant="required-field"
                 size="md"
+                data-testid="vendorZipCode"
                 isDisabled={isFPM}
               />
               <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
@@ -258,6 +261,7 @@ const CreateVendorDetail: React.FC<{
               </FormLabel>
               <Input
                 type="email"
+                data-testid="businessEmailAddress"
                 {...register('businessEmailAddress', {
                   onChange: e => {
                     setValue('businessEmailAddress', e.target.value)
@@ -381,6 +385,7 @@ const CreateVendorDetail: React.FC<{
               <Input
                 type="text"
                 id="ownerName"
+                data-testId="ownersName"
                 variant="required-field"
                 {...register('ownerName', {
                   required: isActive && 'This is required',
@@ -497,7 +502,7 @@ const CreateVendorDetail: React.FC<{
           <Button
             disabled={disableDetailsNext}
             type="submit"
-            data-testid="saveDocumentCards"
+            data-testid="saveVendorDetails"
             variant="solid"
             colorScheme="brand"
           >
