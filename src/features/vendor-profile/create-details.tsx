@@ -502,7 +502,7 @@ const CreateVendorDetail: React.FC<{
           <Button
             disabled={disableDetailsNext}
             type="submit"
-            data-testid="saveVendorDetails"
+            data-testid="saveDocumentCards"
             variant="solid"
             colorScheme="brand"
           >
