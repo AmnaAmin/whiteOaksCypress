@@ -60,6 +60,18 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'businessEmailAddress',
   },
   {
+    header: 'vendorAddress',
+    accessorKey: 'streetAddress',
+  },
+  {
+    header: 'vendorCity',
+    accessorKey: 'city',
+  },
+  {
+    header: 'vendorZipCode',
+    accessorKey: 'zipCode',
+  },
+  {
     header: 'name',
     accessorKey: 'companyName',
   },
