@@ -207,7 +207,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               </FormLabel>
               <Input
                 type="text"
-                id="companyName"
+                data-testId="companyName"
                 variant="required-field"
                 {...register('companyName', {
                   required: isActive && 'This is required',
@@ -227,7 +227,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               </FormLabel>
               <Input
                 type="text"
-                id="companyName"
                 variant="required-field"
                 {...register('ownerName', {
                   required: isActive && 'This is required',
@@ -277,7 +276,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   return (
                     <>
                       <NumberFormat
-                        data-testid="businessphoneno"
                         value={field.value}
                         customInput={CustomRequiredInput}
                         format="(###)-###-####"
@@ -701,7 +699,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </Button>
           )}
 
-          <Button type="submit" data-testid="saveDocumentCards" variant="solid" colorScheme="brand">
+          <Button type="submit" data-testid="saveVendorAccounts" variant="solid" colorScheme="brand">
             {t('save')}
           </Button>
         </HStack>
