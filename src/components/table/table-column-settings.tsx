@@ -132,6 +132,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
           </ModalHeader>
           <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
           <ModalBody
+          data-testid="Settings"
             h="50vh"
             overflowY="auto"
             bg="#FFFFFF"
