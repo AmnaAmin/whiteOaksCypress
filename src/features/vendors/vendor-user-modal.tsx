@@ -35,6 +35,7 @@ import { useStates } from 'api/pc-projects'
 import { useAuth } from 'utils/auth-context'
 import { useState, useEffect } from 'react'
 import { Card } from 'components/card/card'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const VendorUserModal = ({
   vendorDetails,
@@ -153,7 +154,7 @@ const VendorUserModal = ({
       setModalSize('3xl')
     }
   }, [isMobile])
-
+  const { isFPM } = useUserRolesSelector()
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onCloseModal} size={modalSize} variant="custom">
@@ -453,9 +454,11 @@ const VendorUserModal = ({
                   >
                     {t('cancel')}
                   </Button>
+                  {!isFPM && (
                   <Button type="submit" colorScheme="brand" disabled={!!watchRequiredField}>
                     {t('save')}
                   </Button>
+                  )}
                 </HStack>
               </Flex>
             </chakra.form>
