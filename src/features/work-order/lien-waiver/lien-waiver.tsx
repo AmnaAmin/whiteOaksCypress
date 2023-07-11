@@ -311,10 +311,6 @@ export const LienWaiverTab: React.FC<any> = props => {
                       variant="required-field"
                       register={register}
                       disabled={isFieldsDisabled}
-                      elementStyle={{
-                        bg: 'white',
-                        borderLeft: '2px solid #4E87F8',
-                      }}
                       testId="claimantsTitle"
                       rules={{ required: 'This is required field' }}
                       name={`claimantTitle`}
