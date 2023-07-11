@@ -382,6 +382,9 @@ i18n.use(initReactI18next).init({
         businessEmail: 'Business Email',
         secondaryEmail: 'Secondary Email',
         coiglExpirationDate: 'COI-GL Expiration Date',
+        vendorCity: 'Vendor City',
+        vendorZipCode: 'Zip Code',
+
         constructionTrade: 'Construction Trade',
         totalCapacity: 'Total Capacity',
         activeDate: 'Active Date',
@@ -997,6 +1000,8 @@ i18n.use(initReactI18next).init({
         businessEmail: 'email de negocios',
         secondaryEmail: 'Email Secundario',
         coiglExpirationDate: 'Fecha de vencimiento de COI-GL',
+        vendorCity: 'Ciudad del proveedor',
+        vendorZipCode: 'Código postal',
         constructionTrade: 'Construcción Comercio',
         totalCapacity: 'Capacidad total',
         activeDate: 'Fecha Activa',
