@@ -93,12 +93,13 @@ steps:
       - chmod 755 auto/run_tests.sh
       - auto/run_tests.sh
     label: ':package: & :rocket: Run Tests on PRE-PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
+    if: build.branch == "pswoa-*"
     # depends_on:
     #   - "build"
     # soft_fail:
     #   - exit_status: "*"
     key: 'preprod_run_tests'
-    branches: pswoa-*
+    # branches: pswoa-*
     agents:
       queue: 'wo:preprod'
     notify:
@@ -128,7 +129,8 @@ steps:
       - chmod 755 auto/deploy_preprod.sh
       - auto/deploy_preprod.sh
     label: ':package: & :rocket: Build & Deploy PRE-PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
-    branches: master
+    if: build.branch == "master"
+    # branches: master
     agents:
       queue: 'wo:preprod'
     retry:
@@ -153,7 +155,8 @@ steps:
       - chmod 755 auto/deploy_prod.sh
       - auto/deploy_prod.sh
     label: ':package: & :rocket: Build & Deploy PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
-    branches: master
+    if: build.branch == "master"
+    # branches: master
     agents:
       queue: 'wo:prod'
     retry:
