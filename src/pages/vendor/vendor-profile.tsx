@@ -68,7 +68,8 @@ const tabStyle = {
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
-  const { isVendor, isAdmin } = useUserRolesSelector()
+  const { isVendor, isAdmin, isVendorManager } = useUserRolesSelector()
+  const allowVendorAccounts = isAdmin || isVendorManager
   const { t } = useTranslation()
   const toast = useToast()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
@@ -167,7 +168,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           case 4:
             //create vendor: market tab
             if (validateMarket(formData?.markets)) {
-              if (isAdmin) {
+              if (allowVendorAccounts) {
                 setTabIndex(i => i + 1)
               } else {
                 const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
@@ -250,7 +251,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
               {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
               {!!vendorProfileData?.id && <Tab>Users</Tab>}
-              {isAdmin && (
+              {allowVendorAccounts && (
                 <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id}>
                   {t('vendorProfileAccount')}
                 </Tab>
@@ -345,7 +346,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   </TabPanel>
                 )}
 
-                {isAdmin && (
+                {allowVendorAccounts && (
                   <TabPanel p="0px">
                     <VendorAccounts
                       isActive={vendorProfileData?.id ? tabIndex === 7 : tabIndex === 5}
