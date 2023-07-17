@@ -1,11 +1,7 @@
 import { Box, useDisclosure } from '@chakra-ui/react'
-// import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
-// import { ColumnDef } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
-// import { PROJECT_TYPE } from './project-type.i18n'
 import { useState } from 'react'
-// import { ProjectTypeModal } from './project-type-modal'
 import { CLIENT_TYPE_COLUMNS, useClientType } from 'api/client-type'
 import { ProjectTypeModal } from 'features/project-type/project-type-modal'
 
