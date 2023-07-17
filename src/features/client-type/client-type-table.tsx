@@ -1,0 +1,42 @@
+import { Box, useDisclosure } from '@chakra-ui/react'
+// import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+// import { ColumnDef } from '@tanstack/react-table'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import { Table } from 'components/table-refactored/table'
+// import { PROJECT_TYPE } from './project-type.i18n'
+import { useState } from 'react'
+// import { ProjectTypeModal } from './project-type-modal'
+import { CLIENT_TYPE_COLUMNS, useClientType } from 'api/client-type'
+import { ProjectTypeModal } from 'features/project-type/project-type-modal'
+
+export const ClientTypeTable = () => {
+  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  const [selectedProjectType, setSelectedProjectType] = useState()
+  const { data: clientType, isLoading } = useClientType()
+
+  return (
+    <Box overflow="auto" roundedTop={6} border="1px solid #CBD5E0">
+      <ProjectTypeModal
+        projectTypeDetails={selectedProjectType}
+        onClose={() => {
+          setSelectedProjectType(undefined)
+          onCloseDisclosure()
+        }}
+        isOpen={isOpen}
+        clientType={true}
+      />
+
+      <Box overflowX={'auto'} h="calc(100vh - 170px)" roundedTop={6}>
+        <TableContextProvider data={clientType} columns={CLIENT_TYPE_COLUMNS}>
+          <Table
+            isLoading={isLoading}
+            onRowClick={row => {
+              setSelectedProjectType(row)
+              onOpen()
+            }}
+          />
+        </TableContextProvider>
+      </Box>
+    </Box>
+  )
+}

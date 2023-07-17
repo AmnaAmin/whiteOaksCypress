@@ -267,8 +267,8 @@ export const MENU_ROLE_BASED: Menus = {
     {
       pathTo: '/clientType',
       title: 'Client type',
-      Icon: BiDockTop,
-      color: '#9B2C2C',
+      Icon: BiUserPlus,
+      color: '#0BC5EA',
       testId: 'clientTypeLink',
     },
     {
@@ -358,8 +358,8 @@ export const MENU_ROLE_BASED: Menus = {
     {
       pathTo: '/clientType',
       title: 'Client type',
-      Icon: BiDockTop,
-      color: '#9B2C2C',
+      Icon: BiUserPlus,
+      color: '#0BC5EA',
       testId: 'clientTypeLink',
     },
     {
