@@ -1,7 +1,7 @@
 import { Button, HStack, Text, useDisclosure } from '@chakra-ui/react'
 import { Card } from 'components/card/card'
+import { ClientTypeModal } from 'features/client-type/client-type-modal'
 import { ClientTypeTable } from 'features/client-type/client-type-table'
-import { ProjectTypeModal } from 'features/project-type/project-type-modal'
 import { PROJECT_TYPE } from 'features/project-type/project-type.i18n'
 import { useTranslation } from 'react-i18next'
 import { BiAddToQueue } from 'react-icons/bi'
@@ -22,7 +22,7 @@ export const ClientType = () => {
       </HStack>
 
       <ClientTypeTable />
-      <ProjectTypeModal clientType={true} onClose={onClose} isOpen={isOpen} />
+      <ClientTypeModal onClose={onClose} isOpen={isOpen} />
     </Card>
   )
 }

@@ -3,7 +3,7 @@ import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
 import { useState } from 'react'
 import { CLIENT_TYPE_COLUMNS, useClientType } from 'api/client-type'
-import { ProjectTypeModal } from 'features/project-type/project-type-modal'
+import { ClientTypeModal } from './client-type-modal'
 
 export const ClientTypeTable = () => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
@@ -12,14 +12,13 @@ export const ClientTypeTable = () => {
 
   return (
     <Box overflow="auto" roundedTop={6} border="1px solid #CBD5E0">
-      <ProjectTypeModal
-        projectTypeDetails={selectedProjectType}
+      <ClientTypeModal
+        clientTypeDetails={selectedProjectType}
         onClose={() => {
           setSelectedProjectType(undefined)
           onCloseDisclosure()
         }}
         isOpen={isOpen}
-        clientType={true}
       />
 
       <Box overflowX={'auto'} h="calc(100vh - 170px)" roundedTop={6}>
