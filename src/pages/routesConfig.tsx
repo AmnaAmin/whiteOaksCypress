@@ -22,6 +22,7 @@ import { SupportTickets } from './admin/support-tickets'
 import { Estimates } from 'pages/estimates'
 import { EstimateDetails } from 'pages/estimate-details'
 import CypressReport from './cypress-report'
+import { ClientType } from './admin/client-type'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -98,6 +99,7 @@ export default function useRoutesConfig() {
         { path: 'estimate-details/:projectId', element: EstimateDetails },
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'projectType', element: ProjectType },
+        { path: 'clientType', element: ClientType },
         { path: 'estimates', element: Estimates },
         { path: 'projects', element: Projects },
         { path: 'payable', element: Payable },

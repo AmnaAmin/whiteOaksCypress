@@ -265,6 +265,13 @@ export const MENU_ROLE_BASED: Menus = {
       testId: 'projectTypeLink',
     },
     {
+      pathTo: '/clientType',
+      title: 'Client type',
+      Icon: BiUserPlus,
+      color: '#0BC5EA',
+      testId: 'clientTypeLink',
+    },
+    {
       pathTo: '/vendorSkills',
       title: `${SIDE_NAV}.vendorsSkills`,
       Icon: BiAlignMiddle,
@@ -347,6 +354,13 @@ export const MENU_ROLE_BASED: Menus = {
       Icon: BiDockTop,
       color: '#9B2C2C',
       testId: 'projectTypeLink',
+    },
+    {
+      pathTo: '/clientType',
+      title: 'Client type',
+      Icon: BiUserPlus,
+      color: '#0BC5EA',
+      testId: 'clientTypeLink',
     },
     {
       pathTo: '/vendorSkills',
