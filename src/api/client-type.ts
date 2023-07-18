@@ -1,7 +1,6 @@
 import { useToast } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/table-core'
 import { PROJECT_TYPE } from 'features/project-type/project-type.i18n'
-import { t } from 'i18next'
 import orderBy from 'lodash/orderBy'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
@@ -131,11 +130,4 @@ export const useClientTypeMutation = () => {
       },
     },
   )
-}
-
-export const textCheckForType = (projectTypeDetails, clientType) => {
-  if (projectTypeDetails && clientType) return t(`${PROJECT_TYPE}.editClientType`)
-  if (projectTypeDetails && !clientType) return t(`${PROJECT_TYPE}.editProjectType`)
-  if (!projectTypeDetails && clientType) return t(`${PROJECT_TYPE}.newClientType`)
-  if (!projectTypeDetails && !clientType) return t(`${PROJECT_TYPE}.newProjectType`)
 }
