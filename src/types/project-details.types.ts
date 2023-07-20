@@ -78,6 +78,7 @@ type ContactsFormValues = {
   superPhoneNumberExtension: string | null
   superEmail: string | null
   client: SelectOption | null
+  clientType: SelectOption | null
   homeOwnerName: string
   homeOwnerPhone: string
   homeOwnerEmail: string

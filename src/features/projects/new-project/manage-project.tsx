@@ -199,6 +199,32 @@ export const ManageProject: React.FC<{
               <FormErrorMessage>{errors.superEmailAddress && errors.superEmailAddress.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+
+          <GridItem>
+            <FormControl>
+              <FormLabel isTruncated title={t(`${NEW_PROJECT}.clientType`)} size="md">
+                {t(`${NEW_PROJECT}.clientType`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={`clientType`}
+                rules={{ required: 'This is required field' }}
+                render={({ field: { value, onChange }, fieldState }) => (
+                  <>
+                    <ReactSelect
+                      id="clientType"
+                      // options={projectTypeSelectOptions}
+                      options={clientSelectOptions}
+                      selected={value}
+                      selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
+                      onChange={option => onChange(option)}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
+            </FormControl>
+          </GridItem>
         </Grid>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
