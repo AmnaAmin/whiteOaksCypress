@@ -78,6 +78,7 @@ type ContactsFormValues = {
   superPhoneNumberExtension: string | null
   superEmail: string | null
   client: SelectOption | null
+  clientType: SelectOption | null
   homeOwnerName: string
   homeOwnerPhone: string
   homeOwnerEmail: string
@@ -197,6 +198,7 @@ export type ProjectDetailsAPIPayload = {
   agentName: string | null
   agentPhone: string | null
   agentEmail: string | null
+  clientType: number
 
   // Location
   streetAddress: string | null
