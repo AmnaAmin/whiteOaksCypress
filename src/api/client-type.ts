@@ -1,7 +1,6 @@
 import { useToast } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/table-core'
 import { PROJECT_TYPE } from 'features/project-type/project-type.i18n'
-import orderBy from 'lodash/orderBy'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
@@ -47,11 +46,23 @@ export const CLIENT_TYPE_COLUMNS: ColumnDef<any>[] = [
 export const useClientType = () => {
   const client = useClient()
 
-  return useQuery('clientType', async () => {
-    const response = await client(`client-types`, {})
+  const { data: clientTypes, ...rest } = useQuery('clientType', async () => {
+    const response = await client(`client-types?page=&size=&sort=id,desc`, {})
 
-    return orderBy(response?.data || [], ['id'], ['desc'])
+    return response?.data
   })
+
+  const clientTypesSelectOptions =
+    clientTypes?.map(client => ({
+      value: client.id,
+      label: client.value,
+    })) || []
+
+  return {
+    clientTypesSelectOptions,
+    data: clientTypes,
+    ...rest,
+  }
 }
 
 export const useClientTypeEditMutation = () => {

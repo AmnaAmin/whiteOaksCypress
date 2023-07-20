@@ -37,15 +37,19 @@ const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
 type ContactProps = {
   projectCoordinatorSelectOptions: SelectOption[]
   clientSelectOptions: SelectOption[]
+  clientTypesSelectOptions: SelectOption[]
 }
-const Contact: React.FC<ContactProps> = ({ projectCoordinatorSelectOptions, clientSelectOptions }) => {
+const Contact: React.FC<ContactProps> = ({
+  projectCoordinatorSelectOptions,
+  clientSelectOptions,
+  clientTypesSelectOptions,
+}) => {
   const {
     register,
     control,
     formState: { errors },
     setValue,
   } = useFormContext<ProjectDetailsFormValues>()
-
   const marketWatch = useWatch({ name: 'market', control })
 
   const clientWatch = useWatch({ name: 'client', control })
@@ -289,7 +293,7 @@ const Contact: React.FC<ContactProps> = ({ projectCoordinatorSelectOptions, clie
           </FormControl>
         </GridItem>
         <GridItem>
-          <FormControl w="215px" mt={'6px'}>
+          <FormControl w="215px" mt={'6px'} isInvalid={!!errors.clientType}>
             <FormLabel isTruncated title={t(`${NEW_PROJECT}.clientType`)} size="md">
               {t(`${NEW_PROJECT}.clientType`)}
             </FormLabel>
@@ -297,15 +301,17 @@ const Contact: React.FC<ContactProps> = ({ projectCoordinatorSelectOptions, clie
               control={control}
               name={`clientType`}
               rules={{ required: 'This is required field' }}
-              render={({ field: { value, onChange }, fieldState }) => (
+              render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
+                    menuPlacement="top"
                     id="clientType"
-                    // options={projectTypeSelectOptions}
-                    options={clientSelectOptions}
-                    selected={value}
+                    {...field}
+                    options={clientTypesSelectOptions}
                     selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
-                    onChange={option => onChange(option)}
+                    onChange={option => {
+                      field.onChange(option)
+                    }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>

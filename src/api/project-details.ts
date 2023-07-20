@@ -161,7 +161,7 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries(['properties'])
 
         receiveableFormReturn?.resetField('id')
-        receiveableFormReturn?.setValue("selected", []);
+        receiveableFormReturn?.setValue('selected', [])
         receiveableFormReturn?.resetField('selected')
 
         toast({
@@ -513,6 +513,7 @@ export const parseFormValuesFromAPIData = ({
   stateSelectOptions,
   marketSelectOptions,
   propertySelectOptions,
+  clientTypesSelectOptions,
 }: {
   project?: Project
   projectExtraAttributes?: ProjectExtraAttributesType
@@ -524,6 +525,7 @@ export const parseFormValuesFromAPIData = ({
   stateSelectOptions?: any
   marketSelectOptions?: SelectOption[]
   propertySelectOptions: SelectOption[]
+  clientTypesSelectOptions: SelectOption[]
 }): ProjectDetailsFormValues | Object => {
   if (
     !project ||
@@ -531,6 +533,7 @@ export const parseFormValuesFromAPIData = ({
     !projectCoordinatorSelectOptions ||
     !projectManagerSelectOptions ||
     !clientSelectOptions ||
+    !clientTypesSelectOptions ||
     !stateSelectOptions ||
     !marketSelectOptions
   ) {
@@ -605,7 +608,6 @@ export const parseFormValuesFromAPIData = ({
         invoiceNumber: r.resubmissionInvoiceNumber,
       }
     }),
-
     // Contacts form values
     projectCoordinator: findOptionByValue(projectCoordinatorSelectOptions, project.projectCoordinatorId),
     projectCoordinatorPhoneNumber: project.pcPhoneNumber,
@@ -618,6 +620,7 @@ export const parseFormValuesFromAPIData = ({
     superPhoneNumberExtension: project.superPhoneNumberExtension,
     superEmail: project.superEmailAddress,
     client: findOptionByValue(clientSelectOptions, project.clientName),
+    clientType: findOptionByValue(clientTypesSelectOptions, project.clientTypeId),
     homeOwnerName: project.homeOwnerName,
     homeOwnerPhone: project.homeOwnerPhone,
     homeOwnerEmail: project.homeOwnerEmail,
@@ -771,6 +774,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     agentName: formValues.agentName,
     agentPhone: formValues.agentPhone,
     agentEmail: formValues.agentEmail,
+    clientType: formValues?.clientType?.value,
 
     // Location
     streetAddress: formValues?.address?.label || null,

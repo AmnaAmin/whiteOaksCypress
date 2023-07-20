@@ -10,6 +10,7 @@ import { useProjectManagementSaveButtonDisabled } from './hooks'
 import NumberFormat from 'react-number-format'
 import Select from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
+import { useClientType } from 'api/client-type'
 
 export const ManageProject: React.FC<{
   isLoading: boolean
@@ -30,6 +31,7 @@ export const ManageProject: React.FC<{
   const { fieldProjectManagerByMarketOptions } = useFPMsByMarket(values.newMarket?.value)
   const { projectCoordinatorSelectOptions } = useProjectCoordinators()
   const { clientSelectOptions } = useClients()
+  const { clientTypesSelectOptions } = useClientType()
   const [carrierOption, setCarrierOptions] = useState<SelectOption[] | null>()
 
   const isProjectManagementSaveButtonDisabled = useProjectManagementSaveButtonDisabled(control)
@@ -211,14 +213,16 @@ export const ManageProject: React.FC<{
                 rules={{ required: 'This is required field' }}
                 render={({ field: { value, onChange }, fieldState }) => (
                   <>
-                    <ReactSelect
-                      id="clientType"
-                      // options={projectTypeSelectOptions}
-                      options={clientSelectOptions}
-                      selected={value}
-                      selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
-                      onChange={option => onChange(option)}
-                    />
+                    <div data-testid="client_type">
+                      <ReactSelect
+                        id="clientType"
+                        // options={projectTypeSelectOptions}
+                        options={clientTypesSelectOptions}
+                        selected={value}
+                        selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
+                        onChange={option => onChange(option)}
+                      />
+                    </div>
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
@@ -237,10 +241,12 @@ export const ManageProject: React.FC<{
                 name={`carrier`}
                 render={({ field, fieldState }) => (
                   <>
-                    <Select  
-                    menuPlacement="top"
-                    selectProps={{ menuHeight: '180px' }} 
-                    options={carrierOption} {...field} />
+                    <Select
+                      menuPlacement="top"
+                      selectProps={{ menuHeight: '180px' }}
+                      options={carrierOption}
+                      {...field}
+                    />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}

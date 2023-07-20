@@ -130,6 +130,7 @@ export type Project = {
   lienRightFileDate: Date | string | null
   lienRightExpireDate: Date | string | null
   resubmissionDTOList: ResubmissionListItem[]
+  clientTypeId: string | number
 }
 
 export type ProjectExtraAttributesType = {

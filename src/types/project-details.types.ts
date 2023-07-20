@@ -198,6 +198,7 @@ export type ProjectDetailsAPIPayload = {
   agentName: string | null
   agentPhone: string | null
   agentEmail: string | null
+  clientType: number
 
   // Location
   streetAddress: string | null
