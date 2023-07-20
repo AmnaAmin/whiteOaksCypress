@@ -613,7 +613,7 @@ export const parseFormValuesFromAPIData = ({
     fieldProjectManager: findOptionByValue(projectManagerSelectOptions, project.projectManagerId),
     fieldProjectManagerPhoneNumber: project.projectManagerPhoneNumber,
     fieldProjectManagerExtension: project.pmPhoneNumberExtension,
-    superName: project.superLastName,
+    superName: project.superFirstName,
     superPhoneNumber: project.superPhoneNumber,
     superPhoneNumberExtension: project.superPhoneNumberExtension,
     superEmail: project.superEmailAddress,
