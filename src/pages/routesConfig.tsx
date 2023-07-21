@@ -23,6 +23,7 @@ import { Estimates } from 'pages/estimates'
 import { EstimateDetails } from 'pages/estimate-details'
 import CypressReport from './cypress-report'
 import { ClientType } from './admin/client-type'
+import SorryCypressReport from './sorry-cypress-report'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -113,6 +114,7 @@ export default function useRoutesConfig() {
         { path: 'vendorSkills', element: VendorSkills },
         { path: 'alerts', element: Alerts },
         { path: 'cypressReport', element: CypressReport },
+        { path: 'sorryCypress', element: SorryCypressReport },
       ]
 
     case isAccounting:
