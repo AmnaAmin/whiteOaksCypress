@@ -414,7 +414,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   required: isVendorRequired && 'This is required',
                 })}
                 size="md"
-                isDisabled={adminRole}
               />
               <FormErrorMessage pos="absolute">{errors.bankName && errors.bankName?.message}</FormErrorMessage>
             </FormControl>
@@ -432,7 +431,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   required: isVendorRequired && 'This is required',
                 })}
                 size="md"
-                isDisabled={adminRole}
               />
               <FormErrorMessage pos="absolute">
                 {errors.bankPrimaryContact && errors.bankPrimaryContact?.message}
@@ -453,7 +451,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 })}
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={adminRole}
               />
               <FormErrorMessage pos={'absolute'}>{errors.bankEmail?.message}</FormErrorMessage>
             </FormControl>
@@ -482,7 +479,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
-                        isDisabled={adminRole}
                       />
                       <FormErrorMessage>{fieldState.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
                     </>
@@ -506,7 +502,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={adminRole}
               />
               <FormErrorMessage pos="absolute">{errors.bankAddress?.message}</FormErrorMessage>
             </FormControl>
@@ -524,7 +519,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={adminRole}
                 onKeyPress={preventNumber}
               />
               <FormErrorMessage pos="absolute">{errors.bankCity?.message}</FormErrorMessage>
@@ -546,7 +540,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                       options={stateSelectOptions}
                       {...field}
                       selectProps={{ isBorderLeft: isVendorRequired, menuHeight: '180px' }}
-                      isDisabled={adminRole}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -567,7 +560,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={adminRole}
               />
               <FormErrorMessage pos="absolute">{errors.bankZipCode?.message}</FormErrorMessage>
             </FormControl>
@@ -585,7 +577,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={adminRole}
               />
               <FormErrorMessage pos="absolute">{errors.bankRoutingNo?.message}</FormErrorMessage>
             </FormControl>
@@ -603,7 +594,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                isDisabled={adminRole}
               />
               <FormErrorMessage pos="absolute">{errors.bankAccountingNo?.message}</FormErrorMessage>
             </FormControl>
@@ -637,7 +627,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                                   field.onChange(isChecked)
                                 }}
                                 mr="2px"
-                                isDisabled={adminRole}
                               >
                                 {t(account?.value)}
                               </Checkbox>
@@ -901,7 +890,6 @@ const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef }) =
             _hover: { bg: 'gray.100' },
             _active: { bg: 'gray.100' },
           }}
-          disabled={adminRole}
           onClick={() => {
             setOpenSignature(true)
           }}
