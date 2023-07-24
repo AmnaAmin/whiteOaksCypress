@@ -171,7 +171,7 @@ export const useFieldDisabledEnabledDecision = (
     isSysFactoringFee: isFactoringFeeSysGenerated,
     isPaidDateDisabled: !transaction || (isStatusApproved && !isAdminEnabled),
     isStatusDisabled:
-      (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading || lateAndFactoringFeeForVendor,
+      (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading || lateAndFactoringFeeForVendor ||isFactoringFeeSysGenerated ,
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
 }
