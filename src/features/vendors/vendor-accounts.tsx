@@ -425,7 +425,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               </FormLabel>
               <Input
                 type="text"
-                id="banksrimaryContact"
+                id="bankPrimaryContact"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 {...register('bankPrimaryContact', {
                   required: isVendorRequired && 'This is required',
@@ -671,7 +671,14 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
       >
         <Box>
           {hasOwnerSignature && (
-            <Button onClick={downloadACFForm} leftIcon={<BiDownload />} variant="outline" size="md" colorScheme="brand">
+            <Button
+              onClick={downloadACFForm}
+              leftIcon={<BiDownload />}
+              data-testid="downloadACHForm"
+              variant="outline"
+              size="md"
+              colorScheme="brand"
+            >
               {t(`${VENDORPROFILE}.downloadACFForm`)}
             </Button>
           )}
@@ -758,6 +765,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole,
                 <VStack alignItems="baseline">
                   <Box>
                     <ChooseFileField
+                      testId="voidedCheckFile"
                       name={field.name}
                       value={field.value?.name ? field.value?.name : t('chooseFile')}
                       isError={!!fieldState.error?.message}
