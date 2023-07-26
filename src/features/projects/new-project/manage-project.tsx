@@ -141,7 +141,7 @@ export const ManageProject: React.FC<{
               <FormLabel size="md">{t(`${NEW_PROJECT}.clientSuperName`)}</FormLabel>
               <Input
                 id="clientSuperName"
-                {...register('superLastName')}
+                {...register('superFirstName')}
                 value={formattedClientName}
                 onChange={handleChange}
               />
