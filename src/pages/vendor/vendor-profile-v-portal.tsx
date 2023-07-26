@@ -1,7 +1,6 @@
 // Revisit, Separate the vendor profile forms from vendor profile page.
 
 import { Box, Divider, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
-import { DevTool } from '@hookform/devtools'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 import { Card } from 'features/login-form-centered/Card'
@@ -84,7 +83,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const [tabIndex, setTabIndex] = useState<any>(0)
   const [reachTabIndex, setReachTabIndex] = useState(0)
   const formReturn = useForm<VendorProfileDetailsFormData>()
-  const { control } = formReturn
   useVendorDetails({ form: formReturn, vendorProfileData })
 
   const showError = name => {
@@ -426,7 +424,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             </Card>
           </Tabs>
         </form>
-        <DevTool control={control} />
       </Stack>
     </FormProvider>
   )
