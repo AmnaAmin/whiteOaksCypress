@@ -378,7 +378,7 @@ const CreateVendorDetail: React.FC<{
 
         <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px" mt="30px">
           <GridItem>
-            <FormControl w="215px" isInvalid={!!errors.companyName}>
+          <FormControl w="215px" isInvalid={!!errors.ownerName}>
               <FormLabel variant="strong-label" size="md">
                 {t('ownersName')}
               </FormLabel>
@@ -396,7 +396,7 @@ const CreateVendorDetail: React.FC<{
                 size="md"
                 isDisabled={isFPM}
               />
-              <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
+              <FormErrorMessage pos="absolute">{errors.ownerName && errors.ownerName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
