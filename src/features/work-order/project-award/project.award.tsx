@@ -43,7 +43,6 @@ export const ProjectAwardTab: React.FC<any> = props => {
     const nteFiftyPercentage = (percentage / 100) * 50
     const nteSeventyPercentage = (percentage / 100) * 70
     const nteNintyPercentage = (percentage / 100) * 90
-
     if (selectedCardValues?.drawLimit === 1) return nteFiftyPercentage
     if (selectedCardValues?.drawLimit === 2) return nteSeventyPercentage
     if (selectedCardValues?.drawLimit === 4) return nteNintyPercentage
@@ -53,7 +52,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
     const percentage = (awardPlanScopeAmount / 100) * per
     return awardPlanScopeAmount - percentage
   }
-  console.log(selectedCardValues)
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -88,8 +87,8 @@ export const ProjectAwardTab: React.FC<any> = props => {
             >
               {t(`${PROJECT_AWARD}.originalscopeamount`)}
               <Text fontWeight="600" fontSize="16px" color="brand.300">
-                {currencyFormatter(calculatePercentage(selectedCardValues?.factoringFee))}
-              </Text>
+  {selectedCardValues ? currencyFormatter(calculatePercentage(selectedCardValues?.factoringFee)) : ''}
+</Text>
             </Box>
             <Box
               flex="1"
@@ -143,8 +142,8 @@ export const ProjectAwardTab: React.FC<any> = props => {
             >
               {t(`${PROJECT_AWARD}.NTEmax`)}
               <Text w={'100%'} fontWeight="600" fontSize="16px" color="brand.300">
-                {currencyFormatter(calNteMax(selectedCardValues?.factoringFee))}
-              </Text>
+  {selectedCardValues ? currencyFormatter(calNteMax(selectedCardValues?.factoringFee)) : ''}
+</Text>
             </Box>
           </Box>
           <Flex w="100%" alignContent="space-between" pos="relative">
