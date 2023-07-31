@@ -372,7 +372,7 @@ i18n.use(initReactI18next).init({
         city: 'City',
         sin: 'SSN',
         ein: 'EIN',
-        zip: 'Zipcode',
+        zip: 'Zip Code',
         primaryContact: 'Primary Contact',
         secondaryContact: 'Secondary Contact',
         businessPhoneNo: 'Business Phone No',
