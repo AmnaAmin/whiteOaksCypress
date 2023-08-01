@@ -27,6 +27,8 @@ export const projectType = {
         save: 'Save',
         cancel: 'Cancel',
         deleteType: 'Delete Type',
+        delete: 'Delete',
+
       },
     },
   },

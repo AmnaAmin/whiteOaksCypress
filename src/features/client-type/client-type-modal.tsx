@@ -172,7 +172,22 @@ export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close
             </Box>
           </ModalBody>
           <ModalFooter borderTop="1px solid #E2E8F0" mt="40px">
+          <HStack w="100%" justifyContent="start">
+            <Button
+                variant="outline"
+                colorScheme="brand"
+                mr={3}
+                onClick={() => {
+                  onClose()
+                  reset()
+                }}
+                data-testid="cancelModal"
+              >
+                {t(`${PROJECT_TYPE}.delete`)}
+              </Button>
+              </HStack>
             <HStack w="100%" justifyContent="end">
+           
               <Button
                 variant="outline"
                 colorScheme="brand"
