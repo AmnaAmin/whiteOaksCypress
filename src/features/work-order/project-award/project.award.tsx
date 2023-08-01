@@ -29,11 +29,26 @@ export const ProjectAwardTab: React.FC<any> = props => {
  
   const { t } = useTranslation()
   // get drawremaining value..
-  const drawRemaining = awardPlansStats?.map( item => { if (item.workOrderId==props.workOrder.id) { return item.drawRemaining;}});
+  const drawRemaining = awardPlansStats?.map((item) => {
+    if (item.workOrderId === props.workOrder.id) {
+      return item.drawRemaining;
+    }
+    return null; 
+  });
   // get materialRemaining value..
-  const materialRemaining = awardPlansStats?.map( item => {  if (item.workOrderId==props.workOrder.id) { return item.materialRemaining;}}); 
+  const materialRemaining = awardPlansStats?.map((item) => {
+    if (item.workOrderId === props.workOrder.id) {
+      return item.materialRemaining;
+    }
+    return null; 
+  });
   // get totalAmountRemaining value..
-  const totalAmountRemaining = awardPlansStats?.map( item => { if (item.workOrderId==props.workOrder.id) {  return item.totalAmountRemaining;}});   
+  const totalAmountRemaining = awardPlansStats?.map((item) => {
+    if (item.workOrderId === props.workOrder.id) {
+      return item.totalAmountRemaining;
+    }
+    return null; 
+  });
 
   useEffect(() => {
     if (props?.workOrder?.awardPlanId !== null) {
