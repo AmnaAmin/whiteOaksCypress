@@ -239,7 +239,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isRefund,
     selectedWorkOrder,
   )
-
+  const { isAdmin } = useUserRolesSelector()
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
 
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund

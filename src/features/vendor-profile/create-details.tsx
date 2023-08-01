@@ -62,6 +62,8 @@ const CreateVendorDetail: React.FC<{
   // Set Document Status dropdown if Status is Expired
   const [statusOptions, setStatusOptions] = useState<any>([])
   const documentStatusSelectOptions = useDocumentStatusSelectOptions(vendorProfileData)
+  const { permissions } = useRoleBasedPermissions()
+  const isReadOnly = permissions?.includes('VENDOR.READ')
 
   useEffect(() => {
     if (vendorProfileData?.status === 15) {
