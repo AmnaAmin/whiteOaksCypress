@@ -8,7 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { PROJECT_AWARD } from './projectAward.i18n'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { currencyFormatter } from 'utils/string-formatters'
-// import { ProjectAwardCard, TextCard } from './project-award-card'
+import { useWorkOrderAwardStats } from 'api/transactions'
+
+
 
 export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
@@ -16,19 +18,28 @@ export const ProjectAwardTab: React.FC<any> = props => {
   const { isAdmin } = useUserRolesSelector()
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
   const [selectedCardValues, setSelectedCardValues] = useState<any>(null)
-
+  const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId)
+  
   useEffect(() => {
-    setSelectedCardValues(projectAwardData.find((card: any) => card.id === selectedCard) || null)
+    setSelectedCardValues(projectAwardData?.find((card: any) => card.id === selectedCard) || null)
   }, [selectedCard, projectAwardData])
   interface FormValues {
     id?: number
   }
+ 
   const { t } = useTranslation()
- useEffect(() => {
+  // get drawremaining value..
+  const drawRemaining = awardPlansStats?.map( item => { if (item.workOrderId==props.workOrder.id) { return item.drawRemaining;}});
+  // get materialRemaining value..
+  const materialRemaining = awardPlansStats?.map( item => {  if (item.workOrderId==props.workOrder.id) { return item.materialRemaining;}}); 
+  // get totalAmountRemaining value..
+  const totalAmountRemaining = awardPlansStats?.map( item => { if (item.workOrderId==props.workOrder.id) {  return item.totalAmountRemaining;}});   
+
+  useEffect(() => {
     if (props?.workOrder?.awardPlanId !== null) {
-      setSelectedCard(props.workOrder.awardPlanId);
+      setSelectedCard(props.workOrder.awardPlanId)
     }
-  }, [props?.workOrder?.awardPlanId]);
+  }, [props?.workOrder?.awardPlanId])
 
   const { handleSubmit } = useForm<FormValues>()
 
@@ -37,21 +48,12 @@ export const ProjectAwardTab: React.FC<any> = props => {
       props?.onSave(parseProjectAwardValuesToPayload(selectedCard, projectAwardData))
     }
   }
-
-  const calNteMax = p => {
-    const percentage = calculatePercentage(p)
-    const nteFiftyPercentage = (percentage / 100) * 50
-    const nteSeventyPercentage = (percentage / 100) * 70
-    const nteNintyPercentage = (percentage / 100) * 90
-    if (selectedCardValues?.drawLimit === 1) return nteFiftyPercentage
-    if (selectedCardValues?.drawLimit === 2) return nteSeventyPercentage
-    if (selectedCardValues?.drawLimit === 4) return nteNintyPercentage
-    return 0
-  }
   const calculatePercentage = per => {
     const percentage = (awardPlanScopeAmount / 100) * per
     return awardPlanScopeAmount - percentage
   }
+
+ 
 
   return (
     <>
@@ -80,32 +82,13 @@ export const ProjectAwardTab: React.FC<any> = props => {
               borderBottomLeftRadius="6px"
               borderRight="1px solid #CBD5E0"
               textAlign="center"
-              display='flex'
-              flexDirection='column'
-              justifyContent='center'
-              
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.originalscopeamount`)}
               <Text fontWeight="600" fontSize="16px" color="brand.300">
-  {selectedCardValues ? currencyFormatter(calculatePercentage(selectedCardValues?.factoringFee)) : ''}
-</Text>
-            </Box>
-            <Box
-              flex="1"
-              h="58px"
-              bg="gray.50"
-              fontSize="14px"
-              fontWeight="400"
-              textColor="gray.600"
-              borderRight="1px solid #CBD5E0"
-              textAlign="center"
-              display='flex'
-              flexDirection='column'
-              justifyContent='center'
-            >
-              {t(`${PROJECT_AWARD}.materialDraws`)}
-              <Text fontWeight="600" fontSize="16px" color="brand.300">
-                {selectedCardValues?.materialLimit}
+                {selectedCardValues ? currencyFormatter(calculatePercentage(selectedCardValues?.factoringFee)) : ''}
               </Text>
             </Box>
             <Box
@@ -117,13 +100,31 @@ export const ProjectAwardTab: React.FC<any> = props => {
               textColor="gray.600"
               borderRight="1px solid #CBD5E0"
               textAlign="center"
-              display='flex'
-              flexDirection='column'
-              justifyContent='center'
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+            >
+              {t(`${PROJECT_AWARD}.materialDraws`)}
+              <Text fontWeight="600" fontSize="16px" color="brand.300">
+                {materialRemaining}
+              </Text>
+            </Box>
+            <Box
+              flex="1"
+              h="58px"
+              bg="gray.50"
+              fontSize="14px"
+              fontWeight="400"
+              textColor="gray.600"
+              borderRight="1px solid #CBD5E0"
+              textAlign="center"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.laborDraws`)}
               <Text fontWeight="600" fontSize="16px" color="brand.300">
-                {selectedCardValues?.drawLimit}
+                 {drawRemaining}
               </Text>
             </Box>
             <Box
@@ -136,14 +137,14 @@ export const ProjectAwardTab: React.FC<any> = props => {
               borderBottomRightRadius="6px"
               bg="gray.50"
               textAlign="center"
-              display='flex'
-              flexDirection='column'
-              justifyContent='center'
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.NTEmax`)}
               <Text w={'100%'} fontWeight="600" fontSize="16px" color="brand.300">
-  {selectedCardValues ? currencyFormatter(calNteMax(selectedCardValues?.factoringFee)) : ''}
-</Text>
+                {totalAmountRemaining}
+              </Text>
             </Box>
           </Box>
           <Flex w="100%" alignContent="space-between" pos="relative">
