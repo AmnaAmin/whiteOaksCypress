@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Divider, HStack, Icon, Text, Flex, Checkbox } from '@chakra-ui/react'
 import { BiCheckSquare } from 'react-icons/bi'
 import { AiFillExclamationCircle } from 'react-icons/ai'
-import { DocumentsCardFormValues, VendorProfile } from 'types/vendor.types'
+import { VendorProfile } from 'types/vendor.types'
 import { UseFormRegister } from 'react-hook-form'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
@@ -104,6 +104,22 @@ export const VendorPortalVerifyDocument = (props: VendorPortalVerifyDocumentProp
         setVerificationStatus(VERIFICATION_STATUS.VERIFIED)
       }
     }
+    if (props.fieldName === 'bankVoidedCheckStatus') {
+      if (
+        props.vendor.bankVoidedCheckStatus === null ||
+        props.vendor.bankVoidedCheckStatus === VERIFICATION_STATUS.UNVERIFIED
+      ) {
+        setVerificationStatus(VERIFICATION_STATUS.UNVERIFIED)
+      }
+
+      if (props.vendor.bankVoidedCheckStatus === VERIFICATION_STATUS.EXPIRED) {
+        setVerificationStatus(VERIFICATION_STATUS.EXPIRED)
+      }
+
+      if (props.vendor.bankVoidedCheckStatus === VERIFICATION_STATUS.VERIFIED) {
+        setVerificationStatus(VERIFICATION_STATUS.VERIFIED)
+      }
+    }
   }, [props.vendor])
 
   return (
@@ -144,7 +160,7 @@ export const VendorPortalVerifyDocument = (props: VendorPortalVerifyDocumentProp
 interface AdminVerifyDocumentProps {
   vendor: NewVendorProfile
   fieldName: string
-  registerToFormField: UseFormRegister<DocumentsCardFormValues>
+  registerToFormField: UseFormRegister<any>
 }
 
 export const AdminPortalVerifyDocument = (props: AdminVerifyDocumentProps): JSX.Element => {
@@ -224,6 +240,22 @@ export const AdminPortalVerifyDocument = (props: AdminVerifyDocumentProps): JSX.
       }
 
       if (props.vendor?.w9Status === VERIFICATION_STATUS.VERIFIED) {
+        setVerificationStatus(VERIFICATION_STATUS.VERIFIED)
+      }
+    }
+    if (props.fieldName === 'bankVoidedCheckStatus') {
+      if (
+        props.vendor?.bankVoidedCheckStatus === null ||
+        props.vendor?.bankVoidedCheckStatus === VERIFICATION_STATUS.UNVERIFIED
+      ) {
+        setVerificationStatus(VERIFICATION_STATUS.UNVERIFIED)
+      }
+
+      if (props.vendor?.bankVoidedCheckStatus === VERIFICATION_STATUS.EXPIRED) {
+        setVerificationStatus(VERIFICATION_STATUS.EXPIRED)
+      }
+
+      if (props.vendor?.bankVoidedCheckStatus === VERIFICATION_STATUS.VERIFIED) {
         setVerificationStatus(VERIFICATION_STATUS.VERIFIED)
       }
     }

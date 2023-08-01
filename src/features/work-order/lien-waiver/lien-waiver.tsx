@@ -311,10 +311,6 @@ export const LienWaiverTab: React.FC<any> = props => {
                       variant="required-field"
                       register={register}
                       disabled={isFieldsDisabled}
-                      elementStyle={{
-                        bg: 'white',
-                        borderLeft: '2px solid #4E87F8',
-                      }}
                       testId="claimantsTitle"
                       rules={{ required: 'This is required field' }}
                       name={`claimantTitle`}
@@ -424,7 +420,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                 <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" mt={8} gap={10}>
                   <GridItem>
                     <InputView
-                      controlStyle={{ w: '16em' }}
+                      controlStyle={{ w: '14em' }}
                       label="Date of signature"
                       InputElem={
                         <>
@@ -437,10 +433,11 @@ export const LienWaiverTab: React.FC<any> = props => {
                   </GridItem>
                   <GridItem>
                     <InputView
+                    controlStyle={{ mb: '5px' }}
                       label="Claimant Signature"
                       InputElem={
                         workOrder?.lienWaiverAccepted && claimantsSignature ? (
-                          <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
+                          <Image mt='7px'  hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
                         ) : (
                           <></>
                         )

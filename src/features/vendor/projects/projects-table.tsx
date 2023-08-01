@@ -13,7 +13,7 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
-import { ColumnDef, PaginationState } from '@tanstack/react-table'
+import { ColumnDef, PaginationState , VisibilityState } from '@tanstack/react-table'
 import {
   GotoFirstPage,
   GotoLastPage,
@@ -32,7 +32,7 @@ const PROJECT_TABLE_QUERY_KEYS = {
   skillName: 'skillName.contains',
   workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',
   expectedPaymentDate: 'expectedPaymentDate.equals',
-  displayId: 'displayId.contains'
+  displayId: 'displayId.contains',
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
@@ -99,6 +99,7 @@ type ProjectProps = {
 }
 
 export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const navigate = useNavigate()
@@ -123,12 +124,12 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
   )
 
-  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.vendorProject)
   const {
     tableColumns,
     settingColumns,
     refetch: refetchColumns,
-  } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.project)
+  } = useTableColumnSettings(PROJECT_COLUMNS, TableNames.vendorProject)
   const filtersInitialValues = {
     statusLabel: selectedCard !== 'pastDue' ? selectedCard : 'past Due',
   }
@@ -149,7 +150,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
-
+  
   const onRowClick = rowData => {
     navigate(`/project-details/${rowData.projectId}`)
   }
@@ -168,6 +169,8 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
         setPagination={setPagination}
         columnFilters={columnFilters}
         setColumnFilters={setColumnFilters}
+        columnVisibility={columnVisibility}
+        setColumnVisibility={setColumnVisibility}
       >
         <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !workOrderData?.length} />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
@@ -184,7 +187,12 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
                 refetch={refetchColumns}
                 disabled={isLoading}
                 onSave={onSave}
-                columns={settingColumns}
+                columns={settingColumns.filter(
+                  col =>
+                    col.colId !== 'displayId' &&
+                    !(columnVisibility[col?.contentKey] === false),
+                )}
+              
               />
             )}
           </ButtonsWrapper>

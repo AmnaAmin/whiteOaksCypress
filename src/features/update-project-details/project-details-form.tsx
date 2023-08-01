@@ -34,6 +34,7 @@ import { useTransactionsV1 } from 'api/transactions'
 import { TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { useClientType } from 'api/client-type'
 
 type tabProps = {
   projectData: Project
@@ -53,6 +54,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { userSelectOptions: fpmSelectOptions } = useGetUsersByType(5)
   const { userSelectOptions: projectCoordinatorSelectOptions } = useGetUsersByType(112)
   const { clientSelectOptions } = useGetClientSelectOptions()
+  const { clientTypesSelectOptions } = useClientType()
   const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData)
   const { data: overPayment } = useGetOverpayment(projectData?.id)
   const { stateSelectOptions, states } = useStates()
@@ -85,6 +87,7 @@ const ProjectDetailsTab = (props: tabProps) => {
       stateSelectOptions,
       marketSelectOptions,
       propertySelectOptions,
+      clientTypesSelectOptions,
     })
     formReturn.reset(formValues)
   }, [
@@ -98,6 +101,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     stateSelectOptions?.length,
     marketSelectOptions?.length,
     propertySelectOptions?.length,
+    clientTypesSelectOptions?.length,
   ])
 
   const hasPendingDrawsOnPaymentSave = (payment, depreciation) => {
@@ -236,6 +240,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   <Contact
                     projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
                     clientSelectOptions={clientSelectOptions}
+                    clientTypesSelectOptions={clientTypesSelectOptions}
                   />
                 </TabPanel>
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
@@ -259,23 +264,23 @@ const ProjectDetailsTab = (props: tabProps) => {
                   <Divider border="1px solid" />
                 </Box>
                 <Box h="70px" w="100%" pb="3">
-                <>
-              {!isReadOnly && (
-                  <Button
-                    mt="8px"
-                    mr="32px"
-                    float={'right'}
-                    variant="solid"
-                    colorScheme="brand"
-                    type="submit"
-                    form="project-details"
-                    fontSize="16px"
-                    disabled={isSubmitting || isLoading}
-                  >
-                    {t(`project.projectDetails.save`)}
-                  </Button>
+                  <>
+                    {!isReadOnly && (
+                      <Button
+                        mt="8px"
+                        mr="32px"
+                        float={'right'}
+                        variant="solid"
+                        colorScheme="brand"
+                        type="submit"
+                        form="project-details"
+                        fontSize="16px"
+                        disabled={isSubmitting || isLoading}
+                      >
+                        {t(`project.projectDetails.save`)}
+                      </Button>
                     )}
-                    </>
+                  </>
                   {onClose && (
                     <>
                       <Button

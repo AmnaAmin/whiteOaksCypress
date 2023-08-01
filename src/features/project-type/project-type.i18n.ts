@@ -5,6 +5,7 @@ export const projectType = {
       [PROJECT_TYPE]: {
         //Page
         projectType: 'Project Type',
+        clientType: 'Client Type',
         titleDel: 'delete Project Type',
         delMsg: 'Project Type has been deleted successfully.',
         failedMsg: 'Unable to delete Project Type.',
@@ -18,8 +19,11 @@ export const projectType = {
 
         // modal
         addProjectType: 'Add Project Type',
+        addClientType: 'Add Client Type',
         newProjectType: 'New Project Type',
+        newClientType: 'New Client Type',
         editProjectType: 'Edit Project Type',
+        editClientType: 'Edit Client Type',
         save: 'Save',
         cancel: 'Cancel',
         deleteType: 'Delete Type',
@@ -32,6 +36,7 @@ export const projectType = {
       [PROJECT_TYPE]: {
         //Page
         projectType: 'Tipo de proyecto',
+        clientType: 'Tipo de cliente',
         titleDel: 'Eliminar tipo de proyecto',
         delMsg: 'El tipo de proyecto se ha eliminado correctamente.',
         failedMsg: 'No se puede eliminar el tipo de proyecto.',
@@ -45,8 +50,11 @@ export const projectType = {
 
         // modal
         addProjectType: 'Agregar tipo de proyecto',
+        addClientType: 'Agregar tipo de cliente',
         newProjectType: 'Nuevo tipo de proyecto',
+        newClientType: 'Nuevo tipo de cliente',
         editProjectType: 'Editar tipo de proyecto',
+        editClientType: 'Editar tipo de cliente',
         save: 'Ahorrar',
         cancel: 'Cancelar',
         deleteType: 'Eliminar tipo',

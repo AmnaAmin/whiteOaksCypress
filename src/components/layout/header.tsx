@@ -65,18 +65,18 @@ const hoverEffect = {
 }
 
 export const notificationCount = {
-  width: '18px',
-  height: '18px',
+  width: '25px',
+  height: '25px',
   borderRadius: '100%',
   color: '#fff',
-  backgroundColor: '#F6AD55',
+  backgroundColor: '#4299E1',
   display: 'flex',
   justifyContent: 'center',
   bottom: '12px',
   left: '14px',
   alignItems: 'center',
   textAlign: 'center',
-  fontWeight: '700',
+  fontWeight: '500',
   position: 'absolute',
   fontSize: '12px',
 }

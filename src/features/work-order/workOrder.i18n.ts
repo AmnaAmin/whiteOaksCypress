@@ -65,7 +65,7 @@ export const workOrder = {
         clientEnd: 'Client End',
         profitPercentage: 'Profit Percentage',
         finalSowAmount: 'Final SOW Amount',
-        type: 'Type',
+        type: 'Skill',
         clientApprovedAmount: 'Client Approved Amount',
         vendorWorkOrderAmount: 'Vendor WO Amount',
         expectedStartDate: 'Expected Start Date',
