@@ -44,6 +44,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         queryClient.invalidateQueries(['audit-logs', projectId])
+        queryClient.invalidateQueries(['changeOrders'])
         if (!hideToast) {
           toast({
             title: 'Work Order',
