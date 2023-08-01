@@ -35,6 +35,7 @@ import { useStates } from 'api/pc-projects'
 import { useAuth } from 'utils/auth-context'
 import { useState, useEffect } from 'react'
 import { Card } from 'components/card/card'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const VendorUserModal = ({
   vendorDetails,
@@ -153,7 +154,7 @@ const VendorUserModal = ({
       setModalSize('3xl')
     }
   }, [isMobile])
-
+  const { isFPM } = useUserRolesSelector()
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onCloseModal} size={modalSize} variant="custom">
@@ -162,10 +163,10 @@ const VendorUserModal = ({
           <Box
             sx={{
               '@media screen and (max-width: 480px)': {
-                position: "sticky",
-                top: "0",
+                position: 'sticky',
+                top: '0',
                 zIndex: 99,
-                zoom: 1
+                zoom: 1,
               },
             }}
           >
@@ -187,280 +188,309 @@ const VendorUserModal = ({
             </ModalHeader>
             <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           </Box>
-          <ModalBody bg='#F2F3F4' px='12px'  pb="22px"  borderBottom="1px solid #E2E8F0">
-          <Card borderTopRightRadius='6px' borderTopLeftRadius='6px'>
-            <chakra.form
-              onSubmit={handleSubmit(onSubmit)}
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              spellCheck={false}
-              action="#"
-              sx={{
-                '@media screen and (max-width: 480px)': {
-                  '.chakra-form-control': {
-                    marginTop: '20px',
-                    width: '80%',
-                    marginInline: '0 !important',
+          <ModalBody bg="#F2F3F4" px="12px" pb="22px" borderBottom="1px solid #E2E8F0">
+            <Card borderTopRightRadius="6px" borderTopLeftRadius="6px">
+              <chakra.form
+                onSubmit={handleSubmit(onSubmit)}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck={false}
+                action="#"
+                sx={{
+                  '@media screen and (max-width: 480px)': {
+                    '.chakra-form-control': {
+                      marginTop: '20px',
+                      width: '80%',
+                      marginInline: '0 !important',
+                    },
+                    '.chakra-form-control:first-child': {
+                      marginTop: '0px',
+                    },
+                    '.chakra-input__group': {
+                      width: '100%',
+                      marginInline: '0 !important',
+                    },
                   },
-                  '.chakra-form-control:first-child': {
-                    marginTop: '0px',
-                  },
-                  '.chakra-input__group': {
-                    width: '100%',
-                    marginInline: '0 !important',
-                  },
-                },
-              }}
-            >
-              <Box ml="20px">
-                      <Stack alignItems="center" direction="row" spacing="16px" mt="30px">
-                        <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
-                          <FormLabel variant="strong-label" size="md">
-                            Vendor Roles
-                          </FormLabel>
-                          <FormControl>
-                            <HStack spacing="16px">
-                              <Checkbox
-                                {...register('vendorAdmin', {
-                                  onChange: e => {
-                                    if (!e.target.checked) setValue('primaryAdmin', false)
-                                  },
-                                })}
-                                colorScheme="brand"
-                              >
-                                Admin
-                              </Checkbox>
-                              <Checkbox
-                                isChecked={formValues.primaryAdmin}
-                                isDisabled={isPrimaryDisabled}
-                                {...register('primaryAdmin')}
-                              >
-                                <chakra.span position="relative">Primary</chakra.span>
-                              </Checkbox>
-                            </HStack>
-                            <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
+                }}
+              >
+                <Box ml="20px">
+                  <Stack alignItems="center" direction="row" spacing="16px" mt="30px">
+                    <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+                      <FormLabel variant="strong-label" size="md">
+                        Vendor Roles
+                      </FormLabel>
+                      <FormControl>
+                        <HStack spacing="16px">
+                          <Checkbox
+                            data-testid="vendorAdmin"
+                            {...register('vendorAdmin', {
+                              onChange: e => {
+                                if (!e.target.checked) setValue('primaryAdmin', false)
+                              },
+                            })}
+                            colorScheme="brand"
+                          >
+                            Admin
+                          </Checkbox>
+                          <Checkbox
+                            data-testid="primaryAdmin"
+                            isChecked={formValues.primaryAdmin}
+                            isDisabled={isPrimaryDisabled}
+                            {...register('primaryAdmin')}
+                          >
+                            <chakra.span position="relative">Primary</chakra.span>
+                          </Checkbox>
+                        </HStack>
+                        <FormErrorMessage pos="absolute">{errors.Check?.message}</FormErrorMessage>
+                      </FormControl>
+                    </VStack>
+                  </Stack>
+                </Box>
+                <Box mt="14px">
+                  {false ? (
+                    <BlankSlate width="60px" />
+                  ) : (
+                    <Box ml="20px">
+                      <HStack
+                        mt="30px"
+                        spacing={15}
+                        sx={{
+                          '@media screen and (max-width: 480px)': {
+                            flexDirection: 'column',
+                            alignItems: 'baseline',
+                          },
+                        }}
+                      >
+                        {isEditUser && (
+                          <FormControl w={215}>
+                            <FormLabel variant="strong-label" size="md">
+                              {t(`${USER_MANAGEMENT}.modal.id`)}
+                            </FormLabel>
+                            <Input isDisabled={isEditUser} variant="required-field" type="id" {...register('id')} />
                           </FormControl>
-                        </VStack>
-                      </Stack>
-                    </Box>
-              <Box mt="14px">
-                {false ? (
-                  <BlankSlate width="60px" />
-                ) : (
-                  <Box ml="20px">
-                    <HStack
-                      mt="30px"
-                      spacing={15}
-                      sx={{
-                        '@media screen and (max-width: 480px)': {
-                          flexDirection: 'column',
-                          alignItems: 'baseline',
-                        },
-                      }}
-                    >
-                      {isEditUser && (
+                        )}
+                        <FormControl w={215} isInvalid={!!errors.email} h="77px">
+                          <FormLabel variant="strong-label" size="md">
+                            {t(`${USER_MANAGEMENT}.modal.email`)}
+                          </FormLabel>
+                          <Input
+                            isDisabled={isEditUser}
+                            variant="required-field"
+                            data-testid="userEmail"
+                            type="email"
+                            {...register('email', {
+                              required: 'This is required',
+                              pattern: {
+                                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                message: 'Invalid Email Address',
+                              },
+                            })}
+                          />
+                          <FormErrorMessage pos={'absolute'}>{errors.email?.message}</FormErrorMessage>
+                        </FormControl>
+
                         <FormControl w={215}>
                           <FormLabel variant="strong-label" size="md">
-                            {t(`${USER_MANAGEMENT}.modal.id`)}
+                            {t(`${USER_MANAGEMENT}.modal.firstName`)}
                           </FormLabel>
-                          <Input isDisabled={isEditUser} variant="required-field" type="id" {...register('id')} />
+                          <Input
+                            data-testid="userFirstName"
+                            variant="required-field"
+                            type="text"
+                            {...register('firstName')}
+                          />
                         </FormControl>
-                      )}
-                      <FormControl w={215} isInvalid={!!errors.email} h="77px">
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.email`)}
-                        </FormLabel>
-                        <Input
-                          isDisabled={isEditUser}
-                          variant="required-field"
-                          type="email"
-                          {...register('email', {
-                            required: 'This is required',
-                            pattern: {
-                              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                              message: 'Invalid Email Address',
-                            },
-                          })}
-                        />
-                        <FormErrorMessage pos={'absolute'}>{errors.email?.message}</FormErrorMessage>
-                      </FormControl>
 
-                      <FormControl w={215}>
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.firstName`)}
-                        </FormLabel>
-                        <Input variant="required-field" type="text" {...register('firstName')} />
-                      </FormControl>
+                        <FormControl w={215}>
+                          <FormLabel variant="strong-label" size="md">
+                            {t(`${USER_MANAGEMENT}.modal.lastName`)}
+                          </FormLabel>
+                          <Input
+                            data-testid="userLastName"
+                            autoComplete="off"
+                            variant="required-field"
+                            type="text"
+                            {...register('lastName')}
+                          />
+                        </FormControl>
+                      </HStack>
 
-                      <FormControl w={215}>
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.lastName`)}
-                        </FormLabel>
-                        <Input autoComplete="off" variant="required-field" type="text" {...register('lastName')} />
-                      </FormControl>
-                    </HStack>
+                      <HStack
+                        mt="30px"
+                        sx={{
+                          '@media screen and (max-width: 480px)': {
+                            flexDirection: 'column',
+                            alignItems: 'baseline',
+                            marginInlineStart: '0px',
+                          },
+                        }}
+                      >
+                        <PasswordField errors={errors} register={register} isRequired={!isEditUser} />
+                      </HStack>
 
-                    <HStack
-                      mt="30px"
-                      sx={{
-                        '@media screen and (max-width: 480px)': {
-                          flexDirection: 'column',
-                          alignItems: 'baseline',
-                          marginInlineStart: '0px',
-                        },
-                      }}
-                    >
-                      <PasswordField errors={errors} register={register} isRequired={!isEditUser} />
-                    </HStack>
+                      <HStack
+                        mt="30px"
+                        spacing={15}
+                        sx={{
+                          '@media screen and (max-width: 480px)': {
+                            flexDirection: 'column',
+                            alignItems: 'baseline',
+                          },
+                        }}
+                      >
+                        <FormControl w="215px">
+                          <FormLabel variant="strong-label" size="md">
+                            {t(`${USER_MANAGEMENT}.modal.language`)}
+                          </FormLabel>
+                          <Controller
+                            data-testid="language"
+                            control={control}
+                            name="langKey"
+                            render={({ field }) => (
+                              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} />
+                            )}
+                          />
+                        </FormControl>
 
-                    <HStack
-                      mt="30px"
-                      spacing={15}
-                      sx={{
-                        '@media screen and (max-width: 480px)': {
-                          flexDirection: 'column',
-                          alignItems: 'baseline',
-                        },
-                      }}
-                    >
-                      <FormControl w="215px">
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.language`)}
-                        </FormLabel>
-                        <Controller
-                          control={control}
-                          name="langKey"
-                          render={({ field }) => (
-                            <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} />
-                          )}
-                        />
-                      </FormControl>
+                        <FormControl w={215} isInvalid={!invalidTelePhone} mt="20px">
+                          <FormLabel variant="strong-label" size="md">
+                            {t(`${USER_MANAGEMENT}.modal.telephone`)}
+                          </FormLabel>
+                          <Box height="40px">
+                            <Controller
+                              control={control}
+                              name="telephoneNumber"
+                              render={({ field }) => {
+                                return (
+                                  <NumberFormat
+                                    data-testid="userTelephoneNumber"
+                                    customInput={Input}
+                                    value={field.value}
+                                    onChange={e => field.onChange(e)}
+                                    format="(###)-###-####"
+                                    mask="_"
+                                    placeholder="(___)-___-____"
+                                    variant="required-field"
+                                  />
+                                )
+                              }}
+                            />
+                            <FormErrorMessage>
+                              {!invalidTelePhone ? 'Valid Phone Number Is Required' : null}
+                            </FormErrorMessage>
+                          </Box>
+                        </FormControl>
+                        <FormControl w={215}>
+                          <Checkbox
+                            mt="25px"
+                            data-testid="activated"
+                            isChecked={formValues.activated}
+                            fontSize="16px"
+                            fontWeight={400}
+                            color="#718096"
+                            {...register('activated')}
+                          >
+                            {t(`${USER_MANAGEMENT}.modal.activated`)}
+                          </Checkbox>
+                        </FormControl>
+                      </HStack>
+                      <HStack
+                        mt="30px"
+                        spacing={15}
+                        sx={{
+                          '@media screen and (max-width: 480px)': {
+                            flexDirection: 'column',
+                            alignItems: 'baseline',
+                          },
+                        }}
+                      >
+                        <FormControl w={215}>
+                          <FormLabel variant="strong-label" size="md">
+                            {t(`${USER_MANAGEMENT}.modal.address`)}
+                          </FormLabel>
+                          <Input
+                            data-testid="userAddress"
+                            variant="required-field"
+                            type="text"
+                            {...register('streetAddress')}
+                          />
+                        </FormControl>
 
-                      <FormControl w={215} isInvalid={!invalidTelePhone} mt="20px">
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.telephone`)}
-                        </FormLabel>
-                        <Box height="40px">
+                        <FormControl w={215}>
+                          <FormLabel variant="strong-label" size="md">
+                            {t(`${USER_MANAGEMENT}.modal.city`)}
+                          </FormLabel>
+                          <Input data-testid="userCity" type="text" {...register('city')} variant="required-field" />
+                        </FormControl>
+                      </HStack>
+                      <HStack
+                        mt="30px"
+                        spacing={15}
+                        sx={{
+                          '@media screen and (max-width: 480px)': {
+                            flexDirection: 'column',
+                            alignItems: 'baseline',
+                          },
+                        }}
+                      >
+                        <FormControl w={215}>
+                          <FormLabel variant="strong-label" size="md">
+                            {t(`${USER_MANAGEMENT}.modal.state`)}
+                          </FormLabel>
                           <Controller
                             control={control}
-                            name="telephoneNumber"
-                            render={({ field }) => {
-                              return (
-                                <NumberFormat
-                                  customInput={Input}
-                                  value={field.value}
-                                  onChange={e => field.onChange(e)}
-                                  format="(###)-###-####"
-                                  mask="_"
-                                  placeholder="(___)-___-____"
-                                  variant="required-field"
-                                />
-                              )
-                            }}
+                            name="state"
+                            data-testid="userState"
+                            render={({ field }) => (
+                              <ReactSelect
+                                menuPlacement="top"
+                                id="state"
+                                {...field}
+                                options={stateOptions}
+                                selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
+                              />
+                            )}
                           />
-                          <FormErrorMessage>
-                            {!invalidTelePhone ? 'Valid Phone Number Is Required' : null}
-                          </FormErrorMessage>
-                        </Box>
-                      </FormControl>
-                      <FormControl w={215}>
-                        <Checkbox
-                          mt="25px"
-                          isChecked={formValues.activated}
-                          fontSize="16px"
-                          fontWeight={400}
-                          color="#718096"
-                          {...register('activated')}
-                        >
-                          {t(`${USER_MANAGEMENT}.modal.activated`)}
-                        </Checkbox>
-                      </FormControl>
-                    </HStack>
-                    <HStack
-                      mt="30px"
-                      spacing={15}
-                      sx={{
-                        '@media screen and (max-width: 480px)': {
-                          flexDirection: 'column',
-                          alignItems: 'baseline',
-                        },
+                        </FormControl>
+
+                        <FormControl w={215}>
+                          <FormLabel variant="strong-label" size="md">
+                            {t(`${USER_MANAGEMENT}.modal.zipcode`)}
+                          </FormLabel>
+                          <Input
+                            data-testid="userZipCode"
+                            type="number"
+                            {...register('zipCode')}
+                            variant="required-field"
+                          />
+                        </FormControl>
+                      </HStack>
+                    </Box>
+                  )}
+                </Box>
+                <Flex borderTop="1px solid #E2E8F0" mt="20px" pt="20px" justifyContent="right">
+                  <HStack spacing="16px">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        onClose()
+                        reset()
                       }}
+                      colorScheme="brand"
                     >
-                      <FormControl w={215}>
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.address`)}
-                        </FormLabel>
-                        <Input variant="required-field" type="text" {...register('streetAddress')} />
-                      </FormControl>
-
-                      <FormControl w={215}>
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.city`)}
-                        </FormLabel>
-                        <Input type="text" {...register('city')} variant="required-field" />
-                      </FormControl>
-
-                    </HStack>                 
-                    <HStack
-                      mt="30px"
-                      spacing={15}
-                      sx={{
-                        '@media screen and (max-width: 480px)': {
-                          flexDirection: 'column',
-                          alignItems: 'baseline',
-                        },
-                      }}
-                    >
-                      <FormControl w={215}>
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.state`)}
-                        </FormLabel>
-                        <Controller
-                          control={control}
-                          name="state"
-                          render={({ field }) => (
-                            <ReactSelect
-                            menuPlacement="top"
-                              id="state"
-                              {...field}
-                              options={stateOptions}
-                              selectProps={{ isBorderLeft: true, menuHeight: '180px'}}
-                            />
-                          )}
-                        />
-                      </FormControl>
-
-                      <FormControl w={215}>
-                        <FormLabel variant="strong-label" size="md">
-                          {t(`${USER_MANAGEMENT}.modal.zipcode`)}
-                        </FormLabel>
-                        <Input type="number" {...register('zipCode')} variant="required-field" />
-                      </FormControl>
-                    </HStack>                  
-                  </Box>                 
-                )}
-              </Box>
-              <Flex borderTop="1px solid #E2E8F0" mt="20px" pt="20px" justifyContent="right">
-                <HStack spacing="16px">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      onClose()
-                      reset()
-                    }}
-                    colorScheme="brand"
-                  >
-                    {t('cancel')}
-                  </Button>
-                  <Button type="submit" colorScheme="brand" disabled={!!watchRequiredField}>
-                    {t('save')}
-                  </Button>
-                </HStack>
-              </Flex>
-            </chakra.form>
+                      {t('cancel')}
+                    </Button>
+                    {!isFPM && (
+                      <Button type="submit" data-testid="saveUser" colorScheme="brand" disabled={!!watchRequiredField}>
+                        {t('save')}
+                      </Button>
+                    )}
+                  </HStack>
+                </Flex>
+              </chakra.form>
             </Card>
-          </ModalBody>        
+          </ModalBody>
         </ModalContent>
       </Modal>
     </div>

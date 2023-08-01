@@ -44,7 +44,7 @@ const NewVendorModal: React.FC<NewVendorModalType> = props => {
               {t('newVendor')}
             </FormLabel>
           </ModalHeader>
-          <ModalCloseButton _hover={{ bg: 'blue.50' }} />
+          <ModalCloseButton data-testid="new-vendor-close-btn" _hover={{ bg: 'blue.50' }} />
           <ModalBody bg="#F2F3F4" py="10px">
             <NewVendorTabs onClose={props.onClose} />
           </ModalBody>

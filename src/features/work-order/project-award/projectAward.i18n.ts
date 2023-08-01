@@ -14,6 +14,7 @@ export const projectAwards = {
         factoringFee: 'Factoring Fee',
         netFinalPayAmount: 'Net final pay amount',
         scopeAmount: 'Scope amount',
+        originalscopeamount: 'Original Scope Amount',
         upgradePlan: 'Upgrade Project Plan',
       },
     },

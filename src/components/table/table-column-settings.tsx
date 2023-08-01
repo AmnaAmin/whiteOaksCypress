@@ -42,22 +42,28 @@ interface TableColumnSettingsProps {
 }
 
 const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: TableColumnSettingsProps) => {
-  const [columnRecords, setColumnRecords] = useState(columns)
+  const [paginationRecord, setPaginationRecord] = useState<ColumnType | undefined>(
+    columns?.find(c => c.contentKey === 'pagination'),
+  )
+  const [columnRecords, setColumnRecords] = useState(columns?.filter(col => col.contentKey !== 'pagination'))
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { t } = useTranslation()
 
   const saveModal = useCallback(() => {
-    const columnsPayload = columnRecords.map((item, index) => ({
+    let columnsPayload = columnRecords.map((item, index) => ({
       ...item,
       order: index,
     }))
-
+    if (paginationRecord) {
+      columnsPayload.push(paginationRecord as ColumnType)
+    }
     onClose()
     onSave(columnsPayload)
   }, [columnRecords, onClose, onSave])
 
   useEffect(() => {
-    setColumnRecords(columns)
+    setColumnRecords(columns?.filter(col => col.contentKey !== 'pagination'))
+    setPaginationRecord(columns?.find(c => c.contentKey === 'pagination'))
   }, [columns])
 
   const handleOnDragEnd = useCallback(
@@ -126,6 +132,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
           </ModalHeader>
           <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
           <ModalBody
+          data-testid="Settings"
             h="50vh"
             overflowY="auto"
             bg="#FFFFFF"
@@ -146,55 +153,53 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
                     id="column-settings-list"
                     data-testid="column-settings-list"
                   >
-                    {columnRecords
-                      ?.filter(col => col.contentKey !== 'pagination')
-                      .map(({ field, id, hide }, index) => (
-                        <Draggable key={id} draggableId={`${id}_${index}`} index={index} className="draggable-item">
-                          {(provided, snapshot) => (
-                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                              <Center>
-                                <ListItem
-                                  data-testid={`draggable-item-${index}`}
-                                  borderWidth="1.5px"
-                                  borderColor="gray.300"
-                                  borderRadius="8"
-                                  w="485px"
-                                  m="1.5"
-                                  py="8px"
-                                  fontSize="1em"
-                                  fontWeight={600}
-                                  backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
-                                  _hover={{ bg: 'blue.50' }}
-                                >
-                                  <HStack spacing="21.83px" ml="21.83px">
-                                    <BiGridVertical
-                                      fontSize="1.4rem"
-                                      color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'}
-                                    />
-                                    <Checkbox
-                                      size="lg"
-                                      marginStart="0.625rem"
-                                      onChange={() => onCheck(index)}
-                                      isChecked={!hide}
-                                      colorScheme="PrimaryCheckBox"
+                    {columnRecords.map(({ field, id, hide }, index) => (
+                      <Draggable key={id} draggableId={`${id}_${index}`} index={index} className="draggable-item">
+                        {(provided, snapshot) => (
+                          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                            <Center>
+                              <ListItem
+                                data-testid={`draggable-item-${index}`}
+                                borderWidth="1.5px"
+                                borderColor="gray.300"
+                                borderRadius="8"
+                                w="485px"
+                                m="1.5"
+                                py="8px"
+                                fontSize="1em"
+                                fontWeight={600}
+                                backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
+                                _hover={{ bg: 'blue.50' }}
+                              >
+                                <HStack spacing="21.83px" ml="21.83px">
+                                  <BiGridVertical
+                                    fontSize="1.4rem"
+                                    color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'}
+                                  />
+                                  <Checkbox
+                                    size="lg"
+                                    marginStart="0.625rem"
+                                    onChange={() => onCheck(index)}
+                                    isChecked={!hide}
+                                    colorScheme="PrimaryCheckBox"
+                                  >
+                                    <Text
+                                      ml="12px"
+                                      color="gray.600"
+                                      fontStyle="normal"
+                                      fontWeight={400}
+                                      fontSize="14px"
                                     >
-                                      <Text
-                                        ml="12px"
-                                        color="gray.600"
-                                        fontStyle="normal"
-                                        fontWeight={400}
-                                        fontSize="14px"
-                                      >
-                                        {t(field)}
-                                      </Text>
-                                    </Checkbox>
-                                  </HStack>
-                                </ListItem>
-                              </Center>
-                            </div>
-                          )}
-                        </Draggable>
-                      ))}
+                                      {t(field)}
+                                    </Text>
+                                  </Checkbox>
+                                </HStack>
+                              </ListItem>
+                            </Center>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
                     {provided.placeholder}
                   </List>
                 )}

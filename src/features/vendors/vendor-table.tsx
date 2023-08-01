@@ -40,6 +40,9 @@ export const VENDOR_TABLE_QUERY_KEYS = {
   state: 'state.contains',
   businessPhoneNumber: 'businessPhoneNumber.contains',
   businessEmailAddress: 'businessEmailAddress.contains',
+  streetAddress: 'streetAddress.contains',
+  city: 'city.contains',
+  zipCode: 'zipCode.contains',
 }
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
@@ -58,6 +61,18 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'businessEmail',
     accessorKey: 'businessEmailAddress',
+  },
+  {
+    header: 'vendorAddress',
+    accessorKey: 'streetAddress',
+  },
+  {
+    header: 'vendorCity',
+    accessorKey: 'city',
+  },
+  {
+    header: 'vendorZipCode',
+    accessorKey: 'zipCode',
   },
   {
     header: 'name',
