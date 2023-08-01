@@ -23,8 +23,8 @@ import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { useAuth } from 'utils/auth-context'
 import { dateFormat } from 'utils/date-time-utils'
-
-import { useClientTypeEditMutation, useClientTypeMutation } from 'api/client-type'
+import { ConfirmationBox } from 'components/Confirmation'
+import { useClientTypeEditMutation, useClientTypeMutation, useClientTypeDelMutation } from 'api/client-type'
 import { PROJECT_TYPE } from 'features/project-type/project-type.i18n'
 
 const ReadonlyFileStructure: React.FC<{ label: string; value: string; icons: React.ElementType; testid: string }> = ({
@@ -62,16 +62,21 @@ export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close
   const { register, handleSubmit, setValue, watch, reset } = useForm()
   const { mutate: clientTypePayload, isLoading: loadingNewClient } = useClientTypeMutation()
   const { mutate: clientTypeEditPayload, isLoading: loadingEditClient } = useClientTypeEditMutation()
-
+  const { mutate: delClientType, isLoading: loadingDel } = useClientTypeDelMutation()
   const { data } = useAuth()
   const typeFieldWatch = watch('type')
   const Loading = loadingEditClient || loadingNewClient
-  const { onClose: onCloseDisclosure } = useDisclosure()
+  const { isOpen: isOpenClientType, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
     close()
   }, [close, onCloseDisclosure])
+
+  const deleteClientType = () => {
+    delClientType(clientTypeDetails, { onSuccess: () => onClose() })
+  }
 
   const onSubmit = value => {
     if (clientTypeDetails) {
@@ -172,22 +177,20 @@ export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close
             </Box>
           </ModalBody>
           <ModalFooter borderTop="1px solid #E2E8F0" mt="40px">
-          <HStack w="100%" justifyContent="start">
-            <Button
+            <HStack w="100%" justifyContent="start">
+              <Button
                 variant="outline"
                 colorScheme="brand"
                 mr={3}
                 onClick={() => {
-                  onClose()
-                  reset()
+               onOpen()
                 }}
                 data-testid="cancelModal"
               >
                 {t(`${PROJECT_TYPE}.delete`)}
               </Button>
-              </HStack>
+            </HStack>
             <HStack w="100%" justifyContent="end">
-           
               <Button
                 variant="outline"
                 colorScheme="brand"
@@ -211,6 +214,14 @@ export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close
             </HStack>
           </ModalFooter>
         </form>
+        <ConfirmationBox
+          title="Client Type"
+          content={t(`${PROJECT_TYPE}.delConfirmTextClient`)}
+          isOpen={isOpenClientType}
+          onClose={onCloseDisclosure}
+          isLoading={loadingDel}
+          onConfirm={deleteClientType}
+        />
       </ModalContent>
     </Modal>
   )
