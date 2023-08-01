@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { PROJECT_AWARD } from './projectAward.i18n'
 import { currencyFormatter } from 'utils/string-formatters'
-// import { ProjectAwardCard, TextCard } from './project-award-card'
+import { useWorkOrderAwardStats } from 'api/transactions'
 
 export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
@@ -17,14 +17,38 @@ export const ProjectAwardTab: React.FC<any> = props => {
   const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   const [selectedCard, setSelectedCard] = useState(null)
   const [selectedCardValues, setSelectedCardValues] = useState<any>(null)
+  const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId)
 
   useEffect(() => {
-    setSelectedCardValues(projectAwardData.find((card: any) => card.id === selectedCard) || null)
+    setSelectedCardValues(projectAwardData?.find((card: any) => card.id === selectedCard) || null)
   }, [selectedCard, projectAwardData])
   interface FormValues {
     id?: number
   }
+
   const { t } = useTranslation()
+  // get drawremaining value..
+  const drawRemaining = awardPlansStats?.map(item => {
+    if (item.workOrderId === props.workOrder.id) {
+      return item.drawRemaining
+    }
+    return null
+  })
+  // get materialRemaining value..
+  const materialRemaining = awardPlansStats?.map(item => {
+    if (item.workOrderId === props.workOrder.id) {
+      return item.materialRemaining
+    }
+    return null
+  })
+  // get totalAmountRemaining value..
+  const totalAmountRemaining = awardPlansStats?.map(item => {
+    if (item.workOrderId === props.workOrder.id) {
+      return item.totalAmountRemaining
+    }
+    return null
+  })
+
   useEffect(() => {
     if (props?.workOrder?.awardPlanId !== null) {
       setSelectedCard(props.workOrder.awardPlanId)
@@ -37,17 +61,6 @@ export const ProjectAwardTab: React.FC<any> = props => {
     if (selectedCard) {
       props?.onSave(parseProjectAwardValuesToPayload(selectedCard, projectAwardData))
     }
-  }
-
-  const calNteMax = p => {
-    const percentage = calculatePercentage(p)
-    const nteFiftyPercentage = (percentage / 100) * 50
-    const nteSeventyPercentage = (percentage / 100) * 70
-    const nteNintyPercentage = (percentage / 100) * 90
-    if (selectedCardValues?.drawLimit === 1) return nteFiftyPercentage
-    if (selectedCardValues?.drawLimit === 2) return nteSeventyPercentage
-    if (selectedCardValues?.drawLimit === 4) return nteNintyPercentage
-    return 0
   }
   const calculatePercentage = per => {
     const percentage = (awardPlanScopeAmount / 100) * per
@@ -105,7 +118,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
             >
               {t(`${PROJECT_AWARD}.materialDraws`)}
               <Text fontWeight="600" fontSize="16px" color="brand.300">
-                {selectedCardValues?.materialLimit}
+                {materialRemaining}
               </Text>
             </Box>
             <Box
@@ -123,7 +136,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
             >
               {t(`${PROJECT_AWARD}.laborDraws`)}
               <Text fontWeight="600" fontSize="16px" color="brand.300">
-                {selectedCardValues?.drawLimit}
+                {drawRemaining}
               </Text>
             </Box>
             <Box
@@ -142,7 +155,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
             >
               {t(`${PROJECT_AWARD}.NTEmax`)}
               <Text w={'100%'} fontWeight="600" fontSize="16px" color="brand.300">
-                {selectedCardValues ? currencyFormatter(calNteMax(selectedCardValues?.factoringFee)) : ''}
+                {totalAmountRemaining}
               </Text>
             </Box>
           </Box>
