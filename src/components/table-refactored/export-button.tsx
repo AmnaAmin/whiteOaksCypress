@@ -7,6 +7,7 @@ import { BiExport } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from 'react-query'
 import { useSaveToExcel } from './util'
+import { useTableInstance } from './table-context'
 
 type ExportButtonProps = ButtonProps & {
   columns: ColumnDef<any>[]
@@ -31,9 +32,14 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 }) => {
   const { t } = useTranslation()
   const exportToExcel = useSaveToExcel()
+  const tableInstance = useTableInstance();
 
   const handleExport = () => {
-    if (fetchedData) {
+    const filteredData = tableInstance?.getFilteredRowModel();
+    if (filteredData) {
+      exportToExcel(filteredData?.rows.map(row => row?.original), fileName);
+    }
+    else if (fetchedData) {
       exportToExcel(fetchedData, fileName)
     } else {
       refetch?.()?.then(({ data }) => {
