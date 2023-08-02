@@ -307,6 +307,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     (!isEditUser && !formValues?.newPassword) ||
     !formValues?.accountType ||
     !formValues?.streetAddress ||
+    !formValues?.city ||
+    !formValues?.zipCode ||
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
     (isVendor && !formValues.vendorId) ||
