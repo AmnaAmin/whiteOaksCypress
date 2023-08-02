@@ -174,7 +174,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: `${TRANSACTION}.submit`,
     accessorKey: 'modifiedDate',
     accessorFn: cellInfo => {
-      return datePickerFormat(cellInfo.modifiedDate)
+      return dateFormat(cellInfo.modifiedDate)
     },
     cell: (row: any) => {
       const value = row?.row.original?.modifiedDate
