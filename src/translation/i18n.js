@@ -136,7 +136,7 @@ i18n.use(initReactI18next).init({
 
         // Payable
         propertyAddress: 'Property Address',
-        vendorAddress: 'Vendor Address',
+        vendorAddress: 'Street Address',
         wOCompletedDate: 'WO Completed Date',
         wOIssueDate: 'WO Issue Date',
         id: 'ID',
@@ -382,7 +382,7 @@ i18n.use(initReactI18next).init({
         businessEmail: 'Business Email',
         secondaryEmail: 'Secondary Email',
         coiglExpirationDate: 'COI-GL Expiration Date',
-        vendorCity: 'Vendor City',
+        vendorCity: 'City',
         vendorZipCode: 'Zip Code',
 
         constructionTrade: 'Skill',
