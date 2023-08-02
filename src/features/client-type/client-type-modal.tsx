@@ -20,7 +20,7 @@ import {
 import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiCalendar, BiDetail } from 'react-icons/bi'
+import { BiCalendar, BiDetail, BiTrash } from 'react-icons/bi'
 import { useAuth } from 'utils/auth-context'
 import { dateFormat } from 'utils/date-time-utils'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -181,13 +181,14 @@ export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close
               <Button
                 variant="outline"
                 colorScheme="brand"
+                leftIcon={<BiTrash />}
                 mr={3}
                 onClick={() => {
                onOpen()
                 }}
-                data-testid="cancelModal"
+                data-testid="deleteModal"
               >
-                {t(`${PROJECT_TYPE}.delete`)}
+                {t(`${PROJECT_TYPE}.deleteType`)}
               </Button>
             </HStack>
             <HStack w="100%" justifyContent="end">
