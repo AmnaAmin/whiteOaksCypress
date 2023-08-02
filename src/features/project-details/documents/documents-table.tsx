@@ -111,7 +111,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
                     refetch={refetchColumns}
                     disabled={isLoading}
                     onSave={onSave}
-                    columns={settingColumns}
+                    columns={settingColumns?.filter(t => !!t.contentKey)}
                   />
                 )}
               </ButtonsWrapper>
