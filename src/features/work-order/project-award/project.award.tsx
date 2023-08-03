@@ -43,12 +43,8 @@ export const ProjectAwardTab: React.FC<any> = props => {
     return null; 
   });
   // get totalAmountRemaining value..
-  const totalAmountRemaining = awardPlansStats?.map((item) => {
-    if (item.workOrderId === props.workOrder.id) {
-      return item.totalAmountRemaining;
-    }
-    return null; 
-  });
+  const totalAmountRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id)?.totalAmountRemaining;
+ 
 
   useEffect(() => {
     if (props?.workOrder?.awardPlanId !== null) {
@@ -158,7 +154,9 @@ export const ProjectAwardTab: React.FC<any> = props => {
             >
               {t(`${PROJECT_AWARD}.NTEmax`)}
               <Text w={'100%'} fontWeight="600" fontSize="16px" color="brand.300">
-                {totalAmountRemaining}
+              <Text w={'100%'} fontWeight="600" fontSize="16px" color="brand.300">
+                {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : ''}
+                </Text>
               </Text>
             </Box>
           </Box>
