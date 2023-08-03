@@ -219,7 +219,7 @@ export const ManageProject: React.FC<{
                         // options={projectTypeSelectOptions}
                         options={clientTypesSelectOptions}
                         selected={value}
-                        selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
+                        selectProps={{ isBorderLeft: true, menuHeight: '125px' }}
                         onChange={option => onChange(option)}
                       />
                     </div>
