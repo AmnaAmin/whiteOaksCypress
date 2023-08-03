@@ -53,6 +53,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
             <Button
               variant="outline"
               colorScheme="brand"
+              data-testid="add-carrier"
               onClick={() => {
                 append({
                   name: '',
@@ -63,7 +64,8 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
               mb={'10px'}
               leftIcon={<BiPlus />}
             >
-              {t(`${CLIENTS}.addCarrier`)}
+              {t(`${CLIENTS}.addCarrier`)} 
+              
             </Button>
           )}
         </>
@@ -86,6 +88,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
                   </FormLabel>
                   <Input
                     id="carrier"
+                    data-testid="carrier-name"
                     {...register(`carrier.${index}.name`, { required: 'This is required' })}
                     variant={'required-field'}
                     type="text"
@@ -115,6 +118,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
                             id="phoneNumber"
                             customInput={Input}
                             value={field.value}
+                            data-testid="carrier-phoneNumber"
                             onChange={e => field.onChange(e)}
                             format="(###)-###-####"
                             mask="_"
@@ -142,6 +146,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
                   </FormLabel>
                   <Input
                     id="emailAddress"
+                    data-testid="carrier-emailAddress"
                     {...register(`carrier.${index}.emailAddress`, {
                       required: 'This is required',
                       pattern: {
