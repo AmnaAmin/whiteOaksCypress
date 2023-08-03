@@ -16,7 +16,8 @@ type ExportButtonProps = ButtonProps & {
   refetch?: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
   ) => Promise<QueryObserverResult<any[], unknown>>
-  fileName?: string
+  fileName?: string;
+  downloadFromTable?: boolean;
 }
 
 /*
@@ -28,6 +29,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   refetch,
   fetchedData,
   isLoading,
+  downloadFromTable=false,
   ...rest
 }) => {
   const { t } = useTranslation()
@@ -36,7 +38,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 
   const handleExport = () => {
     const filteredData = tableInstance?.getFilteredRowModel();
-    if (filteredData) {
+    if (filteredData && downloadFromTable) {
       exportToExcel(filteredData?.rows.map(row => row?.original), fileName);
     }
     else if (fetchedData) {

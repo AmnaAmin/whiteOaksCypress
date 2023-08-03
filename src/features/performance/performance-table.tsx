@@ -163,6 +163,7 @@ export const PerformanceTable = React.forwardRef((props: any, ref) => {
                 fileName="performance"
                 isLoading={isPerformanceTableLoading}
                 fetchedData={performance}
+                downloadFromTable={true}
               />
             </Box>
           </TableFooter>
