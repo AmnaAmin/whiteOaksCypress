@@ -487,6 +487,15 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
             PROJECT_STATUS.disputed,
           ]
         }
+        // Last Project Status -> Reconcile
+        else if (previousProjectStatus === Number(PROJECT_STATUS.reconcile.value)) {
+          overrideProjectStatusOptions = [
+            selectOption,
+            PROJECT_STATUS.new, 
+            PROJECT_STATUS.active, 
+            PROJECT_STATUS.punch
+          ]
+        }
       }
     }
     return overrideProjectStatusOptions
@@ -718,10 +727,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     ...projectPayload,
     // Project Management payload
     projectStatusId: formValues?.status?.value || null,
-    previousStatus:
-      formValues?.status?.value === 220 && formValues?.previousStatus === 220
-        ? project?.previousStatus
-        : formValues?.previousStatus,
+    previousStatus: project?.projectStatusId,
     projectType: formValues?.type?.value ?? null,
     woNumber: formValues.woNumber,
     poNumber: formValues.poNumber,
