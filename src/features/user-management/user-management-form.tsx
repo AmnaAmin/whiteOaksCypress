@@ -422,29 +422,23 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     )
   }, [watchMultiMarkets, showMarkets])
 
-
-  
-  const accountTypeSelectOptions = useMemo( () => {
+  const accountTypeSelectOptions = useMemo(() => {
     const options = cloneDeep(accountTypeOptions)
     options.splice(
       accountTypeOptions.indexOf(accountTypeOptions.find(a => a.value === 5)),
       0,
-     ...fpmManagerRoleOptions
-          ?.filter(
-            role =>
-              ![
-                UserTypes.directorOfConstruction,
-                UserTypes.operations,
-                UserTypes.regularManager,
-              ].includes(role?.value),
-          )
-          .map(option => {
-            option.subItem = true
-            return option
-          }),
+      ...fpmManagerRoleOptions
+        ?.filter(
+          role =>
+            ![UserTypes.directorOfConstruction, UserTypes.operations, UserTypes.regularManager].includes(role?.value),
+        )
+        .map(option => {
+          option.subItem = true
+          return option
+        }),
     )
-    return options;
-  }, [accountTypeOptions] ); 
+    return options
+  }, [accountTypeOptions])
 
   return (
     <form
@@ -518,7 +512,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.accountType`)}
           </FormLabel>
-          
+
           <Controller
             control={control}
             name="accountType"
@@ -947,6 +941,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <HStack mt="30px" w="300px">
                 <FormControl>
                   <Checkbox
+                    isChecked={formValues?.vendorAdmin}
                     {...register('vendorAdmin', {
                       onChange: e => {
                         if (!e.target.checked) setValue('primaryAdmin', false)
