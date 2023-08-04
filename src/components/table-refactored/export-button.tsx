@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from 'react-query'
 import { useSaveToExcel } from './util'
 import { useTableInstance } from './table-context'
-import { dataURLtoFile } from 'components/table/util'
 
 type ExportButtonProps = ButtonProps & {
   columns: ColumnDef<any>[]
