@@ -136,7 +136,7 @@ i18n.use(initReactI18next).init({
 
         // Payable
         propertyAddress: 'Property Address',
-        vendorAddress: 'Vendor Address',
+        vendorAddress: 'Street Address',
         wOCompletedDate: 'WO Completed Date',
         wOIssueDate: 'WO Issue Date',
         id: 'ID',
@@ -382,10 +382,10 @@ i18n.use(initReactI18next).init({
         businessEmail: 'Business Email',
         secondaryEmail: 'Secondary Email',
         coiglExpirationDate: 'COI-GL Expiration Date',
-        vendorCity: 'Vendor City',
+        vendorCity: 'City',
         vendorZipCode: 'Zip Code',
 
-        constructionTrade: 'Construction Trade',
+        constructionTrade: 'Skill',
         totalCapacity: 'Total Capacity',
         activeDate: 'Active Date',
         statusLabel: 'Status',
@@ -1002,7 +1002,7 @@ i18n.use(initReactI18next).init({
         coiglExpirationDate: 'Fecha de vencimiento de COI-GL',
         vendorCity: 'Ciudad del proveedor',
         vendorZipCode: 'Código postal',
-        constructionTrade: 'Construcción Comercio',
+        constructionTrade: 'Habilidad',
         totalCapacity: 'Capacidad total',
         activeDate: 'Fecha Activa',
         statusLabel: 'Estado',

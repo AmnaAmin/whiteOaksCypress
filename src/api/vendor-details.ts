@@ -751,7 +751,7 @@ export const useSaveLanguage = () => {
 export const useVendorNext = ({ control, documents }: { control: any; documents?: any }) => {
   const [...detailfields] = useWatch({
     control,
-    name: ['city', 'companyName', 'state', 'streetAddress', 'zipCode'],
+    name: ['city', 'companyName', 'state', 'streetAddress', 'zipCode','businessEmailAddress', 'ownerName', 'capacity'],
   })
 
   const businessPhoneNumber = useWatch({ name: 'businessPhoneNumber', control })
