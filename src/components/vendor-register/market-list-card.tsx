@@ -27,7 +27,7 @@ export const MarketForm = ({ onClose, isActive, markets }: marketFormProps) => {
   return (
     <>
       <Box h="584px" overflow="auto">
-        <Flex maxW="800px" wrap="wrap" gridGap={3}>
+        <Flex maxW="800px" wrap="wrap" gridGap={3} position={'relative'}>
           {tradeCheckboxes?.map((checkbox, index) => {
             return (
               <Controller
