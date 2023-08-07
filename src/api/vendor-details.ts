@@ -25,7 +25,6 @@ import {
 import { usePaginationQuery } from 'api'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { t } from 'i18next'
-import { format } from 'date-fns'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
