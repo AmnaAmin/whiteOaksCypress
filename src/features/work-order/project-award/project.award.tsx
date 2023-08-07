@@ -79,7 +79,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
           >
             <Box
               flex={{ base: '1', md: '2' }}
-              h="auto"
+              h="60px"
               bg="gray.50"
               fontSize="14px"
               fontWeight="400"
@@ -99,7 +99,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
             </Box>
             <Box
               flex="1"
-              h="auto"
+              h="59px"
               bg="gray.50"
               fontSize="14px"
               fontWeight="400"
@@ -117,7 +117,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
             </Box>
             <Box
               flex="1"
-              h="auto"
+              h="59px"
               bg="gray.50"
               fontSize="14px"
               fontWeight="400"
@@ -135,7 +135,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
             </Box>
             <Box
               flex="1"
-              h="auto" 
+              h="59px" 
               borderTopRightRadius={{ base: '6px', md: '6px' }}
               fontSize="14px"
               fontWeight="400"
