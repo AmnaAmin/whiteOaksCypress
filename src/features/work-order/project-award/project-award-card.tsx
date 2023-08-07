@@ -70,7 +70,6 @@ export const ProjectAwardCard = ({
   id,
   awardPlanScopeAmount,
   isUpgradeProjectAward,
-  onClick, 
 }) => {
   const [checkIcon, setCheckIcon] = useState(false)
   const { t } = useTranslation()
@@ -121,7 +120,6 @@ export const ProjectAwardCard = ({
       onSelectedCard(null)
     }
     // onSelectedCard(selectedCard.id !== id && id)
-    onClick(cardsvalues)
   }
   const idChecker = selectedCard === id
 
