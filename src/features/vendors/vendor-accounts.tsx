@@ -105,13 +105,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Controller
                 control={control}
                 name="einNumber"
-                rules={{
-                  required: ssnNumber ? '' : isActive && 'This is required',
-                  pattern: {
-                    value: /^$|^\d{9}$/,
-                    message: 'Invalid EIN number format',
-                  },
-                }}
+                rules={{ required: ssnNumber ? '' : isActive && 'This is required' }}
                 render={({ field, fieldState }) => {
                   return (
                     <>
@@ -140,13 +134,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Controller
                 control={control}
                 name="ssnNumber"
-                rules={{
-                  required: einNumber ? '' : isActive && 'This is required',
-                  pattern: {
-                    value: /^$|^\d{9}$/,
-                    message: 'Invalid SSN number format',
-                  },
-                }}
+                rules={{ required: einNumber ? '' : isActive && 'This is required' }}
                 render={({ field, fieldState }) => {
                   return (
                     <>
