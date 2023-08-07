@@ -350,7 +350,7 @@ const WorkOrderDetailTab = props => {
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
+        <ModalBody h='600px' overflow={'auto'}>
           <Stack spacing="32px" m="25px">
             <Box>
               {[STATUS.Rejected].includes(workOrderDetails?.statusLabel?.toLocaleLowerCase()) && (
@@ -465,7 +465,7 @@ const WorkOrderDetailTab = props => {
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
-            <SimpleGrid columns={7} gap={1}>
+            <SimpleGrid columns={5} gap={4}>
               <CalenderCard
                 testId={'woIssued'}
                 title={t(`${WORK_ORDER}.woIssued`)}

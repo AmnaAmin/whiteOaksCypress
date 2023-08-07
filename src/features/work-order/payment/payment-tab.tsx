@@ -150,7 +150,7 @@ const PaymentInfoTab = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody ml={30} h={'calc(100vh - 300px)'} overflow={'auto'}>
+        <ModalBody ml={30} h='600px' overflow={'auto'}>
           <SimpleGrid
             columns={5}
             spacing={8}

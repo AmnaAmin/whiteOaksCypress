@@ -63,7 +63,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <ModalBody h={'calc(100vh - 300px)'} p="25px" overflow={'auto'}>
+        <ModalBody h="600px" p="25px" overflow={'auto'}>
           <Box
             display={{ base: 'block', md: 'flex' }}
             flexDirection={{ base: 'column', md: 'row' }}

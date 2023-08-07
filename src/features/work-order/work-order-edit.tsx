@@ -164,7 +164,7 @@ const WorkOrderDetails = ({
       <ModalOverlay />
       {workOrder && (
         <>
-          <ModalContent bg="#F2F3F4">
+          <ModalContent bg="#F2F3F4" maxW="1100px"  maxH="900px">
             <ModalHeader bg="white">
               <HStack spacing={4}>
                 <HStack fontSize="16px" fontWeight={500}>
@@ -194,7 +194,7 @@ const WorkOrderDetails = ({
             )}
             <Divider mb={3} />
             <Stack>
-              <Tabs
+              <Tabs 
                 variant="enclosed"
                 colorScheme="brand"
                 size="md"
