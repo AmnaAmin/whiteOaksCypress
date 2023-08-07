@@ -240,7 +240,7 @@ export const parseAccountsFormDataToAPIData = async (
     bankChecking: formValues?.bankChecking,
     bankSaving: formValues?.bankSaving,
     bankVoidedCheckDate: formValues?.bankVoidedCheckDate,
-    bankVoidedCheckStatus: formValues?.bankVoidedCheckStatus ? 'VERIFIED' :  null,
+    bankVoidedCheckStatus: formValues?.bankVoidedCheckStatus ? 'VERIFIED' : null,
     bankDateSignature: dateISOFormatWithZeroTime(formValues?.bankDateSignature),
     bankRoutingNo: formValues?.bankRoutingNo,
     bankAccountingNo: formValues?.bankAccountingNo,
@@ -751,7 +751,7 @@ export const useSaveLanguage = () => {
 export const useVendorNext = ({ control, documents }: { control: any; documents?: any }) => {
   const [...detailfields] = useWatch({
     control,
-    name: ['city', 'companyName', 'state', 'streetAddress', 'zipCode','businessEmailAddress', 'ownerName', 'capacity'],
+    name: ['city', 'companyName', 'state', 'streetAddress', 'zipCode', 'businessEmailAddress', 'ownerName', 'capacity'],
   })
 
   const businessPhoneNumber = useWatch({ name: 'businessPhoneNumber', control })
@@ -844,7 +844,7 @@ export const createACHForm = (form, values, signatureDimention, signature) => {
   const heading = 'Vendor ACH Form'
   const vendorDetailsHeading = 'Vendor Automated Request Form'
   const bankInformationHeading = 'Bank Information'
-  const disclaimer = 'Please attach copy of VOIDED CHECK with company information'
+  const disclaimer = 'Please attach copy of VOIDED CHECK with company information.'
   const note1 = 'Signature above authorizes White Oaks Aligned, LLC to make direct deposit payments'
   const note2 = 'into the account listed above.'
   const footer = '4 14th Street * Suite 601 * Hoboken, NJ 07030 *** 128 E. Hargett St * Suite 204 * Raleigh, NC 27601'
@@ -852,43 +852,25 @@ export const createACHForm = (form, values, signatureDimention, signature) => {
   const centerX1 = (form.internal.pageSize.getWidth() - form.getTextWidth(vendorDetailsHeading)) / 2
   const centerX2 = (form.internal.pageSize.getWidth() - form.getTextWidth(bankInformationHeading)) / 2
 
-  const VendorInfo = [
-    { label: 'Company Name:', value: values?.companyName ?? '' },
-    { label: 'Primary Contact:', value: values?.primaryContact ?? '' },
-    { label: `Owner's Name:`, value: values?.ownerName ?? '' },
-    {
-      label: 'Address:',
-      value:
-        (values?.streetAddress ?? '') +
-        ' ' +
-        (values?.city ?? '') +
-        ' ' +
-        (values?.state ?? '') +
-        ' , ' +
-        (values?.zipCode ?? ''),
-    },
-    { label: 'Telephone:', value: values?.businessPhoneNumber ?? '' },
-    { label: 'Email Address:', value: values?.businessEmailAddress ?? '' },
-  ]
-  const BankInfo = [
-    { label: 'Bank Name:', value: values?.bankName ?? '' },
-    { label: 'Primary Contact:', value: values?.bankPrimaryContact ?? '' },
-    {
-      label: `Address:`,
-      value: values?.bankAddress + ' ' + values?.bankCity + ' ' + values?.bankState + ' , ' + values?.bankZipCode,
-    },
-    { label: 'Telephone:', value: values?.bankPhoneNumber ?? '' },
-    { label: 'Email Address:', value: values?.bankEmail ?? '' },
-    { label: 'Routing Number:', value: values?.bankRoutingNo ?? '' },
-    { label: 'Account Number:', value: values?.bankAccountacingNo ?? '' },
-    {
-      label: 'Account Type:',
-      value:
-        (values?.bankSaving ? 'Saving' : '') +
-        (values?.bankSaving && values?.bankChecking ? ',' : '') +
-        (values?.bankChecking ? 'Checking' : ''),
-    },
-  ]
+  const wrapText = (text: string, maxWidth: number): string[] => {
+    const words: string[] = text.split(' ')
+    const lines: string[] = []
+    let currentLine: string = words[0]
+
+    for (let i = 1; i < words.length; i++) {
+      const testLine: string = currentLine + ' ' + words[i]
+      const width: number = form.getTextWidth(testLine)
+      if (width <= maxWidth) {
+        currentLine = testLine
+      } else {
+        lines.push(currentLine)
+        currentLine = words[i]
+      }
+    }
+    lines.push(currentLine)
+    return lines
+  }
+
   var img = new Image()
   img.src = 'wo-logo-tree.png'
   img.onload = function () {
@@ -903,10 +885,41 @@ export const createACHForm = (form, values, signatureDimention, signature) => {
     form.setFontSize(12)
     form.setFont(basicFont, 'normal')
     var vendorInfoYStart = 65
+    const lineHeight = 8
+
+    const VendorInfo = [
+      { label: 'Company Name:', value: values?.companyName ?? '' },
+      { label: 'Primary Contact:', value: values?.primaryContact ?? '' },
+      { label: `Owner's Name:`, value: values?.ownerName ?? '' },
+      {
+        label: 'Address:',
+        value:
+          (values?.streetAddress ?? '') +
+          ' ' +
+          (values?.city ?? '') +
+          ' ' +
+          (values?.state ?? '') +
+          ' , ' +
+          (values?.zipCode ?? ''),
+      },
+      { label: 'Telephone:', value: values?.businessPhoneNumber ?? '' },
+      { label: 'Email Address:', value: values?.businessEmailAddress ?? '' },
+    ]
+
     VendorInfo.forEach(info => {
-      form.text(info.label, startx, vendorInfoYStart + 5)
-      form.text(info.value, startx + 45, vendorInfoYStart + 5)
-      vendorInfoYStart = vendorInfoYStart + 8
+      const labelLines = wrapText(info.label, 40)
+      const valueLines = wrapText(info.value, 100)
+
+      for (let i = 0; i < Math.max(labelLines.length, valueLines.length); i++) {
+        if (i < labelLines.length) {
+          form.text(labelLines[i], startx, vendorInfoYStart + i * lineHeight)
+        }
+        if (i < valueLines.length) {
+          form.text(valueLines[i], startx + 45, vendorInfoYStart + i * lineHeight)
+        }
+      }
+
+      vendorInfoYStart += Math.max(labelLines.length, valueLines.length) * lineHeight
     })
     form.setFont(basicFont, 'bold')
     form.setFontSize(16)
@@ -914,19 +927,52 @@ export const createACHForm = (form, values, signatureDimention, signature) => {
     form.setFontSize(12)
     form.setFont(basicFont, 'normal')
     var bankInfoYStart = vendorInfoYStart + 20
+
+    const BankInfo = [
+      { label: 'Bank Name:', value: values?.bankName ?? '' },
+      { label: 'Bank Primary Contact:', value: values?.bankPrimaryContact ?? '' },
+      {
+        label: `Address:`,
+        value: values?.bankAddress + ' ' + values?.bankCity + ' ' + values?.bankState + ' , ' + values?.bankZipCode,
+      },
+      { label: 'Telephone:', value: values?.bankPhoneNumber ?? '' },
+      { label: 'Email Address:', value: values?.bankEmail ?? '' },
+      { label: 'Routing Number:', value: values?.bankRoutingNo ?? '' },
+      { label: 'Account Number:', value: values?.bankAccountingNo ?? '' },
+      {
+        label: 'Account Type:',
+        value:
+          (values?.bankChecking ? 'Checking' : '') +
+          (values?.bankChecking && values?.bankSaving ? ',' : '') +
+          (values?.bankSaving ? 'Saving' : ''),
+      },
+    ]
+
     BankInfo.forEach(info => {
       if (info.label === 'Account Number:') {
-        vendorInfoYStart = vendorInfoYStart + 8
-        return
+        vendorInfoYStart = vendorInfoYStart + 8;
+        return;
       }
-      form.text(info.label, startx, bankInfoYStart + 5)
-      form.text(info.value, startx + 45, bankInfoYStart + 5)
+    
+      form.text(info.label, startx, bankInfoYStart + 5);
+    
+      if (info.label === 'Bank Primary Contact:' || info.label === 'Address:') {
+        const textLines = wrapText(info.value, 100); 
+        for (let i = 0; i < textLines.length; i++) {
+          form.text(textLines[i], startx + 45, bankInfoYStart + 5 + i * lineHeight);
+        }
+      } else {
+        form.text(info.value, startx + 45, bankInfoYStart + 5);
+      }
+    
       if (info.label === 'Routing Number:') {
-        form.text('Account Number:', startx + 100, bankInfoYStart + 5)
-        form.text(values?.bankAccountingNo ?? '', startx + 135, bankInfoYStart + 5)
+        form.text('Account Number:', startx + 100, bankInfoYStart + 5);
+        form.text(values?.bankAccountingNo ?? '', startx + 135, bankInfoYStart + 5);
       }
-      bankInfoYStart = bankInfoYStart + 8
-    })
+    
+      bankInfoYStart = bankInfoYStart + (info.label === 'Bank Primary Contact:' || info.label === 'Address:' ? (lineHeight * Math.max(1, wrapText(info.value, 100).length)) : 8);
+    });
+    
     var signatureYStart = bankInfoYStart + 15
     form.setFillColor(253, 255, 50)
     form.rect(startx + 14, signatureYStart - 5, 125, 8, 'F')
@@ -950,6 +996,7 @@ export const createACHForm = (form, values, signatureDimention, signature) => {
       startx + 120,
       signatureYStart + 15,
     )
+
     form.text(note1, startx, signatureYStart + 30)
     form.text(note2, startx, signatureYStart + 35)
     form.setTextColor(211, 211, 211)
@@ -957,6 +1004,5 @@ export const createACHForm = (form, values, signatureDimention, signature) => {
     form.text(footer, startx + 15, signatureYStart + 75)
 
     form.save('Vendor ACH Form')
-    return format
   }
 }
