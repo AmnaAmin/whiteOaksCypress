@@ -65,27 +65,28 @@ export const ProjectAwardTab: React.FC<any> = props => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <ModalBody h={'calc(100vh - 300px)'} p="25px" overflow={'auto'}>
           <Box
-            display="flex"
-            flexDirection="row"
+            display={{ base: 'block', md: 'flex' }}
+            flexDirection={{ base: 'column', md: 'row' }}
             alignItems="center"
             justifyContent="center"
             borderRadius="6px"
-            height="60px"
-            width="100%"
+            height="auto"
+            width="1000px"
             border="1px solid #CBD5E0"
             marginBottom="20px"
             marginTop="-9px"
+            padding={{ base: '100px 0', md: '0px 0px' }}
           >
             <Box
-              flex="2"
-              h="58px"
+              flex={{ base: '1', md: '2' }}
+              h="auto"
               bg="gray.50"
               fontSize="14px"
               fontWeight="400"
               textColor="gray.600"
               borderTopLeftRadius="6px"
-              borderBottomLeftRadius="6px"
-              borderRight="1px solid #CBD5E0"
+              borderBottomLeftRadius={{ base: '6px', md: '6px' }}
+              borderRight={{ base: 'none', md: '1px solid #CBD5E0' }}
               textAlign="center"
               display="flex"
               flexDirection="column"
@@ -98,44 +99,44 @@ export const ProjectAwardTab: React.FC<any> = props => {
             </Box>
             <Box
               flex="1"
-              h="58px"
+              h="auto"
               bg="gray.50"
               fontSize="14px"
               fontWeight="400"
               textColor="gray.600"
-              borderRight="1px solid #CBD5E0"
+              borderRight={{ base: 'none', md: '1px solid #CBD5E0' }}
               textAlign="center"
               display="flex"
               flexDirection="column"
               justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.materialDraws`)}
-              <Text fontWeight="600" fontSize="16px" color="brand.300">
+              <Text fontWeight="600" fontSize="16px" color={materialRemaining && materialRemaining.includes(0) ? 'red.500' : 'brand.300'}>
                 {materialRemaining}
               </Text>
             </Box>
             <Box
               flex="1"
-              h="58px"
+              h="auto"
               bg="gray.50"
               fontSize="14px"
               fontWeight="400"
               textColor="gray.600"
-              borderRight="1px solid #CBD5E0"
+              borderRight={{ base: 'none', md: '1px solid #CBD5E0' }}
               textAlign="center"
               display="flex"
               flexDirection="column"
               justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.laborDraws`)}
-              <Text fontWeight="600" fontSize="16px" color="brand.300">
+              <Text fontWeight="600" fontSize="16px" color={drawRemaining && drawRemaining.includes(0) ? 'red.500' : 'brand.300'}>
                 {drawRemaining}
               </Text>
             </Box>
             <Box
               flex="1"
-              h="58px"
-              borderTopRightRadius="6px"
+              h="auto" 
+              borderTopRightRadius={{ base: '6px', md: '6px' }}
               fontSize="14px"
               fontWeight="400"
               textColor="gray.600"
@@ -147,10 +148,8 @@ export const ProjectAwardTab: React.FC<any> = props => {
               justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.NTEmax`)}
-              <Text w={'100%'} fontWeight="600" fontSize="16px" color="brand.300">
-                <Text w={'100%'} fontWeight="600" fontSize="16px" color="brand.300">
-                  {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : ''}
-                </Text>
+              <Text fontWeight="600" fontSize="16px"  color={totalAmountRemaining === 0 ? 'red.500' : 'brand.300'}>
+                {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : ''}
               </Text>
             </Box>
           </Box>
