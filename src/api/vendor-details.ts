@@ -950,29 +950,33 @@ export const createACHForm = (form, values, signatureDimention, signature) => {
 
     BankInfo.forEach(info => {
       if (info.label === 'Account Number:') {
-        vendorInfoYStart = vendorInfoYStart + 8;
-        return;
+        vendorInfoYStart = vendorInfoYStart + 8
+        return
       }
-    
-      form.text(info.label, startx, bankInfoYStart + 5);
-    
+
+      form.text(info.label, startx, bankInfoYStart + 5)
+
       if (info.label === 'Bank Primary Contact:' || info.label === 'Address:') {
-        const textLines = wrapText(info.value, 100); 
+        const textLines = wrapText(info.value, 100)
         for (let i = 0; i < textLines.length; i++) {
-          form.text(textLines[i], startx + 45, bankInfoYStart + 5 + i * lineHeight);
+          form.text(textLines[i], startx + 45, bankInfoYStart + 5 + i * lineHeight)
         }
       } else {
-        form.text(info.value, startx + 45, bankInfoYStart + 5);
+        form.text(info.value, startx + 45, bankInfoYStart + 5)
       }
-    
+
       if (info.label === 'Routing Number:') {
-        form.text('Account Number:', startx + 100, bankInfoYStart + 5);
-        form.text(values?.bankAccountingNo ?? '', startx + 135, bankInfoYStart + 5);
+        form.text('Account Number:', startx + 100, bankInfoYStart + 5)
+        form.text(values?.bankAccountingNo ?? '', startx + 135, bankInfoYStart + 5)
       }
-    
-      bankInfoYStart = bankInfoYStart + (info.label === 'Bank Primary Contact:' || info.label === 'Address:' ? (lineHeight * Math.max(1, wrapText(info.value, 100).length)) : 8);
-    });
-    
+
+      bankInfoYStart =
+        bankInfoYStart +
+        (info.label === 'Bank Primary Contact:' || info.label === 'Address:'
+          ? lineHeight * Math.max(1, wrapText(info.value, 100).length)
+          : 8)
+    })
+
     var signatureYStart = bankInfoYStart + 15
     form.setFillColor(253, 255, 50)
     form.rect(startx + 14, signatureYStart - 5, 125, 8, 'F')
