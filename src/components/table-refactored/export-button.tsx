@@ -16,8 +16,9 @@ type ExportButtonProps = ButtonProps & {
   refetch?: <TPageData>(
     options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined,
   ) => Promise<QueryObserverResult<any[], unknown>>
-  fileName?: string;
-  downloadFromTable?: boolean;
+  fileName?: string
+  customExport?: (data) => void
+  downloadFromTable?: boolean
 }
 
 /*
@@ -29,24 +30,26 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   refetch,
   fetchedData,
   isLoading,
-  downloadFromTable=false,
+  customExport,
+  downloadFromTable = false,
   ...rest
 }) => {
   const { t } = useTranslation()
   const exportToExcel = useSaveToExcel()
-  const tableInstance = useTableInstance();
+  const tableInstance = useTableInstance()
 
   const handleExport = () => {
-    const filteredData = tableInstance?.getFilteredRowModel();
+    const filteredData = tableInstance?.getFilteredRowModel()
+    console.log(filteredData)
     if (filteredData && downloadFromTable) {
-      exportToExcel(filteredData?.rows.map(row => row?.original), fileName);
-    }
-    else if (fetchedData) {
-      exportToExcel(fetchedData, fileName)
+      const filtered = filteredData?.rows.map(row => row?.original)
+      customExport ? customExport(filtered) : exportToExcel(filtered, fileName)
+    } else if (fetchedData) {
+      customExport ? customExport(fetchedData) : exportToExcel(fetchedData, fileName)
     } else {
       refetch?.()?.then(({ data }) => {
         if (data) {
-          exportToExcel(data, fileName)
+          customExport ? customExport(data) : exportToExcel(data, fileName)
         } else if (data) {
           console.error('Export button should be inside tableContext.provider tree')
         }
