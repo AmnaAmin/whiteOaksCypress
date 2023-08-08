@@ -22,8 +22,10 @@ export const ProjectAwardTab: React.FC<any> = props => {
   //get originalscopeamount value...
   const factoringFee = projectAwardData?.find(a => a.id === props?.workOrder?.awardPlanId)?.factoringFee
   const { t } = useTranslation()
+  
   // get drawremaining value..
   const drawRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id, )?.drawRemaining
+  
   // get materialRemaining value..
   const materialRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id, )?.materialRemaining
 
@@ -107,7 +109,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               <Text
                 fontWeight="600"
                 fontSize="16px"
-                color={materialRemaining && materialRemaining=== 0 ? 'red.500' : 'brand.300'}
+                color={materialRemaining !==null && materialRemaining=== 0 ? 'red.500' : 'brand.300'}
               >
                 {materialRemaining ? materialRemaining : 0}
               </Text>
@@ -129,7 +131,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               <Text
                 fontWeight="600"
                 fontSize="16px"
-                color={drawRemaining && drawRemaining === 0 ? 'red.500' : 'brand.300'}
+                color={drawRemaining !==null && drawRemaining === 0 ? 'red.500' : 'brand.300'}
               >
                 {drawRemaining ? drawRemaining : 0}
               </Text>
@@ -149,7 +151,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.NTEmax`)}
-              <Text fontWeight="600" fontSize="16px" color={totalAmountRemaining === 0 ? 'red.500' : 'brand.300'}>
+              <Text fontWeight="600" fontSize="16px" color={totalAmountRemaining !==null && totalAmountRemaining=== 0 ? 'red.500' : 'brand.300'}>
                 {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : 0}
               </Text>
             </Box>
