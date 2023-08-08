@@ -16,7 +16,6 @@ export const ProjectAwardTab: React.FC<any> = props => {
   const { isAdmin } = useUserRolesSelector()
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
   const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId)
-console.log('props?.awardPlanScopeAmount', awardPlanScopeAmount)
   interface FormValues {
     id?: number
   }
@@ -26,21 +25,22 @@ console.log('props?.awardPlanScopeAmount', awardPlanScopeAmount)
   // get drawremaining value..
   const drawRemaining = awardPlansStats?.map(item => {
     if (item.workOrderId === props.workOrder.id) {
-      return item.drawRemaining;
+      return item.drawRemaining
     }
-    return null;
+    return null
   })
-  
   // get materialRemaining value..
   const materialRemaining = awardPlansStats?.map(item => {
     if (item.workOrderId === props.workOrder.id) {
-      return item.materialRemaining;
+      return item.materialRemaining
     }
-    return null;
-  });
-  const hasNumber = (x) => x > 0 || x < 0;
-  let _drawRemaining = drawRemaining?.filter(hasNumber).toString();
-  let _materialRemaining = materialRemaining?.filter(hasNumber).toString();
+    return null
+  })
+
+  const hasNumber = x => x > 0 || x < 0
+  let _drawRemaining = drawRemaining?.filter(hasNumber).toString()
+  let _materialRemaining = materialRemaining?.filter(hasNumber).toString()
+
   // get totalAmountRemaining value..
   const totalAmountRemaining = awardPlansStats?.find(
     item => item.workOrderId === props.workOrder.id,
@@ -98,10 +98,10 @@ console.log('props?.awardPlanScopeAmount', awardPlanScopeAmount)
             >
               {t(`${PROJECT_AWARD}.originalscopeamount`)}
               <Text fontWeight="600" fontSize="16px" color="brand.300">
-  {factoringFee !== null && !isNaN(factoringFee)
-    ? currencyFormatter(calculatePercentage(factoringFee)) || '0'
-    : '0'}
-</Text>
+                {factoringFee !== null && !isNaN(factoringFee)
+                  ? currencyFormatter(calculatePercentage(factoringFee)) || '0'
+                  : '0'}
+              </Text>
             </Box>
             <Box
               flex="1"
@@ -122,8 +122,7 @@ console.log('props?.awardPlanScopeAmount', awardPlanScopeAmount)
                 fontSize="16px"
                 color={materialRemaining && materialRemaining.includes(0) ? 'red.500' : 'brand.300'}
               >
-                {_materialRemaining  ?  _materialRemaining : 0}
-                
+                {_materialRemaining ? _materialRemaining : 0}
               </Text>
             </Box>
             <Box
@@ -145,8 +144,7 @@ console.log('props?.awardPlanScopeAmount', awardPlanScopeAmount)
                 fontSize="16px"
                 color={drawRemaining && drawRemaining.includes(0) ? 'red.500' : 'brand.300'}
               >
-
-                {_drawRemaining  ? _drawRemaining :0 }
+                {_drawRemaining ? _drawRemaining : 0}
               </Text>
             </Box>
             <Box
