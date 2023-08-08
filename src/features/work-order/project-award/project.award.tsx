@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormLabel, HStack, ModalBody, ModalFooter } from '@chakra-ui/react'
+import { Box, Button, Checkbox, Flex, FormLabel, HStack, ModalBody, ModalFooter } from '@chakra-ui/react'
 import { parseProjectAwardValuesToPayload } from 'api/work-order'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -10,41 +10,42 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useWorkOrderAwardStats } from 'api/transactions'
 
-
-
 export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
-  const { isUpdating, projectAwardData, isUpgradeProjectAward } = props
+  const { isUpdating, projectAwardData, isUpgradeProjectAward, workOrder } = props
+
   const { isAdmin } = useUserRolesSelector()
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
   const [selectedCardValues, setSelectedCardValues] = useState<any>(null)
+  const [largeWorkOrder, setLargeWorkOrder] = useState<boolean>(workOrder?.largeWorkOrder)
   const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId)
-  
+
   useEffect(() => {
     setSelectedCardValues(projectAwardData?.find((card: any) => card.id === selectedCard) || null)
   }, [selectedCard, projectAwardData])
   interface FormValues {
     id?: number
   }
- 
+
   const { t } = useTranslation()
   // get drawremaining value..
-  const drawRemaining = awardPlansStats?.map((item) => {
+  const drawRemaining = awardPlansStats?.map(item => {
     if (item.workOrderId === props.workOrder.id) {
-      return item.drawRemaining;
+      return item.drawRemaining
     }
-    return null; 
-  });
+    return null
+  })
   // get materialRemaining value..
-  const materialRemaining = awardPlansStats?.map((item) => {
+  const materialRemaining = awardPlansStats?.map(item => {
     if (item.workOrderId === props.workOrder.id) {
-      return item.materialRemaining;
+      return item.materialRemaining
     }
-    return null; 
-  });
+    return null
+  })
   // get totalAmountRemaining value..
-  const totalAmountRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id)?.totalAmountRemaining;
- 
+  const totalAmountRemaining = awardPlansStats?.find(
+    item => item.workOrderId === props.workOrder.id,
+  )?.totalAmountRemaining
 
   useEffect(() => {
     if (props?.workOrder?.awardPlanId !== null) {
@@ -56,15 +57,13 @@ export const ProjectAwardTab: React.FC<any> = props => {
 
   const onSubmit = () => {
     if (selectedCard) {
-      props?.onSave(parseProjectAwardValuesToPayload(selectedCard, projectAwardData))
+      props?.onSave(parseProjectAwardValuesToPayload(selectedCard, projectAwardData, largeWorkOrder))
     }
   }
   const calculatePercentage = per => {
     const percentage = (awardPlanScopeAmount / 100) * per
     return awardPlanScopeAmount - percentage
   }
-
- 
 
   return (
     <>
@@ -79,8 +78,8 @@ export const ProjectAwardTab: React.FC<any> = props => {
             height="60px"
             width="100%"
             border="1px solid #CBD5E0"
-            marginBottom='20px'
-            marginTop='-9px'
+            marginBottom="20px"
+            marginTop="-9px"
           >
             <Box
               flex="2"
@@ -135,7 +134,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
             >
               {t(`${PROJECT_AWARD}.laborDraws`)}
               <Text fontWeight="600" fontSize="16px" color="brand.300">
-                 {drawRemaining}
+                {drawRemaining}
               </Text>
             </Box>
             <Box
@@ -154,8 +153,8 @@ export const ProjectAwardTab: React.FC<any> = props => {
             >
               {t(`${PROJECT_AWARD}.NTEmax`)}
               <Text w={'100%'} fontWeight="600" fontSize="16px" color="brand.300">
-              <Text w={'100%'} fontWeight="600" fontSize="16px" color="brand.300">
-                {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : ''}
+                <Text w={'100%'} fontWeight="600" fontSize="16px" color="brand.300">
+                  {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : ''}
                 </Text>
               </Text>
             </Box>
@@ -186,6 +185,17 @@ export const ProjectAwardTab: React.FC<any> = props => {
             })}
           </HStack>
         </ModalBody>
+        <Box data-testid="largeWoCheckbox" mb={'5px'} ml={'5px'}>
+          <Checkbox
+            onChange={e => setLargeWorkOrder(e.target.checked)}
+            disabled={awardPlanScopeAmount < 75000}
+            borderColor={'black'}
+            isChecked={largeWorkOrder}
+            size="lg"
+          >
+            Large WO
+          </Checkbox>
+        </Box>
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
           <Box w={'100%'}>
             <FormLabel color={'#4A5568'} fontSize="12px" fontWeight={400}>

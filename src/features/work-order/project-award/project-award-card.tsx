@@ -70,7 +70,7 @@ export const ProjectAwardCard = ({
   id,
   awardPlanScopeAmount,
   isUpgradeProjectAward,
-  onClick, 
+  onClick,
 }) => {
   const [checkIcon, setCheckIcon] = useState(false)
   const { t } = useTranslation()
@@ -80,7 +80,7 @@ export const ProjectAwardCard = ({
     if (cardsvalues?.drawLimit === 0) return 0
     if (cardsvalues?.drawLimit === 1) return 'NTE 50%'
     if (cardsvalues?.drawLimit === 2) return 'NTE 70%'
-    if (cardsvalues?.drawLimit === 4) return 'NTE 90%'
+    if (cardsvalues?.drawLimit >= 4) return 'NTE 90%'
   }
   const awardPlanId = workOrder?.awardPlanId
 
