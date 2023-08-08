@@ -189,8 +189,9 @@ export const ProjectAwardTab: React.FC<any> = props => {
             })}
           </HStack>
         </ModalBody>
-        <Box data-testid="largeWoCheckbox" mb={'5px'} ml={'5px'}>
+        <Box mb={'5px'} ml={'5px'}>
           <Checkbox
+            data-testid="largeWoCheckbox"
             onChange={e => setLargeWorkOrder(e.target.checked)}
             disabled={awardPlanScopeAmount < 75000}
             borderColor={'black'}
