@@ -23,23 +23,10 @@ export const ProjectAwardTab: React.FC<any> = props => {
   const factoringFee = projectAwardData?.find(a => a.id === props?.workOrder?.awardPlanId)?.factoringFee
   const { t } = useTranslation()
   // get drawremaining value..
-  const drawRemaining = awardPlansStats?.map(item => {
-    if (item.workOrderId === props.workOrder.id) {
-      return item.drawRemaining
-    }
-    return null
-  })
+  const drawRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id, )?.drawRemaining
   // get materialRemaining value..
-  const materialRemaining = awardPlansStats?.map(item => {
-    if (item.workOrderId === props.workOrder.id) {
-      return item.materialRemaining
-    }
-    return null
-  })
+  const materialRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id, )?.materialRemaining
 
-  const hasNumber = x => x > 0 || x < 0
-  let _drawRemaining = drawRemaining?.filter(hasNumber).toString()
-  let _materialRemaining = materialRemaining?.filter(hasNumber).toString()
 
   // get totalAmountRemaining value..
   const totalAmountRemaining = awardPlansStats?.find(
@@ -120,9 +107,9 @@ export const ProjectAwardTab: React.FC<any> = props => {
               <Text
                 fontWeight="600"
                 fontSize="16px"
-                color={materialRemaining && materialRemaining.includes(0) ? 'red.500' : 'brand.300'}
+                color={materialRemaining && materialRemaining=== 0 ? 'red.500' : 'brand.300'}
               >
-                {_materialRemaining ? _materialRemaining : 0}
+                {materialRemaining ? materialRemaining : 0}
               </Text>
             </Box>
             <Box
@@ -142,9 +129,9 @@ export const ProjectAwardTab: React.FC<any> = props => {
               <Text
                 fontWeight="600"
                 fontSize="16px"
-                color={drawRemaining && drawRemaining.includes(0) ? 'red.500' : 'brand.300'}
+                color={drawRemaining && drawRemaining === 0 ? 'red.500' : 'brand.300'}
               >
-                {_drawRemaining ? _drawRemaining : 0}
+                {drawRemaining ? drawRemaining : 0}
               </Text>
             </Box>
             <Box
