@@ -16,27 +16,20 @@ export const ProjectAwardTab: React.FC<any> = props => {
   const { isAdmin } = useUserRolesSelector()
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
   const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId)
-
   interface FormValues {
     id?: number
   }
   //get originalscopeamount value...
   const factoringFee = projectAwardData?.find(a => a.id === props?.workOrder?.awardPlanId)?.factoringFee
   const { t } = useTranslation()
+  
   // get drawremaining value..
-  const drawRemaining = awardPlansStats?.map(item => {
-    if (item.workOrderId === props.workOrder.id) {
-      return item.drawRemaining
-    }
-    return null
-  })
+  const drawRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id, )?.drawRemaining
+  
   // get materialRemaining value..
-  const materialRemaining = awardPlansStats?.map(item => {
-    if (item.workOrderId === props.workOrder.id) {
-      return item.materialRemaining
-    }
-    return null
-  })
+  const materialRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id, )?.materialRemaining
+
+
   // get totalAmountRemaining value..
   const totalAmountRemaining = awardPlansStats?.find(
     item => item.workOrderId === props.workOrder.id,
@@ -94,7 +87,9 @@ export const ProjectAwardTab: React.FC<any> = props => {
             >
               {t(`${PROJECT_AWARD}.originalscopeamount`)}
               <Text fontWeight="600" fontSize="16px" color="brand.300">
-                {currencyFormatter(calculatePercentage(factoringFee))}
+                {factoringFee !== null && !isNaN(factoringFee)
+                  ? currencyFormatter(calculatePercentage(factoringFee)) || '0'
+                  : '0'}
               </Text>
             </Box>
             <Box
@@ -111,8 +106,12 @@ export const ProjectAwardTab: React.FC<any> = props => {
               justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.materialDraws`)}
-              <Text fontWeight="600" fontSize="16px" color={materialRemaining && materialRemaining.includes(0) ? 'red.500' : 'brand.300'}>
-                {materialRemaining}
+              <Text
+                fontWeight="600"
+                fontSize="16px"
+                color={materialRemaining !==null && materialRemaining=== 0 ? 'red.500' : 'brand.300'}
+              >
+                {materialRemaining ? materialRemaining : 0}
               </Text>
             </Box>
             <Box
@@ -129,13 +128,17 @@ export const ProjectAwardTab: React.FC<any> = props => {
               justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.laborDraws`)}
-              <Text fontWeight="600" fontSize="16px" color={drawRemaining && drawRemaining.includes(0) ? 'red.500' : 'brand.300'}>
-                {drawRemaining}
+              <Text
+                fontWeight="600"
+                fontSize="16px"
+                color={drawRemaining !==null && drawRemaining === 0 ? 'red.500' : 'brand.300'}
+              >
+                {drawRemaining ? drawRemaining : 0}
               </Text>
             </Box>
             <Box
               flex="1"
-              h="59px" 
+              h="59px"
               borderTopRightRadius={{ base: '6px', md: '6px' }}
               fontSize="14px"
               fontWeight="400"
@@ -148,8 +151,8 @@ export const ProjectAwardTab: React.FC<any> = props => {
               justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.NTEmax`)}
-              <Text fontWeight="600" fontSize="16px"  color={totalAmountRemaining === 0 ? 'red.500' : 'brand.300'}>
-                {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : ''}
+              <Text fontWeight="600" fontSize="16px" color={totalAmountRemaining !==null && totalAmountRemaining=== 0 ? 'red.500' : 'brand.300'}>
+                {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : 0}
               </Text>
             </Box>
           </Box>
