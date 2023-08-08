@@ -142,3 +142,41 @@ export const useClientTypeMutation = () => {
     },
   )
 }
+
+export const useClientTypeDelMutation = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+
+  return useMutation(
+    (ClientTypeDetails: any) => {
+      return client(`client-types/${ClientTypeDetails?.id}`, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onSuccess() {
+        toast({
+          title: 'Delete Client Type',
+          description: `Client Type has been deleted successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        queryClient.invalidateQueries('clientType')
+      },
+
+      onError(error: any) {
+        toast({
+          title: 'Client Type',
+          description: (error.title as string) ?? 'Unable to delete Client Type.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    },
+  )
+}
