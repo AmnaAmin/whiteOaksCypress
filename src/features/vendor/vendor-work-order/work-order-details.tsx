@@ -122,6 +122,7 @@ export const WorkOrderDetails = ({
       <ModalOverlay />
       {workOrder && (
         <ModalContent
+        maxW="1100px"
           rounded={[0]}
           borderTop="2px solid #345EA6"
           w={{ base: modalSize, sm: 'calc(100% - 30px)', md: 'calc(100% - 150px)' }}

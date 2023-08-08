@@ -233,7 +233,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               </FormLabel>
               <Input
                 size="md"
-                placeholder="PC project 1"
                 id="projectName"
                 {...register('projectName')}
                 autoComplete="off"

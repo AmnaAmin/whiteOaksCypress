@@ -150,7 +150,7 @@ const PaymentInfoTab = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody ml={30} h={'calc(100vh - 300px)'} overflow={'auto'}>
+        <ModalBody ml={30} h='600px' overflow={'auto'}>
           <SimpleGrid
             columns={5}
             spacing={8}
@@ -400,8 +400,8 @@ const PaymentInfoTab = props => {
 
               <Box height="80px">
                 <FormControl isInvalid={!!errors.clientApprovedAmount}>
-                  <FormLabel variant={'strong-label'} size={'md'}>
-                    {truncateWithEllipsis(t('clientFinalApprovedAmount'), 30)}
+                  <FormLabel  isTruncated title={'Client Final Approved Amount'} variant={'strong-label'} size={'md'}>
+                  {truncateWithEllipsis(t('clientFinalApprovedAmount').trim(), 30)}
                   </FormLabel>
                   <Controller
                     control={control}

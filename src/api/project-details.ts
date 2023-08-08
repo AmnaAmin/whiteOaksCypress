@@ -496,6 +496,18 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
             PROJECT_STATUS.punch
           ]
         }
+        // Last Project Status -> Overpayment
+        else if (previousProjectStatus === Number(PROJECT_STATUS.overpayment.value)) {
+          overrideProjectStatusOptions = [
+            selectOption,
+            PROJECT_STATUS.new,
+            PROJECT_STATUS.active,
+            PROJECT_STATUS.punch,
+            PROJECT_STATUS.closed,
+            PROJECT_STATUS.invoiced,
+            PROJECT_STATUS.disputed,
+          ]
+        }
       }
     }
     return overrideProjectStatusOptions
