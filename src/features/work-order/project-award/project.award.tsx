@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormLabel, HStack, ModalBody, ModalFooter } from '@chakra-ui/react'
+import { Box, Button, Checkbox, Flex, FormLabel, HStack, ModalBody, ModalFooter } from '@chakra-ui/react'
 import { parseProjectAwardValuesToPayload } from 'api/work-order'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -12,9 +12,12 @@ import { useWorkOrderAwardStats } from 'api/transactions'
 
 export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
-  const { isUpdating, projectAwardData, isUpgradeProjectAward } = props
+  const { isUpdating, projectAwardData, isUpgradeProjectAward, workOrder } = props
+
   const { isAdmin } = useUserRolesSelector()
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
+  const [largeWorkOrder, setLargeWorkOrder] = useState<boolean>(workOrder?.largeWorkOrder)
+
   const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId)
   interface FormValues {
     id?: number
@@ -22,13 +25,12 @@ export const ProjectAwardTab: React.FC<any> = props => {
   //get originalscopeamount value...
   const factoringFee = projectAwardData?.find(a => a.id === props?.workOrder?.awardPlanId)?.factoringFee
   const { t } = useTranslation()
-  
-  // get drawremaining value..
-  const drawRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id, )?.drawRemaining
-  
-  // get materialRemaining value..
-  const materialRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id, )?.materialRemaining
 
+  // get drawremaining value..
+  const drawRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id)?.drawRemaining
+
+  // get materialRemaining value..
+  const materialRemaining = awardPlansStats?.find(item => item.workOrderId === props.workOrder.id)?.materialRemaining
 
   // get totalAmountRemaining value..
   const totalAmountRemaining = awardPlansStats?.find(
@@ -45,7 +47,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
 
   const onSubmit = () => {
     if (selectedCard) {
-      props?.onSave(parseProjectAwardValuesToPayload(selectedCard, projectAwardData))
+      props?.onSave(parseProjectAwardValuesToPayload(selectedCard, projectAwardData, largeWorkOrder))
     }
   }
   const calculatePercentage = per => {
@@ -109,7 +111,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               <Text
                 fontWeight="600"
                 fontSize="16px"
-                color={materialRemaining !==null && materialRemaining=== 0 ? 'red.500' : 'brand.300'}
+                color={materialRemaining !== null && materialRemaining === 0 ? 'red.500' : 'brand.300'}
               >
                 {materialRemaining ? materialRemaining : 0}
               </Text>
@@ -131,7 +133,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               <Text
                 fontWeight="600"
                 fontSize="16px"
-                color={drawRemaining !==null && drawRemaining === 0 ? 'red.500' : 'brand.300'}
+                color={drawRemaining !== null && drawRemaining === 0 ? 'red.500' : 'brand.300'}
               >
                 {drawRemaining ? drawRemaining : 0}
               </Text>
@@ -151,7 +153,11 @@ export const ProjectAwardTab: React.FC<any> = props => {
               justifyContent="center"
             >
               {t(`${PROJECT_AWARD}.NTEmax`)}
-              <Text fontWeight="600" fontSize="16px" color={totalAmountRemaining !==null && totalAmountRemaining=== 0 ? 'red.500' : 'brand.300'}>
+              <Text
+                fontWeight="600"
+                fontSize="16px"
+                color={totalAmountRemaining !== null && totalAmountRemaining === 0 ? 'red.500' : 'brand.300'}
+              >
                 {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : 0}
               </Text>
             </Box>
@@ -181,6 +187,18 @@ export const ProjectAwardTab: React.FC<any> = props => {
             })}
           </HStack>
         </ModalBody>
+        <Box mb={'5px'} ml={'5px'}>
+          <Checkbox
+            data-testid="largeWoCheckbox"
+            onChange={e => setLargeWorkOrder(e.target.checked)}
+            disabled={awardPlanScopeAmount < 75000}
+            borderColor={'black'}
+            isChecked={largeWorkOrder}
+            size="lg"
+          >
+            Large WO
+          </Checkbox>
+        </Box>
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
           <Box w={'100%'}>
             <FormLabel color={'#4A5568'} fontSize="12px" fontWeight={400}>
