@@ -7,7 +7,7 @@ export const STATUS_CODE = {
 }
 
 export enum PERFORM {
-  SelfPer = 'Self-Perform-20',
+  SelfPer = 'Self-Perform 20',
   CoPer20 = 'CO-Perform 20',
   COPer14 = 'CO-Perform 14',
   CoPer7 = 'CO-Perform 7',
