@@ -189,7 +189,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               })}
             </HStack>
           </ModalBody>
-          <Box mb={'5px'} ml={'5px'}>
+          <Box mb={'5px'} ml={'9px'}>
             <Checkbox
               data-testid="largeWoCheckbox"
               onChange={e => setLargeWorkOrder(e.target.checked)}
@@ -221,7 +221,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
           </ModalFooter>
         </form>
       )}
-      {!projectAwardData && <BlankSlate size={'sm'} />}
+      {!projectAwardData && <BlankSlate size={'lg'} />}
     </>
   )
 }
