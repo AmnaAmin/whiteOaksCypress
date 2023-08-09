@@ -9,6 +9,7 @@ import { ClientFormValues } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
 import orderBy from 'lodash/orderBy'
 import { usePaginationQuery } from 'api'
+import { reduceArrayToObject } from 'utils'
 
 // export const useClients = () => {
 //   const client = useClient()
@@ -276,4 +277,39 @@ export const useSubFormErrors = (errors: FieldErrors<ClientFormValues>) => {
       !!errors?.accountPayableContactInfos?.[0]?.comments,
     isCarrierTabErrors: errors?.carrier,
   }
+}
+
+export const mappingDataForClientExport = (data, columns) => {
+  return data.map((row: any) => {
+    const columnDefWithAccessorKeyAsKey = reduceArrayToObject(columns, 'accessorKey')
+    return Object.keys(columnDefWithAccessorKeyAsKey).reduce((acc, key) => {
+      let value = ''
+      switch (key) {
+        case 'contactsName':
+          value = row?.contacts?.[0].contact
+          break
+        case 'contactsEmail':
+          value = row?.contacts?.[0].emailAddress
+          break
+        case 'contactsPhone':
+          value = row?.contacts?.[0].phoneNumber
+          break
+        case 'accountPayableContactInfosContact':
+          value = row.accountPayableContactInfos?.[0]?.contact
+          break
+        case 'accountPayableContactInfosEmail':
+          value = row.accountPayableContactInfos?.[0]?.emailAddress
+          break
+        case 'accountPayableContactInfosPhone':
+          value = row.accountPayableContactInfos?.[0]?.phoneNumber
+          break
+        default:
+          value = row[key]
+          break
+      }
+      var mappedObj = { ...acc }
+      mappedObj[key] = value
+      return mappedObj
+    }, {})
+  })
 }

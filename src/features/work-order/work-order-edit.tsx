@@ -64,9 +64,6 @@ const WorkOrderDetails = ({
   const { projectId } = useParams<{ projectId: string }>()
   const [projId, setProjId] = useState<string | undefined>(projectId)
   const { projectData, isLoading: isProjectLoading } = usePCProject(projId)
-
-  const { projectAwardData } = useProjectAward()
-
   const { swoProject } = useFetchProjectId(projId)
   const { documents: documentsData = [], isLoading: isDocumentsLoading } = useDocuments({
     projectId: projId,
@@ -78,9 +75,6 @@ const WorkOrderDetails = ({
   const [isUpdating, setIsUpdating] = useState(false)
   const [isError, setIsError] = useState(false)
 
-  const { mutate: updateWorkOrder, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({
-    swoProjectId: swoProject?.id,
-  })
   const {
     awardPlanScopeAmount,
     workOrderDetails,
@@ -88,6 +82,12 @@ const WorkOrderDetails = ({
     isFetching: isFetchingLineItems,
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
+
+  const { mutate: updateWorkOrder, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({
+    swoProjectId: swoProject?.id,
+  })
+
+  const { projectAwardData } = useProjectAward(workOrderDetails?.largeWorkOrder)
 
   const navigate = useNavigate()
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
@@ -164,7 +164,7 @@ const WorkOrderDetails = ({
       <ModalOverlay />
       {workOrder && (
         <>
-          <ModalContent bg="#F2F3F4">
+          <ModalContent bg="#F2F3F4" maxW="1100px"  maxH="900px">
             <ModalHeader bg="white">
               <HStack spacing={4}>
                 <HStack fontSize="16px" fontWeight={500}>
@@ -194,7 +194,7 @@ const WorkOrderDetails = ({
             )}
             <Divider mb={3} />
             <Stack>
-              <Tabs
+              <Tabs 
                 variant="enclosed"
                 colorScheme="brand"
                 size="md"
@@ -257,20 +257,21 @@ const WorkOrderDetails = ({
                 <Card mx="10px" mb="10px" roundedTopLeft={0} p={0}>
                   <TabPanels>
                     <TabPanel p={0}>
-                      {projectData && <WorkOrderDetailTab 
-                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                        workOrder={workOrder}
-                        workOrderDetails={workOrderDetails}
-                        onClose={onClose}
-                        onSave={onSave}
-                        isWorkOrderUpdating={isWorkOrderUpdating}
-                        swoProject={swoProject}
-                        projectData={projectData}
-                        documentsData={documentsData}
-                        isFetchingLineItems={isFetchingLineItems}
-                        isLoadingLineItems={isLoadingLineItems}
-                      />
-}
+                      {projectData && (
+                        <WorkOrderDetailTab
+                          navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                          workOrder={workOrder}
+                          workOrderDetails={workOrderDetails}
+                          onClose={onClose}
+                          onSave={onSave}
+                          isWorkOrderUpdating={isWorkOrderUpdating}
+                          swoProject={swoProject}
+                          projectData={projectData}
+                          documentsData={documentsData}
+                          isFetchingLineItems={isFetchingLineItems}
+                          isLoadingLineItems={isLoadingLineItems}
+                        />
+                      )}
                     </TabPanel>
                     <TabPanel p={0}>
                       {isProjectLoading ? (

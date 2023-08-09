@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, Button, Flex, Icon, useDisclosure } from '@chakra-ui/react'
 import { useClients } from 'api/clients'
 import { Card } from 'components/card/card'
 import { ClientsTable } from 'features/clients/clients-table'
@@ -54,24 +54,6 @@ export const Client = () => {
               </Button>
             )}
           </>
-        </Flex>
-        <Flex
-          px={7}
-          alignItems="center"
-          h="52px"
-          border="1px solid #CBD5E0"
-          borderBottom="none"
-          borderTopRadius={6}
-          fontSize="18px"
-          fontWeight={500}
-          color="gray.600"
-          bg="#F2F3F4"
-        >
-          <Text flex={1}>{t(`${CLIENTS}.businessName`)}</Text>
-          <Divider orientation="vertical" border="1px solid" />
-          <Text textAlign="center" flex={1}>
-            {t(`${CLIENTS}.accountPayable`)}
-          </Text>
         </Flex>
         <Box>
           <ClientsTable ref={tabsContainerRef} createdClientId={createdClientId} defaultSelected={client} />

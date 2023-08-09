@@ -46,5 +46,5 @@ export enum TableNames {
   devtekUsersTable = 'devtek-users-table',
   vendorProject = 'vendorProject',
   testProject = 'testProject',
-  clients='clients'
+  clients = 'clients-table',
 }

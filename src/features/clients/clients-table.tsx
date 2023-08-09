@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
-import { useClients } from 'api/clients'
+import { mappingDataForClientExport, useClients } from 'api/clients'
 import { Clients } from 'types/client.type'
 import Client from 'features/clients/selected-client-modal'
 import { CLIENTS } from './clients.i18n'
@@ -22,6 +22,10 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { ExportButton } from 'components/table-refactored/export-button'
+import { useTranslation } from 'react-i18next'
+import Excel from 'exceljs'
+import { saveAs } from 'file-saver'
 
 export const CLIENT_TABLE_QUERY_KEYS = {
   companyName: 'companyName.contains',
@@ -34,61 +38,7 @@ export const CLIENT_TABLE_QUERY_KEYS = {
   accountPayablePhone: 'accountPayableContactInfos[0].phoneNumber.equals',
 };
 
-export const columns: ColumnDef<any>[] = [
-  {
-    header: `${CLIENTS}.name`,
-    accessorKey: 'companyName',
-  },
-  {
-    header: `${CLIENTS}.contact`,
-    accessorKey: 'contacts[0].contact',
-    accessorFn: row => {
-      return row.contacts?.[0] ? row.contacts?.[0]?.contact : '- - -'
-    },
-  },
-  {
-    header: `${CLIENTS}.address`,
-    accessorKey: 'streetAddress',
-    accessorFn: row => {
-      return row.streetAddress ? row.streetAddress : '- - -'
-    },
-  },
-  {
-    header: `${CLIENTS}.phone`,
-    accessorKey: 'contacts[0].phoneNumber',
-    accessorFn: row => {
-      return row.contacts?.[0] ? row.contacts?.[0]?.phoneNumber : '- - -'
-    },
-  },
-  {
-    header: `${CLIENTS}.email`,
-    accessorKey: 'contacts[0].emailAddress',
-    accessorFn: row => {
-      return row.contacts?.[0] ? row.contacts?.[0]?.emailAddress : '- - -'
-    },
-  },
-  {
-    header: `${CLIENTS}.contact`,
-    accessorKey: 'accountPayableContactInfos[0].contact',
-    accessorFn: row => {
-      return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.contact : '- - -'
-    },
-  },
-  {
-    header: `${CLIENTS}.email`,
-    accessorKey: 'accountPayableContactInfos[0].emailAddress',
-    accessorFn: row => {
-      return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.emailAddress : '- - -'
-    },
-  },
-  {
-    header: `${CLIENTS}.phone`,
-    accessorKey: 'accountPayableContactInfos[0].phoneNumber',
-    accessorFn: row => {
-      return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.phoneNumber : '- - -'
-    },
-  },
-]
+
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { defaultSelected } = props
   // const { data: clients, isLoading, refetch } = useClients()
@@ -116,8 +66,9 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
+  // const { tableColumns, settingColumns, refetch: refetchColumns } = useTableColumnSettings(columns, TableNames.clients)
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.clients)
-  const { tableColumns, settingColumns, refetch: refetchColumns } = useTableColumnSettings(columns, TableNames.clients)
+  const { t } = useTranslation()
 
   useEffect(() => {
     if (clients && clients.length > 0 && selectedClient?.id) {
@@ -140,9 +91,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     }
   }, [defaultSelected])
 
-  const onSave = columns => {
-    postGridColumn(columns)
-  }
+
 
   // useEffect(() => {
   //   if (selectedCard) {
@@ -152,6 +101,93 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   //     setFilteredUrl(null)
   //   }
   // }, [selectedCard])
+  const CLIENT_COLUMNS: ColumnDef<any>[] = [
+    {
+      header: `${CLIENTS}.name`,
+      accessorKey: 'companyName',
+    },
+    {
+      header: `${CLIENTS}.contact`,
+      accessorKey: 'contactsName',
+      accessorFn: row => {
+        return row.contacts?.[0] ? row.contacts?.[0]?.contact : '- - -'
+      },
+    },
+    {
+      header: `${CLIENTS}.address`,
+      accessorKey: 'streetAddress',
+      accessorFn: row => {
+        return row.streetAddress ? row.streetAddress : '- - -'
+      },
+    },
+    {
+      header: `${CLIENTS}.contactsPhone`,
+      accessorKey: 'contactsPhone',
+      accessorFn: row => {
+        return row.contacts?.[0] ? row.contacts?.[0]?.phoneNumber : '- - -'
+      },
+    },
+    {
+      header: `${CLIENTS}.contactsEmail`,
+      accessorKey: 'contactsEmail',
+      accessorFn: row => {
+        return row.contacts?.[0] ? row.contacts?.[0]?.emailAddress : '- - -'
+      },
+    },
+    {
+      header: `${CLIENTS}.accountsContact`,
+      accessorKey: 'accountPayableContactInfosContact',
+      accessorFn: row => {
+        return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.contact : '- - -'
+      },
+    },
+    {
+      header: `${CLIENTS}.accountsEmail`,
+      accessorKey: 'accountPayableContactInfosEmail',
+      accessorFn: row => {
+        return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.emailAddress : '- - -'
+      },
+    },
+    {
+      header: `${CLIENTS}.accountsPhone`,
+      accessorKey: 'accountPayableContactInfosPhone',
+      accessorFn: row => {
+        return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.phoneNumber : '- - -'
+      },
+    },
+  ]
+
+  const {
+    tableColumns,
+    settingColumns,
+    refetch: refetchColumns,
+  } = useTableColumnSettings(CLIENT_COLUMNS, TableNames.clients)
+  const onSave = columns => {
+    postGridColumn(columns)
+  }
+
+  const customExport = async ({ data }) => {
+    const workbook = new Excel.Workbook()
+    try {
+      const worksheet = workbook.addWorksheet('Sheet 1') as any
+      const columns = tableColumns || []
+      const columnsNames = columns.map((column: any, index) => {
+        return { header: t(column.header as string), key: column?.accessorKey }
+      })
+      worksheet.columns = columnsNames
+
+      const dataMapped = mappingDataForClientExport(data, columns)
+      dataMapped.forEach(singleData => {
+        worksheet.addRow(singleData)
+      })
+      const buf = await workbook.xlsx.writeBuffer()
+      saveAs(new Blob([buf]), `${'clients'}.xlsx`)
+    } catch (error) {
+      console.error('Error...', error)
+    } finally {
+      workbook.removeWorksheet('Sheet 1')
+    }
+  }
 
   return (
     <Box>
@@ -170,7 +206,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderBottomRadius="6px">
         <TableContextProvider
           data={clients}
-          columns={columns}
+          columns={CLIENT_COLUMNS}
           totalPages={clientTotalPages}
           pagination={pagination}
           setPagination={setPagination}
@@ -188,6 +224,30 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
             isEmpty={!isLoading && !clients?.length}
           />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
+            
+            <ButtonsWrapper>
+              <ExportButton
+                columns={tableColumns}
+                customExport={data => {
+                  customExport({ data })
+                }}
+                colorScheme="brand"
+                fileName="clients"
+                fetchedData={clients}
+                isLoading={isLoading}
+                downloadFromTable={true}
+              />
+              <CustomDivider />
+
+              {settingColumns && (
+                <TableColumnSettings
+                  refetch={refetchColumns}
+                  disabled={isLoading}
+                  onSave={onSave}
+                  columns={settingColumns}
+                />
+              )}
+            </ButtonsWrapper>
             <TablePagination>
               <ShowCurrentRecordsWithTotalRecords dataCount={clientDataCount} />
               <GotoFirstPage />

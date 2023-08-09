@@ -243,7 +243,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   return (
     <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onGenerateLWOpen)}>
       <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
-      <ModalBody h={'calc(100vh - 300px)'} p="25px" overflow={'auto'}>
+      <ModalBody h="600px" p="25px" overflow={'auto'}>
         <FormControl>
           <VStack align="start" spacing="30px">
             {workOrder?.leanWaiverSubmitted && !workOrder?.lienWaiverAccepted && isVendor && (
