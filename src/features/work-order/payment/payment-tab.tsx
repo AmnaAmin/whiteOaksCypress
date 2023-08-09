@@ -66,7 +66,7 @@ const InformationCard = props => {
 }
 
 const PaymentInfoTab = props => {
-  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating } = props
+  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, isLoading } = props
 
   const { t } = useTranslation()
   const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
@@ -109,6 +109,9 @@ const PaymentInfoTab = props => {
       setValue('expectedPaymentDate', null)
       setValue('paymentTerm', null)
     } else {
+      if (isWorkOrderUpdating || isLoading) {
+        return
+      }
       resetPayments(defaultValuesPayment(workOrder, paymentsTerms))
     }
   }, [workOrder])

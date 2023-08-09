@@ -45,7 +45,11 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
   const { workOrder, onClose, onProjectTabChange, documentsData, navigateToProjectDetails, isUpdating, setIsUpdating } =
     props
-  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation({})
+  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation({
+    setUpdating: () => {
+      setIsUpdating(false)
+    },
+  })
   const [documents, setDocuments] = useState<any[]>([])
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
@@ -229,6 +233,9 @@ export const LienWaiverTab: React.FC<any> = props => {
     updateLienWaiver(
       { ...workOrder, lienWaiverAccepted: true, amountOfCheck: workOrder.finalInvoiceAmount, documents },
       {
+        onSettled: () => {
+          setIsUpdating(false)
+        },
         onSuccess: () => {
           setValue('uploadLW', null)
           setIsUpdating(false)
@@ -433,11 +440,11 @@ export const LienWaiverTab: React.FC<any> = props => {
                   </GridItem>
                   <GridItem>
                     <InputView
-                    controlStyle={{ mb: '5px' }}
+                      controlStyle={{ mb: '5px' }}
                       label="Claimant Signature"
                       InputElem={
                         workOrder?.lienWaiverAccepted && claimantsSignature ? (
-                          <Image mt='7px'  hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
+                          <Image mt="7px" hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
                         ) : (
                           <></>
                         )

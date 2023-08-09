@@ -16,10 +16,11 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 type UpdateWorkOrderProps = {
   hideToast?: boolean
   swoProjectId?: string | number | null
+  setUpdating?: (val) => void
 }
 
 export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
-  const { hideToast } = props
+  const { hideToast, setUpdating } = props
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -35,6 +36,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
     },
     {
       onSuccess(res) {
+        setUpdating?.(false)
         const updatedWorkOrderId = res?.data?.id
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['transactions', projectId])
@@ -328,7 +330,6 @@ export const defaultValuesWODetails = (workOrder, defaultVendor, defaultSkill) =
       label: 'Select',
     },
     vendorSkillId: defaultSkill,
-    vendorId: defaultVendor,
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),

@@ -33,7 +33,7 @@ export const removePercentageFormat = (value = '') => {
 }
 
 export const truncateWithEllipsis = (s: string, maxLength: number) => {
-  if (s.length > maxLength) {
+  if (s?.length > maxLength) {
     return s.substring(0, maxLength) + '...'
   }
   return s
@@ -75,10 +75,8 @@ export const preventSpecialCharacter = e => {
   if (/[^a-zA-Z\s]/g.test(e.key)) {
     e.preventDefault()
   }
-
-
 }
 
-export const capitalize = (text) => {
+export const capitalize = text => {
   return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase()
-  }
+}
