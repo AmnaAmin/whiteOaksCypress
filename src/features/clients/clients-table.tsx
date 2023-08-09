@@ -9,7 +9,6 @@ import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
 import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { Clients as ClientType } from 'types/client.type'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
@@ -21,7 +20,6 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
-import { useLocation, useNavigate } from 'react-router-dom'
 import { ExportButton } from 'components/table-refactored/export-button'
 import { useTranslation } from 'react-i18next'
 import Excel from 'exceljs'
@@ -29,13 +27,13 @@ import { saveAs } from 'file-saver'
 
 export const CLIENT_TABLE_QUERY_KEYS = {
   companyName: 'companyName.contains',
-  contact: 'contacts[0].contact.contains',
+  contactsName: 'contactsName.contains',
   streetAddress: 'streetAddress.contains',
-  phoneNumber: 'contacts[0].phoneNumber.equals',
-  emailAddress: 'contacts[0].emailAddress.equals',
-  accountPayableContact: 'accountPayableContactInfos[0].contact.contains',
-  accountPayableEmail: 'accountPayableContactInfos[0].emailAddress.equals',
-  accountPayablePhone: 'accountPayableContactInfos[0].phoneNumber.equals',
+  contactsPhone: 'contactsPhone.equals',
+  contactsEmail: 'contactsEmail.equals',
+  accountPayableContactInfosContact: 'accountPayableContactInfosContact.contains',
+  accountPayableContactInfosEmail: 'accountPayableContactInfosEmail.equals',
+  accountPayableContactInfosPhone: 'accountPayableContactInfosPhone.equals',
 };
 
 
@@ -45,10 +43,9 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
+  const { columnFilters, setColumnFilters, queryStringWithPagination } =
     useColumnFiltersQueryString({
       queryStringAPIFilterKeys: CLIENT_TABLE_QUERY_KEYS,
       pagination,
@@ -63,7 +60,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     totalPages: clientTotalPages,
     refetch,
   } = useClients(
-    filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
+     queryStringWithPagination,
     pagination.pageSize,
   )
   // const { tableColumns, settingColumns, refetch: refetchColumns } = useTableColumnSettings(columns, TableNames.clients)

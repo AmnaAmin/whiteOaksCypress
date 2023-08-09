@@ -9,14 +9,11 @@ import { useTranslation } from 'react-i18next'
 import { BiBookAdd } from 'react-icons/bi'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { PaginationState } from '@tanstack/react-table'
 
 export const Client = () => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
-  const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
-  const { data: clients } = useClients(filteredUrl ? filteredUrl : '', pagination.pageSize)
+  const { data: clients } = useClients( '', 20)
   const { isOpen: isOpenNewClientModal, onClose: onNewClientModalClose, onOpen: onNewClientModalOpen } = useDisclosure()
   const { isProjectCoordinator } = useUserRolesSelector()
   const [createdClientId, setCreatedClientId] = useState<string | null | undefined>(null)

@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ClientFormValues } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
-import orderBy from 'lodash/orderBy'
 import { usePaginationQuery } from 'api'
 import { reduceArrayToObject } from 'utils'
 
