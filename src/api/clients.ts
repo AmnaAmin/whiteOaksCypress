@@ -8,15 +8,39 @@ import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ClientFormValues } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
 import orderBy from 'lodash/orderBy'
+import { usePaginationQuery } from 'api'
 
-export const useClients = () => {
-  const client = useClient()
+// export const useClients = () => {
+//   const client = useClient()
+//   return useQuery('client', async () => {
+//     const response = await client(`clients?page=0&size=10&sort=id,asc`, {})
+//     return orderBy(response?.data || [], ['id'], ['desc'])
+//   })
+// }
 
-  return useQuery('client', async () => {
-    const response = await client(`clients?page=0&size=10000000&sort=id,asc`, {})
+const getClientQueryString = (filterQueryString: string) => {
+  let queryString = filterQueryString
+  if (filterQueryString?.search('&sort=id.equals') < 0) {
+    queryString = queryString + `&sort=id,asc`
+  }
+  return queryString
+}
 
-    return orderBy(response?.data || [], ['id'], ['desc'])
-  })
+type clients = Array<any>
+
+export const useClients = (queryString: string, pageSize: number) => {
+  const apiQueryString = getClientQueryString(queryString)
+  const { data, ...rest } = usePaginationQuery<clients>(
+    ['client', apiQueryString],
+    `clients?${apiQueryString}`,
+    pageSize,
+  )
+  return {
+    data: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
+    ...rest,
+  }
 }
 
 export const useNotes = ({ clientId }: { clientId: number | undefined }) => {

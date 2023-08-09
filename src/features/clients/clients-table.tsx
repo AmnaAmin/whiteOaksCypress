@@ -4,15 +4,117 @@ import { useClients } from 'api/clients'
 import { Clients } from 'types/client.type'
 import Client from 'features/clients/selected-client-modal'
 import { CLIENTS } from './clients.i18n'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
+import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
+import TableColumnSettings from 'components/table/table-column-settings'
+import { Clients as ClientType } from 'types/client.type'
+import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
+import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
+import { TableNames } from 'types/table-column.types'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentRecordsWithTotalRecords,
+  TablePagination,
+} from 'components/table-refactored/pagination'
+import { useLocation, useNavigate } from 'react-router-dom'
 
+export const CLIENT_TABLE_QUERY_KEYS = {
+  companyName: 'companyName.contains',
+  contact: 'contact.contains',
+  streetAddress: 'streetAddress.contains',
+  phoneNumber: 'phoneNumber.equals',
+  emailAddress: 'emailAddress.equals',
+}
+export const columns: ColumnDef<any>[] = [
+  {
+    header: `${CLIENTS}.name`,
+    accessorKey: 'companyName',
+  },
+  {
+    header: `${CLIENTS}.contact`,
+    accessorKey: 'contacts[0].contact',
+    accessorFn: row => {
+      return row.contacts?.[0] ? row.contacts?.[0]?.contact : '- - -'
+    },
+  },
+  {
+    header: `${CLIENTS}.address`,
+    accessorKey: 'streetAddress',
+    accessorFn: row => {
+      return row.streetAddress ? row.streetAddress : '- - -'
+    },
+  },
+  {
+    header: `${CLIENTS}.phone`,
+    accessorKey: 'contacts[0].phoneNumber',
+    accessorFn: row => {
+      return row.contacts?.[0] ? row.contacts?.[0]?.phoneNumber : '- - -'
+    },
+  },
+  {
+    header: `${CLIENTS}.email`,
+    accessorKey: 'contacts[0].emailAddress',
+    accessorFn: row => {
+      return row.contacts?.[0] ? row.contacts?.[0]?.emailAddress : '- - -'
+    },
+  },
+  {
+    header: `${CLIENTS}.contact`,
+    accessorKey: 'accountPayableContactInfos[0].contact',
+    accessorFn: row => {
+      return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.contact : '- - -'
+    },
+  },
+  {
+    header: `${CLIENTS}.email`,
+    accessorKey: 'accountPayableContactInfos[0].emailAddress',
+    accessorFn: row => {
+      return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.emailAddress : '- - -'
+    },
+  },
+  {
+    header: `${CLIENTS}.phone`,
+    accessorKey: 'accountPayableContactInfos[0].phoneNumber',
+    accessorFn: row => {
+      return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.phoneNumber : '- - -'
+    },
+  },
+]
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { defaultSelected } = props
-  const { data: clients, isLoading, refetch } = useClients()
+  console.log('props============>', defaultSelected)
+  // const { data: clients, isLoading, refetch } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
+  const [sorting, setSorting] = React.useState<SortingState>([])
+
+  const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
+    useColumnFiltersQueryString({
+      queryStringAPIFilterKeys: CLIENT_TABLE_QUERY_KEYS,
+      pagination,
+      setPagination,
+      sorting,
+    })
+
+  const {
+    data: clients,
+    isLoading,
+    dataCount: clientDataCount,
+    totalPages: clientTotalPages,
+    refetch,
+  } = useClients(
+    filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
+    pagination.pageSize,
+  )
+  const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.clients)
+  const { tableColumns, settingColumns, refetch: refetchColumns } = useTableColumnSettings(columns, TableNames.clients)
 
   useEffect(() => {
     if (clients && clients.length > 0 && selectedClient?.id) {
@@ -30,65 +132,23 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   useEffect(() => {
     if (defaultSelected?.id) {
       setSelectedClient(defaultSelected)
+      setPagination({ pageIndex: 0, pageSize: 20 })
       onOpen()
     }
   }, [defaultSelected])
 
-  const columns: ColumnDef<any>[] = [
-    {
-      header: `${CLIENTS}.name`,
-      accessorKey: 'companyName',
-    },
-    {
-      header: `${CLIENTS}.contact`,
-      accessorKey: 'contacts[0].contact',
-      accessorFn: row => {
-        return row.contacts?.[0] ? row.contacts?.[0]?.contact : '- - -'
-      },
-    },
-    {
-      header: `${CLIENTS}.address`,
-      accessorKey: 'streetAddress',
-      accessorFn: row => {
-        return row.streetAddress ? row.streetAddress : '- - -'
-      },
-    },
-    {
-      header: `${CLIENTS}.phone`,
-      accessorKey: 'contacts[0].phoneNumber',
-      accessorFn: row => {
-        return row.contacts?.[0] ? row.contacts?.[0]?.phoneNumber : '- - -'
-      },
-    },
-    {
-      header: `${CLIENTS}.email`,
-      accessorKey: 'contacts[0].emailAddress',
-      accessorFn: row => {
-        return row.contacts?.[0] ? row.contacts?.[0]?.emailAddress : '- - -'
-      },
-    },
-    {
-      header: `${CLIENTS}.contact`,
-      accessorKey: 'accountPayableContactInfos[0].contact',
-      accessorFn: row => {
-        return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.contact : '- - -'
-      },
-    },
-    {
-      header: `${CLIENTS}.email`,
-      accessorKey: 'accountPayableContactInfos[0].emailAddress',
-      accessorFn: row => {
-        return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.emailAddress : '- - -'
-      },
-    },
-    {
-      header: `${CLIENTS}.phone`,
-      accessorKey: 'accountPayableContactInfos[0].phoneNumber',
-      accessorFn: row => {
-        return row.accountPayableContactInfos?.[0] ? row.accountPayableContactInfos?.[0]?.phoneNumber : '- - -'
-      },
-    },
-  ]
+  const onSave = columns => {
+    postGridColumn(columns)
+  }
+
+  // useEffect(() => {
+  //   if (selectedCard) {
+  //     setFilteredUrl(VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
+  //     setPagination({ pageIndex: 0, pageSize: 20 })
+  //   } else {
+  //     setFilteredUrl(null)
+  //   }
+  // }, [selectedCard])
 
   return (
     <Box>
@@ -105,7 +165,17 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       )}
 
       <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderBottomRadius="6px">
-        <TableContextProvider data={clients} columns={columns}>
+        <TableContextProvider
+          data={clients}
+          columns={columns}
+          totalPages={clientTotalPages}
+          pagination={pagination}
+          setPagination={setPagination}
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+          sorting={sorting}
+          setSorting={setSorting}
+        >
           <Table
             onRowClick={row => {
               setSelectedClient(row)
@@ -114,6 +184,15 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
             isLoading={isLoading}
             isEmpty={!isLoading && !clients?.length}
           />
+          <TableFooter position="sticky" bottom="0" left="0" right="0">
+            <TablePagination>
+              <ShowCurrentRecordsWithTotalRecords dataCount={clientDataCount} />
+              <GotoFirstPage />
+              <GotoPreviousPage />
+              <GotoNextPage />
+              <GotoLastPage />
+            </TablePagination>
+          </TableFooter>
         </TableContextProvider>
       </Box>
     </Box>

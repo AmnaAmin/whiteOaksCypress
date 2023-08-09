@@ -447,12 +447,15 @@ const getVendorsQueryString = (filterQueryString: string) => {
 
 export const useVendor = (queryString: string, pageSize: number) => {
   const apiQueryString = getVendorsQueryString(queryString)
-
+console.log("quering string======>",apiQueryString)
   const { data, ...rest } = usePaginationQuery<vendors>(
     [VENDOR_QUERY_KEY, apiQueryString],
     `view-vendors/v1?${apiQueryString}`,
     pageSize,
   )
+  console.log("console======>", [VENDOR_QUERY_KEY, apiQueryString],
+  `view-vendors/v1?${apiQueryString}`,
+  pageSize,)
 
   return {
     vendors: data?.data,
