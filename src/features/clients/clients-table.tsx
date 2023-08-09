@@ -25,11 +25,15 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 export const CLIENT_TABLE_QUERY_KEYS = {
   companyName: 'companyName.contains',
-  contact: 'contact.contains',
+  contact: 'contacts[0].contact.contains',
   streetAddress: 'streetAddress.contains',
-  phoneNumber: 'phoneNumber.equals',
-  emailAddress: 'emailAddress.equals',
-}
+  phoneNumber: 'contacts[0].phoneNumber.equals',
+  emailAddress: 'contacts[0].emailAddress.equals',
+  accountPayableContact: 'accountPayableContactInfos[0].contact.contains',
+  accountPayableEmail: 'accountPayableContactInfos[0].emailAddress.equals',
+  accountPayablePhone: 'accountPayableContactInfos[0].phoneNumber.equals',
+};
+
 export const columns: ColumnDef<any>[] = [
   {
     header: `${CLIENTS}.name`,
@@ -87,7 +91,6 @@ export const columns: ColumnDef<any>[] = [
 ]
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { defaultSelected } = props
-  console.log('props============>', defaultSelected)
   // const { data: clients, isLoading, refetch } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()

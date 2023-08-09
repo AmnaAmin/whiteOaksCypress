@@ -218,10 +218,6 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     }
   }, [selectedCard])
 
-  useEffect(() => {
-    console.log('filterdata====>', queryStringWithPagination)
-  }, [filteredUrl, queryStringWithPagination])
-
   const onSave = columns => {
     postGridColumn(columns)
   }
