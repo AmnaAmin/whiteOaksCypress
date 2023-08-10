@@ -236,7 +236,7 @@ const WorkOrderDetails = ({
                 <TabPanels>
                   <TabPanel p={0}>
                     {isLoadingWorkOrder || isProjectLoading ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -256,7 +256,7 @@ const WorkOrderDetails = ({
                   </TabPanel>
                   <TabPanel p={0}>
                     {isLoadingWorkOrder || isProjectLoading ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -273,7 +273,7 @@ const WorkOrderDetails = ({
                   {displayAwardPlan && (
                     <TabPanel p={0}>
                       {isLoadingWorkOrder ? (
-                        <Center h={'calc(100vh - 300px)'}>
+                        <Center h={'600px'}>
                           <Spinner size="xl" />
                         </Center>
                       ) : (
@@ -290,7 +290,7 @@ const WorkOrderDetails = ({
                   )}
                   <TabPanel p={0}>
                     {isLoadingWorkOrder || isDocumentsLoading ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -307,7 +307,7 @@ const WorkOrderDetails = ({
                   </TabPanel>
                   <TabPanel p={0}>
                     {isLoadingWorkOrder || isDocumentsLoading || isTransLoading ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -329,7 +329,7 @@ const WorkOrderDetails = ({
                   </TabPanel>
                   <TabPanel p={0}>
                     {isLoadingWorkOrder || isProjectLoading ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -348,7 +348,7 @@ const WorkOrderDetails = ({
 
                   <TabPanel p={0}>
                     {isLoadingWorkOrder ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (

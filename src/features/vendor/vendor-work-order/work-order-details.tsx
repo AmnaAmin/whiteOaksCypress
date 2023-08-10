@@ -125,7 +125,7 @@ export const WorkOrderDetails = ({
       <ModalOverlay />
       {workOrder && (
         <ModalContent
-        maxW="1100px"
+          maxW="1100px"
           rounded={[0]}
           borderTop="2px solid #345EA6"
           w={{ base: modalSize, sm: 'calc(100% - 30px)', md: 'calc(100% - 150px)' }}
@@ -183,7 +183,7 @@ export const WorkOrderDetails = ({
                 <TabPanels>
                   <TabPanel p={0}>
                     {isLoadingWorkOrder ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -205,7 +205,7 @@ export const WorkOrderDetails = ({
                   </TabPanel>
                   <TabPanel p={0}>
                     {isLoading || isLoadingWorkOrder ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -222,7 +222,7 @@ export const WorkOrderDetails = ({
                   {displayAwardPlan && (
                     <TabPanel p={0}>
                       {isLoadingWorkOrder ? (
-                        <Center h={'calc(100vh - 300px)'}>
+                        <Center h={'600px'}>
                           <Spinner size="xl" />
                         </Center>
                       ) : (
@@ -239,7 +239,7 @@ export const WorkOrderDetails = ({
                   )}
                   <TabPanel p={0}>
                     {isLoadingWorkOrder ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -255,7 +255,7 @@ export const WorkOrderDetails = ({
                   </TabPanel>
                   <TabPanel p={0}>
                     {isLoadingWorkOrder ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -277,7 +277,7 @@ export const WorkOrderDetails = ({
                   </TabPanel>
                   <TabPanel p={0}>
                     {isLoadingWorkOrder ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -303,7 +303,7 @@ export const WorkOrderDetails = ({
                   </TabPanel>
                   <TabPanel p={0}>
                     {isLoadingWorkOrder ? (
-                      <Center h={'calc(100vh - 300px)'}>
+                      <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
