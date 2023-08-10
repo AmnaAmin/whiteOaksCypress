@@ -602,7 +602,7 @@ const WorkOrderDetailTab = props => {
                       size="md"
                       isDisabled={!completedByVendor}
                       variant="outline"
-                      value={assignItemsSum ? `%${assignItemsSum / totalAssignItems}` : 0}
+                      value={assignItemsSum ? `${assignItemsSum / totalAssignItems}%` : 0}
                       // {...register('workOrderDateCompleted')}
                     />
                   </FormControl>
