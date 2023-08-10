@@ -591,22 +591,23 @@ const WorkOrderDetailTab = props => {
                   />
                 </FormControl>
               </Box>
-
-              <Box w="215px">
-                <FormControl>
-                  <FormLabel variant="strong-label" size="md">
-                    {t(`${WORK_ORDER}.completePercentage`)}
-                  </FormLabel>
-                  <Input
-                    data-testid="completedPercentage"
-                    size="md"
-                    isDisabled={!completedByVendor}
-                    variant="outline"
-                    value={assignItemsSum ? `%${assignItemsSum / totalAssignItems}` : 0}
-                    // {...register('workOrderDateCompleted')}
-                  />
-                </FormControl>
-              </Box>
+              {!(uploadedWO && uploadedWO?.s3Url) && (
+                <Box w="215px">
+                  <FormControl>
+                    <FormLabel variant="strong-label" size="md">
+                      {t(`${WORK_ORDER}.completePercentage`)}
+                    </FormLabel>
+                    <Input
+                      data-testid="completedPercentage"
+                      size="md"
+                      isDisabled={!completedByVendor}
+                      variant="outline"
+                      value={assignItemsSum ? `%${assignItemsSum / totalAssignItems}` : 0}
+                      // {...register('workOrderDateCompleted')}
+                    />
+                  </FormControl>
+                </Box>
+              )}
             </HStack>
           </Box>
           {!(uploadedWO && uploadedWO?.s3Url) && (
