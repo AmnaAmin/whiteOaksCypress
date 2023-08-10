@@ -69,7 +69,11 @@ const WorkOrderDetailTab = ({
   const { t } = useTranslation()
   const toast = useToast()
   const [uploadedWO, setUploadedWO] = useState<any>(null)
-  const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({})
+  const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({
+    setUpdating: () => {
+      setIsUpdating(false)
+    },
+  })
   const getDefaultValues = () => {
     return {
       assignedItems:
@@ -151,17 +155,7 @@ const WorkOrderDetailTab = ({
       setIsError(false)
     }
     setIsUpdating(true)
-    updateWorkOrderDetails(
-      { ...workOrder, ...updatedValues },
-      {
-        onSuccess: () => {
-          setIsUpdating(false)
-        },
-        onError: () => {
-          setIsUpdating(false)
-        },
-      },
-    )
+    updateWorkOrderDetails({ ...workOrder, ...updatedValues })
   }
 
   useEffect(() => {
@@ -187,7 +181,7 @@ const WorkOrderDetailTab = ({
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h='600px' maxW="1100px" overflow={'auto'}>
+        <ModalBody h="600px" maxW="1100px" overflow={'auto'}>
           {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && !workOrder.lienWaiverAccepted && (
             <Alert m="25px" status="info" variant="custom" size="sm">
               <AlertIcon />
