@@ -99,6 +99,11 @@ const InformationCard = props => {
   )
 }
 
+export type completePercentage = {
+  value: number
+  label: string
+}
+
 interface FormValues {
   cancel: any
   workOrderStartDate: string | null
@@ -107,6 +112,7 @@ interface FormValues {
   assignedItems?: LineItems[]
   vendorSkillId: number | string | null
   vendorId: number | string | null
+  completePercentage?: completePercentage
 }
 
 const WorkOrderDetailTab = props => {
@@ -151,6 +157,9 @@ const WorkOrderDetailTab = props => {
     name: 'assignedItems',
   })
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const assignItemsSum = assignedItemsArray.fields.map(a => a.completePercentage).reduce((prev, curr) => prev + curr, 0)
+  const totalAssignItems = assignedItemsArray.fields.length
+
   const assignedItemsWatch = useWatch({ name: 'assignedItems', control })
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
   const { mutate: deleteLineItems } = useDeleteLineIds()
@@ -582,6 +591,22 @@ const WorkOrderDetailTab = props => {
                     isDisabled={!completedByVendor}
                     variant="outline"
                     {...register('workOrderDateCompleted')}
+                  />
+                </FormControl>
+              </Box>
+
+              <Box w="215px">
+                <FormControl>
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`${WORK_ORDER}.completePercentage`)}
+                  </FormLabel>
+                  <Input
+                    data-testid="completedPercentage"
+                    size="md"
+                    isDisabled={!completedByVendor}
+                    variant="outline"
+                    value={assignItemsSum ? `%${assignItemsSum / totalAssignItems}` : 0}
+                    // {...register('workOrderDateCompleted')}
                   />
                 </FormControl>
               </Box>

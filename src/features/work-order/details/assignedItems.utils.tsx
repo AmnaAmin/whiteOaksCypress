@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Flex,
   FormControl,
   FormErrorMessage,
   HStack,
@@ -11,6 +12,8 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react'
+import { CreatableSelect } from 'components/form/react-select'
+
 import { STATUS } from 'features/common/status'
 import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
 import { useState, useRef, useCallback, useMemo } from 'react'
@@ -29,11 +32,13 @@ import { isValidAndNonEmpty } from 'utils'
 import { CgPlayListRemove } from 'react-icons/cg'
 import { CustomCheckBox } from './assigned-items'
 import { readFileContent } from 'api/vendor-details'
+import { completePercentage } from './work-order-edit-tab'
 
 const swoPrefix = '/smartwo/api'
 
 export type LineItems = {
   id?: number | string | null
+  completePercentage?: completePercentage | any // place "any" here type because completePercentage vary in lineItems payload
   sku: string
   productName: string
   details?: string
@@ -760,7 +765,9 @@ const setColumnsByConditions = (columns, workOrder, isVendor) => {
       }
     }
   } else {
-    columns = columns.filter(c => !['isCompleted', 'isVerified', 'images'].includes(c.accessorKey))
+    columns = columns.filter(
+      c => !['isCompleted', 'isVerified', 'images', 'completePercentage'].includes(c.accessorKey),
+    )
   }
   return columns
 }
@@ -834,6 +841,8 @@ export const useGetLineItemsColumn = ({
     [controlledAssignedItems],
   )
 
+  const handleDropdownValue = v => [{ value: v, label: `${v?.toString()}` }]
+
   const onFileChange = async file => {
     const fileContents = await readFileContent(file)
     const documentFile = {
@@ -857,6 +866,14 @@ export const useGetLineItemsColumn = ({
       </a>
     )
   }
+
+  const completePercentage = [
+    { value: 10, label: '10' },
+    { value: 25, label: '25' },
+    { value: 50, label: '50' },
+    { value: 75, label: '75' },
+    { value: 100, label: '100' },
+  ]
 
   let columns = useMemo(() => {
     return [
@@ -1161,6 +1178,191 @@ export const useGetLineItemsColumn = ({
         },
       },
       {
+        header: () => <span style={{ marginLeft: '30px' }}> {t(`${WORK_ORDER}.completePercentage`)}</span>,
+        accessorKey: 'completePercentage',
+        cell: ({ row }) => {
+          const index = row?.index
+          const {
+            formState: { errors },
+            control,
+          } = formControl
+          const fontSizes = {
+            sm: '10px',
+            md: '12px',
+            lg: '14px',
+          }
+
+          const getFontSize = (state: any) => {
+            const size = state?.selectProps?.size
+
+            return fontSizes[size] || size
+          }
+
+          return (
+            <Box pos="relative">
+              {index !== 0 && (
+                <Box
+                  w="50px"
+                  pos="absolute"
+                  left="-10px"
+                  top="10px"
+                  _hover={{
+                    '.delete-row-icon': { visibility: 'visible' },
+                  }}
+                >
+                  <Icon
+                    as={BiXCircle}
+                    boxSize={5}
+                    data-testid={'unassign-' + index}
+                    color="brand.300"
+                    visibility="hidden"
+                    className="delete-row-icon"
+                    onClick={() => {
+                      removeAssigned(index)
+                    }}
+                    cursor="pointer"
+                  ></Icon>
+                </Box>
+              )}
+              <FormControl
+                ml="27px"
+                isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
+                zIndex={9999 + 1}
+                width="130px"
+              >
+                <Controller
+                  control={control}
+                  // rules={{ required: true }}
+                  name={`assignedItems.${index}.completePercentage`}
+                  render={({ field }) => {
+                    return (
+                      <>
+                        <CreatableSelect
+                          {...field}
+                          id={`assignedItems.${index}.completePercentage`}
+                          options={completePercentage}
+                          size="md"
+                          value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
+                          isDisabled={isVendor}
+                          selectProps={{ widthAssign: '75%' }}
+                          onChange={option => {
+                            field.onChange(option)
+                          }}
+                          styles={{
+                            menuPortal: base => ({ ...base, zIndex: 99999, position: 'fixed' }),
+                          }}
+                          chakraStyles={{
+                            container: (provided: any) => {
+                              return {
+                                ...provided,
+                                pointerEvents: 'auto',
+                                // background: '#F7FAFC',
+                              }
+                            },
+                            placeholder: provider => ({
+                              ...provider,
+                              fontSize: '12px',
+                              color: 'gray.600',
+                              fontWeight: 400,
+                            }),
+                            menuList: (provided: any, state: any) => {
+                              return { ...provided }
+                            },
+                            menu: (provided: any, state: any) => {
+                              return {
+                                ...provided,
+                                boxShadow: 'lg',
+                                borderWidth: '1px',
+                                borderStyle: 'solid',
+                                borderColor: 'gray.200',
+                                borderRadius: 'md',
+                                bg: 'white',
+                                margin: '2px',
+                              }
+                            },
+
+                            singleValue: (provider: any) => ({
+                              ...provider,
+                              color: '#2D3748',
+                              fontWeight: '400',
+                            }),
+                            option: (provider: any, state: any) => {
+                              return {
+                                ...provider,
+                                fontSize: getFontSize(state),
+                                bg: state.isSelected ? 'gray.50' : 'white',
+                                _hover: {
+                                  bg: state.isSelected ? 'gray.50' : 'blue.50',
+                                },
+                                color: state.isSelected ? 'gray.800' : '',
+                                display: state.data?.isHidden ? 'none' : 'block',
+                              }
+                            },
+                            valueContainer(provided: any) {
+                              const px = {
+                                sm: '12px',
+                                md: '16px',
+                                lg: '16px',
+                              }
+
+                              return {
+                                ...provided,
+                                padding: `0.125rem ${px['sm']}`,
+                                color: 'gray.500',
+                              }
+                            },
+
+                            dropdownIndicator: provided => ({
+                              ...provided,
+                              backgroundColor: 'transparent',
+                              '&>svg': {
+                                color: 'gray.600',
+                              },
+                            }),
+                            control: (provider: any, state) => {
+                              return {
+                                ...provider,
+                                // ...borderLeftStyle,
+                                borderRadius: '6px',
+                                fontSize: getFontSize('sm'),
+                                // _focus: inputFocusStateStyle,
+                                _disabled: {
+                                  opacity: 0.7,
+                                  cursor: 'not-allowed',
+                                  bg: 'gray.100',
+                                },
+                              }
+                            },
+                          }}
+                          key={'assignedItems.' + [index]}
+                          menuPosition="fixed"
+                          menuPortalTarget={document.body}
+                          menuShouldScrollIntoView={false}
+                          isSearchable={true}
+                          placeholder={'Select'}
+                          components={{
+                            IndicatorSeparator: null,
+                            SingleValue: option => {
+                              return (
+                                <Flex title={option.children as string} position="absolute" cursor="default !important">
+                                  <Text isTruncated whiteSpace="nowrap" maxW="148px" fontSize="12px">
+                                    {option.children}
+                                  </Text>
+                                </Flex>
+                              )
+                            },
+                          }}
+                        />
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Box>
+          )
+        },
+      },
+      {
         // header: `${WORK_ORDER}.complete`,
         accessorKey: 'isCompleted',
         enableSorting: false,
@@ -1310,7 +1512,6 @@ export const useGetLineItemsColumn = ({
     markAllCompleted,
     allVerified,
     controlledAssignedItems?.length,
-    
   ])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
