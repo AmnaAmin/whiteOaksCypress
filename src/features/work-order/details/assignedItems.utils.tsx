@@ -1239,6 +1239,7 @@ export const useGetLineItemsColumn = ({
                       <>
                         <CreatableSelect
                           {...field}
+                          id={`assignedItems.${index}.completePercentage`}
                           options={completePercentage}
                           size="md"
                           value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
