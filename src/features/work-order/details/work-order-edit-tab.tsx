@@ -20,7 +20,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
@@ -124,16 +124,31 @@ const WorkOrderDetailTab = props => {
     swoProject,
     projectData,
     documentsData,
-    workOrderDetails,
     isFetchingLineItems,
     isLoadingLineItems,
   } = props
 
-  const formReturn = useForm<FormValues>()
+  const defaultSkill = {
+    value: workOrder?.vendorSkillId as number,
+    label: workOrder?.skillName as string,
+    title: workOrder?.skillName as string,
+  }
+
+  const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
+
+  const defaultValues: FormValues = useMemo(() => {
+    return defaultValuesWODetails(workOrder, defaultSkill)
+  }, [workOrder])
+
+  const formReturn = useForm<FormValues>({
+    defaultValues: {
+      ...defaultValues,
+    },
+  })
+
   const {
     register,
     control,
-    reset,
     setValue,
     formState: { errors },
   } = formReturn
@@ -229,13 +244,13 @@ const WorkOrderDetailTab = props => {
 
   // Enable Vendor Type and Company Name for Admin User
   const [tradeOptions, setTradeOptions] = useState([])
-  const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
+
   const [selectedVendorId, setSelectedVendorId] = useState<SelectVendorOption[]>([])
 
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
 
-  const { vendors } = useFilteredVendors({
+  const { vendors, isLoading: loadingVendors } = useFilteredVendors({
     vendorSkillId,
     projectId: workOrder?.projectId,
     showExpired: true,
@@ -244,13 +259,6 @@ const WorkOrderDetailTab = props => {
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
   const clientStart = projectData?.clientStartDate
-
-  // Set Vendor Skill
-  const defaultSkill = {
-    value: workOrder?.vendorSkillId as number,
-    label: workOrder?.skillName as string,
-    title: workOrder?.skillName as string,
-  }
 
   useEffect(() => {
     const option = [] as any
@@ -275,6 +283,21 @@ const WorkOrderDetailTab = props => {
     }
     setVendorOptions(option)
   }, [vendors])
+
+  useEffect(() => {
+    let defaultVendor
+    if (vendorOptions && vendorOptions?.length > 0) {
+      const selectedVendor = vendorOptions?.find(v => v?.value === workOrder?.vendorId)
+      defaultVendor = {
+        label: selectedVendor?.label as string,
+        value: selectedVendor?.value as number,
+        title: selectedVendor?.label as string,
+      }
+      setValue('vendorId', defaultVendor)
+    } else {
+      setValue('vendorId', defaultVendor)
+    }
+  }, [vendorOptions?.length, setValue])
 
   const updateWorkOrderLineItems = (deletedItems, payload) => {
     if (deletedItems?.length > 0) {
@@ -329,29 +352,11 @@ const WorkOrderDetailTab = props => {
     const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
 
     /* Finding out items that will be unassigned*/
-    const unAssignedItems = getUnAssignedItems(formValues, workOrderDetails?.assignedItems)
-    const removedItems = getRemovedItems(formValues, workOrderDetails?.assignedItems)
-    const payload = parseWODetailValuesToPayload(values, workOrderDetails)
+    const unAssignedItems = getUnAssignedItems(formValues, workOrder?.assignedItems)
+    const removedItems = getRemovedItems(formValues, workOrder?.assignedItems)
+    const payload = parseWODetailValuesToPayload(values, workOrder)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
-
-  useEffect(() => {
-    if (workOrderDetails?.id) {
-      let defaultVendor
-      if (vendorOptions && vendorOptions?.length > 0) {
-        vendorOptions?.forEach(v => {
-          if (workOrder?.vendorId === v?.value) {
-            defaultVendor = {
-              label: v.label as string,
-              value: v.value as number,
-              title: v.label as string,
-            }
-          }
-        })
-      }
-      reset(defaultValuesWODetails(workOrderDetails, defaultVendor, defaultSkill))
-    }
-  }, [workOrderDetails, reset, tradeOptions?.length, vendorOptions?.length])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
@@ -367,7 +372,7 @@ const WorkOrderDetailTab = props => {
         <ModalBody h="600px" overflow={'auto'}>
           <Stack spacing="32px" m="25px">
             <Box>
-              {[STATUS.Rejected].includes(workOrderDetails?.statusLabel?.toLocaleLowerCase()) && (
+              {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
                 <Alert status="info" variant="custom" size="sm">
                   <AlertIcon />
 
@@ -440,6 +445,7 @@ const WorkOrderDetailTab = props => {
                                       {...field}
                                       options={vendorOptions}
                                       size="md"
+                                      loadingCheck={loadingVendors}
                                       selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
                                       onChange={option => {
                                         setSelectedVendorId(option.value)
