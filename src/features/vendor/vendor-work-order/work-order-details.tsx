@@ -20,7 +20,6 @@ import {
   useDisclosure,
   useMediaQuery,
 } from '@chakra-ui/react'
-import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
