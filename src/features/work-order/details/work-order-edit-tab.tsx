@@ -4,6 +4,7 @@ import {
   AlertIcon,
   Box,
   Button,
+  Center,
   Divider,
   Flex,
   FormControl,
@@ -13,12 +14,13 @@ import {
   ModalBody,
   ModalFooter,
   SimpleGrid,
+  Spinner,
   Stack,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
@@ -45,8 +47,8 @@ import { downloadFile } from 'utils/file-utils'
 import ReactSelect from 'components/form/react-select'
 import { CANCEL_WO_OPTIONS } from 'constants/index'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { useTrades } from 'api/vendor-details'
 import { useFilteredVendors } from 'api/pc-projects'
+import { useTrades } from 'api/vendor-details'
 
 export type SelectVendorOption = {
   label: string
@@ -120,11 +122,27 @@ const WorkOrderDetailTab = props => {
     isLoadingLineItems,
   } = props
 
-  const formReturn = useForm<FormValues>()
+  const defaultSkill = {
+    value: workOrder?.vendorSkillId as number,
+    label: workOrder?.skillName as string,
+    title: workOrder?.skillName as string,
+  }
+
+  const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
+
+  const defaultValues: FormValues = useMemo(() => {
+    return defaultValuesWODetails(workOrder, defaultSkill)
+  }, [workOrder])
+
+  const formReturn = useForm<FormValues>({
+    defaultValues: {
+      ...defaultValues,
+    },
+  })
+
   const {
     register,
     control,
-    reset,
     setValue,
     formState: { errors },
   } = formReturn
@@ -144,13 +162,6 @@ const WorkOrderDetailTab = props => {
   const { t } = useTranslation()
   const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
   const { isAdmin, isAccounting } = useUserRolesSelector()
-  const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
-  const { vendors, isLoading: isLoadingVendors } = useFilteredVendors({
-    vendorSkillId,
-    projectId: projectData?.id,
-    showExpired: true,
-    currentVendorId: workOrder?.vendorId,
-  })
 
   const {
     skillName,
@@ -224,20 +235,21 @@ const WorkOrderDetailTab = props => {
 
   // Enable Vendor Type and Company Name for Admin User
   const [tradeOptions, setTradeOptions] = useState([])
-  const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
+
   const [selectedVendorId, setSelectedVendorId] = useState<SelectVendorOption[]>([])
 
   const { data: trades } = useTrades()
+  const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
+
+  const { vendors, isLoading: loadingVendors } = useFilteredVendors({
+    vendorSkillId,
+    projectId: workOrder?.projectId,
+    showExpired: true,
+    currentVendorId: workOrder?.vendorId,
+  })
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
   const clientStart = projectData?.clientStartDate
-
-  // Set Vendor Skill
-  const defaultSkill = {
-    value: workOrder?.vendorSkillId as number,
-    label: workOrder?.skillName as string,
-    title: workOrder?.skillName as string,
-  }
 
   useEffect(() => {
     const option = [] as any
@@ -261,7 +273,25 @@ const WorkOrderDetailTab = props => {
       })
     }
     setVendorOptions(option)
-  }, [vendors?.length])
+  }, [vendors])
+
+  useEffect(() => {
+    let defaultVendor
+    if (vendorOptions && vendorOptions?.length > 0) {
+      vendorOptions?.forEach(v => {
+        if (workOrder?.vendorId === v?.value) {
+          defaultVendor = {
+            label: v.label as string,
+            value: v.value as number,
+            title: v.label as string,
+          }
+        }
+      })
+      setValue('vendorId', defaultVendor)
+    } else {
+      setValue('vendorId', defaultVendor)
+    }
+  }, [vendorOptions?.length, setValue])
 
   const updateWorkOrderLineItems = (deletedItems, payload) => {
     if (deletedItems?.length > 0) {
@@ -322,27 +352,6 @@ const WorkOrderDetailTab = props => {
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
 
-  useEffect(() => {
-    if (isWorkOrderUpdating || isLoadingLineItems || isFetchingLineItems || !tradeOptions?.length) {
-      return
-    }
-    if (workOrder?.id) {
-      let defaultVendor
-      if (vendorOptions && vendorOptions?.length > 0) {
-        vendorOptions?.forEach(v => {
-          if (workOrder?.vendorId === v?.value) {
-            defaultVendor = {
-              label: v.label as string,
-              value: v.value as number,
-              title: v.label as string,
-            }
-          }
-        })
-      }
-      reset(defaultValuesWODetails(workOrder, defaultVendor, defaultSkill))
-    }
-  }, [workOrder, reset, tradeOptions?.length, vendorOptions?.length])
-
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
@@ -354,7 +363,7 @@ const WorkOrderDetailTab = props => {
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
+        <ModalBody h="600px" overflow={'auto'}>
           <Stack spacing="32px" m="25px">
             <Box>
               {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
@@ -430,8 +439,7 @@ const WorkOrderDetailTab = props => {
                                       {...field}
                                       options={vendorOptions}
                                       size="md"
-                                      loadingCheck={isLoadingVendors}
-                                      isLoad
+                                      loadingCheck={loadingVendors}
                                       selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
                                       onChange={option => {
                                         setSelectedVendorId(option.value)
@@ -471,7 +479,7 @@ const WorkOrderDetailTab = props => {
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
-            <SimpleGrid columns={7} gap={1}>
+            <SimpleGrid columns={5} gap={4}>
               <CalenderCard
                 testId={'woIssued'}
                 title={t(`${WORK_ORDER}.woIssued`)}
@@ -581,18 +589,24 @@ const WorkOrderDetailTab = props => {
           </Box>
           {!(uploadedWO && uploadedWO?.s3Url) && (
             <Box mx="32px" mt={10}>
-              <AssignedItems
-                isLoadingLineItems={isFetchingLineItems}
-                onOpenRemainingItemsModal={onOpenRemainingItemsModal}
-                unassignedItems={unassignedItems}
-                setUnAssignedItems={setUnAssignedItems}
-                formControl={formReturn as UseFormReturn<any>}
-                assignedItemsArray={assignedItemsArray}
-                isAssignmentAllowed={isAssignmentAllowed}
-                swoProject={swoProject}
-                downloadPdf={downloadPdf}
-                workOrder={workOrder}
-              />
+              {isLoadingLineItems ? (
+                <Center>
+                  <Spinner size={'lg'} />
+                </Center>
+              ) : (
+                <AssignedItems
+                  isLoadingLineItems={isFetchingLineItems}
+                  onOpenRemainingItemsModal={onOpenRemainingItemsModal}
+                  unassignedItems={unassignedItems}
+                  setUnAssignedItems={setUnAssignedItems}
+                  formControl={formReturn as UseFormReturn<any>}
+                  assignedItemsArray={assignedItemsArray}
+                  isAssignmentAllowed={isAssignmentAllowed}
+                  swoProject={swoProject}
+                  downloadPdf={downloadPdf}
+                  workOrder={workOrder}
+                />
+              )}
             </Box>
           )}
         </ModalBody>

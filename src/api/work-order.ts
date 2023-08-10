@@ -47,6 +47,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         queryClient.invalidateQueries(['audit-logs', projectId])
         queryClient.invalidateQueries(['changeOrders'])
+        queryClient.invalidateQueries(['projectAward'])
         if (!hideToast) {
           toast({
             title: 'Work Order',
@@ -241,10 +242,11 @@ export const parsePaymentValuesToPayload = formValues => {
   }
 }
 
-export const parseProjectAwardValuesToPayload = (id, projectAwardData) => {
+export const parseProjectAwardValuesToPayload = (id, projectAwardData, largeWorkOrder) => {
   return {
     awardPlanId: id,
     paymentTerm: projectAwardData.find(pa => pa.id === id)?.payTerm,
+    largeWorkOrder: largeWorkOrder ? largeWorkOrder : false,
   }
 }
 
@@ -323,13 +325,14 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
   }
 }
 
-export const defaultValuesWODetails = (workOrder, defaultVendor, defaultSkill) => {
+export const defaultValuesWODetails = (workOrder, defaultSkill) => {
   const defaultValues = {
     cancel: {
       value: '',
       label: 'Select',
     },
     vendorSkillId: defaultSkill,
+    vendorId: '',
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),

@@ -64,9 +64,6 @@ const WorkOrderDetails = ({
   const { projectId } = useParams<{ projectId: string }>()
   const [projId, setProjId] = useState<string | undefined>(projectId)
   const { projectData, isLoading: isProjectLoading } = usePCProject(projId)
-
-  const { projectAwardData } = useProjectAward()
-
   const { swoProject } = useFetchProjectId(projId)
   const { documents: documentsData = [], isLoading: isDocumentsLoading } = useDocuments({
     projectId: projId,
@@ -78,9 +75,6 @@ const WorkOrderDetails = ({
   const [isUpdating, setIsUpdating] = useState(false)
   const [isError, setIsError] = useState(false)
 
-  const { mutate: updateWorkOrder, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({
-    swoProjectId: swoProject?.id,
-  })
   const {
     awardPlanScopeAmount,
     workOrderDetails,
@@ -89,12 +83,18 @@ const WorkOrderDetails = ({
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
 
+  const { mutate: updateWorkOrder, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({
+    swoProjectId: swoProject?.id,
+  })
+
+  const { projectAwardData } = useProjectAward(workOrderDetails?.largeWorkOrder)
+
   const navigate = useNavigate()
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
   const { data: vendorEntity } = useVendorEntity(workOrder?.vendorId)
   const { hasExpiredDocumentOrLicense } = useDocumentLicenseMessage({ data: vendorEntity })
   const tabsContainerRef = useRef<HTMLDivElement>(null)
-  const isLoading = isLoadingLineItems || isFetchingLineItems
+  const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems
 
   useEffect(() => {
     if (workOrderDetails) {
@@ -209,33 +209,7 @@ const WorkOrderDetails = ({
                 <Tab>{t('lienWaiver')}</Tab>
                 <Tab>{t('invoice')}</Tab>
                 <Tab>{t('payments')}</Tab>
-                <Tab>
-                  {t('notes')}
-                  {/* Update on figma */}
-
-                  {/* <Box ml="5px" style={countInCircle}>
-                      {notesCount}
-                    </Box> */}
-
-                  {/* Update on figma */}
-                </Tab>
-                {/* commenting till requirements are clear
-                  tabIndex === 1 && (
-                    <Center w="100%" justifyContent="end">
-                      {workOrder?.leanWaiverSubmitted && workOrder.dateLeanWaiverSubmitted && (
-                        <Checkbox
-                          onChange={() => setRejectLW(!rejectLW)}
-                          isChecked={rejectLW}
-                          disabled={!workOrder.lienWaiverAccepted}
-                          color="#4A5568"
-                          fontSize="14px"
-                          fontWeight={500}
-                        >
-                          {t('rejectLienWaiver')}
-                        </Checkbox>
-                      )}
-                    </Center>
-                      )*/}
+                <Tab>{t('notes')}</Tab>
 
                 {showRejectInvoice &&
                   [STATUS.Invoiced, STATUS.Rejected].includes(
@@ -261,8 +235,8 @@ const WorkOrderDetails = ({
               <Card mx="10px" mb="10px" roundedTopLeft={0} p={0}>
                 <TabPanels>
                   <TabPanel p={0}>
-                    {isLoading && projectData ? (
-                      <Center h={'calc(100vh - 220px)'}>
+                    {isLoadingWorkOrder || isProjectLoading ? (
+                      <Center h={'calc(100vh - 300px)'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -281,8 +255,8 @@ const WorkOrderDetails = ({
                     )}
                   </TabPanel>
                   <TabPanel p={0}>
-                    {isLoading || isProjectLoading ? (
-                      <Center h={'calc(100vh - 220px)'}>
+                    {isLoadingWorkOrder || isProjectLoading ? (
+                      <Center h={'calc(100vh - 300px)'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -298,8 +272,8 @@ const WorkOrderDetails = ({
                   </TabPanel>
                   {displayAwardPlan && (
                     <TabPanel p={0}>
-                      {isLoading ? (
-                        <Center h={'calc(100vh - 220px)'}>
+                      {isLoadingWorkOrder ? (
+                        <Center h={'calc(100vh - 300px)'}>
                           <Spinner size="xl" />
                         </Center>
                       ) : (
@@ -315,8 +289,8 @@ const WorkOrderDetails = ({
                     </TabPanel>
                   )}
                   <TabPanel p={0}>
-                    {isLoading || isDocumentsLoading ? (
-                      <Center h={'calc(100vh - 220px)'}>
+                    {isLoadingWorkOrder || isDocumentsLoading ? (
+                      <Center h={'calc(100vh - 300px)'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -332,8 +306,8 @@ const WorkOrderDetails = ({
                     )}
                   </TabPanel>
                   <TabPanel p={0}>
-                    {isLoading || isDocumentsLoading || isTransLoading ? (
-                      <Center h={'calc(100vh - 220px)'}>
+                    {isLoadingWorkOrder || isDocumentsLoading || isTransLoading ? (
+                      <Center h={'calc(100vh - 300px)'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -354,8 +328,8 @@ const WorkOrderDetails = ({
                     )}
                   </TabPanel>
                   <TabPanel p={0}>
-                    {isLoading || isProjectLoading ? (
-                      <Center h={'calc(100vh - 220px)'}>
+                    {isLoadingWorkOrder || isProjectLoading ? (
+                      <Center h={'calc(100vh - 300px)'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (
@@ -367,14 +341,14 @@ const WorkOrderDetails = ({
                         onClose={onClose}
                         onSave={onSave}
                         rejectInvoiceCheck={rejectInvoice}
-                        isLoading={isLoading}
+                        isLoading={isLoadingWorkOrder}
                       />
                     )}
                   </TabPanel>
 
                   <TabPanel p={0}>
-                    {isLoading ? (
-                      <Center h={'calc(100vh - 220ox)'}>
+                    {isLoadingWorkOrder ? (
+                      <Center h={'calc(100vh - 300px)'}>
                         <Spinner size="xl" />
                       </Center>
                     ) : (

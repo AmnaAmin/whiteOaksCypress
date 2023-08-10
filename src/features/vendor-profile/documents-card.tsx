@@ -289,6 +289,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isAgreementSignedDateChanged || !!watchAgreementSignedDate}
                             onClear={() => setValue(field.name, null)}
+                            disabled={isFPM} 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -407,6 +408,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isAutoInsuranceExpDateChanged || !!watchAutoInsuranceExpDate}
                             onClear={() => setValue(field.name, null)}
+                            disabled={isFPM} 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -498,6 +500,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isCoiGlExpDateChanged || !!watchCoiGlExpDate}
                             onClear={() => setValue(field.name, null)}
+                            disabled={isFPM} 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -589,6 +592,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isCoiWcExpDateChanged || !!watchCoiWcExpDate}
                             onClear={() => setValue(field.name, null)}
+                            disabled={isFPM} 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>

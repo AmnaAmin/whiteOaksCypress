@@ -1,5 +1,6 @@
 import {
   Box,
+  Center,
   Divider,
   HStack,
   Modal,
@@ -8,6 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Progress,
+  Spinner,
   Stack,
   Tab,
   TabList,
@@ -73,6 +75,7 @@ export const WorkOrderDetails = ({
   const { projectAwardData } = useProjectAward()
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
   const [isError, setIsError] = useState(false)
+  const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems
 
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
@@ -122,6 +125,7 @@ export const WorkOrderDetails = ({
       <ModalOverlay />
       {workOrder && (
         <ModalContent
+        maxW="1100px"
           rounded={[0]}
           borderTop="2px solid #345EA6"
           w={{ base: modalSize, sm: 'calc(100% - 30px)', md: 'calc(100% - 150px)' }}
@@ -178,24 +182,32 @@ export const WorkOrderDetails = ({
               <Card mb={3} p="0px !important" roundedTop={0} roundedRight={{ base: 0, md: 12 }}>
                 <TabPanels>
                   <TabPanel p={0}>
-                    <WorkOrderDetailTab
-                      documentsData={documentsData}
-                      setIsUpdating={setIsUpdating}
-                      isUpdating={isUpdating}
-                      projectData={projectData}
-                      workOrder={workOrder}
-                      onClose={onClose}
-                      workOrderAssignedItems={workOrderAssignedItems}
-                      isFetchingLineItems={isFetchingLineItems}
-                      isLoadingLineItems={isLoadingLineItems}
-                      displayAwardPlan={displayAwardPlan}
-                      tabIndex={tabIndex}
-                      setIsError={setIsError}
-                    />
+                    {isLoadingWorkOrder ? (
+                      <Center h={'calc(100vh - 300px)'}>
+                        <Spinner size="xl" />
+                      </Center>
+                    ) : (
+                      <WorkOrderDetailTab
+                        documentsData={documentsData}
+                        setIsUpdating={setIsUpdating}
+                        isUpdating={isUpdating}
+                        projectData={projectData}
+                        workOrder={workOrderDetails}
+                        onClose={onClose}
+                        workOrderAssignedItems={workOrderAssignedItems}
+                        isFetchingLineItems={isFetchingLineItems}
+                        isLoadingLineItems={isLoadingLineItems}
+                        displayAwardPlan={displayAwardPlan}
+                        tabIndex={tabIndex}
+                        setIsError={setIsError}
+                      />
+                    )}
                   </TabPanel>
                   <TabPanel p={0}>
-                    {isLoading ? (
-                      <BlankSlate />
+                    {isLoading || isLoadingWorkOrder ? (
+                      <Center h={'calc(100vh - 300px)'}>
+                        <Spinner size="xl" />
+                      </Center>
                     ) : (
                       <TransactionsTab
                         isVendorExpired={isVendorExpired}
@@ -203,30 +215,38 @@ export const WorkOrderDetails = ({
                         tabsContainerRef={tabsContainerRef}
                         projectData={projectData}
                         onClose={onClose}
-                        workOrder={workOrder}
+                        workOrder={workOrderDetails}
                       />
                     )}
                   </TabPanel>
                   {displayAwardPlan && (
                     <TabPanel p={0}>
-                      <ProjectAwardTab
-                        workOrder={workOrderDetails}
-                        onSave={onSave}
-                        onClose={onClose}
-                        awardPlanScopeAmount={awardPlanScopeAmount}
-                        projectAwardData={projectAwardData}
-                        isUpdating={isUpdating}
-                      />
+                      {isLoadingWorkOrder ? (
+                        <Center h={'calc(100vh - 300px)'}>
+                          <Spinner size="xl" />
+                        </Center>
+                      ) : (
+                        <ProjectAwardTab
+                          workOrder={workOrderDetails}
+                          onSave={onSave}
+                          onClose={onClose}
+                          awardPlanScopeAmount={awardPlanScopeAmount}
+                          projectAwardData={projectAwardData}
+                          isUpdating={isUpdating}
+                        />
+                      )}
                     </TabPanel>
                   )}
                   <TabPanel p={0}>
-                    {isLoading ? (
-                      <BlankSlate />
+                    {isLoadingWorkOrder ? (
+                      <Center h={'calc(100vh - 300px)'}>
+                        <Spinner size="xl" />
+                      </Center>
                     ) : (
                       <LienWaiverTab
                         documentsData={documentsData}
                         onProjectTabChange={onProjectTabChange}
-                        workOrder={workOrder}
+                        workOrder={workOrderDetails}
                         onClose={onClose}
                         isUpdating={isUpdating}
                         setIsUpdating={setIsUpdating}
@@ -234,13 +254,15 @@ export const WorkOrderDetails = ({
                     )}
                   </TabPanel>
                   <TabPanel p={0}>
-                    {isLoading ? (
-                      <BlankSlate />
+                    {isLoadingWorkOrder ? (
+                      <Center h={'calc(100vh - 300px)'}>
+                        <Spinner size="xl" />
+                      </Center>
                     ) : (
                       <InvoiceTab
                         documentsData={documentsData}
                         projectData={projectData}
-                        workOrder={workOrder}
+                        workOrder={workOrderDetails}
                         vendorAddress={vendorAddress}
                         transactions={transactions}
                         onClose={onClose}
@@ -254,27 +276,39 @@ export const WorkOrderDetails = ({
                     )}
                   </TabPanel>
                   <TabPanel p={0}>
-                    <InvoicingAndPaymentTab
-                      onClose={onClose}
-                      invoiceAndPaymentData={{
-                        dateInvoiceSubmitted: workOrder?.dateInvoiceSubmitted,
-                        paymentTermDate: workOrder?.paymentTermDate,
-                        datePaymentProcessed: workOrder?.datePaymentProcessed ?? '',
-                        expectedPaymentDate: workOrder?.expectedPaymentDate,
-                        paymentTerm: workOrder?.paymentTerm,
-                        workOrderPayDateVariance: workOrder?.workOrderPayDateVariance ?? '',
-                        datePaid: workOrder?.datePaid ?? '',
-                        clientOriginalApprovedAmount: workOrder?.clientOriginalApprovedAmount,
-                        invoiceAmount: workOrder?.invoiceAmount,
-                        finalInvoiceAmount: workOrder?.finalInvoiceAmount,
-                        dateLeanWaiverSubmitted: workOrder?.dateLeanWaiverSubmitted ?? '',
-                        datePermitsPulled: workOrder?.datePermitsPulled ?? '',
-                        status: workOrder?.statusLabel ?? '',
-                      }}
-                    />
+                    {isLoadingWorkOrder ? (
+                      <Center h={'calc(100vh - 300px)'}>
+                        <Spinner size="xl" />
+                      </Center>
+                    ) : (
+                      <InvoicingAndPaymentTab
+                        onClose={onClose}
+                        invoiceAndPaymentData={{
+                          dateInvoiceSubmitted: workOrderDetails?.dateInvoiceSubmitted,
+                          paymentTermDate: workOrderDetails?.paymentTermDate,
+                          datePaymentProcessed: workOrderDetails?.datePaymentProcessed ?? '',
+                          expectedPaymentDate: workOrderDetails?.expectedPaymentDate,
+                          paymentTerm: workOrderDetails?.paymentTerm,
+                          workOrderPayDateVariance: workOrderDetails?.workOrderPayDateVariance ?? '',
+                          datePaid: workOrderDetails?.datePaid ?? '',
+                          clientOriginalApprovedAmount: workOrderDetails?.clientOriginalApprovedAmount,
+                          invoiceAmount: workOrderDetails?.invoiceAmount,
+                          finalInvoiceAmount: workOrderDetails?.finalInvoiceAmount,
+                          dateLeanWaiverSubmitted: workOrderDetails?.dateLeanWaiverSubmitted ?? '',
+                          datePermitsPulled: workOrderDetails?.datePermitsPulled ?? '',
+                          status: workOrderDetails?.statusLabel ?? '',
+                        }}
+                      />
+                    )}
                   </TabPanel>
                   <TabPanel p={0}>
-                    <WorkOrderNotes workOrder={workOrder} onClose={onClose} />
+                    {isLoadingWorkOrder ? (
+                      <Center h={'calc(100vh - 300px)'}>
+                        <Spinner size="xl" />
+                      </Center>
+                    ) : (
+                      <WorkOrderNotes workOrder={workOrderDetails} onClose={onClose} />
+                    )}
                   </TabPanel>
                 </TabPanels>
               </Card>
