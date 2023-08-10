@@ -34,10 +34,11 @@ export const TransactionsTab = ({
   const preventNewTransaction =
     !!(workOrderStatus === 'paid' || workOrderStatus === 'cancelled' || workOrderStatus === 'invoiced') ||
     (isVendorExpired && !isAdmin)
+  console.log(workOrderStatus)
 
   return (
     <>
-      <ModalBody h='600px' p="10px" overflow={'auto'}>
+      <ModalBody h="600px" p="10px" overflow={'auto'}>
         <Flex w="100%" alignContent="space-between" pos="relative">
           <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" p="11px">
             <Button
