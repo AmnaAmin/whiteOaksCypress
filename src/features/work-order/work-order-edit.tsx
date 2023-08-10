@@ -255,7 +255,7 @@ const WorkOrderDetails = ({
                     )}
                   </TabPanel>
                   <TabPanel p={0}>
-                    {isLoadingWorkOrder || isProjectLoading ? (
+                    {isProjectLoading ? (
                       <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
