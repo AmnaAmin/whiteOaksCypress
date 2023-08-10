@@ -75,7 +75,6 @@ export const ProjectAwardCard = ({
   const [checkIcon, setCheckIcon] = useState(false)
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
-  console.log(cardsvalues)
 
   const drawAmount = () => {
     if (cardsvalues?.name === PERFORM.SelfPer) return 0

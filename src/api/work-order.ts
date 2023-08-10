@@ -298,6 +298,8 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
           }
           const assignedItem = {
             ...a,
+            completePercentage:
+              typeof a.completePercentage === 'number' ? a.completePercentage : Number(a.completePercentage?.label),
             document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
             id: isNewSmartLineItem ? '' : a.id,
             smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
