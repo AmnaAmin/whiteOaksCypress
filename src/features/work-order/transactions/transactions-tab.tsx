@@ -34,7 +34,6 @@ export const TransactionsTab = ({
   const preventNewTransaction =
     !!(workOrderStatus === 'paid' || workOrderStatus === 'cancelled' || workOrderStatus === 'invoiced') ||
     (isVendorExpired && !isAdmin)
-  console.log(workOrderStatus)
 
   return (
     <>
