@@ -165,7 +165,7 @@ const WorkOrderDetails = ({
     <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'} closeOnOverlayClick={false}>
       <>
         <ModalOverlay />
-        <ModalContent bg="#F2F3F4">
+        <ModalContent bg="#F2F3F4" maxW="1100px" maxH="900px">
           <ModalHeader bg="white">
             <HStack spacing={4}>
               <HStack fontSize="16px" fontWeight={500}>

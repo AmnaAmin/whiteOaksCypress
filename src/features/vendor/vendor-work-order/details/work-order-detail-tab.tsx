@@ -181,7 +181,7 @@ const WorkOrderDetailTab = ({
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h='600px' maxW="1100px" overflow={'auto'}>
+        <ModalBody h="600px" maxW="1100px" overflow={'auto'}>
           {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && !workOrder.lienWaiverAccepted && (
             <Alert m="25px" status="info" variant="custom" size="sm">
               <AlertIcon />
