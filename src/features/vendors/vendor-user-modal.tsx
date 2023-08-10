@@ -49,7 +49,6 @@ const VendorUserModal = ({
   parentVendorId: number
 }) => {
   const { t } = useTranslation()
-
   //es-lint-disable-next-line
   //const { isLoading } = useVendorProfile(vendorDetails?.id)
 
@@ -390,6 +389,7 @@ const VendorUserModal = ({
                             fontWeight={400}
                             color="#718096"
                             {...register('activated')}
+                            disabled={vendorDetails?.vendorAdmin}
                           >
                             {t(`${USER_MANAGEMENT}.modal.activated`)}
                           </Checkbox>
