@@ -19,7 +19,6 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import UpdateTransactionModal from 'features/project-details/transactions/update-transaction-modal'
 import { TransactionDetailsModal } from 'features/project-details/transactions/transaction-details-modal'
 
@@ -77,7 +76,7 @@ export const WOTransactionsTable = React.forwardRef((props: TransactionProps, re
     setTotalRows(rows?.length)
   }
 
-  const { isVendor } = useUserRolesSelector()
+
 
   return (
     <>
