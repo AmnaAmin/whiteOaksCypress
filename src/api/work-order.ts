@@ -324,6 +324,10 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     notifyVendor: formValues.notifyVendor,
     vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
+    completePercentage:
+      typeof formValues.completePercentage === 'number'
+        ? formValues.completePercentage
+        : Number(formValues.completePercentage?.label),
   }
 }
 
@@ -346,6 +350,7 @@ export const defaultValuesWODetails = (workOrder, defaultSkill) => {
             return { ...e, uploadedDoc: null, clientAmount: (e.price ?? 0) * (e.quantity ?? 0) }
           })
         : [],
+    completePercentage: workOrder?.completePercentage,
   }
   return defaultValues
 }
