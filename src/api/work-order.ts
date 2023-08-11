@@ -320,7 +320,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
             completePercentage:
               typeof a.completePercentage === 'number'
                 ? a.completePercentage
-                : Number((a.completePercentage?.label).slice(0, -1)),
+                : Number(a.completePercentage?.label?.slice(0, -1)),
             document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
             id: isNewSmartLineItem ? '' : a.id,
             smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
@@ -346,7 +346,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     completePercentage:
       typeof formValues.completePercentage === 'number'
         ? formValues.completePercentage
-        : Number((formValues.completePercentage?.label).slice(0, -1)),
+        : Number(formValues.completePercentage?.label?.slice(0, -1)),
   }
 }
 
