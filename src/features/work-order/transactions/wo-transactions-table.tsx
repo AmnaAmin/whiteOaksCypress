@@ -89,7 +89,7 @@ export const WOTransactionsTable = React.forwardRef((props: TransactionProps, re
       {transactions && (
         <Box
           w="100%"
-          minH={isVendor ? 'calc(100vh - 420px)' : 'calc(100vh - 420px)'}
+          minH="600px"
           position="relative"
           borderRadius="6px"
           border="1px solid #CBD5E0"
