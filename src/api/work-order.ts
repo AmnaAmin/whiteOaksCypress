@@ -20,12 +20,21 @@ type UpdateWorkOrderProps = {
 }
 
 export const completePercentageValues = [
-  { value: 10, label: '10' },
-  { value: 25, label: '25' },
-  { value: 50, label: '50' },
-  { value: 75, label: '75' },
-  { value: 100, label: '100' },
+  { value: 10, label: '10%' },
+  { value: 25, label: '25%' },
+  { value: 50, label: '50%' },
+  { value: 75, label: '75%' },
+  { value: 100, label: '100%' },
 ]
+
+export const newObjectFormatting = data => {
+  const obj = {
+    label: `${data?.label}%`,
+    value: data?.value,
+    __isNew__: true,
+  }
+  return obj
+}
 
 export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
   const { hideToast, setUpdating } = props
@@ -309,7 +318,9 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
           const assignedItem = {
             ...a,
             completePercentage:
-              typeof a.completePercentage === 'number' ? a.completePercentage : Number(a.completePercentage?.label),
+              typeof a.completePercentage === 'number'
+                ? a.completePercentage
+                : Number((a.completePercentage?.label).slice(0, -1)),
             document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
             id: isNewSmartLineItem ? '' : a.id,
             smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
@@ -335,7 +346,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     completePercentage:
       typeof formValues.completePercentage === 'number'
         ? formValues.completePercentage
-        : Number(formValues.completePercentage?.label),
+        : Number((formValues.completePercentage?.label).slice(0, -1)),
   }
 }
 

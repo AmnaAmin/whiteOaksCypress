@@ -33,7 +33,7 @@ import { CgPlayListRemove } from 'react-icons/cg'
 import { CustomCheckBox } from './assigned-items'
 import { readFileContent } from 'api/vendor-details'
 import { completePercentage } from './work-order-edit-tab'
-import { completePercentageValues } from 'api/work-order'
+import { completePercentageValues, newObjectFormatting } from 'api/work-order'
 
 const swoPrefix = '/smartwo/api'
 
@@ -842,7 +842,7 @@ export const useGetLineItemsColumn = ({
     [controlledAssignedItems],
   )
 
-  const handleDropdownValue = v => [{ value: v, label: `${v?.toString()}` }]
+  const handleDropdownValue = v => [{ value: v, label: `${v?.toString()}%` }]
 
   const onFileChange = async file => {
     const fileContents = await readFileContent(file)
@@ -1239,7 +1239,11 @@ export const useGetLineItemsColumn = ({
                           isDisabled={isVendor}
                           selectProps={{ widthAssign: '75%' }}
                           onChange={option => {
-                            field.onChange(option)
+                            if (option?.__isNew__) {
+                              field.onChange(newObjectFormatting(option))
+                            } else {
+                              field.onChange(option)
+                            }
                           }}
                           styles={{
                             menuPortal: base => ({ ...base, zIndex: 99999, position: 'fixed' }),

@@ -30,6 +30,7 @@ import Select, { CreatableSelect } from 'components/form/react-select'
 import {
   completePercentageValues,
   defaultValuesWODetails,
+  newObjectFormatting,
   parseWODetailValuesToPayload,
   useFieldEnableDecisionDetailsTab,
 } from 'api/work-order'
@@ -351,7 +352,7 @@ const WorkOrderDetailTab = props => {
       updateWorkOrderLineItems(deleted, savePayload)
     }
   }
-  const handleDropdownValue = v => [{ value: v, label: `${v?.toString()}` }]
+  const handleDropdownValue = v => [{ value: v, label: `${v?.toString()}%` }]
 
   const onSubmit = values => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
@@ -617,7 +618,11 @@ const WorkOrderDetailTab = props => {
                             value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
                             // isDisabled={isVendor}
                             onChange={option => {
-                              field.onChange(option)
+                              if (option?.__isNew__) {
+                                field.onChange(newObjectFormatting(option))
+                              } else {
+                                field.onChange(option)
+                              }
                             }}
                           />
                         )
