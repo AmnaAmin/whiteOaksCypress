@@ -203,7 +203,7 @@ export const WorkOrderDetails = ({
                     )}
                   </TabPanel>
                   <TabPanel p={0}>
-                    {isLoading || isLoadingWorkOrder ? (
+                    {isLoading ? (
                       <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
