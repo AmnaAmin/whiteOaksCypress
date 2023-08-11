@@ -23,6 +23,7 @@ import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { t } from 'i18next'
 import Select from 'components/form/react-select'
 import { useFPMsByMarket } from 'api/pc-projects'
+import { validateTelePhoneNumber } from 'utils/form-validation'
 
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
@@ -230,6 +231,15 @@ const Contact: React.FC<ContactProps> = ({
             <Controller
               control={control}
               name="superPhoneNumber"
+              rules={{
+                required: 'This is required',
+                validate: (number: string | null) => {
+                  if (number === null) {
+                    return 'Valid Phone Number Is Required';
+                  }
+                  return validateTelePhoneNumber(number) || 'Invalid phone number';
+                },
+              }}
               render={({ field, fieldState }) => {
                 return (
                   <>
@@ -242,7 +252,7 @@ const Contact: React.FC<ContactProps> = ({
                       mask="_"
                       placeholder="(___)-___-____"
                     />
-                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                    <FormErrorMessage>{fieldState?.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
                   </>
                 )
               }}
@@ -252,7 +262,7 @@ const Contact: React.FC<ContactProps> = ({
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superPhoneNumberExtension}>
             <InputLabel title={'project.projectDetails.ext'} htmlFor={'superPhoneNumberExtension'} />
-            <Input size="md" id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" />
+            <Input size="md" id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" type="number" />
             <FormErrorMessage>{errors?.superPhoneNumberExtension?.message}</FormErrorMessage>
           </FormControl>
         </Box>
