@@ -13,7 +13,6 @@ import {
   BiError,
 } from 'react-icons/bi'
 import { SiCypress } from 'react-icons/si'
-import { TiFlowParallel } from 'react-icons/ti'
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { SIDE_NAV } from './sideNav.i18n'
 import { MdOnlinePrediction } from 'react-icons/md'
