@@ -105,7 +105,11 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Controller
                 control={control}
                 name="einNumber"
-                rules={{ required: ssnNumber ? '' : isActive && 'This is required' }}
+               
+                // rules={{
+                //   required: ssnNumber ? '' : isActive && 'This is required',
+                //   validate: (number: string) => validateTelePhoneNumber(number),
+                // }}
                 render={({ field, fieldState }) => {
                   return (
                     <>
