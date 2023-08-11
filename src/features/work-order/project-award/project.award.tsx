@@ -193,7 +193,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
             <Checkbox
               data-testid="largeWoCheckbox"
               onChange={e => setLargeWorkOrder(e.target.checked)}
-              disabled={awardPlanScopeAmount < 75000}
+              disabled={!isAdmin || awardPlanScopeAmount < 75000}
               borderColor={'black'}
               isChecked={largeWorkOrder}
               size="lg"
