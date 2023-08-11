@@ -27,7 +27,12 @@ import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormatNew } from 'utils/date-time-utils'
 import Select, { CreatableSelect } from 'components/form/react-select'
-import { defaultValuesWODetails, parseWODetailValuesToPayload, useFieldEnableDecisionDetailsTab } from 'api/work-order'
+import {
+  completePercentageValues,
+  defaultValuesWODetails,
+  parseWODetailValuesToPayload,
+  useFieldEnableDecisionDetailsTab,
+} from 'api/work-order'
 import AssignedItems from './assigned-items'
 import {
   getRemovedItems,
@@ -103,14 +108,6 @@ export type completePercentage = {
   value: number
   label: string
 }
-
-export const completePercentageValues = [
-  { value: 10, label: '10' },
-  { value: 25, label: '25' },
-  { value: 50, label: '50' },
-  { value: 75, label: '75' },
-  { value: 100, label: '100' },
-]
 
 interface FormValues {
   cancel: any

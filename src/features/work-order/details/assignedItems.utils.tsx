@@ -33,6 +33,7 @@ import { CgPlayListRemove } from 'react-icons/cg'
 import { CustomCheckBox } from './assigned-items'
 import { readFileContent } from 'api/vendor-details'
 import { completePercentage } from './work-order-edit-tab'
+import { completePercentageValues } from 'api/work-order'
 
 const swoPrefix = '/smartwo/api'
 
@@ -867,14 +868,6 @@ export const useGetLineItemsColumn = ({
     )
   }
 
-  const completePercentage = [
-    { value: 10, label: '10' },
-    { value: 25, label: '25' },
-    { value: 50, label: '50' },
-    { value: 75, label: '75' },
-    { value: 100, label: '100' },
-  ]
-
   let columns = useMemo(() => {
     return [
       {
@@ -1240,7 +1233,7 @@ export const useGetLineItemsColumn = ({
                         <CreatableSelect
                           {...field}
                           id={`assignedItems.${index}.completePercentage`}
-                          options={completePercentage}
+                          options={completePercentageValues}
                           size="md"
                           value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
                           isDisabled={isVendor}
