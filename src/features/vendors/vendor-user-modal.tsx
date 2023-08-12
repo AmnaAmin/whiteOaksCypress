@@ -389,7 +389,6 @@ const VendorUserModal = ({
                             fontWeight={400}
                             color="#718096"
                             {...register('activated')}
-                            disabled={vendorDetails?.vendorAdmin}
                           >
                             {t(`${USER_MANAGEMENT}.modal.activated`)}
                           </Checkbox>
