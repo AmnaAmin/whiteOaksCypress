@@ -592,7 +592,7 @@ const WorkOrderDetailTab = props => {
                 </FormControl>
               </Box>
               {!(uploadedWO && uploadedWO?.s3Url) && (
-                <Box w="215px">
+                <Box w="215px" display={'none'}>
                   <FormControl>
                     <FormLabel variant="strong-label" size="md">
                       {t(`${WORK_ORDER}.completePercentage`)}
