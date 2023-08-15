@@ -40,7 +40,6 @@ import {
   useFetchAllPermissions,
   useUpdateRoleMutation,
 } from 'api/access-control'
-import { useAccountData } from 'api/user-account'
 
 interface PemissionFormValues {
   roleName: string
@@ -49,7 +48,7 @@ interface PemissionFormValues {
   permissions: Array<{ name: string; edit: boolean; hide: boolean; read: boolean }>
 }
 
-export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) => {
+export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, allowEdit }) => {
   const formReturn = useForm<PemissionFormValues>()
   const {
     formState: { errors },
@@ -58,9 +57,6 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
   const { mutate: createRole } = useCreateNewRoleMutation()
   const { mutate: updateRole } = useUpdateRoleMutation(permissions?.[0]?.name)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { data } = useAccountData()
-  const isDevtekUser = data?.devAccount
-  const allowEdit = !permissions?.systemRole || (permissions?.systemRole && isDevtekUser)
   const { control, register, reset } = formReturn
   const { t } = useTranslation()
   useEffect(() => {
