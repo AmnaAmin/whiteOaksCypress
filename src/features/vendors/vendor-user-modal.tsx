@@ -157,7 +157,7 @@ const VendorUserModal = ({
       setModalSize('3xl')
     }
   }, [isMobile])
-  const { isFPM,isAdmin } = useUserRolesSelector()
+  const { isFPM } = useUserRolesSelector()
   
   return (
     <div>
