@@ -91,7 +91,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
                     data-testid="carrier-name"
                     {...register(`carrier.${index}.name`, {
                       required: 'This is required',
-                      validate: value => value.trim().length > 0 || 'This is required',
+                      validate: value => value?.trim().length > 0 || 'This is required',
                     })}
                     variant={'required-field'}
                     type="text"
