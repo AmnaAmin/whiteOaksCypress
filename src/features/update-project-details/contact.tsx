@@ -23,6 +23,7 @@ import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { t } from 'i18next'
 import Select from 'components/form/react-select'
 import { useFPMsByMarket } from 'api/pc-projects'
+import { validateTelePhoneNumber } from 'utils/form-validation'
 
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
@@ -48,6 +49,7 @@ const Contact: React.FC<ContactProps> = ({
     register,
     control,
     formState: { errors },
+    watch,
     setValue,
   } = useFormContext<ProjectDetailsFormValues>()
   const marketWatch = useWatch({ name: 'market', control })
@@ -55,7 +57,11 @@ const Contact: React.FC<ContactProps> = ({
   const clientWatch = useWatch({ name: 'client', control })
   const [carrierOption, setCarrierOption] = useState<SelectOption[] | null | undefined>()
   const { fieldProjectManagerByMarketOptions, isLoading } = useFPMsByMarket(marketWatch?.value)
-
+  
+  const agentPhoneValue = watch('agentPhone');
+  const superPhoneNumberExtensionValue = watch('superPhoneNumberExtension');
+  const superPhoneNumberSuper = watch('superPhoneNumber');
+  const homeOwnerPhoneValue = watch('homeOwnerPhone');
   useEffect(() => {
     setCarrierOption(
       clientWatch?.carrier?.map(c => {
@@ -86,7 +92,12 @@ const Contact: React.FC<ContactProps> = ({
       setValue('fieldProjectManager', null)
     }
   }, [fieldProjectManagerByMarketOptions])
+  const [extensionValue, setExtensionValue] = useState('');
 
+  const handleExtensionChange = (event) => {
+    const inputValue = event.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+    setExtensionValue(inputValue);
+  };
   return (
     <Stack spacing={14} minH="600px">
       <HStack spacing="16px">
@@ -225,34 +236,51 @@ const Contact: React.FC<ContactProps> = ({
         </Box>
 
         <Box h="40px">
-          <FormControl isInvalid={!!errors?.superPhoneNumber}>
+        <FormControl isInvalid={!!(errors?.superPhoneNumber && superPhoneNumberSuper)}>
             <InputLabel title={'project.projectDetails.superPhone'} htmlFor={'superPhoneNumber'} />
             <Controller
-              control={control}
-              name="superPhoneNumber"
-              render={({ field, fieldState }) => {
-                return (
-                  <>
-                    <NumberFormat
-                      size="md"
-                      customInput={Input}
-                      value={field.value}
-                      onChange={e => field.onChange(e)}
-                      format="(###)-###-####"
-                      mask="_"
-                      placeholder="(___)-___-____"
-                    />
-                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
-                  </>
-                )
-              }}
-            />
+  control={control}
+  name="superPhoneNumber"
+  rules={{
+    validate: (number: string | null) => {
+      if (!number) {
+        return true; // No error message if no value
+      }
+      if (number.length < 10) {
+        return 'Valid Phone Number Is Required';
+      }
+      return validateTelePhoneNumber(number) || 'Invalid phone number';
+    },
+  }}
+  render={({ field, fieldState }) => {
+    return (
+      <>
+        <NumberFormat
+          size="md"
+          customInput={Input}
+          value={field.value}
+          onChange={e => field.onChange(e)}
+          format="(###)-###-####"
+          mask="_"
+          placeholder="(___)-___-____"
+        />
+        <FormErrorMessage>{fieldState?.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
+      </>
+    );
+  }}
+/>
+
           </FormControl>
         </Box>
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superPhoneNumberExtension}>
             <InputLabel title={'project.projectDetails.ext'} htmlFor={'superPhoneNumberExtension'} />
-            <Input size="md" id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" />
+            <Input 
+            size="md" 
+            id="superPhoneNumberExtension" 
+            {...register('superPhoneNumberExtension')} 
+            w="124px" 
+ />
             <FormErrorMessage>{errors?.superPhoneNumberExtension?.message}</FormErrorMessage>
           </FormControl>
         </Box>
@@ -345,38 +373,54 @@ const Contact: React.FC<ContactProps> = ({
           </FormControl>
         </Box>
         <Box h="40px">
-          <FormControl w="215px" isInvalid={!!errors?.agentPhone}>
-            <InputLabel title={t(`${NEW_PROJECT}.phone`)} htmlFor={'agentPhone'} />
-            <Controller
-              control={control}
-              name="agentPhone"
-              render={({ field, fieldState }) => {
-                return (
-                  <>
-                    <NumberFormat
-                      size="md"
-                      isDisabled={isFieldProjectManagerDisabled}
-                      customInput={Input}
-                      value={field.value}
-                      onChange={e => field.onChange(e)}
-                      format="(###)-###-####"
-                      mask="_"
-                      placeholder="(___)-___-____"
-                    />
-                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
-                  </>
-                )
-              }}
-            />
-          </FormControl>
-        </Box>
-        <Box h="40px">
-          <FormControl w="215px" isInvalid={!!errors?.agentEmail}>
-            <InputLabel title={t(`${NEW_PROJECT}.email`)} htmlFor={'agentEmail'} />
-            <Input size="md" isDisabled={isFieldProjectManagerDisabled} id="agentEmail" {...register('agentEmail')} />
-            <FormErrorMessage>{errors?.agentEmail?.message}</FormErrorMessage>
-          </FormControl>
-        </Box>
+  <FormControl isInvalid={!!(errors?.agentPhone && agentPhoneValue)}>
+    <InputLabel title={t(`${NEW_PROJECT}.phone`)} htmlFor={'agentPhone'} />
+    <Controller
+  control={control}
+  name="agentPhone"
+  rules={{
+    validate: (number: string | null) => {
+      if (!number) {
+        return true; // No error message if no value
+      }
+      if (number.length < 10) {
+        return 'Valid Phone Number Is Required';
+      }
+      return validateTelePhoneNumber(number) || 'Invalid phone number';
+    },
+  }}
+  render={({ field, fieldState }) => {
+    return (
+      <>
+        <NumberFormat
+          size="md"
+          customInput={Input}
+          value={field.value}
+          onChange={e => field.onChange(e)}
+          format="(###)-###-####"
+          mask="_"
+          placeholder="(___)-___-____"
+        />
+        <FormErrorMessage>{fieldState?.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
+      </>
+    );
+  }}
+/>
+  </FormControl>
+</Box>
+<Box h="40px">
+  <FormControl isInvalid={!!(errors?.superPhoneNumberExtension && superPhoneNumberExtensionValue)}>
+    <InputLabel title={'project.projectDetails.ext'} htmlFor={'superPhoneNumberExtension'} />
+    <Input size="md" id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" type="number" />
+    <FormErrorMessage>
+      {errors?.superPhoneNumberExtension?.message && (
+        <span>{errors.superPhoneNumberExtension.message}</span>
+      )}
+    </FormErrorMessage>
+  </FormControl>
+</Box>
+
+
       </HStack>
 
       <HStack spacing="16px">
@@ -393,11 +437,22 @@ const Contact: React.FC<ContactProps> = ({
           </FormControl>
         </Box>
         <Box h="40px">
-          <FormControl w="215px" isInvalid={!!errors?.homeOwnerPhone}>
+        <FormControl isInvalid={!!(errors?.homeOwnerPhone && homeOwnerPhoneValue)}>
             <InputLabel title={t(`${NEW_PROJECT}.phone`)} htmlFor={'homeOwnerPhone'} />
             <Controller
               control={control}
               name="homeOwnerPhone"
+              rules={{
+                validate: (number: string | null) => {
+                  if (!number) {
+                    return true; // No error message if no value
+                  }
+                  if (number.length < 10) {
+                    return 'Valid Phone Number Is Required';
+                  }
+                  return validateTelePhoneNumber(number) || 'Invalid phone number';
+                },
+              }}
               render={({ field, fieldState }) => {
                 return (
                   <>
@@ -405,17 +460,17 @@ const Contact: React.FC<ContactProps> = ({
                       size="md"
                       customInput={Input}
                       value={field.value}
-                      isDisabled={isFieldProjectManagerDisabled}
                       onChange={e => field.onChange(e)}
                       format="(###)-###-####"
                       mask="_"
                       placeholder="(___)-___-____"
                     />
-                    <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                    <FormErrorMessage>{fieldState?.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
                   </>
-                )
+                );
               }}
             />
+            
           </FormControl>
         </Box>
         <Box h="40px">
