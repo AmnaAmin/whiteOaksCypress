@@ -27,10 +27,10 @@ export const usePropertyInformationNextDisabled = (
   const isAcknowledgeCheck = formValues?.property && isDuplicateAddress ? formValues?.acknowledgeCheck : true
   const isHomeOwnerPhoneValue = formValues?.homeOwnerPhone === '' || isValidPhoneNumber(formValues?.homeOwnerPhone)
   const isHomeOwnerEmailValid = formValues?.homeOwnerEmail === '' || isValidEmail(formValues?.homeOwnerEmail)
-
+  const isCityNotEmpty = formValues?.city && formValues?.city.trim() !== '';
   return (
     !formValues.streetAddress ||
-    !formValues.city ||
+    !isCityNotEmpty ||
     !formValues.state?.value ||
     !formValues.zipCode ||
     !formValues.newMarket?.value ||
