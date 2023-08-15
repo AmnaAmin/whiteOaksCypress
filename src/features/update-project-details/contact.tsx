@@ -275,7 +275,11 @@ const Contact: React.FC<ContactProps> = ({
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superPhoneNumberExtension}>
             <InputLabel title={'project.projectDetails.ext'} htmlFor={'superPhoneNumberExtension'} />
-            <Input size="md" id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" type="number" />
+            <Input size="md" id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} 
+            w="124px"  
+            value={extensionValue}
+      onChange={handleExtensionChange}
+      type="text"/>
             <FormErrorMessage>{errors?.superPhoneNumberExtension?.message}</FormErrorMessage>
           </FormControl>
         </Box>
@@ -406,7 +410,9 @@ const Contact: React.FC<ContactProps> = ({
 <Box h="40px">
   <FormControl isInvalid={!!(errors?.superPhoneNumberExtension && superPhoneNumberExtensionValue)}>
     <InputLabel title={'project.projectDetails.ext'} htmlFor={'superPhoneNumberExtension'} />
-    <Input size="md" id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" type="number" />
+    <Input size="md" id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px"  value={extensionValue}
+      onChange={handleExtensionChange}
+      type="text" />
     <FormErrorMessage>
       {errors?.superPhoneNumberExtension?.message && (
         <span>{errors.superPhoneNumberExtension.message}</span>
