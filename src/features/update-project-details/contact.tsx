@@ -275,12 +275,7 @@ const Contact: React.FC<ContactProps> = ({
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superPhoneNumberExtension}>
             <InputLabel title={'project.projectDetails.ext'} htmlFor={'superPhoneNumberExtension'} />
-            <Input 
-            size="md" 
-            id="superPhoneNumberExtension" 
-            {...register('superPhoneNumberExtension')} 
-            w="124px" 
- />
+            <Input size="md" id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} w="124px" type="number" />
             <FormErrorMessage>{errors?.superPhoneNumberExtension?.message}</FormErrorMessage>
           </FormControl>
         </Box>
