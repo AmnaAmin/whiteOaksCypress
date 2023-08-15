@@ -37,6 +37,7 @@ import { useState, useEffect } from 'react'
 import { Card } from 'components/card/card'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
+
 const VendorUserModal = ({
   vendorDetails,
   onClose,
@@ -153,7 +154,8 @@ const VendorUserModal = ({
       setModalSize('3xl')
     }
   }, [isMobile])
-  const { isFPM } = useUserRolesSelector()
+  const { isFPM,isAdmin } = useUserRolesSelector()
+  
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onCloseModal} size={modalSize} variant="custom">
@@ -389,7 +391,7 @@ const VendorUserModal = ({
                             fontWeight={400}
                             color="#718096"
                             {...register('activated')}
-                            disabled={vendorDetails?.vendorAdmin}
+                            disabled={vendorDetails?.vendorAdmin && !isAdmin}
                           >
                             {t(`${USER_MANAGEMENT}.modal.activated`)}
                           </Checkbox>
