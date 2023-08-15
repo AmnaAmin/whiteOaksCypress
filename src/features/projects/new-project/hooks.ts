@@ -69,24 +69,39 @@ export const useNewClientNextButtonDisabled = ({ control }: any) => {
   const [companyName, paymentTerm, streetAddress, city, state] = useWatch({
     control,
     name: ['companyName', 'paymentTerm', 'streetAddress', 'city', 'state'],
-  })
-  const contact = useWatch({ control, name: ['contacts'] })
-  const contactArray = contact?.length > 0 ? contact[0] : []
+  });
+  const contact = useWatch({ control, name: ['contacts'] });
+  const contactArray = contact?.length > 0 ? contact[0] : [];
 
-  const accountPayable = useWatch({ control, name: ['accountPayableContactInfos'] })
-  const accountPayableArray = accountPayable?.length > 0 ? accountPayable[0] : []
+  const accountPayable = useWatch({ control, name: ['accountPayableContactInfos'] });
+  const accountPayableArray = accountPayable?.length > 0 ? accountPayable[0] : [];
+
+  const isFieldEmptyOrSpaces = (fieldValue: string | undefined | null): boolean => {
+    return  fieldValue === undefined || fieldValue === null || (typeof fieldValue === 'string' && fieldValue.trim() === '');
+  };
 
   return {
-    isNewClientDetails: !companyName || !paymentTerm || !streetAddress || !city || !state,
-    isContactSection: contactArray?.some(
-      contact => !contact.contact || !contact.emailAddress || !contact.phoneNumber || !contact.market,
-    ),
-    isAccountPayableSection: accountPayableArray?.some(
-      accountPayable =>
-        !accountPayable.contact ||
-        !accountPayable.phoneNumber ||
-        !accountPayable.emailAddress ||
-        !accountPayable.comments,
-    ),
-  }
-}
+    isNewClientDetails:
+      isFieldEmptyOrSpaces(companyName) ||
+      isFieldEmptyOrSpaces(paymentTerm) ||
+      isFieldEmptyOrSpaces(streetAddress) ||
+      isFieldEmptyOrSpaces(city) ||
+      isFieldEmptyOrSpaces(state),
+    isContactSection:
+      contactArray?.some(
+        contact =>
+          isFieldEmptyOrSpaces(contact?.contact) ||
+          isFieldEmptyOrSpaces(contact?.emailAddress) ||
+          isFieldEmptyOrSpaces(contact?.phoneNumber) ||
+          isFieldEmptyOrSpaces(contact?.market)
+      ) ?? false,
+    isAccountPayableSection:
+      accountPayableArray?.some(
+        accountPayable =>
+          isFieldEmptyOrSpaces(accountPayable?.contact) ||
+          isFieldEmptyOrSpaces(accountPayable?.phoneNumber) ||
+          isFieldEmptyOrSpaces(accountPayable?.emailAddress) ||
+          isFieldEmptyOrSpaces(accountPayable?.comments)
+      ) ?? false,
+  };
+};
