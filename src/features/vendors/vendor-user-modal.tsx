@@ -49,7 +49,6 @@ const VendorUserModal = ({
   parentVendorId: number
 }) => {
   const { t } = useTranslation()
-
   //es-lint-disable-next-line
   //const { isLoading } = useVendorProfile(vendorDetails?.id)
 

@@ -754,13 +754,18 @@ export const useFieldEnableDecision = ({ workOrder, lineItems }) => {
 
 const setColumnsByConditions = (columns, workOrder, isVendor) => {
   if (workOrder) {
-    columns = columns.filter(c => !['assigned'].includes(c.accessorKey))
+    columns = columns.filter(c => !['assigned', 'completePercentage'].includes(c.accessorKey))
     if (isVendor) {
       if (workOrder.showPricing) {
-        columns = columns.filter(c => !['price', 'profit', 'clientAmount', 'isVerified'].includes(c.accessorKey))
+        columns = columns.filter(
+          c => !['price', 'profit', 'clientAmount', 'isVerified', 'completePercentage'].includes(c.accessorKey),
+        )
       } else {
         columns = columns.filter(
-          c => !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessorKey),
+          c =>
+            !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified', 'completePercentage'].includes(
+              c.accessorKey,
+            ),
         )
       }
     }
