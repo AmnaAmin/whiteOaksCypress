@@ -25,15 +25,16 @@ import { useTranslation } from 'react-i18next'
 import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
 
+// 
 export const CLIENT_TABLE_QUERY_KEYS = {
   companyName: 'companyName.contains',
-  contactsName: 'contactsName.contains',
+  contactsName: 'contactName.contains',
   streetAddress: 'streetAddress.contains',
-  contactsPhone: 'contactsPhone.equals',
-  contactsEmail: 'contactsEmail.equals',
+  contactsPhone: 'contactPhone.contains',
+  contactsEmail: 'contactEmail.contains',
   accountPayableContactInfosContact: 'accountPayableContactInfosContact.contains',
-  accountPayableContactInfosEmail: 'accountPayableContactInfosEmail.equals',
-  accountPayableContactInfosPhone: 'accountPayableContactInfosPhone.equals',
+  accountPayableContactInfosEmail: 'accountPayableContactInfosEmail.contains',
+  accountPayableContactInfosPhone: 'accountPayableContactInfosPhone.contains',
 };
 
 
