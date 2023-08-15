@@ -10,13 +10,7 @@ import { useClient } from 'utils/auth-context'
 import { usePaginationQuery } from 'api'
 import { reduceArrayToObject } from 'utils'
 
-// export const useClients = () => {
-//   const client = useClient()
-//   return useQuery('client', async () => {
-//     const response = await client(`clients?page=0&size=10&sort=id,asc`, {})
-//     return orderBy(response?.data || [], ['id'], ['desc'])
-//   })
-// }
+
 
 const getClientQueryString = (filterQueryString: string) => {
   let queryString = filterQueryString
@@ -28,7 +22,7 @@ const getClientQueryString = (filterQueryString: string) => {
 
 type clients = Array<any>
 
-export const useClients = (queryString: string, pageSize: number) => {
+export const useClients = (queryString: string = '', pageSize: number = 20) => {
   const apiQueryString = getClientQueryString(queryString)
   const { data, ...rest } = usePaginationQuery<clients>(
     ['client', apiQueryString],

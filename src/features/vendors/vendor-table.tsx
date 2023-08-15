@@ -164,7 +164,6 @@ type ProjectProps = {
   selectedCard: string
 }
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
-  console.log('selected cards==========', selectedCard)
   const location = useLocation()
   const navigate = useNavigate()
   const vendor = (location?.state as any)?.data || {}
