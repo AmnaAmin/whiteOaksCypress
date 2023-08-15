@@ -21,22 +21,10 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { ExportButton } from 'components/table-refactored/export-button'
+import { CLIENT_TABLE_QUERY_KEYS } from 'api/clients'
 import { useTranslation } from 'react-i18next'
 import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
-
-
-export const CLIENT_TABLE_QUERY_KEYS = {
-  companyName: 'companyName.contains',
-  contactsName: 'contactName.contains',
-  streetAddress: 'streetAddress.contains',
-  contactsPhone: 'contactPhone.contains',
-  contactsEmail: 'contactEmail.contains',
-  accountPayableContactInfosContact: 'accountPayableContactInfosContact.contains',
-  accountPayableContactInfosEmail: 'accountPayableContactInfosEmail.contains',
-  accountPayableContactInfosPhone: 'accountPayableContactInfosPhone.contains',
-};
-
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { defaultSelected } = props

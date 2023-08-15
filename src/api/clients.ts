@@ -312,3 +312,14 @@ export const mappingDataForClientExport = (data, columns) => {
     }, {})
   })
 }
+
+export const CLIENT_TABLE_QUERY_KEYS = {
+  companyName: 'companyName.contains',
+  contactsName: 'contactName.contains',
+  streetAddress: 'streetAddress.contains',
+  contactsPhone: 'contactPhone.contains',
+  contactsEmail: 'contactEmail.contains',
+  accountPayableContactInfosContact: 'accountPayableContactInfosContact.contains',
+  accountPayableContactInfosEmail: 'accountPayableContactInfosEmail.contains',
+  accountPayableContactInfosPhone: 'accountPayableContactInfosPhone.contains',
+};
