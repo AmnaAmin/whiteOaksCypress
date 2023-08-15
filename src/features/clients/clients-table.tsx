@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
 
-// 
+
 export const CLIENT_TABLE_QUERY_KEYS = {
   companyName: 'companyName.contains',
   contactsName: 'contactName.contains',
@@ -40,7 +40,6 @@ export const CLIENT_TABLE_QUERY_KEYS = {
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { defaultSelected } = props
-  // const { data: clients, isLoading, refetch } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
@@ -64,7 +63,6 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
      queryStringWithPagination,
     pagination.pageSize,
   )
-  // const { tableColumns, settingColumns, refetch: refetchColumns } = useTableColumnSettings(columns, TableNames.clients)
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.clients)
   const { t } = useTranslation()
 
@@ -90,15 +88,6 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   }, [defaultSelected])
 
 
-
-  // useEffect(() => {
-  //   if (selectedCard) {
-  //     setFilteredUrl(VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
-  //     setPagination({ pageIndex: 0, pageSize: 20 })
-  //   } else {
-  //     setFilteredUrl(null)
-  //   }
-  // }, [selectedCard])
   const CLIENT_COLUMNS: ColumnDef<any>[] = [
     {
       header: `${CLIENTS}.name`,

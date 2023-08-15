@@ -11,7 +11,7 @@ export function usePaginationQuery<TData>(
 ): UseQueryResult<{ data: TData | undefined; totalCount: number; dataCount: number }> {
   const toast = useToast()
   const client = useClient(clientName)
-console.log("client name------>",client)
+  
   return useQuery(
     queryKey,
     async () => {
