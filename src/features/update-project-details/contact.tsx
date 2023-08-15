@@ -92,7 +92,12 @@ const Contact: React.FC<ContactProps> = ({
       setValue('fieldProjectManager', null)
     }
   }, [fieldProjectManagerByMarketOptions])
+  const [extensionValue, setExtensionValue] = useState('');
 
+  const handleExtensionChange = (event) => {
+    const inputValue = event.target.value.replace(/[^0-9]/g, ''); // Remove non-numeric characters
+    setExtensionValue(inputValue);
+  };
   return (
     <Stack spacing={14} minH="600px">
       <HStack spacing="16px">
