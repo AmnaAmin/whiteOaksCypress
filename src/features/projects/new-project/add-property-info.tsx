@@ -317,11 +317,11 @@ export const AddPropertyInfo: React.FC<{
 
             <GridItem>
               <FormControl>
-                <FormLabel htmlFor="claim" size="md">
-                  {t(`${NEW_PROJECT}.claim`)}
+                <FormLabel htmlFor="claimNumber" size="md">
+                  {t(`${NEW_PROJECT}.claimNumber`)}
                 </FormLabel>
-                <Input id="claim" 
-                // {...register('claim')} 
+                <Input id="claimNumber" 
+                // {...register('claimNumber')} 
                 type="number" />
               </FormControl>
             </GridItem>
