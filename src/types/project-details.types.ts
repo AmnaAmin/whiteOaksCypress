@@ -96,6 +96,7 @@ type ProjectDetailsLocationFormValues = {
   market: SelectOption | null
   gateCode: string | null
   lockBoxCode: string | null
+  claimNumber?:number | null
   hoaContactPhoneNumber: string | null
   hoaContactExtension: string | null
   hoaContactEmail: string | null
@@ -208,6 +209,7 @@ export type ProjectDetailsAPIPayload = {
   market: string | null
   gateCode: string | null
   lockBoxCode: string | null
+  claimNumber?:number | null
   hoaPhone: string | null
   hoaPhoneNumberExtension: string | null
   hoaEmailAddress: string | null
