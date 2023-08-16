@@ -71,11 +71,19 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     setValue,
   } = formReturn
   const values = getValues()
-  let total_Amount = 0
-  const totalvalue = values.transaction.forEach(transaction => {
-    total_Amount += parseFloat(transaction.amount)
-  })
-  console.log('totalvalue', totalvalue)
+    const transaction = useWatch({ name: 'transaction', control })
+   
+  // const totalvalue = values.transaction.forEach(transaction => {
+  //   total_Amount += parseFloat(transaction.amount)
+  // })
+  useEffect(() => {
+    let total_Amount = 0;
+    values.transaction.forEach(transaction => {
+      total_Amount += parseFloat(transaction.amount);
+    });
+    onSetTotalRemainingAmount(Math.abs(total_Amount));
+  }, [values.transaction, onSetTotalRemainingAmount]);
+ 
   const {
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
@@ -88,7 +96,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     onOpen: onReplaceMaterialUploadOpen,
   } = useDisclosure()
 
-  const transaction = useWatch({ name: 'transaction', control })
+
   const document = useWatch({ name: 'attachment', control })
   const { mutate: uploadMaterialAttachment } = useUploadMaterialAttachment()
   const { data: account } = useAccountDetails()
@@ -563,9 +571,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                               : inputValue,
                                           )
                                         : field.onChange('')
-                                      onSetTotalRemainingAmount(Math.abs(total_Amount))
+                                     
                                     }}
-                                    onValueChange={onSetTotalRemainingAmount(Math.abs(total_Amount))}
+                                   
                                     variant={'required-field'}
                                     size="sm"
                                   />
