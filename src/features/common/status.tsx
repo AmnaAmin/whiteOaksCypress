@@ -6,6 +6,13 @@ export const STATUS_CODE = {
   INVOICED: 110,
 }
 
+export enum PERFORM {
+  SelfPer = 'Self-Perform 20',
+  CoPer20 = 'CO-Perform 20',
+  COPer14 = 'CO-Perform 14',
+  CoPer7 = 'CO-Perform 7',
+}
+
 export enum STATUS {
   Paid = 'paid',
   Active = 'active',
@@ -30,7 +37,7 @@ export enum STATUS {
   DoNotUse = 'do not use',
   Decline = 'decline',
   Reconcile = 'reconcile',
-  Rejected = 'rejected'
+  Rejected = 'rejected',
 }
 
 const STATUS_COLOR = {
@@ -57,7 +64,7 @@ const STATUS_COLOR = {
   [STATUS.DoNotUse]: { color: '#F56565', backgroundColor: '#FEFEFE' },
   [STATUS.Decline]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' },
   [STATUS.Rejected]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' },
-  [STATUS.Reconcile]: { color: '#4A5568', backgroundColor: '#F8F6CD' }
+  [STATUS.Reconcile]: { color: '#4A5568', backgroundColor: '#F8F6CD' },
 }
 
 const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {

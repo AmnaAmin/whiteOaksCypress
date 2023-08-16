@@ -16,7 +16,7 @@ export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }
       <WorkOrderDetailsTab
         documentsData={projectData}
         onClose={onClose}
-        workOrder={workOrder}
+        workOrder={{ ...workOrder, ...assignedItems }}
         projectData={projectData}
         setIsUpdating={null}
         isUpdating={false}

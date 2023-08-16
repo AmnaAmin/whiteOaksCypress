@@ -33,7 +33,7 @@ export const removePercentageFormat = (value = '') => {
 }
 
 export const truncateWithEllipsis = (s: string, maxLength: number) => {
-  if (s.length > maxLength) {
+  if (s?.length > maxLength) {
     return s.substring(0, maxLength) + '...'
   }
   return s
