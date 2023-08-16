@@ -24,7 +24,7 @@ export const RolesList = ({ setSelectedRole, selectedRole, allowEdit }) => {
           {roles?.map(role => {
             return (
               <>
-                <Tr minH="45px" {...(selectedRole === role.name && { bg: '#F3F8FF !important' })}>
+                <Tr minH="45px" {...(selectedRole?.name === role.name && { bg: '#F3F8FF !important' })}>
                   <Td lineHeight="28px" w="50%" borderRight="1px solid #CBD5E0">
                     {role.name}
                   </Td>
@@ -39,7 +39,7 @@ export const RolesList = ({ setSelectedRole, selectedRole, allowEdit }) => {
                         fontWeight={'400'}
                         fontStyle={'normal'}
                         onClick={() => {
-                          setSelectedRole(role.name)
+                          setSelectedRole(role)
                         }}
                       >
                         <BiEditAlt></BiEditAlt>
@@ -55,7 +55,7 @@ export const RolesList = ({ setSelectedRole, selectedRole, allowEdit }) => {
                           fontWeight={'400'}
                           fontStyle={'normal'}
                           onClick={() => {
-                            setSelectedRole(role.name)
+                            setSelectedRole(role)
                             onOpenDeleteModal()
                           }}
                         >
@@ -77,7 +77,7 @@ export const RolesList = ({ setSelectedRole, selectedRole, allowEdit }) => {
           onClose={onCloseDeleteModal}
           isLoading={false}
           onConfirm={() => {
-            deleteRole(selectedRole)
+            deleteRole(selectedRole?.name)
             onCloseDeleteModal()
           }}
           showNoButton={true}

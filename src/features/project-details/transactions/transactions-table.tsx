@@ -85,8 +85,13 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   }, [props.transId])
 
   useEffect(() => {
-    setTotalPages(Math.ceil((transactions?.length ?? 0) / 50))
-    setTotalRows(transactions?.length ?? 0)
+    if (!transactions?.length) {
+      setTotalPages(1)
+      setTotalRows(0)
+    } else {
+      setTotalPages(Math.ceil((transactions?.length ?? 0) / 50))
+      setTotalRows(transactions?.length ?? 0)
+    }
   }, [transactions])
 
   const setPageCount = rows => {
@@ -144,7 +149,6 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
             <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !transactions?.length} />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <ButtonsWrapper>
-                
                 <ExportButton columns={tableColumns} refetch={refetch} isLoading={isLoading} fileName="transactions" />
                 <CustomDivider />
                 {settingColumns && (

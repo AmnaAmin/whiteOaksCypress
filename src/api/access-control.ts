@@ -87,7 +87,7 @@ export const useDeleteRole = () => {
   const toast = useToast()
   return useMutation(
     roleName => {
-      return client(`authorities?name=${roleName}`, {
+      return client(`authorities/${roleName}`, {
         method: 'DELETE',
       })
     },

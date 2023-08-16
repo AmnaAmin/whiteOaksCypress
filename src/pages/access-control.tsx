@@ -11,8 +11,8 @@ import { useAccountData } from 'api/user-account'
 
 export const AccessControl: React.FC = () => {
   const { t } = useTranslation()
-  const [selectedRole, setSelectedRole] = useState<string | null>()
-  const { data: permissions, isLoading: isLoadingPermissions } = useFetchRolesPermissions(selectedRole)
+  const [selectedRole, setSelectedRole] = useState<{ name: string; id: string | number } | null>(null)
+  const { data: permissions, isLoading: isLoadingPermissions } = useFetchRolesPermissions(selectedRole?.name)
   const [newRole, setNewRole] = useState(false)
   const { data } = useAccountData()
   const isDevtekUser = data?.devAccount
