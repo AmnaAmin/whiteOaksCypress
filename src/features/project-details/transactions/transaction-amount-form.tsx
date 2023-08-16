@@ -71,7 +71,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     setValue,
   } = formReturn
   const values = getValues()
-
+  let total_Amount = 0
+  const totalvalue = values.transaction.forEach(transaction => {
+    total_Amount += parseFloat(transaction.amount)
+  })
+  console.log('totalvalue', totalvalue)
   const {
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
@@ -551,8 +555,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                       }
                                     }}
                                     onChange={e => {
-                                      onSetTotalRemainingAmount(Math.abs(e?.target?.value))
-
                                       const inputValue = e.currentTarget.value
                                       inputValue !== ''
                                         ? field.onChange(
@@ -561,7 +563,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                               : inputValue,
                                           )
                                         : field.onChange('')
+                                      onSetTotalRemainingAmount(Math.abs(total_Amount))
                                     }}
+                                    onValueChange={onSetTotalRemainingAmount(Math.abs(total_Amount))}
                                     variant={'required-field'}
                                     size="sm"
                                   />
