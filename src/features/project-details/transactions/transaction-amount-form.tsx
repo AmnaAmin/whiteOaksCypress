@@ -71,18 +71,18 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     setValue,
   } = formReturn
   const values = getValues()
-    const transaction = useWatch({ name: 'transaction', control })
-   
-  // const totalvalue = values.transaction.forEach(transaction => {
-  //   total_Amount += parseFloat(transaction.amount)
-  // })
+  const transaction = useWatch({ name: 'transaction', control })
   useEffect(() => {
     let total_Amount = 0;
     values.transaction.forEach(transaction => {
-      total_Amount += parseFloat(transaction.amount);
-    });
-    onSetTotalRemainingAmount(Math.abs(total_Amount));
-  }, [values.transaction, onSetTotalRemainingAmount]);
+      total_Amount += parseFloat(transaction.amount)
+    })
+    
+    const finalTotalAmount = Math.abs(total_Amount)
+    if (finalTotalAmount){
+      onSetTotalRemainingAmount(finalTotalAmount)
+    }
+  }, [values.transaction])
  
   const {
     isOpen: isDeleteConfirmationModalOpen,

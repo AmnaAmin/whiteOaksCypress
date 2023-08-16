@@ -4,23 +4,53 @@ import { mappingDataForClientExport, useClients } from 'api/clients'
 import { Clients } from 'types/client.type'
 import Client from 'features/clients/selected-client-modal'
 import { CLIENTS } from './clients.i18n'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { Table } from 'components/table-refactored/table'
 import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
-import { ExportButton } from 'components/table-refactored/export-button'
 import TableColumnSettings from 'components/table/table-column-settings'
+import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
+import {
+  GotoFirstPage,
+  GotoLastPage,
+  GotoNextPage,
+  GotoPreviousPage,
+  ShowCurrentRecordsWithTotalRecords,
+  TablePagination,
+} from 'components/table-refactored/pagination'
+import { ExportButton } from 'components/table-refactored/export-button'
+import { CLIENT_TABLE_QUERY_KEYS } from 'api/clients'
 import { useTranslation } from 'react-i18next'
 import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { defaultSelected } = props
-  const { data: clients, isLoading, refetch } = useClients()
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
+  const [sorting, setSorting] = React.useState<SortingState>([])
+
+  const { columnFilters, setColumnFilters, queryStringWithPagination } =
+    useColumnFiltersQueryString({
+      queryStringAPIFilterKeys: CLIENT_TABLE_QUERY_KEYS,
+      pagination,
+      setPagination,
+      sorting,
+    })
+
+  const {
+    data: clients,
+    isLoading,
+    dataCount: clientDataCount,
+    totalPages: clientTotalPages,
+    refetch,
+  } = useClients(
+     queryStringWithPagination,
+    pagination.pageSize,
+  )
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.clients)
   const { t } = useTranslation()
 
@@ -40,9 +70,11 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   useEffect(() => {
     if (defaultSelected?.id) {
       setSelectedClient(defaultSelected)
+      setPagination({ pageIndex: 0, pageSize: 20 })
       onOpen()
     }
   }, [defaultSelected])
+
 
   const CLIENT_COLUMNS: ColumnDef<any>[] = [
     {
@@ -147,7 +179,17 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       )}
 
       <Box overflow={'auto'} h="calc(100vh - 225px)" border="1px solid #CBD5E0" borderBottomRadius="6px">
-        <TableContextProvider data={clients} columns={tableColumns}>
+        <TableContextProvider
+          data={clients}
+          columns={CLIENT_COLUMNS}
+          totalPages={clientTotalPages}
+          pagination={pagination}
+          setPagination={setPagination}
+          columnFilters={columnFilters}
+          setColumnFilters={setColumnFilters}
+          sorting={sorting}
+          setSorting={setSorting}
+        >
           <Table
             onRowClick={row => {
               setSelectedClient(row)
@@ -157,6 +199,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
             isEmpty={!isLoading && !clients?.length}
           />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
+            
             <ButtonsWrapper>
               <ExportButton
                 columns={tableColumns}
@@ -180,6 +223,13 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
                 />
               )}
             </ButtonsWrapper>
+            <TablePagination>
+              <ShowCurrentRecordsWithTotalRecords dataCount={clientDataCount} />
+              <GotoFirstPage />
+              <GotoPreviousPage />
+              <GotoNextPage />
+              <GotoLastPage />
+            </TablePagination>
           </TableFooter>
         </TableContextProvider>
       </Box>
