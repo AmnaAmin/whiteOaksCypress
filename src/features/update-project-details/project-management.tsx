@@ -199,6 +199,16 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormErrorMessage>{errors.poNumber && errors.poNumber.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+          <GridItem >
+              <FormControl w="215px">
+                <FormLabel htmlFor="claim" size="md" variant="strong-label">
+                  {t(`project.projectDetails.claim`)}
+                </FormLabel>
+                <Input id="claim" 
+                // {...register('claim')}
+                 type="number" />
+              </FormControl>
+            </GridItem>
           <GridItem>
             <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
