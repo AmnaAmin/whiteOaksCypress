@@ -88,6 +88,7 @@ const WorkOrderDetailTab = ({
   }
 
   const defaultValues: FormValues = useMemo(() => {
+    
     return getDefaultValues()
   }, [workOrder, workOrderAssignedItems?.length])
 
