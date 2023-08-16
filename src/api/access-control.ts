@@ -231,6 +231,7 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
       const key = p.name + '.' + (p.edit ? 'EDIT' : 'READ')
       return allPermissions?.find(a => a.key === key)
     })
+
   for (const key in values.advancedPermissions) {
     if (values.advancedPermissions[key]) {
       const permissionObj = allPermissions?.find(a => a.key === ADV_PERMISSIONS[key])
@@ -275,4 +276,18 @@ export const permissionsDefaultValues = ({ permissions }) => {
       cancelWorkOrderEnable: permissionSet?.some(p => [ADV_PERMISSIONS.cancelWorkOrderEnable, 'ALL'].includes(p)),
     },
   }
+}
+
+export const setDefaultPermission = ({ setValue, value }) => {
+  setValue('advancedPermissions.fpmEdit', value)
+  setValue('advancedPermissions.pcEdit', value)
+  setValue('advancedPermissions.clientEdit', value)
+  setValue('advancedPermissions.addressEdit', value)
+  setValue('advancedPermissions.marketEdit', value)
+
+  setValue('advancedPermissions.gateCodeEdit', value)
+  setValue('advancedPermissions.lockBoxEdit', value)
+  setValue('advancedPermissions.clientDueEdit', value)
+  setValue('advancedPermissions.clientStartEdit', value)
+  setValue('advancedPermissions.woaStartEdit', value)
 }
