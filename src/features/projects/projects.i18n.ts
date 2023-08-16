@@ -43,6 +43,7 @@ export const projects = {
           poNo: 'PO No',
           invoiceDate: 'Invoice Date',
           disqualifiedRevenueFlag: 'Disqualified Revenue',
+          claim : 'Claim'
         },
         projectFilter: {
           new: 'New',
@@ -155,6 +156,7 @@ export const projects = {
           woNo: 'WO No',
           poNo: 'PO No',
           invoiceDate: 'Fecha de la factura',
+          claim:'Reclamo',
         },
         projectFilter: {
           new: 'Nuevo',

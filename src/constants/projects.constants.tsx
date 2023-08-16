@@ -127,6 +127,11 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     size: 230,
   },
   {
+    header: 'projects.projectTable.claim',
+    accessorKey: 'claim',
+    
+  },
+  {
     header: 'projects.projectTable.projectManager',
     accessorKey: 'projectManager',
   },
