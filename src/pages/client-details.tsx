@@ -37,7 +37,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const [tabIndex, setTabIndex] = useState(0)
   const { clientDetails, onClose } = props
   const { mutate: editClientDetails } = useUpdateClientDetails()
-  const { mutate: addNewClientDetails } = useSaveNewClientDetails()
+  const { mutate: addNewClientDetails, isLoading } = useSaveNewClientDetails()
   const { stateSelectOptions: statesOptions } = useStates()
   const { marketSelectOptions: marketOptions, markets } = useMarkets()
 
@@ -121,7 +121,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
                 <CarrierTab clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab}></CarrierTab>
               </TabPanel>
               <TabPanel p="0px">
-                <Market clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
+                <Market clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} saveLoading={isLoading}/>
               </TabPanel>
               <TabPanel p="0px">
                 <ClientNotes clientDetails={clientDetails} onClose={props.onClose} />

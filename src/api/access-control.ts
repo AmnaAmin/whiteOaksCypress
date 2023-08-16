@@ -81,6 +81,34 @@ export const useCreateNewRoleMutation = () => {
   )
 }
 
+export const useDeleteRole = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+  return useMutation(
+    roleName => {
+      return client(`authorities/${roleName}`, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['get-roles'])
+        toast({
+          title: 'Access Control',
+          description: 'Role has been deleted successfully',
+          status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: any) {
+        console.log('Unable to delete role', error)
+      },
+    },
+  )
+}
+
 export const useUpdateRoleMutation = roleName => {
   const client = useClient()
   const toast = useToast()

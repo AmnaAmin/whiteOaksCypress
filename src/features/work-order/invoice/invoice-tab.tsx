@@ -252,9 +252,9 @@ export const InvoiceTab = ({
 
   return (
     <Box>
-      <ModalBody mx={{ base: 0, lg: '25px' }} h={'calc(100vh - 300px)'}>
+      <ModalBody mx={{ base: 0, lg: '25px' }} h="600px">
         {isVendorExpired && (
-          <Box pt="15px">
+          <Box>
             <AlertError
               styleBox={{ width: 'max-content' }}
               msg={
@@ -319,7 +319,7 @@ export const InvoiceTab = ({
         <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
 
         <Box
-          h="calc(100vh - 409px)"
+          h="470px"
           overflow="auto"
           borderRadius={7}
           borderBottom="1px solid #CBD5E0"
@@ -336,8 +336,7 @@ export const InvoiceTab = ({
                   {t('description')}
                 </Td>
                 <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
-                  {t('type')}
-                </Td>
+                  {t('type')}                </Td>
                 <Td color={'gray.900'} fontWeight={500} fontSize={'14px'} w={300} pr={12} textAlign={'end'}>
                   {t('total')}
                 </Td>

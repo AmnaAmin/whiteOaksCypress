@@ -67,7 +67,7 @@ const InformationCard = props => {
 }
 
 const PaymentInfoTab = props => {
-  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating } = props
+  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, isLoading } = props
 
   const { t } = useTranslation()
   const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
@@ -110,6 +110,9 @@ const PaymentInfoTab = props => {
       setValue('expectedPaymentDate', null)
       setValue('paymentTerm', null)
     } else {
+      if (isWorkOrderUpdating || isLoading) {
+        return
+      }
       resetPayments(defaultValuesPayment(workOrder, paymentsTerms))
     }
   }, [workOrder])
@@ -151,7 +154,7 @@ const PaymentInfoTab = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody ml={30} h={'calc(100vh - 300px)'} overflow={'auto'}>
+        <ModalBody ml={30} h='600px' overflow={'auto'}>
           <SimpleGrid
             columns={5}
             spacing={8}
@@ -401,8 +404,8 @@ const PaymentInfoTab = props => {
 
               <Box height="80px">
                 <FormControl isInvalid={!!errors.clientApprovedAmount}>
-                  <FormLabel variant={'strong-label'} size={'md'}>
-                    {truncateWithEllipsis(t('clientFinalApprovedAmount'), 30)}
+                  <FormLabel  isTruncated title={'Client Final Approved Amount'} variant={'strong-label'} size={'md'}>
+                  {truncateWithEllipsis(t('clientFinalApprovedAmount').trim(), 30)}
                   </FormLabel>
                   <Controller
                     control={control}

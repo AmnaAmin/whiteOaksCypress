@@ -159,7 +159,7 @@ const Location: React.FC<LocationProps> = ({
             </Checkbox>
           </Alert>
         )}
-        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px" ml='-22px'>
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px" ml="-22px">
           <GridItem>
             <FormControl isInvalid={!!errors.address} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="address">
@@ -204,7 +204,11 @@ const Location: React.FC<LocationProps> = ({
                 isDisabled={isCityDisabled}
                 id="city"
                 {...register('city', {
-                  required: 'This is required field',
+                  required: 'This is a required field',
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'This is a required field',
+                  },
                   onChange: e => {
                     setVerifiedAddress(false)
                   },
@@ -255,6 +259,10 @@ const Location: React.FC<LocationProps> = ({
                 id="zip"
                 {...register('zip', {
                   required: 'This is required field',
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'This is a required field',
+                  },
                   onChange: e => {
                     setVerifiedAddress(false)
                   },
