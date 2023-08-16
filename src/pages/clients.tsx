@@ -13,11 +13,11 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 export const Client = () => {
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const { t } = useTranslation()
-  const { data: clients } = useClients()
   const { isOpen: isOpenNewClientModal, onClose: onNewClientModalClose, onOpen: onNewClientModalOpen } = useDisclosure()
   const { isProjectCoordinator } = useUserRolesSelector()
   const [createdClientId, setCreatedClientId] = useState<string | null | undefined>(null)
   const [selectedClient, setSelectedClient] = useState<string | null | undefined>(null)
+  const { data: clients } = useClients()
   const location = useLocation()
   const navigate = useNavigate()
   const client = (location?.state as any)?.data || {}
