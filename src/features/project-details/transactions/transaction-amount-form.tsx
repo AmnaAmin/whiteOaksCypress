@@ -563,6 +563,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                       }
                                     }}
                                     onChange={e => {
+                                      onSetTotalRemainingAmount(Math.abs(e?.target?.value))
                                       const inputValue = e.currentTarget.value
                                       inputValue !== ''
                                         ? field.onChange(
