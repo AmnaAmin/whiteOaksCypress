@@ -31,11 +31,13 @@ import ReactSelect from 'components/form/react-select'
 import NumberFormat from 'react-number-format'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useAddVendorUser, useVendorUserDetails, useUpdateVendorUser } from 'api/vendor-user'
+import { useAccountDetails } from 'api/vendor-details'
 import { useStates } from 'api/pc-projects'
 import { useAuth } from 'utils/auth-context'
 import { useState, useEffect } from 'react'
 import { Card } from 'components/card/card'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+
 
 const VendorUserModal = ({
   vendorDetails,
@@ -49,10 +51,10 @@ const VendorUserModal = ({
   parentVendorId: number
 }) => {
   const { t } = useTranslation()
+  const { data: account } = useAccountDetails()
 
   //es-lint-disable-next-line
   //const { isLoading } = useVendorProfile(vendorDetails?.id)
-
   const isEditUser = !!(vendorDetails && vendorDetails.id)
 
   const form = useForm()
@@ -72,6 +74,7 @@ const VendorUserModal = ({
   } = form
 
   useVendorUserDetails(form, vendorDetails)
+
 
   const formValues = watch()
 
@@ -155,6 +158,7 @@ const VendorUserModal = ({
     }
   }, [isMobile])
   const { isFPM } = useUserRolesSelector()
+  
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onCloseModal} size={modalSize} variant="custom">
@@ -390,6 +394,7 @@ const VendorUserModal = ({
                             fontWeight={400}
                             color="#718096"
                             {...register('activated')}
+                            disabled={vendorDetails?.email === account?.email}
                           >
                             {t(`${USER_MANAGEMENT}.modal.activated`)}
                           </Checkbox>

@@ -15,7 +15,7 @@ export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, proje
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
       <WorkOrderEditTab
-        workOrder={workOrder}
+        workOrder={workOrderDetails}
         onSave={onSave}
         navigateToProjectDetails={null}
         isWorkOrderUpdating={false}
@@ -23,7 +23,6 @@ export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, proje
         rejectInvoiceCheck={false}
         projectData={projectData}
         documentsData={DOCUMENTS}
-        workOrderDetails={workOrderDetails}
         isLoadingLineItems={false}
         isFetchingLineItems={false}
       />
