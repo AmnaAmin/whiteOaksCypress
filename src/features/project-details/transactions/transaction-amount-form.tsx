@@ -72,18 +72,19 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   } = formReturn
   const values = getValues()
   const transaction = useWatch({ name: 'transaction', control })
+
   useEffect(() => {
-    let total_Amount = 0;
-    values.transaction.forEach(transaction => {
+    let total_Amount = 0
+    transaction?.forEach(transaction => {
       total_Amount += parseFloat(transaction.amount)
     })
-    
+
     const finalTotalAmount = Math.abs(total_Amount)
-    if (finalTotalAmount){
+    if (finalTotalAmount) {
       onSetTotalRemainingAmount(finalTotalAmount)
     }
-  }, [values.transaction])
- 
+  }, [transaction])
+
   const {
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
@@ -95,7 +96,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     onClose: onReplaceMaterialUploadClose,
     onOpen: onReplaceMaterialUploadOpen,
   } = useDisclosure()
-
 
   const document = useWatch({ name: 'attachment', control })
   const { mutate: uploadMaterialAttachment } = useUploadMaterialAttachment()
@@ -572,9 +572,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                               : inputValue,
                                           )
                                         : field.onChange('')
-                                     
                                     }}
-                                   
                                     variant={'required-field'}
                                     size="sm"
                                   />
