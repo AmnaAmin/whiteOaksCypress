@@ -70,7 +70,13 @@ const CreateVendorDetail: React.FC<{
       setStatusOptions(documentStatus)
     }
   })
-
+  const validateWhitespace = value => {
+    console.log('value', value)
+    if (value.trim() === '') {
+      return 'Cannot be only whitespace'
+    }
+    return true
+  }
   return (
     <Stack spacing={3}>
       <Box overflow="auto">
@@ -85,6 +91,9 @@ const CreateVendorDetail: React.FC<{
               variant="required-field"
               {...register('companyName', {
                 required: isActive && 'This is required',
+               validate: {
+                  whitespace: validateWhitespace,
+                },
                 onChange: e => {
                   setValue('companyName', e.target.value)
                 },
@@ -170,6 +179,9 @@ const CreateVendorDetail: React.FC<{
                 data-testid="streetAddress"
                 {...register('streetAddress', {
                   required: isActive && 'This is required',
+                    validate: {
+                    whitespace: validateWhitespace,
+                  },
                   onChange: e => {
                     setValue('streetAddress', e.target.value)
                   },
@@ -191,6 +203,9 @@ const CreateVendorDetail: React.FC<{
                 type="text"
                 {...register('city', {
                   required: isActive && 'This is required',
+                   validate: {
+                    whitespace: validateWhitespace,
+                  },
                   onChange: e => {
                     setValue('city', e.target.value)
                   },
@@ -388,7 +403,10 @@ const CreateVendorDetail: React.FC<{
                 data-testId="ownersName"
                 variant="required-field"
                 {...register('ownerName', {
-                  required: isActive && 'This is required',
+                  required: isActive && 'This is required', 
+                    validate: {
+                    whitespace: validateWhitespace,
+                  },
                   onChange: e => {
                     setValue('ownerName', e.target.value)
                   },
