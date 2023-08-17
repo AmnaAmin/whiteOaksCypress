@@ -58,7 +58,7 @@ type newVendorSkillsTypes = {
 }
 export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedVendorSkills }) => {
   const { data: account } = useAccountDetails()
-  const { mutate: createVendorSkills } = useVendorSkillsMutation()
+  const { mutate: createVendorSkills , isLoading} = useVendorSkillsMutation()
   const { control, register, handleSubmit, reset, setValue } = useForm()
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -189,7 +189,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                 >
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
-                <Button disabled={!watchvalue} type="submit" colorScheme="brand">
+                <Button disabled={isLoading ||!watchvalue || watchvalue.trim() === ''} type="submit" colorScheme="brand">
                   {t(`${VENDOR_MANAGER}.save`)}
                 </Button>
               </HStack>

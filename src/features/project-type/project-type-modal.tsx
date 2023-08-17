@@ -197,7 +197,7 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
                 {t(`${PROJECT_TYPE}.cancel`)}
               </Button>
               <Button
-                isDisabled={!typeFieldWatch || Loading}
+                isDisabled={!typeFieldWatch  || typeFieldWatch.trim() === ''|| Loading}
                 colorScheme="brand"
                 type="submit"
                 data-testid="saveProjectType"
