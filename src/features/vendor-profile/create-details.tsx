@@ -34,6 +34,7 @@ import first from 'lodash/first'
 import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { validateWhitespace } from 'api/clients'
 
 const validateTelePhoneNumber = (number: string): boolean => {
   return number ? number.match(/\d/g)?.length === 10 : false
@@ -70,13 +71,7 @@ const CreateVendorDetail: React.FC<{
       setStatusOptions(documentStatus)
     }
   })
-  const validateWhitespace = value => {
-    console.log('value', value)
-    if (value.trim() === '') {
-      return 'Cannot be only whitespace'
-    }
-    return true
-  }
+
   return (
     <Stack spacing={3}>
       <Box overflow="auto">
