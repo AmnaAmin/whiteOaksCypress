@@ -7,17 +7,34 @@ import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { ClientFormValues } from 'types/client.type'
 import { useClient } from 'utils/auth-context'
-import orderBy from 'lodash/orderBy'
+import { usePaginationQuery } from 'api'
 import { reduceArrayToObject } from 'utils'
 
-export const useClients = () => {
-  const client = useClient()
 
-  return useQuery('client', async () => {
-    const response = await client(`clients?page=0&size=10000000&sort=id,asc`, {})
 
-    return orderBy(response?.data || [], ['id'], ['desc'])
-  })
+const getClientQueryString = (filterQueryString: string) => {
+  let queryString = filterQueryString
+  if (filterQueryString?.search('&sort=id.equals') < 0) {
+    queryString = queryString + `&sort=id,asc`
+  }
+  return queryString
+}
+
+type clients = Array<any>
+
+export const useClients = (queryString: string = '', pageSize: number = 20) => {
+  const apiQueryString = getClientQueryString(queryString)
+  const { data, ...rest } = usePaginationQuery<clients>(
+    ['client', apiQueryString],
+    `clients?${apiQueryString}`,
+    pageSize,
+  )
+  return {
+    data: data?.data,
+    totalPages: data?.totalCount,
+    dataCount: data?.dataCount,
+    ...rest,
+  }
 }
 
 export const useNotes = ({ clientId }: { clientId: number | undefined }) => {
@@ -289,3 +306,14 @@ export const mappingDataForClientExport = (data, columns) => {
     }, {})
   })
 }
+
+export const CLIENT_TABLE_QUERY_KEYS = {
+  companyName: 'companyName.contains',
+  contactsName: 'contactName.contains',
+  streetAddress: 'streetAddress.contains',
+  contactsPhone: 'contactPhone.contains',
+  contactsEmail: 'contactEmail.contains',
+  accountPayableContactInfosContact: 'accountPayableContactInfosContact.contains',
+  accountPayableContactInfosEmail: 'accountPayableContactInfosEmail.contains',
+  accountPayableContactInfosPhone: 'accountPayableContactInfosPhone.contains',
+};

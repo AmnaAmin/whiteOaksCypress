@@ -1237,7 +1237,7 @@ export const useGetLineItemsColumn = ({
                           size="md"
                           value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
                           isDisabled={isVendor}
-                          selectProps={{ widthAssign: '75%' }}
+                          selectProps={{ widthAssign: '80%' }}
                           onChange={option => {
                             if (option?.__isNew__) {
                               field.onChange(newObjectFormatting(option))

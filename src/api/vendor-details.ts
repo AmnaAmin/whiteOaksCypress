@@ -751,31 +751,34 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   const [...detailfields] = useWatch({
     control,
     name: ['city', 'companyName', 'state', 'streetAddress', 'zipCode', 'businessEmailAddress', 'ownerName', 'capacity'],
-  })
+  });
 
-  const businessPhoneNumber = useWatch({ name: 'businessPhoneNumber', control })
-  const capacity = useWatch({ name: 'capacity', control })
+  // Check if any field in detailfields array has only whitespace
+  const hasWhitespaceOnly = detailfields.some(n => typeof n === 'string' && n.trim() === '');
+
+  const businessPhoneNumber = useWatch({ name: 'businessPhoneNumber', control });
+  const capacity = useWatch({ name: 'capacity', control });
   const documentFields = useWatch({
     control,
     name: ['w9Document'],
-  })
+  });
   const licenseField = useWatch({
     control,
     name: ['licenses'],
-  })
-  const licensesArray = licenseField?.length > 0 ? licenseField[0] : []
-  const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10
+  });
+  const licensesArray = licenseField?.length > 0 ? licenseField[0] : [];
+  const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10;
 
-  // const isEmail = isValidEmail(businessEmailAddress)
-  const isCapacity = capacity <= 500
+  const isCapacity = capacity <= 500;
 
   return {
-    disableDetailsNext: detailfields.some(n => !n) || !isBusinessPhNo || !isCapacity,
+    disableDetailsNext: hasWhitespaceOnly || !isBusinessPhNo || !isCapacity,
 
-    disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl), //disable logic for next on documents tab.
-    disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate),
-  }
-}
+    disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl),
+    
+    disableLicenseNext: licensesArray?.some(l => l.licenseNumber === '' || l.licenseType === '' || !l.expiryDate || l.expiryDate.trim() === '' ||  l.licenseNumber.trim() === ''),
+  };
+};
 
 //vendor projects
 
