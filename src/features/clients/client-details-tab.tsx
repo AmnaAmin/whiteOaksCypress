@@ -33,6 +33,8 @@ import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
 import { preventSpecialCharacter } from 'utils/string-formatters'
 import { useNewClientNextButtonDisabled } from 'features/projects/new-project/hooks'
+import { validateWhitespace } from 'api/clients'
+
 
 type clientDetailProps = {
   clientDetails?: any
@@ -97,13 +99,7 @@ export const Details: React.FC<clientDetailProps> = props => {
   const phoneNumberRef = useRef<any>()
   const phoneNumberRef2 = useRef<any>()
 
-  const validateWhitespace = value => {
-    console.log('value', value)
-    if (value.trim() === '') {
-      return 'Cannot be only whitespace'
-    }
-    return true
-  }
+ 
   return (
     <Box>
       <Box overflow={'auto'} height={400}>
