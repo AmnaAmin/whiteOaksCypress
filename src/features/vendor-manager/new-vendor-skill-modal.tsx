@@ -189,7 +189,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                 >
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
-                <Button disabled={!watchvalue} type="submit" colorScheme="brand">
+                <Button disabled={!watchvalue || watchvalue.trim() === ''} type="submit" colorScheme="brand">
                   {t(`${VENDOR_MANAGER}.save`)}
                 </Button>
               </HStack>
