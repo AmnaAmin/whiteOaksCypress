@@ -58,7 +58,7 @@ type newVendorSkillsTypes = {
 }
 export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedVendorSkills }) => {
   const { data: account } = useAccountDetails()
-  const { mutate: createVendorSkills } = useVendorSkillsMutation()
+  const { mutate: createVendorSkills , isLoading} = useVendorSkillsMutation()
   const { control, register, handleSubmit, reset, setValue } = useForm()
   const toast = useToast()
   const queryClient = useQueryClient()
