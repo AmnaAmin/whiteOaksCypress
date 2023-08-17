@@ -109,6 +109,7 @@ export const Details: React.FC<clientDetailProps> = props => {
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.name`)}
               </FormLabel>
+              
               <Input
                 id="companyName"
                 {...register('companyName', {
