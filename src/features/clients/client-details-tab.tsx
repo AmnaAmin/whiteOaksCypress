@@ -97,6 +97,13 @@ export const Details: React.FC<clientDetailProps> = props => {
   const phoneNumberRef = useRef<any>()
   const phoneNumberRef2 = useRef<any>()
 
+  const validateWhitespace = value => {
+    console.log('value', value)
+    if (value.trim() === '') {
+      return 'Cannot be only whitespace'
+    }
+    return true
+  }
   return (
     <Box>
       <Box overflow={'auto'} height={400}>
@@ -108,12 +115,21 @@ export const Details: React.FC<clientDetailProps> = props => {
               </FormLabel>
               <Input
                 id="companyName"
-                {...register('companyName', { required: 'This is required' })}
+                {...register('companyName', {
+                  required: 'This is required',
+                  validate: {
+                    whitespace: validateWhitespace,
+                  },
+                })}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
                 onKeyPress={e => preventSpecialCharacter(e)}
               />
-              <FormErrorMessage>{errors?.companyName?.message}</FormErrorMessage>
+              {errors.companyName && (
+                <FormErrorMessage>
+                  {errors.companyName.type === 'required' ? 'This field is required' : 'Cannot be only whitespace'}
+                </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -273,7 +289,9 @@ export const Details: React.FC<clientDetailProps> = props => {
               </FormLabel>
               <Input
                 id="streetAddress"
-                {...register('streetAddress', { required: 'This is required' })}
+                {...register('streetAddress', { required: 'This is required' ,  validate: {
+                  whitespace: validateWhitespace,
+                },})}
                 style={disabledTextStyle}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
@@ -288,7 +306,9 @@ export const Details: React.FC<clientDetailProps> = props => {
               </FormLabel>
               <Input
                 id="city"
-                {...register('city', { required: 'This is required' })}
+                {...register('city', { required: 'This is required' ,  validate: {
+                  whitespace: validateWhitespace,
+                },})}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
               />
@@ -353,7 +373,9 @@ export const Details: React.FC<clientDetailProps> = props => {
                     </FormLabel>
                     <Input
                       id="contact"
-                      {...register(`contacts.${index}.contact`, { required: 'This is required' })}
+                      {...register(`contacts.${index}.contact`, { required: 'This is required',  validate: {
+                        whitespace: validateWhitespace,
+                      }, })}
                       style={disabledTextStyle}
                       isDisabled={isProjectCoordinator}
                       variant={'required-field'}
@@ -526,7 +548,9 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
                   <Input
                     id="contact"
-                    {...register(`accountPayableContactInfos.${index}.contact`, { required: 'This is required' })}
+                    {...register(`accountPayableContactInfos.${index}.contact`, { required: 'This is required' ,  validate: {
+                      whitespace: validateWhitespace,
+                    }, })}
                     style={disabledTextStyle}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
@@ -631,7 +655,9 @@ export const Details: React.FC<clientDetailProps> = props => {
                     <FormControl width={'180px'} isInvalid={!!errors?.accountPayableContactInfos?.[index]?.comments}>
                       <Input
                         id="comments"
-                        {...register(`accountPayableContactInfos.${index}.comments`, { required: 'This is required' })}
+                        {...register(`accountPayableContactInfos.${index}.comments`, { required: 'This is required',  validate: {
+                          whitespace: validateWhitespace,
+                        }, })}
                         style={disabledTextStyle}
                         isDisabled={isProjectCoordinator}
                         variant={'required-field'}
