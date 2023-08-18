@@ -290,7 +290,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 >
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
-                <Button isDisabled={!metroValue || !stateValue || !lienDueValue} type="submit" colorScheme="brand">
+                <Button isDisabled={!metroValue || metroValue.trim() === ''|| !stateValue  || !lienDueValue } type="submit" colorScheme="brand">
                   {t(`${VENDOR_MANAGER}.save`)}
                 </Button>
               </HStack>

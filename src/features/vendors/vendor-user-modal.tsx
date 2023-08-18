@@ -38,7 +38,6 @@ import { useState, useEffect } from 'react'
 import { Card } from 'components/card/card'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
-
 const VendorUserModal = ({
   vendorDetails,
   onClose,
@@ -74,7 +73,6 @@ const VendorUserModal = ({
   } = form
 
   useVendorUserDetails(form, vendorDetails)
-
 
   const formValues = watch()
 
@@ -158,7 +156,7 @@ const VendorUserModal = ({
     }
   }, [isMobile])
   const { isFPM } = useUserRolesSelector()
-  
+
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onCloseModal} size={modalSize} variant="custom">
@@ -385,20 +383,24 @@ const VendorUserModal = ({
                             </FormErrorMessage>
                           </Box>
                         </FormControl>
-                        <FormControl w={215}>
-                          <Checkbox
-                            mt="25px"
-                            data-testid="activated"
-                            isChecked={formValues.activated}
-                            fontSize="16px"
-                            fontWeight={400}
-                            color="#718096"
-                            {...register('activated')}
-                            disabled={vendorDetails?.email === account?.email}
-                          >
-                            {t(`${USER_MANAGEMENT}.modal.activated`)}
-                          </Checkbox>
-                        </FormControl>
+                        {vendorDetails?.email === account?.email ? (
+                          ''
+                        ) : (
+                          <FormControl w={215}>
+                            <Checkbox
+                              mt="25px"
+                              data-testid="activated"
+                              isChecked={formValues.activated}
+                              fontSize="16px"
+                              fontWeight={400}
+                              color="#718096"
+                              {...register('activated')}
+                              disabled={vendorDetails?.email === account?.email}
+                            >
+                              {t(`${USER_MANAGEMENT}.modal.activated`)}
+                            </Checkbox>
+                          </FormControl>
+                        )}
                       </HStack>
                       <HStack
                         mt="30px"

@@ -262,7 +262,12 @@ export const useClientDetailsSaveButtonDisabled = (control: Control<ClientFormVa
     !formValues?.contact
   )
 }
-
+export const validateWhitespace = value => {
+  if (value.trim() === '') {
+    return 'Cannot be only whitespace'
+  }
+  return true
+}
 export const useSubFormErrors = (errors: FieldErrors<ClientFormValues>) => {
   return {
     isClientDetailsTabErrors:
