@@ -859,7 +859,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           showNoButton={true}
         />
       </HStack>
-      <DevTool control={control} />
     </form>
   )
 }

@@ -222,6 +222,8 @@ export enum ADV_PERMISSIONS {
   transInvoicedDateEdit = 'PROJECTDETAIL.TRANSACTION.INVOICEDATE.EDIT',
   futureDateEnabled = 'PROJECTDETAIL.TRANSACTION.FUTUREPAYMENT.EDIT',
   cancelWorkOrderEnable = 'PROJECTDETAIL.WORKORDER.CANCEL.EDIT',
+  hideCreateProject = 'PROJECT.CREATE.HIDE',
+  hidePaidProjects = 'PROJECT.PAID.HIDE',
 }
 
 export const mapFormValuestoPayload = (values, allPermissions) => {
@@ -243,6 +245,7 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
     name: values?.roleName,
     location: values?.location?.value,
     assignment: values?.assignment?.value,
+    systemRole: values?.systemRole,
     permissions,
   }
 }
@@ -255,6 +258,7 @@ export const permissionsDefaultValues = ({ permissions }) => {
     location: LOCATIONS?.find(l => l.value === permission?.location) ?? LOCATIONS[0],
     assignment: ASSIGNMENTS?.find(a => a.value === permission?.assignment) ?? ASSIGNMENTS[0],
     permissions: mapPermissionsToFormValues(permission),
+    systemRole: permission?.systemRole,
     advancedPermissions: {
       fpmEdit: permissionSet?.some(p => [ADV_PERMISSIONS.fpmEdit, 'ALL'].includes(p)),
       pcEdit: permissionSet?.some(p => [ADV_PERMISSIONS.pcEdit, 'ALL'].includes(p)),
@@ -274,6 +278,8 @@ export const permissionsDefaultValues = ({ permissions }) => {
       transInvoicedDateEdit: permissionSet?.some(p => [ADV_PERMISSIONS.transInvoicedDateEdit, 'ALL'].includes(p)),
       futureDateEnabled: permissionSet?.some(p => [ADV_PERMISSIONS.futureDateEnabled, 'ALL'].includes(p)),
       cancelWorkOrderEnable: permissionSet?.some(p => [ADV_PERMISSIONS.cancelWorkOrderEnable, 'ALL'].includes(p)),
+      hideCreateProject: permissionSet?.some(p => [ADV_PERMISSIONS.hideCreateProject].includes(p)),
+      hidePaidProjects: permissionSet?.some(p => [ADV_PERMISSIONS.hidePaidProjects].includes(p)),
     },
   }
 }
