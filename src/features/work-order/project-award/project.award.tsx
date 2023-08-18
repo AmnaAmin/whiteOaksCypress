@@ -14,11 +14,11 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
   const { isUpdating, projectAwardData, isUpgradeProjectAward, workOrder } = props
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
 
   const { isAdmin } = useUserRolesSelector()
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
   const [largeWorkOrder, setLargeWorkOrder] = useState<boolean>(workOrder?.largeWorkOrder)
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
 
   const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId)
   interface FormValues {

@@ -28,7 +28,7 @@ import {
 } from '@chakra-ui/react'
 import { ACCESS_CONTROL } from 'features/access-control/access-control.i18n'
 import { useTranslation } from 'react-i18next'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form'
 import Select from 'components/form/react-select'
 import { useEffect, useState } from 'react'
 import {
@@ -36,11 +36,11 @@ import {
   LOCATIONS,
   mapFormValuestoPayload,
   permissionsDefaultValues,
+  setDefaultPermission,
   useCreateNewRoleMutation,
   useFetchAllPermissions,
   useUpdateRoleMutation,
 } from 'api/access-control'
-import { useAccountData } from 'api/user-account'
 
 interface PemissionFormValues {
   roleName: string
@@ -49,7 +49,7 @@ interface PemissionFormValues {
   permissions: Array<{ name: string; edit: boolean; hide: boolean; read: boolean }>
 }
 
-export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) => {
+export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, allowEdit }) => {
   const formReturn = useForm<PemissionFormValues>()
   const {
     formState: { errors },
@@ -58,9 +58,6 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
   const { mutate: createRole } = useCreateNewRoleMutation()
   const { mutate: updateRole } = useUpdateRoleMutation(permissions?.[0]?.name)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { data } = useAccountData()
-  const isDevtekUser = data?.devAccount
-  const allowEdit = !permissions?.systemRole || (permissions?.systemRole && isDevtekUser)
   const { control, register, reset } = formReturn
   const { t } = useTranslation()
   useEffect(() => {
@@ -165,7 +162,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
                 {t(`${ACCESS_CONTROL}.advancedPermissions`)}
               </FormLabel>
             </HStack>
-            <PermissionsTable formControl={formReturn} />
+            <PermissionsTable formControl={formReturn} permissionsData={permissions} />
             <Flex gap="10px" w="100%" justifyContent={'flex-end'}>
               <Button
                 variant={'outline'}
@@ -191,9 +188,9 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
   )
 }
 
-const PermissionsTable = ({ formControl }) => {
+const PermissionsTable = ({ formControl, permissionsData }) => {
   const { t } = useTranslation()
-  const { control, watch, setValue } = formControl
+  const { control, setValue } = formControl
   const [selectedRow, setSelectedRow] = useState<number | null>()
 
   const { fields: permissions } = useFieldArray({
@@ -201,7 +198,18 @@ const PermissionsTable = ({ formControl }) => {
     name: 'permissions',
   })
 
-  const watchPermissions = watch('permissions')
+  const watchPermissions = useWatch({ control, name: 'permissions' })
+
+  useEffect(() => {
+    const watchProjectPermissions = watchPermissions?.find(p => p.name === 'PROJECT')
+    if (!permissionsData?.[0]?.systemRole) {
+      if (watchProjectPermissions?.edit) {
+        setDefaultPermission({ setValue, value: true })
+      } else {
+        setDefaultPermission({ setValue, value: null })
+      }
+    }
+  }, [watchPermissions])
 
   return (
     <TableContainer w="100%" borderRadius={'6px'} border="1px solid #CBD5E0">
