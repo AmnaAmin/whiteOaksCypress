@@ -23,7 +23,7 @@ import { useUpdateWorkOrderMutation } from 'api/work-order'
 import AssignedItems from 'features/work-order/details/assigned-items'
 import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form'
 import { createInvoicePdf, LineItems } from 'features/work-order/details/assignedItems.utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { STATUS } from '../../../common/status'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
@@ -69,7 +69,11 @@ const WorkOrderDetailTab = ({
   const { t } = useTranslation()
   const toast = useToast()
   const [uploadedWO, setUploadedWO] = useState<any>(null)
-  const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({})
+  const { mutate: updateWorkOrderDetails } = useUpdateWorkOrderMutation({
+    setUpdating: () => {
+      setIsUpdating(false)
+    },
+  })
   const getDefaultValues = () => {
     return {
       assignedItems:
@@ -83,22 +87,23 @@ const WorkOrderDetailTab = ({
     }
   }
 
+  const defaultValues: FormValues = useMemo(() => {
+    
+    return getDefaultValues()
+  }, [workOrder, workOrderAssignedItems?.length])
+
   const formReturn = useForm<FormValues>({
-    defaultValues: getDefaultValues(),
+    defaultValues: {
+      ...defaultValues,
+    },
   })
 
-  const { control, getValues, reset } = formReturn
+  const { control, getValues } = formReturn
   const values = getValues()
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
   })
-
-  useEffect(() => {
-    if (workOrder?.id && workOrderAssignedItems) {
-      reset(getDefaultValues())
-    }
-  }, [workOrder, reset, workOrderAssignedItems?.length])
 
   const downloadPdf = () => {
     let doc = new jsPDF()
@@ -151,17 +156,7 @@ const WorkOrderDetailTab = ({
       setIsError(false)
     }
     setIsUpdating(true)
-    updateWorkOrderDetails(
-      { ...workOrder, ...updatedValues },
-      {
-        onSuccess: () => {
-          setIsUpdating(false)
-        },
-        onError: () => {
-          setIsUpdating(false)
-        },
-      },
-    )
+    updateWorkOrderDetails({ ...workOrder, ...updatedValues })
   }
 
   useEffect(() => {
@@ -187,7 +182,7 @@ const WorkOrderDetailTab = ({
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
+        <ModalBody h="600px" maxW="1100px" overflow={'auto'}>
           {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && !workOrder.lienWaiverAccepted && (
             <Alert m="25px" status="info" variant="custom" size="sm">
               <AlertIcon />

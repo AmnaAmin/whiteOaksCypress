@@ -10,6 +10,7 @@ export const projectType = {
         delMsg: 'Project Type has been deleted successfully.',
         failedMsg: 'Unable to delete Project Type.',
         delConfirmText: 'Do you really want to delete this Project Type?',
+        delConfirmTextClient: 'Do you really want to delete this Client Type?',
         //Table
         type: 'Type',
         createdBy: 'Created By',
@@ -27,6 +28,8 @@ export const projectType = {
         save: 'Save',
         cancel: 'Cancel',
         deleteType: 'Delete Type',
+        delete: 'Delete',
+
       },
     },
   },
@@ -41,6 +44,7 @@ export const projectType = {
         delMsg: 'El tipo de proyecto se ha eliminado correctamente.',
         failedMsg: 'No se puede eliminar el tipo de proyecto.',
         delConfirmText: 'Realmente desea eliminar este tipo de proyecto?',
+        delConfirmTextClient:'Realmente deseas eliminar este tipo de cliente?',
         //Type
         type: 'Escribe',
         createdBy: 'Creado por',
@@ -58,6 +62,7 @@ export const projectType = {
         save: 'Ahorrar',
         cancel: 'Cancelar',
         deleteType: 'Eliminar tipo',
+        delete: 'Eliminar',
       },
     },
   },

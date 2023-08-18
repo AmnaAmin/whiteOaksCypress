@@ -31,6 +31,7 @@ import ReactSelect from 'components/form/react-select'
 import NumberFormat from 'react-number-format'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useAddVendorUser, useVendorUserDetails, useUpdateVendorUser } from 'api/vendor-user'
+import { useAccountDetails } from 'api/vendor-details'
 import { useStates } from 'api/pc-projects'
 import { useAuth } from 'utils/auth-context'
 import { useState, useEffect } from 'react'
@@ -49,10 +50,10 @@ const VendorUserModal = ({
   parentVendorId: number
 }) => {
   const { t } = useTranslation()
+  const { data: account } = useAccountDetails()
 
   //es-lint-disable-next-line
   //const { isLoading } = useVendorProfile(vendorDetails?.id)
-
   const isEditUser = !!(vendorDetails && vendorDetails.id)
 
   const form = useForm()
@@ -155,6 +156,7 @@ const VendorUserModal = ({
     }
   }, [isMobile])
   const { isFPM } = useUserRolesSelector()
+
   return (
     <div>
       <Modal isOpen={isOpen} onClose={onCloseModal} size={modalSize} variant="custom">
@@ -381,19 +383,24 @@ const VendorUserModal = ({
                             </FormErrorMessage>
                           </Box>
                         </FormControl>
-                        <FormControl w={215}>
-                          <Checkbox
-                            mt="25px"
-                            data-testid="activated"
-                            isChecked={formValues.activated}
-                            fontSize="16px"
-                            fontWeight={400}
-                            color="#718096"
-                            {...register('activated')}
-                          >
-                            {t(`${USER_MANAGEMENT}.modal.activated`)}
-                          </Checkbox>
-                        </FormControl>
+                        {vendorDetails?.email === account?.email ? (
+                          ''
+                        ) : (
+                          <FormControl w={215}>
+                            <Checkbox
+                              mt="25px"
+                              data-testid="activated"
+                              isChecked={formValues.activated}
+                              fontSize="16px"
+                              fontWeight={400}
+                              color="#718096"
+                              {...register('activated')}
+                              disabled={vendorDetails?.email === account?.email}
+                            >
+                              {t(`${USER_MANAGEMENT}.modal.activated`)}
+                            </Checkbox>
+                          </FormControl>
+                        )}
                       </HStack>
                       <HStack
                         mt="30px"

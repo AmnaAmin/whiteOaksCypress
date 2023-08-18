@@ -50,7 +50,7 @@ export type UserForm = {
   userType?: number
   userTypeLabel?: string
   vendorId?: number | null
-  vendorAdmin?: boolean | null
+  vendorAdmin?: boolean | undefined
   primaryAdmin?: boolean | undefined
 
   directReports?: SelectOption[]

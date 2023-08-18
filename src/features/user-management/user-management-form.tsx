@@ -185,12 +185,21 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const watchRequiredField =
     !formValues?.email ||
+    formValues?.email.trim() === '' ||
     !formValues?.firstName ||
+    formValues?.firstName.trim() === '' ||
     !formValues?.lastName ||
+    formValues?.lastName.trim() === '' ||
     (!isEditUser && !formValues?.newPassword) ||
     !formValues?.accountType ||
     !formValues?.streetAddress ||
+    formValues?.streetAddress.trim() === '' ||
+    !formValues?.city ||
+    formValues?.city.trim() === '' ||
+    !formValues?.zipCode ||
+    formValues?.zipCode.trim() === '' ||
     !formValues?.telephoneNumber ||
+    formValues.telephoneNumber?.trim() === '' ||
     !formValues?.langKey ||
     (isVendor && !formValues.vendorId) ||
     (showMarkets && noMarketsSelected) ||
@@ -688,6 +697,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <HStack mt="30px" w="300px">
                 <FormControl>
                   <Checkbox
+                    isChecked={formValues?.vendorAdmin}
                     {...register('vendorAdmin', {
                       onChange: e => {
                         if (!e.target.checked) setValue('primaryAdmin', false)
@@ -833,11 +843,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           {t(`${USER_MANAGEMENT}.modal.cancel`)}
         </Button>
         <>
-        {!isReadOnly && (
-        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
-          {t(`${USER_MANAGEMENT}.modal.save`)}
-        </Button>
-        )}
+          {!isReadOnly && (
+            <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
+              {t(`${USER_MANAGEMENT}.modal.save`)}
+            </Button>
+          )}
         </>
         <ConfirmationBox
           title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}

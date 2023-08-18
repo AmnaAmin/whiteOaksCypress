@@ -167,14 +167,6 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const vendor = (location?.state as any)?.data || {}
-
-  useEffect(() => {
-    if (vendor?.id) {
-      setSelectedVendor(vendor)
-      navigate(location.pathname, {})
-    }
-  }, [vendor])
-
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -186,15 +178,6 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
       setPagination,
       sorting,
     })
-
-  useEffect(() => {
-    if (selectedCard) {
-      setFilteredUrl(VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
-      setPagination({ pageIndex: 0, pageSize: 20 })
-    } else {
-      setFilteredUrl(null)
-    }
-  }, [selectedCard])
 
   const {
     vendors,
@@ -216,11 +199,23 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     tableColumns,
     settingColumns,
     refetch: refetchColumns,
-  } = useTableColumnSettings(
-    VENDOR_COLUMNS,
-    TableNames.vendors,
-    //  { statusLabel: selectedCard ? selectedCard : ''}
-  )
+  } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
+
+  useEffect(() => {
+    if (vendor?.id) {
+      setSelectedVendor(vendor)
+      navigate(location.pathname, {})
+    }
+  }, [vendor])
+
+  useEffect(() => {
+    if (selectedCard) {
+      setFilteredUrl(VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
+      setPagination({ pageIndex: 0, pageSize: 20 })
+    } else {
+      setFilteredUrl(null)
+    }
+  }, [selectedCard])
 
   const onSave = columns => {
     postGridColumn(columns)

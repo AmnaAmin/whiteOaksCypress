@@ -2,6 +2,7 @@ import { ResubmissionListItem } from './project-details.types'
 import { SelectOption } from './transaction.type'
 
 export type Project = {
+  largeWorkOrder?: boolean
   estimateId?: number | string | null | undefined
   accountRecievable: number | null
   accountPayable: number | null
@@ -206,6 +207,7 @@ export type ProjectWorkOrderType = {
   invoiceAmount: number
   finalInvoiceAmount: number
   leanWaiverSubmitted?: string
+  largeWorkOrder?: boolean
   claimantTitle: string
   claimantsSignature: string
   dateInvoiceSubmitted: string
