@@ -33,13 +33,12 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const { columnFilters, setColumnFilters, queryStringWithPagination } =
-    useColumnFiltersQueryString({
-      queryStringAPIFilterKeys: CLIENT_TABLE_QUERY_KEYS,
-      pagination,
-      setPagination,
-      sorting,
-    })
+  const { columnFilters, setColumnFilters, queryStringWithPagination } = useColumnFiltersQueryString({
+    queryStringAPIFilterKeys: CLIENT_TABLE_QUERY_KEYS,
+    pagination,
+    setPagination,
+    sorting,
+  })
 
   const {
     data: clients,
@@ -47,10 +46,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     dataCount: clientDataCount,
     totalPages: clientTotalPages,
     refetch,
-  } = useClients(
-     queryStringWithPagination,
-    pagination.pageSize,
-  )
+  } = useClients(queryStringWithPagination, pagination.pageSize)
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.clients)
   const { t } = useTranslation()
 
@@ -75,7 +71,6 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     }
   }, [defaultSelected])
 
-
   const CLIENT_COLUMNS: ColumnDef<any>[] = [
     {
       header: `${CLIENTS}.name`,
@@ -83,7 +78,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     },
     {
       header: `${CLIENTS}.contact`,
-      accessorKey: 'contactsName',
+      accessorKey: 'contactName',
       accessorFn: row => {
         return row.contacts?.[0] ? row.contacts?.[0]?.contact : '- - -'
       },
@@ -96,15 +91,15 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       },
     },
     {
-      header: `${CLIENTS}.contactsPhone`,
-      accessorKey: 'contactsPhone',
+      header: `${CLIENTS}.contactPhone`,
+      accessorKey: 'contactPhone',
       accessorFn: row => {
         return row.contacts?.[0] ? row.contacts?.[0]?.phoneNumber : '- - -'
       },
     },
     {
-      header: `${CLIENTS}.contactsEmail`,
-      accessorKey: 'contactsEmail',
+      header: `${CLIENTS}.contactEmail`,
+      accessorKey: 'contactEmail',
       accessorFn: row => {
         return row.contacts?.[0] ? row.contacts?.[0]?.emailAddress : '- - -'
       },
@@ -199,7 +194,6 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
             isEmpty={!isLoading && !clients?.length}
           />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
-            
             <ButtonsWrapper>
               <ExportButton
                 columns={tableColumns}
