@@ -30,6 +30,7 @@ import ScheduleTab from 'features/project-details/project-schedule/schedule-tab'
 import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-table'
 import { useProjectAuditLogs } from 'api/project-details'
 import { boxShadow } from 'theme/common-style'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -50,7 +51,7 @@ export const ProjectDetails: React.FC = props => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
   const [createdTransID, setCreatedTransID] = useState()
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   const setCreatedTransaction = e => {
     setCreatedTransID(e?.data)
   }
@@ -146,7 +147,7 @@ export const ProjectDetails: React.FC = props => {
               pr={{ base: 0, sm: '15px' }}
             >
               <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
-                {tabIndex === 2 &&
+                {!isReadOnly &&tabIndex === 2 &&
                   ![
                     STATUS.Closed,
                     STATUS.Invoiced,
@@ -157,11 +158,12 @@ export const ProjectDetails: React.FC = props => {
                     STATUS.Overpayment,
                     STATUS.Reconcile,
                   ].includes(projectStatus as STATUS) && (
+                    
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen} mb="15px">
                       {t('newWorkOrder')}
                     </Button>
                   )}
-                {tabIndex === 4 && (
+                {!isReadOnly &&tabIndex === 4 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />} mb="15px">
                     {t('projects.projectDetails.upload')}
                   </Button>
@@ -191,7 +193,8 @@ export const ProjectDetails: React.FC = props => {
                         />
                       </FormControl>
                     </Box>
-
+                    <>
+              {!isReadOnly && (
                     <Button
                       variant="solid"
                       colorScheme="brand"
@@ -201,6 +204,8 @@ export const ProjectDetails: React.FC = props => {
                     >
                       {t('projects.projectDetails.newTransaction')}
                     </Button>
+                      )}
+                      </>
                   </HStack>
                 )}
               </Box>

@@ -13,6 +13,7 @@ export const projectAwards = {
         NTEmax: 'NTE max',
         factoringFee: 'Factoring Fee',
         netFinalPayAmount: 'Net final pay amount',
+        originalscopeamount: 'Original Scope  Amount',
         scopeAmount: 'Scope amount',
         upgradePlan: 'Upgrade Project Plan',
       },

@@ -27,7 +27,7 @@ import {
   useCreateTicketMutation,
   useEditTicketMutation,
 } from 'api/support'
-import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { Button } from 'components/button/button'
@@ -92,7 +92,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
     return getSupportFormDefaultValues(email)
   }, [email])
   const { isAdmin } = useUserRolesSelector()
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('SUPPORT.READ')
   const onFileChange = (document: File) => {
     if (!document) return
 
@@ -423,9 +423,13 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
             {t(`${SUPPORT}.cancel`)}
           </Button>
         )}
+         <>
+          {!isReadOnly &&(
         <Button type="submit" colorScheme="brand" data-testid="save" isDisabled={watchRequiredField || Lodings}>
           {t(`${SUPPORT}.save`)}
         </Button>
+          )}
+          </>
       </HStack>
     </form>
   )

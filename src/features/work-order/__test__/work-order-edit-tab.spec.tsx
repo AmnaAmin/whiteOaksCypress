@@ -15,7 +15,7 @@ export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, proje
   await render(
     <Modal isOpen={true} onClose={onClose} size="none">
       <WorkOrderEditTab
-        workOrder={workOrder}
+        workOrder={workOrderDetails}
         onSave={onSave}
         navigateToProjectDetails={null}
         isWorkOrderUpdating={false}
@@ -23,7 +23,6 @@ export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, proje
         rejectInvoiceCheck={false}
         projectData={projectData}
         documentsData={DOCUMENTS}
-        workOrderDetails={workOrderDetails}
         isLoadingLineItems={false}
         isFetchingLineItems={false}
       />
@@ -86,11 +85,11 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
 
     expect(screen.getByTestId('showPriceCheckBox')).toBeInTheDocument()
-    expect(screen.getByTestId('showMarkAllIsVerified')).toBeInTheDocument()
-    expect(screen.queryByTestId('showMarkAllIsComplete')).toBeInTheDocument()
+    expect(screen.getByTestId('verified_checkbox')).toBeInTheDocument()
+    expect(screen.queryByTestId('complete_checkbox')).toBeInTheDocument()
 
     /* Items can only be verified, if they are completed */
-    expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('disabled')
+    expect(screen.getByTestId('verified_checkbox')).toHaveAttribute('disabled')
 
     await act(async () => {
       await userEvent.click(screen.getByTestId('isCompleted-0'))
@@ -101,10 +100,10 @@ describe('Work Order modal showing work order specific details for PC(Super set 
     expect(screen.getByTestId('isCompleted-1')).toHaveAttribute('data-checked')
 
     await act(async () => {
-      await userEvent.click(screen.getByTestId('showMarkAllIsVerified'))
+      await userEvent.click(screen.getByTestId('verified_checkbox'))
     })
 
-    expect(screen.getByTestId('showMarkAllIsVerified')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('verified_checkbox')).toHaveAttribute('data-checked')
     expect(screen.getByTestId('isVerified-0')).toHaveAttribute('data-checked')
     expect(screen.getByTestId('isVerified-1')).toHaveAttribute('data-checked')
     expect((screen.getByTestId('workOrderDateCompleted') as HTMLInputElement).value).toEqual(

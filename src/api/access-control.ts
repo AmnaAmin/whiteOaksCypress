@@ -81,6 +81,34 @@ export const useCreateNewRoleMutation = () => {
   )
 }
 
+export const useDeleteRole = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+  return useMutation(
+    roleName => {
+      return client(`authorities/${roleName}`, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['get-roles'])
+        toast({
+          title: 'Access Control',
+          description: 'Role has been deleted successfully',
+          status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: any) {
+        console.log('Unable to delete role', error)
+      },
+    },
+  )
+}
+
 export const useUpdateRoleMutation = roleName => {
   const client = useClient()
   const toast = useToast()
@@ -98,7 +126,7 @@ export const useUpdateRoleMutation = roleName => {
         queryClient.invalidateQueries(['get-roles-permissions', roleName])
         toast({
           title: 'Access Control',
-          description: 'New Role has been updated successfully',
+          description: 'Role has been updated successfully',
           status: 'success',
           isClosable: true,
           position: 'top-left',
@@ -148,7 +176,7 @@ export const ASSIGNMENTS = [
 ]
 
 export const mapPermissionsToFormValues = permission => {
-  const isAdmin = permission.name === 'ROLE_ADMIN'
+  const isAdmin = permission?.name === 'ROLE_ADMIN'
   const permissions = permission?.permissions
     ?.filter(p => {
       // select all permissions that are at module level like VENDOR.EDIT, PROJECT.EDIT
@@ -205,6 +233,7 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
       const key = p.name + '.' + (p.edit ? 'EDIT' : 'READ')
       return allPermissions?.find(a => a.key === key)
     })
+
   for (const key in values.advancedPermissions) {
     if (values.advancedPermissions[key]) {
       const permissionObj = allPermissions?.find(a => a.key === ADV_PERMISSIONS[key])
@@ -253,4 +282,18 @@ export const permissionsDefaultValues = ({ permissions }) => {
       hidePaidProjects: permissionSet?.some(p => [ADV_PERMISSIONS.hidePaidProjects].includes(p)),
     },
   }
+}
+
+export const setDefaultPermission = ({ setValue, value }) => {
+  setValue('advancedPermissions.fpmEdit', value)
+  setValue('advancedPermissions.pcEdit', value)
+  setValue('advancedPermissions.clientEdit', value)
+  setValue('advancedPermissions.addressEdit', value)
+  setValue('advancedPermissions.marketEdit', value)
+
+  setValue('advancedPermissions.gateCodeEdit', value)
+  setValue('advancedPermissions.lockBoxEdit', value)
+  setValue('advancedPermissions.clientDueEdit', value)
+  setValue('advancedPermissions.clientStartEdit', value)
+  setValue('advancedPermissions.woaStartEdit', value)
 }

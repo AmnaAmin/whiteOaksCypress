@@ -20,8 +20,9 @@ export const workOrder = {
         addRow: 'Add Row',
         details: 'Description',
         status: 'Status',
-        complete: 'Complete',
-        verification: 'Verification',
+        complete: '  Complete',
+        completePercentage: '%Complete',
+        verification: '  Verify',
         showPrice: 'Show Price to Vendor',
         sendNotification: 'Send Notification',
         markAllVerified: 'Mark All Verified',
@@ -58,14 +59,14 @@ export const workOrder = {
         expirationInvoiceMessageForVendor:
           'Your Insurance/License has expired. Please renew expiry to generate invoice.',
         expirationInvoiceMessageForAdmin: `Vendor's Insurance/License has expired. Expiry needs to be renewed to generate invoice.`,
-
+        swoParsingFailure: 'System can not read SOW at this time. Please manually add line items to the Work Order.',
         // New Work Order
 
         clientStart: 'Client Start',
         clientEnd: 'Client End',
         profitPercentage: 'Profit Percentage',
         finalSowAmount: 'Final SOW Amount',
-        type: 'Type',
+        type: 'Skill',
         clientApprovedAmount: 'Client Approved Amount',
         vendorWorkOrderAmount: 'Vendor WO Amount',
         expectedStartDate: 'Expected Start Date',
@@ -94,6 +95,7 @@ export const workOrder = {
         details: 'Descripción',
         status: 'Estado',
         complete: 'Completo',
+        completePercentage: '%Completo',
         verification: 'Verificación',
         showPrice: 'Mostrar precio al vendedor',
         sendNotification: 'Enviar notificación',
@@ -131,6 +133,8 @@ export const workOrder = {
         expirationInvoiceMessageForVendor:
           'Su Seguro/Licencia ha expirado. Renueve el vencimiento para generar la factura.',
         expirationInvoiceMessageForAdmin: `El seguro/licencia del proveedor ha vencido. El vencimiento debe renovarse para generar la factura.`,
+        swoParsingFailure:
+          'El sistema no puede leer SOW en este momento. Agregue manualmente elementos de línea a la orden de trabajo.',
 
         // New Work Order
 

@@ -36,7 +36,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { Alert, AlertDescription, AlertIcon } from '@chakra-ui/alert'
 import { CloseButton } from '@chakra-ui/react'
 import { orderBy } from 'lodash'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { MdOutlineCancel } from 'react-icons/md'
 import { readFileContent } from 'api/vendor-details'
 import { truncateWithEllipsis } from 'utils/string-formatters'
@@ -45,7 +45,11 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
   const { workOrder, onClose, onProjectTabChange, documentsData, navigateToProjectDetails, isUpdating, setIsUpdating } =
     props
-  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation({})
+  const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation({
+    setUpdating: () => {
+      setIsUpdating(false)
+    },
+  })
   const [documents, setDocuments] = useState<any[]>([])
   const [recentLWFile, setRecentLWFile] = useState<any>(null)
   const [openSignature, setOpenSignature] = useState(false)
@@ -57,7 +61,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { isVendor } = useUserRolesSelector()
   const { isFieldsDisabled } = useLWFieldsStatusDecision({ workOrder: workOrder })
   const inputRef = useRef<HTMLInputElement | null>(null)
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   type FormValueType = {
     claimantName: string | null | undefined
     customerName: string | null | undefined
@@ -229,6 +233,9 @@ export const LienWaiverTab: React.FC<any> = props => {
     updateLienWaiver(
       { ...workOrder, lienWaiverAccepted: true, amountOfCheck: workOrder.finalInvoiceAmount, documents },
       {
+        onSettled: () => {
+          setIsUpdating(false)
+        },
         onSuccess: () => {
           setValue('uploadLW', null)
           setIsUpdating(false)
@@ -243,7 +250,7 @@ export const LienWaiverTab: React.FC<any> = props => {
   return (
     <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onGenerateLWOpen)}>
       <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
-      <ModalBody h={'calc(100vh - 300px)'} p="25px" overflow={'auto'}>
+      <ModalBody h="600px" p="25px" overflow={'auto'}>
         <FormControl>
           <VStack align="start" spacing="30px">
             {workOrder?.leanWaiverSubmitted && !workOrder?.lienWaiverAccepted && isVendor && (
@@ -311,10 +318,6 @@ export const LienWaiverTab: React.FC<any> = props => {
                       variant="required-field"
                       register={register}
                       disabled={isFieldsDisabled}
-                      elementStyle={{
-                        bg: 'white',
-                        borderLeft: '2px solid #4E87F8',
-                      }}
                       testId="claimantsTitle"
                       rules={{ required: 'This is required field' }}
                       name={`claimantTitle`}
@@ -424,7 +427,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                 <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" mt={8} gap={10}>
                   <GridItem>
                     <InputView
-                      controlStyle={{ w: '16em' }}
+                      controlStyle={{ w: '14em' }}
                       label="Date of signature"
                       InputElem={
                         <>
@@ -437,10 +440,11 @@ export const LienWaiverTab: React.FC<any> = props => {
                   </GridItem>
                   <GridItem>
                     <InputView
+                      controlStyle={{ mb: '5px' }}
                       label="Claimant Signature"
                       InputElem={
                         workOrder?.lienWaiverAccepted && claimantsSignature ? (
-                          <Image hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
+                          <Image mt="7px" hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
                         ) : (
                           <></>
                         )
@@ -527,17 +531,16 @@ export const LienWaiverTab: React.FC<any> = props => {
           <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
             {t('cancel')}
           </Button>
-
-          {!isVendor ? (
-            <Button
-              onClick={() => lwUpload()}
-              colorScheme="brand"
-              isDisabled={!document || isUpdating}
-              data-testid="cancel-lien-waiver"
-            >
-              {t('save')}
-            </Button>
-          ) : (
+          {!isReadOnly && !isVendor ? (
+  <Button
+    onClick={() => lwUpload()}
+    colorScheme="brand"
+    isDisabled={!document || isUpdating}
+    data-testid="cancel-lien-waiver"
+  >
+    {t('save')}
+  </Button>
+) : null}
             <>
               {[STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
                 workOrder?.statusLabel?.toLocaleLowerCase(),
@@ -548,7 +551,7 @@ export const LienWaiverTab: React.FC<any> = props => {
                   </Button>
                 )}
             </>
-          )}
+          
         </HStack>
       </ModalFooter>
       <ConfirmationBox

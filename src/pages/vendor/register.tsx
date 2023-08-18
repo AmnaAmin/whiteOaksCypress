@@ -276,6 +276,7 @@ export const VendorRegister = () => {
       'password',
       'companyName',
       'ownerName',
+      'primaryContact',
       'secondName',
       'businessPhoneNumber',
       'businessPhoneNumberExtension',
@@ -447,7 +448,6 @@ export const VendorRegister = () => {
       isSsn: ssnEinTabIndex === 1 ? true : false,
     }
 
-    
     createVendorAccount(vendorObj)
   }
 
@@ -474,6 +474,7 @@ export const VendorRegister = () => {
     lastName: watch('lastName'),
     password: watch('password'),
     companyName: watch('companyName'),
+    ownerName: watch('ownerName'),
     businessPhoneNumber: watch('businessPhoneNumber'),
     businessEmailAddress: watch('businessEmailAddress'),
     streetAddress: watch('streetAddress'),
@@ -493,6 +494,7 @@ export const VendorRegister = () => {
     lastName: Yup.string().required('Last name is required'),
     password: Yup.string().required('Password is required'),
     companyName: Yup.string().required('Business name is required'),
+    ownerName: Yup.string().required('OwnerName is required'),
     businessPhoneNumber: Yup.string().required(),
     streetAddress: Yup.string().required('Street Address is required'),
     city: Yup.string().required('City is required'),
@@ -724,7 +726,7 @@ export const VendorRegister = () => {
                         _placeholder={placeholderStyle}
                         {...register('firstName', {
                           required: 'This is required',
-                          onChange: e => setValue('ownerName', e.target.value + ' ' + getValues('lastName')),
+                          onChange: e => setValue('primaryContact', e.target.value + ' ' + getValues('lastName')),
                         })}
                         tabIndex={2}
                         variant="required-field"
@@ -746,7 +748,7 @@ export const VendorRegister = () => {
                         _placeholder={placeholderStyle}
                         {...register('lastName', {
                           required: 'This is required',
-                          onChange: e => setValue('ownerName', getValues('firstName') + ' ' + e.target.value),
+                          onChange: e => setValue('primaryContact', getValues('firstName') + ' ' + e.target.value),
                         })}
                         tabIndex={3}
                         variant="required-field"
@@ -882,36 +884,42 @@ export const VendorRegister = () => {
                         <CustomTab isDisabled={isTabDisabled(FORM_TABS.DOCUMENTS)}>Documents</CustomTab>
                         <CustomTab isDisabled={isTabDisabled(FORM_TABS.LICENSE)}>License</CustomTab>
                         <CustomTab isDisabled={isTabDisabled(FORM_TABS.CONSTRUCTION_TRADE)}>
-                          Construction Trade
+                          Construction Skill
                         </CustomTab>
                         <CustomTab isDisabled={isTabDisabled(FORM_TABS.MARKETS)}>Markets</CustomTab>
                       </TabList>
 
                       <TabPanels>
                         <TabPanel py="0px">
-                          <HStack mt="30px" spacing={{ sm: '0', md: '70px' }} flexDir={{ base: 'column', sm: 'row' }}>
+                          <HStack
+                            alignItems={'start'}
+                            mt="30px"
+                            spacing={{ sm: '0', md: '70px' }}
+                            flexDir={{ base: 'column', sm: 'row' }}
+                          >
                             <VStack w={{ sm: '100%', md: '50%' }} spacing="20px">
-                              <FormControl isInvalid={errors?.ownerName}>
-                                <FormLabel htmlFor="ownerName" sx={formLabeStyle}>
+                              <FormControl isInvalid={errors?.primaryContact}>
+                                <FormLabel htmlFor="primaryContact" sx={formLabeStyle}>
                                   Primary Contact
                                 </FormLabel>
                                 <Input
                                   w="283px"
-                                  id="ownerName"
+                                  id="primaryContact"
                                   type="text"
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your primary contact"
                                   _placeholder={placeholderStyle}
                                   readOnly={true}
-                                  {...register('ownerName', {
+                                  {...register('primaryContact', {
                                     required: 'This is required',
                                   })}
                                   variant="required-field"
                                 />
-                                <FormErrorMessage>{errors?.ownerName && errors?.ownerName?.message}</FormErrorMessage>
+                                <FormErrorMessage>
+                                  {errors?.primaryContact && errors?.primaryContact?.message}
+                                </FormErrorMessage>
                               </FormControl>
-
                               <HStack w="100%" spacing="5px">
                                 <Box w="80%">
                                   <FormControl isInvalid={errors?.businessPhoneNumber}>
@@ -964,7 +972,6 @@ export const VendorRegister = () => {
                                   </FormControl>
                                 </Box>
                               </HStack>
-
                               <FormControl isInvalid={errors?.businessEmailAddress}>
                                 <FormLabel htmlFor="businessEmailAddress" sx={formLabeStyle}>
                                   Primary Email Address
@@ -986,11 +993,29 @@ export const VendorRegister = () => {
                                   {errors?.businessEmailAddress && errors?.businessEmailAddress?.message}
                                 </FormErrorMessage>
                               </FormControl>
+                              <FormControl isInvalid={errors?.ownerName}>
+                                <FormLabel htmlFor="ownersName" sx={formLabeStyle}>
+                                  Owner's Name
+                                </FormLabel>
+                                <Input
+                                  id="ownersName"
+                                  type="text"
+                                  fontSize="14px"
+                                  color="#252F40"
+                                  _placeholder={placeholderStyle}
+                                  {...register('ownerName', {
+                                    required: 'This is required',
+                                  })}
+                                  variant="required-field"
+                                />
+                                <FormErrorMessage>{errors?.ownerName && errors?.ownerName?.message}</FormErrorMessage>
+                              </FormControl>
                             </VStack>
 
                             <VStack
                               w={{ sm: '100%', md: '50%' }}
                               spacing="20px"
+                              alignItems={'start'}
                               sx={{
                                 '@media only screen and (max-width: 480px)': {
                                   marginTop: '20px !important',

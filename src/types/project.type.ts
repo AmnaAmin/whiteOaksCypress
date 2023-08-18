@@ -2,6 +2,7 @@ import { ResubmissionListItem } from './project-details.types'
 import { SelectOption } from './transaction.type'
 
 export type Project = {
+  largeWorkOrder?: boolean
   estimateId?: number | string | null | undefined
   accountRecievable: number | null
   accountPayable: number | null
@@ -130,6 +131,7 @@ export type Project = {
   lienRightFileDate: Date | string | null
   lienRightExpireDate: Date | string | null
   resubmissionDTOList: ResubmissionListItem[]
+  clientTypeId: string | number
 }
 
 export type ProjectExtraAttributesType = {
@@ -205,6 +207,7 @@ export type ProjectWorkOrderType = {
   invoiceAmount: number
   finalInvoiceAmount: number
   leanWaiverSubmitted?: string
+  largeWorkOrder?: boolean
   claimantTitle: string
   claimantsSignature: string
   dateInvoiceSubmitted: string
@@ -270,6 +273,7 @@ export type ProjectFormValues = {
   agentName: string | null
   agentPhone: string | null
   agentEmail: string | null
+  clientType: string | null
 }
 
 export type Market = {

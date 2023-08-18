@@ -60,7 +60,7 @@ import {
   useTotalAmount,
 } from './hooks'
 import { TransactionAmountForm } from './transaction-amount-form'
-import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
@@ -165,6 +165,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   const [remainingAmt, setRemainingAmt] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
 
@@ -238,10 +239,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isRefund,
     selectedWorkOrder,
   )
-
+  const { isAdmin } = useUserRolesSelector()
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
 
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
+  const allowSave = (projectAwardCheck || isPlanExhausted || remainingAmt) && !isAdmin
 
   const methodForPayment = e => {
     if (e > selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw && !isRefund) {
@@ -953,7 +955,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          ((!isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
+          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
             <>
               <Button
                 type="submit"
@@ -961,9 +963,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 data-testid="save-transaction"
                 colorScheme="darkPrimary"
                 variant="solid"
-                disabled={
-                  isFormSubmitLoading || isMaterialsLoading || projectAwardCheck || isPlanExhausted || remainingAmt
-                }
+                disabled={isFormSubmitLoading || isMaterialsLoading || allowSave}
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>

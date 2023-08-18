@@ -13,6 +13,7 @@ type clientDetailProps = {
   onClose: () => void
   setNextTab: () => void
   markets?: any
+  saveLoading?: boolean
 }
 
 export const Market = React.forwardRef((props: clientDetailProps) => {

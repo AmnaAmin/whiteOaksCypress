@@ -42,6 +42,7 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useFetchRoles } from 'api/access-control'
 import { useUsrMgt } from 'pages/admin/user-management'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 type UserManagement = {
   onClose: () => void
@@ -77,12 +78,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
   const { options: roles } = useFetchRoles()
-  const { options: usersList, isLoading: loadingUsersList } = useUsrMgt(
-    'userType.notIn=6&devAccount.equals=false',
-    0,
-    100000000,
-  )
-
+  const {
+    options: usersList,
+    isLoading: loadingUsersList,
+    userMgt: userData,
+  } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   const {
     register,
     handleSubmit,
@@ -104,7 +105,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const formValues = watch()
 
   const accountType: any = formValues?.accountType
-  const managersSelected = formValues?.managers
+  const managerSelected = formValues?.parentFieldProjectManagerId
   const directReportsSelected = formValues?.directReports
 
   const isEditUser = !!(user && user.id)
@@ -166,7 +167,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const onSubmit = useCallback(
     async formData => {
-      let formattedPayload = userMangtPayload(formData, statesDTO)
+      let formattedPayload = userMangtPayload(formData, statesDTO, userData)
       const mutation = userInfo?.id ? updateUser : addUser
       mutation(parseMarketFormValuesToAPIPayload(formattedPayload), {
         onSuccess() {
@@ -177,7 +178,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         },
       })
     },
-    [userInfo, isVendor, addUser, updateUser, userMangtPayload, statesDTO],
+    [userInfo, isVendor, addUser, updateUser, userMangtPayload, statesDTO, userData?.length],
   )
 
   const isPrimaryDisabled = !formValues.vendorAdmin
@@ -189,6 +190,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     (!isEditUser && !formValues?.newPassword) ||
     !formValues?.accountType ||
     !formValues?.streetAddress ||
+    !formValues?.city ||
+    !formValues?.zipCode ||
     !formValues?.telephoneNumber ||
     !formValues?.langKey ||
     (isVendor && !formValues.vendorId) ||
@@ -635,7 +638,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   isMulti={true}
                   loadingCheck={loadingUsersList}
                   {...field}
-                  options={usersList?.filter(ul => !managersSelected?.map(m => m.value)?.some(s => s === ul.value))} //Donot include in direct reports the users selected for managers
+                  options={usersList?.filter(ul => ul.value !== managerSelected?.value)} //Donot include in direct reports the users selected for managers
                 />
               )}
             />
@@ -650,13 +653,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             </FormLabel>
             <Controller
               control={control}
-              name={'managers' as any}
+              name={'parentFieldProjectManagerId'}
               render={({ field }) => (
                 <ReactSelect
                   placeholder="Select or Search"
                   selectProps={{ isBorderLeft: false }}
                   closeMenuOnSelect={false}
-                  isMulti={true}
                   {...field}
                   loadingCheck={loadingUsersList}
                   options={usersList?.filter(
@@ -688,6 +690,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <HStack mt="30px" w="300px">
                 <FormControl>
                   <Checkbox
+                    isChecked={formValues?.vendorAdmin}
                     {...register('vendorAdmin', {
                       onChange: e => {
                         if (!e.target.checked) setValue('primaryAdmin', false)
@@ -809,7 +812,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         mt="30px"
       >
         <>
-          {user && (
+          {!isReadOnly && user && (
             <Button
               variant="outline"
               isDisabled={user?.activated ? true : false}
@@ -832,10 +835,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         >
           {t(`${USER_MANAGEMENT}.modal.cancel`)}
         </Button>
-
-        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
-          {t(`${USER_MANAGEMENT}.modal.save`)}
-        </Button>
+        <>
+          {!isReadOnly && (
+            <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
+              {t(`${USER_MANAGEMENT}.modal.save`)}
+            </Button>
+          )}
+        </>
         <ConfirmationBox
           title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}
           content={t(`${USER_MANAGEMENT}.modal.deleteUserContent`)}

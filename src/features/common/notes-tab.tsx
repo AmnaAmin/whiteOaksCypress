@@ -19,6 +19,7 @@ import { convertDateWithTimeStamp } from 'utils/date-time-utils'
 import React, { useRef, useEffect } from 'react'
 import { BiSpreadsheet } from 'react-icons/bi'
 
+
 export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
     <Flex mb={4} flexDir={{ base: 'column', lg: 'row' }} alignItems="start" mt="20px">

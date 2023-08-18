@@ -6,6 +6,7 @@ import { BiCheckCircle } from 'react-icons/bi'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { currencyFormatter, truncateWithEllipsis } from 'utils/string-formatters'
 import { PROJECT_AWARD } from './projectAward.i18n'
+import { PERFORM } from 'features/common/status'
 
 export const TextCard = () => {
   const { t } = useTranslation()
@@ -76,10 +77,10 @@ export const ProjectAwardCard = ({
   const { isAdmin } = useUserRolesSelector()
 
   const drawAmount = () => {
-    if (cardsvalues?.drawLimit === 0) return 0
-    if (cardsvalues?.drawLimit === 1) return 'NTE 50%'
-    if (cardsvalues?.drawLimit === 2) return 'NTE 70%'
-    if (cardsvalues?.drawLimit === 4) return 'NTE 90%'
+    if (cardsvalues?.name === PERFORM.SelfPer) return 0
+    if (cardsvalues?.name === PERFORM.CoPer20) return 'NTE 50%'
+    if (cardsvalues?.name === PERFORM.COPer14) return 'NTE 70%'
+    if (cardsvalues?.name === PERFORM.CoPer7) return 'NTE 90%'
   }
   const awardPlanId = workOrder?.awardPlanId
 
@@ -98,9 +99,9 @@ export const ProjectAwardCard = ({
     const nteSeventyPercentage = (percentage / 100) * 70
     const nteNintyPercentage = (percentage / 100) * 90
 
-    if (cardsvalues?.drawLimit === 1) return nteFiftyPercentage
-    if (cardsvalues?.drawLimit === 2) return nteSeventyPercentage
-    if (cardsvalues?.drawLimit === 4) return nteNintyPercentage
+    if (cardsvalues?.name === PERFORM.CoPer20) return nteFiftyPercentage
+    if (cardsvalues?.name === PERFORM.COPer14) return nteSeventyPercentage
+    if (cardsvalues?.name === PERFORM.CoPer7) return nteNintyPercentage
     return 0
   }
 

@@ -158,6 +158,7 @@ export const isManualTransaction = transactionType =>
     TransactionTypeValues.shippingFee,
     TransactionTypeValues.deductible,
     TransactionTypeValues.depreciation,
+    TransactionTypeValues.legalFee,
   ].includes(transactionType)
 
 export const useFieldDisabledEnabledDecision = (
@@ -186,7 +187,11 @@ export const useFieldDisabledEnabledDecision = (
     isApproved: isStatusApproved,
     isSysFactoringFee: isFactoringFeeSysGenerated,
     isPaidDateDisabled: !transaction || (isStatusApproved && !paidEditPermission),
-    isStatusDisabled: (isStatusApproved && !statusEditPermission) || isMaterialsLoading || lateAndFactoringFeeForVendor,
+    isStatusDisabled:
+      (isStatusApproved && !statusEditPermission) ||
+      isMaterialsLoading ||
+      lateAndFactoringFeeForVendor ||
+      isFactoringFeeSysGenerated,
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
 }

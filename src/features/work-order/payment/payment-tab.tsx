@@ -27,6 +27,7 @@ import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
 import { truncateWithEllipsis } from 'utils/string-formatters'
 import moment from 'moment'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 const CalenderCard = props => {
   return (
@@ -66,7 +67,7 @@ const InformationCard = props => {
 }
 
 const PaymentInfoTab = props => {
-  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating } = props
+  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, isLoading } = props
 
   const { t } = useTranslation()
   const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
@@ -101,7 +102,7 @@ const PaymentInfoTab = props => {
   })
   const watchPartialPayment = watch('partialPayment')
   const watchPaymentDate = watch('paymentDate')
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   useEffect(() => {
     if ([STATUS.Rejected]?.includes(workOrder?.statusLabel?.toLowerCase())) {
       setValue('dateInvoiceSubmitted', null)
@@ -109,6 +110,9 @@ const PaymentInfoTab = props => {
       setValue('expectedPaymentDate', null)
       setValue('paymentTerm', null)
     } else {
+      if (isWorkOrderUpdating || isLoading) {
+        return
+      }
       resetPayments(defaultValuesPayment(workOrder, paymentsTerms))
     }
   }, [workOrder])
@@ -150,7 +154,7 @@ const PaymentInfoTab = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody ml={30} h={'calc(100vh - 300px)'} overflow={'auto'}>
+        <ModalBody ml={30} h='600px' overflow={'auto'}>
           <SimpleGrid
             columns={5}
             spacing={8}
@@ -400,8 +404,8 @@ const PaymentInfoTab = props => {
 
               <Box height="80px">
                 <FormControl isInvalid={!!errors.clientApprovedAmount}>
-                  <FormLabel variant={'strong-label'} size={'md'}>
-                    {truncateWithEllipsis(t('clientFinalApprovedAmount'), 30)}
+                  <FormLabel  isTruncated title={'Client Final Approved Amount'} variant={'strong-label'} size={'md'}>
+                  {truncateWithEllipsis(t('clientFinalApprovedAmount').trim(), 30)}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -525,9 +529,13 @@ const PaymentInfoTab = props => {
             <Button data-testid="wo-cancel-btn" variant="outline" onClick={props.onClose} colorScheme="brand">
               {t('cancel')}
             </Button>
+            <>
+            {!isReadOnly && (
             <Button type="submit" data-testid="submit-btn" colorScheme="brand" disabled={isWorkOrderUpdating}>
               {t('save')}
             </Button>
+            )}
+            </>
           </HStack>
         </ModalFooter>
       </form>

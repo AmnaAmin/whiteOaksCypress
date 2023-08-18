@@ -44,4 +44,7 @@ export enum TableNames {
   vendorUsersTable = 'vendor-users-table',
   woaUsersTable = 'woa-users-table',
   devtekUsersTable = 'devtek-users-table',
+  vendorProject = 'vendorProject',
+  testProject = 'testProject',
+  clients = 'clients-table',
 }

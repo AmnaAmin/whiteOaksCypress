@@ -111,7 +111,6 @@ export const MenusList: Menu[] = [
     color: '#68D391',
     permissions: ['PERFORMANCE.EDIT', 'PERFORMANCE.READ', 'ALL'],
   },
-
   {
     pathTo: '/userManager',
     title: `${SIDE_NAV}.userMgmt`,
@@ -143,6 +142,14 @@ export const MenusList: Menu[] = [
     color: '#4E87F8',
     testId: 'vendorTrade',
     permissions: ['VENDORSKILL.EDIT', 'VENDORSKILL.READ', 'ALL'],
+  },
+  {
+    pathTo: '/clientType',
+    title: 'Client type',
+    Icon: BiUser,
+    color: '#0BC5EA',
+    testId: 'clientTypeLink',
+    permissions: ['CLIENTTYPE.EDIT', 'CLIENTTYPE.READ', 'ALL'],
   },
   {
     pathTo: '/markets',

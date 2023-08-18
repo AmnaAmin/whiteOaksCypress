@@ -33,7 +33,7 @@ import { addDays, isWednesday, nextFriday, nextWednesday } from 'date-fns'
 import { createInvoice } from 'api/vendor-projects'
 import { useUpdateWorkOrderMutation } from 'api/work-order'
 import { ConfirmationBox } from 'components/Confirmation'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { AlertError } from 'components/AlertError'
 
@@ -100,7 +100,7 @@ export const InvoiceTab = ({
   const toast = useToast()
   const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
   const { isVendor, isAdmin } = useUserRolesSelector()
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   const {
     isOpen: isGenerateInvoiceOpen,
     onClose: onGenerateInvoiceClose,
@@ -252,9 +252,9 @@ export const InvoiceTab = ({
 
   return (
     <Box>
-      <ModalBody mx={{ base: 0, lg: '25px' }} h={'calc(100vh - 300px)'}>
+      <ModalBody mx={{ base: 0, lg: '25px' }} h="600px">
         {isVendorExpired && (
-          <Box pt="15px">
+          <Box>
             <AlertError
               styleBox={{ width: 'max-content' }}
               msg={
@@ -319,7 +319,7 @@ export const InvoiceTab = ({
         <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
 
         <Box
-          h="calc(100vh - 409px)"
+          h="470px"
           overflow="auto"
           borderRadius={7}
           borderBottom="1px solid #CBD5E0"
@@ -336,8 +336,7 @@ export const InvoiceTab = ({
                   {t('description')}
                 </Td>
                 <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
-                  {t('type')}
-                </Td>
+                  {t('type')}                </Td>
                 <Td color={'gray.900'} fontWeight={500} fontSize={'14px'} w={300} pr={12} textAlign={'end'}>
                   {t('total')}
                 </Td>
@@ -443,6 +442,7 @@ export const InvoiceTab = ({
               <Button onClick={onClose} colorScheme="darkPrimary" variant="outline">
                 {t('cancel')}
               </Button>
+              {!isReadOnly && (
               <Button
                 disabled={!rejectInvoiceCheck || isWorkOrderUpdating}
                 onClick={() => rejectInvoice()}
@@ -450,6 +450,7 @@ export const InvoiceTab = ({
               >
                 {t('save')}
               </Button>
+              )}
             </>
           ) : (
             <Button onClick={onClose} variant="outline" colorScheme="darkPrimary">

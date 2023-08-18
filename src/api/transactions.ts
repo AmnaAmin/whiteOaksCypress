@@ -733,6 +733,8 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         queryClient.invalidateQueries(GET_PAGINATED_RECEIVABLE_QUERY_KEY)
         queryClient.invalidateQueries(['audit-logs', projectId])
+        queryClient.invalidateQueries(['changeOrders'])
+        queryClient.invalidateQueries(['WorkOrderDetails'])
 
         toast({
           title: 'Update Transaction.',

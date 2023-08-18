@@ -71,7 +71,19 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     setValue,
   } = formReturn
   const values = getValues()
-
+  const transaction = useWatch({ name: 'transaction', control })
+  useEffect(() => {
+    let total_Amount = 0;
+    values.transaction.forEach(transaction => {
+      total_Amount += parseFloat(transaction.amount)
+    })
+    
+    const finalTotalAmount = Math.abs(total_Amount)
+    if (finalTotalAmount){
+      onSetTotalRemainingAmount(finalTotalAmount)
+    }
+  }, [values.transaction])
+ 
   const {
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
@@ -84,7 +96,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     onOpen: onReplaceMaterialUploadOpen,
   } = useDisclosure()
 
-  const transaction = useWatch({ name: 'transaction', control })
+
   const document = useWatch({ name: 'attachment', control })
   const { mutate: uploadMaterialAttachment } = useUploadMaterialAttachment()
   const { data: account } = useAccountDetails()
@@ -551,8 +563,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                       }
                                     }}
                                     onChange={e => {
-                                      onSetTotalRemainingAmount(Math.abs(e?.target?.value))
-
                                       const inputValue = e.currentTarget.value
                                       inputValue !== ''
                                         ? field.onChange(
@@ -561,7 +571,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                               : inputValue,
                                           )
                                         : field.onChange('')
+                                     
                                     }}
+                                   
                                     variant={'required-field'}
                                     size="sm"
                                   />

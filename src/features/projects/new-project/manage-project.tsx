@@ -10,6 +10,7 @@ import { useProjectManagementSaveButtonDisabled } from './hooks'
 import NumberFormat from 'react-number-format'
 import Select from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
+import { useClientType } from 'api/client-type'
 
 export const ManageProject: React.FC<{
   isLoading: boolean
@@ -30,6 +31,7 @@ export const ManageProject: React.FC<{
   const { fieldProjectManagerByMarketOptions } = useFPMsByMarket(values.newMarket?.value)
   const { projectCoordinatorSelectOptions } = useProjectCoordinators()
   const { clientSelectOptions } = useClients()
+  const { clientTypesSelectOptions } = useClientType()
   const [carrierOption, setCarrierOptions] = useState<SelectOption[] | null>()
 
   const isProjectManagementSaveButtonDisabled = useProjectManagementSaveButtonDisabled(control)
@@ -139,7 +141,7 @@ export const ManageProject: React.FC<{
               <FormLabel size="md">{t(`${NEW_PROJECT}.clientSuperName`)}</FormLabel>
               <Input
                 id="clientSuperName"
-                {...register('superLastName')}
+                {...register('superFirstName')}
                 value={formattedClientName}
                 onChange={handleChange}
               />
@@ -199,6 +201,34 @@ export const ManageProject: React.FC<{
               <FormErrorMessage>{errors.superEmailAddress && errors.superEmailAddress.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+
+          <GridItem>
+            <FormControl>
+              <FormLabel isTruncated title={t(`${NEW_PROJECT}.clientType`)} size="md">
+                {t(`${NEW_PROJECT}.clientType`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name={`clientType`}
+                rules={{ required: 'This is required field' }}
+                render={({ field: { value, onChange }, fieldState }) => (
+                  <>
+                    <div data-testid="client_type">
+                      <ReactSelect
+                        id="clientType"
+                        // options={projectTypeSelectOptions}
+                        options={clientTypesSelectOptions}
+                        selected={value}
+                        selectProps={{ isBorderLeft: true, menuHeight: '125px' }}
+                        onChange={option => onChange(option)}
+                      />
+                    </div>
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
+            </FormControl>
+          </GridItem>
         </Grid>
         <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">
           <GridItem>
@@ -211,7 +241,12 @@ export const ManageProject: React.FC<{
                 name={`carrier`}
                 render={({ field, fieldState }) => (
                   <>
-                    <Select options={carrierOption} {...field} />
+                    <Select
+                      menuPlacement="top"
+                      selectProps={{ menuHeight: '180px' }}
+                      options={carrierOption}
+                      {...field}
+                    />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}

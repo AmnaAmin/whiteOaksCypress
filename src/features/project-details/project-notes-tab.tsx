@@ -4,10 +4,11 @@ import { useNoteMutation } from 'api/work-order'
 import { useAccountDetails } from 'api/vendor-details'
 import { NotesTab } from 'features/common/notes-tab'
 import { useProjectNotes } from 'api/projects'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const ProjectNotes: React.FC<any> = props => {
   const { setNotesCount, projectId, projectData } = props
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   const { mutate: createNotes } = useNoteMutation(projectId)
   const { data: account } = useAccountDetails()
 
@@ -31,6 +32,7 @@ export const ProjectNotes: React.FC<any> = props => {
   }
   return (
     <NotesTab
+      hideSave={isReadOnly}
       saveNote={saveNote}
       projectData={projectData}
       notes={notes}
