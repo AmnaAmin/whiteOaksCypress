@@ -16,7 +16,7 @@ import { useProjectCards } from 'api/pc-projects'
 import { ProjectCard } from 'features/common/project-card'
 import { useTranslation } from 'react-i18next'
 import { BiFlag } from 'react-icons/bi'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, bg }) => {
   return (
@@ -28,7 +28,7 @@ const IconElement: React.FC<{ Icon: React.ElementType; bg: string }> = ({ Icon, 
 
 const useProjectCardJson = cards => {
   const { t } = useTranslation()
-  const { isFPM } = useUserRolesSelector()
+  const hidePaidProjects = useRoleBasedPermissions()?.permissions?.includes('PROJECT.PAID.HIDE')
   let cardArray = [
     {
       id: 'new',
@@ -116,8 +116,8 @@ const useProjectCardJson = cards => {
       IconElement: <IconElement Icon={BiFlag} bg="#FFE1E1" />,
     },
   ]
-  if (isFPM) {
-    cardArray = cardArray?.filter(c => !['clientPaid', 'overpayment'].includes(c.id))
+  if (hidePaidProjects) {
+    cardArray = cardArray?.filter(c => !['clientPaid', 'overpayment'].includes(c?.id))
   }
   return cardArray
 }

@@ -46,6 +46,7 @@ interface PemissionFormValues {
   roleName: string
   assignment: SelectOption
   location: SelectOption
+  systemRole: boolean
   permissions: Array<{ name: string; edit: boolean; hide: boolean; read: boolean }>
 }
 
@@ -143,6 +144,31 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
                         <Select options={LOCATIONS} selectProps={{ isBorderLeft: true }} {...field} />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </div>
+                    </>
+                  )}
+                />
+              </FormControl>
+            </Box>
+            <Box w="215px">
+              <FormControl isInvalid={!!errors.systemRole}>
+                <FormLabel variant="strong-label" size="md">
+                  {t(`${ACCESS_CONTROL}.systemRole`)}
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name={`systemRole`}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <Checkbox
+                        data-testid={'systemRole'}
+                        colorScheme="PrimaryCheckBox"
+                        isChecked={field.value}
+                        style={{ background: 'white', border: '#DFDFDF' }}
+                        mr="2px"
+                        onChange={value => {
+                          field.onChange(value)
+                        }}
+                      ></Checkbox>
                     </>
                   )}
                 />
@@ -368,6 +394,52 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
               <Text color="gray.500" fontWeight={500}>
                 Project Management
               </Text>
+              <Controller
+                control={control}
+                name={`advancedPermissions.hideCreateProject`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px" fontWeight={400}>
+                        Hide Project Creation
+                      </Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
+              <Controller
+                control={control}
+                name={`advancedPermissions.hidePaidProjects`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px" fontWeight={400}>
+                        Hide Paid Projects
+                      </Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
               <Controller
                 control={control}
                 name={`advancedPermissions.woaStartEdit`}
