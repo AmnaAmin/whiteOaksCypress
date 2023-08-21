@@ -1089,7 +1089,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           {t(`${USER_MANAGEMENT}.modal.cancel`)}
         </Button>
 
-        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
+        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone ||  !formValues?.state}>
           {t(`${USER_MANAGEMENT}.modal.save`)}
         </Button>
         <ConfirmationBox
