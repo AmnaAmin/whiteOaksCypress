@@ -316,7 +316,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     (showMarkets && noMarketsSelected) ||
     (showStates && !validateState(formValues?.states)) ||
     (showRegions && !validateRegions(formValues?.regions)) ||
-    (managerOptions?.length > 0 && !formValues?.parentFieldProjectManagerId)
+    (managerOptions?.length > 0 && !formValues?.parentFieldProjectManagerId) ||
+    (!invalidTelePhone ) ||
+    (!formValues?.state)
   /*||
     (showDirectReports && !(formValues as any)?.directReports?.length)*/
 
@@ -1089,7 +1091,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           {t(`${USER_MANAGEMENT}.modal.cancel`)}
         </Button>
 
-        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
+        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField}>
           {t(`${USER_MANAGEMENT}.modal.save`)}
         </Button>
         <ConfirmationBox
