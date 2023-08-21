@@ -421,9 +421,11 @@ export const VendorRegister = () => {
     const email = formValues.email
     const login = email
     const streetAddress = formValues.streetAddress
+    const city = formValues.city
     const telephoneNumber = formValues.telephoneNumber
     const state = formValues.state?.value
-
+    const zipCode = formValues.zipCode
+    const stateId = formValues.state?.id
     const vendorDetails: any = await parseCreateVendorFormToAPIData(formValues, [])
 
     vendorDetails.status = 12
@@ -441,9 +443,11 @@ export const VendorRegister = () => {
       email: email,
       login: login,
       streetAddress: streetAddress,
+      city: city,
+      zipCode: zipCode,
       telephoneNumber: telephoneNumber,
       vendorDetails: vendorDetails,
-      stateId: state?.id,
+      stateId: stateId,
       state: state,
       isSsn: ssnEinTabIndex === 1 ? true : false,
     }

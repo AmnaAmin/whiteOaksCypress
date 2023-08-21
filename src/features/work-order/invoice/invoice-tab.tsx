@@ -401,7 +401,7 @@ export const InvoiceTab = ({
           {navigateToProjectDetails && (
             <Button
               variant="outline"
-              colorScheme="darkPriamry"
+              colorScheme="brand"
               size="md"
               onClick={navigateToProjectDetails}
               leftIcon={<BiSpreadsheet />}
