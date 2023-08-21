@@ -26,8 +26,14 @@ import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormatNew } from 'utils/date-time-utils'
-import Select from 'components/form/react-select'
-import { defaultValuesWODetails, parseWODetailValuesToPayload, useFieldEnableDecisionDetailsTab } from 'api/work-order'
+import Select, { CreatableSelect } from 'components/form/react-select'
+import {
+  completePercentageValues,
+  defaultValuesWODetails,
+  newObjectFormatting,
+  parseWODetailValuesToPayload,
+  useFieldEnableDecisionDetailsTab,
+} from 'api/work-order'
 import AssignedItems from './assigned-items'
 import {
   getRemovedItems,
@@ -346,6 +352,7 @@ const WorkOrderDetailTab = props => {
       updateWorkOrderLineItems(deleted, savePayload)
     }
   }
+  const handleDropdownValue = v => [{ value: v, label: `${v?.toString()}%` }]
 
   const onSubmit = values => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
@@ -591,9 +598,42 @@ const WorkOrderDetailTab = props => {
                   />
                 </FormControl>
               </Box>
-              {!(uploadedWO && uploadedWO?.s3Url) && (
-                <Box w="215px" display={'none'}>
+              {uploadedWO && uploadedWO?.s3Url && (
+                <Box w="215px">
                   <FormControl>
+                    <FormLabel variant="strong-label" size="md">
+                      {t(`${WORK_ORDER}.completePercentage`)}
+                    </FormLabel>
+                    <Controller
+                      control={control}
+                      // rules={{ required: true }}
+                      name={'completePercentage'}
+                      render={({ field }) => {
+                        return (
+                          <CreatableSelect
+                            {...field}
+                            id={`completePercentage`}
+                            options={completePercentageValues}
+                            size="md"
+                            value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
+                            // isDisabled={isVendor}
+                            onChange={option => {
+                              if (option?.__isNew__) {
+                                field.onChange(newObjectFormatting(option))
+                              } else {
+                                field.onChange(option)
+                              }
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FormControl>
+                </Box>
+              )}
+              {!(uploadedWO && uploadedWO?.s3Url) && (
+                <Box w="215px">
+                  <FormControl data-testid="completedPercentageField">
                     <FormLabel variant="strong-label" size="md">
                       {t(`${WORK_ORDER}.completePercentage`)}
                     </FormLabel>
