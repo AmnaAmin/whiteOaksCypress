@@ -287,6 +287,19 @@ export type Market = {
   stateName: string
 }
 
+export type ProjectAward = {
+  id: number
+  name: string
+  materialLimit: number
+  drawLimit: number
+  totalAmountLimit: number
+  payTerm: number
+  factoringFee: number
+  createdBy: string | null
+  dateCreated: string | null
+  lastModifiedBy: string | null
+  dateModified: string | null
+}
 export type ProjectFinancialOverview = {
   changeOrderId: number
   vendorPayment: number
