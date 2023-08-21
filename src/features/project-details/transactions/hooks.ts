@@ -13,6 +13,7 @@ import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useProjectAward } from 'api/project-award'
 
 /*function getRefundTransactionType(type): TransactionsWithRefundType {
   if (type === TransactionTypeValues.material)
@@ -171,7 +172,10 @@ export const useFieldDisabledEnabledDecision = (
     isSysFactoringFee: isFactoringFeeSysGenerated,
     isPaidDateDisabled: !transaction || (isStatusApproved && !isAdminEnabled),
     isStatusDisabled:
-      (isStatusApproved && !(isAdmin || isAccounting)) || isMaterialsLoading || lateAndFactoringFeeForVendor ||isFactoringFeeSysGenerated ,
+      (isStatusApproved && !(isAdmin || isAccounting)) ||
+      isMaterialsLoading ||
+      lateAndFactoringFeeForVendor ||
+      isFactoringFeeSysGenerated,
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
 }
@@ -200,10 +204,12 @@ export const useIsAwardSelect = (
   isRefund?,
   selectedWorkOrder?,
 ) => {
+  const { projectAwardData } = useProjectAward()
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
   const check = against?.awardStatus
   const isValidForAwardPlan = against?.isValidForAwardPlan
+  const isDrawOrMaterial = transType?.label === 'Draw' || transType?.label === 'Material'
   const remainingAmountExceeded =
     (transType?.label === 'Draw' || (transType?.label === 'Material' && !isRefund)) && remainingAmt
 
@@ -225,8 +231,20 @@ export const useIsAwardSelect = (
   const showUpgradeOption = isPlanExhausted && isNotFinalPlan
 
   const showLimitReached = isPlanExhausted && !isNotFinalPlan
+  const selectedAward = projectAwardData?.find(a => a.id === selectedWorkOrder?.awardPlanId)
+  const isCompletedWorkLessThanNTEPercentage =
+    isDrawOrMaterial &&
+    selectedAward?.totalAmountLimit &&
+    selectedWorkOrder?.completePercentage < selectedAward?.totalAmountLimit
 
-  return { check, isValidForAwardPlan, isPlanExhausted, showUpgradeOption, showLimitReached }
+  return {
+    check,
+    isValidForAwardPlan,
+    isPlanExhausted,
+    showUpgradeOption,
+    showLimitReached,
+    isCompletedWorkLessThanNTEPercentage,
+  }
 }
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {

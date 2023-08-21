@@ -67,6 +67,7 @@ import { ReadOnlyInput } from 'components/input-view/input-view'
 import {
   DrawLienWaiver,
   LienWaiverAlert,
+  PercentageCompletionLessThanNTEAlert,
   ProjectAwardAlert,
   ProjectTransactionRemainingAlert,
 } from './draw-transaction-lien-waiver'
@@ -229,19 +230,20 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }, [selectedWorkOrderStats])
 
-  const { check, isValidForAwardPlan, isPlanExhausted, showUpgradeOption, showLimitReached } = useIsAwardSelect(
-    control,
-    transaction,
-    selectedWorkOrderStats,
-    remainingAmt,
-    isRefund,
-    selectedWorkOrder,
-  )
+  const {
+    check,
+    isValidForAwardPlan,
+    isPlanExhausted,
+    showUpgradeOption,
+    showLimitReached,
+    isCompletedWorkLessThanNTEPercentage,
+  } = useIsAwardSelect(control, transaction, selectedWorkOrderStats, remainingAmt, isRefund, selectedWorkOrder)
+  const isAdminEnabled = isAdmin || isAccounting
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
-
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
-  const allowSave = (projectAwardCheck || isPlanExhausted || remainingAmt) && !isAdmin
+  const showCompletedPercentageMessage = isCompletedWorkLessThanNTEPercentage && !isAdminEnabled
+  const allowSave = (projectAwardCheck || isPlanExhausted || remainingAmt || showCompletedPercentageMessage) && !isAdmin
 
   const methodForPayment = e => {
     if (e > selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw && !isRefund) {
@@ -263,7 +265,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowPaymentRecievedDateField,
     isPaymentTermDisabled,
   } = useFieldShowHideDecision(control, transaction)
-  const isAdminEnabled = isAdmin || isAccounting
 
   const { isInvoicedDateRequired, isPaidDateRequired, isPaymentTermRequired } = useFieldRequiredDecision(
     control,
@@ -454,6 +455,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {check && showLimitReached && <ProjectTransactionRemainingAlert msg="PlanLimitExceed" />}
 
       {remainingAmt && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
+
+      {isCompletedWorkLessThanNTEPercentage && <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />}
 
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
