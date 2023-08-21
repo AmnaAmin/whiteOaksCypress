@@ -21,7 +21,7 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { ExportButton } from 'components/table-refactored/export-button'
-import { CLIENT_TABLE_QUERY_KEYS } from 'api/clients'
+import { CLIENT_TABLE_QUERY_KEYS, useGetAllClients } from 'api/clients'
 import { useTranslation } from 'react-i18next'
 import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
@@ -33,12 +33,16 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [sorting, setSorting] = React.useState<SortingState>([])
 
-  const { columnFilters, setColumnFilters, queryStringWithPagination } = useColumnFiltersQueryString({
-    queryStringAPIFilterKeys: CLIENT_TABLE_QUERY_KEYS,
-    pagination,
-    setPagination,
-    sorting,
-  })
+  const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
+    useColumnFiltersQueryString({
+      queryStringAPIFilterKeys: CLIENT_TABLE_QUERY_KEYS,
+      pagination,
+      setPagination,
+      sorting,
+    })
+
+  const { refetch: refetchAllClients, isLoading: isAllExportDataLoading } =
+    useGetAllClients(queryStringWithoutPagination)
 
   const {
     data: clients,
@@ -202,9 +206,8 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
                 }}
                 colorScheme="brand"
                 fileName="clients"
-                fetchedData={clients}
-                isLoading={isLoading}
-                downloadFromTable={true}
+                refetch={refetchAllClients}
+                isLoading={isAllExportDataLoading}
               />
               <CustomDivider />
 
