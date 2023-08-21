@@ -910,7 +910,6 @@ export const VendorRegister = () => {
                                   color="#252F40"
                                   placeholder="Please enter your primary contact"
                                   _placeholder={placeholderStyle}
-                                  readOnly={true}
                                   {...register('primaryContact', {
                                     required: 'This is required',
                                   })}
@@ -983,7 +982,6 @@ export const VendorRegister = () => {
                                   color="#252F40"
                                   placeholder="Please enter your primary email address"
                                   _placeholder={placeholderStyle}
-                                  readOnly={true}
                                   {...register('businessEmailAddress', {
                                     required: 'This is required',
                                   })}
@@ -1212,6 +1210,7 @@ export const VendorRegister = () => {
                                   render={({ field, fieldState }) => (
                                     <>
                                       <Select
+                                      selectProps={{ isBorderLeft: true }}
                                         {...field}
                                         options={stateSelectOptions}
                                         selected={field.value}
