@@ -314,6 +314,17 @@ export const AddPropertyInfo: React.FC<{
                 <Input id="lockBoxCode" {...register('lockBoxCode')} type="number" />
               </FormControl>
             </GridItem>
+
+            <GridItem>
+              <FormControl>
+                <FormLabel htmlFor="claimNumber" size="md">
+                  {t(`${NEW_PROJECT}.claimNumber`)}
+                </FormLabel>
+                <Input id="claimNumber" 
+                {...register('claimNumber')} 
+                type="number" />
+              </FormControl>
+            </GridItem>
           </Grid>
 
           <Grid templateColumns="repeat(4, 225px)" gap={'1rem 1.5rem'} py="3">

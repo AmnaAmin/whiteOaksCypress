@@ -138,7 +138,7 @@ export const useDeleteUserDetails = () => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries('users')
+       
         toast({
           title: t(`${USER_MANAGEMENT}.modal.deleteUserModal`),
           description: t(`${USER_MANAGEMENT}.modal.deleteUserSuccess`),
@@ -146,6 +146,8 @@ export const useDeleteUserDetails = () => {
           isClosable: true,
           position: 'top-left',
         })
+        queryClient.invalidateQueries(USER_MGT_QUERY_KEY)
+        queryClient.invalidateQueries('users')
       },
       onError(error: any) {
         toast({

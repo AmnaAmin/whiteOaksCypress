@@ -421,9 +421,11 @@ export const VendorRegister = () => {
     const email = formValues.email
     const login = email
     const streetAddress = formValues.streetAddress
+    const city = formValues.city
     const telephoneNumber = formValues.telephoneNumber
     const state = formValues.state?.value
-
+    const zipCode = formValues.zipCode
+    const stateId = formValues.state?.id
     const vendorDetails: any = await parseCreateVendorFormToAPIData(formValues, [])
 
     vendorDetails.status = 12
@@ -441,9 +443,11 @@ export const VendorRegister = () => {
       email: email,
       login: login,
       streetAddress: streetAddress,
+      city: city,
+      zipCode: zipCode,
       telephoneNumber: telephoneNumber,
       vendorDetails: vendorDetails,
-      stateId: state?.id,
+      stateId: stateId,
       state: state,
       isSsn: ssnEinTabIndex === 1 ? true : false,
     }
@@ -910,7 +914,6 @@ export const VendorRegister = () => {
                                   color="#252F40"
                                   placeholder="Please enter your primary contact"
                                   _placeholder={placeholderStyle}
-                                  readOnly={true}
                                   {...register('primaryContact', {
                                     required: 'This is required',
                                   })}
@@ -983,7 +986,6 @@ export const VendorRegister = () => {
                                   color="#252F40"
                                   placeholder="Please enter your primary email address"
                                   _placeholder={placeholderStyle}
-                                  readOnly={true}
                                   {...register('businessEmailAddress', {
                                     required: 'This is required',
                                   })}
@@ -1212,6 +1214,7 @@ export const VendorRegister = () => {
                                   render={({ field, fieldState }) => (
                                     <>
                                       <Select
+                                      selectProps={{ isBorderLeft: true }}
                                         {...field}
                                         options={stateSelectOptions}
                                         selected={field.value}
