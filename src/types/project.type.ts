@@ -33,6 +33,7 @@ export type Project = {
   invoiceLink: string | null
   lastCompletedWorkOrder: string | null
   lockBoxCode: string | null
+  claimNumber?: string | null
   market: string | null
   materialCost: number | null
   drawAmount: number | null
@@ -265,6 +266,7 @@ export type ProjectFormValues = {
   projectStartDate?: string
   woaCompletionDate?: string
   propertyId?: number
+  claimNumber?: string | null
   property?: any
   homeOwnerName: string | null
   homeOwnerPhone: string | null

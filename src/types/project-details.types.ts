@@ -36,6 +36,7 @@ type ProjectManagementValues = {
   projectClosedDueDate: string | null
   lienExpiryDate: string | null
   lienFiled: Date | string | null
+  claimNumber: string | null
 }
 
 type ProjectInvoicingAndPaymentFormValues = {
@@ -96,6 +97,7 @@ type ProjectDetailsLocationFormValues = {
   market: SelectOption | null
   gateCode: string | null
   lockBoxCode: string | null
+  claimNumber?: string | null
   hoaContactPhoneNumber: string | null
   hoaContactExtension: string | null
   hoaContactEmail: string | null
@@ -208,6 +210,7 @@ export type ProjectDetailsAPIPayload = {
   market: string | null
   gateCode: string | null
   lockBoxCode: string | null
+  claimNumber?: string | null
   hoaPhone: string | null
   hoaPhoneNumberExtension: string | null
   hoaEmailAddress: string | null
