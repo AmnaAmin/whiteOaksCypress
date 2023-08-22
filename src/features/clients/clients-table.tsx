@@ -82,7 +82,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     },
     {
       header: `${CLIENTS}.contact`,
-      accessorKey: 'contactsName',
+      accessorKey: 'contactName',
       accessorFn: row => {
         return row.contacts?.[0] ? row.contacts?.[0]?.contact : '- - -'
       },
@@ -95,15 +95,15 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       },
     },
     {
-      header: `${CLIENTS}.contactsPhone`,
-      accessorKey: 'contactsPhone',
+      header: `${CLIENTS}.contactPhone`,
+      accessorKey: 'contactPhone',
       accessorFn: row => {
         return row.contacts?.[0] ? row.contacts?.[0]?.phoneNumber : '- - -'
       },
     },
     {
-      header: `${CLIENTS}.contactsEmail`,
-      accessorKey: 'contactsEmail',
+      header: `${CLIENTS}.contactEmail`,
+      accessorKey: 'contactEmail',
       accessorFn: row => {
         return row.contacts?.[0] ? row.contacts?.[0]?.emailAddress : '- - -'
       },
