@@ -301,22 +301,24 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const directReportStates = formValues?.states?.filter(r => r.checked)?.map(r => r.state.id) || ([] as string[])
 
   const watchRequiredField =
-    !formValues?.email ||
-    !formValues?.firstName ||
-    !formValues?.lastName ||
+    (!formValues?.email || formValues?.email.trim() === '') ||
+    (!formValues?.firstName || formValues?.firstName.trim() === '') ||
+    (!formValues?.lastName || formValues?.lastName.trim() === '') ||
     (!isEditUser && !formValues?.newPassword) ||
     !formValues?.accountType ||
-    !formValues?.streetAddress ||
-    !formValues?.city ||
-    !formValues?.zipCode ||
-    !formValues?.telephoneNumber ||
+    (!formValues?.streetAddress || formValues?.streetAddress.trim() === '') ||
+    (!formValues?.city || formValues?.city.trim() === '') ||
+    (!formValues?.zipCode || formValues?.zipCode.trim() === '') ||
+    (!formValues?.telephoneNumber || formValues.telephoneNumber?.trim() === '') ||
     !formValues?.langKey ||
-    (isVendor && !formValues.vendorId) ||
+    (isVendor && !formValues?.vendorId)||
     (isFPM && (!fpmRole || !formValues.managerRoleId)) ||
     (showMarkets && noMarketsSelected) ||
     (showStates && !validateState(formValues?.states)) ||
     (showRegions && !validateRegions(formValues?.regions)) ||
-    (managerOptions?.length > 0 && !formValues?.parentFieldProjectManagerId)
+    (managerOptions?.length > 0 && !formValues?.parentFieldProjectManagerId) ||
+    (!invalidTelePhone ) ||
+    (!formValues?.state)
   /*||
     (showDirectReports && !(formValues as any)?.directReports?.length)*/
 
@@ -1089,7 +1091,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           {t(`${USER_MANAGEMENT}.modal.cancel`)}
         </Button>
 
-        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
+        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField}>
           {t(`${USER_MANAGEMENT}.modal.save`)}
         </Button>
         <ConfirmationBox

@@ -1,10 +1,10 @@
 import { useQuery } from 'react-query'
-import { Project } from 'types/project.type'
+import { ProjectAward } from 'types/project.type'
 import { useClient } from 'utils/auth-context'
 
 export const useProjectAward = (largeWorkOrder?: boolean) => {
   const client = useClient()
-  const { data: projectAwardData, ...rest } = useQuery<Project>(
+  const { data: projectAwardData, ...rest } = useQuery<Array<ProjectAward>>(
     ['projectAward', largeWorkOrder],
     async () => {
       const largeWoEndPoints = 'award-plans?largeWo.equals=true'

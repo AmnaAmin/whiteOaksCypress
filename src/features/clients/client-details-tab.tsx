@@ -33,6 +33,8 @@ import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
 import { preventSpecialCharacter } from 'utils/string-formatters'
 import { useNewClientNextButtonDisabled } from 'features/projects/new-project/hooks'
+import { validateWhitespace } from 'api/clients'
+
 
 type clientDetailProps = {
   clientDetails?: any
@@ -97,6 +99,7 @@ export const Details: React.FC<clientDetailProps> = props => {
   const phoneNumberRef = useRef<any>()
   const phoneNumberRef2 = useRef<any>()
 
+ 
   return (
     <Box>
       <Box overflow={'auto'} height={400}>
@@ -106,14 +109,24 @@ export const Details: React.FC<clientDetailProps> = props => {
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.name`)}
               </FormLabel>
+              
               <Input
                 id="companyName"
-                {...register('companyName', { required: 'This is required' })}
+                {...register('companyName', {
+                  required: 'This is required',
+                  validate: {
+                    whitespace: validateWhitespace,
+                  },
+                })}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
                 onKeyPress={e => preventSpecialCharacter(e)}
               />
-              <FormErrorMessage>{errors?.companyName?.message}</FormErrorMessage>
+              {errors.companyName && (
+                <FormErrorMessage>
+                  {errors.companyName.type === 'required' ? 'This field is required' : 'Cannot be only whitespace'}
+                </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -273,7 +286,9 @@ export const Details: React.FC<clientDetailProps> = props => {
               </FormLabel>
               <Input
                 id="streetAddress"
-                {...register('streetAddress', { required: 'This is required' })}
+                {...register('streetAddress', { required: 'This is required' ,  validate: {
+                  whitespace: validateWhitespace,
+                },})}
                 style={disabledTextStyle}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
@@ -288,7 +303,9 @@ export const Details: React.FC<clientDetailProps> = props => {
               </FormLabel>
               <Input
                 id="city"
-                {...register('city', { required: 'This is required' })}
+                {...register('city', { required: 'This is required' ,  validate: {
+                  whitespace: validateWhitespace,
+                },})}
                 isDisabled={isProjectCoordinator}
                 variant={'required-field'}
               />
@@ -353,7 +370,9 @@ export const Details: React.FC<clientDetailProps> = props => {
                     </FormLabel>
                     <Input
                       id="contact"
-                      {...register(`contacts.${index}.contact`, { required: 'This is required' })}
+                      {...register(`contacts.${index}.contact`, { required: 'This is required',  validate: {
+                        whitespace: validateWhitespace,
+                      }, })}
                       style={disabledTextStyle}
                       isDisabled={isProjectCoordinator}
                       variant={'required-field'}
@@ -526,7 +545,9 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
                   <Input
                     id="contact"
-                    {...register(`accountPayableContactInfos.${index}.contact`, { required: 'This is required' })}
+                    {...register(`accountPayableContactInfos.${index}.contact`, { required: 'This is required' ,  validate: {
+                      whitespace: validateWhitespace,
+                    }, })}
                     style={disabledTextStyle}
                     isDisabled={isProjectCoordinator}
                     variant={'required-field'}
@@ -631,7 +652,9 @@ export const Details: React.FC<clientDetailProps> = props => {
                     <FormControl width={'180px'} isInvalid={!!errors?.accountPayableContactInfos?.[index]?.comments}>
                       <Input
                         id="comments"
-                        {...register(`accountPayableContactInfos.${index}.comments`, { required: 'This is required' })}
+                        {...register(`accountPayableContactInfos.${index}.comments`, { required: 'This is required',  validate: {
+                          whitespace: validateWhitespace,
+                        }, })}
                         style={disabledTextStyle}
                         isDisabled={isProjectCoordinator}
                         variant={'required-field'}
