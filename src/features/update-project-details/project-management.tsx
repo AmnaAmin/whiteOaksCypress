@@ -199,16 +199,16 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormErrorMessage>{errors.poNumber && errors.poNumber.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
-          <GridItem >
-              <FormControl w="215px">
-                <FormLabel htmlFor="claim" size="md" variant="strong-label">
-                  {t(`project.projectDetails.claim`)}
-                </FormLabel>
-                <Input id="claim" 
-                // {...register('claim')}
-                 type="number" />
-              </FormControl>
-            </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.claimNumber} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="claimNumber">
+                {t(`project.projectDetails.claimNumber`)}
+              </FormLabel>
+              <Input size="md" id="claimNumber" {...register('claimNumber')} autoComplete="off" />
+              <FormErrorMessage>{errors.claimNumber && errors.claimNumber.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+
           <GridItem>
             <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
@@ -241,12 +241,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="projectName">
                 {t(`project.projectDetails.projectName`)}
               </FormLabel>
-              <Input
-                size="md"
-                id="projectName"
-                {...register('projectName')}
-                autoComplete="off"
-              />
+              <Input size="md" id="projectName" {...register('projectName')} autoComplete="off" />
               <FormErrorMessage>{errors.projectName && errors.projectName.message}</FormErrorMessage>
             </FormControl>
           </GridItem>

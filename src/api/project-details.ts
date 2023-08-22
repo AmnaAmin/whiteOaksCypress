@@ -489,12 +489,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
         }
         // Last Project Status -> Reconcile
         else if (previousProjectStatus === Number(PROJECT_STATUS.reconcile.value)) {
-          overrideProjectStatusOptions = [
-            selectOption,
-            PROJECT_STATUS.new, 
-            PROJECT_STATUS.active, 
-            PROJECT_STATUS.punch
-          ]
+          overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch]
         }
         // Last Project Status -> Overpayment
         else if (previousProjectStatus === Number(PROJECT_STATUS.overpayment.value)) {
@@ -589,6 +584,7 @@ export const parseFormValuesFromAPIData = ({
     clientDueDate: project.clientDueDate as string,
     clientWalkthroughDate: project.clientWalkthroughDate as string,
     clientSignOffDate: project.clientSignoffDate as string,
+    claimNumber: project.claimNumber,
     overrideProjectStatus: '',
     isReconciled: project.isReconciled as boolean,
     reconcileDate: project.reconcileDate as string,
@@ -750,6 +746,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientDueDate: dateISOFormat(formValues.clientDueDate),
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
     clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
+    claimNumber: formValues.claimNumber,
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
     isReconciled: formValues.isReconciled === null ? false : formValues.isReconciled,
     lienRightFileDate: dateISOFormat(formValues.lienFiled),

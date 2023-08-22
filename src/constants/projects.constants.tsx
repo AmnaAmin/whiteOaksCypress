@@ -71,6 +71,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   displayId: 'displayId.contains',
   percentageCompletion: 'percentageCompletion.equals',
   flag: 'flag.contains',
+  claimNumber: 'claimNumber.equals',
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -127,9 +128,8 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     size: 230,
   },
   {
-    header: 'projects.projectTable.claim',
-    accessorKey: 'claim',
-    
+    header: 'projects.projectTable.claimNumber',
+    accessorKey: 'claimNumber',
   },
   {
     header: 'projects.projectTable.projectManager',
