@@ -71,7 +71,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   displayId: 'displayId.contains',
   percentageCompletion: 'percentageCompletion.equals',
   flag: 'flag.contains',
-  claimNumber: 'claimNumber.equals',
+  claimNumber: 'claimNumber.contains',
 }
 
 const PopoverTooltip = ({ value, title }) => {
