@@ -363,28 +363,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
           </GridItem>
 
           <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                {t(`verifyProject`)}
-              </FormLabel>
-              <Checkbox
-                colorScheme="PrimaryCheckBox"
-                isChecked={watchIsReconciled === null ? false : watchIsReconciled}
-                variant={'normal'}
-                data-testid="notifyVendorCheckBox"
-                disabled={isReconcileDisabled || watchStatus?.label !== sentenceCaseReconcile}
-                size="md"
-                {...register('isReconciled')}
-              >
-                <Text color="#4A5568" fontWeight="400" fontSize="14px">
-                  {watchForm.verifiedDate
-                    ? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`
-                    : ''}
-                </Text>
-              </Checkbox>
-            </FormControl>
-          </GridItem>
-          <GridItem>
             <FormControl isInvalid={!!errors?.projectClosedDueDate}>
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.closedDueDate`)}
@@ -438,6 +416,28 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               </FormControl>
             </GridItem>
           )}
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t(`verifyProject`)}
+              </FormLabel>
+              <Checkbox
+                colorScheme="PrimaryCheckBox"
+                isChecked={watchIsReconciled === null ? false : watchIsReconciled}
+                variant={'normal'}
+                data-testid="notifyVendorCheckBox"
+                disabled={isReconcileDisabled || watchStatus?.label !== sentenceCaseReconcile}
+                size="md"
+                {...register('isReconciled')}
+              >
+                <Text color="#4A5568" fontWeight="400" fontSize="14px">
+                  {watchForm.verifiedDate
+                    ? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`
+                    : ''}
+                </Text>
+              </Checkbox>
+            </FormControl>
+          </GridItem>
         </Grid>
       </Stack>
     </Box>
