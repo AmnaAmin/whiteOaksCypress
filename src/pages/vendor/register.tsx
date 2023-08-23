@@ -912,6 +912,7 @@ export const VendorRegister = () => {
                                   Primary Contact
                                 </FormLabel>
                                 <Input
+                                data-testid="primaryContact_vendor"
                                   w="283px"
                                   id="primaryContact"
                                   type="text"
