@@ -44,6 +44,7 @@ export const projects = {
           invoiceDate: 'Invoice Date',
           disqualifiedRevenueFlag: 'Disqualified Revenue',
           claimNumber: 'Claim #',
+          woaStartDate: 'WOA Start',
         },
         projectFilter: {
           new: 'New',
@@ -157,6 +158,7 @@ export const projects = {
           poNo: 'PO No',
           invoiceDate: 'Fecha de la factura',
           claimNumber: 'Reclamo',
+          woaStartDate: 'Inicio de WOA',
         },
         projectFilter: {
           new: 'Nuevo',
