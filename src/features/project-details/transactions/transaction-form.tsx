@@ -160,6 +160,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { t } = useTranslation()
   const toast = useToast()
   const { isAdmin, isVendor, isAccounting } = useUserRolesSelector()
+  console.log('hello===============================================', isAdmin, isAccounting)
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -456,7 +457,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
       {remainingAmt && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
 
-      {isCompletedWorkLessThanNTEPercentage && <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />}
+      {isCompletedWorkLessThanNTEPercentage &&
+        (isAdminEnabled ? (
+          <PercentageCompletionLessThanNTEAlert msg="PercentageCompletionForAdminAndAccount" />
+        ) : (
+          <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />
+        ))}
 
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
