@@ -160,7 +160,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { t } = useTranslation()
   const toast = useToast()
   const { isAdmin, isVendor, isAccounting } = useUserRolesSelector()
-  console.log('hello===============================================', isAdmin, isAccounting)
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
