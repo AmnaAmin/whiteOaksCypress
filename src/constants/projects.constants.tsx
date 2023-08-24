@@ -72,6 +72,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   percentageCompletion: 'percentageCompletion.equals',
   flag: 'flag.contains',
   claimNumber: 'claimNumber.contains',
+  woaStartDate: 'woaStartDate.equals',
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -250,6 +251,12 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'projects.projectTable.paid',
     accessorKey: 'woaPaidDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaPaidDate),
+    meta: { format: 'date' },
+  },
+  {
+    header: 'projects.projectTable.woaStartDate',
+    accessorKey: 'woaStartDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaStartDate),
     meta: { format: 'date' },
   },
   {
