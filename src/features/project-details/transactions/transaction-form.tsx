@@ -456,7 +456,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
       {remainingAmt && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
 
-      {isCompletedWorkLessThanNTEPercentage && <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />}
+      {isCompletedWorkLessThanNTEPercentage &&
+        (isAdminEnabled ? (
+          <PercentageCompletionLessThanNTEAlert msg="PercentageCompletionForAdminAndAccount" />
+        ) : (
+          <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />
+        ))}
 
       {isFormSubmitLoading && (
         <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
