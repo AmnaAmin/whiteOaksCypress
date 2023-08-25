@@ -1,7 +1,7 @@
 /*eslint-disable */
 import { useToast } from '@chakra-ui/react'
 import axios from 'axios'
-import { useMutation, useQuery } from 'react-query'
+import { useMutation } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { useClient } from 'utils/auth-context'
 
