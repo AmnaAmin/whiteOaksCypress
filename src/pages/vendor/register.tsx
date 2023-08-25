@@ -36,7 +36,7 @@ import { DocumentsCard } from 'components/vendor-register/documents-card'
 import { LicenseCard } from 'components/vendor-register/license-card'
 import { MarketListCard } from 'components/vendor-register/market-list-card'
 import { Card } from 'features/login-form-centered/Card'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 import Select from 'components/form/react-select'
@@ -45,6 +45,7 @@ import * as Yup from 'yup'
 import PasswordStrengthBar, { measureStrength } from 'components/vendor-register/password-strength-bar'
 import NumberFormat from 'react-number-format'
 import { phoneRegex } from 'utils/form-validation'
+import { isEmpty } from 'lodash'
 
 const CustomTab = React.forwardRef((props: any, ref: any) => {
   const tabProps = useTab({ ...props, ref })
@@ -229,6 +230,7 @@ export const VendorRegister = () => {
     formState: { errors, isSubmitting, isValid, isDirty },
     reset,
     control,
+    setError,
     setValue,
     getValues,
     trigger,
@@ -236,16 +238,9 @@ export const VendorRegister = () => {
   } = formReturn
   const formValues = getValues()
 
-  const { data, mutate: verifyUser } = useCheckUserExistance()
+  const { data: verifyUserData, mutate: verifyUser } = useCheckUserExistance()
 
   const watchPassword = watch('password', '')
-
-  const _emailAddressExist = data?.data.emailAddressExist
-  const _businessNameExist = data?.data.businessNameExist
-  const[isUserEmail, setisUserEmail]= useState(false)
-  const[isUserCompanyName, setisUserCompanyName]= useState(false)
-  console.log('isUserEmail', _emailAddressExist)
-  console.log('isUserCompanyName', _businessNameExist)
 
   useEffect(() => {
     if (markets?.length) {
@@ -270,6 +265,62 @@ export const VendorRegister = () => {
     }
   }, [trades, markets])
 
+  const handleLocationDetailsNext = useCallback(
+    async ({ businessNameExist, emailAddressExist }) => {
+      const isSsn = ssnEinTabIndex === 1 ? true : false
+      let detailFields = [
+        'email',
+        'firstName',
+        'lastName',
+        'password',
+        'companyName',
+        'ownerName',
+        'primaryContact',
+        'secondName',
+        'businessPhoneNumber',
+        'businessPhoneNumberExtension',
+        'secondPhoneNumber',
+        'businessEmailAddress',
+        'streetAddress',
+        'city',
+        'zipCode',
+        'capacity',
+        'einNumber',
+        'ssnNumber',
+        'secondEmailAddress',
+        'secondEmailAddress',
+        'state',
+      ]
+      if (isSsn) {
+        detailFields = detailFields.filter(fN => fN !== 'einNumber')
+      } else {
+        detailFields = detailFields.filter(fN => fN !== 'ssnNumber')
+      }
+      for (const fieldName of detailFields) {
+        await trigger(fieldName)
+      }
+      if (emailAddressExist) {
+        setError('email', {
+          type: 'custom',
+          message: 'This user already exists. Please contact WhiteOaks team for further assistance',
+        })
+      }
+      if (businessNameExist) {
+        setError('companyName', {
+          type: 'custom',
+          message: 'This business already exists. Please contact WhiteOaks team for further assistance',
+        })
+      }
+
+      if (isEmpty(errors)) {
+        setDisableLoginFields(true)
+        setformTabIndex(FORM_TABS.DOCUMENTS)
+        setUnLoackedTabs([...unLockedTabs, FORM_TABS.LOCATION_DETAILS])
+      }
+    },
+    [trigger, setError, errors],
+  )
+
   useEffect(() => {
     if (formTabIndex === FORM_TABS.LOCATION_DETAILS) setDisableLoginFields(false)
     if (formTabIndex === FORM_TABS.LOCATION_DETAILS && isMobile) setShowLoginFields(true)
@@ -277,35 +328,6 @@ export const VendorRegister = () => {
   }, [formTabIndex])
   const userData = { companyName: formValues?.companyName, email: formValues?.email }
   const doNext = async () => {
-    const isSsn = ssnEinTabIndex === 1 ? true : false
-     verifyUser(userData);
-    const isFalse = onSuccess();
-   
-    if(!isFalse){
-    let detailFields = [
-      'email',
-      'firstName',
-      'lastName',
-      'password',
-      'companyName',
-      'ownerName',
-      'primaryContact',
-      'secondName',
-      'businessPhoneNumber',
-      'businessPhoneNumberExtension',
-      'secondPhoneNumber',
-      'businessEmailAddress',
-      'streetAddress',
-      'city',
-      'zipCode',
-      'capacity',
-      'einNumber',
-      'ssnNumber',
-      'secondEmailAddress',
-      'secondEmailAddress',
-      'state',
-    ]
-
     const documentFields = [
       'w9DocumentDate',
       'w9Document',
@@ -323,22 +345,12 @@ export const VendorRegister = () => {
 
     const tradeFieldName = 'trades'
 
-    if (isSsn) {
-      detailFields = detailFields.filter(fN => fN !== 'einNumber')
-    } else {
-      detailFields = detailFields.filter(fN => fN !== 'ssnNumber')
-    }
-
     if (formTabIndex === FORM_TABS.LOCATION_DETAILS) {
-      for (const fieldName of detailFields) {
-        if (!(await trigger(fieldName))) return null
-      }
-
-      setDisableLoginFields(true)
-      setformTabIndex(FORM_TABS.DOCUMENTS)
-      setUnLoackedTabs([...unLockedTabs, FORM_TABS.LOCATION_DETAILS])
-
-      return null
+      verifyUser(userData, {
+        onSuccess(res) {
+          handleLocationDetailsNext(res?.data)
+        },
+      })
     }
 
     if (formTabIndex === FORM_TABS.DOCUMENTS) {
@@ -378,7 +390,6 @@ export const VendorRegister = () => {
 
       return null
     }
-  }
   }
 
   const doCancel = () => {
@@ -643,13 +654,7 @@ export const VendorRegister = () => {
     fontWeight: 400,
     color: 'gray.500',
   }
-  const onSuccess = () => {
-    if (isUserEmail == false && isUserCompanyName == false) {
-       doNext();
-    }else{
-      return false;
-    }
-  }
+
   return (
     <Box
       bgImg="url(./bg.svg)"
@@ -715,7 +720,7 @@ export const VendorRegister = () => {
                   </VStack>
 
                   <Stack spacing="13px" mt="30px" display={showLoginFields ? 'block' : 'none'}>
-                    <FormControl isInvalid={errors?.email || isUserEmail}>
+                    <FormControl isInvalid={errors?.email}>
                       <FormLabel htmlFor="email" sx={formLabeStyle}>
                         Email Address
                       </FormLabel>
@@ -737,11 +742,6 @@ export const VendorRegister = () => {
                         variant="required-field"
                       />
                       <FormErrorMessage>{errors?.email && errors?.email?.message}</FormErrorMessage>
-                      <FormErrorMessage>
-                        {isUserEmail
-                          ? 'This email name already exists. Please contact WhiteOaks team for further assistance'
-                          : null}
-                      </FormErrorMessage>
                     </FormControl>
                     <FormControl isInvalid={errors?.firstName}>
                       <FormLabel htmlFor="firstName" sx={formLabeStyle}>
@@ -840,7 +840,7 @@ export const VendorRegister = () => {
                       <FormErrorMessage>{errors?.password && errors?.password?.message}</FormErrorMessage>
                     </FormControl>
 
-                    <FormControl isInvalid={errors?.companyName || isUserCompanyName}>
+                    <FormControl isInvalid={errors?.companyName}>
                       <FormLabel htmlFor="companyName" sx={formLabeStyle}>
                         Business Name
                       </FormLabel>
@@ -861,10 +861,6 @@ export const VendorRegister = () => {
                         variant="required-field"
                       />
                       <FormErrorMessage>{errors?.companyName && errors?.companyName?.message}</FormErrorMessage>
-                      <FormErrorMessage>
-                        {isUserCompanyName &&
-                          'This business name already exists. Please contact WhiteOaks team for further assistance'}
-                      </FormErrorMessage>
                     </FormControl>
                   </Stack>
                 </Box>
@@ -1414,17 +1410,7 @@ export const VendorRegister = () => {
                       {FORM_TABS.MARKETS !== formTabIndex && (
                         <Button
                           data-testid="next_vendor"
-                          onClick={() => {
-                            
-                            setisUserEmail(_emailAddressExist);
-                            setisUserCompanyName(_businessNameExist);
-                            console.log('_emailAddressExist',_emailAddressExist);
-                            console.log('_businessNameExist',_businessNameExist);
-                            if (!(isUserEmail && isUserCompanyName)) {
-                              // Proceed to the next tab if the conditions are not met
-                              doNext()
-                            }
-                          }}
+                          onClick={doNext}
                           //disabled={!isNextBtnActive}
                           bgColor="#345587"
                           width="78px"
