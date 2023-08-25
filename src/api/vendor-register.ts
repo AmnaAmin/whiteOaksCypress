@@ -1,7 +1,7 @@
 /*eslint-disable */
 import { useToast } from '@chakra-ui/react'
 import axios from 'axios'
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
 import { useClient } from 'utils/auth-context'
 
@@ -39,3 +39,17 @@ export const useVendorRegister = () => {
     },
   )
 }
+
+
+export const useCheckUserExistance = () => {
+  const client = useClient()
+  return useMutation(
+    (userData : any) => {
+      return client('/account/users/exists', {
+        data: userData,
+        method: 'POST',
+      })
+    })}
+
+
+

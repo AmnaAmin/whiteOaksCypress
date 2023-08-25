@@ -30,7 +30,7 @@ import {
 } from '@chakra-ui/react'
 import { useStates } from 'api/pc-projects'
 import { parseCreateVendorFormToAPIData, useMarkets, useTrades } from 'api/vendor-details'
-import { useVendorRegister } from 'api/vendor-register'
+import { useCheckUserExistance, useVendorRegister } from 'api/vendor-register'
 import { ConstructionTradeCard } from 'components/vendor-register/construction-trade-card'
 import { DocumentsCard } from 'components/vendor-register/documents-card'
 import { LicenseCard } from 'components/vendor-register/license-card'
@@ -234,8 +234,18 @@ export const VendorRegister = () => {
     trigger,
     watch,
   } = formReturn
+  const formValues = getValues()
+
+  const { data, mutate: verifyUser } = useCheckUserExistance()
 
   const watchPassword = watch('password', '')
+
+  const _emailAddressExist = data?.data.emailAddressExist
+  const _businessNameExist = data?.data.businessNameExist
+  const[isUserEmail, setisUserEmail]= useState(false)
+  const[isUserCompanyName, setisUserCompanyName]= useState(false)
+  console.log('isUserEmail', _emailAddressExist)
+  console.log('isUserCompanyName', _businessNameExist)
 
   useEffect(() => {
     if (markets?.length) {
@@ -265,10 +275,13 @@ export const VendorRegister = () => {
     if (formTabIndex === FORM_TABS.LOCATION_DETAILS && isMobile) setShowLoginFields(true)
     if (formTabIndex !== FORM_TABS.LOCATION_DETAILS && isMobile) setShowLoginFields(false)
   }, [formTabIndex])
-
+  const userData = { companyName: formValues?.companyName, email: formValues?.email }
   const doNext = async () => {
     const isSsn = ssnEinTabIndex === 1 ? true : false
-
+     verifyUser(userData);
+    const isFalse = onSuccess();
+   
+    if(!isFalse){
     let detailFields = [
       'email',
       'firstName',
@@ -365,6 +378,7 @@ export const VendorRegister = () => {
 
       return null
     }
+  }
   }
 
   const doCancel = () => {
@@ -629,6 +643,13 @@ export const VendorRegister = () => {
     fontWeight: 400,
     color: 'gray.500',
   }
+  const onSuccess = () => {
+    if (isUserEmail == false && isUserCompanyName == false) {
+       doNext();
+    }else{
+      return false;
+    }
+  }
   return (
     <Box
       bgImg="url(./bg.svg)"
@@ -694,7 +715,7 @@ export const VendorRegister = () => {
                   </VStack>
 
                   <Stack spacing="13px" mt="30px" display={showLoginFields ? 'block' : 'none'}>
-                    <FormControl isInvalid={errors?.email}>
+                    <FormControl isInvalid={errors?.email || isUserEmail}>
                       <FormLabel htmlFor="email" sx={formLabeStyle}>
                         Email Address
                       </FormLabel>
@@ -716,13 +737,18 @@ export const VendorRegister = () => {
                         variant="required-field"
                       />
                       <FormErrorMessage>{errors?.email && errors?.email?.message}</FormErrorMessage>
+                      <FormErrorMessage>
+                        {isUserEmail
+                          ? 'This email name already exists. Please contact WhiteOaks team for further assistance'
+                          : null}
+                      </FormErrorMessage>
                     </FormControl>
                     <FormControl isInvalid={errors?.firstName}>
                       <FormLabel htmlFor="firstName" sx={formLabeStyle}>
                         First Name
                       </FormLabel>
                       <Input
-                       data-testid="firstName_vendor"
+                        data-testid="firstName_vendor"
                         id="firstName"
                         type="text"
                         fontSize="14px"
@@ -745,7 +771,7 @@ export const VendorRegister = () => {
                         Last Name
                       </FormLabel>
                       <Input
-                       data-testid="lastName_vendor"
+                        data-testid="lastName_vendor"
                         id="lastName"
                         type="text"
                         fontSize="14px"
@@ -769,7 +795,7 @@ export const VendorRegister = () => {
                       </FormLabel>
                       <InputGroup>
                         <Input
-                         data-testid="password_vendor"
+                          data-testid="password_vendor"
                           id="password"
                           type={showPassword ? 'text' : 'password'}
                           fontSize="14px"
@@ -814,13 +840,13 @@ export const VendorRegister = () => {
                       <FormErrorMessage>{errors?.password && errors?.password?.message}</FormErrorMessage>
                     </FormControl>
 
-                    <FormControl isInvalid={errors?.companyName}>
+                    <FormControl isInvalid={errors?.companyName || isUserCompanyName}>
                       <FormLabel htmlFor="companyName" sx={formLabeStyle}>
                         Business Name
                       </FormLabel>
 
                       <Input
-                       data-testid="businessName_vendor"
+                        data-testid="businessName_vendor"
                         id="companyName"
                         type="text"
                         fontSize="14px"
@@ -835,6 +861,10 @@ export const VendorRegister = () => {
                         variant="required-field"
                       />
                       <FormErrorMessage>{errors?.companyName && errors?.companyName?.message}</FormErrorMessage>
+                      <FormErrorMessage>
+                        {isUserCompanyName &&
+                          'This business name already exists. Please contact WhiteOaks team for further assistance'}
+                      </FormErrorMessage>
                     </FormControl>
                   </Stack>
                 </Box>
@@ -912,7 +942,7 @@ export const VendorRegister = () => {
                                   Primary Contact
                                 </FormLabel>
                                 <Input
-                                data-testid="primaryContact_vendor"
+                                  data-testid="primaryContact_vendor"
                                   w="283px"
                                   id="primaryContact"
                                   type="text"
@@ -941,7 +971,7 @@ export const VendorRegister = () => {
                                       render={({ field }) => {
                                         return (
                                           <NumberFormat
-                                          data-testid="businessPhone_vendor"
+                                            data-testid="businessPhone_vendor"
                                             customInput={Input}
                                             value={field.value}
                                             onChange={e => field.onChange(e)}
@@ -987,7 +1017,7 @@ export const VendorRegister = () => {
                                   Primary Email Address
                                 </FormLabel>
                                 <Input
-                                 data-testid="primaryEmail_vendor"
+                                  data-testid="primaryEmail_vendor"
                                   id="businessEmailAddress"
                                   type="text"
                                   fontSize="14px"
@@ -1008,7 +1038,7 @@ export const VendorRegister = () => {
                                   Owner's Name
                                 </FormLabel>
                                 <Input
-                                 data-testid="ownerName_vendor"
+                                  data-testid="ownerName_vendor"
                                   id="ownersName"
                                   type="text"
                                   fontSize="14px"
@@ -1039,7 +1069,7 @@ export const VendorRegister = () => {
                                   Secondary Contact
                                 </FormLabel>
                                 <Input
-                                 data-testid="secondary_vendor"
+                                  data-testid="secondary_vendor"
                                   id="secondName"
                                   type="text"
                                   fontSize="14px"
@@ -1056,7 +1086,7 @@ export const VendorRegister = () => {
                                   Secondary Phone Number
                                 </FormLabel>
                                 <Input
-                                 data-testid="secondaryPhone_vendor"
+                                  data-testid="secondaryPhone_vendor"
                                   id="secondPhoneNumber"
                                   type="text"
                                   fontSize="14px"
@@ -1075,7 +1105,7 @@ export const VendorRegister = () => {
                                   Secondary Email Address
                                 </FormLabel>
                                 <Input
-                                 data-testid="secondaryEmail_vendor"
+                                  data-testid="secondaryEmail_vendor"
                                   id="secondEmailAddress"
                                   type="email"
                                   fontSize="14px"
@@ -1124,7 +1154,7 @@ export const VendorRegister = () => {
                               <TabPanel p="0px">
                                 <FormControl isInvalid={errors?.einNumber}>
                                   <Input
-                                   data-testid="ein_vendor"
+                                    data-testid="ein_vendor"
                                     as={InputMask}
                                     id="einNumber"
                                     type="text"
@@ -1142,7 +1172,7 @@ export const VendorRegister = () => {
                               <TabPanel p="0px">
                                 <FormControl isInvalid={errors?.ssnNumber}>
                                   <Input
-                                   data-testid="ssn_vendor"
+                                    data-testid="ssn_vendor"
                                     as={InputMask}
                                     id="ssnNumber"
                                     type="text"
@@ -1164,7 +1194,7 @@ export const VendorRegister = () => {
                                 Street Address
                               </FormLabel>
                               <Input
-                               data-testid="streetAddress_vendor"
+                                data-testid="streetAddress_vendor"
                                 id="streetAddress"
                                 type="text"
                                 fontSize="14px"
@@ -1198,7 +1228,7 @@ export const VendorRegister = () => {
                                   City
                                 </FormLabel>
                                 <Input
-                                 data-testid="city_vendor"
+                                  data-testid="city_vendor"
                                   id="city"
                                   type="text"
                                   fontSize="14px"
@@ -1230,8 +1260,8 @@ export const VendorRegister = () => {
                                   render={({ field, fieldState }) => (
                                     <>
                                       <Select
-                                       data-testid="state_vendor"
-                                      selectProps={{ isBorderLeft: true }}
+                                        data-testid="state_vendor"
+                                        selectProps={{ isBorderLeft: true }}
                                         {...field}
                                         options={stateSelectOptions}
                                         selected={field.value}
@@ -1268,7 +1298,7 @@ export const VendorRegister = () => {
                                   Zip Code
                                 </FormLabel>
                                 <Input
-                                 data-testid="zipCode_vendor"
+                                  data-testid="zipCode_vendor"
                                   id="zipCode"
                                   type="text"
                                   fontSize="14px"
@@ -1295,7 +1325,7 @@ export const VendorRegister = () => {
                                   Capacity
                                 </FormLabel>
                                 <Input
-                                 data-testid="capacity_vendor"
+                                  data-testid="capacity_vendor"
                                   id="capacity"
                                   type="number"
                                   fontSize="14px"
@@ -1383,9 +1413,19 @@ export const VendorRegister = () => {
                       </Button>
                       {FORM_TABS.MARKETS !== formTabIndex && (
                         <Button
-                        data-testid="next_vendor"
-                          onClick={doNext}
-                          disabled={!isNextBtnActive}
+                          data-testid="next_vendor"
+                          onClick={() => {
+                            
+                            setisUserEmail(_emailAddressExist);
+                            setisUserCompanyName(_businessNameExist);
+                            console.log('_emailAddressExist',_emailAddressExist);
+                            console.log('_businessNameExist',_businessNameExist);
+                            if (!(isUserEmail && isUserCompanyName)) {
+                              // Proceed to the next tab if the conditions are not met
+                              doNext()
+                            }
+                          }}
+                          //disabled={!isNextBtnActive}
                           bgColor="#345587"
                           width="78px"
                           h="40px"
