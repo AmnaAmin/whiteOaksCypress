@@ -246,7 +246,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     (projectAwardCheck || isPlanExhausted || remainingAmt || isCompletedWorkLessThanNTEPercentage) && !isAdminEnabled
 
   const methodForPayment = e => {
-    if (e > selectedWorkOrderStats?.totalAmountRemaining! && isValidForAwardPlan && materialAndDraw && !isRefund) {
+    const totalAmountInItems = e
+    if (
+      !isApproved &&
+      totalAmountInItems > selectedWorkOrderStats?.totalAmountRemaining! &&
+      isValidForAwardPlan &&
+      materialAndDraw &&
+      !isRefund
+    ) {
       setRemainingAmt(true)
     } else {
       setRemainingAmt(false)
