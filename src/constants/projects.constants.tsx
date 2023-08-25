@@ -73,6 +73,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   flag: 'flag.contains',
   claimNumber: 'claimNumber.contains',
   woaStartDate: 'woaStartDate.equals',
+  lienRightExpireDate: 'lienRightExpireDate.equals',
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -131,6 +132,12 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.claimNumber',
     accessorKey: 'claimNumber',
+  },
+  {
+    header: 'projects.projectTable.lienRightsExpires',
+    accessorKey: 'lienRightExpireDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.lienRightExpireDate),
+    meta: { format: 'date' },
   },
   {
     header: 'projects.projectTable.projectManager',
@@ -319,56 +326,56 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.expectedPaymentDate),
     meta: { format: 'date' },
   },
-  {
-    header: 'projects.projectTable.profitPercentage',
-    accessorKey: 'profitPercentage',
-    accessorFn(cellInfo: any) {
-      return numeral(cellInfo.profitPercentage / 100).format('0,0.00%')
-    },
-  },
-  {
-    header: 'projects.projectTable.profitTotal',
-    accessorKey: 'profitTotal',
-    accessorFn(cellInfo: any) {
-      return numeral(cellInfo.profitTotal).format('$0,0.00')
-    },
-    meta: { format: 'currency' },
-  },
-  {
-    header: 'projects.projectTable.materialCost',
-    accessorKey: 'materialCost',
-    accessorFn(cellInfo: any) {
-      return numeral(cellInfo.materialCost).format('$0,0.00')
-    },
-    meta: { format: 'currency' },
-  },
-  {
-    header: 'projects.projectTable.percentagePaid', // Not getting this from backend at the moment
-    accessorKey: 'vendorPaymentPercentage',
-    accessorFn(cellInfo: any) {
-      return isDefined(cellInfo.vendorPaymentPercentage)
-        ? numeral(percentageFormatter(cellInfo.vendorPaymentPercentage)).format('0.00%')
-        : '0.00%'
-    },
-  },
-  {
-    header: 'projects.projectTable.sowDraw',
-    accessorKey: 'drawAmountSow',
-    accessorFn(cellInfo: any) {
-      return numeral(cellInfo.drawAmountSow).format('$0,0.00')
-    },
-    meta: { format: 'currency' },
-  },
-  {
-    header: 'projects.projectTable.woNo',
-    accessorKey: 'woNumber',
-  },
-  {
-    header: 'projects.projectTable.poNo',
-    accessorKey: 'poNumber',
-  },
-  {
-    header: 'projects.projectTable.disqualifiedRevenueFlag',
-    accessorKey: 'disqualifiedRevenueFlag',
-  },
+  // {
+  //   header: 'projects.projectTable.profitPercentage',
+  //   accessorKey: 'profitPercentage',
+  //   accessorFn(cellInfo: any) {
+  //     return numeral(cellInfo.profitPercentage / 100).format('0,0.00%')
+  //   },
+  // },
+  // {
+  //   header: 'projects.projectTable.profitTotal',
+  //   accessorKey: 'profitTotal',
+  //   accessorFn(cellInfo: any) {
+  //     return numeral(cellInfo.profitTotal).format('$0,0.00')
+  //   },
+  //   meta: { format: 'currency' },
+  // },
+  // {
+  //   header: 'projects.projectTable.materialCost',
+  //   accessorKey: 'materialCost',
+  //   accessorFn(cellInfo: any) {
+  //     return numeral(cellInfo.materialCost).format('$0,0.00')
+  //   },
+  //   meta: { format: 'currency' },
+  // },
+  // {
+  //   header: 'projects.projectTable.percentagePaid', // Not getting this from backend at the moment
+  //   accessorKey: 'vendorPaymentPercentage',
+  //   accessorFn(cellInfo: any) {
+  //     return isDefined(cellInfo.vendorPaymentPercentage)
+  //       ? numeral(percentageFormatter(cellInfo.vendorPaymentPercentage)).format('0.00%')
+  //       : '0.00%'
+  //   },
+  // },
+  // {
+  //   header: 'projects.projectTable.sowDraw',
+  //   accessorKey: 'drawAmountSow',
+  //   accessorFn(cellInfo: any) {
+  //     return numeral(cellInfo.drawAmountSow).format('$0,0.00')
+  //   },
+  //   meta: { format: 'currency' },
+  // },
+  // {
+  //   header: 'projects.projectTable.woNo',
+  //   accessorKey: 'woNumber',
+  // },
+  // {
+  //   header: 'projects.projectTable.poNo',
+  //   accessorKey: 'poNumber',
+  // },
+  // {
+  //   header: 'projects.projectTable.disqualifiedRevenueFlag',
+  //   accessorKey: 'disqualifiedRevenueFlag',
+  // },
 ]
