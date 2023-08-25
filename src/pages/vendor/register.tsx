@@ -1411,7 +1411,7 @@ export const VendorRegister = () => {
                         <Button
                           data-testid="next_vendor"
                           onClick={doNext}
-                          //disabled={!isNextBtnActive}
+                          disabled={!isNextBtnActive}
                           bgColor="#345587"
                           width="78px"
                           h="40px"
