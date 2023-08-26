@@ -116,6 +116,7 @@ steps:
       ENV: 'preprod-IntegrationTests'
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
       REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
+      REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
 
   - wait
 
@@ -142,6 +143,7 @@ steps:
       ENV: 'preprod'
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
       REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
+      REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
 
   - wait
 
@@ -168,3 +170,4 @@ steps:
       ENV: 'prod'
       REACT_APP_SUPERSET_URL: 'https://bi.woaharvest.com'
       REACT_APP_ESTIMATES_URL: 'https://estimates.woaharvest.com'
+      REACT_APP_MAINTENANCE_URL: 'https://mm.woaharvest.com'
