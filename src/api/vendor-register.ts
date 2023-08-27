@@ -45,7 +45,7 @@ export const useCheckUserExistance = () => {
   const client = useClient()
   return useMutation(
     (userData : any) => {
-      return client('/account/users/exists', {
+      return client('account/users/exists', {
         data: userData,
         method: 'POST',
       })
