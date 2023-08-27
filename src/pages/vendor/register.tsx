@@ -308,7 +308,7 @@ export const VendorRegister = () => {
       if (businessNameExist) {
         setError('companyName', {
           type: 'custom',
-          message: 'This business already exists. Please contact WhiteOaks team for further assistance',
+          message: 'This business name already exists. Please contact WhiteOaks team for further assistance',
         })
       }
 
