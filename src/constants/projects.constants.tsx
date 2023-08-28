@@ -24,6 +24,7 @@ import { t } from 'i18next'
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
   generalLabourName: 'generalLabourName.contains',
+  claimNumber: 'claimNumber.contains',
   projectManager: 'projectManager.contains',
   projectStatus: 'projectStatus.in',
   streetAddress: 'streetAddress.contains',
@@ -71,8 +72,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   displayId: 'displayId.contains',
   percentageCompletion: 'percentageCompletion.equals',
   flag: 'flag.contains',
-  claimNumber: 'claimNumber.contains',
   woaStartDate: 'woaStartDate.equals',
+  lienRightExpireDate: 'lienRightExpireDate.equals',
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -95,6 +96,12 @@ const PopoverTooltip = ({ value, title }) => {
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
+  {
+    header: 'projects.projectTable.lienRightsExpires',
+    accessorKey: 'lienRightExpireDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.lienRightExpireDate),
+    meta: { format: 'date' },
+  },
   {
     header: 'ID',
     accessorKey: 'displayId',

@@ -45,6 +45,7 @@ export const projects = {
           disqualifiedRevenueFlag: 'Disqualified Revenue',
           claimNumber: 'Claim #',
           woaStartDate: 'WOA Start',
+          lienRightsExpires: 'Lien Rights Expires',
         },
         projectFilter: {
           new: 'New',
@@ -120,6 +121,7 @@ export const projects = {
       projects: {
         projectTable: {
           generalLabour: 'Travail Général',
+          lienRightsExpires: 'Los derechos de gravamen expiran',
           projectManager: 'FPM',
           woDraw: 'Sorteo WO',
           status: 'Estado',
