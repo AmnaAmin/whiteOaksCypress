@@ -132,14 +132,23 @@ export const AddPropertyInfo: React.FC<{
 
   // Email Validation
   const handleEmailChange = event => {
-    if (!isValidEmail(event.target.value)) {
-      setError('Invalid Email Address')
+    const enteredEmail = event.target.value;
+  
+    if (enteredEmail.trim() === "") {
+      // Clear the error message if the field is empty
+      setError("");
+    } else if (!isValidEmail(enteredEmail)) {
+      // Show "Invalid Email Address" error for invalid emails
+      setError("Invalid Email Address");
     } else {
-      setError('')
+      // Clear the error if the entered email is valid
+      setError("");
     }
-
-    setMessage(event.target.value)
-  }
+  
+    // Update the message variable with the entered value
+    setMessage(enteredEmail);
+  };
+  
 
   return (
     <>
