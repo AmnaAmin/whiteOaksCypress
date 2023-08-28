@@ -208,7 +208,7 @@ export const useSaveToExcel = () => {
           return Object.keys(row).reduce((acc, key) => {
             const columnDef = columnDefWithAccessorKeyAsKey[key]
             const header = columnDef?.header
-            var value = row[key]
+            var value = columnDef?.accessorFn?.(row) || row[key]
             if (!!row[key] && columnDef?.meta?.format === 'date') {
               value = new Date(row[key])
             }
