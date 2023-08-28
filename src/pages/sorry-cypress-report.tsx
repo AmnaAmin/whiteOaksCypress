@@ -3,7 +3,7 @@ import { SIDE_NAV } from 'components/layout/sideNav.i18n'
 import { useTranslation } from 'react-i18next'
 
 const SorryCypressReport = () => {
-  const iframe_src = `http://cypress-zvhxp83s-1779591091.us-east-2.elb.amazonaws.com/ci-builds`
+  const iframe_src = `https://sorrycypress-preprod.woaharvest.com/ci-builds`
   const { t } = useTranslation()
   return (
     <Box>
