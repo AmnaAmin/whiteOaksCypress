@@ -190,6 +190,12 @@ const MenuList: React.FC<any> = props => {
   )
 }
 
+const handleMinusNumberInput = e => {
+  if (e?.nativeEvent?.code === 'Minus') {
+    e?.preventDefault()
+  }
+}
+
 export const CreatableSelect = forwardRef((props: SelectProps, ref: any) => (
   <RSCreatableSelect
     {...props}
@@ -200,6 +206,7 @@ export const CreatableSelect = forwardRef((props: SelectProps, ref: any) => (
       IndicatorSeparator: false,
       MenuList,
     }}
+    onKeyDown={handleMinusNumberInput}
   />
 ))
 
