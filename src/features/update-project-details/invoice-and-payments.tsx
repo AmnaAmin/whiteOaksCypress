@@ -653,7 +653,6 @@ const RevisedAmounts = ({ formControl, project }) => {
                       id="dueDaye"
                       type="date"
                       size="md"
-                      variant={'required-field'}
                       css={calendarIcon}
                       disabled={true}
                       {...register(`resubmittedInvoice.${index}.dueDate`)}
