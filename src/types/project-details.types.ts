@@ -210,7 +210,11 @@ export type ProjectDetailsAPIPayload = {
   market: string | null
   gateCode: string | null
   lockBoxCode: string | null
+<<<<<<< Updated upstream
   claimNumber?: string | null
+=======
+  claimNumber?: number | null
+>>>>>>> Stashed changes
   hoaPhone: string | null
   hoaPhoneNumberExtension: string | null
   hoaEmailAddress: string | null

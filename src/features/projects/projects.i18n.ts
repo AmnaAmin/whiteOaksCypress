@@ -43,8 +43,12 @@ export const projects = {
           poNo: 'PO No',
           invoiceDate: 'Invoice Date',
           disqualifiedRevenueFlag: 'Disqualified Revenue',
+<<<<<<< Updated upstream
           claimNumber: 'Claim #',
           woaStartDate: 'WOA Start',
+=======
+          claimNumber: 'Claim',
+>>>>>>> Stashed changes
         },
         projectFilter: {
           new: 'New',
@@ -158,7 +162,10 @@ export const projects = {
           poNo: 'PO No',
           invoiceDate: 'Fecha de la factura',
           claimNumber: 'Reclamo',
+<<<<<<< Updated upstream
           woaStartDate: 'Inicio de WOA',
+=======
+>>>>>>> Stashed changes
         },
         projectFilter: {
           new: 'Nuevo',

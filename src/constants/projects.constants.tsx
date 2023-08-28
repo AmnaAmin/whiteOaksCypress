@@ -24,6 +24,7 @@ import { t } from 'i18next'
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
   generalLabourName: 'generalLabourName.contains',
+  claimNumber: 'claimNumber.contains',
   projectManager: 'projectManager.contains',
   projectStatus: 'projectStatus.in',
   streetAddress: 'streetAddress.contains',
