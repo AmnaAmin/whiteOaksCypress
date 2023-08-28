@@ -209,7 +209,7 @@ export const useIsAwardSelect = (
   const transType = useWatch({ name: 'transactionType', control })
   const check = against?.awardStatus
   const isValidForAwardPlan = against?.isValidForAwardPlan
-  const isDrawOrMaterial = transType?.label === 'Draw' || transType?.label === 'Material'
+  //const isDrawOrMaterial = transType?.label === 'Draw' || transType?.label === 'Material'
   const remainingAmountExceeded =
     (transType?.label === 'Draw' || (transType?.label === 'Material' && !isRefund)) && remainingAmt
 
@@ -233,7 +233,7 @@ export const useIsAwardSelect = (
   const showLimitReached = isPlanExhausted && !isNotFinalPlan
   const selectedAward = projectAwardData?.find(a => a.id === selectedWorkOrder?.awardPlanId)
   const isCompletedWorkLessThanNTEPercentage =
-    isDrawOrMaterial &&
+    transType?.label === 'Draw' &&
     selectedAward?.totalAmountLimit &&
     selectedWorkOrder?.completePercentage < selectedAward?.totalAmountLimit
 
