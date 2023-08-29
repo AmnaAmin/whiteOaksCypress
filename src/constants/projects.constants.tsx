@@ -97,12 +97,6 @@ const PopoverTooltip = ({ value, title }) => {
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
-    header: 'projects.projectTable.lienRightsExpires',
-    accessorKey: 'lienRightExpireDate',
-    accessorFn: (cellInfo: any) => dateFormat(cellInfo.lienRightExpireDate),
-    meta: { format: 'date' },
-  },
-  {
     header: 'ID',
     accessorKey: 'displayId',
     size: 100,
@@ -377,5 +371,11 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.disqualifiedRevenueFlag',
     accessorKey: 'disqualifiedRevenueFlag',
+  },
+  {
+    header: 'projects.projectTable.lienRightsExpires',
+    accessorKey: 'lienRightExpireDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.lienRightExpireDate),
+    meta: { format: 'date' },
   },
 ]
