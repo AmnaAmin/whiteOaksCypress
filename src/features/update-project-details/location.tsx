@@ -27,6 +27,7 @@ import { useState } from 'react'
 import { STATUS } from 'features/common/status'
 import { useProjects } from 'api/projects'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
+import { isValidEmail } from 'utils/string-formatters'
 
 type Market = [
   {
@@ -131,10 +132,29 @@ const Location: React.FC<LocationProps> = ({
       setExistProperty(duplicatedInProjects.map(p => ({ id: p.id as number, status: p.projectStatus as string })))
     }
   }
-
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const handleEmailChange = event => {
+    const enteredEmail = event.target.value;
+  
+    if (enteredEmail.trim() === "") {
+      // Clear the error message if the field is empty
+      setError("");
+    } else if (!isValidEmail(enteredEmail)) {
+      // Show "Invalid Email Address" error for invalid emails
+      setError("Invalid Email Address");
+    } else {
+      // Clear the error if the entered email is valid
+      setError("");
+    }
+  
+    // Update the message variable with the entered value
+    setMessage(enteredEmail);
+  };
+  
   return (
     <Stack>
-      <Box px="6" h="300px" overflow={'auto'}>
+      <Box px="6" h="310px" overflow={'auto'}>
         {isDuplicateAddress && (
           <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
             <AlertIcon />
@@ -375,12 +395,15 @@ const Location: React.FC<LocationProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.hoaContactEmail} w="215px">
+            <FormControl w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="hoaContactEmail" noOfLines={1}>
                 {t(`project.projectDetails.hoaContactEmail`)}
               </FormLabel>
-              <Input size="md" border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')} />
-              <FormErrorMessage>{errors.hoaContactEmail && errors.hoaContactEmail.message}</FormErrorMessage>
+              <Input size="md" border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')}   value={message} onChange={handleEmailChange} />
+              <Text color="red" fontSize="12px" fontWeight="400">
+                  {error ? error : ''}
+                </Text>
+             
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
