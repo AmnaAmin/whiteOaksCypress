@@ -116,6 +116,7 @@ const Location: React.FC<LocationProps> = ({
     setValue('property', property)
     setValue('newMarket', { label: market?.metropolitanServiceArea, value: market?.id })
 
+    
     // Check for duplicate address
     const duplicatedInProjects =
       projects?.filter(
