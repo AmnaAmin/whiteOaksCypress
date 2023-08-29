@@ -22,11 +22,7 @@ export const project = {
           closedDueDate: 'Closed Due Date',
           lienRightsExpires: 'Lien Rights Expires',
           lienFiled: 'Lien Filed',
-<<<<<<< Updated upstream
           claimNumber: 'Claim #',
-=======
-          claimNumber: 'Claim',
->>>>>>> Stashed changes
 
           // Invoicing & Payment
 
@@ -122,11 +118,7 @@ export const project = {
           closedDueDate: 'Fecha de vencimiento cerrada',
           lienRightsExpires: 'Los derechos de gravamen expiran',
           lienFiled: 'Gravamen Presentado',
-<<<<<<< Updated upstream
           claimNumber: 'Reclamo #',
-=======
-          claimNumber: 'Reclamo',
->>>>>>> Stashed changes
 
           // Invoicing & Payment
           invoicingPayment: 'Facturación y pago',
