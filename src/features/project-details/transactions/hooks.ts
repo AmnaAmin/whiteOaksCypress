@@ -162,7 +162,8 @@ export const useFieldDisabledEnabledDecision = (
 
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
-    transaction?.status === TransactionStatusValues.cancelled
+    transaction?.status === TransactionStatusValues.cancelled ||
+    transaction?.status === TransactionStatusValues.denied
   const isFactoringFeeSysGenerated =
     transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
 
