@@ -203,7 +203,6 @@ export const useIsAwardSelect = (
   remainingAmt?,
   isRefund?,
   selectedWorkOrder?,
-  isApproved?,
 ) => {
   const { projectAwardData } = useProjectAward()
   const against = useWatch({ name: 'against', control })

@@ -240,15 +240,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     showUpgradeOption,
     showLimitReached,
     isCompletedWorkLessThanNTEPercentage,
-  } = useIsAwardSelect(
-    control,
-    transaction,
-    selectedWorkOrderStats,
-    remainingAmt,
-    isRefund,
-    selectedWorkOrder,
-    isApproved,
-  )
+  } = useIsAwardSelect(control, transaction, selectedWorkOrderStats, remainingAmt, isRefund, selectedWorkOrder)
   const isAdminEnabled = isAdmin || isAccounting
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
