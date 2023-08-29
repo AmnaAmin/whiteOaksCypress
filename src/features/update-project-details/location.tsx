@@ -131,10 +131,11 @@ const Location: React.FC<LocationProps> = ({
       setExistProperty(duplicatedInProjects.map(p => ({ id: p.id as number, status: p.projectStatus as string })))
     }
   }
-
+  
+  
   return (
     <Stack>
-      <Box px="6" h="300px" overflow={'auto'}>
+      <Box px="6" h="310px" overflow={'auto'}>
         {isDuplicateAddress && (
           <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
             <AlertIcon />
@@ -375,12 +376,20 @@ const Location: React.FC<LocationProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.hoaContactEmail} w="215px">
+            <FormControl isInvalid={!!errors.hoaContactEmail}  w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="hoaContactEmail" noOfLines={1}>
                 {t(`project.projectDetails.hoaContactEmail`)}
               </FormLabel>
-              <Input size="md" border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')} />
-              <FormErrorMessage>{errors.hoaContactEmail && errors.hoaContactEmail.message}</FormErrorMessage>
+              <Input size="md" border=" 1px solid #E2E8F0" id="hoaContactEmail" 
+             
+              {...register('hoaContactEmail', {
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'Invalid Email Address',
+                },
+              })}  />
+               <FormErrorMessage>{errors.hoaContactEmail && errors.hoaContactEmail.message}</FormErrorMessage>
+             
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
