@@ -27,7 +27,6 @@ import { useState } from 'react'
 import { STATUS } from 'features/common/status'
 import { useProjects } from 'api/projects'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
-import { isValidEmail } from 'utils/string-formatters'
 
 type Market = [
   {
