@@ -243,7 +243,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
   const disableSave =
-    (projectAwardCheck || isPlanExhausted || remainingAmt || isCompletedWorkLessThanNTEPercentage) && !isAdminEnabled
+    projectAwardCheck || isPlanExhausted || remainingAmt || (isCompletedWorkLessThanNTEPercentage && !isAdminEnabled)
 
   const methodForPayment = e => {
     const totalAmountInItems = e

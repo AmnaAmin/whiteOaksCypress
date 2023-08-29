@@ -43,12 +43,9 @@ export const projects = {
           poNo: 'PO No',
           invoiceDate: 'Invoice Date',
           disqualifiedRevenueFlag: 'Disqualified Revenue',
-<<<<<<< Updated upstream
           claimNumber: 'Claim #',
           woaStartDate: 'WOA Start',
-=======
-          claimNumber: 'Claim',
->>>>>>> Stashed changes
+          lienRightsExpires: 'Lien Rights Expires',
         },
         projectFilter: {
           new: 'New',
@@ -124,6 +121,7 @@ export const projects = {
       projects: {
         projectTable: {
           generalLabour: 'Travail Général',
+          lienRightsExpires: 'Los derechos de gravamen expiran',
           projectManager: 'FPM',
           woDraw: 'Sorteo WO',
           status: 'Estado',
@@ -162,10 +160,7 @@ export const projects = {
           poNo: 'PO No',
           invoiceDate: 'Fecha de la factura',
           claimNumber: 'Reclamo',
-<<<<<<< Updated upstream
           woaStartDate: 'Inicio de WOA',
-=======
->>>>>>> Stashed changes
         },
         projectFilter: {
           new: 'Nuevo',
