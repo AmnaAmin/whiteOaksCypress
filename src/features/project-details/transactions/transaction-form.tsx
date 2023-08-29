@@ -230,6 +230,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }, [selectedWorkOrderStats])
 
+  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled, lateAndFactoringFeeForVendor } =
+    useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
+
   const {
     check,
     isValidForAwardPlan,
@@ -243,7 +246,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
   const disableSave =
-    projectAwardCheck || isPlanExhausted || remainingAmt || (isCompletedWorkLessThanNTEPercentage && !isAdminEnabled)
+    projectAwardCheck || //when there is no project award
+    remainingAmt || //when remaining amount exceeds for material/draw + is not Refund + is not approved
+    (isCompletedWorkLessThanNTEPercentage && !isAdminEnabled) //when %complete is less than NTE and user is not admin/accounting
 
   const methodForPayment = e => {
     const totalAmountInItems = e
@@ -277,8 +282,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     control,
     transaction,
   )
-  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled, lateAndFactoringFeeForVendor } =
-    useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
 
   const isLienWaiverRequired = useIsLienWaiverRequired(control, transaction)
 
