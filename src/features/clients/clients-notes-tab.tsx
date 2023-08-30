@@ -106,7 +106,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
           {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isProjectCoordinator && (
-          <Button type="submit" colorScheme="brand" ml={2} isDisabled={!message} onClick={Submit}>
+          <Button type="submit" colorScheme="brand" ml={2} isDisabled={clientDetails && !message} onClick={Submit}>
             {t(`${CLIENTS}.save`)}
           </Button>
         )}
