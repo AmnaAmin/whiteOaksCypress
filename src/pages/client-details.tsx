@@ -101,7 +101,9 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
               comment: message,
               clientId: e?.data?.id,
             }
-            createNotes(payload)
+            if (message) {
+              createNotes(payload)
+            }
             onClose()
           },
         })
