@@ -90,7 +90,13 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
               <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
                 {t(`${CLIENTS}.enterNewNote`)}
               </FormLabel>
-              <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
+              <Textarea
+                datatest-id="notes-textarea"
+                flexWrap="wrap"
+                h={'120px'}
+                {...messageBoxStyle}
+                {...register('message')}
+              />
             </FormControl>
           )}
         </form>
