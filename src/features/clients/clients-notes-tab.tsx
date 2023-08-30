@@ -13,6 +13,7 @@ type clientNotesProps = {
   onClose: () => void
   textAreaStyle?: any
   messageBoxStyle?: any
+  setMessage?: any
 }
 
 export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
@@ -51,7 +52,11 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
       comment: message,
       clientId: clientDetails?.id,
     }
-    createNotes(payload)
+    if (clientDetails?.id) {
+      createNotes(payload)
+    } else {
+      props?.setMessage(message)
+    }
   }
 
   return (
@@ -95,7 +100,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
           {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isProjectCoordinator && (
-          <Button colorScheme="brand" ml={2} isDisabled={!message} onClick={Submit}>
+          <Button type="submit" colorScheme="brand" ml={2} isDisabled={!message} onClick={Submit}>
             {t(`${CLIENTS}.save`)}
           </Button>
         )}
