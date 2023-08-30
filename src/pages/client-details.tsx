@@ -41,7 +41,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const { mutate: addNewClientDetails, isLoading } = useSaveNewClientDetails()
   const { stateSelectOptions: statesOptions } = useStates()
   const { marketSelectOptions: marketOptions, markets } = useMarkets()
-  const [mesage, setMessage] = useState()
+  const [message, setMessage] = useState('')
   const { mutate: createNotes } = useClientNoteMutation(null)
 
   const setNextTab = () => {
@@ -98,7 +98,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
         addNewClientDetails(clientPayload, {
           onSuccess(e) {
             const payload = {
-              comment: mesage ?? mesage,
+              comment: message,
               clientId: e?.data?.id,
             }
             createNotes(payload)
@@ -107,7 +107,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
         })
       }
     },
-    [addNewClientDetails],
+    [addNewClientDetails, message],
   )
 
   return (
