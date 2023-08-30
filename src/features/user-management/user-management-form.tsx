@@ -1059,7 +1059,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             {t(`${USER_MANAGEMENT}.modal.employeeID`)}
           </FormLabel>
           <Box height="70px">
-            <Input maxLength={20} type="text" {...register('employeeId')} />
+            <Input maxLength={255} type="text" {...register('employeeId')} />
           </Box>
         </FormControl>
       </HStack>
