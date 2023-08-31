@@ -197,22 +197,27 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
   }
 }
 
-export const useIsAwardSelect = (
-  control: Control<FormValues, any>,
-  transaction?,
-  selectedWorkOrderStats?,
-  remainingAmt?,
-  isRefund?,
-  selectedWorkOrder?,
-) => {
+export const useIsAwardSelect = ({
+  control,
+  selectedWorkOrderStats,
+  totalItemsAmount,
+  isRefund,
+  selectedWorkOrder,
+  isApproved,
+}) => {
   const { projectAwardData } = useProjectAward()
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
   const check = against?.awardStatus
   const isValidForAwardPlan = against?.isValidForAwardPlan
-  //const isDrawOrMaterial = transType?.label === 'Draw' || transType?.label === 'Material'
-  const remainingAmountExceeded =
-    (transType?.label === 'Draw' || (transType?.label === 'Material' && !isRefund)) && remainingAmt
+  const isDrawOrMaterial = transType?.label === 'Draw' || transType?.label === 'Material'
+
+  const remainingAmountExceededFlag =
+    !isApproved &&
+    isValidForAwardPlan &&
+    isDrawOrMaterial &&
+    !isRefund &&
+    totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
 
   const drawConsumed =
     transType?.label === 'Draw' &&
@@ -227,16 +232,17 @@ export const useIsAwardSelect = (
 
   const isNotFinalPlan = selectedWorkOrder?.awardPlanId < 4
 
-  const isPlanExhausted = isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
+  const isPlanExhausted = isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceededFlag)
 
   const showUpgradeOption = isPlanExhausted && isNotFinalPlan
 
   const showLimitReached = isPlanExhausted && !isNotFinalPlan
   const selectedAward = projectAwardData?.find(a => a.id === selectedWorkOrder?.awardPlanId)
+
   const isCompletedWorkLessThanNTEPercentage =
     transType?.label === 'Draw' &&
-    selectedAward?.totalAmountLimit &&
-    selectedWorkOrder?.completePercentage < selectedAward?.totalAmountLimit
+    selectedAward?.allowedDrawAmount &&
+    totalItemsAmount < selectedAward?.allowedDrawAmount
 
   return {
     check,
@@ -245,6 +251,7 @@ export const useIsAwardSelect = (
     showUpgradeOption,
     showLimitReached,
     isCompletedWorkLessThanNTEPercentage,
+    remainingAmountExceededFlag,
   }
 }
 
