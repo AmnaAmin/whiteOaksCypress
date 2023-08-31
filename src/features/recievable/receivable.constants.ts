@@ -69,7 +69,7 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'invoiceNo',
-    accessorKey: 'invoiceNumber',
+    accessorKey: 'resubmissionInvoiceNumber',
   },
 ]
 
@@ -93,5 +93,5 @@ export const RECEIVABLE_TABLE_QUERY_KEYS = {
   woNumber: 'woNumber.contains',
   type: 'type.contains',
   isReceivable: 'isReceivable.equals',
-  displayId: 'displayId.contains'
+  displayId: 'displayId.contains',
 }
