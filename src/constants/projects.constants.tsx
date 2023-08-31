@@ -262,7 +262,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'projects.projectTable.invoiceNumber',
-    accessorKey: 'invoiceNumber',
+    accessorKey: 'resubmissionInvoiceNumber',
   },
   {
     header: 'projects.projectTable.invoiceDate',
