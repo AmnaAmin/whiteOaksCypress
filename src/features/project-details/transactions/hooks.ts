@@ -205,7 +205,6 @@ export const useIsAwardSelect = ({
   selectedWorkOrder,
   isApproved,
 }) => {
-  const { projectAwardData } = useProjectAward()
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
   const check = against?.awardStatus
@@ -237,12 +236,9 @@ export const useIsAwardSelect = ({
   const showUpgradeOption = isPlanExhausted && isNotFinalPlan
 
   const showLimitReached = isPlanExhausted && !isNotFinalPlan
-  const selectedAward = projectAwardData?.find(a => a.id === selectedWorkOrder?.awardPlanId)
 
   const isCompletedWorkLessThanNTEPercentage =
-    transType?.label === 'Draw' &&
-    selectedAward?.allowedDrawAmount &&
-    totalItemsAmount > selectedAward?.allowedDrawAmount
+    transType?.label === 'Draw' && totalItemsAmount > selectedWorkOrderStats?.allowedDrawAmount!
 
   return {
     check,
