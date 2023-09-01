@@ -34,7 +34,7 @@ const WEEK_FILTERS = [
     date: null,
     count: 0,
   },
-  
+
   {
     id: 'Friday',
     title: 'Fri',
@@ -122,7 +122,7 @@ export const usePayableColumns = (control, register) => {
         cell: cellInfo => {
           const { row } = cellInfo
           const projectId = row.original.id
-          const isDraw = row?.original?.paymentType?.toLowerCase() === 'wo draw'
+          //const isDraw = row?.original?.paymentType?.toLowerCase() === 'wo draw'
 
           const onChange = { ...register(`id.${projectId}`) }?.onChange
 
@@ -132,7 +132,7 @@ export const usePayableColumns = (control, register) => {
                 value={projectId}
                 {...register(`id.${projectId}`)}
                 isChecked={!!formValues?.id?.[projectId]}
-                disabled={isDraw}
+                // disabled={isDraw}
                 onChange={e => {
                   onChange(e)
                   row.toggleSelected()
