@@ -55,6 +55,7 @@ import { CANCEL_WO_OPTIONS } from 'constants/index'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
+import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 export type SelectVendorOption = {
   label: string
@@ -175,7 +176,10 @@ const WorkOrderDetailTab = props => {
   const [uploadedWO, setUploadedWO] = useState<any>(null)
 
   const { t } = useTranslation()
-  const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
+  const disabledSave =
+    isWorkOrderUpdating ||
+    (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) ||
+    WORK_ORDER_STATUS.Cancelled === workOrder?.status
   const { isAdmin, isAccounting } = useUserRolesSelector()
 
   const {

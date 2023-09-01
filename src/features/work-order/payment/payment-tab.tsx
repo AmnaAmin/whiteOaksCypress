@@ -27,6 +27,7 @@ import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
 import { truncateWithEllipsis } from 'utils/string-formatters'
 import moment from 'moment'
+import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 const CalenderCard = props => {
   return (
@@ -101,6 +102,7 @@ const PaymentInfoTab = props => {
   })
   const watchPartialPayment = watch('partialPayment')
   const watchPaymentDate = watch('paymentDate')
+  const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
   useEffect(() => {
     if ([STATUS.Rejected]?.includes(workOrder?.statusLabel?.toLowerCase())) {
@@ -153,7 +155,7 @@ const PaymentInfoTab = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody ml={30} h='600px' overflow={'auto'}>
+        <ModalBody ml={30} h="600px" overflow={'auto'}>
           <SimpleGrid
             columns={5}
             spacing={8}
@@ -403,8 +405,8 @@ const PaymentInfoTab = props => {
 
               <Box height="80px">
                 <FormControl isInvalid={!!errors.clientApprovedAmount}>
-                  <FormLabel  isTruncated title={'Client Final Approved Amount'} variant={'strong-label'} size={'md'}>
-                  {truncateWithEllipsis(t('clientFinalApprovedAmount').trim(), 30)}
+                  <FormLabel isTruncated title={'Client Final Approved Amount'} variant={'strong-label'} size={'md'}>
+                    {truncateWithEllipsis(t('clientFinalApprovedAmount').trim(), 30)}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -528,7 +530,12 @@ const PaymentInfoTab = props => {
             <Button data-testid="wo-cancel-btn" variant="outline" onClick={props.onClose} colorScheme="brand">
               {t('cancel')}
             </Button>
-            <Button type="submit" data-testid="submit-btn" colorScheme="brand" disabled={isWorkOrderUpdating}>
+            <Button
+              type="submit"
+              data-testid="submit-btn"
+              colorScheme="brand"
+              disabled={isWorkOrderUpdating || isWOCancelled}
+            >
               {t('save')}
             </Button>
           </HStack>
