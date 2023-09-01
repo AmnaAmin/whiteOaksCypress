@@ -242,7 +242,7 @@ export const useIsAwardSelect = ({
   const isCompletedWorkLessThanNTEPercentage =
     transType?.label === 'Draw' &&
     selectedAward?.allowedDrawAmount &&
-    totalItemsAmount < selectedAward?.allowedDrawAmount
+    totalItemsAmount > selectedAward?.allowedDrawAmount
 
   return {
     check,
