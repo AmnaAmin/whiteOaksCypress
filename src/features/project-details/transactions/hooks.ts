@@ -238,7 +238,7 @@ export const useIsAwardSelect = ({
   const showLimitReached = isPlanExhausted && !isNotFinalPlan
 
   const isCompletedWorkLessThanNTEPercentage =
-    transType?.label === 'Draw' && totalItemsAmount > selectedWorkOrderStats?.allowedDrawAmount!
+    !isApproved && transType?.label === 'Draw' && totalItemsAmount > selectedWorkOrderStats?.allowedDrawAmount!
 
   return {
     check,

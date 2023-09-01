@@ -77,7 +77,6 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
-  TRANSACTION_FEILD_DEFAULT,
   TRANSACTION_MARK_AS_OPTIONS_ARRAY,
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
