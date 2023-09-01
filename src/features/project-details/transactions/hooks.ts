@@ -13,7 +13,6 @@ import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { useProjectAward } from 'api/project-award'
 
 /*function getRefundTransactionType(type): TransactionsWithRefundType {
   if (type === TransactionTypeValues.material)
