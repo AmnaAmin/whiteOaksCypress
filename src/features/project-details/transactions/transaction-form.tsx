@@ -77,7 +77,6 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
-  TRANSACTION_FEILD_DEFAULT,
   TRANSACTION_MARK_AS_OPTIONS_ARRAY,
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
@@ -163,7 +162,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
-  const [remainingAmt, setRemainingAmt] = useState(false)
+  const [totalItemsAmount, setTotalItemAmount] = useState()
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
@@ -217,18 +216,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const transType = useWatch({ name: 'transactionType', control })
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
-  const isRefund = getValues()?.refund
+  const isRefund = useWatch({ name: 'refund', control })
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
   }, [workOrderId, awardPlansStats])
-
-  useEffect(() => {
-    if (selectedWorkOrderStats && !transaction) {
-      setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
-      setRemainingAmt(false)
-    }
-  }, [selectedWorkOrderStats])
 
   const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled, lateAndFactoringFeeForVendor } =
     useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
@@ -240,30 +232,23 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     showUpgradeOption,
     showLimitReached,
     isCompletedWorkLessThanNTEPercentage,
-  } = useIsAwardSelect(control, transaction, selectedWorkOrderStats, remainingAmt, isRefund, selectedWorkOrder)
+    remainingAmountExceededFlag,
+  } = useIsAwardSelect({
+    control,
+    selectedWorkOrderStats,
+    totalItemsAmount,
+    isRefund,
+    selectedWorkOrder,
+    isApproved,
+  })
   const isAdminEnabled = isAdmin || isAccounting
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
   const disableSave =
     projectAwardCheck || //when there is no project award
-    remainingAmt || //when remaining amount exceeds for material/draw + is not Refund + is not approved
+    remainingAmountExceededFlag || //when remaining amount exceeds for material/draw + is not Refund + is not approved
     (isCompletedWorkLessThanNTEPercentage && !isAdminEnabled) //when %complete is less than NTE and user is not admin/accounting
-
-  const methodForPayment = e => {
-    const totalAmountInItems = e
-    if (
-      !isApproved &&
-      totalAmountInItems > selectedWorkOrderStats?.totalAmountRemaining! &&
-      isValidForAwardPlan &&
-      materialAndDraw &&
-      !isRefund
-    ) {
-      setRemainingAmt(true)
-    } else {
-      setRemainingAmt(false)
-    }
-  }
 
   const {
     isShowChangeOrderSelectField,
@@ -464,7 +449,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
       {check && showLimitReached && <ProjectTransactionRemainingAlert msg="PlanLimitExceed" />}
 
-      {remainingAmt && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
+      {remainingAmountExceededFlag && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
 
       {isCompletedWorkLessThanNTEPercentage &&
         (isAdminEnabled ? (
@@ -918,12 +903,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
               <TransactionAmountForm
                 formReturn={formReturn}
-                onSetTotalRemainingAmount={methodForPayment}
+                onSetTotalRemainingAmount={setTotalItemAmount}
                 transaction={transaction}
                 isMaterialsLoading={isMaterialsLoading}
                 setMaterialsLoading={setMaterialsLoading}
                 selectedTransactionId={selectedTransactionId}
-                setRemainingAmt={setRemainingAmt}
               />
             </Flex>
           ) : (

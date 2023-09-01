@@ -214,9 +214,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
       // @ts-ignore
       setValue(`transaction.${index}.amount`, amountValue)
     })
-    if (values?.transactionType?.value === TransactionTypeValues.material && isChecked) {
-      setRemainingAmt?.(false)
-    }
   }
 
   const openFileDialog = () => {
