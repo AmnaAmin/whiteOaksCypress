@@ -134,6 +134,7 @@ export enum TransactionStatusValues {
 
 export type SelectOption = {
   label: string | undefined
+  id?: number
   value: any
   awardStatus?: any
   isValidForAwardPlan?: any
