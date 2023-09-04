@@ -85,6 +85,7 @@ type NotesProps = {
   projectData?: any
   projectCompletion?: boolean
   isPercentageDisabled?: boolean
+  isWOCancelled?: boolean
 }
 
 export const NotesTab = (props: NotesProps) => {
@@ -104,6 +105,7 @@ export const NotesTab = (props: NotesProps) => {
     projectData,
     projectCompletion,
     isPercentageDisabled,
+    isWOCancelled,
   } = props
   const { handleSubmit, register, setValue, reset, control } = useForm()
   const { data: account } = useAccountDetails()
@@ -207,7 +209,7 @@ export const NotesTab = (props: NotesProps) => {
                 <Button
                   type="submit"
                   colorScheme="darkPrimary"
-                  isDisabled={(!message && !completion) || !!isNotesLoading}
+                  isDisabled={(!message && !completion) || !!isNotesLoading || isWOCancelled}
                 >
                   {t('submit')}
                 </Button>

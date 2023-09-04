@@ -192,7 +192,7 @@ const PaymentInfoTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!dateInvoiceSubmittedEnabled}
+                    isDisabled={!dateInvoiceSubmittedEnabled || isWOCancelled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('dateInvoiceSubmitted', {
                       required: invoicedRequired && 'This is required',
@@ -233,7 +233,7 @@ const PaymentInfoTab = props => {
                           <Select
                             {...field}
                             options={paymentsTerms}
-                            isDisabled={!paymentTermEnabled}
+                            isDisabled={!paymentTermEnabled || isWOCancelled}
                             size="md"
                             value={field.value}
                             selectProps={{ isBorderLeft: false }}
@@ -271,7 +271,7 @@ const PaymentInfoTab = props => {
                     data-testid="paymentTermDate"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!paymentTermDateEnabled}
+                    isDisabled={!paymentTermDateEnabled || isWOCancelled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('paymentTermDate', {
                       required: invoicedRequired && 'This is required',
@@ -291,7 +291,7 @@ const PaymentInfoTab = props => {
                     size="md"
                     data-testid="datePaymentProcessed"
                     css={calendarIcon}
-                    isDisabled={!datePaymentProcessedEnabled}
+                    isDisabled={!datePaymentProcessedEnabled || isWOCancelled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('datePaymentProcessed', {
                       required: invoicedRequired && 'This is required',
@@ -316,7 +316,7 @@ const PaymentInfoTab = props => {
                     size="md"
                     data-testid="expectedPaymentDate"
                     css={calendarIcon}
-                    isDisabled={!expectedPaymentDateEnabled}
+                    isDisabled={!expectedPaymentDateEnabled || isWOCancelled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('expectedPaymentDate', {
                       required: invoicedRequired && 'This is required',
@@ -336,7 +336,7 @@ const PaymentInfoTab = props => {
                     size="md"
                     data-testid="datePaid"
                     css={calendarIcon}
-                    isDisabled={!datePaidEnabled}
+                    isDisabled={!datePaidEnabled || isWOCancelled}
                     variant="outline"
                     {...register('datePaid')}
                   />
@@ -360,7 +360,7 @@ const PaymentInfoTab = props => {
                             thousandSeparator
                             customInput={CustomRequiredInput}
                             prefix={'$'}
-                            disabled={!invoiceAmountEnabled}
+                            disabled={!invoiceAmountEnabled || isWOCancelled}
                             onValueChange={e => {
                               field.onChange(e.floatValue ?? '')
                             }}
@@ -390,7 +390,7 @@ const PaymentInfoTab = props => {
                             thousandSeparator
                             customInput={CustomRequiredInput}
                             prefix={'$'}
-                            disabled={!clientOriginalApprovedAmountEnabled}
+                            disabled={!clientOriginalApprovedAmountEnabled || isWOCancelled}
                             onValueChange={e => {
                               field.onChange(e.floatValue ?? '')
                             }}
@@ -421,7 +421,7 @@ const PaymentInfoTab = props => {
                             thousandSeparator
                             customInput={CustomRequiredInput}
                             prefix={'$'}
-                            disabled={!clientApprovedAmountEnabled}
+                            disabled={!clientApprovedAmountEnabled || isWOCancelled}
                             onValueChange={e => {
                               field.onChange(e.floatValue ?? '')
                             }}
@@ -469,7 +469,7 @@ const PaymentInfoTab = props => {
                             thousandSeparator
                             customInput={CustomInput}
                             prefix={'$'}
-                            disabled={!partialPaymentEnabled}
+                            disabled={!partialPaymentEnabled || isWOCancelled}
                             onValueChange={e => {
                               clearErrors('paymentDate')
                               field.onChange(e.floatValue ?? '')
@@ -500,7 +500,7 @@ const PaymentInfoTab = props => {
                     size="md"
                     data-testid="partialPaymentDate"
                     css={calendarIcon}
-                    isDisabled={!paymentDateEnabled}
+                    isDisabled={!paymentDateEnabled || isWOCancelled}
                     variant="outline"
                     {...register('paymentDate', {
                       required: watchPartialPayment && (watchPartialPayment as number) > 0 ? 'This is required' : false,
