@@ -205,7 +205,7 @@ export const VendorRegister = () => {
         ...vendorRegisterFormSchema,
         einNumber: Yup.string()
           .required('EIN is a required field')
-          .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits'),
+          .matches(/^\d{2}-?\d{7}$/, 'Must be only digits'),
       })
     } else {
       setCustomResolver({
@@ -534,7 +534,7 @@ export const VendorRegister = () => {
       ? {
           einNumber: Yup.string()
             .required('EIN is a required field')
-            .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits'),
+            .matches(/^\d{2}-?\d{7}$/, 'Must be only digits'),
         }
       : {}),
     ...(ssnEinTabIndex === 1
@@ -1156,7 +1156,7 @@ export const VendorRegister = () => {
                                     type="text"
                                     fontSize="14px"
                                     color="#718096"
-                                    mask="999-99-9999"
+                                    mask="99-9999999"
                                     {...register('einNumber', {
                                       required: 'This is required',
                                     })}
