@@ -295,6 +295,7 @@ export type ProjectAward = {
   materialLimit: number
   drawLimit: number
   totalAmountLimit: number
+  allowedDrawAmount: number
   payTerm: number
   factoringFee: number
   createdBy: string | null
