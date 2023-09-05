@@ -21,7 +21,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
 import { useTableInstance } from './table-context'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { datePickerFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { MdClose } from 'react-icons/md'
 import { useLayoutEffect } from 'react'
 import _ from 'lodash'
@@ -427,12 +427,13 @@ export const Table: React.FC<TableProps> = ({
                           const title =
                             typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
                           const metaData: any = cell.column.columnDef?.meta as any
+                          const isDate= metaData?.format
 
                           return (
                             <Td
                               key={cell.id}
                               isTruncated
-                              title={!metaData?.hideTitle ? (title as string) : ''}
+                              title={!metaData?.hideTitle && title ? (isDate ? dateFormat(title as string) : (title as string)) : ''}
                               {...getColumnMaxMinWidths(cell.column)}
                             >
                               {isValidAndNonEmpty(cell?.renderValue()) ? value : '_ _ _'}
