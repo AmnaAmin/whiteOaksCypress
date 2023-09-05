@@ -107,9 +107,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 name="einNumber"
                 rules={{
                   required: ssnNumber ? '' : isActive && 'This is required',
-                  pattern: {
-                    value: /^$|^\d{9}$/,
-                    message: 'Invalid EIN number format',
+                  validate: value => {
+                    if (!value) {
+                      return true
+                    }
+
+                    // Regular expression pattern to match EIN format: ##-#######
+                    const einPattern = /^\d{2}-?\d{7}$/
+
+                    if (!einPattern.test(value)) {
+                      return 'Invalid EIN format. Please use the format ##-#######'
+                    }
+
+                    return true // Validation passed
                   },
                 }}
                 render={({ field, fieldState }) => {
