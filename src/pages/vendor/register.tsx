@@ -46,6 +46,7 @@ import PasswordStrengthBar, { measureStrength } from 'components/vendor-register
 import NumberFormat from 'react-number-format'
 import { phoneRegex } from 'utils/form-validation'
 import { isEmpty } from 'lodash'
+import { validateWhitespace } from 'api/clients'
 
 const CustomTab = React.forwardRef((props: any, ref: any) => {
   const tabProps = useTab({ ...props, ref })
@@ -654,7 +655,13 @@ export const VendorRegister = () => {
     fontWeight: 400,
     color: 'gray.500',
   }
+  const [companyName, setCompanyName] = useState('')
 
+  // Function to handle input change and trim spaces
+  const handleInputChange = e => {
+    const trimmedValue = e.target.value.trim() // Trim spaces from the input
+    setCompanyName(trimmedValue) // Update the state with the trimmed value
+  }
   return (
     <Box
       bgImg="url(./bg.svg)"
@@ -856,8 +863,13 @@ export const VendorRegister = () => {
                         _placeholder={placeholderStyle}
                         {...register('companyName', {
                           required: 'This is required',
+                          validate: {
+                            whitespace: validateWhitespace,
+                          },
                         })}
                         tabIndex={5}
+                        value={companyName} // Use the state variable as the input value
+                        onChange={handleInputChange}
                         variant="required-field"
                       />
                       <FormErrorMessage>{errors?.companyName && errors?.companyName?.message}</FormErrorMessage>
