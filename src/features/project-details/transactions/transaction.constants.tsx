@@ -2,7 +2,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { TransactionMarkAsValues, TransactionStatusValues } from 'types/transaction.type'
 import Status from 'features/common/status'
 import numeral from 'numeral'
-import { dateFormat} from 'utils/date-time-utils'
+import { dateFormat } from 'utils/date-time-utils'
 import { TRANSACTION } from './transactions.i18n'
 import { Flex } from '@chakra-ui/react'
 import { DownArrow, RightArrow } from 'components/expension-grid-arrows'
@@ -128,7 +128,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: `${TRANSACTION}.workOrderIdTransTable`,
-    accessorKey: 'workOrderId',
+    accessorKey: 'parentWorkOrderId',
     accessorFn: cellInfo => {
       return cellInfo.parentWorkOrderId ? cellInfo.parentWorkOrderId?.toString() : '- - -'
     },
@@ -143,7 +143,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: `${TRANSACTION}.vendorGL`,
-    accessorKey: 'parentWorkOrderId',
+    accessorKey: 'vendor',
     accessorFn: cellInfo => {
       return cellInfo.parentWorkOrderId !== null ? cellInfo?.vendor || '' : 'Project SOW'
     },
