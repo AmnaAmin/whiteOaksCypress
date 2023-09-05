@@ -10,6 +10,7 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useWorkOrderAwardStats } from 'api/transactions'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
+import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
@@ -18,6 +19,8 @@ export const ProjectAwardTab: React.FC<any> = props => {
   const { isAdmin } = useUserRolesSelector()
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
   const [largeWorkOrder, setLargeWorkOrder] = useState<boolean>(workOrder?.largeWorkOrder)
+
+  const isSaveDisable = isUpdating || !selectedCard || WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
   const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId)
   interface FormValues {
@@ -213,7 +216,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               </Button>
 
               {props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward ? (
-                <Button type="submit" colorScheme="brand" disabled={isUpdating || !selectedCard}>
+                <Button type="submit" colorScheme="brand" disabled={isSaveDisable}>
                   {t('save')}
                 </Button>
               ) : null}
