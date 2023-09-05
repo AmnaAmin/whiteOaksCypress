@@ -8,6 +8,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { Trade, VendorProfile, VendorTradeFormValues } from 'types/vendor.types'
 import { useTrades } from 'api/vendor-details'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import orderBy from 'lodash/orderBy'
 
 type tradesFormProps = {
   vendorProfileData: VendorProfile
@@ -40,9 +41,9 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
   const tradeCheckboxes = useWatch({ control, name: 'trades' })
   return (
     <>
-      <Box h="584px" overflow="auto">
-        <Flex  id="Vendor_Trades" maxW="900px" wrap="wrap" gridGap={3}>
-          {tradeCheckboxes?.map((checkbox, index) => {
+      <Box h="900px" overflow="auto">
+        <Flex id="Vendor_Trades" maxW="900px" wrap="wrap" gridGap={3}>
+          {orderBy(tradeCheckboxes, ['value.trade.skill'], ['asc']).map((checkbox, index) => {
             return (
               <Controller
                 name={`trades.${index}`}
