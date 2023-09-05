@@ -8,7 +8,6 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { Trade, VendorProfile, VendorTradeFormValues } from 'types/vendor.types'
 import { useTrades } from 'api/vendor-details'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import orderBy from 'lodash/orderBy'
 
 type tradesFormProps = {
   vendorProfileData: VendorProfile

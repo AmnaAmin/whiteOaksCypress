@@ -35,7 +35,8 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: 'balance',
     accessorKey: 'amount',
     accessorFn(cellInfo) {
-      return numeral(cellInfo.amount).format('$0,0.00')
+      const formattedAmount = numeral(Math.abs(cellInfo.amount)).format('$0,0.00')
+      return cellInfo.amount < 0 ? formattedAmount : formattedAmount
     },
     meta: { format: 'currency' },
   },
