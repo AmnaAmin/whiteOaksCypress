@@ -7,6 +7,7 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { currencyFormatter, truncateWithEllipsis } from 'utils/string-formatters'
 import { PROJECT_AWARD } from './projectAward.i18n'
 import { PERFORM } from 'features/common/status'
+import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 export const TextCard = () => {
   const { t } = useTranslation()
@@ -113,14 +114,17 @@ export const ProjectAwardCard = ({
   }
 
   const handleSelected = () => {
-    onSelectedCard(cardsvalues?.id)
-
-    if (!selectedCard) {
+    if (WORK_ORDER_STATUS.Cancelled === workOrder?.status) {
+      return false
+    } else {
       onSelectedCard(cardsvalues?.id)
-    } else if (selectedCard === id) {
-      onSelectedCard(null)
+
+      if (!selectedCard) {
+        onSelectedCard(cardsvalues?.id)
+      } else if (selectedCard === id) {
+        onSelectedCard(null)
+      }
     }
-    // onSelectedCard(selectedCard.id !== id && id)
   }
   const idChecker = selectedCard === id
 

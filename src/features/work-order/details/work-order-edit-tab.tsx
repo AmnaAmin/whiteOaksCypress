@@ -55,6 +55,7 @@ import { CANCEL_WO_OPTIONS } from 'constants/index'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
+import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 export type SelectVendorOption = {
   label: string
@@ -175,7 +176,9 @@ const WorkOrderDetailTab = props => {
   const [uploadedWO, setUploadedWO] = useState<any>(null)
 
   const { t } = useTranslation()
-  const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
+  const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
+  const disabledSave =
+    isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
   const { isAdmin, isAccounting } = useUserRolesSelector()
 
   const {
@@ -552,7 +555,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!workOrderStartDateEnable}
+                    isDisabled={!workOrderStartDateEnable || isWOCancelled}
                     min={clientStart as any}
                     variant="required-field"
                     {...register('workOrderStartDate', {
@@ -573,7 +576,7 @@ const WorkOrderDetailTab = props => {
                     size="md"
                     css={calendarIcon}
                     min={woStartDate as string}
-                    isDisabled={!workOrderExpectedCompletionDateEnable}
+                    isDisabled={!workOrderExpectedCompletionDateEnable || isWOCancelled}
                     variant="required-field"
                     {...register('workOrderExpectedCompletionDate', {
                       required: 'This is required field.',
@@ -612,6 +615,7 @@ const WorkOrderDetailTab = props => {
                         return (
                           <CreatableSelect
                             {...field}
+                            isDisabled={isWOCancelled}
                             id={`completePercentage`}
                             options={completePercentageValues}
                             size="md"

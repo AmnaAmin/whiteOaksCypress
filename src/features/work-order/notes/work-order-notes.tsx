@@ -2,11 +2,13 @@ import React, { useEffect } from 'react'
 import { useNotes, useNoteMutation } from 'api/work-order'
 import { NotesTab } from 'features/common/notes-tab'
 import { useAccountDetails } from 'api/vendor-details'
+import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 export const WorkOrderNotes: React.FC<any> = props => {
   const { workOrder, onClose, setNotesCount, navigateToProjectDetails } = props
   const { mutate: createNotes, isLoading: isNotesLoading } = useNoteMutation(workOrder?.id)
   const { data: account } = useAccountDetails()
+  const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
   const { notes = [] } = useNotes({
     workOrderId: workOrder?.id,
@@ -34,6 +36,7 @@ export const WorkOrderNotes: React.FC<any> = props => {
         isNotesLoading={isNotesLoading}
         notes={notes}
         onClose={onClose}
+        isWOCancelled={isWOCancelled}
         navigateToProjectDetails={navigateToProjectDetails}
         messageBoxStyle={{ resize: 'none' }}
         contentStyle={{ padding: { base: '0px', lg: '25px' }, maxHeight: 'calc(100vh - 300px)' }}
