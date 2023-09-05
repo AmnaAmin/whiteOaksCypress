@@ -289,6 +289,32 @@ export const useStates = () => {
   }
 }
 
+export const useMarketStateWise = id => {
+  const client = useClient()
+  const { data: markets, ...rest } = useQuery(
+    ['states-markets', id],
+    async () => {
+      const response = await client(`markets/state/${id}`, {})
+      return response?.data
+    },
+    {
+      enabled: !!id,
+    },
+  )
+
+  const marketSelectOptionsStateWise =
+    markets?.map(market => ({
+      value: market?.id,
+      label: market?.metropolitanServiceArea,
+    })) || []
+
+  return {
+    marketSelectOptionsStateWise,
+    markets,
+    ...rest,
+  }
+}
+
 export const useMarkets = () => {
   const client = useClient()
 
@@ -539,7 +565,7 @@ export const useGanttChart = (projectId?: string): any => {
   }
 }
 
-export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired , currentVendorId }) => {
+export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired, currentVendorId }) => {
   const status_active = 12
   const status_expired = 15
   const capacity = 1 // sfor new workorder capacity is fixed
@@ -554,9 +580,9 @@ export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired , cur
     capacity +
     statusAttrib +
     '&projectsId.equals=' +
-    projectId + 
-     '&currentVendorId.equals='  + currentVendorId;
-    ;
+    projectId +
+    '&currentVendorId.equals=' +
+    currentVendorId
   const { data, ...rest } = useQuery<Array<Vendors>>(
     ['FETCH_FILTERED_VENDORS', vendorSkillId],
     async () => {
