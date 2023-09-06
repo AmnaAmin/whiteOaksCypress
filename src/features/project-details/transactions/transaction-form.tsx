@@ -247,7 +247,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
   const disableSave =
     projectAwardCheck || //when there is no project award
-    (remainingAmountExceededFlag && !isAdmin && !isAccounting) || //when remaining amount exceeds for material/draw + is not Refund + is not approved
+    (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund + is not approved
     (isCompletedWorkLessThanNTEPercentage && !isAdminEnabled) //when %complete is less than NTE and user is not admin/accounting
 
   const {
