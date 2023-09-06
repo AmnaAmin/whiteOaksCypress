@@ -963,7 +963,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 data-testid="save-transaction"
                 colorScheme="darkPrimary"
                 variant="solid"
-                disabled={isFormSubmitLoading || isMaterialsLoading || disableSave}
+                disabled={isFormSubmitLoading && isMaterialsLoading && disableSave}
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>
