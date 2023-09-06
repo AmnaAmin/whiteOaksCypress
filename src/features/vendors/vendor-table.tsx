@@ -118,9 +118,21 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     header: 'EIN/SSN',
     accessorKey: 'einNumber',
     accessorFn(cellInfo) {
-      return cellInfo?.einNumber ? cellInfo?.einNumber : '- - -'
+      const ein = cellInfo?.einNumber || '';
+      const ssn = cellInfo?.ssnNumber || '';
+      
+      if (ein && ssn) {
+        return `${ein} / ${ssn}`;
+      } else if (ein) {
+        return ein;
+      } else if (ssn) {
+        return ssn;
+      } else {
+        return '- - -';
+      }
     },
   },
+  
   {
     header: 'totalCapacity',
     accessorKey: 'capacity',
