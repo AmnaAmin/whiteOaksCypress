@@ -22,7 +22,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
   const { data: account } = useAccountDetails()
   const { isProjectCoordinator } = useUserRolesSelector()
-  const { mutate: createNotes } = useClientNoteMutation(clientDetails?.id)
+  const { mutate: createNotes, isLoading } = useClientNoteMutation(clientDetails?.id)
 
   const { notes = [] } = useNotes({
     clientId: clientDetails ? clientDetails?.id : 0,
@@ -106,7 +106,13 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
           {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isProjectCoordinator && (
-          <Button type="submit" colorScheme="brand" ml={2} isDisabled={clientDetails && !message} onClick={Submit}>
+          <Button
+            type="submit"
+            colorScheme="brand"
+            ml={2}
+            isDisabled={(clientDetails && !message) || isLoading}
+            onClick={Submit}
+          >
             {t(`${CLIENTS}.save`)}
           </Button>
         )}
