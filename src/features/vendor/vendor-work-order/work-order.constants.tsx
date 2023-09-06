@@ -1,7 +1,7 @@
 import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { ProjectWorkOrderType } from 'types/project.type'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import Status from 'features/common/status'
 import numeral from 'numeral'
 
@@ -72,7 +72,7 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
   {
     header: 'issue',
     accessorKey: 'workOrderIssueDate',
-    accessorFn: row => dateFormat(row.workOrderIssueDate),
+    accessorFn: row => datePickerFormat(row.workOrderIssueDate),
     cell: (row: any) => {
       const value = row?.row.original?.workOrderIssueDate
       return dateFormat(value)
@@ -82,7 +82,7 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
   {
     header: 'expectedCompletion',
     accessorKey: 'workOrderExpectedCompletionDate',
-    accessorFn: row => dateFormat(row.workOrderExpectedCompletionDate),
+    accessorFn: row => datePickerFormat(row.workOrderExpectedCompletionDate),
     cell: (row: any) => {
       const value = row?.row.original?.workOrderExpectedCompletionDate
       return dateFormat(value)
