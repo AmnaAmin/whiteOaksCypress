@@ -31,7 +31,7 @@ describe('Upcoming Payment Table Type table', () => {
       expect(screen.getByRole('gridcell', { name: '02/01/2023' })).toBeInTheDocument()
       expect(screen.getByRole('gridcell', { name: '12/22/2022' })).toBeInTheDocument()
       expect(screen.getByRole('gridcell', { name: '12/01/2022' })).toBeInTheDocument()
-      // expect(screen.getByRole('gridcell', { name: '$543.00' })).toBeInTheDocument()
+      expect(screen.getByRole('gridcell', { name: '$543.00' })).toBeInTheDocument()
     })
   })
 })
