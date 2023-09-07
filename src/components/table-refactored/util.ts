@@ -208,7 +208,13 @@ export const useSaveToExcel = () => {
           return Object.keys(row).reduce((acc, key) => {
             const columnDef = columnDefWithAccessorKeyAsKey[key]
             const header = columnDef?.header
-            var value = columnDef?.accessorFn?.(row) || row[key]
+            const isCurrency = columnDef?.meta?.format === 'currency'
+            // row[key] has data from api
+            // accessorFn has data formatted to show on the table
+            // Making sure if its a currency we set the data coming from api.
+            // For all other values if the formatted option is available in accessor fn that will be set, if not backend api data will be set.
+            var value = isCurrency ? row[key] : columnDef?.accessorFn?.(row) || row[key]
+
             if (!!row[key] && columnDef?.meta?.format === 'date') {
               value = new Date(row[key])
             }
