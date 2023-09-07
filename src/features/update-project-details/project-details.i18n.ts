@@ -23,6 +23,7 @@ export const project = {
           lienRightsExpires: 'Lien Rights Expires',
           lienFiled: 'Lien Filed',
           claimNumber: 'Claim #',
+          reoNumber: 'REO #',
 
           // Invoicing & Payment
 
@@ -119,6 +120,7 @@ export const project = {
           lienRightsExpires: 'Los derechos de gravamen expiran',
           lienFiled: 'Gravamen Presentado',
           claimNumber: 'Reclamo #',
+          reoNumber: 'REO #',
 
           // Invoicing & Payment
           invoicingPayment: 'Facturación y pago',
