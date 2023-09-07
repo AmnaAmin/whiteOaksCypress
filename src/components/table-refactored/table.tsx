@@ -426,17 +426,24 @@ export const Table: React.FC<TableProps> = ({
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
                           const title =
                             typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
-                          const metaData: any = cell.column.columnDef?.meta as any
-                          const isDate= metaData?.format
+                          const metaData = cell.column.columnDef?.meta as any
+                          const isDate = metaData?.format === 'date'
+                          const isCurrency = metaData?.format === 'currency'
 
                           return (
                             <Td
                               key={cell.id}
                               isTruncated
-                              title={!metaData?.hideTitle && title ? (isDate ? dateFormat(title as string) : (title as string)) : ''}
+                              title={!metaData?.hideTitle && title ? isDate ? dateFormat(title as string) : (title as string) : ''}
                               {...getColumnMaxMinWidths(cell.column)}
                             >
-                              {isValidAndNonEmpty(cell?.renderValue()) ? value : '_ _ _'}
+                              {isValidAndNonEmpty(cell?.renderValue())
+                                ? isDate && typeof value === 'string'
+                                  ? new Date(value).toLocaleDateString()
+                                  : isCurrency && typeof value === 'number'
+                                  ? value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+                                  : value
+                                : '_ _ _'}
                             </Td>
                           )
                         })}
