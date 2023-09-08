@@ -34,6 +34,7 @@ export type Project = {
   lastCompletedWorkOrder: string | null
   lockBoxCode: string | null
   claimNumber?: string | null
+  reoNumber?: string | null
   market: string | null
   materialCost: number | null
   drawAmount: number | null
@@ -228,6 +229,7 @@ export type ProjectWorkOrderType = {
 
 export type ProjectFormValues = {
   acknowledgeCheck?: boolean
+  reoNumber?: string | null
   name?: string
   projectType?: SelectOption | null
   woNumber?: string

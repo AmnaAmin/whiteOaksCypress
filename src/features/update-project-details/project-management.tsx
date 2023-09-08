@@ -210,6 +210,16 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
           </GridItem>
 
           <GridItem>
+            <FormControl isInvalid={!!errors.reoNumber} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="reoNumber">
+                {t(`project.projectDetails.reoNumber`)}
+              </FormLabel>
+              <Input size="md" id="reoNumber" {...register('reoNumber')} autoComplete="off" />
+              <FormErrorMessage>{errors.reoNumber && errors.reoNumber.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+
+          <GridItem>
             <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.overrideStatus`)}

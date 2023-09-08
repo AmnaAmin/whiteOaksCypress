@@ -37,6 +37,7 @@ type ProjectManagementValues = {
   lienExpiryDate: string | null
   lienFiled: Date | string | null
   claimNumber: string | null
+  reoNumber: string | null
 }
 
 type ProjectInvoicingAndPaymentFormValues = {
@@ -150,6 +151,7 @@ export type ProjectDetailsAPIPayload = {
 
   // Project Management payload
   projectStatus: string | null
+  reoNumber: string | null
   newMarketId: number | null
   projectType: string | null
   woNumber: string | null
