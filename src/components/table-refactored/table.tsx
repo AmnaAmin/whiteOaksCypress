@@ -222,6 +222,7 @@ type TableProps = {
   handleOnDrag?: (result) => void
   handleOnDragStart?: (result) => void
   allowStickyFilters?: boolean
+  hightlightSelectedRow?: boolean
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -234,6 +235,7 @@ export const Table: React.FC<TableProps> = ({
   handleOnDrag,
   handleOnDragStart,
   allowStickyFilters,
+  hightlightSelectedRow,
   ...restProps
 }) => {
   const { t } = useTranslation()
@@ -411,10 +413,16 @@ export const Table: React.FC<TableProps> = ({
                         </Tr>
                       )
                     })
-                  : getRowModel().rows.map(row => (
+                  : getRowModel().rows.map((row, index) => (
                       <Tr
                         key={row.id}
-                        onClick={() => onRowClick?.(row.original)}
+                        onClick={() => {
+                          if (hightlightSelectedRow) {
+                            tableInstance.toggleAllRowsSelected(false)
+                            tableInstance.getRowModel().rows[index].toggleSelected()
+                          }
+                          onRowClick?.(row.original)
+                        }}
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{

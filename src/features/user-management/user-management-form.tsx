@@ -14,7 +14,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 
 import {
