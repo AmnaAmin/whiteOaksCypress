@@ -34,7 +34,7 @@ const WEEK_FILTERS = [
     date: null,
     count: 0,
   },
-  
+
   {
     id: 'Friday',
     title: 'Fri',
@@ -122,6 +122,7 @@ export const usePayableColumns = (control, register) => {
         cell: cellInfo => {
           const { row } = cellInfo
           const projectId = row.original.id
+          const transactionId = row.original.transactionId
           const isDraw = row?.original?.paymentType?.toLowerCase() === 'wo draw'
 
           const onChange = { ...register(`id.${projectId}`) }?.onChange
@@ -129,14 +130,14 @@ export const usePayableColumns = (control, register) => {
           return (
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
               <Checkbox
-                value={projectId}
+                value={!isDraw ? projectId : transactionId}
                 {...register(`id.${projectId}`)}
                 isChecked={!!formValues?.id?.[projectId]}
-                disabled={isDraw}
                 onChange={e => {
                   onChange(e)
                   row.toggleSelected()
                 }}
+                data-testid={!isDraw ? `payment-checkbox` : 'draw-checkbox'}
               />
             </Flex>
           )
