@@ -267,9 +267,9 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px" justifyContent="space-between">
               <HStack spacing="16px">
-                {!isReadOnly &&selectedMarket && (
+                {!isReadOnly && selectedMarket && (
                   <Button
-                  data-testid='delete-Market-btn'
+                    data-testid="delete-Market-btn"
                     variant="outline"
                     colorScheme="brand"
                     onClick={() => {
@@ -293,11 +293,15 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
                 <>
-                {!isReadOnly &&(
-                <Button isDisabled={!metroValue || !stateValue || !lienDueValue} type="submit" colorScheme="brand">
-                  {t(`${VENDOR_MANAGER}.save`)}
-                </Button>
-                )}
+                  {!isReadOnly && (
+                    <Button
+                      isDisabled={!metroValue || metroValue.trim() === '' || !stateValue || !lienDueValue}
+                      type="submit"
+                      colorScheme="brand"
+                    >
+                      {t(`${VENDOR_MANAGER}.save`)}
+                    </Button>
+                  )}
                 </>
               </HStack>
             </ModalFooter>

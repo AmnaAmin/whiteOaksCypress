@@ -14,7 +14,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 
 import {
@@ -185,14 +184,21 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const watchRequiredField =
     !formValues?.email ||
+    formValues?.email.trim() === '' ||
     !formValues?.firstName ||
+    formValues?.firstName.trim() === '' ||
     !formValues?.lastName ||
+    formValues?.lastName.trim() === '' ||
     (!isEditUser && !formValues?.newPassword) ||
     !formValues?.accountType ||
     !formValues?.streetAddress ||
+    formValues?.streetAddress.trim() === '' ||
     !formValues?.city ||
+    formValues?.city.trim() === '' ||
     !formValues?.zipCode ||
+    formValues?.zipCode.trim() === '' ||
     !formValues?.telephoneNumber ||
+    formValues.telephoneNumber?.trim() === '' ||
     !formValues?.langKey ||
     (isVendor && !formValues.vendorId) ||
     (showMarkets && noMarketsSelected) ||

@@ -34,6 +34,7 @@ import first from 'lodash/first'
 import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { validateWhitespace } from 'api/clients'
 
 const validateTelePhoneNumber = (number: string): boolean => {
   return number ? number.match(/\d/g)?.length === 10 : false
@@ -87,6 +88,9 @@ const CreateVendorDetail: React.FC<{
               variant="required-field"
               {...register('companyName', {
                 required: isActive && 'This is required',
+                validate: {
+                  whitespace: validateWhitespace,
+                },
                 onChange: e => {
                   setValue('companyName', e.target.value)
                 },
@@ -172,6 +176,9 @@ const CreateVendorDetail: React.FC<{
                 data-testid="streetAddress"
                 {...register('streetAddress', {
                   required: isActive && 'This is required',
+                  validate: {
+                    whitespace: validateWhitespace,
+                  },
                   onChange: e => {
                     setValue('streetAddress', e.target.value)
                   },
@@ -193,6 +200,9 @@ const CreateVendorDetail: React.FC<{
                 type="text"
                 {...register('city', {
                   required: isActive && 'This is required',
+                  validate: {
+                    whitespace: validateWhitespace,
+                  },
                   onChange: e => {
                     setValue('city', e.target.value)
                   },
@@ -391,6 +401,9 @@ const CreateVendorDetail: React.FC<{
                 variant="required-field"
                 {...register('ownerName', {
                   required: isActive && 'This is required',
+                  validate: {
+                    whitespace: validateWhitespace,
+                  },
                   onChange: e => {
                     setValue('ownerName', e.target.value)
                   },

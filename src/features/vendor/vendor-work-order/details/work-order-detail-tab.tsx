@@ -23,7 +23,7 @@ import { useUpdateWorkOrderMutation } from 'api/work-order'
 import AssignedItems from 'features/work-order/details/assigned-items'
 import { useFieldArray, useForm, UseFormReturn } from 'react-hook-form'
 import { createInvoicePdf, LineItems } from 'features/work-order/details/assignedItems.utils'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { STATUS } from '../../../common/status'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
@@ -87,22 +87,23 @@ const WorkOrderDetailTab = ({
     }
   }
 
+  const defaultValues: FormValues = useMemo(() => {
+    
+    return getDefaultValues()
+  }, [workOrder, workOrderAssignedItems?.length])
+
   const formReturn = useForm<FormValues>({
-    defaultValues: getDefaultValues(),
+    defaultValues: {
+      ...defaultValues,
+    },
   })
 
-  const { control, getValues, reset } = formReturn
+  const { control, getValues } = formReturn
   const values = getValues()
   const assignedItemsArray = useFieldArray({
     control,
     name: 'assignedItems',
   })
-
-  useEffect(() => {
-    if (workOrder?.id && workOrderAssignedItems) {
-      reset(getDefaultValues())
-    }
-  }, [workOrder, reset, workOrderAssignedItems?.length])
 
   const downloadPdf = () => {
     let doc = new jsPDF()

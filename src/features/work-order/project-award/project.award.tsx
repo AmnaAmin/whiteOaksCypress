@@ -14,6 +14,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
   const { isUpdating, projectAwardData, isUpgradeProjectAward, workOrder } = props
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
 
   const { isAdmin } = useUserRolesSelector()
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
@@ -56,7 +57,6 @@ export const ProjectAwardTab: React.FC<any> = props => {
     return awardPlanScopeAmount - percentage
   }
 
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   return (
     <>
       {projectAwardData && (
@@ -213,7 +213,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
                 {t('cancel')}
               </Button>
 
-              {(!isReadOnly && props?.workOrder?.awardPlanId === null) || isAdmin || isUpgradeProjectAward ? (
+              {!isReadOnly && (props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward) ? (
                 <Button type="submit" colorScheme="brand" disabled={isUpdating || !selectedCard}>
                   {t('save')}
                 </Button>

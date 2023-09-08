@@ -62,7 +62,13 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
           {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isReadOnly && (
-          <Button colorScheme="brand" type="submit" form="clientDetails" ml={2} disabled={!validateMarket(markets)}>
+          <Button
+            colorScheme="brand"
+            type="submit"
+            form="clientDetails"
+            ml={2}
+            disabled={!validateMarket(markets) || props.saveLoading}
+          >
             {t(`${CLIENTS}.save`)}
           </Button>
         )}
