@@ -388,6 +388,15 @@ export const AddPropertyInfo: React.FC<{
                 </Text>
               </FormControl>
             </GridItem>
+
+            <GridItem>
+              <FormControl>
+                <FormLabel htmlFor="reoNumber" size="md">
+                  {t(`${NEW_PROJECT}.reoNumber`)}
+                </FormLabel>
+                <Input id="reoNumber" {...register('reoNumber')} />
+              </FormControl>
+            </GridItem>
           </Grid>
           <VStack alignItems={'flex-start'} mt="10px">
             <FormLabel variant="bold-label" size="md">
