@@ -250,7 +250,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   )
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
   const disableSave =
-    !selectedCancelledOrDenied &&
+    !selectedCancelledOrDenied && //Check if the status is being changed to cancel/deny let the transaction be allowed.
     (projectAwardCheck || //when there is no project award
       (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund + is not approved
       (isCompletedWorkLessThanNTEPercentage && !isAdminEnabled)) //when %complete is less than NTE and user is not admin/accounting
@@ -356,6 +356,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return false
   }
 
+  // Admin has a different set of restriction because he is allowed to change amount in any status
+  // If the admin is trying to cancel or deny the transaction - we will ignore any amount change
+
+  // If the admin is trying to change the amount in approved transaction - he will be allowed to enter an amount equal to current approved amount + remaining amount---
+  // ---Example $50 were approved. Remaining is $20. Now he can enter any amount less than or equal to $70.
+
+  // If the admin changes amount in any other status (pending/denied/cancelled), he is allowed to enter an amount less than remaining amount.
   const isAdminEnabledToChange = () => {
     if (isAdmin) {
       if ([TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(watchStatus?.value)) {
@@ -1001,7 +1008,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             type="button"
             variant="solid"
             isDisabled={
-              !selectedCancelledOrDenied && (amount === 0 || (isPlanExhausted && !isApproved) || !invoicedDate)
+              !selectedCancelledOrDenied && (amount === 0 || (isPlanExhausted && !isApproved) || !invoicedDate) //Check if the status is being changed to cancel/deny let the transaction be allowed.
             }
             colorScheme="darkPrimary"
             onClick={event => {
