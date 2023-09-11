@@ -225,6 +225,15 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
   })
 
   const watchPermissions = useWatch({ control, name: 'permissions' })
+  const isHideAll = watchPermissions
+    ? (Object?.values(watchPermissions)?.every((item: any) => item?.hide) as boolean)
+    : false
+  const isReadAll = watchPermissions
+    ? (Object?.values(watchPermissions)?.every((item: any) => item?.read) as boolean)
+    : false
+  const isEditAll = watchPermissions
+    ? (Object?.values(watchPermissions)?.every((item: any) => item?.edit) as boolean)
+    : false
 
   useEffect(() => {
     const watchProjectPermissions = watchPermissions?.find(p => p.name === 'PROJECT')
@@ -244,12 +253,56 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
           <Tr h={'45px'} bg="#F2F3F4">
             <Td borderRight="1px solid #CBD5E0">{t(`${ACCESS_CONTROL}.sections`)}</Td>
             <Td borderRight="1px solid #CBD5E0" textAlign={'center'}>
+              <Checkbox
+                data-testid={'check-hide'}
+                colorScheme="PrimaryCheckBox"
+                style={{ background: 'white', border: '#DFDFDF' }}
+                mr="5px"
+                isChecked={isHideAll}
+                onChange={value => {
+                  for (const key in watchPermissions) {
+                    setValue(`permissions.${key}.hide`, value.currentTarget.checked)
+                    setValue(`permissions.${key}.edit`, !value.currentTarget.checked)
+                    setValue(`permissions.${key}.read`, !value.currentTarget.checked)
+                  }
+                }}
+              ></Checkbox>
               {t(`${ACCESS_CONTROL}.hide`)}
             </Td>
             <Td borderRight="1px solid #CBD5E0" textAlign={'center'}>
+              <Checkbox
+                data-testid={'check-read'}
+                colorScheme="PrimaryCheckBox"
+                style={{ background: 'white', border: '#DFDFDF' }}
+                mr="5px"
+                isChecked={isReadAll}
+                onChange={value => {
+                  for (const key in watchPermissions) {
+                    setValue(`permissions.${key}.read`, value.currentTarget.checked)
+                    setValue(`permissions.${key}.edit`, !value.currentTarget.checked)
+                    setValue(`permissions.${key}.hide`, !value.currentTarget.checked)
+                  }
+                }}
+              ></Checkbox>
               {t(`${ACCESS_CONTROL}.read`)}
             </Td>
-            <Td textAlign={'center'}>{t(`${ACCESS_CONTROL}.edit`)}</Td>
+            <Td textAlign={'center'}>
+              <Checkbox
+                data-testid={'check-hide'}
+                colorScheme="PrimaryCheckBox"
+                style={{ background: 'white', border: '#DFDFDF' }}
+                mr="5px"
+                isChecked={isEditAll}
+                onChange={value => {
+                  for (const key in watchPermissions) {
+                    setValue(`permissions.${key}.edit`, value.currentTarget.checked)
+                    setValue(`permissions.${key}.hide`, !value.currentTarget.checked)
+                    setValue(`permissions.${key}.read`, !value.currentTarget.checked)
+                  }
+                }}
+              ></Checkbox>
+              {t(`${ACCESS_CONTROL}.edit`)}
+            </Td>
           </Tr>
         </Thead>
         <Tbody>
