@@ -9,11 +9,11 @@ import {
   Grid,
   GridItem,
   Input,
-  Stack,
   HStack,
   Button,
   Divider,
   Link as LinkChakra,
+  VStack,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { STATUS } from 'features/common/status'
@@ -132,7 +132,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   })
   return (
     <Box>
-      <Stack>
+      <VStack gap="32px" alignItems={'flex-start'}>
         <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.status}>
@@ -337,6 +337,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormErrorMessage>{errors?.woaCompletionDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+        </Grid>
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
           <GridItem>
             <FormControl isInvalid={!!errors?.clientWalkthroughDate} w="215px">
               <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
@@ -381,6 +383,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormErrorMessage>{errors?.projectClosedDueDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+        </Grid>
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
           <GridItem>
             <FormControl isInvalid={!!errors?.lienExpiryDate}>
               <FormLabel variant="strong-label" size="md">
@@ -399,6 +403,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormErrorMessage>{errors?.lienFiled?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+        </Grid>
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
@@ -450,7 +456,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </GridItem>
           )}
         </Grid>
-      </Stack>
+      </VStack>
     </Box>
   )
 }

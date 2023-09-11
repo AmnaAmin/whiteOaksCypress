@@ -162,7 +162,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
-  const [totalItemsAmount, setTotalItemAmount] = useState()
+  const [totalItemsAmount, setTotalItemAmount] = useState(0)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
@@ -217,6 +217,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
   const isRefund = useWatch({ name: 'refund', control })
+  const watchStatus = watch('status')
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
@@ -244,11 +245,15 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isAdminEnabled = isAdmin || isAccounting
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
+  const selectedCancelledOrDenied = [TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(
+    watchStatus?.value,
+  )
   const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
   const disableSave =
-    projectAwardCheck || //when there is no project award
-    (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund + is not approved
-    (isCompletedWorkLessThanNTEPercentage && !isAdminEnabled) //when %complete is less than NTE and user is not admin/accounting
+    !selectedCancelledOrDenied && //Check if the status is being changed to cancel/deny let the transaction be allowed.
+    (projectAwardCheck || //when there is no project award
+      (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund + is not approved
+      (isCompletedWorkLessThanNTEPercentage && !isAdminEnabled)) //when %complete is less than NTE and user is not admin/accounting
 
   const {
     isShowChangeOrderSelectField,
@@ -351,9 +356,57 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return false
   }
 
+  // Admin has a different set of restriction because he is allowed to change amount in any status
+  // If the admin is trying to cancel or deny the transaction - we will ignore any amount change
+
+  // If the admin is trying to change the amount in approved transaction - he will be allowed to enter an amount equal to current approved amount + remaining amount---
+  // ---Example $50 were approved. Remaining is $20. Now he can enter any amount less than or equal to $70.
+
+  // If the admin changes amount in any other status (pending/denied/cancelled), he is allowed to enter an amount less than remaining amount.
+  const isAdminEnabledToChange = () => {
+    if (isAdmin) {
+      if ([TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(watchStatus?.value)) {
+        return true
+      }
+      if (
+        transaction?.status?.toLocaleUpperCase() === TransactionStatusValues.approved &&
+        materialAndDraw &&
+        totalItemsAmount > -1 * transaction?.changeOrderAmount! + selectedWorkOrderStats?.totalAmountRemaining!
+      ) {
+        toast({
+          title: 'Error',
+          description: t(`PaymentRemaining`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        return false
+      } else if (
+        transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
+        materialAndDraw &&
+        totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
+      ) {
+        toast({
+          title: 'Error',
+          description: t(`PaymentRemaining`),
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+        return false
+      }
+    }
+    return true
+  }
+
   const onSubmit = useCallback(
     async (values: FormValues) => {
       if (hasPendingDrawsOnPaymentSave(values)) {
+        return
+      }
+      if (!isAdminEnabledToChange()) {
         return
       }
       const queryOptions = {
@@ -373,7 +426,16 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         createChangeOrder(payload, queryOptions)
       }
     },
-    [createChangeOrder, onClose, projectId, transaction, updateChangeOrder],
+    [
+      createChangeOrder,
+      onClose,
+      projectId,
+      transaction,
+      updateChangeOrder,
+      selectedWorkOrderStats,
+      totalItemsAmount,
+      watchStatus,
+    ],
   )
 
   const resetExpectedCompletionDateFields = useCallback(
@@ -903,7 +965,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
               <TransactionAmountForm
                 formReturn={formReturn}
-                onSetTotalRemainingAmount={setTotalItemAmount}
+                onSetTotalRemainingAmount={amount => {
+                  setTotalItemAmount(amount)
+                }}
                 transaction={transaction}
                 isMaterialsLoading={isMaterialsLoading}
                 setMaterialsLoading={setMaterialsLoading}
@@ -943,7 +1007,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             data-testid="next-to-lien-waiver-form"
             type="button"
             variant="solid"
-            isDisabled={amount === 0 || isPlanExhausted || !invoicedDate}
+            isDisabled={
+              !selectedCancelledOrDenied && (amount === 0 || (isPlanExhausted && !isApproved) || !invoicedDate) //Check if the status is being changed to cancel/deny let the transaction be allowed.
+            }
             colorScheme="darkPrimary"
             onClick={event => {
               event.stopPropagation()
