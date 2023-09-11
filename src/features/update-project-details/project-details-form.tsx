@@ -222,7 +222,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               borderBottomLeftRadius="4px"
             >
               <TabPanels>
-                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
+                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflowY={'scroll'}>
                   <ProjectManagement
                     projectStatusSelectOptions={projectStatusSelectOptions}
                     projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
