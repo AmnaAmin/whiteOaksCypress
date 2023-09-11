@@ -1,7 +1,7 @@
 import { HStack, Flex, useDisclosure, Box } from '@chakra-ui/react'
 import { ACCESS_CONTROL } from 'features/access-control/access-control.i18n'
 import { useTranslation } from 'react-i18next'
-import { BiEditAlt, BiTrash } from 'react-icons/bi'
+import { BiTrash } from 'react-icons/bi'
 import { useDeleteRole, useFetchRoles } from 'api/access-control'
 import { ConfirmationBox } from 'components/Confirmation'
 import { TableContextProvider } from 'components/table-refactored/table-context'
@@ -14,7 +14,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Table from 'components/table-refactored/table'
 import { ColumnDef } from '@tanstack/react-table'
 
@@ -25,54 +25,44 @@ export const RolesList = ({ setSelectedRole, selectedRole, allowEdit }) => {
   const { mutate: deleteRole, isLoading } = useDeleteRole()
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
+  const [binIcon, setBinIcon] = useState(null)
 
-  const ROLES_TABLE_COLUMNS: ColumnDef<any>[] = [
-    {
-      header: `${ACCESS_CONTROL}.roles`,
-      accessorKey: 'name',
-      cell: cell => {
-        const role = cell?.row?.original as any
-        return (
-          <Flex justifyContent={'space-between'}>
-            <Box>{role.name}</Box>
-            <HStack gap="20px">
-              <Flex
-                gap="5px"
-                _hover={{ color: 'brand.600', cursor: 'pointer' }}
-                fontSize={'14px'}
-                data-testid={'edit-' + role.name}
-                color="gray.500"
-                fontWeight={'400'}
-                fontStyle={'normal'}
-                onClick={() => {
-                  setSelectedRole(role)
-                }}
-              >
-                <BiEditAlt></BiEditAlt>
-              </Flex>
-              {allowEdit && (
-                <Flex
-                  gap="5px"
-                  _hover={{ color: 'brand.600', cursor: 'pointer' }}
-                  fontSize={'14px'}
-                  data-testid={'remove-' + role.name}
-                  color="gray.500"
-                  fontWeight={'400'}
-                  fontStyle={'normal'}
-                  onClick={() => {
-                    setSelectedRole(role)
-                    onOpenDeleteModal()
-                  }}
-                >
-                  <BiTrash></BiTrash>
-                </Flex>
-              )}
-            </HStack>
-          </Flex>
-        )
+  const ROLES_TABLE_COLUMNS: ColumnDef<any>[] = useMemo(() => {
+    return [
+      {
+        header: `${ACCESS_CONTROL}.roles`,
+        accessorKey: 'name',
+        cell: cell => {
+          const role = cell?.row?.original as any
+          return (
+            <Flex justifyContent={'space-between'}>
+              <Box>{role.name}</Box>
+              <HStack gap="20px">
+                {allowEdit && (
+                  <Flex
+                    gap="5px"
+                    _hover={{ color: 'brand.600', cursor: 'pointer' }}
+                    fontSize={'14px'}
+                    display={binIcon === role.name ? 'block' : 'none'}
+                    data-testid={'remove-' + role.name}
+                    color="gray.500"
+                    fontWeight={'400'}
+                    fontStyle={'normal'}
+                    onClick={() => {
+                      setSelectedRole(role)
+                      onOpenDeleteModal()
+                    }}
+                  >
+                    <BiTrash></BiTrash>
+                  </Flex>
+                )}
+              </HStack>
+            </Flex>
+          )
+        },
       },
-    },
-  ]
+    ]
+  }, [setSelectedRole, onOpenDeleteModal, binIcon, setBinIcon])
 
   useEffect(() => {
     if (!roles?.length) {
@@ -111,7 +101,18 @@ export const RolesList = ({ setSelectedRole, selectedRole, allowEdit }) => {
           columns={ROLES_TABLE_COLUMNS}
           manualPagination={false}
         >
-          <Table isLoading={isFetching} isEmpty={!isFetching && !roles?.length} hightlightSelectedRow={true} />
+          <Table
+            isLoading={isFetching}
+            isEmpty={!isFetching && !roles?.length}
+            onRowClick={setSelectedRole}
+            hightlightSelectedRow={true}
+            handleMouseEnter={row => {
+              setBinIcon(row.name)
+            }}
+            handleMouseLeave={() => {
+              setBinIcon(null)
+            }}
+          />
           <TableFooter position="sticky" bottom="0" left="0" right="0">
             <Box h="35px" />
 

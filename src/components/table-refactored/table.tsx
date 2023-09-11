@@ -223,6 +223,8 @@ type TableProps = {
   handleOnDragStart?: (result) => void
   allowStickyFilters?: boolean
   hightlightSelectedRow?: boolean
+  handleMouseEnter?: (row) => void
+  handleMouseLeave?: (row) => void
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -236,6 +238,8 @@ export const Table: React.FC<TableProps> = ({
   handleOnDragStart,
   allowStickyFilters,
   hightlightSelectedRow,
+  handleMouseEnter,
+  handleMouseLeave,
   ...restProps
 }) => {
   const { t } = useTranslation()
@@ -423,6 +427,8 @@ export const Table: React.FC<TableProps> = ({
                           }
                           onRowClick?.(row.original)
                         }}
+                        onMouseEnter={() => handleMouseEnter?.(row.original)}
+                        onMouseLeave={() => handleMouseLeave?.(row.original)}
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
@@ -430,7 +436,7 @@ export const Table: React.FC<TableProps> = ({
                         }}
                         backgroundColor={row.getIsSelected() || row.depth ? '#F9F9F9' : ''}
                       >
-                        {row.getVisibleCells().map(cell => {
+                        {row?.getVisibleCells().map(cell => {
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
                           const title =
                             typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
