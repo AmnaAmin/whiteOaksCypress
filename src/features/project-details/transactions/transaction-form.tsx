@@ -650,12 +650,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             <div data-testid="change-order-select">
                               <Select
                                 isDisabled={isUpdateForm}
-                                options={changeOrderSelectOptions.filter(option => {
-                                  if ('status' in option) {
-                                    return option.status !== 'CANCELLED'
-                                  }
-                                  return true
-                                })}
+                                options={changeOrderSelectOptions}
                                 selectProps={{ isBorderLeft: true }}
                                 {...field}
                               />
