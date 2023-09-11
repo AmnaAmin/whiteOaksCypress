@@ -343,12 +343,18 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
       enabled,
     },
   )
+  if (changeOrders) {
+    changeOrders.forEach(workOrder => {
+      console.log('status:', workOrder.status)
+    })
+  }
 
   const changeOrderOptions = useMemo(
     () =>
       changeOrders?.map(workOrder => ({
         label: createChangeOrderLabel(workOrder.changeOrderAmount, workOrder.name),
         value: workOrder.id,
+        status: typeof workOrder.status === 'number' ? workOrder.status.toString() : workOrder.status,
       })),
     [changeOrders?.length],
   )
