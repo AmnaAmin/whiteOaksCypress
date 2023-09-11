@@ -62,28 +62,24 @@ export const ConstructionPortalPayable = () => {
 
   const Submit = formValues => {
     const payloadArr = [] as any
-
     // Loop in for all selected ID's values on grid through checkbox
     compact(formValues.id).forEach(selectedID => {
-      //loop in from all work order(payable grid's data) to save the checked id's in an array
-      compact(workOrders)?.forEach(e => {
-        //for Draw Wo
-        if (e.transactionId === selectedID) {
-          const obj = {
-            transactionId: parseInt(e.transactionId as string),
-            type: 'Draw',
-          }
-          payloadArr.push(obj)
+      //finding from all work order(payable grid's data) to save the checked id's in an array
+      const payable = workOrders?.find(w => w.id === parseInt(selectedID as string))
+      const isDraw = payable?.paymentType?.toLowerCase() === 'wo draw'
+      if (isDraw) {
+        const objDraw = {
+          transactionId: parseInt(payable.transactionId as string),
+          type: 'Draw',
         }
-        // for Payment Wo
-        else if (e.id === parseInt(selectedID as string)) {
-          const obj = {
-            id: parseInt(e.id as string),
-            type: '',
-          }
-          payloadArr.push(obj)
+        payloadArr.push(objDraw)
+      } else {
+        const objPAyment = {
+          id: payable?.id,
+          type: 'Payment',
         }
-      })
+        payloadArr.push(objPAyment)
+      }
     })
 
     const obj = {

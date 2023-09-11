@@ -122,7 +122,6 @@ export const usePayableColumns = (control, register) => {
         cell: cellInfo => {
           const { row } = cellInfo
           const projectId = row.original.id
-          const transactionId = row.original.transactionId
           const isDraw = row?.original?.paymentType?.toLowerCase() === 'wo draw'
 
           const onChange = { ...register(`id.${projectId}`) }?.onChange
@@ -130,7 +129,7 @@ export const usePayableColumns = (control, register) => {
           return (
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
               <Checkbox
-                value={!isDraw ? projectId : transactionId}
+                value={projectId}
                 {...register(`id.${projectId}`)}
                 isChecked={!!formValues?.id?.[projectId]}
                 onChange={e => {
