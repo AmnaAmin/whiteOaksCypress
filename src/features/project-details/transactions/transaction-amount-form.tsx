@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
-import { isValidAndNonEmptyObject } from 'utils'
+import { isValidAndNonEmpty, isValidAndNonEmptyObject } from 'utils'
 import { isManualTransaction, useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
 import { ChangeOrderType, FormValues, TransactionTypeValues } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -559,18 +559,19 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                         e.preventDefault()
                                       }
                                     }}
-                                    onChange={e => {
-                                      onSetTotalRemainingAmount(Math.abs(e?.target?.value))
-                                      const inputValue = e.currentTarget.value
-                                      inputValue !== ''
-                                        ? field.onChange(
-                                            defaultNegative && !isRefund
-                                              ? -1 * Math.abs(Number(inputValue))
-                                              : inputValue,
-                                          )
-                                        : field.onChange('')
+                                    onValueChange={e => {
+                                      if (!isValidAndNonEmpty(e.formattedValue)) {
+                                        field.onChange('')
+                                        return
+                                      }
+                                      onSetTotalRemainingAmount(Math.abs(e?.floatValue as number))
+                                      const inputValue = e?.floatValue
+                                      field.onChange(
+                                        defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
+                                      )
                                     }}
                                     variant={'required-field'}
+                                    
                                     size="sm"
                                   />
                                 ) : (
