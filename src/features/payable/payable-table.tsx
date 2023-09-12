@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
-import { useGetAllWorkOrders, usePaginatedAccountPayable } from 'api/account-payable'
+import { PayableResponse, useGetAllWorkOrders } from 'api/account-payable'
 import { ProjectWorkOrderType } from 'types/project.type'
 import WorkOrderDetails from 'features/work-order/work-order-edit'
 import { ColumnDef, ColumnFiltersState, PaginationState, SortingState, Updater } from '@tanstack/react-table'
@@ -30,10 +30,14 @@ type PayablePropsTyep = {
   setPagination: (updater: Updater<PaginationState>) => void
   setColumnFilters: (updater: Updater<ColumnFiltersState>) => void
   pagination: PaginationState
-  queryStringWithPagination: string
   queryStringWithoutPagination: string
   sorting: SortingState
   setSorting: (updater: Updater<SortingState>) => void
+  workOrders: PayableResponse
+  isLoading: boolean
+  totalPages: number | undefined
+  dataCount: number | undefined
+  refetchPayables: () => void
 }
 
 export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
@@ -44,8 +48,12 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     setSorting,
     sorting,
     pagination,
-    queryStringWithPagination,
     queryStringWithoutPagination,
+    workOrders,
+    isLoading,
+    totalPages,
+    dataCount,
+    refetchPayables,
   }) => {
     const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
@@ -60,13 +68,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
       projectId: string | number
     }>()
     const [paginationInitialized, setPaginationInitialized] = useState(false)
-    const {
-      workOrders,
-      isLoading,
-      totalPages,
-      dataCount,
-      refetch: refetchPayables,
-    } = usePaginatedAccountPayable(queryStringWithPagination, pagination.pageSize)
+
     const { email } = useUserProfile() as Account
 
     const { refetch, isLoading: isExportDataLoading } = useGetAllWorkOrders(queryStringWithoutPagination)
