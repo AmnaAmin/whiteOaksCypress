@@ -24,6 +24,7 @@ import { EstimateDetails } from 'pages/estimate-details'
 import CypressReport from './cypress-report'
 import { ClientType } from './admin/client-type'
 import SorryCypressReport from './sorry-cypress-report'
+import Dashboardd from 'pages/vendor/dashboard'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -65,6 +66,7 @@ export default function useRoutesConfig() {
         // { path: 'pcDashboard', element: ProjectCoordinatorDashboard },
         { path: 'estimate-details/:projectId', element: EstimateDetails },
         { path: 'estimates', element: Estimates },
+        { path: 'vendorDashboard', element: Dashboardd },
       ]
     case isVendorManager:
       return [
@@ -104,6 +106,7 @@ export default function useRoutesConfig() {
         { path: 'estimates', element: Estimates },
         { path: 'projects', element: Projects },
         { path: 'payable', element: Payable },
+        { path: 'vendorDashboard', element: Dashboardd },
         { path: 'support-tickets', element: SupportTickets },
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
@@ -122,6 +125,7 @@ export default function useRoutesConfig() {
         { path: 'projects', element: Projects },
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'payable', element: Payable },
+        { path: 'vendorDashboard', element: Dashboardd },
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
         { path: 'clients', element: Clients },
@@ -137,6 +141,7 @@ export default function useRoutesConfig() {
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'estimate-details/:projectId', element: EstimateDetails },
         { path: 'payable', element: Payable },
+        { path: 'vendorDashboard', element: Dashboardd },
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
         { path: 'clients', element: Clients },
