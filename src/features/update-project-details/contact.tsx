@@ -108,14 +108,6 @@ const Contact: React.FC<ContactProps> = ({
 
   return (
     <Stack spacing={14} minH="600px">
-      {/* {showModal && (
-        <HStack spacing="16px">
-          <Alert status="info" variant="custom" size="sm">
-            <AlertIcon />
-            <AlertDescription>{t(`${NEW_PROJECT}.clientNameAlertMessage`)}</AlertDescription>
-          </Alert>
-        </HStack>
-      )} */}
       <HStack spacing="16px">
         <Box h="40px">
           <FormControl w="215px" isInvalid={!!errors.projectCoordinator}>
