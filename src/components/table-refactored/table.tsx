@@ -14,6 +14,9 @@ import {
   Tfoot,
   HStack,
   Icon,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
 } from '@chakra-ui/react'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
@@ -27,6 +30,9 @@ import { useLayoutEffect } from 'react'
 import _ from 'lodash'
 import { useStickyState } from 'utils/hooks'
 import { isValidAndNonEmpty } from 'utils'
+import 'react-date-range/dist/styles.css' // main css file
+import 'react-date-range/dist/theme/default.css' // theme css file
+import { DateRangePicker } from 'react-date-range'
 
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
@@ -62,6 +68,18 @@ function Filter({
     [column.getFacetedUniqueValues()],
   )
 
+  const selectionRange = {
+    startDate: new Date(),
+    endDate: new Date(),
+    key: 'selection',
+  }
+
+  const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
+
+  const handleDateRangePickerToggle = () => {
+    setIsDateRangePickerOpen(!isDateRangePickerOpen)
+  }
+
   return (
     <>
       <datalist id={column.id + 'list'}>
@@ -69,24 +87,55 @@ function Filter({
           <option value={value} key={value} />
         ))}
       </datalist>
-      <DebouncedInput
-        type={dateFilter ? 'date' : 'text'}
-        value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
-        onChange={value => {
-          if (dateFilter) {
-            column.setFilterValue(datePickerFormat(value as string))
-            if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
-          } else {
-            column.setFilterValue(value)
-            if (allowStickyFilters) setStickyFilter(value)
-          }
-        }}
-        className="w-36 border shadow rounded"
-        list={column.id + 'list'}
-        // @ts-ignore
-        minW={dateFilter && '127px'}
-        resetValue={!!metaData?.resetFilters}
-      />
+
+      {dateFilter ? (
+        <>
+          <Popover>
+            <PopoverTrigger>
+              <input
+                type="text"
+                value={datePickerFormat(columnFilterValue as string) ?? ''}
+                onChange={value => {
+                  // Handle input change as needed
+                }}
+                onClick={handleDateRangePickerToggle} // Toggle DateRangePicker when input is clicked
+                // ... Other input props ...
+              />
+            </PopoverTrigger>
+            <PopoverContent>
+              {isDateRangePickerOpen && (
+                <DateRangePicker
+                  ranges={[selectionRange]}
+                  onChange={dateRange => {
+                    column.setFilterValue(datePickerFormat(dateRange as string))
+                    if (allowStickyFilters) setStickyFilter(datePickerFormat(dateRange as string))
+                    setIsDateRangePickerOpen(false) // Close DateRangePicker after selection
+                  }}
+                />
+              )}
+            </PopoverContent>
+          </Popover>
+        </>
+      ) : (
+        <DebouncedInput
+          type="text"
+          value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
+          onChange={value => {
+            if (dateFilter) {
+              column.setFilterValue(datePickerFormat(value as string))
+              if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
+            } else {
+              column.setFilterValue(value)
+              if (allowStickyFilters) setStickyFilter(value)
+            }
+          }}
+          className="w-36 border shadow rounded"
+          list={column.id + 'list'}
+          // @ts-ignore
+          minW={dateFilter && '127px'}
+          resetValue={!!metaData?.resetFilters}
+        />
+      )}
       <div className="h-1" />
     </>
   )
@@ -434,7 +483,13 @@ export const Table: React.FC<TableProps> = ({
                             <Td
                               key={cell.id}
                               isTruncated
-                              title={!metaData?.hideTitle && title ? isDate ? dateFormat(title as string) : (title as string) : ''}
+                              title={
+                                !metaData?.hideTitle && title
+                                  ? isDate
+                                    ? dateFormat(title as string)
+                                    : (title as string)
+                                  : ''
+                              }
                               {...getColumnMaxMinWidths(cell.column)}
                             >
                               {isValidAndNonEmpty(cell?.renderValue())
