@@ -324,6 +324,9 @@ const Contact: React.FC<ContactProps> = ({
                         if ((projectData as any)?.estimateClientId !== option.value) {
                           onOpen()
                           setClientOption(option)
+                        } else {
+                          field.onChange(option)
+                          setValue('carrier', null)
                         }
                       } else {
                         field.onChange(option)
