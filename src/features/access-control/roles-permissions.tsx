@@ -262,8 +262,10 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
                 onChange={value => {
                   for (const key in watchPermissions) {
                     setValue(`permissions.${key}.hide`, value.currentTarget.checked)
-                    setValue(`permissions.${key}.edit`, !value.currentTarget.checked)
-                    setValue(`permissions.${key}.read`, !value.currentTarget.checked)
+                    if (value.currentTarget.checked) {
+                      setValue(`permissions.${key}.edit`, !value.currentTarget.checked)
+                      setValue(`permissions.${key}.read`, !value.currentTarget.checked)
+                    }
                   }
                 }}
               ></Checkbox>
@@ -279,8 +281,10 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
                 onChange={value => {
                   for (const key in watchPermissions) {
                     setValue(`permissions.${key}.read`, value.currentTarget.checked)
-                    setValue(`permissions.${key}.edit`, !value.currentTarget.checked)
-                    setValue(`permissions.${key}.hide`, !value.currentTarget.checked)
+                    if (value.currentTarget.checked) {
+                      setValue(`permissions.${key}.edit`, !value.currentTarget.checked)
+                      setValue(`permissions.${key}.hide`, !value.currentTarget.checked)
+                    }
                   }
                 }}
               ></Checkbox>
@@ -296,8 +300,10 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
                 onChange={value => {
                   for (const key in watchPermissions) {
                     setValue(`permissions.${key}.edit`, value.currentTarget.checked)
-                    setValue(`permissions.${key}.hide`, !value.currentTarget.checked)
-                    setValue(`permissions.${key}.read`, !value.currentTarget.checked)
+                    if (value.currentTarget.checked) {
+                      setValue(`permissions.${key}.hide`, !value.currentTarget.checked)
+                      setValue(`permissions.${key}.read`, !value.currentTarget.checked)
+                    }
                   }
                 }}
               ></Checkbox>
