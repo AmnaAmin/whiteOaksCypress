@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiSync } from 'react-icons/bi'
 import { compact } from 'lodash'
-import { useBatchProcessingMutation, useCheckBatch } from 'api/account-payable'
+import { useBatchProcessingMutation, useCheckBatch, usePaginatedAccountPayable } from 'api/account-payable'
 import { ViewLoader } from 'components/page-level-loader'
 import { OverPaymentTransactionsTable } from 'features/project-details/transactions/overpayment-transactions-table'
 import { PaginationState, SortingState } from '@tanstack/react-table'
@@ -38,7 +38,6 @@ export const ConstructionPortalPayable = () => {
   //   setSelectedDay('')
   // }
 
-  
   const { register, reset, control, watch } = useForm()
   const payableColumns = usePayableColumns(control, register)
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
@@ -50,27 +49,45 @@ export const ConstructionPortalPayable = () => {
     sorting,
   })
 
+  const {
+    workOrders,
+    isLoading,
+    totalPages,
+    dataCount,
+    refetch: refetchPayables,
+  } = usePaginatedAccountPayable(queryStringWithPagination, pagination.pageSize)
+
   const { mutate: batchCall } = useBatchProcessingMutation()
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
 
-  useEffect(() => {
-    if (!loading) {
-      reset()
-    }
-  }, [loading])
-
   const Submit = formValues => {
-    const payableProjects = compact(formValues.id).map(id => ({
-      id: parseInt(id as string),
-      type: '',
-    }))
+    const payloadArr = [] as any
+    // Loop in for all selected ID's values on grid through checkbox
+    compact(formValues.id).forEach(selectedID => {
+      //finding from all work order(payable grid's data) to save the checked id's in an array
+      const payable = workOrders?.find(w => w.id === parseInt(selectedID as string))
+      const isDraw = payable?.paymentType?.toLowerCase() === 'wo draw'
+      if (isDraw) {
+        const objDraw = {
+          transactionId: parseInt(payable.transactionId as string),
+          type: 'Draw',
+        }
+        payloadArr.push(objDraw)
+      } else {
+        const objPAyment = {
+          id: payable?.id,
+          type: 'Payment',
+        }
+        payloadArr.push(objPAyment)
+      }
+    })
 
     const obj = {
       typeCode: 'AP',
-      entities: payableProjects,
+      entities: payloadArr,
     }
 
-    if (payableProjects.length === 0) return
+    if (payloadArr.length === 0) return
 
     setLoading(true)
     setIsBatchClick(true)
@@ -84,11 +101,16 @@ export const ConstructionPortalPayable = () => {
   const onNotificationClose = () => {
     setIsBatchClick(false)
   }
-  const formValues = watch();
-  // const { weekDayFilters } = usePayableWeeklyCount({ pagination, queryStringWithPagination })
+  const formValues = watch()
+
+  useEffect(() => {
+    if (!loading) {
+      reset()
+    }
+  }, [loading])
 
   return (
-    <form method='post'>
+    <form method="post">
       <Box pb="2">
         <Box mb={'12px'}>
           <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
@@ -110,7 +132,14 @@ export const ConstructionPortalPayable = () => {
             clear={clearAll}
           /> */}
             <Spacer />
-            <Button alignContent="right" colorScheme="brand"  type="button"  onClick={ () => Submit(formValues) } disabled={selectedCard === '6'} minW="140px">
+            <Button
+              alignContent="right"
+              colorScheme="brand"
+              type="button"
+              onClick={() => Submit(formValues)}
+              disabled={selectedCard === '6'}
+              minW="140px"
+            >
               <Icon as={BiSync} fontSize="18px" mr={2} />
               {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
             </Button>
@@ -127,8 +156,12 @@ export const ConstructionPortalPayable = () => {
                 setSorting={setSorting}
                 setPagination={setPagination}
                 setColumnFilters={setColumnFilters}
-                queryStringWithPagination={queryStringWithPagination}
                 queryStringWithoutPagination={queryStringWithoutPagination}
+                workOrders={workOrders as any}
+                isLoading={isLoading}
+                totalPages={totalPages}
+                dataCount={dataCount}
+                refetchPayables={refetchPayables}
               />
             </Box>
           ) : (
@@ -140,7 +173,8 @@ export const ConstructionPortalPayable = () => {
       <ConfirmationBox
         title={t(`${ACCOUNTS}.batchProcess`)}
         isOpen={!loading && isBatchClick}
-        onClose={onNotificationClose}content={t(`${ACCOUNTS}.batchSuccess`)}
+        onClose={onNotificationClose}
+        content={t(`${ACCOUNTS}.batchSuccess`)}
         onConfirm={onNotificationClose}
         yesButtonText={t(`${ACCOUNTS}.close`)}
         showNoButton={false}
