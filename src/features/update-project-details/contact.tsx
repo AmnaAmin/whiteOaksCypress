@@ -9,6 +9,7 @@ import {
   HStack,
   Input,
   Stack,
+  useDisclosure,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { useTranslation } from 'react-i18next'
@@ -26,9 +27,7 @@ import { useFPMsByMarket } from 'api/pc-projects'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useParams } from 'react-router'
 import { usePCProject } from 'api/pc-projects'
-import { Alert, AlertDescription, AlertIcon } from '@chakra-ui/alert'
-import { CloseButton } from '@chakra-ui/react'
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, Button } from '@chakra-ui/react'
+import { ConfirmationBox } from 'components/Confirmation'
 
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
@@ -59,8 +58,8 @@ const Contact: React.FC<ContactProps> = ({
   } = useFormContext<ProjectDetailsFormValues>()
   const { projectId } = useParams<{ projectId: string }>()
   const { projectData } = usePCProject(projectId)
-  const [showModal, setShowModal] = useState(false)
-
+  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  const [clientOption, setClientOption] = useState<SelectOption>()
   const marketWatch = useWatch({ name: 'market', control })
   const clientWatch = useWatch({ name: 'client', control })
   const [carrierOption, setCarrierOption] = useState<SelectOption[] | null | undefined>()
@@ -106,9 +105,7 @@ const Contact: React.FC<ContactProps> = ({
     const inputValue = event.target.value.replace(/[^0-9]/g, '') // Remove non-numeric characters
     setExtensionValue(inputValue)
   }
-  const onClose = () => {
-    setShowModal(false)
-  }
+
   return (
     <Stack spacing={14} minH="600px">
       {/* {showModal && (
@@ -333,9 +330,8 @@ const Contact: React.FC<ContactProps> = ({
                     onChange={option => {
                       if ((projectData as any)?.estimateId !== null) {
                         if ((projectData as any)?.estimateClientId !== option.value) {
-                          setShowModal(true)
-                          field.onChange(option)
-                          setValue('carrier', null)
+                          onOpen()
+                          setClientOption(option)
                         }
                       } else {
                         field.onChange(option)
@@ -344,7 +340,6 @@ const Contact: React.FC<ContactProps> = ({
                     }}
                   />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                  {showModal && <FormErrorMessage>{t(`${NEW_PROJECT}.clientNameAlertMessage`)}</FormErrorMessage>}
                 </>
               )}
             />
@@ -520,24 +515,20 @@ const Contact: React.FC<ContactProps> = ({
           </FormControl>
         </Box>
       </HStack>
-      <Modal
-        isOpen={showModal}
-        onClose={onClose}
-        isCentered={true}
-        closeOnEsc={false}
-        closeOnOverlayClick={false}
-        size="lg"
-      >
-        <ModalOverlay />
-        <ModalContent rounded="6">
-          <ModalBody>{t(`${NEW_PROJECT}.clientNameAlertMessage`)}</ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={onClose}>
-              OK
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      <ConfirmationBox
+        title="Transaction"
+        content={t(`${NEW_PROJECT}.clientNameAlertMessage`)}
+        isOpen={isOpen}
+        onClose={onCloseDisclosure}
+        isLoading={false}
+        onConfirm={() => {
+          if (clientOption) {
+            setValue('client', clientOption)
+            setValue('carrier', null)
+            onCloseDisclosure()
+          }
+        }}
+      />
     </Stack>
   )
 }

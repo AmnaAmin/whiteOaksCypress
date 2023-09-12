@@ -637,7 +637,7 @@ export const parseFormValuesFromAPIData = ({
     superPhoneNumber: project.superPhoneNumber,
     superPhoneNumberExtension: project.superPhoneNumberExtension,
     superEmail: project.superEmailAddress,
-    client: findOptionByValue(clientSelectOptions, project.clientName),
+    client: clientSelectOptions?.find(c => c?.label === project?.clientName),
     clientType: findOptionByValue(clientTypesSelectOptions, project.clientTypeId),
     homeOwnerName: project.homeOwnerName,
     homeOwnerPhone: project.homeOwnerPhone,

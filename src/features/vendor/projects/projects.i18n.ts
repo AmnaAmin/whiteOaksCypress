@@ -66,8 +66,7 @@ export const projects = {
         superEmail: 'Super Email',
         save: 'Save',
         transaction: 'Transaction',
-        clientNameAlertMessage:
-          'Client in the converted project is changed to different client, no negative change order will be created',
+        clientNameAlertMessage: 'The changes on client will cancel the converted CO . Do you want to continue ?',
       },
     },
   },
@@ -136,8 +135,7 @@ export const projects = {
         save: 'Guardar',
         fileFormat: 'Seleccione un formato de archivo válido (pdf, png, jpg, jpeg)',
         transaction: 'Transacción',
-        clientNameAlertMessage:
-          'Si el cliente en el proyecto convertido se cambia a un cliente diferente, no se creará una orden de cambio negativa.',
+        clientNameAlertMessage: 'Los cambios en el cliente cancelarán el CO convertido. Quieres continuar ?',
       },
     },
   },
