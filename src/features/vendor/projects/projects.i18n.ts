@@ -65,6 +65,9 @@ export const projects = {
         superPhoneNumber: 'Super Phone',
         superEmail: 'Super Email',
         save: 'Save',
+        transaction: 'Transaction',
+        clientNameAlertMessage:
+          'Client in the converted project is changed to different client, no negative change order will be created',
       },
     },
   },
@@ -132,6 +135,9 @@ export const projects = {
         superEmail: 'Correo del Supervisor',
         save: 'Guardar',
         fileFormat: 'Seleccione un formato de archivo válido (pdf, png, jpg, jpeg)',
+        transaction: 'Transacción',
+        clientNameAlertMessage:
+          'Si el cliente en el proyecto convertido se cambia a un cliente diferente, no se creará una orden de cambio negativa.',
       },
     },
   },

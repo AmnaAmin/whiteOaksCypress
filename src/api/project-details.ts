@@ -126,7 +126,7 @@ export const useGetClientSelectOptions = () => {
 
   const clientSelectOptions =
     clients?.map((client: Client) => ({
-      value: client.companyName,
+      value: client.id,
       label: client.companyName,
       carrier: client.carrier,
     })) || []
