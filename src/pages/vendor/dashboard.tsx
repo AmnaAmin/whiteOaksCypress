@@ -2,7 +2,7 @@ import { Box, Text, useMediaQuery, Heading, Tabs, TabList, Tab, TabPanels, TabPa
 import ConstructionDashboard from 'features/vendor/construction portal/construction-dashboard'
 import { EstimatesPortalDashboard } from 'features/vendor/construction portal/estimates-dashboard'
 import { t } from 'i18next'
-const Dashboardd: React.FC = () => {
+const Dashboard: React.FC = () => {
   const [isLessThanOrEq320] = useMediaQuery('(max-width: 320px)')
   if (isLessThanOrEq320) {
     return (
@@ -38,4 +38,4 @@ const Dashboardd: React.FC = () => {
   )
 }
 
-export default Dashboardd
+export default Dashboard
