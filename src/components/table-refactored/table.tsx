@@ -270,7 +270,7 @@ export const Table: React.FC<TableProps> = ({
                 const title = header.isPlaceholder
                   ? null
                   : flexRender(header.column.columnDef.header, header.getContext())
-
+                const checkBox = header?.id === 'checkbox'
                 const sortedBy = header.column.getIsSorted()
                 const sortedDesc = sortedBy === 'desc'
                 const isSortable = header.column.getCanSort()
@@ -285,7 +285,7 @@ export const Table: React.FC<TableProps> = ({
                     zIndex={1}
                     borderBottomColor="#ECEDEE"
                     cursor={isSortable ? 'pointer' : ''}
-                    onClick={header.column.getToggleSortingHandler()}
+                    onClick={!checkBox ? header.column.getToggleSortingHandler() : () => null}
                     {...getColumnMaxMinWidths(header.column)}
                   >
                     <Flex
@@ -434,7 +434,13 @@ export const Table: React.FC<TableProps> = ({
                             <Td
                               key={cell.id}
                               isTruncated
-                              title={!metaData?.hideTitle && title ? isDate ? dateFormat(title as string) : (title as string) : ''}
+                              title={
+                                !metaData?.hideTitle && title
+                                  ? isDate
+                                    ? dateFormat(title as string)
+                                    : (title as string)
+                                  : ''
+                              }
                               {...getColumnMaxMinWidths(cell.column)}
                             >
                               {isValidAndNonEmpty(cell?.renderValue())
