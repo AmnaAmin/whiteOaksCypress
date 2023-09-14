@@ -95,8 +95,13 @@ function Filter({
               <input
                 type="text"
                 value={datePickerFormat(columnFilterValue as string) ?? ''}
-                onChange={value => {
-                  // Handle input change as needed
+                onChange={e => {
+                  const value = e.target.value // Extract the value from the event object
+                  console.log('-----------------', value)
+                  if (dateFilter) {
+                    column.setFilterValue(datePickerFormat(value as string))
+                    if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
+                  }
                 }}
                 onClick={handleDateRangePickerToggle} // Toggle DateRangePicker when input is clicked
                 // ... Other input props ...
@@ -107,6 +112,7 @@ function Filter({
                 <DateRangePicker
                   ranges={[selectionRange]}
                   onChange={dateRange => {
+                    console.log('dateRange as ===========', dateRange)
                     column.setFilterValue(datePickerFormat(dateRange as string))
                     if (allowStickyFilters) setStickyFilter(datePickerFormat(dateRange as string))
                     setIsDateRangePickerOpen(false) // Close DateRangePicker after selection
