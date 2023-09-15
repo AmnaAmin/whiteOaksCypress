@@ -20,6 +20,7 @@ import { percentageFormatter } from 'utils/string-formatters'
 import { Link } from 'react-router-dom'
 import { RiFlag2Fill } from 'react-icons/ri'
 import { t } from 'i18next'
+import { format } from 'date-fns'
 
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
@@ -317,7 +318,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.expectedPayment',
     accessorKey: 'expectedPaymentDate',
-    accessorFn: (cellInfo: any) => dateFormat(cellInfo.expectedPaymentDate),
+    accessorFn: (cellInfo: any) => {
+      dateFormat(cellInfo.expectedPaymentDate)
+      console.log('==================>>>>>>>>>>>', cellInfo)
+    },
     meta: { format: 'date' },
   },
   {
@@ -375,7 +379,9 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.lienRightsExpires',
     accessorKey: 'lienRightExpireDate',
-    accessorFn: (cellInfo: any) => dateFormat(cellInfo.lienRightExpireDate),
+    accessorFn: (cellInfo: any) => {
+      dateFormat(cellInfo.lienRightExpireDate)
+    },
     meta: { format: 'date' },
   },
 ]

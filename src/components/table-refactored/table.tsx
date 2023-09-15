@@ -75,7 +75,10 @@ function Filter({
   }
 
   const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
-  const [selectedDateRange, setSelectedDateRange] = useState('')
+  const [selectedDateRange, setSelectedDateRange] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  })
 
   const handleDateInputClick = e => {
     e.preventDefault()
@@ -96,16 +99,33 @@ function Filter({
             <PopoverTrigger>
               <DebouncedInput
                 type="date"
-                value={selectedDateRange}
+                // value={
+                //   selectedDateRange.startDate && selectedDateRange.endDate
+                //     ? `${format(selectedDateRange.startDate, 'dd-MM-yyyy')} - ${format(
+                //         selectedDateRange.endDate,
+                //         'dd-MM-yyyy',
+                //       )}`
+                //     : ''
+                // }
+                value={format(selectedDateRange?.startDate, 'dd/MM/yyyy')}
                 className="w-36 border shadow rounded"
                 list={column.id + 'list'}
                 // @ts-ignore
                 minW={dateFilter && '127px'}
                 resetValue={!!metaData?.resetFilters}
-                onChange={dateRange => {
-                  setSelectedDateRange(dateRange as string)
-                }}
                 onMouseDown={handleDateInputClick}
+                onChange={
+                  e => console.log('====mmmmmmm', e)
+                  // console.log(
+                  //   '---------------------,,,,',
+                  //   selectedDateRange.startDate && selectedDateRange.endDate
+                  //     ? `${format(selectedDateRange.startDate, 'yyyy-MM-dd')} - ${format(
+                  //         selectedDateRange.endDate,
+                  //         'yyyy-MM-dd',
+                  //       )}`
+                  //     : '',
+                  // )
+                }
               />
             </PopoverTrigger>
             <PopoverContent>
@@ -113,11 +133,14 @@ function Filter({
                 <DateRangePicker
                   ranges={[selectionRange]}
                   onChange={dateRange => {
-                    const selectedDate = dateRange.selection.startDate
-                    const formattedDate = format(selectedDate, 'dd/MM/yyyy')
-                    setSelectedDateRange(formattedDate)
-                    column.setFilterValue(formattedDate)
-                    if (allowStickyFilters) setStickyFilter(formattedDate)
+                    console.log('==========>', dateRange)
+                    const selectedStartDate = dateRange.selection.startDate
+                    const selectedEndDate = dateRange.selection.endDate
+                    const formattedStartDate = format(selectedStartDate, 'dd/MM/yyyy')
+                    const formattedEndDate = format(selectedEndDate, 'dd/MM/yyyy')
+                    setSelectedDateRange({ startDate: selectedStartDate, endDate: selectedEndDate })
+                    column.setFilterValue(`${formattedStartDate} - ${formattedEndDate}`)
+                    if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
                     setIsDateRangePickerOpen(false)
                   }}
                 />
