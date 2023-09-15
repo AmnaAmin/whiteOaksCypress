@@ -26,6 +26,7 @@ export const ConstructionPortalPayable = () => {
   const [loading, setLoading] = useState(false)
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
+  const [selectedIDs, setSelectedIDs] = useState<any>([])
   const [
     selectedDay,
     // setSelectedDay
@@ -61,6 +62,8 @@ export const ConstructionPortalPayable = () => {
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
 
   const Submit = formValues => {
+    const id = compact(formValues.id).map(id => id)
+    setSelectedIDs(id)
     const payloadArr = [] as any
     // Loop in for all selected ID's values on grid through checkbox
     compact(formValues.id).forEach(selectedID => {
@@ -175,8 +178,10 @@ export const ConstructionPortalPayable = () => {
         isOpen={!loading && isBatchClick}
         onClose={onNotificationClose}
         content={t(`${ACCOUNTS}.batchSuccess`)}
+        contentMsg={t(`${ACCOUNTS}.batchSucessFor`)}
+        idValues={selectedIDs}
         onConfirm={onNotificationClose}
-        yesButtonText={t(`${ACCOUNTS}.close`)}
+        yesButtonText={t(`${ACCOUNTS}.ok`)}
         showNoButton={false}
       />
       <DevTool control={control} />

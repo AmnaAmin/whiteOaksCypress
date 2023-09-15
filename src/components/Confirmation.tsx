@@ -21,6 +21,8 @@ interface ConfirmationBoxProps {
   content: string
   yesButtonText?: string
   showNoButton?: boolean
+  contentMsg?: string
+  idValues?: Array<string>
 }
 
 export function ConfirmationBox({
@@ -32,6 +34,8 @@ export function ConfirmationBox({
   content,
   yesButtonText = 'Yes',
   showNoButton = true,
+  contentMsg,
+  idValues,
 }: ConfirmationBoxProps) {
   const modalSize = useBreakpointValue({
     base: 'xs',
@@ -65,12 +69,15 @@ export function ConfirmationBox({
             data-testid="confirmation-message"
             color="#2D3748"
             fontSize="16px"
-            fontWeight={400}
+            fontWeight={600}
             fontStyle="normal"
             mb="2"
           >
             {content}
           </Text>
+          {idValues?.map(e => (
+            <Text>{`${contentMsg} ProjectID: C${e}`}</Text>
+          ))}
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
