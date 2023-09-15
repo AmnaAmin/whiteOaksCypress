@@ -76,10 +76,7 @@ export function ConfirmationBox({
             {content}
           </Text>
           {idValues?.map(e => (
-            <Text>
-              {console.log(contentMsg, e)}
-              {`${contentMsg} ProjectID: C${e}`}
-            </Text>
+            <Text>{`${contentMsg} ProjectID: C${e}`}</Text>
           ))}
         </ModalBody>
         <Flex flexFlow="row-reverse">
