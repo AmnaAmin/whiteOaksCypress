@@ -33,7 +33,7 @@ import { isValidAndNonEmpty } from 'utils'
 import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import { DateRangePicker } from 'react-date-range'
-
+import { format } from 'date-fns'
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
 }
@@ -75,8 +75,10 @@ function Filter({
   }
 
   const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
+  const [selectedDateRange, setSelectedDateRange] = useState('')
 
-  const handleDateRangePickerToggle = () => {
+  const handleDateInputClick = e => {
+    e.preventDefault()
     setIsDateRangePickerOpen(!isDateRangePickerOpen)
   }
 
@@ -92,30 +94,31 @@ function Filter({
         <>
           <Popover>
             <PopoverTrigger>
-              <input
-                type="text"
-                value={datePickerFormat(columnFilterValue as string) ?? ''}
-                onChange={e => {
-                  const value = e.target.value // Extract the value from the event object
-                  console.log('-----------------', value)
-                  if (dateFilter) {
-                    column.setFilterValue(datePickerFormat(value as string))
-                    if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
-                  }
+              <DebouncedInput
+                type="date"
+                value={selectedDateRange}
+                className="w-36 border shadow rounded"
+                list={column.id + 'list'}
+                // @ts-ignore
+                minW={dateFilter && '127px'}
+                resetValue={!!metaData?.resetFilters}
+                onChange={dateRange => {
+                  setSelectedDateRange(dateRange as string)
                 }}
-                onClick={handleDateRangePickerToggle} // Toggle DateRangePicker when input is clicked
-                // ... Other input props ...
+                onMouseDown={handleDateInputClick}
               />
             </PopoverTrigger>
             <PopoverContent>
-              {isDateRangePickerOpen && (
+              {isDateRangePickerOpen && dateFilter && (
                 <DateRangePicker
                   ranges={[selectionRange]}
                   onChange={dateRange => {
-                    console.log('dateRange as ===========', dateRange)
-                    column.setFilterValue(datePickerFormat(dateRange as string))
-                    if (allowStickyFilters) setStickyFilter(datePickerFormat(dateRange as string))
-                    setIsDateRangePickerOpen(false) // Close DateRangePicker after selection
+                    const selectedDate = dateRange.selection.startDate
+                    const formattedDate = format(selectedDate, 'dd/MM/yyyy')
+                    setSelectedDateRange(formattedDate)
+                    column.setFilterValue(formattedDate)
+                    if (allowStickyFilters) setStickyFilter(formattedDate)
+                    setIsDateRangePickerOpen(false)
                   }}
                 />
               )}
