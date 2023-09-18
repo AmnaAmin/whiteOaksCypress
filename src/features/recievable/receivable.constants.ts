@@ -19,13 +19,13 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: 'terms',
     accessorKey: 'paymentTerm',
     accessorFn(cellInfo) {
-      var date
+      var term
       if (cellInfo.resubmissionPaymentTerm !== null) {
-        date = cellInfo.resubmissionPaymentTerm
+        term = cellInfo.resubmissionPaymentTerm
       } else {
-        date = cellInfo.expectedPaymentDate
+        term = cellInfo.paymentTerm
       }
-      return date
+      return term
     },
   },
   {
@@ -36,7 +36,9 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: 'vendorWOExpectedPaymentDate',
     accessorKey: 'expectedPaymentDate',
     accessorFn(cellInfo) {
-      return dateFormat(cellInfo.expectedPaymentDate)
+      return dateFormat(
+        cellInfo.resubmissionDueDate !== null ? cellInfo.resubmissionDueDate : cellInfo.expectedPaymentDate,
+      )
     },
     meta: { format: 'date' },
   },
