@@ -57,6 +57,7 @@ function Filter({
       : stickyFilter
   const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date') || column.id.includes('date')
+  const currencyFilter = metaData?.format === 'currency' || metaData?.format === 'percentage'
   const sortedUniqueValues = React.useMemo(
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
     [column.getFacetedUniqueValues()],
@@ -70,7 +71,7 @@ function Filter({
         ))}
       </datalist>
       <DebouncedInput
-        type={dateFilter ? 'date' : 'text'}
+        type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
         value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
         onChange={value => {
           if (dateFilter) {

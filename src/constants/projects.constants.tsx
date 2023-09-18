@@ -326,6 +326,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.profitPercentage / 100).format('0,0.00%')
     },
+    meta: { format: 'percentage' },
   },
   {
     header: 'projects.projectTable.profitTotal',
@@ -351,6 +352,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
         ? numeral(percentageFormatter(cellInfo.vendorPaymentPercentage)).format('0.00%')
         : '0.00%'
     },
+    meta: { format: 'percentage' },
   },
   {
     header: 'projects.projectTable.sowDraw',
