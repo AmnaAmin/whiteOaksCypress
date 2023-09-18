@@ -23,8 +23,8 @@ const Dashboard: React.FC = () => {
   return (
     <Tabs variant="enclosed" colorScheme="brand">
       <TabList>
-        <Tab>Construction</Tab>
-        <Tab>Estimates</Tab>
+        <Tab data-testid="construction-tab">Construction</Tab>
+        <Tab data-testid="estimates-tab">Estimates</Tab>
       </TabList>
       <TabPanels h={'100%'}>
         <TabPanel h="100vh" padding="5px 0px 0px 0px">
