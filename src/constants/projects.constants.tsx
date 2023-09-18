@@ -317,7 +317,8 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.expectedPayment',
     accessorKey: 'expectedPaymentDate',
-    accessorFn: (cellInfo: any) => dateFormat(cellInfo.expectedPaymentDate),
+    accessorFn: (cellInfo: any) =>
+      dateFormat(cellInfo.resubmissionDueDate !== null ? cellInfo.resubmissionDueDate : cellInfo.expectedPaymentDate),
     meta: { format: 'date' },
   },
   {
