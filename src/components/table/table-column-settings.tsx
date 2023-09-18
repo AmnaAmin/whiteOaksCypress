@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -7,23 +7,21 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  List,
-  ListItem,
   HStack,
-  Checkbox,
   useDisclosure,
-  Center,
   Text,
   Icon,
   Box,
 } from '@chakra-ui/react'
-import { BiGridVertical } from 'react-icons/bi'
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import { useTranslation } from 'react-i18next'
-
+import './kanban.css'
 import { Button } from 'components/button/button'
 import { MdOutlineSettings } from 'react-icons/md'
+import Board from '@lourenci/react-kanban'
+import '@lourenci/react-kanban/dist/styles.css'
+import { BiGridVertical } from 'react-icons/bi'
+import { result } from 'lodash'
 
 export type ColumnType = {
   id?: number
@@ -43,14 +41,56 @@ interface TableColumnSettingsProps {
 
 const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: TableColumnSettingsProps) => {
   const [paginationRecord, setPaginationRecord] = useState<ColumnType | undefined>(
-    columns?.find(c => c.contentKey === 'pagination'),
+    columns?.find(c => c.field === 'pagination'),
   )
-  const [columnRecords, setColumnRecords] = useState(columns?.filter(col => col.contentKey !== 'pagination'))
+  const [columnRecords, setColumnRecords] = useState(
+    columns?.filter(col => col.field !== 'pagination' && col.field == null),
+  )
+  const [columnResults, setColumnResults] = useState(columns?.filter(col => col.contentKey !== 'pagination'))
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { t } = useTranslation()
+  // available.
+  const mapRecordsAvailable = columnResults
+    .filter(c => !c.hide)
+    .map((c, i) => {
+      return {
+        id: c.id,
+        title: c.field,
+        hide: c.hide,
+      }
+    })
+  //unavailable..
+  const mapRecordsUnavailable = columnResults
+    .filter(c => c.hide)
+    .map((c, i) => {
+      console.log(`Unavailable Column: ${c.contentKey}, Hide: ${c.hide}`)
+      return {
+        id: c.id,
+        title: c.field,
+        hide: c.hide,
+      }
+    })
+
+  console.log('mapRecordsUnavailable', mapRecordsUnavailable)
+  console.log('mapRecordsAvailable', mapRecordsAvailable)
+  const board = {
+    columns: [
+      {
+        id: 1,
+        title: 'Show These Records in this Order',
+        cards: mapRecordsAvailable,
+      },
+      {
+        id: 2,
+
+        title: 'Available Records',
+        cards: mapRecordsUnavailable,
+      },
+    ] as any,
+  }
 
   const saveModal = useCallback(() => {
-    let columnsPayload = columnRecords.map((item, index) => ({
+    let columnsPayload = columnResults.map((item, index) => ({
       ...item,
       order: index,
     }))
@@ -59,43 +99,122 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
     }
     onClose()
     onSave(columnsPayload)
-  }, [columnRecords, onClose, onSave])
+    console.log('Results', result)
+  }, [columnResults, onClose, onSave])
 
   useEffect(() => {
-    setColumnRecords(columns?.filter(col => col.contentKey !== 'pagination'))
-    setPaginationRecord(columns?.find(c => c.contentKey === 'pagination'))
+    setColumnResults(columns?.filter(col => col.field !== 'pagination'))
+    setPaginationRecord(columns?.find(c => c.field === 'pagination'))
   }, [columns])
 
-  const handleOnDragEnd = useCallback(
-    result => {
-      if (!result.destination) return
+  const updateRecords = results => {
+    console.log('columns...', columns)
+    console.log('columnsRecords...', columnRecords)
+    const Cards = results.columns?.filter(x => x.cards)
+    const UnavailableData = Cards != null ? Cards.filter(x => x.title === 'Available Records') : null
+    const AvailableData = Cards != null ? Cards.filter(x => x.title === 'Show These Records in this Order') : null
 
-      const items = Array.from(columnRecords)
-      const {
-        source: { index: sourceIndex },
-        destination: { index: destinationIndex },
-      } = result
+    let AvailableItems: ColumnType[]
+    let UnAvailableItems: ColumnType[]
+    if (UnavailableData != null && Cards.length > 0) {
+      for (let i = 0; i < UnavailableData.length; i++) {
+        const content = UnavailableData[i].cards
+        for (let j = 0; j < content.length; j++) {
+          const UnAvailableContentKeys = content[j].title
+          if (
+            UnAvailableContentKeys !== '' &&
+            UnAvailableContentKeys !== null &&
+            UnAvailableContentKeys !== undefined
+          ) {
+            for (let n = 0; n < columnResults.length; n++) {
+              if (columnResults[n].field === UnAvailableContentKeys) {
+                UnAvailableItems = columnResults
+                UnAvailableItems[n].hide = true
+                setColumnResults([...UnAvailableItems])
+              }
+            }
+          }
+        }
+      }
+    }
 
-      const [reorderedItem] = items.splice(sourceIndex, 1)
-      items.splice(destinationIndex, 0, reorderedItem)
+    if (AvailableData.length > 0) {
+      for (let i = 0; i < AvailableData.length; i++) {
+        var content = AvailableData[i].cards
+        for (let j = 0; j < content.length; j++) {
+          var AvailableContentKeys = content[j].title
+          if (AvailableContentKeys !== '' && AvailableContentKeys !== null && AvailableContentKeys !== undefined) {
+            for (let n = 0; n < columnResults.length; n++) {
+              if (columnResults[n].field === AvailableContentKeys) {
+                AvailableItems = columnResults
+                AvailableItems[n].hide = false
+                setColumnResults([...AvailableItems])
+              }
+            }
+          }
+        }
+      }
+    }
+    console.log('ColumnResults', columnResults)
+  }
 
-      setColumnRecords(items)
-    },
-    [columnRecords],
-  )
-
-  const onCheck = useCallback(index => {
-    setColumnRecords(columnRecords => {
-      const items = Array.from(columnRecords)
-      items[index].hide = !items[index].hide
-
-      return items
-    })
-  }, [])
+  const onCardDragChange = results => {
+    if (results.columns.length > 0) {
+      updateRecords(results)
+    }
+  }
 
   const closeSetting = () => {
     onClose()
     refetch()
+  }
+
+  function UncontrolledBoard() {
+    const divStyle = {
+      color: '#4A5568',
+      fontWeight: 500,
+    }
+
+    const columnStyle = {
+      width: '400px',
+      fontWeight: 600,
+      color: '#345EA6',
+    }
+
+    const cardStyle = {
+      width: '400px',
+      marginTop: '16px',
+      height: '50px',
+      backgroundColor: '#FFFFFF',
+      borderRadius: '6px',
+      border: '1px solid #D3D3D3',
+    }
+
+    return (
+      <div style={divStyle}>
+        <Board
+          onCardDragEnd={onCardDragChange}
+          initialBoard={board.columns?.length ? board : { columns: [] }}
+          renderColumnHeader={({ title }) => <div style={columnStyle}>{title}</div>}
+          renderCard={({ title, id }, { dragging }) => (
+            <>
+              <div
+                style={{
+                  opacity: dragging ? 0.5 : 1,
+                }}
+              >
+                <div style={cardStyle}>
+                  <div style={{ display: 'flex', alignItems: 'center', marginLeft: '16px' }}>
+                    <BiGridVertical style={{ marginRight: '5px', color: '#989898', marginTop: '10px' }} />
+                    <span style={{ marginTop: '10px' }}>{title}</span>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        />
+      </div>
+    )
   }
 
   return (
@@ -115,7 +234,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
           </HStack>
         </Button>
       </Box>
-      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="xl">
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="6xl">
         <ModalOverlay />
         <ModalContent h="620px" bg="#F2F3F4" rounded="none">
           <ModalHeader
@@ -123,16 +242,16 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
             borderBottom="1px solid #E2E8F0"
             fontSize="16px"
             fontStyle="normal"
-            fontWeight={400}
-            color="gray.600"
+            fontWeight={600}
+            color="#345EA6"
             mb="11px"
             borderTop="2px solid #345EA6"
           >
-            {t('Settings')}
+            {t('settingsHeader')}
           </ModalHeader>
           <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
           <ModalBody
-          data-testid="Settings"
+            data-testid="Settings"
             h="50vh"
             overflowY="auto"
             bg="#FFFFFF"
@@ -143,70 +262,8 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
             borderBottom="1px solid #CBD5E0"
             pt="30px"
           >
-            <DragDropContext onDragEnd={handleOnDragEnd}>
-              <Droppable droppableId="items">
-                {provided => (
-                  <List
-                    spacing={1}
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    id="column-settings-list"
-                    data-testid="column-settings-list"
-                  >
-                    {columnRecords.map(({ field, id, hide }, index) => (
-                      <Draggable key={id} draggableId={`${id}_${index}`} index={index} className="draggable-item">
-                        {(provided, snapshot) => (
-                          <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                            <Center>
-                              <ListItem
-                                data-testid={`draggable-item-${index}`}
-                                borderWidth="1.5px"
-                                borderColor="gray.300"
-                                borderRadius="8"
-                                w="485px"
-                                m="1.5"
-                                py="8px"
-                                fontSize="1em"
-                                fontWeight={600}
-                                backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
-                                _hover={{ bg: 'blue.50' }}
-                              >
-                                <HStack spacing="21.83px" ml="21.83px">
-                                  <BiGridVertical
-                                    fontSize="1.4rem"
-                                    color={snapshot.isDragging ? '#4b85f8' : '#A0AEC0'}
-                                  />
-                                  <Checkbox
-                                    size="lg"
-                                    marginStart="0.625rem"
-                                    onChange={() => onCheck(index)}
-                                    isChecked={!hide}
-                                    colorScheme="PrimaryCheckBox"
-                                  >
-                                    <Text
-                                      ml="12px"
-                                      color="gray.600"
-                                      fontStyle="normal"
-                                      fontWeight={400}
-                                      fontSize="14px"
-                                    >
-                                      {t(field)}
-                                    </Text>
-                                  </Checkbox>
-                                </HStack>
-                              </ListItem>
-                            </Center>
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </List>
-                )}
-              </Droppable>
-            </DragDropContext>
+            <UncontrolledBoard />
           </ModalBody>
-
           <ModalFooter
             bg="#FFFFFF"
             roundedBottomLeft="6px"

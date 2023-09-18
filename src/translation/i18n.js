@@ -449,6 +449,7 @@ i18n.use(initReactI18next).init({
 
         // Settings Page
         settings: 'Settings',
+        settingsHeader:'Show, Hide & Sort Data Columns',
         firstName: 'First Name',
         lastName: 'Last Name',
         language: 'Language',
