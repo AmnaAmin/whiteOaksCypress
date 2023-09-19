@@ -65,6 +65,7 @@ export default function useRoutesConfig() {
         // { path: 'pcDashboard', element: ProjectCoordinatorDashboard },
         { path: 'estimate-details/:projectId', element: EstimateDetails },
         { path: 'estimates', element: Estimates },
+        { path: 'vendorDashboard', element: VendorDashboard },
       ]
     case isVendorManager:
       return [
@@ -104,6 +105,7 @@ export default function useRoutesConfig() {
         { path: 'estimates', element: Estimates },
         { path: 'projects', element: Projects },
         { path: 'payable', element: Payable },
+        { path: 'vendorDashboard', element: VendorDashboard },
         { path: 'support-tickets', element: SupportTickets },
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
@@ -122,6 +124,7 @@ export default function useRoutesConfig() {
         { path: 'projects', element: Projects },
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'payable', element: Payable },
+        { path: 'vendorDashboard', element: VendorDashboard },
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
         { path: 'clients', element: Clients },
@@ -137,6 +140,7 @@ export default function useRoutesConfig() {
         { path: 'project-details/:projectId', element: ProjectDetails },
         { path: 'estimate-details/:projectId', element: EstimateDetails },
         { path: 'payable', element: Payable },
+        { path: 'vendorDashboard', element: VendorDashboard },
         { path: 'receivable', element: Receivable },
         { path: 'vendors', element: Vendors },
         { path: 'clients', element: Clients },

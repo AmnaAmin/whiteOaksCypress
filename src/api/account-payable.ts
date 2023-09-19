@@ -26,7 +26,7 @@ const getPayableQueryString = (filterQueryString: string) => {
   }
   return queryString
 }
-type PayableResponse = Array<any>
+export type PayableResponse = Array<any>
 export const usePaginatedAccountPayable = (queryString: string, pageSize: number) => {
   const apiQueryString = getPayableQueryString(queryString)
 

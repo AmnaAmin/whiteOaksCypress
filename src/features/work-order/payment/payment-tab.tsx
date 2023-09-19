@@ -405,7 +405,7 @@ const PaymentInfoTab = props => {
 
               <Box height="80px">
                 <FormControl isInvalid={!!errors.clientApprovedAmount}>
-                  <FormLabel isTruncated title={'Client Final Approved Amount'} variant={'strong-label'} size={'md'}>
+                  <FormLabel isTruncated title={'Client Final Approved Amount'} variant={'strong-label'} size={'md'} whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
                     {truncateWithEllipsis(t('clientFinalApprovedAmount').trim(), 30)}
                   </FormLabel>
                   <Controller

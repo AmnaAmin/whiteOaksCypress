@@ -63,6 +63,7 @@ function Filter({
       : stickyFilter
   const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date') || column.id.includes('date')
+  const currencyFilter = metaData?.format === 'currency' || metaData?.format === 'percentage'
   const sortedUniqueValues = React.useMemo(
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
     [column.getFacetedUniqueValues()],
@@ -150,7 +151,7 @@ function Filter({
         </>
       ) : (
         <DebouncedInput
-          type="text"
+          type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
           value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
           onChange={value => {
             if (dateFilter) {
@@ -351,7 +352,7 @@ export const Table: React.FC<TableProps> = ({
                 const title = header.isPlaceholder
                   ? null
                   : flexRender(header.column.columnDef.header, header.getContext())
-
+                const checkBox = header?.id === 'checkbox'
                 const sortedBy = header.column.getIsSorted()
                 const sortedDesc = sortedBy === 'desc'
                 const isSortable = header.column.getCanSort()
@@ -366,7 +367,7 @@ export const Table: React.FC<TableProps> = ({
                     zIndex={1}
                     borderBottomColor="#ECEDEE"
                     cursor={isSortable ? 'pointer' : ''}
-                    onClick={header.column.getToggleSortingHandler()}
+                    onClick={!checkBox ? header.column.getToggleSortingHandler() : () => null}
                     {...getColumnMaxMinWidths(header.column)}
                   >
                     <Flex
