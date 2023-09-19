@@ -69,7 +69,7 @@ export function ConfirmationBox({
             data-testid="confirmation-message"
             color="#2D3748"
             fontSize="16px"
-            fontWeight={600}
+            fontWeight={400}
             fontStyle="normal"
             mb="2"
           >
