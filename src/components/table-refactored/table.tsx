@@ -99,7 +99,6 @@ function Filter({
           <Popover>
             <PopoverTrigger>
               <DebouncedInput
-                type="date"
                 // value={
                 //   selectedDateRange.startDate && selectedDateRange.endDate
                 //     ? `${format(selectedDateRange.startDate, 'dd-MM-yyyy')} - ${format(
@@ -137,8 +136,8 @@ function Filter({
                     console.log('==========>', dateRange)
                     const selectedStartDate = dateRange.selection.startDate
                     const selectedEndDate = dateRange.selection.endDate
-                    const formattedStartDate = format(selectedStartDate, 'dd/MM/yyyy')
-                    const formattedEndDate = format(selectedEndDate, 'dd/MM/yyyy')
+                    const formattedStartDate = format(selectedStartDate, 'yyyy/mm/dd')
+                    const formattedEndDate = format(selectedEndDate, 'yyyy/mm/dd')
                     setSelectedDateRange({ startDate: selectedStartDate, endDate: selectedEndDate })
                     column.setFilterValue(`${formattedStartDate} - ${formattedEndDate}`)
                     if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
