@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/layout'
 import React, { useRef, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from 'utils/auth-context'
 import { getToken } from 'utils/storage.utils'
 
@@ -7,6 +8,7 @@ export const EstimatesPortalDashboard: React.FC = () => {
   const { data } = useAuth()
   const user = data?.user
   const iframeUrl = process.env.REACT_APP_ESTIMATES_URL + '/vendorDashboard'
+  const navigate = useNavigate()
 
   const iframe = useRef<HTMLIFrameElement>(null)
 
@@ -21,6 +23,9 @@ export const EstimatesPortalDashboard: React.FC = () => {
     window.addEventListener('message', (event: any) => {
       if (event.data.estimatesLoaded) {
         sendMessage()
+      }
+      if (event.data.redirectToEstimates) {
+        navigate('/estimates', { state: event.data.params })
       }
     })
   }, [])
