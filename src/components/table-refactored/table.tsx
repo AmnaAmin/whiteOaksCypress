@@ -98,7 +98,6 @@ function Filter({
           <Popover>
             <PopoverTrigger>
               <DebouncedInput
-                type="date"
                 // value={
                 //   selectedDateRange.startDate && selectedDateRange.endDate
                 //     ? `${format(selectedDateRange.startDate, 'dd-MM-yyyy')} - ${format(
