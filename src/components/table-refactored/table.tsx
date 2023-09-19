@@ -99,33 +99,16 @@ function Filter({
           <Popover>
             <PopoverTrigger>
               <DebouncedInput
-                // value={
-                //   selectedDateRange.startDate && selectedDateRange.endDate
-                //     ? `${format(selectedDateRange.startDate, 'dd-MM-yyyy')} - ${format(
-                //         selectedDateRange.endDate,
-                //         'dd-MM-yyyy',
-                //       )}`
-                //     : ''
-                // }
-                value={format(selectedDateRange?.startDate, 'dd/MM/yyyy')}
+                value={`${format(selectedDateRange?.startDate, 'dd/MM/yyyy')}-${format(
+                  selectedDateRange?.endDate,
+                  'dd/MM/yyyy',
+                )}`}
                 className="w-36 border shadow rounded"
                 list={column.id + 'list'}
                 // @ts-ignore
                 minW={dateFilter && '127px'}
                 resetValue={!!metaData?.resetFilters}
                 onMouseDown={handleDateInputClick}
-                onChange={
-                  e => console.log('====mmmmmmm', e)
-                  // console.log(
-                  //   '---------------------,,,,',
-                  //   selectedDateRange.startDate && selectedDateRange.endDate
-                  //     ? `${format(selectedDateRange.startDate, 'yyyy-MM-dd')} - ${format(
-                  //         selectedDateRange.endDate,
-                  //         'yyyy-MM-dd',
-                  //       )}`
-                  //     : '',
-                  // )
-                }
               />
             </PopoverTrigger>
             <PopoverContent>
@@ -133,11 +116,10 @@ function Filter({
                 <DateRangePicker
                   ranges={[selectionRange]}
                   onChange={dateRange => {
-                    console.log('==========>', dateRange)
                     const selectedStartDate = dateRange.selection.startDate
                     const selectedEndDate = dateRange.selection.endDate
-                    const formattedStartDate = format(selectedStartDate, 'yyyy/mm/dd')
-                    const formattedEndDate = format(selectedEndDate, 'yyyy/mm/dd')
+                    const formattedStartDate = format(selectedStartDate, 'yyyy-MM-dd')
+                    const formattedEndDate = format(selectedEndDate, 'yyyy-MM-dd')
                     setSelectedDateRange({ startDate: selectedStartDate, endDate: selectedEndDate })
                     column.setFilterValue(`${formattedStartDate} - ${formattedEndDate}`)
                     if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)

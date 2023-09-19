@@ -56,11 +56,11 @@ export const getAPIFilterQueryString = (
         modifiedFilters.push(
           ...[
             {
-              id: filter.id + '-start',
+              id: filter.id + 'Start',
               value: (filter?.value as string)?.split(' - ')?.[0],
             },
             {
-              id: filter.id + '-end',
+              id: filter.id + 'End',
               value: (filter?.value as string)?.split(' - ')?.[1],
             },
           ],
@@ -69,11 +69,11 @@ export const getAPIFilterQueryString = (
         modifiedFilters.push(
           ...[
             {
-              id: filter.id + '-start',
+              id: filter.id + 'Start',
               value: filter?.value ? dateISOFormatWithZeroTime((filter?.value as string)?.split(' - ')?.[0]) : null,
             },
             {
-              id: filter.id + '-end',
+              id: filter.id + 'End',
               value: filter?.value ? dateISOFormatWithZeroTime((filter?.value as string)?.split(' - ')?.[1]) : null,
             },
           ],
@@ -85,7 +85,6 @@ export const getAPIFilterQueryString = (
   })
 
   const filterKeyValues = reduceQueriesArrayToObject(modifiedFilters, 'id', 'value', queryAndTableColumnMapKeys || {})
-
   return getQueryString({
     ...filterKeyValues,
     page: page || 0,

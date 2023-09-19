@@ -20,7 +20,6 @@ import { percentageFormatter } from 'utils/string-formatters'
 import { Link } from 'react-router-dom'
 import { RiFlag2Fill } from 'react-icons/ri'
 import { t } from 'i18next'
-import { format } from 'date-fns'
 
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
@@ -30,11 +29,11 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   projectStatus: 'projectStatus.in',
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
-  'clientStartDate-start': 'clientStartDate.greatherThanOrEquals',
-  'clientStartDate-end': 'clientStartDate.lessThanOrEquals',
+  clientStartDateStart: 'clientStartDate.greaterThanOrEqual',
+  clientStartDateEnd: 'clientStartDate.lessThanOrEqual',
   homeOwnerName: 'homeOwnerName.contains',
-  'clientDueDate-start': 'clientDueDate.greatherThanOrEquals',
-  'clientDueDate-end': 'clientDueDate.lessThanOrEquals',
+  clientDueDateStart: 'clientDueDate.greaterThanOrEqual',
+  clientDueDateEnd: 'clientDueDate.lessThanOrEqual',
   notes: 'notes.contains',
   projectTypeLabel: 'projectTypeLabel.contains',
   projectCoordinator: 'projectCoordinator.contains',
@@ -44,16 +43,20 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   clientName: 'clientName.contains',
   sowOriginalContractAmount: 'sowOriginalContractAmount.equals',
   projectRelatedCost: 'projectRelatedCost.equals',
-  woaPaidDate: 'woaPaidDate.equals',
+  woaPaidDateStart: 'woaPaidDate.greaterThanOrEqual',
+  woaPaidDateEnd: 'woaPaidDate.lessThanOrEqual',
   invoiceNumber: 'invoiceNumber.contains',
-  woaInvoiceDate: 'woaInvoiceDate.equals',
+  woaInvoiceDateStart: 'woaInvoiceDate.greaterThanOrEqual',
+  woaInvoiceDateEnd: 'woaInvoiceDate.lessThanOrEqual',
   accountRecievable: 'accountRecievable.equals',
   market: 'market.contains',
   state: 'state.contains',
-  woaCompletionDate: 'woaCompletionDate.equals',
+  woaCompletionDateStart: 'woaCompletionDate.greaterThanOrEqual',
+  woaCompletionDateEnd: 'woaCompletionDate.lessThanOrEqual',
   region: 'region.contains',
   partialPayment: 'partialPayment.equals',
-  expectedPaymentDate: 'expectedPaymentDate.equals',
+  expectedPaymentDateStart: 'expectedPaymentDate.greaterThanOrEqual',
+  expectedPaymentDateEnd: 'expectedPaymentDate.lessThanOrEqual',
   profitPercentage: 'profitPercentage.equals',
   profitPercentageAmount: 'profitPercentageAmount.greaterThanOrEqual',
   profitTotal: 'profitTotal.equals',
@@ -65,7 +68,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   pastDue: 'pastDue.equals',
   projectManagerId: 'projectManagerId.in',
   projectStatusId: 'projectStatusId.in',
-  clientSignoffDate: 'clientSignoffDate.lessThanOrEqual',
+  clientSignoffDateStart: 'clientSignoffDate.greaterThanOrEqual',
+  clientSignoffDateEnd: 'clientSignoffDate.lessThanOrEqual',
   sowNewAmount: 'sowNewAmount.equals',
   drawAmountSow: 'drawAmountSow.equals',
   drawAmountWo: 'drawAmountWo.equals',
@@ -75,8 +79,10 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   displayId: 'displayId.contains',
   percentageCompletion: 'percentageCompletion.equals',
   flag: 'flag.contains',
-  woaStartDate: 'woaStartDate.equals',
-  lienRightExpireDate: 'lienRightExpireDate.equals',
+  woaStartDateStart: 'woaStartDate.greaterThanOrEqual',
+  woaStartDateEnd: 'woaStartDate.lessThanOrEqual',
+  lienRightExpireDateStart: 'lienRightExpireDate.greaterThanOrEqual',
+  lienRightExpireDateEnd: 'lienRightExpireDate.lessThanOrEqual',
 }
 
 const PopoverTooltip = ({ value, title }) => {
