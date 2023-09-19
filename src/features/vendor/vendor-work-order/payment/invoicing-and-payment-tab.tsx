@@ -163,23 +163,6 @@ const InvoicingAndPaymentTab = ({
             <InputView
               showDivider={false}
               Icon={BiCalendar}
-              label={t('paymentProcessed')}
-              InputElem={
-                invoiceAndPaymentData?.datePaymentProcessed ? (
-                  <Text data-testid={'datePaymentProcessed'}>
-                    {dateFormatNew(invoiceAndPaymentData?.datePaymentProcessed)}
-                  </Text>
-                ) : (
-                  <Text data-testid={'datePaymentProcessed'}>mm/dd/yy</Text>
-                )
-              }
-            />
-          </GridItem>
-
-          <GridItem flex={{ base: '1', sm: 'unset' }}>
-            <InputView
-              showDivider={false}
-              Icon={BiCalendar}
               label={t('invoiceSubmitted')}
               InputElem={
                 invoiceAndPaymentData.dateInvoiceSubmitted &&
@@ -189,6 +172,22 @@ const InvoicingAndPaymentTab = ({
                   </Text>
                 ) : (
                   <Text data-testid={'dateInvoiceSubmitted'}>mm/dd/yy</Text>
+                )
+              }
+            />
+          </GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
+            <InputView
+              showDivider={false}
+              Icon={BiCalendar}
+              label={t('expectedPaymentProcessed')}
+              InputElem={
+                invoiceAndPaymentData?.datePaymentProcessed ? (
+                  <Text data-testid={'datePaymentProcessed'}>
+                    {dateFormatNew(invoiceAndPaymentData?.datePaymentProcessed)}
+                  </Text>
+                ) : (
+                  <Text data-testid={'datePaymentProcessed'}>mm/dd/yy</Text>
                 )
               }
             />

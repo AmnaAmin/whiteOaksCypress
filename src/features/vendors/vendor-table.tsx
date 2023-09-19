@@ -25,7 +25,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom'
 
 export const VENDOR_TABLE_QUERY_KEYS = {
-  statusLabel: 'statusLabel.equals',
+  statusLabel: 'statusLabel.contains',
   companyName: 'companyName.contains',
   region: 'region.contains',
   ownerName: 'ownerName.contains',
@@ -118,21 +118,21 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     header: 'EIN/SSN',
     accessorKey: 'einNumber',
     accessorFn(cellInfo) {
-      const ein = cellInfo?.einNumber || '';
-      const ssn = cellInfo?.ssnNumber || '';
-      
+      const ein = cellInfo?.einNumber || ''
+      const ssn = cellInfo?.ssnNumber || ''
+
       if (ein && ssn) {
-        return `${ein} / ${ssn}`;
+        return `${ein} / ${ssn}`
       } else if (ein) {
-        return ein;
+        return ein
       } else if (ssn) {
-        return ssn;
+        return ssn
       } else {
-        return '- - -';
+        return '- - -'
       }
     },
   },
-  
+
   {
     header: 'totalCapacity',
     accessorKey: 'capacity',
