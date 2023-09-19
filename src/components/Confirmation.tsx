@@ -54,7 +54,7 @@ export function ConfirmationBox({
       <ModalContent rounded="6">
         <ModalHeader
           borderBottom="2px solid #E2E8F0"
-          fontWeight={500}
+          fontWeight={400}
           color="gray.600"
           fontSize="16px"
           fontStyle="normal"
