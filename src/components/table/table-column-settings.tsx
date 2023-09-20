@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -18,8 +18,8 @@ import { useTranslation } from 'react-i18next'
 import './kanban.css'
 import { Button } from 'components/button/button'
 import { MdOutlineSettings } from 'react-icons/md'
-import Board, { moveCard } from '@lourenci/react-kanban'
 import '@lourenci/react-kanban/dist/styles.css'
+import Board, { moveCard } from '@asseinfo/react-kanban'
 import { BiGridVertical } from 'react-icons/bi'
 import { result } from 'lodash'
 
@@ -47,158 +47,89 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
     columns?.filter(col => col.field !== 'pagination' && col.field == null),
   )
   const [columnResults, setColumnResults] = useState(columns?.filter(col => col.contentKey !== 'pagination'))
-  // console.log("colum state: ", columnResults)
+
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { t } = useTranslation()
   // available.
-  const mapRecordsAvailable = columnResults
-    .filter(c => !c.hide)
-    .map((c, i) => {
-      return {
-        id: c.id,
-        title: c.field,
-        hide: c.hide,
-        description: c.field,
-      }
-    })
+  const mapRecordsAvailable =  useMemo(() => {
+    return {
+      columnResults: columnResults
+        .filter(c => !c.hide)
+        .map((c, i) => ({
+          ...c,
+          id: c.id,
+          title: c.field,
+          hide: c.hide,
+        })),
+    }
+  }, [columnResults])
+  
   //unavailable..
-  const mapRecordsUnavailable = columnResults
-    .filter(c => c.hide)
-    .map((c, i) => {
-      return {
-        id: c.id,
-        title: c.field,
-        hide: c.hide,
-        description: c.field,
-      }
-    })
+  const mapRecordsUnavailable = useMemo(() => {
+    return {
+      columnResults: columnResults
+        .filter(c => c.hide)
+        .map((c, i) => ({
+          ...c,
+          id: c.id,
+          title: c.field,
+          hide: c.hide,
+        })),
+    }
+  }, [columnResults])
+  
+console.log('columnResults',columnResults)
+console.log('mapRecordsUnavailable',mapRecordsUnavailable)
+console.log('mapRecordsAvailable',mapRecordsAvailable)
+  const board = useMemo(()=>{
+    return  {
+      columns: [
+        {
+          id: 1,
+          title: 'Show These Records in this Order',
+          cards: mapRecordsAvailable,
+        },
+        {
+          id: 2,
+          title: 'Available Records',
+          cards: mapRecordsUnavailable,
+        },
+      ] as any,
+    }
+  },[mapRecordsAvailable,mapRecordsUnavailable])
 
-  const board = {
-    columns: [
-      {
-        id: 1,
-        title: 'Show These Records in this Order',
-        cards: mapRecordsAvailable,
-      },
-      {
-        id: 2,
-        title: 'Available Records',
-        cards: mapRecordsUnavailable,
-      },
-    ],
-  }
-  const [controlledBoard, setBoard] = useState<any>(board ?? [])
-  console.log(controlledBoard)
-  // console.log('board', board)
-  // console.log('board_', board_)
-  //result is card
-  const onCardDragChange = (results, source, destination) => {
-    const updatedBoard = moveCard(controlledBoard, source, destination)
-    //  console.log('source',source)
-    //  console.log('destination', destination)
-    setBoard(updatedBoard)
-    //  console.log('result',results)
-    // if (results.columns.length > 0) {
-    //   updateRecords(results)
-    // }
-  }
+  const [managedBoard, setManagedBoard] = useState(board)
+  useEffect(() => {
+    // if(mapRecordsUnavailable.length > 0)
+    // return 
+    setManagedBoard(board)
+  }, [board])
 
+console.log('managedBoard',managedBoard)
   const saveModal = useCallback(() => {
-    console.log("controlledboard:", controlledBoard)
-    console.log("grid data", columnResults)
-    const control = controlledBoard.columns.map(x => {
-      if (x.id === 1) {
-        x.cards = x.cards.map(card => ({ ...card,  hide: false }))
-      } else x.cards = x.cards.map(card => ({ ...card,  hide: true }))
-      return x
-    })
-    const cardsInControlledBoard = [...control[0]?.cards, ...control[1]?.cards];
-    // console.log('controlledBoard', cardsInControlledBoard)
+    const columnsToShow = managedBoard?.columns[0]?.cards
+    const columnsToHide = managedBoard?.columns[1]?.cards
+    const columnsPayload = [
+      ...columnsToShow?.map((card, i) => ({ ...card, hide: false, order: i })),
+      ...columnsToHide?.map((card, i) => ({ ...card, hide: true, order: i + columnsToShow.length - 1 })),
+    ]
 
-    const hiddenCardsId = control[1].cards.map(card => (card.id));
-    // console.log("Here ae the ids of hidden cards:", hiddenCardsId)
-    // const test = control.map(element => {
-    //   return element.cards.filter(card => { 
-    //     // updateRecords(card)
-    //     if (card?.)
-    //   });
-    // });
-    const result = columnResults?.map((x)=>{
-      if (hiddenCardsId?.some((cardId) => cardId === x?.id)) return {...x, hide: true};
-      else return {...x, hide: false}
-    });
-    // const result = cardsInControlledBoard
-
-    console.log(result);
-    setColumnResults(result)
-    // console.log('control', control)
-    onClose()
-    let columnsPayload = result.map((item, index) => ({
-      ...item,
-      order: index,
-    }))
     if (paginationRecord) {
       columnsPayload.push(paginationRecord as ColumnType)
     }
-    console.log("payload: ", columnsPayload);
-    // updateRecords(controlledBoard)
+    onClose()
     onSave(columnsPayload)
-    // console.log('Results', result)
-  }, [columnResults, onClose, onSave, controlledBoard])
+  }, [columnResults, onClose, onSave, managedBoard])
 
   useEffect(() => {
     setColumnResults(columns?.filter(col => col.field !== 'pagination'))
     setPaginationRecord(columns?.find(c => c.field === 'pagination'))
   }, [columns])
 
-  // const updateRecords = results => {
-  //   const Cards = results.columns?.filter(x => x.cards)
-  //   const UnavailableData = Cards != null ? Cards.filter(x => x.title === 'Available Records') : null
-  //   const AvailableData = Cards != null ? Cards.filter(x => x.title === 'Show These Records in this Order') : null
-
-  //   let AvailableItems: ColumnType[]
-  //   let UnAvailableItems: ColumnType[]
-  //   if (UnavailableData != null && Cards.length > 0) {
-  //     for (let i = 0; i < UnavailableData.length; i++) {
-  //       const content = UnavailableData[i].cards
-  //       for (let j = 0; j < content.length; j++) {
-  //         const UnAvailableContentKeys = content[j].title
-  //         if (
-  //           UnAvailableContentKeys !== '' &&
-  //           UnAvailableContentKeys !== null &&
-  //           UnAvailableContentKeys !== undefined
-  //         ) {
-  //           for (let n = 0; n < columnResults.length; n++) {
-  //             if (columnResults[n].field === UnAvailableContentKeys) {
-  //               UnAvailableItems = columnResults
-  //               UnAvailableItems[n].hide = true
-  //               setColumnResults([...UnAvailableItems])
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   if (AvailableData?.length > 0) {
-  //     for (let i = 0; i < AvailableData.length; i++) {
-  //       var content = AvailableData[i].cards
-  //       for (let j = 0; j < content.length; j++) {
-  //         var AvailableContentKeys = content[j].title
-  //         if (AvailableContentKeys !== '' && AvailableContentKeys !== null && AvailableContentKeys !== undefined) {
-  //           for (let n = 0; n < columnResults.length; n++) {
-  //             if (columnResults[n].field === AvailableContentKeys) {
-  //               AvailableItems = columnResults
-  //               AvailableItems[n].hide = false
-  //               setColumnResults([...AvailableItems])
-  //             }
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-  //   console.log('ColumnResults', columnResults)
-  // }
+  const onCardDragChange = (_card, source, destination) => {
+    const updatedBoard = moveCard(managedBoard, source, destination)
+    setManagedBoard(updatedBoard)
+  }
 
   const closeSetting = () => {
     onClose()
@@ -231,7 +162,6 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
         <Board
           onCardDragEnd={onCardDragChange}
           disableColumnDrag
-          // initialBoard={board}
           renderColumnHeader={({ title }) => <div style={columnStyle}>{title}</div>}
           renderCard={({ title, id }, { dragging }) => (
             <>
@@ -250,7 +180,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
             </>
           )}
         >
-          {controlledBoard}
+          {managedBoard}
         </Board>
       </div>
     )
