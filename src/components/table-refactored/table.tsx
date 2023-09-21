@@ -115,10 +115,10 @@ function Filter({
                 minW={dateFilter && '127px'}
                 onMouseDown={handleDateInputClick}
                 resetValue={!!metaData?.resetFilters}
-                // onChange={value => {
-                //   column.setFilterValue(selectedStartDate === '' ? '' : `${selectedStartDate} - ${selectedEndDate}`)
-                //   if (allowStickyFilters) setStickyFilter(value)
-                // }}
+                onChange={value => {
+                  column.setFilterValue(selectedStartDate === '' ? '' : `${selectedStartDate} - ${selectedEndDate}`)
+                  setStickyFilter(`${selectedStartDate} - ${selectedEndDate}`)
+                }}
               />
             </PopoverTrigger>
             <PopoverContent>
@@ -131,8 +131,6 @@ function Filter({
                       setIsDateRangePickerOpen(false)
                     }}
                     onChange={dateRange => {
-                      console.log('filter==========', !!metaData?.resetFilters)
-
                       const selectedStartDate = dateRange.selection.startDate
                       const selectedEndDate = dateRange.selection.endDate
                       const formattedStartDate = format(selectedStartDate, 'yyyy-MM-dd')
@@ -156,15 +154,8 @@ function Filter({
           type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
           value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
           onChange={value => {
-            console.log('filter==========', !!metaData?.resetFilters)
-
-            if (dateFilter) {
-              column.setFilterValue(datePickerFormat(value as string))
-              if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
-            } else {
-              column.setFilterValue(value)
-              if (allowStickyFilters) setStickyFilter(value)
-            }
+            column.setFilterValue(value)
+            if (allowStickyFilters) setStickyFilter(value)
           }}
           className="w-36 border shadow rounded"
           list={column.id + 'list'}
