@@ -203,6 +203,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       }}
                       render={({ field, fieldState }) => (
                         <>
+                        <div data-testid="check_checkbox">
                           <Checkbox
                             colorScheme="brand"
                             isChecked={field.value}
@@ -216,6 +217,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                             {t(`${CLIENTS}.check`)}
                           </Checkbox>
                           <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          </div>
                         </>
                       )}
                     />
@@ -228,6 +230,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       }}
                       render={({ field, fieldState }) => (
                         <>
+                         <div data-testid="ach_checkbox">
                           <Checkbox
                             colorScheme="brand"
                             isChecked={field.value}
@@ -241,6 +244,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                             {t(`${CLIENTS}.ach`)}
                           </Checkbox>
                           <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          </div>
                         </>
                       )}
                     />
@@ -253,6 +257,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       }}
                       render={({ field, fieldState }) => (
                         <>
+                         <div data-testid="wired_checkbox">
                           <Checkbox
                             colorScheme="brand"
                             isChecked={field.value}
@@ -266,6 +271,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                             {t(`${CLIENTS}.wired`)}
                           </Checkbox>
                           <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          </div>
                         </>
                       )}
                     />

@@ -64,12 +64,12 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
         {!isReadOnly && (
           <Button
             colorScheme="brand"
-            type="submit"
             form="clientDetails"
             ml={2}
+            onClick={props?.setNextTab}
             disabled={!validateMarket(markets) || props.saveLoading}
           >
-            {t(`${CLIENTS}.save`)}
+            {t(`${CLIENTS}.next`)}
           </Button>
         )}
       </Flex>

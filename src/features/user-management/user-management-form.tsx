@@ -803,7 +803,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             {t(`${USER_MANAGEMENT}.modal.employeeID`)}
           </FormLabel>
           <Box height="70px">
-            <Input type="text" {...register('employeeId')} />
+            <Input maxLength={255} type="text" {...register('employeeId')} />
           </Box>
         </FormControl>
       </HStack>
@@ -843,7 +843,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </Button>
         <>
           {!isReadOnly && (
-            <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
+            <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField}>
               {t(`${USER_MANAGEMENT}.modal.save`)}
             </Button>
           )}

@@ -13,6 +13,7 @@ type clientNotesProps = {
   onClose: () => void
   textAreaStyle?: any
   messageBoxStyle?: any
+  setMessage?: any
 }
 
 export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
@@ -21,7 +22,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
   const { data: account } = useAccountDetails()
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('CLIENT.READ')
-  const { mutate: createNotes } = useClientNoteMutation(clientDetails?.id)
+  const { mutate: createNotes, isLoading } = useClientNoteMutation(clientDetails?.id)
 
   const { notes = [] } = useNotes({
     clientId: clientDetails ? clientDetails?.id : 0,
@@ -51,7 +52,11 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
       comment: message,
       clientId: clientDetails?.id,
     }
-    createNotes(payload)
+    if (clientDetails?.id) {
+      createNotes(payload)
+    } else {
+      props?.setMessage(message)
+    }
   }
 
   return (
@@ -85,7 +90,13 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
               <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
                 {t(`${CLIENTS}.enterNewNote`)}
               </FormLabel>
-              <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
+              <Textarea
+                datatest-id="notes-textarea"
+                flexWrap="wrap"
+                h={'120px'}
+                {...messageBoxStyle}
+                {...register('message')}
+              />
             </FormControl>
           )}
         </form>
@@ -95,7 +106,13 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
           {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isReadOnly && (
-          <Button colorScheme="brand" ml={2} isDisabled={!message} onClick={Submit}>
+          <Button
+            type="submit"
+            colorScheme="brand"
+            ml={2}
+            isDisabled={(clientDetails && !message) || isLoading}
+            onClick={Submit}
+          >
             {t(`${CLIENTS}.save`)}
           </Button>
         )}

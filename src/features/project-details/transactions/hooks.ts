@@ -178,7 +178,8 @@ export const useFieldDisabledEnabledDecision = (
 
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
-    transaction?.status === TransactionStatusValues.cancelled
+    transaction?.status === TransactionStatusValues.cancelled ||
+    transaction?.status === TransactionStatusValues.denied
   const isFactoringFeeSysGenerated =
     transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
 
@@ -212,20 +213,26 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
   }
 }
 
-export const useIsAwardSelect = (
-  control: Control<FormValues, any>,
-  transaction?,
-  selectedWorkOrderStats?,
-  remainingAmt?,
-  isRefund?,
-  selectedWorkOrder?,
-) => {
+export const useIsAwardSelect = ({
+  control,
+  selectedWorkOrderStats,
+  totalItemsAmount,
+  isRefund,
+  selectedWorkOrder,
+  isApproved,
+}) => {
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
   const check = against?.awardStatus
   const isValidForAwardPlan = against?.isValidForAwardPlan
-  const remainingAmountExceeded =
-    (transType?.label === 'Draw' || (transType?.label === 'Material' && !isRefund)) && remainingAmt
+  const isDrawOrMaterial = transType?.label === 'Draw' || transType?.label === 'Material'
+
+  const remainingAmountExceededFlag =
+    !isApproved &&
+    isValidForAwardPlan &&
+    isDrawOrMaterial &&
+    !isRefund &&
+    totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
 
   const drawConsumed =
     transType?.label === 'Draw' &&
@@ -240,13 +247,24 @@ export const useIsAwardSelect = (
 
   const isNotFinalPlan = selectedWorkOrder?.awardPlanId < 4
 
-  const isPlanExhausted = isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceeded)
+  const isPlanExhausted = isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceededFlag)
 
   const showUpgradeOption = isPlanExhausted && isNotFinalPlan
 
   const showLimitReached = isPlanExhausted && !isNotFinalPlan
 
-  return { check, isValidForAwardPlan, isPlanExhausted, showUpgradeOption, showLimitReached }
+  const isCompletedWorkLessThanNTEPercentage =
+    !isApproved && transType?.label === 'Draw' && totalItemsAmount > selectedWorkOrderStats?.allowedDrawAmount!
+
+  return {
+    check,
+    isValidForAwardPlan,
+    isPlanExhausted,
+    showUpgradeOption,
+    showLimitReached,
+    isCompletedWorkLessThanNTEPercentage,
+    remainingAmountExceededFlag,
+  }
 }
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {

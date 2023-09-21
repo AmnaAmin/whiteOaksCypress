@@ -39,7 +39,7 @@ export function ReceivableConfirmationBox({
   const { t } = useTranslation()
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} isCentered={true} closeOnEsc={false} closeOnOverlayClick={false} size="xl">
       <ModalOverlay />
       <ModalContent rounded="6">
         <ModalHeader

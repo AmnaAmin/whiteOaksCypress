@@ -40,7 +40,7 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 
   const handleExport = () => {
     const filteredData = tableInstance?.getFilteredRowModel()
-    console.log(filteredData)
+
     if (filteredData && downloadFromTable) {
       const filtered = filteredData?.rows.map(row => row?.original)
       customExport ? customExport(filtered) : exportToExcel(filtered, fileName)

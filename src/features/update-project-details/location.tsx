@@ -15,7 +15,7 @@ import {
   Text,
 } from '@chakra-ui/react'
 
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
@@ -27,6 +27,7 @@ import { useState } from 'react'
 import { STATUS } from 'features/common/status'
 import { useProjects } from 'api/projects'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
+import { useMarketStateWise } from 'api/pc-projects'
 
 type Market = [
   {
@@ -112,7 +113,7 @@ const Location: React.FC<LocationProps> = ({
     setValue('city', property?.city)
     setValue('zip', property?.zipCode)
     setValue('market', { label: market?.metropolitanServiceArea, value: market?.id })
-    setValue('state', { label: state?.name, value: state?.code })
+    setValue('state', { label: state?.name, value: state?.code, id: state?.id })
     setValue('property', property)
     setValue('newMarket', { label: market?.metropolitanServiceArea, value: market?.id })
 
@@ -132,9 +133,12 @@ const Location: React.FC<LocationProps> = ({
     }
   }
 
+  const state = useWatch({ name: 'state', control })
+  const { marketSelectOptionsStateWise } = useMarketStateWise(state?.id)
+
   return (
     <Stack>
-      <Box px="6" h="300px" overflow={'auto'}>
+      <Box px="6" h="310px" overflow={'auto'}>
         {isDuplicateAddress && (
           <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
             <AlertIcon />
@@ -238,6 +242,7 @@ const Location: React.FC<LocationProps> = ({
                       onChange={option => {
                         setVerifiedAddress(false)
                         field.onChange(option)
+                        setValue('market', null)
                       }}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -285,7 +290,7 @@ const Location: React.FC<LocationProps> = ({
                   <>
                     <Select
                       {...field}
-                      options={marketSelectOptions}
+                      options={marketSelectOptionsStateWise}
                       size="md"
                       value={field.value}
                       selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
@@ -379,7 +384,17 @@ const Location: React.FC<LocationProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="hoaContactEmail" noOfLines={1}>
                 {t(`project.projectDetails.hoaContactEmail`)}
               </FormLabel>
-              <Input size="md" border=" 1px solid #E2E8F0" id="hoaContactEmail" {...register('hoaContactEmail')} />
+              <Input
+                size="md"
+                border=" 1px solid #E2E8F0"
+                id="hoaContactEmail"
+                {...register('hoaContactEmail', {
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: 'Invalid Email Address',
+                  },
+                })}
+              />
               <FormErrorMessage>{errors.hoaContactEmail && errors.hoaContactEmail.message}</FormErrorMessage>
             </FormControl>
           </GridItem>

@@ -18,11 +18,12 @@ describe('Project Type table', () => {
       expect(screen.queryByText('Modified By')).toBeInTheDocument()
       expect(screen.queryByText('Modified Date')).toBeInTheDocument()
 
+      // Update date strings in your assertions
       expect(screen.getByRole('gridcell', { name: 'Other' })).toBeInTheDocument()
       expect(screen.getByRole('gridcell', { name: 'DevTek' })).toBeInTheDocument()
-      expect(screen.getByRole('gridcell', { name: '2020-11-01' })).toBeInTheDocument()
+      expect(screen.getByRole('gridcell', { name: '11/01/2020' })).toBeInTheDocument() // Updated date format
       expect(screen.getByRole('gridcell', { name: 'admin' })).toBeInTheDocument()
-      expect(screen.getByRole('gridcell', { name: '2021-04-18' })).toBeInTheDocument()
+      expect(screen.getByRole('gridcell', { name: '04/18/2021' })).toBeInTheDocument() // Updated date format
     })
   })
 })

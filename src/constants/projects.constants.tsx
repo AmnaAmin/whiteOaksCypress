@@ -24,6 +24,7 @@ import { t } from 'i18next'
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
   generalLabourName: 'generalLabourName.contains',
+  claimNumber: 'claimNumber.contains',
   projectManager: 'projectManager.contains',
   projectStatus: 'projectStatus.in',
   streetAddress: 'streetAddress.contains',
@@ -71,6 +72,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   displayId: 'displayId.contains',
   percentageCompletion: 'percentageCompletion.equals',
   flag: 'flag.contains',
+  woaStartDate: 'woaStartDate.equals',
+  lienRightExpireDate: 'lienRightExpireDate.equals',
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -125,6 +128,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'projects.projectTable.generalLabour',
     accessorKey: 'generalLabourName',
     size: 230,
+  },
+  {
+    header: 'projects.projectTable.claimNumber',
+    accessorKey: 'claimNumber',
   },
   {
     header: 'projects.projectTable.projectManager',
@@ -248,8 +255,14 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     meta: { format: 'date' },
   },
   {
+    header: 'projects.projectTable.woaStartDate',
+    accessorKey: 'woaStartDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaStartDate),
+    meta: { format: 'date' },
+  },
+  {
     header: 'projects.projectTable.invoiceNumber',
-    accessorKey: 'invoiceNumber',
+    accessorKey: 'resubmissionInvoiceNumber',
   },
   {
     header: 'projects.projectTable.invoiceDate',
@@ -304,7 +317,8 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.expectedPayment',
     accessorKey: 'expectedPaymentDate',
-    accessorFn: (cellInfo: any) => dateFormat(cellInfo.expectedPaymentDate),
+    accessorFn: (cellInfo: any) =>
+      dateFormat(cellInfo.resubmissionDueDate !== null ? cellInfo.resubmissionDueDate : cellInfo.expectedPaymentDate),
     meta: { format: 'date' },
   },
   {
@@ -313,6 +327,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.profitPercentage / 100).format('0,0.00%')
     },
+    meta: { format: 'percentage' },
   },
   {
     header: 'projects.projectTable.profitTotal',
@@ -338,6 +353,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
         ? numeral(percentageFormatter(cellInfo.vendorPaymentPercentage)).format('0.00%')
         : '0.00%'
     },
+    meta: { format: 'percentage' },
   },
   {
     header: 'projects.projectTable.sowDraw',
@@ -358,5 +374,11 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.disqualifiedRevenueFlag',
     accessorKey: 'disqualifiedRevenueFlag',
+  },
+  {
+    header: 'projects.projectTable.lienRightsExpires',
+    accessorKey: 'lienRightExpireDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.lienRightExpireDate),
+    meta: { format: 'date' },
   },
 ]

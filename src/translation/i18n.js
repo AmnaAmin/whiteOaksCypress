@@ -263,6 +263,8 @@ i18n.use(initReactI18next).init({
         PaymentRemaining: 'Remaining payment amount exceeded.',
         PlanLimitExceed:
           'WO has reached its allowed limits under the selected award plan, No more Labor Draw Or Material Draw transactions can be created.',
+        PercentageCompletion: 'Cannot create draw against WO with % completion less than NTE % in PAN',
+        PercentageCompletionForAdminAndAccount: '% completion is less than NTE max',
         nameofClaimant: 'Name of Claimant',
         customerName: 'Customer Name',
         jobLocation: 'Job Location',
@@ -335,6 +337,7 @@ i18n.use(initReactI18next).init({
         LWDate: 'LW Date',
         permitDate: 'Permit Date',
         paymentProcessed: 'Payment Processed',
+        expectedPaymentProcessed: 'Expected Payment Processed',
         invoiceSubmitted: 'Invoice Submitted',
         expectedPay: 'Expected Pay Date',
         // Project - Notes
@@ -878,6 +881,9 @@ i18n.use(initReactI18next).init({
         PaymentRemaining: 'Monto de pago restante excedido.',
         PlanLimitExceed:
           'WO ha alcanzado sus límites permitidos según el plan de adjudicación seleccionado, no se pueden crear más transacciones de extracción de mano de obra o extracción de material.',
+        PercentageCompletion:
+          'No se puede crear un sorteo contra WO con un % de finalización inferior al % de NTE en PAN',
+        PercentageCompletionForAdminAndAccount: '% de finalización inferior al % de NTE en PAN',
         nameofClaimant: 'Nombre del Reclamante',
         customerName: 'Nombre del Cliente',
         jobLocation: 'Locación de Trabajo',
@@ -949,6 +955,7 @@ i18n.use(initReactI18next).init({
         LWDate: 'Fecha LW',
         permitDate: 'Fecha del permiso',
         paymentProcessed: 'Pago procesado',
+        expectedPaymentProcessed: 'Pago esperado procesado',
         invoiceSubmitted: 'Factura enviada',
         expectedPay: 'Fecha de pago esperada',
         // Project - Notes

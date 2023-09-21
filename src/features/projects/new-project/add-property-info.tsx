@@ -23,7 +23,7 @@ import { useProjects } from 'api/projects'
 import Select from 'components/form/react-select'
 import { CreatableSelect } from 'components/form/react-select'
 import { createFilter } from 'react-select'
-import { useGetAddressVerification, useMarkets, useProperties, useStates } from 'api/pc-projects'
+import { useGetAddressVerification, useMarketStateWise, useMarkets, useProperties, useStates } from 'api/pc-projects'
 import { useTranslation } from 'react-i18next'
 import { AddressVerificationModal } from './address-verification-modal'
 import { useAddressShouldBeVerified, usePropertyInformationNextDisabled } from './hooks'
@@ -56,16 +56,6 @@ export const AddPropertyInfo: React.FC<{
   const [check, setCheck] = useState(false)
   const [existProperty, setExistProperty] = useState([{ id: 0, status: '' }])
 
-  // API calls
-  const { projects } = useProjects()
-  const { propertySelectOptions } = useProperties()
-  const { stateSelectOptions, states } = useStates()
-  const { marketSelectOptions, markets } = useMarkets()
-  const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
-
-  const { data: isAddressVerified, refetch, isLoading } = useGetAddressVerification(addressInfo)
-
   const {
     register,
     formState: { errors },
@@ -73,6 +63,14 @@ export const AddPropertyInfo: React.FC<{
     setValue,
   } = useFormContext<ProjectFormValues>()
 
+  // API calls
+  const { projects } = useProjects()
+  const { propertySelectOptions } = useProperties()
+  const { stateSelectOptions, states } = useStates()
+  const { markets } = useMarkets()
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const { data: isAddressVerified, refetch, isLoading } = useGetAddressVerification(addressInfo)
   const isNextButtonDisabled = usePropertyInformationNextDisabled(control, isDuplicateAddress)
   const addressShouldBeVerified = useAddressShouldBeVerified(control)
 
@@ -88,6 +86,9 @@ export const AddPropertyInfo: React.FC<{
   const watchCity = useWatch({ name: 'city', control })
   const watchState = useWatch({ name: 'state', control })
   const watchZipCode = useWatch({ name: 'zipCode', control })
+  const state = useWatch({ name: 'state', control })
+
+  const { marketSelectOptionsStateWise } = useMarketStateWise(state?.id)
 
   // Set all values of Address Info
   useEffect(() => {
@@ -105,14 +106,13 @@ export const AddPropertyInfo: React.FC<{
     const market = markets.find(m => m?.id === property?.marketId)
 
     const state = states.find(s => s?.code === property?.state)
-
     setValue('streetAddress', property?.streetAddress || option.label)
     setValue('city', property?.city)
     setValue('zipCode', property?.zipCode)
     setValue('propertyId', property?.id)
     setValue('property', property)
     setValue('newMarket', { label: market?.metropolitanServiceArea, value: market?.id })
-    setValue('state', { label: state?.name, value: state?.code })
+    setValue('state', { label: state?.name, value: state?.code, id: state?.id })
 
     // Check for duplicate address
     const duplicatedInProjects =
@@ -132,13 +132,21 @@ export const AddPropertyInfo: React.FC<{
 
   // Email Validation
   const handleEmailChange = event => {
-    if (!isValidEmail(event.target.value)) {
+    const enteredEmail = event.target.value
+
+    if (enteredEmail.trim() === '') {
+      // Clear the error message if the field is empty
+      setError('')
+    } else if (!isValidEmail(enteredEmail)) {
+      // Show "Invalid Email Address" error for invalid emails
       setError('Invalid Email Address')
     } else {
+      // Clear the error if the entered email is valid
       setError('')
     }
 
-    setMessage(event.target.value)
+    // Update the message variable with the entered value
+    setMessage(enteredEmail)
   }
 
   return (
@@ -237,6 +245,7 @@ export const AddPropertyInfo: React.FC<{
                         onChange={option => {
                           setAddressInfo({ ...addressInfo, state: option?.value })
                           field.onChange(option)
+                          setValue('newMarket', null)
                         }}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -281,7 +290,7 @@ export const AddPropertyInfo: React.FC<{
                       <Select
                         id="addressMarket"
                         {...field}
-                        options={marketSelectOptions}
+                        options={marketSelectOptionsStateWise}
                         size="md"
                         value={field.value}
                         selectProps={{ isBorderLeft: true, menuHeight: '120px' }}
@@ -312,6 +321,15 @@ export const AddPropertyInfo: React.FC<{
                   {t(`${NEW_PROJECT}.lockBoxCode`)}
                 </FormLabel>
                 <Input id="lockBoxCode" {...register('lockBoxCode')} type="number" />
+              </FormControl>
+            </GridItem>
+
+            <GridItem>
+              <FormControl>
+                <FormLabel htmlFor="claimNumber" size="md">
+                  {t(`${NEW_PROJECT}.claimNumber`)}
+                </FormLabel>
+                <Input id="claimNumber" {...register('claimNumber')} />
               </FormControl>
             </GridItem>
           </Grid>
@@ -368,6 +386,15 @@ export const AddPropertyInfo: React.FC<{
                 <Text color="red" fontSize="14px" fontWeight="400">
                   {error ? error : ''}
                 </Text>
+              </FormControl>
+            </GridItem>
+
+            <GridItem>
+              <FormControl>
+                <FormLabel htmlFor="reoNumber" size="md">
+                  {t(`${NEW_PROJECT}.reoNumber`)}
+                </FormLabel>
+                <Input id="reoNumber" {...register('reoNumber')} />
               </FormControl>
             </GridItem>
           </Grid>

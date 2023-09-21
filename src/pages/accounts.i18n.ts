@@ -5,7 +5,9 @@ export const accounts = {
     translation: {
       [ACCOUNTS]: {
         close: 'Close',
+        ok: 'Ok',
         batchSuccess: 'Batch Processing Successful!',
+        batchSucessFor: 'Batch Processing successful for',
         batchProcess: 'Batch Processing',
         batch: 'Batch Process',
         processing: 'Processing...',
@@ -13,7 +15,7 @@ export const accounts = {
         accountPayable: 'Account Payable',
         batchUnSuccessFul: 'Batch Process cannot be completed',
         batchError: 'Batch Processing Failed!',
-        batchErrorMsg: 'Pending draw/Change order transactions exist against ',
+        batchErrorMsg: 'Pending Draw/Change order/Legal Fee transactions exist against ',
         projectID: 'Project ID: ',
         batchSuccessMsg: 'Batch Processing successful for',
       },
