@@ -28,7 +28,7 @@ export const TradeForm = ({ trades, onClose, isActive }: tradesFormProps) => {
   return (
     <>
       <Box h="584px" overflow="auto">
-        <Flex maxW="900px" wrap="wrap" gridGap={3} position={'relative'}>
+        <Flex  id="construction_Trades" maxW="900px" wrap="wrap" gridGap={3} position={'relative'}>
           {tradeCheckboxes?.map((checkbox, index) => {
             return (
               <Controller

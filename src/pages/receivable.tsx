@@ -1,10 +1,11 @@
 import { Tabs, TabPanel, TabList, Tab, TabPanels } from '@chakra-ui/react'
-import { ConstructionPortalReceiveable } from 'features/recievable/construction-portal-receiveable';
-import { EstimatesPortalReceiveable } from 'features/recievable/estimates-portal-receiveable';
-import { useState } from 'react';
+import { ConstructionPortalReceiveable } from 'features/recievable/construction-portal-receiveable'
+import { EstimatesPortalReceiveable } from 'features/recievable/estimates-portal-receiveable'
+import { MaintenancePortalReceiveable } from 'features/recievable/maintenance-portal-receiveable'
+import { useState } from 'react'
 
 export const Receivable = () => {
-  const [ , setTabIndex ] = useState(0);
+  const [, setTabIndex] = useState(0)
   const handleTabsChange = index => {
     setTabIndex(index)
   }
@@ -14,6 +15,7 @@ export const Receivable = () => {
         <TabList>
           <Tab>Construction</Tab>
           <Tab>Estimates</Tab>
+          <Tab>Maintenance</Tab>
         </TabList>
         <TabPanels>
           <TabPanel padding="5px 0px 0px 0px">
@@ -21,6 +23,9 @@ export const Receivable = () => {
           </TabPanel>
           <TabPanel h="100vh" padding="5px 0px 0px 0px">
             <EstimatesPortalReceiveable />
+          </TabPanel>
+          <TabPanel h="100vh" padding="5px 0px 0px 0px">
+            <MaintenancePortalReceiveable />
           </TabPanel>
         </TabPanels>
       </Tabs>

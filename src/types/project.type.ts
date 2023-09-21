@@ -33,6 +33,8 @@ export type Project = {
   invoiceLink: string | null
   lastCompletedWorkOrder: string | null
   lockBoxCode: string | null
+  claimNumber?: string | null
+  reoNumber?: string | null
   market: string | null
   materialCost: number | null
   drawAmount: number | null
@@ -227,6 +229,7 @@ export type ProjectWorkOrderType = {
 
 export type ProjectFormValues = {
   acknowledgeCheck?: boolean
+  reoNumber?: string | null
   name?: string
   projectType?: SelectOption | null
   woNumber?: string
@@ -265,6 +268,7 @@ export type ProjectFormValues = {
   projectStartDate?: string
   woaCompletionDate?: string
   propertyId?: number
+  claimNumber?: string | null
   property?: any
   homeOwnerName: string | null
   homeOwnerPhone: string | null
@@ -287,6 +291,20 @@ export type Market = {
   stateName: string
 }
 
+export type ProjectAward = {
+  id: number
+  name: string
+  materialLimit: number
+  drawLimit: number
+  totalAmountLimit: number
+  allowedDrawAmount: number
+  payTerm: number
+  factoringFee: number
+  createdBy: string | null
+  dateCreated: string | null
+  lastModifiedBy: string | null
+  dateModified: string | null
+}
 export type ProjectFinancialOverview = {
   changeOrderId: number
   vendorPayment: number

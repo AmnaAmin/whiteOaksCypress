@@ -33,6 +33,7 @@ import { CgPlayListRemove } from 'react-icons/cg'
 import { CustomCheckBox } from './assigned-items'
 import { readFileContent } from 'api/vendor-details'
 import { completePercentage } from './work-order-edit-tab'
+import { completePercentageValues, newObjectFormatting } from 'api/work-order'
 
 const swoPrefix = '/smartwo/api'
 
@@ -754,18 +755,13 @@ export const useFieldEnableDecision = ({ workOrder, lineItems }) => {
 
 const setColumnsByConditions = (columns, workOrder, isVendor) => {
   if (workOrder) {
-    columns = columns.filter(c => !['assigned', 'completePercentage'].includes(c.accessorKey))
+    columns = columns.filter(c => !['assigned'].includes(c.accessorKey))
     if (isVendor) {
       if (workOrder.showPricing) {
-        columns = columns.filter(
-          c => !['price', 'profit', 'clientAmount', 'isVerified', 'completePercentage'].includes(c.accessorKey),
-        )
+        columns = columns.filter(c => !['price', 'profit', 'clientAmount', 'isVerified'].includes(c.accessorKey))
       } else {
         columns = columns.filter(
-          c =>
-            !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified', 'completePercentage'].includes(
-              c.accessorKey,
-            ),
+          c => !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessorKey),
         )
       }
     }
@@ -846,7 +842,7 @@ export const useGetLineItemsColumn = ({
     [controlledAssignedItems],
   )
 
-  const handleDropdownValue = v => [{ value: v, label: `${v?.toString()}` }]
+  const handleDropdownValue = v => [{ value: v, label: `${v?.toString()}%` }]
 
   const onFileChange = async file => {
     const fileContents = await readFileContent(file)
@@ -871,14 +867,6 @@ export const useGetLineItemsColumn = ({
       </a>
     )
   }
-
-  const completePercentage = [
-    { value: 10, label: '10' },
-    { value: 25, label: '25' },
-    { value: 50, label: '50' },
-    { value: 75, label: '75' },
-    { value: 100, label: '100' },
-  ]
 
   let columns = useMemo(() => {
     return [
@@ -1245,13 +1233,17 @@ export const useGetLineItemsColumn = ({
                         <CreatableSelect
                           {...field}
                           id={`assignedItems.${index}.completePercentage`}
-                          options={completePercentage}
+                          options={completePercentageValues}
                           size="md"
                           value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
                           isDisabled={isVendor}
-                          selectProps={{ widthAssign: '75%' }}
+                          selectProps={{ widthAssign: '80%' }}
                           onChange={option => {
-                            field.onChange(option)
+                            if (option?.__isNew__) {
+                              field.onChange(newObjectFormatting(option))
+                            } else {
+                              field.onChange(option)
+                            }
                           }}
                           styles={{
                             menuPortal: base => ({ ...base, zIndex: 99999, position: 'fixed' }),

@@ -78,6 +78,18 @@ export const ProjectTransactionRemainingAlert = ({ msg, onOpen, isUpgradeProject
   )
 }
 
+export const PercentageCompletionLessThanNTEAlert = ({ msg, onOpen }: any) => {
+  const { t } = useTranslation()
+
+  return (
+    <Alert mt={2} status="info" variant="custom" size="sm">
+      <AlertIcon />
+      <AlertDescription maxW="90%">{t(`${msg}`)}</AlertDescription>
+      <Spacer />
+    </Alert>
+  )
+}
+
 export const DrawLienWaiver: React.FC<LienWaiverProps> = props => {
   const { t } = useTranslation()
   const [openSignature, setOpenSignature] = useState(false)

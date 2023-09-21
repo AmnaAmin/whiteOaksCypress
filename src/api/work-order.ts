@@ -19,6 +19,24 @@ type UpdateWorkOrderProps = {
   setUpdating?: (val) => void
 }
 
+export const completePercentageValues = [
+  { value: 10, label: '10%' },
+  { value: 25, label: '25%' },
+  { value: 50, label: '50%' },
+  { value: 75, label: '75%' },
+  { value: 95, label: '95%' },
+  { value: 100, label: '100%' },
+]
+
+export const newObjectFormatting = data => {
+  const obj = {
+    label: `${data?.label}%`,
+    value: data?.value,
+    __isNew__: true,
+  }
+  return obj
+}
+
 export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
   const { hideToast, setUpdating } = props
   const client = useClient()
@@ -301,7 +319,9 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
           const assignedItem = {
             ...a,
             completePercentage:
-              typeof a.completePercentage === 'number' ? a.completePercentage : Number(a.completePercentage?.label),
+              typeof a.completePercentage === 'number'
+                ? a.completePercentage
+                : Number(a.completePercentage?.label?.slice(0, -1)),
             document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
             id: isNewSmartLineItem ? '' : a.id,
             smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
@@ -324,6 +344,10 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     notifyVendor: formValues.notifyVendor,
     vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
+    completePercentage:
+      typeof formValues.completePercentage === 'number'
+        ? formValues.completePercentage
+        : Number(formValues.completePercentage?.label?.slice(0, -1)),
   }
 }
 
@@ -346,6 +370,7 @@ export const defaultValuesWODetails = (workOrder, defaultSkill) => {
             return { ...e, uploadedDoc: null, clientAmount: (e.price ?? 0) * (e.quantity ?? 0) }
           })
         : [],
+    completePercentage: workOrder?.completePercentage,
   }
   return defaultValues
 }

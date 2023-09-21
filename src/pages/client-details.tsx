@@ -14,6 +14,7 @@ import {
   clientDetailsDefaultValues,
   clientDefault,
   useSubFormErrors,
+  useClientNoteMutation,
 } from 'api/clients'
 import { useMarkets, useStates } from 'api/pc-projects'
 import { BiErrorCircle } from 'react-icons/bi'
@@ -40,6 +41,8 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const { mutate: addNewClientDetails, isLoading } = useSaveNewClientDetails()
   const { stateSelectOptions: statesOptions } = useStates()
   const { marketSelectOptions: marketOptions, markets } = useMarkets()
+  const [message, setMessage] = useState('')
+  const { mutate: createNotes } = useClientNoteMutation(null)
 
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
@@ -93,13 +96,20 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
         editClientDetails(clientPayload, queryOptions)
       } else {
         addNewClientDetails(clientPayload, {
-          onSuccess() {
+          onSuccess(e) {
+            const payload = {
+              comment: message,
+              clientId: e?.data?.id,
+            }
+            if (message) {
+              createNotes(payload)
+            }
             onClose()
           },
         })
       }
     },
-    [addNewClientDetails],
+    [addNewClientDetails, message],
   )
 
   return (
@@ -110,7 +120,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
             <TabCustom isError={isClientDetailsTabErrors && tabIndex !== 0}>{t('details')}</TabCustom>
             <TabCustom isError={isCarrierTabErrors && tabIndex !== 1}>{t(`${CLIENTS}.carrier`)}</TabCustom>
             <TabCustom>{t('market')}</TabCustom>
-            {clientDetails?.id && <TabCustom>{t('notes')}</TabCustom>}
+            <TabCustom>{t('notes')}</TabCustom>
           </TabList>
           <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px">
             <TabPanels mt="20px">
@@ -121,10 +131,15 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
                 <CarrierTab clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab}></CarrierTab>
               </TabPanel>
               <TabPanel p="0px">
-                <Market clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} saveLoading={isLoading}/>
+                <Market
+                  clientDetails={clientDetails}
+                  onClose={props.onClose}
+                  setNextTab={setNextTab}
+                  saveLoading={isLoading}
+                />
               </TabPanel>
               <TabPanel p="0px">
-                <ClientNotes clientDetails={clientDetails} onClose={props.onClose} />
+                <ClientNotes clientDetails={clientDetails} onClose={props.onClose} setMessage={setMessage} />
               </TabPanel>
             </TabPanels>
           </Card>

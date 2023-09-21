@@ -30,13 +30,13 @@ import {
 } from '@chakra-ui/react'
 import { useStates } from 'api/pc-projects'
 import { parseCreateVendorFormToAPIData, useMarkets, useTrades } from 'api/vendor-details'
-import { useVendorRegister } from 'api/vendor-register'
+import { useCheckUserExistance, useVendorRegister } from 'api/vendor-register'
 import { ConstructionTradeCard } from 'components/vendor-register/construction-trade-card'
 import { DocumentsCard } from 'components/vendor-register/documents-card'
 import { LicenseCard } from 'components/vendor-register/license-card'
 import { MarketListCard } from 'components/vendor-register/market-list-card'
 import { Card } from 'features/login-form-centered/Card'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import InputMask from 'react-input-mask'
 import Select from 'components/form/react-select'
@@ -45,6 +45,8 @@ import * as Yup from 'yup'
 import PasswordStrengthBar, { measureStrength } from 'components/vendor-register/password-strength-bar'
 import NumberFormat from 'react-number-format'
 import { phoneRegex } from 'utils/form-validation'
+import { isEmpty } from 'lodash'
+import { validateWhitespace } from 'api/clients'
 
 const CustomTab = React.forwardRef((props: any, ref: any) => {
   const tabProps = useTab({ ...props, ref })
@@ -204,7 +206,7 @@ export const VendorRegister = () => {
         ...vendorRegisterFormSchema,
         einNumber: Yup.string()
           .required('EIN is a required field')
-          .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits'),
+          .matches(/^\d{2}-?\d{7}$/, 'Must be only digits'),
       })
     } else {
       setCustomResolver({
@@ -229,11 +231,15 @@ export const VendorRegister = () => {
     formState: { errors, isSubmitting, isValid, isDirty },
     reset,
     control,
+    setError,
     setValue,
     getValues,
     trigger,
     watch,
   } = formReturn
+  const formValues = getValues()
+
+  const { data: verifyUserData, mutate: verifyUser } = useCheckUserExistance()
 
   const watchPassword = watch('password', '')
 
@@ -260,39 +266,69 @@ export const VendorRegister = () => {
     }
   }, [trades, markets])
 
+  const handleLocationDetailsNext = useCallback(
+    async ({ businessNameExist, emailAddressExist }) => {
+      const isSsn = ssnEinTabIndex === 1 ? true : false
+      let detailFields = [
+        'email',
+        'firstName',
+        'lastName',
+        'password',
+        'companyName',
+        'ownerName',
+        'primaryContact',
+        'secondName',
+        'businessPhoneNumber',
+        'businessPhoneNumberExtension',
+        'secondPhoneNumber',
+        'businessEmailAddress',
+        'streetAddress',
+        'city',
+        'zipCode',
+        'capacity',
+        'einNumber',
+        'ssnNumber',
+        'secondEmailAddress',
+        'secondEmailAddress',
+        'state',
+      ]
+      if (isSsn) {
+        detailFields = detailFields.filter(fN => fN !== 'einNumber')
+      } else {
+        detailFields = detailFields.filter(fN => fN !== 'ssnNumber')
+      }
+      for (const fieldName of detailFields) {
+        await trigger(fieldName)
+      }
+      if (emailAddressExist) {
+        setError('email', {
+          type: 'custom',
+          message: 'This user already exists. Please contact WhiteOaks team for further assistance',
+        })
+      }
+      if (businessNameExist) {
+        setError('companyName', {
+          type: 'custom',
+          message: 'This business name already exists. Please contact WhiteOaks team for further assistance',
+        })
+      }
+
+      if (isEmpty(errors)) {
+        setDisableLoginFields(true)
+        setformTabIndex(FORM_TABS.DOCUMENTS)
+        setUnLoackedTabs([...unLockedTabs, FORM_TABS.LOCATION_DETAILS])
+      }
+    },
+    [trigger, setError, errors],
+  )
+
   useEffect(() => {
     if (formTabIndex === FORM_TABS.LOCATION_DETAILS) setDisableLoginFields(false)
     if (formTabIndex === FORM_TABS.LOCATION_DETAILS && isMobile) setShowLoginFields(true)
     if (formTabIndex !== FORM_TABS.LOCATION_DETAILS && isMobile) setShowLoginFields(false)
   }, [formTabIndex])
-
+  const userData = { companyName: formValues?.companyName, email: formValues?.email }
   const doNext = async () => {
-    const isSsn = ssnEinTabIndex === 1 ? true : false
-
-    let detailFields = [
-      'email',
-      'firstName',
-      'lastName',
-      'password',
-      'companyName',
-      'ownerName',
-      'primaryContact',
-      'secondName',
-      'businessPhoneNumber',
-      'businessPhoneNumberExtension',
-      'secondPhoneNumber',
-      'businessEmailAddress',
-      'streetAddress',
-      'city',
-      'zipCode',
-      'capacity',
-      'einNumber',
-      'ssnNumber',
-      'secondEmailAddress',
-      'secondEmailAddress',
-      'state',
-    ]
-
     const documentFields = [
       'w9DocumentDate',
       'w9Document',
@@ -310,22 +346,12 @@ export const VendorRegister = () => {
 
     const tradeFieldName = 'trades'
 
-    if (isSsn) {
-      detailFields = detailFields.filter(fN => fN !== 'einNumber')
-    } else {
-      detailFields = detailFields.filter(fN => fN !== 'ssnNumber')
-    }
-
     if (formTabIndex === FORM_TABS.LOCATION_DETAILS) {
-      for (const fieldName of detailFields) {
-        if (!(await trigger(fieldName))) return null
-      }
-
-      setDisableLoginFields(true)
-      setformTabIndex(FORM_TABS.DOCUMENTS)
-      setUnLoackedTabs([...unLockedTabs, FORM_TABS.LOCATION_DETAILS])
-
-      return null
+      verifyUser(userData, {
+        onSuccess(res) {
+          handleLocationDetailsNext(res?.data)
+        },
+      })
     }
 
     if (formTabIndex === FORM_TABS.DOCUMENTS) {
@@ -421,9 +447,11 @@ export const VendorRegister = () => {
     const email = formValues.email
     const login = email
     const streetAddress = formValues.streetAddress
+    const city = formValues.city
     const telephoneNumber = formValues.telephoneNumber
     const state = formValues.state?.value
-
+    const zipCode = formValues.zipCode
+    const stateId = formValues.state?.id
     const vendorDetails: any = await parseCreateVendorFormToAPIData(formValues, [])
 
     vendorDetails.status = 12
@@ -441,9 +469,11 @@ export const VendorRegister = () => {
       email: email,
       login: login,
       streetAddress: streetAddress,
+      city: city,
+      zipCode: zipCode,
       telephoneNumber: telephoneNumber,
       vendorDetails: vendorDetails,
-      stateId: state?.id,
+      stateId: stateId,
       state: state,
       isSsn: ssnEinTabIndex === 1 ? true : false,
     }
@@ -505,7 +535,7 @@ export const VendorRegister = () => {
       ? {
           einNumber: Yup.string()
             .required('EIN is a required field')
-            .matches(/^\d{3}-?\d{2}-?\d{4}$/, 'Must be only digits'),
+            .matches(/^\d{2}-?\d{7}$/, 'Must be only digits'),
         }
       : {}),
     ...(ssnEinTabIndex === 1
@@ -625,6 +655,13 @@ export const VendorRegister = () => {
     fontWeight: 400,
     color: 'gray.500',
   }
+  const [companyName, setCompanyName] = useState('')
+
+  // Function to handle input change and trim spaces
+  const handleInputChange = e => {
+    const trimmedValue = e.target.value.trim() // Trim spaces from the input
+    setCompanyName(trimmedValue) // Update the state with the trimmed value
+  }
   return (
     <Box
       bgImg="url(./bg.svg)"
@@ -695,6 +732,7 @@ export const VendorRegister = () => {
                         Email Address
                       </FormLabel>
                       <Input
+                        data-testid="email_vendor"
                         id="email"
                         type="email"
                         fontSize="14px"
@@ -717,6 +755,7 @@ export const VendorRegister = () => {
                         First Name
                       </FormLabel>
                       <Input
+                        data-testid="firstName_vendor"
                         id="firstName"
                         type="text"
                         fontSize="14px"
@@ -739,6 +778,7 @@ export const VendorRegister = () => {
                         Last Name
                       </FormLabel>
                       <Input
+                        data-testid="lastName_vendor"
                         id="lastName"
                         type="text"
                         fontSize="14px"
@@ -762,6 +802,7 @@ export const VendorRegister = () => {
                       </FormLabel>
                       <InputGroup>
                         <Input
+                          data-testid="password_vendor"
                           id="password"
                           type={showPassword ? 'text' : 'password'}
                           fontSize="14px"
@@ -812,6 +853,7 @@ export const VendorRegister = () => {
                       </FormLabel>
 
                       <Input
+                        data-testid="businessName_vendor"
                         id="companyName"
                         type="text"
                         fontSize="14px"
@@ -821,8 +863,13 @@ export const VendorRegister = () => {
                         _placeholder={placeholderStyle}
                         {...register('companyName', {
                           required: 'This is required',
+                          validate: {
+                            whitespace: validateWhitespace,
+                          },
                         })}
                         tabIndex={5}
+                        value={companyName} // Use the state variable as the input value
+                        onChange={handleInputChange}
                         variant="required-field"
                       />
                       <FormErrorMessage>{errors?.companyName && errors?.companyName?.message}</FormErrorMessage>
@@ -903,6 +950,7 @@ export const VendorRegister = () => {
                                   Primary Contact
                                 </FormLabel>
                                 <Input
+                                  data-testid="primaryContact_vendor"
                                   w="283px"
                                   id="primaryContact"
                                   type="text"
@@ -910,7 +958,6 @@ export const VendorRegister = () => {
                                   color="#252F40"
                                   placeholder="Please enter your primary contact"
                                   _placeholder={placeholderStyle}
-                                  readOnly={true}
                                   {...register('primaryContact', {
                                     required: 'This is required',
                                   })}
@@ -932,6 +979,7 @@ export const VendorRegister = () => {
                                       render={({ field }) => {
                                         return (
                                           <NumberFormat
+                                            data-testid="businessPhone_vendor"
                                             customInput={Input}
                                             value={field.value}
                                             onChange={e => field.onChange(e)}
@@ -977,13 +1025,13 @@ export const VendorRegister = () => {
                                   Primary Email Address
                                 </FormLabel>
                                 <Input
+                                  data-testid="primaryEmail_vendor"
                                   id="businessEmailAddress"
                                   type="text"
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your primary email address"
                                   _placeholder={placeholderStyle}
-                                  readOnly={true}
                                   {...register('businessEmailAddress', {
                                     required: 'This is required',
                                   })}
@@ -998,6 +1046,7 @@ export const VendorRegister = () => {
                                   Owner's Name
                                 </FormLabel>
                                 <Input
+                                  data-testid="ownerName_vendor"
                                   id="ownersName"
                                   type="text"
                                   fontSize="14px"
@@ -1028,6 +1077,7 @@ export const VendorRegister = () => {
                                   Secondary Contact
                                 </FormLabel>
                                 <Input
+                                  data-testid="secondary_vendor"
                                   id="secondName"
                                   type="text"
                                   fontSize="14px"
@@ -1044,6 +1094,7 @@ export const VendorRegister = () => {
                                   Secondary Phone Number
                                 </FormLabel>
                                 <Input
+                                  data-testid="secondaryPhone_vendor"
                                   id="secondPhoneNumber"
                                   type="text"
                                   fontSize="14px"
@@ -1062,6 +1113,7 @@ export const VendorRegister = () => {
                                   Secondary Email Address
                                 </FormLabel>
                                 <Input
+                                  data-testid="secondaryEmail_vendor"
                                   id="secondEmailAddress"
                                   type="email"
                                   fontSize="14px"
@@ -1110,12 +1162,13 @@ export const VendorRegister = () => {
                               <TabPanel p="0px">
                                 <FormControl isInvalid={errors?.einNumber}>
                                   <Input
+                                    data-testid="ein_vendor"
                                     as={InputMask}
                                     id="einNumber"
                                     type="text"
                                     fontSize="14px"
                                     color="#718096"
-                                    mask="999-99-9999"
+                                    mask="99-9999999"
                                     {...register('einNumber', {
                                       required: 'This is required',
                                     })}
@@ -1127,6 +1180,7 @@ export const VendorRegister = () => {
                               <TabPanel p="0px">
                                 <FormControl isInvalid={errors?.ssnNumber}>
                                   <Input
+                                    data-testid="ssn_vendor"
                                     as={InputMask}
                                     id="ssnNumber"
                                     type="text"
@@ -1148,6 +1202,7 @@ export const VendorRegister = () => {
                                 Street Address
                               </FormLabel>
                               <Input
+                                data-testid="streetAddress_vendor"
                                 id="streetAddress"
                                 type="text"
                                 fontSize="14px"
@@ -1181,6 +1236,7 @@ export const VendorRegister = () => {
                                   City
                                 </FormLabel>
                                 <Input
+                                  data-testid="city_vendor"
                                   id="city"
                                   type="text"
                                   fontSize="14px"
@@ -1212,6 +1268,8 @@ export const VendorRegister = () => {
                                   render={({ field, fieldState }) => (
                                     <>
                                       <Select
+                                        data-testid="state_vendor"
+                                        selectProps={{ isBorderLeft: true }}
                                         {...field}
                                         options={stateSelectOptions}
                                         selected={field.value}
@@ -1248,6 +1306,7 @@ export const VendorRegister = () => {
                                   Zip Code
                                 </FormLabel>
                                 <Input
+                                  data-testid="zipCode_vendor"
                                   id="zipCode"
                                   type="text"
                                   fontSize="14px"
@@ -1274,6 +1333,7 @@ export const VendorRegister = () => {
                                   Capacity
                                 </FormLabel>
                                 <Input
+                                  data-testid="capacity_vendor"
                                   id="capacity"
                                   type="number"
                                   fontSize="14px"
@@ -1361,6 +1421,7 @@ export const VendorRegister = () => {
                       </Button>
                       {FORM_TABS.MARKETS !== formTabIndex && (
                         <Button
+                          data-testid="next_vendor"
                           onClick={doNext}
                           disabled={!isNextBtnActive}
                           bgColor="#345587"

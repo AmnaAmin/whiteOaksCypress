@@ -10,8 +10,6 @@ import { useClient } from 'utils/auth-context'
 import { usePaginationQuery } from 'api'
 import { reduceArrayToObject } from 'utils'
 
-
-
 const getClientQueryString = (filterQueryString: string) => {
   let queryString = filterQueryString
   if (filterQueryString?.search('&sort=id.equals') < 0) {
@@ -35,6 +33,23 @@ export const useClients = (queryString: string = '', pageSize: number = 20) => {
     dataCount: data?.dataCount,
     ...rest,
   }
+}
+
+const GET_ALL_CLIENT_QUERY_KEY = 'all_clients'
+
+export const useGetAllClients = (queryString: string) => {
+  const client = useClient()
+  const apiQueryString = getClientQueryString(queryString)
+  return useQuery(
+    [GET_ALL_CLIENT_QUERY_KEY, apiQueryString],
+    async () => {
+      const response = await client(`clients?${apiQueryString}`, {})
+      return response?.data
+    },
+    {
+      enabled: false,
+    },
+  )
 }
 
 export const useNotes = ({ clientId }: { clientId: number | undefined }) => {
@@ -278,18 +293,18 @@ export const useSubFormErrors = (errors: FieldErrors<ClientFormValues>) => {
 }
 
 export const mappingDataForClientExport = (data, columns) => {
-  return data.map((row: any) => {
+  return data?.map((row: any) => {
     const columnDefWithAccessorKeyAsKey = reduceArrayToObject(columns, 'accessorKey')
     return Object.keys(columnDefWithAccessorKeyAsKey).reduce((acc, key) => {
       let value = ''
       switch (key) {
-        case 'contactsName':
+        case 'contactName':
           value = row?.contacts?.[0].contact
           break
-        case 'contactsEmail':
+        case 'contactEmail':
           value = row?.contacts?.[0].emailAddress
           break
-        case 'contactsPhone':
+        case 'contactPhone':
           value = row?.contacts?.[0].phoneNumber
           break
         case 'accountPayableContactInfosContact':
@@ -314,11 +329,11 @@ export const mappingDataForClientExport = (data, columns) => {
 
 export const CLIENT_TABLE_QUERY_KEYS = {
   companyName: 'companyName.contains',
-  contactsName: 'contactName.contains',
+  contactName: 'contactName.contains',
   streetAddress: 'streetAddress.contains',
-  contactsPhone: 'contactPhone.contains',
-  contactsEmail: 'contactEmail.contains',
+  contactPhone: 'contactPhone.contains',
+  contactEmail: 'contactEmail.contains',
   accountPayableContactInfosContact: 'accountPayableContactInfosContact.contains',
   accountPayableContactInfosEmail: 'accountPayableContactInfosEmail.contains',
   accountPayableContactInfosPhone: 'accountPayableContactInfosPhone.contains',
-};
+}

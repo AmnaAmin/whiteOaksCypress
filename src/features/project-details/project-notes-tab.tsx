@@ -39,6 +39,7 @@ export const ProjectNotes: React.FC<any> = props => {
       projectCompletion={true}
       contentStyle={{ padding: '25px', maxHeight: '450px' }}
       pageLayoutStyle={{ bg: 'white', rounded: 6, pb: 2 }}
+      isPercentageDisabled={true}
     />
   )
 }

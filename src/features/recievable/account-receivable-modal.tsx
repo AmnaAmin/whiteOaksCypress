@@ -50,7 +50,7 @@ const AccountReceivableModal: React.FC<{
           
           <ProjectDetailsTab
             isRecievable={true}
-            style={{ marginLeft: '32px', marginRight: '32px', backgroundColor: '#F7FAFC', height: '430px', pt: "5px"  }}
+            style={{ marginLeft: '32px', marginRight: '32px', backgroundColor: '#F7FAFC', height: '520px', pt: "5px"  }}
             tabVariant="enclosed"
             onClose={props.onClose}
             projectData={projectData as Project}

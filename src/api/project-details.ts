@@ -126,7 +126,7 @@ export const useGetClientSelectOptions = () => {
 
   const clientSelectOptions =
     clients?.map((client: Client) => ({
-      value: client.companyName,
+      value: client.id,
       label: client.companyName,
       carrier: client.carrier,
     })) || []
@@ -489,12 +489,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
         }
         // Last Project Status -> Reconcile
         else if (previousProjectStatus === Number(PROJECT_STATUS.reconcile.value)) {
-          overrideProjectStatusOptions = [
-            selectOption,
-            PROJECT_STATUS.new, 
-            PROJECT_STATUS.active, 
-            PROJECT_STATUS.punch
-          ]
+          overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch]
         }
         // Last Project Status -> Overpayment
         else if (previousProjectStatus === Number(PROJECT_STATUS.overpayment.value)) {
@@ -589,6 +584,8 @@ export const parseFormValuesFromAPIData = ({
     clientDueDate: project.clientDueDate as string,
     clientWalkthroughDate: project.clientWalkthroughDate as string,
     clientSignOffDate: project.clientSignoffDate as string,
+    claimNumber: project.claimNumber,
+    reoNumber: project.reoNumber,
     overrideProjectStatus: '',
     isReconciled: project.isReconciled as boolean,
     reconcileDate: project.reconcileDate as string,
@@ -640,7 +637,7 @@ export const parseFormValuesFromAPIData = ({
     superPhoneNumber: project.superPhoneNumber,
     superPhoneNumberExtension: project.superPhoneNumberExtension,
     superEmail: project.superEmailAddress,
-    client: findOptionByValue(clientSelectOptions, project.clientName),
+    client: clientSelectOptions?.find(c => c?.label === project?.clientName),
     clientType: findOptionByValue(clientTypesSelectOptions, project.clientTypeId),
     homeOwnerName: project.homeOwnerName,
     homeOwnerPhone: project.homeOwnerPhone,
@@ -750,6 +747,8 @@ export const parseProjectDetailsPayloadFromFormData = async (
     clientDueDate: dateISOFormat(formValues.clientDueDate),
     clientWalkthroughDate: dateISOFormat(formValues?.clientWalkthroughDate),
     clientSignoffDate: dateISOFormat(formValues?.clientSignOffDate),
+    claimNumber: formValues.claimNumber,
+    reoNumber: formValues.reoNumber,
     overrideProjectStatus: formValues.overrideProjectStatus?.value,
     isReconciled: formValues.isReconciled === null ? false : formValues.isReconciled,
     lienRightFileDate: dateISOFormat(formValues.lienFiled),

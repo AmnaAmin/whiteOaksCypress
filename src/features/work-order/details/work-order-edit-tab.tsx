@@ -26,8 +26,14 @@ import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormatNew } from 'utils/date-time-utils'
-import Select from 'components/form/react-select'
-import { defaultValuesWODetails, parseWODetailValuesToPayload, useFieldEnableDecisionDetailsTab } from 'api/work-order'
+import Select, { CreatableSelect } from 'components/form/react-select'
+import {
+  completePercentageValues,
+  defaultValuesWODetails,
+  newObjectFormatting,
+  parseWODetailValuesToPayload,
+  useFieldEnableDecisionDetailsTab,
+} from 'api/work-order'
 import AssignedItems from './assigned-items'
 import {
   getRemovedItems,
@@ -49,6 +55,7 @@ import { CANCEL_WO_OPTIONS } from 'constants/index'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
+import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 export type SelectVendorOption = {
   label: string
@@ -169,7 +176,9 @@ const WorkOrderDetailTab = props => {
   const [uploadedWO, setUploadedWO] = useState<any>(null)
 
   const { t } = useTranslation()
-  const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
+  const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
+  const disabledSave =
+    isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
   const { isAdmin } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
   const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
@@ -349,6 +358,7 @@ const WorkOrderDetailTab = props => {
       updateWorkOrderLineItems(deleted, savePayload)
     }
   }
+  const handleDropdownValue = v => [{ value: v, label: `${v?.toString()}%` }]
 
   const onSubmit = values => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
@@ -548,7 +558,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!workOrderStartDateEnable}
+                    isDisabled={!workOrderStartDateEnable || isWOCancelled}
                     min={clientStart as any}
                     variant="required-field"
                     {...register('workOrderStartDate', {
@@ -569,7 +579,7 @@ const WorkOrderDetailTab = props => {
                     size="md"
                     css={calendarIcon}
                     min={woStartDate as string}
-                    isDisabled={!workOrderExpectedCompletionDateEnable}
+                    isDisabled={!workOrderExpectedCompletionDateEnable || isWOCancelled}
                     variant="required-field"
                     {...register('workOrderExpectedCompletionDate', {
                       required: 'This is required field.',
@@ -594,9 +604,43 @@ const WorkOrderDetailTab = props => {
                   />
                 </FormControl>
               </Box>
-              {!(uploadedWO && uploadedWO?.s3Url) && (
-                <Box w="215px" display={'none'}>
+              {uploadedWO && uploadedWO?.s3Url && (
+                <Box w="215px">
                   <FormControl>
+                    <FormLabel variant="strong-label" size="md">
+                      {t(`${WORK_ORDER}.completePercentage`)}
+                    </FormLabel>
+                    <Controller
+                      control={control}
+                      // rules={{ required: true }}
+                      name={'completePercentage'}
+                      render={({ field }) => {
+                        return (
+                          <CreatableSelect
+                            {...field}
+                            isDisabled={isWOCancelled}
+                            id={`completePercentage`}
+                            options={completePercentageValues}
+                            size="md"
+                            value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
+                            // isDisabled={isVendor}
+                            onChange={option => {
+                              if (option?.__isNew__) {
+                                field.onChange(newObjectFormatting(option))
+                              } else {
+                                field.onChange(option)
+                              }
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FormControl>
+                </Box>
+              )}
+              {!(uploadedWO && uploadedWO?.s3Url) && (
+                <Box w="215px">
+                  <FormControl data-testid="completedPercentageField">
                     <FormLabel variant="strong-label" size="md">
                       {t(`${WORK_ORDER}.completePercentage`)}
                     </FormLabel>
