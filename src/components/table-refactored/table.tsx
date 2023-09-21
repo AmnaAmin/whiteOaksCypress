@@ -17,6 +17,7 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
+  Button,
 } from '@chakra-ui/react'
 import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
@@ -77,13 +78,20 @@ function Filter({
 
   const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
   const [selectedDateRange, setSelectedDateRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: '',
+    endDate: '',
   })
+  const [selectedStartDate, setSelectedStartDate] = useState('')
+  const [selectedEndDate, setSelectedEndDate] = useState('')
 
   const handleDateInputClick = e => {
     e.preventDefault()
     setIsDateRangePickerOpen(!isDateRangePickerOpen)
+  }
+  const handleClear = () => {
+    column.setFilterValue('')
+    setSelectedStartDate('')
+    setIsDateRangePickerOpen(false)
   }
 
   return (
@@ -99,33 +107,46 @@ function Filter({
           <Popover>
             <PopoverTrigger>
               <DebouncedInput
-                value={`${format(selectedDateRange?.startDate, 'dd/MM/yyyy')}-${format(
-                  selectedDateRange?.endDate,
-                  'dd/MM/yyyy',
-                )}`}
+                dateFilter
+                value={selectedStartDate === '' ? 'mm/dd/yyyy' : `${selectedStartDate} , ${selectedEndDate}`}
                 className="w-36 border shadow rounded"
                 list={column.id + 'list'}
                 // @ts-ignore
                 minW={dateFilter && '127px'}
-                resetValue={!!metaData?.resetFilters}
                 onMouseDown={handleDateInputClick}
+                resetValue={!!metaData?.resetFilters}
+                // onChange={value => {
+                //   column.setFilterValue(selectedStartDate === '' ? '' : `${selectedStartDate} - ${selectedEndDate}`)
+                //   if (allowStickyFilters) setStickyFilter(value)
+                // }}
               />
             </PopoverTrigger>
             <PopoverContent>
               {isDateRangePickerOpen && dateFilter && (
-                <DateRangePicker
-                  ranges={[selectionRange]}
-                  onChange={dateRange => {
-                    const selectedStartDate = dateRange.selection.startDate
-                    const selectedEndDate = dateRange.selection.endDate
-                    const formattedStartDate = format(selectedStartDate, 'yyyy-MM-dd')
-                    const formattedEndDate = format(selectedEndDate, 'yyyy-MM-dd')
-                    setSelectedDateRange({ startDate: selectedStartDate, endDate: selectedEndDate })
-                    column.setFilterValue(`${formattedStartDate} - ${formattedEndDate}`)
-                    if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
-                    setIsDateRangePickerOpen(false)
-                  }}
-                />
+                <>
+                  <DateRangePicker
+                    zIndex={1000}
+                    ranges={[selectionRange]}
+                    onSelect={() => {
+                      setIsDateRangePickerOpen(false)
+                    }}
+                    onChange={dateRange => {
+                      console.log('filter==========', !!metaData?.resetFilters)
+
+                      const selectedStartDate = dateRange.selection.startDate
+                      const selectedEndDate = dateRange.selection.endDate
+                      const formattedStartDate = format(selectedStartDate, 'yyyy-MM-dd')
+                      const formattedEndDate = format(selectedEndDate, 'yyyy-MM-dd')
+                      setSelectedStartDate(formattedStartDate)
+                      setSelectedEndDate(formattedEndDate)
+                      setSelectedDateRange({ startDate: selectedStartDate, endDate: selectedEndDate })
+                      column.setFilterValue(`${formattedStartDate} - ${formattedEndDate}`)
+                      if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
+                      setIsDateRangePickerOpen(false)
+                    }}
+                  />
+                  <Button onClick={handleClear}>Clear</Button>
+                </>
               )}
             </PopoverContent>
           </Popover>
@@ -135,6 +156,8 @@ function Filter({
           type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
           value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
           onChange={value => {
+            console.log('filter==========', !!metaData?.resetFilters)
+
             if (dateFilter) {
               column.setFilterValue(datePickerFormat(value as string))
               if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
@@ -148,6 +171,7 @@ function Filter({
           // @ts-ignore
           minW={dateFilter && '127px'}
           resetValue={!!metaData?.resetFilters}
+          dateFilter
         />
       )}
       <div className="h-1" />
@@ -177,12 +201,14 @@ function DebouncedInput({
   resetValue,
   onChange,
   debounce = 500,
+  dateFilter,
   ...props
 }: {
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
   resetValue?: boolean
+  dateFilter?: boolean
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   const [value, setValue] = useState(initialValue)
   const [showClearIcon, setShowClearIcon] = useState(false)
@@ -192,7 +218,7 @@ function DebouncedInput({
   const isInputInViewPort = useIsInViewport(inputRef)
 
   useEffect(() => {
-    if (typeof value === 'string' && value.replace(/\s+/g, '') !== '') {
+    if (typeof value === 'string' && value.replace(/\s+/g, '') !== '' && !dateFilter) {
       setShowClearIcon(true)
     }
   }, [])
@@ -203,6 +229,7 @@ function DebouncedInput({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
+      console.log('00000000', value)
       onChange(value)
     }, debounce)
 
@@ -255,7 +282,7 @@ function DebouncedInput({
           border: '1px solid #345EA6',
         }}
       />
-      {showClearIcon && props.type !== 'date' ? (
+      {showClearIcon ? (
         <Icon
           data-testid="tableFilterInputFieldClearIcon"
           cursor="pointer"
