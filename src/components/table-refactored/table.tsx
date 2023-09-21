@@ -138,6 +138,7 @@ function Filter({
                     marginTop: '5px',
                     textTransform: 'capitalize',
                     paddingTop: '10px',
+                    cursor: 'pointer',
                   }}
                 >
                   Clear

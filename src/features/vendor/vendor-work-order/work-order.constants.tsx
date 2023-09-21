@@ -11,8 +11,10 @@ export const WORK_ORDER_TABLE_QUERY_KEYS = {
   companyName: 'companyName.contains',
   businessEmailAddress: 'businessEmailAddress.contains',
   businessPhoneNumber: 'businessPhoneNumber.contains',
-  workOrderIssueDate: 'workOrderIssueDate.equals',
-  workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',
+  workOrderIssueDateStart: 'workOrderIssueDate.greaterThanOrEqual',
+  workOrderIssueDateEnd: 'workOrderIssueDate.lessThanOrEqual',
+  workOrderExpectedCompletionDateStart: 'workOrderExpectedCompletionDate.greaterThanOrEqual',
+  workOrderExpectedCompletionDateEnd: 'workOrderExpectedCompletionDate.lessThanOrEqual',
 }
 
 export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
