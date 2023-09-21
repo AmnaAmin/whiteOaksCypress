@@ -104,50 +104,66 @@ function Filter({
 
       {dateFilter ? (
         <>
-          <Popover>
-            <PopoverTrigger>
-              <DebouncedInput
-                dateFilter
-                value={selectedStartDate === '' ? 'mm/dd/yyyy' : `${selectedStartDate} , ${selectedEndDate}`}
-                className="w-36 border shadow rounded"
-                list={column.id + 'list'}
-                // @ts-ignore
-                minW={dateFilter && '127px'}
-                onMouseDown={handleDateInputClick}
-                resetValue={!!metaData?.resetFilters}
-                onChange={value => {
-                  column.setFilterValue(selectedStartDate === '' ? '' : `${selectedStartDate} - ${selectedEndDate}`)
-                  setStickyFilter(`${selectedStartDate} - ${selectedEndDate}`)
+          <div style={{ position: 'relative' }}>
+            <DebouncedInput
+              dateFilter
+              value={selectedStartDate === '' ? 'mm/dd/yyyy' : `${selectedStartDate} , ${selectedEndDate}`}
+              className="w-36 border shadow rounded"
+              list={column.id + 'list'}
+              // @ts-ignore
+              minW={dateFilter && '127px'}
+              onMouseDown={handleDateInputClick}
+              resetValue={!!metaData?.resetFilters}
+              onChange={value => {
+                column.setFilterValue(selectedStartDate === '' ? '' : `${selectedStartDate} - ${selectedEndDate}`)
+                setStickyFilter(`${selectedStartDate} - ${selectedEndDate}`)
+              }}
+            />
+            {isDateRangePickerOpen && (
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: '0',
+                  backgroundColor: 'white',
+                  boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
                 }}
-              />
-            </PopoverTrigger>
-            <PopoverContent>
-              {isDateRangePickerOpen && dateFilter && (
-                <>
-                  <DateRangePicker
-                    zIndex={1000}
-                    ranges={[selectionRange]}
-                    onSelect={() => {
-                      setIsDateRangePickerOpen(false)
-                    }}
-                    onChange={dateRange => {
-                      const selectedStartDate = dateRange.selection.startDate
-                      const selectedEndDate = dateRange.selection.endDate
-                      const formattedStartDate = format(selectedStartDate, 'yyyy-MM-dd')
-                      const formattedEndDate = format(selectedEndDate, 'yyyy-MM-dd')
-                      setSelectedStartDate(formattedStartDate)
-                      setSelectedEndDate(formattedEndDate)
-                      setSelectedDateRange({ startDate: selectedStartDate, endDate: selectedEndDate })
-                      column.setFilterValue(`${formattedStartDate} - ${formattedEndDate}`)
-                      if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
-                      setIsDateRangePickerOpen(false)
-                    }}
-                  />
-                  <Button onClick={handleClear}>Clear</Button>
-                </>
-              )}
-            </PopoverContent>
-          </Popover>
+              >
+                <div
+                  onClick={handleClear}
+                  style={{
+                    color: 'rgb(61, 145, 255)',
+                    marginLeft: '15px',
+                    fontSize: '12px',
+                    marginTop: '3px',
+                    textTransform: 'capitalize',
+                    paddingTop: '10px',
+                  }}
+                >
+                  Clear
+                </div>
+
+                <DateRangePicker
+                  ranges={[selectionRange]}
+                  onSelect={() => {
+                    setIsDateRangePickerOpen(false)
+                  }}
+                  onChange={dateRange => {
+                    const selectedStartDate = dateRange.selection.startDate
+                    const selectedEndDate = dateRange.selection.endDate
+                    const formattedStartDate = format(selectedStartDate, 'yyyy-MM-dd')
+                    const formattedEndDate = format(selectedEndDate, 'yyyy-MM-dd')
+                    setSelectedStartDate(formattedStartDate)
+                    setSelectedEndDate(formattedEndDate)
+                    setSelectedDateRange({ startDate: selectedStartDate, endDate: selectedEndDate })
+                    column.setFilterValue(`${formattedStartDate} - ${formattedEndDate}`)
+                    if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
+                    setIsDateRangePickerOpen(false)
+                  }}
+                />
+              </div>
+            )}
+          </div>
         </>
       ) : (
         <DebouncedInput
