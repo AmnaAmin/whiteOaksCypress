@@ -133,9 +133,9 @@ function Filter({
                   onClick={handleClear}
                   style={{
                     color: 'rgb(61, 145, 255)',
-                    marginLeft: '15px',
+                    marginLeft: '17px',
                     fontSize: '12px',
-                    marginTop: '3px',
+                    marginTop: '5px',
                     textTransform: 'capitalize',
                     paddingTop: '10px',
                   }}
