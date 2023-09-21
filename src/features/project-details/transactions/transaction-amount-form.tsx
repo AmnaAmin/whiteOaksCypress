@@ -571,6 +571,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                       )
                                     }}
                                     variant={'required-field'}
+                                    
                                     size="sm"
                                   />
                                 ) : (
