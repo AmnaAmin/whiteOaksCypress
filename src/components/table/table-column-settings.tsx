@@ -21,7 +21,7 @@ import { MdOutlineSettings } from 'react-icons/md'
 import '@lourenci/react-kanban/dist/styles.css'
 import Board, { moveCard } from '@asseinfo/react-kanban'
 import { BiGridVertical } from 'react-icons/bi'
-import { result } from 'lodash'
+import React from 'react'
 
 export type ColumnType = {
   id?: number
@@ -43,46 +43,41 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
   const [paginationRecord, setPaginationRecord] = useState<ColumnType | undefined>(
     columns?.find(c => c.field === 'pagination'),
   )
-  const [columnRecords, setColumnRecords] = useState(
-    columns?.filter(col => col.field !== 'pagination' && col.field == null),
-  )
   const [columnResults, setColumnResults] = useState(columns?.filter(col => col.contentKey !== 'pagination'))
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { t } = useTranslation()
   // available.
-  const mapRecordsAvailable =  useMemo(() => {
-    return {
-      columnResults: columnResults
+  const mapRecordsAvailable = useMemo(
+    () =>
+      columnResults
         .filter(c => !c.hide)
         .map((c, i) => ({
           ...c,
-          id: c.id,
+          id: Math.floor(Math.random() * 100000),
           title: c.field,
           hide: c.hide,
         })),
-    }
-  }, [columnResults])
-  
+
+    [columnResults],
+  )
+
   //unavailable..
-  const mapRecordsUnavailable = useMemo(() => {
-    return {
-      columnResults: columnResults
+  const mapRecordsUnavailable = useMemo(
+    () =>
+      columnResults
         .filter(c => c.hide)
         .map((c, i) => ({
           ...c,
-          id: c.id,
+          id: Math.floor(Math.random() * 100000),
           title: c.field,
           hide: c.hide,
         })),
-    }
-  }, [columnResults])
-  
-console.log('columnResults',columnResults)
-console.log('mapRecordsUnavailable',mapRecordsUnavailable)
-console.log('mapRecordsAvailable',mapRecordsAvailable)
-  const board = useMemo(()=>{
-    return  {
+
+    [columnResults],
+  )
+  const board = useMemo(() => {
+    return {
       columns: [
         {
           id: 1,
@@ -96,16 +91,13 @@ console.log('mapRecordsAvailable',mapRecordsAvailable)
         },
       ] as any,
     }
-  },[mapRecordsAvailable,mapRecordsUnavailable])
-
+  }, [mapRecordsAvailable, mapRecordsUnavailable])
+  const [initialBoard, setInitialBoard] = useState(board)
   const [managedBoard, setManagedBoard] = useState(board)
   useEffect(() => {
-    // if(mapRecordsUnavailable.length > 0)
-    // return 
     setManagedBoard(board)
   }, [board])
 
-console.log('managedBoard',managedBoard)
   const saveModal = useCallback(() => {
     const columnsToShow = managedBoard?.columns[0]?.cards
     const columnsToHide = managedBoard?.columns[1]?.cards
@@ -118,72 +110,36 @@ console.log('managedBoard',managedBoard)
       columnsPayload.push(paginationRecord as ColumnType)
     }
     onClose()
+    setManagedBoard(initialBoard)
     onSave(columnsPayload)
-  }, [columnResults, onClose, onSave, managedBoard])
+  }, [columnResults, onClose, onSave, managedBoard, initialBoard])
 
   useEffect(() => {
     setColumnResults(columns?.filter(col => col.field !== 'pagination'))
     setPaginationRecord(columns?.find(c => c.field === 'pagination'))
+    setInitialBoard(board); 
   }, [columns])
 
+  const [isUpdated, setisUpdated] = useState(false)
+
   const onCardDragChange = (_card, source, destination) => {
+    if (!isUpdated) {
+      setisUpdated(true)
+    }
     const updatedBoard = moveCard(managedBoard, source, destination)
     setManagedBoard(updatedBoard)
+  }
+  const [modalKey, setModalKey] = useState(0)
+  const _onClose = () => {
+    // Reset the managedBoard to the initialBoard
+    setManagedBoard(initialBoard)
+    onClose()
+    setModalKey(prevKey => prevKey + 1) 
   }
 
   const closeSetting = () => {
     onClose()
     refetch()
-  }
-
-  function ControlledBoard() {
-    const divStyle = {
-      color: '#4A5568',
-      fontWeight: 500,
-    }
-
-    const columnStyle = {
-      width: '400px',
-      fontWeight: 600,
-      color: '#345EA6',
-    }
-
-    const cardStyle = {
-      width: '400px',
-      marginTop: '16px',
-      height: '50px',
-      backgroundColor: '#FFFFFF',
-      borderRadius: '6px',
-      border: '1px solid #D3D3D3',
-    }
-
-    return (
-      <div style={divStyle}>
-        <Board
-          onCardDragEnd={onCardDragChange}
-          disableColumnDrag
-          renderColumnHeader={({ title }) => <div style={columnStyle}>{title}</div>}
-          renderCard={({ title, id }, { dragging }) => (
-            <>
-              <div
-                style={{
-                  opacity: dragging ? 0.5 : 1,
-                }}
-              >
-                <div style={cardStyle}>
-                  <div style={{ display: 'flex', alignItems: 'center', marginLeft: '16px' }}>
-                    <BiGridVertical style={{ marginRight: '5px', color: '#989898', marginTop: '10px' }} />
-                    <span style={{ marginTop: '10px' }}>{title}</span>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
-        >
-          {managedBoard}
-        </Board>
-      </div>
-    )
   }
 
   return (
@@ -203,7 +159,7 @@ console.log('managedBoard',managedBoard)
           </HStack>
         </Button>
       </Box>
-      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose} size="6xl">
+      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={_onClose} size="6xl" key={modalKey}>
         <ModalOverlay />
         <ModalContent h="620px" bg="#F2F3F4" rounded="none">
           <ModalHeader
@@ -231,7 +187,12 @@ console.log('managedBoard',managedBoard)
             borderBottom="1px solid #CBD5E0"
             pt="30px"
           >
-            <ControlledBoard />
+            <ControlledBoard
+              onCardDragChange={onCardDragChange}
+              board={board}
+              isUpdated={isUpdated}
+              updatedBoard={managedBoard}
+            />
           </ModalBody>
           <ModalFooter
             bg="#FFFFFF"
@@ -256,5 +217,53 @@ console.log('managedBoard',managedBoard)
     </>
   )
 }
+function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
+  const divStyle = {
+    color: '#4A5568',
+  }
 
+  const columnStyle = {
+    width: '400px',
+    fontWeight: 600,
+    color: '#345EA6',
+  }
+
+  const cardStyle = {
+    width: '400px',
+    marginTop: '16px',
+    height: '50px',
+    backgroundColor: '#FFFFFF',
+    borderRadius: '6px',
+    border: '1px solid #D3D3D3',
+  }
+
+  if (!board || !board.columns) return null
+  return (
+    <div style={divStyle}>
+      <Board
+        onCardDragEnd={onCardDragChange}
+        disableColumnDrag
+        renderColumnHeader={({ title }) => <div style={columnStyle}>{title}</div>}
+        renderCard={({ title, id }, { dragging }) => (
+          <React.Fragment key={id}>
+            <div
+              style={{
+                opacity: dragging ? 0.5 : 1,
+              }}
+            >
+              <div style={cardStyle}>
+                <div style={{ display: 'flex', alignItems: 'center', marginLeft: '16px' }}>
+                  <BiGridVertical style={{ marginRight: '5px', color: '#989898', marginTop: '10px' }} />
+                  <span style={{ marginTop: '10px' }}>{title}</span>
+                </div>
+              </div>
+            </div>
+          </React.Fragment>
+        )}
+      >
+        {isUpdated ? updatedBoard : board}
+      </Board>
+    </div>
+  )
+}
 export default TableColumnSettings
