@@ -412,7 +412,7 @@ export const useProjectCoordinators = () => {
   const client = useClient()
 
   const { data: projectCoordinators, ...rest } = useQuery('PC', async () => {
-    const response = await client(`users/usertype/112?sort=firstName,asc`, {})
+    const response = await client(`users/v2/usertype/112?sort=firstName,asc`, {})
 
     return response?.data
   })
