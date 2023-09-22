@@ -20,7 +20,6 @@ import React, { useRef, useEffect } from 'react'
 import { BiSpreadsheet } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 
-
 export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
     <Flex mb={4} flexDir={{ base: 'column', lg: 'row' }} alignItems="start" mt="20px">
