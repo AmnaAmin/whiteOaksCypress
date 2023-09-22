@@ -147,6 +147,7 @@ export const useUpdateRoleMutation = roleName => {
 }
 export const SECTIONS = [
   { value: 'ADMINDASHBOARD', label: 'Dashboard' },
+  { value: 'VENDORDASHBOARD', label: 'Vendor Dashboard' },
   { value: 'ESTIMATE', label: 'Estimates' },
   { value: 'PROJECT', label: 'Projects' },
   { value: 'PAYABLE', label: 'Payable' },
@@ -216,6 +217,7 @@ export enum ADV_PERMISSIONS {
   woaStartEdit = 'PROJECTDETAIL.MGMT.WOASTART.EDIT',
   verifyProjectEnable = 'PROJECTDETAIL.MGMT.PROJECTVERIFIED.EDIT',
   deactivateVendor = 'VENDOR.DEACTIVEVENDOR',
+  vendorAccountEdit = 'VENDOR.VENDORACCOUNTS.EDIT',
   transStatusEdit = 'PROJECTDETAIL.TRANSACTION.STATUS.EDIT',
   transPaidDateEdit = 'PROJECTDETAIL.TRANSACTION.PAIDDATE.EDIT',
   transPaymentReceivedEdit = 'PROJECTDETAIL.TRANSACTION.PAYMENTRECEIVED.EDIT',
@@ -224,6 +226,7 @@ export enum ADV_PERMISSIONS {
   cancelWorkOrderEnable = 'PROJECTDETAIL.WORKORDER.CANCEL.EDIT',
   hideCreateProject = 'PROJECT.CREATE.HIDE',
   hidePaidProjects = 'PROJECT.PAID.HIDE',
+  overrideDrawRestrictionOnPercentageCompletion = 'PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE',
 }
 
 export const mapFormValuestoPayload = (values, allPermissions) => {
@@ -280,6 +283,10 @@ export const permissionsDefaultValues = ({ permissions }) => {
       cancelWorkOrderEnable: permissionSet?.some(p => [ADV_PERMISSIONS.cancelWorkOrderEnable, 'ALL'].includes(p)),
       hideCreateProject: permissionSet?.some(p => [ADV_PERMISSIONS.hideCreateProject].includes(p)),
       hidePaidProjects: permissionSet?.some(p => [ADV_PERMISSIONS.hidePaidProjects].includes(p)),
+      vendorAccountEdit: permissionSet?.some(p => [ADV_PERMISSIONS.vendorAccountEdit].includes(p)),
+      overrideDrawRestrictionOnPercentageCompletion: permissionSet?.some(p =>
+        [ADV_PERMISSIONS.overrideDrawRestrictionOnPercentageCompletion].includes(p),
+      ),
     },
   }
 }

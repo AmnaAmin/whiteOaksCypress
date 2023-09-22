@@ -16,7 +16,7 @@ export const AccessControl: React.FC = () => {
   const [newRole, setNewRole] = useState(false)
   const { data } = useAccountData()
   const isDevtekUser = data?.devAccount
-  const allowEdit = !permissions?.systemRole || (permissions?.systemRole && isDevtekUser)
+  const allowEdit = !permissions?.[0]?.systemRole || (permissions?.[0]?.systemRole && isDevtekUser)
 
   return (
     <Card minH="100%">

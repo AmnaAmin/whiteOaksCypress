@@ -41,6 +41,7 @@ import {
   useFetchAllPermissions,
   useUpdateRoleMutation,
 } from 'api/access-control'
+import { useAccountData } from 'api/user-account'
 
 interface PemissionFormValues {
   roleName: string
@@ -60,6 +61,8 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
   const { mutate: updateRole } = useUpdateRoleMutation(permissions?.[0]?.name)
   const { isOpen, onOpen, onClose } = useDisclosure()
   const { control, register, reset } = formReturn
+  const { data } = useAccountData()
+  const isDevtekUser = data?.devAccount
   const { t } = useTranslation()
   useEffect(() => {
     reset(permissionsDefaultValues({ permissions }))
@@ -97,6 +100,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                 <Input
                   data-testid="roleName"
                   id="roleName"
+                  disabled={!!permissions}
                   size="md"
                   variant="required-field"
                   {...register('roleName', {
@@ -118,7 +122,12 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                   render={({ field, fieldState }) => (
                     <>
                       <div data-testid="assignment">
-                        <Select options={ASSIGNMENTS} selectProps={{ isBorderLeft: true }} {...field} />
+                        <Select
+                          isDisabled={!!permissions}
+                          options={ASSIGNMENTS}
+                          selectProps={{ isBorderLeft: true }}
+                          {...field}
+                        />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </div>
                     </>
@@ -138,7 +147,12 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                   render={({ field, fieldState }) => (
                     <>
                       <div data-testid="locations">
-                        <Select options={LOCATIONS} selectProps={{ isBorderLeft: true }} {...field} />
+                        <Select
+                          options={LOCATIONS}
+                          isDisabled={!!permissions}
+                          selectProps={{ isBorderLeft: true }}
+                          {...field}
+                        />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </div>
                     </>
@@ -146,31 +160,33 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                 />
               </FormControl>
             </Box>
-            <Box w="215px">
-              <FormControl isInvalid={!!errors.systemRole}>
-                <FormLabel variant="strong-label" size="md">
-                  {t(`${ACCESS_CONTROL}.systemRole`)}
-                </FormLabel>
-                <Controller
-                  control={control}
-                  name={`systemRole`}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <Checkbox
-                        data-testid={'systemRole'}
-                        colorScheme="PrimaryCheckBox"
-                        isChecked={field.value}
-                        style={{ background: 'white', border: '#DFDFDF' }}
-                        mr="2px"
-                        onChange={value => {
-                          field.onChange(value)
-                        }}
-                      ></Checkbox>
-                    </>
-                  )}
-                />
-              </FormControl>
-            </Box>
+            {isDevtekUser && (
+              <Box w="215px">
+                <FormControl isInvalid={!!errors.systemRole}>
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`${ACCESS_CONTROL}.systemRole`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name={`systemRole`}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <Checkbox
+                          data-testid={'systemRole'}
+                          colorScheme="PrimaryCheckBox"
+                          isChecked={field.value}
+                          style={{ background: 'white', border: '#DFDFDF' }}
+                          mr="2px"
+                          onChange={value => {
+                            field.onChange(value)
+                          }}
+                        ></Checkbox>
+                      </>
+                    )}
+                  />
+                </FormControl>
+              </Box>
+            )}
           </HStack>
           <VStack w="100%" justifyContent={'start'}>
             <HStack justifyContent={'space-between'} width="100%">
@@ -662,7 +678,13 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                 )}
               />
             </VStack>
-            <VStack pl="40px" alignItems={'flex-start'} borderLeft="1px solid #E2E8F0" borderRight="1px solid #E2E8F0">
+            <VStack
+              maxW="35%"
+              pl="40px"
+              alignItems={'flex-start'}
+              borderLeft="1px solid #E2E8F0"
+              borderRight="1px solid #E2E8F0"
+            >
               <Text color="gray.500" fontWeight={500}>
                 Location
               </Text>
@@ -860,6 +882,29 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                   </>
                 )}
               />
+              <Controller
+                control={control}
+                name={`advancedPermissions.overrideDrawRestrictionOnPercentageCompletion`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
+                        Enable Creating Draw Without Percentage Completion Restrictions
+                      </Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
             </VStack>
             <VStack pl="20px" alignItems={'flex-start'}>
               <Text color="gray.500" fontWeight={500}>
@@ -910,13 +955,34 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                   </>
                 )}
               />
+              <Controller
+                control={control}
+                name={`advancedPermissions.vendorAccountEdit`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px">Can Edit Vendor Accounts</Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
             </VStack>
           </HStack>
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
             <Button colorScheme="brand" data-testid="confirmation-no" mr={3} onClick={onClose}>
-              {t(`close`)}
+              {t(`save`)}
             </Button>
           </ModalFooter>
         </Flex>
