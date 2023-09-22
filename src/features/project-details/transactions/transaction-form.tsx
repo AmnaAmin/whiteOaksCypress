@@ -244,6 +244,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     selectedWorkOrder,
     isApproved,
   })
+  
   const { permissions } = useRoleBasedPermissions()
   const isAdminEnabled = permissions.some(p => ['PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE', 'ALL'].includes(p))
   const isAdmin = useRoleBasedPermissions()?.permissions?.includes('ALL')

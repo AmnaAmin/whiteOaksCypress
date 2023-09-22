@@ -138,17 +138,17 @@ export const ConstructionPortalPayable = () => {
           /> */}
             <Spacer />
             {!isReadOnly && (
-              <Button
-                alignContent="right"
-                colorScheme="brand"
-                type="button"
-                onClick={() => Submit(formValues)}
-                disabled={selectedCard === '6'}
-                minW="140px"
-              >
-                <Icon as={BiSync} fontSize="18px" mr={2} />
-                {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
-              </Button>
+             <Button
+              alignContent="right"
+              colorScheme="brand"
+              type="button"
+              onClick={() => Submit(formValues)}
+              disabled={selectedCard === '6'}
+              minW="140px"
+            >
+              <Icon as={BiSync} fontSize="18px" mr={2} />
+              {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
+            </Button>
             )}
           </Flex>
 

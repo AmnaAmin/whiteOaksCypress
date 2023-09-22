@@ -215,7 +215,6 @@ export const ProjectAwardTab: React.FC<any> = props => {
               <Button data-testid="wo-cancel-btn" onClick={props?.onClose} variant="outline" colorScheme="brand">
                 {t('cancel')}
               </Button>
-
               {!isReadOnly && (props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward) ? (
                 <Button type="submit" colorScheme="brand" disabled={isSaveDisable}>
                   {t('save')}
