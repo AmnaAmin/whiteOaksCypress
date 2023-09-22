@@ -50,7 +50,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   woaCompletionDate: 'woaCompletionDate.equals',
   region: 'region.contains',
   partialPayment: 'partialPayment.equals',
-  expectedPaymentDate: 'expectedPaymentDate.equals',
+  gridExpectedPaymentDate: 'gridExpectedPaymentDate.equals',
   profitPercentage: 'profitPercentage.equals',
   profitPercentageAmount: 'profitPercentageAmount.greaterThanOrEqual',
   profitTotal: 'profitTotal.equals',
@@ -328,9 +328,8 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'projects.projectTable.expectedPayment',
-    accessorKey: 'expectedPaymentDate',
-    accessorFn: (cellInfo: any) =>
-      dateFormat(cellInfo.resubmissionDueDate !== null ? cellInfo.resubmissionDueDate : cellInfo.expectedPaymentDate),
+    accessorKey: 'gridExpectedPaymentDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.gridExpectedPaymentDate),
     meta: { format: 'date' },
   },
   {
