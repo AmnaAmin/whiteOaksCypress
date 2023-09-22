@@ -43,6 +43,8 @@ export const getAPIFilterQueryString = (
             'clientSignoffDate',
             'expectedPayDate',
             'workOrderStartDate',
+            'gridExpectedPaymentDate',
+            'expectedPaymentDate',
             'workOrderExpectedCompletionDate',
             'workOrderDateCompleted',
             'newExpectedCompletionDate',
