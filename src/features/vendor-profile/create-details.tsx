@@ -33,7 +33,7 @@ import { documentStatus, documentScore, portalAccess, useDocumentStatusSelectOpt
 import first from 'lodash/first'
 import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
-import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { validateWhitespace } from 'api/clients'
 
 const validateTelePhoneNumber = (number: string): boolean => {
@@ -55,8 +55,6 @@ const CreateVendorDetail: React.FC<{
     setValue,
   } = useFormContext<VendorProfileDetailsFormData>()
   const { disableDetailsNext } = useVendorNext({ control })
-
-  const { isFPM } = useUserRolesSelector()
 
   const capacityError = useWatch({ name: 'capacity', control })
 
@@ -211,7 +209,7 @@ const CreateVendorDetail: React.FC<{
                 variant="required-field"
                 size="md"
                 data-testid="vendorCity"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
                 onKeyPress={preventNumber}
               />
               <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
@@ -258,7 +256,7 @@ const CreateVendorDetail: React.FC<{
                 variant="required-field"
                 size="md"
                 data-testid="vendorZipCode"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
               />
               <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
@@ -409,7 +407,7 @@ const CreateVendorDetail: React.FC<{
                   },
                 })}
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
               />
               <FormErrorMessage pos="absolute">{errors.ownerName && errors.ownerName?.message}</FormErrorMessage>
             </FormControl>

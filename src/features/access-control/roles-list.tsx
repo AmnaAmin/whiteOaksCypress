@@ -26,7 +26,6 @@ export const RolesList = ({ setSelectedRole, selectedRole, allowEdit }) => {
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
   const [binIcon, setBinIcon] = useState(null)
-
   const ROLES_TABLE_COLUMNS: ColumnDef<any>[] = useMemo(() => {
     return [
       {
