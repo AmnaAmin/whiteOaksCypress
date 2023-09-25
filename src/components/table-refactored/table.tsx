@@ -14,12 +14,8 @@ import {
   Tfoot,
   HStack,
   Icon,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  Button,
 } from '@chakra-ui/react'
-import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
+import { AiOutlineArrowDown, AiOutlineArrowUp, AiOutlineCalendar } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
@@ -90,7 +86,7 @@ function Filter({
   }
   const handleClear = () => {
     column.setFilterValue('')
-    setSelectedStartDate('')
+    setSelectedDateRange({ startDate: '', endDate: '' })
     setIsDateRangePickerOpen(false)
   }
 
@@ -110,15 +106,17 @@ function Filter({
               value={
                 selectedDateRange?.startDate === '' && selectedDateRange?.endDate === ''
                   ? 'mm/dd/yyyy'
-                  : `${selectedStartDate} , ${selectedEndDate}`
+                  : `${moment(selectedStartDate).format('M/D/YY')} - ${moment(selectedEndDate).format('M/D/YY')}`
               }
-              className="w-36 border shadow rounded"
+              className="w-36 border shadow rounded "
+              style={{ cursor: 'pointer' }}
               list={column.id + 'list'}
               // @ts-ignore
               minW={dateFilter && '127px'}
               onMouseDown={handleDateInputClick}
               readOnly
             />
+
             {isDateRangePickerOpen && (
               <div
                 style={{
@@ -127,23 +125,9 @@ function Filter({
                   left: '0',
                   backgroundColor: 'white',
                   boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+                  marginTop: '15px',
                 }}
               >
-                <div
-                  onClick={handleClear}
-                  style={{
-                    color: 'rgb(61, 145, 255)',
-                    marginLeft: '17px',
-                    fontSize: '12px',
-                    marginTop: '5px',
-                    textTransform: 'capitalize',
-                    paddingTop: '10px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Clear
-                </div>
-
                 <DateRangePicker
                   ranges={[selectionRange]}
                   onSelect={() => {
@@ -163,6 +147,20 @@ function Filter({
                   }}
                   maxDate={moment().toDate()}
                 />
+                <div
+                  onClick={handleClear}
+                  style={{
+                    color: 'rgb(61, 145, 255)',
+                    marginLeft: '22px',
+                    fontSize: '12px',
+                    textTransform: 'capitalize',
+                    paddingTop: '10px',
+                    cursor: 'pointer',
+                    marginBottom: '15px',
+                  }}
+                >
+                  Clear
+                </div>
               </div>
             )}
           </div>
@@ -237,7 +235,6 @@ function DebouncedInput({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      console.log('00000000', value)
       onChange(value)
     }, debounce)
 
@@ -290,6 +287,7 @@ function DebouncedInput({
           border: '1px solid #345EA6',
         }}
       />
+
       {!dateFilter && showClearIcon ? (
         <Icon
           data-testid="tableFilterInputFieldClearIcon"
@@ -304,6 +302,15 @@ function DebouncedInput({
             setShowClearIcon(false)
           }}
           visibility={value === '' ? 'hidden' : 'visible'}
+        />
+      ) : dateFilter ? (
+        <Icon
+          data-testid="tableFilterInputFieldClearIcon"
+          as={AiOutlineCalendar}
+          position="absolute"
+          right={`calc(100% - ${inputWidth - 3}px)`}
+          zIndex={10000}
+          mr="-22px"
         />
       ) : null}
     </HStack>

@@ -1,5 +1,5 @@
 import { ColumnFiltersState, SortingState } from '@tanstack/react-table'
-import { dateISOFormatWithZeroTime, datePickerFormat } from './date-time-utils'
+import { dateISOFormatWithZeroTime } from './date-time-utils'
 
 export const getQueryString = (obj: { [key: string]: string | number | undefined }) => {
   return Object.keys(obj).reduce((str, key, i) => {
