@@ -8,6 +8,7 @@ import { TransactionAmountForm } from '../transaction-amount-form'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ChakraProvider } from '@chakra-ui/react'
 import { theme } from 'theme/theme'
+import { setToken } from 'utils/storage.utils'
 
 const TransactionForm = () => {
   const queryClient = new QueryClient({})
