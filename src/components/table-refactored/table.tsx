@@ -73,12 +73,11 @@ function Filter({
   }
 
   const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
+
   const [selectedDateRange, setSelectedDateRange] = useState({
-    startDate: '',
-    endDate: '',
+    startDate: dateFilter && columnFilterValue ? columnFilterValue.split(' - ')[0] : '',
+    endDate: dateFilter && columnFilterValue ? columnFilterValue.split(' - ')[1] : '',
   })
-  const [selectedStartDate, setSelectedStartDate] = useState('')
-  const [selectedEndDate, setSelectedEndDate] = useState('')
 
   const handleDateInputClick = e => {
     e.preventDefault()
@@ -86,6 +85,7 @@ function Filter({
   }
   const handleClear = () => {
     column.setFilterValue('')
+    setStickyFilter(null)
     setSelectedDateRange({ startDate: '', endDate: '' })
     setIsDateRangePickerOpen(false)
   }
@@ -105,15 +105,22 @@ function Filter({
               dateFilter
               value={
                 selectedDateRange?.startDate === '' && selectedDateRange?.endDate === ''
-                  ? 'mm/dd/yyyy'
-                  : `${moment(selectedStartDate).format('M/D/YY')} - ${moment(selectedEndDate).format('M/D/YY')}`
+                  ? ''
+                  : `${moment(selectedDateRange?.startDate).format('M/D/YY')} - ${moment(
+                      selectedDateRange?.endDate,
+                    ).format('M/D/YY')}`
               }
+              onChange={value => {
+                column.setFilterValue(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                if (allowStickyFilters) setStickyFilter(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+              }}
               className="w-36 border shadow rounded "
               style={{ cursor: 'pointer' }}
               list={column.id + 'list'}
               // @ts-ignore
               minW={dateFilter && '127px'}
               onMouseDown={handleDateInputClick}
+              resetValue={!!metaData?.resetFilters}
               readOnly
             />
 
@@ -133,14 +140,14 @@ function Filter({
                   onSelect={() => {
                     setIsDateRangePickerOpen(false)
                   }}
+                  value={[selectionRange]}
+                  zIndex={10000}
                   onChange={dateRange => {
                     const selectedStartDate = dateRange.selection.startDate
                     const selectedEndDate = dateRange.selection.endDate
                     const formattedStartDate = moment(selectedStartDate).format('YYYY-MM-DD')
                     const formattedEndDate = moment(selectedEndDate).format('YYYY-MM-DD')
-                    setSelectedStartDate(formattedStartDate)
-                    setSelectedEndDate(formattedEndDate)
-                    setSelectedDateRange({ startDate: selectedStartDate, endDate: selectedEndDate })
+                    setSelectedDateRange({ startDate: formattedStartDate, endDate: formattedEndDate })
                     column.setFilterValue(`${formattedStartDate} - ${formattedEndDate}`)
                     if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
                     setIsDateRangePickerOpen(false)
@@ -167,16 +174,14 @@ function Filter({
         </>
       ) : (
         <DebouncedInput
-          type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
-          value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
+          type={currencyFilter ? 'number' : 'text'}
+          value={(columnFilterValue as string) ?? ''}
           onChange={value => {
             column.setFilterValue(value)
             if (allowStickyFilters) setStickyFilter(value)
           }}
           className="w-36 border shadow rounded"
           list={column.id + 'list'}
-          // @ts-ignore
-          minW={dateFilter && '127px'}
           resetValue={!!metaData?.resetFilters}
         />
       )}
@@ -235,7 +240,7 @@ function DebouncedInput({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      onChange(value)
+      onChange?.(value)
     }, debounce)
 
     return () => clearTimeout(timeout)
