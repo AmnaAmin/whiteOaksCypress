@@ -107,7 +107,11 @@ function Filter({
           <div style={{ position: 'relative' }}>
             <DebouncedInput
               dateFilter
-              value={selectedStartDate === '' ? 'mm/dd/yyyy' : `${selectedStartDate} , ${selectedEndDate}`}
+              value={
+                selectedDateRange?.startDate === '' && selectedDateRange?.endDate === ''
+                  ? 'mm/dd/yyyy'
+                  : `${selectedStartDate} , ${selectedEndDate}`
+              }
               className="w-36 border shadow rounded"
               list={column.id + 'list'}
               // @ts-ignore
