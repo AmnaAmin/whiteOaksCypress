@@ -180,7 +180,6 @@ function Filter({
           // @ts-ignore
           minW={dateFilter && '127px'}
           resetValue={!!metaData?.resetFilters}
-          dateFilter
         />
       )}
       <div className="h-1" />
@@ -227,7 +226,7 @@ function DebouncedInput({
   const isInputInViewPort = useIsInViewport(inputRef)
 
   useEffect(() => {
-    if (typeof value === 'string' && value.replace(/\s+/g, '') !== '' && !dateFilter) {
+    if (typeof value === 'string' && value.replace(/\s+/g, '') !== '') {
       setShowClearIcon(true)
     }
   }, [])
@@ -291,7 +290,7 @@ function DebouncedInput({
           border: '1px solid #345EA6',
         }}
       />
-      {showClearIcon ? (
+      {!dateFilter && showClearIcon ? (
         <Icon
           data-testid="tableFilterInputFieldClearIcon"
           cursor="pointer"
