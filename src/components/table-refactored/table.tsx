@@ -66,11 +66,11 @@ function Filter({
     [column.getFacetedUniqueValues()],
   )
 
-  const selectionRange = {
+  const [selectionRange, setSelectionRange] = useState({
     startDate: new Date(),
     endDate: new Date(),
     key: 'selection',
-  }
+  })
 
   const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
 
@@ -121,6 +121,7 @@ function Filter({
               minW={dateFilter && '127px'}
               onMouseDown={handleDateInputClick}
               resetValue={!!metaData?.resetFilters}
+              placeholder="mm/dd/yy"
               readOnly
             />
 
@@ -145,6 +146,11 @@ function Filter({
                   onChange={dateRange => {
                     const selectedStartDate = dateRange.selection.startDate
                     const selectedEndDate = dateRange.selection.endDate
+                    setSelectionRange({
+                      startDate: selectedStartDate,
+                      endDate: selectedEndDate,
+                      key: 'selection',
+                    })
                     const formattedStartDate = moment(selectedStartDate).format('YYYY-MM-DD')
                     const formattedEndDate = moment(selectedEndDate).format('YYYY-MM-DD')
                     setSelectedDateRange({ startDate: formattedStartDate, endDate: formattedEndDate })

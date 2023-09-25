@@ -50,6 +50,7 @@ export const getAPIFilterQueryString = (
           'coiWcExpirationDate',
           'woaStartDate',
           'lienRightExpireDate',
+          'expectedPaymentDate',
         ].includes(filter.id)
       ) {
         modifiedFilters.push(
