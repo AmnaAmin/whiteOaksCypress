@@ -63,7 +63,7 @@ export default function useRoutesConfig() {
     { path: 'alerts', element: Alerts, permissions: ['ALERT.READ', 'ALERT.EDIT', 'ALL'] },
     { path: 'cypressReport', element: CypressReport, permissions: ['CYPRESSREPORT.READ', 'ALL'] },
     { path: 'projects', element: VendorProjects, permissions: ['VENDORPROJECT.READ', 'VENDORPROJECT.EDIT'] },
-    { path: 'clientType', element: ClientType, permissions: ['CLIENTTYPE.EDIT', 'CLIENTTYPE.READ'] },
+    { path: 'clientType', element: ClientType, permissions: ['CLIENTTYPE.EDIT', 'CLIENTTYPE.READ', 'ALL'] },
     {
       path: 'project-details/:projectId',
       element: VendorProjectDetails,
