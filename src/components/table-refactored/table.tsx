@@ -34,7 +34,7 @@ import { isValidAndNonEmpty } from 'utils'
 import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import { DateRangePicker } from 'react-date-range'
-import { format } from 'date-fns'
+import moment from 'moment'
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
 }
@@ -113,11 +113,7 @@ function Filter({
               // @ts-ignore
               minW={dateFilter && '127px'}
               onMouseDown={handleDateInputClick}
-              resetValue={!!metaData?.resetFilters}
-              onChange={value => {
-                column.setFilterValue(selectedStartDate === '' ? '' : `${selectedStartDate} - ${selectedEndDate}`)
-                setStickyFilter(`${selectedStartDate} - ${selectedEndDate}`)
-              }}
+              readOnly
             />
             {isDateRangePickerOpen && (
               <div
@@ -152,8 +148,8 @@ function Filter({
                   onChange={dateRange => {
                     const selectedStartDate = dateRange.selection.startDate
                     const selectedEndDate = dateRange.selection.endDate
-                    const formattedStartDate = format(selectedStartDate, 'yyyy-MM-dd')
-                    const formattedEndDate = format(selectedEndDate, 'yyyy-MM-dd')
+                    const formattedStartDate = moment(selectedStartDate).format('YYYY-MM-DD')
+                    const formattedEndDate = moment(selectedEndDate).format('YYYY-MM-DD')
                     setSelectedStartDate(formattedStartDate)
                     setSelectedEndDate(formattedEndDate)
                     setSelectedDateRange({ startDate: selectedStartDate, endDate: selectedEndDate })
@@ -161,6 +157,7 @@ function Filter({
                     if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
                     setIsDateRangePickerOpen(false)
                   }}
+                  maxDate={moment().toDate()}
                 />
               </div>
             )}
