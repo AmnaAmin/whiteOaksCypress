@@ -22,6 +22,8 @@ export const projects = {
           client: 'Client',
           sow: 'SOW',
           projectCost: 'Project Cost',
+          dateAddedNotes: 'Notes Added Date',
+          notesAddedBy: 'Notes Added By',
           paid: 'Paid',
           invoiceNumber: 'Invoice No',
           accountRecievable: 'AR',

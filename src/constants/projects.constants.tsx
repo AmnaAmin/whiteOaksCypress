@@ -50,7 +50,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   woaCompletionDate: 'woaCompletionDate.equals',
   region: 'region.contains',
   partialPayment: 'partialPayment.equals',
-  expectedPaymentDate: 'expectedPaymentDate.equals',
+  gridExpectedPaymentDate: 'gridExpectedPaymentDate.equals',
   profitPercentage: 'profitPercentage.equals',
   profitPercentageAmount: 'profitPercentageAmount.greaterThanOrEqual',
   profitTotal: 'profitTotal.equals',
@@ -74,6 +74,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   flag: 'flag.contains',
   woaStartDate: 'woaStartDate.equals',
   lienRightExpireDate: 'lienRightExpireDate.equals',
+  latestNoteAddedTime: 'latestNoteAddedTime.equals',
+  noteOwner: 'noteOwner.contains',
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -182,6 +184,16 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
       const value = row.cell.getValue()
       return <PopoverTooltip value={value} title={'projects.projectDetails.notes'} />
     },
+  },
+  {
+    header: 'projects.projectTable.dateAddedNotes',
+    accessorKey: 'latestNoteAddedTime',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.latestNoteAddedTime),
+    meta: { format: 'date' },
+  },
+  {
+    header: 'projects.projectTable.notesAddedBy',
+    accessorKey: 'noteOwner',
   },
   {
     header: 'projects.projectDetails.completion',
@@ -316,9 +328,8 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'projects.projectTable.expectedPayment',
-    accessorKey: 'expectedPaymentDate',
-    accessorFn: (cellInfo: any) =>
-      dateFormat(cellInfo.resubmissionDueDate !== null ? cellInfo.resubmissionDueDate : cellInfo.expectedPaymentDate),
+    accessorKey: 'gridExpectedPaymentDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.gridExpectedPaymentDate),
     meta: { format: 'date' },
   },
   {
