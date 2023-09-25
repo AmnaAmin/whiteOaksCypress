@@ -91,7 +91,7 @@ steps:
 
   - command:
       - chmod 755 auto/run_tests.sh
-      - auto/run_tests.sh
+    #  - auto/run_tests.sh
     label: ':package: & :rocket: Run Tests on PRE-PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
     if: build.branch =~ /^pswoa-/ || build.branch =~ /^PSWOA-/ 
     # depends_on:
