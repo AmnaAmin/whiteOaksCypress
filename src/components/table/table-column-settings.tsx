@@ -81,13 +81,13 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
       columns: [
         {
           id: 1,
-          title: 'Show These Records in this Order',
-          cards: mapRecordsAvailable,
+          title: 'Available Records', // Change the order of the columns
+          cards: mapRecordsUnavailable,
         },
         {
           id: 2,
-          title: 'Available Records',
-          cards: mapRecordsUnavailable,
+          title: 'Show These Records in this Order',
+          cards: mapRecordsAvailable,
         },
       ] as any,
     }
@@ -99,8 +99,8 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
   }, [board])
 
   const saveModal = useCallback(() => {
-    const columnsToShow = managedBoard?.columns[0]?.cards
-    const columnsToHide = managedBoard?.columns[1]?.cards
+    const columnsToShow = managedBoard?.columns[1]?.cards
+    const columnsToHide = managedBoard?.columns[0]?.cards
     const columnsPayload = [
       ...columnsToShow?.map((card, i) => ({ ...card, hide: false, order: i })),
       ...columnsToHide?.map((card, i) => ({ ...card, hide: true, order: i + columnsToShow.length - 1 })),
@@ -207,7 +207,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
               <Button variant="ghost" colorScheme="darkPrimary" onClick={closeSetting} border="1px solid" size="md">
                 {t('cancel')}
               </Button>
-              <Button colorScheme="darkPrimary" onClick={saveModal} size="md">
+              <Button data-testid='save-settings' colorScheme="darkPrimary" onClick={saveModal} size="md">
                 {t('save')}
               </Button>
             </HStack>
@@ -246,12 +246,14 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
         renderColumnHeader={({ title }) => <div style={columnStyle}>{title}</div>}
         renderCard={({ title, id }, { dragging }) => (
           <React.Fragment key={id}>
-            <div
+            <div 
+             data-testid={`card-${title}`}
               style={{
                 opacity: dragging ? 0.5 : 1,
               }}
             >
-              <div style={cardStyle}>
+              <div style={cardStyle} 
+              >
                 <div style={{ display: 'flex', alignItems: 'center', marginLeft: '16px' }}>
                   <BiGridVertical style={{ marginRight: '5px', color: '#989898', marginTop: '10px' }} />
                   <span style={{ marginTop: '10px' }}>{title}</span>
