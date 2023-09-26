@@ -69,18 +69,38 @@ function Filter({
     [column.getFacetedUniqueValues()],
   )
 
-  const [selectionRange, setSelectionRange] = useState({
-    startDate:
-      isDateRange && columnFilterValue ? new Date(columnFilterValue?.split(' - ')?.[0]?.toString()) : new Date(),
-    endDate: isDateRange && columnFilterValue ? new Date(columnFilterValue?.split(' - ')?.[1]?.toString()) : new Date(),
-    key: 'selection',
+  const [selectionRange, setSelectionRange] = useState(() => {
+    let startDate = new Date()
+    let endDate = new Date()
+
+    if (columnFilterValue?.includes(' - ') && isDateRange) {
+      if (columnFilterValue !== ' - ') {
+        startDate = new Date(columnFilterValue?.split(' - ')?.[0]?.toString())
+        endDate = new Date(columnFilterValue?.split(' - ')?.[1]?.toString())
+      }
+    }
+    return {
+      startDate,
+      endDate,
+      key: 'selection',
+    }
   })
 
   const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
 
-  const [selectedDateRange, setSelectedDateRange] = useState({
-    startDate: dateFilter && columnFilterValue ? columnFilterValue?.split(' - ')?.[0] : '',
-    endDate: dateFilter && columnFilterValue ? columnFilterValue?.split(' - ')?.[1] : '',
+  const [selectedDateRange, setSelectedDateRange] = useState(() => {
+    let startDate = ''
+    let endDate = ''
+    if (columnFilterValue?.includes(' - ') && isDateRange) {
+      if (columnFilterValue !== ' - ') {
+        startDate = columnFilterValue?.split(' - ')?.[0]
+        endDate = columnFilterValue?.split(' - ')?.[1]
+      }
+    }
+    return {
+      startDate,
+      endDate,
+    }
   })
 
   const handleDateInputClick = e => {
