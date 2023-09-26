@@ -128,12 +128,13 @@ function Filter({
               onMouseDown={handleDateInputClick}
               resetValue={!!metaData?.resetFilters}
               placeholder="mm/dd/yy"
-              data-testid="hello1"
+              data-testid="datePickerInput"
               readOnly
             />
 
             {isDateRangePickerOpen && (
               <div
+                data-testid="datePicker"
                 style={{
                   position: 'absolute',
                   top: '100%',
