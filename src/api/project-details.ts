@@ -79,7 +79,7 @@ export const useGetUsersByType = (userType: number) => {
   const client = useClient()
 
   const { data: users, ...rest } = useQuery<User[]>(['users', userType], async () => {
-    const temp  = (userType == 112 ) ? `users/v2/usertype/${userType}` : `users/usertype/${userType}`;
+    const temp  = (userType === 112 ) ? `users/v2/usertype/${userType}` : `users/usertype/${userType}`;
     const response = await client(`${temp}`, {})
     return response?.data
   })
