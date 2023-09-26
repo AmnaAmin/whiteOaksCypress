@@ -261,6 +261,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
         >
           <Table
             onRowClick={row => setSelectedVendor(row)}
+            isFilteredByApi={true}
             isLoading={vendorsLoading}
             isEmpty={!vendorsLoading && !vendors?.length}
           />
