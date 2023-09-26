@@ -77,7 +77,7 @@ const useStickyState = (defaultValue, key) => {
       return
     }
     const stickyValue = window.localStorage.getItem(key)
-    return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue
+    return stickyValue !== null && stickyValue !== 'undefined' ? JSON.parse(stickyValue) : defaultValue
   })
   React.useEffect(() => {
     window.localStorage.setItem(key, JSON.stringify(value))

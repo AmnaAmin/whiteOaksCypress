@@ -13,7 +13,7 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
-import { ColumnDef, PaginationState , VisibilityState } from '@tanstack/react-table'
+import { ColumnDef, PaginationState, VisibilityState } from '@tanstack/react-table'
 import {
   GotoFirstPage,
   GotoLastPage,
@@ -30,8 +30,10 @@ const PROJECT_TABLE_QUERY_KEYS = {
   id: 'id.equals',
   propertyAddress: 'propertyAddress.contains',
   skillName: 'skillName.contains',
-  workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',
-  expectedPaymentDate: 'expectedPaymentDate.equals',
+  workOrderExpectedCompletionDateStart: 'workOrderExpectedCompletionDate.greaterThanOrEqual',
+  workOrderExpectedCompletionDateEnd: 'workOrderExpectedCompletionDate.lessThanOrEqual',
+  expectedPaymentDateStart: 'expectedPaymentDate.greaterThanOrEqual',
+  expectedPaymentDateEnd: 'expectedPaymentDate.lessThanOrEqual',
   displayId: 'displayId.contains',
 }
 
@@ -150,7 +152,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
-  
+
   const onRowClick = rowData => {
     navigate(`/project-details/${rowData.projectId}`)
   }
@@ -188,11 +190,8 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
                 disabled={isLoading}
                 onSave={onSave}
                 columns={settingColumns.filter(
-                  col =>
-                    col.colId !== 'displayId' &&
-                    !(columnVisibility[col?.contentKey] === false),
+                  col => col.colId !== 'displayId' && !(columnVisibility[col?.contentKey] === false),
                 )}
-              
               />
             )}
           </ButtonsWrapper>
