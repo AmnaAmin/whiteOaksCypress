@@ -67,8 +67,14 @@ function Filter({
   )
 
   const [selectionRange, setSelectionRange] = useState({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate:
+      dateFilter && columnFilterValue && columnFilterValue !== undefined && columnFilterValue !== ' - '
+        ? new Date(columnFilterValue.split(' - ')[0].toString())
+        : new Date(),
+    endDate:
+      dateFilter && columnFilterValue && columnFilterValue !== undefined && columnFilterValue !== ' - '
+        ? new Date(columnFilterValue.split(' - ')[1].toString())
+        : new Date(),
     key: 'selection',
   })
 
@@ -145,6 +151,7 @@ function Filter({
                   value={[selectionRange]}
                   zIndex={10000}
                   onChange={dateRange => {
+                    console.log('=========', dateRange.selection.startDate)
                     const selectedStartDate = dateRange.selection.startDate
                     const selectedEndDate = dateRange.selection.endDate
                     setSelectionRange({
