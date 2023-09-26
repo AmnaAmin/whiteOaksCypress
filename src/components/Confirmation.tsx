@@ -76,7 +76,7 @@ export function ConfirmationBox({
             {content}
           </Text>
           {idValues?.map(e => (
-            <Text>{`${contentMsg} ProjectID: C${e}`}</Text>
+            <Text>{`${contentMsg} WorkorderID: ${e}`}</Text>
           ))}
         </ModalBody>
         <Flex flexFlow="row-reverse">
