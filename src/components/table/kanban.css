@@ -1,0 +1,23 @@
+.react-kanban-column {
+    background-color: #F8F8F8 !important; 
+    border: 1px solid #E8E8E8!important;
+    min-height: 300px !important ;
+    overflow-y: auto ;  
+    overflow-x: hidden ; 
+    margin: 27px !important;
+    border-radius: 7px !important;  
+  }
+  .react-kanban-column::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .react-kanban-column::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .react-kanban-column::-webkit-scrollbar-thumb {
+    background-color: #C2C7CD;
+    border-radius: 1px;
+    border: 2px solid #f1f1f1;
+  }

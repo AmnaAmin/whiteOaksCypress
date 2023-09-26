@@ -17,15 +17,9 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'terms',
-    accessorKey: 'paymentTerm',
+    accessorKey: 'gridPaymentTerm',
     accessorFn(cellInfo) {
-      var term
-      if (cellInfo.resubmissionPaymentTerm !== null) {
-        term = cellInfo.resubmissionPaymentTerm
-      } else {
-        term = cellInfo.paymentTerm
-      }
-      return term
+      return cellInfo.gridPaymentTerm
     },
   },
   {
@@ -34,11 +28,9 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'vendorWOExpectedPaymentDate',
-    accessorKey: 'expectedPaymentDate',
+    accessorKey: 'gridExpectedPaymentDate',
     accessorFn(cellInfo) {
-      return dateFormat(
-        cellInfo.resubmissionDueDate !== null ? cellInfo.resubmissionDueDate : cellInfo.expectedPaymentDate,
-      )
+      return dateFormat(cellInfo.gridExpectedPaymentDate)
     },
     meta: { format: 'date' },
   },
@@ -91,9 +83,9 @@ export const RECEIVABLE_TABLE_QUERY_KEYS = {
   woaInvoiceDateEnd: 'woaInvoiceDate.lessThanOrEqual',
   status: 'status.contains',
   clientName: 'clientName.contains',
-  paymentTerm: 'paymentTerm.equals',
-  expectedPaymentDateStart: 'expectedPaymentDate.greaterThanOrEqual',
-  expectedPaymentDateEnd: 'expectedPaymentDate.lessThanOrEqual',
+  gridPaymentTerm: 'gridPaymentTerm.equals',
+  gridExpectedPaymentDateStart: 'gridExpectedPaymentDate.greaterThanOrEqual',
+  gridExpectedPaymentDateEnd: 'gridExpectedPaymentDate.lessThanOrEqual',
   amount: 'amount.equals',
   finalInvoice: 'finalInvoice.equals',
   marketName: 'marketName.contains',

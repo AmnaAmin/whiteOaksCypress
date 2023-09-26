@@ -55,8 +55,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   woaCompletionDateEnd: 'woaCompletionDate.lessThanOrEqual',
   region: 'region.contains',
   partialPayment: 'partialPayment.equals',
-  expectedPaymentDateStart: 'expectedPaymentDate.greaterThanOrEqual',
-  expectedPaymentDateEnd: 'expectedPaymentDate.lessThanOrEqual',
+  gridExpectedPaymentDateStart: 'gridExpectedPaymentDate.greaterThanOrEqual',
+  gridExpectedPaymentDateEnd: 'gridExpectedPaymentDate.lessThanOrEqual',
   profitPercentage: 'profitPercentage.equals',
   profitPercentageAmount: 'profitPercentageAmount.greaterThanOrEqual',
   profitTotal: 'profitTotal.equals',
@@ -83,6 +83,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   woaStartDateEnd: 'woaStartDate.lessThanOrEqual',
   lienRightExpireDateStart: 'lienRightExpireDate.greaterThanOrEqual',
   lienRightExpireDateEnd: 'lienRightExpireDate.lessThanOrEqual',
+  latestNoteAddedTime: 'latestNoteAddedTime.equals',
+  noteOwner: 'noteOwner.contains',
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -191,6 +193,16 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
       const value = row.cell.getValue()
       return <PopoverTooltip value={value} title={'projects.projectDetails.notes'} />
     },
+  },
+  {
+    header: 'projects.projectTable.dateAddedNotes',
+    accessorKey: 'latestNoteAddedTime',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.latestNoteAddedTime),
+    meta: { format: 'date' },
+  },
+  {
+    header: 'projects.projectTable.notesAddedBy',
+    accessorKey: 'noteOwner',
   },
   {
     header: 'projects.projectDetails.completion',
@@ -325,9 +337,8 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'projects.projectTable.expectedPayment',
-    accessorKey: 'expectedPaymentDate',
-    accessorFn: (cellInfo: any) =>
-      dateFormat(cellInfo.resubmissionDueDate !== null ? cellInfo.resubmissionDueDate : cellInfo.expectedPaymentDate),
+    accessorKey: 'gridExpectedPaymentDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.gridExpectedPaymentDate),
     meta: { format: 'date' },
   },
   {

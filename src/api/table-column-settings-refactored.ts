@@ -82,7 +82,7 @@ export const useTableColumnSettings = (
       })
     : columns.map((col, index) => {
         return generateSettingColumn({
-          field: col.header as string,
+          field: t(col.header as string),
           // @ts-ignore
           contentKey: col.accessorKey as string,
           order: index,
