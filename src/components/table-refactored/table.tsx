@@ -134,7 +134,7 @@ function Filter({
 
             {isDateRangePickerOpen && (
               <div
-                data-testid="datePicker"
+                data-testid="datePickerRange"
                 style={{
                   position: 'absolute',
                   top: '100%',
