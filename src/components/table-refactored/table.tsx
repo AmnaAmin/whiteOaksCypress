@@ -106,7 +106,7 @@ function Filter({
 
       {dateFilter ? (
         <>
-          <div style={{ position: 'relative' }} data-testid="hello">
+          <div style={{ position: 'relative' }} data-testid="datePickerInput">
             <DebouncedInput
               dateFilter
               value={
@@ -128,7 +128,7 @@ function Filter({
               onMouseDown={handleDateInputClick}
               resetValue={!!metaData?.resetFilters}
               placeholder="mm/dd/yy"
-              data-testid="datePickerInput"
+              data-testid="datePickerInputField"
               readOnly
             />
 
