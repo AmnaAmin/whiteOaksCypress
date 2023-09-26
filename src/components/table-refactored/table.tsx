@@ -21,7 +21,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
 import { useTableInstance } from './table-context'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { dateFormat } from 'utils/date-time-utils'
 import { MdClose } from 'react-icons/md'
 import { useLayoutEffect } from 'react'
 import _ from 'lodash'
@@ -106,7 +106,7 @@ function Filter({
 
       {dateFilter ? (
         <>
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative' }} data-testid="hello">
             <DebouncedInput
               dateFilter
               value={
@@ -128,6 +128,7 @@ function Filter({
               onMouseDown={handleDateInputClick}
               resetValue={!!metaData?.resetFilters}
               placeholder="mm/dd/yy"
+              data-testid="hello1"
               readOnly
             />
 
@@ -151,7 +152,6 @@ function Filter({
                   value={[selectionRange]}
                   zIndex={10000}
                   onChange={dateRange => {
-                    console.log('=========', dateRange.selection.startDate)
                     const selectedStartDate = dateRange.selection.startDate
                     const selectedEndDate = dateRange.selection.endDate
                     setSelectionRange({
