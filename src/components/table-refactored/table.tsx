@@ -69,11 +69,11 @@ function Filter({
   const [selectionRange, setSelectionRange] = useState({
     startDate:
       dateFilter && columnFilterValue && columnFilterValue !== undefined && columnFilterValue !== ' - '
-        ? new Date(columnFilterValue.split(' - ')[0].toString())
+        ? new Date(columnFilterValue.split(' - ')[0]?.toString())
         : new Date(),
     endDate:
       dateFilter && columnFilterValue && columnFilterValue !== undefined && columnFilterValue !== ' - '
-        ? new Date(columnFilterValue.split(' - ')[1].toString())
+        ? new Date(columnFilterValue.split(' - ')[1]?.toString())
         : new Date(),
     key: 'selection',
   })
