@@ -134,6 +134,7 @@ function Filter({
                   backgroundColor: 'white',
                   boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
                   marginTop: '15px',
+                  zIndex: 1000,
                 }}
               >
                 <DateRangePicker
