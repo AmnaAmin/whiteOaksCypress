@@ -39,7 +39,7 @@ const AccountReceivableModal: React.FC<{
             <Text>ID {projectData?.id} </Text>
             <Divider orientation="vertical" borderWidth="1px" borderColor="#E2E8F0" height="21px" />
             <Text>{projectData?.streetAddress}</Text>
-            <Tag variant="subtle" border="0.5px solid #48BB78" color='#48BB78' backgroundColor= '#F8FFFA' >
+            <Tag variant="subtle" border="0.5px solid #48BB78" color='#319795' backgroundColor= '#FFF7EA' >
               Invoiced
             </Tag>
           </HStack>
