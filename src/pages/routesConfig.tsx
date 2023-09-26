@@ -34,7 +34,7 @@ export default function useRoutesConfig() {
     {
       path: 'vendorDashboard',
       element: VendorDashboard,
-      permissions: ['VENDORDASHBOARD.READ', 'VENDORDASHBOARD.EDIT', 'ALL'],
+      permissions: ['VENDORDASHBOARD.READ', 'VENDORDASHBOARD.EDIT'],
     },
     { path: 'projects', element: Projects, permissions: ['PROJECT.READ', 'PROJECT.EDIT', 'ALL'] },
     {
