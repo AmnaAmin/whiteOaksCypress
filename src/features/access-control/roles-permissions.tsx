@@ -123,7 +123,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                     <>
                       <div data-testid="assignment">
                         <Select
-                          isDisabled={!!permissions}
+                          //isDisabled={!!permissions}
                           options={ASSIGNMENTS}
                           selectProps={{ isBorderLeft: true }}
                           {...field}
@@ -149,7 +149,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                       <div data-testid="locations">
                         <Select
                           options={LOCATIONS}
-                          isDisabled={!!permissions}
+                          //isDisabled={!!permissions}
                           selectProps={{ isBorderLeft: true }}
                           {...field}
                         />
