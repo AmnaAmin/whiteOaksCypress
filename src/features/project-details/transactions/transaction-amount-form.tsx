@@ -40,6 +40,7 @@ import {
 import { useAccountDetails } from 'api/vendor-details'
 import NumberFormat from 'react-number-format'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
@@ -49,6 +50,9 @@ type TransactionAmountFormProps = {
   onSetTotalRemainingAmount?: any
   selectedTransactionId?: string | number | undefined
   setRemainingAmt?: (val) => void
+  setDisableBtn?: (value) => void
+  disableError?: boolean
+  setFileParseMsg?: (value) => void
 }
 
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
@@ -59,6 +63,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   setMaterialsLoading,
   selectedTransactionId,
   setRemainingAmt,
+  setDisableBtn,
+  disableError,
+  setFileParseMsg,
 }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -72,6 +79,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   } = formReturn
   const values = getValues()
   const transaction = useWatch({ name: 'transaction', control })
+  const [attachmentError, setAttachmentError] = useState(null)
 
   useEffect(() => {
     let total_Amount = 0
@@ -118,10 +126,16 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   })
 
   useEffect(() => {
-    if (materialItems.status === 'COMPLETED' && materialItems?.data?.length) {
+    if (materialItems.status === 'COMPLETED' || materialItems.status === 'FAILED') {
       setRefetchInterval(0)
-      setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data, values.refund))
       setMaterialsLoading?.(false)
+      if (materialItems.status === 'FAILED') {
+        setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
+        if (inputRef.current) inputRef.current.value = ''
+        setFileParseMsg?.(true)
+      } else {
+        setValue('transaction', mapMaterialItemstoTransactions(materialItems?.data ?? [], values.refund))
+      }
     }
   }, [materialItems])
   // useOnRefundMaterialCheckboxChange(control, update)
@@ -193,15 +207,20 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   )
 
   const uploadMaterialDocument = async document => {
-    setMaterialsLoading?.(true)
     let payload = (await getFileContents(document, values?.transactionType?.value)) as any
     payload.correlationId = (account.id + '-' + +new Date()) as string
-    setRefetchInterval(5000)
-    uploadMaterialAttachment(payload, {
-      onSuccess: () => {
-        setCorrelationId(payload.correlationId)
-      },
-    })
+    if (!['application/pdf', 'image/png', 'image/jpg', 'image/jpeg'].includes(payload?.fileObjectContentType)) {
+      setAttachmentError(t(`${NEW_PROJECT}.fileFormat`))
+      setDisableBtn?.(true)
+    } else {
+      setRefetchInterval(5000)
+      setMaterialsLoading?.(true)
+      uploadMaterialAttachment(payload, {
+        onSuccess: () => {
+          setCorrelationId(payload.correlationId)
+        },
+      })
+    }
   }
 
   const onToggleRefundCheckbox = isChecked => {
@@ -363,15 +382,24 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 (document && !document.s3Url ? (
                   <Box color="#345EA6" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
                     <HStack spacing="5px" h="31px" padding="10px" align="center">
-                      <Text as="span" maxW="120px" isTruncated title={document?.name || document.fileType}>
+                      <Text
+                        color={disableError ? 'red' : ''}
+                        as="span"
+                        maxW="120px"
+                        isTruncated
+                        title={document?.name || document.fileType}
+                      >
                         {document?.name || document.fileType}
                       </Text>
                       <MdOutlineCancel
+                        color={disableError ? 'red' : ''}
                         cursor={isMaterialsLoading ? 'default' : 'pointer'}
                         onClick={() => {
                           if (isMaterialsLoading) {
                             return
                           }
+                          setDisableBtn?.(false)
+                          setAttachmentError(null)
                           setValue('attachment', null)
                           setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
                           if (inputRef.current) inputRef.current.value = ''
@@ -380,30 +408,36 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                     </HStack>
                   </Box>
                 ) : (
-                  <Button
-                    onClick={e => {
-                      if (isEditMaterialTransaction) {
-                        onReplaceMaterialUploadOpen()
-                      } else {
-                        if (inputRef.current) {
-                          inputRef.current.click()
+                  <>
+                    <Button
+                      onClick={e => {
+                        if (isEditMaterialTransaction) {
+                          onReplaceMaterialUploadOpen()
+                        } else {
+                          if (inputRef.current) {
+                            inputRef.current.click()
+                          }
                         }
+                      }}
+                      leftIcon={<BiFile color="darkPrimary.300" />}
+                      variant="outline"
+                      size="sm"
+                      colorScheme="darkPrimary"
+                      color="darkPrimary.300"
+                      border={'1px solid #345EA6'}
+                      isDisabled={
+                        isApproved ||
+                        !values?.transactionType?.value ||
+                        isSysFactoringFee ||
+                        lateAndFactoringFeeForVendor
                       }
-                    }}
-                    leftIcon={<BiFile color="darkPrimary.300" />}
-                    variant="outline"
-                    size="sm"
-                    colorScheme="darkPrimary"
-                    color="darkPrimary.300"
-                    border={'1px solid #345EA6'}
-                    isDisabled={
-                      isApproved || !values?.transactionType?.value || isSysFactoringFee || lateAndFactoringFeeForVendor
-                    }
-                  >
-                    {t(`${TRANSACTION}.attachment`)}
-                  </Button>
+                    >
+                      {t(`${TRANSACTION}.attachment`)}
+                    </Button>
+                  </>
                 ))}
             </HStack>
+            {attachmentError && <Text color="red">{attachmentError}</Text>}
           </Box>
         </Flex>
 
@@ -571,7 +605,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                       )
                                     }}
                                     variant={'required-field'}
-                                    
                                     size="sm"
                                   />
                                 ) : (
