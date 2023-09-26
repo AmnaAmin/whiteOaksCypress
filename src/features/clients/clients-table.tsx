@@ -194,6 +194,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
               setSelectedClient(row)
               onOpen()
             }}
+            isFilteredByApi={true}
             isLoading={isLoading}
             isEmpty={!isLoading && !clients?.length}
           />

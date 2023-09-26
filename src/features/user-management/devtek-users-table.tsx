@@ -74,6 +74,7 @@ export const DevtekUsersTable = React.forwardRef((props: any, ref) => {
               setSelectedUser(row)
               onOpen()
             }}
+            isFilteredByApi={true}
             isLoading={isLoading}
             isEmpty={!isLoading && !userMgt?.length}
           />
