@@ -515,7 +515,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {check && showLimitReached && <ProjectTransactionRemainingAlert msg="PlanLimitExceed" />}
 
       {remainingAmountExceededFlag && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
-      {fileParseMsg && <PercentageCompletionLessThanNTEAlert msg={t(`${WORK_ORDER}.atatchmentParsingFailure`)} />}
+      {fileParseMsg && <PercentageCompletionLessThanNTEAlert msg={t(`${WORK_ORDER}.attachmentParsingFailure`)} />}
       {isCompletedWorkLessThanNTEPercentage &&
         (isAdminEnabled ? (
           <PercentageCompletionLessThanNTEAlert msg="PercentageCompletionForAdminAndAccount" />
