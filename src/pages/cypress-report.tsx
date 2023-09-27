@@ -12,7 +12,8 @@ const CypressReport = () => {
           {t(`${SIDE_NAV}.cypressReport`)}
         </FormLabel>
         <a
-          href="http://cypress-zvhxp83s-1779591091.us-east-2.elb.amazonaws.com/ci-builds"
+          href="https://woa-preprod-documents.s3.us-east-2.amazonaws.com/sorry-cypress/output.html"
+          
           rel="noopener noreferrer"
           target="blank"
         >
