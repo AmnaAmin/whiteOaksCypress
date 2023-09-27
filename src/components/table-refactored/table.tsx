@@ -21,7 +21,7 @@ import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
 import { useTableInstance } from './table-context'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { dateFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { MdClose } from 'react-icons/md'
 import { useLayoutEffect } from 'react'
 import _ from 'lodash'
@@ -39,10 +39,12 @@ function Filter({
   column,
   table,
   allowStickyFilters = false,
+  isFilteredByApi = false,
 }: {
   column: Column<any, unknown>
   table: TableType<any>
   allowStickyFilters?: boolean
+  isFilteredByApi
 }) {
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
@@ -60,29 +62,45 @@ function Filter({
       : stickyFilter
   const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date') || column.id.includes('date')
+  const isDateRange = dateFilter && isFilteredByApi
   const currencyFilter = metaData?.format === 'currency' || metaData?.format === 'percentage'
   const sortedUniqueValues = React.useMemo(
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
     [column.getFacetedUniqueValues()],
   )
 
-  const [selectionRange, setSelectionRange] = useState({
-    startDate:
-      dateFilter && columnFilterValue && columnFilterValue !== undefined && columnFilterValue !== ' - '
-        ? new Date(columnFilterValue.split(' - ')[0].toString())
-        : new Date(),
-    endDate:
-      dateFilter && columnFilterValue && columnFilterValue !== undefined && columnFilterValue !== ' - '
-        ? new Date(columnFilterValue.split(' - ')[1].toString())
-        : new Date(),
-    key: 'selection',
+  const [selectionRange, setSelectionRange] = useState(() => {
+    let startDate = new Date()
+    let endDate = new Date()
+
+    if (columnFilterValue?.includes(' - ') && isDateRange) {
+      if (columnFilterValue !== ' - ') {
+        startDate = new Date(columnFilterValue?.split(' - ')?.[0]?.toString())
+        endDate = new Date(columnFilterValue?.split(' - ')?.[1]?.toString())
+      }
+    }
+    return {
+      startDate,
+      endDate,
+      key: 'selection',
+    }
   })
 
   const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
 
-  const [selectedDateRange, setSelectedDateRange] = useState({
-    startDate: dateFilter && columnFilterValue ? columnFilterValue.split(' - ')[0] : '',
-    endDate: dateFilter && columnFilterValue ? columnFilterValue.split(' - ')[1] : '',
+  const [selectedDateRange, setSelectedDateRange] = useState(() => {
+    let startDate = ''
+    let endDate = ''
+    if (columnFilterValue?.includes(' - ') && isDateRange) {
+      if (columnFilterValue !== ' - ') {
+        startDate = columnFilterValue?.split(' - ')?.[0]
+        endDate = columnFilterValue?.split(' - ')?.[1]
+      }
+    }
+    return {
+      startDate,
+      endDate,
+    }
   })
 
   const handleDateInputClick = e => {
@@ -104,7 +122,7 @@ function Filter({
         ))}
       </datalist>
 
-      {dateFilter ? (
+      {dateFilter && isFilteredByApi ? (
         <>
           <div style={{ position: 'relative' }} data-testid="datePickerInput">
             <DebouncedInput
@@ -117,8 +135,13 @@ function Filter({
                     ).format('M/D/YY')}`
               }
               onChange={value => {
-                column.setFilterValue(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
-                if (allowStickyFilters) setStickyFilter(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                if (!!selectedDateRange?.startDate && !!selectedDateRange?.endDate) {
+                  column.setFilterValue(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                  if (allowStickyFilters)
+                    setStickyFilter(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                } else {
+                  column.setFilterValue('')
+                }
               }}
               className="w-36 border shadow rounded "
               style={{ cursor: 'pointer' }}
@@ -189,12 +212,19 @@ function Filter({
         </>
       ) : (
         <DebouncedInput
-          type={currencyFilter ? 'number' : 'text'}
-          value={(columnFilterValue as string) ?? ''}
+          type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
+          value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
           onChange={value => {
-            column.setFilterValue(value)
-            if (allowStickyFilters) setStickyFilter(value)
+            if (dateFilter) {
+              column.setFilterValue(datePickerFormat(value as string))
+              if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
+            } else {
+              column.setFilterValue(value)
+              if (allowStickyFilters) setStickyFilter(value)
+            }
           }}
+          // @ts-ignore
+          minW={dateFilter && '127px'}
           className="w-36 border shadow rounded"
           list={column.id + 'list'}
           resetValue={!!metaData?.resetFilters}
@@ -327,6 +357,7 @@ function DebouncedInput({
         <Icon
           data-testid="tableFilterInputFieldClearIcon"
           as={AiOutlineCalendar}
+          style={{ color: 'gray.600' }}
           position="absolute"
           right={`calc(100% - ${inputWidth - 3}px)`}
           zIndex={10000}
@@ -347,6 +378,7 @@ type TableProps = {
   handleOnDrag?: (result) => void
   handleOnDragStart?: (result) => void
   allowStickyFilters?: boolean
+  isFilteredByApi?: boolean
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -359,6 +391,7 @@ export const Table: React.FC<TableProps> = ({
   handleOnDrag,
   handleOnDragStart,
   allowStickyFilters,
+  isFilteredByApi,
   ...restProps
 }) => {
   const { t } = useTranslation()
@@ -493,6 +526,7 @@ export const Table: React.FC<TableProps> = ({
                           >
                             {header.id !== 'expander' && (
                               <Filter
+                                isFilteredByApi={isFilteredByApi}
                                 allowStickyFilters={allowStickyFilters}
                                 column={header.column}
                                 table={tableInstance}
