@@ -29,9 +29,12 @@ export const VENDOR_TABLE_QUERY_KEYS = {
   companyName: 'companyName.contains',
   region: 'region.contains',
   ownerName: 'ownerName.contains',
-  createdDate: 'createdDate.equals',
-  coiglExpirationDate: 'coiglExpirationDate.equals',
-  coiWcExpirationDate: 'coiWcExpirationDate.equals',
+  createdDateStart: 'createdDate.greaterThanOrEqual',
+  createdDateEnd: 'createdDate.lessThanOrEqual',
+  coiglExpirationDateStart: 'coiglExpirationDate.greaterThanOrEqual',
+  coiglExpirationDateEnd: 'coiglExpirationDate.lessThanOrEqual',
+  coiWcExpirationDateStart: 'coiWcExpirationDate.greaterThanOrEqual',
+  coiWcExpirationDateEnd: 'coiWcExpirationDate.lessThanOrEqual',
   einNumber: 'einNumber.contains',
   capacity: 'capacity.equals',
   availableCapacity: 'availableCapacity.equals',
@@ -258,6 +261,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
         >
           <Table
             onRowClick={row => setSelectedVendor(row)}
+            isFilteredByApi={true}
             isLoading={vendorsLoading}
             isEmpty={!vendorsLoading && !vendors?.length}
           />

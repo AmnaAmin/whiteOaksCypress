@@ -158,6 +158,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       >
         <Table
           allowStickyFilters={true}
+          isFilteredByApi={true}
           isLoading={isLoading}
           onRowClick={onRowClick}
           isEmpty={!isLoading && !projects?.length}

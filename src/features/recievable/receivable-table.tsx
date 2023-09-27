@@ -87,7 +87,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   useEffect(() => {
     if (!receivables?.length) return
 
-   // receivables.forEach((r, i) => setFormValue(`id.${i}`, null))
+    // receivables.forEach((r, i) => setFormValue(`id.${i}`, null))
   }, [receivables?.length])
 
   const { isLoading: isExportDataLoading, refetch } = useGetAllAccountReceivables(queryStringWithoutPagination)
@@ -161,7 +161,12 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         setColumnFilters={setColumnFilters}
         totalPages={totalPages}
       >
-        <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !receivables?.length} />
+        <Table
+          isFilteredByApi={true}
+          isLoading={isLoading}
+          onRowClick={onRowClick}
+          isEmpty={!isLoading && !receivables?.length}
+        />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton

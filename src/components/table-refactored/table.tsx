@@ -15,7 +15,7 @@ import {
   HStack,
   Icon,
 } from '@chakra-ui/react'
-import { AiOutlineArrowDown, AiOutlineArrowUp } from 'react-icons/ai'
+import { AiOutlineArrowDown, AiOutlineArrowUp, AiOutlineCalendar } from 'react-icons/ai'
 import { Input } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 import { useTranslation } from 'react-i18next'
@@ -27,7 +27,10 @@ import { useLayoutEffect } from 'react'
 import _ from 'lodash'
 import { useStickyState } from 'utils/hooks'
 import { isValidAndNonEmpty } from 'utils'
-
+import 'react-date-range/dist/styles.css' // main css file
+import 'react-date-range/dist/theme/default.css' // theme css file
+import { DateRangePicker } from 'react-date-range'
+import moment from 'moment'
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
 }
@@ -36,10 +39,12 @@ function Filter({
   column,
   table,
   allowStickyFilters = false,
+  isFilteredByApi = false,
 }: {
   column: Column<any, unknown>
   table: TableType<any>
   allowStickyFilters?: boolean
+  isFilteredByApi
 }) {
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
 
@@ -57,11 +62,57 @@ function Filter({
       : stickyFilter
   const columnFilterValue = filterInitialState || column.getFilterValue()
   const dateFilter = column.id.includes('Date') || column.id.includes('date')
+  const isDateRange = dateFilter && isFilteredByApi
   const currencyFilter = metaData?.format === 'currency' || metaData?.format === 'percentage'
   const sortedUniqueValues = React.useMemo(
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
     [column.getFacetedUniqueValues()],
   )
+
+  const [selectionRange, setSelectionRange] = useState(() => {
+    let startDate = new Date()
+    let endDate = new Date()
+
+    if (columnFilterValue?.includes(' - ') && isDateRange) {
+      if (columnFilterValue !== ' - ') {
+        startDate = new Date(columnFilterValue?.split(' - ')?.[0]?.toString())
+        endDate = new Date(columnFilterValue?.split(' - ')?.[1]?.toString())
+      }
+    }
+    return {
+      startDate,
+      endDate,
+      key: 'selection',
+    }
+  })
+
+  const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
+
+  const [selectedDateRange, setSelectedDateRange] = useState(() => {
+    let startDate = ''
+    let endDate = ''
+    if (columnFilterValue?.includes(' - ') && isDateRange) {
+      if (columnFilterValue !== ' - ') {
+        startDate = columnFilterValue?.split(' - ')?.[0]
+        endDate = columnFilterValue?.split(' - ')?.[1]
+      }
+    }
+    return {
+      startDate,
+      endDate,
+    }
+  })
+
+  const handleDateInputClick = e => {
+    e.preventDefault()
+    setIsDateRangePickerOpen(!isDateRangePickerOpen)
+  }
+  const handleClear = () => {
+    column.setFilterValue('')
+    setStickyFilter(null)
+    setSelectedDateRange({ startDate: '', endDate: '' })
+    setIsDateRangePickerOpen(false)
+  }
 
   return (
     <>
@@ -70,24 +121,115 @@ function Filter({
           <option value={value} key={value} />
         ))}
       </datalist>
-      <DebouncedInput
-        type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
-        value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
-        onChange={value => {
-          if (dateFilter) {
-            column.setFilterValue(datePickerFormat(value as string))
-            if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
-          } else {
-            column.setFilterValue(value)
-            if (allowStickyFilters) setStickyFilter(value)
-          }
-        }}
-        className="w-36 border shadow rounded"
-        list={column.id + 'list'}
-        // @ts-ignore
-        minW={dateFilter && '127px'}
-        resetValue={!!metaData?.resetFilters}
-      />
+
+      {dateFilter && isFilteredByApi ? (
+        <>
+          <div style={{ position: 'relative' }} data-testid="datePickerInput">
+            <DebouncedInput
+              dateFilter
+              value={
+                selectedDateRange?.startDate === '' && selectedDateRange?.endDate === ''
+                  ? ''
+                  : `${moment(selectedDateRange?.startDate).format('M/D/YY')} - ${moment(
+                      selectedDateRange?.endDate,
+                    ).format('M/D/YY')}`
+              }
+              onChange={value => {
+                if (!!selectedDateRange?.startDate && !!selectedDateRange?.endDate) {
+                  column.setFilterValue(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                  if (allowStickyFilters)
+                    setStickyFilter(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                } else {
+                  column.setFilterValue('')
+                }
+              }}
+              className="w-36 border shadow rounded "
+              style={{ cursor: 'pointer' }}
+              list={column.id + 'list'}
+              // @ts-ignore
+              minW={dateFilter && '127px'}
+              onMouseDown={handleDateInputClick}
+              resetValue={!!metaData?.resetFilters}
+              placeholder="mm/dd/yy"
+              data-testid="datePickerInputField"
+              readOnly
+            />
+
+            {isDateRangePickerOpen && (
+              <div
+                data-testid="datePickerRange"
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: '0',
+                  backgroundColor: 'white',
+                  boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
+                  marginTop: '15px',
+                  zIndex: 1000,
+                }}
+              >
+                <DateRangePicker
+                  ranges={[selectionRange]}
+                  onSelect={() => {
+                    setIsDateRangePickerOpen(false)
+                  }}
+                  value={[selectionRange]}
+                  zIndex={10000}
+                  onChange={dateRange => {
+                    const selectedStartDate = dateRange.selection.startDate
+                    const selectedEndDate = dateRange.selection.endDate
+                    setSelectionRange({
+                      startDate: selectedStartDate,
+                      endDate: selectedEndDate,
+                      key: 'selection',
+                    })
+                    const formattedStartDate = moment(selectedStartDate).format('YYYY-MM-DD')
+                    const formattedEndDate = moment(selectedEndDate).format('YYYY-MM-DD')
+                    setSelectedDateRange({ startDate: formattedStartDate, endDate: formattedEndDate })
+                    column.setFilterValue(`${formattedStartDate} - ${formattedEndDate}`)
+                    if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
+                    setIsDateRangePickerOpen(false)
+                  }}
+                  maxDate={moment().toDate()}
+                />
+                <div
+                  onClick={handleClear}
+                  style={{
+                    color: 'rgb(61, 145, 255)',
+                    marginLeft: '22px',
+                    fontSize: '12px',
+                    textTransform: 'capitalize',
+                    paddingTop: '10px',
+                    cursor: 'pointer',
+                    marginBottom: '15px',
+                  }}
+                >
+                  Clear
+                </div>
+              </div>
+            )}
+          </div>
+        </>
+      ) : (
+        <DebouncedInput
+          type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
+          value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
+          onChange={value => {
+            if (dateFilter) {
+              column.setFilterValue(datePickerFormat(value as string))
+              if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
+            } else {
+              column.setFilterValue(value)
+              if (allowStickyFilters) setStickyFilter(value)
+            }
+          }}
+          // @ts-ignore
+          minW={dateFilter && '127px'}
+          className="w-36 border shadow rounded"
+          list={column.id + 'list'}
+          resetValue={!!metaData?.resetFilters}
+        />
+      )}
       <div className="h-1" />
     </>
   )
@@ -115,12 +257,14 @@ function DebouncedInput({
   resetValue,
   onChange,
   debounce = 500,
+  dateFilter,
   ...props
 }: {
   value: string | number
   onChange: (value: string | number) => void
   debounce?: number
   resetValue?: boolean
+  dateFilter?: boolean
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
   const [value, setValue] = useState(initialValue)
   const [showClearIcon, setShowClearIcon] = useState(false)
@@ -141,7 +285,7 @@ function DebouncedInput({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      onChange(value)
+      onChange?.(value)
     }, debounce)
 
     return () => clearTimeout(timeout)
@@ -193,7 +337,8 @@ function DebouncedInput({
           border: '1px solid #345EA6',
         }}
       />
-      {showClearIcon && props.type !== 'date' ? (
+
+      {!dateFilter && showClearIcon ? (
         <Icon
           data-testid="tableFilterInputFieldClearIcon"
           cursor="pointer"
@@ -207,6 +352,16 @@ function DebouncedInput({
             setShowClearIcon(false)
           }}
           visibility={value === '' ? 'hidden' : 'visible'}
+        />
+      ) : dateFilter ? (
+        <Icon
+          data-testid="tableFilterInputFieldClearIcon"
+          as={AiOutlineCalendar}
+          style={{ color: 'gray.600' }}
+          position="absolute"
+          right={`calc(100% - ${inputWidth - 3}px)`}
+          zIndex={10000}
+          mr="-22px"
         />
       ) : null}
     </HStack>
@@ -226,6 +381,7 @@ type TableProps = {
   hightlightSelectedRow?: boolean
   handleMouseEnter?: (row) => void
   handleMouseLeave?: (row) => void
+  isFilteredByApi?: boolean
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -241,6 +397,7 @@ export const Table: React.FC<TableProps> = ({
   hightlightSelectedRow,
   handleMouseEnter,
   handleMouseLeave,
+  isFilteredByApi,
   ...restProps
 }) => {
   const { t } = useTranslation()
@@ -267,7 +424,7 @@ export const Table: React.FC<TableProps> = ({
       // border="1px solid #CBD5E0"
       bg="white"
       h="100%"
-      minH={'inherit'}
+      minH={'500px'}
     >
       <ChakraTable size="sm" w="100%" {...restProps}>
         <Thead rounded="md" top="0">
@@ -375,6 +532,7 @@ export const Table: React.FC<TableProps> = ({
                           >
                             {header.id !== 'expander' && (
                               <Filter
+                                isFilteredByApi={isFilteredByApi}
                                 allowStickyFilters={allowStickyFilters}
                                 column={header.column}
                                 table={tableInstance}

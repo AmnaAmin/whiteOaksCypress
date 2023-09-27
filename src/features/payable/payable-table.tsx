@@ -193,7 +193,12 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
             setColumnFilters={setColumnFilters}
             totalPages={totalPages}
           >
-            <Table isLoading={isLoading} onRowClick={onRowClick} isEmpty={!isLoading && !workOrders?.length} />
+            <Table
+              isFilteredByApi={true}
+              isLoading={isLoading}
+              onRowClick={onRowClick}
+              isEmpty={!isLoading && !workOrders?.length}
+            />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <ButtonsWrapper>
                 <ExportButton

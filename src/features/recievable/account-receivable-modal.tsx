@@ -8,14 +8,13 @@ import {
   ModalHeader,
   ModalOverlay,
   Divider,
-  Tag,
 } from '@chakra-ui/react'
 import { ViewLoader } from 'components/page-level-loader'
 import ProjectDetailsTab from 'features/update-project-details/project-details-form'
 import React, { useEffect } from 'react'
 import { Project } from 'types/project.type'
 import { usePCProject } from 'api/pc-projects'
-import { STATUS } from 'features/common/status'
+import Status, { STATUS } from 'features/common/status'
 
 const AccountReceivableModal: React.FC<{
   isOpen: boolean
@@ -39,9 +38,7 @@ const AccountReceivableModal: React.FC<{
             <Text>ID {projectData?.id} </Text>
             <Divider orientation="vertical" borderWidth="1px" borderColor="#E2E8F0" height="21px" />
             <Text>{projectData?.streetAddress}</Text>
-            <Tag variant="subtle" border="0.5px solid #48BB78" color='#48BB78' backgroundColor= '#F8FFFA' >
-              Invoiced
-            </Tag>
+             <Status value={projectData?.projectStatus as any} id={projectData?.projectStatus as any} />
           </HStack>
         </ModalHeader>
         <ModalCloseButton />
