@@ -60,6 +60,8 @@ export const workOrder = {
           'Your Insurance/License has expired. Please renew expiry to generate invoice.',
         expirationInvoiceMessageForAdmin: `Vendor's Insurance/License has expired. Expiry needs to be renewed to generate invoice.`,
         swoParsingFailure: 'System can not read SOW at this time. Please manually add line items to the Work Order.',
+        attachmentParsingFailure: 'Items cannot be fetched from the PDF. Please add them manually.',
+
         // New Work Order
 
         clientStart: 'Client Start',
@@ -135,7 +137,7 @@ export const workOrder = {
         expirationInvoiceMessageForAdmin: `El seguro/licencia del proveedor ha vencido. El vencimiento debe renovarse para generar la factura.`,
         swoParsingFailure:
           'El sistema no puede leer SOW en este momento. Agregue manualmente elementos de línea a la orden de trabajo.',
-
+        attachmentParsingFailure: 'Los elementos no se pueden recuperar del PDF. Añádelos manualmente.',
         // New Work Order
 
         clientStart: 'Inicio del cliente',
