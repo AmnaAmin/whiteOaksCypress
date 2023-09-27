@@ -190,7 +190,6 @@ function Filter({
                     if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
                     setIsDateRangePickerOpen(false)
                   }}
-                  maxDate={moment().toDate()}
                 />
                 <div
                   onClick={handleClear}
