@@ -190,6 +190,10 @@ export interface FormValues {
   paymentRecievedDate: string | null
   refund: boolean | null
   lienWaiver?: LienWaiverFormValues
+  paymentProcessed: string | null
+  payAfter: string | null
+  VerifiedByFPM: SelectOption | null
+  VerifiedByDM: SelectOption | null
 }
 
 export type ChangeTransaction = {
@@ -277,6 +281,10 @@ export type ChangeOrderType = {
   paymentReceived: string | null
   documents: Document[]
   systemGenerated: boolean
+  VerifiedByFPM: null
+  VerifiedByDM: null
+  paymentProcessed: null
+  payAfter: null
 }
 
 export type TransactionsWithRefundType = {

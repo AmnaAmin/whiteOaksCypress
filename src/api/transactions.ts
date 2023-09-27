@@ -357,8 +357,8 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   return {
     changeOrderSelectOptions: changeOrderOptions
       ? [CHANGE_ORDER_DEFAULT_OPTION, ...changeOrderOptions]
-      : [CHANGE_ORDER_DEFAULT_OPTION] as any,
-    ...rest, 
+      : ([CHANGE_ORDER_DEFAULT_OPTION] as any),
+    ...rest,
   }
 }
 
@@ -483,6 +483,10 @@ export const parseChangeOrderAPIPayload = async (
     paidDate: dateISOFormat(paidDate as string),
     paymentTerm: formValues.paymentTerm?.value || null,
     payDateVariance: formValues.payDateVariance || '',
+    // paymentProcessed: dateISOFormat(formValues.paymentProcessed as string),
+    // payAfterDate: dateISOFormat(formValues.payAfterDate as string),
+    // VerifiedByFPM,
+    // VerifiedByDM,
     paymentReceived: dateISOFormat(formValues.paymentRecievedDate as string),
     lineItems,
     documents,
@@ -539,6 +543,10 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
     refund: false,
+    VerifiedByFPM: null,
+    VerifiedByDM: null,
+    paymentProcessed: null,
+    payAfterDate: null,
   }
 }
 

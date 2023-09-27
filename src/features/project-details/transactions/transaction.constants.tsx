@@ -40,6 +40,12 @@ export const TRANSACTION_STATUS_OPTIONS = [
   { value: TransactionStatusValues.denied, label: 'Denied' },
 ]
 
+export const TRANSACTION_FPM_DM_STATUS_OPTIONS = [
+  { value: TransactionStatusValues.approved, label: 'Approved' },
+  { value: TransactionStatusValues.cancelled, label: 'Cancelled' },
+  { value: TransactionStatusValues.denied, label: 'Denied' },
+]
+
 export const TRANSACTION_MARK_AS_OPTIONS = {
   paid: {
     value: TransactionMarkAsValues.paid,

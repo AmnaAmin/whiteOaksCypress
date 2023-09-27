@@ -78,6 +78,7 @@ import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
   TRANSACTION_MARK_AS_OPTIONS_ARRAY,
+  TRANSACTION_FPM_DM_STATUS_OPTIONS,
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
@@ -776,6 +777,35 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         <FormErrorMessage>{errors?.invoicedDate?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
+                    <GridItem>
+                      <FormControl
+                      // isInvalid={!!errors.paidDate}
+                      >
+                        <FormLabel
+                          fontSize="14px"
+                          fontStyle="normal"
+                          fontWeight={500}
+                          color="gray.700"
+                          htmlFor="paidDate"
+                          whiteSpace="nowrap"
+                        >
+                          {t(`${TRANSACTION}.paymentProcessed`)}
+                        </FormLabel>
+                        <Input
+                          data-testid="payment-processed"
+                          id="paymentProcessed"
+                          type="date"
+                          // variant={isPaidDateRequired ? 'required-field' : 'outline'}
+                          size="md"
+                          // isDisabled={isPaidDateDisabled}
+                          css={calendarIcon}
+                          // {...register('paymentProcessed', {
+                          //   required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
+                          // })}
+                        />
+                        {/* <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage> */}
+                      </FormControl>
+                    </GridItem>
 
                     <GridItem>
                       <FormControl isInvalid={!!errors.paidDate}>
@@ -806,6 +836,36 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                     </GridItem>
 
                     <GridItem>
+                      <FormControl
+                      // isInvalid={!!errors.paidDate}
+                      >
+                        <FormLabel
+                          fontSize="14px"
+                          fontStyle="normal"
+                          fontWeight={500}
+                          color="gray.700"
+                          htmlFor="payAfterDate"
+                          whiteSpace="nowrap"
+                        >
+                          {t(`${TRANSACTION}.payAfter`)}
+                        </FormLabel>
+                        <Input
+                          data-testid="pay-after"
+                          id="payAfterDate"
+                          type="date"
+                          // variant={isPaidDateRequired ? 'required-field' : 'outline'}
+                          size="md"
+                          // isDisabled={isPaidDateDisabled}
+                          css={calendarIcon}
+                          // {...register('paymentProcessed', {
+                          //   required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
+                          // })}
+                        />
+                        {/* <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage> */}
+                      </FormControl>
+                    </GridItem>
+
+                    <GridItem>
                       <FormControl isInvalid={!!errors.payDateVariance}>
                         <FormLabel
                           fontSize="14px"
@@ -828,6 +888,34 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           {...register('payDateVariance')}
                         />
                         <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
+                      </FormControl>
+                    </GridItem>
+
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
+                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="markAs">
+                          {t(`${TRANSACTION}.VerifiedByFPM`)}
+                        </FormLabel>
+                        <Controller
+                          // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
+                          control={control}
+                          name="markAs"
+                          render={({ field, fieldState }) => {
+                            return (
+                              <>
+                                <Select
+                                  {...field}
+                                  options={TRANSACTION_MARK_AS_OPTIONS_ARRAY}
+                                  // isDisabled={isApproved}
+                                  size="md"
+                                  selectProps={{ isBorderLeft: true }}
+                                  onChange={field.onChange}
+                                />
+                                {/* <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage> */}
+                              </>
+                            )
+                          }}
+                        />
                       </FormControl>
                     </GridItem>
                   </>
@@ -870,18 +958,18 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   <GridItem>
                     <FormControl isInvalid={!!errors.markAs} data-testid="mark-as-select-field">
                       <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="markAs">
-                        {t(`${TRANSACTION}.markAs`)}
+                        {t(`${TRANSACTION}.VerifiedByFPM`)}
                       </FormLabel>
                       <Controller
                         rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                         control={control}
-                        name="markAs"
+                        name="VerifiedByFPM"
                         render={({ field, fieldState }) => {
                           return (
                             <>
                               <Select
                                 {...field}
-                                options={TRANSACTION_MARK_AS_OPTIONS_ARRAY}
+                                options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
                                 isDisabled={isApproved}
                                 size="md"
                                 selectProps={{ isBorderLeft: true }}
