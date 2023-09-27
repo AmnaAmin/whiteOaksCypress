@@ -8,7 +8,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Divider,
-  Tag,
 } from '@chakra-ui/react'
 import { ViewLoader } from 'components/page-level-loader'
 import ProjectDetailsTab from 'features/update-project-details/project-details-form'
