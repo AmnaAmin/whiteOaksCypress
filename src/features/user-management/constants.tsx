@@ -90,9 +90,11 @@ export const USER_MGT_TABLE_QUERIES_KEY = {
   userTypeLabel: 'userTypeLabel.contains',
   langKey: 'langKey.contains',
   activatedLabel: 'activatedLabel.contains',
-  createdDate: 'createdDate.equals',
+  createdDateStart: 'createdDate.greaterThanOrEqual',
+  createdDateEnd: 'createdDate.lessThanOrEqual',
   lastModifiedBy: 'lastModifiedBy.contains',
-  lastModifiedDate: 'lastModifiedDate.equals',
+  lastModifiedDateStart: 'lastModifiedDate.greaterThanOrEqual',
+  lastModifiedDateEnd: 'lastModifiedDate.lessThanOrEqual',
 }
 
 export const USER_MGT_COLUMNS: ColumnDef<any>[] = [
