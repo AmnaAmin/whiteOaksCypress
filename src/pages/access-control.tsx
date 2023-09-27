@@ -37,7 +37,7 @@ export const AccessControl: React.FC = () => {
               {t(`${ACCESS_CONTROL}.newRole`)}
             </Button>
           </HStack>
-          <RolesList setSelectedRole={setSelectedRole} selectedRole={selectedRole} allowEdit={allowEdit} />
+          <RolesList setSelectedRole={setSelectedRole} selectedRole={selectedRole} isDevtekUser={isDevtekUser} />
           {isLoadingPermissions ? (
             <Center height={350}>
               <Spinner size="lg" />

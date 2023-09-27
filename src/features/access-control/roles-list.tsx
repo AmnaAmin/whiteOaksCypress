@@ -18,7 +18,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Table from 'components/table-refactored/table'
 import { ColumnDef } from '@tanstack/react-table'
 
-export const RolesList = ({ setSelectedRole, selectedRole, allowEdit }) => {
+export const RolesList = ({ setSelectedRole, selectedRole, isDevtekUser }) => {
   const { t } = useTranslation()
   const { data: roles, isFetching } = useFetchRoles()
   const { isOpen: isOpenDeleteModal, onClose: onCloseDeleteModal, onOpen: onOpenDeleteModal } = useDisclosure()
@@ -31,30 +31,36 @@ export const RolesList = ({ setSelectedRole, selectedRole, allowEdit }) => {
       {
         header: `${ACCESS_CONTROL}.roles`,
         accessorKey: 'name',
+      },
+      {
+        header: `${ACCESS_CONTROL}.roleType`,
+        accessorKey: 'systemRole',
+        accessorFn: cell => {
+          return cell.systemRole ? t(`${ACCESS_CONTROL}.systemRole`) : t(`${ACCESS_CONTROL}.customRole`)
+        },
         cell: cell => {
           const role = cell?.row?.original as any
+          const allowDelete = !role.systemRole || (role.systemRole && isDevtekUser)
           return (
             <Flex justifyContent={'space-between'}>
-              <Box>{role.name}</Box>
+              <Box>{role.systemRole ? t(`${ACCESS_CONTROL}.systemRole`) : t(`${ACCESS_CONTROL}.customRole`)}</Box>
               <HStack gap="20px">
-                {allowEdit && (
-                  <Flex
-                    gap="5px"
-                    _hover={{ color: 'brand.600', cursor: 'pointer' }}
-                    fontSize={'14px'}
-                    display={binIcon === role.name ? 'block' : 'none'}
-                    data-testid={'remove-' + role.name}
-                    color="gray.500"
-                    fontWeight={'400'}
-                    fontStyle={'normal'}
-                    onClick={() => {
-                      setSelectedRole(role)
-                      onOpenDeleteModal()
-                    }}
-                  >
-                    <BiTrash></BiTrash>
-                  </Flex>
-                )}
+                <Flex
+                  gap="5px"
+                  _hover={{ color: 'brand.600', cursor: 'pointer' }}
+                  fontSize={'14px'}
+                  display={binIcon === role.name && allowDelete ? 'block' : 'none'}
+                  data-testid={'remove-' + role.name}
+                  color="gray.500"
+                  fontWeight={'400'}
+                  fontStyle={'normal'}
+                  onClick={() => {
+                    setSelectedRole(role)
+                    onOpenDeleteModal()
+                  }}
+                >
+                  <BiTrash></BiTrash>
+                </Flex>
               </HStack>
             </Flex>
           )

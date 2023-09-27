@@ -160,7 +160,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                 />
               </FormControl>
             </Box>
-            {isDevtekUser && (
+            {/*{isDevtekUser && (
               <Box w="215px">
                 <FormControl isInvalid={!!errors.systemRole}>
                   <FormLabel variant="strong-label" size="md">
@@ -186,24 +186,26 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                   />
                 </FormControl>
               </Box>
-            )}
+            )}*/}
           </HStack>
           <VStack w="100%" justifyContent={'start'}>
-            <HStack justifyContent={'space-between'} width="100%">
-              <Text data-testid="access-control" fontSize="18px" fontWeight={500} color="gray.700">
-                {t(`${ACCESS_CONTROL}.accessPermissions`)}
-              </Text>
-              <FormLabel
-                data-testid="access-control"
-                variant="clickable-label"
-                size="md"
-                onClick={onOpen}
-                textDecor={'underline'}
-                _hover={{ color: 'brand.600', cursor: 'pointer' }}
-              >
-                {t(`${ACCESS_CONTROL}.advancedPermissions`)}
-              </FormLabel>
-            </HStack>
+            {isDevtekUser && (
+              <HStack justifyContent={'space-between'} width="100%">
+                <Text data-testid="access-control" fontSize="18px" fontWeight={500} color="gray.700">
+                  {t(`${ACCESS_CONTROL}.accessPermissions`)}
+                </Text>
+                <FormLabel
+                  data-testid="access-control"
+                  variant="clickable-label"
+                  size="md"
+                  onClick={onOpen}
+                  textDecor={'underline'}
+                  _hover={{ color: 'brand.600', cursor: 'pointer' }}
+                >
+                  {t(`${ACCESS_CONTROL}.advancedPermissions`)}
+                </FormLabel>
+              </HStack>
+            )}
             <PermissionsTable formControl={formReturn} permissionsData={permissions} />
             <Flex gap="10px" w="100%" justifyContent={'flex-end'}>
               <Button
