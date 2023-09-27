@@ -79,8 +79,10 @@ export const UPCOMING_PAYMENT_TABLE_QUERY_KEYS = {
   id: 'id.equals',
   marketName: 'marketName.contains',
   vendorAddress: 'vendorAddress.contains',
-  workOrderExpectedCompletionDate: 'workOrderExpectedCompletionDate.equals',
-  expectedPaymentDate: 'expectedPaymentDate.equals',
+  workOrderExpectedCompletionDateStart: 'workOrderExpectedCompletionDate.greaterThanOrEqual',
+  workOrderExpectedCompletionDateEnd: 'workOrderExpectedCompletionDate.lessThanOrEqual',
+  expectedPaymentDateStart: 'expectedPaymentDate.greaterThanOrEqual',
+  expectedPaymentDateEnd: 'expectedPaymentDate.lessThanOrEqual',
 }
 
 export const UPCOMING_PAYMENT_API_KEY = 'upcoming-payment'

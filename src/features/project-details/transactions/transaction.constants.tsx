@@ -62,7 +62,8 @@ export const TRANSACTION_TABLE_QUERIES_KEY = {
   parentWorkOrderId: 'vendor.contains',
   transactionTotal: 'transactionTotal.greaterThanOrEqual',
   status: 'status.equals',
-  modifiedDate: 'modifiedDate.lessThanOrEqual',
+  modifiedDateStart: 'modifiedDate.greaterThanOrEqual',
+  modifiedDateEnd: 'modifiedDate.lessThanOrEqual',
   approvedBy: 'approvedBy.contains',
 }
 

@@ -50,7 +50,7 @@ const STATUS_COLOR = {
   [STATUS.Denied]: { color: '#E53E3E', backgroundColor: '#FED7D7' },
   [STATUS.Declined]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' },
   [STATUS.Cancelled]: { color: '#E53E3E', backgroundColor: '#FFFFFF' },
-  [STATUS.Invoiced]: { color: '#38A169', backgroundColor: '#F8FFFA' },
+  [STATUS.Invoiced]: { color: '#319795', backgroundColor: '#FFF7EA' },
   [STATUS.Punch]: { color: '#ED64A6', backgroundColor: '#FFF7F6' },
   [STATUS.New]: { color: '#ED8936', backgroundColor: '#FFF7EA' },
   [STATUS.Closed]: { color: '#B794F4', backgroundColor: '#F6F9FF' },
