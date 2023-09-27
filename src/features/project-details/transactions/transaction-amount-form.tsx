@@ -403,6 +403,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           setValue('attachment', null)
                           setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
                           if (inputRef.current) inputRef.current.value = ''
+                          setFileParseMsg?.(false)
                         }}
                       />
                     </HStack>
