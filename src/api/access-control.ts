@@ -125,6 +125,7 @@ export const useUpdateRoleMutation = roleName => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['get-roles-permissions', roleName])
+        queryClient.invalidateQueries(['get-roles'])
         toast({
           title: 'Access Control',
           description: 'Role has been updated successfully',
