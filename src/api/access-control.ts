@@ -14,6 +14,7 @@ export const useFetchRoles = () => {
       value: res?.name,
       label: res?.name,
       location: res?.location,
+      userTypeId: res?.userTypeId,
     })) || []
   return { data, options, ...rest }
 }

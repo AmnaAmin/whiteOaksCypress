@@ -137,7 +137,6 @@ export const useDeleteUserDetails = () => {
     },
     {
       onSuccess() {
-       
         toast({
           title: t(`${USER_MANAGEMENT}.modal.deleteUserModal`),
           description: t(`${USER_MANAGEMENT}.modal.deleteUserSuccess`),
@@ -181,7 +180,6 @@ export const userMangtPayload = (user: any, statesDTO?: any, usersData?: any) =>
     stateId: user.state?.id || '',
     fpmStateId: getFpmStateId(),
     fpmStates: statesDTO?.filter(s => getFpmStates().find(fs => fs.id === s.id)) || [],
-    userType: 1011,
     ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
     newBonus: user.newBonus?.label ? user.newBonus?.value : '',
     vendorAdmin: user.vendorAdmin,
@@ -198,6 +196,7 @@ export const userMangtPayload = (user: any, statesDTO?: any, usersData?: any) =>
         }
       }),
     parentFieldProjectManagerId: user?.parentFieldProjectManagerId?.value,
+    userType: user?.accountType.userTypeId,
     authorities: [user.accountType?.label],
   }
 
