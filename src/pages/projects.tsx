@@ -17,12 +17,12 @@ import { AddNewProjectModal } from 'features/projects/new-project/add-project'
 import { WeekDayFilters } from 'features/common/due-projects-weekly-filter/weekday-filters'
 import { BiBookAdd, BiChevronRight, BiChevronDown } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
-import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
 import { useDirectReports, useFPMUsers } from 'api/pc-projects'
 import { useStickyState } from 'utils/hooks'
 import { Card } from 'components/card/card'
-import { useUserDirectReports } from 'api/user-management'
+
 import { useAccountData } from 'api/user-account'
 
 const formatGroupLabel = props => (
@@ -41,7 +41,7 @@ export const Projects = () => {
   const hideCreateProject = useRoleBasedPermissions()?.permissions?.some(p =>
     ['PROJECT.CREATE.HIDE', 'PROJECT.READ']?.includes(p),
   )
-  const { fpmUsers = [], setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
+  const { setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
   const { data } = useAccountData()
   const { directReportOptions = [], isLoading: loadingReports } = useDirectReports(data?.email)
 
