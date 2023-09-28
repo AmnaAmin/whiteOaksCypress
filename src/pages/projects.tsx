@@ -17,7 +17,7 @@ import { AddNewProjectModal } from 'features/projects/new-project/add-project'
 import { WeekDayFilters } from 'features/common/due-projects-weekly-filter/weekday-filters'
 import { BiBookAdd, BiChevronRight, BiChevronDown } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
-import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
 import { useDirectReports } from 'api/pc-projects'
 import { useStickyState } from 'utils/hooks'
@@ -110,6 +110,7 @@ export const Projects = () => {
             />
             {/* </Flex> */}
             <Spacer />
+
             <FormControl w="215px" mr={'10px'}>
               <ReactSelect
                 formatGroupLabel={formatGroupLabel}
@@ -128,18 +129,6 @@ export const Projects = () => {
               </Button>
             )}
             {/*change this logic based on access control requirements*/}
-            {fpmUsers?.length > 0 && isFPM && (
-              <FormControl w="215px">
-                <ReactSelect
-                  formatGroupLabel={formatGroupLabel}
-                  onChange={setSelectedFPM}
-                  options={fpmUsers}
-                  placeholder={'Select'}
-                  selectProps={{ isBorderLeft: true }}
-                  styleOption={{ paddingLeft: '40px' }}
-                />
-              </FormControl>
-            )}
           </Flex>
           <Box w="100%" minH="500px">
             <ProjectsTable

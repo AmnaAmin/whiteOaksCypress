@@ -216,6 +216,30 @@ export const useProjectTypeSelectOptions = () => {
   }
 }
 
+export const useDirectReports = (email?: string) => {
+  const client = useClient()
+
+  const { data: user, ...rest } = useQuery(
+    'direct-reports',
+    async () => {
+      const response = await client(`users/${email}`, { email })
+
+      return response?.data
+    },
+    { enabled: !!email },
+  )
+
+  const directReportOptions =
+    user?.directChild?.map(dc => ({
+      value: dc.id,
+      label: dc.firstName + ' ' + dc.lastName,
+    })) || []
+
+  return {
+    directReportOptions: [{ value: 'ALL', label: 'ALL' }, ...directReportOptions],
+    ...rest,
+  }
+}
 export const useVendorCards = () => {
   const client = useClient()
 
@@ -540,7 +564,7 @@ export const useGanttChart = (projectId?: string): any => {
   }
 }
 
-export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired , currentVendorId }) => {
+export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired, currentVendorId }) => {
   const status_active = 12
   const status_expired = 15
   const capacity = 1 // sfor new workorder capacity is fixed
@@ -555,9 +579,9 @@ export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired , cur
     capacity +
     statusAttrib +
     '&projectsId.equals=' +
-    projectId + 
-     '&currentVendorId.equals='  + currentVendorId;
-    ;
+    projectId +
+    '&currentVendorId.equals=' +
+    currentVendorId
   const { data, ...rest } = useQuery<Array<Vendors>>(
     ['FETCH_FILTERED_VENDORS', vendorSkillId],
     async () => {
