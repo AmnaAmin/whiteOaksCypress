@@ -22,7 +22,7 @@ import ReactSelect from 'components/form/react-select'
 import { useDirectReports, useFPMUsers } from 'api/pc-projects'
 import { useStickyState } from 'utils/hooks'
 import { Card } from 'components/card/card'
-import { useUserDirectReports } from 'api/user-management'
+
 import { useAccountData } from 'api/user-account'
 
 const formatGroupLabel = props => (
@@ -41,7 +41,7 @@ export const Projects = () => {
   const hideCreateProject = useRoleBasedPermissions()?.permissions?.some(p =>
     ['PROJECT.CREATE.HIDE', 'PROJECT.READ']?.includes(p),
   )
-  const { fpmUsers = [], setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
+  const { setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
   const { data } = useAccountData()
   const { directReportOptions = [], isLoading: loadingReports } = useDirectReports(data?.email)
 
