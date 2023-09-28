@@ -19,9 +19,11 @@ import { BiBookAdd, BiChevronRight, BiChevronDown } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
-import { useFPMUsers } from 'api/pc-projects'
+import { useDirectReports, useFPMUsers } from 'api/pc-projects'
 import { useStickyState } from 'utils/hooks'
 import { Card } from 'components/card/card'
+import { useUserDirectReports } from 'api/user-management'
+import { useAccountData } from 'api/user-account'
 
 const formatGroupLabel = props => (
   <Box onClick={props.onClick} cursor="pointer" display="flex" alignItems="center" fontWeight="normal" ml={'-7px'}>
@@ -35,9 +37,13 @@ export const Projects = () => {
     onClose: onNewProjectModalClose,
     onOpen: onNewProjectModalOpen,
   } = useDisclosure()
-  const { isFPM } = useUserRolesSelector()
-  const hideCreateProject = useRoleBasedPermissions()?.permissions?.some(p => ['PROJECT.CREATE.HIDE', 'PROJECT.READ']?.includes(p))
+
+  const hideCreateProject = useRoleBasedPermissions()?.permissions?.some(p =>
+    ['PROJECT.CREATE.HIDE', 'PROJECT.READ']?.includes(p),
+  )
   const { fpmUsers = [], setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
+  const { data } = useAccountData()
+  const { directReportOptions = [], isLoading: loadingReports } = useDirectReports(data?.email)
 
   const [resetAllFilters, setResetAllFilters] = useState(false)
   const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard')
@@ -103,8 +109,17 @@ export const Projects = () => {
               }}
               selectedDay={selectedDay}
             />
-            {/* </Flex> */}
+
             <Spacer />
+            <FormControl w="215px" mr={'10px'}>
+              <ReactSelect
+                formatGroupLabel={formatGroupLabel}
+                onChange={setSelectedFPM}
+                options={directReportOptions}
+                loadingCheck={loadingReports}
+                placeholder={'Select'}
+              />
+            </FormControl>
             {!hideCreateProject && (
               <Button onClick={onNewProjectModalOpen} colorScheme="brand" fontSize="14px" minW={'140px'}>
                 <Icon as={BiBookAdd} fontSize="18px" mr={2} />
@@ -112,18 +127,6 @@ export const Projects = () => {
               </Button>
             )}
             {/*change this logic based on access control requirements*/}
-            {fpmUsers?.length > 0 && isFPM && (
-              <FormControl w="215px">
-                <ReactSelect
-                  formatGroupLabel={formatGroupLabel}
-                  onChange={setSelectedFPM}
-                  options={fpmUsers}
-                  placeholder={'Select'}
-                  selectProps={{ isBorderLeft: true }}
-                  styleOption={{ paddingLeft: '40px' }}
-                />
-              </FormControl>
-            )}
           </Flex>
           <Box w="100%" minH="500px">
             <ProjectsTable

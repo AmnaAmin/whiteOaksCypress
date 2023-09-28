@@ -160,7 +160,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                 />
               </FormControl>
             </Box>
-            {/*{isDevtekUser && (
+            {isDevtekUser && (
               <Box w="215px">
                 <FormControl isInvalid={!!errors.systemRole}>
                   <FormLabel variant="strong-label" size="md">
@@ -186,7 +186,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                   />
                 </FormControl>
               </Box>
-            )}*/}
+            )}
           </HStack>
           <VStack w="100%" justifyContent={'start'}>
             {isDevtekUser && (

@@ -97,7 +97,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { mutate: updateUser } = useSaveUserDetails()
   const { mutate: addUser } = useCreateUserMutation()
   const { mutate: deleteUser } = useDeleteUserDetails()
-  const { options: vendorTypes } = useViewVendor()
+  const { options: vendorTypes, isLoading: loadingVendors } = useViewVendor()
 
   useUserDetails({ form, userInfo })
 
@@ -688,7 +688,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 control={control}
                 name="vendorId"
                 render={({ field }) => (
-                  <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={vendorTypes} />
+                  <ReactSelect
+                    selectProps={{ isBorderLeft: true }}
+                    {...field}
+                    options={vendorTypes}
+                    loadingCheck={loadingVendors}
+                  />
                 )}
               />
             </FormControl>

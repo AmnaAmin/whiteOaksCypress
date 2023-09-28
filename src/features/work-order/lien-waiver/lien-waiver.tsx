@@ -531,27 +531,33 @@ export const LienWaiverTab: React.FC<any> = props => {
           <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
             {t('cancel')}
           </Button>
-          {!isReadOnly && !isVendor ? (
-  <Button
-    onClick={() => lwUpload()}
-    colorScheme="brand"
-    isDisabled={!document || isUpdating}
-    data-testid="cancel-lien-waiver"
-  >
-    {t('save')}
-  </Button>
-) : null}
-            <>
-              {[STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
-                workOrder?.statusLabel?.toLocaleLowerCase(),
-              ) &&
-                !(workOrder.leanWaiverSubmitted && workOrder.lienWaiverAccepted) && (
-                  <Button colorScheme="brand" disabled={isUpdating} type="submit" data-testid="save-lien-waiver">
+          <>
+            {!isVendor ? (
+              <>
+                {!isReadOnly && (
+                  <Button
+                    onClick={() => lwUpload()}
+                    colorScheme="brand"
+                    isDisabled={!document || isUpdating}
+                    data-testid="cancel-lien-waiver"
+                  >
                     {t('save')}
                   </Button>
                 )}
-            </>
-          
+              </>
+            ) : (
+              <>
+                {[STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
+                  workOrder?.statusLabel?.toLocaleLowerCase(),
+                ) &&
+                  !(workOrder.leanWaiverSubmitted && workOrder.lienWaiverAccepted) && (
+                    <Button colorScheme="brand" disabled={isUpdating} type="submit" data-testid="save-lien-waiver">
+                      {t('save')}
+                    </Button>
+                  )}
+              </>
+            )}
+          </>
         </HStack>
       </ModalFooter>
       <ConfirmationBox

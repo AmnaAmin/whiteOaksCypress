@@ -161,6 +161,8 @@ export const SECTIONS = [
   { value: 'USERMANAGER', label: 'Users' },
   { value: 'MARKET', label: 'Markets' },
   { value: 'VENDORSKILL', label: 'Vendor Skills' },
+  { value: 'CLIENTTYPE', label: 'Client Type' },
+  { value: 'PROJECTTYPE', label: 'Project Type' },
   { value: 'SUPPORT', label: 'Support' },
   { value: 'ALERT', label: 'Alerts' },
 ]
@@ -251,6 +253,7 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
     location: values?.location?.value,
     assignment: values?.assignment?.value,
     systemRole: values?.systemRole,
+    userTypeId: 0,
     permissions,
   }
 }

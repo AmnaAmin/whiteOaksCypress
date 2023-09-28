@@ -75,6 +75,30 @@ export const useProjectDetails = (projectId?: string) => {
     { enabled: false },
   )
 }
+export const useDirectReports = (email: string) => {
+  const client = useClient()
+
+  const { data: directReports, ...rest } = useQuery(
+    'direct-reports',
+    async () => {
+      const response = await client(`users/${email}`, { email })
+
+      return response?.data
+    },
+    { enabled: !!email },
+  )
+
+  const directReportOptions =
+    directReports?.directChild?.map(dr => ({
+      label: dr?.firstName + ' ' + dr?.lastName,
+      value: dr?.id,
+    })) || []
+
+  return {
+    directReportOptions: [{ label: 'ALL', value: 'ALL' }, ...directReportOptions],
+    ...rest,
+  }
+}
 
 export const useCreateProjectMutation = () => {
   const client = useClient()
