@@ -240,30 +240,6 @@ export const useProjectTypeSelectOptions = () => {
   }
 }
 
-export const useDirectReports = (email?: string) => {
-  const client = useClient()
-
-  const { data: user, ...rest } = useQuery(
-    'direct-reports',
-    async () => {
-      const response = await client(`users/${email}`, { email })
-
-      return response?.data
-    },
-    { enabled: !!email },
-  )
-
-  const directReportOptions =
-    user?.directChild?.map(dc => ({
-      value: dc.id,
-      label: dc.firstName + ' ' + dc.lastName,
-    })) || []
-
-  return {
-    directReportOptions: [{ value: 'ALL', label: 'ALL' }, ...directReportOptions],
-    ...rest,
-  }
-}
 export const useVendorCards = () => {
   const client = useClient()
 
