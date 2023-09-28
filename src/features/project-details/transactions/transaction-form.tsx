@@ -83,6 +83,7 @@ import {
 import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
 import UpdateProjectAward from './update-project-award'
+import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -164,6 +165,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
   const [totalItemsAmount, setTotalItemAmount] = useState(0)
+  const [disableBtn, setDisableBtn] = useState(false)
+  const [fileParseMsg, setFileParseMsg] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
@@ -513,7 +516,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {check && showLimitReached && <ProjectTransactionRemainingAlert msg="PlanLimitExceed" />}
 
       {remainingAmountExceededFlag && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
-
+      {fileParseMsg && <PercentageCompletionLessThanNTEAlert msg={t(`${WORK_ORDER}.attachmentParsingFailure`)} />}
       {isCompletedWorkLessThanNTEPercentage &&
         (isAdminEnabled ? (
           <PercentageCompletionLessThanNTEAlert msg="PercentageCompletionForAdminAndAccount" />
@@ -1057,6 +1060,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   setTotalItemAmount(amount)
                 }}
                 transaction={transaction}
+                setDisableBtn={setDisableBtn}
+                disableError={disableBtn}
+                setFileParseMsg={setFileParseMsg}
                 isMaterialsLoading={isMaterialsLoading}
                 setMaterialsLoading={setMaterialsLoading}
                 selectedTransactionId={selectedTransactionId}
@@ -1117,7 +1123,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 data-testid="save-transaction"
                 colorScheme="darkPrimary"
                 variant="solid"
-                disabled={isFormSubmitLoading || isMaterialsLoading || disableSave}
+                disabled={isFormSubmitLoading || isMaterialsLoading || disableSave || disableBtn}
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>
