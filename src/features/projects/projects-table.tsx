@@ -46,7 +46,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [paginationInitialized, setPaginationInitialized] = useState(false)
-  const { data: days } = useWeekDayProjectsDue('')
+  const { data: days } = useWeekDayProjectsDue(userIds?.join(','))
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
