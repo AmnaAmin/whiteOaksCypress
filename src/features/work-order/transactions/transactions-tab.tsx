@@ -41,18 +41,18 @@ export const TransactionsTab = ({
         <Flex w="100%" alignContent="space-between" pos="relative">
           <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" p="11px">
             <>
-          {!isReadOnly &&  (
-            <Button
-              variant="solid"
-              colorScheme="brand"
-              onClick={onTransactionModalOpen}
-              isDisabled={preventNewTransaction}
-              leftIcon={<BiAddToQueue />}
-              mt="-5px"
-            >
-              {t('projects.projectDetails.newTransaction')}
-            </Button>
-          )}
+              {!isReadOnly && (
+                <Button
+                  variant="solid"
+                  colorScheme="brand"
+                  onClick={onTransactionModalOpen}
+                  isDisabled={preventNewTransaction}
+                  leftIcon={<BiAddToQueue />}
+                  mt="-5px"
+                >
+                  {t('projects.projectDetails.newTransaction')}
+                </Button>
+              )}
             </>
           </Box>
         </Flex>

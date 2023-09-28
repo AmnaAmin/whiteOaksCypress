@@ -19,10 +19,9 @@ import { BiBookAdd, BiChevronRight, BiChevronDown } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
-import { useDirectReports, useFPMUsers } from 'api/pc-projects'
+import { useDirectReports } from 'api/pc-projects'
 import { useStickyState } from 'utils/hooks'
 import { Card } from 'components/card/card'
-
 import { useAccountData } from 'api/user-account'
 
 const formatGroupLabel = props => (
@@ -41,10 +40,10 @@ export const Projects = () => {
   const hideCreateProject = useRoleBasedPermissions()?.permissions?.some(p =>
     ['PROJECT.CREATE.HIDE', 'PROJECT.READ']?.includes(p),
   )
-  const { setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
+
   const { data } = useAccountData()
   const { directReportOptions = [], isLoading: loadingReports } = useDirectReports(data?.email)
-
+  const [selectedUserIds, setSelectedUserIds] = useState<any>([])
   const [resetAllFilters, setResetAllFilters] = useState(false)
   const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard')
   const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay')
@@ -75,8 +74,8 @@ export const Projects = () => {
               setSelectedFlagged(null)
               setSelectedCard(selection)
             }}
+            selectedUsers={selectedUserIds}
             selectedCard={selectedCard}
-            selectedFPM={selectedFPM}
             onSelectFlagged={selection => {
               setSelectedCard(null)
               setSelectedFlagged(selection)
@@ -99,11 +98,11 @@ export const Projects = () => {
               <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
             </Box>
             <WeekDayFilters
-              selectedFPM={selectedFPM}
               clearAll={clearAll}
               clear={() => {
                 setSelectedDay('')
               }}
+              selectedUsers={selectedUserIds}
               onSelectDay={selection => {
                 setSelectedDay(selection)
               }}
@@ -111,10 +110,13 @@ export const Projects = () => {
             />
 
             <Spacer />
+
             <FormControl w="215px" mr={'10px'}>
               <ReactSelect
                 formatGroupLabel={formatGroupLabel}
-                onChange={setSelectedFPM}
+                onChange={user => {
+                  user.value === 'ALL' ? setSelectedUserIds([]) : setSelectedUserIds([user.value])
+                }}
                 options={directReportOptions}
                 loadingCheck={loadingReports}
                 placeholder={'Select'}
@@ -132,8 +134,7 @@ export const Projects = () => {
             <ProjectsTable
               selectedCard={selectedCard as string}
               selectedDay={selectedDay as string}
-              userIds={userIds}
-              selectedFPM={selectedFPM}
+              userIds={selectedUserIds}
               resetFilters={resetAllFilters}
               selectedFlagged={selectedFlagged}
             />

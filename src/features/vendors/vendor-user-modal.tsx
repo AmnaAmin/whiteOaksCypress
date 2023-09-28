@@ -111,6 +111,7 @@ const VendorUserModal = ({
       zipCode: values.zipCode,
       activated: values.activated,
       parentId: userInfo?.user.id,
+      authorities: ['VENDOR'],
     } as any
 
     if (isEditUser) {

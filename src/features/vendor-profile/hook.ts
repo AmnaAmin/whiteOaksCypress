@@ -98,7 +98,7 @@ export const checkIsLicenseChanged = (values: any, licenseDocument) => {
   //const watchExpiryDateNot = watchExpiryDate !== undefined
 
   const isLicenseTypeChanged = watchLicenseType !== values.licenseType
-  const isLicenseNumberChanged = watchLicenseNumber !== values?.licenseNumber 
+  const isLicenseNumberChanged = watchLicenseNumber !== values?.licenseNumber
 
   /*
 
