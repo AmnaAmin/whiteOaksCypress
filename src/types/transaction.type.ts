@@ -191,9 +191,9 @@ export interface FormValues {
   refund: boolean | null
   lienWaiver?: LienWaiverFormValues
   paymentProcessed: string | null
-  payAfter: string | null
-  VerifiedByFPM: SelectOption | null
-  VerifiedByDM: SelectOption | null
+  payAfterDate: string | null
+  VerifiedByFPM: string | null
+  VerifiedByDM: string | null
 }
 
 export type ChangeTransaction = {

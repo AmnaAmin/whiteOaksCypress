@@ -483,10 +483,6 @@ export const parseChangeOrderAPIPayload = async (
     paidDate: dateISOFormat(paidDate as string),
     paymentTerm: formValues.paymentTerm?.value || null,
     payDateVariance: formValues.payDateVariance || '',
-    // paymentProcessed: dateISOFormat(formValues.paymentProcessed as string),
-    // payAfterDate: dateISOFormat(formValues.payAfterDate as string),
-    // VerifiedByFPM,
-    // VerifiedByDM,
     paymentReceived: dateISOFormat(formValues.paymentRecievedDate as string),
     lineItems,
     documents,
@@ -543,10 +539,10 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
     refund: false,
-    VerifiedByFPM: null,
-    VerifiedByDM: null,
     paymentProcessed: null,
     payAfterDate: null,
+    VerifiedByFPM: null,
+    VerifiedByDM: null,
   }
 }
 
@@ -659,6 +655,10 @@ export const parseTransactionToFormValues = (
     paymentTerm: findOption(`${transaction.paymentTerm}`, PAYMENT_TERMS_OPTIONS),
     paidDate: datePickerFormat(transaction.paidDate as string),
     payDateVariance,
+    paymentProcessed: null,
+    payAfterDate: null,
+    VerifiedByFPM: null,
+    VerifiedByDM: null,
     paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
     refund: isRefunded,
     transaction:

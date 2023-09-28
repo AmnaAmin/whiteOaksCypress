@@ -781,32 +781,28 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                       </FormControl>
                     </GridItem>
                     <GridItem>
-                      <FormControl
-                      // isInvalid={!!errors.paidDate}
-                      >
+                      <FormControl isInvalid={!!errors.payDateVariance}>
                         <FormLabel
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
                           color="gray.700"
-                          htmlFor="paidDate"
+                          htmlFor="payDateVariance"
                           whiteSpace="nowrap"
                         >
-                          {t(`${TRANSACTION}.paymentProcessed`)}
+                          {t(`${TRANSACTION}.payDateVariance`)}
                         </FormLabel>
                         <Input
-                          data-testid="payment-processed"
-                          id="paymentProcessed"
-                          type="date"
-                          // variant={isPaidDateRequired ? 'required-field' : 'outline'}
+                          data-testid="pay-date-variance"
+                          id="payDateVariance"
+                          type="text"
                           size="md"
-                          // isDisabled={isPaidDateDisabled}
+                          value={payDateVariance}
                           css={calendarIcon}
-                          // {...register('paymentProcessed', {
-                          //   required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
-                          // })}
+                          isDisabled
+                          {...register('payDateVariance')}
                         />
-                        {/* <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage> */}
+                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
 
@@ -837,11 +833,39 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         <FormErrorMessage>{errors?.paidDate?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.paymentProcessed}>
+                        <FormLabel
+                          fontSize="14px"
+                          fontStyle="normal"
+                          fontWeight={500}
+                          color="gray.700"
+                          htmlFor="paymentProcessed"
+                          whiteSpace="nowrap"
+                        >
+                          {t(`${TRANSACTION}.paymentProcessed`)}
+                        </FormLabel>
+                        <Input
+                          data-testid="payment-processed"
+                          id="paymentProcessed"
+                          type="date"
+                          // variant={isPaidDateRequired ? 'required-field' : 'outline'}
+                          size="md"
+                          // isDisabled={isPaidDateDisabled}
+                          css={calendarIcon}
+                          {...register(
+                            'paymentProcessed',
+                            // , {
+                            //   required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
+                            // }
+                          )}
+                        />
+                        <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage>
+                      </FormControl>
+                    </GridItem>
 
                     <GridItem>
-                      <FormControl
-                      // isInvalid={!!errors.paidDate}
-                      >
+                      <FormControl isInvalid={!!errors.payAfterDate}>
                         <FormLabel
                           fontSize="14px"
                           fontStyle="normal"
@@ -850,7 +874,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           htmlFor="payAfterDate"
                           whiteSpace="nowrap"
                         >
-                          {t(`${TRANSACTION}.payAfter`)}
+                          {t(`${TRANSACTION}.payAfterDate`)}
                         </FormLabel>
                         <Input
                           data-testid="pay-after"
@@ -860,37 +884,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           size="md"
                           // isDisabled={isPaidDateDisabled}
                           css={calendarIcon}
-                          // {...register('paymentProcessed', {
-                          //   required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
-                          // })}
+                          {...register('payAfterDate', {
+                            required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
+                          })}
                         />
-                        {/* <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage> */}
-                      </FormControl>
-                    </GridItem>
-
-                    <GridItem>
-                      <FormControl isInvalid={!!errors.payDateVariance}>
-                        <FormLabel
-                          fontSize="14px"
-                          fontStyle="normal"
-                          fontWeight={500}
-                          color="gray.700"
-                          htmlFor="payDateVariance"
-                          whiteSpace="nowrap"
-                        >
-                          {t(`${TRANSACTION}.payDateVariance`)}
-                        </FormLabel>
-                        <Input
-                          data-testid="pay-date-variance"
-                          id="payDateVariance"
-                          type="text"
-                          size="md"
-                          value={payDateVariance}
-                          css={calendarIcon}
-                          isDisabled
-                          {...register('payDateVariance')}
-                        />
-                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
+                        <FormErrorMessage>{errors?.payAfterDate?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
 
@@ -898,6 +896,33 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                       <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
                         <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="markAs">
                           {t(`${TRANSACTION}.VerifiedByFPM`)}
+                        </FormLabel>
+                        <Controller
+                          // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
+                          control={control}
+                          name="markAs"
+                          render={({ field, fieldState }) => {
+                            return (
+                              <>
+                                <Select
+                                  {...field}
+                                  options={TRANSACTION_MARK_AS_OPTIONS_ARRAY}
+                                  // isDisabled={isApproved}
+                                  size="md"
+                                  selectProps={{ isBorderLeft: true }}
+                                  onChange={field.onChange}
+                                />
+                                {/* <FormErrorMessage>{fieldState.VerifiedByFPM?.message}</FormErrorMessage> */}
+                              </>
+                            )
+                          }}
+                        />
+                      </FormControl>
+                    </GridItem>
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
+                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="markAs">
+                          {t(`${TRANSACTION}.VerifiedByDM`)}
                         </FormLabel>
                         <Controller
                           // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
@@ -961,12 +986,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   <GridItem>
                     <FormControl isInvalid={!!errors.markAs} data-testid="mark-as-select-field">
                       <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="markAs">
-                        {t(`${TRANSACTION}.VerifiedByFPM`)}
+                        {t(`${TRANSACTION}.markAs`)}
                       </FormLabel>
                       <Controller
                         rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                         control={control}
-                        name="VerifiedByFPM"
+                        name="markAs"
                         render={({ field, fieldState }) => {
                           return (
                             <>
