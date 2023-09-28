@@ -8,8 +8,7 @@ type UseColumnFiltersQueryStringProps = {
   setPagination?: (pagination: PaginationState) => void
   selectedCard?: string
   selectedDay?: string
-  selectedFPM?: any
-  userIds?: number[]
+  userIds?: any
   days?: any
   sorting?: SortingState
   selectedFlagged?: any
@@ -66,11 +65,13 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     if (!!selectedDay && days?.length) {
       const selectedDayData = days.find(day => day.dayName === selectedDay)
       clientDueDateFilter = { id: 'clientDueDate', value: selectedDayData?.dueDate }
-      finalFilters = [...columnFilters, clientDueDateFilter]
+      finalFilters = [...finalFilters, clientDueDateFilter]
     }
     // This filter will apply when user select a FPM from the FPM list
-    if (userIds?.length) {
-      finalFilters = [...finalFilters, { id: 'projectManagerId', value: userIds.join(',') }]
+    if (userIds?.length > 0) {
+      finalFilters = [...finalFilters, { id: 'projectManagerId', value: userIds?.join(',') }]
+    } else {
+      finalFilters = finalFilters?.filter(f => f.id !== 'projectManagerId')
     }
 
     const queryStringWithoutPagination = getAPIFilterQueryString(

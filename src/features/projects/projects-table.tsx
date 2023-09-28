@@ -29,8 +29,7 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 type ProjectProps = {
   selectedCard: string
   selectedDay: string
-  userIds?: number[]
-  selectedFPM?: any
+  userIds?: any
   resetFilters: boolean
   selectedFlagged?: any
 }
@@ -39,7 +38,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   selectedCard,
   selectedDay,
   userIds,
-  selectedFPM,
   resetFilters,
   selectedFlagged,
 }) => {
@@ -48,7 +46,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [paginationInitialized, setPaginationInitialized] = useState(false)
-  const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
+  const { data: days } = useWeekDayProjectsDue('')
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
@@ -59,7 +57,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       sorting,
       selectedCard,
       selectedDay,
-      selectedFPM,
       userIds,
       days,
       selectedFlagged,

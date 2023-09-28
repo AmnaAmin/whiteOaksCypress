@@ -4,15 +4,15 @@ import { useClient } from 'utils/auth-context'
 import numeral from 'numeral'
 import { orderBy } from 'lodash'
 import { usePaginationQuery } from 'api/index'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const PROJECTS_QUERY_KEY = 'projects'
 export const useProjects = (filterQueryString?: string, page?: number, size: number = 0) => {
   const queryKey = [PROJECTS_QUERY_KEY, filterQueryString]
   // change this logic based on access control requirements
-  const { isFPM } = useUserRolesSelector()
+  const hidePaidProjects = useRoleBasedPermissions()?.permissions?.includes('PROJECT.PAID.HIDE')
   const fpmRestrictedProjects = 'projectStatusId.notIn=41,72,109' // paid -> 41 , ClientPAid -> 72 , Overpayment -> 109
-  const endpoint = isFPM
+  const endpoint = hidePaidProjects
     ? `v1/projects?${fpmRestrictedProjects}&${filterQueryString || ''}`
     : `v1/projects?${filterQueryString || ''}`
 
@@ -141,7 +141,11 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
   const sowRevisedChangeOrderAmount =
     (firstFinancialRecord?.changeOrder || 0) + (firstFinancialRecord?.coAdjustment || 0)
   const sowRevisedAmount = (firstFinancialRecord?.originalAmount || 0) + (firstFinancialRecord?.noCoAdjustment || 0)
-  const finalSOWAmount = sowRevisedAmount + sowRevisedChangeOrderAmount + (firstFinancialRecord?.carrierFee || 0) + (firstFinancialRecord?.legalFee || 0)
+  const finalSOWAmount =
+    sowRevisedAmount +
+    sowRevisedChangeOrderAmount +
+    (firstFinancialRecord?.carrierFee || 0) +
+    (firstFinancialRecord?.legalFee || 0)
   const originalSOWAmount =
     (firstFinancialRecord?.originalAmount || 0) +
     (firstFinancialRecord?.changeOrder || 0) +
@@ -163,7 +167,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
 
   const finalProjectTotalCost = projectTotalCost + projectExpenses
 
-  const profitMargin = originalSOWAmount === 0 ? 0 : (finalSOWAmount - finalProjectTotalCost) / finalSOWAmount;
+  const profitMargin = originalSOWAmount === 0 ? 0 : (finalSOWAmount - finalProjectTotalCost) / finalSOWAmount
 
   return {
     finalSOWAmount: numeral(finalSOWAmount).format('$0,0.00'),

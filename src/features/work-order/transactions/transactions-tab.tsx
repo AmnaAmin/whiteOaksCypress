@@ -3,7 +3,7 @@ import AddNewTransactionModal from 'features/project-details/transactions/add-tr
 import { WOTransactionsTable } from './wo-transactions-table'
 import { t } from 'i18next'
 import { BiAddToQueue } from 'react-icons/bi'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 
 interface Props {
   projectData: any
@@ -30,7 +30,7 @@ export const TransactionsTab = ({
 
   const workOrderStatus = (workOrder?.statusLabel || '').toLowerCase()
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   const preventNewTransaction =
     !!(workOrderStatus === 'paid' || workOrderStatus === 'cancelled' || workOrderStatus === 'invoiced') ||
     (isVendorExpired && !isAdmin)
@@ -40,16 +40,20 @@ export const TransactionsTab = ({
       <ModalBody h={'calc(100vh - 300px)'} p="10px" overflow={'auto'}>
         <Flex w="100%" alignContent="space-between" pos="relative">
           <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" p="11px">
-            <Button
-              variant="solid"
-              colorScheme="brand"
-              onClick={onTransactionModalOpen}
-              isDisabled={preventNewTransaction}
-              leftIcon={<BiAddToQueue />}
-              mt="-5px"
-            >
-              {t('projects.projectDetails.newTransaction')}
-            </Button>
+            <>
+              {!isReadOnly && (
+                <Button
+                  variant="solid"
+                  colorScheme="brand"
+                  onClick={onTransactionModalOpen}
+                  isDisabled={preventNewTransaction}
+                  leftIcon={<BiAddToQueue />}
+                  mt="-5px"
+                >
+                  {t('projects.projectDetails.newTransaction')}
+                </Button>
+              )}
+            </>
           </Box>
         </Flex>
         <WOTransactionsTable

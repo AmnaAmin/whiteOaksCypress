@@ -125,7 +125,7 @@ const useProjectCardJson = cards => {
 export type ProjectCardProps = {
   onSelectCard: (string) => void
   selectedCard: string
-  selectedFPM?: any
+  selectedUsers?: any
   onSelectFlagged?: (string) => void
   selectedFlagged?: any
   clear?: any
@@ -134,12 +134,12 @@ export type ProjectCardProps = {
 export const ProjectFilters: React.FC<ProjectCardProps> = ({
   onSelectCard,
   selectedCard,
-  selectedFPM,
+  selectedUsers,
   onSelectFlagged,
   selectedFlagged,
   clear,
 }) => {
-  const { data: values, isLoading } = useProjectCards(selectedFPM?.id)
+  const { data: values, isLoading } = useProjectCards(selectedUsers?.join(','))
   const cards = useProjectCardJson(values)
 
   return (
