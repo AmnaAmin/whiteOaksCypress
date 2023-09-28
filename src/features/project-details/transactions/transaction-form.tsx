@@ -894,19 +894,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                     <GridItem>
                       <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
-                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="markAs">
+                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="VerifiedByFPM">
                           {t(`${TRANSACTION}.VerifiedByFPM`)}
                         </FormLabel>
                         <Controller
                           // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           control={control}
-                          name="markAs"
+                          name="VerifiedByFPM"
                           render={({ field, fieldState }) => {
                             return (
                               <>
                                 <Select
                                   {...field}
-                                  options={TRANSACTION_MARK_AS_OPTIONS_ARRAY}
+                                  options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
                                   // isDisabled={isApproved}
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
@@ -921,19 +921,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                     </GridItem>
                     <GridItem>
                       <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
-                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="markAs">
+                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="VerifiedByDM">
                           {t(`${TRANSACTION}.VerifiedByDM`)}
                         </FormLabel>
                         <Controller
                           // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           control={control}
-                          name="markAs"
+                          name="VerifiedByDM"
                           render={({ field, fieldState }) => {
                             return (
                               <>
                                 <Select
                                   {...field}
-                                  options={TRANSACTION_MARK_AS_OPTIONS_ARRAY}
+                                  options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
                                   // isDisabled={isApproved}
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
