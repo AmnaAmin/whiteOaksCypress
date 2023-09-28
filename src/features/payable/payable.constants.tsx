@@ -10,15 +10,20 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   vendorAddress: 'vendorAddress.contains',
   paymentTerm: 'paymentTerm.equals',
   paymentType: 'paymentType.contains',
-  expectedPaymentDate: 'expectedPaymentDate.equals',
+  expectedPaymentDateStart: 'expectedPaymentDate.greaterThanOrEqual',
+  expectedPaymentDateEnd: 'expectedPaymentDate.lessThanOrEqual',
   finalInvoiceAmount: 'finalInvoiceAmount.equals',
   marketName: 'marketName.contains',
-  workOrderStartDate: 'workOrderStartDate.equals',
-  workOrderDateCompleted: 'workOrderDateCompleted.equals',
-  workOrderIssueDate: 'workOrderIssueDate.equals',
+  workOrderStartDateStart: 'workOrderStartDate.greaterThanOrEqual',
+  workOrderStartDateEnd: 'workOrderStartDate.lessThanOrEqual',
+  workOrderDateCompletedStart: 'workOrderDateCompleted.greaterThanOrEqual',
+  workOrderDateCompletedEnd: 'workOrderDateCompleted.lessThanOrEqual',
+  workOrderIssueDateStart: 'workOrderIssueDate.greaterThanOrEqual',
+  workOrderIssueDateEnd: 'workOrderIssueDate.lessThanOrEqual',
   durationCategory: 'durationCategory.equals',
   type: 'type.contains',
-  displayId:'displayId.contains'
+  displayId: 'displayId.contains',
+  clientName: 'clientName.contains',
 }
 
 export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
@@ -37,6 +42,10 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'vendorAddress',
     accessorKey: 'vendorAddress',
+  },
+  {
+    header: 'projects.projectTable.client',
+    accessorKey: 'clientName',
   },
   {
     header: 'paymentTerms',

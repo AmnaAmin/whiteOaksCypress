@@ -21,6 +21,7 @@ import { Estimates } from 'pages/estimates'
 import { EstimateDetails } from 'pages/estimate-details'
 import CypressReport from './cypress-report'
 import { AccessControl } from './access-control'
+import { ClientType } from './admin/client-type'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -62,6 +63,7 @@ export default function useRoutesConfig() {
     { path: 'alerts', element: Alerts, permissions: ['ALERT.READ', 'ALERT.EDIT', 'ALL'] },
     { path: 'cypressReport', element: CypressReport, permissions: ['CYPRESSREPORT.READ', 'ALL'] },
     { path: 'projects', element: VendorProjects, permissions: ['VENDORPROJECT.READ', 'VENDORPROJECT.EDIT'] },
+    { path: 'clientType', element: ClientType, permissions: ['CLIENTTYPE.EDIT', 'CLIENTTYPE.READ', 'ALL'] },
     {
       path: 'project-details/:projectId',
       element: VendorProjectDetails,

@@ -14,6 +14,7 @@ export const useFetchRoles = () => {
       value: res?.name,
       label: res?.name,
       location: res?.location,
+      userTypeId: res?.userTypeId,
     })) || []
   return { data, options, ...rest }
 }
@@ -81,6 +82,34 @@ export const useCreateNewRoleMutation = () => {
   )
 }
 
+export const useDeleteRole = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+  return useMutation(
+    roleName => {
+      return client(`authorities/${roleName}`, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['get-roles'])
+        toast({
+          title: 'Access Control',
+          description: 'Role has been deleted successfully',
+          status: 'success',
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: any) {
+        console.log('Unable to delete role', error)
+      },
+    },
+  )
+}
+
 export const useUpdateRoleMutation = roleName => {
   const client = useClient()
   const toast = useToast()
@@ -96,9 +125,10 @@ export const useUpdateRoleMutation = roleName => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['get-roles-permissions', roleName])
+        queryClient.invalidateQueries(['get-roles'])
         toast({
           title: 'Access Control',
-          description: 'New Role has been updated successfully',
+          description: 'Role has been updated successfully',
           status: 'success',
           isClosable: true,
           position: 'top-left',
@@ -119,6 +149,7 @@ export const useUpdateRoleMutation = roleName => {
 }
 export const SECTIONS = [
   { value: 'ADMINDASHBOARD', label: 'Dashboard' },
+  { value: 'VENDORDASHBOARD', label: 'Vendor Dashboard' },
   { value: 'ESTIMATE', label: 'Estimates' },
   { value: 'PROJECT', label: 'Projects' },
   { value: 'PAYABLE', label: 'Payable' },
@@ -130,6 +161,8 @@ export const SECTIONS = [
   { value: 'USERMANAGER', label: 'Users' },
   { value: 'MARKET', label: 'Markets' },
   { value: 'VENDORSKILL', label: 'Vendor Skills' },
+  { value: 'CLIENTTYPE', label: 'Client Type' },
+  { value: 'PROJECTTYPE', label: 'Project Type' },
   { value: 'SUPPORT', label: 'Support' },
   { value: 'ALERT', label: 'Alerts' },
 ]
@@ -188,12 +221,16 @@ export enum ADV_PERMISSIONS {
   woaStartEdit = 'PROJECTDETAIL.MGMT.WOASTART.EDIT',
   verifyProjectEnable = 'PROJECTDETAIL.MGMT.PROJECTVERIFIED.EDIT',
   deactivateVendor = 'VENDOR.DEACTIVEVENDOR',
+  vendorAccountEdit = 'VENDOR.VENDORACCOUNTS.EDIT',
   transStatusEdit = 'PROJECTDETAIL.TRANSACTION.STATUS.EDIT',
   transPaidDateEdit = 'PROJECTDETAIL.TRANSACTION.PAIDDATE.EDIT',
   transPaymentReceivedEdit = 'PROJECTDETAIL.TRANSACTION.PAYMENTRECEIVED.EDIT',
   transInvoicedDateEdit = 'PROJECTDETAIL.TRANSACTION.INVOICEDATE.EDIT',
   futureDateEnabled = 'PROJECTDETAIL.TRANSACTION.FUTUREPAYMENT.EDIT',
   cancelWorkOrderEnable = 'PROJECTDETAIL.WORKORDER.CANCEL.EDIT',
+  hideCreateProject = 'PROJECT.CREATE.HIDE',
+  hidePaidProjects = 'PROJECT.PAID.HIDE',
+  overrideDrawRestrictionOnPercentageCompletion = 'PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE',
 }
 
 export const mapFormValuestoPayload = (values, allPermissions) => {
@@ -203,6 +240,7 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
       const key = p.name + '.' + (p.edit ? 'EDIT' : 'READ')
       return allPermissions?.find(a => a.key === key)
     })
+
   for (const key in values.advancedPermissions) {
     if (values.advancedPermissions[key]) {
       const permissionObj = allPermissions?.find(a => a.key === ADV_PERMISSIONS[key])
@@ -214,6 +252,8 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
     name: values?.roleName,
     location: values?.location?.value,
     assignment: values?.assignment?.value,
+    systemRole: values?.systemRole,
+    userTypeId: 0,
     permissions,
   }
 }
@@ -226,6 +266,7 @@ export const permissionsDefaultValues = ({ permissions }) => {
     location: LOCATIONS?.find(l => l.value === permission?.location) ?? LOCATIONS[0],
     assignment: ASSIGNMENTS?.find(a => a.value === permission?.assignment) ?? ASSIGNMENTS[0],
     permissions: mapPermissionsToFormValues(permission),
+    systemRole: permission?.systemRole,
     advancedPermissions: {
       fpmEdit: permissionSet?.some(p => [ADV_PERMISSIONS.fpmEdit, 'ALL'].includes(p)),
       pcEdit: permissionSet?.some(p => [ADV_PERMISSIONS.pcEdit, 'ALL'].includes(p)),
@@ -245,6 +286,26 @@ export const permissionsDefaultValues = ({ permissions }) => {
       transInvoicedDateEdit: permissionSet?.some(p => [ADV_PERMISSIONS.transInvoicedDateEdit, 'ALL'].includes(p)),
       futureDateEnabled: permissionSet?.some(p => [ADV_PERMISSIONS.futureDateEnabled, 'ALL'].includes(p)),
       cancelWorkOrderEnable: permissionSet?.some(p => [ADV_PERMISSIONS.cancelWorkOrderEnable, 'ALL'].includes(p)),
+      hideCreateProject: permissionSet?.some(p => [ADV_PERMISSIONS.hideCreateProject].includes(p)),
+      hidePaidProjects: permissionSet?.some(p => [ADV_PERMISSIONS.hidePaidProjects].includes(p)),
+      vendorAccountEdit: permissionSet?.some(p => [ADV_PERMISSIONS.vendorAccountEdit].includes(p)),
+      overrideDrawRestrictionOnPercentageCompletion: permissionSet?.some(p =>
+        [ADV_PERMISSIONS.overrideDrawRestrictionOnPercentageCompletion].includes(p),
+      ),
     },
   }
+}
+
+export const setDefaultPermission = ({ setValue, value }) => {
+  setValue('advancedPermissions.fpmEdit', value)
+  setValue('advancedPermissions.pcEdit', value)
+  setValue('advancedPermissions.clientEdit', value)
+  setValue('advancedPermissions.addressEdit', value)
+  setValue('advancedPermissions.marketEdit', value)
+
+  setValue('advancedPermissions.gateCodeEdit', value)
+  setValue('advancedPermissions.lockBoxEdit', value)
+  setValue('advancedPermissions.clientDueEdit', value)
+  setValue('advancedPermissions.clientStartEdit', value)
+  setValue('advancedPermissions.woaStartEdit', value)
 }

@@ -48,14 +48,7 @@ const useMapAdminCards = cards => {
       iconColor: '#D6BCFA',
       enabled: true,
     },
-    {
-      id: 'balance',
-      title: t(`${ADMIN_DASHBOARD}.balance`),
-      value: 'balance',
-      number: currencyFormatter(cards?.cashOnHand),
-      iconColor: '#FBB6CE',
-      enabled: false,
-    },
+  
   ]
 }
 

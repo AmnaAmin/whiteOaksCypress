@@ -2,6 +2,7 @@ import { ResubmissionListItem } from './project-details.types'
 import { SelectOption } from './transaction.type'
 
 export type Project = {
+  largeWorkOrder?: boolean
   estimateId?: number | string | null | undefined
   accountRecievable: number | null
   accountPayable: number | null
@@ -32,6 +33,8 @@ export type Project = {
   invoiceLink: string | null
   lastCompletedWorkOrder: string | null
   lockBoxCode: string | null
+  claimNumber?: string | null
+  reoNumber?: string | null
   market: string | null
   materialCost: number | null
   drawAmount: number | null
@@ -130,6 +133,7 @@ export type Project = {
   lienRightFileDate: Date | string | null
   lienRightExpireDate: Date | string | null
   resubmissionDTOList: ResubmissionListItem[]
+  clientTypeId: string | number
 }
 
 export type ProjectExtraAttributesType = {
@@ -205,6 +209,7 @@ export type ProjectWorkOrderType = {
   invoiceAmount: number
   finalInvoiceAmount: number
   leanWaiverSubmitted?: string
+  largeWorkOrder?: boolean
   claimantTitle: string
   claimantsSignature: string
   dateInvoiceSubmitted: string
@@ -224,6 +229,7 @@ export type ProjectWorkOrderType = {
 
 export type ProjectFormValues = {
   acknowledgeCheck?: boolean
+  reoNumber?: string | null
   name?: string
   projectType?: SelectOption | null
   woNumber?: string
@@ -262,6 +268,7 @@ export type ProjectFormValues = {
   projectStartDate?: string
   woaCompletionDate?: string
   propertyId?: number
+  claimNumber?: string | null
   property?: any
   homeOwnerName: string | null
   homeOwnerPhone: string | null
@@ -270,6 +277,7 @@ export type ProjectFormValues = {
   agentName: string | null
   agentPhone: string | null
   agentEmail: string | null
+  clientType: string | null
 }
 
 export type Market = {
@@ -283,6 +291,20 @@ export type Market = {
   stateName: string
 }
 
+export type ProjectAward = {
+  id: number
+  name: string
+  materialLimit: number
+  drawLimit: number
+  totalAmountLimit: number
+  allowedDrawAmount: number
+  payTerm: number
+  factoringFee: number
+  createdBy: string | null
+  dateCreated: string | null
+  lastModifiedBy: string | null
+  dateModified: string | null
+}
 export type ProjectFinancialOverview = {
   changeOrderId: number
   vendorPayment: number

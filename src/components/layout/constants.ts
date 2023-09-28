@@ -40,6 +40,7 @@ export const MenusList: Menu[] = [
     Icon: FaHome,
     color: '#ED8936',
     permissions: ['ADMINDASHBOARD.EDIT', 'ADMINDASHBOARD.READ', 'ALL'],
+    testId: 'adminDashboardMenuItem',
   },
   {
     pathTo: '/vendorDashboard',
@@ -47,6 +48,7 @@ export const MenusList: Menu[] = [
     Icon: FaHome,
     color: '#F6AD55',
     permissions: ['VENDORDASHBOARD.EDIT', 'VENDORDASHBOARD.READ'],
+    testId: 'vendorDashboardMenuItem',
   },
   {
     pathTo: '/estimates',
@@ -54,6 +56,7 @@ export const MenusList: Menu[] = [
     Icon: MdOnlinePrediction,
     color: '#ECC94B',
     permissions: ['ESTIMATE.EDIT', 'ESTIMATE.READ', 'ALL'],
+    testId: 'estimatesMenuItem',
   },
   {
     pathTo: '/projects',
@@ -61,6 +64,7 @@ export const MenusList: Menu[] = [
     Icon: FaAlignCenter,
     color: '#4E87F8',
     permissions: ['PROJECT.EDIT', 'PROJECT.READ', 'VENDORPROJECT.READ', 'VENDORPROJECT.EDIT', 'ALL'],
+    testId: 'projectsMenuItem',
   },
   {
     pathTo: '/payable',
@@ -68,6 +72,7 @@ export const MenusList: Menu[] = [
     Icon: BiCreditCard,
     color: '#68D391',
     permissions: ['PAYABLE.EDIT', 'PAYABLE.READ', 'ALL'],
+    testId: 'payableMenuItem',
   },
   {
     pathTo: '/receivable',
@@ -75,6 +80,7 @@ export const MenusList: Menu[] = [
     Icon: BiDollarCircle,
     color: '#4299E1',
     permissions: ['RECEIVABLE.EDIT', 'RECEIVABLE.READ', 'ALL'],
+    testId: 'recievableMenuItem',
   },
   {
     pathTo: '/vendors',
@@ -82,6 +88,7 @@ export const MenusList: Menu[] = [
     Icon: BiUserPin,
     color: '#9F7AEA',
     permissions: ['VENDOR.EDIT', 'VENDOR.READ', 'ALL'],
+    testId: 'vendorMenuItem',
   },
   {
     pathTo: '/vendors',
@@ -89,6 +96,7 @@ export const MenusList: Menu[] = [
     Icon: BiUser,
     color: '#68D391',
     permissions: ['VENDORPROFILE.EDIT', 'VENDORPROFILE.READ'],
+    testId: 'profileMenuItem',
   },
   {
     pathTo: '/clients',
@@ -96,6 +104,7 @@ export const MenusList: Menu[] = [
     Icon: BiGroup,
     color: '#0BC5EA',
     permissions: ['CLIENT.EDIT', 'CLIENT.READ', 'ALL'],
+    testId: 'clientMenuItem',
   },
   {
     pathTo: '/reports',
@@ -103,6 +112,7 @@ export const MenusList: Menu[] = [
     Icon: BiBarChartSquare,
     color: '#FC8181',
     permissions: ['REPORT.READ', 'REPORT.EDIT', 'ALL'],
+    testId: 'reportMenuItem',
   },
   {
     pathTo: '/performance',
@@ -110,8 +120,8 @@ export const MenusList: Menu[] = [
     Icon: BiLineChart,
     color: '#68D391',
     permissions: ['PERFORMANCE.EDIT', 'PERFORMANCE.READ', 'ALL'],
+    testId: 'reportMenuItem',
   },
-
   {
     pathTo: '/userManager',
     title: `${SIDE_NAV}.userMgmt`,
@@ -145,6 +155,14 @@ export const MenusList: Menu[] = [
     permissions: ['VENDORSKILL.EDIT', 'VENDORSKILL.READ', 'ALL'],
   },
   {
+    pathTo: '/clientType',
+    title: 'Client type',
+    Icon: BiUser,
+    color: '#0BC5EA',
+    testId: 'clientTypeLink',
+    permissions: ['CLIENTTYPE.EDIT', 'CLIENTTYPE.READ', 'ALL'],
+  },
+  {
     pathTo: '/markets',
     title: `${SIDE_NAV}.markets`,
     Icon: BiStats,
@@ -157,6 +175,7 @@ export const MenusList: Menu[] = [
     Icon: FaReact,
     color: '#3182CE',
     permissions: ['SUPPORT.EDIT', 'SUPPORT.READ', 'ALL'],
+    testId: 'supportMenuItem',
   },
   ...(showForPreProdAndLocal
     ? [

@@ -28,7 +28,7 @@ import {
 } from '@chakra-ui/react'
 import { ACCESS_CONTROL } from 'features/access-control/access-control.i18n'
 import { useTranslation } from 'react-i18next'
-import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { Controller, useFieldArray, useForm, useWatch } from 'react-hook-form'
 import Select from 'components/form/react-select'
 import { useEffect, useState } from 'react'
 import {
@@ -36,6 +36,7 @@ import {
   LOCATIONS,
   mapFormValuestoPayload,
   permissionsDefaultValues,
+  setDefaultPermission,
   useCreateNewRoleMutation,
   useFetchAllPermissions,
   useUpdateRoleMutation,
@@ -46,10 +47,11 @@ interface PemissionFormValues {
   roleName: string
   assignment: SelectOption
   location: SelectOption
+  systemRole: boolean
   permissions: Array<{ name: string; edit: boolean; hide: boolean; read: boolean }>
 }
 
-export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) => {
+export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, allowEdit }) => {
   const formReturn = useForm<PemissionFormValues>()
   const {
     formState: { errors },
@@ -58,10 +60,9 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
   const { mutate: createRole } = useCreateNewRoleMutation()
   const { mutate: updateRole } = useUpdateRoleMutation(permissions?.[0]?.name)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const { control, register, reset } = formReturn
   const { data } = useAccountData()
   const isDevtekUser = data?.devAccount
-  const allowEdit = !permissions?.systemRole || (permissions?.systemRole && isDevtekUser)
-  const { control, register, reset } = formReturn
   const { t } = useTranslation()
   useEffect(() => {
     reset(permissionsDefaultValues({ permissions }))
@@ -99,6 +100,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
                 <Input
                   data-testid="roleName"
                   id="roleName"
+                  disabled={!!permissions}
                   size="md"
                   variant="required-field"
                   {...register('roleName', {
@@ -120,7 +122,12 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
                   render={({ field, fieldState }) => (
                     <>
                       <div data-testid="assignment">
-                        <Select options={ASSIGNMENTS} selectProps={{ isBorderLeft: true }} {...field} />
+                        <Select
+                          //isDisabled={!!permissions}
+                          options={ASSIGNMENTS}
+                          selectProps={{ isBorderLeft: true }}
+                          {...field}
+                        />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </div>
                     </>
@@ -140,7 +147,12 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
                   render={({ field, fieldState }) => (
                     <>
                       <div data-testid="locations">
-                        <Select options={LOCATIONS} selectProps={{ isBorderLeft: true }} {...field} />
+                        <Select
+                          options={LOCATIONS}
+                          //isDisabled={!!permissions}
+                          selectProps={{ isBorderLeft: true }}
+                          {...field}
+                        />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </div>
                     </>
@@ -148,24 +160,53 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
                 />
               </FormControl>
             </Box>
+            {isDevtekUser && (
+              <Box w="215px">
+                <FormControl isInvalid={!!errors.systemRole}>
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`${ACCESS_CONTROL}.systemRole`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name={`systemRole`}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <Checkbox
+                          data-testid={'systemRole'}
+                          colorScheme="PrimaryCheckBox"
+                          isChecked={field.value}
+                          style={{ background: 'white', border: '#DFDFDF' }}
+                          mr="2px"
+                          onChange={value => {
+                            field.onChange(value)
+                          }}
+                        ></Checkbox>
+                      </>
+                    )}
+                  />
+                </FormControl>
+              </Box>
+            )}
           </HStack>
           <VStack w="100%" justifyContent={'start'}>
-            <HStack justifyContent={'space-between'} width="100%">
-              <Text data-testid="access-control" fontSize="18px" fontWeight={500} color="gray.700">
-                {t(`${ACCESS_CONTROL}.accessPermissions`)}
-              </Text>
-              <FormLabel
-                data-testid="access-control"
-                variant="clickable-label"
-                size="md"
-                onClick={onOpen}
-                textDecor={'underline'}
-                _hover={{ color: 'brand.600', cursor: 'pointer' }}
-              >
-                {t(`${ACCESS_CONTROL}.advancedPermissions`)}
-              </FormLabel>
-            </HStack>
-            <PermissionsTable formControl={formReturn} />
+            {isDevtekUser && (
+              <HStack justifyContent={'space-between'} width="100%">
+                <Text data-testid="access-control" fontSize="18px" fontWeight={500} color="gray.700">
+                  {t(`${ACCESS_CONTROL}.accessPermissions`)}
+                </Text>
+                <FormLabel
+                  data-testid="access-control"
+                  variant="clickable-label"
+                  size="md"
+                  onClick={onOpen}
+                  textDecor={'underline'}
+                  _hover={{ color: 'brand.600', cursor: 'pointer' }}
+                >
+                  {t(`${ACCESS_CONTROL}.advancedPermissions`)}
+                </FormLabel>
+              </HStack>
+            )}
+            <PermissionsTable formControl={formReturn} permissionsData={permissions} />
             <Flex gap="10px" w="100%" justifyContent={'flex-end'}>
               <Button
                 variant={'outline'}
@@ -178,7 +219,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
                 {t(`cancel`)}
               </Button>
               {allowEdit && (
-                <Button colorScheme="brand" type="submit">
+                <Button colorScheme="brand" type="submit" data-testid="saveBtn">
                   {t(`save`)}
                 </Button>
               )}
@@ -191,9 +232,9 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole }) =
   )
 }
 
-const PermissionsTable = ({ formControl }) => {
+const PermissionsTable = ({ formControl, permissionsData }) => {
   const { t } = useTranslation()
-  const { control, watch, setValue } = formControl
+  const { control, setValue } = formControl
   const [selectedRow, setSelectedRow] = useState<number | null>()
 
   const { fields: permissions } = useFieldArray({
@@ -201,7 +242,27 @@ const PermissionsTable = ({ formControl }) => {
     name: 'permissions',
   })
 
-  const watchPermissions = watch('permissions')
+  const watchPermissions = useWatch({ control, name: 'permissions' })
+  const isHideAll = watchPermissions
+    ? (Object?.values(watchPermissions)?.every((item: any) => item?.hide) as boolean)
+    : false
+  const isReadAll = watchPermissions
+    ? (Object?.values(watchPermissions)?.every((item: any) => item?.read) as boolean)
+    : false
+  const isEditAll = watchPermissions
+    ? (Object?.values(watchPermissions)?.every((item: any) => item?.edit) as boolean)
+    : false
+
+  useEffect(() => {
+    const watchProjectPermissions = watchPermissions?.find(p => p.name === 'PROJECT')
+    if (!permissionsData?.[0]?.systemRole) {
+      if (watchProjectPermissions?.edit) {
+        setDefaultPermission({ setValue, value: true })
+      } else {
+        setDefaultPermission({ setValue, value: null })
+      }
+    }
+  }, [watchPermissions])
 
   return (
     <TableContainer w="100%" borderRadius={'6px'} border="1px solid #CBD5E0">
@@ -210,12 +271,62 @@ const PermissionsTable = ({ formControl }) => {
           <Tr h={'45px'} bg="#F2F3F4">
             <Td borderRight="1px solid #CBD5E0">{t(`${ACCESS_CONTROL}.sections`)}</Td>
             <Td borderRight="1px solid #CBD5E0" textAlign={'center'}>
+              <Checkbox
+                data-testid={'check-hide'}
+                colorScheme="PrimaryCheckBox"
+                style={{ background: 'white', border: '#DFDFDF' }}
+                mr="5px"
+                isChecked={isHideAll}
+                onChange={value => {
+                  for (const key in watchPermissions) {
+                    setValue(`permissions.${key}.hide`, value.currentTarget.checked)
+                    if (value.currentTarget.checked) {
+                      setValue(`permissions.${key}.edit`, !value.currentTarget.checked)
+                      setValue(`permissions.${key}.read`, !value.currentTarget.checked)
+                    }
+                  }
+                }}
+              ></Checkbox>
               {t(`${ACCESS_CONTROL}.hide`)}
             </Td>
             <Td borderRight="1px solid #CBD5E0" textAlign={'center'}>
+              <Checkbox
+                data-testid={'check-read'}
+                colorScheme="PrimaryCheckBox"
+                style={{ background: 'white', border: '#DFDFDF' }}
+                mr="5px"
+                isChecked={isReadAll}
+                onChange={value => {
+                  for (const key in watchPermissions) {
+                    setValue(`permissions.${key}.read`, value.currentTarget.checked)
+                    if (value.currentTarget.checked) {
+                      setValue(`permissions.${key}.edit`, !value.currentTarget.checked)
+                      setValue(`permissions.${key}.hide`, !value.currentTarget.checked)
+                    }
+                  }
+                }}
+              ></Checkbox>
               {t(`${ACCESS_CONTROL}.read`)}
             </Td>
-            <Td textAlign={'center'}>{t(`${ACCESS_CONTROL}.edit`)}</Td>
+            <Td textAlign={'center'}>
+              <Checkbox
+                data-testid={'check-hide'}
+                colorScheme="PrimaryCheckBox"
+                style={{ background: 'white', border: '#DFDFDF' }}
+                mr="5px"
+                isChecked={isEditAll}
+                onChange={value => {
+                  for (const key in watchPermissions) {
+                    setValue(`permissions.${key}.edit`, value.currentTarget.checked)
+                    if (value.currentTarget.checked) {
+                      setValue(`permissions.${key}.hide`, !value.currentTarget.checked)
+                      setValue(`permissions.${key}.read`, !value.currentTarget.checked)
+                    }
+                  }
+                }}
+              ></Checkbox>
+              {t(`${ACCESS_CONTROL}.edit`)}
+            </Td>
           </Tr>
         </Thead>
         <Tbody>
@@ -244,10 +355,10 @@ const PermissionsTable = ({ formControl }) => {
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
+                            data-testid={watchPermissions?.[index].name + '.hide'}
                             colorScheme="PrimaryCheckBox"
                             isChecked={field.value}
                             style={{ background: 'white', border: '#DFDFDF' }}
-                            data-dis={{ background: 'red !important' }}
                             mr="2px"
                             onChange={value => {
                               field.onChange(value)
@@ -267,6 +378,7 @@ const PermissionsTable = ({ formControl }) => {
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
+                            data-testid={watchPermissions?.[index].name + '.read'}
                             colorScheme="PrimaryCheckBox"
                             isChecked={field.value}
                             style={{ background: 'white', border: '#DFDFDF' }}
@@ -289,6 +401,7 @@ const PermissionsTable = ({ formControl }) => {
                       render={({ field, fieldState }) => (
                         <>
                           <Checkbox
+                            data-testid={watchPermissions?.[index].name + '.edit'}
                             colorScheme="PrimaryCheckBox"
                             isChecked={field.value}
                             style={{ background: 'white', border: '#DFDFDF' }}
@@ -368,6 +481,52 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
               <Text color="gray.500" fontWeight={500}>
                 Project Management
               </Text>
+              <Controller
+                control={control}
+                name={`advancedPermissions.hideCreateProject`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px" fontWeight={400}>
+                        Hide Project Creation
+                      </Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
+              <Controller
+                control={control}
+                name={`advancedPermissions.hidePaidProjects`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px" fontWeight={400}>
+                        Hide Paid Projects
+                      </Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
               <Controller
                 control={control}
                 name={`advancedPermissions.woaStartEdit`}
@@ -521,7 +680,13 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                 )}
               />
             </VStack>
-            <VStack pl="40px" alignItems={'flex-start'} borderLeft="1px solid #E2E8F0" borderRight="1px solid #E2E8F0">
+            <VStack
+              maxW="35%"
+              pl="40px"
+              alignItems={'flex-start'}
+              borderLeft="1px solid #E2E8F0"
+              borderRight="1px solid #E2E8F0"
+            >
               <Text color="gray.500" fontWeight={500}>
                 Location
               </Text>
@@ -719,6 +884,29 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                   </>
                 )}
               />
+              <Controller
+                control={control}
+                name={`advancedPermissions.overrideDrawRestrictionOnPercentageCompletion`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
+                        Enable Creating Draw Without Percentage Completion Restrictions
+                      </Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
             </VStack>
             <VStack pl="20px" alignItems={'flex-start'}>
               <Text color="gray.500" fontWeight={500}>
@@ -769,13 +957,34 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                   </>
                 )}
               />
+              <Controller
+                control={control}
+                name={`advancedPermissions.vendorAccountEdit`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px">Can Edit Vendor Accounts</Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
             </VStack>
           </HStack>
         </ModalBody>
         <Flex flexFlow="row-reverse">
           <ModalFooter>
             <Button colorScheme="brand" data-testid="confirmation-no" mr={3} onClick={onClose}>
-              {t(`close`)}
+              {t(`save`)}
             </Button>
           </ModalFooter>
         </Flex>

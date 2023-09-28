@@ -17,7 +17,10 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'terms',
-    accessorKey: 'paymentTerm',
+    accessorKey: 'gridPaymentTerm',
+    accessorFn(cellInfo) {
+      return cellInfo.gridPaymentTerm
+    },
   },
   {
     header: 'paymentTypes',
@@ -25,9 +28,9 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'vendorWOExpectedPaymentDate',
-    accessorKey: 'expectedPaymentDate',
+    accessorKey: 'gridExpectedPaymentDate',
     accessorFn(cellInfo) {
-      return dateFormat(cellInfo.expectedPaymentDate)
+      return dateFormat(cellInfo.gridExpectedPaymentDate)
     },
     meta: { format: 'date' },
   },
@@ -35,7 +38,8 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: 'balance',
     accessorKey: 'amount',
     accessorFn(cellInfo) {
-      return numeral(cellInfo.amount).format('$0,0.00')
+      const formattedAmount = numeral(Math.abs(cellInfo.amount)).format('$0,0.00')
+      return cellInfo.amount < 0 ? formattedAmount : formattedAmount
     },
     meta: { format: 'currency' },
   },
@@ -69,23 +73,28 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'invoiceNo',
-    accessorKey: 'invoiceNumber',
+    accessorKey: 'resubmissionInvoiceNumber',
   },
 ]
 
 export const RECEIVABLE_TABLE_QUERY_KEYS = {
   projectId: 'projectId.equals',
-  woaInvoiceDate: 'woaInvoiceDate.equals',
+  woaInvoiceDateStart: 'woaInvoiceDate.greaterThanOrEqual',
+  woaInvoiceDateEnd: 'woaInvoiceDate.lessThanOrEqual',
   status: 'status.contains',
   clientName: 'clientName.contains',
-  paymentTerm: 'paymentTerm.equals',
-  expectedPaymentDate: 'expectedPaymentDate.equals',
+  gridPaymentTerm: 'gridPaymentTerm.equals',
+  gridExpectedPaymentDateStart: 'gridExpectedPaymentDate.greaterThanOrEqual',
+  gridExpectedPaymentDateEnd: 'gridExpectedPaymentDate.lessThanOrEqual',
   amount: 'amount.equals',
   finalInvoice: 'finalInvoice.equals',
   marketName: 'marketName.contains',
-  workOrderStartDate: 'workOrderStartDate.equals',
-  workOrderDateCompleted: 'workOrderDateCompleted.equals',
-  workOrderIssueDate: 'workOrderIssueDate.equals',
+  workOrderStartDateStart: 'workOrderStartDate.greaterThanOrEqual',
+  workOrderStartDateEnd: 'workOrderStartDate.lessThanOrEqual',
+  workOrderDateCompletedStart: 'workOrderDateCompleted.greaterThanOrEqual',
+  workOrderDateCompletedEnd: 'workOrderDateCompleted.lessThanOrEqual',
+  workOrderIssueDateStart: 'workOrderIssueDate.greaterThanOrEqual',
+  workOrderIssueDateEnd: 'workOrderIssueDate.lessThanOrEqual',
   propertyAddress: 'propertyAddress.contains',
   durationCategory: 'durationCategory.equals',
   invoiceNumber: 'invoiceNumber.contains',
@@ -93,5 +102,5 @@ export const RECEIVABLE_TABLE_QUERY_KEYS = {
   woNumber: 'woNumber.contains',
   type: 'type.contains',
   isReceivable: 'isReceivable.equals',
-  displayId: 'displayId.contains'
+  displayId: 'displayId.contains',
 }

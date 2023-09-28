@@ -25,13 +25,16 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom'
 
 export const VENDOR_TABLE_QUERY_KEYS = {
-  statusLabel: 'statusLabel.equals',
+  statusLabel: 'statusLabel.contains',
   companyName: 'companyName.contains',
   region: 'region.contains',
   ownerName: 'ownerName.contains',
-  createdDate: 'createdDate.equals',
-  coiglExpirationDate: 'coiglExpirationDate.equals',
-  coiWcExpirationDate: 'coiWcExpirationDate.equals',
+  createdDateStart: 'createdDate.greaterThanOrEqual',
+  createdDateEnd: 'createdDate.lessThanOrEqual',
+  coiglExpirationDateStart: 'coiglExpirationDate.greaterThanOrEqual',
+  coiglExpirationDateEnd: 'coiglExpirationDate.lessThanOrEqual',
+  coiWcExpirationDateStart: 'coiWcExpirationDate.greaterThanOrEqual',
+  coiWcExpirationDateEnd: 'coiWcExpirationDate.lessThanOrEqual',
   einNumber: 'einNumber.contains',
   capacity: 'capacity.equals',
   availableCapacity: 'availableCapacity.equals',
@@ -40,6 +43,9 @@ export const VENDOR_TABLE_QUERY_KEYS = {
   state: 'state.contains',
   businessPhoneNumber: 'businessPhoneNumber.contains',
   businessEmailAddress: 'businessEmailAddress.contains',
+  streetAddress: 'streetAddress.contains',
+  city: 'city.contains',
+  zipCode: 'zipCode.contains',
 }
 
 export const VENDOR_COLUMNS: ColumnDef<any>[] = [
@@ -58,6 +64,18 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'businessEmail',
     accessorKey: 'businessEmailAddress',
+  },
+  {
+    header: 'vendorAddress',
+    accessorKey: 'streetAddress',
+  },
+  {
+    header: 'vendorCity',
+    accessorKey: 'city',
+  },
+  {
+    header: 'vendorZipCode',
+    accessorKey: 'zipCode',
   },
   {
     header: 'name',
@@ -103,9 +121,21 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
     header: 'EIN/SSN',
     accessorKey: 'einNumber',
     accessorFn(cellInfo) {
-      return cellInfo?.einNumber ? cellInfo?.einNumber : '- - -'
+      const ein = cellInfo?.einNumber || ''
+      const ssn = cellInfo?.ssnNumber || ''
+
+      if (ein && ssn) {
+        return `${ein} / ${ssn}`
+      } else if (ein) {
+        return ein
+      } else if (ssn) {
+        return ssn
+      } else {
+        return '- - -'
+      }
     },
   },
+
   {
     header: 'totalCapacity',
     accessorKey: 'capacity',
@@ -152,14 +182,6 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const vendor = (location?.state as any)?.data || {}
-
-  useEffect(() => {
-    if (vendor?.id) {
-      setSelectedVendor(vendor)
-      navigate(location.pathname, {})
-    }
-  }, [vendor])
-
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -171,15 +193,6 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
       setPagination,
       sorting,
     })
-
-  useEffect(() => {
-    if (selectedCard) {
-      setFilteredUrl(VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
-      setPagination({ pageIndex: 0, pageSize: 20 })
-    } else {
-      setFilteredUrl(null)
-    }
-  }, [selectedCard])
 
   const {
     vendors,
@@ -201,11 +214,23 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     tableColumns,
     settingColumns,
     refetch: refetchColumns,
-  } = useTableColumnSettings(
-    VENDOR_COLUMNS,
-    TableNames.vendors,
-    //  { statusLabel: selectedCard ? selectedCard : ''}
-  )
+  } = useTableColumnSettings(VENDOR_COLUMNS, TableNames.vendors)
+
+  useEffect(() => {
+    if (vendor?.id) {
+      setSelectedVendor(vendor)
+      navigate(location.pathname, {})
+    }
+  }, [vendor])
+
+  useEffect(() => {
+    if (selectedCard) {
+      setFilteredUrl(VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
+      setPagination({ pageIndex: 0, pageSize: 20 })
+    } else {
+      setFilteredUrl(null)
+    }
+  }, [selectedCard])
 
   const onSave = columns => {
     postGridColumn(columns)
@@ -236,6 +261,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
         >
           <Table
             onRowClick={row => setSelectedVendor(row)}
+            isFilteredByApi={true}
             isLoading={vendorsLoading}
             isEmpty={!vendorsLoading && !vendors?.length}
           />

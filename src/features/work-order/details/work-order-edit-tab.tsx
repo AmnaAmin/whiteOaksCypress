@@ -20,14 +20,20 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormatNew } from 'utils/date-time-utils'
-import Select from 'components/form/react-select'
-import { defaultValuesWODetails, parseWODetailValuesToPayload, useFieldEnableDecisionDetailsTab } from 'api/work-order'
+import Select, { CreatableSelect } from 'components/form/react-select'
+import {
+  completePercentageValues,
+  defaultValuesWODetails,
+  newObjectFormatting,
+  parseWODetailValuesToPayload,
+  useFieldEnableDecisionDetailsTab,
+} from 'api/work-order'
 import AssignedItems from './assigned-items'
 import {
   getRemovedItems,
@@ -49,6 +55,7 @@ import { CANCEL_WO_OPTIONS } from 'constants/index'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
+import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 export type SelectVendorOption = {
   label: string
@@ -99,6 +106,11 @@ const InformationCard = props => {
   )
 }
 
+export type completePercentage = {
+  value: number
+  label: string
+}
+
 interface FormValues {
   cancel: any
   workOrderStartDate: string | null
@@ -107,6 +119,7 @@ interface FormValues {
   assignedItems?: LineItems[]
   vendorSkillId: number | string | null
   vendorId: number | string | null
+  completePercentage?: completePercentage
 }
 
 const WorkOrderDetailTab = props => {
@@ -118,16 +131,31 @@ const WorkOrderDetailTab = props => {
     swoProject,
     projectData,
     documentsData,
-    workOrderDetails,
     isFetchingLineItems,
     isLoadingLineItems,
   } = props
 
-  const formReturn = useForm<FormValues>()
+  const defaultSkill = {
+    value: workOrder?.vendorSkillId as number,
+    label: workOrder?.skillName as string,
+    title: workOrder?.skillName as string,
+  }
+
+  const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
+
+  const defaultValues: FormValues = useMemo(() => {
+    return defaultValuesWODetails(workOrder, defaultSkill)
+  }, [workOrder])
+
+  const formReturn = useForm<FormValues>({
+    defaultValues: {
+      ...defaultValues,
+    },
+  })
+
   const {
     register,
     control,
-    reset,
     setValue,
     formState: { errors },
   } = formReturn
@@ -136,6 +164,9 @@ const WorkOrderDetailTab = props => {
     name: 'assignedItems',
   })
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const assignItemsSum = assignedItemsArray.fields.map(a => a.completePercentage).reduce((prev, curr) => prev + curr, 0)
+  const totalAssignItems = assignedItemsArray.fields.length
+
   const assignedItemsWatch = useWatch({ name: 'assignedItems', control })
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
   const { mutate: deleteLineItems } = useDeleteLineIds()
@@ -145,7 +176,9 @@ const WorkOrderDetailTab = props => {
   const [uploadedWO, setUploadedWO] = useState<any>(null)
 
   const { t } = useTranslation()
-  const disabledSave = isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems)
+  const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
+  const disabledSave =
+    isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
   const { isAdmin } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
   const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
@@ -222,23 +255,22 @@ const WorkOrderDetailTab = props => {
 
   // Enable Vendor Type and Company Name for Admin User
   const [tradeOptions, setTradeOptions] = useState([])
-  const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
+
   const [selectedVendorId, setSelectedVendorId] = useState<SelectVendorOption[]>([])
 
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
 
-  const { vendors } = useFilteredVendors({ vendorSkillId, projectId: workOrder?.projectId, showExpired: true  , currentVendorId:  workOrder?.vendorId})
+  const { vendors, isLoading: loadingVendors } = useFilteredVendors({
+    vendorSkillId,
+    projectId: workOrder?.projectId,
+    showExpired: true,
+    currentVendorId: workOrder?.vendorId,
+  })
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
   const clientStart = projectData?.clientStartDate
-
-  // Set Vendor Skill
-  const defaultSkill = {
-    value: workOrder?.vendorSkillId as number,
-    label: workOrder?.skillName as string,
-    title: workOrder?.skillName as string,
-  }
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
 
   useEffect(() => {
     const option = [] as any
@@ -263,6 +295,21 @@ const WorkOrderDetailTab = props => {
     }
     setVendorOptions(option)
   }, [vendors])
+
+  useEffect(() => {
+    let defaultVendor
+    if (vendorOptions && vendorOptions?.length > 0) {
+      const selectedVendor = vendorOptions?.find(v => v?.value === workOrder?.vendorId)
+      defaultVendor = {
+        label: selectedVendor?.label as string,
+        value: selectedVendor?.value as number,
+        title: selectedVendor?.label as string,
+      }
+      setValue('vendorId', defaultVendor)
+    } else {
+      setValue('vendorId', defaultVendor)
+    }
+  }, [vendorOptions?.length, setValue])
 
   const updateWorkOrderLineItems = (deletedItems, payload) => {
     if (deletedItems?.length > 0) {
@@ -311,35 +358,18 @@ const WorkOrderDetailTab = props => {
       updateWorkOrderLineItems(deleted, savePayload)
     }
   }
+  const handleDropdownValue = v => [{ value: v, label: `${v?.toString()}%` }]
 
   const onSubmit = values => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
     const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
 
     /* Finding out items that will be unassigned*/
-    const unAssignedItems = getUnAssignedItems(formValues, workOrderDetails?.assignedItems)
-    const removedItems = getRemovedItems(formValues, workOrderDetails?.assignedItems)
-    const payload = parseWODetailValuesToPayload(values, workOrderDetails)
+    const unAssignedItems = getUnAssignedItems(formValues, workOrder?.assignedItems)
+    const removedItems = getRemovedItems(formValues, workOrder?.assignedItems)
+    const payload = parseWODetailValuesToPayload(values, workOrder)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
-
-  useEffect(() => {
-    if (workOrderDetails?.id) {
-      let defaultVendor
-      if (vendorOptions && vendorOptions?.length > 0) {
-        vendorOptions?.forEach(v => {
-          if (workOrder?.vendorId === v?.value) {
-            defaultVendor = {
-              label: v.label as string,
-              value: v.value as number,
-              title: v.label as string,
-            }
-          }
-        })
-      }
-      reset(defaultValuesWODetails(workOrderDetails, defaultVendor, defaultSkill))
-    }
-  }, [workOrderDetails, reset, tradeOptions?.length, vendorOptions?.length])
 
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
@@ -352,10 +382,10 @@ const WorkOrderDetailTab = props => {
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h={'calc(100vh - 300px)'} overflow={'auto'}>
+        <ModalBody h="600px" overflow={'auto'}>
           <Stack spacing="32px" m="25px">
             <Box>
-              {[STATUS.Rejected].includes(workOrderDetails?.statusLabel?.toLocaleLowerCase()) && (
+              {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
                 <Alert status="info" variant="custom" size="sm">
                   <AlertIcon />
 
@@ -428,6 +458,7 @@ const WorkOrderDetailTab = props => {
                                       {...field}
                                       options={vendorOptions}
                                       size="md"
+                                      loadingCheck={loadingVendors}
                                       selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
                                       onChange={option => {
                                         setSelectedVendorId(option.value)
@@ -467,7 +498,7 @@ const WorkOrderDetailTab = props => {
             <Box>
               <Divider borderColor="#CBD5E0" />
             </Box>
-            <SimpleGrid columns={7} gap={1}>
+            <SimpleGrid columns={5} gap={4}>
               <CalenderCard
                 testId={'woIssued'}
                 title={t(`${WORK_ORDER}.woIssued`)}
@@ -527,7 +558,7 @@ const WorkOrderDetailTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!workOrderStartDateEnable}
+                    isDisabled={!workOrderStartDateEnable || isWOCancelled}
                     min={clientStart as any}
                     variant="required-field"
                     {...register('workOrderStartDate', {
@@ -548,7 +579,7 @@ const WorkOrderDetailTab = props => {
                     size="md"
                     css={calendarIcon}
                     min={woStartDate as string}
-                    isDisabled={!workOrderExpectedCompletionDateEnable}
+                    isDisabled={!workOrderExpectedCompletionDateEnable || isWOCancelled}
                     variant="required-field"
                     {...register('workOrderExpectedCompletionDate', {
                       required: 'This is required field.',
@@ -573,6 +604,57 @@ const WorkOrderDetailTab = props => {
                   />
                 </FormControl>
               </Box>
+              {uploadedWO && uploadedWO?.s3Url && (
+                <Box w="215px">
+                  <FormControl>
+                    <FormLabel variant="strong-label" size="md">
+                      {t(`${WORK_ORDER}.completePercentage`)}
+                    </FormLabel>
+                    <Controller
+                      control={control}
+                      // rules={{ required: true }}
+                      name={'completePercentage'}
+                      render={({ field }) => {
+                        return (
+                          <CreatableSelect
+                            {...field}
+                            isDisabled={isWOCancelled}
+                            id={`completePercentage`}
+                            options={completePercentageValues}
+                            size="md"
+                            value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
+                            // isDisabled={isVendor}
+                            onChange={option => {
+                              if (option?.__isNew__) {
+                                field.onChange(newObjectFormatting(option))
+                              } else {
+                                field.onChange(option)
+                              }
+                            }}
+                          />
+                        )
+                      }}
+                    />
+                  </FormControl>
+                </Box>
+              )}
+              {!(uploadedWO && uploadedWO?.s3Url) && (
+                <Box w="215px">
+                  <FormControl data-testid="completedPercentageField">
+                    <FormLabel variant="strong-label" size="md">
+                      {t(`${WORK_ORDER}.completePercentage`)}
+                    </FormLabel>
+                    <Input
+                      data-testid="completedPercentage"
+                      size="md"
+                      isDisabled={!completedByVendor}
+                      variant="outline"
+                      value={assignItemsSum ? `${assignItemsSum / totalAssignItems}%` : 0}
+                      // {...register('workOrderDateCompleted')}
+                    />
+                  </FormControl>
+                </Box>
+              )}
             </HStack>
           </Box>
           {!(uploadedWO && uploadedWO?.s3Url) && (
@@ -627,9 +709,13 @@ const WorkOrderDetailTab = props => {
             <Button data-testid="wo-cancel-btn" onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>
-            <Button data-testid="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
-              {t('save')}
-            </Button>
+            <>
+              {!isReadOnly && (
+                <Button data-testid="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
+                  {t('save')}
+                </Button>
+              )}
+            </>
           </HStack>
         </ModalFooter>
       </form>

@@ -108,7 +108,7 @@ export const Projects = () => {
               }}
               selectedDay={selectedDay}
             />
-            {/* </Flex> */}
+
             <Spacer />
 
             <FormControl w="215px" mr={'10px'}>

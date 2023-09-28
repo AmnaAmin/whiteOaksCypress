@@ -22,6 +22,8 @@ export const project = {
           closedDueDate: 'Closed Due Date',
           lienRightsExpires: 'Lien Rights Expires',
           lienFiled: 'Lien Filed',
+          claimNumber: 'Claim #',
+          reoNumber: 'REO #',
 
           // Invoicing & Payment
 
@@ -117,6 +119,8 @@ export const project = {
           closedDueDate: 'Fecha de vencimiento cerrada',
           lienRightsExpires: 'Los derechos de gravamen expiran',
           lienFiled: 'Gravamen Presentado',
+          claimNumber: 'Reclamo #',
+          reoNumber: 'REO #',
 
           // Invoicing & Payment
           invoicingPayment: 'Facturación y pago',

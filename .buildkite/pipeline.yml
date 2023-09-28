@@ -1,5 +1,4 @@
 steps:
-
   - wait
 
   - block: ':green_button: Deploy to DEV'

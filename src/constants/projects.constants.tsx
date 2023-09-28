@@ -24,13 +24,16 @@ import { t } from 'i18next'
 export const PROJECT_TABLE_QUERIES_KEY = {
   id: 'id.equals',
   generalLabourName: 'generalLabourName.contains',
+  claimNumber: 'claimNumber.contains',
   projectManager: 'projectManager.contains',
   projectStatus: 'projectStatus.in',
   streetAddress: 'streetAddress.contains',
   city: 'city.contains',
-  clientStartDate: 'clientStartDate.equals',
+  clientStartDateStart: 'clientStartDate.greaterThanOrEqual',
+  clientStartDateEnd: 'clientStartDate.lessThanOrEqual',
   homeOwnerName: 'homeOwnerName.contains',
-  clientDueDate: 'clientDueDate.equals',
+  clientDueDateStart: 'clientDueDate.greaterThanOrEqual',
+  clientDueDateEnd: 'clientDueDate.lessThanOrEqual',
   notes: 'notes.contains',
   projectTypeLabel: 'projectTypeLabel.contains',
   projectCoordinator: 'projectCoordinator.contains',
@@ -40,16 +43,20 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   clientName: 'clientName.contains',
   sowOriginalContractAmount: 'sowOriginalContractAmount.equals',
   projectRelatedCost: 'projectRelatedCost.equals',
-  woaPaidDate: 'woaPaidDate.equals',
+  woaPaidDateStart: 'woaPaidDate.greaterThanOrEqual',
+  woaPaidDateEnd: 'woaPaidDate.lessThanOrEqual',
   invoiceNumber: 'invoiceNumber.contains',
-  woaInvoiceDate: 'woaInvoiceDate.equals',
+  woaInvoiceDateStart: 'woaInvoiceDate.greaterThanOrEqual',
+  woaInvoiceDateEnd: 'woaInvoiceDate.lessThanOrEqual',
   accountRecievable: 'accountRecievable.equals',
   market: 'market.contains',
   state: 'state.contains',
-  woaCompletionDate: 'woaCompletionDate.equals',
+  woaCompletionDateStart: 'woaCompletionDate.greaterThanOrEqual',
+  woaCompletionDateEnd: 'woaCompletionDate.lessThanOrEqual',
   region: 'region.contains',
   partialPayment: 'partialPayment.equals',
-  expectedPaymentDate: 'expectedPaymentDate.equals',
+  gridExpectedPaymentDateStart: 'gridExpectedPaymentDate.greaterThanOrEqual',
+  gridExpectedPaymentDateEnd: 'gridExpectedPaymentDate.lessThanOrEqual',
   profitPercentage: 'profitPercentage.equals',
   profitPercentageAmount: 'profitPercentageAmount.greaterThanOrEqual',
   profitTotal: 'profitTotal.equals',
@@ -61,7 +68,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   pastDue: 'pastDue.equals',
   projectManagerId: 'projectManagerId.in',
   projectStatusId: 'projectStatusId.in',
-  clientSignoffDate: 'clientSignoffDate.lessThanOrEqual',
+  clientSignoffDateStart: 'clientSignoffDate.greaterThanOrEqual',
+  clientSignoffDateEnd: 'clientSignoffDate.lessThanOrEqual',
   sowNewAmount: 'sowNewAmount.equals',
   drawAmountSow: 'drawAmountSow.equals',
   drawAmountWo: 'drawAmountWo.equals',
@@ -69,7 +77,33 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   noteFlag: 'noteFlag.equals',
   lienDueFlag: 'lienDueFlag.equals',
   displayId: 'displayId.contains',
-  percentageCompletion: 'percentageCompletion.equals'
+  percentageCompletion: 'percentageCompletion.equals',
+  flag: 'flag.contains',
+  woaStartDateStart: 'woaStartDate.greaterThanOrEqual',
+  woaStartDateEnd: 'woaStartDate.lessThanOrEqual',
+  lienRightExpireDateStart: 'lienRightExpireDate.greaterThanOrEqual',
+  lienRightExpireDateEnd: 'lienRightExpireDate.lessThanOrEqual',
+  latestNoteAddedTime: 'latestNoteAddedTime.equals',
+  noteOwner: 'noteOwner.contains',
+}
+
+const PopoverTooltip = ({ value, title }) => {
+  return (
+    <Popover trigger="hover">
+      <PopoverTrigger>
+        <Box isTruncated>{value}</Box>
+      </PopoverTrigger>
+      <Portal>
+        <PopoverContent textOverflow={'ellipsis'}>
+          <PopoverArrow />
+          <PopoverHeader color={'#2D3748'}>{t(title)}</PopoverHeader>
+          <PopoverBody>
+            <Text color={'#4A5568'}>{value}</Text>
+          </PopoverBody>
+        </PopoverContent>
+      </Portal>
+    </Popover>
+  )
 }
 
 export const PROJECT_COLUMNS: ColumnDef<any>[] = [
@@ -80,7 +114,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     cell: (row: any) => {
       const value = row.cell.getValue()
       const isFlagged = row.row?.original?.lienDueFlag || row.row?.original?.noteFlag
-      const id= row.row?.original?.id
+      const id = row.row?.original?.id
       return (
         <Box
           fontWeight={'500'}
@@ -107,6 +141,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     size: 230,
   },
   {
+    header: 'projects.projectTable.claimNumber',
+    accessorKey: 'claimNumber',
+  },
+  {
     header: 'projects.projectTable.projectManager',
     accessorKey: 'projectManager',
   },
@@ -121,6 +159,11 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.address',
     accessorKey: 'streetAddress',
+    meta: { hideTitle: true },
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return <PopoverTooltip value={value} title={'projects.projectTable.address'} />
+    },
   },
   {
     header: 'projects.projectTable.city',
@@ -139,29 +182,27 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     meta: { format: 'date' },
   },
   {
+    header: 'projects.projectTable.flag',
+    accessorKey: 'flag',
+  },
+  {
     header: 'projects.projectDetails.notes',
     accessorKey: 'notes',
     meta: { hideTitle: true },
     cell: (row: any) => {
       const value = row.cell.getValue()
-
-      return (
-        <Popover trigger="hover">
-          <PopoverTrigger>
-            <Box isTruncated>{value}</Box>
-          </PopoverTrigger>
-          <Portal>
-            <PopoverContent textOverflow={'ellipsis'}>
-              <PopoverArrow />
-              <PopoverHeader color={'#2D3748'}>Notes</PopoverHeader>
-              <PopoverBody>
-                <Text color={'#4A5568'}>{value}</Text>
-              </PopoverBody>
-            </PopoverContent>
-          </Portal>
-        </Popover>
-      )
+      return <PopoverTooltip value={value} title={'projects.projectDetails.notes'} />
     },
+  },
+  {
+    header: 'projects.projectTable.dateAddedNotes',
+    accessorKey: 'latestNoteAddedTime',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.latestNoteAddedTime),
+    meta: { format: 'date' },
+  },
+  {
+    header: 'projects.projectTable.notesAddedBy',
+    accessorKey: 'noteOwner',
   },
   {
     header: 'projects.projectDetails.completion',
@@ -169,23 +210,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     meta: { hideTitle: true },
     cell: (row: any) => {
       const value = row.cell.getValue()
-
-      return (
-        <Popover trigger="hover">
-          <PopoverTrigger>
-            <Box isTruncated>{value}</Box>
-          </PopoverTrigger>
-          <Portal>
-            <PopoverContent textOverflow={'ellipsis'}>
-              <PopoverArrow />
-              <PopoverHeader color={'#2D3748'}>{t('projects.projectDetails.completion')}</PopoverHeader>
-              <PopoverBody>
-                <Text color={'#4A5568'}>{value}</Text>
-              </PopoverBody>
-            </PopoverContent>
-          </Portal>
-        </Popover>
-      )
+      return <PopoverTooltip value={value} title={'projects.projectDetails.completion'} />
     },
   },
   {
@@ -251,8 +276,14 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     meta: { format: 'date' },
   },
   {
+    header: 'projects.projectTable.woaStartDate',
+    accessorKey: 'woaStartDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.woaStartDate),
+    meta: { format: 'date' },
+  },
+  {
     header: 'projects.projectTable.invoiceNumber',
-    accessorKey: 'invoiceNumber',
+    accessorKey: 'resubmissionInvoiceNumber',
   },
   {
     header: 'projects.projectTable.invoiceDate',
@@ -279,6 +310,12 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.ownerName',
     accessorKey: 'homeOwnerName',
+    meta: { hideTitle: true },
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+
+      return <PopoverTooltip value={value} title={'projects.projectTable.ownerName'} />
+    },
   },
   {
     header: 'projects.projectTable.woaFinish',
@@ -300,8 +337,8 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'projects.projectTable.expectedPayment',
-    accessorKey: 'expectedPaymentDate',
-    accessorFn: (cellInfo: any) => dateFormat(cellInfo.expectedPaymentDate),
+    accessorKey: 'gridExpectedPaymentDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.gridExpectedPaymentDate),
     meta: { format: 'date' },
   },
   {
@@ -310,6 +347,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorFn(cellInfo: any) {
       return numeral(cellInfo.profitPercentage / 100).format('0,0.00%')
     },
+    meta: { format: 'percentage' },
   },
   {
     header: 'projects.projectTable.profitTotal',
@@ -335,6 +373,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
         ? numeral(percentageFormatter(cellInfo.vendorPaymentPercentage)).format('0.00%')
         : '0.00%'
     },
+    meta: { format: 'percentage' },
   },
   {
     header: 'projects.projectTable.sowDraw',
@@ -355,5 +394,13 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.disqualifiedRevenueFlag',
     accessorKey: 'disqualifiedRevenueFlag',
+  },
+  {
+    header: 'projects.projectTable.lienRightsExpires',
+    accessorKey: 'lienRightExpireDate',
+    accessorFn: (cellInfo: any) => {
+      dateFormat(cellInfo.lienRightExpireDate)
+    },
+    meta: { format: 'date' },
   },
 ]

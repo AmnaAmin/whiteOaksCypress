@@ -75,12 +75,15 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
       newMarket: null,
       gateCode: '',
       lockBoxCode: '',
+      claimNumber: '',
+      reoNumber: '',
       hoaPhone: '',
       hoaPhoneNumberExtension: '',
       hoaEmailAddress: '',
       projectManager: null,
       projectCoordinator: null,
       clientName: '',
+      clientType: '',
       client: null,
       superLastName: '',
       superFirstName: '',
@@ -150,12 +153,15 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         newMarketId: values.newMarket?.value,
         gateCode: values.gateCode,
         lockBoxCode: values.lockBoxCode,
+        claimNumber: values.claimNumber,
+        reoNumber: values.reoNumber,
         hoaPhone: values.hoaPhone,
         hoaPhoneNumberExtension: values.hoaPhoneNumberExtension,
         hoaEmailAddress: values.hoaEmailAddress,
         projectManagerId: values.projectManager?.value,
         projectCordinatorId: values.projectCoordinator?.value,
         clientName: values.client?.label,
+        clientType: values.clientType?.value,
         clientId: values.client?.value,
         superLastName: values.superLastName,
         superFirstName: values.superFirstName,
@@ -187,6 +193,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
             position: 'top-left',
           })
           onClose()
+          // discuss this logic in access control
 
           // In case project coordinator created a new project for other user
           // than it should be redirected to project details page

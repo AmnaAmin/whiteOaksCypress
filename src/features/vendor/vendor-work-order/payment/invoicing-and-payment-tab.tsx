@@ -32,7 +32,7 @@ const InvoicingAndPaymentTab = ({
   const { t } = useTranslation()
   return (
     <Box>
-      <ModalBody h={'calc(100vh - 300px)'} pl="26px" pr="25px" pt="10px">
+      <ModalBody h="600px" pl="26px" pr="25px" pt="10px">
         <Grid
           templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(170px,1fr))' }}
           gap={5}
@@ -163,23 +163,6 @@ const InvoicingAndPaymentTab = ({
             <InputView
               showDivider={false}
               Icon={BiCalendar}
-              label={t('paymentProcessed')}
-              InputElem={
-                invoiceAndPaymentData?.datePaymentProcessed ? (
-                  <Text data-testid={'datePaymentProcessed'}>
-                    {dateFormatNew(invoiceAndPaymentData?.datePaymentProcessed)}
-                  </Text>
-                ) : (
-                  <Text data-testid={'datePaymentProcessed'}>mm/dd/yy</Text>
-                )
-              }
-            />
-          </GridItem>
-
-          <GridItem flex={{ base: '1', sm: 'unset' }}>
-            <InputView
-              showDivider={false}
-              Icon={BiCalendar}
               label={t('invoiceSubmitted')}
               InputElem={
                 invoiceAndPaymentData.dateInvoiceSubmitted &&
@@ -189,6 +172,22 @@ const InvoicingAndPaymentTab = ({
                   </Text>
                 ) : (
                   <Text data-testid={'dateInvoiceSubmitted'}>mm/dd/yy</Text>
+                )
+              }
+            />
+          </GridItem>
+          <GridItem flex={{ base: '1', sm: 'unset' }}>
+            <InputView
+              showDivider={false}
+              Icon={BiCalendar}
+              label={t('expectedPaymentProcessed')}
+              InputElem={
+                invoiceAndPaymentData?.datePaymentProcessed ? (
+                  <Text data-testid={'datePaymentProcessed'}>
+                    {dateFormatNew(invoiceAndPaymentData?.datePaymentProcessed)}
+                  </Text>
+                ) : (
+                  <Text data-testid={'datePaymentProcessed'}>mm/dd/yy</Text>
                 )
               }
             />

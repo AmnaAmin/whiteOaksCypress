@@ -7,12 +7,17 @@ import { useFetchRolesPermissions } from 'api/access-control'
 import { useState } from 'react'
 import { RolesList } from 'features/access-control/roles-list'
 import { RolesPermissions } from 'features/access-control/roles-permissions'
+import { useAccountData } from 'api/user-account'
 
 export const AccessControl: React.FC = () => {
   const { t } = useTranslation()
-  const [selectedRole, setSelectedRole] = useState<string | null>()
-  const { data: permissions, isLoading: isLoadingPermissions } = useFetchRolesPermissions(selectedRole)
+  const [selectedRole, setSelectedRole] = useState<{ name: string; id: string | number } | null>(null)
+  const { data: permissions, isLoading: isLoadingPermissions } = useFetchRolesPermissions(selectedRole?.name)
   const [newRole, setNewRole] = useState(false)
+  const { data } = useAccountData()
+  const isDevtekUser = data?.devAccount
+  const allowEdit = !permissions?.[0]?.systemRole || (permissions?.[0]?.systemRole && isDevtekUser)
+
   return (
     <Card minH="100%">
       {!newRole ? (
@@ -22,6 +27,7 @@ export const AccessControl: React.FC = () => {
               {t(`${ACCESS_CONTROL}.accessControl`)}
             </Text>
             <Button
+              data-testid={'newRole'}
               onClick={() => {
                 setNewRole(true)
               }}
@@ -31,7 +37,7 @@ export const AccessControl: React.FC = () => {
               {t(`${ACCESS_CONTROL}.newRole`)}
             </Button>
           </HStack>
-          <RolesList setSelectedRole={setSelectedRole} selectedRole={selectedRole} />
+          <RolesList setSelectedRole={setSelectedRole} selectedRole={selectedRole} isDevtekUser={isDevtekUser} />
           {isLoadingPermissions ? (
             <Center height={350}>
               <Spinner size="lg" />
@@ -39,7 +45,12 @@ export const AccessControl: React.FC = () => {
           ) : (
             <>
               {selectedRole && (
-                <RolesPermissions permissions={permissions} setNewRole={null} setSelectedRole={setSelectedRole} />
+                <RolesPermissions
+                  permissions={permissions}
+                  setNewRole={null}
+                  setSelectedRole={setSelectedRole}
+                  allowEdit={allowEdit}
+                />
               )}
             </>
           )}
@@ -49,7 +60,12 @@ export const AccessControl: React.FC = () => {
           <Text w="100%" data-testid="access-control" fontSize="18px" fontWeight={600} color="#4A5568">
             {t(`${ACCESS_CONTROL}.newRole`)}
           </Text>
-          <RolesPermissions permissions={null} setNewRole={setNewRole} setSelectedRole={setSelectedRole} />
+          <RolesPermissions
+            permissions={null}
+            setNewRole={setNewRole}
+            setSelectedRole={setSelectedRole}
+            allowEdit={allowEdit}
+          />
         </VStack>
       )}
     </Card>

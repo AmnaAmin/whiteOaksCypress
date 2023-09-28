@@ -2,6 +2,7 @@ import { Carrier } from './common.types'
 import { Document } from './vendor.types'
 
 export type ProjectWorkOrder = {
+  largeWorkOrder: boolean
   validForAwardPlan: boolean
   assignAwardPlan: boolean
   businessEmailAddress: string
@@ -134,6 +135,7 @@ export enum TransactionStatusValues {
 export type SelectOption = {
   label: string | undefined
   value: any
+  id?: number
   awardStatus?: any
   isValidForAwardPlan?: any
   carrier?: Carrier[]

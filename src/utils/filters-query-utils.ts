@@ -1,5 +1,5 @@
 import { ColumnFiltersState, SortingState } from '@tanstack/react-table'
-import { dateISOFormatWithZeroTime, datePickerFormat } from './date-time-utils'
+import { dateISOFormatWithZeroTime } from './date-time-utils'
 
 export const getQueryString = (obj: { [key: string]: string | number | undefined }) => {
   return Object.keys(obj).reduce((str, key, i) => {
@@ -30,48 +30,62 @@ export const getAPIFilterQueryString = (
   queryAndTableColumnMapKeys?: { [key: string]: string },
   sorting?: SortingState,
 ) => {
-  const dateToISOFormatFilters =
-    columnFilters?.map(filter => {
-      // change to iso format if we have date and value is not specified 0 or 1.
-      // Dates will have value 0 or 1 if we have to null check the field
-      if (filter?.id?.includes('Date') && !['0', '1']?.includes(filter?.value as string)) {
-        if (
-          [
-            'clientStartDate',
-            'clientDueDate',
-            'clientWalkThroughDate',
-            'clientSignoffDate',
-            'expectedPayDate',
-            'workOrderStartDate',
-            'workOrderExpectedCompletionDate',
-            'workOrderDateCompleted',
-            'expectedPaymentDate',
-            'newExpectedCompletionDate',
-            'coiglExpirationDate',
-            'coiWcExpirationDate',
-          ].includes(filter.id)
-        ) {
-          return {
-            ...filter,
-            value: filter.value ? datePickerFormat(filter.value as string) : null,
-          }
-        }
-        return {
-          ...filter,
-          value: filter.value ? dateISOFormatWithZeroTime(filter.value as string) : null,
-        }
+  let modifiedFilters = [] as any
+  columnFilters?.forEach(filter => {
+    // change to iso format if we have date and value is not specified 0 or 1.
+    // Dates will have value 0 or 1 if we have to null check the field
+    if (filter?.id?.includes('Date') && !['0', '1']?.includes(filter?.value as string)) {
+      if (
+        [
+          'clientStartDate',
+          'clientDueDate',
+          'clientWalkThroughDate',
+          'clientSignoffDate',
+          'expectedPayDate',
+          'workOrderStartDate',
+          'gridExpectedPaymentDate',
+          'expectedPaymentDate',
+          'workOrderExpectedCompletionDate',
+          'workOrderDateCompleted',
+          'newExpectedCompletionDate',
+          'coiglExpirationDate',
+          'coiWcExpirationDate',
+          'woaStartDate',
+          'lienRightExpireDate',
+        ].includes(filter.id)
+      ) {
+        modifiedFilters.push(
+          ...[
+            {
+              id: filter.id + 'Start',
+              value: (filter?.value as string)?.split(' - ')?.[0],
+            },
+            {
+              id: filter.id + 'End',
+              value: (filter?.value as string)?.split(' - ')?.[1],
+            },
+          ],
+        )
+      } else {
+        modifiedFilters.push(
+          ...[
+            {
+              id: filter.id + 'Start',
+              value: filter?.value ? dateISOFormatWithZeroTime((filter?.value as string)?.split(' - ')?.[0]) : null,
+            },
+            {
+              id: filter.id + 'End',
+              value: filter?.value ? dateISOFormatWithZeroTime((filter?.value as string)?.split(' - ')?.[1]) : null,
+            },
+          ],
+        )
       }
+    } else {
+      modifiedFilters.push(filter)
+    }
+  })
 
-      return filter
-    }) || []
-
-  const filterKeyValues = reduceQueriesArrayToObject(
-    dateToISOFormatFilters,
-    'id',
-    'value',
-    queryAndTableColumnMapKeys || {},
-  )
-
+  const filterKeyValues = reduceQueriesArrayToObject(modifiedFilters, 'id', 'value', queryAndTableColumnMapKeys || {})
   return getQueryString({
     ...filterKeyValues,
     page: page || 0,

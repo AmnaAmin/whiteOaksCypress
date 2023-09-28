@@ -12,12 +12,13 @@ import {
   Input,
 } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
-import { useForm, useWatch } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useAccountDetails } from 'api/vendor-details'
 import { convertDateWithTimeStamp } from 'utils/date-time-utils'
 import React, { useRef, useEffect } from 'react'
 import { BiSpreadsheet } from 'react-icons/bi'
+import NumberFormat from 'react-number-format'
 
 export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
@@ -83,6 +84,8 @@ type NotesProps = {
   isNotesLoading?: boolean
   projectData?: any
   projectCompletion?: boolean
+  isPercentageDisabled?: boolean
+  isWOCancelled?: boolean
 }
 
 export const NotesTab = (props: NotesProps) => {
@@ -101,6 +104,8 @@ export const NotesTab = (props: NotesProps) => {
     isNotesLoading,
     projectData,
     projectCompletion,
+    isPercentageDisabled,
+    isWOCancelled,
   } = props
   const { handleSubmit, register, setValue, reset, control } = useForm()
   const { data: account } = useAccountDetails()
@@ -138,7 +143,24 @@ export const NotesTab = (props: NotesProps) => {
               <FormLabel fontSize="16px" color="gray.600" fontWeight={500} htmlFor="percentageCompletion">
                 {t('completeion')}
               </FormLabel>
-              <Input type={'number'} {...register('percentageCompletion')} />
+              <Controller
+                control={control}
+                name="percentageCompletion"
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        size="md"
+                        disabled={isPercentageDisabled}
+                        customInput={Input}
+                        value={field.value}
+                        onChange={e => field.onChange(e)}
+                        suffix="%"
+                      />
+                    </>
+                  )
+                }}
+              />
             </FormControl>
           )}
           <Box {...chatListStyle} overflow="auto">
@@ -187,7 +209,7 @@ export const NotesTab = (props: NotesProps) => {
                 <Button
                   type="submit"
                   colorScheme="darkPrimary"
-                  isDisabled={(!message && !completion) || !!isNotesLoading}
+                  isDisabled={(!message && !completion) || !!isNotesLoading || isWOCancelled}
                 >
                   {t('submit')}
                 </Button>

@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
-import { isValidAndNonEmptyObject } from 'utils'
+import { isValidAndNonEmpty, isValidAndNonEmptyObject } from 'utils'
 import { isManualTransaction, useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
 import { ChangeOrderType, FormValues, TransactionTypeValues } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -71,6 +71,19 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     setValue,
   } = formReturn
   const values = getValues()
+  const transaction = useWatch({ name: 'transaction', control })
+
+  useEffect(() => {
+    let total_Amount = 0
+    transaction?.forEach(transaction => {
+      total_Amount += parseFloat(transaction.amount)
+    })
+
+    const finalTotalAmount = Math.abs(total_Amount)
+    if (finalTotalAmount) {
+      onSetTotalRemainingAmount(finalTotalAmount)
+    }
+  }, [transaction])
 
   const {
     isOpen: isDeleteConfirmationModalOpen,
@@ -84,7 +97,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     onOpen: onReplaceMaterialUploadOpen,
   } = useDisclosure()
 
-  const transaction = useWatch({ name: 'transaction', control })
   const document = useWatch({ name: 'attachment', control })
   const { mutate: uploadMaterialAttachment } = useUploadMaterialAttachment()
   const { data: account } = useAccountDetails()
@@ -202,9 +214,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
       // @ts-ignore
       setValue(`transaction.${index}.amount`, amountValue)
     })
-    if (values?.transactionType?.value === TransactionTypeValues.material && isChecked) {
-      setRemainingAmt?.(false)
-    }
   }
 
   const openFileDialog = () => {
@@ -550,19 +559,19 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                         e.preventDefault()
                                       }
                                     }}
-                                    onChange={e => {
-                                      onSetTotalRemainingAmount(Math.abs(e?.target?.value))
-
-                                      const inputValue = e.currentTarget.value
-                                      inputValue !== ''
-                                        ? field.onChange(
-                                            defaultNegative && !isRefund
-                                              ? -1 * Math.abs(Number(inputValue))
-                                              : inputValue,
-                                          )
-                                        : field.onChange('')
+                                    onValueChange={e => {
+                                      if (!isValidAndNonEmpty(e.formattedValue)) {
+                                        field.onChange('')
+                                        return
+                                      }
+                                      onSetTotalRemainingAmount(Math.abs(e?.floatValue as number))
+                                      const inputValue = e?.floatValue
+                                      field.onChange(
+                                        defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
+                                      )
                                     }}
                                     variant={'required-field'}
+                                    
                                     size="sm"
                                   />
                                 ) : (

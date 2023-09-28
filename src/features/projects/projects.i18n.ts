@@ -9,6 +9,7 @@ export const projects = {
           projectManager: 'FPM',
           woDraw: 'WO Draw',
           status: 'Status',
+          flag: 'Flag',
           address: 'Address',
           city: 'City',
           clientStart: 'Client Start',
@@ -21,6 +22,8 @@ export const projects = {
           client: 'Client',
           sow: 'SOW',
           projectCost: 'Project Cost',
+          dateAddedNotes: 'Notes Added Date',
+          notesAddedBy: 'Notes Added By',
           paid: 'Paid',
           invoiceNumber: 'Invoice No',
           accountRecievable: 'AR',
@@ -42,6 +45,9 @@ export const projects = {
           poNo: 'PO No',
           invoiceDate: 'Invoice Date',
           disqualifiedRevenueFlag: 'Disqualified Revenue',
+          claimNumber: 'Claim #',
+          woaStartDate: 'WOA Start',
+          lienRightsExpires: 'Lien Rights Expires',
         },
         projectFilter: {
           new: 'New',
@@ -117,9 +123,11 @@ export const projects = {
       projects: {
         projectTable: {
           generalLabour: 'Travail Général',
+          lienRightsExpires: 'Los derechos de gravamen expiran',
           projectManager: 'FPM',
           woDraw: 'Sorteo WO',
           status: 'Estado',
+          flag: 'Bandera',
           address: 'Dirección',
           city: 'Ciudad',
           clientStart: 'Inicio del Cliente',
@@ -153,6 +161,8 @@ export const projects = {
           woNo: 'WO No',
           poNo: 'PO No',
           invoiceDate: 'Fecha de la factura',
+          claimNumber: 'Reclamo',
+          woaStartDate: 'Inicio de WOA',
         },
         projectFilter: {
           new: 'Nuevo',

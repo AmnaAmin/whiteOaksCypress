@@ -23,7 +23,7 @@ import { VENDORPROFILE } from './vendor-profile.i18n'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
-import { AdminPortalVerifyDocument } from './verify-documents'
+import { AdminPortalVerifyDocument, VendorPortalVerifyDocument } from './verify-documents'
 
 type DocumentsProps = {
   vendor: VendorProfile
@@ -44,13 +44,34 @@ export const DocumentsCard = React.forwardRef((props: DocumentsProps, ref) => {
   )
 })
 
+export const downloadDocument = (link, text, testid?) => {
+  return (
+    <a
+      href={link}
+      data-testid={testid}
+      target={'_blank'}
+      rel="noreferrer"
+      download
+      style={{ minWidth: '20em', marginTop: '5px', color: '#345EA6' }}
+    >
+      <Flex ml={1}>
+        <BiDownload fontSize="sm" />
+        <Text ml="5px" fontSize="12px" fontStyle="normal" w="170px" isTruncated>
+          {text}
+        </Text>
+      </Flex>
+    </a>
+  )
+}
 export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) => {
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
   const { permissions } = useRoleBasedPermissions()
-  const { isAdmin } = useUserRolesSelector()
   const isReadOnly = permissions?.includes('VENDOR.READ')
 
+  const { isAdmin, isVendor, isProjectCoordinator, isDoc, isAccounting, isOperations, isVendorManager, isFPM } =
+    useUserRolesSelector()
+  const adminRole = isAdmin || isProjectCoordinator || isDoc || isAccounting || isOperations || isVendorManager || isFPM
   const {
     formState: { errors, isSubmitSuccessful },
     control,
@@ -88,6 +109,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     watchCoiWcExpDate,
     isAllFiledWatch,
   } = useWatchDocumentFeild(control, vendor)
+  console.log(getValues())
 
   // const isW9DocRequired = !!watchW9DocumentFile || !!documents.w9DocumentUrl
   const isAgreementRequired = !!watchAgreementFile || !!documents.agreementUrl
@@ -104,18 +126,6 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     const reader = new FileReader()
     reader.addEventListener('load', readFile)
     reader.readAsDataURL(document)
-  }
-  const downloadDocument = (link, text, testid?) => {
-    return (
-      <a href={link} data-testid={testid} download style={{ minWidth: '20em', marginTop: '5px', color: '#345EA6' }}>
-        <Flex ml={1}>
-          <BiDownload fontSize="sm" />
-          <Text ml="5px" fontSize="12px" fontStyle="normal" w="170px" isTruncated>
-            {text}
-          </Text>
-        </Flex>
-      </a>
-    )
   }
 
   const resetFields = () => {
@@ -210,11 +220,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
             {isW9DocumentDateChanged || watchW9DocumentFile ? (
               <SaveChangedFieldAlert />
             ) : (
-              <AdminPortalVerifyDocument
-                vendor={vendor as any}
-                fieldName="W9DocumentCheckBox"
-                registerToFormField={register}
-              />
+              <>
+                {adminRole && (
+                  <AdminPortalVerifyDocument
+                    vendor={vendor as any}
+                    fieldName="W9DocumentCheckBox"
+                    registerToFormField={register}
+                  />
+                )}
+                {isVendor && <VendorPortalVerifyDocument vendor={vendor as any} fieldName="W9Document" />}
+              </>
             )}
           </HStack>
         </HStack>
@@ -277,6 +292,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isAgreementSignedDateChanged || !!watchAgreementSignedDate}
                             onClear={() => setValue(field.name, null)}
+                            disabled={isFPM} 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -292,11 +308,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {isAgreementSignedDateChanged || watchAgreementFile ? (
                 <SaveChangedFieldAlert />
               ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="agreementSignCheckBox"
-                  registerToFormField={register}
-                />
+                <>
+                  {adminRole && (
+                    <AdminPortalVerifyDocument
+                      vendor={vendor as any}
+                      fieldName="agreementSignCheckBox"
+                      registerToFormField={register}
+                    />
+                  )}
+                  {isVendor && <VendorPortalVerifyDocument vendor={vendor as any} fieldName="agreementSign" />}
+                </>
               )}
             </HStack>
           </HStack>
@@ -390,6 +411,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isAutoInsuranceExpDateChanged || !!watchAutoInsuranceExpDate}
                             onClear={() => setValue(field.name, null)}
+                            disabled={isFPM} 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -405,11 +427,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {isAutoInsuranceExpDateChanged || watchInsuranceFile ? (
                 <SaveChangedFieldAlert />
               ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="autoInsuranceCheckBox"
-                  registerToFormField={register}
-                />
+                <>
+                  {adminRole && (
+                    <AdminPortalVerifyDocument
+                      vendor={vendor as any}
+                      fieldName="autoInsuranceCheckBox"
+                      registerToFormField={register}
+                    />
+                  )}
+                  {isVendor && <VendorPortalVerifyDocument vendor={vendor as any} fieldName="autoInsurance" />}
+                </>
               )}
             </HStack>
           </HStack>
@@ -476,6 +503,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isCoiGlExpDateChanged || !!watchCoiGlExpDate}
                             onClear={() => setValue(field.name, null)}
+                            disabled={isFPM} 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -491,11 +519,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {isCoiGlExpDateChanged || watchCoiGlExpFile ? (
                 <SaveChangedFieldAlert />
               ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="coiGLExpCheckBox"
-                  registerToFormField={register}
-                />
+                <>
+                  {adminRole && (
+                    <AdminPortalVerifyDocument
+                      vendor={vendor as any}
+                      fieldName="coiGLExpCheckBox"
+                      registerToFormField={register}
+                    />
+                  )}
+                  {isVendor && <VendorPortalVerifyDocument vendor={vendor as any} fieldName="coiGLExp" />}
+                </>
               )}
             </HStack>
           </HStack>
@@ -562,6 +595,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isCoiWcExpDateChanged || !!watchCoiWcExpDate}
                             onClear={() => setValue(field.name, null)}
+                            disabled={isFPM} 
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -577,11 +611,16 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               {isCoiWcExpDateChanged || watchCoiWcExpFile ? (
                 <SaveChangedFieldAlert />
               ) : (
-                <AdminPortalVerifyDocument
-                  vendor={vendor as any}
-                  fieldName="CoiWcExpCheckbox"
-                  registerToFormField={register}
-                />
+                <>
+                  {adminRole && (
+                    <AdminPortalVerifyDocument
+                      vendor={vendor as any}
+                      fieldName="CoiWcExpCheckbox"
+                      registerToFormField={register}
+                    />
+                  )}
+                  {isVendor && <VendorPortalVerifyDocument vendor={vendor as any} fieldName="CoiWcExp" />}
+                </>
               )}
             </HStack>
           </HStack>

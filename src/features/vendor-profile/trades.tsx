@@ -38,9 +38,10 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
   const { control } = useFormContext<VendorTradeFormValues>()
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('VENDOR.READ')
   const tradeCheckboxes = useWatch({ control, name: 'trades' })
+
   return (
     <>
-      <Box h="584px" overflow="auto">
+      <Box h="1000px" overflow="auto">
         <Flex id="Vendor_Trades" maxW="900px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes?.map((checkbox, index) => {
             return (

@@ -75,6 +75,30 @@ export const useProjectDetails = (projectId?: string) => {
     { enabled: false },
   )
 }
+export const useDirectReports = (email: string) => {
+  const client = useClient()
+
+  const { data: directReports, ...rest } = useQuery(
+    'direct-reports',
+    async () => {
+      const response = await client(`users/${email}`, { email })
+
+      return response?.data
+    },
+    { enabled: !!email },
+  )
+
+  const directReportOptions =
+    directReports?.directChild?.map(dr => ({
+      label: dr?.firstName + ' ' + dr?.lastName,
+      value: dr?.id,
+    })) || []
+
+  return {
+    directReportOptions: [{ label: 'ALL', value: 'ALL' }, ...directReportOptions],
+    ...rest,
+  }
+}
 
 export const useCreateProjectMutation = () => {
   const client = useClient()
@@ -313,6 +337,32 @@ export const useStates = () => {
   }
 }
 
+export const useMarketStateWise = id => {
+  const client = useClient()
+  const { data: markets, ...rest } = useQuery(
+    ['states-markets', id],
+    async () => {
+      const response = await client(`markets/state/${id}`, {})
+      return response?.data
+    },
+    {
+      enabled: !!id,
+    },
+  )
+
+  const marketSelectOptionsStateWise =
+    markets?.map(market => ({
+      value: market?.id,
+      label: market?.metropolitanServiceArea,
+    })) || []
+
+  return {
+    marketSelectOptionsStateWise,
+    markets,
+    ...rest,
+  }
+}
+
 export const useMarkets = () => {
   const client = useClient()
 
@@ -410,7 +460,7 @@ export const useProjectCoordinators = () => {
   const client = useClient()
 
   const { data: projectCoordinators, ...rest } = useQuery('PC', async () => {
-    const response = await client(`users/usertype/112?sort=firstName,asc`, {})
+    const response = await client(`users/v2/usertype/112?sort=firstName,asc`, {})
 
     return response?.data
   })
@@ -471,7 +521,6 @@ const getVendorsQueryString = (filterQueryString: string) => {
 
 export const useVendor = (queryString: string, pageSize: number) => {
   const apiQueryString = getVendorsQueryString(queryString)
-
   const { data, ...rest } = usePaginationQuery<vendors>(
     [VENDOR_QUERY_KEY, apiQueryString],
     `view-vendors/v1?${apiQueryString}`,

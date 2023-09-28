@@ -5,7 +5,6 @@ import ReactSelect from 'components/form/react-select'
 import { documentScore, documentStatus, documentTerm } from 'api/vendor-projects'
 
 const VendorDetails = props => {
-  
   return (
     <Box>
       <Flex minH="100px" gap="15px">
@@ -26,11 +25,11 @@ const VendorDetails = props => {
           </FormControl>
         </Box>
         <Box w="215px">
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel variant="strong-label" size="md">
               Status
             </FormLabel>
-            <ReactSelect selectProps={{ isBorderLeft: true }} options={documentStatus} />
+            <ReactSelect selectProps={{ isBorderLeft: true }} options={documentStatus}  variant="required-field"  isRequired />
           </FormControl>
         </Box>
       </Flex>

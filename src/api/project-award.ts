@@ -1,13 +1,14 @@
 import { useQuery } from 'react-query'
-import { Project } from 'types/project.type'
+import { ProjectAward } from 'types/project.type'
 import { useClient } from 'utils/auth-context'
 
-export const useProjectAward = (projectId?: string) => {
+export const useProjectAward = (largeWorkOrder?: boolean) => {
   const client = useClient()
-  const { data: projectAwardData, ...rest } = useQuery<Project>(
-    ['project', projectId],
+  const { data: projectAwardData, ...rest } = useQuery<Array<ProjectAward>>(
+    ['projectAward', largeWorkOrder],
     async () => {
-      const response = await client(`award-plans/`, {})
+      const largeWoEndPoints = 'award-plans?largeWo.equals=true'
+      const response = await client(largeWorkOrder ? largeWoEndPoints : `award-plans/`, {})
 
       return response?.data
     },

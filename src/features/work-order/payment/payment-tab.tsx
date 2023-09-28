@@ -27,6 +27,8 @@ import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
 import { truncateWithEllipsis } from 'utils/string-formatters'
 import moment from 'moment'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 const CalenderCard = props => {
   return (
@@ -66,7 +68,7 @@ const InformationCard = props => {
 }
 
 const PaymentInfoTab = props => {
-  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating } = props
+  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, isLoading } = props
 
   const { t } = useTranslation()
   const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
@@ -101,6 +103,8 @@ const PaymentInfoTab = props => {
   })
   const watchPartialPayment = watch('partialPayment')
   const watchPaymentDate = watch('paymentDate')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
+  const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
   useEffect(() => {
     if ([STATUS.Rejected]?.includes(workOrder?.statusLabel?.toLowerCase())) {
@@ -109,6 +113,9 @@ const PaymentInfoTab = props => {
       setValue('expectedPaymentDate', null)
       setValue('paymentTerm', null)
     } else {
+      if (isWorkOrderUpdating || isLoading) {
+        return
+      }
       resetPayments(defaultValuesPayment(workOrder, paymentsTerms))
     }
   }, [workOrder])
@@ -150,7 +157,7 @@ const PaymentInfoTab = props => {
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody ml={30} h={'calc(100vh - 300px)'} overflow={'auto'}>
+        <ModalBody ml={30} h="600px" overflow={'auto'}>
           <SimpleGrid
             columns={5}
             spacing={8}
@@ -187,7 +194,7 @@ const PaymentInfoTab = props => {
                     type="date"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!dateInvoiceSubmittedEnabled}
+                    isDisabled={!dateInvoiceSubmittedEnabled || isWOCancelled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('dateInvoiceSubmitted', {
                       required: invoicedRequired && 'This is required',
@@ -228,7 +235,7 @@ const PaymentInfoTab = props => {
                           <Select
                             {...field}
                             options={paymentsTerms}
-                            isDisabled={!paymentTermEnabled}
+                            isDisabled={!paymentTermEnabled || isWOCancelled}
                             size="md"
                             value={field.value}
                             selectProps={{ isBorderLeft: false }}
@@ -266,7 +273,7 @@ const PaymentInfoTab = props => {
                     data-testid="paymentTermDate"
                     size="md"
                     css={calendarIcon}
-                    isDisabled={!paymentTermDateEnabled}
+                    isDisabled={!paymentTermDateEnabled || isWOCancelled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('paymentTermDate', {
                       required: invoicedRequired && 'This is required',
@@ -286,7 +293,7 @@ const PaymentInfoTab = props => {
                     size="md"
                     data-testid="datePaymentProcessed"
                     css={calendarIcon}
-                    isDisabled={!datePaymentProcessedEnabled}
+                    isDisabled={!datePaymentProcessedEnabled || isWOCancelled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('datePaymentProcessed', {
                       required: invoicedRequired && 'This is required',
@@ -311,7 +318,7 @@ const PaymentInfoTab = props => {
                     size="md"
                     data-testid="expectedPaymentDate"
                     css={calendarIcon}
-                    isDisabled={!expectedPaymentDateEnabled}
+                    isDisabled={!expectedPaymentDateEnabled || isWOCancelled}
                     variant={invoicedRequired ? 'required-field' : 'outline'}
                     {...register('expectedPaymentDate', {
                       required: invoicedRequired && 'This is required',
@@ -331,7 +338,7 @@ const PaymentInfoTab = props => {
                     size="md"
                     data-testid="datePaid"
                     css={calendarIcon}
-                    isDisabled={!datePaidEnabled}
+                    isDisabled={!datePaidEnabled || isWOCancelled}
                     variant="outline"
                     {...register('datePaid')}
                   />
@@ -355,7 +362,7 @@ const PaymentInfoTab = props => {
                             thousandSeparator
                             customInput={CustomRequiredInput}
                             prefix={'$'}
-                            disabled={!invoiceAmountEnabled}
+                            disabled={!invoiceAmountEnabled || isWOCancelled}
                             onValueChange={e => {
                               field.onChange(e.floatValue ?? '')
                             }}
@@ -385,7 +392,7 @@ const PaymentInfoTab = props => {
                             thousandSeparator
                             customInput={CustomRequiredInput}
                             prefix={'$'}
-                            disabled={!clientOriginalApprovedAmountEnabled}
+                            disabled={!clientOriginalApprovedAmountEnabled || isWOCancelled}
                             onValueChange={e => {
                               field.onChange(e.floatValue ?? '')
                             }}
@@ -400,8 +407,8 @@ const PaymentInfoTab = props => {
 
               <Box height="80px">
                 <FormControl isInvalid={!!errors.clientApprovedAmount}>
-                  <FormLabel variant={'strong-label'} size={'md'}>
-                    {truncateWithEllipsis(t('clientFinalApprovedAmount'), 30)}
+                  <FormLabel isTruncated title={'Client Final Approved Amount'} variant={'strong-label'} size={'md'} whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
+                    {truncateWithEllipsis(t('clientFinalApprovedAmount').trim(), 30)}
                   </FormLabel>
                   <Controller
                     control={control}
@@ -416,7 +423,7 @@ const PaymentInfoTab = props => {
                             thousandSeparator
                             customInput={CustomRequiredInput}
                             prefix={'$'}
-                            disabled={!clientApprovedAmountEnabled}
+                            disabled={!clientApprovedAmountEnabled || isWOCancelled}
                             onValueChange={e => {
                               field.onChange(e.floatValue ?? '')
                             }}
@@ -464,7 +471,7 @@ const PaymentInfoTab = props => {
                             thousandSeparator
                             customInput={CustomInput}
                             prefix={'$'}
-                            disabled={!partialPaymentEnabled}
+                            disabled={!partialPaymentEnabled || isWOCancelled}
                             onValueChange={e => {
                               clearErrors('paymentDate')
                               field.onChange(e.floatValue ?? '')
@@ -495,7 +502,7 @@ const PaymentInfoTab = props => {
                     size="md"
                     data-testid="partialPaymentDate"
                     css={calendarIcon}
-                    isDisabled={!paymentDateEnabled}
+                    isDisabled={!paymentDateEnabled || isWOCancelled}
                     variant="outline"
                     {...register('paymentDate', {
                       required: watchPartialPayment && (watchPartialPayment as number) > 0 ? 'This is required' : false,
@@ -525,9 +532,18 @@ const PaymentInfoTab = props => {
             <Button data-testid="wo-cancel-btn" variant="outline" onClick={props.onClose} colorScheme="brand">
               {t('cancel')}
             </Button>
-            <Button type="submit" data-testid="submit-btn" colorScheme="brand" disabled={isWorkOrderUpdating}>
-              {t('save')}
-            </Button>
+            <>
+              {!isReadOnly && (
+                <Button
+                  type="submit"
+                  data-testid="submit-btn"
+                  colorScheme="brand"
+                  disabled={isWorkOrderUpdating || isWOCancelled}
+                >
+                  {t('save')}
+                </Button>
+              )}
+            </>
           </HStack>
         </ModalFooter>
       </form>

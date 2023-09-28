@@ -76,6 +76,23 @@ export const useDocumentTypes = () => {
   })
 }
 
+export const useDeleteDocument = () => {
+  const client = useClient()
+
+  return useMutation(
+    docId => {
+      return client('documents/' + docId, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onError(error: any) {
+        console.log('Unable to delete document', error)
+      },
+    },
+  )
+}
+
 export const documentScore = [
   { value: 1, label: '1' },
   { value: 2, label: '2' },

@@ -96,13 +96,14 @@ export const chakraStyles = {
   }),
   control: (provider: any, state) => {
     const { selectProps } = state
-    const { isBorderLeft } = selectProps?.selectProps || {}
+    const { isBorderLeft, widthAssign } = selectProps?.selectProps || {}
 
     const borderLeftStyle = isBorderLeft ? inputBorderLeftStyle : {}
-
+    const assignItemsWidth = widthAssign ? widthAssign : '100%'
     return {
       ...provider,
       ...borderLeftStyle,
+      width: assignItemsWidth,
       borderRadius: '6px',
       fontSize: getFontSize(state),
       _focus: inputFocusStateStyle,
@@ -123,6 +124,7 @@ export const chakraStyles = {
 type SelectProps = any & {
   selectProps: {
     isBorderLeft: boolean
+    widthAssign?: string
     now: string
   }
 }
@@ -188,6 +190,12 @@ const MenuList: React.FC<any> = props => {
   )
 }
 
+const handleMinusNumberInput = e => {
+  if (e?.nativeEvent?.code === 'Minus') {
+    e?.preventDefault()
+  }
+}
+
 export const CreatableSelect = forwardRef((props: SelectProps, ref: any) => (
   <RSCreatableSelect
     {...props}
@@ -198,6 +206,7 @@ export const CreatableSelect = forwardRef((props: SelectProps, ref: any) => (
       IndicatorSeparator: false,
       MenuList,
     }}
+    onKeyDown={handleMinusNumberInput}
   />
 ))
 

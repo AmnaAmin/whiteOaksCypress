@@ -15,7 +15,7 @@ describe('Vendor Work Orders Table', () => {
     test('Vendor-Project table Should render properly', async () => {
       await renderWorkOrderData()
       // Work Order Columns
-      expect(screen.queryByText('ID')).toBeInTheDocument()
+      expect(screen.queryByText('Work Order ID')).toBeInTheDocument()
       expect(screen.queryByText('WO Status')).toBeInTheDocument()
       expect(screen.queryByText('Skill')).toBeInTheDocument()
       expect(screen.queryByText('Name')).toBeInTheDocument()

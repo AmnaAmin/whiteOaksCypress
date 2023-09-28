@@ -9,11 +9,12 @@ import { WOAUsersTable } from './woa-users-table'
 import { DevtekUsersTable } from './devtek-users-table'
 import { BiAddToQueue } from 'react-icons/bi'
 import { useAccountData } from 'api/user-account'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const UserManagementTabs = React.forwardRef((props: any, ref) => {
   const [selectedUser, setSelectedUser] = useState(undefined)
   const { t } = useTranslation()
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   const { onOpen } = useDisclosure()
   const { data } = useAccountData()
 
@@ -35,6 +36,8 @@ export const UserManagementTabs = React.forwardRef((props: any, ref) => {
           {data?.devAccount && <Tab>{t(`${USER_MANAGEMENT}.table.devtekUsers`)}</Tab>}
         </TabList>
         <Flex justifyContent="flex-end" alignItems="center">
+          <>
+        {!isReadOnly && (
           <Button
             mt="-54px"
             data-testid="add-user"
@@ -44,6 +47,8 @@ export const UserManagementTabs = React.forwardRef((props: any, ref) => {
           >
             {t(`${USER_MANAGEMENT}.modal.addUser`)}
           </Button>
+        )}
+        </>
         </Flex>
         <Card
           mt="1px"

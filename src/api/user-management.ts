@@ -137,7 +137,6 @@ export const useDeleteUserDetails = () => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries('users')
         toast({
           title: t(`${USER_MANAGEMENT}.modal.deleteUserModal`),
           description: t(`${USER_MANAGEMENT}.modal.deleteUserSuccess`),
@@ -145,6 +144,8 @@ export const useDeleteUserDetails = () => {
           isClosable: true,
           position: 'top-left',
         })
+        queryClient.invalidateQueries(USER_MGT_QUERY_KEY)
+        queryClient.invalidateQueries('users')
       },
       onError(error: any) {
         toast({
@@ -179,7 +180,6 @@ export const userMangtPayload = (user: any, statesDTO?: any, usersData?: any) =>
     stateId: user.state?.id || '',
     fpmStateId: getFpmStateId(),
     fpmStates: statesDTO?.filter(s => getFpmStates().find(fs => fs.id === s.id)) || [],
-    userType: 1011,
     ignoreQuota: isDefined(user.ignoreQuota?.value) ? user.ignoreQuota?.value : 0,
     newBonus: user.newBonus?.label ? user.newBonus?.value : '',
     vendorAdmin: user.vendorAdmin,
@@ -196,6 +196,7 @@ export const userMangtPayload = (user: any, statesDTO?: any, usersData?: any) =>
         }
       }),
     parentFieldProjectManagerId: user?.parentFieldProjectManagerId?.value,
+    userType: user?.accountType.userTypeId,
     authorities: [user.accountType?.label],
   }
 
@@ -461,7 +462,7 @@ export const useUserDetails = ({ form, userInfo }) => {
   const { options: roles } = useFetchRoles()
   const { options: viewVendorsOptions } = useViewVendor()
   const { userMgt: userData } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
-  console.log(userData)
+
   const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
   const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
 

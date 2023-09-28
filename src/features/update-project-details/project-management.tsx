@@ -9,11 +9,11 @@ import {
   Grid,
   GridItem,
   Input,
-  Stack,
   HStack,
   Button,
   Divider,
   Link as LinkChakra,
+  VStack,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import { STATUS } from 'features/common/status'
@@ -132,7 +132,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   })
   return (
     <Box>
-      <Stack>
+      <VStack gap="32px" alignItems={'flex-start'}>
         <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.status}>
@@ -200,6 +200,26 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
+            <FormControl isInvalid={!!errors.claimNumber} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="claimNumber">
+                {t(`project.projectDetails.claimNumber`)}
+              </FormLabel>
+              <Input size="md" id="claimNumber" {...register('claimNumber')} autoComplete="off" />
+              <FormErrorMessage>{errors.claimNumber && errors.claimNumber.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+
+          <GridItem>
+            <FormControl isInvalid={!!errors.reoNumber} w="215px">
+              <FormLabel variant="strong-label" size="md" htmlFor="reoNumber">
+                {t(`project.projectDetails.reoNumber`)}
+              </FormLabel>
+              <Input size="md" id="reoNumber" {...register('reoNumber')} autoComplete="off" />
+              <FormErrorMessage>{errors.reoNumber && errors.reoNumber.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+
+          <GridItem>
             <FormControl w="215px">
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.overrideStatus`)}
@@ -231,13 +251,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="projectName">
                 {t(`project.projectDetails.projectName`)}
               </FormLabel>
-              <Input
-                size="md"
-                placeholder="PC project 1"
-                id="projectName"
-                {...register('projectName')}
-                autoComplete="off"
-              />
+              <Input size="md" id="projectName" {...register('projectName')} autoComplete="off" />
               <FormErrorMessage>{errors.projectName && errors.projectName.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -323,6 +337,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormErrorMessage>{errors?.woaCompletionDate?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+        </Grid>
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
           <GridItem>
             <FormControl isInvalid={!!errors?.clientWalkthroughDate} w="215px">
               <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
@@ -359,6 +375,37 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
           </GridItem>
 
           <GridItem>
+            <FormControl isInvalid={!!errors?.projectClosedDueDate}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.closedDueDate`)}
+              </FormLabel>
+              <Input type="date" isDisabled={!isAdmin ?? true} {...register('projectClosedDueDate')} />
+              <FormErrorMessage>{errors?.projectClosedDueDate?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+        </Grid>
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
+          <GridItem>
+            <FormControl isInvalid={!!errors?.lienExpiryDate}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.lienRightsExpires`)}
+              </FormLabel>
+              <Input type="date" isDisabled={true} {...register('lienExpiryDate')} />
+              <FormErrorMessage>{errors?.lienExpiryDate?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors?.lienFiled}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.lienFiled`)}
+              </FormLabel>
+              <Input type="date" {...register('lienFiled')} />
+              <FormErrorMessage>{errors?.lienFiled?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+        </Grid>
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
+          <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
                 {t(`verifyProject`)}
@@ -380,33 +427,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               </Checkbox>
             </FormControl>
           </GridItem>
-          <GridItem>
-            <FormControl isInvalid={!!errors?.projectClosedDueDate}>
-              <FormLabel variant="strong-label" size="md">
-                {t(`project.projectDetails.closedDueDate`)}
-              </FormLabel>
-              <Input type="date" isDisabled={!isAdmin ?? true} {...register('projectClosedDueDate')} />
-              <FormErrorMessage>{errors?.projectClosedDueDate?.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={!!errors?.lienExpiryDate}>
-              <FormLabel variant="strong-label" size="md">
-                {t(`project.projectDetails.lienRightsExpires`)}
-              </FormLabel>
-              <Input type="date" isDisabled={true} {...register('lienExpiryDate')} />
-              <FormErrorMessage>{errors?.lienExpiryDate?.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl isInvalid={!!errors?.lienFiled}>
-              <FormLabel variant="strong-label" size="md">
-                {t(`project.projectDetails.lienFiled`)}
-              </FormLabel>
-              <Input type="date" {...register('lienFiled')} />
-              <FormErrorMessage>{errors?.lienFiled?.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
+
           {!!projectData?.estimateId && (
             <GridItem colSpan={2}>
               <FormControl>
@@ -435,7 +456,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </GridItem>
           )}
         </Grid>
-      </Stack>
+      </VStack>
     </Box>
   )
 }

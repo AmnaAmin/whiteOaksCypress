@@ -14,7 +14,6 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { DevTool } from '@hookform/devtools'
 import { useStates } from 'api/pc-projects'
 
 import {
@@ -42,6 +41,7 @@ import { USER_MANAGEMENT } from './user-management.i8n'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useFetchRoles } from 'api/access-control'
 import { useUsrMgt } from 'pages/admin/user-management'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 type UserManagement = {
   onClose: () => void
@@ -82,7 +82,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     isLoading: loadingUsersList,
     userMgt: userData,
   } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   const {
     register,
     handleSubmit,
@@ -97,7 +97,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { mutate: updateUser } = useSaveUserDetails()
   const { mutate: addUser } = useCreateUserMutation()
   const { mutate: deleteUser } = useDeleteUserDetails()
-  const { options: vendorTypes } = useViewVendor()
+  const { options: vendorTypes, isLoading: loadingVendors } = useViewVendor()
 
   useUserDetails({ form, userInfo })
 
@@ -184,12 +184,21 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const watchRequiredField =
     !formValues?.email ||
+    formValues?.email.trim() === '' ||
     !formValues?.firstName ||
+    formValues?.firstName.trim() === '' ||
     !formValues?.lastName ||
+    formValues?.lastName.trim() === '' ||
     (!isEditUser && !formValues?.newPassword) ||
     !formValues?.accountType ||
     !formValues?.streetAddress ||
+    formValues?.streetAddress.trim() === '' ||
+    !formValues?.city ||
+    formValues?.city.trim() === '' ||
+    !formValues?.zipCode ||
+    formValues?.zipCode.trim() === '' ||
     !formValues?.telephoneNumber ||
+    formValues.telephoneNumber?.trim() === '' ||
     !formValues?.langKey ||
     (isVendor && !formValues.vendorId) ||
     (showMarkets && noMarketsSelected) ||
@@ -679,7 +688,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                 control={control}
                 name="vendorId"
                 render={({ field }) => (
-                  <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={vendorTypes} />
+                  <ReactSelect
+                    selectProps={{ isBorderLeft: true }}
+                    {...field}
+                    options={vendorTypes}
+                    loadingCheck={loadingVendors}
+                  />
                 )}
               />
             </FormControl>
@@ -687,6 +701,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <HStack mt="30px" w="300px">
                 <FormControl>
                   <Checkbox
+                    isChecked={formValues?.vendorAdmin}
                     {...register('vendorAdmin', {
                       onChange: e => {
                         if (!e.target.checked) setValue('primaryAdmin', false)
@@ -793,7 +808,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             {t(`${USER_MANAGEMENT}.modal.employeeID`)}
           </FormLabel>
           <Box height="70px">
-            <Input type="text" {...register('employeeId')} />
+            <Input maxLength={255} type="text" {...register('employeeId')} />
           </Box>
         </FormControl>
       </HStack>
@@ -808,7 +823,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         mt="30px"
       >
         <>
-          {user && (
+          {!isReadOnly && user && (
             <Button
               variant="outline"
               isDisabled={user?.activated ? true : false}
@@ -831,10 +846,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         >
           {t(`${USER_MANAGEMENT}.modal.cancel`)}
         </Button>
-
-        <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField || !invalidTelePhone}>
-          {t(`${USER_MANAGEMENT}.modal.save`)}
-        </Button>
+        <>
+          {!isReadOnly && (
+            <Button type="submit" colorScheme="brand" isDisabled={!!watchRequiredField}>
+              {t(`${USER_MANAGEMENT}.modal.save`)}
+            </Button>
+          )}
+        </>
         <ConfirmationBox
           title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}
           content={t(`${USER_MANAGEMENT}.modal.deleteUserContent`)}
@@ -852,7 +870,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           showNoButton={true}
         />
       </HStack>
-      <DevTool control={control} />
     </form>
   )
 }

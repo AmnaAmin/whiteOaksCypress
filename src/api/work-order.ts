@@ -16,10 +16,29 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 type UpdateWorkOrderProps = {
   hideToast?: boolean
   swoProjectId?: string | number | null
+  setUpdating?: (val) => void
+}
+
+export const completePercentageValues = [
+  { value: 10, label: '10%' },
+  { value: 25, label: '25%' },
+  { value: 50, label: '50%' },
+  { value: 75, label: '75%' },
+  { value: 95, label: '95%' },
+  { value: 100, label: '100%' },
+]
+
+export const newObjectFormatting = data => {
+  const obj = {
+    label: `${data?.label}%`,
+    value: data?.value,
+    __isNew__: true,
+  }
+  return obj
 }
 
 export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
-  const { hideToast } = props
+  const { hideToast, setUpdating } = props
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -35,6 +54,7 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
     },
     {
       onSuccess(res) {
+        setUpdating?.(false)
         const updatedWorkOrderId = res?.data?.id
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['transactions', projectId])
@@ -44,6 +64,8 @@ export const useUpdateWorkOrderMutation = (props: UpdateWorkOrderProps) => {
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         queryClient.invalidateQueries(['audit-logs', projectId])
+        queryClient.invalidateQueries(['changeOrders'])
+        queryClient.invalidateQueries(['projectAward'])
         if (!hideToast) {
           toast({
             title: 'Work Order',
@@ -238,10 +260,11 @@ export const parsePaymentValuesToPayload = formValues => {
   }
 }
 
-export const parseProjectAwardValuesToPayload = (id, projectAwardData) => {
+export const parseProjectAwardValuesToPayload = (id, projectAwardData, largeWorkOrder) => {
   return {
     awardPlanId: id,
     paymentTerm: projectAwardData.find(pa => pa.id === id)?.payTerm,
+    largeWorkOrder: largeWorkOrder ? largeWorkOrder : false,
   }
 }
 
@@ -295,6 +318,10 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
           }
           const assignedItem = {
             ...a,
+            completePercentage:
+              typeof a.completePercentage === 'number'
+                ? a.completePercentage
+                : Number(a.completePercentage?.label?.slice(0, -1)),
             document: a.uploadedDoc ? { id: a?.document?.id, ...a.uploadedDoc } : a.document,
             id: isNewSmartLineItem ? '' : a.id,
             smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
@@ -317,17 +344,21 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     notifyVendor: formValues.notifyVendor,
     vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
+    completePercentage:
+      typeof formValues.completePercentage === 'number'
+        ? formValues.completePercentage
+        : Number(formValues.completePercentage?.label?.slice(0, -1)),
   }
 }
 
-export const defaultValuesWODetails = (workOrder, defaultVendor, defaultSkill) => {
+export const defaultValuesWODetails = (workOrder, defaultSkill) => {
   const defaultValues = {
     cancel: {
       value: '',
       label: 'Select',
     },
     vendorSkillId: defaultSkill,
-    vendorId: defaultVendor,
+    vendorId: '',
     workOrderStartDate: datePickerFormat(workOrder?.workOrderStartDate),
     workOrderDateCompleted: datePickerFormat(workOrder?.workOrderDateCompleted),
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
@@ -339,6 +370,7 @@ export const defaultValuesWODetails = (workOrder, defaultVendor, defaultSkill) =
             return { ...e, uploadedDoc: null, clientAmount: (e.price ?? 0) * (e.quantity ?? 0) }
           })
         : [],
+    completePercentage: workOrder?.completePercentage,
   }
   return defaultValues
 }

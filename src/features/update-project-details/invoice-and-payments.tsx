@@ -653,10 +653,9 @@ const RevisedAmounts = ({ formControl, project }) => {
                       id="dueDaye"
                       type="date"
                       size="md"
-                      variant={'required-field'}
                       css={calendarIcon}
                       disabled={true}
-                      {...register(`resubmittedInvoice.${index}.dueDate`, { required: 'This is a required field' })}
+                      {...register(`resubmittedInvoice.${index}.dueDate`)}
                     />
 
                     <Box minH="20px" mt="3px">

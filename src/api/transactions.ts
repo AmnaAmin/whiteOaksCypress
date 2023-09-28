@@ -349,6 +349,7 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
       changeOrders?.map(workOrder => ({
         label: createChangeOrderLabel(workOrder.changeOrderAmount, workOrder.name),
         value: workOrder.id,
+        status: workOrder.status,
       })),
     [changeOrders?.length],
   )
@@ -356,8 +357,8 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   return {
     changeOrderSelectOptions: changeOrderOptions
       ? [CHANGE_ORDER_DEFAULT_OPTION, ...changeOrderOptions]
-      : [CHANGE_ORDER_DEFAULT_OPTION],
-    ...rest,
+      : [CHANGE_ORDER_DEFAULT_OPTION] as any,
+    ...rest, 
   }
 }
 
@@ -733,6 +734,8 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         queryClient.invalidateQueries(GET_PAGINATED_RECEIVABLE_QUERY_KEY)
         queryClient.invalidateQueries(['audit-logs', projectId])
+        queryClient.invalidateQueries(['changeOrders'])
+        queryClient.invalidateQueries(['WorkOrderDetails'])
 
         toast({
           title: 'Update Transaction.',

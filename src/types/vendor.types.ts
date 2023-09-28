@@ -50,6 +50,9 @@ export type Vendor = {
   autoInsuranceExpirationDate: string | null
   agreementSignedDate: string | null
   vendorAgreementSigned: boolean
+  bankVoidedCheckStatus: string | boolean | undefined
+  bankVoidedCheckDate: string | null | undefined
+  voidedCheckUrl: string | null
   isSsn: false
   ssnNumber: string | null
   otherInsuranceExpirationDate: string | null
@@ -104,6 +107,7 @@ export type VendorProfilePayload = {
   secondName: string | null
   statusLabel: string
   ownerName: string
+  primaryContact?: string | null
   businessEmailAddress: string
   businessPhoneNumber: string
   coiglExpirationDate: string | null
@@ -146,6 +150,21 @@ export type VendorProfilePayload = {
   autoInsuranceStatus?: string | boolean
   w9Status?: string | boolean
   enableVendorPortal?: boolean
+  bankAddress?: string
+  bankCity?: string
+  bankEmail?: string
+  bankName?: string
+  bankPhoneNumber?: string
+  bankState?: string
+  bankZipCode?: string
+  bankPrimaryContact?: string
+  bankChecking?: boolean
+  bankSaving?: boolean
+  bankVoidedCheckDate?: string | null
+  bankVoidedCheckStatus?: string | null | boolean
+  bankDateSignature?: string | null | Date
+  bankRoutingNo?: number | string | null
+  bankAccountingNo?: number | string | null
 }
 
 export type LicenseDocument = {
@@ -222,12 +241,7 @@ export type VendorProfileDetailsFormData = {
   city?: string
   zipCode?: string
   capacity?: null | number
-  einNumber?: string
-  ssnNumber?: string
   paymentTerm?: Select
-  creditCard?: boolean
-  ach?: boolean
-  check?: boolean
   agreementSignedDate?: Date
   autoInsuranceExpDate?: Date
   coiGlExpDate?: Date
@@ -263,7 +277,40 @@ export type Trade = {
   skill: string
   active: boolean
 }
-
+export type VendorAccountsFormValues = {
+  einNumber?: string
+  ssnNumber?: string
+  creditCard?: boolean
+  ach?: boolean
+  check?: boolean
+  businessPhoneNumber: string
+  businessNumberExtention: string
+  businessPhoneNumberExtension?: string
+  businessEmailAddress: string
+  ownerName?: string
+  companyName?: string
+  streetAddress?: string
+  state?: Select
+  city?: string
+  zipCode?: string
+  bankName?: string
+  bankPrimaryContact?: string
+  bankEmail?: string
+  bankPhoneNumber: string
+  bankAddress?: string
+  bankCity?: string
+  bankState?: string
+  bankZipCode?: string
+  bankRoutingNo?: string
+  bankAccountingNo?: string
+  bankChecking?: boolean
+  bankSaving?: boolean
+  voidedCheckFile?: File
+  bankVoidedCheckDate?: string | null
+  bankVoidedCheckStatus?: boolean | string | null
+  ownersSignature: any
+  bankDateSignature: string | Date | null
+}
 type TradeFormValues = {
   trade: Trade
   checked: boolean
@@ -359,4 +406,31 @@ export type Vendors = {
   market: string
   businessEmailAddress: string
   businessPhoneNumber: string
+}
+
+export const preventNumber = e => {
+  let keyCode = e.keyCode ? e.keyCode : e.which
+  //  to prevent the special characters and Numbers
+  if (
+    (keyCode > 47 && keyCode < 58) ||
+    keyCode === 36 ||
+    keyCode === 34 ||
+    keyCode === 35 ||
+    keyCode === 37 ||
+    keyCode === 38 ||
+    keyCode === 39 ||
+    keyCode === 40 ||
+    keyCode === 41 ||
+    keyCode === 42 ||
+    keyCode === 43 ||
+    keyCode === 44 ||
+    keyCode === 45 ||
+    keyCode === 46 ||
+    keyCode === 47 ||
+    keyCode === 64 ||
+    keyCode === 94 ||
+    keyCode === 63
+  ) {
+    e.preventDefault()
+  }
 }

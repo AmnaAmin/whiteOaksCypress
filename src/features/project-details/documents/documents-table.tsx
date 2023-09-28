@@ -19,12 +19,14 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { mapDataForDocxExpandableRows } from '../transactions/transaction.constants'
 
 export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const { projectId } = useParams<'projectId'>()
   const { documents, isLoading: isLoadingDocuments } = useDocuments({
     projectId,
   })
+  const [dataDocx, setDataDocx] = useState<any>([])
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
 
@@ -40,10 +42,15 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
     postDocumentColumn(columns)
   }
 
-  useEffect(() => {
-    setTotalPages(Math.ceil((documents?.length ?? 0) / 50))
-    setTotalRows(documents?.length ?? 0)
-  }, [documents])
+  // sort the array and specify that the value with workOrderId null comes before all other values, and that all other values are equal
+  const sortTransData = data => {
+    if (data && data?.length > 0) {
+      data.sort((x, y) => {
+        return x?.workOrderId === null ? -1 : y?.workOrderId === null ? 1 : 0
+      })
+      return data
+    } else return []
+  }
 
   const setPageCount = rows => {
     if (!rows?.length) {
@@ -58,6 +65,17 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
   const onRowClick = row => {}
 
   const { isVendor } = useUserRolesSelector()
+
+  useEffect(() => {
+    if (documents && documents?.length > 0) {
+      setDataDocx(mapDataForDocxExpandableRows(documents as any, isVendor as boolean))
+    }
+  }, [documents])
+
+  useEffect(() => {
+    setTotalPages(Math.ceil((documents?.length ?? 0) / 50))
+    setTotalRows(documents?.length ?? 0)
+  }, [documents])
 
   return (
     <>
@@ -79,7 +97,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
           <TableContextProvider
             totalPages={documents?.length ? totalPages : -1}
             manualPagination={false}
-            data={documents}
+            data={sortTransData(dataDocx)}
             columns={tableColumns}
             isExpandable={true}
           >
@@ -93,7 +111,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
                     refetch={refetchColumns}
                     disabled={isLoading}
                     onSave={onSave}
-                    columns={settingColumns}
+                    columns={settingColumns?.filter(t => !!t.contentKey)}
                   />
                 )}
               </ButtonsWrapper>
