@@ -17,9 +17,9 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'terms',
-    accessorKey: 'gridPaymentTerm',
+    accessorKey: 'paymentTerm',
     accessorFn(cellInfo) {
-      return cellInfo.gridPaymentTerm
+      return cellInfo?.gridPaymentTerm ? cellInfo.gridPaymentTerm : cellInfo.paymentTerm
     },
   },
   {
@@ -30,7 +30,7 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: 'vendorWOExpectedPaymentDate',
     accessorKey: 'gridExpectedPaymentDate',
     accessorFn(cellInfo) {
-      return dateFormat(cellInfo.gridExpectedPaymentDate)
+      return cellInfo.gridExpectedPaymentDate ? dateFormat(cellInfo.gridExpectedPaymentDate) : dateFormat(cellInfo.expectedPaymentDate)
     },
     meta: { format: 'date' },
   },
@@ -103,4 +103,5 @@ export const RECEIVABLE_TABLE_QUERY_KEYS = {
   type: 'type.contains',
   isReceivable: 'isReceivable.equals',
   displayId: 'displayId.contains',
+  paymentTerm: 'paymentTerm.equals'
 }
