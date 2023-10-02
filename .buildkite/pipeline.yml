@@ -22,4 +22,4 @@ steps:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
       ENV: 'dev'
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
-      REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
+      REACT_APP_ESTIMATES_URL: 'https://estimates-dev.woaharvest.com'
