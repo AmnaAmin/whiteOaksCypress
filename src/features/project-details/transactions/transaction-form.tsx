@@ -174,6 +174,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
   const { managerEnabled } = useManagerEnabled(projectId)
+  const isDM = managerEnabled?.allowed
   const {
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
@@ -966,7 +967,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 <Select
                                   {...field}
                                   options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                  isDisabled={!isAdminEnabled && !isFPM}
+                                  isDisabled={!isDM}
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
                                   onChange={statusOption => {

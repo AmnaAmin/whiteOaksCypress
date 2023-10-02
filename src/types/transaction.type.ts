@@ -289,8 +289,8 @@ export type ChangeOrderType = {
   paymentReceived: string | null
   documents: Document[]
   systemGenerated: boolean
-  verifiedByFpm: null
-  verifiedByManager: null
+  verifiedByFpm: string
+  verifiedByManager: string
   paymentProcessed: null
   payAfter: null
 }
