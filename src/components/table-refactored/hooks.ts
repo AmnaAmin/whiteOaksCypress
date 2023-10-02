@@ -69,9 +69,9 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     }
     // This filter will apply when user select a FPM from the FPM list
     if (userIds?.length > 0) {
-      finalFilters = [...finalFilters, { id: 'projectManagerId', value: userIds?.join(',') }]
+      finalFilters = [...finalFilters, { id: 'pcOrFpmUserId', value: userIds?.join(',') }]
     } else {
-      finalFilters = finalFilters?.filter(f => f.id !== 'projectManagerId')
+      finalFilters = finalFilters?.filter(f => f.id !== 'pcOrFpmUserId')
     }
 
     const queryStringWithoutPagination = getAPIFilterQueryString(
