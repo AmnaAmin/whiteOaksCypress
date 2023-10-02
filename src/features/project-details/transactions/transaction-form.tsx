@@ -926,13 +926,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                     <GridItem>
                       <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
-                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="VerifiedByFPM">
-                          {t(`${TRANSACTION}.VerifiedByFPM`)}
+                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="fpmApproved">
+                          {t(`${TRANSACTION}.fpmApproved`)}
                         </FormLabel>
                         <Controller
                           // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           control={control}
-                          name="VerifiedByFPM"
+                          name="fpmApproved"
                           render={({ field, fieldState }) => {
                             return (
                               <>
@@ -953,13 +953,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                     </GridItem>
                     <GridItem>
                       <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
-                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="VerifiedByDM">
-                          {t(`${TRANSACTION}.VerifiedByDM`)}
+                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="managerApproved">
+                          {t(`${TRANSACTION}.managerApproved`)}
                         </FormLabel>
                         <Controller
                           // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           control={control}
-                          name="VerifiedByDM"
+                          name="managerApproved"
                           render={({ field, fieldState }) => {
                             return (
                               <>

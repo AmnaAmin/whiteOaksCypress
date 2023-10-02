@@ -489,8 +489,8 @@ export const parseChangeOrderAPIPayload = async (
     projectId: projectId ?? '',
     paymentProcessed: formValues.paymentProcessed,
     payAfterDate: formValues.payAfterDate,
-    VerifiedByFPM: formValues.VerifiedByFPM,
-    VerifiedByDM: formValues.VerifiedByDM,
+    fpmApproved: formValues.fpmApproved,
+    managerApproved: formValues.managerApproved,
     ...againstProjectSOWPayload,
   }
 }
@@ -544,8 +544,8 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     refund: false,
     paymentProcessed: null,
     payAfterDate: null,
-    VerifiedByFPM: null,
-    VerifiedByDM: null,
+    fpmApproved: null,
+    managerApproved: null,
   }
 }
 
@@ -660,8 +660,8 @@ export const parseTransactionToFormValues = (
     payDateVariance,
     paymentProcessed: null,
     payAfterDate: null,
-    VerifiedByFPM: null,
-    VerifiedByDM: null,
+    fpmApproved: null,
+    managerApproved: null,
     paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
     refund: isRefunded,
     transaction:
