@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import {  render, screen } from '@testing-library/react'
 import TableColumnSettings from '../table-column-settings'
 import userEvent from '@testing-library/user-event'
 import { TableNames } from 'types/table-column.types'
@@ -201,8 +201,8 @@ describe('Table columns setting modal Test Cases', () => {
 
     // const list = screen.getByTestId('column-settings-list')
     const allItems = document.querySelectorAll('#column-settings-list > div')
-    const firstItem = allItems[0] as ChildNode
-    const secondItem = allItems[1] as ChildNode
+    // const firstItem = allItems[0] as ChildNode
+    // const secondItem = allItems[1] as ChildNode
     // fireEvent.dragStart(firstItem)
     // fireEvent.dragOver(secondItem)
     // fireEvent.dragEnter(secondItem)
