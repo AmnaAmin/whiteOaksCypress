@@ -37,6 +37,7 @@ import {
   useTransactionTypes,
   useWorkOrderAwardStats,
   useWorkOrderChangeOrders,
+  useManagerEnabled,
 } from 'api/transactions'
 import {
   ChangeOrderType,
@@ -172,6 +173,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
+  const { managerEnabled } = useManagerEnabled(projectId)
   const {
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
@@ -935,6 +937,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 <Select
                                   {...field}
                                   options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
+                                  value={field.value}
                                   isDisabled={!isAdminEnabled && !isFPM}
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}

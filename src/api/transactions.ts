@@ -720,7 +720,6 @@ export const useChangeOrderMutation = (projectId?: string) => {
 }
 
 export const useChangeOrderUpdateMutation = (projectId?: string) => {
-  console.log('============================================================')
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -788,6 +787,19 @@ export const useTransaction = (transactionId?: number) => {
   return {
     transaction: changeOrder,
     ...rest,
+  }
+}
+
+export const useManagerEnabled = (projectId?: string) => {
+  const client = useClient()
+
+  const { data: managerEnabled, ...rest } = useQuery(['managerEnabled'], async () => {
+    const response = await client(`user//draw/permission/${projectId}`, {})
+    return response?.data
+  })
+
+  return {
+    managerEnabled,
   }
 }
 
