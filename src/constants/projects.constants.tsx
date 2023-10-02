@@ -85,6 +85,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   lienRightExpireDateEnd: 'lienRightExpireDate.lessThanOrEqual',
   latestNoteAddedTime: 'latestNoteAddedTime.equals',
   noteOwner: 'noteOwner.contains',
+  pcOrFpmUserId: 'pcOrFpmUserId.in',
 }
 
 const PopoverTooltip = ({ value, title }) => {
