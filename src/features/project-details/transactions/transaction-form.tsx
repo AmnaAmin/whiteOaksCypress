@@ -939,7 +939,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
                                   onChange={statusOption => {
-                                    field.onChange(statusOption)
+                                    field.onChange(statusOption.value)
                                   }}
                                 />
                                 {/* <FormErrorMessage>{fieldState.VerifiedByFPM?.message}</FormErrorMessage> */}
@@ -955,7 +955,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           {t(`${TRANSACTION}.verifiedByManager`)}
                         </FormLabel>
                         <Controller
-                          // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           control={control}
                           name="verifiedByManager"
                           render={({ field, fieldState }) => {
@@ -968,7 +967,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
                                   onChange={statusOption => {
-                                    field.onChange(statusOption)
+                                    console.log('=========>', statusOption.value)
+                                    field.onChange(statusOption.value) // Only pass the value to field.onChange
                                   }}
                                 />
                                 {/* <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage> */}
