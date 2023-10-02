@@ -213,7 +213,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
              
             <HStack spacing="16px" mr="13px" my="16px">
             {!isAdmin && (
-               <Button mr="750px" colorScheme="darkPrimary" onClick={event => clearSettingType(tableNames)} size="md">
+               <Button mr="770px" colorScheme="darkPrimary" onClick={event => clearSettingType(tableNames)} size="md">
                   {t('resetSettings')}
                 </Button>
               )}
