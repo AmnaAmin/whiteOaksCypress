@@ -178,7 +178,7 @@ describe('Table columns setting modal Test Cases', () => {
   test('Setting Modal should render properly', async () => {
     expect(true).toBe(true)
     const onSave = jest.fn
-    render(<TableColumnSettings onSave={onSave} disabled={false} columns={columnSettings} tableNames={TableNames.testProject} />)
+    render(<TableColumnSettings onSave={onSave} disabled={false} columns={columnSettings} tableNames={TableNames.project} />)
 
     userEvent.click(screen.getByTestId('column-settings-button'))
 
