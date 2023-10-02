@@ -489,8 +489,8 @@ export const parseChangeOrderAPIPayload = async (
     projectId: projectId ?? '',
     paymentProcessed: formValues.paymentProcessed,
     payAfterDate: formValues.payAfterDate,
-    fpmApproved: formValues.fpmApproved,
-    managerApproved: formValues.managerApproved,
+    verifiedByFpm: formValues.verifiedByFpm,
+    verifiedByManager: formValues.verifiedByManager,
     ...againstProjectSOWPayload,
   }
 }
@@ -544,8 +544,8 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     refund: false,
     paymentProcessed: null,
     payAfterDate: null,
-    fpmApproved: null,
-    managerApproved: null,
+    verifiedByFpm: null,
+    verifiedByManager: null,
   }
 }
 
@@ -660,8 +660,8 @@ export const parseTransactionToFormValues = (
     payDateVariance,
     paymentProcessed: null,
     payAfterDate: null,
-    fpmApproved: null,
-    managerApproved: null,
+    verifiedByFpm: null,
+    verifiedByManager: null,
     paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
     refund: isRefunded,
     transaction:
@@ -675,7 +675,6 @@ export const parseTransactionToFormValues = (
 }
 
 export const useChangeOrderMutation = (projectId?: string) => {
-  console.log('heloo========')
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()

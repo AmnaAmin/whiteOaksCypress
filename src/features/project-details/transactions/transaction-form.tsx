@@ -19,9 +19,6 @@ import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'rea
 import { DevTool } from '@hookform/devtools'
 import addDays from 'date-fns/addDays'
 import { datePickerFormat } from 'utils/date-time-utils'
-import { FPMManagerTypes } from 'api/user-management'
-
-// import { Button } from 'components/button/button'
 import Select from 'components/form/react-select'
 
 import {
@@ -224,7 +221,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const workOrderId = against?.value
   const isRefund = useWatch({ name: 'refund', control })
   const watchStatus = watch('status')
-  // const payAfter = invoicedDate + paymentTerm
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const date = new Date(e.target.value)
@@ -926,13 +922,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                     <GridItem>
                       <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
-                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="fpmApproved">
-                          {t(`${TRANSACTION}.fpmApproved`)}
+                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByFpm">
+                          {t(`${TRANSACTION}.verifiedByFpm`)}
                         </FormLabel>
                         <Controller
                           // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           control={control}
-                          name="fpmApproved"
+                          name="verifiedByFpm"
                           render={({ field, fieldState }) => {
                             return (
                               <>
@@ -942,7 +938,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                   isDisabled={!isAdminEnabled && !isFPM}
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
-                                  onChange={field.onChange}
+                                  onChange={statusOption => {
+                                    field.onChange(statusOption)
+                                  }}
                                 />
                                 {/* <FormErrorMessage>{fieldState.VerifiedByFPM?.message}</FormErrorMessage> */}
                               </>
@@ -953,13 +951,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                     </GridItem>
                     <GridItem>
                       <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
-                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="managerApproved">
-                          {t(`${TRANSACTION}.managerApproved`)}
+                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByManager">
+                          {t(`${TRANSACTION}.verifiedByManager`)}
                         </FormLabel>
                         <Controller
                           // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           control={control}
-                          name="managerApproved"
+                          name="verifiedByManager"
                           render={({ field, fieldState }) => {
                             return (
                               <>
@@ -969,7 +967,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                   isDisabled={!isAdminEnabled && !isFPM}
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
-                                  onChange={field.onChange}
+                                  onChange={statusOption => {
+                                    field.onChange(statusOption)
+                                  }}
                                 />
                                 {/* <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage> */}
                               </>
