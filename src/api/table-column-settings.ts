@@ -7,6 +7,7 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 import { useTranslation } from 'react-i18next'
 import { useMemo } from 'react'
+import { useToast } from '@chakra-ui/react'
 
 type generateSettingColumnProps = {
   field: string
@@ -128,3 +129,80 @@ export const useTableColumnSettingsUpdateMutation = (tableName: TableNames) => {
     },
   )
 }
+
+export const useResetSettingsMutation  = () => {
+    const client = useClient()
+    const queryClient = useQueryClient()
+    const toast = useToast()
+    return useMutation(
+      (tableName: any) => {
+        return client(`column/delete/${tableName}`, {
+          method: 'DELETE',
+        })
+      },
+      {
+        onSuccess() {
+          queryClient.invalidateQueries(['GetGridColumn'])
+          toast({
+            title: 'Settings Reset',
+            description: `Settings deleted successfully.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+         
+        },
+  
+        onError(error: any) {
+          toast({
+            title: 'Client Type',
+            description: (error.title as string) ?? 'Unable to delete Settings.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        },
+      },
+    )
+  }
+  
+  export const useResetAllSettingsMutation  = () => {
+    const client = useClient()
+    const queryClient = useQueryClient()
+    const toast = useToast()
+    return useMutation(
+      (tableName: any) => {
+        return client(`column/delete/users/${tableName}`, {
+          method: 'DELETE',
+        })
+      },
+      {
+        onSuccess() {
+          queryClient.invalidateQueries(['GetGridColumn'])
+          toast({
+            title: 'Settings Reset',
+            description: `Settings deleted successfully.`,
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+         
+        },
+  
+        onError(error: any) {
+          toast({
+            title: 'Client Type',
+            description: (error.title as string) ?? 'Unable to delete Settings.',
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+        },
+      },
+    )
+  }
+  

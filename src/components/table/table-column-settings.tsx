@@ -23,6 +23,8 @@ import Board, { moveCard } from '@asseinfo/react-kanban'
 import { BiGridVertical } from 'react-icons/bi'
 import React from 'react'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useResetAllSettingsMutation, useResetSettingsMutation } from 'api/table-column-settings'
+import { TableNames } from 'types/table-column.types'
 
 export type ColumnType = {
   id?: number
@@ -38,9 +40,10 @@ interface TableColumnSettingsProps {
   isOpen?: boolean
   disabled?: boolean
   refetch?: any
+  tableNames: TableNames
 }
 
-const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: TableColumnSettingsProps) => {
+const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, tableNames }: TableColumnSettingsProps) => {
   const [paginationRecord, setPaginationRecord] = useState<ColumnType | undefined>(
     columns?.find(c => c.field === 'pagination'),
   )
@@ -135,6 +138,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
     // Reset the managedBoard to the initialBoard
     setManagedBoard(initialBoard)
     onClose()
+    refetch()
     setModalKey(prevKey => prevKey + 1)
   }
 
@@ -143,6 +147,8 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
     refetch()
   }
   const { isAdmin } = useUserRolesSelector()
+  const { mutate: clearSettingType } = useResetSettingsMutation()
+  const { mutate: clearAllSettingType } = useResetAllSettingsMutation()
   return (
     <>
       <Box _hover={{ bg: 'darkPrimary.50', roundedBottomRight: '6px' }}>
@@ -207,12 +213,22 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
              
             <HStack spacing="16px" mr="13px" my="16px">
             {!isAdmin && (
-              <Button mr="750px" colorScheme="darkPrimary" onClick={saveModal} size="md">
-                {t('resetSettings')}
-              </Button>
+               <Button mr="750px" colorScheme="darkPrimary" onClick={event => clearSettingType(tableNames)} size="md">
+                  {t('resetSettings')}
+                </Button>
               )}
               {isAdmin && (
-                <Button mr="750px" colorScheme="darkPrimary" onClick={saveModal} size="md">
+                <Button colorScheme="darkPrimary" onClick={event => clearSettingType(tableNames)} size="md">
+                  {t('resetSettings')}
+                </Button>
+              )}
+              {isAdmin && (
+                <Button
+                  mr="560px !important"
+                  colorScheme="darkPrimary"
+                  onClick={event => clearAllSettingType(tableNames)}
+                  size="md"
+                >
                   {t('resetAllSettings')}
                 </Button>
               )}

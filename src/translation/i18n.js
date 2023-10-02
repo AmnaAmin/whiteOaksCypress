@@ -209,7 +209,7 @@ i18n.use(initReactI18next).init({
         profits: 'Profits',
         profitmargins: 'Profit Margins',
         resetSettings: 'Clear Settings',
-        resetAllSettings: 'Clear All Settings',
+        resetAllSettings: 'Clear All Users Settings',
 
         // Projects-WorkOrderDetails
         editVendorWorkOrder: 'Edit Vendor Work Order',

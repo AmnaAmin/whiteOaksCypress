@@ -181,6 +181,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
                 disabled={isLoading}
                 onSave={onSave}
                 columns={settingColumns}
+                tableNames={TableNames.receivable}
               />
             )}
           </ButtonsWrapper>

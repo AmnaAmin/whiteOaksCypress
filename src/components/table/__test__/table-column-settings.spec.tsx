@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import TableColumnSettings from '../table-column-settings'
 import userEvent from '@testing-library/user-event'
+import { TableNames } from 'types/table-column.types'
 
 const columnSettings = [
   {
@@ -177,7 +178,7 @@ describe('Table columns setting modal Test Cases', () => {
   test('Setting Modal should render properly', async () => {
     expect(true).toBe(true)
     const onSave = jest.fn
-    render(<TableColumnSettings onSave={onSave} disabled={false} columns={columnSettings} />)
+    render(<TableColumnSettings onSave={onSave} disabled={false} columns={columnSettings} tableNames={TableNames.testProject} />)
 
     userEvent.click(screen.getByTestId('column-settings-button'))
 

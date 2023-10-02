@@ -108,6 +108,7 @@ export const MarketsTable: React.FC<{}> = () => {
                   disabled={isLoading}
                   onSave={onSave}
                   columns={settingColumns}
+                  tableNames={TableNames.markets}
                 />
               )}
             </ButtonsWrapper>
