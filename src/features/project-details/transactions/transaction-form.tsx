@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, ChangeEvent } from 'react'
 import {
   FormErrorMessage,
   FormLabel,
@@ -17,6 +17,9 @@ import {
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
+import addDays from 'date-fns/addDays'
+import { datePickerFormat } from 'utils/date-time-utils'
+import { FPMManagerTypes } from 'api/user-management'
 
 // import { Button } from 'components/button/button'
 import Select from 'components/form/react-select'
@@ -160,7 +163,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
-  const { isAdmin, isVendor, isAccounting } = useUserRolesSelector()
+  const { isAdmin, isVendor, isAccounting, isFPM } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -222,6 +225,34 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const workOrderId = against?.value
   const isRefund = useWatch({ name: 'refund', control })
   const watchStatus = watch('status')
+  // const payAfter = invoicedDate + paymentTerm
+
+  const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const date = new Date(e.target.value)
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    const paymentTerm = getValues().paymentTerm?.value
+
+    // Do not calculated WOA expect date if payment term is not selected
+    if (!paymentTerm) return
+
+    const payAfterDate = addDays(utcDate, paymentTerm)
+    setValue('payAfterDate', datePickerFormat(payAfterDate))
+  }
+
+  const onPaymentTermChange = (option: SelectOption) => {
+    const { invoicedDate } = getValues()
+    if (invoicedDate === null || invoicedDate === '') {
+      return
+    }
+
+    const date = new Date(invoicedDate as string)
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    const paymentTerm = Number(option.value)
+
+    if (!date) return
+    const payAfterDate = addDays(utcDate, paymentTerm)
+    setValue('payAfterDate', datePickerFormat(payAfterDate))
+  }
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
@@ -407,6 +438,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const onSubmit = useCallback(
     async (values: FormValues) => {
+      console.log('========>', values)
       if (hasPendingDrawsOnPaymentSave(values)) {
         return
       }
@@ -744,6 +776,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                   isDisabled={isPaymentTermDisabled}
                                   onChange={paymentTermOption => {
                                     field.onChange(paymentTermOption)
+                                    onPaymentTermChange(paymentTermOption)
                                   }}
                                 />
                                 <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -775,6 +808,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           isDisabled={isApproved && !isAdminEnabled}
                           {...register('invoicedDate', {
                             required: isInvoicedDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
+                            onChange: onInvoiceBackDateChange,
                           })}
                         />
                         <FormErrorMessage>{errors?.invoicedDate?.message}</FormErrorMessage>
@@ -882,7 +916,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           type="date"
                           // variant={isPaidDateRequired ? 'required-field' : 'outline'}
                           size="md"
-                          // isDisabled={isPaidDateDisabled}
+                          readOnly
                           css={calendarIcon}
                           {...register('payAfterDate', {
                             required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
@@ -907,7 +941,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 <Select
                                   {...field}
                                   options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                  // isDisabled={isApproved}
+                                  isDisabled={!isAdminEnabled && !isFPM}
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
                                   onChange={field.onChange}
@@ -934,7 +968,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 <Select
                                   {...field}
                                   options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                  // isDisabled={isApproved}
+                                  isDisabled={!isAdminEnabled && FPMManagerTypes.District}
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
                                   onChange={field.onChange}

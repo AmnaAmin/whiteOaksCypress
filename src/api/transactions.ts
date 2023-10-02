@@ -487,7 +487,10 @@ export const parseChangeOrderAPIPayload = async (
     lineItems,
     documents,
     projectId: projectId ?? '',
-
+    paymentProcessed: formValues.paymentProcessed,
+    payAfterDate: formValues.payAfterDate,
+    VerifiedByFPM: formValues.VerifiedByFPM,
+    VerifiedByDM: formValues.VerifiedByDM,
     ...againstProjectSOWPayload,
   }
 }
@@ -672,6 +675,7 @@ export const parseTransactionToFormValues = (
 }
 
 export const useChangeOrderMutation = (projectId?: string) => {
+  console.log('heloo========')
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()
@@ -717,6 +721,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
 }
 
 export const useChangeOrderUpdateMutation = (projectId?: string) => {
+  console.log('============================================================')
   const client = useClient()
   const toast = useToast()
   const queryClient = useQueryClient()

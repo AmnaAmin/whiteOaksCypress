@@ -222,6 +222,10 @@ export type ChangeOrderPayload = {
   paymentTerm: string | null
   payDateVariance: string | null
   documents?: Array<any>
+  paymentProcessed: string | null
+  payAfterDate: string | null
+  VerifiedByFPM: string | null
+  VerifiedByDM: string | null
 }
 
 export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
@@ -239,6 +243,10 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   modifiedBy: string
   vendorId: number | null
   systemGenerated: boolean | null
+  paymentProcessed: string | null
+  payAfterDate: string | null
+  VerifiedByFPM: string | null
+  VerifiedByDM: string | null
 }
 
 type LineItem = {
