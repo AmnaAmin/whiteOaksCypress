@@ -34,6 +34,7 @@ import {
   CHANGE_ORDER_DEFAULT_VALUE,
   LIEN_WAIVER_DEFAULT_VALUES,
   TRANSACTION_FEILD_DEFAULT,
+  TRANSACTION_FPM_DM_STATUS_OPTIONS,
   TRANSACTION_MARK_AS_OPTIONS,
   TRANSACTION_STATUS_OPTIONS,
 } from 'features/project-details/transactions/transaction.constants'
@@ -426,6 +427,7 @@ export const parseChangeOrderAPIPayload = async (
   formValues: FormValues,
   projectId?: string,
 ): Promise<ChangeOrderPayload> => {
+  console.log('🚀 ~ file: transactions.ts:431 ~ formValues:', formValues)
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
   const newExpectedCompletionDate = formValues.newExpectedCompletionDate as string
 
@@ -489,8 +491,8 @@ export const parseChangeOrderAPIPayload = async (
     projectId: projectId ?? '',
     paymentProcessed: formValues.paymentProcessed,
     payAfterDate: formValues.payAfterDate,
-    verifiedByFpm: formValues.verifiedByFpm,
-    verifiedByManager: formValues.verifiedByManager,
+    verifiedByFpm: formValues.verifiedByFpm?.value,
+    verifiedByManager: formValues.verifiedByManager?.value,
     ...againstProjectSOWPayload,
   }
 }
@@ -514,6 +516,8 @@ export const parseChangeOrderUpdateAPIPayload = async (
     vendorId: transaction.vendorId as number,
     systemGenerated: transaction?.systemGenerated,
     ...payload,
+    verifiedByFpm: formValues.verifiedByFpm?.value,
+    verifiedByManager: formValues.verifiedByManager?.value,
   }
 }
 
@@ -602,6 +606,7 @@ export const parseTransactionToFormValues = (
   const findOption = (value, options): SelectOption | null => {
     return options.find(option => option.value?.toString() === value) ?? null
   }
+
   const payDateVariance = calculatePayDateVariance(transaction.clientApprovedDate, transaction.paidDate)
 
   const lienWaiverDocument = getLatestDocument(transaction.documents?.filter(doc => doc.fileType === 'lienWaiver.pdf'))
@@ -621,6 +626,14 @@ export const parseTransactionToFormValues = (
     transaction.sowRelatedWorkOrderId === null
       ? workOrderOptions[0]
       : findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions)
+
+  const vFpmOptions =
+    transaction.verifiedByFpm === null ? null : findOption(transaction.verifiedByFpm, TRANSACTION_FPM_DM_STATUS_OPTIONS)
+
+  const vDmOptions =
+    transaction.verifiedByManager === null
+      ? null
+      : findOption(transaction.verifiedByManager, TRANSACTION_FPM_DM_STATUS_OPTIONS)
 
   const isRefunded =
     [
@@ -660,8 +673,8 @@ export const parseTransactionToFormValues = (
     payDateVariance,
     paymentProcessed: null,
     payAfterDate: null,
-    verifiedByFpm: null,
-    verifiedByManager: null,
+    verifiedByFpm: vFpmOptions,
+    verifiedByManager: vDmOptions,
     paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
     refund: isRefunded,
     transaction:

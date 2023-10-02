@@ -880,16 +880,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           data-testid="payment-processed"
                           id="paymentProcessed"
                           type="date"
-                          // variant={isPaidDateRequired ? 'required-field' : 'outline'}
                           size="md"
                           // isDisabled={isPaidDateDisabled}
                           css={calendarIcon}
-                          {...register(
-                            'paymentProcessed',
-                            // , {
-                            //   required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
-                            // }
-                          )}
+                          {...register('paymentProcessed')}
                         />
                         <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage>
                       </FormControl>
@@ -911,7 +905,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           data-testid="pay-after"
                           id="payAfterDate"
                           type="date"
-                          // variant={isPaidDateRequired ? 'required-field' : 'outline'}
                           size="md"
                           readOnly
                           css={calendarIcon}
@@ -929,7 +922,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           {t(`${TRANSACTION}.verifiedByFpm`)}
                         </FormLabel>
                         <Controller
-                          // rules={{ required: REQUIRED_FIELD_ERROR_MESSAGE }}
                           control={control}
                           name="verifiedByFpm"
                           render={({ field, fieldState }) => {
@@ -938,15 +930,15 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 <Select
                                   {...field}
                                   options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                  value={field.value}
+                                  // value={field?.value}
                                   isDisabled={!isAdminEnabled && !isFPM}
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
                                   onChange={statusOption => {
-                                    field.onChange(statusOption.value)
+                                    field.onChange(statusOption)
                                   }}
                                 />
-                                {/* <FormErrorMessage>{fieldState.VerifiedByFPM?.message}</FormErrorMessage> */}
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                               </>
                             )
                           }}
@@ -971,11 +963,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
                                   onChange={statusOption => {
-                                    console.log('=========>', statusOption.value)
-                                    field.onChange(statusOption.value) // Only pass the value to field.onChange
+                                    field.onChange(statusOption)
                                   }}
                                 />
-                                {/* <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage> */}
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                               </>
                             )
                           }}

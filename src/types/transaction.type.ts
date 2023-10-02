@@ -192,8 +192,8 @@ export interface FormValues {
   lienWaiver?: LienWaiverFormValues
   paymentProcessed: string | null
   payAfterDate: string | null
-  verifiedByFpm: string | null
-  verifiedByManager: string | null
+  verifiedByFpm: SelectOption | null
+  verifiedByManager: SelectOption | null
 }
 
 export type ChangeTransaction = {
@@ -224,8 +224,8 @@ export type ChangeOrderPayload = {
   documents?: Array<any>
   paymentProcessed: string | null
   payAfterDate: string | null
-  verifiedByFpm: string | null
-  verifiedByManager: string | null
+  verifiedByFpm: SelectOption | null
+  verifiedByManager: SelectOption | null
 }
 
 export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
@@ -245,8 +245,8 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   systemGenerated: boolean | null
   paymentProcessed: string | null
   payAfterDate: string | null
-  verifiedByFpm: string | null
-  verifiedByManager: string | null
+  verifiedByFpm: SelectOption | null
+  verifiedByManager: SelectOption | null
 }
 
 type LineItem = {
@@ -289,8 +289,8 @@ export type ChangeOrderType = {
   paymentReceived: string | null
   documents: Document[]
   systemGenerated: boolean
-  verifiedByFpm: string
-  verifiedByManager: string
+  verifiedByFpm: SelectOption | null
+  verifiedByManager: SelectOption | null
   paymentProcessed: null
   payAfter: null
 }

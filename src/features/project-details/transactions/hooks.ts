@@ -174,8 +174,8 @@ export const useFieldDisabledEnabledDecision = (
       !transaction ||
       (isStatusApproved && !isAdminEnabled) ||
       !(
-        transaction?.verifiedByFpm === TransactionStatusValues.approved &&
-        transaction?.verifiedByManager === TransactionStatusValues.approved
+        transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
+        transaction?.verifiedByManager?.value === TransactionStatusValues.approved
       ),
     isStatusDisabled:
       (isStatusApproved && !(isAdmin || isAccounting)) ||
@@ -183,8 +183,8 @@ export const useFieldDisabledEnabledDecision = (
       lateAndFactoringFeeForVendor ||
       isFactoringFeeSysGenerated ||
       !(
-        transaction?.verifiedByFpm === TransactionStatusValues.approved &&
-        transaction?.verifiedByManager === TransactionStatusValues.approved
+        transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
+        transaction?.verifiedByManager?.value === TransactionStatusValues.approved
       ),
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
