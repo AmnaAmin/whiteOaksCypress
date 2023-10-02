@@ -80,7 +80,6 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
-  TRANSACTION_MARK_AS_OPTIONS_ARRAY,
   TRANSACTION_FPM_DM_STATUS_OPTIONS,
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
@@ -438,7 +437,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const onSubmit = useCallback(
     async (values: FormValues) => {
-      console.log('========>', values)
       if (hasPendingDrawsOnPaymentSave(values)) {
         return
       }
@@ -968,7 +966,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 <Select
                                   {...field}
                                   options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                  isDisabled={!isAdminEnabled && FPMManagerTypes.District}
+                                  isDisabled={!isAdminEnabled && !isFPM}
                                   size="md"
                                   selectProps={{ isBorderLeft: true }}
                                   onChange={field.onChange}

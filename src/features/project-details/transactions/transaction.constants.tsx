@@ -34,7 +34,7 @@ export const LIEN_WAIVER_DEFAULT_VALUES = {
 }
 
 export const TRANSACTION_STATUS_OPTIONS = [
-  { value: TransactionStatusValues.pending, label: 'Pending' },
+  // { value: TransactionStatusValues.pending, label: 'Pending' },
   { value: TransactionStatusValues.approved, label: 'Approved' },
   { value: TransactionStatusValues.cancelled, label: 'Cancelled' },
   { value: TransactionStatusValues.denied, label: 'Denied' },
