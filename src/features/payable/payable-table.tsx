@@ -214,7 +214,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
                     disabled={isLoading}
                     onSave={onSave}
                     columns={settingColumns}
-                    tableNames={TableNames.payable}
+                    tableName={TableNames.payable}
                   />
                 )}
               </ButtonsWrapper>

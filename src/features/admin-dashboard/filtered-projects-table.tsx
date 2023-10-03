@@ -104,7 +104,7 @@ export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
                 disabled={isLoading}
                 onSave={onSave}
                 columns={settingColumns.filter(col => !(columnVisibility[col?.contentKey] === false))}
-                tableNames={TableNames.adminDashboard}
+                tableName={TableNames.adminDashboard}
               />
             )}
           </ButtonsWrapper>

@@ -56,7 +56,7 @@ export const WithAllComponents = () => {
       <TableFooter position="sticky" bottom="0">
         <ButtonsWrapper>
           <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos" />
-          {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} tableNames={TableNames.testProject} />}
+          {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} tableName={TableNames.testProject} />}
         </ButtonsWrapper>
 
         <TablePagination>
@@ -131,7 +131,7 @@ export const WithExportAndColumnSettings = () => {
       <TableFooter position="sticky" bottom="0">
         <ButtonsWrapper>
           <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos" />
-          {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} tableNames={TableNames.testProject}/>}
+          {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} tableName={TableNames.testProject}/>}
         </ButtonsWrapper>
       </TableFooter>
     </TableContextProvider>
@@ -143,7 +143,7 @@ export const TableFooterComponent = () => {
     <TableFooter>
       <ButtonsWrapper>
         <ExportCustomButton columns={columns} data={defaultData} colorScheme="brand" />
-        <TableColumnSettings disabled={false} onSave={() => {}} columns={settingColumns} tableNames={TableNames.testProject} />
+        <TableColumnSettings disabled={false} onSave={() => {}} columns={settingColumns} tableName={TableNames.testProject} />
       </ButtonsWrapper>
     </TableFooter>
   )
@@ -172,7 +172,7 @@ export const TableInsideScrollableElement = () => {
         <TableFooter position="sticky" bottom="0">
           <ButtonsWrapper>
             <ExportCustomButton columns={tableColumns} data={users} colorScheme="brand" fileName="todos" />
-            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} tableNames={TableNames.testProject} />}
+            {settingColumns && <TableColumnSettings disabled={isLoading} onSave={onSave} columns={settingColumns} tableName={TableNames.testProject} />}
           </ButtonsWrapper>
           <TablePagination>
             <ShowCurrentPageWithTotal />

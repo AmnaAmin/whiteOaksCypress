@@ -93,7 +93,7 @@ export const DevtekUsersTable = React.forwardRef((props: any, ref) => {
                   disabled={isLoading}
                   onSave={onSave}
                   columns={settingColumns}
-                  tableNames={TableNames.devtekUsersTable}
+                  tableName={TableNames.devtekUsersTable}
                 />
               )}
             </ButtonsWrapper>

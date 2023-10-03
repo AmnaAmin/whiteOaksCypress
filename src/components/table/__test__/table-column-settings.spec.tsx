@@ -189,7 +189,7 @@ describe('Table columns setting modal Test Cases', () => {
           onSave={onSave}
           disabled={false}
           columns={columnSettings}
-          tableNames={TableNames.testProject}
+          tableName={TableNames.testProject}
         />
       </QueryClientProvider>
     )

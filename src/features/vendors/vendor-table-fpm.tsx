@@ -159,7 +159,7 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
                   disabled={isFPMVendorLoading}
                   onSave={onSave}
                   columns={settingColumns}
-                  tableNames={TableNames.vendors}
+                  tableName={TableNames.vendors}
                 />
               )}
             </ButtonsWrapper>

@@ -58,7 +58,7 @@ export const AuditLogsTable = ({ auditLogs, isLoading, refetch }) => {
                     disabled={isLoading}
                     onSave={onSave}
                     columns={settingColumns}
-                    tableNames={TableNames.auditLogs}
+                    tableName={TableNames.auditLogs}
                   />
                 )}
               </ButtonsWrapper>

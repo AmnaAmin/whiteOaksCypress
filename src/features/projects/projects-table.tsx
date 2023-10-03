@@ -184,7 +184,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
                     col.colId !== 'flagged' &&
                     !(columnVisibility[col?.contentKey] === false),
                 )}
-                tableNames={TableNames.project}
+                tableName={TableNames.project}
               />
             )}
           </ButtonsWrapper>

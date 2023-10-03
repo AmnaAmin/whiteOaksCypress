@@ -62,7 +62,7 @@ export const OverPaymentTransactionsTable = React.forwardRef((props, ref) => {
                     disabled={isLoading}
                     onSave={onSave}
                     columns={settingColumns}
-                    tableNames={TableNames.transaction}
+                    tableName={TableNames.transaction}
                   />
                 )}
               </ButtonsWrapper>

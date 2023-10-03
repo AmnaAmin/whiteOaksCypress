@@ -112,7 +112,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
                     disabled={isLoading}
                     onSave={onSave}
                     columns={settingColumns?.filter(t => !!t.contentKey)}
-                    tableNames={TableNames.document}
+                    tableName={TableNames.document}
                   />
                 )}
               </ButtonsWrapper>

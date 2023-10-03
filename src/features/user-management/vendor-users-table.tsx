@@ -93,7 +93,7 @@ export const VendorUsersTable = React.forwardRef((props: any, ref) => {
                   disabled={isLoading}
                   onSave={onSave}
                   columns={settingColumns}
-                  tableNames={TableNames.vendorUsersTable}
+                  tableName={TableNames.vendorUsersTable}
                 />
               )}
             </ButtonsWrapper>

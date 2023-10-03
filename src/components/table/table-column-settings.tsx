@@ -40,10 +40,10 @@ interface TableColumnSettingsProps {
   isOpen?: boolean
   disabled?: boolean
   refetch?: any
-  tableNames: TableNames
+  tableName: TableNames
 }
 
-const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, tableNames }: TableColumnSettingsProps) => {
+const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, tableName }: TableColumnSettingsProps) => {
   const [paginationRecord, setPaginationRecord] = useState<ColumnType | undefined>(
     columns?.find(c => c.field === 'pagination'),
   )
@@ -213,12 +213,12 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
              
             <HStack spacing="16px" mr="13px" my="16px">
             {!isAdmin && (
-               <Button mr="770px" colorScheme="darkPrimary" onClick={event => clearSettingType(tableNames)} size="md">
+               <Button mr="770px" colorScheme="darkPrimary" onClick={event => clearSettingType(tableName)} size="md">
                   {t('resetSettings')}
                 </Button>
               )}
               {isAdmin && (
-                <Button colorScheme="darkPrimary" onClick={event => clearSettingType(tableNames)} size="md">
+                <Button colorScheme="darkPrimary" onClick={event => clearSettingType(tableName)} size="md">
                   {t('resetSettings')}
                 </Button>
               )}
@@ -226,7 +226,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
                 <Button
                   mr="560px !important"
                   colorScheme="darkPrimary"
-                  onClick={event => clearAllSettingType(tableNames)}
+                  onClick={event => clearAllSettingType(tableName)}
                   size="md"
                 >
                   {t('resetAllSettings')}
