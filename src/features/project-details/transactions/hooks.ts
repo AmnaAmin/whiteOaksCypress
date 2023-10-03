@@ -174,11 +174,12 @@ export const useFieldDisabledEnabledDecision = (
     isSysFactoringFee: isFactoringFeeSysGenerated,
     isPaidDateDisabled:
       !transaction ||
-      (isStatusApproved && !isAdminEnabled) ||
-      !(
-        transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
-        transaction?.verifiedByManager?.value === TransactionStatusValues.approved
-      ),
+      (isStatusApproved &&
+        !isAdminEnabled &&
+        !(
+          transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
+          transaction?.verifiedByManager?.value === TransactionStatusValues.approved
+        )),
     isStatusDisabled:
       (isStatusApproved && !(isAdmin || isAccounting)) ||
       isMaterialsLoading ||
