@@ -671,8 +671,8 @@ export const parseTransactionToFormValues = (
     paymentTerm: findOption(`${transaction.paymentTerm}`, PAYMENT_TERMS_OPTIONS),
     paidDate: datePickerFormat(transaction.paidDate as string),
     payDateVariance,
-    paymentProcessed: null,
-    payAfterDate: null,
+    paymentProcessed: transaction.paymentProcessed,
+    payAfterDate: transaction.payAfterDate,
     verifiedByFpm: vFpmOptions,
     verifiedByManager: vDmOptions,
     paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
@@ -807,7 +807,7 @@ export const useManagerEnabled = (projectId?: string) => {
   const client = useClient()
 
   const { data: managerEnabled } = useQuery(['managerEnabled'], async () => {
-    const response = await client(`user//draw/permission/${projectId}`, {})
+    const response = await client(`user/draw/permission/${projectId}`, {})
     return response?.data
   })
 

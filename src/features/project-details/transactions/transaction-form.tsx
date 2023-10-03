@@ -79,6 +79,7 @@ import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
   TRANSACTION_FPM_DM_STATUS_OPTIONS,
+  TRANSACTION_MARK_AS_OPTIONS,
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
@@ -352,6 +353,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
     resetExpectedCompletionDateFields(option)
   }
+
+  const drawTransaction = transaction?.transactionType === TransactionTypeValues.draw
 
   const hasPendingDrawsOnPaymentSave = values => {
     const isDrawAgainstProject =
@@ -1024,7 +1027,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             <>
                               <Select
                                 {...field}
-                                options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
+                                options={TRANSACTION_MARK_AS_OPTIONS}
                                 isDisabled={isApproved}
                                 size="md"
                                 selectProps={{ isBorderLeft: true }}
@@ -1090,7 +1093,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             <div data-testid="status-select-field">
                               <Select
                                 {...field}
-                                options={transactionStatusOptions}
+                                options={drawTransaction ? TRANSACTION_FPM_DM_STATUS_OPTIONS : transactionStatusOptions}
                                 isDisabled={isStatusDisabled}
                                 onChange={statusOption => {
                                   field.onChange(statusOption)

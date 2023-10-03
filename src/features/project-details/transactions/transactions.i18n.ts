@@ -179,7 +179,7 @@ export const transaction = {
         readLess: 'Leer menos',
         refund: 'Reembolso',
         paymentProcessed: 'Pago procesado',
-        payAfter: 'Pagar Después',
+        payAfterDate: 'Pagar Después',
         verifiedByFpm: 'Verificado por FPM',
         verifiedByManager: 'Verificado por DM',
         // Project WO Overview Table

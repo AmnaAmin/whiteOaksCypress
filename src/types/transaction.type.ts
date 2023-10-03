@@ -292,7 +292,7 @@ export type ChangeOrderType = {
   verifiedByFpm: SelectOption | null
   verifiedByManager: SelectOption | null
   paymentProcessed: null
-  payAfter: null
+  payAfterDate: null
 }
 
 export type TransactionsWithRefundType = {
