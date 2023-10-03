@@ -222,6 +222,7 @@ export enum ADV_PERMISSIONS {
   verifyProjectEnable = 'PROJECTDETAIL.MGMT.PROJECTVERIFIED.EDIT',
   deactivateVendor = 'VENDOR.DEACTIVEVENDOR',
   vendorAccountEdit = 'VENDOR.VENDORACCOUNTS.EDIT',
+  verifyVendorDocuments = 'VENDOR.VERIFYDOCUMENTS',
   transStatusEdit = 'PROJECTDETAIL.TRANSACTION.STATUS.EDIT',
   transPaidDateEdit = 'PROJECTDETAIL.TRANSACTION.PAIDDATE.EDIT',
   transPaymentReceivedEdit = 'PROJECTDETAIL.TRANSACTION.PAYMENTRECEIVED.EDIT',
@@ -288,10 +289,11 @@ export const permissionsDefaultValues = ({ permissions }) => {
       cancelWorkOrderEnable: permissionSet?.some(p => [ADV_PERMISSIONS.cancelWorkOrderEnable, 'ALL'].includes(p)),
       hideCreateProject: permissionSet?.some(p => [ADV_PERMISSIONS.hideCreateProject].includes(p)),
       hidePaidProjects: permissionSet?.some(p => [ADV_PERMISSIONS.hidePaidProjects].includes(p)),
-      vendorAccountEdit: permissionSet?.some(p => [ADV_PERMISSIONS.vendorAccountEdit].includes(p)),
+      vendorAccountEdit: permissionSet?.some(p => [ADV_PERMISSIONS.vendorAccountEdit, 'ALL'].includes(p)),
       overrideDrawRestrictionOnPercentageCompletion: permissionSet?.some(p =>
-        [ADV_PERMISSIONS.overrideDrawRestrictionOnPercentageCompletion].includes(p),
+        [ADV_PERMISSIONS.overrideDrawRestrictionOnPercentageCompletion, 'ALL'].includes(p),
       ),
+      verifyVendorDocuments: permissionSet?.some(p => [ADV_PERMISSIONS.verifyVendorDocuments, 'ALL'].includes(p)),
     },
   }
 }
