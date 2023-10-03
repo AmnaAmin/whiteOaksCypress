@@ -183,11 +183,11 @@ export const useFieldDisabledEnabledDecision = (
       (isStatusApproved && !(isAdmin || isAccounting)) ||
       isMaterialsLoading ||
       lateAndFactoringFeeForVendor ||
-      isFactoringFeeSysGenerated ||
-      !(
-        transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
-        transaction?.verifiedByManager?.value === TransactionStatusValues.approved
-      ),
+      (isFactoringFeeSysGenerated &&
+        !(
+          transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
+          transaction?.verifiedByManager?.value === TransactionStatusValues.approved
+        )),
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
 }
