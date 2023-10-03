@@ -88,14 +88,25 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     ].some(val => val === selectedTransactionTypeId),
   }
   const isPaymentTermDisabled = isAgainstWorkOrderOptionSelected && !isAdmin
-
+  const drawTransaction = transaction?.transactionType === TransactionTypeValues.draw
+  console.log(
+    '=============================vbfpm',
+    transaction?.verifiedByFpm,
+    transaction?.verifiedByManager,
+    transaction,
+  )
+  const vFpm = transaction?.verifiedByFpm
+  const vDM = transaction?.verifiedByManager
+  console.log('==================DE>', vFpm, vDM)
   // The status field should be hidden if user create new transaction or
   // if the transaction of type overpayment with markAs = revenue
   // also we can use markAs?.value === TransactionMarkAsValues.revenue but sometime it's null
-  const isShowStatusField =
-    (!!transaction && !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)) ||
-    (transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
-      transaction?.verifiedByManager?.value === TransactionStatusValues.approved)
+  const isShowStatusField = !drawTransaction
+    ? !!transaction && !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)
+    : !!transaction &&
+      !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid) &&
+      vFpm?.value === TransactionStatusValues.approved &&
+      vDM?.value === TransactionStatusValues.approved
 
   const isStatusNotCancelled = status?.value !== TransactionStatusValues.cancelled
   const markAsPaid = markAs?.value === 'paid'
@@ -122,6 +133,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
 
 export const useFieldRequiredDecision = (control: Control<FormValues, any>, transaction) => {
   const status = useWatch({ name: 'status', control })
+
   const isStatusApproved = status?.value === TransactionStatusValues.approved
   // const against = useWatch({ name: 'against', control })
   // const transactionType = useWatch({ name: 'transactionType', control })
@@ -184,11 +196,7 @@ export const useFieldDisabledEnabledDecision = (
       (isStatusApproved && !(isAdmin || isAccounting)) ||
       isMaterialsLoading ||
       lateAndFactoringFeeForVendor ||
-      (isFactoringFeeSysGenerated &&
-        !(
-          transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
-          transaction?.verifiedByManager?.value === TransactionStatusValues.approved
-        )),
+      isFactoringFeeSysGenerated,
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
 }
