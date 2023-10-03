@@ -156,7 +156,7 @@ export const useResetSettingsMutation  = () => {
   
         onError(error: any) {
           toast({
-            title: 'Client Type',
+            title: 'Settings Reset',
             description: (error.title as string) ?? 'Unable to delete Settings.',
             status: 'error',
             duration: 9000,
@@ -194,7 +194,7 @@ export const useResetSettingsMutation  = () => {
   
         onError(error: any) {
           toast({
-            title: 'Client Type',
+            title: 'Settings Reset',
             description: (error.title as string) ?? 'Unable to delete Settings.',
             status: 'error',
             duration: 9000,

@@ -194,6 +194,29 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
             borderBottom="1px solid #CBD5E0"
             pt="30px"
           >
+              {!isAdmin && (
+               <Button mr="770px" variant="ghost" colorScheme="brand" fontWeight={500} onClick={event => clearSettingType(tableName)} size="md">
+                 <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }}  />
+                  {t('resetSettings')}
+                </Button>
+              )}
+              {isAdmin && (
+                <Button variant="ghost" colorScheme="brand"  fontWeight={500} onClick={event => clearSettingType(tableName)} size="md">
+                   <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }}  />
+                  {t('resetSettings')}
+                </Button>
+              )}
+              {isAdmin && (
+                <Button
+                  mr="560px !important"
+                  variant="ghost" colorScheme="brand"  fontWeight={500}
+                  onClick={event => clearAllSettingType(tableName)}
+                  size="md"
+                >
+                   <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
+                  {t('resetAllSettings')}
+                </Button>
+              )}
             <ControlledBoard
               onCardDragChange={onCardDragChange}
               board={board}
@@ -212,26 +235,6 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
           >
              
             <HStack spacing="16px" mr="13px" my="16px">
-            {!isAdmin && (
-               <Button mr="770px" colorScheme="darkPrimary" onClick={event => clearSettingType(tableName)} size="md">
-                  {t('resetSettings')}
-                </Button>
-              )}
-              {isAdmin && (
-                <Button colorScheme="darkPrimary" onClick={event => clearSettingType(tableName)} size="md">
-                  {t('resetSettings')}
-                </Button>
-              )}
-              {isAdmin && (
-                <Button
-                  mr="560px !important"
-                  colorScheme="darkPrimary"
-                  onClick={event => clearAllSettingType(tableName)}
-                  size="md"
-                >
-                  {t('resetAllSettings')}
-                </Button>
-              )}
 
               <Button variant="ghost" colorScheme="darkPrimary" onClick={closeSetting} border="1px solid" size="md">
                 {t('cancel')}
