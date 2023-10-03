@@ -200,7 +200,7 @@ describe('Table columns setting modal Test Cases', () => {
     // expect(screen.getByText('Column Settings')).toBeInTheDocument()
 
     // const list = screen.getByTestId('column-settings-list')
-    const allItems = document.querySelectorAll('#column-settings-list > div')
+    // const allItems = document.querySelectorAll('#column-settings-list > div')
     // const firstItem = allItems[0] as ChildNode
     // const secondItem = allItems[1] as ChildNode
     // fireEvent.dragStart(firstItem)
