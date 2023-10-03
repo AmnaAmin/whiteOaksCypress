@@ -67,11 +67,9 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
   const [changedDateFields, setChangeDateFields] = useState<string[]>([])
   const { t } = useTranslation()
   const { permissions } = useRoleBasedPermissions()
+  const { isVendor, isAdmin } = useUserRolesSelector()
   const isReadOnly = permissions?.includes('VENDOR.READ')
-
-  const { isAdmin, isVendor, isProjectCoordinator, isDoc, isAccounting, isOperations, isVendorManager, isFPM } =
-    useUserRolesSelector()
-  const adminRole = isAdmin || isProjectCoordinator || isDoc || isAccounting || isOperations || isVendorManager || isFPM
+  const canVerifyDocuments = permissions?.some(p => ['VENDOR.VERIFYDOCUMENTS', 'ALL']?.includes(p))
   const {
     formState: { errors, isSubmitSuccessful },
     control,
@@ -109,7 +107,6 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
     watchCoiWcExpDate,
     isAllFiledWatch,
   } = useWatchDocumentFeild(control, vendor)
-  console.log(getValues())
 
   // const isW9DocRequired = !!watchW9DocumentFile || !!documents.w9DocumentUrl
   const isAgreementRequired = !!watchAgreementFile || !!documents.agreementUrl
@@ -221,7 +218,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
               <SaveChangedFieldAlert />
             ) : (
               <>
-                {adminRole && (
+                {canVerifyDocuments && (
                   <AdminPortalVerifyDocument
                     vendor={vendor as any}
                     fieldName="W9DocumentCheckBox"
@@ -292,7 +289,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isAgreementSignedDateChanged || !!watchAgreementSignedDate}
                             onClear={() => setValue(field.name, null)}
-                            disabled={isFPM} 
+                            disabled={isReadOnly}
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -309,7 +306,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <SaveChangedFieldAlert />
               ) : (
                 <>
-                  {adminRole && (
+                  {canVerifyDocuments && (
                     <AdminPortalVerifyDocument
                       vendor={vendor as any}
                       fieldName="agreementSignCheckBox"
@@ -411,7 +408,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isAutoInsuranceExpDateChanged || !!watchAutoInsuranceExpDate}
                             onClear={() => setValue(field.name, null)}
-                            disabled={isFPM} 
+                            disabled={isReadOnly}
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -428,7 +425,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <SaveChangedFieldAlert />
               ) : (
                 <>
-                  {adminRole && (
+                  {canVerifyDocuments && (
                     <AdminPortalVerifyDocument
                       vendor={vendor as any}
                       fieldName="autoInsuranceCheckBox"
@@ -503,7 +500,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isCoiGlExpDateChanged || !!watchCoiGlExpDate}
                             onClear={() => setValue(field.name, null)}
-                            disabled={isFPM} 
+                            disabled={isReadOnly}
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -520,7 +517,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <SaveChangedFieldAlert />
               ) : (
                 <>
-                  {adminRole && (
+                  {canVerifyDocuments && (
                     <AdminPortalVerifyDocument
                       vendor={vendor as any}
                       fieldName="coiGLExpCheckBox"
@@ -595,7 +592,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                             }}
                             isRequired={!!isCoiWcExpDateChanged || !!watchCoiWcExpDate}
                             onClear={() => setValue(field.name, null)}
-                            disabled={isFPM} 
+                            disabled={isReadOnly}
                           ></ChooseFileField>
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </Box>
@@ -612,7 +609,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
                 <SaveChangedFieldAlert />
               ) : (
                 <>
-                  {adminRole && (
+                  {canVerifyDocuments && (
                     <AdminPortalVerifyDocument
                       vendor={vendor as any}
                       fieldName="CoiWcExpCheckbox"
