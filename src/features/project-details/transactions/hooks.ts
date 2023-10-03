@@ -93,7 +93,8 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   // if the transaction of type overpayment with markAs = revenue
   // also we can use markAs?.value === TransactionMarkAsValues.revenue but sometime it's null
   const isShowStatusField =
-    (!!transaction && !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)) ||
+    !!transaction &&
+    !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid) &&
     !(
       transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
       transaction?.verifiedByManager?.value === TransactionStatusValues.approved
