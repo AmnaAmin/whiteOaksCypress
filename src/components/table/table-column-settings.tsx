@@ -22,6 +22,9 @@ import '@lourenci/react-kanban/dist/styles.css'
 import Board, { moveCard } from '@asseinfo/react-kanban'
 import { BiGridVertical } from 'react-icons/bi'
 import React from 'react'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useResetAllSettingsMutation, useResetSettingsMutation } from 'api/table-column-settings'
+import { TableNames } from 'types/table-column.types'
 
 export type ColumnType = {
   id?: number
@@ -37,9 +40,10 @@ interface TableColumnSettingsProps {
   isOpen?: boolean
   disabled?: boolean
   refetch?: any
+  tableName: TableNames
 }
 
-const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: TableColumnSettingsProps) => {
+const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, tableName }: TableColumnSettingsProps) => {
   const [paginationRecord, setPaginationRecord] = useState<ColumnType | undefined>(
     columns?.find(c => c.field === 'pagination'),
   )
@@ -117,7 +121,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
   useEffect(() => {
     setColumnResults(columns?.filter(col => col.field !== 'pagination'))
     setPaginationRecord(columns?.find(c => c.field === 'pagination'))
-    setInitialBoard(board); 
+    setInitialBoard(board)
   }, [columns])
 
   const [isUpdated, setisUpdated] = useState(false)
@@ -134,14 +138,17 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
     // Reset the managedBoard to the initialBoard
     setManagedBoard(initialBoard)
     onClose()
-    setModalKey(prevKey => prevKey + 1) 
+    refetch()
+    setModalKey(prevKey => prevKey + 1)
   }
 
   const closeSetting = () => {
     onClose()
     refetch()
   }
-
+  const { isAdmin } = useUserRolesSelector()
+  const { mutate: clearSettingType } = useResetSettingsMutation()
+  const { mutate: clearAllSettingType } = useResetAllSettingsMutation()
   return (
     <>
       <Box _hover={{ bg: 'darkPrimary.50', roundedBottomRight: '6px' }}>
@@ -203,11 +210,33 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch }: Tab
             boxShadow="0px 1px 2px 0px lightgrey"
             p="0px"
           >
+             
             <HStack spacing="16px" mr="13px" my="16px">
+            {!isAdmin && (
+               <Button mr="770px" colorScheme="darkPrimary" onClick={event => clearSettingType(tableName)} size="md">
+                  {t('resetSettings')}
+                </Button>
+              )}
+              {isAdmin && (
+                <Button colorScheme="darkPrimary" onClick={event => clearSettingType(tableName)} size="md">
+                  {t('resetSettings')}
+                </Button>
+              )}
+              {isAdmin && (
+                <Button
+                  mr="560px !important"
+                  colorScheme="darkPrimary"
+                  onClick={event => clearAllSettingType(tableName)}
+                  size="md"
+                >
+                  {t('resetAllSettings')}
+                </Button>
+              )}
+
               <Button variant="ghost" colorScheme="darkPrimary" onClick={closeSetting} border="1px solid" size="md">
                 {t('cancel')}
               </Button>
-              <Button data-testid='save-settings' colorScheme="darkPrimary" onClick={saveModal} size="md">
+              <Button data-testid="save-settings" colorScheme="darkPrimary" onClick={saveModal} size="md">
                 {t('save')}
               </Button>
             </HStack>
@@ -246,14 +275,13 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
         renderColumnHeader={({ title }) => <div style={columnStyle}>{title}</div>}
         renderCard={({ title, id }, { dragging }) => (
           <React.Fragment key={id}>
-            <div 
-             data-testid={`card-${title}`}
+            <div
+              data-testid={`card-${title}`}
               style={{
                 opacity: dragging ? 0.5 : 1,
               }}
             >
-              <div style={cardStyle} 
-              >
+              <div style={cardStyle}>
                 <div style={{ display: 'flex', alignItems: 'center', marginLeft: '16px' }}>
                   <BiGridVertical style={{ marginRight: '5px', color: '#989898', marginTop: '10px' }} />
                   <span style={{ marginTop: '10px' }}>{title}</span>

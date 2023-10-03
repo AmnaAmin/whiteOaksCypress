@@ -93,6 +93,7 @@ export const WOAUsersTable = React.forwardRef((props: any, ref) => {
                   disabled={isLoading}
                   onSave={onSave}
                   columns={settingColumns}
+                  tableName={TableNames.woaUsersTable}
                 />
               )}
             </ButtonsWrapper>
