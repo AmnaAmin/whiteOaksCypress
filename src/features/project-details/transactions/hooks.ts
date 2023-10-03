@@ -95,10 +95,8 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const isShowStatusField =
     !!transaction &&
     !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid) &&
-    !(
-      transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
-      transaction?.verifiedByManager?.value === TransactionStatusValues.approved
-    )
+    transaction?.verifiedByFpm?.value === TransactionStatusValues.approved &&
+    transaction?.verifiedByManager?.value === TransactionStatusValues.approved
 
   const isStatusNotCancelled = status?.value !== TransactionStatusValues.cancelled
   const markAsPaid = markAs?.value === 'paid'
