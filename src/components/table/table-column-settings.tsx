@@ -166,9 +166,9 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
           </HStack>
         </Button>
       </Box>
-      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={_onClose} size="6xl" key={modalKey}>
+      <Modal isOpen={isOpen} onClose={_onClose} size="6xl" key={modalKey}>
         <ModalOverlay />
-        <ModalContent h="620px" bg="#F2F3F4" rounded="none">
+        <ModalContent minH="700px" bg="#F2F3F4" rounded="none">
           <ModalHeader
             bg="#FFFFFF"
             borderBottom="1px solid #E2E8F0"
@@ -184,39 +184,54 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
           <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
           <ModalBody
             data-testid="Settings"
-            h="50vh"
-            overflowY="auto"
             bg="#FFFFFF"
             mx="11px"
+            overflowY={'hidden'}
             borderTopLeftRadius="6px"
             borderTopRightRadius="6px"
             boxShadow="1px 0px 2px 0px lightgrey"
             borderBottom="1px solid #CBD5E0"
-            pt="30px"
+            pt="20px"
+            pb="20px"
           >
-              {!isAdmin && (
-               <Button mr="770px" variant="ghost" colorScheme="brand" fontWeight={500} onClick={event => clearSettingType(tableName)} size="md">
-                 <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }}  />
-                  {t('resetSettings')}
-                </Button>
-              )}
-              {isAdmin && (
-                <Button variant="ghost" colorScheme="brand"  fontWeight={500} onClick={event => clearSettingType(tableName)} size="md">
-                   <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }}  />
-                  {t('resetSettings')}
-                </Button>
-              )}
-              {isAdmin && (
-                <Button
-                  mr="560px !important"
-                  variant="ghost" colorScheme="brand"  fontWeight={500}
-                  onClick={event => clearAllSettingType(tableName)}
-                  size="md"
-                >
-                   <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
-                  {t('resetAllSettings')}
-                </Button>
-              )}
+            {!isAdmin && (
+              <Button
+                mr="770px"
+                variant="ghost"
+                colorScheme="brand"
+                fontWeight={500}
+                onClick={event => clearSettingType(tableName)}
+                size="md"
+              >
+                <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
+                {t('resetSettings')}
+              </Button>
+            )}
+            {isAdmin && (
+              <Button
+                variant="ghost"
+                colorScheme="brand"
+                fontWeight={500}
+                onClick={event => clearSettingType(tableName)}
+                size="md"
+              >
+                <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
+                {t('resetSettings')}
+              </Button>
+            )}
+            {isAdmin && (
+              <Button
+                mr="560px !important"
+                variant="ghost"
+                colorScheme="brand"
+                fontWeight={500}
+                onClick={event => clearAllSettingType(tableName)}
+                size="md"
+              >
+                <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
+                {t('resetAllSettings')}
+              </Button>
+            )}
             <ControlledBoard
               onCardDragChange={onCardDragChange}
               board={board}
@@ -233,9 +248,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
             boxShadow="0px 1px 2px 0px lightgrey"
             p="0px"
           >
-             
             <HStack spacing="16px" mr="13px" my="16px">
-
               <Button variant="ghost" colorScheme="darkPrimary" onClick={closeSetting} border="1px solid" size="md">
                 {t('cancel')}
               </Button>
