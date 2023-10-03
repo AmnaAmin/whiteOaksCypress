@@ -806,7 +806,7 @@ export const useTransaction = (transactionId?: number) => {
 export const useManagerEnabled = (projectId?: string) => {
   const client = useClient()
 
-  const { data: managerEnabled, ...rest } = useQuery(['managerEnabled'], async () => {
+  const { data: managerEnabled } = useQuery(['managerEnabled'], async () => {
     const response = await client(`user//draw/permission/${projectId}`, {})
     return response?.data
   })
