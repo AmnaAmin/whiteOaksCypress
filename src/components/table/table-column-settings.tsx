@@ -185,7 +185,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
           <ModalBody
             data-testid="Settings"
             h="50vh"
-            overflowY="auto"
+            //overflowY="auto"
             bg="#FFFFFF"
             mx="11px"
             borderTopLeftRadius="6px"
@@ -195,7 +195,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
             pt="30px"
           >
               {!isAdmin && (
-               <Button mr="770px" variant="ghost" colorScheme="brand" fontWeight={500} onClick={event => clearSettingType(tableName)} size="md">
+               <Button mr="780px" variant="ghost" colorScheme="brand" fontWeight={500} onClick={event => clearSettingType(tableName)} size="md">
                  <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }}  />
                   {t('resetSettings')}
                 </Button>
@@ -217,6 +217,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
                   {t('resetAllSettings')}
                 </Button>
               )}
+            <Box> he</Box>
             <ControlledBoard
               onCardDragChange={onCardDragChange}
               board={board}
@@ -250,9 +251,12 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
   )
 }
 function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
-  const divStyle = {
-    color: '#4A5568',
-  }
+  // const divStyle = {
+  //   color: '#4A5568',
+  //   height: '400px',
+  //   overflowY: scroll,
+
+  // }
 
   const columnStyle = {
     width: '400px',
@@ -271,7 +275,8 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
 
   if (!board || !board.columns) return null
   return (
-    <div style={divStyle}>
+    <Box height= '400px'
+     overflowY= 'scroll'>
       <Board
         onCardDragEnd={onCardDragChange}
         disableColumnDrag
@@ -296,7 +301,7 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
       >
         {isUpdated ? updatedBoard : board}
       </Board>
-    </div>
+    </Box>
   )
 }
 export default TableColumnSettings
