@@ -125,6 +125,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     refundCheckbox,
+    isShowDM: vFpm === TransactionStatusValues.approved,
     isPaymentTermDisabled,
     isShowPaymentRecievedDateField: [
       TransactionTypeValues.payment,

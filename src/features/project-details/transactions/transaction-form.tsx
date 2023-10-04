@@ -174,8 +174,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
+  console.log('---------->transaction', !!transaction)
   const { managerEnabled } = useManagerEnabled(projectId)
   const isDM = managerEnabled?.allowed
+  const isShowFpm = !!transaction
   const {
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
@@ -300,6 +302,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowMarkAsField,
     isShowPaymentRecievedDateField,
     isPaymentTermDisabled,
+    isShowDM,
   } = useFieldShowHideDecision(control, transaction)
 
   const { isInvoicedDateRequired, isPaidDateRequired, isPaymentTermRequired } = useFieldRequiredDecision(
@@ -918,64 +921,64 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         <FormErrorMessage>{errors?.payAfterDate?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
-
-                    <GridItem>
-                      <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
-                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByFpm">
-                          {t(`${TRANSACTION}.verifiedByFpm`)}
-                        </FormLabel>
-                        <Controller
-                          control={control}
-                          name="verifiedByFpm"
-                          render={({ field, fieldState }) => {
-                            return (
-                              <>
-                                <Select
-                                  {...field}
-                                  options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                  // value={field?.value}
-                                  isDisabled={!isAdminEnabled && !isFPM}
-                                  size="md"
-                                  selectProps={{ isBorderLeft: true }}
-                                  onChange={statusOption => {
-                                    field.onChange(statusOption)
-                                  }}
-                                />
-                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                              </>
-                            )
-                          }}
-                        />
-                      </FormControl>
-                    </GridItem>
-                    <GridItem>
-                      <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
-                        <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByManager">
-                          {t(`${TRANSACTION}.verifiedByManager`)}
-                        </FormLabel>
-                        <Controller
-                          control={control}
-                          name="verifiedByManager"
-                          render={({ field, fieldState }) => {
-                            return (
-                              <>
-                                <Select
-                                  {...field}
-                                  options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                  isDisabled={!isDM}
-                                  size="md"
-                                  selectProps={{ isBorderLeft: true }}
-                                  onChange={statusOption => {
-                                    field.onChange(statusOption)
-                                  }}
-                                />
-                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                              </>
-                            )
-                          }}
-                        />
-                      </FormControl>
-                    </GridItem>
+                    {isShowFpm && (
+                      <GridItem>
+                        <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
+                          <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByFpm">
+                            {t(`${TRANSACTION}.verifiedByFpm`)}
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            name="verifiedByFpm"
+                            render={({ field, fieldState }) => {
+                              return (
+                                <>
+                                  <Select
+                                    {...field}
+                                    options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
+                                    isDisabled={!isAdminEnabled && !isFPM}
+                                    size="md"
+                                    onChange={statusOption => {
+                                      field.onChange(statusOption)
+                                    }}
+                                  />
+                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                </>
+                              )
+                            }}
+                          />
+                        </FormControl>
+                      </GridItem>
+                    )}
+                    {isShowDM && (
+                      <GridItem>
+                        <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
+                          <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByManager">
+                            {t(`${TRANSACTION}.verifiedByManager`)}
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            name="verifiedByManager"
+                            render={({ field, fieldState }) => {
+                              return (
+                                <>
+                                  <Select
+                                    {...field}
+                                    options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
+                                    isDisabled={!isDM}
+                                    size="md"
+                                    onChange={statusOption => {
+                                      field.onChange(statusOption)
+                                    }}
+                                  />
+                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                </>
+                              )
+                            }}
+                          />
+                        </FormControl>
+                      </GridItem>
+                    )}
                   </>
                 )}
 
