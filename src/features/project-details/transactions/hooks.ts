@@ -103,10 +103,12 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   // also we can use markAs?.value === TransactionMarkAsValues.revenue but sometime it's null
   const isShowStatusField = !drawTransaction
     ? !!transaction && !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)
-    : (!!transaction && !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)) ||
-      (vFpm == TransactionStatusValues.approved && vDM == TransactionStatusValues.approved)
+    : !!transaction &&
+      !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid) &&
+      vFpm === TransactionStatusValues.approved &&
+      vDM === TransactionStatusValues.approved
 
-  console.log('🚀 ~ file: hooks.ts:104 ~ useFieldShowHideDecision ~ isShowStatusField:', vFpm)
+  console.log('🚀 ~ file: hooks.ts:104 ~ useFieldShowHideDecision ~ isShowStatusField:', isShowStatusField)
 
   const isShowDrawStatus = vFpm === TransactionStatusValues.approved && vDM === TransactionStatusValues.approved
 
