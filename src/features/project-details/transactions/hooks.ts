@@ -70,6 +70,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
   const isAgainstProjectSOWOptionSelected = selectedAgainstId && selectedAgainstId === AGAINST_DEFAULT_VALUE
   const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.draw
+
   // const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.shipping
   // YK - PSWOA-1243
   // && isAgainstProjectSOWOptionSelected
@@ -89,31 +90,25 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   }
   const isPaymentTermDisabled = isAgainstWorkOrderOptionSelected && !isAdmin
   const drawTransaction = transaction?.transactionType === TransactionTypeValues.draw
-  // console.log(
-  //   `==🚀transaction?.transactionType=${transaction?.transactionType},TransactionTypeValues.draw=${TransactionTypeValues.draw}`,
-  //   transaction?.transactionType === TransactionTypeValues.draw,
-  // )
-  // console.log('🚀 ~ file: hooks.ts:92 ~ useFieldShowHideDecision ~ transaction:', transaction)
-
   const vFpm = transaction?.verifiedByFpm as unknown as string
   const vDM = transaction?.verifiedByManager as unknown as string
 
   // The status field should be hidden if user create new transaction or
   // if the transaction of type overpayment with markAs = revenue
   // also we can use markAs?.value === TransactionMarkAsValues.revenue but sometime it's null
+  const isShowDrawStatusField = vFpm === TransactionStatusValues.approved && vDM === TransactionStatusValues.approved
+
   const isShowStatusField = !drawTransaction
     ? !!transaction && !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)
-    : !!transaction &&
+    : drawTransaction && isAgainstProjectSOWOptionSelected
+    ? !!transaction && !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)
+    : drawTransaction && !isAgainstProjectSOWOptionSelected
+    ? !!transaction &&
       !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid) &&
       vFpm === TransactionStatusValues.approved &&
       vDM === TransactionStatusValues.approved
-
+    : ''
   console.log('🚀 ~ file: hooks.ts:104 ~ useFieldShowHideDecision ~ isShowStatusField:', isShowStatusField)
-
-  const isShowDrawStatus = vFpm === TransactionStatusValues.approved && vDM === TransactionStatusValues.approved
-
-  console.log('🚀 ~ file: hooks.ts:111 ~ useFieldShowHideDecision ~ isShowDrawStatus:', isShowDrawStatus)
-
   const isStatusNotCancelled = status?.value !== TransactionStatusValues.cancelled
   const markAsPaid = markAs?.value === 'paid'
 
@@ -123,6 +118,9 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowNewExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowStatusField,
+    isShowDrawStatusField,
+    isShowDrawFieldAgainstWO: isAgainstWorkOrderOptionSelected,
+    drawTransaction,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     refundCheckbox,
     isShowDM: vFpm === TransactionStatusValues.approved,
