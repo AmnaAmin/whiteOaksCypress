@@ -112,6 +112,7 @@ export const WOTransactionsTable = React.forwardRef((props: TransactionProps, re
                     disabled={isLoading}
                     onSave={onSave}
                     columns={settingColumns?.filter(t => !!t.contentKey)}
+                    tableName={TableNames.transaction}
                   />
                 )}
               </ButtonsWrapper>

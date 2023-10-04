@@ -202,6 +202,7 @@ export const TriggeredAlertsTable = React.forwardRef((props: any, ref) => {
                 disabled={isLoading}
                 onSave={onSave}
                 columns={settingColumns}
+                tableName={TableNames.alerts}
               />
             )}
           </ButtonsWrapper>
