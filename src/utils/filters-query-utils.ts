@@ -34,7 +34,7 @@ export const getAPIFilterQueryString = (
   columnFilters?.forEach(filter => {
     // change to iso format if we have date and value is not specified 0 or 1.
     // Dates will have value 0 or 1 if we have to null check the field
-    if (filter?.id?.includes('Date') && !['0', '1']?.includes(filter?.value as string)) {
+    if (filter?.id?.toLocaleLowerCase()?.includes('date') && !['0', '1']?.includes(filter?.value as string)) {
       if (
         [
           'clientStartDate',
@@ -45,7 +45,6 @@ export const getAPIFilterQueryString = (
           'workOrderStartDate',
           'gridExpectedPaymentDate',
           'expectedPaymentDate',
-          'workOrderExpectedCompletionDate',
           'workOrderDateCompleted',
           'newExpectedCompletionDate',
           'coiglExpirationDate',
