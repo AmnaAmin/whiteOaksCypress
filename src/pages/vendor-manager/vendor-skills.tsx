@@ -30,7 +30,7 @@ export const VendorSkills = () => {
   )}
   </>
         </HStack>
-        <VendorSkillsTable />
+        <VendorSkillsTable isReadOnly={isReadOnly}/>
       </Card>
       {isOpenVendorSkillModal && (
         <NewVendorSkillsModal isOpen={isOpenVendorSkillModal} onClose={onVendorSkillModalClose} />

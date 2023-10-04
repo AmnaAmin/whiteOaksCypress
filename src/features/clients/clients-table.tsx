@@ -27,7 +27,7 @@ import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
-  const { defaultSelected } = props
+  const { defaultSelected , isReadOnly } = props
   const [selectedClient, setSelectedClient] = useState<Clients>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
@@ -219,6 +219,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
                   onSave={onSave}
                   columns={settingColumns}
                   tableName={TableNames.clients}
+                  isReadOnly={isReadOnly}
                 />
               )}
             </ButtonsWrapper>

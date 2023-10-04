@@ -32,6 +32,7 @@ type ProjectProps = {
   userIds?: any
   resetFilters: boolean
   selectedFlagged?: any
+  isReadOnly?:boolean
 }
 
 export const ProjectsTable: React.FC<ProjectProps> = ({
@@ -40,6 +41,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   userIds,
   resetFilters,
   selectedFlagged,
+  isReadOnly,
 }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
@@ -182,6 +184,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
                     !(columnVisibility[col?.contentKey] === false),
                 )}
                 tableName={TableNames.project}
+                isReadOnly={isReadOnly}
               />
             )}
           </ButtonsWrapper>

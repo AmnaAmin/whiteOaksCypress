@@ -57,7 +57,7 @@ export const MARKET_COLUMNS: ColumnDef<any>[] = [
   },
 ]
 
-export const MarketsTable: React.FC<{}> = () => {
+export const MarketsTable: React.FC<{ isReadOnly: boolean }> = ({ isReadOnly }) => {
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const { markets, isLoading, refetch } = useMarkets()
@@ -109,6 +109,7 @@ export const MarketsTable: React.FC<{}> = () => {
                   onSave={onSave}
                   columns={settingColumns}
                   tableName={TableNames.markets}
+                  isReadOnly={isReadOnly}
                 />
               )}
             </ButtonsWrapper>

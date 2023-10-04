@@ -54,7 +54,7 @@ export const Client = () => {
           </>
         </Flex>
         <Box>
-          <ClientsTable ref={tabsContainerRef} createdClientId={createdClientId} defaultSelected={client} />
+          <ClientsTable ref={tabsContainerRef} createdClientId={createdClientId} defaultSelected={client} isReadOnly={isReadOnly}/>
         </Box>
       </Card>
       {isOpenNewClientModal && (

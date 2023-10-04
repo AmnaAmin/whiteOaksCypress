@@ -23,7 +23,7 @@ export const Markets = () => {
 )}
 </>
         </HStack>
-        <MarketsTable />
+        <MarketsTable isReadOnly={isReadOnly} />
       </Card>
       <NewMarketModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} />
     </>

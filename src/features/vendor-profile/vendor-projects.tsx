@@ -175,6 +175,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
                     onSave={onSave}
                     columns={settingColumns}
                     tableName={TableNames.vendorProjects}
+                    isReadOnly={isReadOnly}
                   />
                 )}
               </ButtonsWrapper>

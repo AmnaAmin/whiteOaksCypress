@@ -42,7 +42,7 @@ const Vendors = () => {
           )}
         </HStack>
         {!isFPM ? (
-          <VendorTable selectedCard={selectedCard as string} />
+          <VendorTable  selectedCard={selectedCard as string} isReadOnly={isReadOnly}/>
         ) : (
           <FPMVendors selectedCard={selectedCard as string}></FPMVendors>
         )}

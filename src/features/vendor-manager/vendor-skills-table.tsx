@@ -53,7 +53,7 @@ export const VENDORSKILLS_COLUMNS: ColumnDef<any>[] = [
   },
 ]
 
-export const VendorSkillsTable: React.FC<{}> = () => {
+export const VendorSkillsTable: React.FC<{ isReadOnly: boolean }> = ({ isReadOnly }) => {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const { data: VendorSkills, isLoading, refetch } = useTrades()
   const [selectedVendorSkills, setSelectedVendorSkills] = useState<Market>()
@@ -108,6 +108,7 @@ export const VendorSkillsTable: React.FC<{}> = () => {
                   onSave={onSave}
                   columns={settingColumns}
                   tableName={TableNames.vendorSkills}
+                  isReadOnly={isReadOnly}
                 />
               )}
             </ButtonsWrapper>

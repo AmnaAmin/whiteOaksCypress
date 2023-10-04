@@ -59,14 +59,14 @@ export const UserManagementTabs = React.forwardRef((props: any, ref) => {
         >
           <TabPanels>
             <TabPanel px={0}>
-              <WOAUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} />
+              <WOAUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} isReadOnly={isReadOnly} />
             </TabPanel>
             <TabPanel px={0}>
-              <VendorUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} />
+              <VendorUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} isReadOnly={isReadOnly} />
             </TabPanel>
             {data?.devAccount && (
               <TabPanel px={0}>
-                <DevtekUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} />
+                <DevtekUsersTable setSelectedUser={setSelectedUser} onOpen={onOpen} isReadOnly={isReadOnly} />
               </TabPanel>
             )}
           </TabPanels>
