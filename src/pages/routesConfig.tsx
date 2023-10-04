@@ -50,7 +50,7 @@ export default function useRoutesConfig() {
     },
     { path: 'userManager', element: UserManagement, permissions: ['USERMANAGER.READ', 'USERMANAGER.EDIT', 'ALL'] },
     { path: 'roles', element: AccessControl, permissions: ['ALL'] },
-    { path: 'projectType', element: ProjectType, permissions: ['PROJECTTYPE.READ', 'PROJECTTYPE,EDIT', 'ALL'] },
+    { path: 'projectType', element: ProjectType, permissions: ['PROJECTTYPE.READ', 'PROJECTTYPE.EDIT', 'ALL'] },
     { path: 'payable', element: Payable, permissions: ['PAYABLE.READ', 'PAYABLE.EDIT', 'ALL'] },
     { path: 'support-tickets', element: SupportTickets, permissions: ['SUPPORT.READ', 'SUPPORT.EDIT', 'ALL'] },
     { path: 'receivable', element: Receivable, permissions: ['RECEIVABLE.READ', 'RECEIVABLE.EDIT', 'ALL'] },
