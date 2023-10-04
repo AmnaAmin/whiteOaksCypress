@@ -41,9 +41,10 @@ interface TableColumnSettingsProps {
   disabled?: boolean
   refetch?: any
   tableName: TableNames
+  isReadOnly?:boolean
 }
 
-const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, tableName }: TableColumnSettingsProps) => {
+const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, tableName, isReadOnly }: TableColumnSettingsProps) => {
   const [paginationRecord, setPaginationRecord] = useState<ColumnType | undefined>(
     columns?.find(c => c.field === 'pagination'),
   )
@@ -194,7 +195,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
             pt="20px"
             pb="20px"
           >
-            {!isAdmin && (
+            {!isReadOnly && !isAdmin && (
               <Button
                 mr="770px"
                 variant="ghost"
@@ -207,7 +208,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
                 {t('resetSettings')}
               </Button>
             )}
-            {isAdmin && (
+            {!isReadOnly && isAdmin && (
               <Button
                 variant="ghost"
                 colorScheme="brand"
@@ -219,7 +220,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
                 {t('resetSettings')}
               </Button>
             )}
-            {isAdmin && (
+            {!isReadOnly && isAdmin && (
               <Button
                 mr="560px !important"
                 variant="ghost"
@@ -252,9 +253,11 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
               <Button variant="ghost" colorScheme="darkPrimary" onClick={closeSetting} border="1px solid" size="md">
                 {t('cancel')}
               </Button>
+              {isReadOnly ? null : (
               <Button data-testid="save-settings" colorScheme="darkPrimary" onClick={saveModal} size="md">
                 {t('save')}
               </Button>
+              )}
             </HStack>
           </ModalFooter>
         </ModalContent>

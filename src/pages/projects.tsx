@@ -61,7 +61,7 @@ export const Projects = () => {
     setSelectedDay('')
     setSelectedFlagged('')
   }
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   return (
     <>
       <VStack alignItems="start" minH="calc(100vh - 160px)" pb="2">
@@ -137,6 +137,7 @@ export const Projects = () => {
               userIds={selectedUserIds}
               resetFilters={resetAllFilters}
               selectedFlagged={selectedFlagged}
+              isReadOnly={isReadOnly}
             />
           </Box>
         </Card>

@@ -177,8 +177,9 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
 
 type ProjectProps = {
   selectedCard: string
+  isReadOnly?: boolean
 }
-export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
+export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const vendor = (location?.state as any)?.data || {}
@@ -283,6 +284,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
                   onSave={onSave}
                   columns={settingColumns}
                   tableName={TableNames.vendors}
+                  isReadOnly={isReadOnly}
                 />
               )}
             </ButtonsWrapper>

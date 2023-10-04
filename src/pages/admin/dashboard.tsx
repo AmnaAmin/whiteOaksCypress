@@ -11,6 +11,7 @@ import { IoMdClose } from 'react-icons/io'
 import { FilteredProjectsData } from 'features/admin-dashboard/filtered-projects-table'
 import RevenuePerClient from 'features/admin-dashboard/revenue-per-client-graph'
 import RevenueVsProfit from 'features/admin-dashboard/revenue-vs-profit'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation()
@@ -22,7 +23,7 @@ const Dashboard: React.FC = () => {
   const onCardClick = params => {
     setSelectedCard(params)
   }
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('ADMINDASHBOARD.READ')
   return (
     <VStack w="100%" zIndex={2} spacing="14px">
       <Box w="100%">
@@ -49,7 +50,7 @@ const Dashboard: React.FC = () => {
             </Flex>
           </HStack>
           <Box mt="20px">
-            <FilteredProjectsData selectedCard={selectedCard} />
+            <FilteredProjectsData selectedCard={selectedCard} isReadOnly={isReadOnly} />
           </Box>
         </Card>
       )}

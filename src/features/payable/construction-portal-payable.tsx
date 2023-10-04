@@ -169,6 +169,7 @@ export const ConstructionPortalPayable = () => {
                 totalPages={totalPages}
                 dataCount={dataCount}
                 refetchPayables={refetchPayables}
+                isReadOnly={isReadOnly}
               />
             </Box>
           ) : (

@@ -169,6 +169,7 @@ export const ConstructionPortalReceiveable: React.FC = () => {
                 setSorting={setSorting}
                 queryStringWithPagination={queryStringWithPagination}
                 queryStringWithoutPagination={queryStringWithoutPagination}
+                isReadOnly={isReadOnly}
               />
             </Box>
           </Card>

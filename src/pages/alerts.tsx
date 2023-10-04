@@ -40,6 +40,7 @@ const Alerts = () => {
                 managedAlerts={managedAlerts && managedAlerts?.length > 1 ? managedAlerts : []}
                 isLoading={isLoading}
                 refetch={refetch}
+                isReadOnly={isReadOnly}
               />
             </TabPanel>
           </TabPanels>

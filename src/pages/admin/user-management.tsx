@@ -6,12 +6,14 @@ import { UserManagementTabs } from 'features/user-management/user-management-tab
 import { useQuery } from 'react-query'
 import { Project } from 'types/project.type'
 import { useClient } from 'utils/auth-context'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const UserManagement = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   return (
     <Card px="12px" py="16px">
-      <UserManagementTabs onOpenUserModal={onOpen} />
+      <UserManagementTabs onOpenUserModal={onOpen}  isReadOnly={isReadOnly}/>
       {isOpen && <EditUserModal isOpen={isOpen} onClose={onClose} />}
     </Card>
   )

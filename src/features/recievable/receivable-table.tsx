@@ -35,6 +35,7 @@ type ReceivableProps = {
   sorting: SortingState
   setSorting: (updater: Updater<SortingState>) => void
   setFormValue: any
+  isReadOnly?: boolean
 }
 
 export const ReceivableTable: React.FC<ReceivableProps> = ({
@@ -47,6 +48,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   queryStringWithPagination,
   queryStringWithoutPagination,
   setFormValue,
+  isReadOnly,
 }) => {
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
@@ -182,6 +184,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
                 onSave={onSave}
                 columns={settingColumns}
                 tableName={TableNames.receivable}
+                isReadOnly={isReadOnly}
               />
             )}
           </ButtonsWrapper>

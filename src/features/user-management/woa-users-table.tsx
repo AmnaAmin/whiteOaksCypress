@@ -21,7 +21,7 @@ import { ExportButton } from 'components/table-refactored/export-button'
 import TableColumnSettings from 'components/table/table-column-settings'
 
 export const WOAUsersTable = React.forwardRef((props: any, ref) => {
-  const { setSelectedUser, onOpen } = props
+  const { setSelectedUser, onOpen, isReadOnly } = props
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
 
@@ -94,6 +94,7 @@ export const WOAUsersTable = React.forwardRef((props: any, ref) => {
                   onSave={onSave}
                   columns={settingColumns}
                   tableName={TableNames.woaUsersTable}
+                  isReadOnly={isReadOnly}
                 />
               )}
             </ButtonsWrapper>
