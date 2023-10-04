@@ -88,7 +88,7 @@ export const USER_MGT_TABLE_QUERIES_KEY = {
   email: 'email.contains',
   firstName: 'firstName.contains',
   lastName: 'lastName.contains',
-  authorities: 'authorities.contains',
+  authorities: 'authorities.in',
   langKey: 'langKey.contains',
   activatedLabel: 'activatedLabel.contains',
   createdDateStart: 'createdDate.greaterThanOrEqual',
