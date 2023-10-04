@@ -106,4 +106,5 @@ export const RECEIVABLE_TABLE_QUERY_KEYS = {
   isReceivable: 'isReceivable.equals',
   displayId: 'displayId.contains',
   paymentTerm: 'paymentTerm.equals',
+  resubmissionInvoiceNumber: 'resubmissionInvoiceNumber.contains',
 }

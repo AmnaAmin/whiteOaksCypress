@@ -282,6 +282,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
                   disabled={vendorsLoading}
                   onSave={onSave}
                   columns={settingColumns}
+                  tableName={TableNames.vendors}
                 />
               )}
             </ButtonsWrapper>

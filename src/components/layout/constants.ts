@@ -12,7 +12,8 @@ import {
   BiUserPlus,
   BiError,
 } from 'react-icons/bi'
-import { SiCypress } from 'react-icons/si'
+
+import { TiFlowParallel } from 'react-icons/ti'
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { SIDE_NAV } from './sideNav.i18n'
 import { MdOnlinePrediction } from 'react-icons/md'
@@ -187,11 +188,11 @@ export const MenusList: Menu[] = [
           permissions: ['ALERT.EDIT', 'ALERT.READ', 'ALL'],
         },
         {
-          pathTo: '/cypressReport',
-          title: `${SIDE_NAV}.cypressReport`,
-          Icon: SiCypress,
-          color: '#FC8181',
-          permissions: ['CYPRESSREPORT.READ', 'ALL'],
+          pathTo: '/sorryCypress',
+          title: `${SIDE_NAV}.sorryCypress`,
+          Icon: TiFlowParallel,
+          color: '#3182CE',
+          permissions: ['ALL'],
         },
       ]
     : []),

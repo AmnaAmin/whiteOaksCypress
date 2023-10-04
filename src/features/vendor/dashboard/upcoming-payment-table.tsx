@@ -140,6 +140,7 @@ export const UpcomingPaymentTable = () => {
                 disabled={isLoading}
                 onSave={onSave}
                 columns={settingColumns}
+                tableName={TableNames.upcomingPayment}
               />
             )}
           </ButtonsWrapper>

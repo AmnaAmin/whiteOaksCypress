@@ -157,6 +157,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                     disabled={isLoading}
                     onSave={onSave}
                     columns={settingColumns?.filter(t => !!t.contentKey)} //Adding this check to avoid 'Expander' column from showing in the settings.
+                    tableName={TableNames.transaction}
                   />
                 )}
               </ButtonsWrapper>
