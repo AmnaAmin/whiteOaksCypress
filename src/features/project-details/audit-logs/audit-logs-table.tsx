@@ -9,7 +9,7 @@ import TableColumnSettings from 'components/table/table-column-settings'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 
-export const AuditLogsTable = ({ auditLogs, isLoading, refetch }) => {
+export const AuditLogsTable = ({ auditLogs, isLoading, refetch, isReadOnly}) => {
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.auditLogs)
   const {
     tableColumns,
@@ -59,6 +59,7 @@ export const AuditLogsTable = ({ auditLogs, isLoading, refetch }) => {
                     onSave={onSave}
                     columns={settingColumns}
                     tableName={TableNames.auditLogs}
+                    isReadOnly={isReadOnly}
                   />
                 )}
               </ButtonsWrapper>

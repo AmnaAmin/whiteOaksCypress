@@ -18,10 +18,12 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { mapDataForDocxExpandableRows } from '../transactions/transaction.constants'
-
-export const VendorDocumentsTable = React.forwardRef((_, ref) => {
+type DocumentsProps = {
+  isReadOnly?: boolean
+}
+export const VendorDocumentsTable = React.forwardRef((props: DocumentsProps, ref) => {
   const { projectId } = useParams<'projectId'>()
   const { documents, isLoading: isLoadingDocuments } = useDocuments({
     projectId,
@@ -76,7 +78,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
     setTotalPages(Math.ceil((documents?.length ?? 0) / 50))
     setTotalRows(documents?.length ?? 0)
   }, [documents])
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   return (
     <>
       {isLoadingDocuments && (
@@ -113,6 +115,7 @@ export const VendorDocumentsTable = React.forwardRef((_, ref) => {
                     onSave={onSave}
                     columns={settingColumns?.filter(t => !!t.contentKey)}
                     tableName={TableNames.document}
+                    isReadOnly={isReadOnly}
                   />
                 )}
               </ButtonsWrapper>
