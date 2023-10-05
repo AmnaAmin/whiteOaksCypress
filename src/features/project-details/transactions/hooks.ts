@@ -108,7 +108,6 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
       vFpm === TransactionStatusValues.approved &&
       vDM === TransactionStatusValues.approved
     : ''
-  console.log('🚀 ~ file: hooks.ts:104 ~ useFieldShowHideDecision ~ isShowStatusField:', isShowStatusField)
   const isStatusNotCancelled = status?.value !== TransactionStatusValues.cancelled
   const markAsPaid = markAs?.value === 'paid'
 
