@@ -1,21 +1,14 @@
 .react-kanban-column {
-  background-color: #F8F8F8 !important; 
-  border: 1px solid #E8E8E8!important;
-  min-height: 100% !important;
-  max-height: fit-content !important; 
-  height: auto !important;
-  display: flex;
-  margin: 27px !important;
-  border-radius: 7px !important;  
+  background-color: #f8f8f8 !important;
+  border: 1px solid #e8e8e8 !important;
+  min-height: 100px !important;
+  max-height: 450px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden;
+  margin: 35px !important;
+  border-radius: 7px !important;
+  padding: 20px !important;
 }
-.react-kanban-board{
-  height:600px !important;
-  overflow-y: scroll !important ;
-}
-[data-rbd-droppable-id="board-droppable"] {  
-  display:flex;
-  height: 100% !important;
- }
 .react-kanban-column::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -26,7 +19,7 @@
 }
 
 .react-kanban-column::-webkit-scrollbar-thumb {
-  background-color: #C2C7CD;
+  background-color: #c2c7cd;
   border-radius: 1px;
   border: 2px solid #f1f1f1;
 }
