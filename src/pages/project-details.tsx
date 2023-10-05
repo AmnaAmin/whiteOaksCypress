@@ -220,6 +220,7 @@ export const ProjectDetails: React.FC = props => {
                         projectStatus={projectData?.projectStatus as string}
                         defaultSelected={transaction}
                         transId={createdTransID}
+                        isReadOnly={isReadOnly}
                       />
                     )}
                   </Box>
@@ -237,7 +238,7 @@ export const ProjectDetails: React.FC = props => {
                   <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
                 </TabPanel>
                 <TabPanel p="0px">
-                  <VendorDocumentsTable ref={tabsContainerRef} />
+                  <VendorDocumentsTable ref={tabsContainerRef} isReadOnly={isReadOnly} />
                 </TabPanel>
 
                 {/* <TabPanel px="0">
@@ -255,7 +256,7 @@ export const ProjectDetails: React.FC = props => {
                 </TabPanel>
                 {
                   <TabPanel p="0px" minH="calc(100vh - 450px)">
-                    <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch={refetchAudits} />
+                    <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch={refetchAudits} isReadOnly={isReadOnly} />
                   </TabPanel>
                 }
               </TabPanels>

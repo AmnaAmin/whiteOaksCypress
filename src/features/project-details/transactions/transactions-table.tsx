@@ -32,6 +32,7 @@ type TransactionProps = {
   defaultSelected?: TransactionType
   transId?: any
   isVendorExpired?: boolean
+  isReadOnly?: boolean
 }
 
 export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
@@ -158,6 +159,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
                     onSave={onSave}
                     columns={settingColumns?.filter(t => !!t.contentKey)} //Adding this check to avoid 'Expander' column from showing in the settings.
                     tableName={TableNames.transaction}
+                    isReadOnly={props?.isReadOnly}
                   />
                 )}
               </ButtonsWrapper>
