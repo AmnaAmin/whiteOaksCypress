@@ -3,6 +3,7 @@ import { SelectOption } from './transaction.type'
 
 export type Project = {
   largeWorkOrder?: boolean
+  latestNoteAddedTime?: string
   estimateId?: number | string | null | undefined
   accountRecievable: number | null
   accountPayable: number | null
