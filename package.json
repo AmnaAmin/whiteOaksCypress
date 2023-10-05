@@ -2,7 +2,7 @@
   "name": "whiteoaks-ui",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://8717-39-50-199-189.ngrok-free.app",
+  "proxy": "https://preprod.woaharvest.com",
   "dependencies": {
     "@asseinfo/react-kanban": "^2.2.0",
     "@chakra-ui/icons": "^1.0.17",
