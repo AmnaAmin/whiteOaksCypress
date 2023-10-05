@@ -386,7 +386,7 @@ export const useFPMs = () => {
   const client = useClient()
 
   const { data: fieldProjectMangers, ...rest } = useQuery('FPM', async () => {
-    const response = await client(`users/usertype/5?sort=firstName,asc`, {})
+    const response = await client(`users/v2/usertype/5?sort=firstName,asc`, {})
 
     return response?.data
   })
