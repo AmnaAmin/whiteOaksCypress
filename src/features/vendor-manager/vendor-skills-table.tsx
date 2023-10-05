@@ -107,6 +107,7 @@ export const VendorSkillsTable: React.FC<{}> = () => {
                   disabled={isLoading}
                   onSave={onSave}
                   columns={settingColumns}
+                  tableName={TableNames.vendorSkills}
                 />
               )}
             </ButtonsWrapper>

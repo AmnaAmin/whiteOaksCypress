@@ -192,6 +192,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({ selectedCard }) => {
                 columns={settingColumns.filter(
                   col => col.colId !== 'displayId' && !(columnVisibility[col?.contentKey] === false),
                 )}
+                tableName={TableNames.vendorProject}
               />
             )}
           </ButtonsWrapper>

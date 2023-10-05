@@ -179,6 +179,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
                     disabled={isLoading}
                     onSave={onSave}
                     columns={settingColumns}
+                    tableName={TableNames.vendorProjects}
                   />
                 )}
               </ButtonsWrapper>

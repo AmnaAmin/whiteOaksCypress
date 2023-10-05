@@ -117,6 +117,7 @@ export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({ managedA
                   disabled={isLoading}
                   onSave={onSave}
                   columns={settingColumns}
+                  tableName={TableNames.alerts}
                 />
               )}
             </ButtonsWrapper>
