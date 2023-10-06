@@ -63,7 +63,11 @@ const Contact: React.FC<ContactProps> = ({
   const marketWatch = useWatch({ name: 'market', control })
   const clientWatch = useWatch({ name: 'client', control })
   const [carrierOption, setCarrierOption] = useState<SelectOption[] | null | undefined>()
-  const { fieldProjectManagerByMarketOptions, isLoading } = useFPMsByMarket(marketWatch?.value)
+  const {
+    fieldProjectManagerByMarketOptions,
+    isLoading,
+    fieldProjectMangersByMarket: fpmUsers,
+  } = useFPMsByMarket(marketWatch?.value)
 
   const agentPhoneValue = watch('agentPhone')
   const superPhoneNumberExtensionValue = watch('superPhoneNumberExtension')
@@ -91,8 +95,6 @@ const Contact: React.FC<ContactProps> = ({
   } = useFieldsDisabled(control)
 
   const { users: pcUsers } = useGetUsersByType(112)
-
-  const { users: fpmUsers } = useGetUsersByType(5)
 
   useEffect(() => {
     if (fieldProjectManagerByMarketOptions.length === 0 && !isLoading) {
