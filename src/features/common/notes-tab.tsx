@@ -181,7 +181,9 @@ export const NotesTab = (props: NotesProps) => {
             <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
               {t('enterNewNote')}
             </FormLabel>
-            <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} />
+            <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} 
+            data-testid="notes_textarea"
+            />
           </FormControl>
         </Flex>
         {!hideFooter && (
@@ -208,6 +210,7 @@ export const NotesTab = (props: NotesProps) => {
               {!hideSave && (
                 <Button
                   type="submit"
+                  data-testid="notes_submit"
                   colorScheme="darkPrimary"
                   isDisabled={(!message && !completion) || !!isNotesLoading || isWOCancelled}
                 >
