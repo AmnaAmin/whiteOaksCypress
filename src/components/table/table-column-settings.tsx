@@ -85,12 +85,12 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
       columns: [
         {
           id: 1,
-          title: 'Available Records', // Change the order of the columns
+          title: `${t('availableColumn')}`, // Change the order of the columns
           cards: mapRecordsUnavailable,
         },
         {
           id: 2,
-          title: 'Show These Records in this Order',
+          title: `${t('showRecordsOrder')}`,
           cards: mapRecordsAvailable,
         },
       ] as any,
@@ -271,6 +271,9 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
     width: '400px',
     fontWeight: 600,
     color: '#345EA6',
+    position: 'sticky',
+    top: 0,
+    background: 'red',
   }
 
   const cardStyle = {
@@ -288,7 +291,7 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
       <Board
         onCardDragEnd={onCardDragChange}
         disableColumnDrag
-        renderColumnHeader={({ title }) => <div style={columnStyle}>{title}</div>}
+        renderColumnHeader={({ title }) => <div style={columnStyle as any}>{title}</div>}
         renderCard={({ title, id }, { dragging }) => (
           <React.Fragment key={id}>
             <div
