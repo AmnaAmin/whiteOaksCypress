@@ -163,6 +163,8 @@ export const SECTIONS = [
   { value: 'VENDORSKILL', label: 'Vendor Skills' },
   { value: 'CLIENTTYPE', label: 'Client Type' },
   { value: 'PROJECTTYPE', label: 'Project Type' },
+  { value: 'VENDORPROJECT', label: 'Vendor Projects' },
+  { value: 'VENDORPROFILE', label: 'Vendor Profile' },
   { value: 'SUPPORT', label: 'Support' },
   { value: 'ALERT', label: 'Alerts' },
 ]
@@ -203,6 +205,7 @@ export const mapPermissionsToFormValues = permission => {
       edit: permissionObj?.action === 'EDIT' || isAdmin,
       read: permissionObj?.action === 'READ',
       hide: !permissionObj && !isAdmin,
+      label: s.label,
     })
   })
   return sectionWisePermissions
