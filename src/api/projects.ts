@@ -18,7 +18,8 @@ export const useProjects = (filterQueryString?: string, page?: number, size: num
   const { data, ...rest } = usePaginationQuery<Array<Project>>(queryKey, endpoint, size || 10, { enabled: size > 0 })
 
   return {
-    projects: data?.data,
+    // making a duplicate parameter for now as BE will change its name later on
+    projects: data?.data?.map(e => ({ ...e, latestNoteAddedDate: e.latestNoteAddedTime })),
     totalPages: data?.totalCount,
     dataCount: data?.dataCount,
     ...rest,
@@ -139,7 +140,11 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
   const sowRevisedChangeOrderAmount =
     (firstFinancialRecord?.changeOrder || 0) + (firstFinancialRecord?.coAdjustment || 0)
   const sowRevisedAmount = (firstFinancialRecord?.originalAmount || 0) + (firstFinancialRecord?.noCoAdjustment || 0)
-  const finalSOWAmount = sowRevisedAmount + sowRevisedChangeOrderAmount + (firstFinancialRecord?.carrierFee || 0) + (firstFinancialRecord?.legalFee || 0)
+  const finalSOWAmount =
+    sowRevisedAmount +
+    sowRevisedChangeOrderAmount +
+    (firstFinancialRecord?.carrierFee || 0) +
+    (firstFinancialRecord?.legalFee || 0)
   const originalSOWAmount =
     (firstFinancialRecord?.originalAmount || 0) +
     (firstFinancialRecord?.changeOrder || 0) +
@@ -161,7 +166,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
 
   const finalProjectTotalCost = projectTotalCost + projectExpenses
 
-  const profitMargin = originalSOWAmount === 0 ? 0 : (finalSOWAmount - finalProjectTotalCost) / finalSOWAmount;
+  const profitMargin = originalSOWAmount === 0 ? 0 : (finalSOWAmount - finalProjectTotalCost) / finalSOWAmount
 
   return {
     finalSOWAmount: numeral(finalSOWAmount).format('$0,0.00'),
