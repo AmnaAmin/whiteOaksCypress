@@ -427,7 +427,6 @@ export const parseChangeOrderAPIPayload = async (
   formValues: FormValues,
   projectId?: string,
 ): Promise<ChangeOrderPayload> => {
-  console.log('🚀 ~ file: transactions.ts:431 ~ formValues:', formValues)
   const expectedCompletionDate = dateISOFormat(formValues.expectedCompletionDate)
   const newExpectedCompletionDate = formValues.newExpectedCompletionDate as string
 
