@@ -79,7 +79,7 @@ import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
   TRANSACTION_FPM_DM_STATUS_OPTIONS,
-  TRANSACTION_MARK_AS_OPTIONS,
+  TRANSACTION_MARK_AS_OPTIONS_ARRAY,
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
@@ -889,7 +889,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               id="paymentProcessed"
                               type="date"
                               size="md"
-                              // isDisabled={isPaidDateDisabled}
                               css={calendarIcon}
                               {...register('paymentProcessed')}
                             />
@@ -914,7 +913,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               id="payAfterDate"
                               type="date"
                               size="md"
-                              readOnly
+                              isDisabled
                               css={calendarIcon}
                               {...register('payAfterDate', {
                                 required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
@@ -925,7 +924,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         </GridItem>
                         {isShowFpm && (
                           <GridItem>
-                            <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
+                            <FormControl isInvalid={!!errors.verifiedByFpm} data-testid="verified-by-fpm">
                               <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByFpm">
                                 {t(`${TRANSACTION}.verifiedByFpm`)}
                               </FormLabel>
@@ -940,6 +939,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                         options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
                                         isDisabled={!isAdminEnabled && !isFPM}
                                         size="md"
+                                        selectProps={{ isBorderLeft: true }}
                                         onChange={statusOption => {
                                           field.onChange(statusOption)
                                         }}
@@ -954,7 +954,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         )}
                         {isShowDM && (
                           <GridItem>
-                            <FormControl isInvalid={!!errors.markAs} data-testid="verified-by-fpm">
+                            <FormControl isInvalid={!!errors.verifiedByManager} data-testid="verified-by-dm">
                               <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByManager">
                                 {t(`${TRANSACTION}.verifiedByManager`)}
                               </FormLabel>
@@ -969,6 +969,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                         options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
                                         isDisabled={!isDM}
                                         size="md"
+                                        selectProps={{ isBorderLeft: true }}
                                         onChange={statusOption => {
                                           field.onChange(statusOption)
                                         }}
@@ -1034,7 +1035,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             <>
                               <Select
                                 {...field}
-                                options={TRANSACTION_MARK_AS_OPTIONS}
+                                options={TRANSACTION_MARK_AS_OPTIONS_ARRAY}
                                 isDisabled={isApproved}
                                 size="md"
                                 selectProps={{ isBorderLeft: true }}

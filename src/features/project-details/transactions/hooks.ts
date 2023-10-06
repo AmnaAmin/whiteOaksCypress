@@ -98,6 +98,32 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   // also we can use markAs?.value === TransactionMarkAsValues.revenue but sometime it's null
   const isShowDrawStatusField = vFpm === TransactionStatusValues.approved && vDM === TransactionStatusValues.approved
 
+  // let isShowStatusField = false
+  // if (!!transaction) {
+  //   isShowStatusField = true
+  //   if (
+  //     drawTransaction &&
+  //     !isAgainstProjectSOWOptionSelected &&
+  //     vFpm !== TransactionStatusValues.approved &&
+  //     vDM !== TransactionStatusValues.approved
+  //   ) {
+  //     console.log(
+  //       '============================================',
+  //       drawTransaction,
+  //       !isAgainstProjectSOWOptionSelected,
+  //       vFpm,
+  //       vDM,
+  //     )
+  //     isShowStatusField = false
+  //   } else if (isTransactionTypeOverpaymentSelected && markAs?.value === TransactionMarkAsValues.paid) {
+  //     console.log('================')
+  //     isShowStatusField = false
+  //   } else {
+  //     isShowStatusField = false
+  //     console.log('==================2st ele', vFpm, vDM,isAgainstProjectSOWOptionSelected,)
+  //   }
+  // }
+
   let isShowStatusField = false
 
   const isTransactionValid =
