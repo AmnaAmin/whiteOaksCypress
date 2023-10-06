@@ -346,7 +346,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
                   {...(selectedRow === index && { bg: '#F3F8FF !important' })}
                 >
                   <Td w="50%" lineHeight="28px" borderRight="1px solid #CBD5E0">
-                    {watchPermissions?.[index].name}
+                    {watchPermissions?.[index].label}
                   </Td>
                   <Td textAlign={'center'} borderRight="1px solid #CBD5E0">
                     <Controller
