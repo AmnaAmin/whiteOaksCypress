@@ -523,7 +523,7 @@ const WorkOrderDetailTab = props => {
           <Box mt="32px" mx="32px">
             <HStack spacing="16px">
               {cancelPermissions && !isCancelled && (
-                <Box w="215px">
+                <Box w="215px" data-testid="note_submit">
                   <FormControl zIndex="2">
                     <FormLabel variant="strong-label" size="md">
                       {t('cancelWorkOrder')}

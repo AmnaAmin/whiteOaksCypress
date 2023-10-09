@@ -27,7 +27,7 @@ type ProjectProps = {
   isReadOnly?: boolean
 }
 
-export const FilteredProjectsData = ({ selectedCard , isReadOnly}: ProjectProps) => {
+export const FilteredProjectsData = ({ selectedCard, isReadOnly }: ProjectProps) => {
   const navigate = useNavigate()
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 

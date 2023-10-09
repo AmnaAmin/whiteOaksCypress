@@ -21,7 +21,7 @@ import { ExportButton } from 'components/table-refactored/export-button'
 import TableColumnSettings from 'components/table/table-column-settings'
 
 export const DevtekUsersTable = React.forwardRef((props: any, ref) => {
-  const { setSelectedUser, onOpen , isReadOnly} = props
+  const { setSelectedUser, onOpen, isReadOnly } = props
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
 

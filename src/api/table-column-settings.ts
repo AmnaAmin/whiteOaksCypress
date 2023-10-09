@@ -130,79 +130,39 @@ export const useTableColumnSettingsUpdateMutation = (tableName: TableNames) => {
   )
 }
 
-export const useResetSettingsMutation  = () => {
-    const client = useClient()
-    const queryClient = useQueryClient()
-    const toast = useToast()
-    return useMutation(
-      (tableName: any) => {
-        return client(`column/delete/${tableName}`, {
-          method: 'DELETE',
+export const useResetSettingsMutation = () => {
+  const client = useClient()
+  const queryClient = useQueryClient()
+  const toast = useToast()
+  return useMutation(
+    (tableName: any) => {
+      return client(`column/delete/${tableName}`, {
+        method: 'DELETE',
+      })
+    },
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(['GetGridColumn'])
+        toast({
+          title: 'Reset Settings',
+          description: `Settings have been reset successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
         })
       },
-      {
-        onSuccess() {
-          queryClient.invalidateQueries(['GetGridColumn'])
-          toast({
-            title: 'Settings Reset',
-            description: `Settings deleted successfully.`,
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-         
-        },
-  
-        onError(error: any) {
-          toast({
-            title: 'Settings Reset',
-            description: (error.title as string) ?? 'Unable to delete Settings.',
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        },
-      },
-    )
-  }
-  
-  export const useResetAllSettingsMutation  = () => {
-    const client = useClient()
-    const queryClient = useQueryClient()
-    const toast = useToast()
-    return useMutation(
-      (tableName: any) => {
-        return client(`column/delete/users/${tableName}`, {
-          method: 'DELETE',
+
+      onError(error: any) {
+        toast({
+          title: 'Reset Settings',
+          description: (error.title as string) ?? 'Unable to reset Settings.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
         })
       },
-      {
-        onSuccess() {
-          queryClient.invalidateQueries(['GetGridColumn'])
-          toast({
-            title: 'Settings Reset',
-            description: `Settings deleted successfully.`,
-            status: 'success',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-         
-        },
-  
-        onError(error: any) {
-          toast({
-            title: 'Settings Reset',
-            description: (error.title as string) ?? 'Unable to delete Settings.',
-            status: 'error',
-            duration: 9000,
-            isClosable: true,
-            position: 'top-left',
-          })
-        },
-      },
-    )
-  }
-  
+    },
+  )
+}

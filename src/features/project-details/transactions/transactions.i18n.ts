@@ -61,6 +61,10 @@ export const transaction = {
         readMore: 'Read More',
         readLess: 'Read Less',
         refund: 'Refund',
+        paymentProcessed: 'Payment Processed',
+        payAfterDate: 'Pay After',
+        verifiedByFpm: 'Verified by FPM',
+        verifiedByManager: 'Verified by DM',
 
         // Project WO Overview Table
         vendor: 'Vendor',
@@ -174,7 +178,10 @@ export const transaction = {
         readMore: 'Lee mas',
         readLess: 'Leer menos',
         refund: 'Reembolso',
-
+        paymentProcessed: 'Pago procesado',
+        payAfterDate: 'Pagar Después',
+        verifiedByFpm: 'Verificado por FPM',
+        verifiedByManager: 'Verificado por DM',
         // Project WO Overview Table
         vendor: 'Vendedor',
         clientApprovedAmount: 'Monto aprobado por el cliente',

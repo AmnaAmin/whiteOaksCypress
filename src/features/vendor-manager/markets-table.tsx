@@ -74,7 +74,7 @@ export const MarketsTable: React.FC<{ isReadOnly: boolean }> = ({ isReadOnly }) 
   }
 
   return (
-    <Box overflow="auto"borderBottomRadius="6px" borderTopRadius="6px"  border="1px solid #CBD5E0">
+    <Box overflow="auto" borderBottomRadius="6px" borderTopRadius="6px" border="1px solid #CBD5E0">
       {selectedMarket && (
         <NewMarketModal
           isOpen={selectedMarket ? true : false}
@@ -84,7 +84,7 @@ export const MarketsTable: React.FC<{ isReadOnly: boolean }> = ({ isReadOnly }) 
           selectedMarket={selectedMarket}
         />
       )}
-      <Box overflow={'auto'} h="calc(100vh - 170px)"  borderBottomRadius="6px" borderTopRadius="6px">
+      <Box overflow={'auto'} h="calc(100vh - 170px)" borderBottomRadius="6px" borderTopRadius="6px">
         <TableContextProvider data={markets} columns={tableColumns} sorting={sorting} setSorting={setSorting}>
           <Table
             onRowClick={row => setSelectedMarket(row)}

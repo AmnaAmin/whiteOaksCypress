@@ -32,7 +32,7 @@ type ProjectProps = {
   userIds?: any
   resetFilters: boolean
   selectedFlagged?: any
-  isReadOnly?:boolean
+  isReadOnly?: boolean
 }
 
 export const ProjectsTable: React.FC<ProjectProps> = ({

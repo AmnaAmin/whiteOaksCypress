@@ -6,6 +6,7 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 import { useTranslation } from 'react-i18next'
 import orderBy from 'lodash/orderBy'
+import { useToast } from '@chakra-ui/react'
 
 type generateSettingColumnProps = {
   field: string
@@ -129,7 +130,7 @@ export const useTableColumnSettings = (
 export const useTableColumnSettingsUpdateMutation = (tableName: TableNames) => {
   const client = useClient()
   const queryClient = useQueryClient()
-
+  const toast = useToast()
   return useMutation(
     'PostGridColumn',
     async (payload: TableColumnSetting) => {
@@ -140,6 +141,24 @@ export const useTableColumnSettingsUpdateMutation = (tableName: TableNames) => {
     {
       onSuccess() {
         queryClient.invalidateQueries(['GetGridColumn', tableName])
+        toast({
+          title: 'Update Settings',
+          description: `Settings have been updated successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Update Settings',
+          description: (error.title as string) ?? 'Unable to update Settings.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
       },
     },
   )
