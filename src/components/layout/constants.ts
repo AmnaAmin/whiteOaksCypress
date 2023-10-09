@@ -378,8 +378,8 @@ export const MENU_ROLE_BASED: Menus = {
             color: '#ED64A6',
           },
           {
-            pathTo: '/sorryCypress',
-            title: `${SIDE_NAV}.sorryCypress`,
+            pathTo: '/cypressReport',
+            title: `${SIDE_NAV}.cypressReport`,
             Icon: TiFlowParallel,
             color: '#3182CE',
           },
