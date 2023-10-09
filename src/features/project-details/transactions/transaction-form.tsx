@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState, ChangeEvent } from 'react'
 import {
   FormErrorMessage,
   FormLabel,
@@ -17,8 +17,8 @@ import {
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
-
-// import { Button } from 'components/button/button'
+import addDays from 'date-fns/addDays'
+import { datePickerFormat } from 'utils/date-time-utils'
 import Select from 'components/form/react-select'
 
 import {
@@ -37,6 +37,7 @@ import {
   useTransactionTypes,
   useWorkOrderAwardStats,
   useWorkOrderChangeOrders,
+  useManagerEnabled,
 } from 'api/transactions'
 import {
   ChangeOrderType,
@@ -78,6 +79,7 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
+  TRANSACTION_FPM_DM_STATUS_OPTIONS,
   TRANSACTION_MARK_AS_OPTIONS_ARRAY,
 } from 'features/project-details/transactions/transaction.constants'
 import { TRANSACTION } from './transactions.i18n'
@@ -160,7 +162,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAccounting, isFPM } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -174,6 +176,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
+  const { managerEnabled } = useManagerEnabled(projectId)
+  const isDM = managerEnabled?.allowed
+  const isShowFpm = !!transaction
   const {
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
@@ -224,6 +229,33 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isRefund = useWatch({ name: 'refund', control })
   const watchStatus = watch('status')
 
+  const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const date = new Date(e.target.value)
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    const paymentTerm = getValues().paymentTerm?.value
+
+    // Do not calculated WOA expect date if payment term is not selected
+    if (!paymentTerm) return
+
+    const payAfterDate = addDays(utcDate, paymentTerm)
+    setValue('payAfterDate', datePickerFormat(payAfterDate))
+  }
+
+  const onPaymentTermChange = (option: SelectOption) => {
+    const { invoicedDate } = getValues()
+    if (invoicedDate === null || invoicedDate === '') {
+      return
+    }
+
+    const date = new Date(invoicedDate as string)
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    const paymentTerm = Number(option.value)
+
+    if (!date) return
+    const payAfterDate = addDays(utcDate, paymentTerm)
+    setValue('payAfterDate', datePickerFormat(payAfterDate))
+  }
+
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
   }, [workOrderId, awardPlansStats])
@@ -247,8 +279,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     selectedWorkOrder,
     isApproved,
   })
-  
+
   const { permissions } = useRoleBasedPermissions()
+  /* add permissions to verify by fpm and district manager*/
   const isAdminEnabled = permissions.some(p => ['PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE', 'ALL'].includes(p))
   const isAdmin = useRoleBasedPermissions()?.permissions?.includes('ALL')
 
@@ -274,6 +307,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowMarkAsField,
     isShowPaymentRecievedDateField,
     isPaymentTermDisabled,
+    isShowDM,
+    isShowDrawFieldAgainstWO,
   } = useFieldShowHideDecision(control, transaction)
 
   const { editInvoiceDate, editPaymentReceived, enableFutureDate, allowSaveOnApproved } = usePermissionBasedDecision()
@@ -328,6 +363,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
     resetExpectedCompletionDateFields(option)
   }
+
+  const drawTransaction = transaction?.transactionType === TransactionTypeValues.draw
 
   const hasPendingDrawsOnPaymentSave = values => {
     const isDrawAgainstProject =
@@ -749,6 +786,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                   isDisabled={isPaymentTermDisabled}
                                   onChange={paymentTermOption => {
                                     field.onChange(paymentTermOption)
+                                    onPaymentTermChange(paymentTermOption)
                                   }}
                                 />
                                 <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -780,9 +818,35 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           isDisabled={isApproved && !editInvoiceDate}
                           {...register('invoicedDate', {
                             required: isInvoicedDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
+                            onChange: onInvoiceBackDateChange,
                           })}
                         />
                         <FormErrorMessage>{errors?.invoicedDate?.message}</FormErrorMessage>
+                      </FormControl>
+                    </GridItem>
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.payDateVariance}>
+                        <FormLabel
+                          fontSize="14px"
+                          fontStyle="normal"
+                          fontWeight={500}
+                          color="gray.700"
+                          htmlFor="payDateVariance"
+                          whiteSpace="nowrap"
+                        >
+                          {t(`${TRANSACTION}.payDateVariance`)}
+                        </FormLabel>
+                        <Input
+                          data-testid="pay-date-variance"
+                          id="payDateVariance"
+                          type="text"
+                          size="md"
+                          value={payDateVariance}
+                          css={calendarIcon}
+                          isDisabled
+                          {...register('payDateVariance')}
+                        />
+                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
 
@@ -813,32 +877,120 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         <FormErrorMessage>{errors?.paidDate?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
+                    {isShowDrawFieldAgainstWO && (
+                      <>
+                        <GridItem>
+                          <FormControl isInvalid={!!errors.paymentProcessed}>
+                            <FormLabel
+                              fontSize="14px"
+                              fontStyle="normal"
+                              fontWeight={500}
+                              color="gray.700"
+                              htmlFor="paymentProcessed"
+                              whiteSpace="nowrap"
+                            >
+                              {t(`${TRANSACTION}.paymentProcessed`)}
+                            </FormLabel>
+                            <Input
+                              data-testid="payment-processed"
+                              id="paymentProcessed"
+                              type="date"
+                              size="md"
+                              css={calendarIcon}
+                              {...register('paymentProcessed')}
+                            />
+                            <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage>
+                          </FormControl>
+                        </GridItem>
 
-                    <GridItem>
-                      <FormControl isInvalid={!!errors.payDateVariance}>
-                        <FormLabel
-                          fontSize="14px"
-                          fontStyle="normal"
-                          fontWeight={500}
-                          color="gray.700"
-                          htmlFor="payDateVariance"
-                          whiteSpace="nowrap"
-                        >
-                          {t(`${TRANSACTION}.payDateVariance`)}
-                        </FormLabel>
-                        <Input
-                          data-testid="pay-date-variance"
-                          id="payDateVariance"
-                          type="text"
-                          size="md"
-                          value={payDateVariance}
-                          css={calendarIcon}
-                          isDisabled
-                          {...register('payDateVariance')}
-                        />
-                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
-                      </FormControl>
-                    </GridItem>
+                        <GridItem>
+                          <FormControl isInvalid={!!errors.payAfterDate}>
+                            <FormLabel
+                              fontSize="14px"
+                              fontStyle="normal"
+                              fontWeight={500}
+                              color="gray.700"
+                              htmlFor="payAfterDate"
+                              whiteSpace="nowrap"
+                            >
+                              {t(`${TRANSACTION}.payAfterDate`)}
+                            </FormLabel>
+                            <Input
+                              data-testid="pay-after"
+                              id="payAfterDate"
+                              type="date"
+                              size="md"
+                              isDisabled
+                              css={calendarIcon}
+                              {...register('payAfterDate', {
+                                required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
+                              })}
+                            />
+                            <FormErrorMessage>{errors?.payAfterDate?.message}</FormErrorMessage>
+                          </FormControl>
+                        </GridItem>
+                        {isShowFpm && (
+                          <GridItem>
+                            <FormControl isInvalid={!!errors.verifiedByFpm} data-testid="verified-by-fpm">
+                              <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByFpm">
+                                {t(`${TRANSACTION}.verifiedByFpm`)}
+                              </FormLabel>
+                              <Controller
+                                control={control}
+                                name="verifiedByFpm"
+                                render={({ field, fieldState }) => {
+                                  return (
+                                    <>
+                                      <Select
+                                        {...field}
+                                        options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
+                                        isDisabled={!isAdminEnabled && !isFPM}
+                                        size="md"
+                                        selectProps={{ isBorderLeft: true }}
+                                        onChange={statusOption => {
+                                          field.onChange(statusOption)
+                                        }}
+                                      />
+                                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                    </>
+                                  )
+                                }}
+                              />
+                            </FormControl>
+                          </GridItem>
+                        )}
+                        {isShowDM && (
+                          <GridItem>
+                            <FormControl isInvalid={!!errors.verifiedByManager} data-testid="verified-by-dm">
+                              <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByManager">
+                                {t(`${TRANSACTION}.verifiedByManager`)}
+                              </FormLabel>
+                              <Controller
+                                control={control}
+                                name="verifiedByManager"
+                                render={({ field, fieldState }) => {
+                                  return (
+                                    <>
+                                      <Select
+                                        {...field}
+                                        options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
+                                        isDisabled={!isDM}
+                                        size="md"
+                                        selectProps={{ isBorderLeft: true }}
+                                        onChange={statusOption => {
+                                          field.onChange(statusOption)
+                                        }}
+                                      />
+                                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                    </>
+                                  )
+                                }}
+                              />
+                            </FormControl>
+                          </GridItem>
+                        )}
+                      </>
+                    )}
                   </>
                 )}
 
@@ -934,41 +1086,45 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 )}
 
                 {isShowStatusField && (
-                  <GridItem>
-                    <FormControl isInvalid={!!errors.status}>
-                      <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
-                        {t(`${TRANSACTION}.status`)}
-                      </FormLabel>
-                      <Controller
-                        control={control}
-                        name="status"
-                        rules={{
-                          required: REQUIRED_FIELD_ERROR_MESSAGE,
-                          validate: option => {
-                            return transactionType?.value === TransactionTypeValues.overpayment &&
-                              option?.value === TransactionStatusValues.pending
-                              ? STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE
-                              : true
-                          },
-                        }}
-                        render={({ field, fieldState }) => (
-                          <>
-                            <div data-testid="status-select-field">
-                              <Select
-                                {...field}
-                                options={transactionStatusOptions}
-                                isDisabled={isStatusDisabled}
-                                onChange={statusOption => {
-                                  field.onChange(statusOption)
-                                }}
-                              />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </div>
-                          </>
-                        )}
-                      />
-                    </FormControl>
-                  </GridItem>
+                  <>
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.status}>
+                        <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
+                          {t(`${TRANSACTION}.status`)}
+                        </FormLabel>
+                        <Controller
+                          control={control}
+                          name="status"
+                          rules={{
+                            required: REQUIRED_FIELD_ERROR_MESSAGE,
+                            validate: option => {
+                              return transactionType?.value === TransactionTypeValues.overpayment &&
+                                option?.value === TransactionStatusValues.pending
+                                ? STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE
+                                : true
+                            },
+                          }}
+                          render={({ field, fieldState }) => (
+                            <>
+                              <div data-testid="status-select-field">
+                                <Select
+                                  {...field}
+                                  options={
+                                    drawTransaction ? TRANSACTION_FPM_DM_STATUS_OPTIONS : transactionStatusOptions
+                                  }
+                                  isDisabled={isStatusDisabled}
+                                  onChange={statusOption => {
+                                    field.onChange(statusOption)
+                                  }}
+                                />
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </div>
+                            </>
+                          )}
+                        />
+                      </FormControl>
+                    </GridItem>
+                  </>
                 )}
               </Grid>
 

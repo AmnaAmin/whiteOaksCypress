@@ -65,10 +65,15 @@ type ManagedAlertsTablesTypes = {
   isLoading: boolean
   refetch: any
   managedAlerts: any
-  isReadOnly?:boolean
+  isReadOnly?: boolean
 }
 
-export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({ managedAlerts, isLoading, refetch, isReadOnly }) => {
+export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({
+  managedAlerts,
+  isLoading,
+  refetch,
+  isReadOnly,
+}) => {
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const [selectedAlert, setSelectedAlert] = useState<ProjectAlertType>()

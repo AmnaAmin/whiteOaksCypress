@@ -188,8 +188,8 @@ export const MenusList: Menu[] = [
           permissions: ['ALERT.EDIT', 'ALERT.READ', 'ALL'],
         },
         {
-          pathTo: '/sorryCypress',
-          title: `${SIDE_NAV}.sorryCypress`,
+          pathTo: '/cypressReport',
+          title: `${SIDE_NAV}.cypressReport`,
           Icon: TiFlowParallel,
           color: '#3182CE',
           permissions: ['ALL'],
