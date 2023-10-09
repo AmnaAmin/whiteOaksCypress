@@ -452,7 +452,9 @@ i18n.use(initReactI18next).init({
 
         // Settings Page
         settings: 'Settings',
-        settingsHeader:'Show, Hide & Sort Data Columns',
+        settingsHeader: 'Column settings',
+        availableColumn: 'Available columns',
+        showRecordsOrder: 'Show these columns in this order',
         firstName: 'First Name',
         lastName: 'Last Name',
         language: 'Language',
@@ -1071,6 +1073,9 @@ i18n.use(initReactI18next).init({
 
         // Settings Page
         settings: 'Ajustes',
+        settingsHeader: 'Configuración de columna',
+        availableColumn: 'Columnas disponibles',
+        showRecordsOrder: 'Mostrar estas columnas en este orden',
         firstName: 'Primer Nombre',
         lastName: 'Apellido',
         language: 'Idioma',
