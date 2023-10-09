@@ -521,7 +521,7 @@ const WorkOrderDetailTab = props => {
             <HStack spacing="16px">
               {isAdmin && !isCancelled && (
                 <Box w="215px"
-                data-testid="notes_submit">
+                 data-testid="note_submit">
                   <FormControl zIndex="2">
                     <FormLabel variant="strong-label" size="md">
                       {t('cancelWorkOrder')}

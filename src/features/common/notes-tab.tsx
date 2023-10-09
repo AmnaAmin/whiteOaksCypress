@@ -182,7 +182,7 @@ export const NotesTab = (props: NotesProps) => {
               {t('enterNewNote')}
             </FormLabel>
             <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} 
-            data-testid="notes_textarea"
+            data-testid="note_textarea"
             />
           </FormControl>
         </Flex>
