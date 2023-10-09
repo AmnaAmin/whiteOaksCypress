@@ -1,5 +1,4 @@
-import { Box, Button, FormLabel, Flex } from '@chakra-ui/react'
-import { SIDE_NAV } from 'components/layout/sideNav.i18n'
+import { Box} from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 
 const CypressReport = () => {
