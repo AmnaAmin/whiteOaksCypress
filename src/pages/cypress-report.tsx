@@ -1,5 +1,4 @@
 import { Box} from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 
 const CypressReport = () => {
   const iframe_src = `https://woa-preprod-documents.s3.us-east-2.amazonaws.com/sorry-cypress/output.html`
