@@ -22,9 +22,9 @@ import '@lourenci/react-kanban/dist/styles.css'
 import Board, { moveCard } from '@asseinfo/react-kanban'
 import { BiGridVertical } from 'react-icons/bi'
 import React from 'react'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { useResetAllSettingsMutation, useResetSettingsMutation } from 'api/table-column-settings'
+import { useResetSettingsMutation } from 'api/table-column-settings'
 import { TableNames } from 'types/table-column.types'
+import { ConfirmationBox } from 'components/Confirmation'
 
 export type ColumnType = {
   id?: number
@@ -146,9 +146,15 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
     onClose()
     refetch()
   }
-  const { isAdmin } = useUserRolesSelector()
   const { mutate: clearSettingType } = useResetSettingsMutation()
-  const { mutate: clearAllSettingType } = useResetAllSettingsMutation()
+  const {
+    isOpen: isResetConfirmationModalOpen,
+    onClose: onResetConfirmationModalClose,
+    onOpen: onResetConfirmationModalOpen,
+  } = useDisclosure()
+  const openResetConfirmationBox = () => {
+    onResetConfirmationModalOpen()
+  }
   return (
     <>
       <Box _hover={{ bg: 'darkPrimary.50', roundedBottomRight: '6px' }}>
@@ -194,44 +200,20 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
             pt="20px"
             pb="20px"
           >
-            {!isAdmin && (
-              <Button
-                mr="770px"
-                variant="ghost"
-                colorScheme="brand"
-                fontWeight={500}
-                onClick={event => clearSettingType(tableName)}
-                size="md"
-              >
-                <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
-                {t('resetSettings')}
-              </Button>
-            )}
-            {isAdmin && (
-              <Button
-                variant="ghost"
-                colorScheme="brand"
-                fontWeight={500}
-                onClick={event => clearSettingType(tableName)}
-                size="md"
-              >
-                <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
-                {t('resetSettings')}
-              </Button>
-            )}
-            {isAdmin && (
-              <Button
-                mr="560px !important"
-                variant="ghost"
-                colorScheme="brand"
-                fontWeight={500}
-                onClick={event => clearAllSettingType(tableName)}
-                size="md"
-              >
-                <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
-                {t('resetAllSettings')}
-              </Button>
-            )}
+            <Button variant="ghost" colorScheme="brand" fontWeight={500} onClick={openResetConfirmationBox} size="md">
+              <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
+              {t('resetSettings')}
+            </Button>
+            <ConfirmationBox
+              title="Reset Settings?"
+              content="Are you sure you want to reset Settings? This action cannot be undone."
+              isOpen={isResetConfirmationModalOpen}
+              onClose={onResetConfirmationModalClose}
+              onConfirm={() => {
+                onResetConfirmationModalClose()
+                clearSettingType(tableName)
+              }}
+            />
             <ControlledBoard
               onCardDragChange={onCardDragChange}
               board={board}

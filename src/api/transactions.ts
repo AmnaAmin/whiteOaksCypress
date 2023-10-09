@@ -34,6 +34,7 @@ import {
   CHANGE_ORDER_DEFAULT_VALUE,
   LIEN_WAIVER_DEFAULT_VALUES,
   TRANSACTION_FEILD_DEFAULT,
+  TRANSACTION_FPM_DM_STATUS_OPTIONS,
   TRANSACTION_MARK_AS_OPTIONS,
   TRANSACTION_STATUS_OPTIONS,
 } from 'features/project-details/transactions/transaction.constants'
@@ -357,8 +358,8 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   return {
     changeOrderSelectOptions: changeOrderOptions
       ? [CHANGE_ORDER_DEFAULT_OPTION, ...changeOrderOptions]
-      : [CHANGE_ORDER_DEFAULT_OPTION] as any,
-    ...rest, 
+      : ([CHANGE_ORDER_DEFAULT_OPTION] as any),
+    ...rest,
   }
 }
 
@@ -487,7 +488,10 @@ export const parseChangeOrderAPIPayload = async (
     lineItems,
     documents,
     projectId: projectId ?? '',
-
+    paymentProcessed: formValues.paymentProcessed,
+    payAfterDate: formValues.payAfterDate,
+    verifiedByFpm: formValues.verifiedByFpm?.value,
+    verifiedByManager: formValues.verifiedByManager?.value,
     ...againstProjectSOWPayload,
   }
 }
@@ -511,6 +515,8 @@ export const parseChangeOrderUpdateAPIPayload = async (
     vendorId: transaction.vendorId as number,
     systemGenerated: transaction?.systemGenerated,
     ...payload,
+    verifiedByFpm: formValues.verifiedByFpm?.value,
+    verifiedByManager: formValues.verifiedByManager?.value,
   }
 }
 
@@ -539,6 +545,10 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
     refund: false,
+    paymentProcessed: null,
+    payAfterDate: null,
+    verifiedByFpm: null,
+    verifiedByManager: null,
   }
 }
 
@@ -595,6 +605,7 @@ export const parseTransactionToFormValues = (
   const findOption = (value, options): SelectOption | null => {
     return options.find(option => option.value?.toString() === value) ?? null
   }
+
   const payDateVariance = calculatePayDateVariance(transaction.clientApprovedDate, transaction.paidDate)
 
   const lienWaiverDocument = getLatestDocument(transaction.documents?.filter(doc => doc.fileType === 'lienWaiver.pdf'))
@@ -614,6 +625,14 @@ export const parseTransactionToFormValues = (
     transaction.sowRelatedWorkOrderId === null
       ? workOrderOptions[0]
       : findOption(transaction.sowRelatedWorkOrderId?.toString(), workOrderOptions)
+
+  const vFpmOptions =
+    transaction.verifiedByFpm === null ? null : findOption(transaction.verifiedByFpm, TRANSACTION_FPM_DM_STATUS_OPTIONS)
+
+  const vDmOptions =
+    transaction.verifiedByManager === null
+      ? null
+      : findOption(transaction.verifiedByManager, TRANSACTION_FPM_DM_STATUS_OPTIONS)
 
   const isRefunded =
     [
@@ -651,6 +670,10 @@ export const parseTransactionToFormValues = (
     paymentTerm: findOption(`${transaction.paymentTerm}`, PAYMENT_TERMS_OPTIONS),
     paidDate: datePickerFormat(transaction.paidDate as string),
     payDateVariance,
+    paymentProcessed: transaction.paymentProcessed,
+    payAfterDate: transaction.payAfterDate,
+    verifiedByFpm: vFpmOptions,
+    verifiedByManager: vDmOptions,
     paymentRecievedDate: datePickerFormat(transaction.paymentReceived as string),
     refund: isRefunded,
     transaction:
@@ -776,6 +799,19 @@ export const useTransaction = (transactionId?: number) => {
   return {
     transaction: changeOrder,
     ...rest,
+  }
+}
+
+export const useManagerEnabled = (projectId?: string) => {
+  const client = useClient()
+
+  const { data: managerEnabled } = useQuery(['managerEnabled'], async () => {
+    const response = await client(`user/draw/permission/${projectId}`, {})
+    return response?.data
+  })
+
+  return {
+    managerEnabled,
   }
 }
 

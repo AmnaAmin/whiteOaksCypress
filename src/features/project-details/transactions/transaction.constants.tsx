@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { TransactionMarkAsValues, TransactionStatusValues } from 'types/transaction.type'
+import { SelectOption, TransactionMarkAsValues, TransactionStatusValues } from 'types/transaction.type'
 import Status from 'features/common/status'
 import numeral from 'numeral'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
@@ -39,6 +39,12 @@ export const TRANSACTION_STATUS_OPTIONS = [
   { value: TransactionStatusValues.cancelled, label: 'Cancelled' },
   { value: TransactionStatusValues.denied, label: 'Denied' },
 ]
+
+export const TRANSACTION_FPM_DM_STATUS_OPTIONS = [
+  { value: TransactionStatusValues.approved, label: 'Approved' },
+  { value: TransactionStatusValues.cancelled, label: 'Cancelled' },
+  { value: TransactionStatusValues.denied, label: 'Denied' },
+] as SelectOption[]
 
 export const TRANSACTION_MARK_AS_OPTIONS = {
   paid: {
