@@ -96,51 +96,22 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   // The status field should be hidden if user create new transaction or
   // if the transaction of type overpayment with markAs = revenue
   // also we can use markAs?.value === TransactionMarkAsValues.revenue but sometime it's null
+  //if draw is against work order then status field will be shown when it is approved by FPM and Direct Manager of that fpm
   const isShowDrawStatusField = vFpm === TransactionStatusValues.approved && vDM === TransactionStatusValues.approved
-
-  // let isShowStatusField = false
-  // if (!!transaction) {
-  //   isShowStatusField = true
-  //   if (
-  //     drawTransaction &&
-  //     !isAgainstProjectSOWOptionSelected &&
-  //     vFpm !== TransactionStatusValues.approved &&
-  //     vDM !== TransactionStatusValues.approved
-  //   ) {
-  //     console.log(
-  //       '============================================',
-  //       drawTransaction,
-  //       !isAgainstProjectSOWOptionSelected,
-  //       vFpm,
-  //       vDM,
-  //     )
-  //     isShowStatusField = false
-  //   } else if (isTransactionTypeOverpaymentSelected && markAs?.value === TransactionMarkAsValues.paid) {
-  //     console.log('================')
-  //     isShowStatusField = false
-  //   } else {
-  //     isShowStatusField = false
-  //     console.log('==================2st ele', vFpm, vDM,isAgainstProjectSOWOptionSelected,)
-  //   }
-  // }
-
-  let isShowStatusField = false
-
-  const isTransactionValid =
-    !!transaction && !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)
-
-  if (!drawTransaction && isTransactionValid) {
-    isShowStatusField = true
-  } else if (drawTransaction) {
-    if (isAgainstProjectSOWOptionSelected && isTransactionValid) {
-      isShowStatusField = true
-    } else if (
-      !isAgainstProjectSOWOptionSelected &&
-      isTransactionValid &&
-      vFpm === TransactionStatusValues.approved &&
-      vDM === TransactionStatusValues.approved
-    ) {
-      isShowStatusField = true
+  var isShowStatusField = false
+  if (!!transaction) {
+    if (!drawTransaction) {
+      if (!(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)) {
+        isShowStatusField = true
+      }
+    } else {
+      if (isAgainstProjectSOWOptionSelected) {
+        isShowStatusField = true
+      } else {
+        if (isShowDrawStatusField) {
+          isShowStatusField = true
+        }
+      }
     }
   }
 
@@ -153,7 +124,6 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowNewExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowStatusField,
-    isShowDrawStatusField,
     isShowDrawFieldAgainstWO: isAgainstWorkOrderOptionSelected,
     drawTransaction,
     isTransactionTypeDrawAgainstProjectSOWSelected,
