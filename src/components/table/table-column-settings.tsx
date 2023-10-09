@@ -263,15 +263,6 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
   )
 }
 function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
-  
-  useEffect(() => {
-    Array.from(document.querySelectorAll(".react-kanban-column")).forEach(el => {
-      const child = el?.firstChild as any;
-      if (child) {
-        child?.classList?.add("kanban-custom-css") as any;
-      } 
-    });
-  }, [])
   const divStyle = {
     color: '#4A5568',
   }
@@ -280,9 +271,6 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
     width: '400px',
     fontWeight: 600,
     color: '#345EA6',
-    position: 'sticky',
-    top: 0,
-    background: 'red',
   }
 
   const cardStyle = {
@@ -300,9 +288,7 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
       <Board
         onCardDragEnd={onCardDragChange}
         disableColumnDrag
-        // renderColumnHeader={({ title }) => {  
-        //   return (<div style={columnStyle as any}>{title}</div>)
-        // }}
+        renderColumnHeader={({ title }) => <div style={columnStyle as any}>{title}</div>}
         renderCard={({ title, id }, { dragging }) => (
           <React.Fragment key={id}>
             <div
