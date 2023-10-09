@@ -46,6 +46,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   woaPaidDateStart: 'woaPaidDate.greaterThanOrEqual',
   woaPaidDateEnd: 'woaPaidDate.lessThanOrEqual',
   invoiceNumber: 'invoiceNumber.contains',
+  resubmissionInvoiceNumber: 'resubmissionInvoiceNumber.contains',
   woaInvoiceDateStart: 'woaInvoiceDate.greaterThanOrEqual',
   woaInvoiceDateEnd: 'woaInvoiceDate.lessThanOrEqual',
   accountRecievable: 'accountRecievable.equals',
@@ -83,7 +84,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   woaStartDateEnd: 'woaStartDate.lessThanOrEqual',
   lienRightExpireDateStart: 'lienRightExpireDate.greaterThanOrEqual',
   lienRightExpireDateEnd: 'lienRightExpireDate.lessThanOrEqual',
-  latestNoteAddedTime: 'latestNoteAddedTime.equals',
+  latestNoteAddedDateStart: 'latestNoteAddedDate.greaterThanOrEqual',
+  latestNoteAddedDateEnd: 'latestNoteAddedDate.lessThanOrEqual',
   noteOwner: 'noteOwner.contains',
 }
 
@@ -196,8 +198,8 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: 'projects.projectTable.dateAddedNotes',
-    accessorKey: 'latestNoteAddedTime',
-    accessorFn: (cellInfo: any) => dateFormat(cellInfo.latestNoteAddedTime),
+    accessorKey: 'latestNoteAddedDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.latestNoteAddedDate),
     meta: { format: 'date' },
   },
   {
