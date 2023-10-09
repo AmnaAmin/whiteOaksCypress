@@ -70,6 +70,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
   const isAgainstProjectSOWOptionSelected = selectedAgainstId && selectedAgainstId === AGAINST_DEFAULT_VALUE
   const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.draw
+
   // const isTransactionTypeDrawAgainstProjectSOWSelected = selectedTransactionTypeId === TransactionTypeValues.shipping
   // YK - PSWOA-1243
   // && isAgainstProjectSOWOptionSelected
@@ -88,12 +89,31 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     ].some(val => val === selectedTransactionTypeId),
   }
   const isPaymentTermDisabled = isAgainstWorkOrderOptionSelected && !isAdmin
+  const drawTransaction = transaction?.transactionType === TransactionTypeValues.draw
+  const vFpm = transaction?.verifiedByFpm as unknown as string
+  const vDM = transaction?.verifiedByManager as unknown as string
 
   // The status field should be hidden if user create new transaction or
   // if the transaction of type overpayment with markAs = revenue
   // also we can use markAs?.value === TransactionMarkAsValues.revenue but sometime it's null
-  const isShowStatusField =
-    !!transaction && !(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)
+  //if draw is against work order then status field will be shown when it is approved by FPM and Direct Manager of that fpm
+  const isShowDrawStatusField = vFpm === TransactionStatusValues.approved && vDM === TransactionStatusValues.approved
+  var isShowStatusField = false
+  if (!!transaction) {
+    if (!drawTransaction) {
+      if (!(isTransactionTypeOverpaymentSelected && markAs?.value !== TransactionMarkAsValues.paid)) {
+        isShowStatusField = true
+      }
+    } else {
+      if (isAgainstProjectSOWOptionSelected) {
+        isShowStatusField = true
+      } else {
+        if (isShowDrawStatusField) {
+          isShowStatusField = true
+        }
+      }
+    }
+  }
 
   const isStatusNotCancelled = status?.value !== TransactionStatusValues.cancelled
   const markAsPaid = markAs?.value === 'paid'
@@ -104,8 +124,11 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowNewExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowStatusField,
+    isShowDrawFieldAgainstWO: isAgainstWorkOrderOptionSelected,
+    drawTransaction,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     refundCheckbox,
+    isShowDM: vFpm === TransactionStatusValues.approved,
     isPaymentTermDisabled,
     isShowPaymentRecievedDateField: [
       TransactionTypeValues.payment,
@@ -120,6 +143,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
 
 export const useFieldRequiredDecision = (control: Control<FormValues, any>, transaction) => {
   const status = useWatch({ name: 'status', control })
+
   const isStatusApproved = status?.value === TransactionStatusValues.approved
   // const against = useWatch({ name: 'against', control })
   // const transactionType = useWatch({ name: 'transactionType', control })
@@ -165,12 +189,17 @@ export const useFieldDisabledEnabledDecision = (
     transaction?.status === TransactionStatusValues.denied
   const isFactoringFeeSysGenerated =
     transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
-
+  const vFpm = transaction?.verifiedByFpm as unknown as string
+  const vDM = transaction?.verifiedByManager as unknown as string
   return {
     isUpdateForm,
     isApproved: isStatusApproved,
     isSysFactoringFee: isFactoringFeeSysGenerated,
-    isPaidDateDisabled: !transaction || (isStatusApproved && !isAdminEnabled),
+    isPaidDateDisabled:
+      !transaction ||
+      (isStatusApproved &&
+        !isAdminEnabled &&
+        !(vFpm === (TransactionStatusValues.approved as unknown as any) && vDM === TransactionStatusValues.approved)),
     isStatusDisabled:
       (isStatusApproved && !(isAdmin || isAccounting)) ||
       isMaterialsLoading ||

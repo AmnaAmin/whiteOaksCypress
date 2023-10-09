@@ -190,6 +190,10 @@ export interface FormValues {
   paymentRecievedDate: string | null
   refund: boolean | null
   lienWaiver?: LienWaiverFormValues
+  paymentProcessed: string | null
+  payAfterDate: string | null
+  verifiedByFpm: SelectOption | null
+  verifiedByManager: SelectOption | null
 }
 
 export type ChangeTransaction = {
@@ -218,6 +222,10 @@ export type ChangeOrderPayload = {
   paymentTerm: string | null
   payDateVariance: string | null
   documents?: Array<any>
+  paymentProcessed: string | null
+  payAfterDate: string | null
+  verifiedByFpm: SelectOption | null
+  verifiedByManager: SelectOption | null
 }
 
 export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
@@ -235,6 +243,10 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   modifiedBy: string
   vendorId: number | null
   systemGenerated: boolean | null
+  paymentProcessed: string | null
+  payAfterDate: string | null
+  verifiedByFpm: SelectOption | null
+  verifiedByManager: SelectOption | null
 }
 
 type LineItem = {
@@ -277,6 +289,10 @@ export type ChangeOrderType = {
   paymentReceived: string | null
   documents: Document[]
   systemGenerated: boolean
+  verifiedByFpm: SelectOption | null
+  verifiedByManager: SelectOption | null
+  paymentProcessed: null
+  payAfterDate: null
 }
 
 export type TransactionsWithRefundType = {

@@ -139,7 +139,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     }
   }, [materialItems])
   // useOnRefundMaterialCheckboxChange(control, update)
-
   const { refundCheckbox } = useFieldShowHideDecision(control)
   const { isApproved, isSysFactoringFee, lateAndFactoringFeeForVendor } = useFieldDisabledEnabledDecision(
     control,
