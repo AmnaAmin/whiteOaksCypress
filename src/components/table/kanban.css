@@ -23,3 +23,14 @@
   border-radius: 1px;
   border: 2px solid #f1f1f1;
 }
+
+/* .react-kanban-board-column-header {
+  position: sticky;
+  top: 0;
+  padding: 0px !important;
+} */
+
+.kanban-custom-css {
+  position: sticky;
+  top: 0;
+}

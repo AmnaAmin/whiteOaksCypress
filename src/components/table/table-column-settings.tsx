@@ -94,12 +94,12 @@ const TableColumnSettings = ({
       columns: [
         {
           id: 1,
-          title: 'Available Records', // Change the order of the columns
+          title: `${t('availableColumn')}`, // Change the order of the columns
           cards: mapRecordsUnavailable,
         },
         {
           id: 2,
-          title: 'Show These Records in this Order',
+          title: `${t('showRecordsOrder')}`,
           cards: mapRecordsAvailable,
         },
       ] as any,
@@ -155,7 +155,6 @@ const TableColumnSettings = ({
     onClose()
     refetch()
   }
-  const { isAdmin } = useUserRolesSelector()
   const { mutate: clearSettingType } = useResetSettingsMutation()
   const {
     isOpen: isResetConfirmationModalOpen,
@@ -211,14 +210,7 @@ const TableColumnSettings = ({
             pb="20px"
           >
             {!isReadOnly && (
-              <Button
-                mr="770px"
-                variant="ghost"
-                colorScheme="brand"
-                fontWeight={500}
-                onClick={event => clearSettingType(tableName)}
-                size="md"
-              >
+              <Button variant="ghost" colorScheme="brand" fontWeight={500} onClick={openResetConfirmationBox} size="md">
                 <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
                 {t('resetSettings')}
               </Button>
@@ -291,7 +283,7 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
       <Board
         onCardDragEnd={onCardDragChange}
         disableColumnDrag
-        renderColumnHeader={({ title }) => <div style={columnStyle}>{title}</div>}
+        renderColumnHeader={({ title }) => <div style={columnStyle as any}>{title}</div>}
         renderCard={({ title, id }, { dragging }) => (
           <React.Fragment key={id}>
             <div
