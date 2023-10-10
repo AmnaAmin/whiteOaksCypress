@@ -1,7 +1,7 @@
 import { Tabs, TabPanel, TabList, Tab, TabPanels } from '@chakra-ui/react'
 import { ConstructionPortalPayable } from 'features/payable/construction-portal-payable'
-//import { EstimatesPortalPayable } from 'features/payable/estimates-portal-payable'
-//import { MaintenancePortalPayable } from 'features/payable/maintenance-portal-payable'
+import { EstimatesPortalPayable } from 'features/payable/estimates-portal-payable'
+import { MaintenancePortalPayable } from 'features/payable/maintenance-portal-payable'
 import { useState } from 'react'
 
 export const Payable = () => {
@@ -22,10 +22,10 @@ export const Payable = () => {
             <ConstructionPortalPayable />
           </TabPanel>
           <TabPanel h="100vh" padding="5px 0px 0px 0px">
-            {/*<EstimatesPortalPayable />*/}
+            <EstimatesPortalPayable />
           </TabPanel>
           <TabPanel h="100vh" padding="5px 0px 0px 0px">
-            {/*<MaintenancePortalPayable />*/}
+            *<MaintenancePortalPayable />
           </TabPanel>
         </TabPanels>
       </Tabs>

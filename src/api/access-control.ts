@@ -235,6 +235,7 @@ export enum ADV_PERMISSIONS {
   hideCreateProject = 'PROJECT.CREATE.HIDE',
   hidePaidProjects = 'PROJECT.PAID.HIDE',
   overrideDrawRestrictionOnPercentageCompletion = 'PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE',
+  verifiedByFPM = 'PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT',
 }
 
 export const mapFormValuestoPayload = (values, allPermissions) => {
@@ -297,6 +298,7 @@ export const permissionsDefaultValues = ({ permissions }) => {
         [ADV_PERMISSIONS.overrideDrawRestrictionOnPercentageCompletion, 'ALL'].includes(p),
       ),
       verifyVendorDocuments: permissionSet?.some(p => [ADV_PERMISSIONS.verifyVendorDocuments, 'ALL'].includes(p)),
+      verifiedByFPM: permissionSet?.some(p => [ADV_PERMISSIONS.verifiedByFPM, 'ALL'].includes(p)),
     },
   }
 }
