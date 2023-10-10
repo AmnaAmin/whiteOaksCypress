@@ -162,7 +162,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
-  const { isVendor, isAccounting, isFPM } = useUserRolesSelector()
+  const { isVendor } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -177,7 +177,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
   const { managerEnabled } = useManagerEnabled(projectId)
-  const isDM = managerEnabled?.allowed
+  const isManagingFPM = managerEnabled?.allowed
   const isShowFpm = !!transaction
   const {
     againstOptions: againstSelectOptions,
@@ -282,7 +282,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const { permissions } = useRoleBasedPermissions()
   /* add permissions to verify by fpm and district manager*/
-  const isAdminEnabled = permissions.some(p => ['PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE', 'ALL'].includes(p))
+  const isEnabledToOverrideNTE = permissions.some(p =>
+    ['PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE', 'ALL'].includes(p),
+  )
+  const isEnabledForVerifyingAsFPM = permissions.some(p =>
+    ['PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT', 'ALL'].includes(p),
+  )
   const isAdmin = useRoleBasedPermissions()?.permissions?.includes('ALL')
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
@@ -294,7 +299,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     !selectedCancelledOrDenied && //Check if the status is being changed to cancel/deny let the transaction be allowed.
     (projectAwardCheck || //when there is no project award
       (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund + is not approved
-      (isCompletedWorkLessThanNTEPercentage && !isAdminEnabled)) //when %complete is less than NTE and user is not admin/accounting
+      (isCompletedWorkLessThanNTEPercentage && !isEnabledToOverrideNTE)) //when %complete is less than NTE and user is not admin/accounting
 
   const {
     isShowChangeOrderSelectField,
@@ -560,7 +565,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {remainingAmountExceededFlag && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
       {fileParseMsg && <PercentageCompletionLessThanNTEAlert msg={t(`${WORK_ORDER}.attachmentParsingFailure`)} />}
       {isCompletedWorkLessThanNTEPercentage &&
-        (isAdminEnabled ? (
+        (isEnabledToOverrideNTE ? (
           <PercentageCompletionLessThanNTEAlert msg="PercentageCompletionForAdminAndAccount" />
         ) : (
           <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />
@@ -944,7 +949,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                       <Select
                                         {...field}
                                         options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                        isDisabled={!isAdminEnabled && !isFPM}
+                                        isDisabled={!isEnabledForVerifyingAsFPM}
                                         size="md"
                                         selectProps={{ isBorderLeft: true }}
                                         onChange={statusOption => {
@@ -974,7 +979,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                       <Select
                                         {...field}
                                         options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                        isDisabled={!isDM}
+                                        isDisabled={!isManagingFPM}
                                         size="md"
                                         selectProps={{ isBorderLeft: true }}
                                         onChange={statusOption => {

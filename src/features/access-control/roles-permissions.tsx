@@ -681,7 +681,7 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
               />
             </VStack>
             <VStack
-              maxW="35%"
+              w="40%"
               pl="40px"
               alignItems={'flex-start'}
               borderLeft="1px solid #E2E8F0"
@@ -775,6 +775,98 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                 )}
               />
               <Text color="gray.500" mt="25px !important" fontWeight={500}>
+                Work Order
+              </Text>
+              <Controller
+                control={control}
+                name={`advancedPermissions.cancelWorkOrderEnable`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px">Can Cancel Work order</Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
+              <Text color="gray.500" mt="25px !important" fontWeight={500}>
+                Vendor
+              </Text>
+              <Controller
+                control={control}
+                name={`advancedPermissions.deactivateVendor`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px">Can Deactivate Vendor</Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
+              <Controller
+                control={control}
+                name={`advancedPermissions.vendorAccountEdit`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px">Can Edit Vendor Accounts</Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
+              <Controller
+                control={control}
+                name={`advancedPermissions.verifyVendorDocuments`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px">Can Verify Documents</Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
+            </VStack>
+            <VStack pl="20px" alignItems={'flex-start'}>
+              <Text color="gray.500" fontWeight={500}>
                 Transaction
               </Text>
               <Controller
@@ -907,14 +999,9 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                   </>
                 )}
               />
-            </VStack>
-            <VStack pl="20px" alignItems={'flex-start'}>
-              <Text color="gray.500" fontWeight={500}>
-                Work Order
-              </Text>
               <Controller
                 control={control}
-                name={`advancedPermissions.cancelWorkOrderEnable`}
+                name={`advancedPermissions.verifiedByFPM`}
                 render={({ field, fieldState }) => (
                   <>
                     <Checkbox
@@ -928,73 +1015,9 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                       }}
                       // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                     >
-                      <Text fontSize="14px">Can Cancel Work order</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Text color="gray.500" mt="25px !important" fontWeight={500}>
-                Vendor
-              </Text>
-              <Controller
-                control={control}
-                name={`advancedPermissions.deactivateVendor`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Deactivate Vendor</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.vendorAccountEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Edit Vendor Accounts</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.verifyVendorDocuments`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Verify Documents</Text>
+                      <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
+                        Enable Verified By FPM
+                      </Text>
                     </Checkbox>
                   </>
                 )}
