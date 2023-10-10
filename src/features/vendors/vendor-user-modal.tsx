@@ -36,7 +36,7 @@ import { useStates } from 'api/pc-projects'
 import { useAuth } from 'utils/auth-context'
 import { useState, useEffect } from 'react'
 import { Card } from 'components/card/card'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 const VendorUserModal = ({
   vendorDetails,
@@ -111,6 +111,7 @@ const VendorUserModal = ({
       zipCode: values.zipCode,
       activated: values.activated,
       parentId: userInfo?.user.id,
+      authorities: ['VENDOR'],
     } as any
 
     if (isEditUser) {
@@ -155,7 +156,8 @@ const VendorUserModal = ({
       setModalSize('3xl')
     }
   }, [isMobile])
-  const { isFPM } = useUserRolesSelector()
+  const { permissions } = useRoleBasedPermissions()
+  const isReadOnly = permissions?.includes('VENDOR.READ')
 
   return (
     <div>
@@ -488,7 +490,7 @@ const VendorUserModal = ({
                     >
                       {t('cancel')}
                     </Button>
-                    {!isFPM && (
+                    {!isReadOnly && (
                       <Button type="submit" data-testid="saveUser" colorScheme="brand" disabled={!!watchRequiredField}>
                         {t('save')}
                       </Button>

@@ -29,26 +29,26 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 type ProjectProps = {
   selectedCard: string
   selectedDay: string
-  userIds?: number[]
-  selectedFPM?: any
+  userIds?: any
   resetFilters: boolean
   selectedFlagged?: any
+  isReadOnly?: boolean
 }
 
 export const ProjectsTable: React.FC<ProjectProps> = ({
   selectedCard,
   selectedDay,
   userIds,
-  selectedFPM,
   resetFilters,
   selectedFlagged,
+  isReadOnly,
 }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [paginationInitialized, setPaginationInitialized] = useState(false)
-  const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
+  const { data: days } = useWeekDayProjectsDue(userIds?.join(','))
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
@@ -59,7 +59,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       sorting,
       selectedCard,
       selectedDay,
-      selectedFPM,
       userIds,
       days,
       selectedFlagged,
@@ -185,6 +184,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
                     !(columnVisibility[col?.contentKey] === false),
                 )}
                 tableName={TableNames.project}
+                isReadOnly={isReadOnly}
               />
             )}
           </ButtonsWrapper>

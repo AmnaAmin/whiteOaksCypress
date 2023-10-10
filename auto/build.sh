@@ -19,6 +19,16 @@ if [ "preprod" = $ENV ]; then
   zip -r output-preprod.zip output-preprod
   buildkite-agent artifact upload output-preprod.zip
 
+elif [ "dev" = $ENV ]; then
+  export NODE_OPTIONS=--max-old-space-size=8192 
+  npm run build:prod
+
+  ls build
+  mkdir output-dev
+  cp -r build/* output-dev
+  zip -r output-dev.zip output-dev
+  buildkite-agent artifact upload output-dev.zip
+
 elif [ "prod" = $ENV ]; then
   export NODE_OPTIONS=--max-old-space-size=8192 
   npm run build:prod

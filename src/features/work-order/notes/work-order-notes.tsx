@@ -2,12 +2,14 @@ import React, { useEffect } from 'react'
 import { useNotes, useNoteMutation } from 'api/work-order'
 import { NotesTab } from 'features/common/notes-tab'
 import { useAccountDetails } from 'api/vendor-details'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 export const WorkOrderNotes: React.FC<any> = props => {
   const { workOrder, onClose, setNotesCount, navigateToProjectDetails } = props
   const { mutate: createNotes, isLoading: isNotesLoading } = useNoteMutation(workOrder?.id)
   const { data: account } = useAccountDetails()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
   const { notes = [] } = useNotes({
@@ -32,6 +34,7 @@ export const WorkOrderNotes: React.FC<any> = props => {
   return (
     <>
       <NotesTab
+        hideSave={isReadOnly}
         saveNote={saveNote}
         isNotesLoading={isNotesLoading}
         notes={notes}

@@ -41,9 +41,17 @@ interface TableColumnSettingsProps {
   disabled?: boolean
   refetch?: any
   tableName: TableNames
+  isReadOnly?: boolean
 }
 
-const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, tableName }: TableColumnSettingsProps) => {
+const TableColumnSettings = ({
+  onSave,
+  columns,
+  disabled = false,
+  refetch,
+  tableName,
+  isReadOnly,
+}: TableColumnSettingsProps) => {
   const [paginationRecord, setPaginationRecord] = useState<ColumnType | undefined>(
     columns?.find(c => c.field === 'pagination'),
   )
@@ -200,10 +208,12 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
             pt="20px"
             pb="20px"
           >
-            <Button variant="ghost" colorScheme="brand" fontWeight={500} onClick={openResetConfirmationBox} size="md">
-              <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
-              {t('resetSettings')}
-            </Button>
+            {!isReadOnly && (
+              <Button variant="ghost" colorScheme="brand" fontWeight={500} onClick={openResetConfirmationBox} size="md">
+                <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
+                {t('resetSettings')}
+              </Button>
+            )}
             <ConfirmationBox
               title="Reset Settings?"
               content="Are you sure you want to reset Settings? This action cannot be undone."
@@ -234,9 +244,11 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
               <Button variant="ghost" colorScheme="darkPrimary" onClick={closeSetting} border="1px solid" size="md">
                 {t('cancel')}
               </Button>
-              <Button data-testid="save-settings" colorScheme="darkPrimary" onClick={saveModal} size="md">
-                {t('save')}
-              </Button>
+              {isReadOnly ? null : (
+                <Button data-testid="save-settings" colorScheme="darkPrimary" onClick={saveModal} size="md">
+                  {t('save')}
+                </Button>
+              )}
             </HStack>
           </ModalFooter>
         </ModalContent>

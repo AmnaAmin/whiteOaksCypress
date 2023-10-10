@@ -20,6 +20,7 @@ import { DevTool } from '@hookform/devtools'
 import { ACCOUNTS } from 'pages/accounts.i18n'
 import { Card } from 'components/card/card'
 import { usePayableColumns } from './hooks'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 //All commented Code will be used later
 export const ConstructionPortalPayable = () => {
@@ -33,6 +34,7 @@ export const ConstructionPortalPayable = () => {
   ] = useState<string>('')
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = useState<SortingState>([])
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
 
   // const clearAll = () => {
   //   setSelectedCard('')
@@ -135,7 +137,8 @@ export const ConstructionPortalPayable = () => {
             clear={clearAll}
           /> */}
             <Spacer />
-            <Button
+            {!isReadOnly && (
+             <Button
               alignContent="right"
               colorScheme="brand"
               type="button"
@@ -146,6 +149,7 @@ export const ConstructionPortalPayable = () => {
               <Icon as={BiSync} fontSize="18px" mr={2} />
               {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
             </Button>
+            )}
           </Flex>
 
           {/* -- If overpayment card is not selected, then show payable table. (Overpayment Card Id is 6) -- */}
@@ -165,6 +169,7 @@ export const ConstructionPortalPayable = () => {
                 totalPages={totalPages}
                 dataCount={dataCount}
                 refetchPayables={refetchPayables}
+                isReadOnly={isReadOnly}
               />
             </Box>
           ) : (

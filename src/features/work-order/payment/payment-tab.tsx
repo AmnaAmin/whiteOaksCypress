@@ -27,6 +27,7 @@ import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
 import { truncateWithEllipsis } from 'utils/string-formatters'
 import moment from 'moment'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
 const CalenderCard = props => {
@@ -102,6 +103,7 @@ const PaymentInfoTab = props => {
   })
   const watchPartialPayment = watch('partialPayment')
   const watchPaymentDate = watch('paymentDate')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
   useEffect(() => {
@@ -530,14 +532,18 @@ const PaymentInfoTab = props => {
             <Button data-testid="wo-cancel-btn" variant="outline" onClick={props.onClose} colorScheme="brand">
               {t('cancel')}
             </Button>
-            <Button
-              type="submit"
-              data-testid="submit-btn"
-              colorScheme="brand"
-              disabled={isWorkOrderUpdating || isWOCancelled}
-            >
-              {t('save')}
-            </Button>
+            <>
+              {!isReadOnly && (
+                <Button
+                  type="submit"
+                  data-testid="submit-btn"
+                  colorScheme="brand"
+                  disabled={isWorkOrderUpdating || isWOCancelled}
+                >
+                  {t('save')}
+                </Button>
+              )}
+            </>
           </HStack>
         </ModalFooter>
       </form>

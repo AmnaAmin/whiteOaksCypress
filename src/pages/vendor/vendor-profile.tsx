@@ -15,7 +15,7 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { VendorProfile, VendorProfileDetailsFormData } from 'types/vendor.types'
-import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import {
   createVendorPayload,
   parseAccountsFormDataToAPIData,
@@ -67,8 +67,9 @@ const tabStyle = {
 export const VendorProfileTabs: React.FC<Props> = props => {
   const vendorProfileData = props.vendorProfileData
   const VendorType = props.vendorModalType
-  const { isVendor, isAdmin, isVendorManager } = useUserRolesSelector()
-  const allowVendorAccounts = isAdmin || isVendorManager
+  const { isVendor } = useUserRolesSelector()
+  const { permissions } = useRoleBasedPermissions()
+  const allowVendorAccounts = permissions.some(p => ['VENDOR.VENDORACCOUNTS.EDIT', 'ALL'].includes(p))
   const { t } = useTranslation()
   const toast = useToast()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')

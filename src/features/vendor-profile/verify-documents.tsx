@@ -4,7 +4,7 @@ import { BiCheckSquare } from 'react-icons/bi'
 import { AiFillExclamationCircle } from 'react-icons/ai'
 import { VendorProfile } from 'types/vendor.types'
 import { UseFormRegister } from 'react-hook-form'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 interface NewVendorProfile extends VendorProfile {
   coiGLStatus: string | null
@@ -165,7 +165,7 @@ interface AdminVerifyDocumentProps {
 
 export const AdminPortalVerifyDocument = (props: AdminVerifyDocumentProps): JSX.Element => {
   const [verificationStatus, setVerificationStatus] = useState<VERIFICATION_STATUS>(VERIFICATION_STATUS.UNVERIFIED)
-  const { isFPM } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('VENDOR.READ')
 
   useEffect(() => {
     if (props.fieldName === 'CoiWcExpCheckbox') {
@@ -282,8 +282,10 @@ export const AdminPortalVerifyDocument = (props: AdminVerifyDocumentProps): JSX.
         {verificationStatus === VERIFICATION_STATUS.UNVERIFIED && (
           <Checkbox
             color="#E2E8F0"
-            data-testid={'verify-' + props.fieldName}
-            isDisabled={isFPM}
+            //bgColor="#FFFFFF"
+            //borderColor="#E2E8F0"
+            // borderWidth="2px"
+            isDisabled={isReadOnly}
             {...props.registerToFormField(props.fieldName as any)}
           >
             <Text fontSize="14px" lineHeight="20px" color="#718096">

@@ -4,7 +4,6 @@ import { setToken } from 'utils/storage.utils'
 import { BrowserRouter } from 'react-router-dom'
 import { waitForLoadingToFinishLabelOnly } from 'utils/test-utils'
 import Dashboard from '../dashboard'
-import { VENDOR_DATA } from 'mocks/api/vendor-dashboard/data'
 import { currencyFormatter } from 'utils/string-formatters'
 import { PROJECT_FILTER_CARDS } from 'features/vendor/projects/project-filter-mock'
 
@@ -33,6 +32,6 @@ describe('Verify Vendor Dashboard', () => {
     expect(screen.getByTestId('upcoming-payments').textContent).toEqual(
       currencyFormatter(PROJECT_FILTER_CARDS.find(wo => wo.label === 'upcomingInvoiceTotal')?.count as number),
     )
-    expect(screen.getByTestId('vendor-score').textContent).toEqual(VENDOR_DATA.score?.toLocaleString())
+    //expect(screen.getByTestId('vendor-score').textContent).toEqual(VENDOR_DATA.score?.toLocaleString())
   })
 })

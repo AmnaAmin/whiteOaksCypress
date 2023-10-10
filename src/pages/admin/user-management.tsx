@@ -6,14 +6,15 @@ import { UserManagementTabs } from 'features/user-management/user-management-tab
 import { useQuery } from 'react-query'
 import { Project } from 'types/project.type'
 import { useClient } from 'utils/auth-context'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const UserManagement = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   return (
     <Card px="12px" py="16px">
-      
-      <UserManagementTabs onOpenUserModal={onOpen} />
-      {isOpen && <EditUserModal isOpen={isOpen} onClose={onClose}  />}
+      <UserManagementTabs onOpenUserModal={onOpen}  isReadOnly={isReadOnly}/>
+      {isOpen && <EditUserModal isOpen={isOpen} onClose={onClose} />}
     </Card>
   )
 }
@@ -24,10 +25,17 @@ export const useUsrMgt = (filterQueryString?: string, page?: number, size: numbe
 
   const { data, ...rest } = usePaginationQuery<Array<any>>(queryKey, endpoint, size || 10, { enabled: size > 0 })
 
+  const options =
+    data?.data?.map(res => ({
+      value: res?.id,
+      label: res?.firstName + ' ' + res?.lastName,
+    })) || []
+
   return {
     userMgt: data?.data,
     totalPages: data?.totalCount,
     dataCount: data?.dataCount,
+    options,
     ...rest,
   }
 }

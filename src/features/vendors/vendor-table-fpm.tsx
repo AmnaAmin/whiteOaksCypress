@@ -49,6 +49,9 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
 
   useEffect(() => {
     if (userInfo?.id) {
+      if (!userInfo?.fieldProjectManagerRoleId) {
+        userInfo.fieldProjectManagerRoleId = FPMManagerTypes.Regular
+      }
       let fpmBasedFilters = ''
       switch (userInfo?.fieldProjectManagerRoleId) {
         case FPMManagerTypes.District: {

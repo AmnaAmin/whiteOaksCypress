@@ -17,11 +17,12 @@ import { AddNewProjectModal } from 'features/projects/new-project/add-project'
 import { WeekDayFilters } from 'features/common/due-projects-weekly-filter/weekday-filters'
 import { BiBookAdd, BiChevronRight, BiChevronDown } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
-import { useFPMUsers } from 'api/pc-projects'
+import { useDirectReports } from 'api/pc-projects'
 import { useStickyState } from 'utils/hooks'
 import { Card } from 'components/card/card'
+import { useAccountData } from 'api/user-account'
 
 const formatGroupLabel = props => (
   <Box onClick={props.onClick} cursor="pointer" display="flex" alignItems="center" fontWeight="normal" ml={'-7px'}>
@@ -35,9 +36,14 @@ export const Projects = () => {
     onClose: onNewProjectModalClose,
     onOpen: onNewProjectModalOpen,
   } = useDisclosure()
-  const { isFPM } = useUserRolesSelector()
-  const { fpmUsers = [], setSelectedFPM, selectedFPM, userIds } = useFPMUsers()
 
+  const hideCreateProject = useRoleBasedPermissions()?.permissions?.some(p =>
+    ['PROJECT.CREATE.HIDE', 'PROJECT.READ']?.includes(p),
+  )
+
+  const { data } = useAccountData()
+  const { directReportOptions = [], isLoading: loadingReports } = useDirectReports(data?.email)
+  const [selectedUserIds, setSelectedUserIds] = useState<any>([])
   const [resetAllFilters, setResetAllFilters] = useState(false)
   const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard')
   const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay')
@@ -55,7 +61,7 @@ export const Projects = () => {
     setSelectedDay('')
     setSelectedFlagged('')
   }
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   return (
     <>
       <VStack alignItems="start" minH="calc(100vh - 160px)" pb="2">
@@ -68,8 +74,8 @@ export const Projects = () => {
               setSelectedFlagged(null)
               setSelectedCard(selection)
             }}
+            selectedUsers={selectedUserIds}
             selectedCard={selectedCard}
-            selectedFPM={selectedFPM}
             onSelectFlagged={selection => {
               setSelectedCard(null)
               setSelectedFlagged(selection)
@@ -91,47 +97,47 @@ export const Projects = () => {
             <Box ml="2">
               <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
             </Box>
-
             <WeekDayFilters
-              selectedFPM={selectedFPM}
               clearAll={clearAll}
               clear={() => {
                 setSelectedDay('')
               }}
+              selectedUsers={selectedUserIds}
               onSelectDay={selection => {
                 setSelectedDay(selection)
               }}
               selectedDay={selectedDay}
             />
-            {/* </Flex> */}
+
             <Spacer />
-            {!isFPM && (
+
+            <FormControl w="215px" mr={'10px'}>
+              <ReactSelect
+                formatGroupLabel={formatGroupLabel}
+                onChange={user => {
+                  user.value === 'ALL' ? setSelectedUserIds([]) : setSelectedUserIds([user.value])
+                }}
+                options={directReportOptions}
+                loadingCheck={loadingReports}
+                placeholder={'Select'}
+              />
+            </FormControl>
+            {!hideCreateProject && (
               <Button onClick={onNewProjectModalOpen} colorScheme="brand" fontSize="14px" minW={'140px'}>
                 <Icon as={BiBookAdd} fontSize="18px" mr={2} />
                 {t('projects.newProjects')}
               </Button>
             )}
-            {fpmUsers?.length > 0 && isFPM && (
-              <FormControl w="215px">
-                <ReactSelect
-                  formatGroupLabel={formatGroupLabel}
-                  onChange={setSelectedFPM}
-                  options={fpmUsers}
-                  placeholder={'Select'}
-                  selectProps={{ isBorderLeft: true }}
-                  styleOption={{ paddingLeft: '40px' }}
-                />
-              </FormControl>
-            )}
+            {/*change this logic based on access control requirements*/}
           </Flex>
           <Box w="100%" minH="500px">
             <ProjectsTable
               selectedCard={selectedCard as string}
               selectedDay={selectedDay as string}
-              userIds={userIds}
-              selectedFPM={selectedFPM}
+              userIds={selectedUserIds}
               resetFilters={resetAllFilters}
               selectedFlagged={selectedFlagged}
+              isReadOnly={isReadOnly}
             />
           </Box>
         </Card>

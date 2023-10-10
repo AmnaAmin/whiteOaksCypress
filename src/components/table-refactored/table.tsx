@@ -377,6 +377,9 @@ type TableProps = {
   handleOnDrag?: (result) => void
   handleOnDragStart?: (result) => void
   allowStickyFilters?: boolean
+  hightlightSelectedRow?: boolean
+  handleMouseEnter?: (row) => void
+  handleMouseLeave?: (row) => void
   isFilteredByApi?: boolean
 }
 
@@ -390,6 +393,9 @@ export const Table: React.FC<TableProps> = ({
   handleOnDrag,
   handleOnDragStart,
   allowStickyFilters,
+  hightlightSelectedRow,
+  handleMouseEnter,
+  handleMouseLeave,
   isFilteredByApi,
   ...restProps
 }) => {
@@ -569,10 +575,18 @@ export const Table: React.FC<TableProps> = ({
                         </Tr>
                       )
                     })
-                  : getRowModel().rows.map(row => (
+                  : getRowModel().rows.map((row, index) => (
                       <Tr
                         key={row.id}
-                        onClick={() => onRowClick?.(row.original)}
+                        onClick={() => {
+                          if (hightlightSelectedRow) {
+                            tableInstance.toggleAllRowsSelected(false)
+                            tableInstance.getRowModel().rows[index].toggleSelected()
+                          }
+                          onRowClick?.(row.original)
+                        }}
+                        onMouseEnter={() => handleMouseEnter?.(row.original)}
+                        onMouseLeave={() => handleMouseLeave?.(row.original)}
                         cursor={onRowClick ? 'pointer' : 'default'}
                         onContextMenu={() => onRightClick?.(row.original)}
                         _hover={{
@@ -580,7 +594,7 @@ export const Table: React.FC<TableProps> = ({
                         }}
                         backgroundColor={row.getIsSelected() || row.depth ? '#F9F9F9' : ''}
                       >
-                        {row.getVisibleCells().map(cell => {
+                        {row?.getVisibleCells().map(cell => {
                           const value = flexRender(cell.column.columnDef.cell, cell.getContext())
                           const title =
                             typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null

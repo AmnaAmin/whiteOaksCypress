@@ -25,6 +25,7 @@ import { BiCalendar, BiDetail, BiTrash } from 'react-icons/bi'
 import { useAuth } from 'utils/auth-context'
 import { dateFormat } from 'utils/date-time-utils'
 import { PROJECT_TYPE } from './project-type.i18n'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 const ReadonlyFileStructure: React.FC<{ label: string; value: string; icons: React.ElementType; testid: string }> = ({
   label,
@@ -66,6 +67,7 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
   const typeFieldWatch = watch('type')
   const Loading = isLoading || loading
   const { isOpen: isOpenProjType, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECTTYPE.READ')
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -177,7 +179,7 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
           </ModalBody>
           <ModalFooter borderTop="1px solid #E2E8F0" mt="40px">
             <HStack justifyContent="start" w="100%">
-              {projectTypeDetails && (
+              {projectTypeDetails && !isReadOnly && (
                 <Button variant="outline" colorScheme="brand" size="md" onClick={onOpen} leftIcon={<BiTrash />}>
                   {t(`${PROJECT_TYPE}.deleteType`)}
                 </Button>
@@ -196,14 +198,16 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
               >
                 {t(`${PROJECT_TYPE}.cancel`)}
               </Button>
-              <Button
-                isDisabled={!typeFieldWatch  || typeFieldWatch.trim() === ''|| Loading}
-                colorScheme="brand"
-                type="submit"
-                data-testid="saveProjectType"
-              >
-                {t(`${PROJECT_TYPE}.save`)}
-              </Button>
+              {!isReadOnly && (
+                <Button
+                  isDisabled={!typeFieldWatch || typeFieldWatch.trim() === '' || Loading}
+                  colorScheme="brand"
+                  type="submit"
+                  data-testid="saveProjectType"
+                >
+                  {t(`${PROJECT_TYPE}.save`)}
+                </Button>
+              )}
             </HStack>
           </ModalFooter>
         </form>

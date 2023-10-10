@@ -1,3 +1,5 @@
+import { SelectOption } from './transaction.type'
+
 export type UserForm = {
   email: string
   firstName: string
@@ -37,7 +39,7 @@ export type UserForm = {
   // managerRoleId?: string
   newBonus?: number | null
   newTarget?: number | null
-  parentFieldProjectManagerId?: number | null
+  parentFieldProjectManagerId?: SelectOption | null
   removeCards?: null
   reportingFieldManagers?: any[] | null
   stateId?: number
@@ -51,5 +53,5 @@ export type UserForm = {
   vendorAdmin?: boolean | undefined
   primaryAdmin?: boolean | undefined
 
-  directReports?: any
+  directReports?: SelectOption[]
 }

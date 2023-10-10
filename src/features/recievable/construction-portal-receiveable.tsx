@@ -17,8 +17,9 @@ import { RECEIVABLE_TABLE_QUERY_KEYS } from 'features/recievable/receivable.cons
 import { ReceivableConfirmationBox } from 'features/recievable/receivable-confirmation-box'
 import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
-export const ReceivableContext = React.createContext<any>(null);
+export const ReceivableContext = React.createContext<any>(null)
 
 export const ConstructionPortalReceiveable: React.FC = () => {
   const [loading, setLoading] = useState(false)
@@ -33,8 +34,8 @@ export const ConstructionPortalReceiveable: React.FC = () => {
 
   const formReturn = useForm()
 
-  const { register, reset, control, setValue, watch } = formReturn;
-
+  const { register, reset, control, setValue, watch } = formReturn
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('RECEIVABLE.READ')
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = useState<SortingState>([])
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
@@ -111,12 +112,11 @@ export const ConstructionPortalReceiveable: React.FC = () => {
     setIsBatchClick(false)
   }
 
-  const formValues = watch();
-
+  const formValues = watch()
 
   return (
     <ReceivableContext.Provider value={formReturn}>
-      <form method='post'>
+      <form method="post">
         <Box pb="20">
           {/* <FormLabel variant="strong-label" size="lg">
             {t(`${ACCOUNTS}.accountReceivable`)}
@@ -138,17 +138,21 @@ export const ConstructionPortalReceiveable: React.FC = () => {
               clear={clearAll}
             /> */}
               <Spacer />
-              <Button
-                alignContent="right"
-                // onClick={onNewProjectModalOpen}
-                colorScheme="brand"
-                type="button"
-                minW={'140px'}
-                onClick={ () => Submit(formValues) }
-              >
-                <Icon as={BiSync} fontSize="18px" mr={2} />
-                {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
-              </Button>
+              <>
+                {!isReadOnly && (
+                  <Button
+                    alignContent="right"
+                    // onClick={onNewProjectModalOpen}
+                    colorScheme="brand"
+                    type="button"
+                    minW={'140px'}
+                    onClick={() => Submit(formValues)}
+                  >
+                    <Icon as={BiSync} fontSize="18px" mr={2} />
+                    {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
+                  </Button>
+                )}
+              </>
             </Flex>
 
             {/* {batchRunStatus && <Box>{failedRun?.description}</Box>} */}
@@ -165,6 +169,7 @@ export const ConstructionPortalReceiveable: React.FC = () => {
                 setSorting={setSorting}
                 queryStringWithPagination={queryStringWithPagination}
                 queryStringWithoutPagination={queryStringWithoutPagination}
+                isReadOnly={isReadOnly}
               />
             </Box>
           </Card>

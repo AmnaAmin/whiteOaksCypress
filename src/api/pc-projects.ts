@@ -75,6 +75,30 @@ export const useProjectDetails = (projectId?: string) => {
     { enabled: false },
   )
 }
+export const useDirectReports = (email: string) => {
+  const client = useClient()
+
+  const { data: directReports, ...rest } = useQuery(
+    'direct-reports',
+    async () => {
+      const response = await client(`users/${email}`, { email })
+
+      return response?.data
+    },
+    { enabled: !!email },
+  )
+
+  const directReportOptions =
+    directReports?.directChild?.map(dr => ({
+      label: dr?.firstName + ' ' + dr?.lastName,
+      value: dr?.id,
+    })) || []
+
+  return {
+    directReportOptions: [{ label: 'ALL', value: 'ALL' }, ...directReportOptions],
+    ...rest,
+  }
+}
 
 export const useCreateProjectMutation = () => {
   const client = useClient()
@@ -362,7 +386,7 @@ export const useFPMs = () => {
   const client = useClient()
 
   const { data: fieldProjectMangers, ...rest } = useQuery('FPM', async () => {
-    const response = await client(`users/usertype/5?sort=firstName,asc`, {})
+    const response = await client(`users/v2/usertype/5?sort=firstName,asc`, {})
 
     return response?.data
   })
@@ -412,7 +436,7 @@ export const useProjectCoordinators = () => {
   const client = useClient()
 
   const { data: projectCoordinators, ...rest } = useQuery('PC', async () => {
-    const response = await client(`users/usertype/112?sort=firstName,asc`, {})
+    const response = await client(`users/v2/usertype/112?sort=firstName,asc`, {})
 
     return response?.data
   })
@@ -530,6 +554,7 @@ export const useGetAllFPMVendors = (fpmBasedQueryParams, queryStringWithOutPagin
   }
 }
 export const useFPMVendor = (fpmBasedQueryParams, queryStringWithPagination, pageSize) => {
+  
   const query = fpmBasedQueryParams + '&' + queryStringWithPagination
   const apiQueryString = getVendorsQueryString(query)
   const { data, ...rest } = usePaginationQuery<vendors>(

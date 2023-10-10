@@ -32,11 +32,11 @@ export enum UserTypes {
 export const useUserRolesSelector = (): UserRoles => {
   const { data } = useAuth()
 
-  const { userType } = (data?.user as Account) ?? ''
+  const { authorities, userType } = (data?.user as Account) ?? ''
 
   return {
-    isAdmin: userType === UserTypes.admin,
-    isVendor: userType === UserTypes.vendor,
+    isAdmin: authorities?.includes('ROLE_ADMIN'),
+    isVendor: authorities?.includes('VENDOR'),
     isProjectCoordinator: userType === UserTypes.projectCoordinator,
     isVendorManager: userType === UserTypes.vendorManager,
     isFPM: userType === UserTypes.fieldProjectManager,
@@ -52,4 +52,26 @@ export const useUserRolesSelector = (): UserRoles => {
 export const useUserProfile = (): Account | undefined => {
   const { data } = useAuth()
   return data?.user
+}
+
+export const useRoleBasedPermissions = (): { permissions: Array<string> } => {
+  const { data } = useAuth()
+  const { permissions, authorities } = data?.user as Account
+  const isAdmin = authorities.includes('ROLE_ADMIN')
+  return {
+    permissions: isAdmin ? ['ALL'] : permissions,
+  }
+}
+
+export enum ROLE {
+  Vendor = 'Vendor',
+  PC = 'Project Coordinator',
+  VendorManager = 'Vendor Manager',
+  DOC = 'Director Of Construction',
+  FPM = 'Field Project Manager',
+  CO = 'Construction Operations',
+  ClientManager = 'Client Manager',
+  Accounting = 'Accounting',
+  Operations = 'Operational',
+  Admin = 'Admin',
 }

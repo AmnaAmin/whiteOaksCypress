@@ -28,6 +28,7 @@ import { t } from 'i18next'
 import { Market } from 'types/vendor.types'
 import { useTranslation } from 'react-i18next'
 import { ConfirmationBox } from 'components/Confirmation'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 const InformationCard: React.FC<{ label: string; value: string; icons: React.ElementType }> = ({
   label,
@@ -58,13 +59,13 @@ type newVendorSkillsTypes = {
 }
 export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedVendorSkills }) => {
   const { data: account } = useAccountDetails()
-  const { mutate: createVendorSkills , isLoading} = useVendorSkillsMutation()
+  const { mutate: createVendorSkills, isLoading } = useVendorSkillsMutation()
   const { control, register, handleSubmit, reset, setValue } = useForm()
   const toast = useToast()
   const queryClient = useQueryClient()
   const { isOpen: isOpenDeleteSkill, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const { mutate: deleteVendorSkillMutate, isLoading: loadingDelete } = useVendorSkillDelete()
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('VENDORSKILL.READ')
   const deleteVendorSkill = () => {
     deleteVendorSkillMutate(selectedVendorSkills, {
       onSuccess: () => {
@@ -172,7 +173,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px">
               <HStack justifyContent="start" w="100%">
-                {selectedVendorSkills && (
+                {!isReadOnly && selectedVendorSkills && (
                   <Button variant="outline" colorScheme="brand" size="md" onClick={onOpen} leftIcon={<BiTrash />}>
                     {t(`${VENDOR_MANAGER}.deleteSkill`)}
                   </Button>
@@ -189,9 +190,17 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                 >
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
-                <Button disabled={isLoading ||!watchvalue || watchvalue.trim() === ''} type="submit" colorScheme="brand">
-                  {t(`${VENDOR_MANAGER}.save`)}
-                </Button>
+                <>
+                  {!isReadOnly && (
+                    <Button
+                      disabled={isLoading || !watchvalue || watchvalue.trim() === ''}
+                      type="submit"
+                      colorScheme="brand"
+                    >
+                      {t(`${VENDOR_MANAGER}.save`)}
+                    </Button>
+                  )}
+                </>
               </HStack>
             </ModalFooter>
             {isOpenDeleteSkill && (

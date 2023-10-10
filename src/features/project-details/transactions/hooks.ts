@@ -12,7 +12,7 @@ import { AGAINST_DEFAULT_VALUE, calculatePayDateVariance, parseLienWaiverFormVal
 import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 
 /*function getRefundTransactionType(type): TransactionsWithRefundType {
   if (type === TransactionTypeValues.material)
@@ -154,6 +154,21 @@ export const useFieldRequiredDecision = (control: Control<FormValues, any>, tran
   }
 }
 
+export const usePermissionBasedDecision = () => {
+  const { permissions } = useRoleBasedPermissions()
+  const enableFutureDate = permissions.some(p => ['PROJECTDETAIL.TRANSACTION.FUTUREPAYMENT.EDIT', 'ALL'].includes(p))
+  const editPaymentReceived = permissions.some(p =>
+    ['PROJECTDETAIL.TRANSACTION.PAYMENTRECEIVED.EDIT', 'ALL'].includes(p),
+  )
+  const editInvoiceDate = permissions.some(p => ['PROJECTDETAIL.TRANSACTION.INVOICEDATE.EDIT', 'ALL'].includes(p))
+  return {
+    enableFutureDate,
+    editPaymentReceived,
+    editInvoiceDate,
+    allowSaveOnApproved: enableFutureDate || editPaymentReceived || editInvoiceDate,
+  }
+}
+
 export const isManualTransaction = transactionType =>
   [
     TransactionTypeValues.changeOrder,
@@ -175,8 +190,10 @@ export const useFieldDisabledEnabledDecision = (
   transaction?: ChangeOrderType,
   isMaterialsLoading?: boolean,
 ) => {
-  const { isAdmin, isAccounting, isVendor } = useUserRolesSelector()
-  const isAdminEnabled = isAdmin || isAccounting
+  const { permissions } = useRoleBasedPermissions()
+  const { isVendor } = useUserRolesSelector()
+  const statusEditPermission = permissions.some(p => ['PROJECTDETAIL.TRANSACTION.STATUS.EDIT', 'ALL'].includes(p))
+  const paidEditPermission = permissions.some(p => ['PROJECTDETAIL.TRANSACTION.PAIDDATE.EDIT', 'ALL'].includes(p))
   const isUpdateForm = !!transaction || isMaterialsLoading
   const lateAndFactoringFeeForVendor =
     isVendor &&
@@ -198,10 +215,10 @@ export const useFieldDisabledEnabledDecision = (
     isPaidDateDisabled:
       !transaction ||
       (isStatusApproved &&
-        !isAdminEnabled &&
+        !paidEditPermission &&
         !(vFpm === (TransactionStatusValues.approved as unknown as any) && vDM === TransactionStatusValues.approved)),
     isStatusDisabled:
-      (isStatusApproved && !(isAdmin || isAccounting)) ||
+      (isStatusApproved && !statusEditPermission) ||
       isMaterialsLoading ||
       lateAndFactoringFeeForVendor ||
       isFactoringFeeSysGenerated,

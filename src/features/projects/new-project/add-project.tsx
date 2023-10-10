@@ -193,6 +193,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
             position: 'top-left',
           })
           onClose()
+          // discuss this logic in access control
 
           // In case project coordinator created a new project for other user
           // than it should be redirected to project details page

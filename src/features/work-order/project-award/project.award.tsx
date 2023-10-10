@@ -6,7 +6,7 @@ import { ProjectAwardCard, TextCard } from './project-award-card'
 import { Text } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { PROJECT_AWARD } from './projectAward.i18n'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { currencyFormatter } from 'utils/string-formatters'
 import { useWorkOrderAwardStats } from 'api/transactions'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
@@ -15,6 +15,7 @@ import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 export const ProjectAwardTab: React.FC<any> = props => {
   const awardPlanScopeAmount = props?.awardPlanScopeAmount
   const { isUpdating, projectAwardData, isUpgradeProjectAward, workOrder } = props
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
 
   const { isAdmin } = useUserRolesSelector()
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
@@ -214,8 +215,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               <Button data-testid="wo-cancel-btn" onClick={props?.onClose} variant="outline" colorScheme="brand">
                 {t('cancel')}
               </Button>
-
-              {props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward ? (
+              {!isReadOnly && (props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward) ? (
                 <Button type="submit" colorScheme="brand" disabled={isSaveDisable}>
                   {t('save')}
                 </Button>

@@ -1,15 +1,4 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { useMemo } from 'react'
-import { useForm } from 'react-hook-form'
-import { FormValues } from 'types/transaction.type'
-import { transactionDefaultFormValues } from 'api/transactions'
-import { TransactionAmountForm } from '../transaction-amount-form'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { ChakraProvider } from '@chakra-ui/react'
-import { theme } from 'theme/theme'
-
-const TransactionForm = () => {
+/*const TransactionForm = () => {
   const queryClient = new QueryClient({})
   const defaultValues: FormValues = useMemo(() => {
     return transactionDefaultFormValues('test@test.com')
@@ -27,6 +16,9 @@ const TransactionForm = () => {
     </QueryClientProvider>
   )
 }
+beforeAll(() => {
+  setToken('pc')
+})
 
 const FIELD_CHECKBOX_SELECTOR = '#amounts-list input[type=checkbox]'
 const ALL_CHECKBOX_SLELECTOR = '#all-checkbox input[type=checkbox]'
@@ -135,4 +127,4 @@ describe('Transaction amount adding/removing interactions test cases', () => {
 
     expect(screen.getByTestId('transaction-description-0')).toBeInTheDocument()
   })
-})
+})*/

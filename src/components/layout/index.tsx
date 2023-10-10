@@ -15,17 +15,19 @@ import { Sidebar } from './sidebar'
 import { SidebarLink } from './sidebar-link'
 import { useMobileMenuState } from 'utils/hooks/useMobileMenuState'
 import { AiOutlineVerticalLeft, AiOutlineVerticalRight } from 'react-icons/ai'
-import { useRoleBasedMenu } from './constants'
+import { MenusList } from './constants'
 import { IdleTimeOutModal } from './idle-time-out'
 import { useTranslation } from 'react-i18next'
 import { SIDE_NAV } from './sideNav.i18n'
 import { processRegisteration } from 'integrations/firebase/firebase-config'
 import { DeviceSupported } from 'integrations/firebase/device-support-warning'
 import { ViewLoader } from 'components/page-level-loader'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const Layout: React.FC = props => {
   const { isOpen, toggle } = useMobileMenuState()
-  const menu = useRoleBasedMenu()
+  const { permissions } = useRoleBasedPermissions()
+  const menus = MenusList?.filter(m => permissions.some(p => m.permissions.includes(p))) //filter Menu List based on Permissions for the user.
   const { t } = useTranslation()
   const { isOpen: isOpenBrowserWarning, onClose: onCloseBrowserWarning, onOpen: onOpenBrowserWarning } = useDisclosure()
   const [isNavigating, setNavigating] = useState(false)
@@ -69,44 +71,46 @@ export const Layout: React.FC = props => {
                   <FormLabel ml={6} color="#A1A6B1" size="sm" letterSpacing="1px">
                     {t(`${SIDE_NAV}.menu`)}
                   </FormLabel>
-                  {menu?.map((item, index) => (
-                    <React.Fragment key={index}>
-                      {item.title === `${SIDE_NAV}.userMgmt` && (
-                        <Flex
-                          alignItems="center"
-                          h="43px"
-                          w="201px"
-                          style={{
-                            borderTop: '1px solid rgb(237, 242, 247, 0.25)',
-                            borderBottom: '1px solid rgb(237, 242, 247, 0.25)',
-                            paddingLeft: '26px',
-                            marginBottom: '21px',
-                            marginTop: '28px',
-                          }}
-                        >
-                          <Text
-                            as="span"
+                  {menus?.map((item: any, index) => (
+                    <>
+                      <React.Fragment key={index}>
+                        {item.title === `${SIDE_NAV}.userMgmt` && (
+                          <Flex
+                            alignItems="center"
+                            h="43px"
+                            w="201px"
                             style={{
-                              fontWeight: 6500,
-                              fontSize: '13px',
-                              lineHeight: '28px',
-                              color: '#A1A6B1',
-                              letterSpacing: '1px',
+                              borderTop: '1px solid rgb(237, 242, 247, 0.25)',
+                              borderBottom: '1px solid rgb(237, 242, 247, 0.25)',
+                              paddingLeft: '26px',
+                              marginBottom: '21px',
+                              marginTop: '28px',
                             }}
                           >
-                            {t(`${SIDE_NAV}.administration`)}
-                          </Text>
-                        </Flex>
-                      )}
-                      <Box w="201px" key={item.pathTo}>
-                        <SidebarLink
-                          pathTo={item.pathTo}
-                          title={t(item.title)}
-                          testId={item.testId}
-                          icon={<item.Icon color={item.color} />}
-                        />
-                      </Box>
-                    </React.Fragment>
+                            <Text
+                              as="span"
+                              style={{
+                                fontWeight: 6500,
+                                fontSize: '13px',
+                                lineHeight: '28px',
+                                color: '#A1A6B1',
+                                letterSpacing: '1px',
+                              }}
+                            >
+                              {t(`${SIDE_NAV}.administration`)}
+                            </Text>
+                          </Flex>
+                        )}
+                        <Box w="201px" key={item.pathTo}>
+                          <SidebarLink
+                            pathTo={item.pathTo}
+                            title={t(item.title)}
+                            testId={item.testId}
+                            icon={<item.Icon color={item.color} />}
+                          />
+                        </Box>
+                      </React.Fragment>
+                    </>
                   ))}
                 </Stack>
               </Sidebar>

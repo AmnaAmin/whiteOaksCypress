@@ -4,7 +4,7 @@ import { useClientNoteMutation, useNotes } from 'api/clients'
 import { Box, Button, Center, Flex, FormControl, FormLabel, Textarea } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useAccountDetails } from 'api/vendor-details'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useForm, useWatch } from 'react-hook-form'
 import { CLIENTS } from './clients.i18n'
 
@@ -21,7 +21,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
   const { t } = useTranslation()
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
   const { data: account } = useAccountDetails()
-  const { isProjectCoordinator } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('CLIENT.READ')
   const { mutate: createNotes, isLoading } = useClientNoteMutation(clientDetails?.id)
 
   const { notes = [] } = useNotes({
@@ -78,14 +78,14 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
             )
           ) : (
             <Box width="100%" p={5}>
-              {isProjectCoordinator && (
+              {isReadOnly && (
                 <Center>
                   <FormLabel variant={'light-label'}>No Notes to show for this client.</FormLabel>
                 </Center>
               )}
             </Box>
           )}
-          {!isProjectCoordinator && (
+          {!isReadOnly && (
             <FormControl {...textAreaStyle}>
               <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
                 {t(`${CLIENTS}.enterNewNote`)}
@@ -102,10 +102,10 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
         </form>
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
-        <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
+        <Button variant={!isReadOnly ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
           {t(`${CLIENTS}.cancel`)}
         </Button>
-        {!isProjectCoordinator && (
+        {!isReadOnly && (
           <Button
             type="submit"
             colorScheme="brand"
