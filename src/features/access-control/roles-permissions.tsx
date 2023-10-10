@@ -78,6 +78,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
       })
     } else {
       payload['id'] = permissions?.[0]?.id
+      payload['userTypeId'] = permissions?.[0]?.userTypeId
       updateRole(payload as any)
     }
   }
