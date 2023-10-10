@@ -68,6 +68,7 @@ const ConstructionDashboard: React.FC = () => {
         }}
         justifyContent="stretch"
         w="100%"
+        flexWrap={'wrap'}
       >
         <Card p={0} borderRadius="6px" flex={1} bg="#FDFDFF" style={boxShadow}>
           <Flex mb="5px" mt="25px">
