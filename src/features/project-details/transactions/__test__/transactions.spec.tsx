@@ -26,7 +26,7 @@ import {
 } from 'features/project-details/transactions/transaction.constants'
 
 beforeAll(() => {
-  setToken('pc')
+  setToken('admin')
 })
 
 jest.setTimeout(150000)

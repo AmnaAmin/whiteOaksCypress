@@ -8,6 +8,7 @@ async function client(endpoint: string, httpConfig: any | undefined = {}) {
     headers: {
       Authorization: token ? `Bearer ${token}` : undefined,
       'Content-Type': data ? 'application/json' : undefined,
+      'ngrok-skip-browser-warning': '69420',
       ...customHeaders,
     },
     ...customConfig,
