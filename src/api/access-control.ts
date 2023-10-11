@@ -147,27 +147,29 @@ export const useUpdateRoleMutation = roleName => {
     },
   )
 }
-export const SECTIONS = [
-  { value: 'ADMINDASHBOARD', label: 'Dashboard' },
-  { value: 'VENDORDASHBOARD', label: 'Vendor Dashboard' },
-  { value: 'ESTIMATE', label: 'Estimates' },
-  { value: 'PROJECT', label: 'Projects' },
-  { value: 'PAYABLE', label: 'Payable' },
-  { value: 'RECEIVABLE', label: 'Receivable' },
-  { value: 'VENDOR', label: 'Vendors' },
-  { value: 'CLIENT', label: 'Clients' },
-  { value: 'REPORT', label: 'Reports' },
-  { value: 'PERFORMANCE', label: 'Performance' },
-  { value: 'USERMANAGER', label: 'Users' },
-  { value: 'MARKET', label: 'Markets' },
-  { value: 'VENDORSKILL', label: 'Vendor Skills' },
-  { value: 'CLIENTTYPE', label: 'Client Type' },
-  { value: 'PROJECTTYPE', label: 'Project Type' },
-  { value: 'VENDORPROJECT', label: 'Vendor Projects' },
-  { value: 'VENDORPROFILE', label: 'Vendor Profile' },
-  { value: 'SUPPORT', label: 'Support' },
-  { value: 'ALERT', label: 'Alerts' },
-]
+export const useGetSections = ({ isDevtekUser }) => {
+  return [
+    ...(isDevtekUser ? [{ value: 'ADMINDASHBOARD', label: 'Dashboard' }] : []),
+    ...(isDevtekUser ? [{ value: 'VENDORDASHBOARD', label: 'Vendor Dashboard' }] : []),
+    { value: 'ESTIMATE', label: 'Estimates' },
+    { value: 'PROJECT', label: 'Projects' },
+    { value: 'PAYABLE', label: 'Payable' },
+    { value: 'RECEIVABLE', label: 'Receivable' },
+    { value: 'VENDOR', label: 'Vendors' },
+    { value: 'CLIENT', label: 'Clients' },
+    { value: 'REPORT', label: 'Reports' },
+    { value: 'PERFORMANCE', label: 'Performance' },
+    { value: 'USERMANAGER', label: 'Users' },
+    { value: 'MARKET', label: 'Markets' },
+    { value: 'VENDORSKILL', label: 'Vendor Skills' },
+    { value: 'CLIENTTYPE', label: 'Client Type' },
+    { value: 'PROJECTTYPE', label: 'Project Type' },
+    { value: 'VENDORPROJECT', label: 'Vendor Projects' },
+    { value: 'VENDORPROFILE', label: 'Vendor Profile' },
+    { value: 'SUPPORT', label: 'Support' },
+    { value: 'ALERT', label: 'Alerts' },
+  ]
+}
 
 export const LOCATIONS = [
   { value: 'All', label: 'All' },
@@ -182,7 +184,7 @@ export const ASSIGNMENTS = [
   { value: 'PC', label: 'Project Coordinator' },
 ]
 
-export const mapPermissionsToFormValues = permission => {
+export const mapPermissionsToFormValues = (permission, sections) => {
   const isAdmin = permission?.name === 'ROLE_ADMIN'
   const permissions = permission?.permissions
     ?.filter(p => {
@@ -198,7 +200,7 @@ export const mapPermissionsToFormValues = permission => {
     })
 
   const sectionWisePermissions = [] as any
-  SECTIONS?.forEach(s => {
+  sections?.forEach(s => {
     const permissionObj = permissions?.find(p => s.value === p.section && ['READ', 'EDIT'].includes(p.action))
     sectionWisePermissions?.push({
       name: s.value,
@@ -263,14 +265,14 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
   }
 }
 
-export const permissionsDefaultValues = ({ permissions }) => {
+export const permissionsDefaultValues = ({ permissions, sections }) => {
   const permission = permissions?.[0]
   const permissionSet = permission?.name === 'ROLE_ADMIN' ? ['ALL'] : permission?.permissions?.map(p => p.key)
   return {
     roleName: permission?.name ?? '',
     location: LOCATIONS?.find(l => l.value === permission?.location) ?? LOCATIONS[0],
     assignment: ASSIGNMENTS?.find(a => a.value === permission?.assignment) ?? ASSIGNMENTS[0],
-    permissions: mapPermissionsToFormValues(permission),
+    permissions: mapPermissionsToFormValues(permission, sections),
     systemRole: permission?.systemRole,
     advancedPermissions: {
       fpmEdit: permissionSet?.some(p => [ADV_PERMISSIONS.fpmEdit, 'ALL'].includes(p)),
