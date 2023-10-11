@@ -6,24 +6,22 @@
   padding: 20px !important;
   width: 450px !important;
 }
-.react-kanban-column {
+.react-kanban-column 
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
-::-webkit-scrollbar-track {
+.react-kanban-column ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-::-webkit-scrollbar-thumb {
+.react-kanban-column ::-webkit-scrollbar-thumb {
  background-color: #c2c7cd;
  border-radius: 1px;
  border: 2px solid #f1f1f1;
 
   }
-
-}
 
 [data-rbd-droppable-id='2'] {
   height: 400px !important;
