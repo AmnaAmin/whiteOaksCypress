@@ -39,6 +39,7 @@ import {
   setDefaultPermission,
   useCreateNewRoleMutation,
   useFetchAllPermissions,
+  useGetSections,
   useUpdateRoleMutation,
 } from 'api/access-control'
 import { useAccountData } from 'api/user-account'
@@ -63,10 +64,11 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
   const { control, register, reset } = formReturn
   const { data } = useAccountData()
   const isDevtekUser = data?.devAccount
+  const sections = useGetSections({ isDevtekUser })
   const { t } = useTranslation()
   useEffect(() => {
-    reset(permissionsDefaultValues({ permissions }))
-  }, [reset, permissions])
+    reset(permissionsDefaultValues({ permissions, sections }))
+  }, [reset, permissions, sections?.length])
 
   const onSubmit = values => {
     let payload = mapFormValuestoPayload(values, allPermissions)
@@ -341,6 +343,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
             return (
               <>
                 <Tr
+                  key={index}
                   minH="45px"
                   onClick={() => {
                     if (index === selectedRow) {
