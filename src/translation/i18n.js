@@ -210,7 +210,7 @@ i18n.use(initReactI18next).init({
         revenue: 'Revenue',
         profits: 'Profits',
         profitmargins: 'Profit Margins',
-        resetSettings: 'Clear Settings',
+        resetSettings: 'Reset Settings',
         resetAllSettings: 'Clear All Users Settings',
 
         // Projects-WorkOrderDetails
@@ -455,7 +455,7 @@ i18n.use(initReactI18next).init({
         // Settings Page
         settings: 'Settings',
         settingsHeader: 'Column settings',
-        availableColumn: 'Available columns',
+        availableColumn: 'Hide these columns',
         showRecordsOrder: 'Show these columns in this order',
         firstName: 'First Name',
         lastName: 'Last Name',
@@ -1077,7 +1077,7 @@ i18n.use(initReactI18next).init({
         // Settings Page
         settings: 'Ajustes',
         settingsHeader: 'Configuración de columna',
-        availableColumn: 'Columnas disponibles',
+        availableColumn: 'Ocultar estas columnas',
         showRecordsOrder: 'Mostrar estas columnas en este orden',
         firstName: 'Primer Nombre',
         lastName: 'Apellido',
