@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react'
 
 const CypressReport = () => {
-  const iframe_src = `https://woa-preprod-documents.s3.us-east-2.amazonaws.com/sorry-cypress/output.html`
+  const iframe_src = `https://preprod.woaharvest.com/sorry-cypress/output.html`
   return (
     <Box>
       <Box h="calc(100vh - 150px)">
