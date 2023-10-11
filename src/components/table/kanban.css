@@ -1,36 +1,43 @@
 .react-kanban-column {
   background-color: #f8f8f8 !important;
   border: 1px solid #e8e8e8 !important;
-  min-height: 100px !important;
-  max-height: 450px !important;
-  overflow-y: auto !important;
-  overflow-x: hidden;
-  margin: 35px !important;
+  margin: 17px !important;
   border-radius: 7px !important;
   padding: 20px !important;
+  width: 450px !important;
 }
-.react-kanban-column::-webkit-scrollbar {
+.react-kanban-column {
+::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
-.react-kanban-column::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
 
-.react-kanban-column::-webkit-scrollbar-thumb {
-  background-color: #c2c7cd;
-  border-radius: 1px;
-  border: 2px solid #f1f1f1;
+::-webkit-scrollbar-thumb {
+ background-color: #c2c7cd;
+ border-radius: 1px;
+ border: 2px solid #f1f1f1;
+
+  }
+
 }
 
-/* .react-kanban-board-column-header {
-  position: sticky;
-  top: 0;
-  padding: 0px !important;
-} */
+[data-rbd-droppable-id='2'] {
+  height: 400px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 5px !important;
+}
+[data-rbd-droppable-id='1'] {
+  height: 400px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 5px !important;
+}
 
-.kanban-custom-css {
-  position: sticky;
-  top: 0;
+.react-kanban-board {
+  padding: 0px !important
 }

@@ -180,7 +180,7 @@ const TableColumnSettings = ({
           </HStack>
         </Button>
       </Box>
-      <Modal isOpen={isOpen} onClose={_onClose} size="6xl" key={modalKey}>
+      <Modal isOpen={isOpen} onClose={_onClose} size="5xl" key={modalKey}>
         <ModalOverlay />
         <ModalContent minH="700px" bg="#F2F3F4" rounded="none">
           <ModalHeader
@@ -209,7 +209,7 @@ const TableColumnSettings = ({
             pb="20px"
           >
             {!isReadOnly && (
-              <Button variant="ghost" colorScheme="brand" fontWeight={500} onClick={openResetConfirmationBox} size="md">
+              <Button variant="ghost" colorScheme="brand" fontWeight={500} ml='4px' mt='-8px' marginBottom='-5px' onClick={openResetConfirmationBox} size="md">
                 <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
                 {t('resetSettings')}
               </Button>
@@ -240,7 +240,7 @@ const TableColumnSettings = ({
             boxShadow="0px 1px 2px 0px lightgrey"
             p="0px"
           >
-            <HStack spacing="16px" mr="13px" my="16px">
+            <HStack spacing="16px" mr="44px" my="16px">
               <Button variant="ghost" colorScheme="darkPrimary" onClick={closeSetting} border="1px solid" size="md">
                 {t('cancel')}
               </Button>
@@ -263,13 +263,14 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
 
   const columnStyle = {
     width: '400px',
-    fontWeight: 600,
+    fontWeight: 500,
     color: '#345EA6',
+    marginBottom:'10px'
   }
 
   const cardStyle = {
-    width: '400px',
-    marginTop: '16px',
+    width: '400px', 
+    marginBottom:'16px',
     height: '50px',
     backgroundColor: '#FFFFFF',
     borderRadius: '6px',
