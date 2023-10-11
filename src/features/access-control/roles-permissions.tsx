@@ -103,6 +103,12 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                   id="roleName"
                   disabled={!!permissions}
                   size="md"
+                  onKeyDown={e => {
+                    if (e.code === 'Space') {
+                      e.stopPropagation()
+                      e.preventDefault()
+                    }
+                  }}
                   variant="required-field"
                   {...register('roleName', {
                     required: 'This is required field.',
@@ -161,7 +167,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                 />
               </FormControl>
             </Box>
-            {isDevtekUser && (
+            {/*isDevtekUser && (
               <Box w="215px">
                 <FormControl isInvalid={!!errors.systemRole}>
                   <FormLabel variant="strong-label" size="md">
@@ -187,7 +193,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                   />
                 </FormControl>
               </Box>
-            )}
+            )*/}
           </HStack>
           <VStack w="100%" justifyContent={'start'}>
             {isDevtekUser && (

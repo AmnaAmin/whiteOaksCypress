@@ -105,7 +105,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
 
   const accountType: any = formValues?.accountType
   const managerSelected = formValues?.parentFieldProjectManagerId
-  const directReportsSelected = formValues?.directReports
+  // const directReportsSelected = formValues?.directReports
 
   const isEditUser = !!(user && user.id)
   const isVendor = accountType?.label?.toLowerCase() === 'vendor'
@@ -651,7 +651,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           </FormControl>
         </HStack>
       )}
-      {!isVendor && (
+      {/*!isVendor && (
         <HStack mt="30px" spacing={15}>
           <FormControl w="81.9%">
             <FormLabel variant="strong-label" size="md">
@@ -675,7 +675,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             />
           </FormControl>
         </HStack>
-      )}
+      )*/}
 
       {isVendor ? (
         <>
