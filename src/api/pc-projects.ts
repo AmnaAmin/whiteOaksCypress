@@ -56,7 +56,7 @@ export const useProjectCards = (id?: string) => {
   const client = useClient()
 
   return useQuery(['projectCards', id], async () => {
-    const response = await client(`projectCards/${id ?? ''}`, {})
+    const response = await client(`projectCards?userId=${id ?? ''}`, {})
 
     return response?.data
   })
@@ -554,7 +554,6 @@ export const useGetAllFPMVendors = (fpmBasedQueryParams, queryStringWithOutPagin
   }
 }
 export const useFPMVendor = (fpmBasedQueryParams, queryStringWithPagination, pageSize) => {
-  
   const query = fpmBasedQueryParams + '&' + queryStringWithPagination
   const apiQueryString = getVendorsQueryString(query)
   const { data, ...rest } = usePaginationQuery<vendors>(
