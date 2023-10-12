@@ -1,4 +1,4 @@
-import { Box, Flex, Icon, Spacer } from '@chakra-ui/react'
+import { Box, Flex, FormControl, Icon, Spacer } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { ConfirmationBox } from 'components/Confirmation'
 // import { usePayableWeeklyCount } from 'features/recievable/hook'
@@ -8,7 +8,7 @@ import { PayableTable } from 'features/payable/payable-table'
 import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BiSync } from 'react-icons/bi'
+import { BiChevronDown, BiChevronRight, BiSync } from 'react-icons/bi'
 import { compact } from 'lodash'
 import { useBatchProcessingMutation, useCheckBatch, usePaginatedAccountPayable } from 'api/account-payable'
 import { ViewLoader } from 'components/page-level-loader'
@@ -21,6 +21,16 @@ import { ACCOUNTS } from 'pages/accounts.i18n'
 import { Card } from 'components/card/card'
 import { usePayableColumns } from './hooks'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import ReactSelect from 'components/form/react-select'
+import { useAccountData } from 'api/user-account'
+import { useDirectReports } from 'api/pc-projects'
+import { useWeekDayProjectsDue } from 'api/projects'
+
+const formatGroupLabel = props => (
+  <Box onClick={props.onClick} cursor="pointer" display="flex" alignItems="center" fontWeight="normal" ml={'-7px'}>
+    {props.isHidden ? <BiChevronRight fontSize={'20px'} /> : <BiChevronDown fontSize={'20px'} />} {props.label}
+  </Box>
+)
 
 //All commented Code will be used later
 export const ConstructionPortalPayable = () => {
@@ -28,6 +38,7 @@ export const ConstructionPortalPayable = () => {
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedIDs, setSelectedIDs] = useState<any>([])
+  const [userIds, setSelectedUserIds] = useState<any>([])
   const [
     selectedDay,
     // setSelectedDay
@@ -35,6 +46,8 @@ export const ConstructionPortalPayable = () => {
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = useState<SortingState>([])
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
+  const { data } = useAccountData()
+  const { directReportOptions = [], isLoading: loadingReports } = useDirectReports(data?.email)
 
   // const clearAll = () => {
   //   setSelectedCard('')
@@ -43,12 +56,15 @@ export const ConstructionPortalPayable = () => {
 
   const { register, reset, control, watch } = useForm()
   const payableColumns = usePayableColumns(control, register)
+  const { data: days } = useWeekDayProjectsDue(userIds?.join(','))
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: PAYABLE_TABLE_QUERY_KEYS,
     pagination,
     setPagination,
     selectedCard,
     selectedDay,
+    userIds,
+    days,
     sorting,
   })
 
@@ -136,19 +152,31 @@ export const ConstructionPortalPayable = () => {
             selectedDay={selectedDay}
             clear={clearAll}
           /> */}
+
             <Spacer />
+            <FormControl w="215px" mr={'10px'}>
+              <ReactSelect
+                formatGroupLabel={formatGroupLabel}
+                onChange={user => {
+                  user.value === 'ALL' ? setSelectedUserIds([]) : setSelectedUserIds([user.value])
+                }}
+                options={directReportOptions}
+                loadingCheck={loadingReports}
+                placeholder={'Select'}
+              />
+            </FormControl>
             {!isReadOnly && (
-             <Button
-              alignContent="right"
-              colorScheme="brand"
-              type="button"
-              onClick={() => Submit(formValues)}
-              disabled={selectedCard === '6'}
-              minW="140px"
-            >
-              <Icon as={BiSync} fontSize="18px" mr={2} />
-              {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
-            </Button>
+              <Button
+                alignContent="right"
+                colorScheme="brand"
+                type="button"
+                onClick={() => Submit(formValues)}
+                disabled={selectedCard === '6'}
+                minW="140px"
+              >
+                <Icon as={BiSync} fontSize="18px" mr={2} />
+                {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
+              </Button>
             )}
           </Flex>
 
