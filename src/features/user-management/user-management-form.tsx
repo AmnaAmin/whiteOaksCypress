@@ -860,10 +860,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </>
         <ConfirmationBox
           title="Are You Sure?"
-          content="User already reporting to another user. Proceed anyway?"
+          content={`${(isParentAvailable?.parentData[isParentAvailable?.parentData?.length - 1] as any)?.label } is already reporting to another user. Proceed anyway?`}
           isOpen={isParentAvailable?.isParent}
           onClose={() => setIsParentAvailable({ parentData: [], isParent: false })}
           onConfirm={() => {
+            console.log(isParentAvailable?.parentData[isParentAvailable?.parentData?.length - 1])
             setValue("directReports", isParentAvailable?.parentData);
             setIsParentAvailable({ parentData: [], isParent: false });
           }}
