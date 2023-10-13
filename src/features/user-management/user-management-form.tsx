@@ -380,6 +380,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             fontSize="16px"
             fontWeight={400}
             color="#718096"
+            colorScheme="brand"
             {...register('activated')}
           >
             {t(`${USER_MANAGEMENT}.modal.activated`)}
