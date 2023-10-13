@@ -91,7 +91,7 @@ export const useProjectWorkOrders = projectId => {
 export const useWeekDayProjectsDue = (id?: string) => {
   const client = useClient()
   return useQuery(['weekDayFilters', id], async () => {
-    const response = await client(`projects-due-this-week/${id ?? ''}`, {})
+    const response = await client(`projects-due-this-week?userId=${id ?? ''}`, {})
     return response?.data
   })
 }
@@ -152,7 +152,6 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     (firstFinancialRecord?.changeOrder || 0) +
     (firstFinancialRecord?.adjustment || 0)
 
-    
   const projectExpenses = -1 * ((firstFinancialRecord?.shipFee || 0) + (firstFinancialRecord?.permitFee || 0))
 
   const { vendorAccountPayable, projectTotalCost, materialCost, vendorPayment } = restProjectFinancialOverviews?.reduce(
