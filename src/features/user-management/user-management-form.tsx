@@ -864,7 +864,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
           isOpen={isParentAvailable?.isParent}
           onClose={() => setIsParentAvailable({ parentData: [], isParent: false })}
           onConfirm={() => {
-            console.log(isParentAvailable?.parentData[isParentAvailable?.parentData?.length - 1])
             setValue("directReports", isParentAvailable?.parentData);
             setIsParentAvailable({ parentData: [], isParent: false });
           }}
