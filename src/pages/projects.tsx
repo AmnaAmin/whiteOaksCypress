@@ -52,7 +52,7 @@ export const Projects = () => {
   const [createdProject, setCreatedProject] = useState<string | number | null>(null)
 
   const { t } = useTranslation()
-  console.log('created project', createdProject)
+
   const clearAll = () => {
     setResetAllFilters(true)
     setTimeout(() => {
