@@ -54,9 +54,9 @@ export const useCall = () => {
 
 export const useProjectCards = (id?: string) => {
   const client = useClient()
-
+  const apiUrl = 'projectCards' + (!!id ? `?userId=${id ?? ''}` : '')
   return useQuery(['projectCards', id], async () => {
-    const response = await client(`projectCards?userId=${id ?? ''}`, {})
+    const response = await client(apiUrl, {})
 
     return response?.data
   })

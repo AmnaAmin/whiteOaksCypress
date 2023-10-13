@@ -19,7 +19,6 @@ import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
-import { useWeekDayProjectsDue } from 'api/projects'
 import { useAccountData } from 'api/user-account'
 import { useDirectReports } from 'api/pc-projects'
 
@@ -52,7 +51,6 @@ export const ConstructionPortalReceiveable: React.FC = () => {
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('RECEIVABLE.READ')
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = useState<SortingState>([])
-  const { data: days } = useWeekDayProjectsDue(userIds?.join(','))
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: RECEIVABLE_TABLE_QUERY_KEYS,
     pagination,
@@ -60,7 +58,6 @@ export const ConstructionPortalReceiveable: React.FC = () => {
     selectedCard,
     selectedDay,
     userIds,
-    days,
     sorting,
   })
 
@@ -139,7 +136,7 @@ export const ConstructionPortalReceiveable: React.FC = () => {
             {t(`${ACCOUNTS}.accountReceivable`)}
           </FormLabel> */}
           <Box mb={'12px'}>
-            <ReceivableFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
+            <ReceivableFilter onSelected={setSelectedCard} cardSelected={selectedCard} userIds={userIds} />
           </Box>
 
           {/* Temp comment */}
