@@ -76,6 +76,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const form = useForm<UserForm>()
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
+  const [isParentAvailable, setIsParentAvailable] = useState({ parentData: [], isParent: false }) // HN-PSWOA-6382| This state contains the data of the selected user that has a parent and a boolean to control the confirmation modal
   const { options: roles } = useFetchRoles()
   const {
     options: usersList,
@@ -643,7 +644,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   closeMenuOnSelect={false}
                   isMulti={true}
                   loadingCheck={loadingUsersList}
-                  {...field}
+                  value={field?.value}
+                  onChange={(option: any) =>{
+                    if (!option?.every((u: any) => u?.parentFPMId === null) && field?.value?.length < option?.length) return setIsParentAvailable({ isParent: true, parentData: option }); // HN-PSWOA-6382| Only show confirmation modal if the selected user has a parent and it is selected not removed from dropdown
+                    field.onChange(option);
+                  }}
                   options={usersList?.filter(ul => ul.value !== managerSelected?.value)} //Donot include in direct reports the users selected for managers
                 />
               )}
@@ -853,6 +858,16 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             </Button>
           )}
         </>
+        <ConfirmationBox
+          title="Are You Sure?"
+          content="User already reporting to another user. Proceed anyway?"
+          isOpen={isParentAvailable?.isParent}
+          onClose={() => setIsParentAvailable({ parentData: [], isParent: false })}
+          onConfirm={() => {
+            setValue("directReports", isParentAvailable?.parentData);
+            setIsParentAvailable({ parentData: [], isParent: false });
+          }}
+        />
         <ConfirmationBox
           title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}
           content={t(`${USER_MANAGEMENT}.modal.deleteUserContent`)}
