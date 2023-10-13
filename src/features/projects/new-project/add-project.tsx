@@ -24,30 +24,24 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { ProjectFormValues } from 'types/project.type'
 import { useToast } from '@chakra-ui/react'
 import { useCreateProjectMutation } from 'api/pc-projects'
-import { useNavigate } from 'react-router-dom'
 import { DevTool } from '@hookform/devtools'
 import { useTranslation } from 'react-i18next'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { useProjectInformationNextButtonDisabled, usePropertyInformationNextDisabled } from './hooks'
 import { createDocumentPayload } from 'utils/file-utils'
-import { useAuth } from 'utils/auth-context'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type AddProjectFormProps = {
   onClose: () => void
+  setCreatedProject?: ((projectId) => void) | undefined
 }
 
-const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
+const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose, setCreatedProject }) => {
   const { t } = useTranslation()
   const toast = useToast()
-  const { isProjectCoordinator } = useUserRolesSelector()
-  const { data } = useAuth()
-  const user = data?.user
 
   const { mutate: saveProjectDetails, isLoading } = useCreateProjectMutation()
   const [tabIndex, setTabIndex] = useState(0)
   const [isDuplicateAddress, setIsDuplicateAddress] = useState(false)
-  const navigate = useNavigate()
 
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
@@ -182,8 +176,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
         onSuccess(response) {
           const project = response?.data
           const projectId = project?.id
-          const projectCordinatorId = project?.projectCordinatorId
-
+          setCreatedProject?.(projectId)
           toast({
             title: 'Project Details',
             description: `New project has been created successfully with project id: ${projectId}`,
@@ -192,14 +185,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose }) => {
             isClosable: true,
             position: 'top-left',
           })
-          onClose()
-          // discuss this logic in access control
-
-          // In case project coordinator created a new project for other user
-          // than it should be redirected to project details page
-          if (isProjectCoordinator && user?.id !== projectCordinatorId) return
-
-          navigate(`/project-details/${projectId}`)
+          onClose?.()
         },
         onError(error: any) {
           toast({
@@ -259,9 +245,10 @@ type CustomModalProps = Pick<ModalProps, 'isOpen' | 'onClose'>
 // type AddNewProjectProps = CustomModalProps
 type UpdateProjectProps = CustomModalProps & {
   selectedProjectId?: number
+  setCreatedProject?: ((projectId) => void) | undefined
 }
 
-export const AddNewProjectModal: React.FC<UpdateProjectProps> = ({ isOpen, onClose }) => {
+export const AddNewProjectModal: React.FC<UpdateProjectProps> = ({ isOpen, onClose, setCreatedProject }) => {
   const { t } = useTranslation()
   return (
     <Modal
@@ -278,7 +265,7 @@ export const AddNewProjectModal: React.FC<UpdateProjectProps> = ({ isOpen, onClo
           <ModalHeader>{t(`${NEW_PROJECT}.title`)}</ModalHeader>
           <ModalCloseButton _focus={{ outline: 'none' }} />
           <ModalBody px="0">
-            <AddProjectForm onClose={onClose} />
+            <AddProjectForm onClose={onClose} setCreatedProject={setCreatedProject} />
           </ModalBody>
         </ModalContent>
       </ModalOverlay>
