@@ -91,7 +91,7 @@ export const useProjectWorkOrders = projectId => {
 export const useWeekDayProjectsDue = (id?: string) => {
   const client = useClient()
   return useQuery(['weekDayFilters', id], async () => {
-    const response = await client(`projects-due-this-week?userId=${id ?? ''}`, {})
+    const response = await client(`projects-due-this-week/${id ?? ''}`, {})
     return response?.data
   })
 }

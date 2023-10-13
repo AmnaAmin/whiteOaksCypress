@@ -25,7 +25,7 @@ export const Payable = () => {
             <EstimatesPortalPayable />
           </TabPanel>
           <TabPanel h="100vh" padding="5px 0px 0px 0px">
-            *<MaintenancePortalPayable />
+            <MaintenancePortalPayable />
           </TabPanel>
         </TabPanels>
       </Tabs>
