@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Flex, Icon, Spacer } from '@chakra-ui/react'
+import { Box, Button, Flex, FormControl, Icon, Spacer } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReceivableFilter } from 'features/recievable/receivable-filter'
@@ -12,12 +12,22 @@ import { useForm } from 'react-hook-form'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useReceivableTableColumns } from 'features/recievable/hook'
 import { ACCOUNTS } from 'pages/accounts.i18n'
-import { BiSync } from 'react-icons/bi'
+import { BiChevronDown, BiChevronRight, BiSync } from 'react-icons/bi'
 import { RECEIVABLE_TABLE_QUERY_KEYS } from 'features/recievable/receivable.constants'
 import { ReceivableConfirmationBox } from 'features/recievable/receivable-confirmation-box'
 import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import ReactSelect from 'components/form/react-select'
+import { useWeekDayProjectsDue } from 'api/projects'
+import { useAccountData } from 'api/user-account'
+import { useDirectReports } from 'api/pc-projects'
+
+const formatGroupLabel = props => (
+  <Box onClick={props.onClick} cursor="pointer" display="flex" alignItems="center" fontWeight="normal" ml={'-7px'}>
+    {props.isHidden ? <BiChevronRight fontSize={'20px'} /> : <BiChevronDown fontSize={'20px'} />} {props.label}
+  </Box>
+)
 
 export const ReceivableContext = React.createContext<any>(null)
 
@@ -26,6 +36,10 @@ export const ConstructionPortalReceiveable: React.FC = () => {
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay] = useState<string>('')
+  const [userIds, setSelectedUserIds] = useState<any>([])
+
+  const { data } = useAccountData()
+  const { directReportOptions = [], isLoading: loadingReports } = useDirectReports(data?.email)
 
   // const clearAll = () => {
   //   setSelectedCard('')
@@ -38,12 +52,15 @@ export const ConstructionPortalReceiveable: React.FC = () => {
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('RECEIVABLE.READ')
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
   const [sorting, setSorting] = useState<SortingState>([])
+  const { data: days } = useWeekDayProjectsDue(userIds?.join(','))
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: RECEIVABLE_TABLE_QUERY_KEYS,
     pagination,
     setPagination,
     selectedCard,
     selectedDay,
+    userIds,
+    days,
     sorting,
   })
 
@@ -138,6 +155,17 @@ export const ConstructionPortalReceiveable: React.FC = () => {
               clear={clearAll}
             /> */}
               <Spacer />
+              <FormControl w="215px" mr={'10px'}>
+                <ReactSelect
+                  formatGroupLabel={formatGroupLabel}
+                  onChange={user => {
+                    user.value === 'ALL' ? setSelectedUserIds([]) : setSelectedUserIds([user.value])
+                  }}
+                  options={directReportOptions}
+                  loadingCheck={loadingReports}
+                  placeholder={'Select'}
+                />
+              </FormControl>
               <>
                 {!isReadOnly && (
                   <Button
