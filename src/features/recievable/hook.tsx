@@ -59,7 +59,7 @@ const WEEK_FILTERS = [
 ]
 
 export const usePayableWeeklyCount = () => {
-  const { data: PayableData } = useAccountPayableCard()
+  const { data: PayableData } = useAccountPayableCard({ userIds: null })
 
   const getWeekDates = () => {
     const now = new Date()

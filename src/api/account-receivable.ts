@@ -12,11 +12,11 @@ declare global {
 
 export const ACCONT_RECEIVABLE_API_KEY = 'account-receivable'
 
-export const usePCRecievable = () => {
+export const usePCRecievable = ({ userIds }) => {
   const client = useClient()
-
-  const { data: receivableData, ...rest } = useQuery(ACCONT_RECEIVABLE_API_KEY, async () => {
-    const response = await client(`account_receivable`, {})
+  const apiQuery = `account_receivable` + (userIds?.length > 0 ? `?userId=${userIds?.join(',')}` : '')
+  const { data: receivableData, ...rest } = useQuery([ACCONT_RECEIVABLE_API_KEY, userIds], async () => {
+    const response = await client(apiQuery, {})
 
     return response?.data
   })
@@ -122,7 +122,7 @@ export const useBatchRun = (batchId, paginatedQueryString, refetchInterval) => {
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         }
       },
-      refetchInterval: refetchInterval
+      refetchInterval: refetchInterval,
     },
   )
 }

@@ -305,16 +305,23 @@ export const permissionsDefaultValues = ({ permissions, sections }) => {
   }
 }
 
-export const setDefaultPermission = ({ setValue, value }) => {
-  setValue('advancedPermissions.fpmEdit', value)
-  setValue('advancedPermissions.pcEdit', value)
-  setValue('advancedPermissions.clientEdit', value)
-  setValue('advancedPermissions.addressEdit', value)
-  setValue('advancedPermissions.marketEdit', value)
+export const setDefaultPermission = ({ setValue, value, section }) => {
+  if (section === 'PROJECT') {
+    setValue('advancedPermissions.fpmEdit', value)
+    setValue('advancedPermissions.pcEdit', value)
+    setValue('advancedPermissions.clientEdit', value)
+    setValue('advancedPermissions.addressEdit', value)
+    setValue('advancedPermissions.marketEdit', value)
 
-  setValue('advancedPermissions.gateCodeEdit', value)
-  setValue('advancedPermissions.lockBoxEdit', value)
-  setValue('advancedPermissions.clientDueEdit', value)
-  setValue('advancedPermissions.clientStartEdit', value)
-  setValue('advancedPermissions.woaStartEdit', value)
+    setValue('advancedPermissions.gateCodeEdit', value)
+    setValue('advancedPermissions.lockBoxEdit', value)
+    setValue('advancedPermissions.clientDueEdit', value)
+    setValue('advancedPermissions.clientStartEdit', value)
+    setValue('advancedPermissions.woaStartEdit', value)
+    setValue('advancedPermissions.lockBoxEdit', value)
+    setValue('advancedPermissions.verifyProjectEnable', value)
+  }
+  if (section === 'VENDOR') {
+    setValue('advancedPermissions.verifyVendorDocuments', value)
+  }
 }

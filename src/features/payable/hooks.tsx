@@ -59,7 +59,7 @@ const WEEK_FILTERS = [
 ]
 
 export const useWeeklyCount = () => {
-  const { receivableData } = usePCRecievable()
+  const { receivableData } = usePCRecievable({ userIds: null })
   const getWeekDates = () => {
     const now = new Date()
     const dayOfWeek = now.getDay() // 0-6

@@ -24,7 +24,6 @@ import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
 import { useAccountData } from 'api/user-account'
 import { useDirectReports } from 'api/pc-projects'
-import { useWeekDayProjectsDue } from 'api/projects'
 
 const formatGroupLabel = props => (
   <Box onClick={props.onClick} cursor="pointer" display="flex" alignItems="center" fontWeight="normal" ml={'-7px'}>
@@ -56,7 +55,6 @@ export const ConstructionPortalPayable = () => {
 
   const { register, reset, control, watch } = useForm()
   const payableColumns = usePayableColumns(control, register)
-  const { data: days } = useWeekDayProjectsDue(userIds?.join(','))
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: PAYABLE_TABLE_QUERY_KEYS,
     pagination,
@@ -64,7 +62,6 @@ export const ConstructionPortalPayable = () => {
     selectedCard,
     selectedDay,
     userIds,
-    days,
     sorting,
   })
 
@@ -134,7 +131,7 @@ export const ConstructionPortalPayable = () => {
     <form method="post">
       <Box pb="2">
         <Box mb={'12px'}>
-          <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
+          <PayableCardsFilter onSelected={setSelectedCard} cardSelected={selectedCard} userIds={userIds} />
         </Box>
         <Card px="12px" py="16px">
           <Flex alignItems="center" mb="16px">
