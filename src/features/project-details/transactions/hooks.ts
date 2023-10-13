@@ -199,6 +199,7 @@ export const useFieldDisabledEnabledDecision = (
     isVendor &&
     (transaction?.transactionType === TransactionTypeValues.lateFee ||
       transaction?.transactionType === TransactionTypeValues.factoring)
+  const statusFieldForVendor = isVendor && transaction?.transactionType === TransactionTypeValues.draw
 
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
@@ -221,7 +222,8 @@ export const useFieldDisabledEnabledDecision = (
       (isStatusApproved && !statusEditPermission) ||
       isMaterialsLoading ||
       lateAndFactoringFeeForVendor ||
-      isFactoringFeeSysGenerated,
+      isFactoringFeeSysGenerated ||
+      statusFieldForVendor,
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
 }
