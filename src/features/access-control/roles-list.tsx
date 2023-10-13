@@ -31,12 +31,20 @@ export const RolesList = ({ setSelectedRole, selectedRole }) => {
       {
         header: `${ACCESS_CONTROL}.roles`,
         accessorKey: 'name',
+      },
+      {
+        header: `${ACCESS_CONTROL}.assignment`,
+        accessorKey: 'assignment',
+      },
+      {
+        header: `${ACCESS_CONTROL}.location`,
+        accessorKey: 'location',
         cell: cell => {
           const role = cell?.row?.original as any
           // const allowDelete = !role.systemRole || (role.systemRole && isDevtekUser)
           return (
             <Flex justifyContent={'space-between'}>
-              <Box>{role.name}</Box>
+              <Box>{role.location}</Box>
               <HStack gap="20px">
                 <Flex
                   gap="5px"

@@ -3,8 +3,8 @@ import { usePCRecievable } from 'api/account-receivable'
 import { currencyFormatter } from 'utils/string-formatters'
 import { AccountFilterCard } from './account-filter-card'
 
-export const ReceivableFilter = ({ cardSelected, onSelected }) => {
-  const { receivableData, isLoading } = usePCRecievable()
+export const ReceivableFilter = ({ cardSelected, onSelected, userIds }) => {
+  const { receivableData, isLoading } = usePCRecievable({ userIds })
   enum PayableCardTypes {
     PastDue = '1',
     SevenDays = '2',
