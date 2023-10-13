@@ -264,12 +264,10 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
 
   useEffect(() => {
     const watchProjectPermissions = watchPermissions?.find(p => p.name === 'PROJECT')
+    const watchVendorsPermissions = watchPermissions?.find(p => p.name === 'VENDOR')
     if (!permissionsData?.[0]?.systemRole) {
-      if (watchProjectPermissions?.edit) {
-        setDefaultPermission({ setValue, value: true })
-      } else {
-        setDefaultPermission({ setValue, value: null })
-      }
+      setDefaultPermission({ setValue, value: watchProjectPermissions?.edit, section: watchProjectPermissions?.name })
+      setDefaultPermission({ setValue, value: watchVendorsPermissions?.edit, section: watchVendorsPermissions?.name })
     }
   }, [watchPermissions])
 
