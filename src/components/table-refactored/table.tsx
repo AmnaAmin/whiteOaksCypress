@@ -148,7 +148,6 @@ function Filter({
               list={column.id + 'list'}
               // @ts-ignore
               minW={dateFilter && '127px'}
-              minDate={new Date()}
               onMouseDown={handleDateInputClick}
               resetValue={!!metaData?.resetFilters}
               placeholder="mm/dd/yy"
