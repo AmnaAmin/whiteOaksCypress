@@ -35,12 +35,14 @@ type ProjectManagerProps = {
   projectTypeSelectOptions: SelectOption[]
   projectOverrideStatusSelectOptions: any //SelectOption[]
   projectData: Project
+  isReadOnly: boolean
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({
   projectStatusSelectOptions,
   projectTypeSelectOptions,
   projectOverrideStatusSelectOptions,
   projectData,
+  isReadOnly,
 }) => {
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
@@ -148,6 +150,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                     <div data-testid="proj-status">
                       <ReactSelect
                         {...field}
+                        isDisabled={isReadOnly}
                         options={projectStatusSelectOptions}
                         isOptionDisabled={option => option.disabled}
                         onChange={option => {
@@ -174,7 +177,12 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect {...field} options={projectTypeSelectOptions} selectProps={{ isBorderLeft: true }} />
+                    <ReactSelect
+                      isDisabled={isReadOnly}
+                      {...field}
+                      options={projectTypeSelectOptions}
+                      selectProps={{ isBorderLeft: true }}
+                    />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
