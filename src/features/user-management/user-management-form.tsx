@@ -76,7 +76,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const form = useForm<UserForm>()
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
-  const [isParentAvailable, setIsParentAvailable] = useState({ parentData: [], isParent: false }) // HN-PSWOA-6382| This state contains the data of the selected user that has a parent and a boolean to control the confirmation modal
+  const [selectedOption, setSelectedOption] = useState([]) // HN-PSWOA-6382| This state contains the data of the selected user that has a parent
   const { options: roles } = useFetchRoles()
   const {
     options: usersList,
@@ -646,7 +646,9 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   loadingCheck={loadingUsersList}
                   value={field?.value}
                   onChange={(option: any) =>{
-                    if (!option?.every((u: any) => u?.parentFPMId === null) && field?.value?.length < option?.length) return setIsParentAvailable({ isParent: true, parentData: option }); // HN-PSWOA-6382| Only show confirmation modal if the selected user has a parent and it is selected not removed from dropdown
+                    const lastSelectedOption = option[option.length - 1];
+                    const isUserBeingAdd = field?.value?.length < option?.length;
+                    if (lastSelectedOption?.parentId && isUserBeingAdd) return setSelectedOption(option); // HN-PSWOA-6382| Only show confirmation modal if the selected user has a parent and it is selected not removed from dropdown
                     field.onChange(option);
                   }}
                   options={usersList?.filter(ul => ul.value !== managerSelected?.value)} //Donot include in direct reports the users selected for managers
@@ -860,12 +862,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </>
         <ConfirmationBox
           title="Are You Sure?"
-          content={`${(isParentAvailable?.parentData[isParentAvailable?.parentData?.length - 1] as any)?.label } is already reporting to another user. Proceed anyway?`}
-          isOpen={isParentAvailable?.isParent}
-          onClose={() => setIsParentAvailable({ parentData: [], isParent: false })}
+          content={`${(selectedOption[selectedOption?.length - 1] as any)?.label } is already reporting to another user. Proceed anyway?`}
+          isOpen={!!selectedOption?.length}
+          onClose={() => setSelectedOption([])}
           onConfirm={() => {
-            setValue("directReports", isParentAvailable?.parentData);
-            setIsParentAvailable({ parentData: [], isParent: false });
+            setValue("directReports", selectedOption);
+            setSelectedOption([]);
           }}
         />
         <ConfirmationBox
