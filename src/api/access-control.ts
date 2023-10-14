@@ -305,23 +305,51 @@ export const permissionsDefaultValues = ({ permissions, sections }) => {
   }
 }
 
-export const setDefaultPermission = ({ setValue, value, section }) => {
+export const setDefaultPermission = ({ setValue, value, section, assignment }) => {
   if (section === 'PROJECT') {
-    setValue('advancedPermissions.fpmEdit', value)
-    setValue('advancedPermissions.pcEdit', value)
-    setValue('advancedPermissions.clientEdit', value)
-    setValue('advancedPermissions.addressEdit', value)
-    setValue('advancedPermissions.marketEdit', value)
+    if (assignment === 'FPM') {
+      setValue('advancedPermissions.gateCodeEdit', value)
+      setValue('advancedPermissions.lockBoxEdit', value)
+      setValue('advancedPermissions.hideCreateProject', value)
+      setValue('advancedPermissions.hidePaidProjects', value)
+      setValue('advancedPermissions.verifiedByFPM', value)
 
-    setValue('advancedPermissions.gateCodeEdit', value)
-    setValue('advancedPermissions.lockBoxEdit', value)
-    setValue('advancedPermissions.clientDueEdit', value)
-    setValue('advancedPermissions.clientStartEdit', value)
-    setValue('advancedPermissions.woaStartEdit', value)
-    setValue('advancedPermissions.lockBoxEdit', value)
-    setValue('advancedPermissions.verifyProjectEnable', value)
+      setValue('advancedPermissions.fpmEdit', false)
+      setValue('advancedPermissions.pcEdit', false)
+      setValue('advancedPermissions.clientEdit', false)
+      setValue('advancedPermissions.addressEdit', false)
+      setValue('advancedPermissions.marketEdit', false)
+      setValue('advancedPermissions.clientDueEdit', false)
+      setValue('advancedPermissions.clientStartEdit', false)
+      setValue('advancedPermissions.woaStartEdit', false)
+      setValue('advancedPermissions.verifyProjectEnable', false)
+    } else {
+      setValue('advancedPermissions.fpmEdit', value)
+      setValue('advancedPermissions.pcEdit', value)
+      setValue('advancedPermissions.clientEdit', value)
+      setValue('advancedPermissions.addressEdit', value)
+      setValue('advancedPermissions.marketEdit', value)
+
+      setValue('advancedPermissions.gateCodeEdit', value)
+      setValue('advancedPermissions.lockBoxEdit', value)
+      setValue('advancedPermissions.clientDueEdit', value)
+      setValue('advancedPermissions.clientStartEdit', value)
+      setValue('advancedPermissions.woaStartEdit', value)
+      setValue('advancedPermissions.lockBoxEdit', value)
+      setValue('advancedPermissions.verifyProjectEnable', value)
+
+      setValue('advancedPermissions.hideCreateProject', false)
+      setValue('advancedPermissions.hidePaidProjects', false)
+      setValue('advancedPermissions.verifiedByFPM', false)
+    }
   }
   if (section === 'VENDOR') {
-    setValue('advancedPermissions.verifyVendorDocuments', value)
+    if (assignment === 'PC' || assignment === 'All') {
+      setValue('advancedPermissions.verifyVendorDocuments', value)
+      setValue('advancedPermissions.deactivateVendor', value)
+    } else {
+      setValue('advancedPermissions.verifyVendorDocuments', false)
+      setValue('advancedPermissions.deactivateVendor', false)
+    }
   }
 }
