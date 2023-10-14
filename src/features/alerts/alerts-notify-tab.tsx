@@ -16,6 +16,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import NumberFormat from 'react-number-format'
 import { AlertFormValues, availableUsers } from 'types/alert.type'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 const TextDivider = ({ title }) => {
   return (
@@ -47,6 +48,7 @@ export const AlertsNotifyTab = ({ onClose }) => {
     return !!(recipientEmailAddress || body || recipientPhoneNumber || isOneOfUserTypesSelected)
   }, [fields])
   const phoneNumberRef = useRef<any>()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('ALERT.READ')
   const watchUserTypes = useWatch({ control, name: 'userTypes' })
   const { messageContent, alertRuleQuery } = useCreateMessageContentAndQuery(control)
 
@@ -103,7 +105,12 @@ export const AlertsNotifyTab = ({ onClose }) => {
             <FormLabel variant="strong-label" size="md">
               {t('recipient')}
             </FormLabel>
-            <Input data-testid="recipientEmailAddress" type="email" {...register('recipientEmailAddress')} />
+            <Input
+              isDisabled={isReadOnly}
+              data-testid="recipientEmailAddress"
+              type="email"
+              {...register('recipientEmailAddress')}
+            />
           </Box>
 
           <Box>
@@ -118,7 +125,13 @@ export const AlertsNotifyTab = ({ onClose }) => {
           <FormLabel variant="strong-label" size="md">
             {t('body')}
           </FormLabel>
-          <Textarea data-testid="body" fontSize={'14px'} placeholder="Write here..." {...register('body')} />
+          <Textarea
+            isDisabled={isReadOnly}
+            data-testid="body"
+            fontSize={'14px'}
+            placeholder="Write here..."
+            {...register('body')}
+          />
         </Box>
 
         <TextDivider title={t('textUser')} />
@@ -154,6 +167,7 @@ export const AlertsNotifyTab = ({ onClose }) => {
                       mask="_"
                       placeholder="(___)-___-____"
                       getInputRef={phoneNumberRef}
+                      isDisabled={isReadOnly}
                     />
                     <FormErrorMessage>
                       {errors?.recipientPhoneNumber && errors?.recipientPhoneNumber?.message}
@@ -188,9 +202,17 @@ export const AlertsNotifyTab = ({ onClose }) => {
         <Button onClick={onClose} data-testid={'cancelAlert'} variant="outline" colorScheme="brand">
           {t('cancel')}
         </Button>
-        <Button type="submit" data-testid={'saveAlert'} form="alertDetails" isDisabled={!isEnabled} colorScheme="brand">
-          {t('save')}
-        </Button>
+        {!isReadOnly && (
+          <Button
+            type="submit"
+            data-testid={'saveAlert'}
+            form="alertDetails"
+            isDisabled={!isEnabled}
+            colorScheme="brand"
+          >
+            {t('save')}
+          </Button>
+        )}
       </HStack>
     </Box>
   )
