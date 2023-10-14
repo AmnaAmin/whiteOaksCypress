@@ -24,7 +24,7 @@ import { ProjectDetailsFormValues, ProjectStatus } from 'types/project-details.t
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
-import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useCurrentDate, useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 import { addDays } from 'date-fns'
 import moment from 'moment'
