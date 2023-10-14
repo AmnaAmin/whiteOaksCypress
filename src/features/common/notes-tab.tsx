@@ -19,6 +19,7 @@ import { convertDateWithTimeStamp } from 'utils/date-time-utils'
 import React, { useRef, useEffect } from 'react'
 import { BiSpreadsheet } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
@@ -121,6 +122,7 @@ export const NotesTab = (props: NotesProps) => {
 
   const message = useWatch({ name: 'message', control })
   const completion = useWatch({ name: 'percentageCompletion', control })
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
 
   const Submit = data => {
     if (saveNote) {
@@ -181,10 +183,14 @@ export const NotesTab = (props: NotesProps) => {
             <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
               {t('enterNewNote')}
             </FormLabel>
-            <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')}
-            isDisabled={hideSave}
-            _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }} 
-            data-testid="note_textarea"
+            <Textarea
+              disabled={isReadOnly}
+              _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }}
+              flexWrap="wrap"
+              h={'120px'}
+              {...messageBoxStyle}
+              {...register('message')}
+              data-testid="note_textarea"
             />
           </FormControl>
         </Flex>
