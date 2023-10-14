@@ -8,7 +8,6 @@ export function usePaginationQuery<TData>(
   size: number,
   options?: any,
   clientName?: string,
-  enabled?: boolean,
 ): UseQueryResult<{ data: TData | undefined; totalCount: number; dataCount: number }> {
   const toast = useToast()
   const client = useClient(clientName)
@@ -22,7 +21,6 @@ export function usePaginationQuery<TData>(
       return { data: response?.data, totalCount: size ? Math.ceil(Number(total) / size) : 0, dataCount: total }
     },
     {
-      enabled,
       onError: (error: any) => {
         toast({
           title: 'Error',
