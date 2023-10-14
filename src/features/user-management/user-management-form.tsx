@@ -76,6 +76,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const form = useForm<UserForm>()
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
+  const [selectedOption, setSelectedOption] = useState([]) // HN-PSWOA-6382| This state contains the data of the selected user that has a parent
   const { options: roles } = useFetchRoles()
   const {
     options: usersList,
@@ -643,7 +644,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   closeMenuOnSelect={false}
                   isMulti={true}
                   loadingCheck={loadingUsersList}
-                  {...field}
+                  value={field?.value}
+                  onChange={(option: any) =>{
+                    const lastSelectedOption = option[option.length - 1];
+                    const isUserBeingAdd = field?.value?.length < option?.length;
+                    if (lastSelectedOption?.parentId && isUserBeingAdd) return setSelectedOption(option); // HN-PSWOA-6382| Only show confirmation modal if the selected user has a parent and it is selected not removed from dropdown
+                    field.onChange(option);
+                  }}
                   options={usersList?.filter(ul => ul.value !== managerSelected?.value)} //Donot include in direct reports the users selected for managers
                 />
               )}
@@ -853,6 +860,16 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             </Button>
           )}
         </>
+        <ConfirmationBox
+          title="Are You Sure?"
+          content={`${(selectedOption[selectedOption?.length - 1] as any)?.label } is already reporting to another user. Proceed anyway?`}
+          isOpen={!!selectedOption?.length}
+          onClose={() => setSelectedOption([])}
+          onConfirm={() => {
+            setValue("directReports", selectedOption);
+            setSelectedOption([]);
+          }}
+        />
         <ConfirmationBox
           title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}
           content={t(`${USER_MANAGEMENT}.modal.deleteUserContent`)}

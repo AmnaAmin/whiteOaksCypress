@@ -1,10 +1,10 @@
 import { Grid } from '@chakra-ui/react'
-import { usePCRecievable } from 'api/account-receivable'
+import { useRecievableCards } from 'api/account-receivable'
 import { currencyFormatter } from 'utils/string-formatters'
 import { AccountFilterCard } from './account-filter-card'
 
 export const ReceivableFilter = ({ cardSelected, onSelected, userIds }) => {
-  const { receivableData, isLoading } = usePCRecievable({ userIds })
+  const { receivableData, isLoading } = useRecievableCards({ userIds })
   enum PayableCardTypes {
     PastDue = '1',
     SevenDays = '2',
