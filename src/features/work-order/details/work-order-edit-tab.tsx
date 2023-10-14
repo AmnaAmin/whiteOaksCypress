@@ -56,6 +56,7 @@ import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-commo
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
+import { useLocation } from 'react-router-dom'
 
 export type SelectVendorOption = {
   label: string
@@ -270,8 +271,11 @@ const WorkOrderDetailTab = props => {
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
   const clientStart = projectData?.clientStartDate
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
-
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   useEffect(() => {
     const option = [] as any
     if (trades && trades?.length > 0) {

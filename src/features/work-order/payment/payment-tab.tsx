@@ -29,6 +29,7 @@ import { truncateWithEllipsis } from 'utils/string-formatters'
 import moment from 'moment'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
+import { useLocation } from 'react-router-dom'
 
 const CalenderCard = props => {
   return (
@@ -103,7 +104,11 @@ const PaymentInfoTab = props => {
   })
   const watchPartialPayment = watch('partialPayment')
   const watchPaymentDate = watch('paymentDate')
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
   useEffect(() => {
@@ -407,7 +412,15 @@ const PaymentInfoTab = props => {
 
               <Box height="80px">
                 <FormControl isInvalid={!!errors.clientApprovedAmount}>
-                  <FormLabel isTruncated title={'Client Final Approved Amount'} variant={'strong-label'} size={'md'} whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}>
+                  <FormLabel
+                    isTruncated
+                    title={'Client Final Approved Amount'}
+                    variant={'strong-label'}
+                    size={'md'}
+                    whiteSpace={'nowrap'}
+                    textOverflow={'ellipsis'}
+                    overflow={'hidden'}
+                  >
                     {truncateWithEllipsis(t('clientFinalApprovedAmount').trim(), 30)}
                   </FormLabel>
                   <Controller

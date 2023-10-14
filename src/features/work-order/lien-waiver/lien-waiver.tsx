@@ -40,6 +40,7 @@ import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-commo
 import { MdOutlineCancel } from 'react-icons/md'
 import { readFileContent } from 'api/vendor-details'
 import { truncateWithEllipsis } from 'utils/string-formatters'
+import { useLocation } from 'react-router-dom'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
@@ -61,7 +62,12 @@ export const LienWaiverTab: React.FC<any> = props => {
   const { isVendor } = useUserRolesSelector()
   const { isFieldsDisabled } = useLWFieldsStatusDecision({ workOrder: workOrder })
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
+  // const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   type FormValueType = {
     claimantName: string | null | undefined
     customerName: string | null | undefined
