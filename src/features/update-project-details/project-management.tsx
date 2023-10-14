@@ -35,7 +35,7 @@ type ProjectManagerProps = {
   projectTypeSelectOptions: SelectOption[]
   projectOverrideStatusSelectOptions: any //SelectOption[]
   projectData: Project
-  isReadOnly: boolean
+  isReadOnly?: boolean
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({
   projectStatusSelectOptions,
@@ -47,7 +47,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
 
   useEffect(() => {
     if (isReadOnly) {
@@ -165,7 +164,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                         isDisabled={isReadOnly}
                         options={projectStatusSelectOptions}
                         isOptionDisabled={option => option.disabled}
-                        isDisabled={isReadOnly}
                         onChange={option => {
                           clearErrors()
                           updateProjCloseDueDate(option)
