@@ -14,10 +14,11 @@ import { BsEye, BsEyeSlash } from 'react-icons/bs'
 import zxcvbn from 'zxcvbn'
 import { USER_MANAGEMENT } from './user-management.i8n'
 
-export const PasswordField: React.FC<{ errors: any; register: any; isRequired: boolean }> = ({
+export const PasswordField: React.FC<{ errors: any; register: any; isRequired: boolean; isDisabled?: boolean }> = ({
   register,
   errors,
   isRequired,
+  isDisabled=false
 }) => {
   const [password, setPassword] = useState(false)
   const { t } = useTranslation()
@@ -59,6 +60,7 @@ export const PasswordField: React.FC<{ errors: any; register: any; isRequired: b
           type={password ? 'text' : 'password'}
           id="newPassword"
           {...register('newPassword')}
+          disabled={isDisabled}
           rounded="6px"
           autoComplete="new-password"
           onInput={event => {
