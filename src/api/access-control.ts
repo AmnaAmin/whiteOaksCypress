@@ -151,23 +151,23 @@ export const useGetSections = ({ isDevtekUser }) => {
   return [
     ...(isDevtekUser ? [{ value: 'ADMINDASHBOARD', label: 'Dashboard' }] : []),
     ...(isDevtekUser ? [{ value: 'VENDORDASHBOARD', label: 'Vendor Dashboard' }] : []),
-    { value: 'ESTIMATE', label: 'Estimates' },
+    ...(isDevtekUser ? [{ value: 'ESTIMATE', label: 'Estimates' }] : []),
     { value: 'PROJECT', label: 'Projects' },
     { value: 'PAYABLE', label: 'Payable' },
     { value: 'RECEIVABLE', label: 'Receivable' },
     { value: 'VENDOR', label: 'Vendors' },
     { value: 'CLIENT', label: 'Clients' },
-    { value: 'REPORT', label: 'Reports' },
     { value: 'PERFORMANCE', label: 'Performance' },
     { value: 'USERMANAGER', label: 'Users' },
     { value: 'MARKET', label: 'Markets' },
     { value: 'VENDORSKILL', label: 'Vendor Skills' },
     { value: 'CLIENTTYPE', label: 'Client Type' },
     { value: 'PROJECTTYPE', label: 'Project Type' },
-    { value: 'VENDORPROJECT', label: 'Vendor Projects' },
-    { value: 'VENDORPROFILE', label: 'Vendor Profile' },
     { value: 'SUPPORT', label: 'Support' },
-    { value: 'ALERT', label: 'Alerts' },
+    ...(isDevtekUser ? [{ value: 'VENDORPROJECT', label: 'Vendor Projects' }] : []),
+    ...(isDevtekUser ? [{ value: 'VENDORPROFILE', label: 'Vendor Profile' }] : []),
+    ...(isDevtekUser ? [{ value: 'ALERT', label: 'Alerts' }] : []),
+    ...(isDevtekUser ? [{ value: 'REPORT', label: 'Reports' }] : []),
   ]
 }
 
