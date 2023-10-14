@@ -35,7 +35,7 @@ type ProjectManagerProps = {
   projectTypeSelectOptions: SelectOption[]
   projectOverrideStatusSelectOptions: any //SelectOption[]
   projectData: Project
-  isReadOnly: boolean
+  isReadOnly?: boolean
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({
   projectStatusSelectOptions,
@@ -47,6 +47,17 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
+
+  useEffect(() => {
+    if (isReadOnly) {
+      Array.from(document.querySelectorAll("input")).forEach(input => {
+        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
+            input.setAttribute("disabled", "true");
+          }
+      });
+    };
+  }, []);
+
   // const [overrideProjectStatusOptions, setOverrideProjectStatusOptions] = useState<any>([])
   // const [lastProjectStatus, setlastProjectStatus] = useState<any>('')
 
@@ -177,12 +188,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect
-                      isDisabled={isReadOnly}
-                      {...field}
-                      options={projectTypeSelectOptions}
-                      selectProps={{ isBorderLeft: true }}
-                    />
+                    <ReactSelect {...field} options={projectTypeSelectOptions} selectProps={{ isBorderLeft: true }} isDisabled={isReadOnly} />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}

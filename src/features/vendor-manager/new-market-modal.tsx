@@ -213,7 +213,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.metroServiceArea`)}
                   </FormLabel>
-                  <Input {...register('metroServiceArea')} type="text" variant="required-field" w="215px" />
+                  <Input {...register('metroServiceArea')} type="text" variant="required-field" w="215px" disabled={isReadOnly} />
                 </Box>
 
                 <FormControl w="225px">
@@ -228,6 +228,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                         <Select
                           {...field}
                           options={stateSelectOptions}
+                          isDisabled={isReadOnly}
                           // size="md"
                           selectProps={{ isBorderLeft: true, menuHeight: '103px' }}
                           onChange={option => {
@@ -252,6 +253,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                           <NumberFormat
                             customInput={CustomRequiredInput}
                             value={field.value}
+                            disabled={isReadOnly}
                             onValueChange={values => {
                               const { floatValue } = values
                               field.onChange(floatValue ?? '')

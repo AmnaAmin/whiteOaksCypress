@@ -162,12 +162,12 @@ const PaymentInfoTab = props => {
 
   useEffect(() => {
     if (isReadOnly) {
-      Array.from(document.querySelectorAll('input')).forEach(input => {
-        if (input.getAttribute('data-testid') !== 'tableFilterInputField') {
-          input.setAttribute('disabled', 'true')
-        }
-      })
-    }
+      Array.from(document.querySelectorAll("input")).forEach(input => {
+        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
+            input.setAttribute("disabled", "true");
+          }
+      });
+    };
   }, [])
   return (
     <Box>
