@@ -578,9 +578,7 @@ export const useVendor = (user, queryString: string, pageSize: number) => {
     [VENDOR_QUERY_KEY, apiQueryString],
     `view-vendors/v1?${apiQueryString}`,
     pageSize,
-    [],
-    undefined,
-    !!user,
+    { enabled: !!user },
   )
 
   return {
