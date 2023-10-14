@@ -35,6 +35,12 @@ export const renderPayments = async ({ onClose, workOrder, onSave }: any) => {
 }
 
 jest.setTimeout(150000)
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useLocation: () => ({
+    pathname: "localhost:3000/projects/payments"
+  })
+}));
 
 describe('Work Order Invoice Test Cases', () => {
   beforeAll(() => {
