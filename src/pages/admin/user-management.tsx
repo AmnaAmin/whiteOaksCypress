@@ -29,6 +29,7 @@ export const useUsrMgt = (filterQueryString?: string, page?: number, size: numbe
     data?.data?.map(res => ({
       value: res?.id,
       label: res?.firstName + ' ' + res?.lastName,
+      parentId: res?.parentFieldProjectManagerId,
     })) || []
 
   return {
