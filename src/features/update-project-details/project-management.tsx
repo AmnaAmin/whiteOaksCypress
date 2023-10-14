@@ -24,7 +24,7 @@ import { ProjectDetailsFormValues, ProjectStatus } from 'types/project-details.t
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useCurrentDate, useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
 import { addDays } from 'date-fns'
 import moment from 'moment'
@@ -45,6 +45,18 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+
+  useEffect(() => {
+    if (isReadOnly) {
+      Array.from(document.querySelectorAll("input")).forEach(input => {
+        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
+            input.setAttribute("disabled", "true");
+          }
+      });
+    };
+  }, []);
+
   // const [overrideProjectStatusOptions, setOverrideProjectStatusOptions] = useState<any>([])
   // const [lastProjectStatus, setlastProjectStatus] = useState<any>('')
 
@@ -150,6 +162,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                         {...field}
                         options={projectStatusSelectOptions}
                         isOptionDisabled={option => option.disabled}
+                        isDisabled={isReadOnly}
                         onChange={option => {
                           clearErrors()
                           updateProjCloseDueDate(option)
@@ -174,7 +187,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect {...field} options={projectTypeSelectOptions} selectProps={{ isBorderLeft: true }} />
+                    <ReactSelect {...field} options={projectTypeSelectOptions} selectProps={{ isBorderLeft: true }} isDisabled={isReadOnly} />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}

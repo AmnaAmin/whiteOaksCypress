@@ -1,6 +1,7 @@
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input } from '@chakra-ui/react'
 import { getAttributeOptions, getBehaviorOptions, getCustomOptions, useFieldRelatedDecisions } from 'api/alerts'
 import Select from 'components/form/react-select'
+import { useEffect } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { AlertFormValues, CATEGORY_OPTIONS, NOTIFY_OPTIONS, TYPE_SELECTION_OPTIONS } from 'types/alert.type'
@@ -34,6 +35,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
               type="text"
               variant="required-field"
               {...register('title', { required: 'This is required' })}
+              disabled={isReadOnly}
             />
             <FormErrorMessage>{errors.title && errors.title.message}</FormErrorMessage>
           </FormControl>
@@ -48,7 +50,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
               rules={{ required: 'This is required' }}
               render={({ field, fieldState }) => (
                 <>
-                  <Select {...field} selectProps={{ isBorderLeft: true }} options={CATEGORY_OPTIONS} />
+                  <Select {...field} selectProps={{ isBorderLeft: true }} options={CATEGORY_OPTIONS} isDisabled={isReadOnly} />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}
@@ -63,7 +65,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
               name="notify"
               control={control}
               render={({ field }) => {
-                return <Select {...field} options={NOTIFY_OPTIONS} />
+                return <Select {...field} options={NOTIFY_OPTIONS} isDisabled={isReadOnly} />
               }}
             />
           </Box>
@@ -99,6 +101,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                       //menuPlacement={'top'}
                       options={TYPE_SELECTION_OPTIONS}
                       size="md"
+                      isDisabled={isReadOnly}
                       value={field.value}
                       onChange={option => {
                         field.onChange(option)
@@ -128,6 +131,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                   <>
                     <Select
                       {...field}
+                      isDisabled={isReadOnly}
                       options={getAttributeOptions(watchTypeSelection?.label)}
                       size="md"
                       //menuPlacement={'top'}
@@ -159,6 +163,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                   <>
                     <Select
                       {...field}
+                      isDisabled={isReadOnly}
                       //menuPlacement={'top'}
                       options={getBehaviorOptions(watchAttributeSelection?.type)}
                       size="md"
@@ -188,6 +193,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                   return (
                     <>
                       <Select
+                        isDisabled={isReadOnly}
                         {...field}
                         options={getCustomOptions({
                           type: watchTypeSelection?.label,

@@ -181,7 +181,9 @@ export const NotesTab = (props: NotesProps) => {
             <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
               {t('enterNewNote')}
             </FormLabel>
-            <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} 
+            <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')}
+            isDisabled={hideSave}
+            _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }} 
             data-testid="note_textarea"
             />
           </FormControl>
