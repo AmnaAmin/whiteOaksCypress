@@ -185,6 +185,7 @@ export const NotesTab = (props: NotesProps) => {
             </FormLabel>
             <Textarea
               disabled={isReadOnly}
+              _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }}
               flexWrap="wrap"
               h={'120px'}
               {...messageBoxStyle}
