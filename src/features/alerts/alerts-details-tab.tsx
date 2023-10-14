@@ -1,7 +1,6 @@
 import { Box, Button, Divider, FormControl, FormErrorMessage, FormLabel, HStack, Input } from '@chakra-ui/react'
 import { getAttributeOptions, getBehaviorOptions, getCustomOptions, useFieldRelatedDecisions } from 'api/alerts'
 import Select from 'components/form/react-select'
-import { useEffect } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { AlertFormValues, CATEGORY_OPTIONS, NOTIFY_OPTIONS, TYPE_SELECTION_OPTIONS } from 'types/alert.type'
