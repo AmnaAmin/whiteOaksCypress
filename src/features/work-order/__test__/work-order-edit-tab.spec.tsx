@@ -1,6 +1,5 @@
 /*eslint-disable */
-import { fireEvent, render } from '@testing-library/react'
-// import { waitFor } from '@testing-library/react'
+import { fireEvent, render, waitFor } from '@testing-library/react'
 import WorkOrderEditTab from '../../work-order/details/work-order-edit-tab'
 import { Providers } from 'providers'
 import { WORK_ORDERS, PROJECTS, assignedItems, SWO_PROJECT, DOCUMENTS } from 'mocks/api/workorder/data'
@@ -10,24 +9,28 @@ import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 import { setToken } from 'utils/storage.utils'
+import { BrowserRouter } from 'react-router-dom'
 
 export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, projectData, lineItems }: any) => {
   const workOrderDetails = { ...workOrder, assignedItems: lineItems }
   await render(
-    <Modal isOpen={true} onClose={onClose} size="none">
-      <WorkOrderEditTab
-        workOrder={workOrderDetails}
-        onSave={onSave}
-        navigateToProjectDetails={null}
-        isWorkOrderUpdating={false}
-        swoProject={SWO_PROJECT}
-        rejectInvoiceCheck={false}
-        projectData={projectData}
-        documentsData={DOCUMENTS}
-        isLoadingLineItems={false}
-        isFetchingLineItems={false}
-      />
-    </Modal>,
+    <BrowserRouter>
+      <Modal isOpen={true} onClose={onClose} size="none">
+        <WorkOrderEditTab
+          workOrder={workOrderDetails}
+          onSave={onSave}
+          navigateToProjectDetails={null}
+          isWorkOrderUpdating={false}
+          swoProject={SWO_PROJECT}
+          rejectInvoiceCheck={false}
+          projectData={projectData}
+          documentsData={DOCUMENTS}
+          isLoadingLineItems={false}
+          isFetchingLineItems={false}
+        />
+      </Modal>
+    </BrowserRouter>,
+
     {
       wrapper: Providers,
     },
@@ -55,7 +58,7 @@ describe('Work Order modal showing work order specific details for PC(Super set 
       transactions,
       lineItems: assignedItems.filter(a => !a.isCompleted && !a.isVerified),
     })
-    // expect(screen.getByTestId('companyName').textContent).toEqual(workOrder?.companyName)
+    expect(screen.getByTestId('companyName').textContent).toEqual(workOrder?.companyName)
     expect(screen.getByTestId('vendorType').textContent).toEqual(workOrder?.skillName)
     expect(screen.getByTestId('email').textContent).toEqual(workOrder?.businessEmailAddress)
     expect(screen.getByTestId('phone').textContent).toEqual(workOrder?.businessPhoneNumber)
@@ -141,7 +144,7 @@ describe('Work Order modal showing work order specific details for PC(Super set 
       lineItems: assignedItems.filter(a => a.isCompleted && a.isVerified),
     })
 
-    // expect(screen.getByTestId('companyName').textContent).toEqual(workOrder?.companyName)
+    expect(screen.getByTestId('companyName').textContent).toEqual(workOrder?.companyName)
     expect(screen.getByTestId('vendorType').textContent).toEqual(workOrder?.skillName)
     expect(screen.getByTestId('email').textContent).toEqual(workOrder?.businessEmailAddress)
     expect(screen.getByTestId('phone').textContent).toEqual(workOrder?.businessPhoneNumber)
