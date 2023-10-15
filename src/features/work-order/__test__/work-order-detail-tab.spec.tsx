@@ -13,24 +13,22 @@ import { BrowserRouter } from 'react-router-dom'
 export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }: any) => {
   const setIsError = jest.fn()
   await render(
-    <BrowserRouter>
-      <Modal isOpen={true} onClose={onClose} size="none">
-        <WorkOrderDetailsTab
-          documentsData={projectData}
-          onClose={onClose}
-          workOrder={{ ...workOrder, ...assignedItems }}
-          projectData={projectData}
-          setIsUpdating={null}
-          isUpdating={false}
-          workOrderAssignedItems={assignedItems}
-          isFetchingLineItems={false}
-          isLoadingLineItems={false}
-          displayAwardPlan={true}
-          tabIndex={0}
-          setIsError={setIsError}
-        />
-      </Modal>
-    </BrowserRouter>,
+    <Modal isOpen={true} onClose={onClose} size="none">
+      <WorkOrderDetailsTab
+        documentsData={projectData}
+        onClose={onClose}
+        workOrder={{ ...workOrder, ...assignedItems }}
+        projectData={projectData}
+        setIsUpdating={null}
+        isUpdating={false}
+        workOrderAssignedItems={assignedItems}
+        isFetchingLineItems={false}
+        isLoadingLineItems={false}
+        displayAwardPlan={true}
+        tabIndex={0}
+        setIsError={setIsError}
+      />
+    </Modal>,
     {
       wrapper: Providers,
     },
@@ -40,9 +38,17 @@ export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }
 }
 export const rendeWorkOrderModal = async ({ onClose, workOrder, projectData, transactions }: any) => {
   await render(
-    <Modal isOpen={true} onClose={onClose} size="none">
-      <WorkOrderDetails onClose={onClose} workOrder={workOrder} projectData={projectData} transactions={transactions} />
-    </Modal>,
+    <BrowserRouter>
+      <Modal isOpen={true} onClose={onClose} size="none">
+        <WorkOrderDetails
+          onClose={onClose}
+          workOrder={workOrder}
+          projectData={projectData}
+          transactions={transactions}
+        />
+      </Modal>
+    </BrowserRouter>,
+
     {
       wrapper: Providers,
     },
