@@ -20,7 +20,6 @@ import React, { useRef, useEffect } from 'react'
 import { BiSpreadsheet } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
-import { useLocation } from 'react-router-dom'
 
 export const MessagesTypes: React.FC<{ userNote?: any; otherNote?: any }> = ({ userNote, otherNote }) => {
   return (
@@ -123,11 +122,6 @@ export const NotesTab = (props: NotesProps) => {
 
   const message = useWatch({ name: 'message', control })
   const completion = useWatch({ name: 'percentageCompletion', control })
-  const { pathname } = useLocation()
-  const isPayable = pathname?.includes('payable')
-  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
-  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
-  const isReadOnly = isPayableRead || isProjRead
   const Submit = data => {
     if (saveNote) {
       saveNote(data)
@@ -188,7 +182,7 @@ export const NotesTab = (props: NotesProps) => {
               {t('enterNewNote')}
             </FormLabel>
             <Textarea
-              disabled={isReadOnly}
+              disabled={hideSave}
               _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }}
               flexWrap="wrap"
               h={'120px'}
