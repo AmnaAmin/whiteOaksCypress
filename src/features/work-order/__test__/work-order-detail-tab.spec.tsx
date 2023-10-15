@@ -8,26 +8,29 @@ import { Modal } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
+import { BrowserRouter } from 'react-router-dom'
 
 export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }: any) => {
   const setIsError = jest.fn()
   await render(
-    <Modal isOpen={true} onClose={onClose} size="none">
-      <WorkOrderDetailsTab
-        documentsData={projectData}
-        onClose={onClose}
-        workOrder={{ ...workOrder, ...assignedItems }}
-        projectData={projectData}
-        setIsUpdating={null}
-        isUpdating={false}
-        workOrderAssignedItems={assignedItems}
-        isFetchingLineItems={false}
-        isLoadingLineItems={false}
-        displayAwardPlan={true}
-        tabIndex={0}
-        setIsError={setIsError}
-      />
-    </Modal>,
+    <BrowserRouter>
+      <Modal isOpen={true} onClose={onClose} size="none">
+        <WorkOrderDetailsTab
+          documentsData={projectData}
+          onClose={onClose}
+          workOrder={{ ...workOrder, ...assignedItems }}
+          projectData={projectData}
+          setIsUpdating={null}
+          isUpdating={false}
+          workOrderAssignedItems={assignedItems}
+          isFetchingLineItems={false}
+          isLoadingLineItems={false}
+          displayAwardPlan={true}
+          tabIndex={0}
+          setIsError={setIsError}
+        />
+      </Modal>
+    </BrowserRouter>,
     {
       wrapper: Providers,
     },
