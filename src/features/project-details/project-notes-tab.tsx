@@ -5,10 +5,15 @@ import { useAccountDetails } from 'api/vendor-details'
 import { NotesTab } from 'features/common/notes-tab'
 import { useProjectNotes } from 'api/projects'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { useLocation } from 'react-router-dom'
 
 export const ProjectNotes: React.FC<any> = props => {
   const { setNotesCount, projectId, projectData } = props
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   const { mutate: createNotes } = useNoteMutation(projectId)
   const { data: account } = useAccountDetails()
 
