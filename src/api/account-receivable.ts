@@ -12,11 +12,28 @@ declare global {
 
 export const ACCONT_RECEIVABLE_API_KEY = 'account-receivable'
 
-export const usePCRecievable = () => {
+export const usePCRecievable = ({ userIds }) => {
   const client = useClient()
+  const apiQuery = `account_receivable` + (userIds?.length > 0 ? `?userId=${userIds?.join(',')}` : '')
+  const { data: receivableData, ...rest } = useQuery([ACCONT_RECEIVABLE_API_KEY, userIds], async () => {
+    const response = await client(apiQuery, {})
 
-  const { data: receivableData, ...rest } = useQuery(ACCONT_RECEIVABLE_API_KEY, async () => {
-    const response = await client(`account_receivable`, {})
+    return response?.data
+  })
+
+  return {
+    receivableData,
+    ...rest,
+  }
+}
+export const ACCOUNT_CARDS_RECEIVABLE_API_KEY = 'account-receivable-cards'
+
+export const useRecievableCards = ({ userIds }) => {
+  const client = useClient()
+  const userIdsStr = userIds?.length > 0 ? `&directReportUserOnly.equals=${userIds?.join(',')}` : ''
+  const apiQuery = `account-receivables?page=0&size=0&sort=id,desc` + userIdsStr
+  const { data: receivableData, ...rest } = useQuery([ACCOUNT_CARDS_RECEIVABLE_API_KEY, userIds], async () => {
+    const response = await client(apiQuery, {})
 
     return response?.data
   })
@@ -92,6 +109,8 @@ export const useCheckBatch = (setLoading, loading, paginatedQueryString) => {
           setAPIEnabled(false)
           queryClient.invalidateQueries([GET_PAGINATED_RECEIVABLE_QUERY_KEY, paginatedQueryString])
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+          queryClient.invalidateQueries(ACCOUNT_CARDS_RECEIVABLE_API_KEY)
+          
 
           const response = await client(`batch-values/batchType/940`, {})
           setBatchResponse(response?.data)
@@ -120,9 +139,10 @@ export const useBatchRun = (batchId, paginatedQueryString, refetchInterval) => {
         if (!isBatchProcessingInProgress) {
           queryClient.invalidateQueries([GET_PAGINATED_RECEIVABLE_QUERY_KEY, paginatedQueryString])
           queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+          queryClient.invalidateQueries(ACCOUNT_CARDS_RECEIVABLE_API_KEY)
         }
       },
-      refetchInterval: refetchInterval
+      refetchInterval: refetchInterval,
     },
   )
 }

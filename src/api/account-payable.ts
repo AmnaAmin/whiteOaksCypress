@@ -10,11 +10,11 @@ declare global {
 
 export const ACCONT_PAYABLE_API_KEY = 'account-payable'
 
-export const useAccountPayableCard = () => {
+export const useAccountPayableCard = ({ userIds }) => {
   const client = useClient()
-
-  return useQuery(ACCONT_PAYABLE_API_KEY, async () => {
-    const response = await client(`ap-cards`, {})
+  const apiQuery = `ap-cards` + (userIds?.length > 0 ? `?userId=${userIds?.join(',')}` : '')
+  return useQuery([ACCONT_PAYABLE_API_KEY, userIds], async () => {
+    const response = await client(apiQuery, {})
     return { ...response?.data }
   })
 }

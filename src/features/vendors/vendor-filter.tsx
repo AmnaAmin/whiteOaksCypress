@@ -1,9 +1,10 @@
 import { Grid, Icon } from '@chakra-ui/react'
 import { BiClipboard, BiFile, BiHourglass, BiMessageSquareError } from 'react-icons/bi'
-import { useVendorCards } from 'api/pc-projects'
+import { useFetchUserDetails, useVendorCards } from 'api/pc-projects'
 import VendorFilterCard from './vendor-filter-card'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useTranslation } from 'react-i18next'
+import { useAccountData } from 'api/user-account'
 
 export const useVendorCardJson = cards => {
   const { t } = useTranslation()
@@ -41,7 +42,10 @@ export const useVendorCardJson = cards => {
 }
 
 export const VendorFilters = ({ onSelectCard, selectedCard }) => {
-  const { data: valuesVendor } = useVendorCards()
+  const { data: account } = useAccountData()
+  const { user } = useFetchUserDetails(account?.email)
+
+  const { data: valuesVendor } = useVendorCards({ user })
   const cards = useVendorCardJson(valuesVendor)
 
   return (

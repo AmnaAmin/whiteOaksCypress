@@ -56,7 +56,7 @@ export default function useRoutesConfig() {
     { path: 'receivable', element: Receivable, permissions: ['RECEIVABLE.READ', 'RECEIVABLE.EDIT', 'ALL'] },
     { path: 'vendors', element: Vendors, permissions: ['VENDOR.READ', 'VENDOR.EDIT', 'ALL'] },
     { path: 'clients', element: Clients, permissions: ['CLIENT.READ', 'CLIENT.EDIT', 'ALL'] },
-    { path: 'reports', element: Reports, permissions: ['REPORT.READ', 'ALL'] },
+    { path: 'reports', element: Reports, permissions: ['REPORT.READ', 'REPORT.EDIT', 'ALL'] },
     { path: 'markets', element: Markets, permissions: ['MARKET.READ', 'MARKET.EDIT', 'ALL'] },
     { path: 'performance', element: PerformanceTab, permissions: ['PERFORMANCE.READ', 'PERFORMANCE.EDIT', 'ALL'] },
     { path: 'vendorSkills', element: VendorSkills, permissions: ['VENDORSKILL.READ', 'VENDORSKILL.EDIT', 'ALL'] },

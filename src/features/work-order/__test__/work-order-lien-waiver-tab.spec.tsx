@@ -7,14 +7,17 @@ import { LienWaiverTab } from '../lien-waiver/lien-waiver'
 import { Modal } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import { imgUtility } from 'utils/file-utils'
+import { BrowserRouter } from 'react-router-dom'
 
 export const renderLienWaiver = async ({ onClose, workOrder, documentsData }: any) => {
   // mocking signature to image as canvas context as not supported in jest
   jest.spyOn(imgUtility, 'generateTextToImage').mockReturnValue(SIGNATURE_IMG)
   const component = await render(
-    <Modal isOpen={true} onClose={onClose} size="none">
-      <LienWaiverTab workOrder={workOrder} documentsData={documentsData} onClose={onClose} />
-    </Modal>,
+    <BrowserRouter>
+      <Modal isOpen={true} onClose={onClose} size="none">
+        <LienWaiverTab workOrder={workOrder} documentsData={documentsData} onClose={onClose} />
+      </Modal>
+    </BrowserRouter>,
     {
       wrapper: Providers,
     },

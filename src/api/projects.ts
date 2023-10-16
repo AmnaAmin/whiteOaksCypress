@@ -152,7 +152,6 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     (firstFinancialRecord?.changeOrder || 0) +
     (firstFinancialRecord?.adjustment || 0)
 
-    
   const projectExpenses = -1 * ((firstFinancialRecord?.shipFee || 0) + (firstFinancialRecord?.permitFee || 0))
 
   const { vendorAccountPayable, projectTotalCost, materialCost, vendorPayment } = restProjectFinancialOverviews?.reduce(

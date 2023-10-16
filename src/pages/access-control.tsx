@@ -7,16 +7,13 @@ import { useFetchRolesPermissions } from 'api/access-control'
 import { useState } from 'react'
 import { RolesList } from 'features/access-control/roles-list'
 import { RolesPermissions } from 'features/access-control/roles-permissions'
-import { useAccountData } from 'api/user-account'
 
 export const AccessControl: React.FC = () => {
   const { t } = useTranslation()
   const [selectedRole, setSelectedRole] = useState<{ name: string; id: string | number } | null>(null)
   const { data: permissions, isLoading: isLoadingPermissions } = useFetchRolesPermissions(selectedRole?.name)
   const [newRole, setNewRole] = useState(false)
-  const { data } = useAccountData()
-  const isDevtekUser = data?.devAccount
-  const allowEdit = !permissions?.[0]?.systemRole || (permissions?.[0]?.systemRole && isDevtekUser)
+  // const allowEdit = !permissions?.[0]?.systemRole || (permissions?.[0]?.systemRole && isDevtekUser)
 
   return (
     <Card minH="100%">
@@ -37,7 +34,7 @@ export const AccessControl: React.FC = () => {
               {t(`${ACCESS_CONTROL}.newRole`)}
             </Button>
           </HStack>
-          <RolesList setSelectedRole={setSelectedRole} selectedRole={selectedRole} isDevtekUser={isDevtekUser} />
+          <RolesList setSelectedRole={setSelectedRole} selectedRole={selectedRole} />
           {isLoadingPermissions ? (
             <Center height={350}>
               <Spinner size="lg" />
@@ -49,7 +46,7 @@ export const AccessControl: React.FC = () => {
                   permissions={permissions}
                   setNewRole={null}
                   setSelectedRole={setSelectedRole}
-                  allowEdit={allowEdit}
+                  allowEdit={true}
                 />
               )}
             </>
@@ -64,7 +61,7 @@ export const AccessControl: React.FC = () => {
             permissions={null}
             setNewRole={setNewRole}
             setSelectedRole={setSelectedRole}
-            allowEdit={allowEdit}
+            allowEdit={true}
           />
         </VStack>
       )}
