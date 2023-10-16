@@ -260,8 +260,8 @@ export const InvoiceTab = ({
       <ModalBody mx={{ base: 0, lg: '25px' }} h="600px">
         {isVendorExpired && (
           <Box>
-            <AlertError
-              styleBox={{ width: 'max-content' }}
+            <AlertError 
+              styleBox={{ width: 'max-content', marginTop: '9px'}}
               msg={
                 isVendor
                   ? `${WORK_ORDER}.expirationInvoiceMessageForVendor`
@@ -324,7 +324,7 @@ export const InvoiceTab = ({
         <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
 
         <Box
-          h="470px"
+          h={isVendorExpired ? '410px' : '470px'}
           overflow="auto"
           borderRadius={7}
           borderBottom="1px solid #CBD5E0"
