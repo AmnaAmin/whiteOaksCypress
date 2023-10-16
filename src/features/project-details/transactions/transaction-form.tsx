@@ -232,6 +232,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
   const isRefund = useWatch({ name: 'refund', control })
+  const verifiedByFpm = useWatch({ name: 'verifiedByFpm', control })
+  const verifiedByManager = useWatch({ name: 'verifiedByManager', control })
+  const paidDate = useWatch({ name: 'paidDate', control })
   const watchStatus = watch('status')
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -361,6 +364,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }, [selectedWorkOrder])
 
+  useEffect(() => {
+    if (
+      verifiedByFpm?.value === 'CANCELLED' ||
+      verifiedByManager?.value === 'CANCELLED' ||
+      verifiedByFpm?.value === 'DENIED' ||
+      verifiedByManager?.value === 'DENIED'
+    ) {
+      setValue('paidDate', null)
+    } else {
+      setValue('paidDate', paidDate)
+    }
+  }, [verifiedByFpm, verifiedByManager])
+
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
       setValue('invoicedDate', null)
@@ -375,7 +391,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }
 
   const drawTransaction = transaction?.transactionType === TransactionTypeValues.draw
-
   const hasPendingDrawsOnPaymentSave = values => {
     const isDrawAgainstProject =
       values?.transactionType?.value === TransactionTypeValues.draw && values?.against?.label === 'Project SOW'
@@ -1120,7 +1135,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 <Select
                                   {...field}
                                   options={
-                                    drawTransaction ? TRANSACTION_FPM_DM_STATUS_OPTIONS : transactionStatusOptions
+                                    drawTransaction && workOrderId !== '0'
+                                      ? TRANSACTION_FPM_DM_STATUS_OPTIONS
+                                      : transactionStatusOptions
                                   }
                                   isDisabled={isStatusDisabled}
                                   onChange={statusOption => {
