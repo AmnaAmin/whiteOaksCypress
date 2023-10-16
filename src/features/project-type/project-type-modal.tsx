@@ -172,6 +172,7 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
                     {...register('type')}
                     title={typeFieldWatch}
                     data-testid="type"
+                    isDisabled={isReadOnly}
                   />
                 </Box>
               </Box>

@@ -38,16 +38,16 @@ const AccountReceivableModal: React.FC<{
             <Text>ID {projectData?.id} </Text>
             <Divider orientation="vertical" borderWidth="1px" borderColor="#E2E8F0" height="21px" />
             <Text>{projectData?.streetAddress}</Text>
-             <Status value={projectData?.projectStatus as any} id={projectData?.projectStatus as any} />
+            <Status value={projectData?.projectStatus as any} id={projectData?.projectStatus as any} />
           </HStack>
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody  bg='#F2F3F4' p="10px" pt='0px !important' minH="450px">
+        <ModalBody bg="#F2F3F4" p="10px" pt="0px !important" minH="450px">
           {isLoading && <ViewLoader />}
-          
+
           <ProjectDetailsTab
             isRecievable={true}
-            style={{ marginLeft: '32px', marginRight: '32px', backgroundColor: '#F7FAFC', height: '520px', pt: "5px"  }}
+            style={{ marginLeft: '32px', marginRight: '32px', backgroundColor: '#F7FAFC', height: '520px', pt: '5px' }}
             tabVariant="enclosed"
             onClose={props.onClose}
             projectData={projectData as Project}

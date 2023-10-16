@@ -293,6 +293,16 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
     )
   }, [watchMultiMarkets, showMarkets])
 
+  useEffect(() => {
+    if (isReadOnly) {
+      Array.from(document.querySelectorAll("input")).forEach(input => {
+        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
+            input.setAttribute("disabled", "true");
+          }
+      });
+    }
+  }, []);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -372,7 +382,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             render={({ field: { onChange, ...rest } }) => (
               <ReactSelect
                 {...rest}
-                isDisabled={userInfo && userInfo.userTypeLabel === 'Vendor'}
+                isDisabled={(userInfo && userInfo.userTypeLabel === 'Vendor') || isReadOnly}
                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                 options={roles}
                 onChange={target => {
@@ -392,7 +402,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             control={control}
             name="langKey"
             render={({ field }) => (
-              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} />
+              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} isDisabled={isReadOnly} />
             )}
           />
         </FormControl>
@@ -518,6 +528,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
                       <CheckboxButton
                         name={name}
                         key={value.state.id}
+                        isDisabled={isReadOnly}
                         isChecked={state?.checked}
                         onChange={event => {
                           const checked = event.target.checked
@@ -558,6 +569,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             render={({ field }) => (
               <ReactSelect
                 placeholder="Select or Search"
+                isDisabled={isReadOnly}
                 selectProps={{ isBorderLeft: false }}
                 closeMenuOnSelect={false}
                 isMulti={true}
@@ -667,6 +679,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
                   closeMenuOnSelect={false}
                   isMulti={true}
                   loadingCheck={loadingUsersList}
+                  isDisabled={isReadOnly}
                   value={field?.value}
                   onChange={(option: any) => {
                     const lastSelectedOption = option[option.length - 1]
@@ -781,6 +794,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
               <ReactSelect
                 id="state"
                 {...field}
+                isDisabled={isReadOnly}
                 options={stateOptions}
                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
               />
