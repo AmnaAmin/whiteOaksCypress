@@ -81,7 +81,7 @@ export const UPCOMING_PAYMENT_TABLE_QUERY_KEYS = {
   skillName: 'skillName.contains',
   marketName: 'marketName.contains',
   vendorAddress: 'vendorAddress.contains',
-  dateInvoiceSubmittedStart: 'dateInvoiceSubmitted.greaterThanOrEqual',
+  dateInvoiceSubmittedStart: 'dateInvoiceSubmitted.equals',
   dateInvoiceSubmittedEnd: 'dateInvoiceSubmitted.lessThanOrEqual',
   finalInvoiceAmount: 'displayFinalInvoiceAmount.contains',
   workOrderExpectedCompletionDateStart: 'workOrderExpectedCompletionDate.equals',
