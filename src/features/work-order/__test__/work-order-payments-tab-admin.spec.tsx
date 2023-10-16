@@ -10,21 +10,24 @@ import { datePickerFormat } from 'utils/date-time-utils'
 import { act } from 'react-dom/test-utils'
 import { addDays, isWednesday, nextFriday, nextWednesday } from 'date-fns'
 import moment from 'moment'
+import { BrowserRouter } from 'react-router-dom'
 
 export const renderPayments = async ({ onClose, workOrder, onSave }: any) => {
   const setTabIndex = jest.fn()
   const component = await render(
-    <Modal isOpen={true} onClose={onClose} size="none">
-      <PaymentInfoTab
-        workOrder={workOrder}
-        onClose={onClose}
-        projectData={null}
-        setTabIndex={setTabIndex}
-        onSave={onSave}
-        navigateToProjectDetails={null}
-        isWorkOrderUpdating={false}
-      />
-    </Modal>,
+    <BrowserRouter>
+      <Modal isOpen={true} onClose={onClose} size="none">
+        <PaymentInfoTab
+          workOrder={workOrder}
+          onClose={onClose}
+          projectData={null}
+          setTabIndex={setTabIndex}
+          onSave={onSave}
+          navigateToProjectDetails={null}
+          isWorkOrderUpdating={false}
+        />
+      </Modal>
+    </BrowserRouter>,
     {
       wrapper: Providers,
     },

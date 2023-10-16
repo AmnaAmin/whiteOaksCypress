@@ -35,16 +35,29 @@ type ProjectManagerProps = {
   projectTypeSelectOptions: SelectOption[]
   projectOverrideStatusSelectOptions: any //SelectOption[]
   projectData: Project
+  isReadOnly?: boolean
 }
 const ProjectManagement: React.FC<ProjectManagerProps> = ({
   projectStatusSelectOptions,
   projectTypeSelectOptions,
   projectOverrideStatusSelectOptions,
   projectData,
+  isReadOnly,
 }) => {
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
+
+  useEffect(() => {
+    if (isReadOnly) {
+      Array.from(document.querySelectorAll("input")).forEach(input => {
+        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
+            input.setAttribute("disabled", "true");
+          }
+      });
+    };
+  }, []);
+
   // const [overrideProjectStatusOptions, setOverrideProjectStatusOptions] = useState<any>([])
   // const [lastProjectStatus, setlastProjectStatus] = useState<any>('')
 
@@ -148,6 +161,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                     <div data-testid="proj-status">
                       <ReactSelect
                         {...field}
+                        isDisabled={isReadOnly}
                         options={projectStatusSelectOptions}
                         isOptionDisabled={option => option.disabled}
                         onChange={option => {
@@ -174,7 +188,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect {...field} options={projectTypeSelectOptions} selectProps={{ isBorderLeft: true }} />
+                    <ReactSelect {...field} options={projectTypeSelectOptions} selectProps={{ isBorderLeft: true }} isDisabled={isReadOnly} />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}

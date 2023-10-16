@@ -88,7 +88,12 @@ export const FilteredProjectsData = ({ selectedCard, isReadOnly }: ProjectProps)
         columnVisibility={columnVisibility}
         setColumnVisibility={setColumnVisibility}
       >
-        <Table onRowClick={onRowClick} isLoading={isLoading || isFetching} isEmpty={!isLoading && !projects?.length} />
+        <Table
+          onRowClick={onRowClick}
+          isLoading={isLoading || isFetching}
+          isEmpty={!isLoading && !projects?.length}
+          isFilteredByApi={true}
+        />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton

@@ -86,6 +86,7 @@ import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
 import UpdateProjectAward from './update-project-award'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
+import { useLocation } from 'react-router-dom'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -170,7 +171,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [disableBtn, setDisableBtn] = useState(false)
   const [fileParseMsg, setFileParseMsg] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
 
