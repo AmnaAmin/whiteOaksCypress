@@ -43,9 +43,16 @@ import { useFetchRoles } from 'api/access-control'
 import { useUsrMgt } from 'pages/admin/user-management'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
+enum UserTabs {
+  WOA = 0,
+  VENDOR = 1,
+  DEVTEK = 2,
+}
+
 type UserManagement = {
   onClose: () => void
   user?: UserForm
+  tabIndex?: number
 }
 
 const validateMarket = markets => {
@@ -71,18 +78,34 @@ const validateRegions = regions => {
   return true
 }
 
-export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) => {
+export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, tabIndex }) => {
   const { t } = useTranslation()
   const form = useForm<UserForm>()
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
   const [selectedOption, setSelectedOption] = useState([]) // HN-PSWOA-6382| This state contains the data of the selected user that has a parent
   const { options: roles } = useFetchRoles()
-  const {
-    options: usersList,
-    isLoading: loadingUsersList,
-    userMgt: userData,
-  } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
+
+  const queryString = useMemo(() => {
+    let queryString = ''
+    switch (tabIndex) {
+      case UserTabs.WOA: {
+        queryString = 'userType.notIn=6&devAccount.equals=false'
+        break
+      }
+      case UserTabs.VENDOR: {
+        queryString = 'userType.equals=6&devAccount.equals=false'
+        break
+      }
+      case UserTabs.DEVTEK: {
+        queryString = 'devAccount.equals=true'
+        break
+      }
+    }
+    return queryString
+  }, [tabIndex])
+
+  const { options: usersList, isLoading: loadingUsersList, userMgt: userData } = useUsrMgt(queryString, 0, 100000000)
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   const {
     register,
@@ -100,7 +123,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { mutate: deleteUser } = useDeleteUserDetails()
   const { options: vendorTypes, isLoading: loadingVendors } = useViewVendor()
 
-  useUserDetails({ form, userInfo })
+  useUserDetails({ form, userInfo, queryString })
 
   const formValues = watch()
 
@@ -645,11 +668,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   isMulti={true}
                   loadingCheck={loadingUsersList}
                   value={field?.value}
-                  onChange={(option: any) =>{
-                    const lastSelectedOption = option[option.length - 1];
-                    const isUserBeingAdd = field?.value?.length < option?.length;
-                    if (lastSelectedOption?.parentId && isUserBeingAdd) return setSelectedOption(option); // HN-PSWOA-6382| Only show confirmation modal if the selected user has a parent and it is selected not removed from dropdown
-                    field.onChange(option);
+                  onChange={(option: any) => {
+                    const lastSelectedOption = option[option.length - 1]
+                    const isUserBeingAdd = field?.value?.length < option?.length
+                    if (lastSelectedOption?.parentId && isUserBeingAdd) return setSelectedOption(option) // HN-PSWOA-6382| Only show confirmation modal if the selected user has a parent and it is selected not removed from dropdown
+                    field.onChange(option)
                   }}
                   options={usersList?.filter(ul => ul.value !== managerSelected?.value)} //Donot include in direct reports the users selected for managers
                 />
@@ -862,12 +885,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
         </>
         <ConfirmationBox
           title="Are You Sure?"
-          content={`${(selectedOption[selectedOption?.length - 1] as any)?.label } is already reporting to another user. Proceed anyway?`}
+          content={`${
+            (selectedOption[selectedOption?.length - 1] as any)?.label
+          } is already reporting to another user. Proceed anyway?`}
           isOpen={!!selectedOption?.length}
           onClose={() => setSelectedOption([])}
           onConfirm={() => {
-            setValue("directReports", selectedOption);
-            setSelectedOption([]);
+            setValue('directReports', selectedOption)
+            setSelectedOption([])
           }}
         />
         <ConfirmationBox
