@@ -151,23 +151,23 @@ export const useGetSections = ({ isDevtekUser }) => {
   return [
     ...(isDevtekUser ? [{ value: 'ADMINDASHBOARD', label: 'Dashboard' }] : []),
     ...(isDevtekUser ? [{ value: 'VENDORDASHBOARD', label: 'Vendor Dashboard' }] : []),
-    { value: 'ESTIMATE', label: 'Estimates' },
+    ...(isDevtekUser ? [{ value: 'ESTIMATE', label: 'Estimates' }] : []),
     { value: 'PROJECT', label: 'Projects' },
     { value: 'PAYABLE', label: 'Payable' },
     { value: 'RECEIVABLE', label: 'Receivable' },
     { value: 'VENDOR', label: 'Vendors' },
     { value: 'CLIENT', label: 'Clients' },
-    { value: 'REPORT', label: 'Reports' },
     { value: 'PERFORMANCE', label: 'Performance' },
     { value: 'USERMANAGER', label: 'Users' },
     { value: 'MARKET', label: 'Markets' },
     { value: 'VENDORSKILL', label: 'Vendor Skills' },
     { value: 'CLIENTTYPE', label: 'Client Type' },
     { value: 'PROJECTTYPE', label: 'Project Type' },
-    { value: 'VENDORPROJECT', label: 'Vendor Projects' },
-    { value: 'VENDORPROFILE', label: 'Vendor Profile' },
     { value: 'SUPPORT', label: 'Support' },
-    { value: 'ALERT', label: 'Alerts' },
+    ...(isDevtekUser ? [{ value: 'VENDORPROJECT', label: 'Vendor Projects' }] : []),
+    ...(isDevtekUser ? [{ value: 'VENDORPROFILE', label: 'Vendor Profile' }] : []),
+    ...(isDevtekUser ? [{ value: 'ALERT', label: 'Alerts' }] : []),
+    ...(isDevtekUser ? [{ value: 'REPORT', label: 'Reports' }] : []),
   ]
 }
 
@@ -305,16 +305,51 @@ export const permissionsDefaultValues = ({ permissions, sections }) => {
   }
 }
 
-export const setDefaultPermission = ({ setValue, value }) => {
-  setValue('advancedPermissions.fpmEdit', value)
-  setValue('advancedPermissions.pcEdit', value)
-  setValue('advancedPermissions.clientEdit', value)
-  setValue('advancedPermissions.addressEdit', value)
-  setValue('advancedPermissions.marketEdit', value)
+export const setDefaultPermission = ({ setValue, value, section, assignment }) => {
+  if (section === 'PROJECT') {
+    if (assignment === 'FPM') {
+      setValue('advancedPermissions.gateCodeEdit', value)
+      setValue('advancedPermissions.lockBoxEdit', value)
+      setValue('advancedPermissions.hideCreateProject', value)
+      setValue('advancedPermissions.hidePaidProjects', value)
+      setValue('advancedPermissions.verifiedByFPM', value)
 
-  setValue('advancedPermissions.gateCodeEdit', value)
-  setValue('advancedPermissions.lockBoxEdit', value)
-  setValue('advancedPermissions.clientDueEdit', value)
-  setValue('advancedPermissions.clientStartEdit', value)
-  setValue('advancedPermissions.woaStartEdit', value)
+      setValue('advancedPermissions.fpmEdit', false)
+      setValue('advancedPermissions.pcEdit', false)
+      setValue('advancedPermissions.clientEdit', false)
+      setValue('advancedPermissions.addressEdit', false)
+      setValue('advancedPermissions.marketEdit', false)
+      setValue('advancedPermissions.clientDueEdit', false)
+      setValue('advancedPermissions.clientStartEdit', false)
+      setValue('advancedPermissions.woaStartEdit', false)
+      setValue('advancedPermissions.verifyProjectEnable', false)
+    } else {
+      setValue('advancedPermissions.fpmEdit', value)
+      setValue('advancedPermissions.pcEdit', value)
+      setValue('advancedPermissions.clientEdit', value)
+      setValue('advancedPermissions.addressEdit', value)
+      setValue('advancedPermissions.marketEdit', value)
+
+      setValue('advancedPermissions.gateCodeEdit', value)
+      setValue('advancedPermissions.lockBoxEdit', value)
+      setValue('advancedPermissions.clientDueEdit', value)
+      setValue('advancedPermissions.clientStartEdit', value)
+      setValue('advancedPermissions.woaStartEdit', value)
+      setValue('advancedPermissions.lockBoxEdit', value)
+      setValue('advancedPermissions.verifyProjectEnable', value)
+
+      setValue('advancedPermissions.hideCreateProject', false)
+      setValue('advancedPermissions.hidePaidProjects', false)
+      setValue('advancedPermissions.verifiedByFPM', false)
+    }
+  }
+  if (section === 'VENDOR') {
+    if (assignment === 'PC' || assignment === 'All') {
+      setValue('advancedPermissions.verifyVendorDocuments', value)
+      setValue('advancedPermissions.deactivateVendor', value)
+    } else {
+      setValue('advancedPermissions.verifyVendorDocuments', false)
+      setValue('advancedPermissions.deactivateVendor', false)
+    }
+  }
 }

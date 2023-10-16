@@ -17,11 +17,13 @@ export const UserManagementTabs = React.forwardRef((props: any, ref) => {
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   const { onOpen } = useDisclosure()
   const { data } = useAccountData()
+  const [tabIndex, setTabIndex] = useState<number | undefined>(0)
 
   return (
     <>
       {selectedUser && (
         <EditUserModal
+          tabIndex={tabIndex}
           user={selectedUser}
           isOpen={selectedUser ? true : false}
           onClose={() => {
@@ -29,7 +31,7 @@ export const UserManagementTabs = React.forwardRef((props: any, ref) => {
           }}
         />
       )}
-      <Tabs variant="enclosed" colorScheme="brand">
+      <Tabs index={tabIndex} onChange={index => setTabIndex(index)} variant="enclosed" colorScheme="brand">
         <TabList whiteSpace="nowrap" border="none">
           <Tab>{t(`${USER_MANAGEMENT}.table.woaUsers`)}</Tab>
           <Tab>{t(`${USER_MANAGEMENT}.table.vendorUsers`)}</Tab>
@@ -37,18 +39,18 @@ export const UserManagementTabs = React.forwardRef((props: any, ref) => {
         </TabList>
         <Flex justifyContent="flex-end" alignItems="center">
           <>
-        {!isReadOnly && (
-          <Button
-            mt="-54px"
-            data-testid="add-user"
-            colorScheme="brand"
-            onClick={props.onOpenUserModal}
-            leftIcon={<BiAddToQueue />}
-          >
-            {t(`${USER_MANAGEMENT}.modal.addUser`)}
-          </Button>
-        )}
-        </>
+            {!isReadOnly && (
+              <Button
+                mt="-54px"
+                data-testid="add-user"
+                colorScheme="brand"
+                onClick={props.onOpenUserModal}
+                leftIcon={<BiAddToQueue />}
+              >
+                {t(`${USER_MANAGEMENT}.modal.addUser`)}
+              </Button>
+            )}
+          </>
         </Flex>
         <Card
           mt="1px"

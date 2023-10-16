@@ -43,9 +43,16 @@ import { useFetchRoles } from 'api/access-control'
 import { useUsrMgt } from 'pages/admin/user-management'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
+enum UserTabs {
+  WOA = 0,
+  VENDOR = 1,
+  DEVTEK = 2,
+}
+
 type UserManagement = {
   onClose: () => void
   user?: UserForm
+  tabIndex?: number
 }
 
 const validateMarket = markets => {
@@ -71,17 +78,34 @@ const validateRegions = regions => {
   return true
 }
 
-export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) => {
+export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, tabIndex }) => {
   const { t } = useTranslation()
   const form = useForm<UserForm>()
   const { stateSelectOptions: stateOptions, states: statesDTO } = useStates()
   const [isDeleteBtnClicked, setIsDeleteBtnClicked] = useState(false)
+  const [selectedOption, setSelectedOption] = useState([]) // HN-PSWOA-6382| This state contains the data of the selected user that has a parent
   const { options: roles } = useFetchRoles()
-  const {
-    options: usersList,
-    isLoading: loadingUsersList,
-    userMgt: userData,
-  } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
+
+  const queryString = useMemo(() => {
+    let queryString = ''
+    switch (tabIndex) {
+      case UserTabs.WOA: {
+        queryString = 'userType.notIn=6&devAccount.equals=false'
+        break
+      }
+      case UserTabs.VENDOR: {
+        queryString = 'userType.equals=6&devAccount.equals=false'
+        break
+      }
+      case UserTabs.DEVTEK: {
+        queryString = 'devAccount.equals=true'
+        break
+      }
+    }
+    return queryString
+  }, [tabIndex])
+
+  const { options: usersList, isLoading: loadingUsersList, userMgt: userData } = useUsrMgt(queryString, 0, 100000000)
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   const {
     register,
@@ -99,7 +123,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
   const { mutate: deleteUser } = useDeleteUserDetails()
   const { options: vendorTypes, isLoading: loadingVendors } = useViewVendor()
 
-  useUserDetails({ form, userInfo })
+  useUserDetails({ form, userInfo, queryString })
 
   const formValues = watch()
 
@@ -269,6 +293,16 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
     )
   }, [watchMultiMarkets, showMarkets])
 
+  useEffect(() => {
+    if (isReadOnly) {
+      Array.from(document.querySelectorAll("input")).forEach(input => {
+        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
+            input.setAttribute("disabled", "true");
+          }
+      });
+    }
+  }, []);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -348,7 +382,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             render={({ field: { onChange, ...rest } }) => (
               <ReactSelect
                 {...rest}
-                isDisabled={userInfo && userInfo.userTypeLabel === 'Vendor'}
+                isDisabled={(userInfo && userInfo.userTypeLabel === 'Vendor') || isReadOnly}
                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                 options={roles}
                 onChange={target => {
@@ -368,7 +402,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             control={control}
             name="langKey"
             render={({ field }) => (
-              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} />
+              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} isDisabled={isReadOnly} />
             )}
           />
         </FormControl>
@@ -494,6 +528,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                       <CheckboxButton
                         name={name}
                         key={value.state.id}
+                        isDisabled={isReadOnly}
                         isChecked={state?.checked}
                         onChange={event => {
                           const checked = event.target.checked
@@ -534,6 +569,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             render={({ field }) => (
               <ReactSelect
                 placeholder="Select or Search"
+                isDisabled={isReadOnly}
                 selectProps={{ isBorderLeft: false }}
                 closeMenuOnSelect={false}
                 isMulti={true}
@@ -643,7 +679,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
                   closeMenuOnSelect={false}
                   isMulti={true}
                   loadingCheck={loadingUsersList}
-                  {...field}
+                  isDisabled={isReadOnly}
+                  value={field?.value}
+                  onChange={(option: any) => {
+                    const lastSelectedOption = option[option.length - 1]
+                    const isUserBeingAdd = field?.value?.length < option?.length
+                    if (lastSelectedOption?.parentId && isUserBeingAdd) return setSelectedOption(option) // HN-PSWOA-6382| Only show confirmation modal if the selected user has a parent and it is selected not removed from dropdown
+                    field.onChange(option)
+                  }}
                   options={usersList?.filter(ul => ul.value !== managerSelected?.value)} //Donot include in direct reports the users selected for managers
                 />
               )}
@@ -751,6 +794,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
               <ReactSelect
                 id="state"
                 {...field}
+                isDisabled={isReadOnly}
                 options={stateOptions}
                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
               />
@@ -853,6 +897,18 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose }) 
             </Button>
           )}
         </>
+        <ConfirmationBox
+          title="Are You Sure?"
+          content={`${
+            (selectedOption[selectedOption?.length - 1] as any)?.label
+          } is already reporting to another user. Proceed anyway?`}
+          isOpen={!!selectedOption?.length}
+          onClose={() => setSelectedOption([])}
+          onConfirm={() => {
+            setValue('directReports', selectedOption)
+            setSelectedOption([])
+          }}
+        />
         <ConfirmationBox
           title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}
           content={t(`${USER_MANAGEMENT}.modal.deleteUserContent`)}

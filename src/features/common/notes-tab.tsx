@@ -121,7 +121,6 @@ export const NotesTab = (props: NotesProps) => {
 
   const message = useWatch({ name: 'message', control })
   const completion = useWatch({ name: 'percentageCompletion', control })
-
   const Submit = data => {
     if (saveNote) {
       saveNote(data)
@@ -181,8 +180,14 @@ export const NotesTab = (props: NotesProps) => {
             <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
               {t('enterNewNote')}
             </FormLabel>
-            <Textarea flexWrap="wrap" h={'120px'} {...messageBoxStyle} {...register('message')} 
-            data-testid="note_textarea"
+            <Textarea
+              disabled={hideSave}
+              _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }}
+              flexWrap="wrap"
+              h={'120px'}
+              {...messageBoxStyle}
+              {...register('message')}
+              data-testid="note_textarea"
             />
           </FormControl>
         </Flex>

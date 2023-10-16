@@ -168,6 +168,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                   w="215px"
                   defaultValue={selectedVendorSkills?.skill}
                   title={watchvalue}
+                  isDisabled={isReadOnly}
                 />
               </Box>
             </ModalBody>

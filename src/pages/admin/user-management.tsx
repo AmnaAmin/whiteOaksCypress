@@ -13,7 +13,7 @@ export const UserManagement = () => {
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   return (
     <Card px="12px" py="16px">
-      <UserManagementTabs onOpenUserModal={onOpen}  isReadOnly={isReadOnly}/>
+      <UserManagementTabs onOpenUserModal={onOpen} isReadOnly={isReadOnly} />
       {isOpen && <EditUserModal isOpen={isOpen} onClose={onClose} />}
     </Card>
   )
@@ -29,6 +29,7 @@ export const useUsrMgt = (filterQueryString?: string, page?: number, size: numbe
     data?.data?.map(res => ({
       value: res?.id,
       label: res?.firstName + ' ' + res?.lastName,
+      parentId: res?.parentFieldProjectManagerId,
     })) || []
 
   return {

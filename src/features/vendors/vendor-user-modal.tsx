@@ -234,13 +234,14 @@ const VendorUserModal = ({
                               },
                             })}
                             colorScheme="brand"
+                            isDisabled={isReadOnly}
                           >
                             Admin
                           </Checkbox>
                           <Checkbox
                             data-testid="primaryAdmin"
                             isChecked={formValues.primaryAdmin}
-                            isDisabled={isPrimaryDisabled}
+                            isDisabled={isPrimaryDisabled || isReadOnly}
                             {...register('primaryAdmin')}
                           >
                             <chakra.span position="relative">Primary</chakra.span>
@@ -301,6 +302,7 @@ const VendorUserModal = ({
                           <Input
                             data-testid="userFirstName"
                             variant="required-field"
+                            disabled={isReadOnly}
                             type="text"
                             {...register('firstName')}
                           />
@@ -314,6 +316,7 @@ const VendorUserModal = ({
                             data-testid="userLastName"
                             autoComplete="off"
                             variant="required-field"
+                            isDisabled={isReadOnly}
                             type="text"
                             {...register('lastName')}
                           />
@@ -330,7 +333,7 @@ const VendorUserModal = ({
                           },
                         }}
                       >
-                        <PasswordField errors={errors} register={register} isRequired={!isEditUser} />
+                        <PasswordField errors={errors} register={register} isRequired={!isEditUser} isDisabled={isReadOnly} />
                       </HStack>
 
                       <HStack
@@ -352,7 +355,7 @@ const VendorUserModal = ({
                             control={control}
                             name="langKey"
                             render={({ field }) => (
-                              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} />
+                              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} isDisabled={isReadOnly} />
                             )}
                           />
                         </FormControl>
@@ -371,6 +374,7 @@ const VendorUserModal = ({
                                     data-testid="userTelephoneNumber"
                                     customInput={Input}
                                     value={field.value}
+                                    isDisabled={isReadOnly}
                                     onChange={e => field.onChange(e)}
                                     format="(###)-###-####"
                                     mask="_"
@@ -397,7 +401,7 @@ const VendorUserModal = ({
                               fontWeight={400}
                               color="#718096"
                               {...register('activated')}
-                              disabled={vendorDetails?.email === account?.email}
+                              disabled={vendorDetails?.email === account?.email || isReadOnly}
                             >
                               {t(`${USER_MANAGEMENT}.modal.activated`)}
                             </Checkbox>
@@ -423,6 +427,7 @@ const VendorUserModal = ({
                             variant="required-field"
                             type="text"
                             {...register('streetAddress')}
+                            disabled={isReadOnly}
                           />
                         </FormControl>
 
@@ -430,7 +435,7 @@ const VendorUserModal = ({
                           <FormLabel variant="strong-label" size="md">
                             {t(`${USER_MANAGEMENT}.modal.city`)}
                           </FormLabel>
-                          <Input data-testid="userCity" type="text" {...register('city')} variant="required-field" />
+                          <Input data-testid="userCity" type="text" {...register('city')} variant="required-field" disabled={isReadOnly} />
                         </FormControl>
                       </HStack>
                       <HStack
@@ -455,6 +460,7 @@ const VendorUserModal = ({
                               <ReactSelect
                                 menuPlacement="top"
                                 id="state"
+                                isDisabled={isReadOnly}
                                 {...field}
                                 options={stateOptions}
                                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
@@ -471,6 +477,7 @@ const VendorUserModal = ({
                             data-testid="userZipCode"
                             type="number"
                             {...register('zipCode')}
+                            disabled={isReadOnly}
                             variant="required-field"
                           />
                         </FormControl>

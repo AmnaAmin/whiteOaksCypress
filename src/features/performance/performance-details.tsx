@@ -19,6 +19,7 @@ import { badges, bonus, ignorePerformance, useFPMDetails } from 'api/performance
 import { Controller, UseFormReturn } from 'react-hook-form'
 import Select from 'components/form/react-select'
 import { PERFORMANCE } from './performance.i18n'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 type FieldInfoCardProps = {
   title: string
@@ -33,12 +34,19 @@ const FieldInfoCard: React.FC<FieldInfoCardProps> = ({ value, title, icon, testI
     <Box>
       <HStack alignItems="start">
         <VStack spacing={1} alignItems="start">
-        <Tooltip label={t(`${PERFORMANCE}.${title}`)} color="black" placement="top" bg="#ffffff">
-          <Text color="#4A5568" fontWeight={500} fontSize="16px" lineHeight="24px" fontStyle="inter" noOfLines={1}>
-            {t(`${PERFORMANCE}.${title}`)}
-          </Text>
+          <Tooltip label={t(`${PERFORMANCE}.${title}`)} color="black" placement="top" bg="#ffffff">
+            <Text color="#4A5568" fontWeight={500} fontSize="16px" lineHeight="24px" fontStyle="inter" noOfLines={1}>
+              {t(`${PERFORMANCE}.${title}`)}
+            </Text>
           </Tooltip>
-          <Text data-testid={testId} color="#718096" fontSize="16px" fontWeight={400} fontStyle="inter" lineHeight={'24px'}>
+          <Text
+            data-testid={testId}
+            color="#718096"
+            fontSize="16px"
+            fontWeight={400}
+            fontStyle="inter"
+            lineHeight={'24px'}
+          >
             {value}
           </Text>
         </VStack>
@@ -57,23 +65,27 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
   const { data: fpmData } = useFPMDetails(props?.performanceDetails?.userId)
   const { t } = useTranslation()
   const { control } = formControl
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PERFORMANCE.READ')
 
   return (
     <Box>
       <Box>
         <Flex direction="row" mt={2}>
-          
           <Box width={'34%'} flexWrap={'wrap'}>
             <FieldInfoCard title={'previousBonus'} value={currencyFormatter(fpmData?.previousBonus)} />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'} ml={8}>
-            <FieldInfoCard title={'profit'} value={currencyFormatter(fpmData?.profit)} testId="fpm_Profit"/>
+            <FieldInfoCard title={'profit'} value={currencyFormatter(fpmData?.profit)} testId="fpm_Profit" />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={'revenue'} value={currencyFormatter(fpmData?.revenue)} testId="fpm_Revenue"  />
+            <FieldInfoCard title={'revenue'} value={currencyFormatter(fpmData?.revenue)} testId="fpm_Revenue" />
           </Box>
           <Box width={'33%'} px={4} flexWrap={'wrap'}>
-            <FieldInfoCard title={'disqualifiedRevenue'} value={currencyFormatter(fpmData?.disqualifiedRevenue)} testId="fpm_disRevenue"  />
+            <FieldInfoCard
+              title={'disqualifiedRevenue'}
+              value={currencyFormatter(fpmData?.disqualifiedRevenue)}
+              testId="fpm_disRevenue"
+            />
           </Box>
         </Flex>
         <Divider mt={4} mb={5} />
@@ -96,6 +108,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                       selected={field.value}
                       selectProps={{ isBorderLeft: true }}
                       onChange={option => field.onChange(option)}
+                      isDisabled={isReadOnly}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -120,6 +133,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                       selected={field.value}
                       selectProps={{ isBorderLeft: true }}
                       onChange={option => field.onChange(option)}
+                      isDisabled={isReadOnly}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -144,6 +158,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                       selected={field.value}
                       selectProps={{ isBorderLeft: true }}
                       onChange={option => field.onChange(option)}
+                      isDisabled={isReadOnly}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>

@@ -252,6 +252,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
   })
 
   const watchPermissions = useWatch({ control, name: 'permissions' })
+  const watchAssignment = useWatch({ control, name: 'assignment' })
   const isHideAll = watchPermissions
     ? (Object?.values(watchPermissions)?.every((item: any) => item?.hide) as boolean)
     : false
@@ -263,15 +264,23 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
     : false
 
   useEffect(() => {
-    const watchProjectPermissions = watchPermissions?.find(p => p.name === 'PROJECT')
+    const watchProjectPermissions = watchPermissions?.find(p => p?.name === 'PROJECT')
+    const watchVendorsPermissions = watchPermissions?.find(p => p?.name === 'VENDOR')
     if (!permissionsData?.[0]?.systemRole) {
-      if (watchProjectPermissions?.edit) {
-        setDefaultPermission({ setValue, value: true })
-      } else {
-        setDefaultPermission({ setValue, value: null })
-      }
+      setDefaultPermission({
+        setValue,
+        value: watchProjectPermissions?.edit,
+        section: watchProjectPermissions?.name,
+        assignment: watchAssignment?.value,
+      })
+      setDefaultPermission({
+        setValue,
+        value: watchVendorsPermissions?.edit,
+        section: watchVendorsPermissions?.name,
+        assignment: watchAssignment?.value,
+      })
     }
-  }, [watchPermissions])
+  }, [watchPermissions, watchAssignment])
 
   return (
     <TableContainer w="100%" borderRadius={'6px'} border="1px solid #CBD5E0">

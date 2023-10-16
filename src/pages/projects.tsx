@@ -49,6 +49,7 @@ export const Projects = () => {
   const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay')
 
   const [selectedFlagged, setSelectedFlagged] = useState<string | null>()
+  const [createdProject, setCreatedProject] = useState<string | number | null>(null)
 
   const { t } = useTranslation()
 
@@ -138,11 +139,18 @@ export const Projects = () => {
               resetFilters={resetAllFilters}
               selectedFlagged={selectedFlagged}
               isReadOnly={isReadOnly}
+              onNewProjectModalClose={onNewProjectModalClose}
+              createdProject={createdProject}
+              setCreatedProject={setCreatedProject}
             />
           </Box>
         </Card>
       </VStack>
-      <AddNewProjectModal isOpen={isOpenNewProjectModal} onClose={onNewProjectModalClose} />
+      <AddNewProjectModal
+        isOpen={isOpenNewProjectModal}
+        onClose={onNewProjectModalClose}
+        setCreatedProject={setCreatedProject}
+      />
     </>
   )
 }
