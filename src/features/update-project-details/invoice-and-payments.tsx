@@ -37,8 +37,9 @@ import moment from 'moment'
 
 type invoiceAndPaymentProps = {
   projectData: Project
+  isReadOnly?: boolean
 }
-const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) => {
+const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData, isReadOnly }) => {
   const formControl = useFormContext<ProjectDetailsFormValues>()
   const {
     register,
@@ -235,6 +236,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                             onChange={(file: any) => {
                               field.onChange(file)
                             }}
+                            disabled={isReadOnly}
                           />
 
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -296,7 +298,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                   <>
                     <ReactSelect
                       {...field}
-                      isDisabled={isPaymentTermsDisabled}
+                      isDisabled={isPaymentTermsDisabled || isReadOnly}
                       options={PAYMENT_TERMS_OPTIONS}
                       selectProps={{ isBorderLeft: !isPaymentTermsDisabled, menuHeight: '100px' }}
                       onChange={(option: SelectOption) => {
@@ -392,7 +394,6 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
                       customInput={Input}
                       thousandSeparator={true}
                       prefix={'$'}
-                      
                     />
                   )
                 }}
@@ -455,12 +456,14 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData }) =
           </GridItem>
         </Grid>
       </Box>
-      <Box>{isInvoicedOrPaid && <RevisedAmounts formControl={formControl} project={projectData} />}</Box>
+      <Box>
+        {isInvoicedOrPaid && <RevisedAmounts isReadOnly={isReadOnly} formControl={formControl} project={projectData} />}
+      </Box>
     </HStack>
   )
 }
 
-const RevisedAmounts = ({ formControl, project }) => {
+const RevisedAmounts = ({ formControl, project, isReadOnly }) => {
   const {
     control,
     register,
@@ -542,7 +545,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                     size="md"
                     variant={'required-field'}
                     css={calendarIcon}
-                    disabled={!!watchResubmissions?.[index].id}
+                    disabled={!!watchResubmissions?.[index].id || isReadOnly}
                     {...register(`resubmittedInvoice.${index}.notificationDate`, {
                       required: 'This is a required field',
                     })}
@@ -603,7 +606,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                           {...field}
                           options={PAYMENT_TERMS_OPTIONS}
                           selectProps={{ isBorderLeft: true, menuHeight: '105px' }}
-                          isDisabled={!!watchResubmissions?.[index]?.id}
+                          isDisabled={!!watchResubmissions?.[index]?.id || isReadOnly}
                           onChange={(option: SelectOption) => {
                             field.onChange(option)
                             if (option?.value && watchResubmissions?.[index]?.resubmissionDate) {
@@ -674,7 +677,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                     <Input
                       id="invoiceNo"
                       size="md"
-                      disabled={!!watchResubmissions?.[index].id}
+                      disabled={!!watchResubmissions?.[index].id || isReadOnly}
                       variant={'required-field'}
                       {...register(`resubmittedInvoice.${index}.invoiceNumber`, {
                         required: 'This is a required field',
@@ -715,7 +718,7 @@ const RevisedAmounts = ({ formControl, project }) => {
                                 isRequired={
                                   !watchResubmissions?.[index]?.uploadedInvoice && !watchResubmissions?.[index].docUrl
                                 }
-                                disabled={!!watchResubmissions?.[index].id}
+                                disabled={!!watchResubmissions?.[index].id || isReadOnly}
                                 isError={!!fieldState.error?.message}
                                 onChange={(file: any) => {
                                   field.onChange(file)

@@ -42,7 +42,7 @@ export const ConstructionPortalPayable = () => {
     selectedDay,
     // setSelectedDay
   ] = useState<string>('')
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = useState<SortingState>([])
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
   const { data } = useAccountData()

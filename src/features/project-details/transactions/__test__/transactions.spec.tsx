@@ -24,6 +24,7 @@ import {
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
 } from 'features/project-details/transactions/transaction.constants'
+import { BrowserRouter } from 'react-router-dom'
 
 beforeAll(() => {
   setToken('pc')
@@ -32,7 +33,12 @@ beforeAll(() => {
 jest.setTimeout(150000)
 
 const renderTransactionForm = async (props: TransactionFormProps) => {
-  render(<TransactionForm {...props} />, { wrapper: Providers })
+  render(
+    <BrowserRouter>
+      <TransactionForm {...props} />
+    </BrowserRouter>,
+    { wrapper: Providers },
+  )
 
   await waitForLoadingToFinish()
 }

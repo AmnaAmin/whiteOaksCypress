@@ -8,6 +8,7 @@ import { Modal } from '@chakra-ui/react'
 import { dateFormat } from 'utils/date-time-utils'
 import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
+import { BrowserRouter } from 'react-router-dom'
 
 export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }: any) => {
   const setIsError = jest.fn()
@@ -37,9 +38,17 @@ export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }
 }
 export const rendeWorkOrderModal = async ({ onClose, workOrder, projectData, transactions }: any) => {
   await render(
-    <Modal isOpen={true} onClose={onClose} size="none">
-      <WorkOrderDetails onClose={onClose} workOrder={workOrder} projectData={projectData} transactions={transactions} />
-    </Modal>,
+    <BrowserRouter>
+      <Modal isOpen={true} onClose={onClose} size="none">
+        <WorkOrderDetails
+          onClose={onClose}
+          workOrder={workOrder}
+          projectData={projectData}
+          transactions={transactions}
+        />
+      </Modal>
+    </BrowserRouter>,
+
     {
       wrapper: Providers,
     },

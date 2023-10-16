@@ -49,7 +49,7 @@ export const ConstructionPortalReceiveable: React.FC = () => {
 
   const { register, reset, control, setValue, watch } = formReturn
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('RECEIVABLE.READ')
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = useState<SortingState>([])
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: RECEIVABLE_TABLE_QUERY_KEYS,
