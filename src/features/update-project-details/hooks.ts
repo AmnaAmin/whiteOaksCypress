@@ -1,7 +1,7 @@
 import { ProjectStatus as STATUS } from 'types/project-details.types'
 import { Control, useWatch, FieldErrors } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { PROJECT_STATUS } from 'features/common/status'
 
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, projectData?: any) => {
@@ -9,18 +9,8 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
   const isProjectStatusInvoiced = projectData?.projectStatus === PROJECT_STATUS.invoiced.label
   const invoiceBackDate = useWatch({ name: 'invoiceBackDate', control })
   const remainingPayment = useWatch({ name: 'remainingPayment', control })
-  const {
-    isFPM,
-    isProjectCoordinator,
-    isDoc,
-    isAccounting,
-    isAdmin,
-    isOperations,
-    isVendor,
-    isClientManager,
-    isConstructionOperations,
-    isVendorManager,
-  } = useUserRolesSelector()
+  const { permissions } = useRoleBasedPermissions()
+  const { isAdmin } = useUserRolesSelector()
 
   const projectStatus = status?.value
 
@@ -57,10 +47,10 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isClientSignOffDateRequired: isStatusClosed,
 
     isWOAStartDisabled:
-      isFPM ||
+      !permissions.some(p => ['PROJECTDETAIL.MGMT.WOASTART.EDIT', 'ALL'].includes(p)) ||
       isStatusClosed ||
       isStatusInvoiced ||
-      (isStatusClientPaid && !isAdmin) ||
+      isStatusClientPaid ||
       isStatusPaid ||
       isStatusOverPayment,
     isWOACompletionDisabled:
@@ -72,17 +62,17 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
       isStatusPaid ||
       isStatusOverPayment,
     isClientStartDateDisabled:
-      isFPM ||
+      !permissions.some(p => ['PROJECTDETAIL.MGMT.CLIENTSTART.EDIT', 'ALL'].includes(p)) ||
       isStatusClosed ||
       isStatusInvoiced ||
-      (isStatusClientPaid && !isAdmin) ||
+      isStatusClientPaid ||
       isStatusPaid ||
       isStatusOverPayment,
     isClientDueDateDisabled:
-      isFPM ||
+      !permissions.some(p => ['PROJECTDETAIL.MGMT.CLIENTDUEDATE.EDIT', 'ALL'].includes(p)) ||
       isStatusClosed ||
       isStatusInvoiced ||
-      (isStatusClientPaid && !isAdmin) ||
+      isStatusClientPaid ||
       isStatusPaid ||
       isStatusOverPayment,
     isClientWalkthroughDisabled:
@@ -99,8 +89,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
       isStatusPaid ||
       isStatusOverPayment ||
       isStatusInvoiced,
-    isReconcileDisabled: isFPM || isVendor || isClientManager || isConstructionOperations || isVendorManager,
-    isReconcileAllowed: isAdmin || isDoc || isAccounting || isOperations || isProjectCoordinator,
+    isReconcileDisabled: !permissions.some(p => ['PROJECTDETAIL.MGMT.PROJECTVERIFIED.EDIT', 'ALL'].includes(p)),
 
     // Invoicing and payment form fields states
     isOriginalSOWAmountDisabled: isAllTimeDisabled,
@@ -116,29 +105,27 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isPaymentDisabled: !(isStatusClientPaid || isProjectStatusInvoiced || invoiceBackDate) || remainingPayment === 0,
 
     // Contacts field states
-    isProjectCoordinatorDisabled: !isAdmin && !isDoc && !isAccounting && !isOperations && isAllTimeDisabled,
+    isProjectCoordinatorDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.PC.EDIT', 'ALL'].includes(p)),
     isProjectCoordinatorPhoneNumberDisabled: isAllTimeDisabled,
     isProjectCoordinatorExtensionDisabled: isAllTimeDisabled,
-    isFieldProjectManagerDisabled:
-      !isAdmin && !isProjectCoordinator && !isDoc && !isOperations && !isAccounting && isAllTimeDisabled,
+    isFieldProjectManagerDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.FPM.EDIT', 'ALL'].includes(p)),
     isFieldProjectManagerPhoneNumberDisabled: isAllTimeDisabled,
     isFieldProjectManagerExtensionDisabled: isAllTimeDisabled,
-    isClientDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations,
+    isClientDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.CLIENT.EDIT', 'ALL'].includes(p)),
 
     // Location Form fields states
-    isAddressDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations,
-    isCityDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations,
-    isStateDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations,
-    isZipDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations,
-    isMarketDisabled: !isAdmin && !isAccounting && !isProjectCoordinator && !isDoc && !isOperations,
-    isGateCodeDisabled:
-      isFPM || isDoc || isProjectCoordinator || isAccounting || isAdmin
-        ? !newActivePunchEnabledFieldStatus
-        : isAllTimeDisabled,
-    isLockBoxCodeDisabled:
-      isFPM || isDoc || isProjectCoordinator || isAccounting || isAdmin
-        ? !newActivePunchEnabledFieldStatus
-        : isAllTimeDisabled,
+    isAddressDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.ADDRESS.EDIT', 'ALL'].includes(p)),
+
+    isCityDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.ADDRESS.EDIT', 'ALL'].includes(p)),
+    isStateDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.ADDRESS.EDIT', 'ALL'].includes(p)),
+    isZipDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.ADDRESS.EDIT', 'ALL'].includes(p)),
+    isMarketDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.MARKET.EDIT', 'ALL'].includes(p)),
+    isGateCodeDisabled: permissions.some(p => ['PROJECTDETAIL.CONTACT.GATECODE.EDIT', 'ALL'].includes(p))
+      ? !newActivePunchEnabledFieldStatus
+      : isAllTimeDisabled,
+    isLockBoxCodeDisabled: permissions.some(p => ['PROJECTDETAIL.CONTACT.LOCKBOX.EDIT', 'ALL'].includes(p))
+      ? !newActivePunchEnabledFieldStatus
+      : isAllTimeDisabled,
   }
 }
 

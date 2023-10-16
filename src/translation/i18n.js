@@ -22,6 +22,7 @@ import { vendorProfile } from 'features/vendor-profile/vendor-profile.i18n'
 import { projectAwards } from 'features/work-order/project-award/projectAward.i18n'
 import { globalErrors } from './errors.i18n'
 import { performance } from 'features/performance/performance.i18n'
+import { accessControl } from 'features/access-control/access-control.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -51,6 +52,7 @@ i18n.use(initReactI18next).init({
         ...projectAwards.en.translation,
         ...globalErrors.en.translation,
         ...performance.en.translation,
+        ...accessControl.en.translation,
 
         // DASHBOARDa
         vendorScore: 'Vendor Score',
@@ -208,7 +210,7 @@ i18n.use(initReactI18next).init({
         revenue: 'Revenue',
         profits: 'Profits',
         profitmargins: 'Profit Margins',
-        resetSettings: 'Clear Settings',
+        resetSettings: 'Reset Settings',
         resetAllSettings: 'Clear All Users Settings',
 
         // Projects-WorkOrderDetails
@@ -453,7 +455,7 @@ i18n.use(initReactI18next).init({
         // Settings Page
         settings: 'Settings',
         settingsHeader: 'Column settings',
-        availableColumn: 'Available columns',
+        availableColumn: 'Hide these columns',
         showRecordsOrder: 'Show these columns in this order',
         firstName: 'First Name',
         lastName: 'Last Name',
@@ -612,6 +614,7 @@ i18n.use(initReactI18next).init({
         ...projectAwards.es.translation,
         ...globalErrors.es.translation,
         ...performance.es.translation,
+        ...accessControl.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -1074,7 +1077,7 @@ i18n.use(initReactI18next).init({
         // Settings Page
         settings: 'Ajustes',
         settingsHeader: 'Configuración de columna',
-        availableColumn: 'Columnas disponibles',
+        availableColumn: 'Ocultar estas columnas',
         showRecordsOrder: 'Mostrar estas columnas en este orden',
         firstName: 'Primer Nombre',
         lastName: 'Apellido',

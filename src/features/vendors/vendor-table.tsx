@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { useGetAllVendors, useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
+import { useFetchUserDetails, useGetAllVendors, useVendor, VENDORS_SELECTED_CARD_MAP_URL } from 'api/pc-projects'
 import Status from 'features/common/status'
 import { dateFormat } from 'utils/date-time-utils'
 import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
@@ -23,6 +23,7 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useAccountData } from 'api/user-account'
 
 export const VENDOR_TABLE_QUERY_KEYS = {
   statusLabel: 'statusLabel.contains',
@@ -177,14 +178,18 @@ export const VENDOR_COLUMNS: ColumnDef<any>[] = [
 
 type ProjectProps = {
   selectedCard: string
+  isReadOnly?: boolean
 }
-export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
+
+export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const vendor = (location?.state as any)?.data || {}
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const { data: account } = useAccountData()
+  const { user } = useFetchUserDetails(account?.email)
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
@@ -200,12 +205,14 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
     dataCount: vendorsDataCount,
     totalPages: vendorsTotalPages,
   } = useVendor(
+    user,
     filteredUrl ? filteredUrl + '&' + queryStringWithPagination : queryStringWithPagination,
     pagination.pageSize,
   )
 
   const [selectedVendor, setSelectedVendor] = useState<VendorType>()
   const { refetch: allVendorsRefetch, isLoading: isAllExportDataLoading } = useGetAllVendors(
+    user,
     filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
   )
 
@@ -283,6 +290,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard }) => {
                   onSave={onSave}
                   columns={settingColumns}
                   tableName={TableNames.vendors}
+                  isReadOnly={isReadOnly}
                 />
               )}
             </ButtonsWrapper>

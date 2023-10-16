@@ -29,26 +29,32 @@ import { useUserProfile } from 'utils/redux-common-selectors'
 type ProjectProps = {
   selectedCard: string
   selectedDay: string
-  userIds?: number[]
-  selectedFPM?: any
+  userIds?: any
   resetFilters: boolean
   selectedFlagged?: any
+  isReadOnly?: boolean
+  onNewProjectModalClose: () => void
+  createdProject: string | number | null
+  setCreatedProject: (value: string | number | null) => void
 }
 
 export const ProjectsTable: React.FC<ProjectProps> = ({
   selectedCard,
   selectedDay,
   userIds,
-  selectedFPM,
   resetFilters,
   selectedFlagged,
+  isReadOnly,
+  createdProject,
+  setCreatedProject,
+  onNewProjectModalClose,
 }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [paginationInitialized, setPaginationInitialized] = useState(false)
-  const { data: days } = useWeekDayProjectsDue(selectedFPM?.id)
+  const { data: days } = useWeekDayProjectsDue(userIds?.join(','))
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
@@ -59,7 +65,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       sorting,
       selectedCard,
       selectedDay,
-      selectedFPM,
       userIds,
       days,
       selectedFlagged,
@@ -70,6 +75,15 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     pagination.pageIndex,
     pagination.pageSize,
   )
+
+  useEffect(() => {
+    if (createdProject) {
+      if (projects?.map(p => p.id).includes(Number(createdProject))) {
+        navigate(`/project-details/${createdProject}`)
+      }
+      setCreatedProject(null)
+    }
+  }, [dataCount])
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)
@@ -185,6 +199,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
                     !(columnVisibility[col?.contentKey] === false),
                 )}
                 tableName={TableNames.project}
+                isReadOnly={isReadOnly}
               />
             )}
           </ButtonsWrapper>

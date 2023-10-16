@@ -27,7 +27,7 @@ import {
   useCreateTicketMutation,
   useEditTicketMutation,
 } from 'api/support'
-import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { FileAttachment, SupportFormValues } from 'types/support.types'
 import { Account } from 'types/account.types'
 import { Button } from 'components/button/button'
@@ -92,7 +92,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
     return getSupportFormDefaultValues(email)
   }, [email])
   const { isAdmin } = useUserRolesSelector()
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('SUPPORT.READ')
   const onFileChange = (document: File) => {
     if (!document) return
 
@@ -263,6 +263,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                     <>
                       <ReactSelect
                         id="issueType"
+                        isDisabled={isReadOnly}
                         options={ISSUE_TYPE_OPTIONS}
                         {...field}
                         selectProps={{ isBorderLeft: true }}
@@ -286,6 +287,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                       <ReactSelect
                         id="severity"
                         options={SEVERITY_OPTIONS}
+                        isDisabled={isReadOnly}
                         {...field}
                         selectProps={{ isBorderLeft: true }}
                       />
@@ -327,6 +329,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                 id="Title"
                 type="text"
                 bg="white"
+                disabled={isReadOnly}
                 {...register('title', {
                   required: 'This is required field',
                 })}
@@ -355,6 +358,8 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
               {...register('description', {
                 required: 'This is required field',
               })}
+              isDisabled={isReadOnly}
+              _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }}
               data-testid="descriptions"
               borderLeft={'2px solid #345EA6'}
               _hover={{
@@ -408,6 +413,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                       }}
                       onClear={() => setValue(field.name, null)}
                       inputStyle={{ borderLeft: '2px solid #E2E8F0' }}
+                      disabled={isReadOnly}
                     ></ChooseFileField>
                   </Box>
                   {supportDetail?.s3Url && downloadDocument(supportDetail?.s3Url, supportDetail?.s3Url)}
@@ -423,9 +429,13 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
             {t(`${SUPPORT}.cancel`)}
           </Button>
         )}
+         <>
+          {!isReadOnly &&(
         <Button type="submit" colorScheme="brand" data-testid="save" isDisabled={watchRequiredField || Lodings}>
           {t(`${SUPPORT}.save`)}
         </Button>
+          )}
+          </>
       </HStack>
     </form>
   )

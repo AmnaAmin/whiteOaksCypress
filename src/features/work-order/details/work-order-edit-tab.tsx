@@ -52,10 +52,11 @@ import { WORK_ORDER } from '../workOrder.i18n'
 import { downloadFile } from 'utils/file-utils'
 import ReactSelect from 'components/form/react-select'
 import { CANCEL_WO_OPTIONS } from 'constants/index'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
+import { useLocation } from 'react-router-dom'
 
 export type SelectVendorOption = {
   label: string
@@ -179,7 +180,9 @@ const WorkOrderDetailTab = props => {
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
   const disabledSave =
     isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
-  const { isAdmin, isAccounting } = useUserRolesSelector()
+  const { isAdmin } = useUserRolesSelector()
+  const { permissions } = useRoleBasedPermissions()
+  const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
 
   const {
     skillName,
@@ -268,7 +271,11 @@ const WorkOrderDetailTab = props => {
 
   const selectedVendor = vendors?.find(v => v.id === (selectedVendorId as any))
   const clientStart = projectData?.clientStartDate
-
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   useEffect(() => {
     const option = [] as any
     if (trades && trades?.length > 0) {
@@ -376,6 +383,15 @@ const WorkOrderDetailTab = props => {
   const inProgress = [STATUS.Active, STATUS.PastDue, STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
     workOrder.statusLabel?.toLowerCase(),
   )
+  useEffect(() => {
+    if (isReadOnly) {
+      Array.from(document.querySelectorAll("input")).forEach(input => {
+        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
+            input.setAttribute("disabled", "true");
+          }
+      });
+    };
+  }, []);
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -519,9 +535,8 @@ const WorkOrderDetailTab = props => {
           </Stack>
           <Box mt="32px" mx="32px">
             <HStack spacing="16px">
-              {isAdmin && !isCancelled && (
-                <Box w="215px"
-                 data-testid="note_submit">
+              {cancelPermissions && !isCancelled && (
+                <Box w="215px" data-testid="note_submit">
                   <FormControl zIndex="2">
                     <FormLabel variant="strong-label" size="md">
                       {t('cancelWorkOrder')}
@@ -536,7 +551,7 @@ const WorkOrderDetailTab = props => {
                             onChange={option => field.onChange(option)}
                             isDisabled={
                               ![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) &&
-                              !(isAdmin || isAccounting)
+                              !cancelPermissions
                             }
                           />
                         </>
@@ -707,9 +722,13 @@ const WorkOrderDetailTab = props => {
             <Button data-testid="wo-cancel-btn" onClick={props.onClose} colorScheme="brand" variant="outline">
               {t('cancel')}
             </Button>
-            <Button data-testid="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
-              {t('save')}
-            </Button>
+            <>
+              {!isReadOnly && (
+                <Button data-testid="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>
+                  {t('save')}
+                </Button>
+              )}
+            </>
           </HStack>
         </ModalFooter>
       </form>

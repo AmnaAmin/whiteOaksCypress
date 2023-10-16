@@ -43,6 +43,7 @@ import { MARKET_KEY, useDeleteMarket } from 'api/market'
 import NumberFormat from 'react-number-format'
 import { CustomRequiredInput } from 'components/input/input'
 import { SelectOption } from 'types/transaction.type'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 const InformationCard: React.FC<{
   Icon: React.ElementType
@@ -80,6 +81,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
   const { data: account } = useAccountDetails()
   const { mutate: createMarkets } = useMarketsMutation()
   const { stateSelectOptions } = useStates()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('MARKET.READ')
   const defaultValues: any = useMemo(() => {
     return {
       state: { label: selectedMarket?.stateName, id: selectedMarket?.stateId },
@@ -211,7 +213,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.metroServiceArea`)}
                   </FormLabel>
-                  <Input {...register('metroServiceArea')} type="text" variant="required-field" w="215px" />
+                  <Input {...register('metroServiceArea')} type="text" variant="required-field" w="215px" disabled={isReadOnly} />
                 </Box>
 
                 <FormControl w="225px">
@@ -226,6 +228,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                         <Select
                           {...field}
                           options={stateSelectOptions}
+                          isDisabled={isReadOnly}
                           // size="md"
                           selectProps={{ isBorderLeft: true, menuHeight: '103px' }}
                           onChange={option => {
@@ -250,6 +253,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                           <NumberFormat
                             customInput={CustomRequiredInput}
                             value={field.value}
+                            disabled={isReadOnly}
                             onValueChange={values => {
                               const { floatValue } = values
                               field.onChange(floatValue ?? '')
@@ -265,9 +269,9 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px" justifyContent="space-between">
               <HStack spacing="16px">
-                {selectedMarket && (
+                {!isReadOnly && selectedMarket && (
                   <Button
-                  data-testid='delete-Market-btn'
+                    data-testid="delete-Market-btn"
                     variant="outline"
                     colorScheme="brand"
                     onClick={() => {
@@ -290,9 +294,17 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 >
                   {t(`${VENDOR_MANAGER}.cancel`)}
                 </Button>
-                <Button isDisabled={!metroValue || metroValue.trim() === ''|| !stateValue  || !lienDueValue } type="submit" colorScheme="brand">
-                  {t(`${VENDOR_MANAGER}.save`)}
-                </Button>
+                <>
+                  {!isReadOnly && (
+                    <Button
+                      isDisabled={!metroValue || metroValue.trim() === '' || !stateValue || !lienDueValue}
+                      type="submit"
+                      colorScheme="brand"
+                    >
+                      {t(`${VENDOR_MANAGER}.save`)}
+                    </Button>
+                  )}
+                </>
               </HStack>
             </ModalFooter>
           </ModalContent>

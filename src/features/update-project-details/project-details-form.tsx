@@ -33,6 +33,7 @@ import { useTranslation } from 'react-i18next'
 import { useTransactionsV1 } from 'api/transactions'
 import { TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
 
 type tabProps = {
@@ -45,7 +46,9 @@ type tabProps = {
 
 const ProjectDetailsTab = (props: tabProps) => {
   const { style, onClose, tabVariant, projectData, isRecievable } = props
-
+  const isRecievableRead = useRoleBasedPermissions()?.permissions?.includes('RECEIVABLE.READ') && isRecievable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isRecievableRead || isProjRead
   const [tabIndex, setTabIndex] = useState(0)
   const { propertySelectOptions } = useProperties()
   const { data: projectExtraAttributes } = useProjectExtraAttributes(projectData?.id as number)
@@ -186,6 +189,18 @@ const ProjectDetailsTab = (props: tabProps) => {
     setTabIndex(index)
   }
 
+  // const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
+
+  useEffect(() => {
+    if (isReadOnly) {
+      Array.from(document.querySelectorAll('input')).forEach(input => {
+        if (input.getAttribute('data-testid') !== 'tableFilterInputField') {
+          input.setAttribute('disabled', 'true')
+        }
+      })
+    }
+  }, [])
+
   return (
     <>
       <FormProvider {...formReturn}>
@@ -222,17 +237,18 @@ const ProjectDetailsTab = (props: tabProps) => {
               borderBottomLeftRadius="4px"
             >
               <TabPanels>
-                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflowY={'scroll'}>
+                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflowY={'auto'}>
                   <ProjectManagement
                     projectStatusSelectOptions={projectStatusSelectOptions}
                     projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
                     projectTypeSelectOptions={projectTypeSelectOptions}
                     projectData={projectData}
+                    isReadOnly={isReadOnly}
                   />
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  <InvoiceAndPayments projectData={projectData} />
+                  <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
@@ -263,19 +279,23 @@ const ProjectDetailsTab = (props: tabProps) => {
                   <Divider border="1px solid" />
                 </Box>
                 <Box h="70px" w="100%" pb="3">
-                  <Button
-                    mt="8px"
-                    mr="32px"
-                    float={'right'}
-                    variant="solid"
-                    colorScheme="brand"
-                    type="submit"
-                    form="project-details"
-                    fontSize="16px"
-                    disabled={isSubmitting || isLoading}
-                  >
-                    {t(`project.projectDetails.save`)}
-                  </Button>
+                  <>
+                    {!isReadOnly && (
+                      <Button
+                        mt="8px"
+                        mr="32px"
+                        float={'right'}
+                        variant="solid"
+                        colorScheme="brand"
+                        type="submit"
+                        form="project-details"
+                        fontSize="16px"
+                        disabled={isSubmitting || isLoading}
+                      >
+                        {t(`project.projectDetails.save`)}
+                      </Button>
+                    )}
+                  </>
                   {onClose && (
                     <>
                       <Button

@@ -4,14 +4,15 @@ import { useClient } from 'utils/auth-context'
 import numeral from 'numeral'
 import { orderBy } from 'lodash'
 import { usePaginationQuery } from 'api/index'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const PROJECTS_QUERY_KEY = 'projects'
 export const useProjects = (filterQueryString?: string, page?: number, size: number = 0) => {
   const queryKey = [PROJECTS_QUERY_KEY, filterQueryString]
-  const { isFPM } = useUserRolesSelector()
+  // change this logic based on access control requirements
+  const hidePaidProjects = useRoleBasedPermissions()?.permissions?.includes('PROJECT.PAID.HIDE')
   const fpmRestrictedProjects = 'projectStatusId.notIn=41,72,109' // paid -> 41 , ClientPAid -> 72 , Overpayment -> 109
-  const endpoint = isFPM
+  const endpoint = hidePaidProjects
     ? `v1/projects?${fpmRestrictedProjects}&${filterQueryString || ''}`
     : `v1/projects?${filterQueryString || ''}`
 
@@ -29,6 +30,7 @@ export const useProjects = (filterQueryString?: string, page?: number, size: num
 export const ALL_PROJECTS_QUERY_KEY = 'all_projects'
 export const useGetAllProjects = (filterQueryString: string) => {
   const client = useClient()
+  // change this logic based on access control requirements
   const { isFPM } = useUserRolesSelector()
   const fpmRestrictedProjects = 'projectStatusId.notIn=41,72,109' // paid -> 41 , ClientPAid -> 72 , Overpayment -> 109
   const endpoint = isFPM

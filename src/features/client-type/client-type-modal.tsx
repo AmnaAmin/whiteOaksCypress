@@ -26,6 +26,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { ConfirmationBox } from 'components/Confirmation'
 import { useClientTypeEditMutation, useClientTypeMutation, useClientTypeDelMutation } from 'api/client-type'
 import { PROJECT_TYPE } from 'features/project-type/project-type.i18n'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 const ReadonlyFileStructure: React.FC<{ label: string; value: string; icons: React.ElementType; testid: string }> = ({
   label,
@@ -67,7 +68,7 @@ export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close
   const typeFieldWatch = watch('type')
   const Loading = loadingEditClient || loadingNewClient
   const { isOpen: isOpenClientType, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('CLIENTTYPE.READ')
 
   const onClose = useCallback(() => {
     onCloseDisclosure()
@@ -171,6 +172,7 @@ export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close
                     {...register('type')}
                     title={typeFieldWatch}
                     data-testid="type"
+                    isDisabled={isReadOnly}
                   />
                 </Box>
               </Box>
@@ -178,18 +180,20 @@ export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close
           </ModalBody>
           <ModalFooter borderTop="1px solid #E2E8F0" mt="40px">
             <HStack w="100%" justifyContent="start">
-              <Button
-                variant="outline"
-                colorScheme="brand"
-                leftIcon={<BiTrash />}
-                mr={3}
-                onClick={() => {
-               onOpen()
-                }}
-                data-testid="deleteModal"
-              >
-                {t(`${PROJECT_TYPE}.deleteType`)}
-              </Button>
+              {clientTypeDetails && !isReadOnly && (
+                <Button
+                  variant="outline"
+                  colorScheme="brand"
+                  leftIcon={<BiTrash />}
+                  mr={3}
+                  onClick={() => {
+                    onOpen()
+                  }}
+                  data-testid="deleteModal"
+                >
+                  {t(`${PROJECT_TYPE}.deleteType`)}
+                </Button>
+              )}
             </HStack>
             <HStack w="100%" justifyContent="end">
               <Button
@@ -204,14 +208,16 @@ export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close
               >
                 {t(`${PROJECT_TYPE}.cancel`)}
               </Button>
-              <Button
-                isDisabled={!typeFieldWatch  || typeFieldWatch.trim() === ''|| Loading}
-                colorScheme="brand"
-                type="submit"
-                data-testid="saveProjectType"
-              >
-                {t(`${PROJECT_TYPE}.save`)}
-              </Button>
+              {!isReadOnly && (
+                <Button
+                  isDisabled={!typeFieldWatch || typeFieldWatch.trim() === '' || Loading}
+                  colorScheme="brand"
+                  type="submit"
+                  data-testid="saveProjectType"
+                >
+                  {t(`${PROJECT_TYPE}.save`)}
+                </Button>
+              )}
             </HStack>
           </ModalFooter>
         </form>

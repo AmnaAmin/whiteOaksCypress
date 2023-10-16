@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Flex, Icon, Spacer } from '@chakra-ui/react'
+import { Box, Button, Flex, FormControl, Icon, Spacer } from '@chakra-ui/react'
 import { DevTool } from '@hookform/devtools'
 import { ViewLoader } from 'components/page-level-loader'
 import { ReceivableFilter } from 'features/recievable/receivable-filter'
@@ -12,19 +12,33 @@ import { useForm } from 'react-hook-form'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import { useReceivableTableColumns } from 'features/recievable/hook'
 import { ACCOUNTS } from 'pages/accounts.i18n'
-import { BiSync } from 'react-icons/bi'
+import { BiChevronDown, BiChevronRight, BiSync } from 'react-icons/bi'
 import { RECEIVABLE_TABLE_QUERY_KEYS } from 'features/recievable/receivable.constants'
 import { ReceivableConfirmationBox } from 'features/recievable/receivable-confirmation-box'
 import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import ReactSelect from 'components/form/react-select'
+import { useAccountData } from 'api/user-account'
+import { useDirectReports } from 'api/pc-projects'
 
-export const ReceivableContext = React.createContext<any>(null);
+const formatGroupLabel = props => (
+  <Box onClick={props.onClick} cursor="pointer" display="flex" alignItems="center" fontWeight="normal" ml={'-7px'}>
+    {props.isHidden ? <BiChevronRight fontSize={'20px'} /> : <BiChevronDown fontSize={'20px'} />} {props.label}
+  </Box>
+)
+
+export const ReceivableContext = React.createContext<any>(null)
 
 export const ConstructionPortalReceiveable: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [isBatchClick, setIsBatchClick] = useState(false)
   const [selectedCard, setSelectedCard] = useState<string>('')
   const [selectedDay] = useState<string>('')
+  const [userIds, setSelectedUserIds] = useState<any>([])
+
+  const { data } = useAccountData()
+  const { directReportOptions = [], isLoading: loadingReports } = useDirectReports(data?.email)
 
   // const clearAll = () => {
   //   setSelectedCard('')
@@ -33,9 +47,9 @@ export const ConstructionPortalReceiveable: React.FC = () => {
 
   const formReturn = useForm()
 
-  const { register, reset, control, setValue, watch } = formReturn;
-
-  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 0 })
+  const { register, reset, control, setValue, watch } = formReturn
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('RECEIVABLE.READ')
+  const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 25 })
   const [sorting, setSorting] = useState<SortingState>([])
   const { setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } = useColumnFiltersQueryString({
     queryStringAPIFilterKeys: RECEIVABLE_TABLE_QUERY_KEYS,
@@ -43,6 +57,7 @@ export const ConstructionPortalReceiveable: React.FC = () => {
     setPagination,
     selectedCard,
     selectedDay,
+    userIds,
     sorting,
   })
 
@@ -111,18 +126,17 @@ export const ConstructionPortalReceiveable: React.FC = () => {
     setIsBatchClick(false)
   }
 
-  const formValues = watch();
-
+  const formValues = watch()
 
   return (
     <ReceivableContext.Provider value={formReturn}>
-      <form method='post'>
+      <form method="post">
         <Box pb="20">
           {/* <FormLabel variant="strong-label" size="lg">
             {t(`${ACCOUNTS}.accountReceivable`)}
           </FormLabel> */}
           <Box mb={'12px'}>
-            <ReceivableFilter onSelected={setSelectedCard} cardSelected={selectedCard} />
+            <ReceivableFilter onSelected={setSelectedCard} cardSelected={selectedCard} userIds={userIds} />
           </Box>
 
           {/* Temp comment */}
@@ -138,17 +152,32 @@ export const ConstructionPortalReceiveable: React.FC = () => {
               clear={clearAll}
             /> */}
               <Spacer />
-              <Button
-                alignContent="right"
-                // onClick={onNewProjectModalOpen}
-                colorScheme="brand"
-                type="button"
-                minW={'140px'}
-                onClick={ () => Submit(formValues) }
-              >
-                <Icon as={BiSync} fontSize="18px" mr={2} />
-                {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
-              </Button>
+              <FormControl w="215px" mr={'10px'}>
+                <ReactSelect
+                  formatGroupLabel={formatGroupLabel}
+                  onChange={user => {
+                    user.value === 'ALL' ? setSelectedUserIds([]) : setSelectedUserIds([user.value])
+                  }}
+                  options={directReportOptions}
+                  loadingCheck={loadingReports}
+                  placeholder={'Select'}
+                />
+              </FormControl>
+              <>
+                {!isReadOnly && (
+                  <Button
+                    alignContent="right"
+                    // onClick={onNewProjectModalOpen}
+                    colorScheme="brand"
+                    type="button"
+                    minW={'140px'}
+                    onClick={() => Submit(formValues)}
+                  >
+                    <Icon as={BiSync} fontSize="18px" mr={2} />
+                    {!loading ? t(`${ACCOUNTS}.batch`) : t(`${ACCOUNTS}.processing`)}
+                  </Button>
+                )}
+              </>
             </Flex>
 
             {/* {batchRunStatus && <Box>{failedRun?.description}</Box>} */}
@@ -165,6 +194,7 @@ export const ConstructionPortalReceiveable: React.FC = () => {
                 setSorting={setSorting}
                 queryStringWithPagination={queryStringWithPagination}
                 queryStringWithoutPagination={queryStringWithoutPagination}
+                isReadOnly={isReadOnly}
               />
             </Box>
           </Card>

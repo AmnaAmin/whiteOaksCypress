@@ -38,6 +38,7 @@ type PayablePropsTyep = {
   totalPages: number | undefined
   dataCount: number | undefined
   refetchPayables: () => void
+  isReadOnly?: boolean
 }
 
 export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
@@ -54,6 +55,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
     totalPages,
     dataCount,
     refetchPayables,
+    isReadOnly,
   }) => {
     const { isOpen, onClose: onCloseDisclosure, onOpen } = useDisclosure()
     const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
@@ -215,6 +217,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
                     onSave={onSave}
                     columns={settingColumns}
                     tableName={TableNames.payable}
+                    isReadOnly={isReadOnly}
                   />
                 )}
               </ButtonsWrapper>

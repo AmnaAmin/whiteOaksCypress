@@ -24,9 +24,10 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { TableNames } from 'types/table-column.types'
 type ProjectProps = {
   selectedCard: string
+  isReadOnly?: boolean
 }
 
-export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
+export const FilteredProjectsData = ({ selectedCard, isReadOnly }: ProjectProps) => {
   const navigate = useNavigate()
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ accountPayableInvoiced: false })
 
@@ -87,7 +88,12 @@ export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
         columnVisibility={columnVisibility}
         setColumnVisibility={setColumnVisibility}
       >
-        <Table onRowClick={onRowClick} isLoading={isLoading || isFetching} isEmpty={!isLoading && !projects?.length} />
+        <Table
+          onRowClick={onRowClick}
+          isLoading={isLoading || isFetching}
+          isEmpty={!isLoading && !projects?.length}
+          isFilteredByApi={true}
+        />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton
@@ -105,6 +111,7 @@ export const FilteredProjectsData = ({ selectedCard }: ProjectProps) => {
                 onSave={onSave}
                 columns={settingColumns.filter(col => !(columnVisibility[col?.contentKey] === false))}
                 tableName={TableNames.adminDashboard}
+                isReadOnly={isReadOnly}
               />
             )}
           </ButtonsWrapper>

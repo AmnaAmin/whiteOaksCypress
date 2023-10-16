@@ -16,6 +16,7 @@ export enum UserTypes {
 
 export type Account = {
   id: number
+  permissions: string[]
   login: string
   firstName: string
   lastName: string
@@ -27,7 +28,7 @@ export type Account = {
   createdDate: string
   lastModifiedBy: string
   lastModifiedDate: string
-  authorities: Authorities
+  //authorities: Authorities
   streetAddress: string
   city: string
   stateId: number | null
@@ -53,6 +54,7 @@ export type Account = {
   avatarName: string | null
   features: string[]
   hfeWage: string | null
+  authorities: string[]
 }
 
 export type PasswordFormValues = {

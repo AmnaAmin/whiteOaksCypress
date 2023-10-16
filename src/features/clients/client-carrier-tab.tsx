@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { Controller, useFormContext, useFieldArray } from 'react-hook-form'
 import { ClientFormValues } from 'types/client.type'
 import { CLIENTS } from './clients.i18n'
@@ -41,7 +41,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
     control,
   } = useFormContext<ClientFormValues>()
   const phoneNumberRef = useRef<any>()
-  const { isProjectCoordinator } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('CLIENT.READ')
 
   const { fields: carrierField, append, remove } = useFieldArray({ control, name: 'carrier' })
 
@@ -49,7 +49,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
     <Box>
       <Box overflow={'auto'} height={400}>
         <>
-          {!isProjectCoordinator && (
+          {!isReadOnly && (
             <Button
               variant="outline"
               colorScheme="brand"
@@ -69,13 +69,11 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
             </Button>
           )}
         </>
-        {isProjectCoordinator && carrierField.length < 1 && (
+        {isReadOnly && carrierField.length < 1 && (
           <Box width="100%" p={5}>
-            {isProjectCoordinator && (
-              <Center>
-                <FormLabel variant={'light-label'}> {t(`${CLIENTS}.noCarriers`)}</FormLabel>
-              </Center>
-            )}
+            <Center>
+              <FormLabel variant={'light-label'}> {t(`${CLIENTS}.noCarriers`)}</FormLabel>
+            </Center>
           </Box>
         )}
         {carrierField.map((carrier, index) => {
@@ -95,6 +93,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
                     })}
                     variant={'required-field'}
                     type="text"
+                    isDisabled={isReadOnly}
                   />
                   <FormErrorMessage>{errors?.carrier?.[index]?.name?.message}</FormErrorMessage>
                 </FormControl>
@@ -128,6 +127,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
                             placeholder="(___)-___-____"
                             variant={'required-field'}
                             getInputRef={phoneNumberRef}
+                            isDisabled={isReadOnly}
                           />
                           <FormErrorMessage>
                             {errors?.carrier?.[index]?.phoneNumber?.message}
@@ -159,11 +159,12 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
                     })}
                     variant={'required-field'}
                     type="email"
+                    isDisabled={isReadOnly}
                   />
                   <FormErrorMessage>{errors?.carrier?.[index]?.emailAddress?.message}</FormErrorMessage>
                 </FormControl>
               </GridItem>
-              {!isProjectCoordinator && (
+              {!isReadOnly && (
                 <GridItem display={'flex'} mt="25px" alignItems={'center'}>
                   <Box w="2em" color="#345EA6" fontSize="15px" m={{ base: '4%', md: 0 }}>
                     <Center>
@@ -184,10 +185,10 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
         })}
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
-        <Button variant={!isProjectCoordinator ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
+        <Button variant={!isReadOnly ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
           {t(`${CLIENTS}.cancel`)}
         </Button>
-        {!isProjectCoordinator && (
+        {!isReadOnly && (
           <>
             {clientDetails?.id ? (
               <Button colorScheme="brand" type="submit" form="clientDetails" ml={2}>

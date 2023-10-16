@@ -6,32 +6,22 @@ import { useState } from 'react'
 import { BiBookAdd } from 'react-icons/bi'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { useTranslation } from 'react-i18next'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { Card } from 'components/card/card'
-import { FPMVendors } from 'features/vendors/vendor-table-fpm'
-import { FPMVendorFilters } from 'features/vendors/vendor-filters-fpm'
 
 const Vendors = () => {
   const { isOpen: isOpenNewVendorModal, onOpen: onNewVendorModalOpen, onClose: onNewVendorModalClose } = useDisclosure()
   const [selectedCard, setSelectedCard] = useState<string>('')
   const { t } = useTranslation()
-  const { isFPM } = useUserRolesSelector()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('VENDOR.READ')
 
   return (
     <Box pb="2">
-      {!isFPM ? (
-        <VendorFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
-      ) : (
-        <FPMVendorFilters onSelectCard={setSelectedCard} selectedCard={selectedCard}></FPMVendorFilters>
-      )}
-
+      <VendorFilters onSelectCard={setSelectedCard} selectedCard={selectedCard} />
       <Card px="12px" py="16px" mt="12px">
         <HStack mb="16px">
-          {/* <Button variant="ghost" colorScheme="brand" onClick={() => setSelectedCard('')}>
-          {t('clearFilter')}
-        </Button> */}
           <Spacer />
-          {!isFPM && (
+          {!isReadOnly && (
             <Box>
               <Button onClick={onNewVendorModalOpen} colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />}>
                 {t(`${VENDOR_MANAGER}.newVendor`)}
@@ -39,11 +29,7 @@ const Vendors = () => {
             </Box>
           )}
         </HStack>
-        {!isFPM ? (
-          <VendorTable selectedCard={selectedCard as string} />
-        ) : (
-          <FPMVendors selectedCard={selectedCard as string}></FPMVendors>
-        )}
+        <VendorTable selectedCard={selectedCard as string} isReadOnly={isReadOnly} />
       </Card>
 
       <NewVendorModal isOpen={isOpenNewVendorModal} onClose={onNewVendorModalClose} />

@@ -54,9 +54,9 @@ export const useCall = () => {
 
 export const useProjectCards = (id?: string) => {
   const client = useClient()
-
+  const apiUrl = 'projectCards' + (!!id ? `?userId=${id ?? ''}` : '')
   return useQuery(['projectCards', id], async () => {
-    const response = await client(`projectCards/${id ?? ''}`, {})
+    const response = await client(apiUrl, {})
 
     return response?.data
   })
@@ -74,6 +74,30 @@ export const useProjectDetails = (projectId?: string) => {
     },
     { enabled: false },
   )
+}
+export const useDirectReports = (email: string) => {
+  const client = useClient()
+
+  const { data: directReports, ...rest } = useQuery(
+    'direct-reports',
+    async () => {
+      const response = await client(`users/${email}`, { email })
+
+      return response?.data
+    },
+    { enabled: !!email },
+  )
+
+  const directReportOptions =
+    directReports?.directChild?.map(dr => ({
+      label: dr?.firstName + ' ' + dr?.lastName,
+      value: dr?.id,
+    })) || []
+
+  return {
+    directReportOptions: [{ label: 'ALL', value: 'ALL' }, ...directReportOptions],
+    ...rest,
+  }
 }
 
 export const useCreateProjectMutation = () => {
@@ -216,14 +240,64 @@ export const useProjectTypeSelectOptions = () => {
   }
 }
 
-export const useVendorCards = () => {
+const getLocationBasedFiltersForCards = (location, account) => {
+  let locationBasedFilter = ''
+  switch (location) {
+    case 'STATE': {
+      const states = account?.fpmStates?.map(m => m.code)?.join(',')
+      locationBasedFilter = 'states=' + states
+      break
+    }
+    case 'REGION': {
+      const regions = account?.regions?.join(',')
+      locationBasedFilter = 'regions=' + regions
+      break
+    }
+    case 'MARKET': {
+      const marketIds = account?.markets?.map(m => m.id)?.join(',')
+      locationBasedFilter = 'marketIds=' + marketIds
+      break
+    }
+  }
+  return locationBasedFilter
+}
+
+export const useVendorCards = ({ user }) => {
+  const client = useClient()
+  const location = user?.authorityList?.[0].location
+
+  const locationBasedFilters = getLocationBasedFiltersForCards(location, user)
+  const vendorCardsApi = locationBasedFilters !== '' ? `vendorsCards/v1?` + locationBasedFilters : 'vendorsCards'
+  return useQuery<Vendors>(
+    ['vendorsCards', locationBasedFilters],
+    async () => {
+      const response = await client(vendorCardsApi, {})
+
+      return response?.data
+    },
+    {
+      enabled: !!user,
+    },
+  )
+}
+
+export const useFetchUserDetails = (email: string) => {
   const client = useClient()
 
-  return useQuery<Vendors>(['vendorsCards'], async () => {
-    const response = await client(`vendorsCards`, {})
+  const { data: user, ...rest } = useQuery(
+    'user-details',
+    async () => {
+      const response = await client(`users/${email}`, { email })
 
-    return response?.data
-  })
+      return response?.data
+    },
+    { enabled: !!email },
+  )
+
+  return {
+    user,
+    ...rest,
+  }
 }
 
 export const useFPMVendorCards = fpmBasedFilters => {
@@ -362,7 +436,7 @@ export const useFPMs = () => {
   const client = useClient()
 
   const { data: fieldProjectMangers, ...rest } = useQuery('FPM', async () => {
-    const response = await client(`users/usertype/5?sort=firstName,asc`, {})
+    const response = await client(`users/v2/usertype/5?sort=firstName,asc`, {})
 
     return response?.data
   })
@@ -412,7 +486,7 @@ export const useProjectCoordinators = () => {
   const client = useClient()
 
   const { data: projectCoordinators, ...rest } = useQuery('PC', async () => {
-    const response = await client(`users/usertype/112?sort=firstName,asc`, {})
+    const response = await client(`users/v2/usertype/112?sort=firstName,asc`, {})
 
     return response?.data
   })
@@ -471,12 +545,40 @@ const getVendorsQueryString = (filterQueryString: string) => {
   return queryString
 }
 
-export const useVendor = (queryString: string, pageSize: number) => {
-  const apiQueryString = getVendorsQueryString(queryString)
+const getLocationBasedFiltersForTable = (location, account) => {
+  let locationBasedFilter = ''
+  switch (location) {
+    case 'STATE': {
+      const states = account?.fpmStates?.map(m => m.code)?.join(',')
+      locationBasedFilter = 'state.in=' + states
+      break
+    }
+    case 'REGION': {
+      const regions = account?.regions?.join(',')
+      locationBasedFilter = 'region.in=' + regions
+      break
+    }
+    case 'MARKET': {
+      const marketIds = account?.markets?.map(m => m.id)?.join(',')
+      locationBasedFilter = 'marketId.in=' + marketIds
+      break
+    }
+  }
+  return locationBasedFilter
+}
+
+export const useVendor = (user, queryString: string, pageSize: number) => {
+  const userLocation = user?.authorityList?.[0].location
+  const locationBasedFilters = getLocationBasedFiltersForTable(userLocation, user)
+
+  const apiQueryString =
+    getVendorsQueryString(queryString) + (locationBasedFilters !== '' ? `&${locationBasedFilters}` : '')
+
   const { data, ...rest } = usePaginationQuery<vendors>(
     [VENDOR_QUERY_KEY, apiQueryString],
     `view-vendors/v1?${apiQueryString}`,
     pageSize,
+    { enabled: !!user },
   )
 
   return {
@@ -488,13 +590,18 @@ export const useVendor = (queryString: string, pageSize: number) => {
 }
 
 export const ALL_VENDORS_QUERY_KEY = 'all_vendors'
-export const useGetAllVendors = (filterQueryString: string) => {
+export const useGetAllVendors = (user, filterQueryString: string) => {
   const client = useClient()
+  const userLocation = user?.authorityList?.[0].location
+  const locationBasedFilters = getLocationBasedFiltersForTable(userLocation, user)
 
   const { data, ...rest } = useQuery<Array<Project>>(
     ALL_VENDORS_QUERY_KEY,
     async () => {
-      const response = await client(`view-vendors/v1?${filterQueryString}`, {})
+      const response = await client(
+        `view-vendors/v1?${filterQueryString}` + (locationBasedFilters !== '' ? `&${locationBasedFilters}` : ''),
+        {},
+      )
 
       return response?.data
     },

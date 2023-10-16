@@ -2,12 +2,19 @@ import React, { useEffect } from 'react'
 import { useNotes, useNoteMutation } from 'api/work-order'
 import { NotesTab } from 'features/common/notes-tab'
 import { useAccountDetails } from 'api/vendor-details'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
+import { useLocation } from 'react-router-dom'
 
 export const WorkOrderNotes: React.FC<any> = props => {
   const { workOrder, onClose, setNotesCount, navigateToProjectDetails } = props
   const { mutate: createNotes, isLoading: isNotesLoading } = useNoteMutation(workOrder?.id)
   const { data: account } = useAccountDetails()
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
   const { notes = [] } = useNotes({
@@ -32,6 +39,7 @@ export const WorkOrderNotes: React.FC<any> = props => {
   return (
     <>
       <NotesTab
+        hideSave={isReadOnly}
         saveNote={saveNote}
         isNotesLoading={isNotesLoading}
         notes={notes}

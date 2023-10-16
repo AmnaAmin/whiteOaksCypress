@@ -33,7 +33,7 @@ import { documentStatus, documentScore, portalAccess, useDocumentStatusSelectOpt
 import first from 'lodash/first'
 import NumberFormat from 'react-number-format'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { validateWhitespace } from 'api/clients'
 
 const validateTelePhoneNumber = (number: string): boolean => {
@@ -56,13 +56,13 @@ const CreateVendorDetail: React.FC<{
   } = useFormContext<VendorProfileDetailsFormData>()
   const { disableDetailsNext } = useVendorNext({ control })
 
-  const { isFPM } = useUserRolesSelector()
-
   const capacityError = useWatch({ name: 'capacity', control })
 
   // Set Document Status dropdown if Status is Expired
   const [statusOptions, setStatusOptions] = useState<any>([])
   const documentStatusSelectOptions = useDocumentStatusSelectOptions(vendorProfileData)
+  const { permissions } = useRoleBasedPermissions()
+  const isReadOnly = permissions?.includes('VENDOR.READ')
 
   useEffect(() => {
     if (vendorProfileData?.status === 15) {
@@ -86,7 +86,7 @@ const CreateVendorDetail: React.FC<{
               variant="required-field"
               {...register('companyName', {
                 required: isActive && 'This is required',
-               validate: {
+                validate: {
                   whitespace: validateWhitespace,
                 },
                 onChange: e => {
@@ -94,7 +94,7 @@ const CreateVendorDetail: React.FC<{
                 },
               })}
               size="md"
-              isDisabled={isFPM}
+              isDisabled={isReadOnly}
             />
             <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
           </FormControl>
@@ -112,7 +112,7 @@ const CreateVendorDetail: React.FC<{
                     options={statusOptions}
                     {...field}
                     selectProps={{ isBorderLeft: true }}
-                    isDisabled={isFPM}
+                    isDisabled={isReadOnly}
                   />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -133,7 +133,7 @@ const CreateVendorDetail: React.FC<{
                     options={documentScore}
                     {...field}
                     selectProps={{ isBorderLeft: true }}
-                    isDisabled={isFPM}
+                    isDisabled={isReadOnly}
                   />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                 </>
@@ -153,7 +153,7 @@ const CreateVendorDetail: React.FC<{
                   <ReactSelect
                     options={portalAccess}
                     {...field}
-                    isDisabled={isFPM}
+                    isDisabled={isReadOnly}
                     selectProps={{ isBorderLeft: true }}
                   />
                   <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
@@ -174,7 +174,7 @@ const CreateVendorDetail: React.FC<{
                 data-testid="streetAddress"
                 {...register('streetAddress', {
                   required: isActive && 'This is required',
-                    validate: {
+                  validate: {
                     whitespace: validateWhitespace,
                   },
                   onChange: e => {
@@ -184,7 +184,7 @@ const CreateVendorDetail: React.FC<{
                 w="215px"
                 variant="required-field"
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
               />
               <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
             </FormControl>
@@ -198,7 +198,7 @@ const CreateVendorDetail: React.FC<{
                 type="text"
                 {...register('city', {
                   required: isActive && 'This is required',
-                   validate: {
+                  validate: {
                     whitespace: validateWhitespace,
                   },
                   onChange: e => {
@@ -209,7 +209,7 @@ const CreateVendorDetail: React.FC<{
                 variant="required-field"
                 size="md"
                 data-testid="vendorCity"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
                 onKeyPress={preventNumber}
               />
               <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
@@ -231,7 +231,7 @@ const CreateVendorDetail: React.FC<{
                       options={stateSelectOptions}
                       {...field}
                       selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
-                      isDisabled={isFPM}
+                      isDisabled={isReadOnly}
                     />
                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                   </>
@@ -256,7 +256,7 @@ const CreateVendorDetail: React.FC<{
                 variant="required-field"
                 size="md"
                 data-testid="vendorZipCode"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
               />
               <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
@@ -279,7 +279,7 @@ const CreateVendorDetail: React.FC<{
                 })}
                 variant="required-field"
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
               />
               <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
             </FormControl>
@@ -308,7 +308,7 @@ const CreateVendorDetail: React.FC<{
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
-                        isDisabled={isFPM}
+                        isDisabled={isReadOnly}
                       />
                       <FormErrorMessage>{fieldState.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
                     </>
@@ -332,7 +332,7 @@ const CreateVendorDetail: React.FC<{
                 w="121px"
                 variant="outline"
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
                 type="number"
               />
             </FormControl>
@@ -359,7 +359,7 @@ const CreateVendorDetail: React.FC<{
                         onValueChange={e => {
                           field.onChange(e.value)
                         }}
-                        isDisabled={isFPM}
+                        isDisabled={isReadOnly}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -380,7 +380,7 @@ const CreateVendorDetail: React.FC<{
                 w="121px"
                 variant="outline"
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
               />
             </FormControl>
           </Box>
@@ -388,7 +388,7 @@ const CreateVendorDetail: React.FC<{
 
         <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px" mt="30px">
           <GridItem>
-          <FormControl w="215px" isInvalid={!!errors.ownerName}>
+            <FormControl w="215px" isInvalid={!!errors.ownerName}>
               <FormLabel variant="strong-label" size="md">
                 {t('ownersName')}
               </FormLabel>
@@ -398,8 +398,8 @@ const CreateVendorDetail: React.FC<{
                 data-testId="ownersName"
                 variant="required-field"
                 {...register('ownerName', {
-                  required: isActive && 'This is required', 
-                    validate: {
+                  required: isActive && 'This is required',
+                  validate: {
                     whitespace: validateWhitespace,
                   },
                   onChange: e => {
@@ -407,7 +407,7 @@ const CreateVendorDetail: React.FC<{
                   },
                 })}
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
               />
               <FormErrorMessage pos="absolute">{errors.ownerName && errors.ownerName?.message}</FormErrorMessage>
             </FormControl>
@@ -425,7 +425,7 @@ const CreateVendorDetail: React.FC<{
                 w="215px"
                 variant="required-field"
                 size="md"
-                isDisabled={isFPM}
+                isDisabled={isReadOnly}
               />
               <FormErrorMessage pos="absolute">{errors.capacity?.message}</FormErrorMessage>
             </FormControl>
@@ -443,7 +443,7 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input type="text" {...register('secondName')} variant="outline" size="md" isDisabled={isFPM} />
+            <Input type="text" {...register('secondName')} variant="outline" size="md" isDisabled={isReadOnly} />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -460,7 +460,7 @@ const CreateVendorDetail: React.FC<{
               })}
               variant="outline"
               size="md"
-              isDisabled={isFPM}
+              isDisabled={isReadOnly}
             />
           </FormControl>
           <GridItem></GridItem>
@@ -485,7 +485,7 @@ const CreateVendorDetail: React.FC<{
                         maxMenuHeight="100%"
                         {...field}
                         selectProps={{ isBorderLeft: true }}
-                        isDisabled={isFPM}
+                        isDisabled={isReadOnly}
                       />
                       <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                     </>
@@ -507,11 +507,11 @@ const CreateVendorDetail: React.FC<{
         justifyContent="end"
       >
         {onClose && (
-          <Button variant={isFPM ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant={isReadOnly ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
-        {!isFPM && (
+        {!isReadOnly && (
           <Button
             disabled={disableDetailsNext}
             type="submit"

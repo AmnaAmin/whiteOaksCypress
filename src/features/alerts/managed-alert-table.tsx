@@ -65,9 +65,15 @@ type ManagedAlertsTablesTypes = {
   isLoading: boolean
   refetch: any
   managedAlerts: any
+  isReadOnly?: boolean
 }
 
-export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({ managedAlerts, isLoading, refetch }) => {
+export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({
+  managedAlerts,
+  isLoading,
+  refetch,
+  isReadOnly,
+}) => {
   const [sorting, setSorting] = React.useState<SortingState>([])
 
   const [selectedAlert, setSelectedAlert] = useState<ProjectAlertType>()
@@ -118,6 +124,7 @@ export const ManagedAlertTable: React.FC<ManagedAlertsTablesTypes> = ({ managedA
                   onSave={onSave}
                   columns={settingColumns}
                   tableName={TableNames.alerts}
+                  isReadOnly={isReadOnly}
                 />
               )}
             </ButtonsWrapper>

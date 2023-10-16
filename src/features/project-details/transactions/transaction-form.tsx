@@ -56,11 +56,12 @@ import {
   useIsAwardSelect,
   useIsLienWaiverRequired,
   useLienWaiverFormValues,
+  usePermissionBasedDecision,
   useSelectedWorkOrder,
   useTotalAmount,
 } from './hooks'
 import { TransactionAmountForm } from './transaction-amount-form'
-import { useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserProfile, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
@@ -85,6 +86,7 @@ import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
 import UpdateProjectAward from './update-project-award'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
+import { useLocation } from 'react-router-dom'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -161,7 +163,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
-  const { isAdmin, isVendor, isAccounting, isFPM } = useUserRolesSelector()
+  const { isVendor } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -169,13 +171,18 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [disableBtn, setDisableBtn] = useState(false)
   const [fileParseMsg, setFileParseMsg] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
 
   // API calls
   const { transaction } = useTransaction(selectedTransactionId)
   const { managerEnabled } = useManagerEnabled(projectId)
-  const isDM = managerEnabled?.allowed
+  const isManagingFPM = managerEnabled?.allowed
   const isShowFpm = !!transaction
   const {
     againstOptions: againstSelectOptions,
@@ -225,6 +232,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
   const isRefund = useWatch({ name: 'refund', control })
+  const verifiedByFpm = useWatch({ name: 'verifiedByFpm', control })
+  const verifiedByManager = useWatch({ name: 'verifiedByManager', control })
+  const paidDate = useWatch({ name: 'paidDate', control })
   const watchStatus = watch('status')
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -277,7 +287,16 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     selectedWorkOrder,
     isApproved,
   })
-  const isAdminEnabled = isAdmin || isAccounting
+
+  const { permissions } = useRoleBasedPermissions()
+  /* add permissions to verify by fpm and district manager*/
+  const isEnabledToOverrideNTE = permissions.some(p =>
+    ['PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE', 'ALL'].includes(p),
+  )
+  const isEnabledForVerifyingAsFPM = permissions.some(p =>
+    ['PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT', 'ALL'].includes(p),
+  )
+  const isAdmin = useRoleBasedPermissions()?.permissions?.includes('ALL')
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
   const selectedCancelledOrDenied = [TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(
@@ -288,7 +307,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     !selectedCancelledOrDenied && //Check if the status is being changed to cancel/deny let the transaction be allowed.
     (projectAwardCheck || //when there is no project award
       (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund + is not approved
-      (isCompletedWorkLessThanNTEPercentage && !isAdminEnabled)) //when %complete is less than NTE and user is not admin/accounting
+      (isCompletedWorkLessThanNTEPercentage && !isEnabledToOverrideNTE)) //when %complete is less than NTE and user is not admin/accounting
 
   const {
     isShowChangeOrderSelectField,
@@ -305,6 +324,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowDrawFieldAgainstWO,
   } = useFieldShowHideDecision(control, transaction)
 
+  const { editInvoiceDate, editPaymentReceived, enableFutureDate, allowSaveOnApproved } = usePermissionBasedDecision()
   const { isInvoicedDateRequired, isPaidDateRequired, isPaymentTermRequired } = useFieldRequiredDecision(
     control,
     transaction,
@@ -344,6 +364,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }, [selectedWorkOrder])
 
+  useEffect(() => {
+    if (
+      verifiedByFpm?.value === 'CANCELLED' ||
+      verifiedByManager?.value === 'CANCELLED' ||
+      verifiedByFpm?.value === 'DENIED' ||
+      verifiedByManager?.value === 'DENIED'
+    ) {
+      setValue('paidDate', null)
+    } else {
+      setValue('paidDate', paidDate)
+    }
+  }, [verifiedByFpm, verifiedByManager])
+
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
       setValue('invoicedDate', null)
@@ -358,7 +391,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }
 
   const drawTransaction = transaction?.transactionType === TransactionTypeValues.draw
-
   const hasPendingDrawsOnPaymentSave = values => {
     const isDrawAgainstProject =
       values?.transactionType?.value === TransactionTypeValues.draw && values?.against?.label === 'Project SOW'
@@ -493,7 +525,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   )
 
   // Disable selection of future payment received date for all users expect Admin and Accounting
-  const futureDateDisable = !isAdminEnabled ? format(new Date(), 'yyyy-MM-dd') : ''
+  const futureDateDisable = !enableFutureDate ? format(new Date(), 'yyyy-MM-dd') : ''
 
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
@@ -553,7 +585,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       {remainingAmountExceededFlag && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
       {fileParseMsg && <PercentageCompletionLessThanNTEAlert msg={t(`${WORK_ORDER}.attachmentParsingFailure`)} />}
       {isCompletedWorkLessThanNTEPercentage &&
-        (isAdminEnabled ? (
+        (isEnabledToOverrideNTE ? (
           <PercentageCompletionLessThanNTEAlert msg="PercentageCompletionForAdminAndAccount" />
         ) : (
           <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />
@@ -808,7 +840,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           type="date"
                           variant={isInvoicedDateRequired ? 'required-field' : 'outline'}
                           css={calendarIcon}
-                          isDisabled={isApproved && !isAdminEnabled}
+                          isDisabled={isApproved && !editInvoiceDate}
                           {...register('invoicedDate', {
                             required: isInvoicedDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
                             onChange: onInvoiceBackDateChange,
@@ -937,7 +969,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                       <Select
                                         {...field}
                                         options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                        isDisabled={!isAdminEnabled && !isFPM}
+                                        isDisabled={!isEnabledForVerifyingAsFPM}
                                         size="md"
                                         selectProps={{ isBorderLeft: true }}
                                         onChange={statusOption => {
@@ -967,7 +999,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                       <Select
                                         {...field}
                                         options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                        isDisabled={!isDM}
+                                        isDisabled={!isManagingFPM}
                                         size="md"
                                         selectProps={{ isBorderLeft: true }}
                                         onChange={statusOption => {
@@ -1008,7 +1040,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         size="md"
                         type="date"
                         variant="required-field"
-                        isDisabled={isApproved && !isAdminEnabled}
+                        isDisabled={isApproved && !editPaymentReceived}
                         max={futureDateDisable}
                         {...register('paymentRecievedDate', { required: REQUIRED_FIELD_ERROR_MESSAGE })}
                       />
@@ -1103,7 +1135,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 <Select
                                   {...field}
                                   options={
-                                    drawTransaction ? TRANSACTION_FPM_DM_STATUS_OPTIONS : transactionStatusOptions
+                                    drawTransaction && workOrderId !== '0'
+                                      ? TRANSACTION_FPM_DM_STATUS_OPTIONS
+                                      : transactionStatusOptions
                                   }
                                   isDisabled={isStatusDisabled}
                                   onChange={statusOption => {
@@ -1182,7 +1216,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          ((!isApproved && !lateAndFactoringFeeForVendor) || isAdminEnabled) && (
+          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
             <>
               <Button
                 type="submit"

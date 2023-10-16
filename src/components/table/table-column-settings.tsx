@@ -41,9 +41,17 @@ interface TableColumnSettingsProps {
   disabled?: boolean
   refetch?: any
   tableName: TableNames
+  isReadOnly?: boolean
 }
 
-const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, tableName }: TableColumnSettingsProps) => {
+const TableColumnSettings = ({
+  onSave,
+  columns,
+  disabled = false,
+  refetch,
+  tableName,
+  isReadOnly,
+}: TableColumnSettingsProps) => {
   const [paginationRecord, setPaginationRecord] = useState<ColumnType | undefined>(
     columns?.find(c => c.field === 'pagination'),
   )
@@ -172,7 +180,7 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
           </HStack>
         </Button>
       </Box>
-      <Modal isOpen={isOpen} onClose={_onClose} size="6xl" key={modalKey}>
+      <Modal isOpen={isOpen} onClose={_onClose} size="5xl" key={modalKey}>
         <ModalOverlay />
         <ModalContent minH="700px" bg="#F2F3F4" rounded="none">
           <ModalHeader
@@ -200,10 +208,12 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
             pt="20px"
             pb="20px"
           >
-            <Button variant="ghost" colorScheme="brand" fontWeight={500} onClick={openResetConfirmationBox} size="md">
-              <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
-              {t('resetSettings')}
-            </Button>
+            {!isReadOnly && (
+              <Button variant="ghost" colorScheme="brand" fontWeight={500} ml='4px' mt='-8px' marginBottom='-5px' onClick={openResetConfirmationBox} size="md">
+                <Icon as={MdOutlineSettings} fontSize="14px" fontWeight={500} style={{ marginRight: '8px' }} />
+                {t('resetSettings')}
+              </Button>
+            )}
             <ConfirmationBox
               title="Reset Settings?"
               content="Are you sure you want to reset Settings? This action cannot be undone."
@@ -230,13 +240,15 @@ const TableColumnSettings = ({ onSave, columns, disabled = false, refetch, table
             boxShadow="0px 1px 2px 0px lightgrey"
             p="0px"
           >
-            <HStack spacing="16px" mr="13px" my="16px">
+            <HStack spacing="16px" mr="44px" my="16px">
               <Button variant="ghost" colorScheme="darkPrimary" onClick={closeSetting} border="1px solid" size="md">
                 {t('cancel')}
               </Button>
-              <Button data-testid="save-settings" colorScheme="darkPrimary" onClick={saveModal} size="md">
-                {t('save')}
-              </Button>
+              {isReadOnly ? null : (
+                <Button data-testid="save-settings" colorScheme="darkPrimary" onClick={saveModal} size="md">
+                  {t('save')}
+                </Button>
+              )}
             </HStack>
           </ModalFooter>
         </ModalContent>
@@ -251,13 +263,14 @@ function ControlledBoard({ onCardDragChange, board, updatedBoard, isUpdated }) {
 
   const columnStyle = {
     width: '400px',
-    fontWeight: 600,
+    fontWeight: 500,
     color: '#345EA6',
+    marginBottom:'10px'
   }
 
   const cardStyle = {
-    width: '400px',
-    marginTop: '16px',
+    width: '400px', 
+    marginBottom:'16px',
     height: '50px',
     backgroundColor: '#FFFFFF',
     borderRadius: '6px',

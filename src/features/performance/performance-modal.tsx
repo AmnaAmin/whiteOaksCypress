@@ -26,6 +26,7 @@ import { Button } from 'components/button/button'
 import { useForm, UseFormReturn } from 'react-hook-form'
 import PerformanceGraph from './performance-modal-graph'
 import { PERFORMANCE } from './performance.i18n'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 const PerformanceModal = ({
   performanceDetails,
@@ -41,6 +42,7 @@ const PerformanceModal = ({
   const { data: fpmData, isLoading, refetch, isFetching } = useFPMDetails(performanceDetails?.userId, yearFilter)
   const { mutate: savePerformanceDetails } = useMutatePerformance(performanceDetails?.userId)
   const formReturn = useForm<PerformanceType>()
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PERFORMANCE.READ')
   const { control, formState, reset } = formReturn
   // Setting Dropdown values
   const bonusValue = bonus?.find(b => b?.value === fpmData?.newBonus)
@@ -113,6 +115,8 @@ const PerformanceModal = ({
               <Button variant="outline" colorScheme="brand" onClick={onClose} mr={2}>
                 {t(`${PERFORMANCE}.cancel`)}
               </Button>
+<>
+{!isReadOnly && (
               <Button
                 colorScheme="brand"
                 type="submit"
@@ -121,6 +125,8 @@ const PerformanceModal = ({
               >
                 {t(`${PERFORMANCE}.save`)}
               </Button>
+)}
+</>
             </ModalFooter>
           </ModalContent>
         </form>

@@ -28,6 +28,7 @@ import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useParams } from 'react-router'
 import { usePCProject } from 'api/pc-projects'
 import { ConfirmationBox } from 'components/Confirmation'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
@@ -63,7 +64,11 @@ const Contact: React.FC<ContactProps> = ({
   const marketWatch = useWatch({ name: 'market', control })
   const clientWatch = useWatch({ name: 'client', control })
   const [carrierOption, setCarrierOption] = useState<SelectOption[] | null | undefined>()
-  const { fieldProjectManagerByMarketOptions, isLoading } = useFPMsByMarket(marketWatch?.value)
+  const {
+    fieldProjectManagerByMarketOptions,
+    isLoading,
+    fieldProjectMangersByMarket: fpmUsers,
+  } = useFPMsByMarket(marketWatch?.value)
 
   const agentPhoneValue = watch('agentPhone')
   const superPhoneNumberExtensionValue = watch('superPhoneNumberExtension')
@@ -92,8 +97,6 @@ const Contact: React.FC<ContactProps> = ({
 
   const { users: pcUsers } = useGetUsersByType(112)
 
-  const { users: fpmUsers } = useGetUsersByType(5)
-
   useEffect(() => {
     if (fieldProjectManagerByMarketOptions.length === 0 && !isLoading) {
       setValue('fieldProjectManager', null)
@@ -105,6 +108,8 @@ const Contact: React.FC<ContactProps> = ({
     const inputValue = event.target.value.replace(/[^0-9]/g, '') // Remove non-numeric characters
     setExtensionValue(inputValue)
   }
+
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
 
   return (
     <Stack spacing={14} minH="600px">
@@ -356,6 +361,7 @@ const Contact: React.FC<ContactProps> = ({
                     id="clientType"
                     {...field}
                     options={clientTypesSelectOptions}
+                    isDisabled={isReadOnly}
                     selectProps={{ isBorderLeft: true, menuHeight: '215px' }}
                     onChange={option => {
                       field.onChange(option)

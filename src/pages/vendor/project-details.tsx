@@ -17,7 +17,7 @@ import { BiAddToQueue, BiUpload } from 'react-icons/bi'
 // import { TriggeredAlertsTable } from 'features/alerts/view-notifications'
 import { Card } from 'features/login-form-centered/Card'
 import { STATUS } from 'features/common/status'
-import { useUserProfile } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
 import { useVendorEntity } from 'api/vendor-dashboard'
 import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
@@ -46,7 +46,7 @@ const ProjectDetails: React.FC = props => {
   const isNewTransactionAllow = vendorWOStatusValue
     ? ![STATUS.Paid, STATUS.Cancelled, STATUS.Invoiced].includes(vendorWOStatusValue?.toLocaleLowerCase() as STATUS)
     : true
-
+    const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   return (
     <>
       <Stack w="100%" spacing="15px" ref={tabsContainerRef} h="calc(100vh - 160px)">
@@ -154,7 +154,7 @@ const ProjectDetails: React.FC = props => {
                   />
                 </TabPanel>
                 <TabPanel p="0px">
-                  <VendorDocumentsTable ref={tabsContainerRef} />
+                  <VendorDocumentsTable ref={tabsContainerRef} isReadOnly={isReadOnly}/>
                 </TabPanel>
                 {/*<TabPanel p="0px">
                   <TriggeredAlertsTable

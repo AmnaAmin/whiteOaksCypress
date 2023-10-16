@@ -2,6 +2,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { StatusUserMgt } from './status-user-mgt'
 import { USER_MANAGEMENT } from './user-management.i8n'
+import { capitalize } from 'utils/string-formatters'
 
 //TODO - Move to constants file
 export const BONUS = [
@@ -87,7 +88,7 @@ export const USER_MGT_TABLE_QUERIES_KEY = {
   email: 'email.contains',
   firstName: 'firstName.contains',
   lastName: 'lastName.contains',
-  userTypeLabel: 'userTypeLabel.contains',
+  authorities: 'authorities.contains',
   langKey: 'langKey.contains',
   activatedLabel: 'activatedLabel.contains',
   createdDateStart: 'createdDate.greaterThanOrEqual',
@@ -112,7 +113,10 @@ export const USER_MGT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: `${USER_MANAGEMENT}.table.account`,
-    accessorKey: 'userTypeLabel',
+    accessorKey: 'authorities',
+    accessorFn: row => {
+      return capitalize(row?.authorities?.[0])
+    },
   },
   {
     header: `${USER_MANAGEMENT}.table.language`,

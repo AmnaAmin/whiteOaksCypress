@@ -22,6 +22,7 @@ export const userManagementTranslation = {
         modal: {
           vendorManagerUser: 'Vendor Manager User',
           newUser: 'New User',
+          editUser: 'Edit User',
           addUser: 'Add User',
           id: 'ID',
           email: 'Email',
@@ -46,7 +47,7 @@ export const userManagementTranslation = {
           employeeID: 'Employee ID',
           fieldProjectManagerRole: 'Field Manager Role',
           managerRole: 'Manager Role',
-          parentFieldProjectManagerId: 'Manager',
+          manager: 'Manager',
           save: 'Save',
           cancel: 'Cancel',
           delete: 'Delete',
@@ -85,6 +86,7 @@ export const userManagementTranslation = {
         modal: {
           vendorManagerUser: 'Usuario administrador de proveedores',
           newUser: 'Nueva usuaria',
+          editUser: 'Editar usuaria',
           addUser: 'Agregar usuario',
           id: 'IDENTIFICACIÓN',
           email: 'Correo electrónico',
@@ -109,7 +111,7 @@ export const userManagementTranslation = {
           employeeID: 'ID de empleado',
           fieldProjectManagerRole: 'Field Manager Role',
           managerRole: 'Manager Role',
-          parentFieldProjectManagerId: 'Manager',
+          manager: 'Manager',
           save: 'Ahorrar',
           cancel: 'cancelar',
           delete: 'Borrar',
