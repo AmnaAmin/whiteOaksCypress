@@ -13,7 +13,7 @@ export const UserManagement = () => {
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   return (
     <Card px="12px" py="16px">
-      <UserManagementTabs onOpenUserModal={onOpen}  isReadOnly={isReadOnly}/>
+      <UserManagementTabs onOpenUserModal={onOpen} isReadOnly={isReadOnly} />
       {isOpen && <EditUserModal isOpen={isOpen} onClose={onClose} />}
     </Card>
   )

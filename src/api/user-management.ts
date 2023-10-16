@@ -454,14 +454,14 @@ export const useUserDirectReports = (
   }
 }
 
-export const useUserDetails = ({ form, userInfo }) => {
+export const useUserDetails = ({ form, userInfo, queryString }) => {
   const { setValue, reset } = form
   const { stateSelectOptions: stateOptions } = useStates()
   const { markets } = useMarkets()
   const { regionSelectOptions } = useRegions()
   const { options: roles } = useFetchRoles()
   const { options: viewVendorsOptions } = useViewVendor()
-  const { userMgt: userData } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
+  const { userMgt: userData } = useUsrMgt(queryString, 0, 100000000)
 
   const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
   const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])
