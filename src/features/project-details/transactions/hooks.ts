@@ -207,17 +207,12 @@ export const useFieldDisabledEnabledDecision = (
     transaction?.status === TransactionStatusValues.denied
   const isFactoringFeeSysGenerated =
     transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
-  const vFpm = transaction?.verifiedByFpm as unknown as string
-  const vDM = transaction?.verifiedByManager as unknown as string
+
   return {
     isUpdateForm,
     isApproved: isStatusApproved,
     isSysFactoringFee: isFactoringFeeSysGenerated,
-    isPaidDateDisabled:
-      !transaction ||
-      (isStatusApproved &&
-        !paidEditPermission &&
-        !(vFpm === (TransactionStatusValues.approved as unknown as any) && vDM === TransactionStatusValues.approved)),
+    isPaidDateDisabled: !transaction && isStatusApproved && !paidEditPermission,
     isStatusDisabled:
       (isStatusApproved && !statusEditPermission) ||
       isMaterialsLoading ||

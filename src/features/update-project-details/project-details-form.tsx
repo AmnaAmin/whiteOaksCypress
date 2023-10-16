@@ -46,7 +46,9 @@ type tabProps = {
 
 const ProjectDetailsTab = (props: tabProps) => {
   const { style, onClose, tabVariant, projectData, isRecievable } = props
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['RECEIVABLE.READ', 'PROJECT.READ']?.includes(p))
+  const isRecievableRead = useRoleBasedPermissions()?.permissions?.includes('RECEIVABLE.READ') && isRecievable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isRecievableRead || isProjRead
   const [tabIndex, setTabIndex] = useState(0)
   const { propertySelectOptions } = useProperties()
   const { data: projectExtraAttributes } = useProjectExtraAttributes(projectData?.id as number)
@@ -187,6 +189,18 @@ const ProjectDetailsTab = (props: tabProps) => {
     setTabIndex(index)
   }
 
+  // const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
+
+  useEffect(() => {
+    if (isReadOnly) {
+      Array.from(document.querySelectorAll('input')).forEach(input => {
+        if (input.getAttribute('data-testid') !== 'tableFilterInputField') {
+          input.setAttribute('disabled', 'true')
+        }
+      })
+    }
+  }, [])
+
   return (
     <>
       <FormProvider {...formReturn}>
@@ -223,17 +237,18 @@ const ProjectDetailsTab = (props: tabProps) => {
               borderBottomLeftRadius="4px"
             >
               <TabPanels>
-                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflowY={'scroll'}>
+                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflowY={'auto'}>
                   <ProjectManagement
                     projectStatusSelectOptions={projectStatusSelectOptions}
                     projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
                     projectTypeSelectOptions={projectTypeSelectOptions}
                     projectData={projectData}
+                    isReadOnly={isReadOnly}
                   />
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  <InvoiceAndPayments projectData={projectData} />
+                  <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>

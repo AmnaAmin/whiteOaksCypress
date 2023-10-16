@@ -86,6 +86,7 @@ import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
 import UpdateProjectAward from './update-project-award'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
+import { useLocation } from 'react-router-dom'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -170,7 +171,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [disableBtn, setDisableBtn] = useState(false)
   const [fileParseMsg, setFileParseMsg] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
 
@@ -227,6 +232,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
   const isRefund = useWatch({ name: 'refund', control })
+  const verifiedByFpm = useWatch({ name: 'verifiedByFpm', control })
+  const verifiedByManager = useWatch({ name: 'verifiedByManager', control })
+  const paidDate = useWatch({ name: 'paidDate', control })
   const watchStatus = watch('status')
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -356,6 +364,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     }
   }, [selectedWorkOrder])
 
+  useEffect(() => {
+    if (
+      verifiedByFpm?.value === 'CANCELLED' ||
+      verifiedByManager?.value === 'CANCELLED' ||
+      verifiedByFpm?.value === 'DENIED' ||
+      verifiedByManager?.value === 'DENIED'
+    ) {
+      setValue('paidDate', null)
+    } else {
+      setValue('paidDate', paidDate)
+    }
+  }, [verifiedByFpm, verifiedByManager])
+
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
       setValue('invoicedDate', null)
@@ -370,7 +391,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }
 
   const drawTransaction = transaction?.transactionType === TransactionTypeValues.draw
-
   const hasPendingDrawsOnPaymentSave = values => {
     const isDrawAgainstProject =
       values?.transactionType?.value === TransactionTypeValues.draw && values?.against?.label === 'Project SOW'
@@ -1115,7 +1135,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 <Select
                                   {...field}
                                   options={
-                                    drawTransaction ? TRANSACTION_FPM_DM_STATUS_OPTIONS : transactionStatusOptions
+                                    drawTransaction && workOrderId !== '0'
+                                      ? TRANSACTION_FPM_DM_STATUS_OPTIONS
+                                      : transactionStatusOptions
                                   }
                                   isDisabled={isStatusDisabled}
                                   onChange={statusOption => {

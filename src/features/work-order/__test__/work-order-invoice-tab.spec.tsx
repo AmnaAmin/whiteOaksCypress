@@ -7,26 +7,29 @@ import { InvoiceTab } from '../invoice/invoice-tab'
 import { Modal } from '@chakra-ui/react'
 import { currencyFormatter } from 'utils/string-formatters'
 import { TransactionStatusValues as TSV } from 'types/transaction.type'
+import { BrowserRouter } from 'react-router-dom'
 
 export const renderInvoice = async ({ onClose, workOrder, documentsData, transactions, vendorAddress }: any) => {
   const setTabIndex = jest.fn()
   const component = await render(
-    <Modal isOpen={true} onClose={onClose} size="none">
-      <InvoiceTab
-        workOrder={workOrder}
-        documentsData={documentsData}
-        onClose={onClose}
-        projectData={null}
-        transactions={transactions}
-        setTabIndex={setTabIndex}
-        rejectInvoiceCheck={null}
-        onSave={null}
-        navigateToProjectDetails={null}
-        isWorkOrderUpdating={false}
-        vendorAddress={vendorAddress}
-        isVendorExpired={false}
-      />
-    </Modal>,
+    <BrowserRouter>
+      <Modal isOpen={true} onClose={onClose} size="none">
+        <InvoiceTab
+          workOrder={workOrder}
+          documentsData={documentsData}
+          onClose={onClose}
+          projectData={null}
+          transactions={transactions}
+          setTabIndex={setTabIndex}
+          rejectInvoiceCheck={null}
+          onSave={null}
+          navigateToProjectDetails={null}
+          isWorkOrderUpdating={false}
+          vendorAddress={vendorAddress}
+          isVendorExpired={false}
+        />
+      </Modal>
+    </BrowserRouter>,
     {
       wrapper: Providers,
     },

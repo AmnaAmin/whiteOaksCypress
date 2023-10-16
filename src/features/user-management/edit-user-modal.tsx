@@ -8,9 +8,10 @@ type EditUser = {
   isOpen: boolean
   onClose: () => void
   user?: UserForm
+  tabIndex?: number
 }
 
-export const EditUserModal: React.FC<EditUser> = ({ user, isOpen, onClose }) => {
+export const EditUserModal: React.FC<EditUser> = ({ user, isOpen, onClose, tabIndex }) => {
   const { t } = useTranslation()
 
   return (
@@ -23,7 +24,7 @@ export const EditUserModal: React.FC<EditUser> = ({ user, isOpen, onClose }) => 
           </ModalHeader>
           <ModalCloseButton onClick={onClose} />
           <ModalBody>
-            <UserManagementForm user={user} onClose={onClose} />
+            <UserManagementForm user={user} onClose={onClose} tabIndex={tabIndex} />
           </ModalBody>
         </ModalContent>
       </Modal>

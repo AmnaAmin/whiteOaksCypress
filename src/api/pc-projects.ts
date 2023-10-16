@@ -550,7 +550,7 @@ const getLocationBasedFiltersForTable = (location, account) => {
   switch (location) {
     case 'STATE': {
       const states = account?.fpmStates?.map(m => m.code)?.join(',')
-      locationBasedFilter = 'states.in=' + states
+      locationBasedFilter = 'state.in=' + states
       break
     }
     case 'REGION': {
@@ -578,9 +578,7 @@ export const useVendor = (user, queryString: string, pageSize: number) => {
     [VENDOR_QUERY_KEY, apiQueryString],
     `view-vendors/v1?${apiQueryString}`,
     pageSize,
-    [],
-    undefined,
-    !!user,
+    { enabled: !!user },
   )
 
   return {

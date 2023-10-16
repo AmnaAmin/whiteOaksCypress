@@ -4,6 +4,7 @@ import { WOTransactionsTable } from './wo-transactions-table'
 import { t } from 'i18next'
 import { BiAddToQueue } from 'react-icons/bi'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useLocation } from 'react-router-dom'
 
 interface Props {
   projectData: any
@@ -30,7 +31,11 @@ export const TransactionsTab = ({
 
   const workOrderStatus = (workOrder?.statusLabel || '').toLowerCase()
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   const preventNewTransaction =
     !!(workOrderStatus === 'paid' || workOrderStatus === 'cancelled' || workOrderStatus === 'invoiced') ||
     (isVendorExpired && !isAdmin)
