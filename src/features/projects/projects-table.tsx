@@ -33,6 +33,9 @@ type ProjectProps = {
   resetFilters: boolean
   selectedFlagged?: any
   isReadOnly?: boolean
+  onNewProjectModalClose: () => void
+  createdProject: string | number | null
+  setCreatedProject: (value: string | number | null) => void
 }
 
 export const ProjectsTable: React.FC<ProjectProps> = ({
@@ -42,6 +45,9 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   resetFilters,
   selectedFlagged,
   isReadOnly,
+  createdProject,
+  setCreatedProject,
+  onNewProjectModalClose,
 }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
@@ -69,6 +75,15 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     pagination.pageIndex,
     pagination.pageSize,
   )
+
+  useEffect(() => {
+    if (createdProject) {
+      if (projects?.map(p => p.id).includes(Number(createdProject))) {
+        navigate(`/project-details/${createdProject}`)
+      }
+      setCreatedProject(null)
+    }
+  }, [dataCount])
 
   const { refetch, isLoading: isExportDataLoading } = useGetAllProjects(queryStringWithoutPagination)
   const { mutate: postGridColumn } = useTableColumnSettingsUpdateMutation(TableNames.project)

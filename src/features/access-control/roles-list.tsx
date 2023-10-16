@@ -18,7 +18,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Table from 'components/table-refactored/table'
 import { ColumnDef } from '@tanstack/react-table'
 
-export const RolesList = ({ setSelectedRole, selectedRole, isDevtekUser }) => {
+export const RolesList = ({ setSelectedRole, selectedRole }) => {
   const { t } = useTranslation()
   const { data: roles, isFetching } = useFetchRoles()
   const { isOpen: isOpenDeleteModal, onClose: onCloseDeleteModal, onOpen: onOpenDeleteModal } = useDisclosure()
@@ -33,23 +33,24 @@ export const RolesList = ({ setSelectedRole, selectedRole, isDevtekUser }) => {
         accessorKey: 'name',
       },
       {
-        header: `${ACCESS_CONTROL}.roleType`,
-        accessorKey: 'systemRole',
-        accessorFn: cell => {
-          return cell.systemRole ? t(`${ACCESS_CONTROL}.systemRole`) : t(`${ACCESS_CONTROL}.customRole`)
-        },
+        header: `${ACCESS_CONTROL}.assignment`,
+        accessorKey: 'assignment',
+      },
+      {
+        header: `${ACCESS_CONTROL}.location`,
+        accessorKey: 'location',
         cell: cell => {
           const role = cell?.row?.original as any
-          const allowDelete = !role.systemRole || (role.systemRole && isDevtekUser)
+          // const allowDelete = !role.systemRole || (role.systemRole && isDevtekUser)
           return (
             <Flex justifyContent={'space-between'}>
-              <Box>{role.systemRole ? t(`${ACCESS_CONTROL}.systemRole`) : t(`${ACCESS_CONTROL}.customRole`)}</Box>
+              <Box>{role.location}</Box>
               <HStack gap="20px">
                 <Flex
                   gap="5px"
                   _hover={{ color: 'brand.600', cursor: 'pointer' }}
                   fontSize={'14px'}
-                  display={binIcon === role.name && allowDelete ? 'block' : 'none'}
+                  display={binIcon === role.name ? 'block' : 'none'}
                   data-testid={'remove-' + role.name}
                   color="gray.500"
                   fontWeight={'400'}

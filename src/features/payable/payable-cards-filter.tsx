@@ -3,8 +3,8 @@ import { useAccountPayableCard } from 'api/account-payable'
 import { currencyFormatter } from 'utils/string-formatters'
 import { AccountFilterCard } from 'features/recievable/account-filter-card'
 
-export const PayableCardsFilter = ({ cardSelected, onSelected }) => {
-  const { data, isLoading } = useAccountPayableCard()
+export const PayableCardsFilter = ({ cardSelected, onSelected, userIds }) => {
+  const { data, isLoading } = useAccountPayableCard({ userIds })
   const payableCards = data?.payableCards
 
   enum PayableCardTypes {

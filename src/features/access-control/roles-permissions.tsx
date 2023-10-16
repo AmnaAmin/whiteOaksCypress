@@ -39,6 +39,7 @@ import {
   setDefaultPermission,
   useCreateNewRoleMutation,
   useFetchAllPermissions,
+  useGetSections,
   useUpdateRoleMutation,
 } from 'api/access-control'
 import { useAccountData } from 'api/user-account'
@@ -63,10 +64,11 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
   const { control, register, reset } = formReturn
   const { data } = useAccountData()
   const isDevtekUser = data?.devAccount
+  const sections = useGetSections({ isDevtekUser })
   const { t } = useTranslation()
   useEffect(() => {
-    reset(permissionsDefaultValues({ permissions }))
-  }, [reset, permissions])
+    reset(permissionsDefaultValues({ permissions, sections }))
+  }, [reset, permissions, sections?.length])
 
   const onSubmit = values => {
     let payload = mapFormValuestoPayload(values, allPermissions)
@@ -103,6 +105,12 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                   id="roleName"
                   disabled={!!permissions}
                   size="md"
+                  onKeyDown={e => {
+                    if (e.code === 'Space') {
+                      e.stopPropagation()
+                      e.preventDefault()
+                    }
+                  }}
                   variant="required-field"
                   {...register('roleName', {
                     required: 'This is required field.',
@@ -161,7 +169,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                 />
               </FormControl>
             </Box>
-            {isDevtekUser && (
+            {/*isDevtekUser && (
               <Box w="215px">
                 <FormControl isInvalid={!!errors.systemRole}>
                   <FormLabel variant="strong-label" size="md">
@@ -187,7 +195,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                   />
                 </FormControl>
               </Box>
-            )}
+            )*/}
           </HStack>
           <VStack w="100%" justifyContent={'start'}>
             {isDevtekUser && (
@@ -244,6 +252,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
   })
 
   const watchPermissions = useWatch({ control, name: 'permissions' })
+  const watchAssignment = useWatch({ control, name: 'assignment' })
   const isHideAll = watchPermissions
     ? (Object?.values(watchPermissions)?.every((item: any) => item?.hide) as boolean)
     : false
@@ -255,15 +264,23 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
     : false
 
   useEffect(() => {
-    const watchProjectPermissions = watchPermissions?.find(p => p.name === 'PROJECT')
+    const watchProjectPermissions = watchPermissions?.find(p => p?.name === 'PROJECT')
+    const watchVendorsPermissions = watchPermissions?.find(p => p?.name === 'VENDOR')
     if (!permissionsData?.[0]?.systemRole) {
-      if (watchProjectPermissions?.edit) {
-        setDefaultPermission({ setValue, value: true })
-      } else {
-        setDefaultPermission({ setValue, value: null })
-      }
+      setDefaultPermission({
+        setValue,
+        value: watchProjectPermissions?.edit,
+        section: watchProjectPermissions?.name,
+        assignment: watchAssignment?.value,
+      })
+      setDefaultPermission({
+        setValue,
+        value: watchVendorsPermissions?.edit,
+        section: watchVendorsPermissions?.name,
+        assignment: watchAssignment?.value,
+      })
     }
-  }, [watchPermissions])
+  }, [watchPermissions, watchAssignment])
 
   return (
     <TableContainer w="100%" borderRadius={'6px'} border="1px solid #CBD5E0">
@@ -335,6 +352,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
             return (
               <>
                 <Tr
+                  key={index}
                   minH="45px"
                   onClick={() => {
                     if (index === selectedRow) {

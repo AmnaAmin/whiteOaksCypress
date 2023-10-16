@@ -9,24 +9,28 @@ import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 import { setToken } from 'utils/storage.utils'
+import { BrowserRouter } from 'react-router-dom'
 
 export const renderWorkOrderEditTab = async ({ onSave, onClose, workOrder, projectData, lineItems }: any) => {
   const workOrderDetails = { ...workOrder, assignedItems: lineItems }
   await render(
-    <Modal isOpen={true} onClose={onClose} size="none">
-      <WorkOrderEditTab
-        workOrder={workOrderDetails}
-        onSave={onSave}
-        navigateToProjectDetails={null}
-        isWorkOrderUpdating={false}
-        swoProject={SWO_PROJECT}
-        rejectInvoiceCheck={false}
-        projectData={projectData}
-        documentsData={DOCUMENTS}
-        isLoadingLineItems={false}
-        isFetchingLineItems={false}
-      />
-    </Modal>,
+    <BrowserRouter>
+      <Modal isOpen={true} onClose={onClose} size="none">
+        <WorkOrderEditTab
+          workOrder={workOrderDetails}
+          onSave={onSave}
+          navigateToProjectDetails={null}
+          isWorkOrderUpdating={false}
+          swoProject={SWO_PROJECT}
+          rejectInvoiceCheck={false}
+          projectData={projectData}
+          documentsData={DOCUMENTS}
+          isLoadingLineItems={false}
+          isFetchingLineItems={false}
+        />
+      </Modal>
+    </BrowserRouter>,
+
     {
       wrapper: Providers,
     },
