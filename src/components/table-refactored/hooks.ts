@@ -1,6 +1,7 @@
 import { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table'
 import { useState, useMemo, useEffect } from 'react'
 import { getAPIFilterQueryString } from 'utils/filters-query-utils'
+import moment from 'moment'
 
 type UseColumnFiltersQueryStringProps = {
   queryStringAPIFilterKeys: { [key: string]: string }
@@ -64,7 +65,10 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     // This filter will apply when user select a day from the project due days list
     if (!!selectedDay && days?.length) {
       const selectedDayData = days.find(day => day.dayName === selectedDay)
-      clientDueDateFilter = { id: 'clientDueDate', value: selectedDayData?.dueDate }
+      clientDueDateFilter = {
+        id: 'clientDueDate',
+        value: selectedDayData?.dueDate ? moment(selectedDayData?.dueDate).format('YYYY-MM-DD') : '',
+      }
       finalFilters = [...finalFilters, clientDueDateFilter]
     }
     // This filter will apply when user select a FPM from the FPM list
