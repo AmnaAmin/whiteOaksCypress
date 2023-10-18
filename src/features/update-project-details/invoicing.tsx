@@ -1,4 +1,4 @@
-import { Box, Button } from '@chakra-ui/react'
+import { Box, Button, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
 import React, { useEffect, useState } from 'react'
 import { TableNames } from 'types/table-column.types'
@@ -20,6 +20,7 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Project } from 'types/project.type'
 import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
+import InvoiceModal from './add-invoice-modal'
 type InvoicingProps = {
   isReadOnly?: boolean
   projectData?: Project
@@ -29,6 +30,11 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
   const { t } = useTranslation()
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
+  const {
+    isOpen: isOpenTransactionModal,
+    onClose: onTransactionModalClose,
+    onOpen: onTransactionModalOpen,
+  } = useDisclosure()
 
   const { mutate: postDocumentColumn } = useTableColumnSettingsUpdateMutation(TableNames.invoicing)
   const {
@@ -64,7 +70,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
   return (
     <>
       <Box display={'flex'} w="100%" justifyContent={'end'}>
-        <Button colorScheme="brand" leftIcon={<BiBookAdd />} mb="15px">
+        <Button colorScheme="brand" onClick={onTransactionModalOpen} leftIcon={<BiBookAdd />} mb="15px">
           {t('project.projectDetails.newInvoice')}
         </Button>
       </Box>
@@ -120,6 +126,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
           </TableContextProvider>
         </Box>
       )}
+      <InvoiceModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
     </>
   )
 })
