@@ -320,6 +320,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           onToggleRefundCheckbox(isChecked)
                           onChange(isChecked)
                         }}
+                        style={{ color: '#3A5EA6', fontSize: '12px' }}
                       >
                         {t(`${TRANSACTION}.refund`)}
                       </Checkbox>
