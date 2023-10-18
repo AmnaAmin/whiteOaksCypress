@@ -112,6 +112,11 @@ function Filter({
     setStickyFilter(null)
     setSelectedDateRange({ startDate: '', endDate: '' })
     setIsDateRangePickerOpen(false)
+    setSelectionRange({
+      startDate: new Date(),
+      endDate: new Date(),
+      key: 'selection',
+    })
   }
 
   return (
@@ -190,6 +195,7 @@ function Filter({
                     if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
                     setIsDateRangePickerOpen(false)
                   }}
+                  inputRanges={[]}
                 />
                 <div
                   onClick={handleClear}
