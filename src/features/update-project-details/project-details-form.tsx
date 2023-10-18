@@ -5,7 +5,7 @@ import Location from './location'
 import Contact from './contact'
 import ProjectManagement from './project-management'
 import Misc from './misc'
-import InvoiceAndPayments from './invoice-and-payments'
+import InvoiceAndPayments from './payments'
 import { BiErrorCircle, BiSpreadsheet } from 'react-icons/bi'
 import { AddressInfo, Project } from 'types/project.type'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
@@ -35,6 +35,7 @@ import { TransactionStatusValues, TransactionTypeValues } from 'types/transactio
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
+import { Invoicing } from './invoicing'
 
 type tabProps = {
   projectData: Project
@@ -217,12 +218,15 @@ const ProjectDetailsTab = (props: tabProps) => {
                 {t(`project.projectDetails.projectManagement`)}
               </TabCustom>
               <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
-                {t(`project.projectDetails.invoicingPayment`)}
+                {t(`project.projectDetails.invoicing`)}
               </TabCustom>
-              <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 2}>
+              <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 2}>
+                {t(`project.projectDetails.payments`)}
+              </TabCustom>
+              <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 3}>
                 {t(`project.projectDetails.contacts`)}
               </TabCustom>
-              <TabCustom isError={isLocationFormErrors && tabIndex !== 3}>
+              <TabCustom isError={isLocationFormErrors && tabIndex !== 4}>
                 {t(`project.projectDetails.location`)}
               </TabCustom>
               <TabCustom>{t(`project.projectDetails.misc`)}</TabCustom>
@@ -246,7 +250,9 @@ const ProjectDetailsTab = (props: tabProps) => {
                     isReadOnly={isReadOnly}
                   />
                 </TabPanel>
-
+                <TabPanel p="0" h={style?.height ?? 'auto'}>
+                  <Invoicing isReadOnly={isReadOnly} projectData={projectData} />
+                </TabPanel>
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
                   <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
                 </TabPanel>
@@ -280,7 +286,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                 </Box>
                 <Box h="70px" w="100%" pb="3">
                   <>
-                    {!isReadOnly && (
+                    {!isReadOnly && tabIndex !== 1 && (
                       <Button
                         mt="8px"
                         mr="32px"

@@ -28,6 +28,8 @@ export const project = {
           // Invoicing & Payment
 
           invoicingPayment: 'Invoicing & Payment',
+          invoicing: 'Invoicing',
+          payments: 'Payments',
           originalSowAmount: 'Original SOW Amount',
           finalSowAmount: ' Final SOW Amount',
           invoiceNo: 'Invoice No.',
@@ -45,6 +47,7 @@ export const project = {
           paymentError: `Unable to save payment due to 'Pending' Draw/Payment/Depreciation/Carrier Fee transaction against Project SOW.`,
           resubmissionDate: 'Resubmission Date',
           notificationDate: 'Notification Date',
+          newInvoice: 'New Invoice',
 
           // Contacts
           contacts: 'Contacts',
@@ -124,6 +127,8 @@ export const project = {
 
           // Invoicing & Payment
           invoicingPayment: 'Facturación y pago',
+          invoicing: 'Facturación',
+          payments: 'Pagos',
           originalSowAmount: 'Importe de la SOW original',
           finalSowAmount: 'Importe de la SOW final',
           invoiceNo: 'Número de factura',
@@ -141,6 +146,7 @@ export const project = {
           paymentError: `No se pudo guardar el pago debido a una transacción de Retiro/Pago/Depreciación 'Pendiente' contra el Proyecto SOW.`,
           resubmissionDate: 'Fecha de reenvío',
           notificationDate: 'Fecha de notificación',
+          newInvoice: 'Nueva factura',
 
           // Contacts
           contacts: 'Contactos',
