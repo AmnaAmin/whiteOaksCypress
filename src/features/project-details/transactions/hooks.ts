@@ -239,6 +239,21 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
   }
 }
 
+export const useTotalPendingDrawAmount = items => {
+  let totalAmount
+  //filtering pending transactions & Draw only (type=30)
+  const transactionItems = items.filter(
+    co => co.status === TransactionStatusValues.pending && co.transactionType === 30,
+  )
+
+  if (transactionItems.length > 1) {
+    totalAmount = transactionItems.map(a => a.transactionTotal).reduce((prev, curr) => prev + curr, 0)
+  } else {
+    totalAmount = transactionItems[0]?.transactionTotal
+  }
+  return totalAmount
+}
+
 export const useIsAwardSelect = ({
   control,
   selectedWorkOrderStats,
