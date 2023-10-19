@@ -37,6 +37,7 @@ import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-commo
 import { WORK_ORDER } from '../workOrder.i18n'
 import { AlertError } from 'components/AlertError'
 import { useLocation } from 'react-router-dom'
+import { useTotalPendingDrawAmount } from 'features/project-details/transactions/hooks'
 
 export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({
   title,
@@ -96,6 +97,9 @@ export const InvoiceTab = ({
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
+  const totalPendingDrawAmount = useTotalPendingDrawAmount(items)
+  console.log(transactions)
+
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
@@ -137,7 +141,9 @@ export const InvoiceTab = ({
     if (transactions && transactions.length > 0) {
       // only show approved or paid transactions.
       const transactionItems = transactions.filter(
-        co => co.status === TSV.approved && co.parentWorkOrderId === workOrder.id,
+        co =>
+          (co.status === TSV.approved && co.parentWorkOrderId === workOrder.id) ||
+          (co.status === TSV.pending && co.transactionType === 30 && co.parentWorkOrderId === workOrder.id),
       )
       setItems(transactionItems)
     }
@@ -260,8 +266,8 @@ export const InvoiceTab = ({
       <ModalBody mx={{ base: 0, lg: '25px' }} h="600px">
         {isVendorExpired && (
           <Box>
-            <AlertError 
-              styleBox={{ width: 'max-content', marginTop: '9px'}}
+            <AlertError
+              styleBox={{ width: 'max-content', marginTop: '9px' }}
               msg={
                 isVendor
                   ? `${WORK_ORDER}.expirationInvoiceMessageForVendor`
@@ -384,6 +390,14 @@ export const InvoiceTab = ({
                         </Text>
                         <Text fontWeight={500} color={'gray.600'} data-testid={'totalAmountPaid'}>
                           {currencyFormatter(workOrder.totalAmountPaid)}
+                        </Text>
+                      </HStack>
+                      <HStack w={300} height="35px" justifyContent="space-between">
+                        <Text fontWeight={500} color={'gray.600'}>
+                          {t('pendingDraw')}
+                        </Text>
+                        <Text fontWeight={500} color={'gray.600'} data-testid={'pendingDraw'}>
+                          {currencyFormatter(totalPendingDrawAmount)}
                         </Text>
                       </HStack>
                       <HStack w={300} height="35px" justifyContent="space-between">
