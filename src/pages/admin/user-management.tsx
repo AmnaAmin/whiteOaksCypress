@@ -32,7 +32,6 @@ export const useUsrMgt = (filterQueryString?: string, page?: number, size: numbe
       parentId: res?.parentFieldProjectManagerId,
     })) || []
     options.sort((a, b) => a.label.localeCompare(b.label));
-
   return {
     userMgt: data?.data,
     totalPages: data?.totalCount,
