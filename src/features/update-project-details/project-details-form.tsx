@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, Icon, Stack, useDisclosure, useToast } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, HStack, Icon, Stack, useDisclosure, useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react'
 import Location from './location'
@@ -23,9 +23,15 @@ import {
   useProjectOverrideStatusSelectOptions,
 } from 'api/project-details'
 import { DevTool } from '@hookform/devtools'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSubFormErrors } from './hooks'
-import { useGetAddressVerification, useProjectExtraAttributes, useProperties } from 'api/pc-projects'
+import {
+  useDeleteProjectMutation,
+  useGetAddressVerification,
+  useProjectAllowDelete,
+  useProjectExtraAttributes,
+  useProperties,
+} from 'api/pc-projects'
 // import { PROJECT_DETAILS } from './projectDetails.i18n'
 import { useMarkets, useStates } from 'api/pc-projects'
 
@@ -35,6 +41,7 @@ import { TransactionStatusValues, TransactionTypeValues } from 'types/transactio
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
+import { ConfirmationBox } from 'components/Confirmation'
 
 type tabProps = {
   projectData: Project
@@ -52,6 +59,9 @@ const ProjectDetailsTab = (props: tabProps) => {
   const [tabIndex, setTabIndex] = useState(0)
   const { propertySelectOptions } = useProperties()
   const { data: projectExtraAttributes } = useProjectExtraAttributes(projectData?.id as number)
+  const { data: deleteCheck } = useProjectAllowDelete(projectData?.id as number)
+  const { mutate: deleteProjectCall, isLoading: deleteLoading } = useDeleteProjectMutation()
+
   const { projectTypeSelectOptions } = useGetProjectTypeSelectOptions()
   const { userSelectOptions: fpmSelectOptions } = useGetUsersByType(5)
   const { userSelectOptions: projectCoordinatorSelectOptions } = useGetUsersByType(112)
@@ -141,6 +151,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     zipCode: '',
   })
   const [isVerifiedAddress, setVerifiedAddress] = useState(true)
+  const navigate = useNavigate()
 
   // Get all values of Address Info
   const watchAddress = useWatch({ name: 'address', control })
@@ -170,6 +181,12 @@ const ProjectDetailsTab = (props: tabProps) => {
     onClose: onAddressVerificationModalClose,
   } = useDisclosure()
 
+  const {
+    isOpen: isDeleteProjecModalOpen,
+    onOpen: onDeleteProjecModalOpen,
+    onClose: onDeleteProjecModalClose,
+  } = useDisclosure()
+
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
@@ -187,6 +204,10 @@ const ProjectDetailsTab = (props: tabProps) => {
 
   const handleTabsChange = index => {
     setTabIndex(index)
+  }
+
+  const deleteProject = () => {
+    onDeleteProjecModalOpen()
   }
 
   // const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
@@ -279,7 +300,18 @@ const ProjectDetailsTab = (props: tabProps) => {
                   <Divider border="1px solid" />
                 </Box>
                 <Box h="70px" w="100%" pb="3">
-                  <>
+                  <HStack placeContent={'flex-end'}>
+                    {deleteCheck && (
+                      <Button
+                        fontSize="16px"
+                        variant="outline"
+                        colorScheme="brand"
+                        isDisabled={deleteLoading}
+                        onClick={deleteProject}
+                      >
+                        Delete
+                      </Button>
+                    )}
                     {!isReadOnly && (
                       <Button
                         mt="8px"
@@ -295,7 +327,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                         {t(`project.projectDetails.save`)}
                       </Button>
                     )}
-                  </>
+                  </HStack>
                   {onClose && (
                     <>
                       <Button
@@ -335,6 +367,30 @@ const ProjectDetailsTab = (props: tabProps) => {
         isAddressVerified={isAddressVerified}
         isLoading={addressVerificationLoading}
         setSave={setVerifiedAddress}
+      />
+
+      <ConfirmationBox
+        title="Delete Project"
+        content="Are you sure you want to Delete this project?"
+        isOpen={isDeleteProjecModalOpen}
+        onClose={onDeleteProjecModalClose}
+        onConfirm={() => {
+          deleteProjectCall(projectData?.id as number, {
+            onSuccess() {
+              navigate('/projects')
+              onDeleteProjecModalClose()
+              toast({
+                title: 'Project Deleted',
+                description: `Project is deleted successfully.`,
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+                position: 'top-left',
+              })
+            },
+          })
+          // clearSettingType(tableName)
+        }}
       />
     </>
   )
