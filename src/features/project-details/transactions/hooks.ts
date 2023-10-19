@@ -240,7 +240,7 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
 }
 
 export const useTotalPendingDrawAmount = items => {
-  var totalAmount
+  let totalAmount
   //filtering pending transactions & Draw only (type=30)
   const transactionItems = items.filter(
     co => co.status === TransactionStatusValues.pending && co.transactionType === 30,

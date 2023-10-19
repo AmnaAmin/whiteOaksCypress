@@ -98,8 +98,6 @@ export const InvoiceTab = ({
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
   const totalPendingDrawAmount = useTotalPendingDrawAmount(items)
-  console.log(transactions)
-
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
