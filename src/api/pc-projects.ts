@@ -44,6 +44,21 @@ export const useProjectExtraAttributes = (projectId?: number) => {
   )
 }
 
+export const PROJECT_ALLOW_DELETE = 'projectAllowedDelete'
+export const useProjectAllowDelete = (projectId?: number) => {
+  const client = useClient()
+
+  return useQuery(
+    [PROJECT_ALLOW_DELETE, projectId],
+    async () => {
+      const response = await client(`projects/allowedDelete/${projectId}`, {})
+
+      return response?.data
+    },
+    { enabled: !!projectId },
+  )
+}
+
 export const useCall = () => {
   const client = useClient()
 
@@ -98,6 +113,15 @@ export const useDirectReports = (email: string) => {
     directReportOptions: [{ label: 'ALL', value: 'ALL' }, ...directReportOptions],
     ...rest,
   }
+}
+
+export const useDeleteProjectMutation = () => {
+  const client = useClient()
+  return useMutation((projectId?: number) => {
+    return client(`projects/${projectId}`, {
+      method: 'DELETE',
+    })
+  })
 }
 
 export const useCreateProjectMutation = () => {

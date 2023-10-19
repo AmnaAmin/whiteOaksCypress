@@ -147,7 +147,8 @@ export const ProjectDetails: React.FC = props => {
               pr={{ base: 0, sm: '15px' }}
             >
               <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
-                {!isReadOnly &&tabIndex === 2 &&
+                {!isReadOnly &&
+                  tabIndex === 2 &&
                   ![
                     STATUS.Closed,
                     STATUS.Invoiced,
@@ -158,12 +159,11 @@ export const ProjectDetails: React.FC = props => {
                     STATUS.Overpayment,
                     STATUS.Reconcile,
                   ].includes(projectStatus as STATUS) && (
-                    
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen} mb="15px">
                       {t('newWorkOrder')}
                     </Button>
                   )}
-                {!isReadOnly &&tabIndex === 4 && (
+                {!isReadOnly && tabIndex === 4 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />} mb="15px">
                     {t('projects.projectDetails.upload')}
                   </Button>
@@ -194,18 +194,18 @@ export const ProjectDetails: React.FC = props => {
                       </FormControl>
                     </Box>
                     <>
-              {!isReadOnly && (
-                    <Button
-                      variant="solid"
-                      colorScheme="brand"
-                      onClick={onTransactionModalOpen}
-                      isDisabled={preventNewTransaction}
-                      leftIcon={<BiAddToQueue />}
-                    >
-                      {t('projects.projectDetails.newTransaction')}
-                    </Button>
+                      {!isReadOnly && (
+                        <Button
+                          variant="solid"
+                          colorScheme="brand"
+                          onClick={onTransactionModalOpen}
+                          isDisabled={preventNewTransaction}
+                          leftIcon={<BiAddToQueue />}
+                        >
+                          {t('projects.projectDetails.newTransaction')}
+                        </Button>
                       )}
-                      </>
+                    </>
                   </HStack>
                 )}
               </Box>
@@ -256,7 +256,12 @@ export const ProjectDetails: React.FC = props => {
                 </TabPanel>
                 {
                   <TabPanel p="0px" minH="calc(100vh - 450px)">
-                    <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch={refetchAudits} isReadOnly={isReadOnly} />
+                    <AuditLogsTable
+                      auditLogs={auditLogs}
+                      isLoading={isLoadingAudits}
+                      refetch={refetchAudits}
+                      isReadOnly={isReadOnly}
+                    />
                   </TabPanel>
                 }
               </TabPanels>

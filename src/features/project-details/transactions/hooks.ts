@@ -13,6 +13,7 @@ import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { currencyFormatter } from 'utils/string-formatters'
 
 /*function getRefundTransactionType(type): TransactionsWithRefundType {
   if (type === TransactionTypeValues.material)
@@ -251,7 +252,7 @@ export const useTotalPendingDrawAmount = items => {
   } else {
     totalAmount = transactionItems[0]?.transactionTotal
   }
-  return totalAmount
+  return totalAmount ? currencyFormatter(totalAmount) : '$0.00'
 }
 
 export const useIsAwardSelect = ({
