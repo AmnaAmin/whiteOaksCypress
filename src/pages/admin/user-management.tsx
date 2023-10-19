@@ -31,6 +31,7 @@ export const useUsrMgt = (filterQueryString?: string, page?: number, size: numbe
       label: res?.firstName + ' ' + res?.lastName,
       parentId: res?.parentFieldProjectManagerId,
     })) || []
+    options.sort((a, b) => a.label.localeCompare(b.label));
 
   return {
     userMgt: data?.data,
