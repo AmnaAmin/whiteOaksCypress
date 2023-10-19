@@ -1,3 +1,4 @@
+import { type } from 'os'
 import { SelectOption } from './transaction.type'
 
 export interface InvoicingType {
@@ -7,6 +8,16 @@ export interface InvoicingType {
   modifiedBy: string | null
   invoiceNumber: string | null
   invoiceDate: string | null
-  paymentTerms: SelectOption | null
+  paymentTerms: SelectOption | undefined
   woaExpectedPayDate: string | null
+  invoiceItems: InvoiceItemType[]
+}
+
+type InvoiceItemType = {
+  id: string | null | number
+  transactionId: string | null
+  type: string | null
+  description: string | null
+  amount: number | string | null
+  checked: boolean
 }

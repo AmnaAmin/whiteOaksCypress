@@ -50,3 +50,12 @@ export const INVOICING_TABLE_COLUMNS: ColumnDef<any>[] = [
     id: 'modifiedBy',
   },
 ]
+
+export const INVOICE_ITEMS_DEFAULT = {
+  id: null,
+  transactionId: null,
+  type: '',
+  description: '',
+  amount: '',
+  checked: false,
+}

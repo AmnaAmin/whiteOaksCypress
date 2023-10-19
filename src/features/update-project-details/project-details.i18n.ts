@@ -48,6 +48,10 @@ export const project = {
           resubmissionDate: 'Resubmission Date',
           notificationDate: 'Notification Date',
           newInvoice: 'New Invoice',
+          addNewRow: 'Add New Row',
+          deleteRow: 'Delete Row',
+          description: 'Description',
+          amount: 'Amount',
 
           // Contacts
           contacts: 'Contacts',
@@ -147,6 +151,10 @@ export const project = {
           resubmissionDate: 'Fecha de reenvío',
           notificationDate: 'Fecha de notificación',
           newInvoice: 'Nueva factura',
+          addNewRow: 'Agregar nueva fila',
+          deleteRow: 'Eliminar fila',
+          description: 'Descripción',
+          amount: 'Cantidad',
 
           // Contacts
           contacts: 'Contactos',

@@ -1,6 +1,6 @@
 import { Box, Button, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
-import React, { useEffect, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { INVOICING_TABLE_COLUMNS } from 'constants/invoicing.constants'
@@ -21,10 +21,16 @@ import { Project } from 'types/project.type'
 import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import InvoiceModal from './add-invoice-modal'
+
 type InvoicingProps = {
   isReadOnly?: boolean
-  projectData?: Project
+  projectData: Project | undefined
 }
+export const InvoicingContext = createContext<{ projectData?: Project; invoiceCount?: number }>({
+  projectData: undefined,
+  invoiceCount: 0,
+})
+
 export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
   const { isReadOnly, projectData } = props
   const { t } = useTranslation()
@@ -126,7 +132,9 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
           </TableContextProvider>
         </Box>
       )}
-      <InvoiceModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
+      <InvoicingContext.Provider value={{ projectData, invoiceCount: projectData?.resubmissionDTOList?.length }}>
+        <InvoiceModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
+      </InvoicingContext.Provider>
     </>
   )
 })
