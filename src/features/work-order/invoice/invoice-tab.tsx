@@ -395,7 +395,7 @@ export const InvoiceTab = ({
                           {t('pendingDraw')}
                         </Text>
                         <Text fontWeight={500} color={'gray.600'} data-testid={'pendingDraw'}>
-                          {currencyFormatter(totalPendingDrawAmount)}
+                          {totalPendingDrawAmount}
                         </Text>
                       </HStack>
                       <HStack w={300} height="35px" justifyContent="space-between">
