@@ -7,8 +7,11 @@ import { useState, useEffect, useContext } from 'react'
 import { InvoiceForm } from './invoice-form'
 import { Project } from 'types/project.type'
 import { InvoicingContext } from './invoicing'
+import { InvoicingType } from 'types/invoice.types'
 
-type Props = Pick<ModalProps, 'isOpen' | 'onClose'>
+type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
+  selectedInvoice?: InvoicingType
+}
 
 export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number) => {
   return (
@@ -21,7 +24,7 @@ export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number)
   )
 }
 
-const InvoiceModal: React.FC<Props> = ({ isOpen, onClose }) => {
+const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice }) => {
   const { t } = useTranslation()
   const { projectData, invoiceCount } = useContext(InvoicingContext)
   const [isMobile] = useMediaQuery('(max-width: 480px)')
@@ -56,7 +59,7 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose }) => {
         <ModalCloseButton _hover={{ bg: 'blue.50' }} _focus={{ outline: 'none' }} />
         <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
-            <InvoiceForm onClose={onClose} />
+            <InvoiceForm onClose={onClose} invoice={selectedInvoice} />
           </Card>
         </ModalBody>
       </ModalContent>

@@ -26,6 +26,8 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { InvoiceItems } from './invoice-items'
 import { InvoicingContext } from './invoicing'
 import { getInvoiceInitials } from './add-invoice-modal'
+import { TRANSACTION_FPM_DM_STATUS_OPTIONS } from 'features/project-details/transactions/transaction.constants'
+import Select from 'components/form/react-select'
 
 const InvoicingReadOnlyInfo: React.FC<any> = () => {
   const { t } = useTranslation()
@@ -95,19 +97,22 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount }) => {
     dateModified: invoice?.dateModified,
     createdBy: invoice?.createdBy,
     modifiedBy: invoice?.modifiedBy,
-    invoiceNumber: invoice?.invoiceNumber ?? invoiceInitials,
-    invoiceDate: invoice?.invoiceDate ?? datePickerFormat(invoicedDate),
+    invoiceNumber: datePickerFormat(invoice?.invoiceNumber) ?? invoiceInitials,
+    invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
     paymentTerms: PAYMENT_TERMS_OPTIONS?.find(p => p.value === projectData?.paymentTerm),
-    woaExpectedPayDate: invoice?.woaExpectedPayDate ?? datePickerFormat(woaExpectedDate),
+    woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPayDate ?? woaExpectedDate),
     invoiceItems: invoice?.invoiceItems,
+    status: invoice?.status ?? TRANSACTION_FPM_DM_STATUS_OPTIONS[0],
   }
 }
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) => {
   const { t } = useTranslation()
   const { projectData, invoiceCount } = useContext(InvoicingContext)
+
   const defaultValues: InvoicingType = useMemo(() => {
     return invoiceDefaultValues({ invoice, invoiceCount, projectData })
   }, [invoice, projectData, invoiceCount])
+
   const [totalAmount, setTotalAmount] = React.useState(0)
   const formReturn = useForm<InvoicingType>({
     defaultValues: {
@@ -121,7 +126,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
     register,
     setValue,
   } = formReturn
-
   const onPaymentTermChange = (option: SelectOption) => {
     const { invoiceDate } = getValues()
     const date = new Date(invoiceDate as string)
@@ -133,8 +137,22 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
     const woaExpectedDate = addDays(utcDate, paymentTerm)
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
+
+  const onInvoiceDateChange = e => {
+    const { paymentTerms } = getValues()
+    const date = new Date(e.target.value)
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+
+    // Do not calculated WOA expect date if payment term is not selected
+    if (!paymentTerms?.value) return
+    const woaExpectedDate = addDays(utcDate, paymentTerms?.value)
+    setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
+  }
+  const onSubmit = values => {
+    console.log(values)
+  }
   return (
-    <form onSubmit={formReturn.handleSubmit(() => {})} onKeyDown={e => {}}>
+    <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => {}}>
       <InvoicingReadOnlyInfo invoice={invoice} />
       <Flex direction="column">
         <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pt="20px" pb="4">
@@ -176,6 +194,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
                         id="invoiceDate"
                         size="md"
                         {...register('invoiceDate')}
+                        onChange={onInvoiceDateChange}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </div>
@@ -211,9 +230,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
             </FormControl>
           </GridItem>
         </Grid>
-        <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pt="20px" pb="4">
+        <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pb="4">
           <GridItem>
-            <FormControl isInvalid={!!errors.invoiceDate} data-testid="woaExpectedPayDate">
+            <FormControl isInvalid={!!errors.woaExpectedPayDate} data-testid="woaExpectedPayDate">
               <FormLabel variant="strong-label" size="md" htmlFor="woaExpectedPayDate">
                 {t(`project.projectDetails.woaExpectedPay`)}
               </FormLabel>
@@ -238,6 +257,35 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
               />
             </FormControl>
           </GridItem>
+          {
+            <>
+              <GridItem>
+                <FormControl isInvalid={!!errors.status}>
+                  <FormLabel htmlFor="status" fontSize="14px" color="gray.700" fontWeight={500}>
+                    {t(`project.projectDetails.status`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="status"
+                    render={({ field, fieldState }) => (
+                      <>
+                        <div data-testid="status-select-field">
+                          <Select
+                            {...field}
+                            options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
+                            onChange={statusOption => {
+                              field.onChange(statusOption)
+                            }}
+                          />
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </div>
+                      </>
+                    )}
+                  />
+                </FormControl>
+              </GridItem>
+            </>
+          }
         </Grid>
         <InvoiceItems
           setTotalAmount={setTotalAmount}
@@ -251,7 +299,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
         <Button onClick={onClose} variant={'outline'} colorScheme="darkPrimary" data-testid="close-transaction-form">
           {t(`project.projectDetails.cancel`)}
         </Button>
-
         <Button
           type="submit"
           form="invoice-form"

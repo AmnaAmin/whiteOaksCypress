@@ -21,6 +21,7 @@ import { Project } from 'types/project.type'
 import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import InvoiceModal from './add-invoice-modal'
+import { useFetchInvoices } from 'api/invoicing'
 
 type InvoicingProps = {
   isReadOnly?: boolean
@@ -36,11 +37,11 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
   const { t } = useTranslation()
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
-  const {
-    isOpen: isOpenTransactionModal,
-    onClose: onTransactionModalClose,
-    onOpen: onTransactionModalOpen,
-  } = useDisclosure()
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
+  const { invoices, isLoading: isLoadingInvoices } = useFetchInvoices({
+    projectId: `${projectData?.id}`,
+  })
+  const { isOpen: isOpenInvoiceModal, onClose: onInvoiceModalClose, onOpen: onInvoiceModalOpen } = useDisclosure()
 
   const { mutate: postDocumentColumn } = useTableColumnSettingsUpdateMutation(TableNames.invoicing)
   const {
@@ -64,7 +65,10 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
     }
   }
 
-  const onRowClick = row => {}
+  const onRowClick = row => {
+    setSelectedInvoice(row?.row?.original)
+    onInvoiceModalOpen()
+  }
 
   const { isVendor } = useUserRolesSelector()
 
@@ -76,11 +80,11 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
   return (
     <>
       <Box display={'flex'} w="100%" justifyContent={'end'}>
-        <Button colorScheme="brand" onClick={onTransactionModalOpen} leftIcon={<BiBookAdd />} mb="15px">
+        <Button colorScheme="brand" onClick={onInvoiceModalOpen} leftIcon={<BiBookAdd />} mb="15px">
           {t('project.projectDetails.newInvoice')}
         </Button>
       </Box>
-      {projectData?.resubmissionDTOList && (
+      {invoices && (
         <Box
           overflowX={'auto'}
           w="100%"
@@ -93,22 +97,18 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
           <TableContextProvider
             totalPages={totalPages}
             manualPagination={false}
-            data={projectData?.resubmissionDTOList}
+            data={invoices}
             columns={tableColumns}
             isExpandable={true}
           >
             <Table
               onRowClick={onRowClick}
-              isLoading={isLoading}
-              isEmpty={!isLoading && !projectData?.resubmissionDTOList?.length}
+              isLoading={isLoadingInvoices}
+              isEmpty={!isLoadingInvoices && !invoices?.length}
             />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <ButtonsWrapper>
-                <ExportCustomButton
-                  columns={tableColumns}
-                  data={projectData?.resubmissionDTOList}
-                  fileName="documents"
-                />
+                <ExportCustomButton columns={tableColumns} data={invoices} fileName="invoices" />
                 <CustomDivider />
                 {settingColumns && (
                   <TableColumnSettings
@@ -133,7 +133,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
         </Box>
       )}
       <InvoicingContext.Provider value={{ projectData, invoiceCount: projectData?.resubmissionDTOList?.length }}>
-        <InvoiceModal isOpen={isOpenTransactionModal} onClose={onTransactionModalClose} />
+        <InvoiceModal isOpen={isOpenInvoiceModal} onClose={onInvoiceModalClose} selectedInvoice={selectedInvoice} />
       </InvoicingContext.Provider>
     </>
   )

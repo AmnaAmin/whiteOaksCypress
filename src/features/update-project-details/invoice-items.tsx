@@ -12,6 +12,8 @@ import {
   Grid,
   VStack,
   Tooltip,
+  Text,
+  FormLabel,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
@@ -25,6 +27,8 @@ import { INVOICE_ITEMS_DEFAULT } from 'constants/invoicing.constants'
 import { useTransactionsV1 } from 'api/transactions'
 import { InvoicingContext } from './invoicing'
 import { currencyFormatter } from 'utils/string-formatters'
+import { TRANSACTION_FPM_DM_STATUS_OPTIONS } from 'features/project-details/transactions/transaction.constants'
+import { Select } from 'chakra-react-select'
 
 type InvoiceItemsFormProps = {
   formReturn: UseFormReturn<InvoicingType>
@@ -42,9 +46,22 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
     register,
     formState: { errors },
     setValue,
+    watch,
+    getValues,
   } = formReturn
 
-  const invoiceItemsWatch = useWatch({ name: 'invoiceItems', control })
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'invoiceItems',
+  })
+  const watchInvoiceArray = watch('invoiceItems')
+  const controlledInvoiceArray = fields.map((field, index) => {
+    return {
+      ...field,
+      ...watchInvoiceArray[index],
+    }
+  })
+
   const { projectData } = useContext(InvoicingContext)
   const { transactions } = useTransactionsV1(`${projectData?.id}`)
 
@@ -56,7 +73,7 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
           ?.filter(t => t.status === 'APPROVED' && !t.parentWorkOrderId)
           ?.map(t => ({
             id: t.id,
-            transactionId: t.name,
+            transactionId: t.id,
             checked: false,
             type: t.name,
             description: t.transactionTypeLabel,
@@ -68,11 +85,11 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
 
   useEffect(() => {
     let total_Amount = 0
-    invoiceItemsWatch?.forEach(item => {
+    controlledInvoiceArray?.forEach(item => {
       total_Amount += parseFloat(item?.amount && item?.amount !== '' ? item?.amount?.toString() : '0')
     })
     setTotalAmount?.(total_Amount)
-  }, [invoiceItemsWatch])
+  }, [controlledInvoiceArray])
 
   const {
     isOpen: isDeleteConfirmationModalOpen,
@@ -80,36 +97,38 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
     onOpen: onDeleteConfirmationModalOpen,
   } = useDisclosure()
 
-  const { fields: invoiceItems, append } = useFieldArray({
-    control,
-    name: 'invoiceItems',
-  })
-
   const toggleAllCheckboxes = useCallback(
     event => {
       setValue(
         'invoiceItems',
-        invoiceItemsWatch.map(items => ({
+        controlledInvoiceArray.map(items => ({
           ...items,
           checked: event.currentTarget.checked,
         })),
       )
     },
-    [invoiceItemsWatch, setValue],
+    [controlledInvoiceArray, setValue],
   )
-  const deleteRows = useCallback(() => {
-    const remainingItems = invoiceItemsWatch?.filter(i => !i.checked)
-    setValue('invoiceItems', remainingItems?.length > 0 ? [...remainingItems] : [INVOICE_ITEMS_DEFAULT])
+  const deleteRows = useCallback(async () => {
+    let indices = [] as any
+    await controlledInvoiceArray?.forEach((item, index) => {
+      if (item.checked) {
+        indices.push(index)
+      }
+    })
+    console.log(indices)
+    remove(indices)
     onDeleteConfirmationModalClose()
-  }, [invoiceItemsWatch, onDeleteConfirmationModalClose, setValue])
+  }, [controlledInvoiceArray, onDeleteConfirmationModalClose, setValue])
 
+  console.log(getValues())
   const addRow = useCallback(() => {
     append({ type: '', description: '', amount: '', checked: false })
   }, [append])
 
   const checkedItems = useMemo(() => {
-    return invoiceItemsWatch?.map(item => item.checked)
-  }, [invoiceItemsWatch])
+    return controlledInvoiceArray?.map(item => item.checked)
+  }, [controlledInvoiceArray])
 
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
@@ -198,7 +217,9 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
           </Grid>
 
           <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
-            {invoiceItemsWatch?.map((invoiceItem, index) => {
+            {controlledInvoiceArray?.map((invoiceItem, index) => {
+              const isPaidOrOriginalSOW =
+                invoiceItem?.description === 'Original SOW' || invoiceItem?.description === 'Payment'
               return (
                 <Grid
                   className="amount-input-row"
@@ -237,7 +258,7 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                   )}
                   <GridItem>
                     <FormControl isInvalid={!!errors.invoiceItems?.[index]?.type}>
-                      <Tooltip label={invoiceItems?.[index]?.description} placement="top" bg="#ffffff" color="black">
+                      <Tooltip label={controlledInvoiceArray?.[index]?.type} placement="top" bg="#ffffff" color="black">
                         <Input
                           data-testid={`invoiceItems-type-${index}`}
                           type="text"
@@ -245,6 +266,8 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                           autoComplete="off"
                           placeholder="Add Type here"
                           noOfLines={1}
+                          variant={'required-field'}
+                          disabled={isPaidOrOriginalSOW}
                           {...register(`invoiceItems.${index}.type` as const, {
                             required: 'This is required field',
                           })}
@@ -255,7 +278,12 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                   </GridItem>
                   <GridItem>
                     <FormControl isInvalid={!!errors.invoiceItems?.[index]?.description}>
-                      <Tooltip label={invoiceItems?.[index]?.description} placement="top" bg="#ffffff" color="black">
+                      <Tooltip
+                        label={controlledInvoiceArray?.[index]?.description}
+                        placement="top"
+                        bg="#ffffff"
+                        color="black"
+                      >
                         <Input
                           data-testid={`invoiceItems-description-${index}`}
                           type="text"
@@ -263,6 +291,8 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                           autoComplete="off"
                           placeholder="Add Description here"
                           noOfLines={1}
+                          variant={'required-field'}
+                          disabled={isPaidOrOriginalSOW}
                           {...register(`invoiceItems.${index}.description` as const, {
                             required: 'This is required field',
                           })}
@@ -283,10 +313,12 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                           return (
                             <>
                               <NumberFormat
+                                {...field}
                                 data-testid={`invoiceItems-amount-${index}`}
                                 customInput={Input}
-                                value={field.value}
+                                value={controlledInvoiceArray?.[index]?.amount}
                                 placeholder="Add Amount"
+                                disabled={isPaidOrOriginalSOW}
                                 onValueChange={e => {
                                   const inputValue = e?.floatValue ?? ''
                                   field.onChange(inputValue)
@@ -319,10 +351,9 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
           </Box>
           <Box>
             <Grid
-              gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
+              gridTemplateColumns={'30px 1fr 1fr'}
               fontSize="14px"
               color="gray.600"
-              columnGap="4rem"
               borderWidth="1px 0 0 0"
               borderStyle="solid"
               borderColor="gray.300"
@@ -338,17 +369,22 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                 py="4"
                 height="auto"
               ></GridItem>
-              <GridItem py={'3'} fontWeight="bold" data-testid="total-amount">
-                {t('total')}: {currencyFormatter(totalAmount ?? 0)}
+              <GridItem py={'3'} data-testid="total-amount">
+                <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
+                  <Text fontWeight={700}>
+                    {t('total')}
+                    {':'}
+                  </Text>
+                  <Text ml={'10px'}>{currencyFormatter(totalAmount ?? 0)}</Text>
+                </Flex>
               </GridItem>
             </Grid>
           </Box>
           <Box>
             <Grid
-              gridTemplateColumns={isShowCheckboxes ? '30px 2fr 1fr' : '2fr 1fr'}
+              gridTemplateColumns={'30px 1fr 1fr'}
               fontSize="14px"
               color="gray.600"
-              columnGap="4rem"
               borderWidth="1px 0 0 0"
               borderStyle="solid"
               borderColor="gray.300"
@@ -364,8 +400,23 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                 py="4"
                 height="auto"
               ></GridItem>
-              <GridItem py={'3'} fontWeight="bold" data-testid="total-amount">
-                {t('total')}: {}
+              <GridItem py={'3'} data-testid="total-amount">
+                <Flex direction={'column'}>
+                  <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
+                    <Text fontWeight={700}>
+                      {t('project.projectDetails.subtotal')}
+                      {':'}
+                    </Text>
+                    <Text ml={'10px'}>{currencyFormatter(projectData?.sowNewAmount ?? 0)}</Text>
+                  </Flex>
+                  <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
+                    <Text fontWeight={700}>
+                      {t('balanceDue')}
+                      {':'}
+                    </Text>
+                    <Text ml={'10px'}>{currencyFormatter(projectData?.accountRecievable ?? 0)}</Text>
+                  </Flex>
+                </Flex>
               </GridItem>
             </Grid>
           </Box>

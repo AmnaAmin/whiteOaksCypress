@@ -15,7 +15,7 @@ type invoiceAndPaymentProps = {
   projectData: Project
   isReadOnly?: boolean
 }
-const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData, isReadOnly }) => {
+const Payments: React.FC<invoiceAndPaymentProps> = ({ projectData, isReadOnly }) => {
   const formControl = useFormContext<ProjectDetailsFormValues>()
   const {
     control,
@@ -260,4 +260,4 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData, isR
     </HStack>
   )
 }
-export default InvoiceAndPayments
+export default Payments

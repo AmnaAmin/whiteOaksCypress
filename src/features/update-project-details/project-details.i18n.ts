@@ -52,6 +52,8 @@ export const project = {
           deleteRow: 'Delete Row',
           description: 'Description',
           amount: 'Amount',
+          subtotal: 'Subtotal',
+          balancedue: 'Balance Due',
 
           // Contacts
           contacts: 'Contacts',
@@ -155,6 +157,8 @@ export const project = {
           deleteRow: 'Eliminar fila',
           description: 'Descripción',
           amount: 'Cantidad',
+          subtotal: 'Subtotal',
+          balancedue: 'Saldo pendiente',
 
           // Contacts
           contacts: 'Contactos',

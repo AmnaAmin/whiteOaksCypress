@@ -5,7 +5,7 @@ import Location from './location'
 import Contact from './contact'
 import ProjectManagement from './project-management'
 import Misc from './misc'
-import InvoiceAndPayments from './payments'
+import Payments from './payments'
 import { BiErrorCircle, BiSpreadsheet } from 'react-icons/bi'
 import { AddressInfo, Project } from 'types/project.type'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
@@ -36,6 +36,8 @@ import { AddressVerificationModal } from 'features/projects/new-project/address-
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
 import { Invoicing } from './invoicing'
+import { PROJECT_STATUS } from 'features/common/status'
+import InvoiceAndPayments from './invoicing-payments'
 
 type tabProps = {
   projectData: Project
@@ -201,7 +203,11 @@ const ProjectDetailsTab = (props: tabProps) => {
       })
     }
   }, [])
-
+  const isInvoicedOrPaid = [
+    PROJECT_STATUS.clientPaid.value,
+    PROJECT_STATUS.paid.value,
+    PROJECT_STATUS.invoiced.value,
+  ].includes(projectData?.projectStatusId?.toString() as string)
   return (
     <>
       <FormProvider {...formReturn}>
@@ -217,11 +223,13 @@ const ProjectDetailsTab = (props: tabProps) => {
               <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
                 {t(`project.projectDetails.projectManagement`)}
               </TabCustom>
-              <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
-                {t(`project.projectDetails.invoicing`)}
-              </TabCustom>
-              <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 2}>
-                {t(`project.projectDetails.payments`)}
+              {!isInvoicedOrPaid && (
+                <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
+                  {t(`project.projectDetails.invoicing`)}
+                </TabCustom>
+              )}
+              <TabCustom isError={isInvoicedOrPaid ? isInvoiceAndPaymentFormErrors && tabIndex !== 1 : false}>
+                {isInvoicedOrPaid ? t(`project.projectDetails.invoicingPayment`) : t(`project.projectDetails.payments`)}
               </TabCustom>
               <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 3}>
                 {t(`project.projectDetails.contacts`)}
@@ -250,11 +258,17 @@ const ProjectDetailsTab = (props: tabProps) => {
                     isReadOnly={isReadOnly}
                   />
                 </TabPanel>
-                <TabPanel p="0" h={style?.height ?? 'auto'}>
-                  <Invoicing isReadOnly={isReadOnly} projectData={projectData} />
-                </TabPanel>
+                {!isInvoicedOrPaid && (
+                  <TabPanel p="0" h={style?.height ?? 'auto'}>
+                    <Invoicing isReadOnly={isReadOnly} projectData={projectData} />
+                  </TabPanel>
+                )}
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
+                  {isInvoicedOrPaid ? (
+                    <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
+                  ) : (
+                    <Payments isReadOnly={isReadOnly} projectData={projectData} />
+                  )}
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>

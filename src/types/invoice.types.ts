@@ -11,11 +11,12 @@ export interface InvoicingType {
   paymentTerms: SelectOption | undefined
   woaExpectedPayDate: string | null
   invoiceItems: InvoiceItemType[]
+  status: SelectOption | undefined
 }
 
 type InvoiceItemType = {
   id: string | null | number
-  transactionId: string | null
+  transactionId: string | null | number
   type: string | null
   description: string | null
   amount: number | string | null
