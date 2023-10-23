@@ -122,6 +122,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                   {t('W9DocumentDate')}
                 </FormLabel>
                 <Input
+                  variant = "required-field"
                   isDisabled={true}
                   w="215px"
                   type="date"
@@ -184,6 +185,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                   {t('agreementSignedDate')}
                 </FormLabel>
                 <Input
+                
                   type="date"
                   w="215px"
                   min={minDate.toISOString().split('T')[0]}
