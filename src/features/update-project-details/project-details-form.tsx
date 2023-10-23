@@ -210,6 +210,33 @@ const ProjectDetailsTab = (props: tabProps) => {
     onDeleteProjecModalOpen()
   }
 
+  const confirmDelete = () => {
+    deleteProjectCall(projectData?.id as number, {
+      onSuccess() {
+        navigate('/projects')
+        onDeleteProjecModalClose()
+        toast({
+          title: 'Project Deleted',
+          description: `Project is deleted successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Project Delete',
+          description: (error.title as string) ?? 'Unable to Delete Project.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    })
+  }
+
   // const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
 
   useEffect(() => {
@@ -374,23 +401,8 @@ const ProjectDetailsTab = (props: tabProps) => {
         content="Are you sure you want to Delete this project?"
         isOpen={isDeleteProjecModalOpen}
         onClose={onDeleteProjecModalClose}
-        onConfirm={() => {
-          deleteProjectCall(projectData?.id as number, {
-            onSuccess() {
-              navigate('/projects')
-              onDeleteProjecModalClose()
-              toast({
-                title: 'Project Deleted',
-                description: `Project is deleted successfully.`,
-                status: 'success',
-                duration: 9000,
-                isClosable: true,
-                position: 'top-left',
-              })
-            },
-          })
-          // clearSettingType(tableName)
-        }}
+        isLoading={deleteLoading}
+        onConfirm={confirmDelete}
       />
     </>
   )
