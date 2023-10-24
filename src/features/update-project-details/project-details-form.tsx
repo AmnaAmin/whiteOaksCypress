@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Flex, HStack, Icon, Stack, useDisclosure, useToast } from '@chakra-ui/react'
+import { Box, Button, Divider, Flex, Icon, Stack, useDisclosure, useToast } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { Tabs, TabList, TabPanels, Tab, TabPanel, Text } from '@chakra-ui/react'
 import Location from './location'
@@ -327,34 +327,35 @@ const ProjectDetailsTab = (props: tabProps) => {
                   <Divider border="1px solid" />
                 </Box>
                 <Box h="70px" w="100%" pb="3">
-                  <HStack placeContent={'flex-end'}>
-                    {deleteCheck && (
-                      <Button
-                        fontSize="16px"
-                        variant="outline"
-                        colorScheme="brand"
-                        isDisabled={deleteLoading}
-                        onClick={deleteProject}
-                      >
-                        Delete
-                      </Button>
-                    )}
-                    {!isReadOnly && (
-                      <Button
-                        mt="8px"
-                        mr="32px"
-                        float={'right'}
-                        variant="solid"
-                        colorScheme="brand"
-                        type="submit"
-                        form="project-details"
-                        fontSize="16px"
-                        disabled={isSubmitting || isLoading}
-                      >
-                        {t(`project.projectDetails.save`)}
-                      </Button>
-                    )}
-                  </HStack>
+                  {!isReadOnly && (
+                    <Button
+                      mt="8px"
+                      mr="32px"
+                      float={'right'}
+                      variant="solid"
+                      colorScheme="brand"
+                      type="submit"
+                      form="project-details"
+                      fontSize="16px"
+                      disabled={isSubmitting || isLoading}
+                    >
+                      {t(`project.projectDetails.save`)}
+                    </Button>
+                  )}
+                  {deleteCheck && !isRecievable && (
+                    <Button
+                      fontSize="16px"
+                      mt="8px"
+                      mr="5"
+                      float={'right'}
+                      variant="outline"
+                      colorScheme="brand"
+                      isDisabled={deleteLoading}
+                      onClick={deleteProject}
+                    >
+                      Delete
+                    </Button>
+                  )}
                   {onClose && (
                     <>
                       <Button
