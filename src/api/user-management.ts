@@ -169,7 +169,8 @@ export const userMangtPayload = (user: any, statesDTO?: any, usersData?: any) =>
     return user.states?.filter(state => state.checked === true)?.map(s => s?.state)
   }
 
-  const directReportIds = user?.directReports?.map(d => d.value)
+  const directReportIds = user?.directReports?.filter(d => !d.orphanChild).map(d => d.value)
+  console.log(directReportIds)
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
@@ -359,6 +360,7 @@ const parseUserFormData = ({
         return {
           label: u.firstName + ' ' + u.lastName,
           value: u.id,
+          orphanChild: u.orphanChild,
         }
       }) || [],
     parentFieldProjectManagerId: managerUser
