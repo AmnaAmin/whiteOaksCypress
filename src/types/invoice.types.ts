@@ -1,17 +1,18 @@
-import { type } from 'os'
 import { SelectOption } from './transaction.type'
 
 export interface InvoicingType {
-  dateCreated: string | null
-  createdBy: string | null
-  dateModified: string | null
-  modifiedBy: string | null
+  id?: string | number | null
+  createdDate?: string | null
+  createdBy?: string | null
+  modifiedDate?: string | null
+  modifiedBy?: string | null
   invoiceNumber: string | null
   invoiceDate: string | null
-  paymentTerms: SelectOption | undefined
+  paymentTerm: SelectOption | undefined
   woaExpectedPayDate: string | null
   invoiceItems: InvoiceItemType[]
   status: SelectOption | undefined
+  paymentReceivedDate: string | null
 }
 
 type InvoiceItemType = {
@@ -22,3 +23,15 @@ type InvoiceItemType = {
   amount: number | string | null
   checked: boolean
 }
+
+export enum InvoiceStatusValues {
+  pending = 'PENDING',
+  cancelled = 'CANCELLED',
+  approved = 'APPROVED',
+  denied = 'DENIED',
+}
+export const INVOICE_STATUS_OPTIONS = [
+  { value: InvoiceStatusValues.approved, label: 'Approved' },
+  { value: InvoiceStatusValues.cancelled, label: 'Cancelled' },
+  { value: InvoiceStatusValues.denied, label: 'Denied' },
+] as SelectOption[]

@@ -54,6 +54,8 @@ export const project = {
           amount: 'Amount',
           subtotal: 'Subtotal',
           balancedue: 'Balance Due',
+          paymentReceived: 'Payment Received',
+          balanceDueError: 'Balance Due must not be negative.',
 
           // Contacts
           contacts: 'Contacts',
@@ -159,6 +161,8 @@ export const project = {
           amount: 'Cantidad',
           subtotal: 'Subtotal',
           balancedue: 'Saldo pendiente',
+          paymentReceived: 'Pago recibido',
+          balanceDueError: 'El saldo adeudado no debe ser negativo.',
 
           // Contacts
           contacts: 'Contactos',

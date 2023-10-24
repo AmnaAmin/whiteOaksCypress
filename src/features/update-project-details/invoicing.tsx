@@ -38,6 +38,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
+
   const { invoices, isLoading: isLoadingInvoices } = useFetchInvoices({
     projectId: `${projectData?.id}`,
   })
@@ -66,7 +67,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
   }
 
   const onRowClick = row => {
-    setSelectedInvoice(row?.row?.original)
+    setSelectedInvoice(row)
     onInvoiceModalOpen()
   }
 
@@ -132,8 +133,15 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
           </TableContextProvider>
         </Box>
       )}
-      <InvoicingContext.Provider value={{ projectData, invoiceCount: projectData?.resubmissionDTOList?.length }}>
-        <InvoiceModal isOpen={isOpenInvoiceModal} onClose={onInvoiceModalClose} selectedInvoice={selectedInvoice} />
+      <InvoicingContext.Provider value={{ projectData, invoiceCount: invoices?.length }}>
+        <InvoiceModal
+          isOpen={isOpenInvoiceModal}
+          onClose={() => {
+            setSelectedInvoice(null)
+            onInvoiceModalClose()
+          }}
+          selectedInvoice={selectedInvoice}
+        />
       </InvoicingContext.Provider>
     </>
   )

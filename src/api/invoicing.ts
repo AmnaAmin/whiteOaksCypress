@@ -1,4 +1,7 @@
-import { useQuery } from 'react-query'
+import { useToast } from '@chakra-ui/react'
+import { useTranslation } from 'react-i18next'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useParams } from 'react-router-dom'
 import { InvoicingType } from 'types/invoice.types'
 import { useClient } from 'utils/auth-context'
 
@@ -19,4 +22,68 @@ export const useFetchInvoices = ({ projectId }: { projectId: string | number | u
     invoices: invoices?.length ? invoices : [],
     ...rest,
   }
+}
+
+export const useCreateInvoiceMutation = ({ projId }) => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  const { projectId } = useParams<'projectId'>() || projId
+
+  return useMutation(
+    payload => {
+      return client('project-invoices', {
+        data: payload,
+        method: 'POST',
+      })
+    },
+    {
+      onSuccess(res) {
+        queryClient.invalidateQueries(['invoices', projectId])
+      },
+      onError(error: any) {
+        let description = error.title ?? 'Unable to save Invoice.'
+
+        toast({
+          title: 'Invoice',
+          description,
+          position: 'top-left',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
+}
+
+export const useUpdateInvoiceMutation = ({ projId }) => {
+  const client = useClient()
+  const toast = useToast()
+  const queryClient = useQueryClient()
+  const { projectId } = useParams<'projectId'>() || projId
+
+  return useMutation(
+    payload => {
+      return client('project-invoices', {
+        data: payload,
+        method: 'PUT',
+      })
+    },
+    {
+      onSuccess(res) {
+        queryClient.invalidateQueries(['invoices', projectId])
+      },
+      onError(error: any) {
+        let description = error.title ?? 'Unable to save Invoice.'
+
+        toast({
+          title: 'Invoice',
+          description,
+          position: 'top-left',
+          status: 'error',
+          isClosable: true,
+        })
+      },
+    },
+  )
 }

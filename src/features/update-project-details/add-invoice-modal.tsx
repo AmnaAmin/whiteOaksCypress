@@ -20,7 +20,7 @@ export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number)
     projectData?.market?.slice(0, 3) +
     '-' +
     projectData?.streetAddress?.split(' ').join('')?.slice(0, 7) +
-    (revisedIndex && revisedIndex > 0 ? `-${revisedIndex}` : '')
+    (revisedIndex && revisedIndex > 0 ? `(${revisedIndex})` : '')
   )
 }
 
@@ -52,7 +52,7 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice }) => 
             </Box>
             <Divider orientation="vertical" border="1px" h={6} marginLeft={5} />
             <Box color="gray.500" fontWeight={'400'} ml={5}>
-              {invoiceNumber}
+              {!selectedInvoice ? invoiceNumber : selectedInvoice?.invoiceNumber}
             </Box>
           </Flex>
         </ModalHeader>

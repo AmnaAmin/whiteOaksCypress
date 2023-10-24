@@ -11,13 +11,14 @@ import {
   HStack,
   Input,
 } from '@chakra-ui/react'
-import { useFormContext, useForm, Controller } from 'react-hook-form'
+import { useToast } from '@chakra-ui/toast'
+import { useForm, Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ReadOnlyInput } from 'components/input-view/input-view'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { TRANSACTION } from '../project-details/transactions/transactions.i18n'
-import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
-import { InvoicingType } from 'types/invoice.types'
+import { dateFormat, dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
+import { INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
 import { useAccountData } from 'api/user-account'
 import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
@@ -26,15 +27,12 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { InvoiceItems } from './invoice-items'
 import { InvoicingContext } from './invoicing'
 import { getInvoiceInitials } from './add-invoice-modal'
-import { TRANSACTION_FPM_DM_STATUS_OPTIONS } from 'features/project-details/transactions/transaction.constants'
-import Select from 'components/form/react-select'
+import { useCreateInvoiceMutation, useUpdateInvoiceMutation } from 'api/invoicing'
 
-const InvoicingReadOnlyInfo: React.FC<any> = () => {
+const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
-  const { data } = useAccountData()
-  const { getValues } = useFormContext<InvoicingType>()
-  const formValues = getValues()
-
+  const createdBy = invoice?.createdBy ?? account?.email
+  const modifiedBy = invoice?.modifiedBy
   return (
     <Grid
       templateColumns="repeat(auto-fill, minmax(100px,1fr))"
@@ -47,7 +45,7 @@ const InvoicingReadOnlyInfo: React.FC<any> = () => {
         <ReadOnlyInput
           label={t(`${TRANSACTION}.dateCreated`)}
           name={'dateCreated'}
-          value={formValues?.dateCreated ? (dateFormat(formValues?.dateCreated) as string) : '---'}
+          value={dateFormat(invoice?.createdDate ?? new Date()) as string}
           Icon={BiCalendar}
         />
       </GridItem>
@@ -56,7 +54,7 @@ const InvoicingReadOnlyInfo: React.FC<any> = () => {
         <ReadOnlyInput
           label={t(`${TRANSACTION}.dateModified`)}
           name={'dateModified'}
-          value={formValues?.dateModified ? (dateFormat(formValues?.dateModified) as string) : '---'}
+          value={invoice?.modifiedDate ? (dateFormat(invoice?.modifiedDate) as string) : '---'}
           Icon={BiCalendar}
         />
       </GridItem>
@@ -64,7 +62,7 @@ const InvoicingReadOnlyInfo: React.FC<any> = () => {
         <ReadOnlyInput
           label={t(`${TRANSACTION}.createdBy`)}
           name="createdBy"
-          value={formValues?.createdBy ?? (data?.email as string)}
+          value={(createdBy as string) || '---'}
           Icon={BiDetail}
         />
       </GridItem>
@@ -73,7 +71,7 @@ const InvoicingReadOnlyInfo: React.FC<any> = () => {
         <ReadOnlyInput
           label={t(`${TRANSACTION}.modifiedBy`)}
           name={'modifiedBy'}
-          value={(formValues?.modifiedBy as string) || '----'}
+          value={(modifiedBy as string) || '----'}
           Icon={BiDetail}
         />
       </GridItem>
@@ -93,21 +91,21 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount }) => {
   const woaExpectedDate = addDays(utcDate, paymentTerm)
 
   return {
-    dateCreated: invoice?.dateCreated ?? new Date(),
-    dateModified: invoice?.dateModified,
-    createdBy: invoice?.createdBy,
-    modifiedBy: invoice?.modifiedBy,
-    invoiceNumber: datePickerFormat(invoice?.invoiceNumber) ?? invoiceInitials,
+    invoiceNumber: invoice?.invoiceNumber ?? invoiceInitials,
     invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
-    paymentTerms: PAYMENT_TERMS_OPTIONS?.find(p => p.value === projectData?.paymentTerm),
+    paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? projectData?.paymentTerm)),
     woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPayDate ?? woaExpectedDate),
-    invoiceItems: invoice?.invoiceItems,
-    status: invoice?.status ?? TRANSACTION_FPM_DM_STATUS_OPTIONS[0],
+    invoiceItems: invoice?.invoiceLineItems,
+    status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
+    paymentReceivedDate: datePickerFormat(invoice?.paymentReceivedDate),
   }
 }
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) => {
   const { t } = useTranslation()
   const { projectData, invoiceCount } = useContext(InvoicingContext)
+  const { mutate: createInvoiceMutate } = useCreateInvoiceMutation({ projId: projectData?.id })
+  const { mutate: updateInvoiceMutate } = useUpdateInvoiceMutation({ projId: projectData?.id })
+  const { data } = useAccountData()
 
   const defaultValues: InvoicingType = useMemo(() => {
     return invoiceDefaultValues({ invoice, invoiceCount, projectData })
@@ -125,7 +123,11 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
     getValues,
     register,
     setValue,
+    watch,
   } = formReturn
+  const watchStatus = watch('status')
+  const toast = useToast()
+  const balanceDue = projectData?.sowNewAmount! - totalAmount
   const onPaymentTermChange = (option: SelectOption) => {
     const { invoiceDate } = getValues()
     const date = new Date(invoiceDate as string)
@@ -139,21 +141,75 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
   }
 
   const onInvoiceDateChange = e => {
-    const { paymentTerms } = getValues()
+    const { paymentTerm } = getValues()
     const date = new Date(e.target.value)
     const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
 
     // Do not calculated WOA expect date if payment term is not selected
-    if (!paymentTerms?.value) return
-    const woaExpectedDate = addDays(utcDate, paymentTerms?.value)
+    if (!paymentTerm?.value) return
+    const woaExpectedDate = addDays(utcDate, paymentTerm?.value)
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
   const onSubmit = values => {
-    console.log(values)
+    if (balanceDue < 0) {
+      toast({
+        title: 'Error',
+        description: t(`project.projectDetails.balanceDueError`),
+        status: 'error',
+        isClosable: true,
+        position: 'top-left',
+      })
+      return
+    }
+
+    if (!invoice) {
+      const payload = {
+        ...values,
+        paymentTerm: values.paymentTerm?.value,
+        projectId: projectData?.id,
+        status: null,
+        createdBy: data?.email,
+        createdDate: dateISOFormatWithZeroTime(new Date()),
+        modifiedDate: dateISOFormatWithZeroTime(new Date()),
+        modifiedBy: data?.email,
+        totalAmountPaid: totalAmount,
+        invoiceLineItems: values.invoiceItems,
+      }
+      createInvoiceMutate(payload, {
+        onSuccess: () => {
+          onClose?.()
+        },
+        onError: error => {
+          console.log(error)
+        },
+      })
+    } else {
+      const payload = {
+        ...values,
+        id: invoice?.id,
+        paymentTerm: values.paymentTerm?.value,
+        projectId: projectData?.id,
+        status: values.status?.value,
+        createdBy: invoice?.createdBy,
+        createdDate: invoice?.createdDate,
+        modifiedDate: dateISOFormatWithZeroTime(new Date()),
+        modifiedBy: data?.email,
+        totalAmountPaid: totalAmount,
+        invoiceLineItems: values.invoiceItems,
+      }
+      updateInvoiceMutate(payload, {
+        onSuccess: () => {
+          onClose?.()
+        },
+        onError: error => {
+          console.log(error)
+        },
+      })
+    }
   }
   return (
     <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => {}}>
-      <InvoicingReadOnlyInfo invoice={invoice} />
+      <InvoicingReadOnlyInfo invoice={invoice} account={data} />
       <Flex direction="column">
         <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pt="20px" pb="4">
           <GridItem>
@@ -204,13 +260,13 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl data-testid="payment-term" w="215px" isInvalid={!!errors.paymentTerms}>
+            <FormControl data-testid="payment-term" w="215px" isInvalid={!!errors.paymentTerm}>
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.paymentTerms`)}
               </FormLabel>
               <Controller
                 control={control}
-                name="paymentTerms"
+                name="paymentTerm"
                 rules={{ required: 'This is required field.' }}
                 render={({ field, fieldState }) => (
                   <>
@@ -257,35 +313,63 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
               />
             </FormControl>
           </GridItem>
-          {
+          {invoice && (
             <>
               <GridItem>
-                <FormControl isInvalid={!!errors.status}>
-                  <FormLabel htmlFor="status" fontSize="14px" color="gray.700" fontWeight={500}>
+                <FormControl data-testid="status" w="215px" isInvalid={!!errors.status}>
+                  <FormLabel variant="strong-label" size="md">
                     {t(`project.projectDetails.status`)}
                   </FormLabel>
                   <Controller
                     control={control}
                     name="status"
+                    rules={{ required: 'This is required field.' }}
                     render={({ field, fieldState }) => (
                       <>
-                        <div data-testid="status-select-field">
-                          <Select
-                            {...field}
-                            options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                            onChange={statusOption => {
-                              field.onChange(statusOption)
-                            }}
-                          />
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </div>
+                        <ReactSelect
+                          {...field}
+                          options={INVOICE_STATUS_OPTIONS}
+                          selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
+                          onChange={statusOption => {
+                            field.onChange(statusOption)
+                          }}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </>
                     )}
                   />
                 </FormControl>
               </GridItem>
+              <GridItem>
+                <FormControl isInvalid={!!errors.paymentReceivedDate} data-testid="woaExpectedPayDate">
+                  <FormLabel variant="strong-label" size="md" htmlFor="woaExpectedPayDate">
+                    {t(`project.projectDetails.paymentReceived`)}
+                  </FormLabel>
+                  <Controller
+                    rules={{ required: watchStatus?.value === 'APPROVED' ? 'This is required' : false }}
+                    control={control}
+                    name="paymentReceivedDate"
+                    render={({ field, fieldState }) => {
+                      return (
+                        <div data-testid="paymentReceivedDate">
+                          <Input
+                            disabled={watchStatus?.value !== 'APPROVED'}
+                            data-testid="paymentReceivedDate"
+                            type="date"
+                            id="paymentReceivedDate"
+                            variant={watchStatus?.value !== 'APPROVED' ? 'outline' : 'required-field'}
+                            size="md"
+                            {...register('paymentReceivedDate')}
+                          />
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </div>
+                      )
+                    }}
+                  />
+                </FormControl>
+              </GridItem>
             </>
-          }
+          )}
         </Grid>
         <InvoiceItems
           setTotalAmount={setTotalAmount}
@@ -300,7 +384,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
           {t(`project.projectDetails.cancel`)}
         </Button>
         <Button
-          type="submit"
+          onClick={() => {
+            formReturn.handleSubmit(onSubmit)()
+          }}
           form="invoice-form"
           data-testid="save-transaction"
           colorScheme="darkPrimary"

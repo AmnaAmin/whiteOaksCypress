@@ -13,28 +13,24 @@ import {
   VStack,
   Tooltip,
   Text,
-  FormLabel,
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
-import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
+import { Controller, useFieldArray, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
 import { ConfirmationBox } from 'components/Confirmation'
 import { useTranslation } from 'react-i18next'
 import { BiAddToQueue } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { InvoicingType } from 'types/invoice.types'
-import { INVOICE_ITEMS_DEFAULT } from 'constants/invoicing.constants'
 import { useTransactionsV1 } from 'api/transactions'
 import { InvoicingContext } from './invoicing'
 import { currencyFormatter } from 'utils/string-formatters'
-import { TRANSACTION_FPM_DM_STATUS_OPTIONS } from 'features/project-details/transactions/transaction.constants'
-import { Select } from 'chakra-react-select'
 
 type InvoiceItemsFormProps = {
   formReturn: UseFormReturn<InvoicingType>
   invoice?: InvoicingType
-  setTotalAmount?: (value) => void
-  totalAmount?: number
+  setTotalAmount: (value) => void
+  totalAmount: number
 }
 
 export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, formReturn, invoice, totalAmount }) => {
@@ -47,7 +43,6 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
     formState: { errors },
     setValue,
     watch,
-    getValues,
   } = formReturn
 
   const { fields, append, remove } = useFieldArray({
@@ -66,20 +61,22 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
   const { transactions } = useTransactionsV1(`${projectData?.id}`)
 
   useEffect(() => {
-    if (transactions?.length) {
-      setValue(
-        'invoiceItems',
-        transactions
-          ?.filter(t => t.status === 'APPROVED' && !t.parentWorkOrderId)
-          ?.map(t => ({
-            id: t.id,
-            transactionId: t.id,
-            checked: false,
-            type: t.name,
-            description: t.transactionTypeLabel,
-            amount: t.transactionTotal,
-          })) ?? [],
-      )
+    if (!invoice) {
+      if (transactions?.length) {
+        setValue(
+          'invoiceItems',
+          transactions
+            ?.filter(t => t.status === 'APPROVED' && !t.parentWorkOrderId)
+            ?.map(t => ({
+              id: null,
+              transactionId: t.id,
+              checked: false,
+              type: t.name,
+              description: t.transactionTypeLabel,
+              amount: t.transactionTotal,
+            })) ?? [],
+        )
+      }
     }
   }, [transactions?.length])
 
@@ -116,12 +113,11 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
         indices.push(index)
       }
     })
-    console.log(indices)
+
     remove(indices)
     onDeleteConfirmationModalClose()
   }, [controlledInvoiceArray, onDeleteConfirmationModalClose, setValue])
 
-  console.log(getValues())
   const addRow = useCallback(() => {
     append({ type: '', description: '', amount: '', checked: false })
   }, [append])
@@ -218,8 +214,9 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
 
           <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
             {controlledInvoiceArray?.map((invoiceItem, index) => {
-              const isPaidOrOriginalSOW =
-                invoiceItem?.description === 'Original SOW' || invoiceItem?.description === 'Payment'
+              const isPaidOrOriginalSOW = ['Original SOW', 'Payment', 'Depreciation', 'Deductible', 'Draw'].includes(
+                invoiceItem?.description as string,
+              )
               return (
                 <Grid
                   className="amount-input-row"
@@ -414,7 +411,7 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                       {t('balanceDue')}
                       {':'}
                     </Text>
-                    <Text ml={'10px'}>{currencyFormatter(projectData?.accountRecievable ?? 0)}</Text>
+                    <Text ml={'10px'}>{currencyFormatter(projectData?.sowNewAmount! - totalAmount)}</Text>
                   </Flex>
                 </Flex>
               </GridItem>

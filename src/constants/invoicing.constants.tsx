@@ -5,42 +5,32 @@ import Status from 'features/common/status'
 export const INVOICING_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'invoiceNumber',
-    id: 'resubmissionInvoiceNumber',
-    accessorKey: 'resubmissionInvoiceNumber',
+    id: 'invoiceNumber',
+    accessorKey: 'invoiceNumber',
   },
   {
-    id: 'type',
-    header: 'type',
-    accessorKey: 'type',
-  },
-  {
-    id: 'skill',
-    header: 'skill',
-    accessorKey: 'skill',
-  },
-  {
-    id: 'invoicedAmount',
+    id: 'totalAmountPaid',
     header: 'invoicedAmount',
-    accessorKey: 'invoicedAmount',
+    accessorKey: 'totalAmountPaid',
   },
   {
     header: 'invoicedStatus',
-    accessorKey: 'invoicedStatus',
+    accessorKey: 'status',
     cell: row => {
       const value = row.cell.getValue() as string
       return <Status value={value} id={value}></Status>
     },
   },
   {
-    id: 'resubmissionDate',
+    id: 'createdDate',
     header: 'submit',
-    accessorKey: '',
+    accessorKey: 'createdDate',
     meta: { format: 'date' },
     accessorFn: cellInfo => {
-      return datePickerFormat(cellInfo.resubmissionDate)
+      return datePickerFormat(cellInfo.createdDate)
     },
     cell: (row: any) => {
-      const value = row?.row.original?.resubmissionDate
+      const value = row?.row.original?.createdDate
       return dateFormat(value)
     },
   },
