@@ -12,6 +12,7 @@ import {
   Input,
   Spacer,
   Text,
+  useDisclosure,
   VStack,
 } from '@chakra-ui/react'
 import { useStates } from 'api/pc-projects'
@@ -118,11 +119,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
   } = form
 
   const { data: userInfo } = useUser(user?.email)
-  const { mutate: updateUser } = useSaveUserDetails()
+  const { mutate: updateUser, isError } = useSaveUserDetails()
   const { mutate: addUser } = useCreateUserMutation()
   const { mutate: deleteUser } = useDeleteUserDetails()
   const { options: vendorTypes, isLoading: loadingVendors } = useViewVendor()
-
+console.log('isError', isError)
   useUserDetails({ form, userInfo, queryString })
 
   const formValues = watch()
@@ -250,7 +251,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
   const watchMultiStates = useWatch({ control, name: 'directStates' as any })
   const watchMultiRegions = useWatch({ control, name: 'directRegions' as any })
   const watchMultiMarkets = useWatch({ control, name: 'directMarkets' as any })
-
+  const watchActivateCheckBox = useWatch({ control, name: 'activated' as any })
+console.log('watchActivateCheckBoc',watchActivateCheckBox)
   useEffect(() => {
     if (!showStates || !watchMultiStates) return
 
@@ -303,6 +305,11 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
     }
   }, []);
 
+  const {
+    isOpen: isDeleteConfirmationModalOpen,
+    onClose: onDeleteConfirmationModalClose,
+    onOpen: onDeleteConfirmationModalOpen,
+  } = useDisclosure()
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -925,6 +932,15 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
           }}
           yesButtonText={t(`${USER_MANAGEMENT}.modal.delete`)}
           showNoButton={true}
+        />
+
+<ConfirmationBox
+          title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}
+          content={t(`${USER_MANAGEMENT}.modal.deleteUserContent`)}
+          isOpen={isError}
+          onClose={() => {onDeleteConfirmationModalClose()}}
+          showNoButton={false}
+          yesButtonText={'OK'}
         />
       </HStack>
     </form>
