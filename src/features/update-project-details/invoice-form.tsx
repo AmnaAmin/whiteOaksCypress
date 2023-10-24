@@ -1,5 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import {
+  Box,
   Button,
   Divider,
   Flex,
@@ -24,10 +25,11 @@ import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
-import { InvoiceItems } from './invoice-items'
+import { FinalSowLineItems } from './final-sow-line-items'
 import { InvoicingContext } from './invoicing'
 import { getInvoiceInitials } from './add-invoice-modal'
 import { useCreateInvoiceMutation, useUpdateInvoiceMutation } from 'api/invoicing'
+import { ReceivedLineItems } from './received-line-items'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -95,7 +97,8 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount }) => {
     invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
     paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? projectData?.paymentTerm)),
     woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPayDate ?? woaExpectedDate),
-    invoiceItems: invoice?.invoiceLineItems,
+    finalSowLineItems: invoice?.finalInvoiceLineItems,
+    receivedLineItems: invoice?.receivedLineItems,
     status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
     paymentReceivedDate: datePickerFormat(invoice?.paymentReceivedDate),
   }
@@ -111,7 +114,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
     return invoiceDefaultValues({ invoice, invoiceCount, projectData })
   }, [invoice, projectData, invoiceCount])
 
-  const [totalAmount, setTotalAmount] = React.useState(0)
+  const [totalReceived, setTotalReceived] = React.useState(0)
+  const [finalSow, setFinalSow] = React.useState(0)
   const formReturn = useForm<InvoicingType>({
     defaultValues: {
       ...defaultValues,
@@ -127,7 +131,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
   } = formReturn
   const watchStatus = watch('status')
   const toast = useToast()
-  const balanceDue = projectData?.sowNewAmount! - totalAmount
+  const balanceDue = finalSow - totalReceived
+
   const onPaymentTermChange = (option: SelectOption) => {
     const { invoiceDate } = getValues()
     const date = new Date(invoiceDate as string)
@@ -150,6 +155,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
     const woaExpectedDate = addDays(utcDate, paymentTerm?.value)
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
+
   const onSubmit = values => {
     if (balanceDue < 0) {
       toast({
@@ -164,7 +170,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
 
     if (!invoice) {
       const payload = {
-        ...values,
         paymentTerm: values.paymentTerm?.value,
         projectId: projectData?.id,
         status: null,
@@ -172,8 +177,21 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
         createdDate: dateISOFormatWithZeroTime(new Date()),
         modifiedDate: dateISOFormatWithZeroTime(new Date()),
         modifiedBy: data?.email,
-        totalAmountPaid: totalAmount,
-        invoiceLineItems: values.invoiceItems,
+        invoiceAmount: finalSow - totalReceived,
+        invoiceLineItems: [...values.finalSowLineItems, ...values.receivedLineItems]?.map(item => {
+          return {
+            id: item.id,
+            transactionId: item.transactionid,
+            name: item.name,
+            type: item.type,
+            description: item.description,
+            amount: item.amount,
+          }
+        }),
+        woaExpectedPayDate: values.woaExpectedPayDate,
+        invoiceNumber: values.invoiceNumber,
+        invoiceDate: values.invoiceDate,
+        paymentReceivedDate: values.paymentReceivedDate,
       }
       createInvoiceMutate(payload, {
         onSuccess: () => {
@@ -185,7 +203,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
       })
     } else {
       const payload = {
-        ...values,
         id: invoice?.id,
         paymentTerm: values.paymentTerm?.value,
         projectId: projectData?.id,
@@ -194,8 +211,21 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
         createdDate: invoice?.createdDate,
         modifiedDate: dateISOFormatWithZeroTime(new Date()),
         modifiedBy: data?.email,
-        totalAmountPaid: totalAmount,
-        invoiceLineItems: values.invoiceItems,
+        invoiceAmount: finalSow - totalReceived,
+        invoiceLineItems: [...values.finalSowLineItems, ...values.receivedLineItems]?.map(item => {
+          return {
+            id: item.id,
+            transactionId: item.transactionid,
+            name: item.name,
+            type: item.type,
+            description: item.description,
+            amount: item.amount,
+          }
+        }),
+        woaExpectedPayDate: values.woaExpectedPayDate,
+        invoiceNumber: values.invoiceNumber,
+        invoiceDate: values.invoiceDate,
+        paymentReceivedDate: values.paymentReceivedDate,
       }
       updateInvoiceMutate(payload, {
         onSuccess: () => {
@@ -371,9 +401,21 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
             </>
           )}
         </Grid>
-        <InvoiceItems
-          setTotalAmount={setTotalAmount}
-          totalAmount={totalAmount}
+        <Box color="gray.500" fontWeight={'500'} mt="20px">
+          {t(`project.projectDetails.finalSow`)}
+        </Box>
+        <FinalSowLineItems
+          setTotalAmount={setFinalSow}
+          totalAmount={finalSow}
+          formReturn={formReturn}
+          invoice={invoice}
+        />
+        <Box color="gray.500" fontWeight={'500'} mt="20px">
+          {t(`project.projectDetails.received`)}
+        </Box>
+        <ReceivedLineItems
+          setTotalAmount={setTotalReceived}
+          totalAmount={totalReceived}
           formReturn={formReturn}
           invoice={invoice}
         />

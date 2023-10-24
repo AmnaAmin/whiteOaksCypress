@@ -56,6 +56,9 @@ export const project = {
           balancedue: 'Balance Due',
           paymentReceived: 'Payment Received',
           balanceDueError: 'Balance Due must not be negative.',
+          received: 'Received',
+          finalSow: 'Final Sow',
+          invoiceAmount: 'Invoice Amount',
 
           // Contacts
           contacts: 'Contacts',
@@ -138,7 +141,7 @@ export const project = {
           invoicing: 'Facturación',
           payments: 'Pagos',
           originalSowAmount: 'Importe de la SOW original',
-          finalSowAmount: 'Importe de la SOW final',
+          finalSowAmount: 'Importe de la Sow final',
           invoiceNo: 'Número de factura',
           uploadInvoice: 'Cargar factura',
           invoiceBackDate: 'Reembolso de factura',
@@ -163,6 +166,9 @@ export const project = {
           balancedue: 'Saldo pendiente',
           paymentReceived: 'Pago recibido',
           balanceDueError: 'El saldo adeudado no debe ser negativo.',
+          received: 'Recibió',
+          finalSow: 'SOW Final',
+          invoiceAmount: 'Importe de la factura',
 
           // Contacts
           contacts: 'Contactos',

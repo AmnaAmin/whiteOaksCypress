@@ -25,6 +25,7 @@ import { InvoicingType } from 'types/invoice.types'
 import { useTransactionsV1 } from 'api/transactions'
 import { InvoicingContext } from './invoicing'
 import { currencyFormatter } from 'utils/string-formatters'
+import { TransactionTypeValues } from 'types/transaction.type'
 
 type InvoiceItemsFormProps = {
   formReturn: UseFormReturn<InvoicingType>
@@ -33,7 +34,12 @@ type InvoiceItemsFormProps = {
   totalAmount: number
 }
 
-export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, formReturn, invoice, totalAmount }) => {
+export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
+  setTotalAmount,
+  formReturn,
+  invoice,
+  totalAmount,
+}) => {
   const { t } = useTranslation()
   const isShowCheckboxes = true
 
@@ -47,9 +53,9 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'invoiceItems',
+    name: 'finalSowLineItems',
   })
-  const watchInvoiceArray = watch('invoiceItems')
+  const watchInvoiceArray = watch('finalSowLineItems')
   const controlledInvoiceArray = fields.map((field, index) => {
     return {
       ...field,
@@ -60,22 +66,33 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
   const { projectData } = useContext(InvoicingContext)
   const { transactions } = useTransactionsV1(`${projectData?.id}`)
 
+  const isAddedInFinalSow = transaction => {
+    const compatibleType =
+      transaction.transactionType === TransactionTypeValues.carrierFee ||
+      transaction.transactionType === TransactionTypeValues.legalFee ||
+      transaction.transactionType === TransactionTypeValues.changeOrder ||
+      transaction.transactionType === TransactionTypeValues.originalSOW
+    return transaction.status === 'APPROVED' && !transaction.parentWorkOrderId && compatibleType
+  }
+
   useEffect(() => {
     if (!invoice) {
       if (transactions?.length) {
-        setValue(
-          'invoiceItems',
-          transactions
-            ?.filter(t => t.status === 'APPROVED' && !t.parentWorkOrderId)
-            ?.map(t => ({
+        let finalSowLineItems = [] as any
+        transactions.forEach(t => {
+          if (isAddedInFinalSow(t)) {
+            finalSowLineItems.push({
               id: null,
               transactionId: t.id,
               checked: false,
-              type: t.name,
+              name: t.name,
+              type: 'finalSowLineItems',
               description: t.transactionTypeLabel,
-              amount: t.transactionTotal,
-            })) ?? [],
-        )
+              amount: Math.abs(t.transactionTotal),
+            })
+          }
+        })
+        setValue('finalSowLineItems', finalSowLineItems ?? [])
       }
     }
   }, [transactions?.length])
@@ -97,7 +114,7 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
   const toggleAllCheckboxes = useCallback(
     event => {
       setValue(
-        'invoiceItems',
+        'finalSowLineItems',
         controlledInvoiceArray.map(items => ({
           ...items,
           checked: event.currentTarget.checked,
@@ -182,7 +199,6 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
           flexDirection="column"
           rounded={6}
           w="100%"
-          minH="36vh"
         >
           <Grid
             gridTemplateColumns={isShowCheckboxes ? '30px 1fr 2fr 1fr' : '1fr 2fr 1fr'}
@@ -212,7 +228,7 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
             <GridItem ml="10px">{t(`project.projectDetails.amount`)}</GridItem>
           </Grid>
 
-          <Box flex="1" overflow="auto" maxH="200px" mb="60px" id="amounts-list">
+          <Box flex="1" overflow="auto" maxH="150px" id="amounts-list">
             {controlledInvoiceArray?.map((invoiceItem, index) => {
               const isPaidOrOriginalSOW = ['Original SOW', 'Payment', 'Depreciation', 'Deductible', 'Draw'].includes(
                 invoiceItem?.description as string,
@@ -234,7 +250,7 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                     <GridItem>
                       <Controller
                         control={control}
-                        name={`invoiceItems.${index}.checked` as const}
+                        name={`finalSowLineItems.${index}.checked` as const}
                         render={({ field: { name, value, onChange } }) => {
                           return (
                             <Checkbox
@@ -254,10 +270,10 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                     </GridItem>
                   )}
                   <GridItem>
-                    <FormControl isInvalid={!!errors.invoiceItems?.[index]?.type}>
+                    <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.name}>
                       <Tooltip label={controlledInvoiceArray?.[index]?.type} placement="top" bg="#ffffff" color="black">
                         <Input
-                          data-testid={`invoiceItems-type-${index}`}
+                          data-testid={`finalSowLineItems-type-${index}`}
                           type="text"
                           size="sm"
                           autoComplete="off"
@@ -265,16 +281,18 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                           noOfLines={1}
                           variant={'required-field'}
                           disabled={isPaidOrOriginalSOW}
-                          {...register(`invoiceItems.${index}.type` as const, {
+                          {...register(`finalSowLineItems.${index}.name` as const, {
                             required: 'This is required field',
                           })}
                         />
                       </Tooltip>
-                      <FormErrorMessage>{errors?.invoiceItems?.[index]?.description?.message ?? ''}</FormErrorMessage>
+                      <FormErrorMessage>
+                        {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
+                      </FormErrorMessage>
                     </FormControl>
                   </GridItem>
                   <GridItem>
-                    <FormControl isInvalid={!!errors.invoiceItems?.[index]?.description}>
+                    <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.description}>
                       <Tooltip
                         label={controlledInvoiceArray?.[index]?.description}
                         placement="top"
@@ -282,7 +300,7 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                         color="black"
                       >
                         <Input
-                          data-testid={`invoiceItems-description-${index}`}
+                          data-testid={`finalSowLineItems-description-${index}`}
                           type="text"
                           size="sm"
                           autoComplete="off"
@@ -290,18 +308,20 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                           noOfLines={1}
                           variant={'required-field'}
                           disabled={isPaidOrOriginalSOW}
-                          {...register(`invoiceItems.${index}.description` as const, {
+                          {...register(`finalSowLineItems.${index}.description` as const, {
                             required: 'This is required field',
                           })}
                         />
                       </Tooltip>
-                      <FormErrorMessage>{errors?.invoiceItems?.[index]?.description?.message ?? ''}</FormErrorMessage>
+                      <FormErrorMessage>
+                        {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
+                      </FormErrorMessage>
                     </FormControl>
                   </GridItem>
                   <GridItem>
-                    <FormControl px={1} isInvalid={!!errors.invoiceItems?.[index]?.amount}>
+                    <FormControl px={1} isInvalid={!!errors.finalSowLineItems?.[index]?.amount}>
                       <Controller
-                        name={`invoiceItems.${index}.amount` as const}
+                        name={`finalSowLineItems.${index}.amount` as const}
                         control={control}
                         rules={{
                           required: 'This is required field',
@@ -311,7 +331,7 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                             <>
                               <NumberFormat
                                 {...field}
-                                data-testid={`invoiceItems-amount-${index}`}
+                                data-testid={`finalSowLineItems-amount-${index}`}
                                 customInput={Input}
                                 value={controlledInvoiceArray?.[index]?.amount}
                                 placeholder="Add Amount"
@@ -373,46 +393,6 @@ export const InvoiceItems: React.FC<InvoiceItemsFormProps> = ({ setTotalAmount, 
                     {':'}
                   </Text>
                   <Text ml={'10px'}>{currencyFormatter(totalAmount ?? 0)}</Text>
-                </Flex>
-              </GridItem>
-            </Grid>
-          </Box>
-          <Box>
-            <Grid
-              gridTemplateColumns={'30px 1fr 1fr'}
-              fontSize="14px"
-              color="gray.600"
-              borderWidth="1px 0 0 0"
-              borderStyle="solid"
-              borderColor="gray.300"
-              bg="white"
-              roundedBottom={6}
-              height="auto"
-            >
-              {isShowCheckboxes && <GridItem />}
-              <GridItem
-                borderWidth="0 1px 0 0"
-                borderStyle="solid"
-                borderColor="gray.300"
-                py="4"
-                height="auto"
-              ></GridItem>
-              <GridItem py={'3'} data-testid="total-amount">
-                <Flex direction={'column'}>
-                  <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
-                    <Text fontWeight={700}>
-                      {t('project.projectDetails.subtotal')}
-                      {':'}
-                    </Text>
-                    <Text ml={'10px'}>{currencyFormatter(projectData?.sowNewAmount ?? 0)}</Text>
-                  </Flex>
-                  <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
-                    <Text fontWeight={700}>
-                      {t('balanceDue')}
-                      {':'}
-                    </Text>
-                    <Text ml={'10px'}>{currencyFormatter(projectData?.sowNewAmount! - totalAmount)}</Text>
-                  </Flex>
                 </Flex>
               </GridItem>
             </Grid>

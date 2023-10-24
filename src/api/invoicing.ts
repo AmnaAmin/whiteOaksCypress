@@ -1,5 +1,4 @@
 import { useToast } from '@chakra-ui/react'
-import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
 import { InvoicingType } from 'types/invoice.types'
@@ -31,7 +30,7 @@ export const useCreateInvoiceMutation = ({ projId }) => {
   const { projectId } = useParams<'projectId'>() || projId
 
   return useMutation(
-    payload => {
+    (payload: any) => {
       return client('project-invoices', {
         data: payload,
         method: 'POST',
@@ -63,7 +62,7 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
   const { projectId } = useParams<'projectId'>() || projId
 
   return useMutation(
-    payload => {
+    (payload: any) => {
       return client('project-invoices', {
         data: payload,
         method: 'PUT',

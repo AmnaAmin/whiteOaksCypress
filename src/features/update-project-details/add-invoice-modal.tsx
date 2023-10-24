@@ -29,7 +29,7 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice }) => 
   const { projectData, invoiceCount } = useContext(InvoicingContext)
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
-  const [modalSize, setModalSize] = useState<string>('3xl')
+  const [modalSize, setModalSize] = useState<string>('5xl')
 
   const invoiceNumber = getInvoiceInitials(projectData, invoiceCount)
 
