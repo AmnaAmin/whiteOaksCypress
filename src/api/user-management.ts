@@ -170,7 +170,6 @@ export const userMangtPayload = (user: any, statesDTO?: any, usersData?: any) =>
   }
 
   const directReportIds = user?.directReports?.filter(d => !d.orphanChild).map(d => d.value)
-  console.log(directReportIds)
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
