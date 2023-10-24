@@ -27,7 +27,7 @@ type InvoiceItemType = {
 }
 
 export enum InvoiceStatusValues {
-  pendingPayment = 'PENDING PAYMENT',
+  pendingPayment = 'PENDING_PAYMENT',
   paid = 'PAID',
 }
 export const INVOICE_STATUS_OPTIONS = [

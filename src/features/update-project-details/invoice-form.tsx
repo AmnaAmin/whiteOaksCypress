@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next'
 import { ReadOnlyInput } from 'components/input-view/input-view'
 import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { TRANSACTION } from '../project-details/transactions/transactions.i18n'
-import { dateFormat, dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
 import { useAccountData } from 'api/user-account'
 import ReactSelect from 'components/form/react-select'
@@ -28,7 +28,7 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { FinalSowLineItems } from './final-sow-line-items'
 import { InvoicingContext } from './invoicing'
 import { getInvoiceInitials } from './add-invoice-modal'
-import { useCreateInvoiceMutation, useUpdateInvoiceMutation } from 'api/invoicing'
+import { mapFormValuesToPayload, useCreateInvoiceMutation, useUpdateInvoiceMutation } from 'api/invoicing'
 import { ReceivedLineItems } from './received-line-items'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
@@ -97,8 +97,8 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount }) => {
     invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
     paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? projectData?.paymentTerm)),
     woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPayDate ?? woaExpectedDate),
-    finalSowLineItems: invoice?.finalInvoiceLineItems,
-    receivedLineItems: invoice?.receivedLineItems,
+    finalSowLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems'),
+    receivedLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems'),
     status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
     paymentReceivedDate: datePickerFormat(invoice?.paymentReceivedDate),
   }
@@ -167,32 +167,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
       })
       return
     }
-
+    const payload = mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: balanceDue })
     if (!invoice) {
-      const payload = {
-        paymentTerm: values.paymentTerm?.value,
-        projectId: projectData?.id,
-        status: null,
-        createdBy: data?.email,
-        createdDate: dateISOFormatWithZeroTime(new Date()),
-        modifiedDate: dateISOFormatWithZeroTime(new Date()),
-        modifiedBy: data?.email,
-        invoiceAmount: finalSow - totalReceived,
-        invoiceLineItems: [...values.finalSowLineItems, ...values.receivedLineItems]?.map(item => {
-          return {
-            id: item.id,
-            transactionId: item.transactionid,
-            name: item.name,
-            type: item.type,
-            description: item.description,
-            amount: item.amount,
-          }
-        }),
-        woaExpectedPayDate: values.woaExpectedPayDate,
-        invoiceNumber: values.invoiceNumber,
-        invoiceDate: values.invoiceDate,
-        paymentReceivedDate: values.paymentReceivedDate,
-      }
       createInvoiceMutate(payload, {
         onSuccess: () => {
           onClose?.()
@@ -202,31 +178,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
         },
       })
     } else {
-      const payload = {
-        id: invoice?.id,
-        paymentTerm: values.paymentTerm?.value,
-        projectId: projectData?.id,
-        status: values.status?.value,
-        createdBy: invoice?.createdBy,
-        createdDate: invoice?.createdDate,
-        modifiedDate: dateISOFormatWithZeroTime(new Date()),
-        modifiedBy: data?.email,
-        invoiceAmount: finalSow - totalReceived,
-        invoiceLineItems: [...values.finalSowLineItems, ...values.receivedLineItems]?.map(item => {
-          return {
-            id: item.id,
-            transactionId: item.transactionid,
-            name: item.name,
-            type: item.type,
-            description: item.description,
-            amount: item.amount,
-          }
-        }),
-        woaExpectedPayDate: values.woaExpectedPayDate,
-        invoiceNumber: values.invoiceNumber,
-        invoiceDate: values.invoiceDate,
-        paymentReceivedDate: values.paymentReceivedDate,
-      }
       updateInvoiceMutate(payload, {
         onSuccess: () => {
           onClose?.()
