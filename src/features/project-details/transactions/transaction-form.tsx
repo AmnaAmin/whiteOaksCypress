@@ -877,7 +877,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           type="date"
                           variant={isPaidDateRequired ? 'required-field' : 'outline'}
                           size="md"
-                          isDisabled={isPaidDateDisabled}
+                          isDisabled={isPaidDateDisabled || isVendor}
                           css={calendarIcon}
                           {...register('paidDate', {
                             required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
@@ -904,6 +904,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               data-testid="payment-processed"
                               id="paymentProcessed"
                               type="date"
+                              isDisabled={isVendor}
                               size="md"
                               css={calendarIcon}
                               {...register('paymentProcessed')}
