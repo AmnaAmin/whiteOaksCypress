@@ -12,7 +12,6 @@ import {
   Input,
   Spacer,
   Text,
-  useDisclosure,
   VStack,
 } from '@chakra-ui/react'
 import { useStates } from 'api/pc-projects'
@@ -119,11 +118,17 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
   } = form
 
   const { data: userInfo } = useUser(user?.email)
-  const { mutate: updateUser, isError } = useSaveUserDetails()
+  const { mutate: updateUser, isError, error: updateUserError } = useSaveUserDetails()
+  const [isModalOpen, setModalOpen] = useState(false)
+  useEffect(() => {
+    if (isError) {
+      setModalOpen(true)
+    }
+  }, [isError])
   const { mutate: addUser } = useCreateUserMutation()
   const { mutate: deleteUser } = useDeleteUserDetails()
   const { options: vendorTypes, isLoading: loadingVendors } = useViewVendor()
-console.log('isError', isError)
+
   useUserDetails({ form, userInfo, queryString })
 
   const formValues = watch()
@@ -251,8 +256,6 @@ console.log('isError', isError)
   const watchMultiStates = useWatch({ control, name: 'directStates' as any })
   const watchMultiRegions = useWatch({ control, name: 'directRegions' as any })
   const watchMultiMarkets = useWatch({ control, name: 'directMarkets' as any })
-  const watchActivateCheckBox = useWatch({ control, name: 'activated' as any })
-console.log('watchActivateCheckBoc',watchActivateCheckBox)
   useEffect(() => {
     if (!showStates || !watchMultiStates) return
 
@@ -305,11 +308,7 @@ console.log('watchActivateCheckBoc',watchActivateCheckBox)
     }
   }, []);
 
-  const {
-    isOpen: isDeleteConfirmationModalOpen,
-    onClose: onDeleteConfirmationModalClose,
-    onOpen: onDeleteConfirmationModalOpen,
-  } = useDisclosure()
+ 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -933,14 +932,15 @@ console.log('watchActivateCheckBoc',watchActivateCheckBox)
           yesButtonText={t(`${USER_MANAGEMENT}.modal.delete`)}
           showNoButton={true}
         />
-
-<ConfirmationBox
+        <ConfirmationBox
           title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}
-          content={t(`${USER_MANAGEMENT}.modal.deleteUserContent`)}
-          isOpen={isError}
-          onClose={() => {onDeleteConfirmationModalClose()}}
+          content = {`${t(`${USER_MANAGEMENT}.modal.deactivateUser`)}`}
+          extraContent={ `Project Id: ${updateUserError?.missing_project_id}`}
+          isOpen={isModalOpen}
+          onClose={() => setModalOpen(false)}
+          onConfirm={() => setModalOpen(false)}
           showNoButton={false}
-          yesButtonText={'OK'}
+          yesButtonText={t(`${USER_MANAGEMENT}.modal.oK`)}
         />
       </HStack>
     </form>

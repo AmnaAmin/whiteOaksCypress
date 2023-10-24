@@ -111,15 +111,6 @@ export const useSaveUserDetails = () => {
         })
       },
       onError(error: any) {
-        console.log('API Success Response:',error.missing_project_id); // Log the success response to the console
-
-        toast({
-          title: t(`${USER_MANAGEMENT}.modal.updateUser`),
-          description: (error.title as string) ?? t(`${USER_MANAGEMENT}.modal.userUpdateFailed`),
-          status: 'error',
-          isClosable: true,
-          position: 'top-left',
-        })
       },
     },
   )
