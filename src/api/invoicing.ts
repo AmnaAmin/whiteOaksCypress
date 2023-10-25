@@ -99,7 +99,7 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
     createdDate: invoice ? invoice?.createdDate : dateISOFormatWithZeroTime(new Date()),
     modifiedDate: dateISOFormatWithZeroTime(new Date()),
     modifiedBy: account?.email,
-    invoicedAmount: invoiceAmount,
+    invoiceAmount: invoiceAmount,
     invoiceLineItems: [...values.finalSowLineItems, ...values.receivedLineItems]?.map(item => {
       return {
         id: item.id,
@@ -114,6 +114,7 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
     invoiceNumber: values.invoiceNumber,
     invoiceDate: values.invoiceDate,
     paymentReceivedDate: values.paymentReceivedDate,
+    changeOrderId :  invoice ? invoice?.changeOrderId : null,
   }
 
   return payload
