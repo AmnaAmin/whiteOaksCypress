@@ -111,7 +111,6 @@ export const useWeeklyCount = () => {
 
 export const usePayableColumns = (control, register) => {
   const formValues = useWatch({ control })
-
   const payableColumns: ColumnDef<any>[] = useMemo(
     () => [
       ...PAYABLE_TABLE_COLUMNS,
@@ -121,18 +120,16 @@ export const usePayableColumns = (control, register) => {
         accessorFn: () => true,
         cell: cellInfo => {
           const { row } = cellInfo
-          const woID = row.original.id
+          const idd = row.original.idd
           const isDraw = row?.original?.paymentType?.toLowerCase() === 'wo draw'
-          const transactionId = row.original.transactionId
-          const onChange = { ...register(`id.${woID}`) }?.onChange
-          const idForPayload = !isDraw ? woID : transactionId
+          const onChange = { ...register(`id.${idd}`) }?.onChange
 
           return (
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
               <Checkbox
-                value={woID}
-                {...register(`id.${idForPayload}`)}
-                isChecked={!!formValues?.id?.[idForPayload]}
+                value={idd}
+                {...register(`id.${idd}`)}
+                isChecked={!!formValues?.id?.[idd]}
                 onChange={e => {
                   onChange(e)
                   row.toggleSelected()
