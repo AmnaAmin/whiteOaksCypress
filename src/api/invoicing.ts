@@ -116,6 +116,5 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
     paymentReceivedDate: values.paymentReceivedDate,
     changeOrderId: invoice ? invoice?.changeOrderId : null,
   }
-
   return payload
 }

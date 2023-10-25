@@ -71,12 +71,12 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({
 
   const isAddedInPayments = transaction => {
     const compatibleType =
-      (transaction.status === 'APPROVED' && transaction.transactionType === TransactionTypeValues.draw) ||
-      transaction.transactionType === TransactionTypeValues.payment ||
-      transaction.transactionType === TransactionTypeValues.overpayment ||
-      transaction.transactionType === TransactionTypeValues.depreciation ||
-      transaction.transactionType === TransactionTypeValues.deductible ||
-      (transaction.status === 'PENDING' && transaction.transactionType === TransactionTypeValues.invoice)
+      transaction.status === 'APPROVED' &&
+      (transaction.transactionType === TransactionTypeValues.draw ||
+        transaction.transactionType === TransactionTypeValues.payment ||
+        transaction.transactionType === TransactionTypeValues.overpayment ||
+        transaction.transactionType === TransactionTypeValues.depreciation ||
+        transaction.transactionType === TransactionTypeValues.deductible)
     return !transaction.parentWorkOrderId && compatibleType && !transaction.invoiceNumber
   }
 

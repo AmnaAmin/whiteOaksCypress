@@ -36,7 +36,6 @@ import { AddressVerificationModal } from 'features/projects/new-project/address-
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
 import { Invoicing } from './invoicing'
-import { PROJECT_STATUS } from 'features/common/status'
 import InvoiceAndPayments from './invoicing-payments'
 
 type tabProps = {
@@ -203,11 +202,7 @@ const ProjectDetailsTab = (props: tabProps) => {
       })
     }
   }, [])
-  const isInvoicedOrPaid = [
-    PROJECT_STATUS.clientPaid.value,
-    PROJECT_STATUS.paid.value,
-    PROJECT_STATUS.invoiced.value,
-  ].includes(projectData?.projectStatusId?.toString() as string)
+
   return (
     <>
       <FormProvider {...formReturn}>
@@ -223,13 +218,17 @@ const ProjectDetailsTab = (props: tabProps) => {
               <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
                 {t(`project.projectDetails.projectManagement`)}
               </TabCustom>
-              {!isInvoicedOrPaid && (
+              {projectData?.validForNewInvoice && (
                 <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
                   {t(`project.projectDetails.invoicing`)}
                 </TabCustom>
               )}
-              <TabCustom isError={isInvoicedOrPaid ? isInvoiceAndPaymentFormErrors && tabIndex !== 1 : false}>
-                {isInvoicedOrPaid ? t(`project.projectDetails.invoicingPayment`) : t(`project.projectDetails.payments`)}
+              <TabCustom
+                isError={!projectData?.validForNewInvoice ? isInvoiceAndPaymentFormErrors && tabIndex !== 1 : false}
+              >
+                {!projectData?.validForNewInvoice
+                  ? t(`project.projectDetails.invoicingPayment`)
+                  : t(`project.projectDetails.payments`)}
               </TabCustom>
               <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 3}>
                 {t(`project.projectDetails.contacts`)}
@@ -258,13 +257,13 @@ const ProjectDetailsTab = (props: tabProps) => {
                     isReadOnly={isReadOnly}
                   />
                 </TabPanel>
-                {!isInvoicedOrPaid && (
+                {projectData?.validForNewInvoice && (
                   <TabPanel p="0" h={style?.height ?? 'auto'}>
                     <Invoicing isReadOnly={isReadOnly} projectData={projectData} />
                   </TabPanel>
                 )}
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  {isInvoicedOrPaid ? (
+                  {!projectData?.validForNewInvoice ? (
                     <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
                   ) : (
                     <Payments isReadOnly={isReadOnly} projectData={projectData} />
