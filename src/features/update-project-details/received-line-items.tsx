@@ -67,6 +67,7 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({
 
   const { projectData } = useContext(InvoicingContext)
   const { transactions } = useTransactionsV1(`${projectData?.id}`)
+  const isPaid = (invoice?.status as string)?.toLocaleUpperCase() === 'PAID'
 
   const isAddedInPayments = transaction => {
     const compatibleType =
@@ -140,7 +141,7 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({
   }, [controlledInvoiceArray, onDeleteConfirmationModalClose, setValue])
 
   const addRow = useCallback(() => {
-    append({ type: 'receivedLineItems',name : '', description: '', amount: '', checked: false })
+    append({ type: 'receivedLineItems', name: '', description: '', amount: '', checked: false })
   }, [append])
 
   const checkedItems = useMemo(() => {
@@ -162,6 +163,7 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({
                 size="sm"
                 colorScheme="darkPrimary"
                 onClick={addRow}
+                disabled={isPaid}
                 color="darkPrimary.300"
                 leftIcon={<BiAddToQueue color="darkPrimary.300" />}
               >
@@ -172,6 +174,7 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({
                 variant="outline"
                 size="sm"
                 ml="10px"
+                disabled={isPaid}
                 colorScheme="darkPrimary"
                 _hover={{
                   _disabled: {
@@ -236,13 +239,10 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({
             {controlledInvoiceArray?.length > 0 ? (
               <>
                 {controlledInvoiceArray?.map((invoiceItem, index) => {
-                  const isPaidOrOriginalSOW = [
-                    'Original SOW',
-                    'Payment',
-                    'Depreciation',
-                    'Deductible',
-                    'Draw',
-                  ].includes(invoiceItem?.description as string)
+                  const isPaidOrOriginalSOW =
+                    ['Original SOW', 'Payment', 'Depreciation', 'Deductible', 'Draw'].includes(
+                      invoiceItem?.description as string,
+                    ) && !!invoiceItem?.transactionId
                   return (
                     <Grid
                       className="amount-input-row"
@@ -295,7 +295,7 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({
                               placeholder="Add Type here"
                               noOfLines={1}
                               variant={'required-field'}
-                              disabled={isPaidOrOriginalSOW}
+                              disabled={isPaidOrOriginalSOW || isPaid}
                               {...register(`receivedLineItems.${index}.name` as const, {
                                 required: 'This is required field',
                               })}
@@ -322,7 +322,7 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({
                               placeholder="Add Description here"
                               noOfLines={1}
                               variant={'required-field'}
-                              disabled={isPaidOrOriginalSOW}
+                              disabled={isPaidOrOriginalSOW || isPaid}
                               {...register(`receivedLineItems.${index}.description` as const, {
                                 required: 'This is required field',
                               })}
@@ -350,7 +350,7 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({
                                     customInput={Input}
                                     value={controlledInvoiceArray?.[index]?.amount}
                                     placeholder="Add Amount"
-                                    disabled={isPaidOrOriginalSOW}
+                                    disabled={isPaidOrOriginalSOW || isPaid}
                                     onValueChange={e => {
                                       const inputValue = e?.floatValue ?? ''
                                       field.onChange(inputValue)

@@ -11,8 +11,8 @@ export const INVOICING_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     id: 'invoicedAmount',
-    header: 'invoicedAmount',
-    accessorKey: 'invoicedAmount',
+    header: 'invoiceAmount',
+    accessorKey: 'invoiceAmount',
     cell: row => {
       const value = row.cell.getValue() as string
       return currencyFormatter(value)

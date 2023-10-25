@@ -11,7 +11,7 @@ export interface InvoicingType {
   paymentTerm: SelectOption | undefined
   woaExpectedPayDate: string | null
   receivedLineItems: InvoiceItemType[]
-  status: SelectOption | undefined
+  status: SelectOption | undefined | string
   paymentReceivedDate: string | null
   finalSowLineItems: InvoiceItemType[]
 }

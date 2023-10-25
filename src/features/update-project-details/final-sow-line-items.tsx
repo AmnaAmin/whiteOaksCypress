@@ -41,7 +41,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
   totalAmount,
 }) => {
   const { t } = useTranslation()
-  const isShowCheckboxes = true
+  const isPaid = (invoice?.status as string)?.toLocaleUpperCase() === 'PAID'
 
   const {
     control,
@@ -93,7 +93,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
               name: t.name,
               type: 'finalSowLineItems',
               description: t.transactionTypeLabel,
-              amount: Math.abs(t.transactionTotal),
+              amount: t.transactionTotal,
             })
           }
         })
@@ -141,7 +141,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
   }, [controlledInvoiceArray, onDeleteConfirmationModalClose, setValue])
 
   const addRow = useCallback(() => {
-    append({ type: 'finalSowLineItems',name : '', description: '', amount: '', checked: false })
+    append({ type: 'finalSowLineItems', name: '', description: '', amount: '', checked: false })
   }, [append])
 
   const checkedItems = useMemo(() => {
@@ -163,6 +163,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                 size="sm"
                 colorScheme="darkPrimary"
                 onClick={addRow}
+                disabled={isPaid}
                 color="darkPrimary.300"
                 leftIcon={<BiAddToQueue color="darkPrimary.300" />}
               >
@@ -173,6 +174,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                 variant="outline"
                 size="sm"
                 ml="10px"
+                disabled={isPaid}
                 colorScheme="darkPrimary"
                 _hover={{
                   _disabled: {
@@ -206,7 +208,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
           w="100%"
         >
           <Grid
-            gridTemplateColumns={isShowCheckboxes ? '30px 1fr 2fr 1fr' : '1fr 2fr 1fr'}
+            gridTemplateColumns={'30px 1fr 2fr 1fr'}
             py="3"
             fontSize="14px"
             color="gray.600"
@@ -216,18 +218,17 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
             borderColor="gray.300"
             roundedTop={6}
           >
-            {isShowCheckboxes && (
-              <GridItem id="all-checkbox">
-                <Checkbox
-                  px="1.5"
-                  variant="normal"
-                  colorScheme="PrimaryCheckBox"
-                  onChange={toggleAllCheckboxes}
-                  isChecked={allChecked}
-                  isIndeterminate={isIndeterminate}
-                />
-              </GridItem>
-            )}
+            <GridItem id="all-checkbox">
+              <Checkbox
+                px="1.5"
+                variant="normal"
+                colorScheme="PrimaryCheckBox"
+                onChange={toggleAllCheckboxes}
+                isChecked={allChecked}
+                isIndeterminate={isIndeterminate}
+              />
+            </GridItem>
+
             <GridItem ml="10px"> {t(`project.projectDetails.type`)}</GridItem>
             <GridItem ml="10px"> {t(`project.projectDetails.description`)}</GridItem>
             <GridItem ml="10px">{t(`project.projectDetails.amount`)}</GridItem>
@@ -237,18 +238,15 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
             {controlledInvoiceArray?.length > 0 ? (
               <>
                 {controlledInvoiceArray?.map((invoiceItem, index) => {
-                  const isPaidOrOriginalSOW = [
-                    'Original SOW',
-                    'Payment',
-                    'Depreciation',
-                    'Deductible',
-                    'Draw',
-                  ].includes(invoiceItem?.description as string)
+                  const isPaidOrOriginalSOW =
+                    ['Original SOW', 'Payment', 'Depreciation', 'Deductible', 'Draw'].includes(
+                      invoiceItem?.description as string,
+                    ) && !!invoiceItem?.transactionId
                   return (
                     <Grid
                       className="amount-input-row"
                       key={index}
-                      gridTemplateColumns={isShowCheckboxes ? '30px 1fr 2fr 1fr' : '1fr 2fr 1fr'}
+                      gridTemplateColumns={'30px 1fr 2fr 1fr'}
                       p={'6px'}
                       fontSize="14px"
                       color="gray.600"
@@ -257,29 +255,28 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                       borderColor="gray.300"
                       height="auto"
                     >
-                      {isShowCheckboxes && (
-                        <GridItem>
-                          <Controller
-                            control={control}
-                            name={`finalSowLineItems.${index}.checked` as const}
-                            render={({ field: { name, value, onChange } }) => {
-                              return (
-                                <Checkbox
-                                  variant="normal"
-                                  py="2"
-                                  data-testid={`checkbox-${index}`}
-                                  key={name}
-                                  name={name}
-                                  isChecked={invoiceItem.checked}
-                                  onChange={event => {
-                                    onChange(event.currentTarget.checked)
-                                  }}
-                                />
-                              )
-                            }}
-                          />
-                        </GridItem>
-                      )}
+                      <GridItem>
+                        <Controller
+                          control={control}
+                          name={`finalSowLineItems.${index}.checked` as const}
+                          render={({ field: { name, value, onChange } }) => {
+                            return (
+                              <Checkbox
+                                variant="normal"
+                                py="2"
+                                data-testid={`checkbox-${index}`}
+                                key={name}
+                                name={name}
+                                isChecked={invoiceItem.checked}
+                                onChange={event => {
+                                  onChange(event.currentTarget.checked)
+                                }}
+                              />
+                            )
+                          }}
+                        />
+                      </GridItem>
+
                       <GridItem>
                         <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.name}>
                           <Tooltip
@@ -296,7 +293,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                               placeholder="Add Type here"
                               noOfLines={1}
                               variant={'required-field'}
-                              //disabled={isPaidOrOriginalSOW}
+                              disabled={isPaidOrOriginalSOW || isPaid}
                               {...register(`finalSowLineItems.${index}.name` as const, {
                                 required: 'This is required field',
                               })}
@@ -323,7 +320,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                               placeholder="Add Description here"
                               noOfLines={1}
                               variant={'required-field'}
-                              // disabled={isPaidOrOriginalSOW}
+                              disabled={isPaidOrOriginalSOW || isPaid}
                               {...register(`finalSowLineItems.${index}.description` as const, {
                                 required: 'This is required field',
                               })}
@@ -351,7 +348,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                                     customInput={Input}
                                     value={controlledInvoiceArray?.[index]?.amount}
                                     placeholder="Add Amount"
-                                    // disabled={isPaidOrOriginalSOW}
+                                    disabled={isPaidOrOriginalSOW || isPaid}
                                     onValueChange={e => {
                                       const inputValue = e?.floatValue ?? ''
                                       field.onChange(inputValue)
@@ -401,7 +398,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
               roundedBottom={6}
               height="auto"
             >
-              {isShowCheckboxes && <GridItem />}
+              <GridItem />
               <GridItem
                 borderWidth="0 1px 0 0"
                 borderStyle="solid"

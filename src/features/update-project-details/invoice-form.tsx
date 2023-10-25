@@ -30,6 +30,8 @@ import { InvoicingContext } from './invoicing'
 import { getInvoiceInitials } from './add-invoice-modal'
 import { mapFormValuesToPayload, useCreateInvoiceMutation, useUpdateInvoiceMutation } from 'api/invoicing'
 import { ReceivedLineItems } from './received-line-items'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { ADV_PERMISSIONS } from 'api/access-control'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -132,6 +134,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
   const watchStatus = watch('status')
   const toast = useToast()
   const balanceDue = finalSow - totalReceived
+  const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
+  const { permissions } = useRoleBasedPermissions()
+  const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
 
   const onPaymentTermChange = (option: SelectOption) => {
     const { invoiceDate } = getValues()
@@ -205,7 +210,13 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
                 render={({ field, fieldState }) => {
                   return (
                     <div data-testid="invoice-number">
-                      <Input data-testid="invoiceNumber" id="invoiceNumber" size="md" {...register('invoiceNumber')} />
+                      <Input
+                        data-testid="invoiceNumber"
+                        id="invoiceNumber"
+                        size="md"
+                        disabled={true}
+                        {...register('invoiceNumber')}
+                      />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                     </div>
                   )
@@ -230,6 +241,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
                         type="date"
                         id="invoiceDate"
                         size="md"
+                        disabled={isPaid || !isInvoicedEnabled}
                         {...register('invoiceDate')}
                         onChange={onInvoiceDateChange}
                       />
@@ -253,6 +265,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
                   <>
                     <ReactSelect
                       {...field}
+                      isDisabled={isPaid}
                       options={PAYMENT_TERMS_OPTIONS}
                       selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                       onChange={(option: SelectOption) => {
@@ -283,6 +296,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
                       <Input
                         data-testid="woaExpectedPayDate"
                         type="date"
+                        disabled={true}
                         id="woaExpectedPayDate"
                         size="md"
                         {...register('woaExpectedPayDate')}
@@ -309,6 +323,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
                       <>
                         <ReactSelect
                           {...field}
+                          disabled={isPaid}
                           options={INVOICE_STATUS_OPTIONS}
                           selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                           onChange={statusOption => {
@@ -327,18 +342,18 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
                     {t(`project.projectDetails.paymentReceived`)}
                   </FormLabel>
                   <Controller
-                    rules={{ required: watchStatus?.value === 'PAID' ? 'This is required' : false }}
+                    rules={{ required: (watchStatus as SelectOption)?.value === 'PAID' ? 'This is required' : false }}
                     control={control}
                     name="paymentReceivedDate"
                     render={({ field, fieldState }) => {
                       return (
                         <div data-testid="paymentReceivedDate">
                           <Input
-                            disabled={watchStatus?.value !== 'PAID'}
+                            disabled={(watchStatus as SelectOption)?.value !== 'PAID' || isPaid}
                             data-testid="paymentReceivedDate"
                             type="date"
                             id="paymentReceivedDate"
-                            variant={watchStatus?.value !== 'PAID' ? 'outline' : 'required-field'}
+                            variant={(watchStatus as SelectOption)?.value !== 'PAID' ? 'outline' : 'required-field'}
                             size="md"
                             {...register('paymentReceivedDate')}
                           />
@@ -381,7 +396,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
           onClick={() => {
             formReturn.handleSubmit(onSubmit)()
           }}
-          disabled={!balanceDue}
+          disabled={!balanceDue || isPaid}
           form="invoice-form"
           data-testid="save-transaction"
           colorScheme="darkPrimary"

@@ -14,7 +14,7 @@ export const useFetchInvoices = ({ projectId }: { projectId: string | number | u
 
       return response?.data ? response?.data : []
     },
-    { enabled: !!projectId },
+    { enabled: !!projectId && projectId !== 'undefined' },
   )
 
   return {
@@ -39,7 +39,7 @@ export const useCreateInvoiceMutation = ({ projId }) => {
     {
       onSuccess(res) {
         queryClient.invalidateQueries(['invoices', projectId])
-        queryClient.invalidateQueries(['changeOrders'])
+        queryClient.invalidateQueries(['transactions', projectId])
       },
       onError(error: any) {
         let description = error.title ?? 'Unable to save Invoice.'
@@ -72,7 +72,7 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
     {
       onSuccess(res) {
         queryClient.invalidateQueries(['invoices', projectId])
-        queryClient.invalidateQueries(['changeOrders'])
+        queryClient.invalidateQueries(['transactions', projectId])
       },
       onError(error: any) {
         let description = error.title ?? 'Unable to save Invoice.'
@@ -114,7 +114,7 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
     invoiceNumber: values.invoiceNumber,
     invoiceDate: values.invoiceDate,
     paymentReceivedDate: values.paymentReceivedDate,
-    changeOrderId :  invoice ? invoice?.changeOrderId : null,
+    changeOrderId: invoice ? invoice?.changeOrderId : null,
   }
 
   return payload
