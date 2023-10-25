@@ -140,7 +140,7 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({
   }, [controlledInvoiceArray, onDeleteConfirmationModalClose, setValue])
 
   const addRow = useCallback(() => {
-    append({ type: '', description: '', amount: '', checked: false })
+    append({ type: 'receivedLineItems',name : '', description: '', amount: '', checked: false })
   }, [append])
 
   const checkedItems = useMemo(() => {

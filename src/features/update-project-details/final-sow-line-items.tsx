@@ -141,7 +141,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
   }, [controlledInvoiceArray, onDeleteConfirmationModalClose, setValue])
 
   const addRow = useCallback(() => {
-    append({ type: '', description: '', amount: '', checked: false })
+    append({ type: 'finalSowLineItems',name : '', description: '', amount: '', checked: false })
   }, [append])
 
   const checkedItems = useMemo(() => {
