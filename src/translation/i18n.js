@@ -334,6 +334,7 @@ i18n.use(initReactI18next).init({
         subTotal: 'Sub Total',
         totalAmountPaid: 'Total Amount Paid',
         balanceDue: 'Balance Due',
+        pendingDraw: 'Pending Draw',
         see: 'See',
         // Project - Payments
         LWDate: 'LW Date',
@@ -959,6 +960,7 @@ i18n.use(initReactI18next).init({
         subTotal: 'Total parcial',
         totalAmountPaid: 'Cantidad total pagada',
         balanceDue: 'Saldo adeudado',
+        pendingDraw: 'Sorteo pendiente',
         see: 'Ver',
         // Project - Payments
         LWDate: 'Fecha LW',

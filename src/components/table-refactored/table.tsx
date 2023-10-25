@@ -68,6 +68,7 @@ function Filter({
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
     [column.getFacetedUniqueValues()],
   )
+  const isCheckBox = column.id === 'checkbox'
 
   const [selectionRange, setSelectionRange] = useState(() => {
     let startDate = new Date()
@@ -216,24 +217,28 @@ function Filter({
           </div>
         </>
       ) : (
-        <DebouncedInput
-          type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
-          value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
-          onChange={value => {
-            if (dateFilter) {
-              column.setFilterValue(datePickerFormat(value as string))
-              if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
-            } else {
-              column.setFilterValue(value)
-              if (allowStickyFilters) setStickyFilter(value)
-            }
-          }}
-          // @ts-ignore
-          minW={dateFilter && '127px'}
-          className="w-36 border shadow rounded"
-          list={column.id + 'list'}
-          resetValue={!!metaData?.resetFilters}
-        />
+        <div>
+          {!isCheckBox && (
+            <DebouncedInput
+              type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
+              value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
+              onChange={value => {
+                if (dateFilter) {
+                  column.setFilterValue(datePickerFormat(value as string))
+                  if (allowStickyFilters) setStickyFilter(datePickerFormat(value as string))
+                } else {
+                  column.setFilterValue(value)
+                  if (allowStickyFilters) setStickyFilter(value)
+                }
+              }}
+              // @ts-ignore
+              minW={dateFilter && '127px'}
+              className="w-36 border shadow rounded"
+              list={column.id + 'list'}
+              resetValue={!!metaData?.resetFilters}
+            />
+          )}
+        </div>
       )}
       <div className="h-1" />
     </>

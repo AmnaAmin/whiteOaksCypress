@@ -232,9 +232,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
   const isRefund = useWatch({ name: 'refund', control })
-  const verifiedByFpm = useWatch({ name: 'verifiedByFpm', control })
-  const verifiedByManager = useWatch({ name: 'verifiedByManager', control })
-  const paidDate = useWatch({ name: 'paidDate', control })
   const watchStatus = watch('status')
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -363,19 +360,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       setValue('paymentTerm', updatedPaymentTerm as any)
     }
   }, [selectedWorkOrder])
-
-  useEffect(() => {
-    if (
-      verifiedByFpm?.value === 'CANCELLED' ||
-      verifiedByManager?.value === 'CANCELLED' ||
-      verifiedByFpm?.value === 'DENIED' ||
-      verifiedByManager?.value === 'DENIED'
-    ) {
-      setValue('paidDate', null)
-    } else {
-      setValue('paidDate', paidDate)
-    }
-  }, [verifiedByFpm, verifiedByManager])
 
   const onAgainstOptionSelect = (option: SelectOption) => {
     if (option?.value !== AGAINST_DEFAULT_VALUE) {
@@ -893,7 +877,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           type="date"
                           variant={isPaidDateRequired ? 'required-field' : 'outline'}
                           size="md"
-                          isDisabled={isPaidDateDisabled}
+                          isDisabled={isPaidDateDisabled || isVendor}
                           css={calendarIcon}
                           {...register('paidDate', {
                             required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
@@ -920,6 +904,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               data-testid="payment-processed"
                               id="paymentProcessed"
                               type="date"
+                              isDisabled={isVendor}
                               size="md"
                               css={calendarIcon}
                               {...register('paymentProcessed')}
