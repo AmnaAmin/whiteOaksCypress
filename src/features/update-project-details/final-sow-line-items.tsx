@@ -72,7 +72,12 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
       transaction.transactionType === TransactionTypeValues.legalFee ||
       transaction.transactionType === TransactionTypeValues.changeOrder ||
       transaction.transactionType === TransactionTypeValues.originalSOW
-    return transaction.status === 'APPROVED' && !transaction.parentWorkOrderId && compatibleType
+    return (
+      transaction.status === 'APPROVED' &&
+      !transaction.parentWorkOrderId &&
+      compatibleType &&
+      !transaction.invoiceNumber
+    )
   }
 
   useEffect(() => {
@@ -229,121 +234,132 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
           </Grid>
 
           <Box flex="1" overflow="auto" maxH="150px" id="amounts-list">
-            {controlledInvoiceArray?.map((invoiceItem, index) => {
-              const isPaidOrOriginalSOW = ['Original SOW', 'Payment', 'Depreciation', 'Deductible', 'Draw'].includes(
-                invoiceItem?.description as string,
-              )
-              return (
-                <Grid
-                  className="amount-input-row"
-                  key={index}
-                  gridTemplateColumns={isShowCheckboxes ? '30px 1fr 2fr 1fr' : '1fr 2fr 1fr'}
-                  p={'6px'}
-                  fontSize="14px"
-                  color="gray.600"
-                  gap="20px"
-                  borderStyle="solid"
-                  borderColor="gray.300"
-                  height="auto"
-                >
-                  {isShowCheckboxes && (
-                    <GridItem>
-                      <Controller
-                        control={control}
-                        name={`finalSowLineItems.${index}.checked` as const}
-                        render={({ field: { name, value, onChange } }) => {
-                          return (
-                            <Checkbox
-                              variant="normal"
-                              py="2"
-                              data-testid={`checkbox-${index}`}
-                              key={name}
-                              name={name}
-                              isChecked={invoiceItem.checked}
-                              onChange={event => {
-                                onChange(event.currentTarget.checked)
-                              }}
+            {controlledInvoiceArray?.length > 0 ? (
+              <>
+                {controlledInvoiceArray?.map((invoiceItem, index) => {
+                  const isPaidOrOriginalSOW = [
+                    'Original SOW',
+                    'Payment',
+                    'Depreciation',
+                    'Deductible',
+                    'Draw',
+                  ].includes(invoiceItem?.description as string)
+                  return (
+                    <Grid
+                      className="amount-input-row"
+                      key={index}
+                      gridTemplateColumns={isShowCheckboxes ? '30px 1fr 2fr 1fr' : '1fr 2fr 1fr'}
+                      p={'6px'}
+                      fontSize="14px"
+                      color="gray.600"
+                      gap="20px"
+                      borderStyle="solid"
+                      borderColor="gray.300"
+                      height="auto"
+                    >
+                      {isShowCheckboxes && (
+                        <GridItem>
+                          <Controller
+                            control={control}
+                            name={`finalSowLineItems.${index}.checked` as const}
+                            render={({ field: { name, value, onChange } }) => {
+                              return (
+                                <Checkbox
+                                  variant="normal"
+                                  py="2"
+                                  data-testid={`checkbox-${index}`}
+                                  key={name}
+                                  name={name}
+                                  isChecked={invoiceItem.checked}
+                                  onChange={event => {
+                                    onChange(event.currentTarget.checked)
+                                  }}
+                                />
+                              )
+                            }}
+                          />
+                        </GridItem>
+                      )}
+                      <GridItem>
+                        <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.name}>
+                          <Tooltip
+                            label={controlledInvoiceArray?.[index]?.type}
+                            placement="top"
+                            bg="#ffffff"
+                            color="black"
+                          >
+                            <Input
+                              data-testid={`finalSowLineItems-type-${index}`}
+                              type="text"
+                              size="sm"
+                              autoComplete="off"
+                              placeholder="Add Type here"
+                              noOfLines={1}
+                              variant={'required-field'}
+                              //disabled={isPaidOrOriginalSOW}
+                              {...register(`finalSowLineItems.${index}.name` as const, {
+                                required: 'This is required field',
+                              })}
                             />
-                          )
-                        }}
-                      />
-                    </GridItem>
-                  )}
-                  <GridItem>
-                    <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.name}>
-                      <Tooltip label={controlledInvoiceArray?.[index]?.type} placement="top" bg="#ffffff" color="black">
-                        <Input
-                          data-testid={`finalSowLineItems-type-${index}`}
-                          type="text"
-                          size="sm"
-                          autoComplete="off"
-                          placeholder="Add Type here"
-                          noOfLines={1}
-                          variant={'required-field'}
-                          disabled={isPaidOrOriginalSOW}
-                          {...register(`finalSowLineItems.${index}.name` as const, {
-                            required: 'This is required field',
-                          })}
-                        />
-                      </Tooltip>
-                      <FormErrorMessage>
-                        {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
-                      </FormErrorMessage>
-                    </FormControl>
-                  </GridItem>
-                  <GridItem>
-                    <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.description}>
-                      <Tooltip
-                        label={controlledInvoiceArray?.[index]?.description}
-                        placement="top"
-                        bg="#ffffff"
-                        color="black"
-                      >
-                        <Input
-                          data-testid={`finalSowLineItems-description-${index}`}
-                          type="text"
-                          size="sm"
-                          autoComplete="off"
-                          placeholder="Add Description here"
-                          noOfLines={1}
-                          variant={'required-field'}
-                          disabled={isPaidOrOriginalSOW}
-                          {...register(`finalSowLineItems.${index}.description` as const, {
-                            required: 'This is required field',
-                          })}
-                        />
-                      </Tooltip>
-                      <FormErrorMessage>
-                        {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
-                      </FormErrorMessage>
-                    </FormControl>
-                  </GridItem>
-                  <GridItem>
-                    <FormControl px={1} isInvalid={!!errors.finalSowLineItems?.[index]?.amount}>
-                      <Controller
-                        name={`finalSowLineItems.${index}.amount` as const}
-                        control={control}
-                        rules={{
-                          required: 'This is required field',
-                        }}
-                        render={({ field, fieldState }) => {
-                          return (
-                            <>
-                              <NumberFormat
-                                {...field}
-                                data-testid={`finalSowLineItems-amount-${index}`}
-                                customInput={Input}
-                                value={controlledInvoiceArray?.[index]?.amount}
-                                placeholder="Add Amount"
-                                disabled={isPaidOrOriginalSOW}
-                                onValueChange={e => {
-                                  const inputValue = e?.floatValue ?? ''
-                                  field.onChange(inputValue)
-                                }}
-                                variant={'required-field'}
-                                size="sm"
-                              />
-                              {/*                           
+                          </Tooltip>
+                          <FormErrorMessage>
+                            {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
+                          </FormErrorMessage>
+                        </FormControl>
+                      </GridItem>
+                      <GridItem>
+                        <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.description}>
+                          <Tooltip
+                            label={controlledInvoiceArray?.[index]?.description}
+                            placement="top"
+                            bg="#ffffff"
+                            color="black"
+                          >
+                            <Input
+                              data-testid={`finalSowLineItems-description-${index}`}
+                              type="text"
+                              size="sm"
+                              autoComplete="off"
+                              placeholder="Add Description here"
+                              noOfLines={1}
+                              variant={'required-field'}
+                              // disabled={isPaidOrOriginalSOW}
+                              {...register(`finalSowLineItems.${index}.description` as const, {
+                                required: 'This is required field',
+                              })}
+                            />
+                          </Tooltip>
+                          <FormErrorMessage>
+                            {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
+                          </FormErrorMessage>
+                        </FormControl>
+                      </GridItem>
+                      <GridItem>
+                        <FormControl px={1} isInvalid={!!errors.finalSowLineItems?.[index]?.amount}>
+                          <Controller
+                            name={`finalSowLineItems.${index}.amount` as const}
+                            control={control}
+                            rules={{
+                              required: 'This is required field',
+                            }}
+                            render={({ field, fieldState }) => {
+                              return (
+                                <>
+                                  <NumberFormat
+                                    {...field}
+                                    data-testid={`finalSowLineItems-amount-${index}`}
+                                    customInput={Input}
+                                    value={controlledInvoiceArray?.[index]?.amount}
+                                    placeholder="Add Amount"
+                                    // disabled={isPaidOrOriginalSOW}
+                                    onValueChange={e => {
+                                      const inputValue = e?.floatValue ?? ''
+                                      field.onChange(inputValue)
+                                    }}
+                                    variant={'required-field'}
+                                    size="sm"
+                                  />
+                                  {/*                           
                                 <Input
                                   {...field}
                                   data-testid={`transaction-amount-${index}`}
@@ -355,17 +371,24 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                                   value={numeral(Number(field.value)).format('$0,0[.]00')}
                                 />
                               */}
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                            </>
-                          )
-                        }}
-                      />
-                    </FormControl>
-                  </GridItem>
-                </Grid>
-              )
-            })}
+                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                </>
+                              )
+                            }}
+                          />
+                        </FormControl>
+                      </GridItem>
+                    </Grid>
+                  )
+                })}
+              </>
+            ) : (
+              <Box w="100%" mt="10px" mb="10px" textAlign="center" fontSize={'14px'} color="gray.500">
+                {t('noDataDisplayed')}
+              </Box>
+            )}
           </Box>
+
           <Box>
             <Grid
               gridTemplateColumns={'30px 1fr 1fr'}

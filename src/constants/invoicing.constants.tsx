@@ -1,6 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import Status from 'features/common/status'
+import { currencyFormatter } from 'utils/string-formatters'
 
 export const INVOICING_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
@@ -9,9 +10,13 @@ export const INVOICING_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'invoiceNumber',
   },
   {
-    id: 'totalAmountPaid',
+    id: 'invoicedAmount',
     header: 'invoicedAmount',
-    accessorKey: 'totalAmountPaid',
+    accessorKey: 'invoicedAmount',
+    cell: row => {
+      const value = row.cell.getValue() as string
+      return currencyFormatter(value)
+    },
   },
   {
     header: 'invoicedStatus',

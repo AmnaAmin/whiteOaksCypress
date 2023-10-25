@@ -327,18 +327,18 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
                     {t(`project.projectDetails.paymentReceived`)}
                   </FormLabel>
                   <Controller
-                    rules={{ required: watchStatus?.value === 'APPROVED' ? 'This is required' : false }}
+                    rules={{ required: watchStatus?.value === 'PAID' ? 'This is required' : false }}
                     control={control}
                     name="paymentReceivedDate"
                     render={({ field, fieldState }) => {
                       return (
                         <div data-testid="paymentReceivedDate">
                           <Input
-                            disabled={watchStatus?.value !== 'APPROVED'}
+                            disabled={watchStatus?.value !== 'PAID'}
                             data-testid="paymentReceivedDate"
                             type="date"
                             id="paymentReceivedDate"
-                            variant={watchStatus?.value !== 'APPROVED' ? 'outline' : 'required-field'}
+                            variant={watchStatus?.value !== 'PAID' ? 'outline' : 'required-field'}
                             size="md"
                             {...register('paymentReceivedDate')}
                           />
@@ -367,6 +367,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
         <ReceivedLineItems
           setTotalAmount={setTotalReceived}
           totalAmount={totalReceived}
+          finalSow={finalSow}
           formReturn={formReturn}
           invoice={invoice}
         />
@@ -380,6 +381,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
           onClick={() => {
             formReturn.handleSubmit(onSubmit)()
           }}
+          disabled={!balanceDue}
           form="invoice-form"
           data-testid="save-transaction"
           colorScheme="darkPrimary"

@@ -7,7 +7,6 @@ import { dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 
 export const useFetchInvoices = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
-
   const { data: invoices, ...rest } = useQuery<Array<InvoicingType>>(
     ['invoices', projectId],
     async () => {
@@ -40,6 +39,7 @@ export const useCreateInvoiceMutation = ({ projId }) => {
     {
       onSuccess(res) {
         queryClient.invalidateQueries(['invoices', projectId])
+        queryClient.invalidateQueries(['changeOrders'])
       },
       onError(error: any) {
         let description = error.title ?? 'Unable to save Invoice.'
@@ -72,6 +72,7 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
     {
       onSuccess(res) {
         queryClient.invalidateQueries(['invoices', projectId])
+        queryClient.invalidateQueries(['changeOrders'])
       },
       onError(error: any) {
         let description = error.title ?? 'Unable to save Invoice.'
@@ -98,11 +99,11 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
     createdDate: invoice ? invoice?.createdDate : dateISOFormatWithZeroTime(new Date()),
     modifiedDate: dateISOFormatWithZeroTime(new Date()),
     modifiedBy: account?.email,
-    invoiceAmount: invoiceAmount,
+    invoicedAmount: invoiceAmount,
     invoiceLineItems: [...values.finalSowLineItems, ...values.receivedLineItems]?.map(item => {
       return {
         id: item.id,
-        transactionId: item.transactionid,
+        transactionId: item.transactionId,
         name: item.name,
         type: item.type,
         description: item.description,
@@ -114,5 +115,6 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
     invoiceDate: values.invoiceDate,
     paymentReceivedDate: values.paymentReceivedDate,
   }
+
   return payload
 }
