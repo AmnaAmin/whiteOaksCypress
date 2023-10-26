@@ -208,7 +208,6 @@ export const useFieldDisabledEnabledDecision = (
     transaction?.status === TransactionStatusValues.denied
   const isFactoringFeeSysGenerated =
     transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
-
   return {
     isUpdateForm,
     isApproved: isStatusApproved,
@@ -221,6 +220,7 @@ export const useFieldDisabledEnabledDecision = (
       isFactoringFeeSysGenerated ||
       statusFieldForVendor,
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
+    isFactoringFeeSysGenerated,
   }
 }
 

@@ -265,8 +265,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
   }, [workOrderId, awardPlansStats])
 
-  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled, lateAndFactoringFeeForVendor } =
-    useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
+  const {
+    isUpdateForm,
+    isApproved,
+    isPaidDateDisabled,
+    isStatusDisabled,
+    lateAndFactoringFeeForVendor,
+    isFactoringFeeSysGenerated,
+  } = useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
 
   const {
     check,
@@ -1200,7 +1206,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
+          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) &&
+          !isFactoringFeeSysGenerated && (
             <>
               <Button
                 type="submit"
