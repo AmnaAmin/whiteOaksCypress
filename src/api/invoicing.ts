@@ -22,6 +22,23 @@ export const useFetchInvoices = ({ projectId }: { projectId: string | number | u
     ...rest,
   }
 }
+export const useFetchInvoiceDetails = ({ invoiceId }: { invoiceId: string | number | undefined }) => {
+  const client = useClient()
+  const { data: invoiceDetails, ...rest } = useQuery<Array<InvoicingType>>(
+    ['invoice-details', invoiceId],
+    async () => {
+      const response = await client(`project-invoices/${invoiceId}`, {})
+
+      return response?.data ? response?.data : []
+    },
+    { enabled: !!invoiceId && invoiceId !== 'undefined' },
+  )
+
+  return {
+    invoiceDetails,
+    ...rest,
+  }
+}
 
 export const useCreateInvoiceMutation = ({ projId }) => {
   const client = useClient()

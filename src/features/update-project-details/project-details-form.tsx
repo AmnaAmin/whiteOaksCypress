@@ -85,8 +85,9 @@ const ProjectDetailsTab = (props: tabProps) => {
   const {
     control,
     formState: { errors, isSubmitting },
+    watch,
   } = formReturn
-
+  const watchClient = watch('client')
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
     useSubFormErrors(errors)
   useEffect(() => {
@@ -307,7 +308,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                 </TabPanel>
                 {projectData?.validForNewInvoice && (
                   <TabPanel p="0" h={style?.height ?? 'auto'}>
-                    <Invoicing isReadOnly={isReadOnly} projectData={projectData} />
+                    <Invoicing isReadOnly={isReadOnly} projectData={projectData} clientSelected={watchClient} />
                   </TabPanel>
                 )}
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
