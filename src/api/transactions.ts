@@ -706,6 +706,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries([GET_TRANSACTIONS_BY_WORK_ORDER_API_KEY, projectId])
         queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
+        queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
@@ -752,6 +753,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
     {
       onSuccess() {
         queryClient.invalidateQueries('transactions_work_order')
+        queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
