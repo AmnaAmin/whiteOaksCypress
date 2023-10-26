@@ -98,7 +98,7 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelect
   return {
     invoiceNumber: invoice?.invoiceNumber ?? invoiceInitials,
     invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
-    paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? projectData?.paymentTerm)),
+    paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? clientSelected?.paymentTerm)),
     woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPayDate ?? woaExpectedDate),
     finalSowLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems'),
     receivedLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems'),
