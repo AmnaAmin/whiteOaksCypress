@@ -9,7 +9,6 @@ import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiChevronDown, BiChevronRight, BiSync } from 'react-icons/bi'
-import { compact } from 'lodash'
 import { useBatchProcessingMutation, useCheckBatch, usePaginatedAccountPayable } from 'api/account-payable'
 import { ViewLoader } from 'components/page-level-loader'
 import { OverPaymentTransactionsTable } from 'features/project-details/transactions/overpayment-transactions-table'
@@ -77,13 +76,18 @@ export const ConstructionPortalPayable = () => {
   const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
 
   const Submit = formValues => {
-    const id = compact(formValues.id).map(id => id)
+    const id = [] as any
+    for (let [key, value] of Object.entries(formValues.id)) {
+      if (!!value) {
+        id.push(key)
+      }
+    }
     setSelectedIDs(id)
     const payloadArr = [] as any
     // Loop in for all selected ID's values on grid through checkbox
-    compact(formValues.id).forEach(selectedID => {
+    id.forEach(selectedID => {
       //finding from all work order(payable grid's data) to save the checked id's in an array
-      const payable = workOrders?.find(w => w.id === parseInt(selectedID as string))
+      const payable = workOrders?.find(w => w.idd === selectedID)
       const isDraw = payable?.paymentType?.toLowerCase() === 'wo draw'
       if (isDraw) {
         const objDraw = {
@@ -209,7 +213,7 @@ export const ConstructionPortalPayable = () => {
         onClose={onNotificationClose}
         content={t(`${ACCOUNTS}.batchSuccess`)}
         contentMsg={t(`${ACCOUNTS}.batchSucessFor`)}
-        idValues={selectedIDs}
+        idValues={workOrders?.filter(w => selectedIDs.includes(w.idd)).map(w => w.id)}
         onConfirm={onNotificationClose}
         yesButtonText={t(`${ACCOUNTS}.ok`)}
         showNoButton={false}

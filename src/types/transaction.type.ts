@@ -118,6 +118,8 @@ export enum TransactionTypeValues {
   deductible = 1018,
   depreciation = 1019,
   legalFee = 1024,
+  originalSOW = 28,
+  invoice = 1025,
 }
 
 export enum TransactionMarkAsValues {
@@ -139,6 +141,7 @@ export type SelectOption = {
   awardStatus?: any
   isValidForAwardPlan?: any
   carrier?: Carrier[]
+  paymentTerm?: string | number | null | undefined
   lienDue?: number | undefined
   __isNew__?: boolean
   property?: any

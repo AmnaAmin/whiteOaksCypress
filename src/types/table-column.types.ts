@@ -47,4 +47,5 @@ export enum TableNames {
   vendorProject = 'vendorProject',
   testProject = 'testProject',
   clients = 'clients-table',
+  invoicing = 'invoicing',
 }

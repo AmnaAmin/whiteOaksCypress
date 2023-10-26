@@ -91,6 +91,7 @@ export type Client = {
   modifiedBy: string | null
   modifiedDate: string | null
   carrier: Carrier[]
+  paymentTerm: string
 }
 
 export type Carrier = {

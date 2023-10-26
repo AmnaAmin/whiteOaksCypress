@@ -5,7 +5,7 @@ import Location from './location'
 import Contact from './contact'
 import ProjectManagement from './project-management'
 import Misc from './misc'
-import InvoiceAndPayments from './invoice-and-payments'
+import Payments from './payments'
 import { BiErrorCircle, BiSpreadsheet } from 'react-icons/bi'
 import { AddressInfo, Project } from 'types/project.type'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
@@ -41,6 +41,8 @@ import { TransactionStatusValues, TransactionTypeValues } from 'types/transactio
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
+import { Invoicing } from './invoicing'
+import InvoiceAndPayments from './invoicing-payments'
 import { ConfirmationBox } from 'components/Confirmation'
 
 type tabProps = {
@@ -83,8 +85,9 @@ const ProjectDetailsTab = (props: tabProps) => {
   const {
     control,
     formState: { errors, isSubmitting },
+    watch,
   } = formReturn
-
+  const watchClient = watch('client')
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
     useSubFormErrors(errors)
   useEffect(() => {
@@ -264,13 +267,22 @@ const ProjectDetailsTab = (props: tabProps) => {
               <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
                 {t(`project.projectDetails.projectManagement`)}
               </TabCustom>
-              <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
-                {t(`project.projectDetails.invoicingPayment`)}
+              {projectData?.validForNewInvoice && (
+                <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
+                  {t(`project.projectDetails.invoicing`)}
+                </TabCustom>
+              )}
+              <TabCustom
+                isError={!projectData?.validForNewInvoice ? isInvoiceAndPaymentFormErrors && tabIndex !== 1 : false}
+              >
+                {!projectData?.validForNewInvoice
+                  ? t(`project.projectDetails.invoicingPayment`)
+                  : t(`project.projectDetails.payments`)}
               </TabCustom>
-              <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 2}>
+              <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 3}>
                 {t(`project.projectDetails.contacts`)}
               </TabCustom>
-              <TabCustom isError={isLocationFormErrors && tabIndex !== 3}>
+              <TabCustom isError={isLocationFormErrors && tabIndex !== 4}>
                 {t(`project.projectDetails.location`)}
               </TabCustom>
               <TabCustom>{t(`project.projectDetails.misc`)}</TabCustom>
@@ -294,9 +306,17 @@ const ProjectDetailsTab = (props: tabProps) => {
                     isReadOnly={isReadOnly}
                   />
                 </TabPanel>
-
+                {projectData?.validForNewInvoice && (
+                  <TabPanel p="0" h={style?.height ?? 'auto'}>
+                    <Invoicing isReadOnly={isReadOnly} projectData={projectData} clientSelected={watchClient} />
+                  </TabPanel>
+                )}
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
+                  {!projectData?.validForNewInvoice ? (
+                    <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
+                  ) : (
+                    <Payments isReadOnly={isReadOnly} projectData={projectData} />
+                  )}
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
@@ -327,7 +347,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   <Divider border="1px solid" />
                 </Box>
                 <Box h="70px" w="100%" pb="3">
-                  {!isReadOnly && (
+                  {!isReadOnly && !(projectData?.validForNewInvoice && tabIndex === 1) && (
                     <Button
                       mt="8px"
                       mr="32px"
