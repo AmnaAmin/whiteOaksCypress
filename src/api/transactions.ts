@@ -522,6 +522,7 @@ export const parseChangeOrderUpdateAPIPayload = async (
     verifiedByFpm: formValues.verifiedByFpm?.value,
     verifiedByManager: formValues.verifiedByManager?.value,
     invoiceId: transaction?.invoiceId,
+    invoiceNumber: transaction?.invoiceNumber,
   }
 }
 
