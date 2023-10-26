@@ -16,7 +16,7 @@ import { useToast } from '@chakra-ui/toast'
 import { useForm, Controller } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ReadOnlyInput } from 'components/input-view/input-view'
-import { BiCalendar, BiDetail } from 'react-icons/bi'
+import { BiCalendar, BiDetail, BiDownload } from 'react-icons/bi'
 import { TRANSACTION } from '../project-details/transactions/transactions.i18n'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
@@ -28,12 +28,17 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { FinalSowLineItems } from './final-sow-line-items'
 import { InvoicingContext } from './invoicing'
 import { getInvoiceInitials } from './add-invoice-modal'
-import { mapFormValuesToPayload } from 'api/invoicing'
+import {
+  createInvoicePdf,
+  mapFormValuesToPayload,
+  useCreateInvoiceMutation,
+  useUpdateInvoiceMutation,
+} from 'api/invoicing'
 import { ReceivedLineItems } from './received-line-items'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { ADV_PERMISSIONS } from 'api/access-control'
-import { createInvoicePdfNew } from 'api/vendor-projects'
 import jsPDF from 'jspdf'
+import { downloadFile } from 'utils/file-utils'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -110,8 +115,8 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount }) => {
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) => {
   const { t } = useTranslation()
   const { projectData, invoiceCount } = useContext(InvoicingContext)
-  // const { mutate: createInvoiceMutate } = useCreateInvoiceMutation({ projId: projectData?.id })
-  // const { mutate: updateInvoiceMutate } = useUpdateInvoiceMutation({ projId: projectData?.id })
+  const { mutate: createInvoiceMutate } = useCreateInvoiceMutation({ projId: projectData?.id })
+  const { mutate: updateInvoiceMutate } = useUpdateInvoiceMutation({ projId: projectData?.id })
   const { data } = useAccountData()
 
   const defaultValues: InvoicingType = useMemo(() => {
@@ -171,7 +176,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
 
-  const onSubmit = values => {
+  const onSubmit = async values => {
     if (balanceDue < 0) {
       toast({
         title: 'Error',
@@ -182,38 +187,43 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
       })
       return
     }
-    const payload = mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: balanceDue })
-    const finalSowLineItems = payload?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems')
-    const receivedLineItems = payload?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems')
-
-    // if (!invoice) {
-    //   createInvoiceMutate(payload, {
-    //     onSuccess: () => {
-    //       onClose?.()
-    //     },
-    //     onError: error => {
-    //       console.log(error)
-    //     },
-    //   })
-    // } else {
-    //   updateInvoiceMutate(payload, {
-    //     onSuccess: () => {
-    //       onClose?.()
-    //     },
-    //     onError: error => {
-    //       console.log(error)
-    //     },
-    //   })
-    // }
-    let doc = new jsPDF()
-    createInvoicePdfNew({
-      doc,
-      invoiceVals: defaultValues,
-      finalSowLineItems,
-      receivedLineItems,
+    let payload = mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: balanceDue })
+    let form = new jsPDF()
+    form = await createInvoicePdf({
+      doc: form,
+      invoiceVals: payload,
       address: woAddress,
       projectData,
     })
+    const pdfUri = form.output('datauristring')
+    payload['documents'] = [
+      {
+        documentType: 48,
+        projectId: projectData?.id,
+        fileObject: pdfUri.split(',')[1],
+        fileObjectContentType: 'application/pdf',
+        fileType: 'Invoice.pdf',
+      },
+    ]
+    if (!invoice) {
+      createInvoiceMutate(payload, {
+        onSuccess: () => {
+          onClose?.()
+        },
+        onError: error => {
+          console.log(error)
+        },
+      })
+    } else {
+      updateInvoiceMutate(payload, {
+        onSuccess: () => {
+          onClose?.()
+        },
+        onError: error => {
+          console.log(error)
+        },
+      })
+    }
   }
 
   return (
@@ -411,23 +421,39 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
         />
       </Flex>
       <Divider mt={3}></Divider>
-      <HStack alignItems="center" justifyContent="end" mt="16px" spacing="16px">
-        <Button onClick={onClose} variant={'outline'} colorScheme="darkPrimary" data-testid="close-transaction-form">
-          {t(`project.projectDetails.cancel`)}
-        </Button>
-        <Button
-          onClick={() => {
-            formReturn.handleSubmit(onSubmit)()
-          }}
-          disabled={!balanceDue || isPaid}
-          form="invoice-form"
-          data-testid="save-transaction"
-          colorScheme="darkPrimary"
-          variant="solid"
-        >
-          {t(`project.projectDetails.save`)}
-        </Button>
-      </HStack>
+      <Flex alignItems="center" justifyContent="space-between" mt="16px">
+        <Box>
+          {!!invoice?.documents?.[0]?.s3Url && (
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              size="md"
+              data-testid="seeInvoice"
+              onClick={() => downloadFile(invoice?.documents?.[0]?.s3Url)}
+              leftIcon={<BiDownload />}
+            >
+              {t('see')} {t('invoice')}
+            </Button>
+          )}
+        </Box>
+        <HStack>
+          <Button onClick={onClose} variant={'outline'} colorScheme="darkPrimary" data-testid="close-transaction-form">
+            {t(`project.projectDetails.cancel`)}
+          </Button>
+          <Button
+            onClick={() => {
+              formReturn.handleSubmit(onSubmit)()
+            }}
+            disabled={!balanceDue || isPaid}
+            form="invoice-form"
+            data-testid="save-transaction"
+            colorScheme="darkPrimary"
+            variant="solid"
+          >
+            {t(`project.projectDetails.save`)}
+          </Button>
+        </HStack>
+      </Flex>
     </form>
   )
 }

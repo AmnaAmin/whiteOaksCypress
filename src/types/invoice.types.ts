@@ -14,6 +14,15 @@ export interface InvoicingType {
   status: SelectOption | undefined | string
   paymentReceivedDate: string | null
   finalSowLineItems: InvoiceItemType[]
+  documents?: InvoiceDocumentType[]
+}
+type InvoiceDocumentType = {
+  documentType: number
+  projectId?: string | null
+  fileObject?: any
+  fileObjectContentType?: string
+  fileType?: string
+  s3Url?: string
 }
 
 type InvoiceItemType = {
