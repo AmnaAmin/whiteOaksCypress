@@ -22,10 +22,12 @@ import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import InvoiceModal from './add-invoice-modal'
 import { useFetchInvoices } from 'api/invoicing'
+import { SelectOption } from 'types/transaction.type'
 
 type InvoicingProps = {
   isReadOnly?: boolean
   projectData: Project | undefined
+  clientSelected: SelectOption | undefined | null
 }
 export const InvoicingContext = createContext<{ projectData?: Project; invoiceCount?: number }>({
   projectData: undefined,
@@ -33,7 +35,7 @@ export const InvoicingContext = createContext<{ projectData?: Project; invoiceCo
 })
 
 export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
-  const { isReadOnly, projectData } = props
+  const { isReadOnly, projectData, clientSelected } = props
   const { t } = useTranslation()
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
@@ -140,6 +142,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
             setSelectedInvoice(null)
             onInvoiceModalClose()
           }}
+          clientSelected={clientSelected}
           selectedInvoice={selectedInvoice}
         />
       </InvoicingContext.Provider>

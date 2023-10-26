@@ -86,8 +86,9 @@ const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
 export type InvoicingFormProps = {
   invoice?: InvoicingType
   onClose?: () => void
+  clientSelected?: SelectOption | undefined | null
 }
-const invoiceDefaultValues = ({ invoice, projectData, invoiceCount }) => {
+const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelected }) => {
   const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
   const invoicedDate = new Date()
   const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
@@ -105,7 +106,7 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount }) => {
     paymentReceivedDate: datePickerFormat(invoice?.paymentReceivedDate),
   }
 }
-export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) => {
+export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, clientSelected }) => {
   const { t } = useTranslation()
   const { projectData, invoiceCount } = useContext(InvoicingContext)
   const { mutate: createInvoiceMutate } = useCreateInvoiceMutation({ projId: projectData?.id })
@@ -113,8 +114,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
   const { data } = useAccountData()
 
   const defaultValues: InvoicingType = useMemo(() => {
-    return invoiceDefaultValues({ invoice, invoiceCount, projectData })
-  }, [invoice, projectData, invoiceCount])
+    return invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected })
+  }, [invoice, projectData, invoiceCount, clientSelected])
 
   const [totalReceived, setTotalReceived] = React.useState(0)
   const [finalSow, setFinalSow] = React.useState(0)

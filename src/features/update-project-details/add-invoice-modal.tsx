@@ -8,9 +8,11 @@ import { InvoiceForm } from './invoice-form'
 import { Project } from 'types/project.type'
 import { InvoicingContext } from './invoicing'
 import { InvoicingType } from 'types/invoice.types'
+import { SelectOption } from 'types/transaction.type'
 
 type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   selectedInvoice?: InvoicingType
+  clientSelected?: SelectOption | undefined | null
 }
 
 export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number) => {
@@ -20,11 +22,11 @@ export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number)
     projectData?.market?.slice(0, 3) +
     '-' +
     projectData?.streetAddress?.split(' ').join('')?.slice(0, 7) +
-    (revisedIndex && revisedIndex > 0 ? `(${revisedIndex})` : '')
+    (revisedIndex && revisedIndex > 0 ? `-R${String(revisedIndex).padStart(2, '0')}` : '')
   )
 }
 
-const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice }) => {
+const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, clientSelected }) => {
   const { t } = useTranslation()
   const { projectData, invoiceCount } = useContext(InvoicingContext)
   const [isMobile] = useMediaQuery('(max-width: 480px)')
@@ -59,7 +61,7 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice }) => 
         <ModalCloseButton _hover={{ bg: 'blue.50' }} _focus={{ outline: 'none' }} />
         <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
-            <InvoiceForm onClose={onClose} invoice={selectedInvoice} />
+            <InvoiceForm onClose={onClose} invoice={selectedInvoice} clientSelected={clientSelected} />
           </Card>
         </ModalBody>
       </ModalContent>

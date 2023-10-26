@@ -141,6 +141,7 @@ export type SelectOption = {
   awardStatus?: any
   isValidForAwardPlan?: any
   carrier?: Carrier[]
+  paymentTerm?: string | number | null | undefined
   lienDue?: number | undefined
   __isNew__?: boolean
   property?: any
