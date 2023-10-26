@@ -28,10 +28,12 @@ import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { FinalSowLineItems } from './final-sow-line-items'
 import { InvoicingContext } from './invoicing'
 import { getInvoiceInitials } from './add-invoice-modal'
-import { mapFormValuesToPayload, useCreateInvoiceMutation, useUpdateInvoiceMutation } from 'api/invoicing'
+import { mapFormValuesToPayload } from 'api/invoicing'
 import { ReceivedLineItems } from './received-line-items'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { ADV_PERMISSIONS } from 'api/access-control'
+import { createInvoicePdfNew } from 'api/vendor-projects'
+import jsPDF from 'jspdf'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -108,8 +110,8 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount }) => {
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) => {
   const { t } = useTranslation()
   const { projectData, invoiceCount } = useContext(InvoicingContext)
-  const { mutate: createInvoiceMutate } = useCreateInvoiceMutation({ projId: projectData?.id })
-  const { mutate: updateInvoiceMutate } = useUpdateInvoiceMutation({ projId: projectData?.id })
+  // const { mutate: createInvoiceMutate } = useCreateInvoiceMutation({ projId: projectData?.id })
+  // const { mutate: updateInvoiceMutate } = useUpdateInvoiceMutation({ projId: projectData?.id })
   const { data } = useAccountData()
 
   const defaultValues: InvoicingType = useMemo(() => {
@@ -137,6 +139,14 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
   const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
   const { permissions } = useRoleBasedPermissions()
   const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
+
+  const woAddress = {
+    companyName: 'WhiteOaks Aligned, LLC',
+    streetAddress: 'Four 14th Street #601',
+    city: 'Hoboken',
+    state: 'NJ',
+    zipCode: '07030',
+  }
 
   const onPaymentTermChange = (option: SelectOption) => {
     const { invoiceDate } = getValues()
@@ -173,26 +183,39 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
       return
     }
     const payload = mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: balanceDue })
-    if (!invoice) {
-      createInvoiceMutate(payload, {
-        onSuccess: () => {
-          onClose?.()
-        },
-        onError: error => {
-          console.log(error)
-        },
-      })
-    } else {
-      updateInvoiceMutate(payload, {
-        onSuccess: () => {
-          onClose?.()
-        },
-        onError: error => {
-          console.log(error)
-        },
-      })
-    }
+    const finalSowLineItems = payload?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems')
+    const receivedLineItems = payload?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems')
+
+    // if (!invoice) {
+    //   createInvoiceMutate(payload, {
+    //     onSuccess: () => {
+    //       onClose?.()
+    //     },
+    //     onError: error => {
+    //       console.log(error)
+    //     },
+    //   })
+    // } else {
+    //   updateInvoiceMutate(payload, {
+    //     onSuccess: () => {
+    //       onClose?.()
+    //     },
+    //     onError: error => {
+    //       console.log(error)
+    //     },
+    //   })
+    // }
+    let doc = new jsPDF()
+    createInvoicePdfNew({
+      doc,
+      invoiceVals: defaultValues,
+      finalSowLineItems,
+      receivedLineItems,
+      address: woAddress,
+      projectData,
+    })
   }
+
   return (
     <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => {}}>
       <InvoicingReadOnlyInfo invoice={invoice} account={data} />
