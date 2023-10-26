@@ -9,8 +9,6 @@ export const useDeleteMarket = () => {
   const client = useClient()
   const toast = useToast()
 
-  
-
   return useMutation({
     mutationFn: async (payload: any) => {
       const response = await client(`markets/${payload?.id}`, {

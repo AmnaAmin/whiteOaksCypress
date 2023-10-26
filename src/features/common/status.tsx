@@ -38,6 +38,7 @@ export enum STATUS {
   Decline = 'decline',
   Reconcile = 'reconcile',
   Rejected = 'rejected',
+  Pending_payment = 'pending_payment',
 }
 
 const STATUS_COLOR = {
@@ -65,6 +66,7 @@ const STATUS_COLOR = {
   [STATUS.Decline]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' },
   [STATUS.Rejected]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' },
   [STATUS.Reconcile]: { color: '#4A5568', backgroundColor: '#F8F6CD' },
+  [STATUS.Pending_payment]: { color: '#0BC5EA', backgroundColor: '#C4F1F9' },
 }
 
 const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
