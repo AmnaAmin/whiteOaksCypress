@@ -196,15 +196,15 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
       projectData,
     })
     const pdfUri = form.output('datauristring')
-    payload['documents'] = [
+    payload['document'] = 
       {
         documentType: 48,
         projectId: projectData?.id,
         fileObject: pdfUri.split(',')[1],
         fileObjectContentType: 'application/pdf',
         fileType: 'Invoice.pdf',
-      },
-    ]
+      }
+    
     if (!invoice) {
       createInvoiceMutate(payload, {
         onSuccess: () => {
@@ -423,13 +423,13 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose }) 
       <Divider mt={3}></Divider>
       <Flex alignItems="center" justifyContent="space-between" mt="16px">
         <Box>
-          {!!invoice?.documents?.[0]?.s3Url && (
+          {!!invoice?.document?.s3Url && (
             <Button
               variant="outline"
               colorScheme="brand"
               size="md"
               data-testid="seeInvoice"
-              onClick={() => downloadFile(invoice?.documents?.[0]?.s3Url)}
+              onClick={() => downloadFile(invoice?.document?.s3Url)}
               leftIcon={<BiDownload />}
             >
               {t('see')} {t('invoice')}

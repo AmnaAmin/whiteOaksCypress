@@ -14,7 +14,7 @@ export interface InvoicingType {
   status: SelectOption | undefined | string
   paymentReceivedDate: string | null
   finalSowLineItems: InvoiceItemType[]
-  documents?: InvoiceDocumentType[]
+  document?: InvoiceDocumentType
 }
 type InvoiceDocumentType = {
   documentType: number
