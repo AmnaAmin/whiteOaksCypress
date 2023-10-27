@@ -95,7 +95,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
           border="1px solid #CBD5E0"
           borderRadius="6px"
           roundedRight={{ base: '0px', sm: '6px' }}
-          minH={isVendor ? { sm: 'auto', md: 'calc(100vh - 370px)' } : { sm: 'auto', md: 'calc(100vh - 507px)' }}
+          h='550px'
         >
           <TableContextProvider
             totalPages={totalPages}
