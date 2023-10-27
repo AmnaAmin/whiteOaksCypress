@@ -99,7 +99,7 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelect
   const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
   const invoicedDate = new Date()
   const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
-  const paymentTerm = Number(projectData?.paymentTerm)
+  const paymentTerm = Number(clientSelected?.paymentTerm) ?? 0
   const woaExpectedDate = addDays(utcDate, paymentTerm)
 
   return {
