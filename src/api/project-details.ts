@@ -129,6 +129,7 @@ export const useGetClientSelectOptions = () => {
       value: client.id,
       label: client.companyName,
       carrier: client.carrier,
+      paymentTerm: client.paymentTerm,
     })) || []
 
   return { clientSelectOptions, ...rest }
