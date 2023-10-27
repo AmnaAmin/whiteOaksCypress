@@ -307,7 +307,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   />
                 </TabPanel>
                 {projectData?.validForNewInvoice && (
-                  <TabPanel p="0" h={style?.height ?? 'auto'}>
+                  <TabPanel p="0"  h='600px'>
                     <Invoicing isReadOnly={isReadOnly} projectData={projectData} clientSelected={watchClient} />
                   </TabPanel>
                 )}
