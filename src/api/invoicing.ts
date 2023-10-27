@@ -133,7 +133,7 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
     woaExpectedPayDate: values.woaExpectedPayDate,
     invoiceNumber: values.invoiceNumber,
     invoiceDate: values.invoiceDate,
-    paymentReceivedDate: values.paymentReceivedDate,
+    paymentReceived: values.paymentReceivedDate,
     changeOrderId: invoice ? invoice?.changeOrderId : null,
     document: null as any,
   }
