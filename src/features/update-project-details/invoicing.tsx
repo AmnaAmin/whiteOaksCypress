@@ -16,7 +16,6 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Project } from 'types/project.type'
 import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
@@ -73,7 +72,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
     onInvoiceModalOpen()
   }
 
-  const { isVendor } = useUserRolesSelector()
+ 
 
   useEffect(() => {
     setTotalPages(Math.ceil((projectData?.resubmissionDTOList?.length ?? 0) / 50))
