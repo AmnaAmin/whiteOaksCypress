@@ -130,7 +130,7 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
         amount: item.amount,
       }
     }),
-    woaExpectedPayDate: values.woaExpectedPayDate,
+    woaExpectedPay: values.woaExpectedPayDate,
     invoiceNumber: values.invoiceNumber,
     invoiceDate: values.invoiceDate,
     paymentReceived: values.paymentReceivedDate,
