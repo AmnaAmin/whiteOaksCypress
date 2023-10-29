@@ -135,6 +135,7 @@ export type Project = {
   lienRightExpireDate: Date | string | null
   resubmissionDTOList: ResubmissionListItem[]
   clientTypeId: string | number
+  validForNewInvoice: boolean
 }
 
 export type ProjectExtraAttributesType = {

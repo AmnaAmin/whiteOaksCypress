@@ -65,6 +65,7 @@ export const transaction = {
         payAfterDate: 'Pay After',
         verifiedByFpm: 'Verified by FPM',
         verifiedByManager: 'Verified by DM',
+        invoiceNumber: 'Invoice No.',
 
         // Project WO Overview Table
         vendor: 'Vendor',
@@ -182,6 +183,7 @@ export const transaction = {
         payAfterDate: 'Pagar Después',
         verifiedByFpm: 'Verificado por FPM',
         verifiedByManager: 'Verificado por DM',
+        invoiceNumber: 'Número de factura',
         // Project WO Overview Table
         vendor: 'Vendedor',
         clientApprovedAmount: 'Monto aprobado por el cliente',

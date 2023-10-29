@@ -1,0 +1,464 @@
+import React, { useContext, useMemo } from 'react'
+import {
+  Box,
+  Button,
+  Divider,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  GridItem,
+  HStack,
+  Input,
+} from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/toast'
+import { useForm, Controller } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
+import { ReadOnlyInput } from 'components/input-view/input-view'
+import { BiCalendar, BiDetail, BiDownload } from 'react-icons/bi'
+import { TRANSACTION } from '../project-details/transactions/transactions.i18n'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
+import { useAccountData } from 'api/user-account'
+import ReactSelect from 'components/form/react-select'
+import { SelectOption } from 'types/transaction.type'
+import { addDays } from 'date-fns'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { FinalSowLineItems } from './final-sow-line-items'
+import { InvoicingContext } from './invoicing'
+import { getInvoiceInitials } from './add-invoice-modal'
+import {
+  createInvoicePdf,
+  mapFormValuesToPayload,
+  useCreateInvoiceMutation,
+  useUpdateInvoiceMutation,
+} from 'api/invoicing'
+import { ReceivedLineItems } from './received-line-items'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { ADV_PERMISSIONS } from 'api/access-control'
+import jsPDF from 'jspdf'
+import { downloadFile } from 'utils/file-utils'
+
+const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
+  const { t } = useTranslation()
+  const createdBy = invoice?.createdBy ?? account?.email
+  const modifiedBy = invoice?.modifiedBy
+  return (
+    <Grid
+      templateColumns="repeat(auto-fill, minmax(100px,1fr))"
+      gap={{ base: '1rem 20px', sm: '3.5rem' }}
+      borderBottom="1px solid #E2E8F0"
+      borderColor="gray.200"
+      py="5"
+    >
+      <GridItem>
+        <ReadOnlyInput
+          label={t(`${TRANSACTION}.dateCreated`)}
+          name={'dateCreated'}
+          value={dateFormat(invoice?.createdDate ?? new Date()) as string}
+          Icon={BiCalendar}
+        />
+      </GridItem>
+
+      <GridItem>
+        <ReadOnlyInput
+          label={t(`${TRANSACTION}.dateModified`)}
+          name={'dateModified'}
+          value={invoice?.modifiedDate ? (dateFormat(invoice?.modifiedDate) as string) : '---'}
+          Icon={BiCalendar}
+        />
+      </GridItem>
+      <GridItem>
+        <ReadOnlyInput
+          label={t(`${TRANSACTION}.createdBy`)}
+          name="createdBy"
+          value={(createdBy as string) || '---'}
+          Icon={BiDetail}
+        />
+      </GridItem>
+
+      <GridItem>
+        <ReadOnlyInput
+          label={t(`${TRANSACTION}.modifiedBy`)}
+          name={'modifiedBy'}
+          value={(modifiedBy as string) || '----'}
+          Icon={BiDetail}
+        />
+      </GridItem>
+    </Grid>
+  )
+}
+
+export type InvoicingFormProps = {
+  invoice?: InvoicingType
+  onClose?: () => void
+  clientSelected?: SelectOption | undefined | null
+}
+const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelected }) => {
+  const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
+  const invoicedDate = new Date()
+  const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
+  const paymentTerm = Number(clientSelected?.paymentTerm) ?? 0
+  const woaExpectedDate = addDays(utcDate, paymentTerm)
+
+  return {
+    invoiceNumber: invoice?.invoiceNumber ?? invoiceInitials,
+    invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
+    paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? clientSelected?.paymentTerm)),
+    woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPay ?? woaExpectedDate),
+    finalSowLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems'),
+    receivedLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems'),
+    status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
+    paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
+  }
+}
+export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, clientSelected }) => {
+  const { t } = useTranslation()
+  const { projectData, invoiceCount } = useContext(InvoicingContext)
+  const { mutate: createInvoiceMutate, isLoading: isLoadingCreate } = useCreateInvoiceMutation({
+    projId: projectData?.id,
+  })
+  const { mutate: updateInvoiceMutate, isLoading: isLoadingUpdate } = useUpdateInvoiceMutation({
+    projId: projectData?.id,
+  })
+  const { data } = useAccountData()
+
+  const defaultValues: InvoicingType = useMemo(() => {
+    return invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected })
+  }, [invoice, projectData, invoiceCount, clientSelected])
+
+  const [totalReceived, setTotalReceived] = React.useState(0)
+  const [finalSow, setFinalSow] = React.useState(0)
+  const formReturn = useForm<InvoicingType>({
+    defaultValues: {
+      ...defaultValues,
+    },
+  })
+  const {
+    formState: { errors },
+    control,
+    getValues,
+    register,
+    setValue,
+    watch,
+  } = formReturn
+  const watchStatus = watch('status')
+  const toast = useToast()
+  const balanceDue = finalSow - totalReceived
+  const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
+  const { permissions } = useRoleBasedPermissions()
+  const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
+
+  const woAddress = {
+    companyName: 'WhiteOaks Aligned, LLC',
+    streetAddress: 'Four 14th Street #601',
+    city: 'Hoboken',
+    state: 'NJ',
+    zipCode: '07030',
+  }
+
+  const onPaymentTermChange = (option: SelectOption) => {
+    const { invoiceDate } = getValues()
+    const date = new Date(invoiceDate as string)
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+    const paymentTerm = Number(option.value)
+
+    // Do not calculated WOA expect date if payment term is not selected
+    if (!date) return
+    const woaExpectedDate = addDays(utcDate, paymentTerm)
+    setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
+  }
+
+  const onInvoiceDateChange = e => {
+    const { paymentTerm } = getValues()
+    const date = new Date(e.target.value)
+    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
+
+    // Do not calculated WOA expect date if payment term is not selected
+    if (!paymentTerm?.value) return
+    const woaExpectedDate = addDays(utcDate, paymentTerm?.value)
+    setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
+  }
+
+  const onSubmit = async values => {
+    if (balanceDue < 0) {
+      toast({
+        title: 'Error',
+        description: t(`project.projectDetails.balanceDueError`),
+        status: 'error',
+        isClosable: true,
+        position: 'top-left',
+      })
+      return
+    }
+    let payload = mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: balanceDue })
+    let form = new jsPDF()
+    form = await createInvoicePdf({
+      doc: form,
+      invoiceVals: payload,
+      address: woAddress,
+      projectData,
+    })
+    const pdfUri = form.output('datauristring')
+    payload['document'] = {
+      documentType: 48,
+      projectId: projectData?.id,
+      fileObject: pdfUri.split(',')[1],
+      fileObjectContentType: 'application/pdf',
+      fileType: 'Invoice.pdf',
+    }
+
+    if (!invoice) {
+      createInvoiceMutate(payload, {
+        onSuccess: () => {
+          onClose?.()
+        },
+        onError: error => {
+          console.log(error)
+        },
+      })
+    } else {
+      updateInvoiceMutate(payload, {
+        onSuccess: () => {
+          onClose?.()
+        },
+        onError: error => {
+          console.log(error)
+        },
+      })
+    }
+  }
+
+  return (
+    <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => {}}>
+      <InvoicingReadOnlyInfo invoice={invoice} account={data} />
+      <Flex direction="column">
+        <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pt="20px" pb="4">
+          <GridItem>
+            <FormControl isInvalid={!!errors.invoiceNumber} data-testid="invoiceNumber">
+              <FormLabel variant="strong-label" size="md" htmlFor="invoiceNumber">
+                {t(`project.projectDetails.invoiceNo`)}
+              </FormLabel>
+              <Controller
+                rules={{ required: 'This is required' }}
+                control={control}
+                name="invoiceNumber"
+                render={({ field, fieldState }) => {
+                  return (
+                    <div data-testid="invoice-number">
+                      <Input
+                        data-testid="invoiceNumber"
+                        id="invoiceNumber"
+                        size="md"
+                        disabled={true}
+                        {...register('invoiceNumber')}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </div>
+                  )
+                }}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.invoiceDate} data-testid="invoiceDate">
+              <FormLabel variant="strong-label" size="md" htmlFor="invoiceDate">
+                {t(`project.projectDetails.woaInvoiceDate`)}
+              </FormLabel>
+              <Controller
+                rules={{ required: 'This is required' }}
+                control={control}
+                name="invoiceDate"
+                render={({ field, fieldState }) => {
+                  return (
+                    <div data-testid="invoiceDate">
+                      <Input
+                        data-testid="invoiceDate"
+                        type="date"
+                        id="invoiceDate"
+                        size="md"
+                        disabled={isPaid || !isInvoicedEnabled}
+                        {...register('invoiceDate')}
+                        onChange={onInvoiceDateChange}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </div>
+                  )
+                }}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl data-testid="payment-term" w="215px" isInvalid={!!errors.paymentTerm}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.paymentTerms`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="paymentTerm"
+                rules={{ required: 'This is required field.' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <ReactSelect
+                      {...field}
+                      isDisabled={isPaid}
+                      options={PAYMENT_TERMS_OPTIONS}
+                      selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
+                      onChange={(option: SelectOption) => {
+                        onPaymentTermChange(option)
+                        field.onChange(option)
+                      }}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
+            </FormControl>
+          </GridItem>
+        </Grid>
+        <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pb="4">
+          <GridItem>
+            <FormControl isInvalid={!!errors.woaExpectedPayDate} data-testid="woaExpectedPayDate">
+              <FormLabel variant="strong-label" size="md" htmlFor="woaExpectedPayDate">
+                {t(`project.projectDetails.woaExpectedPay`)}
+              </FormLabel>
+              <Controller
+                rules={{ required: 'This is required' }}
+                control={control}
+                name="woaExpectedPayDate"
+                render={({ field, fieldState }) => {
+                  return (
+                    <div data-testid="woaExpectedPayDate">
+                      <Input
+                        data-testid="woaExpectedPayDate"
+                        type="date"
+                        disabled={true}
+                        id="woaExpectedPayDate"
+                        size="md"
+                        {...register('woaExpectedPayDate')}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </div>
+                  )
+                }}
+              />
+            </FormControl>
+          </GridItem>
+          {invoice && (
+            <>
+              <GridItem>
+                <FormControl data-testid="status" w="215px" isInvalid={!!errors.status}>
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`project.projectDetails.status`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="status"
+                    rules={{ required: 'This is required field.' }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <ReactSelect
+                          {...field}
+                          isDisabled={isPaid}
+                          options={INVOICE_STATUS_OPTIONS}
+                          selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
+                          onChange={statusOption => {
+                            field.onChange(statusOption)
+                          }}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </>
+                    )}
+                  />
+                </FormControl>
+              </GridItem>
+              <GridItem>
+                <FormControl isInvalid={!!errors.paymentReceivedDate} data-testid="woaExpectedPayDate">
+                  <FormLabel variant="strong-label" size="md" htmlFor="woaExpectedPayDate">
+                    {t(`project.projectDetails.paymentReceived`)}
+                  </FormLabel>
+                  <Controller
+                    rules={{ required: (watchStatus as SelectOption)?.value === 'PAID' ? 'This is required' : false }}
+                    control={control}
+                    name="paymentReceivedDate"
+                    render={({ field, fieldState }) => {
+                      return (
+                        <div data-testid="paymentReceivedDate">
+                          <Input
+                            disabled={(watchStatus as SelectOption)?.value !== 'PAID' || isPaid}
+                            data-testid="paymentReceivedDate"
+                            type="date"
+                            id="paymentReceivedDate"
+                            variant={(watchStatus as SelectOption)?.value !== 'PAID' ? 'outline' : 'required-field'}
+                            size="md"
+                            {...register('paymentReceivedDate')}
+                          />
+                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                        </div>
+                      )
+                    }}
+                  />
+                </FormControl>
+              </GridItem>
+            </>
+          )}
+        </Grid>
+        <Box color="gray.500" fontWeight={'500'} mt="20px">
+          {t(`project.projectDetails.finalSow`)}
+        </Box>
+        <FinalSowLineItems
+          setTotalAmount={setFinalSow}
+          totalAmount={finalSow}
+          formReturn={formReturn}
+          invoice={invoice}
+        />
+        <Box color="gray.500" fontWeight={'500'} mt="20px">
+          {t(`project.projectDetails.received`)}
+        </Box>
+        <ReceivedLineItems
+          setTotalAmount={setTotalReceived}
+          totalAmount={totalReceived}
+          finalSow={finalSow}
+          formReturn={formReturn}
+          invoice={invoice}
+        />
+      </Flex>
+      <Divider mt={3}></Divider>
+      <Flex alignItems="center" justifyContent="space-between" mt="16px">
+        <Box>
+          {!!invoice?.document?.s3Url && (
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              size="md"
+              data-testid="seeInvoice"
+              onClick={() => downloadFile(invoice?.document?.s3Url)}
+              leftIcon={<BiDownload />}
+            >
+              {t('see')} {t('invoice')}
+            </Button>
+          )}
+        </Box>
+        <HStack>
+          <Button onClick={onClose} variant={'outline'} colorScheme="darkPrimary" data-testid="close-transaction-form">
+            {t(`project.projectDetails.cancel`)}
+          </Button>
+          <Button
+            onClick={() => {
+              formReturn.handleSubmit(onSubmit)()
+            }}
+            isLoading={isLoadingUpdate || isLoadingCreate}
+            disabled={!balanceDue || isPaid}
+            form="invoice-form"
+            data-testid="save-transaction"
+            colorScheme="darkPrimary"
+            variant="solid"
+          >
+            {t(`project.projectDetails.save`)}
+          </Button>
+        </HStack>
+      </Flex>
+    </form>
+  )
+}

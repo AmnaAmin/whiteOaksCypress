@@ -184,7 +184,7 @@ export const InvoiceTab = ({
       updatedWorkOrder,
       projectData,
       items,
-      { subTotal: workOrder?.subTotal, amountPaid: workOrder?.totalAmountPaid },
+      { subTotal: workOrder?.subTotal, amountPaid: workOrder?.totalAmountPaid, drawPending: totalPendingDrawAmount },
       vendorAddress,
     )
     const pdfUri = form.output('datauristring')
@@ -395,7 +395,7 @@ export const InvoiceTab = ({
                           {t('pendingDraw')}
                         </Text>
                         <Text fontWeight={500} color={'gray.600'} data-testid={'pendingDraw'}>
-                          {totalPendingDrawAmount}
+                          {currencyFormatter(totalPendingDrawAmount)}
                         </Text>
                       </HStack>
                       <HStack w={300} height="35px" justifyContent="space-between">

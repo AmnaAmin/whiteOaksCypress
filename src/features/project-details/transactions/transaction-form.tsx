@@ -183,6 +183,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { transaction } = useTransaction(selectedTransactionId)
   const { managerEnabled } = useManagerEnabled(projectId)
   const isManagingFPM = managerEnabled?.allowed
+  const isInvoiceTransaction =
+    transaction?.transactionType === TransactionTypeValues.payment && !!transaction?.invoiceNumber
   const isShowFpm = !!transaction
   const {
     againstOptions: againstSelectOptions,
@@ -1025,7 +1027,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         size="md"
                         type="date"
                         variant="required-field"
-                        isDisabled={isApproved && !editPaymentReceived}
+                        isDisabled={(isApproved && !editPaymentReceived) || isInvoiceTransaction}
                         max={futureDateDisable}
                         {...register('paymentRecievedDate', { required: REQUIRED_FIELD_ERROR_MESSAGE })}
                       />
@@ -1138,6 +1140,24 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                     </GridItem>
                   </>
                 )}
+                {isInvoiceTransaction && (
+                  <>
+                    <GridItem>
+                      <FormControl>
+                        <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
+                          {t(`${TRANSACTION}.invoiceNumber`)}
+                        </FormLabel>
+                        <Input
+                          data-testid="invoice-number"
+                          id="invoiceNumber"
+                          size="md"
+                          isDisabled={true}
+                          value={transaction?.invoiceNumber as string}
+                        />
+                      </FormControl>
+                    </GridItem>
+                  </>
+                )}
               </Grid>
 
               <TransactionAmountForm
@@ -1209,7 +1229,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 data-testid="save-transaction"
                 colorScheme="darkPrimary"
                 variant="solid"
-                disabled={isFormSubmitLoading || isMaterialsLoading || disableSave || disableBtn}
+                disabled={
+                  isFormSubmitLoading || isMaterialsLoading || disableSave || disableBtn || isInvoiceTransaction
+                }
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>
