@@ -141,6 +141,7 @@ export type SelectOption = {
   awardStatus?: any
   isValidForAwardPlan?: any
   carrier?: Carrier[]
+  paymentTerm?: string | number | null | undefined
   lienDue?: number | undefined
   __isNew__?: boolean
   property?: any
@@ -249,6 +250,8 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   payAfterDate: string | null
   verifiedByFpm: SelectOption | null
   verifiedByManager: SelectOption | null
+  invoiceId: number | string | null
+  invoiceNumber?: number | string | null
 }
 
 type LineItem = {
@@ -295,6 +298,8 @@ export type ChangeOrderType = {
   verifiedByManager: SelectOption | null
   paymentProcessed: null
   payAfterDate: null
+  invoiceId: number | string | null
+  invoiceNumber?: number | string | null
 }
 
 export type TransactionsWithRefundType = {

@@ -88,3 +88,39 @@ export const createDocumentPayload = (file: File, documentType = 42): Promise<Do
     reader.readAsDataURL(file)
   })
 }
+
+export const addImages = async images => {
+  const results = await Promise.all(
+    images.map(async (image: any, index: number) => {
+      const img = await addImageProcess(image)
+      return img
+    }),
+  )
+  return results
+}
+
+async function addImageProcess(src) {
+  return new Promise((resolve, reject) => {
+    let img = new Image()
+    img.src = src
+    img.crossOrigin = 'Anonymous'
+    img.onload = () => {
+      var dataURI = getBase64Image(img)
+      return resolve(dataURI)
+    }
+    img.onerror = reject
+  })
+}
+
+function getBase64Image(img) {
+  var canvas = document.createElement('canvas')
+
+  canvas.width = img.width
+  canvas.height = img.height
+  var ctx = canvas.getContext('2d')
+  ctx?.drawImage(img, 0, 0)
+
+  var dataURL = canvas.toDataURL('image/jpeg')
+
+  return dataURL.replace(/^data:image\/(png|jpg);base64,/, '')
+}

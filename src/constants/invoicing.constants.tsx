@@ -11,7 +11,7 @@ export const INVOICING_TABLE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     id: 'invoicedAmount',
-    header: 'invoiceAmount',
+    header: 'Invoiced Amount',
     accessorKey: 'invoiceAmount',
     cell: row => {
       const value = row.cell.getValue() as string

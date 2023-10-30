@@ -16,16 +16,17 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { Project } from 'types/project.type'
 import { BiBookAdd } from 'react-icons/bi'
 import { useTranslation } from 'react-i18next'
 import InvoiceModal from './add-invoice-modal'
 import { useFetchInvoices } from 'api/invoicing'
+import { SelectOption } from 'types/transaction.type'
 
 type InvoicingProps = {
   isReadOnly?: boolean
   projectData: Project | undefined
+  clientSelected: SelectOption | undefined | null
 }
 export const InvoicingContext = createContext<{ projectData?: Project; invoiceCount?: number }>({
   projectData: undefined,
@@ -33,7 +34,7 @@ export const InvoicingContext = createContext<{ projectData?: Project; invoiceCo
 })
 
 export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
-  const { isReadOnly, projectData } = props
+  const { isReadOnly, projectData, clientSelected } = props
   const { t } = useTranslation()
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
@@ -71,7 +72,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
     onInvoiceModalOpen()
   }
 
-  const { isVendor } = useUserRolesSelector()
+ 
 
   useEffect(() => {
     setTotalPages(Math.ceil((projectData?.resubmissionDTOList?.length ?? 0) / 50))
@@ -93,7 +94,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
           border="1px solid #CBD5E0"
           borderRadius="6px"
           roundedRight={{ base: '0px', sm: '6px' }}
-          minH={isVendor ? { sm: 'auto', md: 'calc(100vh - 370px)' } : { sm: 'auto', md: 'calc(100vh - 507px)' }}
+          h='550px'
         >
           <TableContextProvider
             totalPages={totalPages}
@@ -140,6 +141,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
             setSelectedInvoice(null)
             onInvoiceModalClose()
           }}
+          clientSelected={clientSelected}
           selectedInvoice={selectedInvoice}
         />
       </InvoicingContext.Provider>
