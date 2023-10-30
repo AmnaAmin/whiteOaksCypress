@@ -118,7 +118,13 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
   } = form
 
   const { data: userInfo } = useUser(user?.email)
-  const { mutate: updateUser } = useSaveUserDetails()
+  const { mutate: updateUser, isError, error: updateUserError } = useSaveUserDetails()
+  const [isModalOpen, setModalOpen] = useState(false)
+  useEffect(() => {
+    if (isError) {
+      setModalOpen(true)
+    }
+  }, [isError])
   const { mutate: addUser } = useCreateUserMutation()
   const { mutate: deleteUser } = useDeleteUserDetails()
   const { options: vendorTypes, isLoading: loadingVendors } = useViewVendor()
@@ -250,7 +256,6 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
   const watchMultiStates = useWatch({ control, name: 'directStates' as any })
   const watchMultiRegions = useWatch({ control, name: 'directRegions' as any })
   const watchMultiMarkets = useWatch({ control, name: 'directMarkets' as any })
-
   useEffect(() => {
     if (!showStates || !watchMultiStates) return
 
@@ -303,6 +308,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
     }
   }, []);
 
+ 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -925,6 +931,16 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
           }}
           yesButtonText={t(`${USER_MANAGEMENT}.modal.delete`)}
           showNoButton={true}
+        />
+        <ConfirmationBox
+          title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}
+          content = {`${t(`${USER_MANAGEMENT}.modal.deactivateUser`)}`}
+          extraContent={ `Project Id: ${updateUserError?.missing_project_id}`}
+          isOpen={isModalOpen}
+          onClose={() => setModalOpen(false)}
+          onConfirm={() => setModalOpen(false)}
+          showNoButton={false}
+          yesButtonText={t(`${USER_MANAGEMENT}.modal.oK`)}
         />
       </HStack>
     </form>
