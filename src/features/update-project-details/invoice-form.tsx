@@ -99,25 +99,29 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelect
   const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
   const invoicedDate = new Date()
   const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
-  const paymentTerm = Number(projectData?.paymentTerm)
+  const paymentTerm = Number(clientSelected?.paymentTerm) ?? 0
   const woaExpectedDate = addDays(utcDate, paymentTerm)
 
   return {
     invoiceNumber: invoice?.invoiceNumber ?? invoiceInitials,
     invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
     paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? clientSelected?.paymentTerm)),
-    woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPayDate ?? woaExpectedDate),
+    woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPay ?? woaExpectedDate),
     finalSowLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems'),
     receivedLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems'),
     status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
-    paymentReceivedDate: datePickerFormat(invoice?.paymentReceivedDate),
+    paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
   }
 }
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, clientSelected }) => {
   const { t } = useTranslation()
   const { projectData, invoiceCount } = useContext(InvoicingContext)
-  const { mutate: createInvoiceMutate } = useCreateInvoiceMutation({ projId: projectData?.id })
-  const { mutate: updateInvoiceMutate } = useUpdateInvoiceMutation({ projId: projectData?.id })
+  const { mutate: createInvoiceMutate, isLoading: isLoadingCreate } = useCreateInvoiceMutation({
+    projId: projectData?.id,
+  })
+  const { mutate: updateInvoiceMutate, isLoading: isLoadingUpdate } = useUpdateInvoiceMutation({
+    projId: projectData?.id,
+  })
   const { data } = useAccountData()
 
   const defaultValues: InvoicingType = useMemo(() => {
@@ -197,15 +201,14 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
       projectData,
     })
     const pdfUri = form.output('datauristring')
-    payload['document'] = 
-      {
-        documentType: 48,
-        projectId: projectData?.id,
-        fileObject: pdfUri.split(',')[1],
-        fileObjectContentType: 'application/pdf',
-        fileType: 'Invoice.pdf',
-      }
-    
+    payload['document'] = {
+      documentType: 48,
+      projectId: projectData?.id,
+      fileObject: pdfUri.split(',')[1],
+      fileObjectContentType: 'application/pdf',
+      fileType: 'Invoice.pdf',
+    }
+
     if (!invoice) {
       createInvoiceMutate(payload, {
         onSuccess: () => {
@@ -357,7 +360,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
                       <>
                         <ReactSelect
                           {...field}
-                          disabled={isPaid}
+                          isDisabled={isPaid}
                           options={INVOICE_STATUS_OPTIONS}
                           selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                           onChange={statusOption => {
@@ -445,6 +448,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
             onClick={() => {
               formReturn.handleSubmit(onSubmit)()
             }}
+            isLoading={isLoadingUpdate || isLoadingCreate}
             disabled={!balanceDue || isPaid}
             form="invoice-form"
             data-testid="save-transaction"

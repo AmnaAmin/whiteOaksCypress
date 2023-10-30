@@ -111,13 +111,6 @@ export const useSaveUserDetails = () => {
         })
       },
       onError(error: any) {
-        toast({
-          title: t(`${USER_MANAGEMENT}.modal.updateUser`),
-          description: (error.title as string) ?? t(`${USER_MANAGEMENT}.modal.userUpdateFailed`),
-          status: 'error',
-          isClosable: true,
-          position: 'top-left',
-        })
       },
     },
   )

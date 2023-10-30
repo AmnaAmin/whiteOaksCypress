@@ -130,10 +130,10 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
         amount: item.amount,
       }
     }),
-    woaExpectedPayDate: values.woaExpectedPayDate,
+    woaExpectedPay: values.woaExpectedPayDate,
     invoiceNumber: values.invoiceNumber,
     invoiceDate: values.invoiceDate,
-    paymentReceivedDate: values.paymentReceivedDate,
+    paymentReceived: values.paymentReceivedDate,
     changeOrderId: invoice ? invoice?.changeOrderId : null,
     document: null as any,
   }
@@ -147,7 +147,7 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
   receivedLineItems = receivedLineItems?.length > 0 ? receivedLineItems : [{ type: '', description: '', amount: 0 }]
 
   const workOrderInfo = [
-    { label: 'Date:', value: invoiceVals?.invoiceDate ?? '' },
+    { label: 'Date:', value: dateFormat(invoiceVals?.invoiceDate) ?? '' },
     { label: 'Invoice #:', value: invoiceVals?.invoiceNumber ?? '' },
   ]
   const basicFont = undefined
@@ -207,7 +207,7 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
         pm: projectData.projectManager,
         address: projectData.streetAddress,
         paymentTerm: invoiceVals?.paymentTerm,
-        dueDate: invoiceVals?.woaExpectedPayDate,
+        dueDate: dateFormat(invoiceVals?.woaExpectedPay),
       },
     ],
     columnStyles: {
