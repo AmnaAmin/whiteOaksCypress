@@ -437,7 +437,7 @@ export const Table: React.FC<TableProps> = ({
       // border="1px solid #CBD5E0"
       bg="white"
       h="100%"
-      minH={isFilteredByApi ? '530px' : 'inherit'}
+      minH={isFilteredByApi ? '500px' : 'inherit'}
     >
       <TableDatePickerContext.Provider value={{ datePickerState, datePickerDispatch } as any}>
         <ChakraTable size="sm" w="100%" {...restProps}>
