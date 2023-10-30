@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react'
+import React, { useState, useEffect, useRef, useMemo, useReducer, useContext } from 'react'
 import { Column, Table as TableType, TableOptions, flexRender } from '@tanstack/react-table'
 import {
   Table as ChakraTable,
@@ -29,8 +29,10 @@ import { useStickyState } from 'utils/hooks'
 import { isValidAndNonEmpty } from 'utils'
 import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
-import { DateRangePicker } from 'react-date-range'
+import { DateRange } from 'react-date-range'
 import moment from 'moment'
+
+import { tableContextReducer, TableDatePickerContext, TableReducerActionType } from './TableContext'
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
 }
@@ -47,7 +49,6 @@ function Filter({
   isFilteredByApi
 }) {
   const firstValue = table.getPreFilteredRowModel().flatRows[0]?.getValue(column.id)
-
   // We inject meta into certain columns where the filter state can be prefilled either by backend or by UI
   // In react table, meta key can be added to any column and meta can hold any arbitrary value
   const metaData: any = column.columnDef?.meta as any
@@ -119,6 +120,7 @@ function Filter({
       key: 'selection',
     })
   }
+  const { datePickerState } = useContext(TableDatePickerContext)
 
   return (
     <>
@@ -167,14 +169,14 @@ function Filter({
                 style={{
                   position: 'absolute',
                   top: '100%',
-                  left: '0',
+                  left: datePickerState.isLastColumn ? '-205px' : '0',
                   backgroundColor: 'white',
                   boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px',
                   marginTop: '15px',
                   zIndex: 1000,
                 }}
               >
-                <DateRangePicker
+                <DateRange
                   ranges={[selectionRange]}
                   onSelect={() => {
                     setIsDateRangePickerOpen(false)
@@ -414,6 +416,7 @@ export const Table: React.FC<TableProps> = ({
 
   const tableInstance = useTableInstance()
   const { getHeaderGroups, getRowModel, getFooterGroups } = tableInstance
+  const [datePickerState, datePickerDispatch] = useReducer(tableContextReducer, { isLastColumn: false })
   const getColumnMaxMinWidths = (column: any) => {
     const columnWidth = column?.getSize() + 'px'
 
@@ -436,240 +439,253 @@ export const Table: React.FC<TableProps> = ({
       h="100%"
       minH={isFilteredByApi ? '530px' : 'inherit'}
     >
-      <ChakraTable size="sm" w="100%" {...restProps}>
-        <Thead rounded="md" top="0">
-          {getHeaderGroups().map(headerGroup => (
-            <Tr key={headerGroup.id}>
-              {headerGroup.headers.map(header => {
-                const title = header.isPlaceholder
-                  ? null
-                  : flexRender(header.column.columnDef.header, header.getContext())
-                const checkBox = header?.id === 'checkbox'
-                const sortedBy = header.column.getIsSorted()
-                const sortedDesc = sortedBy === 'desc'
-                const isSortable = header.column.getCanSort()
+      <TableDatePickerContext.Provider value={{ datePickerState, datePickerDispatch } as any}>
+        <ChakraTable size="sm" w="100%" {...restProps}>
+          <Thead rounded="md" top="0">
+            {getHeaderGroups().map(headerGroup => (
+              <Tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => {
+                  const title = header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())
+                  const checkBox = header?.id === 'checkbox'
+                  const sortedBy = header.column.getIsSorted()
+                  const sortedDesc = sortedBy === 'desc'
+                  const isSortable = header.column.getCanSort()
 
-                return (
-                  <Th
-                    key={header.id}
-                    position="sticky"
-                    top="0"
-                    py="3"
-                    bg="#ECEDEE"
-                    zIndex={1}
-                    borderBottomColor="#ECEDEE"
-                    cursor={isSortable ? 'pointer' : ''}
-                    onClick={!checkBox ? header.column.getToggleSortingHandler() : () => null}
-                    {...getColumnMaxMinWidths(header.column)}
-                  >
-                    <Flex
-                      alignItems="center"
-                      _before={{
-                        content: '""',
-                        bottom: '-2px',
-                        left: '0px',
-                        position: 'absolute',
-                        minW: '100%',
-                        borderBottom: '3px solid #ECEDEE',
-                      }}
+                  return (
+                    <Th
+                      key={header.id}
+                      position="sticky"
+                      top="0"
+                      py="3"
+                      bg="#ECEDEE"
+                      zIndex={1}
+                      borderBottomColor="#ECEDEE"
+                      cursor={isSortable ? 'pointer' : ''}
+                      onClick={!checkBox ? header.column.getToggleSortingHandler() : () => null}
+                      {...getColumnMaxMinWidths(header.column)}
                     >
-                      <Text
-                        fontSize="14px"
-                        color="gray.700"
-                        fontWeight={500}
-                        fontStyle="normal"
-                        textTransform="none"
-                        isTruncated
-                        display="inline-block"
-                        title={typeof title === 'string' ? t(title as string) : ''}
-                        py="1px"
+                      <Flex
+                        alignItems="center"
+                        _before={{
+                          content: '""',
+                          bottom: '-2px',
+                          left: '0px',
+                          position: 'absolute',
+                          minW: '100%',
+                          borderBottom: '3px solid #ECEDEE',
+                        }}
                       >
-                        {typeof title === 'string' ? t(title as string) : title}
-                      </Text>
+                        <Text
+                          fontSize="14px"
+                          color="gray.700"
+                          fontWeight={500}
+                          fontStyle="normal"
+                          textTransform="none"
+                          isTruncated
+                          display="inline-block"
+                          title={typeof title === 'string' ? t(title as string) : ''}
+                          py="1px"
+                        >
+                          {typeof title === 'string' ? t(title as string) : title}
+                        </Text>
 
-                      {sortedBy &&
-                        (isSortable ? (
-                          sortedDesc ? (
-                            <AiOutlineArrowUp fontSize="17px" />
+                        {sortedBy &&
+                          (isSortable ? (
+                            sortedDesc ? (
+                              <AiOutlineArrowUp fontSize="17px" />
+                            ) : (
+                              <AiOutlineArrowDown fontSize="17px" />
+                            )
                           ) : (
-                            <AiOutlineArrowDown fontSize="17px" />
-                          )
-                        ) : (
-                          ''
-                        ))}
-                    </Flex>
-                  </Th>
+                            ''
+                          ))}
+                      </Flex>
+                    </Th>
+                  )
+                })}
+              </Tr>
+            ))}
+
+            {/** Header Filter Input Field for each column **/}
+            {!isHideFilters &&
+              getHeaderGroups().map(headerGroup => {
+                return (
+                  <Tr key={`th_${headerGroup.id}`} position="relative">
+                    {headerGroup.headers.map((header, i) => {
+                      const totalColumns = headerGroup.headers.length
+                      const positionFromLast = totalColumns - i
+
+                      const handleThClick = () => {
+                        if (positionFromLast === 1 || positionFromLast === 2) {
+                          datePickerDispatch({ type: TableReducerActionType.SET_IS_LAST_COLUMN })
+                        } else {
+                          datePickerDispatch({ type: TableReducerActionType.SET_IS_NOT_LAST_COLUMN })
+                        }
+                      }
+                      return (
+                        <Th
+                          key={`th_td_${header.id}`}
+                          py="3"
+                          position="sticky"
+                          zIndex={1}
+                          top="43px"
+                          // borderBottomColor="gray.300"
+                          bg="#ECEDEE"
+                          {...getColumnMaxMinWidths(header.column)}
+                          onClick={handleThClick}
+                        >
+                          {header.column.getCanFilter() ? (
+                            <Box
+                              _after={{
+                                content: '""',
+                                bottom: '0px',
+                                left: '0px',
+                                position: 'absolute',
+                                minW: '100%',
+                                borderBottom: '1px solid #CBD5E0',
+                              }}
+                              _before={{
+                                content: '""',
+                                top: '0px',
+                                left: '0px',
+                                position: 'absolute',
+                                minW: '100%',
+                                borderBottom: '1px solid #CBD5E0',
+                              }}
+                            >
+                              {header.id !== 'expander' && (
+                                <Filter
+                                  isFilteredByApi={isFilteredByApi}
+                                  allowStickyFilters={allowStickyFilters}
+                                  column={header.column}
+                                  table={tableInstance}
+                                />
+                              )}
+                            </Box>
+                          ) : null}
+                        </Th>
+                      )
+                    })}
+                  </Tr>
                 )
               })}
-            </Tr>
-          ))}
+          </Thead>
 
-          {/** Header Filter Input Field for each column **/}
-          {!isHideFilters &&
-            getHeaderGroups().map(headerGroup => {
-              return (
-                <Tr key={`th_${headerGroup.id}`} position="relative">
-                  {headerGroup.headers.map(header => {
-                    return (
-                      <Th
-                        key={`th_td_${header.id}`}
-                        py="3"
-                        position="sticky"
-                        zIndex={1}
-                        top="43px"
-                        // borderBottomColor="gray.300"
-                        bg="#ECEDEE"
-                        {...getColumnMaxMinWidths(header.column)}
-                      >
-                        {header.column.getCanFilter() ? (
-                          <Box
-                            _after={{
-                              content: '""',
-                              bottom: '0px',
-                              left: '0px',
-                              position: 'absolute',
-                              minW: '100%',
-                              borderBottom: '1px solid #CBD5E0',
-                            }}
-                            _before={{
-                              content: '""',
-                              top: '0px',
-                              left: '0px',
-                              position: 'absolute',
-                              minW: '100%',
-                              borderBottom: '1px solid #CBD5E0',
-                            }}
-                          >
-                            {header.id !== 'expander' && (
-                              <Filter
-                                isFilteredByApi={isFilteredByApi}
-                                allowStickyFilters={allowStickyFilters}
-                                column={header.column}
-                                table={tableInstance}
-                              />
-                            )}
-                          </Box>
-                        ) : null}
-                      </Th>
-                    )
-                  })}
-                </Tr>
-              )
-            })}
-        </Thead>
+          {isEmpty ? (
+            <Tbody>
+              <Tr>
+                <Td colSpan={100} border="0">
+                  <Box pos="sticky" top="0" left="calc(50% - 50px)" mt="60px" w="300px">
+                    {t('noDataDisplayed')}
+                  </Box>
+                </Td>
+              </Tr>
+            </Tbody>
+          ) : (
+            <>
+              {!handleOnDrag ? (
+                <Tbody>
+                  {isLoading
+                    ? getRowModel().rows.map(row => {
+                        return (
+                          <Tr key={row.id}>
+                            {row.getVisibleCells().map(cell => {
+                              return (
+                                <Td key={cell.id} {...getColumnMaxMinWidths(cell.column)}>
+                                  <BlankSlate size="sm" width="100%" />
+                                </Td>
+                              )
+                            })}
+                          </Tr>
+                        )
+                      })
+                    : getRowModel().rows.map((row, index) => (
+                        <Tr
+                          key={row.id}
+                          onClick={() => {
+                            if (hightlightSelectedRow) {
+                              tableInstance.toggleAllRowsSelected(false)
+                              tableInstance.getRowModel().rows[index].toggleSelected()
+                            }
+                            onRowClick?.(row.original)
+                          }}
+                          onMouseEnter={() => handleMouseEnter?.(row.original)}
+                          onMouseLeave={() => handleMouseLeave?.(row.original)}
+                          cursor={onRowClick ? 'pointer' : 'default'}
+                          onContextMenu={() => onRightClick?.(row.original)}
+                          _hover={{
+                            bg: !!onRowClick ? '#F3F8FF' : '',
+                          }}
+                          backgroundColor={row.getIsSelected() || row.depth ? '#F9F9F9' : ''}
+                        >
+                          {row?.getVisibleCells().map(cell => {
+                            const value = flexRender(cell.column.columnDef.cell, cell.getContext())
+                            const title =
+                              typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
+                            const metaData = cell.column.columnDef?.meta as any
+                            const isDate = metaData?.format === 'date'
+                            const isCurrency = metaData?.format === 'currency'
 
-        {isEmpty ? (
-          <Tbody>
-            <Tr>
-              <Td colSpan={100} border="0">
-                <Box pos="sticky" top="0" left="calc(50% - 50px)" mt="60px" w="300px">
-                  {t('noDataDisplayed')}
-                </Box>
-              </Td>
-            </Tr>
-          </Tbody>
-        ) : (
-          <>
-            {!handleOnDrag ? (
-              <Tbody>
-                {isLoading
-                  ? getRowModel().rows.map(row => {
-                      return (
-                        <Tr key={row.id}>
-                          {row.getVisibleCells().map(cell => {
                             return (
-                              <Td key={cell.id} {...getColumnMaxMinWidths(cell.column)}>
-                                <BlankSlate size="sm" width="100%" />
+                              <Td
+                                key={cell.id}
+                                isTruncated
+                                title={
+                                  !metaData?.hideTitle && title
+                                    ? isDate
+                                      ? dateFormat(title as string)
+                                      : (title as string)
+                                    : ''
+                                }
+                                {...getColumnMaxMinWidths(cell.column)}
+                              >
+                                {isValidAndNonEmpty(cell?.renderValue())
+                                  ? isDate && typeof value === 'string'
+                                    ? new Date(value).toLocaleDateString()
+                                    : isCurrency && typeof value === 'number'
+                                    ? value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
+                                    : value
+                                  : '_ _ _'}
                               </Td>
                             )
                           })}
                         </Tr>
-                      )
-                    })
-                  : getRowModel().rows.map((row, index) => (
-                      <Tr
-                        key={row.id}
-                        onClick={() => {
-                          if (hightlightSelectedRow) {
-                            tableInstance.toggleAllRowsSelected(false)
-                            tableInstance.getRowModel().rows[index].toggleSelected()
-                          }
-                          onRowClick?.(row.original)
-                        }}
-                        onMouseEnter={() => handleMouseEnter?.(row.original)}
-                        onMouseLeave={() => handleMouseLeave?.(row.original)}
-                        cursor={onRowClick ? 'pointer' : 'default'}
-                        onContextMenu={() => onRightClick?.(row.original)}
-                        _hover={{
-                          bg: !!onRowClick ? '#F3F8FF' : '',
-                        }}
-                        backgroundColor={row.getIsSelected() || row.depth ? '#F9F9F9' : ''}
-                      >
-                        {row?.getVisibleCells().map(cell => {
-                          const value = flexRender(cell.column.columnDef.cell, cell.getContext())
-                          const title =
-                            typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
-                          const metaData = cell.column.columnDef?.meta as any
-                          const isDate = metaData?.format === 'date'
-                          const isCurrency = metaData?.format === 'currency'
-
+                      ))}
+                </Tbody>
+              ) : (
+                <DragDropEnabledRows
+                  handleOnDragStart={handleOnDragStart}
+                  handleOnDrag={handleOnDrag}
+                  getRowModel={getRowModel}
+                  onRowClick={onRowClick}
+                  onRightClick={onRightClick}
+                  getColumnMaxMinWidths={getColumnMaxMinWidths}
+                />
+              )}
+              {isShowFooter && (
+                <Tfoot>
+                  {getFooterGroups().map(footerGroup => {
+                    return (
+                      <Tr>
+                        {footerGroup.headers.map(footer => {
+                          const footerValue = flexRender(footer.column.columnDef.footer, footer.getContext())
                           return (
-                            <Td
-                              key={cell.id}
-                              isTruncated
-                              title={
-                                !metaData?.hideTitle && title
-                                  ? isDate
-                                    ? dateFormat(title as string)
-                                    : (title as string)
-                                  : ''
-                              }
-                              {...getColumnMaxMinWidths(cell.column)}
-                            >
-                              {isValidAndNonEmpty(cell?.renderValue())
-                                ? isDate && typeof value === 'string'
-                                  ? new Date(value).toLocaleDateString()
-                                  : isCurrency && typeof value === 'number'
-                                  ? value.toLocaleString('en-US', { style: 'currency', currency: 'USD' })
-                                  : value
-                                : '_ _ _'}
+                            <Td pos="sticky" bottom="0" fontWeight={'bold'} py="4">
+                              {footerValue}
                             </Td>
                           )
                         })}
                       </Tr>
-                    ))}
-              </Tbody>
-            ) : (
-              <DragDropEnabledRows
-                handleOnDragStart={handleOnDragStart}
-                handleOnDrag={handleOnDrag}
-                getRowModel={getRowModel}
-                onRowClick={onRowClick}
-                onRightClick={onRightClick}
-                getColumnMaxMinWidths={getColumnMaxMinWidths}
-              />
-            )}
-            {isShowFooter && (
-              <Tfoot>
-                {getFooterGroups().map(footerGroup => {
-                  return (
-                    <Tr>
-                      {footerGroup.headers.map(footer => {
-                        const footerValue = flexRender(footer.column.columnDef.footer, footer.getContext())
-                        return (
-                          <Td pos="sticky" bottom="0" fontWeight={'bold'} py="4">
-                            {footerValue}
-                          </Td>
-                        )
-                      })}
-                    </Tr>
-                  )
-                })}
-              </Tfoot>
-            )}
-          </>
-        )}
-      </ChakraTable>
+                    )
+                  })}
+                </Tfoot>
+              )}
+            </>
+          )}
+        </ChakraTable>
+      </TableDatePickerContext.Provider>
     </Stack>
   )
 }
@@ -717,7 +733,6 @@ const DragDropEnabledRows = ({
                     >
                       {row.getVisibleCells().map(cell => {
                         const value = flexRender(cell.column.columnDef.cell, cell.getContext())
-
                         return (
                           <Td
                             py={0}
