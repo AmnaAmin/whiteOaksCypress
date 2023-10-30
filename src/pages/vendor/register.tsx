@@ -128,7 +128,7 @@ const vendorRegisterFormSchema = {
     .email('Must be a valid email')
     .required('Email is required')
     .transform(yupNullable),
-  secondaryEmail: Yup.string().email('Must be a valid email').transform(yupNullable),
+  secondEmailAddress: Yup.string().email('Must be a valid email').transform(yupNullable),
   streetAddress: Yup.string().required('Street Address is required'),
   city: Yup.string().required('City is required'),
   state: Yup.object().required('State is required'),
@@ -288,7 +288,6 @@ export const VendorRegister = () => {
         'capacity',
         'einNumber',
         'ssnNumber',
-        'secondEmailAddress',
         'secondEmailAddress',
         'state',
       ]
@@ -1008,7 +1007,7 @@ export const VendorRegister = () => {
                                     </FormLabel>
                                     <Input
                                       id="businessPhoneNumberExtension"
-                                      type="text"
+                                      type="number"
                                       fontSize="14px"
                                       color="#252F40"
                                       placeholder=""
@@ -1096,7 +1095,7 @@ export const VendorRegister = () => {
                                 <Input
                                   data-testid="secondaryPhone_vendor"
                                   id="secondPhoneNumber"
-                                  type="text"
+                                  type="number"
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Enter your secondary phone number"
@@ -1308,7 +1307,7 @@ export const VendorRegister = () => {
                                 <Input
                                   data-testid="zipCode_vendor"
                                   id="zipCode"
-                                  type="text"
+                                  type="number"
                                   fontSize="14px"
                                   color="#252F40"
                                   placeholder="Please enter your zip code"

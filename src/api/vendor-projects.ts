@@ -226,7 +226,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
       ...items.map(ai => {
         return {
           item: ai.id,
-          description: ai.name,
+          description: ai?.status === 'PENDING' ? `${ai.name} (pending)` : ai.name,
           amount: currencyFormatter(ai.transactionTotal),
         }
       }),
