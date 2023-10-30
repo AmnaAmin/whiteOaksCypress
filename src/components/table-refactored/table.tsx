@@ -518,7 +518,7 @@ export const Table: React.FC<TableProps> = ({
                       const positionFromLast = totalColumns - i
 
                       const handleThClick = () => {
-                        if (positionFromLast === 1) {
+                        if (positionFromLast === 1 || positionFromLast === 2) {
                           datePickerDispatch({ type: TableReducerActionType.SET_IS_LAST_COLUMN })
                         } else {
                           datePickerDispatch({ type: TableReducerActionType.SET_IS_NOT_LAST_COLUMN })
