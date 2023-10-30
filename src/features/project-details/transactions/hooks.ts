@@ -13,7 +13,6 @@ import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
-import { currencyFormatter } from 'utils/string-formatters'
 
 /*function getRefundTransactionType(type): TransactionsWithRefundType {
   if (type === TransactionTypeValues.material)
@@ -208,7 +207,8 @@ export const useFieldDisabledEnabledDecision = (
     transaction?.status === TransactionStatusValues.denied
   const isFactoringFeeSysGenerated =
     transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
-
+  const isInvoicePayment =
+    transaction?.transactionType === TransactionTypeValues.payment && !!transaction?.invoiceNumber
   return {
     isUpdateForm,
     isApproved: isStatusApproved,
@@ -219,7 +219,9 @@ export const useFieldDisabledEnabledDecision = (
       isMaterialsLoading ||
       lateAndFactoringFeeForVendor ||
       isFactoringFeeSysGenerated ||
-      statusFieldForVendor,
+      statusFieldForVendor ||
+      isInvoicePayment,
+
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
   }
 }
@@ -252,7 +254,7 @@ export const useTotalPendingDrawAmount = items => {
   } else {
     totalAmount = transactionItems[0]?.transactionTotal
   }
-  return totalAmount ? currencyFormatter(totalAmount) : '$0.00'
+  return totalAmount ? totalAmount : 0
 }
 
 export const useIsAwardSelect = ({

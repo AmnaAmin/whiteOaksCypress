@@ -50,13 +50,13 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 
   useEffect(() => {
     if (isReadOnly) {
-      Array.from(document.querySelectorAll("input")).forEach(input => {
-        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
-            input.setAttribute("disabled", "true");
-          }
-      });
-    };
-  }, []);
+      Array.from(document.querySelectorAll('input')).forEach(input => {
+        if (input.getAttribute('data-testid') !== 'tableFilterInputField') {
+          input.setAttribute('disabled', 'true')
+        }
+      })
+    }
+  }, [])
 
   // const [overrideProjectStatusOptions, setOverrideProjectStatusOptions] = useState<any>([])
   // const [lastProjectStatus, setlastProjectStatus] = useState<any>('')
@@ -188,7 +188,12 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
-                    <ReactSelect {...field} options={projectTypeSelectOptions} selectProps={{ isBorderLeft: true }} isDisabled={isReadOnly} />
+                    <ReactSelect
+                      {...field}
+                      options={projectTypeSelectOptions}
+                      selectProps={{ isBorderLeft: true }}
+                      isDisabled={isReadOnly}
+                    />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                   </>
                 )}
