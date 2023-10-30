@@ -13,11 +13,20 @@ window.addEventListener('message', (event: any) => {
 export const Estimates = () => {
   const { data } = useAuth()
   const user = data?.user
+  const platformParam = 'platform=1'
+ 
+  let iframeUrl = process.env.REACT_APP_ESTIMATES_URL
+  
 
-  const iframeUrl = process.env.REACT_APP_ESTIMATES_URL
-
+  if ((window as any).Cypress) {
+    if (iframeUrl && iframeUrl.indexOf('?') === -1) {
+      iframeUrl = iframeUrl + '?' + platformParam
+    } 
+  }else {
+    iframeUrl = iframeUrl + '?hideLogin=1'
+  }
+ 
   const navigate = useNavigate()
-
   const iframe = useRef<HTMLIFrameElement>(null)
 
   const sendMessage = () => {
@@ -36,7 +45,7 @@ export const Estimates = () => {
       }
 
       if (event.data?.estimateCreated) {
-        toast.closeAll();
+        toast.closeAll()
         toast({
           title: 'Estimate Details',
           description: `New Estimate has been created successfully with estimate id: ${event.data.estimateId}`,

@@ -238,6 +238,7 @@ export enum ADV_PERMISSIONS {
   hidePaidProjects = 'PROJECT.PAID.HIDE',
   overrideDrawRestrictionOnPercentageCompletion = 'PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE',
   verifiedByFPM = 'PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT',
+  invoiceDateEdit = 'PROJECTDETAIL.INVOICING.INVOICEDATE.EDIT',
 }
 
 export const mapFormValuestoPayload = (values, allPermissions) => {
@@ -301,6 +302,7 @@ export const permissionsDefaultValues = ({ permissions, sections }) => {
       ),
       verifyVendorDocuments: permissionSet?.some(p => [ADV_PERMISSIONS.verifyVendorDocuments, 'ALL'].includes(p)),
       verifiedByFPM: permissionSet?.some(p => [ADV_PERMISSIONS.verifiedByFPM, 'ALL'].includes(p)),
+      invoiceDateEdit: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p)),
     },
   }
 }
