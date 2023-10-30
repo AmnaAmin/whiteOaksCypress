@@ -223,6 +223,7 @@ export const useFieldDisabledEnabledDecision = (
       isInvoicePayment,
 
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
+    isFactoringFeeSysGenerated,
   }
 }
 
