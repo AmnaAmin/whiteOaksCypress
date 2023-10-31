@@ -302,6 +302,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
                   <>
                     <ReactSelect
                       {...field}
+                      id="paymentTermDD"
                       isDisabled={isPaid}
                       options={PAYMENT_TERMS_OPTIONS}
                       selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
@@ -360,6 +361,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
                       <>
                         <ReactSelect
                           {...field}
+                          id="status"
                           isDisabled={isPaid}
                           options={INVOICE_STATUS_OPTIONS}
                           selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
