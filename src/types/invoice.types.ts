@@ -10,11 +10,12 @@ export interface InvoicingType {
   invoiceDate: string | null
   paymentTerm: SelectOption | undefined
   woaExpectedPayDate: string | null
-  receivedLineItems: InvoiceItemType[]
+  receivedLineItems?: InvoiceItemType[]
   status: SelectOption | undefined | string
   paymentReceivedDate: string | null
   finalSowLineItems: InvoiceItemType[]
   document?: InvoiceDocumentType
+  attachments?: any
 }
 type InvoiceDocumentType = {
   documentType: number
@@ -33,6 +34,7 @@ type InvoiceItemType = {
   description: string | null
   amount: number | string | null
   checked: boolean
+  modifiedDate?: string | null
 }
 
 export enum InvoiceStatusValues {

@@ -7,6 +7,8 @@ import { dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 import autoTable from 'jspdf-autotable'
 import { addImages } from 'utils/file-utils'
+import { Control, useWatch } from 'react-hook-form'
+import numeral from 'numeral'
 
 export const useFetchInvoices = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
@@ -25,9 +27,9 @@ export const useFetchInvoices = ({ projectId }: { projectId: string | number | u
     ...rest,
   }
 }
-export const useFetchInvoiceDetails = ({ invoiceId }: { invoiceId: string | number | undefined }) => {
+export const useFetchInvoiceDetails = ({ invoiceId }: { invoiceId: string | number | undefined | null }) => {
   const client = useClient()
-  const { data: invoiceDetails, ...rest } = useQuery<Array<InvoicingType>>(
+  const { data: invoiceDetails, ...rest } = useQuery<InvoicingType>(
     ['invoice-details', invoiceId],
     async () => {
       const response = await client(`project-invoices/${invoiceId}`, {})
@@ -120,7 +122,7 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
     modifiedDate: dateISOFormatWithZeroTime(new Date()),
     modifiedBy: account?.email,
     invoiceAmount: invoiceAmount,
-    invoiceLineItems: [...values.finalSowLineItems, ...values.receivedLineItems]?.map(item => {
+    invoiceLineItems: [...values.finalSowLineItems]?.map(item => {
       return {
         id: item.id,
         transactionId: item.transactionId,
@@ -138,6 +140,20 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
     document: null as any,
   }
   return payload
+}
+export const useTotalAmount = watchInvoiceArray => {
+  const totalAmount = watchInvoiceArray?.reduce((result, item) => {
+    if (item.amount) {
+      return result + Number(item.amount)
+    } else {
+      return result
+    }
+  }, 0)
+
+  return {
+    formattedAmount: numeral(totalAmount).format('$0,0.00'),
+    amount: totalAmount,
+  }
 }
 
 export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData }) => {
@@ -204,8 +220,8 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
     bodyStyles: { lineColor: '#000000', minCellHeight: 15 },
     body: [
       {
-        pm: projectData.projectManager,
-        address: projectData.streetAddress,
+        pm: projectData?.projectManager,
+        address: projectData?.streetAddress,
         paymentTerm: invoiceVals?.paymentTerm,
         dueDate: dateFormat(invoiceVals?.woaExpectedPay),
       },

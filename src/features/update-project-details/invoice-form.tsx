@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import {
   Box,
   Button,
@@ -11,12 +11,19 @@ import {
   GridItem,
   HStack,
   Input,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  useDisclosure,
 } from '@chakra-ui/react'
 import { useToast } from '@chakra-ui/toast'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ReadOnlyInput } from 'components/input-view/input-view'
-import { BiCalendar, BiDetail, BiDownload } from 'react-icons/bi'
+import { BiAddToQueue, BiCalendar, BiDetail, BiDownload, BiFile } from 'react-icons/bi'
 import { TRANSACTION } from '../project-details/transactions/transactions.i18n'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
@@ -26,12 +33,12 @@ import { SelectOption } from 'types/transaction.type'
 import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { FinalSowLineItems } from './final-sow-line-items'
-import { InvoicingContext } from './invoicing'
 import { getInvoiceInitials } from './add-invoice-modal'
 import {
   createInvoicePdf,
   mapFormValuesToPayload,
   useCreateInvoiceMutation,
+  useTotalAmount,
   useUpdateInvoiceMutation,
 } from 'api/invoicing'
 import { ReceivedLineItems } from './received-line-items'
@@ -39,6 +46,11 @@ import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { ADV_PERMISSIONS } from 'api/access-control'
 import jsPDF from 'jspdf'
 import { downloadFile } from 'utils/file-utils'
+import { Project } from 'types/project.type'
+import { currencyFormatter } from 'utils/string-formatters'
+import { MdOutlineCancel } from 'react-icons/md'
+import { RiDeleteBinLine } from 'react-icons/ri'
+import { ConfirmationBox } from 'components/Confirmation'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -91,9 +103,11 @@ const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
 }
 
 export type InvoicingFormProps = {
-  invoice?: InvoicingType
+  invoice?: InvoicingType | undefined
   onClose?: () => void
   clientSelected?: SelectOption | undefined | null
+  invoiceCount?: number
+  projectData?: Project | undefined
 }
 const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelected }) => {
   const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
@@ -111,11 +125,17 @@ const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelect
     receivedLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems'),
     status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
     paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
+    attachments: undefined,
   }
 }
-export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, clientSelected }) => {
+export const InvoiceForm: React.FC<InvoicingFormProps> = ({
+  invoice,
+  onClose,
+  clientSelected,
+  projectData,
+  invoiceCount,
+}) => {
   const { t } = useTranslation()
-  const { projectData, invoiceCount } = useContext(InvoicingContext)
   const { mutate: createInvoiceMutate, isLoading: isLoadingCreate } = useCreateInvoiceMutation({
     projId: projectData?.id,
   })
@@ -123,18 +143,25 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
     projId: projectData?.id,
   })
   const { data } = useAccountData()
-
+  const balanceDue = 0
+  const [tabIndex, setTabIndex] = React.useState(0)
   const defaultValues: InvoicingType = useMemo(() => {
     return invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected })
   }, [invoice, projectData, invoiceCount, clientSelected])
 
-  const [totalReceived, setTotalReceived] = React.useState(0)
-  const [finalSow, setFinalSow] = React.useState(0)
   const formReturn = useForm<InvoicingType>({
     defaultValues: {
       ...defaultValues,
     },
   })
+
+  useEffect(() => {
+    if (invoice) {
+      formReturn.reset({
+        ...invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected }),
+      })
+    }
+  }, [invoice])
   const {
     formState: { errors },
     control,
@@ -143,13 +170,39 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
     setValue,
     watch,
   } = formReturn
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'finalSowLineItems',
+  })
+  const watchInvoiceArray = watch('finalSowLineItems')
+
   const watchStatus = watch('status')
+  const watchAttachments = watch('attachments')
+
   const toast = useToast()
-  const balanceDue = finalSow - totalReceived
+  const { formattedAmount: totalAmount, amount } = useTotalAmount(watchInvoiceArray)
   const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
   const { permissions } = useRoleBasedPermissions()
   const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
+  const {
+    isOpen: isDeleteConfirmationModalOpen,
+    onClose: onDeleteConfirmationModalClose,
+    onOpen: onDeleteConfirmationModalOpen,
+  } = useDisclosure()
 
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
+  const onFileChange = useCallback(
+    e => {
+      const files = e.target.files
+      if (files[0]) {
+        setValue('attachments', files[0])
+      }
+      e.target.value = null
+    },
+    [setValue],
+  )
   const woAddress = {
     companyName: 'WhiteOaks Aligned, LLC',
     streetAddress: 'Four 14th Street #601',
@@ -192,7 +245,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
       })
       return
     }
-    let payload = mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: balanceDue })
+    let payload = mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: amount })
     let form = new jsPDF()
     form = await createInvoicePdf({
       doc: form,
@@ -229,6 +282,29 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
       })
     }
   }
+
+  const deleteRows = useCallback(async () => {
+    let indices = [] as any
+    await watchInvoiceArray?.forEach((item, index) => {
+      if (item.checked) {
+        indices.push(index)
+      }
+    })
+
+    remove(indices)
+    onDeleteConfirmationModalClose()
+  }, [watchInvoiceArray, onDeleteConfirmationModalClose, setValue])
+
+  const addRow = useCallback(() => {
+    append({
+      type: 'finalSowLineItems',
+      name: '',
+      modifiedDate: datePickerFormat(new Date()),
+      description: '',
+      amount: '',
+      checked: false,
+    })
+  }, [append])
 
   return (
     <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => {}}>
@@ -367,6 +443,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
                           selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                           onChange={statusOption => {
                             field.onChange(statusOption)
+                            if (statusOption?.value === 'PAID') {
+                              setValue('paymentReceivedDate', datePickerFormat(new Date()))
+                            }
                           }}
                         />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -406,25 +485,164 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
             </>
           )}
         </Grid>
-        <Box color="gray.500" fontWeight={'500'} mt="20px">
-          {t(`project.projectDetails.finalSow`)}
+
+        <Tabs variant="enclosed" colorScheme="brand" mt="10px" onChange={setTabIndex}>
+          <TabList>
+            <Tab> {t(`project.projectDetails.invoiced`)}</Tab>
+            <Tab> {t(`project.projectDetails.received`)}</Tab>
+            {tabIndex === 0 && (
+              <Flex w="100%" ml="20px" mt="5px">
+                <Box>
+                  <Flex flex="1">
+                    <Button
+                      data-testid="add-new-row-button"
+                      variant="ghost"
+                      size="sm"
+                      colorScheme="darkPrimary"
+                      onClick={addRow}
+                      disabled={isPaid}
+                      leftIcon={<BiAddToQueue />}
+                    >
+                      {t(`project.projectDetails.addNewRow`)}
+                    </Button>
+                    <Button
+                      data-testid="delete-row-button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={isPaid}
+                      colorScheme="darkPrimary"
+                      ml="10px"
+                      leftIcon={<RiDeleteBinLine />}
+                      onClick={onDeleteConfirmationModalOpen}
+                    >
+                      {t(`project.projectDetails.deleteRow`)}
+                    </Button>
+                  </Flex>
+                </Box>
+              </Flex>
+            )}
+            <Flex justifyContent={'end'} width="100%">
+              <input
+                type="file"
+                name="smart_reciept"
+                ref={inputRef}
+                style={{ display: 'none' }}
+                onChange={onFileChange}
+              ></input>
+              {watchAttachments ? (
+                <Flex
+                  justifyContent={'center'}
+                  color="#345EA6"
+                  height={'32px'}
+                  border="1px solid #345EA6"
+                  borderRadius="4px"
+                  fontSize="14px"
+                >
+                  <HStack spacing="5px" padding="10px" align="center">
+                    <Text
+                      as="span"
+                      maxW="120px"
+                      isTruncated
+                      title={watchAttachments?.name || watchAttachments.fileType}
+                    >
+                      {watchAttachments?.name || watchAttachments.fileType}
+                    </Text>
+                    <MdOutlineCancel
+                      cursor={'pointer'}
+                      onClick={() => {
+                        setValue('attachments', undefined)
+                      }}
+                    />
+                  </HStack>
+                </Flex>
+              ) : (
+                <Button
+                  onClick={e => {
+                    if (inputRef.current) {
+                      inputRef.current.click()
+                    }
+                  }}
+                  leftIcon={<BiFile color="darkPrimary.300" />}
+                  rightIcon={
+                    watchAttachments ? (
+                      <MdOutlineCancel
+                        onClick={e => {
+                          setValue('attachments', undefined)
+                        }}
+                      />
+                    ) : undefined
+                  }
+                  variant="outline"
+                  size="sm"
+                  colorScheme="darkPrimary"
+                  color="darkPrimary.300"
+                  border={'1px solid #345EA6'}
+                >
+                  {t(`${TRANSACTION}.attachment`)}
+                </Button>
+              )}
+            </Flex>
+          </TabList>
+          <TabPanels>
+            <TabPanel padding="5px 0px 0px 0px">
+              <FinalSowLineItems formReturn={formReturn} invoice={invoice} projectData={projectData} fields={fields} />
+            </TabPanel>
+            <TabPanel h="100%" padding="5px 0px 0px 0px">
+              <ReceivedLineItems formReturn={formReturn} projectData={projectData} invoice={invoice} />
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+        <Box>
+          <Grid
+            gridTemplateColumns={'1fr 1fr'}
+            fontSize="14px"
+            color="gray.600"
+            borderWidth="0px 1px 1px  1px"
+            borderStyle="solid"
+            borderColor="gray.300"
+            bg="white"
+            roundedBottom={6}
+            height="100px"
+          >
+            <GridItem
+              borderWidth="0 1px 0 0"
+              borderStyle="solid"
+              borderColor="gray.300"
+              py="4"
+              height="auto"
+            ></GridItem>
+            <GridItem py={'3'} data-testid="total-amount">
+              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
+                <Text fontWeight={700}>
+                  {t('sowAmount')}
+                  {':'}
+                </Text>
+                <Text ml={'10px'}>{currencyFormatter(projectData?.sowNewAmount?.toString() as string)}</Text>
+              </Flex>
+              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
+                <Text fontWeight={700}>
+                  {t('amountReceived')}
+                  {':'}
+                </Text>
+                <Text ml={'10px'}>{currencyFormatter(projectData?.accountRecievable?.toString() as string)}</Text>
+              </Flex>
+              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
+                <Text fontWeight={700}>
+                  {t('remainingAR')}
+                  {':'}
+                </Text>
+                <Text ml={'10px'}>{totalAmount}</Text>
+              </Flex>
+              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
+                <Text fontWeight={700}>
+                  {t('invoicedAmount')}
+                  {':'}
+                </Text>
+                <Text ml={'10px'}>{totalAmount}</Text>
+              </Flex>
+            </GridItem>
+          </Grid>
         </Box>
-        <FinalSowLineItems
-          setTotalAmount={setFinalSow}
-          totalAmount={finalSow}
-          formReturn={formReturn}
-          invoice={invoice}
-        />
-        <Box color="gray.500" fontWeight={'500'} mt="20px">
-          {t(`project.projectDetails.received`)}
-        </Box>
-        <ReceivedLineItems
-          setTotalAmount={setTotalReceived}
-          totalAmount={totalReceived}
-          finalSow={finalSow}
-          formReturn={formReturn}
-          invoice={invoice}
-        />
       </Flex>
       <Divider mt={3}></Divider>
       <Flex alignItems="center" justifyContent="space-between" mt="16px">
@@ -451,7 +669,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
               formReturn.handleSubmit(onSubmit)()
             }}
             isLoading={isLoadingUpdate || isLoadingCreate}
-            disabled={!balanceDue || isPaid}
+            disabled={isPaid}
             form="invoice-form"
             data-testid="save-transaction"
             colorScheme="darkPrimary"
@@ -461,6 +679,13 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({ invoice, onClose, cl
           </Button>
         </HStack>
       </Flex>
+      <ConfirmationBox
+        title="Are You Sure?"
+        content="Do you want to proceed? This process cannot be undone. "
+        isOpen={isDeleteConfirmationModalOpen}
+        onClose={onDeleteConfirmationModalClose}
+        onConfirm={deleteRows}
+      />
     </form>
   )
 }

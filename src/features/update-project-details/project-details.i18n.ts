@@ -59,6 +59,8 @@ export const project = {
           received: 'Received',
           finalSow: 'Final Sow',
           invoiceAmount: 'Invoice Amount',
+          invoiced: 'Invoiced',
+          date: 'Date',
 
           // Contacts
           contacts: 'Contacts',
@@ -169,6 +171,8 @@ export const project = {
           received: 'Recibió',
           finalSow: 'SOW Final',
           invoiceAmount: 'Importe de la factura',
+          invoiced: 'Facturado',
+          date: 'Fecha',
 
           // Contacts
           contacts: 'Contactos',

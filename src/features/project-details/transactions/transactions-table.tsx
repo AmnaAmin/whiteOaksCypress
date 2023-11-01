@@ -26,6 +26,8 @@ import {
 } from 'components/table-refactored/pagination'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { TransactionType } from 'types/transaction.type'
+import InvoiceModal from 'features/update-project-details/add-invoice-modal'
+import { Project } from 'types/project.type'
 
 type TransactionProps = {
   projectStatus: string
@@ -33,12 +35,14 @@ type TransactionProps = {
   transId?: any
   isVendorExpired?: boolean
   isReadOnly?: boolean
+  projectData?: Project | undefined
 }
 
 export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
   // const { isVendorExpired } = props
   const { projectId } = useParams<'projectId'>()
-  const { defaultSelected } = props
+  const { isOpen: isOpenInvoiceModal, onClose: onInvoiceModalClose, onOpen: onInvoiceModalOpen } = useDisclosure()
+  const { defaultSelected, projectData } = props
   const [dataTrans, setDataTrans] = useState<any>([])
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
@@ -49,6 +53,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     refetch: refetchColumns,
   } = useTableColumnSettings(TRANSACTION_TABLE_COLUMNS, TableNames.transaction)
   const { refetch, transactions, isLoading } = useTransactionsV1(projectId)
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
   const { isOpen: isOpenEditModal, onOpen: onEditModalOpen, onClose: onEditModalClose } = useDisclosure()
@@ -69,9 +74,14 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
 
   const onRowClick = useCallback(
     row => {
-      setSelectedTransactionName(row.name)
-      setSelectedTransactionId(row.id)
-      onEditModalOpen()
+      if (row?.transactionTypeLabel === 'Payment' && row?.invoiceNumber) {
+        setSelectedInvoice(row?.invoiceId)
+        onInvoiceModalOpen()
+      } else {
+        setSelectedTransactionName(row.name)
+        setSelectedTransactionId(row.id)
+        onEditModalOpen()
+      }
     },
     [onEditModalOpen, onTransactionDetailsModalOpen],
   )
@@ -187,6 +197,15 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
         isOpen={isOpenTransactionDetailsModal}
         onClose={onTransactionDetailsModalClose}
         selectedTransactionId={selectedTransactionId as number}
+      />
+      <InvoiceModal
+        isOpen={isOpenInvoiceModal}
+        onClose={() => {
+          setSelectedInvoice(null)
+          onInvoiceModalClose()
+        }}
+        projectData={projectData}
+        selectedInvoice={selectedInvoice}
       />
     </>
   )

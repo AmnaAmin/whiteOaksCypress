@@ -72,8 +72,6 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
     onInvoiceModalOpen()
   }
 
- 
-
   useEffect(() => {
     setTotalPages(Math.ceil((projectData?.resubmissionDTOList?.length ?? 0) / 50))
     setTotalRows(projectData?.resubmissionDTOList?.length ?? 0)
@@ -94,7 +92,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
           border="1px solid #CBD5E0"
           borderRadius="6px"
           roundedRight={{ base: '0px', sm: '6px' }}
-          h='550px'
+          h="550px"
         >
           <TableContextProvider
             totalPages={totalPages}

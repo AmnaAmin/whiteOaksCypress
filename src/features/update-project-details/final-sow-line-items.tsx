@@ -23,23 +23,18 @@ import { BiAddToQueue } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { InvoicingType } from 'types/invoice.types'
 import { useTransactionsV1 } from 'api/transactions'
-import { InvoicingContext } from './invoicing'
-import { currencyFormatter } from 'utils/string-formatters'
 import { TransactionTypeValues } from 'types/transaction.type'
+import { Project } from 'types/project.type'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 
 type InvoiceItemsFormProps = {
   formReturn: UseFormReturn<InvoicingType>
   invoice?: InvoicingType
-  setTotalAmount: (value) => void
-  totalAmount: number
+  projectData: Project | undefined
+  fields: any
 }
 
-export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
-  setTotalAmount,
-  formReturn,
-  invoice,
-  totalAmount,
-}) => {
+export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn, invoice, projectData, fields }) => {
   const { t } = useTranslation()
   const isPaid = (invoice?.status as string)?.toLocaleUpperCase() === 'PAID'
 
@@ -51,19 +46,8 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
     watch,
   } = formReturn
 
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'finalSowLineItems',
-  })
   const watchInvoiceArray = watch('finalSowLineItems')
-  const controlledInvoiceArray = fields.map((field, index) => {
-    return {
-      ...field,
-      ...watchInvoiceArray[index],
-    }
-  })
 
-  const { projectData } = useContext(InvoicingContext)
   const { transactions } = useTransactionsV1(`${projectData?.id}`)
 
   const isAddedInFinalSow = transaction => {
@@ -86,6 +70,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
         let finalSowLineItems = [] as any
         transactions.forEach(t => {
           if (isAddedInFinalSow(t)) {
+            console.log(t)
             finalSowLineItems.push({
               id: null,
               transactionId: t.id,
@@ -94,6 +79,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
               type: 'finalSowLineItems',
               description: t.transactionTypeLabel,
               amount: t.transactionTotal,
+              modifiedDate: datePickerFormat(t.modifiedDate),
             })
           }
         })
@@ -102,51 +88,22 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
     }
   }, [transactions?.length])
 
-  useEffect(() => {
-    let total_Amount = 0
-    controlledInvoiceArray?.forEach(item => {
-      total_Amount += parseFloat(item?.amount && item?.amount !== '' ? item?.amount?.toString() : '0')
-    })
-    setTotalAmount?.(total_Amount)
-  }, [controlledInvoiceArray])
-
-  const {
-    isOpen: isDeleteConfirmationModalOpen,
-    onClose: onDeleteConfirmationModalClose,
-    onOpen: onDeleteConfirmationModalOpen,
-  } = useDisclosure()
-
   const toggleAllCheckboxes = useCallback(
     event => {
       setValue(
         'finalSowLineItems',
-        controlledInvoiceArray.map(items => ({
+        watchInvoiceArray.map(items => ({
           ...items,
           checked: event.currentTarget.checked,
         })),
       )
     },
-    [controlledInvoiceArray, setValue],
+    [watchInvoiceArray, setValue],
   )
-  const deleteRows = useCallback(async () => {
-    let indices = [] as any
-    await controlledInvoiceArray?.forEach((item, index) => {
-      if (item.checked) {
-        indices.push(index)
-      }
-    })
-
-    remove(indices)
-    onDeleteConfirmationModalClose()
-  }, [controlledInvoiceArray, onDeleteConfirmationModalClose, setValue])
-
-  const addRow = useCallback(() => {
-    append({ type: 'finalSowLineItems', name: '', description: '', amount: '', checked: false })
-  }, [append])
 
   const checkedItems = useMemo(() => {
-    return controlledInvoiceArray?.map(item => item.checked)
-  }, [controlledInvoiceArray])
+    return watchInvoiceArray?.map(item => item.checked)
+  }, [watchInvoiceArray])
 
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
@@ -154,49 +111,6 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
   return (
     <Box overflowX={'auto'} w="100%">
       <VStack alignItems="start" w="720px">
-        <Flex w="100%" mt="10px" mb="15px" justifyContent={'space-between'}>
-          <Box>
-            <Flex flex="1">
-              <Button
-                data-testid="add-new-row-button"
-                variant="outline"
-                size="sm"
-                colorScheme="darkPrimary"
-                onClick={addRow}
-                disabled={isPaid}
-                color="darkPrimary.300"
-                leftIcon={<BiAddToQueue color="darkPrimary.300" />}
-              >
-                {t(`project.projectDetails.addNewRow`)}
-              </Button>
-              <Button
-                data-testid="delete-row-button"
-                variant="outline"
-                size="sm"
-                ml="10px"
-                disabled={isPaid}
-                colorScheme="darkPrimary"
-                _hover={{
-                  _disabled: {
-                    bg: '#EBF8FF',
-                    color: 'darkPrimary.300',
-                    opacity: 0.5,
-                  },
-                }}
-                _disabled={{
-                  bg: '#EBF8FF',
-                  color: 'darkPrimary.300',
-                  opacity: 0.5,
-                }}
-                leftIcon={<RiDeleteBinLine color="darkPrimary.300" />}
-                onClick={onDeleteConfirmationModalOpen}
-              >
-                {t(`project.projectDetails.deleteRow`)}
-              </Button>
-            </Flex>
-          </Box>
-        </Flex>
-
         <Flex
           borderStyle="solid"
           borderColor="gray.300"
@@ -208,7 +122,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
           w="100%"
         >
           <Grid
-            gridTemplateColumns={'30px 1fr 2fr 1fr'}
+            gridTemplateColumns={'30px 1fr 2fr 1fr 1fr'}
             py="3"
             fontSize="14px"
             color="gray.600"
@@ -231,26 +145,28 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
 
             <GridItem ml="10px"> {t(`project.projectDetails.type`)}</GridItem>
             <GridItem ml="10px"> {t(`project.projectDetails.description`)}</GridItem>
+            <GridItem ml="10px">{t(`project.projectDetails.date`)}</GridItem>
             <GridItem ml="10px">{t(`project.projectDetails.amount`)}</GridItem>
           </Grid>
 
-          <Box flex="1" overflow="auto" maxH="150px" id="amounts-list">
-            {controlledInvoiceArray?.length > 0 ? (
+          <Box flex="1" overflow="auto" maxH="155px" minH="155px" id="amounts-list">
+            {watchInvoiceArray?.length > 0 ? (
               <>
-                {controlledInvoiceArray?.map((invoiceItem, index) => {
+                {watchInvoiceArray?.map((invoiceItem, index) => {
                   const isPaidOrOriginalSOW =
-                    ['Original SOW', 'Payment', 'Depreciation', 'Deductible', 'Draw'].includes(
+                    ['Original SOW', 'Carrier Fee', 'Legal Fee', 'ChangeOrder'].includes(
                       invoiceItem?.description as string,
                     ) && !!invoiceItem?.transactionId
                   return (
                     <Grid
                       className="amount-input-row"
                       key={index}
-                      gridTemplateColumns={'30px 1fr 2fr 1fr'}
+                      gridTemplateColumns={'30px 1fr 2fr 1fr 1fr'}
                       p={'6px'}
                       fontSize="14px"
                       color="gray.600"
                       gap="20px"
+                      textAlign={'center'}
                       borderStyle="solid"
                       borderColor="gray.300"
                       height="auto"
@@ -279,12 +195,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
 
                       <GridItem>
                         <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.name}>
-                          <Tooltip
-                            label={controlledInvoiceArray?.[index]?.type}
-                            placement="top"
-                            bg="#ffffff"
-                            color="black"
-                          >
+                          <Tooltip label={watchInvoiceArray?.[index]?.name} placement="top" bg="#ffffff" color="black">
                             <Input
                               data-testid={`finalSowLineItems-type-${index}`}
                               type="text"
@@ -307,7 +218,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                       <GridItem>
                         <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.description}>
                           <Tooltip
-                            label={controlledInvoiceArray?.[index]?.description}
+                            label={watchInvoiceArray?.[index]?.description}
                             placement="top"
                             bg="#ffffff"
                             color="black"
@@ -332,6 +243,30 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                         </FormControl>
                       </GridItem>
                       <GridItem>
+                        <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.modifiedDate}>
+                          <Tooltip
+                            label={dateFormat(watchInvoiceArray?.[index]?.modifiedDate as string)}
+                            placement="top"
+                            bg="#ffffff"
+                            color="black"
+                          >
+                            <Input
+                              data-testid={`finalSowLineItems-modifiedDate-${index}`}
+                              type="date"
+                              size="sm"
+                              variant={'required-field'}
+                              disabled={isPaidOrOriginalSOW || isPaid}
+                              {...register(`finalSowLineItems.${index}.modifiedDate` as const, {
+                                required: false,
+                              })}
+                            />
+                          </Tooltip>
+                          <FormErrorMessage>
+                            {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
+                          </FormErrorMessage>
+                        </FormControl>
+                      </GridItem>
+                      <GridItem>
                         <FormControl px={1} isInvalid={!!errors.finalSowLineItems?.[index]?.amount}>
                           <Controller
                             name={`finalSowLineItems.${index}.amount` as const}
@@ -346,7 +281,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                                     {...field}
                                     data-testid={`finalSowLineItems-amount-${index}`}
                                     customInput={Input}
-                                    value={controlledInvoiceArray?.[index]?.amount}
+                                    value={watchInvoiceArray?.[index]?.amount}
                                     placeholder="Add Amount"
                                     disabled={isPaidOrOriginalSOW || isPaid}
                                     onValueChange={e => {
@@ -385,47 +320,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
               </Box>
             )}
           </Box>
-
-          <Box>
-            <Grid
-              gridTemplateColumns={'30px 1fr 1fr'}
-              fontSize="14px"
-              color="gray.600"
-              borderWidth="1px 0 0 0"
-              borderStyle="solid"
-              borderColor="gray.300"
-              bg="white"
-              roundedBottom={6}
-              height="auto"
-            >
-              <GridItem />
-              <GridItem
-                borderWidth="0 1px 0 0"
-                borderStyle="solid"
-                borderColor="gray.300"
-                py="4"
-                height="auto"
-              ></GridItem>
-              <GridItem py={'3'} data-testid="total-amount">
-                <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
-                  <Text fontWeight={700}>
-                    {t('total')}
-                    {':'}
-                  </Text>
-                  <Text ml={'10px'}>{currencyFormatter(totalAmount ?? 0)}</Text>
-                </Flex>
-              </GridItem>
-            </Grid>
-          </Box>
         </Flex>
-
-        <ConfirmationBox
-          title="Are You Sure?"
-          content="Do you want to proceed? This process cannot be undone. "
-          isOpen={isDeleteConfirmationModalOpen}
-          onClose={onDeleteConfirmationModalClose}
-          onConfirm={deleteRows}
-        />
       </VStack>
     </Box>
   )

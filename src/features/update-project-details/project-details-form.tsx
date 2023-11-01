@@ -267,11 +267,6 @@ const ProjectDetailsTab = (props: tabProps) => {
               <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
                 {t(`project.projectDetails.projectManagement`)}
               </TabCustom>
-              {projectData?.validForNewInvoice && (
-                <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
-                  {t(`project.projectDetails.invoicing`)}
-                </TabCustom>
-              )}
               <TabCustom
                 isError={!projectData?.validForNewInvoice ? isInvoiceAndPaymentFormErrors && tabIndex !== 1 : false}
               >
@@ -306,11 +301,6 @@ const ProjectDetailsTab = (props: tabProps) => {
                     isReadOnly={isReadOnly}
                   />
                 </TabPanel>
-                {projectData?.validForNewInvoice && (
-                  <TabPanel p="0"  h='600px'>
-                    <Invoicing isReadOnly={isReadOnly} projectData={projectData} clientSelected={watchClient} />
-                  </TabPanel>
-                )}
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
                   {!projectData?.validForNewInvoice ? (
                     <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
