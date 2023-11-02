@@ -206,10 +206,10 @@ const WorkOrderDetails = ({
                 <Tab>{t('workOrderDetails')}</Tab>
                 <Tab data-testid="wo_transaction_tab">{t('projects.projectDetails.transactions')}</Tab>
                 {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
-                <Tab>{t('lienWaiver')}</Tab>
-                <Tab>{t('invoice')}</Tab>
-                <Tab>{t('payments')}</Tab>
-                <Tab>{t('notes')}</Tab>
+                <Tab data-testid="wo_lienWaiver">{t('lienWaiver')}</Tab>
+                <Tab data-testid="wo_invoice">{t('invoice')}</Tab>
+                <Tab data-testid="wo_payments">{t('payments')}</Tab>
+                <Tab data-testid="wo_notes">{t('notes')}</Tab>
 
                 {showRejectInvoice &&
                   [STATUS.Invoiced, STATUS.Rejected].includes(

@@ -76,7 +76,7 @@ export const FilteredProjectsData = ({ selectedCard, isReadOnly }: ProjectProps)
   }, [selectedCard])
 
   return (
-    <Box h={'500px'} overflow="auto">
+    <Box h={'525px'} overflow="auto">
       <TableContextProvider
         data={projects}
         columns={tableColumns}
