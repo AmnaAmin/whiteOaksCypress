@@ -25,7 +25,7 @@ import {
   TablePagination,
 } from 'components/table-refactored/pagination'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { TransactionType } from 'types/transaction.type'
+import { TransactionType, TransactionTypeValues } from 'types/transaction.type'
 import InvoiceModal from 'features/update-project-details/add-invoice-modal'
 import { Project } from 'types/project.type'
 
@@ -74,7 +74,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
 
   const onRowClick = useCallback(
     row => {
-      if (row?.transactionTypeLabel === 'Payment' && row?.invoiceNumber) {
+      if (row?.transactionType === TransactionTypeValues.invoice) {
         setSelectedInvoice(row?.invoiceId)
         onInvoiceModalOpen()
       } else {

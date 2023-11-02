@@ -129,6 +129,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
             <GridItem id="all-checkbox">
               <Checkbox
                 px="1.5"
+                ml="8px"
                 variant="normal"
                 colorScheme="PrimaryCheckBox"
                 onChange={toggleAllCheckboxes}
@@ -237,20 +238,20 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                         </FormControl>
                       </GridItem>
                       <GridItem>
-                        <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.modifiedDate}>
+                        <FormControl isInvalid={!!errors.finalSowLineItems?.[index]?.createdDate}>
                           <Tooltip
-                            label={dateFormat(watchInvoiceArray?.[index]?.modifiedDate as string)}
+                            label={dateFormat(watchInvoiceArray?.[index]?.createdDate as string)}
                             placement="top"
                             bg="#ffffff"
                             color="black"
                           >
                             <Input
-                              data-testid={`finalSowLineItems-modifiedDate-${index}`}
+                              data-testid={`finalSowLineItems-createdDate-${index}`}
                               type="date"
                               size="sm"
                               variant={'required-field'}
                               disabled={isPaidOrOriginalSOW || isPaid}
-                              {...register(`finalSowLineItems.${index}.modifiedDate` as const, {
+                              {...register(`finalSowLineItems.${index}.createdDate` as const, {
                                 required: false,
                               })}
                             />

@@ -70,7 +70,7 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                     >
                       <GridItem ml="10px">{invoiceItem.name}</GridItem>
                       <GridItem ml="10px">{invoiceItem.description}</GridItem>
-                      <GridItem ml="10px">{dateFormat(invoiceItem.modifiedDate as string)}</GridItem>
+                      <GridItem ml="10px">{dateFormat(invoiceItem.createdDate as string)}</GridItem>
                       <GridItem ml="10px">{invoiceItem.amount}</GridItem>
                     </Grid>
                   )

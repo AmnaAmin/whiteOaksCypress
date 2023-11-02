@@ -12,6 +12,7 @@ import { TransactionTypeValues } from 'types/transaction.type'
 import { getInvoiceInitials } from 'features/update-project-details/add-invoice-modal'
 import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { readFileContent } from './vendor-details'
 
 export const useFetchInvoices = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
@@ -114,7 +115,16 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
   )
 }
 
-export const mapFormValuesToPayload = ({ projectData, invoice, values, account, invoiceAmount }) => {
+export const mapFormValuesToPayload = async ({ projectData, invoice, values, account, invoiceAmount }) => {
+  let attachmentDTO = await readFileContent(values?.attachments)
+  if (attachmentDTO) {
+    attachmentDTO = {
+      documentType: 39,
+      fileObjectContentType: values?.attachments?.type,
+      fileType: values?.attachments.name,
+      fileObject: attachmentDTO,
+    }
+  }
   const payload = {
     id: invoice ? invoice?.id : null,
     paymentTerm: values.paymentTerm?.value,
@@ -133,6 +143,7 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
         type: item.type,
         description: item.description,
         amount: item.amount,
+        createdDate: item.modifiedDate,
       }
     }),
     woaExpectedPay: values.woaExpectedPayDate,
@@ -141,6 +152,7 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
     paymentReceived: values.paymentReceivedDate,
     changeOrderId: invoice ? invoice?.changeOrderId : null,
     document: null as any,
+    attachmemts: [attachmentDTO],
   }
   return payload
 }
@@ -172,7 +184,7 @@ export const isReceivedTransaction = transaction => {
     transaction.status === 'APPROVED' &&
     ((!transaction.invoiceNumber &&
       [TransactionTypeValues.deductible, TransactionTypeValues.depreciation].includes(transaction.transactionType)) ||
-      transaction.transactionType === TransactionTypeValues.payment)
+      transaction.transactionType === TransactionTypeValues.invoice)
   return !transaction.parentWorkOrderId && compatibleType
 }
 const isAddedInFinalSow = transaction => {
@@ -205,6 +217,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
           type: 'receivedLineItems',
           description: t.transactionTypeLabel,
           amount: Math.abs(t.transactionTotal),
+          createdDate: datePickerFormat(t.modifiedDate),
         })
       }
     })
@@ -222,7 +235,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
             type: 'finalSowLineItems',
             description: t.transactionTypeLabel,
             amount: t.transactionTotal,
-            modifiedDate: datePickerFormat(t.modifiedDate),
+            createdDate: datePickerFormat(t.modifiedDate),
           })
         }
       })

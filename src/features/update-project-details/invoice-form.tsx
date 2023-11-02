@@ -283,7 +283,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       })
       return
     }
-    let payload = mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: invoiced })
+    let payload = await mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: invoiced })
     let form = new jsPDF()
     form = await createInvoicePdf({
       doc: form,
@@ -337,7 +337,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     append({
       type: 'finalSowLineItems',
       name: '',
-      modifiedDate: datePickerFormat(new Date()),
+      createdDate: datePickerFormat(new Date()),
       description: '',
       amount: '',
       checked: false,

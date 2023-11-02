@@ -34,7 +34,7 @@ type InvoiceItemType = {
   description: string | null
   amount: number | string | null
   checked: boolean
-  modifiedDate?: string | null
+  createdDate?: string | null
 }
 
 export enum InvoiceStatusValues {
