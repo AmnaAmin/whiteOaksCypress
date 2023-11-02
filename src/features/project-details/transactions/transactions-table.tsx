@@ -204,6 +204,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
           setSelectedInvoice(null)
           onInvoiceModalClose()
         }}
+        invoiceCount={transactions?.filter(t => t?.transactionType === TransactionTypeValues.invoice)?.length}
         projectData={projectData}
         selectedInvoice={selectedInvoice}
       />

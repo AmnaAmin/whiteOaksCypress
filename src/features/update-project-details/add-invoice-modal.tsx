@@ -6,8 +6,9 @@ import { boxShadow } from 'theme/common-style'
 import { useState, useEffect } from 'react'
 import { InvoiceForm } from './invoice-form'
 import { Project } from 'types/project.type'
-import { SelectOption } from 'types/transaction.type'
+import { SelectOption, TransactionTypeValues } from 'types/transaction.type'
 import { useFetchInvoiceDetails } from 'api/invoicing'
+import { useTransactionsV1 } from 'api/transactions'
 
 type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   selectedInvoice?: string | number | null
@@ -39,8 +40,12 @@ const InvoiceModal: React.FC<Props> = ({
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
   const [modalSize, setModalSize] = useState<string>('5xl')
+  const { transactions } = useTransactionsV1(`${projectData?.id}`)
 
-  const invoiceNumber = getInvoiceInitials(projectData, invoiceCount)
+  const invoiceNumber = getInvoiceInitials(
+    projectData,
+    transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length,
+  )
   const { invoiceDetails: invoice } = useFetchInvoiceDetails({ invoiceId: selectedInvoice })
 
   useEffect(() => {
@@ -70,11 +75,12 @@ const InvoiceModal: React.FC<Props> = ({
         <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
             <InvoiceForm
+              transactions={transactions}
               onClose={onClose}
               invoice={invoice}
               clientSelected={clientSelected}
               projectData={projectData}
-              invoiceCount={invoiceCount}
+              invoiceCount={transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length}
             />
           </Card>
         </ModalBody>

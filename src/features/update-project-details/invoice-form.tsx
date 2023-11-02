@@ -51,7 +51,6 @@ import { currencyFormatter } from 'utils/string-formatters'
 import { MdOutlineCancel } from 'react-icons/md'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
-import { useTransactionsV1 } from 'api/transactions'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -103,9 +102,9 @@ const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   )
 }
 
-const InvoicingSummary: React.FC<any> = ({ projectData, received, invoiced }) => {
+const InvoicingSummary: React.FC<any> = ({ projectData, received, invoiced, sowAmount }) => {
   const { t } = useTranslation()
-  const remainingAR = projectData?.sowNewAmount - received
+  const remainingAR = (sowAmount ?? projectData?.sowNewAmount) - received
   return (
     <Box>
       <Grid
@@ -125,7 +124,7 @@ const InvoicingSummary: React.FC<any> = ({ projectData, received, invoiced }) =>
               {t('project.projectDetails.sowAmount')}
               {':'}
             </Text>
-            <Text ml={'10px'}>{currencyFormatter(projectData?.sowNewAmount?.toString() as string)}</Text>
+            <Text ml={'10px'}>{currencyFormatter(sowAmount ?? (projectData?.sowNewAmount?.toString() as string))}</Text>
           </Flex>
           <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
             <Text fontWeight={600} color="gray.600">
@@ -168,6 +167,7 @@ export type InvoicingFormProps = {
   clientSelected?: SelectOption | undefined | null
   invoiceCount?: number
   projectData?: Project | undefined
+  transactions?: any[]
 }
 
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({
@@ -176,6 +176,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   clientSelected,
   projectData,
   invoiceCount,
+  transactions,
 }) => {
   const { t } = useTranslation()
   const { mutate: createInvoiceMutate, isLoading: isLoadingCreate } = useCreateInvoiceMutation({
@@ -184,9 +185,10 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const { mutate: updateInvoiceMutate, isLoading: isLoadingUpdate } = useUpdateInvoiceMutation({
     projId: projectData?.id,
   })
-  const { transactions } = useTransactionsV1(`${projectData?.id}`)
+
   const { data } = useAccountData()
   const [tabIndex, setTabIndex] = React.useState(0)
+  const invoicePdfUrl = invoice?.documents?.find(doc => doc.documentType === 42)?.s3Url
 
   const formReturn = useForm<InvoicingType>()
 
@@ -292,13 +294,13 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       projectData,
     })
     const pdfUri = form.output('datauristring')
-    payload['document'] = {
-      documentType: 48,
+    payload['documents']?.push({
+      documentType: 42,
       projectId: projectData?.id,
       fileObject: pdfUri.split(',')[1],
       fileObjectContentType: 'application/pdf',
       fileType: 'Invoice.pdf',
-    }
+    })
 
     if (!invoice) {
       createInvoiceMutate(payload, {
@@ -630,18 +632,23 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
             </TabPanel>
           </TabPanels>
         </Tabs>
-        <InvoicingSummary projectData={projectData} invoiced={invoiced} received={received} />
+        <InvoicingSummary
+          projectData={projectData}
+          invoiced={invoiced}
+          received={received}
+          sowAmount={invoice?.sowAmount}
+        />
       </Flex>
       <Divider mt={3}></Divider>
       <Flex alignItems="center" justifyContent="space-between" mt="16px">
         <Box>
-          {!!invoice?.document?.s3Url && (
+          {!!invoicePdfUrl && (
             <Button
               variant="outline"
               colorScheme="brand"
               size="md"
               data-testid="seeInvoice"
-              onClick={() => downloadFile(invoice?.document?.s3Url)}
+              onClick={() => downloadFile(invoicePdfUrl)}
               leftIcon={<BiDownload />}
             >
               {t('see')} {t('invoice')}
