@@ -74,7 +74,7 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: 'workOrderId',
     accessorKey: 'workOrderId',
     accessorFn: cellInfo => {
-      return cellInfo.id ? cellInfo.id?.toString() : '- - -'
+      return cellInfo?.id ? cellInfo.id?.toString() : '- - -'
     },
     cell: withPreviewCell,
   },
