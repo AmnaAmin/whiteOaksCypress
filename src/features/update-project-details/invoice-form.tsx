@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import {
   Box,
   Button,
@@ -33,13 +33,13 @@ import { SelectOption } from 'types/transaction.type'
 import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { FinalSowLineItems } from './final-sow-line-items'
-import { getInvoiceInitials } from './add-invoice-modal'
 import {
   createInvoicePdf,
   mapFormValuesToPayload,
   useCreateInvoiceMutation,
   useTotalAmount,
   useUpdateInvoiceMutation,
+  invoiceDefaultValues,
 } from 'api/invoicing'
 import { ReceivedLineItems } from './received-line-items'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
@@ -51,6 +51,7 @@ import { currencyFormatter } from 'utils/string-formatters'
 import { MdOutlineCancel } from 'react-icons/md'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
+import { useTransactionsV1 } from 'api/transactions'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -102,6 +103,65 @@ const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   )
 }
 
+const InvoicingSummary: React.FC<any> = ({ projectData, received, invoiced }) => {
+  const { t } = useTranslation()
+  const remainingAR = projectData?.sowNewAmount - received
+  return (
+    <Box>
+      <Grid
+        gridTemplateColumns={'1fr 1fr'}
+        fontSize="14px"
+        color="gray.600"
+        borderWidth="0px 1px 1px  1px"
+        borderStyle="solid"
+        borderColor="gray.300"
+        bg="white"
+        roundedBottom={6}
+      >
+        <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.300" py="4" height="auto"></GridItem>
+        <GridItem py={'3'} data-testid="total-amount" height={'auto'}>
+          <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
+            <Text fontWeight={600} color="gray.600">
+              {t('project.projectDetails.sowAmount')}
+              {':'}
+            </Text>
+            <Text ml={'10px'}>{currencyFormatter(projectData?.sowNewAmount?.toString() as string)}</Text>
+          </Flex>
+          <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
+            <Text fontWeight={600} color="gray.600">
+              {t('project.projectDetails.amountReceived')}
+              {':'}
+            </Text>
+            <Text ml={'10px'}>{currencyFormatter(received)}</Text>
+          </Flex>
+          <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
+            <Text fontWeight={600} color="gray.600">
+              {t('project.projectDetails.remainingAR')}
+              {':'}
+            </Text>
+            <Text ml={'10px'}>{currencyFormatter(remainingAR)}</Text>
+          </Flex>
+          <Flex
+            direction={'row'}
+            justifyContent={'space-between'}
+            pl="30px"
+            pr="30px"
+            mt="10px"
+            borderTop="1px solid #CBD5E0"
+            pt="10px"
+          >
+            <Text fontWeight={600} color="gray.600">
+              {t('project.projectDetails.invoiceAmount')}
+              {':'}
+            </Text>
+            <Text ml={'10px'}>{currencyFormatter(invoiced)}</Text>
+          </Flex>
+        </GridItem>
+      </Grid>
+    </Box>
+  )
+}
+
 export type InvoicingFormProps = {
   invoice?: InvoicingType | undefined
   onClose?: () => void
@@ -109,25 +169,7 @@ export type InvoicingFormProps = {
   invoiceCount?: number
   projectData?: Project | undefined
 }
-const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelected }) => {
-  const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
-  const invoicedDate = new Date()
-  const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
-  const paymentTerm = Number(clientSelected?.paymentTerm) ?? 0
-  const woaExpectedDate = addDays(utcDate, paymentTerm)
 
-  return {
-    invoiceNumber: invoice?.invoiceNumber ?? invoiceInitials,
-    invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
-    paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? clientSelected?.paymentTerm)),
-    woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPay ?? woaExpectedDate),
-    finalSowLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems'),
-    receivedLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems'),
-    status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
-    paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
-    attachments: undefined,
-  }
-}
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   invoice,
   onClose,
@@ -142,26 +184,17 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const { mutate: updateInvoiceMutate, isLoading: isLoadingUpdate } = useUpdateInvoiceMutation({
     projId: projectData?.id,
   })
+  const { transactions } = useTransactionsV1(`${projectData?.id}`)
   const { data } = useAccountData()
-  const balanceDue = 0
   const [tabIndex, setTabIndex] = React.useState(0)
-  const defaultValues: InvoicingType = useMemo(() => {
-    return invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected })
-  }, [invoice, projectData, invoiceCount, clientSelected])
 
-  const formReturn = useForm<InvoicingType>({
-    defaultValues: {
-      ...defaultValues,
-    },
-  })
+  const formReturn = useForm<InvoicingType>()
 
   useEffect(() => {
-    if (invoice) {
-      formReturn.reset({
-        ...invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected }),
-      })
-    }
-  }, [invoice])
+    formReturn.reset({
+      ...invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected, transactions }),
+    })
+  }, [invoice, transactions?.length])
   const {
     formState: { errors },
     control,
@@ -176,12 +209,17 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     name: 'finalSowLineItems',
   })
   const watchInvoiceArray = watch('finalSowLineItems')
+  const watchReceivedArray = watch('receivedLineItems')
 
   const watchStatus = watch('status')
   const watchAttachments = watch('attachments')
 
   const toast = useToast()
-  const { formattedAmount: totalAmount, amount } = useTotalAmount(watchInvoiceArray)
+  const { invoiced, received } = useTotalAmount({
+    invoiced: watchInvoiceArray,
+    received: watchReceivedArray,
+  })
+  const remainingAR = projectData?.sowNewAmount! - received
   const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
   const { permissions } = useRoleBasedPermissions()
   const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
@@ -235,7 +273,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   }
 
   const onSubmit = async values => {
-    if (balanceDue < 0) {
+    if (remainingAR - invoiced < 0) {
       toast({
         title: 'Error',
         description: t(`project.projectDetails.balanceDueError`),
@@ -245,7 +283,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       })
       return
     }
-    let payload = mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: amount })
+    let payload = mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: invoiced })
     let form = new jsPDF()
     form = await createInvoicePdf({
       doc: form,
@@ -592,57 +630,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
             </TabPanel>
           </TabPanels>
         </Tabs>
-        <Box>
-          <Grid
-            gridTemplateColumns={'1fr 1fr'}
-            fontSize="14px"
-            color="gray.600"
-            borderWidth="0px 1px 1px  1px"
-            borderStyle="solid"
-            borderColor="gray.300"
-            bg="white"
-            roundedBottom={6}
-            height="100px"
-          >
-            <GridItem
-              borderWidth="0 1px 0 0"
-              borderStyle="solid"
-              borderColor="gray.300"
-              py="4"
-              height="auto"
-            ></GridItem>
-            <GridItem py={'3'} data-testid="total-amount">
-              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
-                <Text fontWeight={700}>
-                  {t('sowAmount')}
-                  {':'}
-                </Text>
-                <Text ml={'10px'}>{currencyFormatter(projectData?.sowNewAmount?.toString() as string)}</Text>
-              </Flex>
-              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
-                <Text fontWeight={700}>
-                  {t('amountReceived')}
-                  {':'}
-                </Text>
-                <Text ml={'10px'}>{currencyFormatter(projectData?.accountRecievable?.toString() as string)}</Text>
-              </Flex>
-              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
-                <Text fontWeight={700}>
-                  {t('remainingAR')}
-                  {':'}
-                </Text>
-                <Text ml={'10px'}>{totalAmount}</Text>
-              </Flex>
-              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
-                <Text fontWeight={700}>
-                  {t('invoicedAmount')}
-                  {':'}
-                </Text>
-                <Text ml={'10px'}>{totalAmount}</Text>
-              </Flex>
-            </GridItem>
-          </Grid>
-        </Box>
+        <InvoicingSummary projectData={projectData} invoiced={invoiced} received={received} />
       </Flex>
       <Divider mt={3}></Divider>
       <Flex alignItems="center" justifyContent="space-between" mt="16px">
@@ -669,7 +657,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
               formReturn.handleSubmit(onSubmit)()
             }}
             isLoading={isLoadingUpdate || isLoadingCreate}
-            disabled={isPaid}
+            disabled={!invoiced || isPaid}
             form="invoice-form"
             data-testid="save-transaction"
             colorScheme="darkPrimary"

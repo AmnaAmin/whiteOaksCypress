@@ -41,7 +41,6 @@ import { TransactionStatusValues, TransactionTypeValues } from 'types/transactio
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
-import { Invoicing } from './invoicing'
 import InvoiceAndPayments from './invoicing-payments'
 import { ConfirmationBox } from 'components/Confirmation'
 
@@ -85,9 +84,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   const {
     control,
     formState: { errors, isSubmitting },
-    watch,
   } = formReturn
-  const watchClient = watch('client')
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
     useSubFormErrors(errors)
   useEffect(() => {

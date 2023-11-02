@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Box, Flex, GridItem, Grid, VStack } from '@chakra-ui/react'
 import { UseFormReturn } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { InvoicingType } from 'types/invoice.types'
-import { useTransactionsV1 } from 'api/transactions'
-import { TransactionTypeValues } from 'types/transaction.type'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
 
@@ -17,40 +15,9 @@ type InvoiceItemsFormProps = {
 export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn, projectData, invoice }) => {
   const { t } = useTranslation()
 
-  const { setValue, watch, getValues } = formReturn
+  const { watch } = formReturn
 
   const watchInvoiceArray = watch('receivedLineItems')
-
-  const { transactions } = useTransactionsV1(`${projectData?.id}`)
-
-  const isAddedInPayments = transaction => {
-    const compatibleType =
-      transaction.status === 'APPROVED' &&
-      ((!transaction.invoiceNumber &&
-        [TransactionTypeValues.deductible, TransactionTypeValues.depreciation].includes(transaction.transactionType)) ||
-        transaction.transactionType === TransactionTypeValues.payment)
-    return !transaction.parentWorkOrderId && compatibleType
-  }
-
-  useEffect(() => {
-    if (transactions?.length) {
-      let received = [] as any
-      transactions.forEach(t => {
-        if (isAddedInPayments(t)) {
-          received.push({
-            id: null,
-            transactionId: t.id,
-            checked: false,
-            name: t.name,
-            type: 'receivedLineItems',
-            description: t.transactionTypeLabel,
-            amount: Math.abs(t.transactionTotal),
-          })
-        }
-      })
-      setValue('receivedLineItems', received ?? [])
-    }
-  }, [transactions?.length, invoice])
 
   return (
     <Box overflowX={'auto'} w="100%">

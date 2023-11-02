@@ -1,25 +1,19 @@
-import React, { useCallback, useContext, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import {
   Box,
-  Button,
   Checkbox,
   Flex,
   FormControl,
   FormErrorMessage,
   Input,
-  useDisclosure,
   GridItem,
   Grid,
   VStack,
   Tooltip,
-  Text,
 } from '@chakra-ui/react'
-import { RiDeleteBinLine } from 'react-icons/ri'
-import { Controller, useFieldArray, UseFormReturn } from 'react-hook-form'
+import { Controller, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
-import { ConfirmationBox } from 'components/Confirmation'
 import { useTranslation } from 'react-i18next'
-import { BiAddToQueue } from 'react-icons/bi'
 import NumberFormat from 'react-number-format'
 import { InvoicingType } from 'types/invoice.types'
 import { useTransactionsV1 } from 'api/transactions'

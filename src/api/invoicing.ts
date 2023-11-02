@@ -1,14 +1,17 @@
 import { useToast } from '@chakra-ui/react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useParams } from 'react-router-dom'
-import { InvoicingType } from 'types/invoice.types'
+import { INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
 import { useClient } from 'utils/auth-context'
-import { dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
+import { dateFormat, dateISOFormatWithZeroTime, datePickerFormat } from 'utils/date-time-utils'
 import { currencyFormatter } from 'utils/string-formatters'
 import autoTable from 'jspdf-autotable'
 import { addImages } from 'utils/file-utils'
-import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
+import { TransactionTypeValues } from 'types/transaction.type'
+import { getInvoiceInitials } from 'features/update-project-details/add-invoice-modal'
+import { addDays } from 'date-fns'
+import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 
 export const useFetchInvoices = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
@@ -141,8 +144,15 @@ export const mapFormValuesToPayload = ({ projectData, invoice, values, account, 
   }
   return payload
 }
-export const useTotalAmount = watchInvoiceArray => {
-  const totalAmount = watchInvoiceArray?.reduce((result, item) => {
+export const useTotalAmount = ({ invoiced, received }) => {
+  const totalAmount = invoiced?.reduce((result, item) => {
+    if (item.amount) {
+      return result + Number(item.amount)
+    } else {
+      return result
+    }
+  }, 0)
+  const totalReceived = received?.reduce((result, item) => {
     if (item.amount) {
       return result + Number(item.amount)
     } else {
@@ -152,7 +162,53 @@ export const useTotalAmount = watchInvoiceArray => {
 
   return {
     formattedAmount: numeral(totalAmount).format('$0,0.00'),
-    amount: totalAmount,
+    invoiced: totalAmount,
+    formattedReceived: numeral(totalReceived).format('$0,0.00'),
+    received: totalReceived,
+  }
+}
+export const isReceivedTransaction = transaction => {
+  const compatibleType =
+    transaction.status === 'APPROVED' &&
+    ((!transaction.invoiceNumber &&
+      [TransactionTypeValues.deductible, TransactionTypeValues.depreciation].includes(transaction.transactionType)) ||
+      transaction.transactionType === TransactionTypeValues.payment)
+  return !transaction.parentWorkOrderId && compatibleType
+}
+
+export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelected, transactions }) => {
+  const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
+  const invoicedDate = new Date()
+  const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
+  const paymentTerm = Number(clientSelected?.paymentTerm) ?? 0
+  const woaExpectedDate = addDays(utcDate, paymentTerm)
+  let received = [] as any
+  if (transactions?.length) {
+    transactions.forEach(t => {
+      if (isReceivedTransaction(t)) {
+        received.push({
+          id: null,
+          transactionId: t.id,
+          checked: false,
+          name: t.name,
+          type: 'receivedLineItems',
+          description: t.transactionTypeLabel,
+          amount: Math.abs(t.transactionTotal),
+        })
+      }
+    })
+  }
+
+  return {
+    invoiceNumber: invoice?.invoiceNumber ?? invoiceInitials,
+    invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
+    paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? clientSelected?.paymentTerm)),
+    woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPay ?? woaExpectedDate),
+    finalSowLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems'),
+    receivedLineItems: received,
+    status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
+    paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
+    attachments: undefined,
   }
 }
 
