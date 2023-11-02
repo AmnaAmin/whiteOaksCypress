@@ -88,6 +88,9 @@ const ProjectDetailsTab = (props: tabProps) => {
     watch,
   } = formReturn
   const watchClient = watch('client')
+
+  const carrierSelected = watchClient?.carrier?.filter(e => e.id === projectData?.carrierId)
+
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
     useSubFormErrors(errors)
   useEffect(() => {
@@ -307,7 +310,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   />
                 </TabPanel>
                 {projectData?.validForNewInvoice && (
-                  <TabPanel p="0"  h='600px'>
+                  <TabPanel p="0" h="600px">
                     <Invoicing isReadOnly={isReadOnly} projectData={projectData} clientSelected={watchClient} />
                   </TabPanel>
                 )}
@@ -321,6 +324,7 @@ const ProjectDetailsTab = (props: tabProps) => {
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
                   <Contact
+                    carrierSelected={carrierSelected}
                     projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
                     clientSelectOptions={clientSelectOptions}
                     clientTypesSelectOptions={clientTypesSelectOptions}
