@@ -189,6 +189,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const { data } = useAccountData()
   const [tabIndex, setTabIndex] = React.useState(0)
   const invoicePdfUrl = invoice?.documents?.find(doc => doc.documentType === 42)?.s3Url
+  const attachment = invoice?.documents?.find(doc => doc.documentType === 1029)
 
   const formReturn = useForm<InvoicingType>()
 
@@ -562,6 +563,29 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
               </Flex>
             )}
             <Flex justifyContent={'end'} width="100%">
+              {!!attachment?.s3Url && (
+                <>
+                  <a href={attachment?.s3Url} download style={{ color: 'darkPrimary.300', marginTop: '10px' }}>
+                    <Flex>
+                      <Box mt="3px" color="darkPrimary.300">
+                        <BiDownload fontSize="sm" />
+                      </Box>
+                      <Text
+                        ml="5px"
+                        fontSize="14px"
+                        fontWeight={500}
+                        fontStyle="normal"
+                        maxW="110px"
+                        isTruncated
+                        color="darkPrimary.300"
+                        title={attachment?.fileType}
+                      >
+                        {attachment?.fileType}
+                      </Text>
+                    </Flex>
+                  </a>
+                </>
+              )}
               <input
                 type="file"
                 name="smart_reciept"
