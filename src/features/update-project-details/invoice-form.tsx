@@ -365,7 +365,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         data-testid="invoiceNumber"
                         id="invoiceNumber"
                         size="md"
-                        disabled={true}
+                        disabled={isPaid}
                         {...register('invoiceNumber')}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
