@@ -175,6 +175,16 @@ export const isReceivedTransaction = transaction => {
       transaction.transactionType === TransactionTypeValues.payment)
   return !transaction.parentWorkOrderId && compatibleType
 }
+const isAddedInFinalSow = transaction => {
+  const compatibleType =
+    transaction.transactionType === TransactionTypeValues.carrierFee ||
+    transaction.transactionType === TransactionTypeValues.legalFee ||
+    transaction.transactionType === TransactionTypeValues.changeOrder ||
+    transaction.transactionType === TransactionTypeValues.originalSOW
+  return (
+    transaction.status === 'APPROVED' && !transaction.parentWorkOrderId && compatibleType && !transaction.invoiceNumber
+  )
+}
 
 export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelected, transactions }) => {
   const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
@@ -183,6 +193,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
   const paymentTerm = Number(clientSelected?.paymentTerm) ?? 0
   const woaExpectedDate = addDays(utcDate, paymentTerm)
   let received = [] as any
+  let finalSowLineItems = [] as any
   if (transactions?.length) {
     transactions.forEach(t => {
       if (isReceivedTransaction(t)) {
@@ -198,13 +209,34 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
       }
     })
   }
+  if (!invoice) {
+    if (transactions?.length) {
+      transactions.forEach(t => {
+        if (isAddedInFinalSow(t)) {
+          console.log(t)
+          finalSowLineItems.push({
+            id: null,
+            transactionId: t.id,
+            checked: false,
+            name: t.name,
+            type: 'finalSowLineItems',
+            description: t.transactionTypeLabel,
+            amount: t.transactionTotal,
+            modifiedDate: datePickerFormat(t.modifiedDate),
+          })
+        }
+      })
+    }
+  }
 
   return {
     invoiceNumber: invoice?.invoiceNumber ?? invoiceInitials,
     invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
     paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? clientSelected?.paymentTerm)),
     woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPay ?? woaExpectedDate),
-    finalSowLineItems: invoice?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems'),
+    finalSowLineItems: !invoice
+      ? finalSowLineItems
+      : invoice?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems'),
     receivedLineItems: received,
     status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
     paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
