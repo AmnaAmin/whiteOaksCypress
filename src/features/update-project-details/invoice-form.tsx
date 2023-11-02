@@ -565,7 +565,11 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
             <Flex justifyContent={'end'} width="100%">
               {!!attachment?.s3Url && (
                 <>
-                  <a href={attachment?.s3Url} download style={{ color: 'darkPrimary.300', marginTop: '10px' }}>
+                  <a
+                    href={attachment?.s3Url}
+                    download
+                    style={{ color: 'darkPrimary.300', marginTop: '10px', marginRight: '3px' }}
+                  >
                     <Flex>
                       <Box mt="3px" color="darkPrimary.300">
                         <BiDownload fontSize="sm" />
@@ -575,7 +579,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         fontSize="14px"
                         fontWeight={500}
                         fontStyle="normal"
-                        maxW="110px"
+                        maxW="90px"
                         isTruncated
                         color="darkPrimary.300"
                         title={attachment?.fileType}
@@ -603,12 +607,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                   fontSize="14px"
                 >
                   <HStack spacing="5px" padding="10px" align="center">
-                    <Text
-                      as="span"
-                      maxW="120px"
-                      isTruncated
-                      title={watchAttachments?.name || watchAttachments.fileType}
-                    >
+                    <Text as="span" maxW="90px" isTruncated title={watchAttachments?.name || watchAttachments.fileType}>
                       {watchAttachments?.name || watchAttachments.fileType}
                     </Text>
                     <MdOutlineCancel
