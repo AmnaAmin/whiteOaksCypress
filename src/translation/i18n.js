@@ -210,7 +210,7 @@ i18n.use(initReactI18next).init({
         revenue: 'Revenue',
         profits: 'Profits',
         profitmargins: 'Profit Margins',
-        resetSettings: 'Clear Settings',
+        resetSettings: 'Reset Settings',
         resetAllSettings: 'Clear All Users Settings',
 
         // Projects-WorkOrderDetails
@@ -334,6 +334,7 @@ i18n.use(initReactI18next).init({
         subTotal: 'Sub Total',
         totalAmountPaid: 'Total Amount Paid',
         balanceDue: 'Balance Due',
+        pendingDraw: 'Pending Draw',
         see: 'See',
         // Project - Payments
         LWDate: 'LW Date',
@@ -455,7 +456,7 @@ i18n.use(initReactI18next).init({
         // Settings Page
         settings: 'Settings',
         settingsHeader: 'Column settings',
-        availableColumn: 'Available columns',
+        availableColumn: 'Hide these columns',
         showRecordsOrder: 'Show these columns in this order',
         firstName: 'First Name',
         lastName: 'Last Name',
@@ -563,7 +564,7 @@ i18n.use(initReactI18next).init({
         accountRecievable: 'Account Recievable',
         woaPaidDate: 'WOA Paid Date',
         projectRelatedCost: 'Project Related Cost',
-        invoiceNumber: 'Invoice Number',
+        invoiceNumber: 'Invoice No.',
         sowOriginalContractAmount: 'SOW Original Contract Amount',
         clientName: 'Client Name',
         zipCode: 'Zip Code',
@@ -586,6 +587,10 @@ i18n.use(initReactI18next).init({
 
         //Notifications
         viewAllNotification: 'View All Notifications',
+
+        skill: 'Skill',
+        invoicedAmount: 'Invoiced Amount',
+        invoicedStatus: 'Invoiced Status',
       },
     },
     es: {
@@ -955,6 +960,7 @@ i18n.use(initReactI18next).init({
         subTotal: 'Total parcial',
         totalAmountPaid: 'Cantidad total pagada',
         balanceDue: 'Saldo adeudado',
+        pendingDraw: 'Sorteo pendiente',
         see: 'Ver',
         // Project - Payments
         LWDate: 'Fecha LW',
@@ -1077,7 +1083,7 @@ i18n.use(initReactI18next).init({
         // Settings Page
         settings: 'Ajustes',
         settingsHeader: 'Configuración de columna',
-        availableColumn: 'Columnas disponibles',
+        availableColumn: 'Ocultar estas columnas',
         showRecordsOrder: 'Mostrar estas columnas en este orden',
         firstName: 'Primer Nombre',
         lastName: 'Apellido',
@@ -1132,6 +1138,12 @@ i18n.use(initReactI18next).init({
 
         //Notifications
         viewAllNotification: 'Ver todas las notificaciones',
+
+        //invoicing
+        invoiceNumber: 'Número de factura',
+        skill: 'Habilidad',
+        invoicedAmount: 'Cantidad facturada',
+        invoicedStatus: 'Estado de la factura',
       },
     },
   },

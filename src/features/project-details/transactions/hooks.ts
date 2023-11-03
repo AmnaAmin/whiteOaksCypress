@@ -199,6 +199,7 @@ export const useFieldDisabledEnabledDecision = (
     isVendor &&
     (transaction?.transactionType === TransactionTypeValues.lateFee ||
       transaction?.transactionType === TransactionTypeValues.factoring)
+  const statusFieldForVendor = isVendor && transaction?.transactionType === TransactionTypeValues.draw
 
   const isStatusApproved =
     transaction?.status === TransactionStatusValues.approved ||
@@ -206,23 +207,23 @@ export const useFieldDisabledEnabledDecision = (
     transaction?.status === TransactionStatusValues.denied
   const isFactoringFeeSysGenerated =
     transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
-  const vFpm = transaction?.verifiedByFpm as unknown as string
-  const vDM = transaction?.verifiedByManager as unknown as string
+  const isInvoicePayment =
+    transaction?.transactionType === TransactionTypeValues.payment && !!transaction?.invoiceNumber
   return {
     isUpdateForm,
     isApproved: isStatusApproved,
     isSysFactoringFee: isFactoringFeeSysGenerated,
-    isPaidDateDisabled:
-      !transaction ||
-      (isStatusApproved &&
-        !paidEditPermission &&
-        !(vFpm === (TransactionStatusValues.approved as unknown as any) && vDM === TransactionStatusValues.approved)),
+    isPaidDateDisabled: !transaction && isStatusApproved && !paidEditPermission,
     isStatusDisabled:
       (isStatusApproved && !statusEditPermission) ||
       isMaterialsLoading ||
       lateAndFactoringFeeForVendor ||
-      isFactoringFeeSysGenerated,
+      isFactoringFeeSysGenerated ||
+      statusFieldForVendor ||
+      isInvoicePayment,
+
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
+    isFactoringFeeSysGenerated,
   }
 }
 
@@ -240,6 +241,21 @@ export const useTotalAmount = (control: Control<FormValues, any>) => {
     formattedAmount: numeral(totalAmount).format('$0,0.00'),
     amount: totalAmount,
   }
+}
+
+export const useTotalPendingDrawAmount = items => {
+  let totalAmount
+  //filtering pending transactions & Draw only (type=30)
+  const transactionItems = items.filter(
+    co => co.status === TransactionStatusValues.pending && co.transactionType === 30,
+  )
+
+  if (transactionItems.length > 1) {
+    totalAmount = transactionItems.map(a => a.transactionTotal).reduce((prev, curr) => prev + curr, 0)
+  } else {
+    totalAmount = transactionItems[0]?.transactionTotal
+  }
+  return totalAmount ? totalAmount : 0
 }
 
 export const useIsAwardSelect = ({
@@ -363,12 +379,7 @@ export const useAgainstOptions = (
     }
 
     // If the transaction is new and transaction type is draw and project status is invoiced or following state, hide Project SOW againstOption
-    if (
-      transactionType?.value === TransactionTypeValues.draw &&
-      !isVendor &&
-      !transaction?.id &&
-      !['new', 'active', 'punch', 'closed', 'reconcile'].includes(projectStatus?.toLowerCase())
-    ) {
+    if (transactionType?.value === TransactionTypeValues.draw) {
       return againstOptions.slice(1)
     }
 

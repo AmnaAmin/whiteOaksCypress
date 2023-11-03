@@ -76,7 +76,7 @@ export const FilteredProjectsData = ({ selectedCard, isReadOnly }: ProjectProps)
   }, [selectedCard])
 
   return (
-    <Box h={'500px'} overflow="auto">
+    <Box h={'525px'} overflow="auto">
       <TableContextProvider
         data={projects}
         columns={tableColumns}
@@ -88,7 +88,12 @@ export const FilteredProjectsData = ({ selectedCard, isReadOnly }: ProjectProps)
         columnVisibility={columnVisibility}
         setColumnVisibility={setColumnVisibility}
       >
-        <Table onRowClick={onRowClick} isLoading={isLoading || isFetching} isEmpty={!isLoading && !projects?.length} />
+        <Table
+          onRowClick={onRowClick}
+          isLoading={isLoading || isFetching}
+          isEmpty={!isLoading && !projects?.length}
+          isFilteredByApi={true}
+        />
         <TableFooter position="sticky" bottom="0" left="0" right="0">
           <ButtonsWrapper>
             <ExportButton

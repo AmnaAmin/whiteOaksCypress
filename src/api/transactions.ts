@@ -26,7 +26,11 @@ import { createForm } from 'utils/lien-waiver'
 import { Document } from 'types/vendor.types'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { PROJECT_FINANCIAL_OVERVIEW_API_KEY } from './projects'
-import { ACCONT_RECEIVABLE_API_KEY, GET_PAGINATED_RECEIVABLE_QUERY_KEY } from 'api/account-receivable'
+import {
+  ACCONT_RECEIVABLE_API_KEY,
+  ACCOUNT_CARDS_RECEIVABLE_API_KEY,
+  GET_PAGINATED_RECEIVABLE_QUERY_KEY,
+} from 'api/account-receivable'
 import numeral from 'numeral'
 import { ErrorType } from 'types/common.types'
 import {
@@ -134,10 +138,10 @@ const transactionTypeOptions = [
     value: TransactionTypeValues.material,
     label: 'Material',
   },
-  {
+  /* {
     value: TransactionTypeValues.payment,
     label: 'Payment',
-  },
+  },*/
   {
     value: TransactionTypeValues.lateFee,
     label: 'Late Fee',
@@ -517,6 +521,8 @@ export const parseChangeOrderUpdateAPIPayload = async (
     ...payload,
     verifiedByFpm: formValues.verifiedByFpm?.value,
     verifiedByManager: formValues.verifiedByManager?.value,
+    invoiceId: transaction?.invoiceId,
+    invoiceNumber: transaction?.invoiceNumber,
   }
 }
 
@@ -701,6 +707,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
       onSuccess() {
         queryClient.invalidateQueries([GET_TRANSACTIONS_BY_WORK_ORDER_API_KEY, projectId])
         queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
+        queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
@@ -708,6 +715,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['changeOrder', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+        queryClient.invalidateQueries(ACCOUNT_CARDS_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(['audit-logs', projectId])
 
         toast({
@@ -746,6 +754,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
     {
       onSuccess() {
         queryClient.invalidateQueries('transactions_work_order')
+        queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['documents', projectId])
         queryClient.invalidateQueries(['project', projectId])
@@ -754,6 +763,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['changeOrder', projectId])
         queryClient.invalidateQueries(['overpayment', Number(projectId)])
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
+        queryClient.invalidateQueries(ACCOUNT_CARDS_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
         queryClient.invalidateQueries(GET_PAGINATED_RECEIVABLE_QUERY_KEY)
         queryClient.invalidateQueries(['audit-logs', projectId])

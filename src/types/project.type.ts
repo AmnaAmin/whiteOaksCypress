@@ -135,6 +135,7 @@ export type Project = {
   lienRightExpireDate: Date | string | null
   resubmissionDTOList: ResubmissionListItem[]
   clientTypeId: string | number
+  validForNewInvoice: boolean
 }
 
 export type ProjectExtraAttributesType = {
@@ -338,6 +339,7 @@ export type ProjectFinancialOverview = {
   deductible: number
   depreciation: number
   legalFee: number
+  invoiceAmount: number
 }
 
 export type AddressInfo = { address: string | any; city: string; state: string; zipCode: string }

@@ -86,6 +86,7 @@ import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
 import UpdateProjectAward from './update-project-award'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
+import { useLocation } from 'react-router-dom'
 
 const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
   const { t } = useTranslation()
@@ -170,7 +171,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [disableBtn, setDisableBtn] = useState(false)
   const [fileParseMsg, setFileParseMsg] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
 
@@ -178,6 +183,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { transaction } = useTransaction(selectedTransactionId)
   const { managerEnabled } = useManagerEnabled(projectId)
   const isManagingFPM = managerEnabled?.allowed
+  const isInvoiceTransaction =
+    transaction?.transactionType === TransactionTypeValues.payment && !!transaction?.invoiceNumber
   const isShowFpm = !!transaction
   const {
     againstOptions: againstSelectOptions,
@@ -260,8 +267,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
   }, [workOrderId, awardPlansStats])
 
-  const { isUpdateForm, isApproved, isPaidDateDisabled, isStatusDisabled, lateAndFactoringFeeForVendor } =
-    useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
+  const {
+    isUpdateForm,
+    isApproved,
+    isPaidDateDisabled,
+    isStatusDisabled,
+    lateAndFactoringFeeForVendor,
+    isFactoringFeeSysGenerated,
+  } = useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
 
   const {
     check,
@@ -370,7 +383,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   }
 
   const drawTransaction = transaction?.transactionType === TransactionTypeValues.draw
-
   const hasPendingDrawsOnPaymentSave = values => {
     const isDrawAgainstProject =
       values?.transactionType?.value === TransactionTypeValues.draw && values?.against?.label === 'Project SOW'
@@ -873,7 +885,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           type="date"
                           variant={isPaidDateRequired ? 'required-field' : 'outline'}
                           size="md"
-                          isDisabled={isPaidDateDisabled}
+                          isDisabled={isPaidDateDisabled || isVendor}
                           css={calendarIcon}
                           {...register('paidDate', {
                             required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
@@ -900,6 +912,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               data-testid="payment-processed"
                               id="paymentProcessed"
                               type="date"
+                              isDisabled={isVendor}
                               size="md"
                               css={calendarIcon}
                               {...register('paymentProcessed')}
@@ -1020,7 +1033,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         size="md"
                         type="date"
                         variant="required-field"
-                        isDisabled={isApproved && !editPaymentReceived}
+                        isDisabled={(isApproved && !editPaymentReceived) || isInvoiceTransaction}
                         max={futureDateDisable}
                         {...register('paymentRecievedDate', { required: REQUIRED_FIELD_ERROR_MESSAGE })}
                       />
@@ -1115,7 +1128,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                 <Select
                                   {...field}
                                   options={
-                                    drawTransaction ? TRANSACTION_FPM_DM_STATUS_OPTIONS : transactionStatusOptions
+                                    drawTransaction && workOrderId !== '0'
+                                      ? TRANSACTION_FPM_DM_STATUS_OPTIONS
+                                      : transactionStatusOptions
                                   }
                                   isDisabled={isStatusDisabled}
                                   onChange={statusOption => {
@@ -1126,6 +1141,24 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               </div>
                             </>
                           )}
+                        />
+                      </FormControl>
+                    </GridItem>
+                  </>
+                )}
+                {isInvoiceTransaction && (
+                  <>
+                    <GridItem>
+                      <FormControl>
+                        <FormLabel htmlFor="aginst" fontSize="14px" color="gray.700" fontWeight={500}>
+                          {t(`${TRANSACTION}.invoiceNumber`)}
+                        </FormLabel>
+                        <Input
+                          data-testid="invoice-number"
+                          id="invoiceNumber"
+                          size="md"
+                          isDisabled={true}
+                          value={transaction?.invoiceNumber as string}
                         />
                       </FormControl>
                     </GridItem>
@@ -1194,7 +1227,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
+          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) &&
+          !isFactoringFeeSysGenerated && (
             <>
               <Button
                 type="submit"
@@ -1202,7 +1236,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 data-testid="save-transaction"
                 colorScheme="darkPrimary"
                 variant="solid"
-                disabled={isFormSubmitLoading || isMaterialsLoading || disableSave || disableBtn}
+                disabled={
+                  isFormSubmitLoading || isMaterialsLoading || disableSave || disableBtn || isInvoiceTransaction
+                }
               >
                 {t(`${TRANSACTION}.save`)}
               </Button>

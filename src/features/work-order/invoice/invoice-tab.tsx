@@ -36,6 +36,8 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { AlertError } from 'components/AlertError'
+import { useLocation } from 'react-router-dom'
+import { useTotalPendingDrawAmount } from 'features/project-details/transactions/hooks'
 
 export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.ElementType }> = ({
   title,
@@ -95,12 +97,17 @@ export const InvoiceTab = ({
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
+  const totalPendingDrawAmount = useTotalPendingDrawAmount(items)
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
   const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
   const { isVendor, isAdmin } = useUserRolesSelector()
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['PAYABLE.READ', 'PROJECT.READ']?.includes(p))
+  const { pathname } = useLocation()
+  const isPayable = pathname?.includes('payable')
+  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isPayableRead || isProjRead
   const {
     isOpen: isGenerateInvoiceOpen,
     onClose: onGenerateInvoiceClose,
@@ -132,7 +139,9 @@ export const InvoiceTab = ({
     if (transactions && transactions.length > 0) {
       // only show approved or paid transactions.
       const transactionItems = transactions.filter(
-        co => co.status === TSV.approved && co.parentWorkOrderId === workOrder.id,
+        co =>
+          (co.status === TSV.approved && co.parentWorkOrderId === workOrder.id) ||
+          (co.status === TSV.pending && co.transactionType === 30 && co.parentWorkOrderId === workOrder.id),
       )
       setItems(transactionItems)
     }
@@ -175,7 +184,7 @@ export const InvoiceTab = ({
       updatedWorkOrder,
       projectData,
       items,
-      { subTotal: workOrder?.subTotal, amountPaid: workOrder?.totalAmountPaid },
+      { subTotal: workOrder?.subTotal, amountPaid: workOrder?.totalAmountPaid, drawPending: totalPendingDrawAmount },
       vendorAddress,
     )
     const pdfUri = form.output('datauristring')
@@ -256,7 +265,7 @@ export const InvoiceTab = ({
         {isVendorExpired && (
           <Box>
             <AlertError
-              styleBox={{ width: 'max-content' }}
+              styleBox={{ width: 'max-content', marginTop: '9px' }}
               msg={
                 isVendor
                   ? `${WORK_ORDER}.expirationInvoiceMessageForVendor`
@@ -319,7 +328,7 @@ export const InvoiceTab = ({
         <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
 
         <Box
-          h="470px"
+          h={isVendorExpired ? '410px' : '470px'}
           overflow="auto"
           borderRadius={7}
           borderBottom="1px solid #CBD5E0"
@@ -336,7 +345,8 @@ export const InvoiceTab = ({
                   {t('description')}
                 </Td>
                 <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
-                  {t('type')}                </Td>
+                  {t('type')}{' '}
+                </Td>
                 <Td color={'gray.900'} fontWeight={500} fontSize={'14px'} w={300} pr={12} textAlign={'end'}>
                   {t('total')}
                 </Td>
@@ -378,6 +388,14 @@ export const InvoiceTab = ({
                         </Text>
                         <Text fontWeight={500} color={'gray.600'} data-testid={'totalAmountPaid'}>
                           {currencyFormatter(workOrder.totalAmountPaid)}
+                        </Text>
+                      </HStack>
+                      <HStack w={300} height="35px" justifyContent="space-between">
+                        <Text fontWeight={500} color={'gray.600'}>
+                          {t('pendingDraw')}
+                        </Text>
+                        <Text fontWeight={500} color={'gray.600'} data-testid={'pendingDraw'}>
+                          {currencyFormatter(totalPendingDrawAmount)}
                         </Text>
                       </HStack>
                       <HStack w={300} height="35px" justifyContent="space-between">
@@ -443,13 +461,13 @@ export const InvoiceTab = ({
                 {t('cancel')}
               </Button>
               {!isReadOnly && (
-              <Button
-                disabled={!rejectInvoiceCheck || isWorkOrderUpdating}
-                onClick={() => rejectInvoice()}
-                colorScheme="darkPrimary"
-              >
-                {t('save')}
-              </Button>
+                <Button
+                  disabled={!rejectInvoiceCheck || isWorkOrderUpdating}
+                  onClick={() => rejectInvoice()}
+                  colorScheme="darkPrimary"
+                >
+                  {t('save')}
+                </Button>
               )}
             </>
           ) : (

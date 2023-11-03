@@ -152,7 +152,6 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
     (firstFinancialRecord?.changeOrder || 0) +
     (firstFinancialRecord?.adjustment || 0)
 
-    
   const projectExpenses = -1 * ((firstFinancialRecord?.shipFee || 0) + (firstFinancialRecord?.permitFee || 0))
 
   const { vendorAccountPayable, projectTotalCost, materialCost, vendorPayment } = restProjectFinancialOverviews?.reduce(
@@ -190,7 +189,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
         accountReceivable:
           (fo?.newAmount || 0) +
           (fo?.draw || 0) -
-          ((fo?.partialPayment || 0) + (fo?.deductible || 0) + (fo?.depreciation || 0)),
+          ((fo?.partialPayment || 0) + (fo?.deductible || 0) + (fo?.depreciation || 0) + (fo?.invoiceAmount || 0)),
       })) || [],
     workOrderFinancialOverviews: restProjectFinancialOverviews,
     vendorPaymentPercentage,

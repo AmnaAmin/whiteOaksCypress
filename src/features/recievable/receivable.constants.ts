@@ -107,4 +107,5 @@ export const RECEIVABLE_TABLE_QUERY_KEYS = {
   displayId: 'displayId.contains',
   paymentTerm: 'paymentTerm.equals',
   resubmissionInvoiceNumber: 'resubmissionInvoiceNumber.contains',
+  pcOrFpmUserId: 'directReportUserOnly.equals',
 }

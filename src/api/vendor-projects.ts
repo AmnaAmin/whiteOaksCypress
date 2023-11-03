@@ -226,7 +226,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
       ...items.map(ai => {
         return {
           item: ai.id,
-          description: ai.name,
+          description: ai?.status === 'PENDING' ? `${ai.name} (pending)` : ai.name,
           amount: currencyFormatter(ai.transactionTotal),
         }
       }),
@@ -262,6 +262,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
   const summaryInfo = [
     { title: 'Subtotal', value: currencyFormatter(summary.subTotal) },
     { title: 'Amount Paid', value: currencyFormatter(Math.abs(summary.amountPaid)) },
+    { title: 'Pending Draw', value: currencyFormatter(Math.abs(Number(summary.drawPending))) },
     { title: 'Balance Due', value: currencyFormatter(summary.subTotal - Math.abs(summary.amountPaid)) },
   ]
   // hide first rect as per new format

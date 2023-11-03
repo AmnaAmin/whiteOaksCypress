@@ -5,7 +5,7 @@ import Location from './location'
 import Contact from './contact'
 import ProjectManagement from './project-management'
 import Misc from './misc'
-import InvoiceAndPayments from './invoice-and-payments'
+import Payments from './payments'
 import { BiErrorCircle, BiSpreadsheet } from 'react-icons/bi'
 import { AddressInfo, Project } from 'types/project.type'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
@@ -23,9 +23,15 @@ import {
   useProjectOverrideStatusSelectOptions,
 } from 'api/project-details'
 import { DevTool } from '@hookform/devtools'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useSubFormErrors } from './hooks'
-import { useGetAddressVerification, useProjectExtraAttributes, useProperties } from 'api/pc-projects'
+import {
+  useDeleteProjectMutation,
+  useGetAddressVerification,
+  useProjectAllowDelete,
+  useProjectExtraAttributes,
+  useProperties,
+} from 'api/pc-projects'
 // import { PROJECT_DETAILS } from './projectDetails.i18n'
 import { useMarkets, useStates } from 'api/pc-projects'
 
@@ -35,6 +41,8 @@ import { TransactionStatusValues, TransactionTypeValues } from 'types/transactio
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
+import InvoiceAndPayments from './invoicing-payments'
+import { ConfirmationBox } from 'components/Confirmation'
 
 type tabProps = {
   projectData: Project
@@ -46,10 +54,15 @@ type tabProps = {
 
 const ProjectDetailsTab = (props: tabProps) => {
   const { style, onClose, tabVariant, projectData, isRecievable } = props
-  const isReadOnly = useRoleBasedPermissions()?.permissions?.some(p => ['RECEIVABLE.READ', 'PROJECT.READ']?.includes(p))
+  const isRecievableRead = useRoleBasedPermissions()?.permissions?.includes('RECEIVABLE.READ') && isRecievable
+  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = isRecievableRead || isProjRead
   const [tabIndex, setTabIndex] = useState(0)
   const { propertySelectOptions } = useProperties()
   const { data: projectExtraAttributes } = useProjectExtraAttributes(projectData?.id as number)
+  const { data: deleteCheck } = useProjectAllowDelete(projectData?.id as number)
+  const { mutate: deleteProjectCall, isLoading: deleteLoading } = useDeleteProjectMutation()
+
   const { projectTypeSelectOptions } = useGetProjectTypeSelectOptions()
   const { userSelectOptions: fpmSelectOptions } = useGetUsersByType(5)
   const { userSelectOptions: projectCoordinatorSelectOptions } = useGetUsersByType(112)
@@ -71,10 +84,13 @@ const ProjectDetailsTab = (props: tabProps) => {
   const {
     control,
     formState: { errors, isSubmitting },
+    watch,
   } = formReturn
-
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
     useSubFormErrors(errors)
+  const watchClient = watch('client')
+
+  const carrierSelected = watchClient?.carrier?.filter(e => e.id === projectData?.carrierId)
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
       project: projectData,
@@ -139,6 +155,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     zipCode: '',
   })
   const [isVerifiedAddress, setVerifiedAddress] = useState(true)
+  const navigate = useNavigate()
 
   // Get all values of Address Info
   const watchAddress = useWatch({ name: 'address', control })
@@ -168,6 +185,12 @@ const ProjectDetailsTab = (props: tabProps) => {
     onClose: onAddressVerificationModalClose,
   } = useDisclosure()
 
+  const {
+    isOpen: isDeleteProjecModalOpen,
+    onOpen: onDeleteProjecModalOpen,
+    onClose: onDeleteProjecModalClose,
+  } = useDisclosure()
+
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
@@ -187,6 +210,49 @@ const ProjectDetailsTab = (props: tabProps) => {
     setTabIndex(index)
   }
 
+  const deleteProject = () => {
+    onDeleteProjecModalOpen()
+  }
+
+  const confirmDelete = () => {
+    deleteProjectCall(projectData?.id as number, {
+      onSuccess() {
+        navigate('/projects')
+        onDeleteProjecModalClose()
+        toast({
+          title: 'Project Deleted',
+          description: `Project is deleted successfully.`,
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+      onError(error: any) {
+        toast({
+          title: 'Project Delete',
+          description: (error.title as string) ?? 'Unable to Delete Project.',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'top-left',
+        })
+      },
+    })
+  }
+
+  // const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
+
+  useEffect(() => {
+    if (isReadOnly) {
+      Array.from(document.querySelectorAll('input')).forEach(input => {
+        if (input.getAttribute('data-testid') !== 'tableFilterInputField') {
+          input.setAttribute('disabled', 'true')
+        }
+      })
+    }
+  }, [])
+
   return (
     <>
       <FormProvider {...formReturn}>
@@ -202,13 +268,17 @@ const ProjectDetailsTab = (props: tabProps) => {
               <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
                 {t(`project.projectDetails.projectManagement`)}
               </TabCustom>
-              <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
-                {t(`project.projectDetails.invoicingPayment`)}
+              <TabCustom
+                isError={!projectData?.validForNewInvoice ? isInvoiceAndPaymentFormErrors && tabIndex !== 1 : false}
+              >
+                {!projectData?.validForNewInvoice
+                  ? t(`project.projectDetails.invoicingPayment`)
+                  : t(`project.projectDetails.payments`)}
               </TabCustom>
-              <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 2}>
+              <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 3}>
                 {t(`project.projectDetails.contacts`)}
               </TabCustom>
-              <TabCustom isError={isLocationFormErrors && tabIndex !== 3}>
+              <TabCustom isError={isLocationFormErrors && tabIndex !== 4}>
                 {t(`project.projectDetails.location`)}
               </TabCustom>
               <TabCustom>{t(`project.projectDetails.misc`)}</TabCustom>
@@ -223,21 +293,26 @@ const ProjectDetailsTab = (props: tabProps) => {
               borderBottomLeftRadius="4px"
             >
               <TabPanels>
-                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflowY={'scroll'}>
+                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflowY={'auto'}>
                   <ProjectManagement
                     projectStatusSelectOptions={projectStatusSelectOptions}
                     projectOverrideStatusSelectOptions={projectOverrideStatusSelectOptions}
                     projectTypeSelectOptions={projectTypeSelectOptions}
                     projectData={projectData}
+                    isReadOnly={isReadOnly}
                   />
                 </TabPanel>
-
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  <InvoiceAndPayments projectData={projectData} />
+                  {!projectData?.validForNewInvoice ? (
+                    <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
+                  ) : (
+                    <Payments isReadOnly={isReadOnly} projectData={projectData} />
+                  )}
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
                   <Contact
+                    carrierSelected={carrierSelected}
                     projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
                     clientSelectOptions={clientSelectOptions}
                     clientTypesSelectOptions={clientTypesSelectOptions}
@@ -264,23 +339,35 @@ const ProjectDetailsTab = (props: tabProps) => {
                   <Divider border="1px solid" />
                 </Box>
                 <Box h="70px" w="100%" pb="3">
-                  <>
-                    {!isReadOnly && (
-                      <Button
-                        mt="8px"
-                        mr="32px"
-                        float={'right'}
-                        variant="solid"
-                        colorScheme="brand"
-                        type="submit"
-                        form="project-details"
-                        fontSize="16px"
-                        disabled={isSubmitting || isLoading}
-                      >
-                        {t(`project.projectDetails.save`)}
-                      </Button>
-                    )}
-                  </>
+                  {!isReadOnly && !(projectData?.validForNewInvoice && tabIndex === 1) && (
+                    <Button
+                      mt="8px"
+                      mr="32px"
+                      float={'right'}
+                      variant="solid"
+                      colorScheme="brand"
+                      type="submit"
+                      form="project-details"
+                      fontSize="16px"
+                      disabled={isSubmitting || isLoading}
+                    >
+                      {t(`project.projectDetails.save`)}
+                    </Button>
+                  )}
+                  {deleteCheck && !isRecievable && (
+                    <Button
+                      fontSize="16px"
+                      mt="8px"
+                      mr="5"
+                      float={'right'}
+                      variant="outline"
+                      colorScheme="brand"
+                      isDisabled={deleteLoading}
+                      onClick={deleteProject}
+                    >
+                      Delete
+                    </Button>
+                  )}
                   {onClose && (
                     <>
                       <Button
@@ -320,6 +407,15 @@ const ProjectDetailsTab = (props: tabProps) => {
         isAddressVerified={isAddressVerified}
         isLoading={addressVerificationLoading}
         setSave={setVerifiedAddress}
+      />
+
+      <ConfirmationBox
+        title="Delete Project"
+        content="Are you sure you want to Delete this project?"
+        isOpen={isDeleteProjecModalOpen}
+        onClose={onDeleteProjecModalClose}
+        isLoading={deleteLoading}
+        onConfirm={confirmDelete}
       />
     </>
   )

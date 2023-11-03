@@ -122,6 +122,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                   {t('W9DocumentDate')}
                 </FormLabel>
                 <Input
+                  variant = "required-field"
                   isDisabled={true}
                   w="215px"
                   type="date"
@@ -153,6 +154,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                     <VStack alignItems="baseline">
                       <Box>
                         <ChooseFileField
+                          isRequired
                           name={field.name}
                           value={field.value?.name ? field.value?.name : t('chooseFile')}
                           isError={!!fieldState.error?.message}
@@ -184,6 +186,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                   {t('agreementSignedDate')}
                 </FormLabel>
                 <Input
+                  variant = "required-field"
                   type="date"
                   w="215px"
                   min={minDate.toISOString().split('T')[0]}
@@ -221,6 +224,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                       <VStack alignItems="baseline">
                         <Box>
                           <ChooseFileField
+                            isRequired
                             name={field.name}
                             value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
@@ -276,7 +280,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 >
                   {t('autoInsuranceExpDate')}
                 </FormLabel>
-                <Input min={minDate.toISOString().split('T')[0]} type="date" w="215px" {...register('autoInsuranceExpDate')} data-testid="autoInsuranceExpDate" />
+                <Input variant = "required-field" min={minDate.toISOString().split('T')[0]} type="date" w="215px" {...register('autoInsuranceExpDate')} data-testid="autoInsuranceExpDate" />
                 <FormErrorMessage>
                   {errors.autoInsuranceExpDate && errors.autoInsuranceExpDate.message}
                 </FormErrorMessage>
@@ -307,6 +311,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                       <VStack alignItems="baseline">
                         <Box>
                           <ChooseFileField
+                            isRequired
                             name={field.name}
                             value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
@@ -338,7 +343,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 <FormLabel variant="strong-label" sx={formLabeStyle}>
                   {t('COIGLExpDate')}
                 </FormLabel>
-                <Input min={minDate.toISOString().split('T')[0]} type="date" w="215px" {...register('coiGlExpDate')} data-testid="coiGlExpDate" />
+                <Input variant = "required-field" min={minDate.toISOString().split('T')[0]} type="date" w="215px" {...register('coiGlExpDate')} data-testid="coiGlExpDate" />
                 <FormErrorMessage>{errors.coiGlExpDate && errors.coiGlExpDate.message}</FormErrorMessage>
               </FormControl>
             </Box>
@@ -367,6 +372,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                       <VStack alignItems="baseline">
                         <Box>
                           <ChooseFileField
+                            isRequired
                             name={field.name}
                             value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}
@@ -400,7 +406,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                 <FormLabel variant="strong-label" size="md" color="#2D3748">
                   {t('COIWCExpDate')}
                 </FormLabel>
-                <Input min={minDate.toISOString().split('T')[0]} type="date" w="215px" {...register('coiWcExpDate')} data-testid="coiWcExpDate" />
+                <Input variant = "required-field" min={minDate.toISOString().split('T')[0]} type="date" w="215px" {...register('coiWcExpDate')} data-testid="coiWcExpDate" />
                 <FormErrorMessage>{errors.coiWcExpDate && errors.coiWcExpDate?.message}</FormErrorMessage>
               </FormControl>
             </Box>
@@ -426,6 +432,7 @@ export const DocumentsForm = ({ isActive }: DocumentFormProps) => {
                       <VStack alignItems="baseline">
                         <Box>
                           <ChooseFileField
+                            isRequired
                             name={field.name}
                             value={field.value?.name ? field.value?.name : t('chooseFile')}
                             isError={!!fieldState.error?.message}

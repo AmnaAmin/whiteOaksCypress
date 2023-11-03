@@ -111,13 +111,6 @@ export const useSaveUserDetails = () => {
         })
       },
       onError(error: any) {
-        toast({
-          title: t(`${USER_MANAGEMENT}.modal.updateUser`),
-          description: (error.title as string) ?? t(`${USER_MANAGEMENT}.modal.userUpdateFailed`),
-          status: 'error',
-          isClosable: true,
-          position: 'top-left',
-        })
       },
     },
   )
@@ -169,7 +162,7 @@ export const userMangtPayload = (user: any, statesDTO?: any, usersData?: any) =>
     return user.states?.filter(state => state.checked === true)?.map(s => s?.state)
   }
 
-  const directReportIds = user?.directReports?.map(d => d.value)
+  const directReportIds = user?.directReports?.filter(d => !d.orphanChild).map(d => d.value)
   const userObj = {
     ...user,
     newPassword: user.newPassword || '',
@@ -359,6 +352,7 @@ const parseUserFormData = ({
         return {
           label: u.firstName + ' ' + u.lastName,
           value: u.id,
+          orphanChild: u.orphanChild,
         }
       }) || [],
     parentFieldProjectManagerId: managerUser
@@ -454,14 +448,14 @@ export const useUserDirectReports = (
   }
 }
 
-export const useUserDetails = ({ form, userInfo }) => {
+export const useUserDetails = ({ form, userInfo, queryString }) => {
   const { setValue, reset } = form
   const { stateSelectOptions: stateOptions } = useStates()
   const { markets } = useMarkets()
   const { regionSelectOptions } = useRegions()
   const { options: roles } = useFetchRoles()
   const { options: viewVendorsOptions } = useViewVendor()
-  const { userMgt: userData } = useUsrMgt('userType.notIn=6&devAccount.equals=false', 0, 100000000)
+  const { userMgt: userData } = useUsrMgt(queryString, 0, 100000000)
 
   const formattedMarkets = parseMarketAPIDataToFormValues(markets, userInfo?.markets || [])
   const formattedRegions = parseRegionsAPIDataToFormValues(regionSelectOptions, userInfo?.regions || [])

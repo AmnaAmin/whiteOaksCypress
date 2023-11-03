@@ -24,6 +24,7 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   type: 'type.contains',
   displayId: 'displayId.contains',
   clientName: 'clientName.contains',
+  pcOrFpmUserId: 'directReportUserOnly.equals',
 }
 
 export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [

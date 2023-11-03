@@ -1,4 +1,4 @@
-import { useDisclosure, FormControl, FormLabel, Switch, Flex, HStack } from '@chakra-ui/react'
+import { useDisclosure, FormControl, FormLabel, Switch, Flex } from '@chakra-ui/react'
 
 import { Box, Button, Stack } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
@@ -9,7 +9,7 @@ import { TransactionsTable } from 'features/project-details/transactions/transac
 import { usePCProject } from 'api/pc-projects'
 import { Project } from 'types/project.type'
 import { AmountDetailsCard } from 'features/project-details/project-amount-detail'
-import { BiAddToQueue, BiUpload } from 'react-icons/bi'
+import { BiAddToQueue, BiBookAdd, BiUpload } from 'react-icons/bi'
 
 import ProjectDetailsTab from 'features/update-project-details/project-details-form'
 import NewWorkOrder from 'features/work-order/new-work-order'
@@ -31,6 +31,8 @@ import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-t
 import { useProjectAuditLogs } from 'api/project-details'
 import { boxShadow } from 'theme/common-style'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import InvoiceModal from 'features/update-project-details/add-invoice-modal'
+import { ADV_PERMISSIONS } from 'api/access-control'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -39,6 +41,7 @@ export const ProjectDetails: React.FC = props => {
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const [tabIndex, setTabIndex] = useState(0)
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
   const { ganttChartData, isLoading: isGanttChartLoading } = useGanttChart(projectId)
   const [formattedGanttData, setFormattedGanttData] = useState<any[]>([])
 
@@ -57,6 +60,7 @@ export const ProjectDetails: React.FC = props => {
   }
 
   const [isShowProjectFinancialOverview, setIsShowProjectFinancialOverview] = useState(false)
+  const { isOpen: isOpenInvoiceModal, onClose: onInvoiceModalClose, onOpen: onInvoiceModalOpen } = useDisclosure()
 
   const projectStatus = (projectData?.projectStatus || '').toLowerCase()
 
@@ -65,6 +69,8 @@ export const ProjectDetails: React.FC = props => {
   const navigate = useNavigate()
   const workOrder = (location?.state as any)?.workOrder || {}
   const transaction = (location?.state as any)?.transaction || {}
+  const { permissions } = useRoleBasedPermissions()
+  const isAllowedInvoicing = permissions.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p))
 
   useEffect(() => {
     if (workOrder?.id) {
@@ -147,7 +153,8 @@ export const ProjectDetails: React.FC = props => {
               pr={{ base: 0, sm: '15px' }}
             >
               <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
-                {!isReadOnly &&tabIndex === 2 &&
+                {!isReadOnly &&
+                  tabIndex === 2 &&
                   ![
                     STATUS.Closed,
                     STATUS.Invoiced,
@@ -158,18 +165,17 @@ export const ProjectDetails: React.FC = props => {
                     STATUS.Overpayment,
                     STATUS.Reconcile,
                   ].includes(projectStatus as STATUS) && (
-                    
                     <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen} mb="15px">
                       {t('newWorkOrder')}
                     </Button>
                   )}
-                {!isReadOnly &&tabIndex === 4 && (
+                {!isReadOnly && tabIndex === 4 && (
                   <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />} mb="15px">
                     {t('projects.projectDetails.upload')}
                   </Button>
                 )}
                 {tabIndex === 0 && (
-                  <HStack spacing="16px" mb="10px">
+                  <Flex justifyContent={'end'} w="100%" gap={'10px'}>
                     <Box mt={'14px'}>
                       <FormControl display="flex" alignItems="center">
                         <FormLabel
@@ -193,20 +199,27 @@ export const ProjectDetails: React.FC = props => {
                         />
                       </FormControl>
                     </Box>
-                    <>
-              {!isReadOnly && (
-                    <Button
-                      variant="solid"
-                      colorScheme="brand"
-                      onClick={onTransactionModalOpen}
-                      isDisabled={preventNewTransaction}
-                      leftIcon={<BiAddToQueue />}
-                    >
-                      {t('projects.projectDetails.newTransaction')}
-                    </Button>
-                      )}
+                    {!isReadOnly && (
+                      <>
+                        <Box>
+                          {isAllowedInvoicing && (
+                            <Button colorScheme="brand" onClick={onInvoiceModalOpen} leftIcon={<BiBookAdd />} mb="15px">
+                              {t('project.projectDetails.newInvoice')}
+                            </Button>
+                          )}
+                        </Box>
+                        <Button
+                          variant="solid"
+                          colorScheme="brand"
+                          onClick={onTransactionModalOpen}
+                          isDisabled={preventNewTransaction}
+                          leftIcon={<BiAddToQueue />}
+                        >
+                          {t('projects.projectDetails.newTransaction')}
+                        </Button>
                       </>
-                  </HStack>
+                    )}
+                  </Flex>
                 )}
               </Box>
               <TabPanels h="100%">
@@ -221,6 +234,7 @@ export const ProjectDetails: React.FC = props => {
                         defaultSelected={transaction}
                         transId={createdTransID}
                         isReadOnly={isReadOnly}
+                        projectData={projectData as Project}
                       />
                     )}
                   </Box>
@@ -256,7 +270,12 @@ export const ProjectDetails: React.FC = props => {
                 </TabPanel>
                 {
                   <TabPanel p="0px" minH="calc(100vh - 450px)">
-                    <AuditLogsTable auditLogs={auditLogs} isLoading={isLoadingAudits} refetch={refetchAudits} isReadOnly={isReadOnly} />
+                    <AuditLogsTable
+                      auditLogs={auditLogs}
+                      isLoading={isLoadingAudits}
+                      refetch={refetchAudits}
+                      isReadOnly={isReadOnly}
+                    />
                   </TabPanel>
                 }
               </TabPanels>
@@ -274,6 +293,17 @@ export const ProjectDetails: React.FC = props => {
         {isOpen && <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />}
         {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
         <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
+
+        <InvoiceModal
+          isOpen={isOpenInvoiceModal}
+          projectData={projectData as Project}
+          onClose={() => {
+            setSelectedInvoice(null)
+            onInvoiceModalClose()
+          }}
+          //clientSelected={clientSelected}
+          selectedInvoice={selectedInvoice}
+        />
       </Stack>
     </>
   )

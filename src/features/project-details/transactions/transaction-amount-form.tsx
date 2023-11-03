@@ -321,7 +321,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           onChange(isChecked)
                         }}
                       >
-                        {t(`${TRANSACTION}.refund`)}
+                          <span style={{ fontSize: '12px', color: '#3A5EA6' }}>{t(`${TRANSACTION}.refund`)}</span>
+                      
                       </Checkbox>
                     )
                   }}

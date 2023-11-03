@@ -26,6 +26,10 @@ export const EstimateDetails = () => {
         sendMessage()
       }
 
+      if (event.data.redirectToEstimates) {
+        window.history.pushState(null, '', '/estimates')
+      }
+
       if (event.data.isEstimatesDetailsPage) {
         //window.history.pushState(null, '', `/${event.data.path}/${event.data.estimatesId}`);
       }
