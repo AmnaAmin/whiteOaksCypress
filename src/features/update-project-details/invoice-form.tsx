@@ -286,6 +286,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       })
       return
     }
+
     let payload = await mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: invoiced })
     let form = new jsPDF()
     form = await createInvoicePdf({
@@ -293,6 +294,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       invoiceVals: payload,
       address: woAddress,
       projectData,
+      sowAmt: invoice?.sowAmount,
     })
     const pdfUri = form.output('datauristring')
     payload['documents']?.push({

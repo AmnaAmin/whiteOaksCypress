@@ -262,11 +262,20 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
   }
 }
 
-export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData }) => {
+export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData, sowAmt }) => {
+  let sowAmount = sowAmt ?? (projectData?.sowNewAmount?.toString() as string)
+
   let finalSowLineItems = invoiceVals?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems')
   let receivedLineItems = invoiceVals?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems')
   finalSowLineItems = finalSowLineItems?.length > 0 ? finalSowLineItems : [{ type: '', description: '', amount: 0 }]
   receivedLineItems = receivedLineItems?.length > 0 ? receivedLineItems : [{ type: '', description: '', amount: 0 }]
+
+  let receivedTotal
+  if (receivedLineItems.length > 1) {
+    receivedTotal = receivedLineItems?.map(p => p?.amount).reduce((prev, curr) => Number(prev) + Number(curr), 0)
+  } else {
+    receivedTotal = receivedLineItems?.[0]?.amount
+  }
 
   const workOrderInfo = [
     { label: 'Date:', value: dateFormat(invoiceVals?.invoiceDate) ?? '' },
@@ -396,7 +405,19 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
 
   const summaryInfo = [
     {
-      title: 'Total',
+      title: 'SOW Amount:',
+      value: currencyFormatter(sowAmount),
+    },
+    {
+      title: 'Amount Received:',
+      value: currencyFormatter(receivedTotal),
+    },
+    {
+      title: 'Remaining AR',
+      value: currencyFormatter(Number(sowAmount) - receivedTotal),
+    },
+    {
+      title: 'Invoice Amount:',
       value: currencyFormatter(finalSow),
     },
   ]
@@ -409,14 +430,14 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
     // }
     doc.rect(rectX, rectY, rectL, rectW, rectD)
     doc.setFont(baseFont, 'bold')
-    doc.text(sum.title, summaryX - 5, rectY + 6)
+    doc.text(sum.title, summaryX - 9, rectY + 6)
     doc.setFont(baseFont, 'normal')
     doc.text(sum.value, summaryX + 28, rectY + 6)
     rectY = rectY + 10
   })
 
   autoTable(doc, {
-    startY: tableEndsY + 20,
+    startY: tableEndsY + 50,
     headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
     theme: 'grid',
     bodyStyles: { lineColor: '#000000', minCellHeight: 15 },
@@ -456,25 +477,18 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
   const rectLL = 30
   const rectWW = 10
 
-  let receivedTotal
-  if (receivedLineItems.length > 1) {
-    receivedTotal = receivedLineItems?.map(p => p?.amount).reduce((prev, curr) => Number(prev) + Number(curr), 0)
-  } else {
-    receivedTotal = receivedLineItems?.[0]?.amount
-  }
+  // const summaryInfo1 = [
+  //   {
+  //     title: 'Total',
+  //     value: currencyFormatter(receivedTotal),
+  //   },
+  //   {
+  //     title: 'Invoice Amount',
+  //     value: currencyFormatter(finalSow - receivedTotal),
+  //   },
+  // ]
 
-  const summaryInfo1 = [
-    {
-      title: 'Total',
-      value: currencyFormatter(receivedTotal),
-    },
-    {
-      title: 'Invoice Amount',
-      value: currencyFormatter(finalSow - receivedTotal),
-    },
-  ]
-
-  summaryInfo1.forEach(sum => {
+  summaryInfo.forEach(sum => {
     let rectDD = 'D'
     // if (sum.title === 'Balance Due') {
     doc.setFillColor(211)
@@ -482,14 +496,14 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
     // }
     doc.rect(rectXX, rectYY, rectLL, rectWW, rectDD)
     doc.setFont(baseFont, 'bold')
-    doc.text(sum.title, summaryXX - 5, rectYY + 6)
+    doc.text(sum.title, summaryXX - 9, rectYY + 6)
     doc.setFont(baseFont, 'normal')
     doc.text(sum.value, summaryXX + 28, rectYY + 6)
     rectYY = rectYY + 10
   })
 
   doc.setFont(summaryFont, 'bold')
-  doc.text('Thank you for your bussiness!', startx, 270)
+  doc.text('Thank you for your bussiness!', startx, 280)
 
   doc.setFontSize(10)
   doc.setFont(basicFont, 'normal')
