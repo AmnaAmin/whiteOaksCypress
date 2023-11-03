@@ -156,7 +156,7 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
     documents: attachmentDTO ? [attachmentDTO] : [],
     //only save sowAmount once invoice is going for PAID, else it will be same as current projects sowAmount.
     sowAmount: values.status?.value === 'PAID' ? projectData?.sowNewAmount : null,
-    remainingPayment: values.remainingPayment,
+    remainingPayment: !invoice ? invoiceAmount : values.remainingPayment,
   }
   return payload
 }
@@ -273,7 +273,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
     paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
     attachments: undefined,
     sowAmount: invoice?.sowAmount,
-    remainingPayment: Number(invoice?.remainingPayment)?.toFixed(2) ?? 0,
+    remainingPayment: invoice ? Number(invoice?.remainingPayment)?.toFixed(2) ?? 0 : null,
     payment: invoice ? (Number(invoiceAmount) - Number(invoice?.remainingPayment))?.toFixed(2) : invoiceAmount,
   }
 }

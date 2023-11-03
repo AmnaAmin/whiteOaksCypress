@@ -132,6 +132,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   }, [transactions])
 
   const { isVendor } = useUserRolesSelector()
+
   return (
     <>
       {isLoading && (

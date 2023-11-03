@@ -229,16 +229,20 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   })
 
   useEffect(() => {
-    clearErrors('remainingPayment')
-    if (Number(watchReminaingPayment) < 0) {
-      setError('remainingPayment', { type: 'custom', message: 'Remaining payment cannot be negative' })
+    if (!!invoice) {
+      clearErrors('remainingPayment')
+      if (Number(watchReminaingPayment) < 0) {
+        setError('remainingPayment', { type: 'custom', message: 'Remaining payment cannot be negative' })
+      }
     }
   }, [watchReminaingPayment])
 
   useEffect(() => {
-    clearErrors('payment')
-    if (Number(watchPayment) > invoiced) {
-      setError('payment', { type: 'custom', message: 'Payment cannot be greater than invoiced amount' })
+    if (!!invoice) {
+      clearErrors('payment')
+      if (Number(watchPayment) > invoiced) {
+        setError('payment', { type: 'custom', message: 'Payment cannot be greater than invoiced amount' })
+      }
     }
   }, [invoiced, watchPayment])
 
@@ -483,64 +487,64 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
               />
             </FormControl>
           </GridItem>
-          <GridItem>
-            <FormControl data-testid="remainingPayment" w="215px" isInvalid={!!errors.remainingPayment}>
-              <FormLabel variant="strong-label" size="md">
-                {t(`project.projectDetails.remainingPayment`)}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="remainingPayment"
-                render={({ field }) => {
-                  return (
-                    <NumberInput
-                      data-testid="remainingPayment"
-                      value={field.value}
-                      disabled={true}
-                      customInput={CustomRequiredInput}
-                      thousandSeparator={true}
-                      prefix={'$'}
-                    />
-                  )
-                }}
-              />
-              <FormErrorMessage>{errors?.remainingPayment?.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl data-testid="payment" w="215px" isInvalid={!!errors.payment}>
-              <FormLabel variant="strong-label" size="md">
-                {t(`project.projectDetails.payment`)}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="payment"
-                rules={{ required: 'This is required' }}
-                render={({ field }) => {
-                  return (
-                    <NumberInput
-                      data-testid="payment"
-                      value={field.value}
-                      onValueChange={e => {
-                        field.onChange(e.floatValue)
-                        setValue(
-                          'remainingPayment',
-                          e.floatValue ? Number(invoiced - e.floatValue)?.toFixed(2) : Number(invoiced)?.toFixed(2),
-                        )
-                      }}
-                      disabled={isPaid}
-                      customInput={CustomRequiredInput}
-                      thousandSeparator={true}
-                      prefix={'$'}
-                    />
-                  )
-                }}
-              />
-              <FormErrorMessage>{errors?.payment?.message}</FormErrorMessage>
-            </FormControl>
-          </GridItem>
           {invoice && (
             <>
+              <GridItem>
+                <FormControl data-testid="remainingPayment" w="215px" isInvalid={!!errors.remainingPayment}>
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`project.projectDetails.remainingPayment`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="remainingPayment"
+                    render={({ field }) => {
+                      return (
+                        <NumberInput
+                          data-testid="remainingPayment"
+                          value={field.value}
+                          disabled={true}
+                          customInput={CustomRequiredInput}
+                          thousandSeparator={true}
+                          prefix={'$'}
+                        />
+                      )
+                    }}
+                  />
+                  <FormErrorMessage>{errors?.remainingPayment?.message}</FormErrorMessage>
+                </FormControl>
+              </GridItem>
+              <GridItem>
+                <FormControl data-testid="payment" w="215px" isInvalid={!!errors.payment}>
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`project.projectDetails.payment`)}
+                  </FormLabel>
+                  <Controller
+                    control={control}
+                    name="payment"
+                    rules={{ required: 'This is required' }}
+                    render={({ field }) => {
+                      return (
+                        <NumberInput
+                          data-testid="payment"
+                          value={field.value}
+                          onValueChange={e => {
+                            field.onChange(e.floatValue)
+                            setValue(
+                              'remainingPayment',
+                              e.floatValue ? Number(invoiced - e.floatValue)?.toFixed(2) : Number(invoiced)?.toFixed(2),
+                            )
+                          }}
+                          disabled={isPaid}
+                          customInput={CustomRequiredInput}
+                          thousandSeparator={true}
+                          prefix={'$'}
+                        />
+                      )
+                    }}
+                  />
+                  <FormErrorMessage>{errors?.payment?.message}</FormErrorMessage>
+                </FormControl>
+              </GridItem>
               <GridItem>
                 <FormControl data-testid="status" w="215px" isInvalid={!!errors.status}>
                   <FormLabel variant="strong-label" size="md">
