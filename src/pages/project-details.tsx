@@ -301,7 +301,6 @@ export const ProjectDetails: React.FC = props => {
             onInvoiceModalClose()
           }}
           projectId={projectData?.id}
-          //clientSelected={clientSelected}
           selectedInvoice={selectedInvoice}
         />
       </Stack>
