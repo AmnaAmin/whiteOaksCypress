@@ -211,7 +211,6 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
   const woaExpectedDate = addDays(utcDate, paymentTerm)
   let received = [] as any
   let finalSowLineItems = [] as any
-  let invoiceAmount = 0
   if (transactions?.length) {
     transactions.forEach(t => {
       if (isReceivedTransaction(t)) {
@@ -232,7 +231,6 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
     if (transactions?.length) {
       transactions.forEach(t => {
         if (isAddedInFinalSow(t)) {
-          invoiceAmount = invoiceAmount + Number(t.transactionTotal)
           finalSowLineItems.push({
             id: null,
             transactionId: t.id,
@@ -246,16 +244,6 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
         }
       })
     }
-  } else {
-    invoiceAmount = invoice?.invoiceLineItems
-      ?.filter(t => t.type === 'finalSowLineItems')
-      ?.reduce((result, item) => {
-        if (item.amount) {
-          return result + Number(item.amount)
-        } else {
-          return result
-        }
-      }, 0)
   }
 
   return {
@@ -274,7 +262,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
     attachments: undefined,
     sowAmount: invoice?.sowAmount,
     remainingPayment: invoice ? Number(invoice?.remainingPayment)?.toFixed(2) ?? 0 : null,
-    payment: invoice ? (Number(invoiceAmount) - Number(invoice?.remainingPayment))?.toFixed(2) : invoiceAmount,
+    payment: invoice ? (Number(invoice?.invoiceAmount) - Number(invoice?.remainingPayment))?.toFixed(2) : null,
   }
 }
 

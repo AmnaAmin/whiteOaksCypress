@@ -191,14 +191,13 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const [tabIndex, setTabIndex] = React.useState(0)
   const invoicePdfUrl = invoice?.documents?.find(doc => doc.documentType === 42)?.s3Url
   const attachment = invoice?.documents?.find(doc => doc.documentType === 1029)
-
   const formReturn = useForm<InvoicingType>()
 
   useEffect(() => {
     formReturn.reset({
       ...invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected, transactions }),
     })
-  }, [invoice, transactions?.length])
+  }, [invoice, transactions?.length, clientSelected])
   const {
     formState: { errors },
     control,
@@ -218,8 +217,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const watchReceivedArray = watch('receivedLineItems')
   const watchReminaingPayment = watch('remainingPayment')
   const watchPayment = watch('payment')
-
-  const watchStatus = watch('status')
   const watchAttachments = watch('attachments')
 
   const toast = useToast()
@@ -250,6 +247,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
   const { permissions } = useRoleBasedPermissions()
   const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
+  const isAdmin = permissions.includes('ALL')
   const {
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
@@ -392,7 +390,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         data-testid="invoiceNumber"
                         id="invoiceNumber"
                         size="md"
-                        disabled={isPaid}
+                        disabled={!isAdmin || isPaid}
                         {...register('invoiceNumber')}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -581,18 +579,22 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     {t(`project.projectDetails.paymentReceived`)}
                   </FormLabel>
                   <Controller
-                    rules={{ required: (watchStatus as SelectOption)?.value === 'PAID' ? 'This is required' : false }}
+                    rules={{
+                      required: parseFloat(watchReminaingPayment!?.toString()) !== 0 ? false : 'This is required',
+                    }}
                     control={control}
                     name="paymentReceivedDate"
                     render={({ field, fieldState }) => {
                       return (
                         <div data-testid="paymentReceivedDate">
                           <Input
-                            disabled={(watchStatus as SelectOption)?.value !== 'PAID' || isPaid}
+                            disabled={parseFloat(watchReminaingPayment!?.toString()) !== 0 || isPaid}
                             data-testid="paymentReceivedDate"
                             type="date"
                             id="paymentReceivedDate"
-                            variant={(watchStatus as SelectOption)?.value !== 'PAID' ? 'outline' : 'required-field'}
+                            variant={
+                              parseFloat(watchReminaingPayment!?.toString()) !== 0 ? 'outline' : 'required-field'
+                            }
                             size="md"
                             {...register('paymentReceivedDate')}
                           />

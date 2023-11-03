@@ -6,13 +6,13 @@ import { boxShadow } from 'theme/common-style'
 import { useState, useEffect } from 'react'
 import { InvoiceForm } from './invoice-form'
 import { Project } from 'types/project.type'
-import { SelectOption, TransactionTypeValues } from 'types/transaction.type'
+import { TransactionTypeValues } from 'types/transaction.type'
 import { useFetchInvoiceDetails } from 'api/invoicing'
 import { useTransactionsV1 } from 'api/transactions'
+import { useGetClientSelectOptions } from 'api/project-details'
 
 type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   selectedInvoice?: string | number | null
-  clientSelected?: SelectOption | undefined | null
   projectData?: Project | undefined
   invoiceCount?: number
 }
@@ -28,7 +28,7 @@ export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number)
   )
 }
 
-const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, clientSelected, projectData }) => {
+const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, projectData }) => {
   const { t } = useTranslation()
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
@@ -42,6 +42,8 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, clien
   const { invoiceDetails: invoice, isLoading: isLoadingInvoice } = useFetchInvoiceDetails({
     invoiceId: selectedInvoice,
   })
+  const { clientSelectOptions } = useGetClientSelectOptions()
+  const clientSelected = clientSelectOptions?.find(c => c.label === projectData?.clientName)
 
   useEffect(() => {
     if (isMobile) {
