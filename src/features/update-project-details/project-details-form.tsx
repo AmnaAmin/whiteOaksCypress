@@ -308,6 +308,7 @@ const ProjectDetailsTab = (props: tabProps) => {
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
                   <Contact
+                    carrierSelected={carrierSelected}
                     projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
                     clientSelectOptions={clientSelectOptions}
                     clientTypesSelectOptions={clientTypesSelectOptions}
