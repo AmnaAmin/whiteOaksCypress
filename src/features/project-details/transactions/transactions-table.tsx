@@ -42,7 +42,7 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
   // const { isVendorExpired } = props
   const { projectId } = useParams<'projectId'>()
   const { isOpen: isOpenInvoiceModal, onClose: onInvoiceModalClose, onOpen: onInvoiceModalOpen } = useDisclosure()
-  const { defaultSelected, projectData } = props
+  const { defaultSelected } = props
   const [dataTrans, setDataTrans] = useState<any>([])
   const [selectedTransactionId, setSelectedTransactionId] = useState<number>()
   const [selectedTransactionName, setSelectedTransactionName] = useState<string>('')
@@ -205,8 +205,6 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
           setSelectedInvoice(null)
           onInvoiceModalClose()
         }}
-        invoiceCount={transactions?.filter(t => t?.transactionType === TransactionTypeValues.invoice)?.length}
-        projectData={projectData}
         selectedInvoice={selectedInvoice}
       />
     </>

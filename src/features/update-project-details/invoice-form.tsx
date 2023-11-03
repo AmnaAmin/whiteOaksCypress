@@ -23,7 +23,7 @@ import { useToast } from '@chakra-ui/toast'
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ReadOnlyInput } from 'components/input-view/input-view'
-import { BiAddToQueue, BiCalendar, BiDetail, BiDownload, BiFile } from 'react-icons/bi'
+import { BiAddToQueue, BiCalendar, BiDetail, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { TRANSACTION } from '../project-details/transactions/transactions.i18n'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
@@ -52,6 +52,7 @@ import { MdOutlineCancel } from 'react-icons/md'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
+import { useNavigate } from 'react-router-dom'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -169,6 +170,8 @@ export type InvoicingFormProps = {
   invoiceCount?: number
   projectData?: Project | undefined
   transactions?: any[]
+  isLoading?: boolean
+  isReceivable?: boolean
 }
 
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({
@@ -178,6 +181,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   projectData,
   invoiceCount,
   transactions,
+  isLoading,
+  isReceivable,
 }) => {
   const { t } = useTranslation()
   const { mutate: createInvoiceMutate, isLoading: isLoadingCreate } = useCreateInvoiceMutation({
@@ -186,18 +191,25 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const { mutate: updateInvoiceMutate, isLoading: isLoadingUpdate } = useUpdateInvoiceMutation({
     projId: projectData?.id,
   })
-
   const { data } = useAccountData()
   const [tabIndex, setTabIndex] = React.useState(0)
   const invoicePdfUrl = invoice?.documents?.find(doc => doc.documentType === 42)?.s3Url
   const attachment = invoice?.documents?.find(doc => doc.documentType === 1029)
   const formReturn = useForm<InvoicingType>()
+  const navigate = useNavigate()
 
   useEffect(() => {
+    if (isLoading) {
+      return
+    }
     formReturn.reset({
       ...invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected, transactions }),
     })
   }, [invoice, transactions?.length, clientSelected])
+
+  const navigateToProjectDetails = () => {
+    navigate(`/project-details/${invoice?.projectId}`)
+  }
   const {
     formState: { errors },
     control,
@@ -746,7 +758,18 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       </Flex>
       <Divider mt={3}></Divider>
       <Flex alignItems="center" justifyContent="space-between" mt="16px">
-        <Box>
+        <HStack>
+          {isReceivable && (
+            <Button
+              variant="outline"
+              colorScheme="brand"
+              size="md"
+              onClick={navigateToProjectDetails}
+              leftIcon={<BiSpreadsheet />}
+            >
+              {t('seeProjectDetails')}
+            </Button>
+          )}
           {!!invoicePdfUrl && (
             <Button
               variant="outline"
@@ -759,7 +782,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
               {t('see')} {t('invoice')}
             </Button>
           )}
-        </Box>
+        </HStack>
         <HStack>
           <Button onClick={onClose} variant={'outline'} colorScheme="darkPrimary" data-testid="close-transaction-form">
             {t(`project.projectDetails.cancel`)}
