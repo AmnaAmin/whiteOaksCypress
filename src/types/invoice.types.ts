@@ -19,6 +19,7 @@ export interface InvoicingType {
   sowAmount?: number | string | null
   remainingPayment?: number | string | null
   payment?: number | string | null
+  projectId?: string | null | number
 }
 type InvoiceDocumentType = {
   documentType: number

@@ -296,11 +296,11 @@ export const ProjectDetails: React.FC = props => {
 
         <InvoiceModal
           isOpen={isOpenInvoiceModal}
-          projectData={projectData as Project}
           onClose={() => {
             setSelectedInvoice(null)
             onInvoiceModalClose()
           }}
+          projectId={projectData?.id}
           //clientSelected={clientSelected}
           selectedInvoice={selectedInvoice}
         />

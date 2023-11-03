@@ -9,10 +9,10 @@ import autoTable from 'jspdf-autotable'
 import { addImages } from 'utils/file-utils'
 import numeral from 'numeral'
 import { TransactionTypeValues } from 'types/transaction.type'
-import { getInvoiceInitials } from 'features/update-project-details/add-invoice-modal'
 import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { readFileContent } from './vendor-details'
+import { Project } from 'types/project.type'
 
 export const useFetchInvoices = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
@@ -498,4 +498,15 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
   doc.setFontSize(10)
   doc.setFont(basicFont, 'normal')
   return doc
+}
+
+export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number) => {
+  return (
+    projectData?.clientName?.split(' ')?.[0] +
+    '-' +
+    projectData?.market?.slice(0, 3) +
+    '-' +
+    projectData?.streetAddress?.split(' ').join('')?.slice(0, 7) +
+    (revisedIndex && revisedIndex > 0 ? `-R${String(revisedIndex).padStart(2, '0')}` : '')
+  )
 }
