@@ -17,6 +17,8 @@ export interface InvoicingType {
   documents?: InvoiceDocumentType[]
   attachments?: any
   sowAmount?: number | string | null
+  remainingPayment?: number | string | null
+  payment?: number | string | null
 }
 type InvoiceDocumentType = {
   documentType: number
@@ -41,8 +43,10 @@ type InvoiceItemType = {
 export enum InvoiceStatusValues {
   pendingPayment = 'PENDING_PAYMENT',
   paid = 'PAID',
+  partialPaid = 'PARTIAL_PAID',
 }
 export const INVOICE_STATUS_OPTIONS = [
   { value: InvoiceStatusValues.pendingPayment, label: 'Pending payment' },
   { value: InvoiceStatusValues.paid, label: 'Paid' },
+  { value: InvoiceStatusValues.partialPaid, label: 'Partial paid' },
 ] as SelectOption[]

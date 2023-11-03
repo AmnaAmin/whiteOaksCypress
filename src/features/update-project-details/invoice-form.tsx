@@ -51,6 +51,7 @@ import { currencyFormatter } from 'utils/string-formatters'
 import { MdOutlineCancel } from 'react-icons/md'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
+import { CustomRequiredInput, NumberInput } from 'components/input/input'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -204,6 +205,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     getValues,
     register,
     setValue,
+    setError,
+    clearErrors,
     watch,
   } = formReturn
 
@@ -213,6 +216,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   })
   const watchInvoiceArray = watch('finalSowLineItems')
   const watchReceivedArray = watch('receivedLineItems')
+  const watchReminaingPayment = watch('remainingPayment')
+  const watchPayment = watch('payment')
 
   const watchStatus = watch('status')
   const watchAttachments = watch('attachments')
@@ -222,6 +227,21 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     invoiced: watchInvoiceArray,
     received: watchReceivedArray,
   })
+
+  useEffect(() => {
+    clearErrors('remainingPayment')
+    if (Number(watchReminaingPayment) < 0) {
+      setError('remainingPayment', { type: 'custom', message: 'Remaining payment cannot be negative' })
+    }
+  }, [watchReminaingPayment])
+
+  useEffect(() => {
+    clearErrors('payment')
+    if (Number(watchPayment) > invoiced) {
+      setError('payment', { type: 'custom', message: 'Payment cannot be greater than invoiced amount' })
+    }
+  }, [invoiced, watchPayment])
+
   const remainingAR = projectData?.sowNewAmount! - received
   const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
   const { permissions } = useRoleBasedPermissions()
@@ -348,7 +368,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   }, [append])
 
   return (
-    <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => {}}>
+    <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)}>
       <InvoicingReadOnlyInfo invoice={invoice} account={data} />
       <Flex direction="column">
         <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pt="20px" pb="4">
@@ -463,6 +483,62 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
               />
             </FormControl>
           </GridItem>
+          <GridItem>
+            <FormControl data-testid="remainingPayment" w="215px" isInvalid={!!errors.remainingPayment}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.remainingPayment`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="remainingPayment"
+                render={({ field }) => {
+                  return (
+                    <NumberInput
+                      data-testid="remainingPayment"
+                      value={field.value}
+                      disabled={true}
+                      customInput={CustomRequiredInput}
+                      thousandSeparator={true}
+                      prefix={'$'}
+                    />
+                  )
+                }}
+              />
+              <FormErrorMessage>{errors?.remainingPayment?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl data-testid="payment" w="215px" isInvalid={!!errors.payment}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.payment`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="payment"
+                rules={{ required: 'This is required' }}
+                render={({ field }) => {
+                  return (
+                    <NumberInput
+                      data-testid="payment"
+                      value={field.value}
+                      onValueChange={e => {
+                        field.onChange(e.floatValue)
+                        setValue(
+                          'remainingPayment',
+                          e.floatValue ? Number(invoiced - e.floatValue)?.toFixed(2) : Number(invoiced)?.toFixed(2),
+                        )
+                      }}
+                      disabled={isPaid}
+                      customInput={CustomRequiredInput}
+                      thousandSeparator={true}
+                      prefix={'$'}
+                    />
+                  )
+                }}
+              />
+              <FormErrorMessage>{errors?.payment?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
           {invoice && (
             <>
               <GridItem>
@@ -479,7 +555,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         <ReactSelect
                           {...field}
                           id="status"
-                          isDisabled={isPaid}
+                          isDisabled={true}
                           options={INVOICE_STATUS_OPTIONS}
                           selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                           onChange={statusOption => {

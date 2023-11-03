@@ -1,4 +1,4 @@
-import { Box, Divider, Flex, ModalProps, useMediaQuery } from '@chakra-ui/react'
+import { Box, Center, Divider, Flex, ModalProps, Spinner, useMediaQuery } from '@chakra-ui/react'
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/modal'
 import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
@@ -28,14 +28,7 @@ export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number)
   )
 }
 
-const InvoiceModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  selectedInvoice,
-  clientSelected,
-  projectData,
-  invoiceCount,
-}) => {
+const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, clientSelected, projectData }) => {
   const { t } = useTranslation()
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
@@ -46,7 +39,9 @@ const InvoiceModal: React.FC<Props> = ({
     projectData,
     transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length,
   )
-  const { invoiceDetails: invoice } = useFetchInvoiceDetails({ invoiceId: selectedInvoice })
+  const { invoiceDetails: invoice, isLoading: isLoadingInvoice } = useFetchInvoiceDetails({
+    invoiceId: selectedInvoice,
+  })
 
   useEffect(() => {
     if (isMobile) {
@@ -74,14 +69,20 @@ const InvoiceModal: React.FC<Props> = ({
         <ModalCloseButton _hover={{ bg: 'blue.50' }} _focus={{ outline: 'none' }} />
         <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
-            <InvoiceForm
-              transactions={transactions}
-              onClose={onClose}
-              invoice={invoice}
-              clientSelected={clientSelected}
-              projectData={projectData}
-              invoiceCount={transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length}
-            />
+            {isLoadingInvoice ? (
+              <Center minH="680px">
+                <Spinner size="lg" />
+              </Center>
+            ) : (
+              <InvoiceForm
+                transactions={transactions}
+                onClose={onClose}
+                invoice={invoice}
+                clientSelected={clientSelected}
+                projectData={projectData}
+                invoiceCount={transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length}
+              />
+            )}
           </Card>
         </ModalBody>
       </ModalContent>

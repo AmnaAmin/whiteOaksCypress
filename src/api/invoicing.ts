@@ -140,7 +140,7 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
     invoiceLineItems: [...lineItems]?.map(item => {
       return {
         id: item.id,
-        transactionId: item.transactionId,
+        transactionId: item?.type === 'finalSowLineItems' ? item.transactionId : null,
         name: item.name,
         type: item.type,
         description: item.description,
@@ -156,6 +156,7 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
     documents: attachmentDTO ? [attachmentDTO] : [],
     //only save sowAmount once invoice is going for PAID, else it will be same as current projects sowAmount.
     sowAmount: values.status?.value === 'PAID' ? projectData?.sowNewAmount : null,
+    remainingPayment: values.remainingPayment,
   }
   return payload
 }
@@ -185,9 +186,10 @@ export const useTotalAmount = ({ invoiced, received }) => {
 export const isReceivedTransaction = transaction => {
   const compatibleType =
     transaction.status === 'APPROVED' &&
-    ((!transaction.invoiceNumber &&
-      [TransactionTypeValues.deductible, TransactionTypeValues.depreciation].includes(transaction.transactionType)) ||
-      transaction.transactionType === TransactionTypeValues.invoice)
+    [TransactionTypeValues.deductible, TransactionTypeValues.depreciation, TransactionTypeValues.invoice].includes(
+      transaction.transactionType,
+    )
+
   return !transaction.parentWorkOrderId && compatibleType
 }
 const isAddedInFinalSow = transaction => {
@@ -209,6 +211,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
   const woaExpectedDate = addDays(utcDate, paymentTerm)
   let received = [] as any
   let finalSowLineItems = [] as any
+  let invoiceAmount = 0
   if (transactions?.length) {
     transactions.forEach(t => {
       if (isReceivedTransaction(t)) {
@@ -229,6 +232,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
     if (transactions?.length) {
       transactions.forEach(t => {
         if (isAddedInFinalSow(t)) {
+          invoiceAmount = invoiceAmount + Number(t.transactionTotal)
           finalSowLineItems.push({
             id: null,
             transactionId: t.id,
@@ -242,6 +246,16 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
         }
       })
     }
+  } else {
+    invoiceAmount = invoice?.invoiceLineItems
+      ?.filter(t => t.type === 'finalSowLineItems')
+      ?.reduce((result, item) => {
+        if (item.amount) {
+          return result + Number(item.amount)
+        } else {
+          return result
+        }
+      }, 0)
   }
 
   return {
@@ -255,10 +269,12 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
     // fetch saved received items once invoice is PAID, else it will be dynamically calculated from current transactions.
     receivedLineItems:
       invoice?.status === 'PAID' ? invoice?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems') : received,
-    status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
+    status: INVOICE_STATUS_OPTIONS?.find(o => o.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
     paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
     attachments: undefined,
     sowAmount: invoice?.sowAmount,
+    remainingPayment: Number(invoice?.remainingPayment)?.toFixed(2) ?? 0,
+    payment: invoice ? (Number(invoiceAmount) - Number(invoice?.remainingPayment))?.toFixed(2) : invoiceAmount,
   }
 }
 
