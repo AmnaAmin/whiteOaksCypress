@@ -285,7 +285,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     const woaExpectedDate = addDays(utcDate, paymentTerm)
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
-  console.log(watchReminaingPayment)
+
   const onInvoiceDateChange = e => {
     const { paymentTerm } = getValues()
     const date = new Date(e.target.value)
