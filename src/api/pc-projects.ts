@@ -19,7 +19,7 @@ export const usePCProject = (projectId?: string) => {
 
       return response?.data
     },
-    { enabled: !!projectId },
+    { enabled: !!projectId && projectId !== 'undefined' },
   )
 
   return {

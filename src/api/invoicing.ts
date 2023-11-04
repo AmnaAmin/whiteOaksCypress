@@ -125,8 +125,11 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
       fileObject: attachmentDTO,
     }
   }
-  // Only save received items once invoice will be PAID, else it will be dynamically calculated from current transactions.
-  const lineItems = [...values.finalSowLineItems, ...(values.status?.value === 'PAID' ? values.receivedLineItems : [])]
+  // Only save received items once invoice will be PAID (Remaining Payment 0), else it will be dynamically calculated from current transactions.
+  const lineItems = [
+    ...values.finalSowLineItems,
+    ...(parseFloat(values.remainingPayment) === 0 ? values.receivedLineItems : []),
+  ]
   const payload = {
     id: invoice ? invoice?.id : null,
     paymentTerm: values.paymentTerm?.value,
@@ -154,8 +157,8 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
     paymentReceived: values.paymentReceivedDate,
     changeOrderId: invoice ? invoice?.changeOrderId : null,
     documents: attachmentDTO ? [attachmentDTO] : [],
-    //only save sowAmount once invoice is going for PAID, else it will be same as current projects sowAmount.
-    sowAmount: values.status?.value === 'PAID' ? projectData?.sowNewAmount : null,
+    //only save sowAmount once invoice is going for PAID (Remaining Payment 0), else it will be same as current projects sowAmount.
+    sowAmount: parseFloat(values.remainingPayment) === 0 ? projectData?.sowNewAmount : null,
     remainingPayment: !invoice ? invoiceAmount : values.remainingPayment,
   }
   return payload
