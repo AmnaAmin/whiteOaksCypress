@@ -329,6 +329,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       address: woAddress,
       projectData,
       sowAmt: invoice?.sowAmount,
+      received,
     })
     const pdfUri = form.output('datauristring')
     payload['documents']?.push({
