@@ -9,10 +9,10 @@ import autoTable from 'jspdf-autotable'
 import { addImages } from 'utils/file-utils'
 import numeral from 'numeral'
 import { TransactionTypeValues } from 'types/transaction.type'
-import { getInvoiceInitials } from 'features/update-project-details/add-invoice-modal'
 import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { readFileContent } from './vendor-details'
+import { Project } from 'types/project.type'
 
 export const useFetchInvoices = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
@@ -125,8 +125,11 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
       fileObject: attachmentDTO,
     }
   }
-  // Only save received items once invoice will be PAID, else it will be dynamically calculated from current transactions.
-  const lineItems = [...values.finalSowLineItems, ...(values.status?.value === 'PAID' ? values.receivedLineItems : [])]
+  // Only save received items once invoice will be PAID (Remaining Payment 0), else it will be dynamically calculated from current transactions.
+  const lineItems = [
+    ...values.finalSowLineItems,
+    ...(parseFloat(values.remainingPayment) === 0 ? values.receivedLineItems : []),
+  ]
   const payload = {
     id: invoice ? invoice?.id : null,
     paymentTerm: values.paymentTerm?.value,
@@ -140,7 +143,7 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
     invoiceLineItems: [...lineItems]?.map(item => {
       return {
         id: item.id,
-        transactionId: item.transactionId,
+        transactionId: item?.type === 'finalSowLineItems' ? item.transactionId : null,
         name: item.name,
         type: item.type,
         description: item.description,
@@ -154,8 +157,9 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
     paymentReceived: values.paymentReceivedDate,
     changeOrderId: invoice ? invoice?.changeOrderId : null,
     documents: attachmentDTO ? [attachmentDTO] : [],
-    //only save sowAmount once invoice is going for PAID, else it will be same as current projects sowAmount.
-    sowAmount: values.status?.value === 'PAID' ? projectData?.sowNewAmount : null,
+    //only save sowAmount once invoice is going for PAID (Remaining Payment 0), else it will be same as current projects sowAmount.
+    sowAmount: parseFloat(values.remainingPayment) === 0 ? projectData?.sowNewAmount : null,
+    remainingPayment: !invoice ? invoiceAmount : values.remainingPayment,
   }
   return payload
 }
@@ -185,9 +189,10 @@ export const useTotalAmount = ({ invoiced, received }) => {
 export const isReceivedTransaction = transaction => {
   const compatibleType =
     transaction.status === 'APPROVED' &&
-    ((!transaction.invoiceNumber &&
-      [TransactionTypeValues.deductible, TransactionTypeValues.depreciation].includes(transaction.transactionType)) ||
-      transaction.transactionType === TransactionTypeValues.invoice)
+    [TransactionTypeValues.deductible, TransactionTypeValues.depreciation, TransactionTypeValues.invoice].includes(
+      transaction.transactionType,
+    )
+
   return !transaction.parentWorkOrderId && compatibleType
 }
 const isAddedInFinalSow = transaction => {
@@ -255,10 +260,12 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
     // fetch saved received items once invoice is PAID, else it will be dynamically calculated from current transactions.
     receivedLineItems:
       invoice?.status === 'PAID' ? invoice?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems') : received,
-    status: INVOICE_STATUS_OPTIONS?.find(p => p.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
+    status: INVOICE_STATUS_OPTIONS?.find(o => o.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
     paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
     attachments: undefined,
     sowAmount: invoice?.sowAmount,
+    remainingPayment: invoice ? Number(invoice?.remainingPayment)?.toFixed(2) ?? 0 : null,
+    payment: invoice ? (Number(invoice?.invoiceAmount) - Number(invoice?.remainingPayment))?.toFixed(2) : null,
   }
 }
 
@@ -508,4 +515,15 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData,
   doc.setFontSize(10)
   doc.setFont(basicFont, 'normal')
   return doc
+}
+
+export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number) => {
+  return (
+    projectData?.clientName?.split(' ')?.[0] +
+    '-' +
+    projectData?.market?.slice(0, 3) +
+    '-' +
+    projectData?.streetAddress?.split(' ').join('')?.slice(0, 7) +
+    (revisedIndex && revisedIndex > 0 ? `-R${String(revisedIndex).padStart(2, '0')}` : '')
+  )
 }

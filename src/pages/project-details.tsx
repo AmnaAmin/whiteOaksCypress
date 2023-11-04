@@ -32,6 +32,7 @@ import { useProjectAuditLogs } from 'api/project-details'
 import { boxShadow } from 'theme/common-style'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import InvoiceModal from 'features/update-project-details/add-invoice-modal'
+import { ADV_PERMISSIONS } from 'api/access-control'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -68,6 +69,8 @@ export const ProjectDetails: React.FC = props => {
   const navigate = useNavigate()
   const workOrder = (location?.state as any)?.workOrder || {}
   const transaction = (location?.state as any)?.transaction || {}
+  const { permissions } = useRoleBasedPermissions()
+  const isAllowedInvoicing = permissions.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p))
 
   useEffect(() => {
     if (workOrder?.id) {
@@ -199,9 +202,11 @@ export const ProjectDetails: React.FC = props => {
                     {!isReadOnly && (
                       <>
                         <Box>
-                          <Button colorScheme="brand" onClick={onInvoiceModalOpen} leftIcon={<BiBookAdd />} mb="15px">
-                            {t('project.projectDetails.newInvoice')}
-                          </Button>
+                          {isAllowedInvoicing && (
+                            <Button colorScheme="brand" onClick={onInvoiceModalOpen} leftIcon={<BiBookAdd />} mb="15px">
+                              {t('project.projectDetails.newInvoice')}
+                            </Button>
+                          )}
                         </Box>
                         <Button
                           variant="solid"
@@ -291,12 +296,11 @@ export const ProjectDetails: React.FC = props => {
 
         <InvoiceModal
           isOpen={isOpenInvoiceModal}
-          projectData={projectData as Project}
           onClose={() => {
             setSelectedInvoice(null)
             onInvoiceModalClose()
           }}
-          //clientSelected={clientSelected}
+          projectId={projectData?.id}
           selectedInvoice={selectedInvoice}
         />
       </Stack>

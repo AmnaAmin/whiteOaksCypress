@@ -84,9 +84,13 @@ const ProjectDetailsTab = (props: tabProps) => {
   const {
     control,
     formState: { errors, isSubmitting },
+    watch,
   } = formReturn
   const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
     useSubFormErrors(errors)
+  const watchClient = watch('client')
+
+  const carrierSelected = watchClient?.carrier?.filter(e => e.id === projectData?.carrierId)
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
       project: projectData,
@@ -308,6 +312,7 @@ const ProjectDetailsTab = (props: tabProps) => {
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
                   <Contact
+                    carrierSelected={carrierSelected}
                     projectCoordinatorSelectOptions={projectCoordinatorSelectOptions}
                     clientSelectOptions={clientSelectOptions}
                     clientTypesSelectOptions={clientTypesSelectOptions}

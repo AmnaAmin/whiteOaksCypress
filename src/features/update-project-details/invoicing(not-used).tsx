@@ -26,7 +26,7 @@ import { SelectOption } from 'types/transaction.type'
 type InvoicingProps = {
   isReadOnly?: boolean
   projectData: Project | undefined
-  clientSelected: SelectOption | undefined | null
+  clientSelected?: SelectOption | undefined | null
 }
 export const InvoicingContext = createContext<{ projectData?: Project; invoiceCount?: number }>({
   projectData: undefined,
@@ -139,7 +139,6 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
             setSelectedInvoice(null)
             onInvoiceModalClose()
           }}
-          clientSelected={clientSelected}
           selectedInvoice={selectedInvoice}
         />
       </InvoicingContext.Provider>

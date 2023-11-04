@@ -1,52 +1,40 @@
-import { Box, Divider, Flex, ModalProps, useMediaQuery } from '@chakra-ui/react'
+import { Box, Center, Divider, Flex, ModalProps, Spinner, useMediaQuery } from '@chakra-ui/react'
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody } from '@chakra-ui/modal'
 import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
 import { boxShadow } from 'theme/common-style'
 import { useState, useEffect } from 'react'
 import { InvoiceForm } from './invoice-form'
-import { Project } from 'types/project.type'
-import { SelectOption, TransactionTypeValues } from 'types/transaction.type'
-import { useFetchInvoiceDetails } from 'api/invoicing'
+import { TransactionTypeValues } from 'types/transaction.type'
+import { getInvoiceInitials, useFetchInvoiceDetails } from 'api/invoicing'
 import { useTransactionsV1 } from 'api/transactions'
+import { useGetClientSelectOptions } from 'api/project-details'
+import { usePCProject } from 'api/pc-projects'
 
 type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   selectedInvoice?: string | number | null
-  clientSelected?: SelectOption | undefined | null
-  projectData?: Project | undefined
-  invoiceCount?: number
+  projectId?: number | string | null | undefined
+  isReceivable?: boolean
 }
 
-export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number) => {
-  return (
-    projectData?.clientName?.split(' ')?.[0] +
-    '-' +
-    projectData?.market?.slice(0, 3) +
-    '-' +
-    projectData?.streetAddress?.split(' ').join('')?.slice(0, 7) +
-    (revisedIndex && revisedIndex > 0 ? `-R${String(revisedIndex).padStart(2, '0')}` : '')
-  )
-}
-
-const InvoiceModal: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  selectedInvoice,
-  clientSelected,
-  projectData,
-  invoiceCount,
-}) => {
+const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, projectId, isReceivable }) => {
   const { t } = useTranslation()
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
   const [modalSize, setModalSize] = useState<string>('5xl')
-  const { transactions } = useTransactionsV1(`${projectData?.id}`)
 
+  const { invoiceDetails: invoice, isLoading: isLoadingInvoice } = useFetchInvoiceDetails({
+    invoiceId: selectedInvoice,
+  })
+  const { projectData, isLoading: isLoadingProject } = usePCProject(`${invoice?.projectId ?? projectId}`)
+  const { transactions, isLoading: isLoadingTransactions } = useTransactionsV1(`${projectData?.id}`)
   const invoiceNumber = getInvoiceInitials(
     projectData,
     transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length,
   )
-  const { invoiceDetails: invoice } = useFetchInvoiceDetails({ invoiceId: selectedInvoice })
+  const { clientSelectOptions } = useGetClientSelectOptions()
+  const clientSelected = clientSelectOptions?.find(c => c.label === projectData?.clientName)
+  const isLoading = isLoadingTransactions || isLoadingProject || isLoadingInvoice
 
   useEffect(() => {
     if (isMobile) {
@@ -74,14 +62,22 @@ const InvoiceModal: React.FC<Props> = ({
         <ModalCloseButton _hover={{ bg: 'blue.50' }} _focus={{ outline: 'none' }} />
         <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
-            <InvoiceForm
-              transactions={transactions}
-              onClose={onClose}
-              invoice={invoice}
-              clientSelected={clientSelected}
-              projectData={projectData}
-              invoiceCount={transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length}
-            />
+            {isLoading ? (
+              <Center minH="680px">
+                <Spinner size="lg" />
+              </Center>
+            ) : (
+              <InvoiceForm
+                transactions={transactions}
+                onClose={onClose}
+                invoice={invoice}
+                clientSelected={clientSelected}
+                projectData={projectData}
+                isLoading={isLoading}
+                invoiceCount={transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length}
+                isReceivable={isReceivable}
+              />
+            )}
           </Card>
         </ModalBody>
       </ModalContent>

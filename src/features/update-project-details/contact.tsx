@@ -44,11 +44,13 @@ type ContactProps = {
   projectCoordinatorSelectOptions: SelectOption[]
   clientSelectOptions: SelectOption[]
   clientTypesSelectOptions: SelectOption[]
+  carrierSelected: SelectOption[] | any
 }
 const Contact: React.FC<ContactProps> = ({
   projectCoordinatorSelectOptions,
   clientSelectOptions,
   clientTypesSelectOptions,
+  carrierSelected,
 }) => {
   const {
     register,
@@ -64,11 +66,17 @@ const Contact: React.FC<ContactProps> = ({
   const marketWatch = useWatch({ name: 'market', control })
   const clientWatch = useWatch({ name: 'client', control })
   const [carrierOption, setCarrierOption] = useState<SelectOption[] | null | undefined>()
+  const [selectedOption, setSelectedOption] = useState({})
+
   const {
     fieldProjectManagerByMarketOptions,
     isLoading,
     fieldProjectMangersByMarket: fpmUsers,
   } = useFPMsByMarket(marketWatch?.value)
+
+  const handleChange = selected => {
+    setSelectedOption(selected)
+  }
 
   const agentPhoneValue = watch('agentPhone')
   const superPhoneNumberExtensionValue = watch('superPhoneNumberExtension')
@@ -111,6 +119,11 @@ const Contact: React.FC<ContactProps> = ({
 
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
 
+  useEffect(() => {
+    if (carrierSelected) {
+      setSelectedOption({ label: carrierSelected[0]?.name, value: carrierSelected[0]?.id })
+    }
+  }, [carrierSelected])
   return (
     <Stack spacing={14} minH="600px">
       <HStack spacing="16px">
@@ -384,7 +397,16 @@ const Contact: React.FC<ContactProps> = ({
               name={`carrier`}
               render={({ field, fieldState }) => (
                 <>
-                  <Select isDisabled={isFieldProjectManagerDisabled} options={carrierOption} {...field} />
+                  <Select
+                    {...field}
+                    value={selectedOption}
+                    isDisabled={isFieldProjectManagerDisabled}
+                    options={carrierOption}
+                    onChange={e => {
+                      field.onChange(e)
+                      handleChange(e)
+                    }}
+                  />
                   <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                 </>
               )}

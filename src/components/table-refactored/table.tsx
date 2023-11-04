@@ -102,6 +102,7 @@ function Filter({
     return {
       startDate,
       endDate,
+      key: 'selection',
     }
   })
 
@@ -112,7 +113,7 @@ function Filter({
   const handleClear = () => {
     column.setFilterValue('')
     setStickyFilter(null)
-    setSelectedDateRange({ startDate: '', endDate: '' })
+    setSelectedDateRange({ startDate: '', endDate: '', key: 'selection' })
     setIsDateRangePickerOpen(false)
     setSelectionRange({
       startDate: new Date(),
@@ -177,6 +178,8 @@ function Filter({
                 }}
               >
                 <DateRange
+                  showMonthArrow={false}
+                  dragSelectionEnabled
                   ranges={[selectionRange]}
                   onSelect={() => {
                     setIsDateRangePickerOpen(false)
@@ -193,7 +196,11 @@ function Filter({
                     })
                     const formattedStartDate = moment(selectedStartDate).format('YYYY-MM-DD')
                     const formattedEndDate = moment(selectedEndDate).format('YYYY-MM-DD')
-                    setSelectedDateRange({ startDate: formattedStartDate, endDate: formattedEndDate })
+                    setSelectedDateRange({
+                      startDate: formattedStartDate,
+                      endDate: formattedEndDate,
+                      key: 'selection',
+                    })
                     column.setFilterValue(`${formattedStartDate} - ${formattedEndDate}`)
                     if (allowStickyFilters) setStickyFilter(`${formattedStartDate} - ${formattedEndDate}`)
                     setIsDateRangePickerOpen(false)

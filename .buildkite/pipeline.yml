@@ -1,137 +1,17 @@
 steps:
-  # - command:
-  #     - chmod 755 auto/run_tests.sh
-  #     - auto/run_tests.sh
-  #   label: ':package: & :rocket: Run Tests on Dev: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
-  #   # depends_on:
-  #   #   - "build"
-  #   # soft_fail:
-  #   #   - exit_status: "*"
-  #   key: 'dev_run_tests'
-  #   branches: woa-* pswoa-*
-  #   agents:
-  #     queue: 'wo:dev'
-  #   notify:
-  #     - github_commit_status:
-  #         context: 'Dev: Unit Tests?'
-  #     # - if: build.branch =~ /^woa-/
-  #     #   github_commit_status:
-  #     #     context: 'Dev: Unit Tests for woa-*?'
-  #     # - if: build.branch =~ /^pswoa-/
-  #     #   github_commit_status:
-  #     #     context: 'Dev: Unit Tests for pswoa-*?'
-  #   # artifact_paths:
-  #   #   - "cypress/results/**/*"
-  #   retry:
-  #     automatic:
-  #       - exit_status: -1
-  #         limit: 1
-  #   env:
-  #     BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
-  #     ENV: 'dev-IntegrationTests'
-  #     REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
-
-  # - command:
-  #     - chmod 755 auto/build.sh
-  #     - auto/build.sh
-  #     - chmod 755 auto/deploy_dev.sh
-  #     - auto/deploy_dev.sh
-  #   label: ':package: & :rocket: Build & Deploy Dev: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
-  #   branches: dev
-  #   agents:
-  #     queue: 'wo:dev'
-  #   retry:
-  #     automatic:
-  #       - exit_status: -1
-  #         limit: 1
-  #   env:
-  #     BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
-  #     ENV: 'dev'
-  #     REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
-
-  # - command:
-  #     - chmod 755 auto/build.sh
-  #     - auto/build.sh
-  #     - chmod 755 auto/deploy_qa.sh
-  #     - auto/deploy_qa.sh
-  #   label: ':package: & :rocket: Build & Deploy QA: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
-  #   branches: release/*
-  #   agents:
-  #     queue: 'wo:qa'
-  #   retry:
-  #     automatic:
-  #       - exit_status: -1
-  #         limit: 1
-  #   env:
-  #     BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
-  #     ENV: 'qa'
-  #     REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
-
-  # - command:
-  #     - echo "Bypass master Github Commit Status from QA..."
-  #   label: ':package: & :rocket: Bypass master Github Commit Status from QA'
-  #   key: 'qa_run_tests'
-  #   branches: release/*
-  #   agents:
-  #     queue: 'wo:qa'
-  #   notify:
-  #     - github_commit_status:
-  #         context: 'Pre-Prod: Unit Tests?'
-  #     # - if: build.branch =~ /^release\//
-  #     #   github_commit_status:
-  #     #     context: 'Pre-Prod: Unit Tests for pswoa-*?'
-  #   retry:
-  #     automatic:
-  #       - exit_status: -1
-  #         limit: 1
-  #   env:
-  #     BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
-  #     ENV: 'qa-IntegrationTests'
-  #     REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
-
-  - command:
-      - chmod 755 auto/run_tests.sh
-      - auto/run_tests.sh
-    label: ':package: & :rocket: Run Tests on PRE-PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
-    if: build.branch =~ /^pswoa-/ || build.branch =~ /^PSWOA-/
-    # depends_on:
-    #   - "build"
-    # soft_fail:
-    #   - exit_status: "*"
-    key: 'preprod_run_tests'
-    # branches: pswoa-*
-    agents:
-      queue: 'wo:preprod'
-    notify:
-      - github_commit_status:
-          context: 'Pre-Prod: Unit Tests?'
-    # artifact_paths:
-    #   - "cypress/results/**/*"
-    retry:
-      automatic:
-        - exit_status: -1
-          limit: 1
-    env:
-      BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
-      ENV: 'preprod-IntegrationTests'
-      REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
-      REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
-      REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
-
   - wait
 
-  - block: ':green_button: Deploy to PRE-PROD'
-    prompt: 'Deploy WO to PRE-PROD environment?'
-    branches: 'master'
+  - block: ':green_button: Deploy to DEV'
+    prompt: 'Deploy WO to DEV environment?'
+    branches: 'dev2-preprod'
 
   - command:
       - chmod 755 auto/build.sh
       - auto/build.sh
-      - chmod 755 auto/deploy_preprod.sh
-      - auto/deploy_preprod.sh
-    label: ':package: & :rocket: Build & Deploy PRE-PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
-    if: build.branch == "master"
-    # branches: master
+      - chmod 755 auto/deploy_dev.sh
+      - auto/deploy_dev.sh
+    label: ':package: & :rocket: Build & Deploy DEV: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
+    branches: dev2-preprod
     agents:
       queue: 'wo:preprod'
     retry:
@@ -140,34 +20,6 @@ steps:
           limit: 1
     env:
       BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
-      ENV: 'preprod'
+      ENV: 'dev'
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
-      REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
-      REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
-
-  - wait
-
-  - block: ':green_button: Deploy to PROD'
-    prompt: 'Deploy WO to PROD environment?'
-    branches: 'master'
-
-  - command:
-      - chmod 755 auto/build.sh
-      - auto/build.sh
-      - chmod 755 auto/deploy_prod.sh
-      - auto/deploy_prod.sh
-    label: ':package: & :rocket: Build & Deploy PROD: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
-    if: build.branch == "master"
-    # branches: master
-    agents:
-      queue: 'wo:prod'
-    retry:
-      automatic:
-        - exit_status: -1
-          limit: 1
-    env:
-      BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
-      ENV: 'prod'
-      REACT_APP_SUPERSET_URL: 'https://bi.woaharvest.com'
-      REACT_APP_ESTIMATES_URL: 'https://estimates.woaharvest.com'
-      REACT_APP_MAINTENANCE_URL: 'https://mm.woaharvest.com'
+      REACT_APP_ESTIMATES_URL: 'https://estimates-dev.woaharvest.com'
