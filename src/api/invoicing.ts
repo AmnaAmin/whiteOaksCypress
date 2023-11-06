@@ -266,7 +266,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
     attachments: undefined,
     sowAmount: invoice?.sowAmount,
     remainingPayment: invoice ? Number(invoice?.remainingPayment)?.toFixed(2) ?? 0 : null,
-    payment: invoice ? (Number(invoice?.invoiceAmount) - Number(invoice?.remainingPayment))?.toFixed(2) : null,
+    payment: Number(0)?.toFixed(2),
   }
 }
 
