@@ -364,7 +364,7 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData,
   })
 
   doc.setFont(summaryFont, 'bold')
-  doc.text('Recivable', startx, 140)
+  doc.text('Receivable', startx, 140)
 
   autoTable(doc, {
     startY: y2 + 85,
@@ -401,21 +401,10 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData,
   doc.internal.pageSize.getHeight()
   doc.setDrawColor(0, 0, 0)
 
-  let invoiceHeadingYSize = 190
-  const sizeFn = tableSize => {
-    if (tableSize === 2) invoiceHeadingYSize = invoiceHeadingYSize + 2
-    if (tableSize === 3) invoiceHeadingYSize = invoiceHeadingYSize + 4
-    if (tableSize === 4) invoiceHeadingYSize = invoiceHeadingYSize + 6
-    if (tableSize === 5) invoiceHeadingYSize = invoiceHeadingYSize + 8
-    if (tableSize === 6) invoiceHeadingYSize = invoiceHeadingYSize + 10
-    if (tableSize === 7) invoiceHeadingYSize = invoiceHeadingYSize + 12
-    if (tableSize === 8) invoiceHeadingYSize = invoiceHeadingYSize + 14
-    if (tableSize === 9) invoiceHeadingYSize = invoiceHeadingYSize + 16
-  }
+  let invoiceHeadingYSize = tableEndsY + 25
 
   let finalSow
   if (finalSowLineItems.length > 1) {
-    sizeFn(finalSowLineItems.length)
     finalSow = finalSowLineItems?.map(p => p?.amount).reduce((prev, curr) => Number(prev) + Number(curr), 0)
   } else {
     finalSow = finalSowLineItems?.[0]?.amount
@@ -486,17 +475,6 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData,
   }
   const rectLL = 30
   const rectWW = 10
-
-  // const summaryInfo1 = [
-  //   {
-  //     title: 'Total',
-  //     value: currencyFormatter(receivedTotal),
-  //   },
-  //   {
-  //     title: 'Invoice Amount',
-  //     value: currencyFormatter(finalSow - receivedTotal),
-  //   },
-  // ]
 
   summaryInfo.forEach(sum => {
     let rectDD = 'D'
