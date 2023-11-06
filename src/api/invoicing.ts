@@ -269,11 +269,18 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
   }
 }
 
-export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData, sowAmt, received }) => {
+export const createInvoicePdf = async ({
+  doc,
+  invoiceVals,
+  address,
+  projectData,
+  sowAmt,
+  received,
+  receivedLineItems,
+}) => {
   let sowAmount = sowAmt ?? (projectData?.sowNewAmount?.toString() as string)
 
   let finalSowLineItems = invoiceVals?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems')
-  let receivedLineItems = invoiceVals?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems')
 
   finalSowLineItems = finalSowLineItems?.length > 0 ? finalSowLineItems : [{ type: '', description: '', amount: 0 }]
   receivedLineItems = receivedLineItems?.length > 0 ? receivedLineItems : [{ type: '', description: '', amount: 0 }]
@@ -469,9 +476,9 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData,
   doc.setDrawColor(0, 0, 0)
   let rectXX = summaryXX + 26
   let rectYY = tableEndsY2
-  if (doc.internal.pageSize.getHeight() - tableEndsY2 < 30) {
+  if (doc.internal.pageSize.getHeight() - tableEndsY2 < 60) {
     doc.addPage()
-    tableEndsY = 20
+    rectYY = 20
   }
   const rectLL = 30
   const rectWW = 10
@@ -491,7 +498,7 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData,
   })
 
   doc.setFont(summaryFont, 'bold')
-  doc.text('Thank you for your bussiness!', startx, 280)
+  doc.text('Thank you for your bussiness!', startx, rectYY - 5)
 
   doc.setFontSize(10)
   doc.setFont(basicFont, 'normal')
