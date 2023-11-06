@@ -160,6 +160,7 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
     //only save sowAmount once invoice is going for PAID (Remaining Payment 0), else it will be same as current projects sowAmount.
     sowAmount: parseFloat(values.remainingPayment) === 0 ? projectData?.sowNewAmount : null,
     remainingPayment: !invoice ? invoiceAmount : values.remainingPayment,
+    payment: values.payment ?? 0,
   }
   return payload
 }
