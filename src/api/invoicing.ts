@@ -269,11 +269,28 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
   }
 }
 
-export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData }) => {
+export const createInvoicePdf = async ({
+  doc,
+  invoiceVals,
+  address,
+  projectData,
+  sowAmt,
+  received,
+  receivedLineItems,
+}) => {
+  let sowAmount = sowAmt ?? (projectData?.sowNewAmount?.toString() as string)
+
   let finalSowLineItems = invoiceVals?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems')
-  let receivedLineItems = invoiceVals?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems')
+
   finalSowLineItems = finalSowLineItems?.length > 0 ? finalSowLineItems : [{ type: '', description: '', amount: 0 }]
   receivedLineItems = receivedLineItems?.length > 0 ? receivedLineItems : [{ type: '', description: '', amount: 0 }]
+
+  let receivedTotal
+  if (receivedLineItems.length > 1) {
+    receivedTotal = receivedLineItems?.map(p => p?.amount).reduce((prev, curr) => Number(prev) + Number(curr), 0)
+  } else {
+    receivedTotal = receivedLineItems?.[0]?.amount
+  }
 
   const workOrderInfo = [
     { label: 'Date:', value: dateFormat(invoiceVals?.invoiceDate) ?? '' },
@@ -353,16 +370,20 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
     ],
   })
 
+  doc.setFont(summaryFont, 'bold')
+  doc.text('Receivable', startx, 140)
+
   autoTable(doc, {
-    startY: y2 + 75,
+    startY: y2 + 85,
     headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
     theme: 'grid',
     bodyStyles: { lineColor: '#000000', minCellHeight: 15 },
     body: [
-      ...finalSowLineItems.map(ai => {
+      ...receivedLineItems.map(ai => {
         return {
           type: ai.name,
           description: ai.description,
+          date: ai.createdDate,
           amount: ai.amount ? currencyFormatter(ai.amount) : 0,
         }
       }),
@@ -370,29 +391,24 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
     columnStyles: {
       type: { cellWidth: 40 },
       description: { cellWidth: 50 },
-      amount: { cellWidth: 60 },
+      date: { cellWidth: 30 },
+      amount: { cellWidth: 30 },
     },
     columns: [
       { header: 'Type', dataKey: 'type' },
       { header: 'Description', dataKey: 'description' },
+      { header: 'Date', dataKey: 'date' },
       { header: 'Amount', dataKey: 'amount' },
     ],
   })
 
   const baseFont = 'times'
-  const tableEndsY = (doc as any).lastAutoTable.finalY /* last row Y of auto table */
-  const summaryX = doc.internal.pageSize.getWidth() - 102 /* Starting x point of invoice summary  */
+  let tableEndsY = (doc as any).lastAutoTable.finalY /* last row Y of auto table */
   doc.setFontSize(12).setFont(baseFont, 'normal')
   doc.internal.pageSize.getHeight()
   doc.setDrawColor(0, 0, 0)
-  let rectX = summaryX + 26
-  let rectY = tableEndsY
-  if (doc.internal.pageSize.getHeight() - tableEndsY < 30) {
-    doc.addPage()
-    rectY = 20
-  }
-  const rectL = 30
-  const rectW = 10
+
+  let invoiceHeadingYSize = tableEndsY + 25
 
   let finalSow
   if (finalSowLineItems.length > 1) {
@@ -403,35 +419,37 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
 
   const summaryInfo = [
     {
-      title: 'Total',
+      title: 'SOW Amount:',
+      value: currencyFormatter(sowAmount),
+    },
+    {
+      title: 'Amount Received:',
+      value: currencyFormatter(receivedTotal),
+    },
+    {
+      title: 'Remaining AR:',
+      value: currencyFormatter(Number(sowAmount) - received),
+    },
+    {
+      title: 'Invoice Amount:',
       value: currencyFormatter(finalSow),
     },
   ]
 
-  summaryInfo.forEach(sum => {
-    let rectD = 'D'
-    // if (sum.title === 'Balance Due') {
-    doc.setFillColor(211)
-    rectD = 'FD'
-    // }
-    doc.rect(rectX, rectY, rectL, rectW, rectD)
-    doc.setFont(baseFont, 'bold')
-    doc.text(sum.title, summaryX - 5, rectY + 6)
-    doc.setFont(baseFont, 'normal')
-    doc.text(sum.value, summaryX + 28, rectY + 6)
-    rectY = rectY + 10
-  })
+  doc.setFont(summaryFont, 'bold')
+  doc.text('Invoice', startx, invoiceHeadingYSize)
 
   autoTable(doc, {
-    startY: tableEndsY + 20,
+    startY: tableEndsY + 30,
     headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
     theme: 'grid',
     bodyStyles: { lineColor: '#000000', minCellHeight: 15 },
     body: [
-      ...receivedLineItems.map(ai => {
+      ...finalSowLineItems.map(ai => {
         return {
           type: ai.name,
           description: ai.description,
+          date: ai.createdDate,
           amount: ai.amount ? currencyFormatter(ai.amount) : 0,
         }
       }),
@@ -439,11 +457,13 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
     columnStyles: {
       type: { cellWidth: 40 },
       description: { cellWidth: 50 },
-      amount: { cellWidth: 60 },
+      date: { cellWidth: 30 },
+      amount: { cellWidth: 30 },
     },
     columns: [
       { header: 'Type', dataKey: 'type' },
       { header: 'Description', dataKey: 'description' },
+      { header: 'Date', dataKey: 'date' },
       { header: 'Amount', dataKey: 'amount' },
     ],
   })
@@ -456,32 +476,14 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
   doc.setDrawColor(0, 0, 0)
   let rectXX = summaryXX + 26
   let rectYY = tableEndsY2
-  if (doc.internal.pageSize.getHeight() - tableEndsY2 < 30) {
+  if (doc.internal.pageSize.getHeight() - tableEndsY2 < 60) {
     doc.addPage()
-    rectY = 20
+    rectYY = 20
   }
   const rectLL = 30
   const rectWW = 10
 
-  let receivedTotal
-  if (receivedLineItems.length > 1) {
-    receivedTotal = receivedLineItems?.map(p => p?.amount).reduce((prev, curr) => Number(prev) + Number(curr), 0)
-  } else {
-    receivedTotal = receivedLineItems?.[0]?.amount
-  }
-
-  const summaryInfo1 = [
-    {
-      title: 'Total',
-      value: currencyFormatter(receivedTotal),
-    },
-    {
-      title: 'Invoice Amount',
-      value: currencyFormatter(finalSow - receivedTotal),
-    },
-  ]
-
-  summaryInfo1.forEach(sum => {
+  summaryInfo.forEach(sum => {
     let rectDD = 'D'
     // if (sum.title === 'Balance Due') {
     doc.setFillColor(211)
@@ -489,14 +491,14 @@ export const createInvoicePdf = async ({ doc, invoiceVals, address, projectData 
     // }
     doc.rect(rectXX, rectYY, rectLL, rectWW, rectDD)
     doc.setFont(baseFont, 'bold')
-    doc.text(sum.title, summaryXX - 5, rectYY + 6)
+    doc.text(sum.title, summaryXX - 9, rectYY + 6)
     doc.setFont(baseFont, 'normal')
     doc.text(sum.value, summaryXX + 28, rectYY + 6)
     rectYY = rectYY + 10
   })
 
   doc.setFont(summaryFont, 'bold')
-  doc.text('Thank you for your bussiness!', startx, 270)
+  doc.text('Thank you for your bussiness!', startx, rectYY - 5)
 
   doc.setFontSize(10)
   doc.setFont(basicFont, 'normal')
