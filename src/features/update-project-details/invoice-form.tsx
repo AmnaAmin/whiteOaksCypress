@@ -227,7 +227,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   })
   const watchInvoiceArray = watch('finalSowLineItems')
   const watchReceivedArray = watch('receivedLineItems')
-  const watchReminaingPayment = watch('remainingPayment')
+  const watchReminaingPayment = watch('remainingPayment') as number
   const watchPayment = watch('payment')
   const watchAttachments = watch('attachments')
 
@@ -545,7 +545,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                             field.onChange(e.floatValue)
                             setValue(
                               'remainingPayment',
-                              e.floatValue ? Number(invoiced - e.floatValue)?.toFixed(2) : Number(invoiced)?.toFixed(2),
+                              e.floatValue
+                                ? Number(watchReminaingPayment - e.floatValue)?.toFixed(2)
+                                : Number(watchReminaingPayment)?.toFixed(2),
                             )
                           }}
                           disabled={isPaid}
