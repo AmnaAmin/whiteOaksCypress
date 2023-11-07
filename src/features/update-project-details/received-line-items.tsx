@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { InvoicingType } from 'types/invoice.types'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
+import { currencyFormatter } from 'utils/string-formatters'
 
 type InvoiceItemsFormProps = {
   formReturn: UseFormReturn<InvoicingType>
@@ -71,7 +72,7 @@ export const ReceivedLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                       <GridItem ml="10px">{invoiceItem.name}</GridItem>
                       <GridItem ml="10px">{invoiceItem.description}</GridItem>
                       <GridItem ml="10px">{dateFormat(invoiceItem.createdDate as string)}</GridItem>
-                      <GridItem ml="10px">{invoiceItem.amount}</GridItem>
+                      <GridItem ml="10px">{currencyFormatter(invoiceItem?.amount as string)}</GridItem>
                     </Grid>
                   )
                 })}
