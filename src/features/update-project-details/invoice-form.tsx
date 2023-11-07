@@ -128,13 +128,13 @@ const InvoicingSummary: React.FC<any> = ({ projectData, received, invoiced, sowA
             </Text>
             <Text ml={'10px'}>{currencyFormatter(sowAmount ?? (projectData?.sowNewAmount?.toString() as string))}</Text>
           </Flex>
-          <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
+          { projectData?.validForNewInvoice &&  <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
             <Text fontWeight={600} color="gray.600">
               {t('project.projectDetails.amountReceived')}
               {':'}
             </Text>
             <Text ml={'10px'}>{currencyFormatter(received)}</Text>
-          </Flex>
+          </Flex> }
           <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
             <Text fontWeight={600} color="gray.600">
               {t('project.projectDetails.remainingAR')}
@@ -635,7 +635,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
         <Tabs variant="enclosed" colorScheme="brand" mt="10px" onChange={setTabIndex}>
           <TabList>
             <Tab> {t(`project.projectDetails.invoiced`)}</Tab>
-            <Tab> {t(`project.projectDetails.received`)}</Tab>
+            {projectData?.validForNewInvoice && <Tab> {t(`project.projectDetails.received`)}</Tab>}
             {tabIndex === 0 && (
               <Flex w="100%" ml="20px" mt="5px">
                 <Box>
@@ -755,9 +755,11 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
             <TabPanel padding="5px 0px 0px 0px">
               <FinalSowLineItems formReturn={formReturn} invoice={invoice} projectData={projectData} fields={fields} />
             </TabPanel>
-            <TabPanel h="100%" padding="5px 0px 0px 0px">
-              <ReceivedLineItems formReturn={formReturn} projectData={projectData} invoice={invoice} />
-            </TabPanel>
+            {projectData?.validForNewInvoice && (
+              <TabPanel h="100%" padding="5px 0px 0px 0px">
+                <ReceivedLineItems formReturn={formReturn} projectData={projectData} invoice={invoice} />
+              </TabPanel>
+            )}
           </TabPanels>
         </Tabs>
         <InvoicingSummary
