@@ -44,7 +44,7 @@ export const project = {
           depreciation: 'Depreciation',
           originalSOW: 'Original SOW',
           invoice: 'Invoice',
-          paymentError: `Unable to save payment due to 'Pending' Draw/Payment/Depreciation/Carrier Fee transaction against Project SOW.`,
+          paymentError: `Unable to save payment due to 'Pending' Depreciation/Carrier Fee transaction against Project SOW.`,
           resubmissionDate: 'Resubmission Date',
           notificationDate: 'Notification Date',
           newInvoice: 'New Invoice',

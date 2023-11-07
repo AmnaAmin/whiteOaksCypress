@@ -396,8 +396,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       const pendingDraws = transactions?.filter(
         t =>
           [
-            TransactionTypeValues.draw,
-            TransactionTypeValues.payment,
+            //TransactionTypeValues.draw,
+            //TransactionTypeValues.payment,
             TransactionTypeValues.depreciation,
             TransactionTypeValues.carrierFee,
           ].includes(t.transactionType) &&
