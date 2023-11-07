@@ -42,7 +42,7 @@ import {
   invoiceDefaultValues,
 } from 'api/invoicing'
 import { ReceivedLineItems } from './received-line-items'
-import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { ADV_PERMISSIONS } from 'api/access-control'
 import jsPDF from 'jspdf'
 import { downloadFile } from 'utils/file-utils'
@@ -259,7 +259,11 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
   const { permissions } = useRoleBasedPermissions()
   const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
+  const { isAccounting } = useUserRolesSelector()
   const isAdmin = permissions.includes('ALL')
+
+  const isAdminOrAcc = isAdmin || isAccounting || !invoice
+
   const {
     isOpen: isDeleteConfirmationModalOpen,
     onClose: onDeleteConfirmationModalClose,
@@ -458,7 +462,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     <ReactSelect
                       {...field}
                       id="paymentTermDD"
-                      isDisabled={isPaid}
+                      isDisabled={isPaid || !isAdminOrAcc}
                       options={PAYMENT_TERMS_OPTIONS}
                       selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                       onChange={(option: SelectOption) => {
@@ -550,7 +554,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                                 : Number(watchReminaingPayment)?.toFixed(2),
                             )
                           }}
-                          disabled={isPaid}
+                          disabled={isPaid || !isAdminOrAcc}
                           customInput={CustomRequiredInput}
                           thousandSeparator={true}
                           prefix={'$'}
