@@ -384,7 +384,7 @@ export const createInvoicePdf = async ({
         return {
           type: ai.name,
           description: ai.description,
-          date: ai.createdDate,
+          date: dateFormat(ai.createdDate),
           amount: ai.amount ? currencyFormatter(ai.amount) : 0,
         }
       }),
@@ -450,7 +450,7 @@ export const createInvoicePdf = async ({
         return {
           type: ai.name,
           description: ai.description,
-          date: ai.createdDate,
+          date: dateFormat(ai.createdDate),
           amount: ai.amount ? currencyFormatter(ai.amount) : 0,
         }
       }),
