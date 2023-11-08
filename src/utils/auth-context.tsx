@@ -10,6 +10,7 @@ import { Box } from '@chakra-ui/layout'
 import { useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
+import { useNavigate } from 'react-router-dom'
 
 type AuthState = {
   user: Account
@@ -23,6 +24,7 @@ type LoginPayload = {
 
 export const useLogin = () => {
   const { setData } = useAsync({})
+  const navigate = useNavigate()
 
   return useMutation({
     mutationFn: async (loginPayload: LoginPayload) => {
@@ -32,11 +34,11 @@ export const useLogin = () => {
 
       setData({ user: accountResponse?.data?.user, token: authLogin.id_token })
 
-      return { accountResponse, signatureValid: authLogin.agreement_valid }
+      return accountResponse
     },
-    // onSuccess: () => {
-    //   navigate(0)
-    // },
+    onSuccess: () => {
+      navigate(0)
+    },
   })
 }
 
