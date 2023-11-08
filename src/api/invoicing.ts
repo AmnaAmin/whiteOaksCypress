@@ -66,6 +66,7 @@ export const useCreateInvoiceMutation = ({ projId }) => {
       onSuccess(res) {
         queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
+        queryClient.invalidateQueries(['projectFinancialOverview', projectId])
       },
       onError(error: any) {
         let description = error.title ?? 'Unable to save Invoice.'
@@ -99,6 +100,7 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
       onSuccess(res) {
         queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
+        queryClient.invalidateQueries(['projectFinancialOverview', projectId])
       },
       onError(error: any) {
         let description = error.title ?? 'Unable to save Invoice.'
