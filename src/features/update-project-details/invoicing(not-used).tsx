@@ -34,7 +34,7 @@ export const InvoicingContext = createContext<{ projectData?: Project; invoiceCo
 })
 
 export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
-  const { isReadOnly, projectData, clientSelected } = props
+  const { isReadOnly, projectData } = props
   const { t } = useTranslation()
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
