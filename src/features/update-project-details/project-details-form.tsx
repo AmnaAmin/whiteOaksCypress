@@ -339,7 +339,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   <Divider border="1px solid" />
                 </Box>
                 <Box h="70px" w="100%" pb="3">
-                  {!isReadOnly && !(projectData?.validForNewInvoice && tabIndex === 1) && (
+                  {!isReadOnly  && (
                     <Button
                       mt="8px"
                       mr="32px"

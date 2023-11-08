@@ -120,7 +120,7 @@ export const ProjectDetails: React.FC = props => {
   // }, [tabIndex])
 
   return (
-    <>
+   
       <Stack w={{ base: '971px', xl: '100%' }} spacing={'16px'} ref={tabsContainerRef} h="calc(100vh - 160px)">
         <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
         <AmountDetailsCard projectId={projectId} />
@@ -304,6 +304,6 @@ export const ProjectDetails: React.FC = props => {
           selectedInvoice={selectedInvoice}
         />
       </Stack>
-    </>
+   
   )
 }
