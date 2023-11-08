@@ -63,9 +63,9 @@ const Payments: React.FC<invoiceAndPaymentProps> = ({ projectData, isReadOnly })
   const { t } = useTranslation()
 
   return (
-    <HStack gap="8" alignItems={'flex-start'} overflowX="auto" width="100%">
+    <HStack height='624px' gap="10" alignItems={'flex-start'} overflowX="auto" width="100%">
       <Box>
-        <Grid templateColumns="repeat(3,1fr)" gap={4} rowGap="32px" columnGap="8px" w="100%">
+        <Grid templateColumns="repeat(3,1fr)" gap={4} rowGap="32px" columnGap="32px" w="100%">
           {projectData?.projectStatus === STATUS.Invoiced?.toUpperCase() && (
             <GridItem colSpan={4} minH="8px"></GridItem>
           )}
@@ -171,9 +171,9 @@ const Payments: React.FC<invoiceAndPaymentProps> = ({ projectData, isReadOnly })
           templateColumns="repeat(3,1fr)"
           gap={4}
           rowGap="32px"
-          columnGap="8px"
+          columnGap="32px"
           w="100%"
-          mt={'20px'}
+          mt={'40px'}
           overflowX={'auto'}
         >
           <GridItem>

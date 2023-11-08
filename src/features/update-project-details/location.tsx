@@ -137,7 +137,7 @@ const Location: React.FC<LocationProps> = ({
   const { marketSelectOptionsStateWise } = useMarketStateWise(state?.id)
 
   return (
-    <Stack>
+    <Stack minH="624px">
       <Box px="6" h="310px" overflow={'auto'}>
         {isDuplicateAddress && (
           <Alert status="info" mb={5} bg="#EBF8FF" rounded={6} width="75%">
@@ -163,7 +163,7 @@ const Location: React.FC<LocationProps> = ({
             </Checkbox>
           </Alert>
         )}
-        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px" ml="-22px">
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="32px" w="908px" ml="-22px">
           <GridItem>
             <FormControl isInvalid={!!errors.address} w="215px">
               <FormLabel variant="strong-label" size="md" htmlFor="address">

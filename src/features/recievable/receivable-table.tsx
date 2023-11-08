@@ -24,6 +24,7 @@ import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'ap
 import { TableNames } from 'types/table-column.types'
 import { useUserProfile } from 'utils/redux-common-selectors'
 import { Account } from 'types/account.types'
+import InvoiceModal from 'features/update-project-details/add-invoice-modal'
 
 type ReceivableProps = {
   receivableColumns: ColumnDef<any>[]
@@ -54,6 +55,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
   const [selectedProjectId, setSelectedProjectId] = useState<string>()
   const [selectedProjectStatus, setSelectedProjectStatus] = useState<string>()
   const [paginationInitialized, setPaginationInitialized] = useState(false)
+  const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
   const { email } = useUserProfile() as Account
 
   const {
@@ -62,6 +64,7 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
     onClose: onAccountReceivableModalClose,
   } = useDisclosure()
   const { isOpen: isOpenTransactionModal, onOpen: onEditModalOpen, onClose: onTransactionModalClose } = useDisclosure()
+  const { isOpen: isOpenInvoiceModal, onClose: onInvoiceModalClose, onOpen: onInvoiceModalOpen } = useDisclosure()
 
   const onRowClick = useCallback(
     row => {
@@ -70,6 +73,9 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         setSelectedProjectId(row.projectId)
         setSelectedProjectStatus(row?.projectStatus || '')
         onEditModalOpen()
+      } else if (row.type === 'Invoice') {
+        setSelectedInvoice(row?.invoiceId)
+        onInvoiceModalOpen()
       } else {
         setSelectedProjectId(row.projectId)
         setSelectedProjectStatus(row?.projectStatus || '')
@@ -212,6 +218,15 @@ export const ReceivableTable: React.FC<ReceivableProps> = ({
         selectedTransactionId={selectedTransactionId as number}
         projectId={selectedProjectId as string}
         projectStatus={selectedProjectStatus as string}
+      />
+      <InvoiceModal
+        isOpen={isOpenInvoiceModal}
+        onClose={() => {
+          setSelectedInvoice(null)
+          onInvoiceModalClose()
+        }}
+        selectedInvoice={selectedInvoice}
+        isReceivable={true}
       />
     </Box>
   )

@@ -80,7 +80,7 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.receivable`,
     Icon: BiDollarCircle,
     color: '#4299E1',
-    permissions: ['RECEIVABLE.EDIT', 'RECEIVABLE.READ', 'ALL'],
+    permissions: ['RECEIVABLE.EDIT', 'RECEIVABLE.READ', 'ESTIMATERECEIVABLE.READ', 'ESTIMATERECEIVABLE.READ', 'ALL'],
     testId: 'recievableMenuItem',
   },
   {

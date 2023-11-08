@@ -132,6 +132,9 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${TRANSACTION}.type`,
     accessorKey: 'transactionTypeLabel',
+    accessorFn: cellInfo => {
+      return cellInfo.isInvoice ? 'Invoice' : cellInfo?.transactionTypeLabel || '- - -'
+    },
   },
   {
     header: `${TRANSACTION}.workOrderIdTransTable`,
