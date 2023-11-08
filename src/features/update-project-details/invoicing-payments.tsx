@@ -128,7 +128,7 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData, isR
   return (
     <HStack gap="8" alignItems={'flex-start'} overflowX="auto" width="100%">
       <Box>
-        <Grid templateColumns="repeat(4,1fr)" gap={4} rowGap="32px" columnGap="8px" w="100%" overflowX={'auto'}>
+        <Grid templateColumns="repeat(4,1fr)" gap={4} rowGap="32px" columnGap="32px" w="100%" overflowX={'auto'}>
           {projectData?.projectStatus === STATUS.Invoiced?.toUpperCase() && (
             <GridItem colSpan={4} minH="8px"></GridItem>
           )}

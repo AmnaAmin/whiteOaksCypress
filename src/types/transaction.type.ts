@@ -119,7 +119,7 @@ export enum TransactionTypeValues {
   depreciation = 1019,
   legalFee = 1024,
   originalSOW = 28,
-  invoice = 1025,
+  invoice = 1027,
 }
 
 export enum TransactionMarkAsValues {

@@ -72,7 +72,7 @@ export function ReceivableConfirmationBox({
                         <HStack color="gray.500" fontSize="12px" fontWeight={400}>
                           <Text>{t(`${ACCOUNTS}.batchSuccessMsg`)}</Text>
                           <Text color="#345EA6">
-                            {t(`${ACCOUNTS}.projectID`) + 'C'+ b.value + '.'}
+                            {t(`${ACCOUNTS}.projectID`) + 'C' + b.value + '.'}
                             <br></br>
                           </Text>
                         </HStack>
@@ -91,7 +91,7 @@ export function ReceivableConfirmationBox({
                       <HStack mb={1}>
                         <Icon as={BiErrorCircle} fontSize="18px" color={'red.400'} />
                         <HStack color="gray.500" fontSize="12px" fontWeight={400}>
-                          <Text>{t(`${ACCOUNTS}.batchErrorMsg`)}</Text>
+                          <Text>{batchRunFailed[0].description}</Text>
                           <Text color="#345EA6">
                             {t(`${ACCOUNTS}.projectID`) + b.value + '.'}
                             <br></br>
