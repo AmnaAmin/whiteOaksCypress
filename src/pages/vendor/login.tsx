@@ -1,6 +1,8 @@
 import { Box, VStack, Text, Image } from '@chakra-ui/react'
 import { Card } from 'features/login-form-centered/Card'
 import { LoginForm } from 'features/login-form-centered/LoginForm'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useLogin } from 'utils/auth-context'
 
 type LoginFormValues = {
@@ -9,9 +11,12 @@ type LoginFormValues = {
 }
 
 export const Login = () => {
-  
+
   const { mutate: loginMutation, isError } = useLogin()
-  
+  const [showDisclaimerModal, setShowDisclaimerModal] = useState(false);
+  //eslint-disable-next-line
+  const navigate = useNavigate();
+
   const onSubmit = (values: LoginFormValues) => {
     loginMutation(
       { email: values.email, password: values.password },
@@ -19,6 +24,13 @@ export const Login = () => {
         onError: err => {
           //const error = typeof err === "string" ? JSON.parse(err as string) : err;
         },
+        onSuccess: data => {
+          if (data.signatureValid) {
+            navigate(0)
+          } else {
+            setShowDisclaimerModal(!data.signatureValid);
+          }
+        }
       },
     )
   }
@@ -54,7 +66,7 @@ export const Login = () => {
           </VStack>
         </Card>
         <Card borderTopRightRadius="0px !important" borderTopLeftRadius="0px !important" bg="#FFFFFF" pb="10">
-          <LoginForm onSubmitForm={onSubmit} isError={isError} />
+          <LoginForm onSubmitForm={onSubmit} isError={isError} showDisclaimerModal={showDisclaimerModal} />
         </Card>
         <Text textAlign="center" fontSize="14px" fontWeight="400px" color="#3A3A3A" mt="23px">
           © 2022-23 Harvest WhiteOaks. All Rights Reserved.
