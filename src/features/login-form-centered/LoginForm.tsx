@@ -12,17 +12,12 @@ import {
   AlertDescription,
   useDisclosure,
   FormErrorMessage,
-  useToast,
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { PasswordField } from './PasswordField'
 import { BiUserCheck } from 'react-icons/bi'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { DisclaimerModal } from 'components/LoginDisclaimer'
-import { useAuth } from 'utils/auth-context'
-import { signAgreementClient, SignatureDocument } from 'api/sign-agreement'
-import { getToken } from 'utils/storage.utils'
-
 
 type FormValues = {
   email: string
@@ -32,16 +27,9 @@ type FormValues = {
 type FormProps = {
   onSubmitForm: (val: FormValues) => void
   isError: boolean
-  showDisclaimerModal?: boolean
 }
 
 export const LoginForm = (props: FormProps) => {
-  const auth = useAuth()
-  const token = getToken();
-  const toast = useToast();
-  //eslint-disable-next-line
-  const navigate = useNavigate();
-
   const {
     handleSubmit,
     register,
@@ -49,29 +37,9 @@ export const LoginForm = (props: FormProps) => {
     watch,
     trigger,
   } = useForm<FormValues>()
-  const { isOpen, onOpen, onClose } = useDisclosure({ isOpen: props.showDisclaimerModal })
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const watchEmail = watch('email')
   const watchPassword = watch('password')
-
-
-  const signAgreement = async (data: SignatureDocument) => {
-    if (token && token != null) {
-      signAgreementClient(data, token).then(() => {
-        navigate(0);
-      }).catch((error: any) => {
-        toast.closeAll();
-        toast({
-          title: `${error.response?.data?.title}: ${error.response?.data?.detail}`,
-          position: 'top-left',
-          status: 'error',
-        });
-        if (auth && auth.logout) {
-          auth.logout();
-        }
-      });
-    }
-  }
-
   return (
     <chakra.form id="loginForm" {...props} data-testid="loginForm">
       <Stack spacing="29px" mx={{ sm: '70px' }} pt="20px">
@@ -116,15 +84,8 @@ export const LoginForm = (props: FormProps) => {
           color="#FFFFFF"
           rounded="8px"
           data-testid="signInButton"
-          onClick={function () {
-            if (!!watchPassword && !!watchEmail) {
-              handleSubmit((values) => {
-                props.onSubmitForm(values);
-                if (props.showDisclaimerModal) {
-                  onOpen();
-                }
-              })();
-            }
+          onClick={() => {
+            if (!!watchPassword && !!watchEmail) onOpen()
             else trigger()
           }}
         >
@@ -158,15 +119,12 @@ export const LoginForm = (props: FormProps) => {
         </Button>
       </Stack>
       <DisclaimerModal
-        data-testid='disclaimer-modal'
         isOpen={isOpen}
-        onClose={() => {
-          if (auth && auth.logout) {
-            auth.logout();
-          }
+        onClose={onClose}
+        onConfirm={handleSubmit(values => {
+          props.onSubmitForm(values)
           onClose()
-        }}
-        onConfirm={(data: SignatureDocument) => signAgreement(data)}
+        })}
       />
     </chakra.form>
   )
