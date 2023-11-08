@@ -125,9 +125,9 @@ const Contact: React.FC<ContactProps> = ({
     }
   }, [carrierSelected])
   return (
-    <Stack spacing={14} minH="600px">
-      <HStack spacing="16px">
-        <Box h="40px">
+    <Stack spacing={14} minH="624px">
+      <HStack spacing="32px" >
+        <Box h="40px" >
           <FormControl w="215px" isInvalid={!!errors.projectCoordinator}>
             <InputLabel title={'project.projectDetails.projectCoordinator'} htmlFor={'projectCoordinator'} />
             <Controller
@@ -190,7 +190,7 @@ const Contact: React.FC<ContactProps> = ({
         </Box>
       </HStack>
 
-      <HStack spacing="16px">
+      <HStack spacing="32px">
         <Box h="40px">
           <FormControl w="215px" isInvalid={!!errors.fieldProjectManager}>
             <InputLabel title={'project.projectDetails.fieldProjectManager'} htmlFor={'fieldProjectManager'} />
@@ -252,7 +252,7 @@ const Contact: React.FC<ContactProps> = ({
         </Box>
       </HStack>
 
-      <HStack spacing="16px">
+      <HStack spacing="32px">
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superName}>
             <InputLabel title={'project.projectDetails.superName'} htmlFor={'superName'} />
@@ -322,7 +322,7 @@ const Contact: React.FC<ContactProps> = ({
         </Box>
       </HStack>
 
-      <Grid h="40px" templateColumns="repeat(2, 225px)" gap={'8px'}>
+      <HStack spacing="32px" >
         <GridItem>
           <FormControl w="215px" isInvalid={!!errors.client}>
             <InputLabel title={'project.projectDetails.client'} htmlFor={'client'} />
@@ -386,9 +386,9 @@ const Contact: React.FC<ContactProps> = ({
             />
           </FormControl>
         </GridItem>
-      </Grid>
+      </HStack>
 
-      <HStack spacing="16px">
+      <HStack spacing="32px">
         <Box h="40px">
           <FormControl w="215px" isInvalid={!!errors?.superName}>
             <InputLabel title={t(`${NEW_PROJECT}.carrier`)} htmlFor={'carrier'} />
@@ -476,7 +476,7 @@ const Contact: React.FC<ContactProps> = ({
         </Box>
       </HStack>
 
-      <HStack spacing="16px">
+      <HStack spacing="32px">
         <Box h="40px">
           <FormControl w="215px" isInvalid={!!errors?.homeOwnerName}>
             <InputLabel title={t(`${NEW_PROJECT}.homeOwner`)} htmlFor={'homeOwnerName'} />
