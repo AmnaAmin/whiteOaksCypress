@@ -146,7 +146,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   return (
     <Box>
       <VStack gap="32px" alignItems={'flex-start'}>
-        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="32px" w="908px">
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.status}>
               <FormLabel variant="strong-label" size="md">
@@ -357,7 +357,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
         </Grid>
-        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="32px" w="908px">
           <GridItem>
             <FormControl isInvalid={!!errors?.clientWalkthroughDate} w="215px">
               <FormLabel variant="strong-label" size="md" whiteSpace="nowrap">
@@ -403,7 +403,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
         </Grid>
-        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="32px" w="908px">
           <GridItem>
             <FormControl isInvalid={!!errors?.lienExpiryDate}>
               <FormLabel variant="strong-label" size="md">
@@ -423,7 +423,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
         </Grid>
-        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
+        <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="32px" w="908px">
           <GridItem>
             <FormControl>
               <FormLabel variant="strong-label" size="md">
