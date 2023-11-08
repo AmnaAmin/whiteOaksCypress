@@ -1,6 +1,5 @@
 // import { User } from "types/user";
 const localStorageKey = 'jhi-authenticationToken'
-const signatureValidationKey = 'valid-signature'
 
 async function client(endpoint: string, data: unknown, headers = { 'Content-Type': 'application/json' }) {
   const config = {
@@ -42,8 +41,7 @@ async function client(endpoint: string, data: unknown, headers = { 'Content-Type
 }
 
 function handleUserResponse(user: any) {
-  window.localStorage.setItem(localStorageKey, user.id_token);
-  window.localStorage.setItem(signatureValidationKey, user.agreement_valid)
+  window.localStorage.setItem(localStorageKey, user.id_token)
   return user
 }
 
@@ -76,4 +74,4 @@ async function logout() {
   return Promise.resolve()
 }
 
-export { login, forgetPassword, resetPassword, register, logout, localStorageKey, signatureValidationKey }
+export { login, forgetPassword, resetPassword, register, logout, localStorageKey }
