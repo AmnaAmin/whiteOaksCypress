@@ -55,6 +55,7 @@ export const project = {
           subtotal: 'Subtotal',
           balancedue: 'Balance Due',
           paymentReceived: 'Payment Received',
+          partialPayment: 'Partial Payment',
           balanceDueError: 'Invoiced Amount cannot be greater than AR.',
           received: 'Received',
           finalSow: 'Final Sow',
@@ -170,6 +171,8 @@ export const project = {
           subtotal: 'Subtotal',
           balancedue: 'Saldo pendiente',
           paymentReceived: 'Pago recibido',
+          partialPayment: 'Pago parcial',
+
           balanceDueError: 'El monto facturado no puede ser mayor que AR.',
           received: 'Recibió',
           finalSow: 'SOW Final',
