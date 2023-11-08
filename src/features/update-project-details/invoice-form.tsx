@@ -128,13 +128,15 @@ const InvoicingSummary: React.FC<any> = ({ projectData, received, invoiced, sowA
             </Text>
             <Text ml={'10px'}>{currencyFormatter(sowAmount ?? (projectData?.sowNewAmount?.toString() as string))}</Text>
           </Flex>
-          { projectData?.validForNewInvoice &&  <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
-            <Text fontWeight={600} color="gray.600">
-              {t('project.projectDetails.amountReceived')}
-              {':'}
-            </Text>
-            <Text ml={'10px'}>{currencyFormatter(received)}</Text>
-          </Flex> }
+          {projectData?.validForNewInvoice && (
+            <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
+              <Text fontWeight={600} color="gray.600">
+                {t('project.projectDetails.amountReceived')}
+                {':'}
+              </Text>
+              <Text ml={'10px'}>{currencyFormatter(received)}</Text>
+            </Flex>
+          )}
           <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
             <Text fontWeight={600} color="gray.600">
               {t('project.projectDetails.remainingAR')}
@@ -552,7 +554,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                               'remainingPayment',
                               e.floatValue
                                 ? Number(remainingPayVal - e.floatValue)?.toFixed(2)
-                                : Number(remainingPayVal)?.toFixed(2),
+                                : Number(invoiced)?.toFixed(2),
                             )
                           }}
                           disabled={isPaid || !isAdminOrAcc}
@@ -628,6 +630,23 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                   />
                 </FormControl>
               </GridItem>
+
+              <GridItem>
+                <FormLabel variant="strong-label" size="md" htmlFor="woaExpectedPayDate">
+                  {t(`project.projectDetails.partialPayment`)}
+                </FormLabel>
+                <div data-testid="partialPayment">
+                  <Input
+                    w={'215px'}
+                    disabled={true}
+                    data-testid="partialPayment"
+                    id="partialPayment"
+                    variant={'outline'}
+                    value={currencyFormatter(invoice?.payment as number)}
+                    size="md"
+                  />
+                </div>
+              </GridItem>
             </>
           )}
         </Grid>
@@ -646,7 +665,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       size="sm"
                       colorScheme="darkPrimary"
                       onClick={addRow}
-                      disabled={isPaid}
+                      disabled={isPaid || !isAdminOrAcc}
                       leftIcon={<BiAddToQueue />}
                     >
                       {t(`project.projectDetails.addNewRow`)}
@@ -655,7 +674,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       data-testid="delete-row-button"
                       variant="ghost"
                       size="sm"
-                      disabled={isPaid}
+                      disabled={isPaid || !isAdminOrAcc}
                       colorScheme="darkPrimary"
                       ml="10px"
                       leftIcon={<RiDeleteBinLine />}
@@ -805,7 +824,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
               formReturn.handleSubmit(onSubmit)()
             }}
             isLoading={isLoadingUpdate || isLoadingCreate}
-            disabled={!invoiced || isPaid}
+            disabled={!invoiced || isPaid || !isAdminOrAcc}
             form="invoice-form"
             data-testid="save-transaction"
             colorScheme="darkPrimary"
