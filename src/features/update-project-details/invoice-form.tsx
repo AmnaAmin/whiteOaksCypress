@@ -55,7 +55,6 @@ import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { useNavigate } from 'react-router-dom'
 import { ProjectStatus } from 'types/project-details.types'
 
-
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
   const createdBy = invoice?.createdBy ?? account?.email
@@ -406,6 +405,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           c => c.value === InvoiceStatusValues.pendingPayment || c.value === InvoiceStatusValues.cancelled,
         ),
       )
+    } else if (invoice?.status === InvoiceStatusValues.cancelled) {
+      setCurrStatusOptions(currStatusOptions.filter(c => c.value === InvoiceStatusValues.cancelled))
     } else {
       setCurrStatusOptions(INVOICE_STATUS_OPTIONS)
     }
