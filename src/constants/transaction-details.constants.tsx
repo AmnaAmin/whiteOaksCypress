@@ -103,7 +103,7 @@ export const FINANCIAL_OVERVIEW_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${TRANSACTION}.AR`,
     accessorKey: 'accountReceivable',
-    cell: row => <span data-testid="financial-overview-AR">{ numeral((row as any).accountReceivable).format('$0,0.00')}</span>,
+    cell: row => <span data-testid="financial-overview-AR">{ numeral((row as any).row.original.accountReceivable).format('$0,0.00')}</span>,
     accessorFn(row) {
       const val = numeral(row.accountReceivable).format('$0,0.00');
       return val
