@@ -201,6 +201,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const formReturn = useForm<InvoicingType>()
   const navigate = useNavigate()
   const [currStatusOptions, setCurrStatusOptions] = useState(INVOICE_STATUS_OPTIONS)
+  const isCancelled = invoice?.status === InvoiceStatusValues.cancelled;
 
   useEffect(() => {
     if (isLoading) {
@@ -383,6 +384,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     onDeleteConfirmationModalClose()
   }, [watchInvoiceArray, onDeleteConfirmationModalClose, setValue])
 
+
+
   const addRow = useCallback(() => {
     append({
       type: 'finalSowLineItems',
@@ -394,6 +397,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     })
   }, [append])
 
+  const isStatusDisabled = invoice?.status !== InvoiceStatusValues.pendingPayment || isCancelled
+  console.log("🚀 ~ file: invoice-form.tsx:401 ~ isStatusDisabled:", isStatusDisabled)
   useEffect(() => {
     if (!invoice) return
     if (
@@ -405,10 +410,10 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           c => c.value === InvoiceStatusValues.pendingPayment || c.value === InvoiceStatusValues.cancelled,
         ),
       )
-    } else if (invoice?.status === InvoiceStatusValues.cancelled) {
+    } else if (isCancelled) {
       setCurrStatusOptions(currStatusOptions.filter(c => c.value === InvoiceStatusValues.cancelled))
     } else {
-      setCurrStatusOptions(INVOICE_STATUS_OPTIONS)
+      setCurrStatusOptions(INVOICE_STATUS_OPTIONS.filter( c => c.value !== InvoiceStatusValues.cancelled ))
     }
   }, [invoice?.status, invoice])
 
@@ -433,7 +438,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         data-testid="invoiceNumber"
                         id="invoiceNumber"
                         size="md"
-                        disabled={!isAdmin || isPaid}
+                        disabled={!isAdmin || isPaid || isCancelled}
                         {...register('invoiceNumber')}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -460,7 +465,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         type="date"
                         id="invoiceDate"
                         size="md"
-                        disabled={isPaid || !isInvoicedEnabled}
+                        disabled={isPaid || !isInvoicedEnabled || isCancelled}
                         {...register('invoiceDate')}
                         onChange={onInvoiceDateChange}
                       />
@@ -485,7 +490,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     <ReactSelect
                       {...field}
                       id="paymentTermDD"
-                      isDisabled={isPaid || !isAdminOrAcc}
+                      isDisabled={isPaid || !isAdminOrAcc || isCancelled}
                       options={PAYMENT_TERMS_OPTIONS}
                       selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                       onChange={(option: SelectOption) => {
@@ -566,6 +571,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     render={({ field }) => {
                       return (
                         <NumberInput
+                        
                           data-testid="payment"
                           value={field.value}
                           onValueChange={e => {
@@ -577,7 +583,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                                 : Number(invoiced)?.toFixed(2),
                             )
                           }}
-                          disabled={isPaid || !isAdminOrAcc}
+                          disabled={isPaid || !isAdminOrAcc || isCancelled}
                           customInput={CustomRequiredInput}
                           thousandSeparator={true}
                           prefix={'$'}
@@ -602,7 +608,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         <ReactSelect
                           {...field}
                           id="status"
-                          isDisabled={!currStatusOptions.find(c => c.value === InvoiceStatusValues.pendingPayment)}
+                          isDisabled={isStatusDisabled}
                           // options={INVOICE_STATUS_OPTIONS}
                           options={currStatusOptions}
                           selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
@@ -634,7 +640,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       return (
                         <div data-testid="paymentReceivedDate">
                           <Input
-                            disabled={parseFloat(watchReminaingPayment!?.toString()) !== 0 || isPaid}
+                            disabled={parseFloat(watchReminaingPayment!?.toString()) !== 0 || isPaid || isCancelled}
                             data-testid="paymentReceivedDate"
                             type="date"
                             id="paymentReceivedDate"
@@ -686,7 +692,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       size="sm"
                       colorScheme="darkPrimary"
                       onClick={addRow}
-                      disabled={isPaid || !isAdminOrAcc}
+                      disabled={isPaid || !isAdminOrAcc || isCancelled}
                       leftIcon={<BiAddToQueue />}
                     >
                       {t(`project.projectDetails.addNewRow`)}
@@ -695,7 +701,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       data-testid="delete-row-button"
                       variant="ghost"
                       size="sm"
-                      disabled={isPaid || !isAdminOrAcc}
+                      disabled={isPaid || !isAdminOrAcc || isCancelled}
                       colorScheme="darkPrimary"
                       ml="10px"
                       leftIcon={<RiDeleteBinLine />}
