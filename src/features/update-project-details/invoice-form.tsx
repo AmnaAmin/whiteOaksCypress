@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Box,
   Button,
@@ -26,7 +26,7 @@ import { ReadOnlyInput } from 'components/input-view/input-view'
 import { BiAddToQueue, BiCalendar, BiDetail, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { TRANSACTION } from '../project-details/transactions/transactions.i18n'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
-import { INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
+import { InvoiceStatusValues, INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
 import { useAccountData } from 'api/user-account'
 import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
@@ -53,6 +53,8 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { useNavigate } from 'react-router-dom'
+import { ProjectStatus } from 'types/project-details.types'
+import { projectStatus } from 'types/alert.type'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -199,6 +201,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const attachment = invoice?.documents?.find(doc => doc.documentType === 1029)
   const formReturn = useForm<InvoicingType>()
   const navigate = useNavigate()
+  const [currStatusOptions, setCurrStatusOptions] = useState(INVOICE_STATUS_OPTIONS)
 
   useEffect(() => {
     if (isLoading) {
@@ -392,6 +395,22 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     })
   }, [append])
 
+  useEffect(() => {
+    if (!invoice) return
+    if (
+      invoice?.status === InvoiceStatusValues.pendingPayment &&
+      projectData?.projectStatusId === ProjectStatus.Closed
+    ) {
+      setCurrStatusOptions(
+        currStatusOptions.filter(
+          c => c.value === InvoiceStatusValues.pendingPayment || c.value === InvoiceStatusValues.cancelled,
+        ),
+      )
+    } else {
+      setCurrStatusOptions(INVOICE_STATUS_OPTIONS)
+    }
+  }, [invoice?.status, invoice])
+
   return (
     <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)}>
       <InvoicingReadOnlyInfo invoice={invoice} account={data} />
@@ -582,8 +601,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         <ReactSelect
                           {...field}
                           id="status"
-                          isDisabled={true}
-                          options={INVOICE_STATUS_OPTIONS}
+                          isDisabled={!currStatusOptions.find(c => c.value === InvoiceStatusValues.pendingPayment)}
+                          // options={INVOICE_STATUS_OPTIONS}
+                          options={currStatusOptions}
                           selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                           onChange={statusOption => {
                             field.onChange(statusOption)
