@@ -398,7 +398,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   }, [append])
 
   const isStatusDisabled = invoice?.status !== InvoiceStatusValues.pendingPayment || isCancelled
-  console.log("🚀 ~ file: invoice-form.tsx:401 ~ isStatusDisabled:", isStatusDisabled)
+  
   useEffect(() => {
     if (!invoice) return
     if (
