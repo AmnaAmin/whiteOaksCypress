@@ -53,7 +53,6 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { useNavigate } from 'react-router-dom'
-import { ProjectStatus } from 'types/project-details.types'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -400,8 +399,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   useEffect(() => {
     if (!invoice) return
     if (
-      invoice?.status === InvoiceStatusValues.pendingPayment &&
-      projectData?.projectStatusId === ProjectStatus.Closed
+      invoice?.status === InvoiceStatusValues.pendingPayment 
     ) {
       setCurrStatusOptions(
         currStatusOptions.filter(
