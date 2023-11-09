@@ -98,6 +98,7 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
     },
     {
       onSuccess(res) {
+        queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['projectFinancialOverview', projectId])
@@ -192,9 +193,12 @@ export const useTotalAmount = ({ invoiced, received }) => {
 export const isReceivedTransaction = transaction => {
   const compatibleType =
     transaction.status === 'APPROVED' &&
-    [TransactionTypeValues.deductible, TransactionTypeValues.depreciation, TransactionTypeValues.invoice].includes(
-      transaction.transactionType,
-    )
+    [
+      TransactionTypeValues.deductible,
+      TransactionTypeValues.depreciation,
+      TransactionTypeValues.invoice,
+      TransactionTypeValues.payment,
+    ].includes(transaction.transactionType)
 
   return !transaction.parentWorkOrderId && compatibleType
 }

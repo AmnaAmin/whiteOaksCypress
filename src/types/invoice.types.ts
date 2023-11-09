@@ -48,9 +48,11 @@ export enum InvoiceStatusValues {
   pendingPayment = 'PENDING_PAYMENT',
   paid = 'PAID',
   partialPaid = 'PARTIAL_PAID',
+  cancelled = 'CANCELLED'
 }
 export const INVOICE_STATUS_OPTIONS = [
   { value: InvoiceStatusValues.pendingPayment, label: 'Pending payment' },
   { value: InvoiceStatusValues.paid, label: 'Paid' },
   { value: InvoiceStatusValues.partialPaid, label: 'Partial paid' },
+  { value: InvoiceStatusValues.cancelled, label: 'Cancelled' }
 ] as SelectOption[]
