@@ -138,10 +138,10 @@ const transactionTypeOptions = [
     value: TransactionTypeValues.material,
     label: 'Material',
   },
-  {
+  /* {
     value: TransactionTypeValues.payment,
     label: 'Payment',
-  },
+  },*/
   {
     value: TransactionTypeValues.lateFee,
     label: 'Late Fee',

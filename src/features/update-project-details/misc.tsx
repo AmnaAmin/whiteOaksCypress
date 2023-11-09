@@ -39,8 +39,8 @@ const Misc: React.FC = () => {
   const { t } = useTranslation()
 
   return (
-    <Stack>
-      <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="16px" w="908px">
+    <Stack minH="624px">
+      <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="32px" w="908px">
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
