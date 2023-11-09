@@ -54,7 +54,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { useNavigate } from 'react-router-dom'
 import { ProjectStatus } from 'types/project-details.types'
-import { projectStatus } from 'types/alert.type'
+
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
