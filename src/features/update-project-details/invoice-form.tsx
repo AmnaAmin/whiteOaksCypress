@@ -104,7 +104,14 @@ const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   )
 }
 
-const InvoicingSummary: React.FC<any> = ({ projectData, received, invoiced, sowAmount }) => {
+const InvoicingSummary: React.FC<any> = ({
+  projectData,
+  received,
+  invoiced,
+  sowAmount,
+  isPartialPayment,
+  invoiceAmount,
+}) => {
   const { t } = useTranslation()
   const remainingAR = (sowAmount ?? projectData?.sowNewAmount) - received
   return (
@@ -121,43 +128,49 @@ const InvoicingSummary: React.FC<any> = ({ projectData, received, invoiced, sowA
       >
         <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.300" py="4" height="auto"></GridItem>
         <GridItem py={'3'} data-testid="total-amount" height={'auto'}>
-          <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
-            <Text fontWeight={600} color="gray.600">
-              {t('project.projectDetails.sowAmount')}
-              {':'}
-            </Text>
-            <Text ml={'10px'}>{currencyFormatter(sowAmount ?? (projectData?.sowNewAmount?.toString() as string))}</Text>
-          </Flex>
-          {projectData?.validForNewInvoice && (
-            <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
-              <Text fontWeight={600} color="gray.600">
-                {t('project.projectDetails.amountReceived')}
-                {':'}
-              </Text>
-              <Text ml={'10px'}>{currencyFormatter(received)}</Text>
-            </Flex>
+          {!isPartialPayment && (
+            <>
+              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
+                <Text fontWeight={600} color="gray.600">
+                  {t('project.projectDetails.sowAmount')}
+                  {':'}
+                </Text>
+                <Text ml={'10px'}>
+                  {currencyFormatter(sowAmount ?? (projectData?.sowNewAmount?.toString() as string))}
+                </Text>
+              </Flex>
+              {projectData?.validForNewInvoice && (
+                <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
+                  <Text fontWeight={600} color="gray.600">
+                    {t('project.projectDetails.amountReceived')}
+                    {':'}
+                  </Text>
+                  <Text ml={'10px'}>{currencyFormatter(received)}</Text>
+                </Flex>
+              )}
+              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
+                <Text fontWeight={600} color="gray.600">
+                  {t('project.projectDetails.remainingAR')}
+                  {':'}
+                </Text>
+                <Text ml={'10px'}>{currencyFormatter(remainingAR)}</Text>
+              </Flex>
+            </>
           )}
-          <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
-            <Text fontWeight={600} color="gray.600">
-              {t('project.projectDetails.remainingAR')}
-              {':'}
-            </Text>
-            <Text ml={'10px'}>{currencyFormatter(remainingAR)}</Text>
-          </Flex>
           <Flex
             direction={'row'}
             justifyContent={'space-between'}
             pl="30px"
             pr="30px"
             mt="10px"
-            borderTop="1px solid #CBD5E0"
+            borderTop={!isPartialPayment ? '1px solid #CBD5E0' : 'none'}
             pt="10px"
           >
             <Text fontWeight={600} color="gray.600">
               {t('project.projectDetails.invoiceAmount')}
               {':'}
             </Text>
-            <Text ml={'10px'}>{currencyFormatter(invoiced)}</Text>
+            <Text ml={'10px'}>{currencyFormatter(!isPartialPayment ? invoiced : invoiceAmount)}</Text>
           </Flex>
         </GridItem>
       </Grid>
@@ -200,7 +213,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const formReturn = useForm<InvoicingType>()
   const navigate = useNavigate()
   const [currStatusOptions, setCurrStatusOptions] = useState(INVOICE_STATUS_OPTIONS)
-  const isCancelled = invoice?.status === InvoiceStatusValues.cancelled;
+  const isCancelled = invoice?.status === InvoiceStatusValues.cancelled
 
   useEffect(() => {
     if (isLoading) {
@@ -254,7 +267,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   useEffect(() => {
     if (!!invoice) {
       clearErrors('payment')
-      if (Number(watchPayment) > invoiced) {
+      if (Number(watchPayment) > invoiced?.toFixed(2)) {
         setError('payment', { type: 'custom', message: 'Payment cannot be greater than invoiced amount' })
       }
     }
@@ -383,8 +396,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     onDeleteConfirmationModalClose()
   }, [watchInvoiceArray, onDeleteConfirmationModalClose, setValue])
 
-
-
   const addRow = useCallback(() => {
     append({
       type: 'finalSowLineItems',
@@ -397,7 +408,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   }, [append])
 
   const isStatusDisabled = invoice?.status !== InvoiceStatusValues.pendingPayment || isCancelled
-  
+
   useEffect(() => {
     if (!invoice) return
     if (
@@ -411,7 +422,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     } else if (isCancelled) {
       setCurrStatusOptions(currStatusOptions.filter(c => c.value === InvoiceStatusValues.cancelled))
     } else {
-      setCurrStatusOptions(INVOICE_STATUS_OPTIONS.filter( c => c.value !== InvoiceStatusValues.cancelled ))
+      setCurrStatusOptions(INVOICE_STATUS_OPTIONS.filter(c => c.value !== InvoiceStatusValues.cancelled))
     }
   }, [invoice?.status, invoice])
 
@@ -569,7 +580,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     render={({ field }) => {
                       return (
                         <NumberInput
-                        
                           data-testid="payment"
                           value={field.value}
                           onValueChange={e => {
@@ -811,6 +821,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           invoiced={invoiced}
           received={received}
           sowAmount={invoice?.sowAmount}
+          isPartialPayment={invoice?.isPartialPayment}
+          invoiceAmount={invoice?.invoiceAmount}
         />
       </Flex>
       <Divider mt={3}></Divider>

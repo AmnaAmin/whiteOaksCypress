@@ -42,7 +42,16 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
     watch,
   } = formReturn
 
+  const isPaymentTypeData = value => value.type === 'Payment'
+
   const watchInvoiceArray = watch('finalSowLineItems')
+  const isPartialPayment = invoice?.isPartialPayment
+
+  const watchPaymentInvoiceArray = invoice?.invoiceLineItems.map(e => e)
+
+  const partialPayment = watchPaymentInvoiceArray?.filter(isPaymentTypeData)
+
+  const dataToMap = isPartialPayment ? partialPayment : watchInvoiceArray
 
   const { transactions } = useTransactionsV1(`${projectData?.id}`)
 
@@ -147,9 +156,9 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
           </Grid>
 
           <Box flex="1" overflow="auto" maxH="155px" minH="155px" id="amounts-list">
-            {watchInvoiceArray?.length > 0 ? (
+            {watchInvoiceArray?.length > 0 || partialPayment?.length > 0 ? (
               <>
-                {watchInvoiceArray?.map((invoiceItem, index) => {
+                {dataToMap?.map((invoiceItem, index) => {
                   const isPaidOrOriginalSOW =
                     ['Original SOW', 'Carrier Fee', 'Legal Fee', 'ChangeOrder'].includes(
                       invoiceItem?.description as string,
@@ -197,8 +206,9 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                               data-testid={`finalSowLineItems-type-${index}`}
                               type="text"
                               size="sm"
+                              value={isPartialPayment ? invoiceItem?.name : undefined}
                               autoComplete="off"
-                              placeholder="Add Type here"
+                              placeholder={!isPartialPayment ? 'Add Type here' : ''}
                               noOfLines={1}
                               variant={'required-field'}
                               disabled={isPaidOrOriginalSOW || isPaid || isCancelled}
@@ -225,8 +235,9 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                               type="text"
                               size="sm"
                               autoComplete="off"
-                              placeholder="Add Description here"
+                              placeholder={!isPartialPayment ? 'Add Description here' : ''}
                               noOfLines={1}
+                              value={isPartialPayment ? invoiceItem?.description : undefined}
                               variant={'required-field'}
                               disabled={isPaidOrOriginalSOW || isPaid || isCancelled}
                               {...register(`finalSowLineItems.${index}.description` as const, {
@@ -251,6 +262,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                               data-testid={`finalSowLineItems-createdDate-${index}`}
                               type="date"
                               size="sm"
+                              value={isPartialPayment ? invoiceItem?.createdDate : undefined}
                               variant={'required-field'}
                               disabled={isPaidOrOriginalSOW || isPaid || isCancelled}
                               {...register(`finalSowLineItems.${index}.createdDate` as const, {
@@ -278,8 +290,8 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                                     {...field}
                                     data-testid={`finalSowLineItems-amount-${index}`}
                                     customInput={Input}
-                                    value={watchInvoiceArray?.[index]?.amount}
-                                    placeholder="Add Amount"
+                                    value={isPartialPayment ? invoiceItem?.amount : watchInvoiceArray?.[index]?.amount}
+                                    placeholder={!isPartialPayment ? 'Add Amount' : ''}
                                     disabled={isPaidOrOriginalSOW || isPaid || isCancelled}
                                     onValueChange={e => {
                                       const inputValue = e?.floatValue ?? ''
