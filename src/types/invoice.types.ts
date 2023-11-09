@@ -2,6 +2,9 @@ import { SelectOption } from './transaction.type'
 
 export interface InvoicingType {
   id?: string | number | null
+  invoiceLineItems?: any
+  isPartialPayment?: boolean
+  invoiceAmount?: number | null
   createdDate?: string | null
   createdBy?: string | null
   modifiedDate?: string | null
