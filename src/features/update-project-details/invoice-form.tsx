@@ -332,7 +332,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   }
 
   const onSubmit = async values => {
-    if (remainingAR - invoiced < 0) {
+   
+    if (remainingAR - invoiced < 0 && values?.status?.value !== InvoiceStatusValues.cancelled) {
       toast({
         title: 'Error',
         description: t(`project.projectDetails.balanceDueError`),
