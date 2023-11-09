@@ -402,8 +402,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   useEffect(() => {
     if (!invoice) return
     if (
-      invoice?.status === InvoiceStatusValues.pendingPayment &&
-      projectData?.projectStatusId === ProjectStatus.Closed
+      invoice?.status === InvoiceStatusValues.pendingPayment 
     ) {
       setCurrStatusOptions(
         currStatusOptions.filter(
