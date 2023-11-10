@@ -21,7 +21,8 @@ const getClientQueryString = (filterQueryString: string) => {
 type clients = Array<any>
 
 export const useClients = (queryString: string = '', pageSize: number = 20) => {
-  const apiQueryString = getClientQueryString(queryString)
+  let apiQueryString = getClientQueryString(queryString)
+  apiQueryString = `${apiQueryString}&activated.equals=true`;
   const { data, ...rest } = usePaginationQuery<clients>(
     ['client', apiQueryString],
     `clients?${apiQueryString}`,
@@ -39,7 +40,8 @@ const GET_ALL_CLIENT_QUERY_KEY = 'all_clients'
 
 export const useGetAllClients = (queryString: string) => {
   const client = useClient()
-  const apiQueryString = getClientQueryString(queryString)
+  let apiQueryString = getClientQueryString(queryString)
+  apiQueryString = `${apiQueryString}&activated.equals=true`;
   return useQuery(
     [GET_ALL_CLIENT_QUERY_KEY, apiQueryString],
     async () => {
