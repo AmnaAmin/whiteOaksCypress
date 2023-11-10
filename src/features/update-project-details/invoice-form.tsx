@@ -332,7 +332,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   }
 
   const onSubmit = async values => {
-   
     if (remainingAR - invoiced < 0 && values?.status?.value !== InvoiceStatusValues.cancelled) {
       toast({
         title: 'Error',
@@ -412,9 +411,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
 
   useEffect(() => {
     if (!invoice) return
-    if (
-      invoice?.status === InvoiceStatusValues.pendingPayment 
-    ) {
+    if (invoice?.status === InvoiceStatusValues.pendingPayment) {
       setCurrStatusOptions(
         currStatusOptions.filter(
           c => c.value === InvoiceStatusValues.pendingPayment || c.value === InvoiceStatusValues.cancelled,
@@ -808,7 +805,13 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           </TabList>
           <TabPanels>
             <TabPanel padding="5px 0px 0px 0px">
-              <FinalSowLineItems formReturn={formReturn} invoice={invoice} projectData={projectData} fields={fields} />
+              <FinalSowLineItems
+                isAdminOrAcc={isAdminOrAcc}
+                formReturn={formReturn}
+                invoice={invoice}
+                projectData={projectData}
+                fields={fields}
+              />
             </TabPanel>
             {projectData?.validForNewInvoice && (
               <TabPanel h="100%" padding="5px 0px 0px 0px">
