@@ -16,11 +16,9 @@ import {
   Image,
   HStack,
   IconButton,
-  Checkbox,
 } from '@chakra-ui/react'
 import { SignatureDocument } from 'api/sign-agreement'
 import SignatureModal from 'features/vendor/vendor-work-order/lien-waiver/signature-modal'
-import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -65,7 +63,7 @@ export function DisclaimerModal({ isOpen, isLoading = false, onClose, onConfirm 
     setValue('dateOfSignature', new Date(), { shouldValidate: true })
   }
 
-  const [agreed, setAgreed] = useState(false);
+  // const [agreed, setAgreed] = useState(false);
 
   const onRemoveSignature = () => {
     setClaimantsSignature('')
