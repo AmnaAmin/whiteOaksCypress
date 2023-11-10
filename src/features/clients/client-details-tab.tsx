@@ -24,14 +24,13 @@ import { ClientFormValues } from 'types/client.type'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import Select from 'components/form/react-select'
-import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { CLIENT_STATUS_OPTIONS, PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { MdOutlineCancel } from 'react-icons/md'
 import { useWatch } from 'react-hook-form'
 import { BiPlus } from 'react-icons/bi'
 // import { paymentsTerms } from 'api/vendor-projects'
 import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
-import { preventSpecialCharacter } from 'utils/string-formatters'
 import { useNewClientNextButtonDisabled } from 'features/projects/new-project/hooks'
 import { validateWhitespace } from 'api/clients'
 
@@ -97,11 +96,47 @@ export const Details: React.FC<clientDetailProps> = props => {
 
   const phoneNumberRef = useRef<any>()
   const phoneNumberRef2 = useRef<any>()
+  const preventSpecialCharacter = (event) => {
+    const charCode = event.which || event.keyCode;
+  
+    // Allow alphanumeric characters
+    if ((charCode >= 48 && charCode <= 57) || // 0-9
+        (charCode >= 65 && charCode <= 90) || // A-Z
+        (charCode >= 97 && charCode <= 122)) { // a-z
+      return true;
+    }
+  
+    // Prevent input of special characters
+    event.preventDefault();
+    return false;
+  };
 
+  
   return (
     <Box>
       <Box overflow={'auto'} height={400}>
         <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
+        <GridItem>
+            <FormControl isInvalid={!!errors?.title}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`${CLIENTS}.title`)}
+              </FormLabel>
+
+              <Input
+                id="title"
+                {...register('title', {
+                 
+                })}
+                isDisabled={isReadOnly}
+               
+              />
+              {errors.title && (
+                <FormErrorMessage>
+                  {errors.title.type ===  'Cannot be only whitespace'}
+                </FormErrorMessage>
+              )}
+            </FormControl>
+          </GridItem>
           <GridItem>
             <FormControl isInvalid={!!errors?.companyName}>
               <FormLabel variant="strong-label" size="md">
@@ -128,6 +163,32 @@ export const Details: React.FC<clientDetailProps> = props => {
             </FormControl>
           </GridItem>
           <GridItem>
+            <FormControl isInvalid={!!errors?.activated}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`${CLIENTS}.status`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="activated"
+                render={({ field, fieldState }) => (
+                  <>
+                    <div data-testid="client_activated">
+                      <ReactSelect
+                        options={CLIENT_STATUS_OPTIONS}
+                        menuPosition="fixed"
+                        {...field}
+                        isDisabled={isReadOnly}
+                      />
+                      <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                    </div>
+                  </>
+                )}
+              />
+            </FormControl>
+          </GridItem>
+         </Grid>
+         <Grid templateColumns="repeat(4, 215px)" marginTop='20px' gap={'2rem 3rem'}>
+         <GridItem>
             <FormControl isInvalid={!!errors?.paymentTerm}>
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.paymentTerms`)}
@@ -154,6 +215,9 @@ export const Details: React.FC<clientDetailProps> = props => {
               />
             </FormControl>
           </GridItem>
+
+
+
           <VStack width={'300px'}>
             <GridItem>
               <FormControl
@@ -281,8 +345,8 @@ export const Details: React.FC<clientDetailProps> = props => {
               </FormControl>
             </GridItem>
           </VStack>
-        </Grid>
-        <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3">
+         </Grid>
+        <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3" marginTop='20px'>
           <GridItem>
             <FormControl isInvalid={!!errors?.streetAddress}>
               <FormLabel variant="strong-label" size="md">
@@ -481,7 +545,6 @@ export const Details: React.FC<clientDetailProps> = props => {
                         <Controller
                           control={control}
                           name={`contacts.${index}.market`}
-                          rules={{ required: 'This is required' }}
                           render={({ field }) => (
                             <>
                               <div data-testid="market_id">
@@ -491,7 +554,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                                   selected={field.value}
                                   onChange={option => field.onChange(option)}
                                   isDisabled={isReadOnly}
-                                  selectProps={{ isBorderLeft: true }}
+                                  // selectProps={{ isBorderLeft: true }}
                                 />
                                 <FormErrorMessage>{errors?.contacts?.[index]?.market?.message}</FormErrorMessage>
                               </div>

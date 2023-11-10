@@ -21,6 +21,17 @@ export const PAYMENT_TERMS_OPTIONS = [
   },
 ]
 
+export const CLIENT_STATUS_OPTIONS=[
+  {
+    value:true,
+    label:"Activated"
+  },
+  {
+    value:false,
+    label:"Deactivated"
+  }
+]
+
 export const FILTERED_PAYMENT_TERMS_OPTIONS = PAYMENT_TERMS_OPTIONS.filter(payment => [20, 30].includes(payment.value))
 
 export const CANCEL_WO_OPTIONS = [
