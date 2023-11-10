@@ -178,7 +178,7 @@ export function DisclaimerModal({ isOpen, isLoading = false, onClose, onConfirm 
               <GridItem>
                 <FormControl isInvalid={!claimantsSignature}>
                   <FormLabel fontWeight={500} fontSize="14px" color="gray.700">
-                    {t('claimantsSignature')}
+                    {t('signature')}
                   </FormLabel>
                   <Button
                     pos="relative"
@@ -266,7 +266,7 @@ export function DisclaimerModal({ isOpen, isLoading = false, onClose, onConfirm 
                   readOnly
                 />
               </GridItem>
-              <GridItem pos="relative" alignSelf="center">
+              {/* <GridItem pos="relative" alignSelf="center">
                 <Checkbox
                   variant={'outLinePrimary'}
                   data-testid="agreed-checkbox"
@@ -276,7 +276,7 @@ export function DisclaimerModal({ isOpen, isLoading = false, onClose, onConfirm 
                 >
                   {t('Agreed')}
                 </Checkbox>
-              </GridItem>
+              </GridItem> */}
             </Grid>
           </ModalBody>
           <Flex flexFlow="row-reverse">
@@ -302,7 +302,8 @@ export function DisclaimerModal({ isOpen, isLoading = false, onClose, onConfirm 
                 data-testid="agreeDisclaimer"
                 fontWeight={500}
                 w="6px"
-                disabled={claimantsSignature === '' || !agreed}
+                // disabled={claimantsSignature === '' || !agreed}
+                disabled={claimantsSignature === ''}
               >
                 I Agree
               </Button>
