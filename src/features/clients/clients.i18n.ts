@@ -11,7 +11,9 @@ export const clients = {
         newClient: 'New Client',
         phone: 'Phone',
         // Client Modal
+        title:'Title',
         name: 'Name',
+        status:'Status',
         paymentTerms: 'Payment Terms',
         paymentMethod: 'Payment Method',
         accPayConInfo: 'Accounts Payable Contact Details',

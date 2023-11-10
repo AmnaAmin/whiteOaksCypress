@@ -83,6 +83,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
           ...c,
           market: c.market?.value,
         })),
+        activated:values.activated?.value,
         carrier: values?.carrier?.map(c => {
           return {
             id: c.id,

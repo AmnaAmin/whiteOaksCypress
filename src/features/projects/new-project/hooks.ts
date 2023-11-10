@@ -92,8 +92,7 @@ export const useNewClientNextButtonDisabled = ({ control }: any) => {
         contact =>
           isFieldEmptyOrSpaces(contact?.contact) ||
           isFieldEmptyOrSpaces(contact?.emailAddress) ||
-          isFieldEmptyOrSpaces(contact?.phoneNumber) ||
-          isFieldEmptyOrSpaces(contact?.market)
+          isFieldEmptyOrSpaces(contact?.phoneNumber) 
       ) ?? false,
     isAccountPayableSection:
       accountPayableArray?.some(

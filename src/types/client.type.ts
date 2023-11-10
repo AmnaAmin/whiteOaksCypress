@@ -93,4 +93,6 @@ export type ClientFormValues = {
   paymentCreditCard?: boolean
   paymentWired?: boolean
   carrier?: Carrier[]
+  title?: string
+  activated?:boolean
 }
