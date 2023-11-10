@@ -33,6 +33,7 @@ import { CLIENTS } from './clients.i18n'
 import NumberFormat from 'react-number-format'
 import { useNewClientNextButtonDisabled } from 'features/projects/new-project/hooks'
 import { validateWhitespace } from 'api/clients'
+import { preventSpecialCharacter } from 'utils/string-formatters'
 
 type clientDetailProps = {
   clientDetails?: any
@@ -95,23 +96,7 @@ export const Details: React.FC<clientDetailProps> = props => {
   })
 
   const phoneNumberRef = useRef<any>()
-  const phoneNumberRef2 = useRef<any>()
-  const preventSpecialCharacter = (event) => {
-    const charCode = event.which || event.keyCode;
-  
-    // Allow alphanumeric characters
-    if ((charCode >= 48 && charCode <= 57) || // 0-9
-        (charCode >= 65 && charCode <= 90) || // A-Z
-        (charCode >= 97 && charCode <= 122)) { // a-z
-      return true;
-    }
-  
-    // Prevent input of special characters
-    event.preventDefault();
-    return false;
-  };
-
-  
+  const phoneNumberRef2 = useRef<any>() 
   return (
     <Box>
       <Box overflow={'auto'} height={400}>
