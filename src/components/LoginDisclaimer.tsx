@@ -16,9 +16,11 @@ import {
   Image,
   HStack,
   IconButton,
+  Checkbox,
 } from '@chakra-ui/react'
 import { SignatureDocument } from 'api/sign-agreement'
 import SignatureModal from 'features/vendor/vendor-work-order/lien-waiver/signature-modal'
+import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { useRef, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -62,6 +64,8 @@ export function DisclaimerModal({ isOpen, isLoading = false, onClose, onConfirm 
     convertSignatureTextToImage(value)
     setValue('dateOfSignature', new Date(), { shouldValidate: true })
   }
+
+  const [agreed, setAgreed] = useState(false);
 
   const onRemoveSignature = () => {
     setClaimantsSignature('')
@@ -262,6 +266,17 @@ export function DisclaimerModal({ isOpen, isLoading = false, onClose, onConfirm 
                   readOnly
                 />
               </GridItem>
+              <GridItem pos="relative" alignSelf="center">
+                <Checkbox
+                  variant={'outLinePrimary'}
+                  data-testid="agreed-checkbox"
+                  size="md"
+                  isChecked={agreed}
+                  onChange={e => setAgreed(!agreed)}
+                >
+                  {t('Agreed')}
+                </Checkbox>
+              </GridItem>
             </Grid>
           </ModalBody>
           <Flex flexFlow="row-reverse">
@@ -287,7 +302,7 @@ export function DisclaimerModal({ isOpen, isLoading = false, onClose, onConfirm 
                 data-testid="agreeDisclaimer"
                 fontWeight={500}
                 w="6px"
-                disabled={claimantsSignature === ''}
+                disabled={claimantsSignature === '' || !agreed}
               >
                 I Agree
               </Button>
