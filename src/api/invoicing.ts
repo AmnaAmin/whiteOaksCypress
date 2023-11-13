@@ -216,6 +216,7 @@ const isAddedInFinalSow = transaction => {
 }
 
 export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelected, transactions }) => {
+  
   const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
   const invoicedDate = new Date()
   const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
@@ -225,6 +226,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
   let finalSowLineItems = [] as any
   if (transactions?.length) {
     transactions.forEach(t => {
+      
       if (isReceivedTransaction(t)) {
         received.push({
           id: null,
@@ -267,8 +269,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
       ? finalSowLineItems
       : invoice?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems'),
     // fetch saved received items once invoice is PAID, else it will be dynamically calculated from current transactions.
-    receivedLineItems:
-      invoice?.status === 'PAID' ? invoice?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems') : received,
+    receivedLineItems: received,
     status: INVOICE_STATUS_OPTIONS?.find(o => o.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
     paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
     attachments: undefined,

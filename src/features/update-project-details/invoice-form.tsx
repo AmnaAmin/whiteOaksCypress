@@ -114,7 +114,7 @@ const InvoicingSummary: React.FC<any> = ({
   invoiceAmount,
 }) => {
   const { t } = useTranslation()
-  const remainingAR = (sowAmount ?? projectData?.sowNewAmount)
+  const remainingAR = (sowAmount ?? projectData?.sowNewAmount) - received
   return (
     <Box>
       <Grid
