@@ -89,7 +89,7 @@ export const useTransactionsV1 = (projectId?: string) => {
             t.status = 'Partial Paid'
           }
           if (invoiceData.status === InvoiceStatusValues.paid) {
-            console.log('paid found ', t)
+           
             t.status = InvoiceStatusValues.paid
           }
         }),
