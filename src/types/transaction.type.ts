@@ -101,6 +101,7 @@ export type TransactionType = {
   transactionTypeLabel: string
   vendor: string
   vendorId: number
+  invoiceId: number
 }
 
 export enum TransactionTypeValues {
