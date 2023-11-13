@@ -19,7 +19,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { useToast } from '@chakra-ui/toast'
+// import { useToast } from '@chakra-ui/toast'
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ReadOnlyInput } from 'components/input-view/input-view'
@@ -249,7 +249,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const watchAttachments = watch('attachments')
   const remainingPayVal = invoice?.remainingPayment as number
 
-  const toast = useToast()
+  // const toast = useToast()
   const { invoiced, received } = useTotalAmount({
     invoiced: watchInvoiceArray,
     received: watchReceivedArray,
@@ -273,7 +273,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     }
   }, [invoiced, watchPayment])
 
-  const remainingAR = projectData?.sowNewAmount! - received
+  // const remainingAR = projectData?.sowNewAmount! - received
   const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
   const { permissions } = useRoleBasedPermissions()
   const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
@@ -332,16 +332,18 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   }
 
   const onSubmit = async values => {
-    if (remainingAR - invoiced < 0 && values?.status?.value !== InvoiceStatusValues.cancelled) {
-      toast({
-        title: 'Error',
-        description: t(`project.projectDetails.balanceDueError`),
-        status: 'error',
-        isClosable: true,
-        position: 'top-left',
-      })
-      return
-    }
+    // console.log("Remaing AR:", remainingAR);
+    // console.log("Invoiced Amount: ", invoiced);
+    // if (remainingAR - invoiced < 0 && values?.status?.value !== InvoiceStatusValues.cancelled) {
+    //   toast({
+    //     title: 'Error',
+    //     description: t(`project.projectDetails.balanceDueError`),
+    //     status: 'error',
+    //     isClosable: true,
+    //     position: 'top-left',
+    //   })
+    //   return
+    // }
 
     let payload = await mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: invoiced })
     let form = new jsPDF()
@@ -423,6 +425,19 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       setCurrStatusOptions(INVOICE_STATUS_OPTIONS.filter(c => c.value !== InvoiceStatusValues.cancelled))
     }
   }, [invoice?.status, invoice])
+
+
+  const isPaymentReceivedDisabled = parseFloat(watchReminaingPayment!?.toString()) !== 0 || isPaid || isCancelled;
+
+
+  useEffect( () => {
+    if ( isPaymentReceivedDisabled ) {
+      setValue('paymentReceivedDate', null);
+      return;
+    }
+    setValue('paymentReceivedDate', datePickerFormat(new Date()))
+  }, [isPaymentReceivedDisabled] );
+
 
   return (
     <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)}>
@@ -646,7 +661,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       return (
                         <div data-testid="paymentReceivedDate">
                           <Input
-                            disabled={parseFloat(watchReminaingPayment!?.toString()) !== 0 || isPaid || isCancelled}
+                            disabled={isPaymentReceivedDisabled}
+                            // {...(isPaymentReceivedDisabled ? { value: datePickerFormat(new Date()) as string } : {})}
                             data-testid="paymentReceivedDate"
                             type="date"
                             id="paymentReceivedDate"
