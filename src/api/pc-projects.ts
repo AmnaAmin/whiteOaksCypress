@@ -422,11 +422,13 @@ export const useMarkets = () => {
     return response?.data
   })
 
-  const marketSelectOptions =
-    markets?.map(market => ({
+  const marketSelectOptions = [
+    { value: '', label: 'Select' },
+    ...(markets?.map(market => ({
       value: market?.id,
       label: market?.metropolitanServiceArea,
-    })) || []
+    })) || [])
+  ];
 
   return {
     marketSelectOptions,
