@@ -532,7 +532,7 @@ export const useClients = () => {
   const client = useClient()
 
   const { data: clients, ...rest } = useQuery('clients', async () => {
-    const response = await client(`clients?page=&size=&sort=companyName,asc`, {})
+    const response = await client(`clients?activated.equals=true&page=&size=&sort=companyName,asc`, {})
 
     return response?.data
   })
