@@ -109,6 +109,8 @@ export const useUpdateClientDetails = () => {
 export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marketOptions, markets }) => {
   const stateValue = statesOptions?.find(b => b?.id === clientDetails?.state)
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === clientDetails?.paymentTerm)
+  const statusValue = CLIENT_STATUS_OPTIONS?.find(s => s?.value === clientDetails?.activated)
+
   const marketsId = clientDetails?.markets.map(m => m.id)
   const marketList = markets?.map(market => ({
     ...market,
@@ -158,7 +160,7 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
     contacts: contactsMarketsValue,
     accountPayableContactInfos: accPayInfoValue,
     carrier,
-    activated: CLIENT_STATUS_OPTIONS.find(c => c.value= clientDetails.activated)
+    activated: statusValue
   }
   return defaultValues
 }
