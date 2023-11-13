@@ -54,6 +54,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { useNavigate } from 'react-router-dom'
 
+
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
   const createdBy = invoice?.createdBy ?? account?.email
@@ -427,9 +428,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   }, [invoice?.status, invoice])
 
 
-  const isPaymentReceivedDisabled = parseFloat(watchReminaingPayment!?.toString()) !== 0 || isPaid || isCancelled;
-
-
+  const watchPaymentValue = parseFloat(watchPayment!?.toString());
+  const isPaymentReceivedDisabled = isNaN(watchPaymentValue) || watchPaymentValue <= 0 || isPaid || isCancelled;
+  
   useEffect( () => {
     if ( isPaymentReceivedDisabled ) {
       setValue('paymentReceivedDate', null);
