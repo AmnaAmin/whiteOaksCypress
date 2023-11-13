@@ -75,7 +75,6 @@ export const useTransactionsV1 = (projectId?: string) => {
     async () => {
       const response = await client(`change-orders/v1?projectId=${projectId}&sort=modifiedDate,asc`, {})
 
-      
       await Promise.all(
         response?.data?.map(async t => {
           if (t.transactionType !== TransactionTypeValues.invoice) return
@@ -85,7 +84,6 @@ export const useTransactionsV1 = (projectId?: string) => {
           const response = await client(`project-invoices/${invoiceId}`, {})
 
           const invoiceData = response?.data as InvoicingType
-          console.log('🚀 ~ file: transactions.ts:86 ~ invoiceData:', invoiceData.status)
 
           if (invoiceData.status === InvoiceStatusValues.partialPaid) {
             t.status = 'Partial Paid'
@@ -97,7 +95,6 @@ export const useTransactionsV1 = (projectId?: string) => {
         }),
       )
 
-      console.log('Updated data', response?.data)
       return response?.data
     },
     { enabled: projectId !== 'undefined' },
