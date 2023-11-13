@@ -539,7 +539,8 @@ export const Details: React.FC<clientDetailProps> = props => {
                                   selected={field.value}
                                   onChange={option => field.onChange(option)}
                                   isDisabled={isReadOnly}
-                                  // selectProps={{ isBorderLeft: true }}
+                                   selectProps={{ isBorderLeft: false, menuHeight: '180px',  overflowY: 'scroll' }}
+                                   
                                 />
                                 <FormErrorMessage>{errors?.contacts?.[index]?.market?.message}</FormErrorMessage>
                               </div>
