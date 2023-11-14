@@ -535,7 +535,7 @@ const WorkOrderDetailTab = props => {
           </Stack>
           <Box mt="32px" mx="32px">
             <HStack spacing="16px">
-              {(isFPM || isProjectCoordinator) && !isCancelled && (
+              {(isAdmin || isFPM || isProjectCoordinator) && !isCancelled && (
                 <Box w="215px" data-testid="note_submit">
                   <FormControl zIndex="2">
                     <FormLabel variant="strong-label" size="md">
