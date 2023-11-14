@@ -41,6 +41,7 @@ export const TRANSACTION_STATUS_OPTIONS = [
 ]
 
 export const TRANSACTION_FPM_DM_STATUS_OPTIONS = [
+  { value: TransactionStatusValues.pending, label: 'Pending' },
   { value: TransactionStatusValues.approved, label: 'Approved' },
   { value: TransactionStatusValues.cancelled, label: 'Cancelled' },
   { value: TransactionStatusValues.denied, label: 'Denied' },

@@ -191,7 +191,8 @@ export const useFieldDisabledEnabledDecision = (
   isMaterialsLoading?: boolean,
 ) => {
   const { permissions } = useRoleBasedPermissions()
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAccounting } = useUserRolesSelector()
+  const isAdmin = useRoleBasedPermissions()?.permissions?.includes('ALL')
   const statusEditPermission = permissions.some(p => ['PROJECTDETAIL.TRANSACTION.STATUS.EDIT', 'ALL'].includes(p))
   const paidEditPermission = permissions.some(p => ['PROJECTDETAIL.TRANSACTION.PAIDDATE.EDIT', 'ALL'].includes(p))
   const isUpdateForm = !!transaction || isMaterialsLoading
@@ -220,7 +221,7 @@ export const useFieldDisabledEnabledDecision = (
       lateAndFactoringFeeForVendor ||
       isFactoringFeeSysGenerated ||
       statusFieldForVendor ||
-      isInvoicePayment,
+      isInvoicePayment || (!isAdmin && !isAccounting),
 
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
     isFactoringFeeSysGenerated,
