@@ -180,10 +180,9 @@ const WorkOrderDetailTab = props => {
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
   const disabledSave =
     isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin,isFPM,isProjectCoordinator } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
   const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
-
   const {
     skillName,
     companyName,
@@ -380,6 +379,7 @@ const WorkOrderDetailTab = props => {
   }
 
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
+  console.log(isCancelled)
   const inProgress = [STATUS.Active, STATUS.PastDue, STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
     workOrder.statusLabel?.toLowerCase(),
   )
@@ -535,7 +535,7 @@ const WorkOrderDetailTab = props => {
           </Stack>
           <Box mt="32px" mx="32px">
             <HStack spacing="16px">
-              {cancelPermissions && !isCancelled && (
+              {(isFPM || isProjectCoordinator) && !isCancelled && (
                 <Box w="215px" data-testid="note_submit">
                   <FormControl zIndex="2">
                     <FormLabel variant="strong-label" size="md">

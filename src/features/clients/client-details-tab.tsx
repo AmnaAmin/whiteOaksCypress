@@ -416,7 +416,7 @@ export const Details: React.FC<clientDetailProps> = props => {
         {contactsFields.map((contacts, index) => {
           return (
             <>
-              <Grid templateColumns="repeat(2, 215px) 110px repeat(2, 215px)" gap={'1rem 1.5rem'} py="3">
+              <Grid templateColumns="repeat(2, 215px) 110px repeat(2, 240px)" gap={'1rem 1.5rem'} py="3" >
                 <GridItem>
                   <FormControl isInvalid={!!errors?.contacts?.[index]?.contact}>
                     <FormLabel variant="strong-label" size="md">
@@ -526,21 +526,21 @@ export const Details: React.FC<clientDetailProps> = props => {
                       {t(`${CLIENTS}.market`)}
                     </FormLabel>
                     <HStack>
-                      <Box width={'180px'}>
+                      <Box width={'215px'}>
                         <Controller
                           control={control}
                           name={`contacts.${index}.market`}
                           render={({ field }) => (
                             <>
                               <div data-testid="market_id">
-                                <Select
+                                 <ReactSelect
                                   {...field}
                                   options={marketSelectOptions}
                                   selected={field.value}
                                   onChange={option => field.onChange(option)}
                                   isDisabled={isReadOnly}
-                                   selectProps={{ isBorderLeft: false, menuHeight: '180px',  overflowY: 'scroll' }}
-                                   
+                                  selectProps={{ isBorderLeft: false, menuHeight: '180px'}}
+                                                     
                                 />
                                 <FormErrorMessage>{errors?.contacts?.[index]?.market?.message}</FormErrorMessage>
                               </div>
@@ -594,7 +594,7 @@ export const Details: React.FC<clientDetailProps> = props => {
         </Flex>
         {accPayInfoFields.map((accountPayableContactInfos, index) => {
           return (
-            <Grid templateColumns="repeat(2, 215px) 110px repeat(2, 215px)" gap={'1rem 1.5rem'} py="4">
+            <Grid templateColumns="repeat(2, 215px) 110px repeat(2, 240px)" gap={'1rem 1.5rem'} py="4">
               <GridItem>
                 <FormControl isInvalid={!!errors?.accountPayableContactInfos?.[index]?.contact}>
                   <FormLabel variant="strong-label" size="md">
@@ -709,7 +709,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
 
                   <HStack>
-                    <FormControl width={'180px'} isInvalid={!!errors?.accountPayableContactInfos?.[index]?.comments}>
+                    <FormControl width={'215px'} isInvalid={!!errors?.accountPayableContactInfos?.[index]?.comments}>
                       <Input
                         id="comments"
                         {...register(`accountPayableContactInfos.${index}.comments`, {
