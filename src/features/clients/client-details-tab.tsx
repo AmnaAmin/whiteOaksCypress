@@ -98,8 +98,8 @@ export const Details: React.FC<clientDetailProps> = props => {
   const phoneNumberRef = useRef<any>()
   const phoneNumberRef2 = useRef<any>() 
   return (
-    <Box>
-      <Box overflow={'auto'} height={400}>
+    <Box >
+      <Box overflow={'auto'} height={400} width={1145}>
         <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
         <GridItem>
             <FormControl isInvalid={!!errors?.title}>

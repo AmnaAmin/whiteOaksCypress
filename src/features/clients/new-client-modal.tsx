@@ -30,11 +30,11 @@ const NewClientModal: React.FC<NewClientModalType> = props => {
           props.onClose()
         }}
         isOpen={props.isOpen}
-        size="6xl"
+        size="none"
       >
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader  borderBottom="2px solid #E2E8F0">
+        <ModalContent w="1190px" rounded={6} borderTop="2px solid #4E87F8" >
+          <ModalHeader h="63px" borderBottom="2px solid #E2E8F0">
             <FormLabel variant="strong-label" size="lg">
               {t(`${CLIENTS}.newClient`)}
             </FormLabel>
