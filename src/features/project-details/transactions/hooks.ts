@@ -13,6 +13,7 @@ import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { StringProjectStatus } from 'types/project-details.types'
 
 /*function getRefundTransactionType(type): TransactionsWithRefundType {
   if (type === TransactionTypeValues.material)
@@ -221,7 +222,7 @@ export const useFieldDisabledEnabledDecision = (
       lateAndFactoringFeeForVendor ||
       isFactoringFeeSysGenerated ||
       statusFieldForVendor ||
-      isInvoicePayment || (!isAdmin && !isAccounting),
+      isInvoicePayment || (!isAdmin && !isAccounting && transaction?.transactionType === TransactionTypeValues.draw ),
 
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
     isFactoringFeeSysGenerated,
@@ -380,7 +381,12 @@ export const useAgainstOptions = (
     }
 
     // If the transaction is new and transaction type is draw and project status is invoiced or following state, hide Project SOW againstOption
-    if (transactionType?.value === TransactionTypeValues.draw) {
+    if (
+      transactionType?.value === TransactionTypeValues.draw &&
+      !isVendor &&
+      !transaction?.id &&
+      ![StringProjectStatus.New, StringProjectStatus.Active, StringProjectStatus.Punch, StringProjectStatus.Closed, StringProjectStatus.Reconcile].includes(projectStatus?.toLowerCase())
+    ) {
       return againstOptions.slice(1)
     }
 

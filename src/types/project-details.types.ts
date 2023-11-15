@@ -1,5 +1,14 @@
 import { SelectOption } from './transaction.type'
 
+export enum StringProjectStatus{
+  New= 'new',
+  Active='active',
+  Punch='punch',
+  Closed='closed',
+  Reconcile='reconcile',
+
+}
+
 export enum ProjectStatus {
   New = 7,
   Active = 8,
