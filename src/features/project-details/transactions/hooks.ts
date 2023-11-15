@@ -13,6 +13,7 @@ import { Control, useWatch } from 'react-hook-form'
 import numeral from 'numeral'
 import { useEffect, useMemo } from 'react'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { StringProjectStatus } from 'types/project-details.types'
 
 /*function getRefundTransactionType(type): TransactionsWithRefundType {
   if (type === TransactionTypeValues.material)
@@ -384,7 +385,7 @@ export const useAgainstOptions = (
       transactionType?.value === TransactionTypeValues.draw &&
       !isVendor &&
       !transaction?.id &&
-      !['new', 'active', 'punch', 'closed', 'reconcile'].includes(projectStatus?.toLowerCase())
+      ![StringProjectStatus.New, StringProjectStatus.Active, StringProjectStatus.Punch, StringProjectStatus.Closed, StringProjectStatus.Reconcile].includes(projectStatus?.toLowerCase())
     ) {
       return againstOptions.slice(1)
     }
