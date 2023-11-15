@@ -221,7 +221,7 @@ export const useFieldDisabledEnabledDecision = (
       lateAndFactoringFeeForVendor ||
       isFactoringFeeSysGenerated ||
       statusFieldForVendor ||
-      isInvoicePayment || (!isAdmin && !isAccounting),
+      isInvoicePayment || (!isAdmin && !isAccounting && transaction?.transactionType === TransactionTypeValues.draw ),
 
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
     isFactoringFeeSysGenerated,
