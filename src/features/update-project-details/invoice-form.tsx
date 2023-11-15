@@ -40,6 +40,8 @@ import {
   useTotalAmount,
   useUpdateInvoiceMutation,
   invoiceDefaultValues,
+  useUpdateInvoicingDocument,
+  useGenerateInvoicePDF,
 } from 'api/invoicing'
 import { ReceivedLineItems } from './received-line-items'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
@@ -53,7 +55,7 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { useNavigate } from 'react-router-dom'
-
+import { Document } from 'types/vendor.types'
 
 const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
   const { t } = useTranslation()
@@ -249,6 +251,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const watchPayment = watch('payment')
   const watchAttachments = watch('attachments')
   const remainingPayVal = invoice?.remainingPayment as number
+  const { mutate: updateInvoiceDocument } = useUpdateInvoicingDocument()
 
   // const toast = useToast()
   const { invoiced, received } = useTotalAmount({
@@ -332,6 +335,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
 
+  const generatePDFInvoiceDoc = useGenerateInvoicePDF()
+
   const onSubmit = async values => {
     // console.log("Remaing AR:", remainingAR);
     // console.log("Invoiced Amount: ", invoiced);
@@ -368,7 +373,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
 
     if (!invoice) {
       createInvoiceMutate(payload, {
-        onSuccess: () => {
+        onSuccess: data => {
           onClose?.()
         },
         onError: error => {
@@ -377,8 +382,12 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       })
     } else {
       updateInvoiceMutate(payload, {
-        onSuccess: () => {
+        onSuccess: data => {
           onClose?.()
+
+          generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then(documentObj => {
+            updateInvoiceDocument(documentObj as Document)
+          })
         },
         onError: error => {
           console.log(error)
@@ -427,18 +436,16 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     }
   }, [invoice?.status, invoice])
 
+  const watchPaymentValue = parseFloat(watchPayment!?.toString())
+  const isPaymentReceivedDisabled = isNaN(watchPaymentValue) || watchPaymentValue <= 0 || isPaid || isCancelled
 
-  const watchPaymentValue = parseFloat(watchPayment!?.toString());
-  const isPaymentReceivedDisabled = isNaN(watchPaymentValue) || watchPaymentValue <= 0 || isPaid || isCancelled;
-  
-  useEffect( () => {
-    if ( isPaymentReceivedDisabled ) {
-      setValue('paymentReceivedDate', null);
-      return;
+  useEffect(() => {
+    if (isPaymentReceivedDisabled) {
+      setValue('paymentReceivedDate', null)
+      return
     }
     setValue('paymentReceivedDate', datePickerFormat(new Date()))
-  }, [isPaymentReceivedDisabled] );
-
+  }, [isPaymentReceivedDisabled])
 
   return (
     <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)}>
