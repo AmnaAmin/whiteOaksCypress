@@ -13,6 +13,9 @@ import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { readFileContent } from './vendor-details'
 import { Project } from 'types/project.type'
+import { Document } from 'types/vendor.types'
+import { useCallback } from 'react'
+import jsPDF from 'jspdf'
 
 export const useFetchInvoices = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
@@ -67,9 +70,8 @@ export const useCreateInvoiceMutation = ({ projId }) => {
         queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['projectFinancialOverview', projectId])
-        queryClient.invalidateQueries(['project',projectId])
-        queryClient.invalidateQueries(['project',projectId?.toString()])
-       
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['project', projectId?.toString()])
       },
       onError(error: any) {
         let description = error.title ?? 'Unable to save Invoice.'
@@ -105,8 +107,8 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
         queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['projectFinancialOverview', projectId])
-        queryClient.invalidateQueries(['project',projectId])
-        queryClient.invalidateQueries(['project',projectId?.toString()])
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['project', projectId?.toString()])
       },
       onError(error: any) {
         let description = error.title ?? 'Unable to save Invoice.'
@@ -226,7 +228,6 @@ const isAddedInFinalSow = transaction => {
 }
 
 export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelected, transactions }) => {
-  
   const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
   const invoicedDate = new Date()
   const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
@@ -237,7 +238,6 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
   let finalSowLineItems = [] as any
   if (transactions?.length) {
     transactions.forEach(t => {
-      
       if (isReceivedTransaction(t)) {
         received.push({
           id: null,
@@ -539,5 +539,91 @@ export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number)
     '-' +
     projectData?.streetAddress?.split(' ').join('')?.slice(0, 7) +
     (revisedIndex && revisedIndex > 0 ? `-R${String(revisedIndex).padStart(2, '0')}` : '')
+  )
+}
+
+export const useUpdateInvoicingDocument = () => {
+  const client = useClient()
+
+  return useMutation(async (payload: Document) => {
+    let documents = await client('/documents?projectId.equals=' + payload.projectId, {})
+    if (documents?.data) {
+      documents = documents.data?.filter((d: Document) => d.projectInvoiceId === payload.projectInvoiceId)
+    }
+    if (documents && Array.isArray(documents)) {
+      payload.id = documents[0].id
+    }
+
+    return client('/documents', {
+      data: payload,
+      method: 'PUT',
+    })
+  })
+}
+
+export const useGenerateInvoicePDF = () => {
+  const client = useClient()
+
+  return useCallback(
+    async (invoiceId, woAddress, payload) => {
+      const transactionsResponse = await client(
+        `change-orders/v1?projectId=${payload.projectId}&sort=modifiedDate,asc`,
+        {},
+      )
+      const projectResponse = await client(`projects/${payload.projectId}?cacheBuster=${new Date().valueOf()}`, {})
+      const invoiceResponse = await client(`project-invoices/${invoiceId}`, {})
+
+      const invoice = invoiceResponse?.data
+
+      const transactions = transactionsResponse?.data
+      const projectData = projectResponse?.data
+
+      let received = [] as any
+      if (transactions?.length) {
+        transactions.forEach(t => {
+          if (isReceivedTransaction(t)) {
+            received.push({
+              id: null,
+              transactionId: t.id,
+              checked: false,
+              name: t.name,
+              type: 'receivedLineItems',
+              description: t.transactionTypeLabel,
+              amount: Math.abs(t.transactionTotal),
+              createdDate: datePickerFormat(t.modifiedDate),
+            })
+          }
+        })
+      }
+
+      const totalReceived = received?.reduce((result, item) => {
+        if (item.amount) {
+          return result + Number(item.amount)
+        } else {
+          return result
+        }
+      }, 0)
+     
+      let form = new jsPDF()
+      form = await createInvoicePdf({
+        doc: form,
+        invoiceVals: payload,
+        address: woAddress,
+        projectData,
+        sowAmt: invoice?.sowAmount,
+        received: totalReceived,
+        receivedLineItems: received,
+      })
+      const pdfUri = form.output('datauristring')
+      return {
+        documentType: 42,
+        projectId: projectData?.id,
+        fileObject: pdfUri.split(',')[1],
+        fileObjectContentType: 'application/pdf',
+        fileType: 'Invoice.pdf',
+        projectInvoiceId: invoice?.id,
+      }
+    },
+    [],
   )
 }

@@ -195,6 +195,7 @@ export type VendorEntity = Vendor & {
 }
 
 export type Document = {
+  id?: number
   documentType: number
   fileObject: string
   fileObjectContentType: string
@@ -210,6 +211,7 @@ export type Document = {
   vendorName?: string
   workOrderName?: string
   workOrderId?: number
+  projectInvoiceId?: number
 }
 
 type Select = {
