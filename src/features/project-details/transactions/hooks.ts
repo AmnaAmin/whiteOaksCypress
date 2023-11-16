@@ -376,7 +376,7 @@ export const useAgainstOptions = (
 
     // In case of other users than vendors the first option of againstOptions is the
     // Project SOW which should be hide in case transactionType is material
-    if (transactionType?.value === TransactionTypeValues.material && !isVendor) {
+    if ((transactionType?.value === TransactionTypeValues.material || TransactionTypeValues.draw) && !isVendor) {
       return againstOptions.slice(1)
     }
 
