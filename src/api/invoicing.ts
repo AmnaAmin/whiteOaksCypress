@@ -546,7 +546,7 @@ export const useUpdateInvoicingDocument = () => {
   const client = useClient()
 
   return useMutation(async (payload: Document) => {
-    let documents = await client('/documents?projectId.equals=' + payload.projectId, {})
+    let documents = await client('documents?projectId.equals=' + payload.projectId, {})
     if (documents?.data) {
       documents = documents.data?.filter((d: Document) => d.projectInvoiceId === payload.projectInvoiceId)
     }
