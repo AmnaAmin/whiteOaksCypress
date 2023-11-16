@@ -554,7 +554,7 @@ export const useUpdateInvoicingDocument = () => {
       payload.id = documents[0].id
     }
 
-    return client('/documents', {
+    return client('documents', {
       data: payload,
       method: 'PUT',
     })
