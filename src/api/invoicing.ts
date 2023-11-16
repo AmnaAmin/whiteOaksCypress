@@ -210,13 +210,20 @@ export const isReceivedTransaction = transaction => {
   return !transaction.parentWorkOrderId && compatibleType
 }
 const isAddedInFinalSow = transaction => {
+  const isInvoiceCancelled = (t) => {
+   
+    if ( t.invoiceStatus === 'CANCELLED' ) return true
+
+    return false;
+  }
+
   const compatibleType =
     transaction.transactionType === TransactionTypeValues.carrierFee ||
     transaction.transactionType === TransactionTypeValues.legalFee ||
     transaction.transactionType === TransactionTypeValues.changeOrder ||
     transaction.transactionType === TransactionTypeValues.originalSOW
   return (
-    transaction.status === 'APPROVED' && !transaction.parentWorkOrderId && compatibleType && !transaction.invoiceNumber
+    transaction.status === 'APPROVED' && !transaction.parentWorkOrderId && compatibleType &&  ( !transaction.invoiceNumber || isInvoiceCancelled(transaction) )
   )
 }
 
@@ -226,6 +233,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
   const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
   const paymentTerm = Number(clientSelected?.paymentTerm) ?? 0
   const woaExpectedDate = addDays(utcDate, paymentTerm)
+  
   let received = [] as any
   let finalSowLineItems = [] as any
   if (transactions?.length) {
@@ -244,10 +252,15 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
       }
     })
   }
+
+ 
+  
+
   if (!invoice) {
     if (transactions?.length) {
       transactions.forEach(t => {
-        if (isAddedInFinalSow(t)) {
+        
+        if (isAddedInFinalSow(t) ) {
           finalSowLineItems.push({
             id: null,
             transactionId: t.id,
