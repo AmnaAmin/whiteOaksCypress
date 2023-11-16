@@ -186,6 +186,7 @@ export const Header: React.FC<HeaderProps> = ({ toggleMenu, setNavigating }) => 
           <HStack spacing={4} _hover={{ bg: '#14213D' }} pl="1">
             <Menu placement="bottom">
               <MenuButton
+               data-testid='logout_user'
                 bgSize="auto"
                 w={{ base: 'auto' }}
                 onClick={() => {
