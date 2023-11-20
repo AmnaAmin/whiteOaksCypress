@@ -24,6 +24,7 @@ export const sideNav = {
         estimates: 'Estimates',
         cypressReport: 'Cypress Report',
         accessControl: 'Access Control',
+        vendorQRScan: 'QR Scan'
       },
     },
   },
@@ -50,6 +51,7 @@ export const sideNav = {
         estimates: 'Estimados',
         cypressReport: 'Informes de Cypress',
         accessControl: 'Control de acceso',
+        vendorQRScan: 'QR Scan'
       },
     },
   },
