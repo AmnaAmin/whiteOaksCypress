@@ -22,6 +22,7 @@ import { EstimateDetails } from 'pages/estimate-details'
 import CypressReport from './cypress-report'
 import { AccessControl } from './access-control'
 import { ClientType } from './admin/client-type'
+import GeoQRScan from './vendor/geo-qr-scan'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -70,5 +71,10 @@ export default function useRoutesConfig() {
       permissions: ['VENDORPROJECT.READ', 'VENDORPROJECT.EDIT'],
     },
     { path: 'vendors', element: VendorProfilePage, permissions: ['VENDORPROFILE.EDIT', 'VENDORPROFILE.READ'] },
+    {
+      path: 'vendor-scan',
+      element: GeoQRScan,
+      permissions: ['ALL']
+    }
   ]
 }

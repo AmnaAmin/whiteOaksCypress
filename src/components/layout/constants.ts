@@ -11,6 +11,7 @@ import {
   BiUserPin,
   BiUserPlus,
   BiError,
+  BiQrScan,
 } from 'react-icons/bi'
 
 import { TiFlowParallel } from 'react-icons/ti'
@@ -196,6 +197,17 @@ export const MenusList: Menu[] = [
         },
       ]
     : []),
+    ...(showForPreProdAndLocal
+      ? [
+          {
+            pathTo: '/vendor-scan',
+            title: `${SIDE_NAV}.vendorQRScan`,
+            Icon: BiQrScan,
+            color: '#D3D3D3',
+            permissions: ['ALL'],
+          },
+        ]
+      : [])
 ]
 
 export const APP_LOCAL_DATE_FORMAT_Z = 'yyyy-MM-dd'
