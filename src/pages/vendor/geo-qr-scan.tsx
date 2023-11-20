@@ -1,8 +1,13 @@
-import { VStack, Text, Box, Button, Center, HStack } from '@chakra-ui/react'
+import { VStack, Text, Box, Button, Center, Spinner } from '@chakra-ui/react'
 import { Html5QrcodeScanner } from 'html5-qrcode'
 import { useEffect, useState } from 'react'
 
 const qrcodeRegionId = 'html5qr-code-full-region'
+
+interface Location {
+  latitude: number
+  longitude: number
+}
 
 interface QRCodeResult {
   id: number
@@ -11,7 +16,11 @@ interface QRCodeResult {
 }
 
 const createConfig = (props: any) => {
-  let config = {} as any
+  let config = {
+    videoConstraints: {
+      facingMode: { exact: 'environment' },
+    },
+  } as any
   if (props.fps) {
     config.fps = props.fps
   }
@@ -108,7 +117,7 @@ export default function GeoQRScan() {
             <Box>
               <Html5QrcodePlugin
                 fps={10}
-                qrbox={250}
+                qrbox={300}
                 disableFlip={false}
                 qrCodeSuccessCallback={onNewScanResult}
                 qrCodeErrorCallback={onScanFailure}
@@ -140,11 +149,6 @@ export default function GeoQRScan() {
   )
 }
 
-interface Location {
-  latitude: number
-  longitude: number
-}
-
 const LocationComponent: React.FC = () => {
   const [location, setLocation] = useState<Location | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -167,16 +171,20 @@ const LocationComponent: React.FC = () => {
 
   useEffect(() => {
     getLocation()
-    return () => {}
+    return () => {
+      setLocation(null)
+    }
   }, [])
 
   return (
     <Box>
-      {location && (
+      {location ? (
         <Box>
           <Text>Latitude: {location.latitude}</Text>
           <Text>Longitude: {location.longitude}</Text>
         </Box>
+      ) : (
+        <Spinner />
       )}
       {error && <Text color="red">Error: {error}</Text>}
     </Box>
