@@ -144,12 +144,16 @@ function Filter({
                     ).format('M/D/YY')}`
               }
               onChange={value => {
-                if (!!selectedDateRange?.startDate && !!selectedDateRange?.endDate) {
-                  column.setFilterValue(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
-                  if (allowStickyFilters)
-                    setStickyFilter(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                if (!!metaData?.resetFilters) {
+                  handleClear()
                 } else {
-                  column.setFilterValue('')
+                  if (!!selectedDateRange?.startDate && !!selectedDateRange?.endDate) {
+                    column.setFilterValue(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                    if (allowStickyFilters)
+                      setStickyFilter(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                  } else {
+                    column.setFilterValue('')
+                  }
                 }
               }}
               className="w-36 border shadow rounded "
