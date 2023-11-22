@@ -180,7 +180,7 @@ const WorkOrderDetailTab = props => {
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
   const disabledSave =
     isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
-  const { isAdmin,isFPM,isProjectCoordinator } = useUserRolesSelector()
+  const { isAdmin, isFPM, isProjectCoordinator } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
   const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
   const {
@@ -385,13 +385,13 @@ const WorkOrderDetailTab = props => {
   )
   useEffect(() => {
     if (isReadOnly) {
-      Array.from(document.querySelectorAll("input")).forEach(input => {
-        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
-            input.setAttribute("disabled", "true");
-          }
-      });
-    };
-  }, []);
+      Array.from(document.querySelectorAll('input')).forEach(input => {
+        if (input.getAttribute('data-testid') !== 'tableFilterInputField') {
+          input.setAttribute('disabled', 'true')
+        }
+      })
+    }
+  }, [])
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -545,7 +545,7 @@ const WorkOrderDetailTab = props => {
                       control={control}
                       name="cancel"
                       render={({ field }) => (
-                        <>
+                        <div data-testid="cancel_Work_Order">
                           <ReactSelect
                             options={CANCEL_WO_OPTIONS}
                             onChange={option => field.onChange(option)}
@@ -554,7 +554,7 @@ const WorkOrderDetailTab = props => {
                               !cancelPermissions
                             }
                           />
-                        </>
+                        </div>
                       )}
                     />
                   </FormControl>
