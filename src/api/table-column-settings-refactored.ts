@@ -70,15 +70,25 @@ export const useTableColumnSettings = (
     return response?.data
   })
 
+  // If column configuration is saved for a user, we iterate through default columns and generate settings columns.
+  // If a column is deleted/added in default list, it will be added/removed from saved list to display to the user.
+  // If no configuration is saved for a user, we iterate through default columns and generate settings columns.
+
   const settingColumns = savedColumns?.length
-    ? savedColumns.map((col, index) => {
+    ? columns.map((col, index) => {
+        const savedColumn = savedColumns.find(pCol => {
+          // @ts-ignore
+          return pCol.colId === col.accessorKey
+        }) as TableColumnSetting
+
         return generateSettingColumn({
-          field: t(col.field),
-          contentKey: col.contentKey as string,
-          order: col.order,
+          field: savedColumn ? t(savedColumn?.field) : t(col.header as string),
+          // @ts-ignore
+          contentKey: savedColumn ? (savedColumn?.contentKey as string) : (col.accessorKey as string),
+          order: savedColumn ? savedColumn.order : index,
           userId: email,
           type: tableName,
-          hide: col.hide,
+          hide: savedColumn ? savedColumn.hide : false,
         })
       })
     : columns.map((col, index) => {
