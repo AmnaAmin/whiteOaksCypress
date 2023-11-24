@@ -12,6 +12,8 @@ import {
   BiUserPlus,
   BiError,
   BiQrScan,
+  BiInfinite,
+  BiBugAlt
 } from 'react-icons/bi'
 
 import { TiFlowParallel } from 'react-icons/ti'
@@ -193,6 +195,20 @@ export const MenusList: Menu[] = [
           title: `${SIDE_NAV}.cypressReport`,
           Icon: TiFlowParallel,
           color: '#3182CE',
+          permissions: ['ALL'],
+        },
+        {
+          pathTo: '/sonarqubeDashboard',
+          title: `${SIDE_NAV}.sonarqubeDashboard`,
+          Icon: BiBugAlt,
+          color: '#7182CE',
+          permissions: ['ALL'],
+        },
+        {
+          pathTo: '/automationDashboard',
+          title: `${SIDE_NAV}.automationDashboard`,
+          Icon: BiInfinite,
+          color: '#3092CE',
           permissions: ['ALL'],
         },
       ]
