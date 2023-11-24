@@ -41,7 +41,6 @@ import { PasswordField } from './password-field'
 import { USER_MANAGEMENT } from './user-management.i8n'
 import { validateTelePhoneNumber } from 'utils/form-validation'
 import { useFetchRoles } from 'api/access-control'
-import { useUsrMgt } from 'pages/admin/user-management'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 enum UserTabs {
