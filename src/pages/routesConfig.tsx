@@ -16,7 +16,8 @@ import { UserManagement } from './admin/user-management'
 import Dashboard from './admin/dashboard'
 import { ProjectType } from './admin/project-type'
 import { SupportTickets } from './admin/support-tickets'
-
+import SonarQubeDashboard from './sonarqube_dashboard'
+import AutomationDashboard from './automation-dashboard'
 import { Estimates } from 'pages/estimates'
 import { EstimateDetails } from 'pages/estimate-details'
 import CypressReport from './cypress-report'
@@ -65,6 +66,8 @@ export default function useRoutesConfig() {
     { path: 'cypressReport', element: CypressReport, permissions: ['CYPRESSREPORT.READ', 'ALL'] },
     { path: 'projects', element: VendorProjects, permissions: ['VENDORPROJECT.READ', 'VENDORPROJECT.EDIT'] },
     { path: 'clientType', element: ClientType, permissions: ['CLIENTTYPE.EDIT', 'CLIENTTYPE.READ', 'ALL'] },
+    { path: 'sonarqubeDashboard', element: SonarQubeDashboard, permissions: ['SONARQUBEDASHBOARD.READ', 'ALL'] },
+    { path: 'automationDashboard', element: AutomationDashboard, permissions: ['AUTOMATIONDASHBOARD.READ', 'ALL'] },
     {
       path: 'project-details/:projectId',
       element: VendorProjectDetails,
