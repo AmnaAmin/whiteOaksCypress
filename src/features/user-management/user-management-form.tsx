@@ -23,6 +23,7 @@ import {
   useSaveUserDetails,
   useUser,
   useUserDetails,
+  useUserDirectReportsAllList,
   useViewVendor,
 } from 'api/user-management'
 import { languageOptions } from 'api/vendor-details'
@@ -105,7 +106,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
     return queryString
   }, [tabIndex])
 
-  const { options: usersList, isLoading: loadingUsersList, userMgt: userData } = useUsrMgt(queryString, 0, 100000000)
+  const { options: usersList, isLoading: loadingUsersList, userMgt: userData } = useUserDirectReportsAllList();
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   const {
     register,
@@ -894,6 +895,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             onClose()
             reset()
           }}
+          data-testid="cancel-user-modal"
         >
           {t(`${USER_MANAGEMENT}.modal.cancel`)}
         </Button>
