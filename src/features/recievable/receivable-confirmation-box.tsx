@@ -94,7 +94,7 @@ export function BatchConfirmationBox({
                     batchRunFailed?.map(b => (
                       <HStack mb={1}>
                         <Icon as={BiErrorCircle} fontSize="18px" color={'red.400'} />
-                        <HStack color="gray.500" fontSize="12px" fontWeight={400}>
+                        <HStack color="gray.500" fontSize="12px" fontWeight={400} alignItems={'flex-start'}>
                           <Text>{batchRunFailed[0].description}</Text>
                           <Text color="#345EA6" minW="140px">
                             {batchType === 'PAYABLE'
