@@ -1,6 +1,5 @@
 import { Box, Flex, FormControl, Icon, Spacer } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
-import { ConfirmationBox } from 'components/Confirmation'
 // import { usePayableWeeklyCount } from 'features/recievable/hook'
 import { PayableCardsFilter } from 'features/payable/payable-cards-filter'
 import { PayableTable } from 'features/payable/payable-table'
@@ -9,7 +8,7 @@ import { t } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BiChevronDown, BiChevronRight, BiSync } from 'react-icons/bi'
-import { useBatchProcessingMutation, useCheckBatch, usePaginatedAccountPayable } from 'api/account-payable'
+import { useBatchProcessingMutation, useBatchRun, useCheckBatch, usePaginatedAccountPayable } from 'api/account-payable'
 import { ViewLoader } from 'components/page-level-loader'
 import { OverPaymentTransactionsTable } from 'features/project-details/transactions/overpayment-transactions-table'
 import { PaginationState, SortingState } from '@tanstack/react-table'
@@ -23,6 +22,7 @@ import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import ReactSelect from 'components/form/react-select'
 import { useAccountData } from 'api/user-account'
 import { useDirectReports } from 'api/pc-projects'
+import { BatchConfirmationBox } from 'features/recievable/receivable-confirmation-box'
 
 const formatGroupLabel = props => (
   <Box onClick={props.onClick} cursor="pointer" display="flex" alignItems="center" fontWeight="normal" ml={'-7px'}>
@@ -30,12 +30,11 @@ const formatGroupLabel = props => (
   </Box>
 )
 
-//All commented Code will be used later
 export const ConstructionPortalPayable = () => {
   const [loading, setLoading] = useState(false)
-  const [isBatchClick, setIsBatchClick] = useState(false)
+  const [openBatchConfirmation, setOpenBatchConfirmation] = useState(false)
+  const [refetchInterval, setRefetchInterval] = useState(0)
   const [selectedCard, setSelectedCard] = useState<string>('')
-  const [selectedIDs, setSelectedIDs] = useState<any>([])
   const [userIds, setSelectedUserIds] = useState<any>([])
   const [
     selectedDay,
@@ -46,11 +45,6 @@ export const ConstructionPortalPayable = () => {
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ')
   const { data } = useAccountData()
   const { directReportOptions = [], isLoading: loadingReports } = useDirectReports(data?.email)
-
-  // const clearAll = () => {
-  //   setSelectedCard('')
-  //   setSelectedDay('')
-  // }
 
   const { register, reset, control, watch } = useForm()
   const payableColumns = usePayableColumns(control, register)
@@ -66,14 +60,22 @@ export const ConstructionPortalPayable = () => {
 
   const {
     workOrders,
-    isLoading,
+    isLoading: isLoadingPayables,
     totalPages,
     dataCount,
     refetch: refetchPayables,
   } = usePaginatedAccountPayable(queryStringWithPagination, pagination.pageSize)
 
-  const { mutate: batchCall } = useBatchProcessingMutation()
-  const { refetch } = useCheckBatch(setLoading, loading, queryStringWithPagination)
+  const { data: run, mutate: batchCall } = useBatchProcessingMutation()
+  const batchId = run?.data?.id || 0
+  const { data: batchRun, isLoading: isLoadingBatchResult, refetch: fetchBatchResult } = useBatchRun(batchId)
+  const { refetch: fetchBatchCheck } = useCheckBatch(
+    queryStringWithPagination,
+    setLoading,
+    fetchBatchResult,
+    refetchInterval,
+    setRefetchInterval,
+  )
 
   const Submit = formValues => {
     const id = [] as any
@@ -82,7 +84,6 @@ export const ConstructionPortalPayable = () => {
         id.push(key)
       }
     }
-    setSelectedIDs(id)
     const payloadArr = [] as any
     // Loop in for all selected ID's values on grid through checkbox
     id.forEach(selectedID => {
@@ -112,16 +113,23 @@ export const ConstructionPortalPayable = () => {
     if (payloadArr.length === 0) return
 
     setLoading(true)
-    setIsBatchClick(true)
 
     batchCall(obj as any, {
       onSuccess: () => {
-        refetch()
+        fetchBatchCheck()
+        setRefetchInterval(1000)
       },
     })
   }
+  useEffect(() => {
+    reset()
+    if (batchRun?.length > 0 && !isLoadingBatchResult) {
+      setOpenBatchConfirmation(true)
+    }
+  }, [batchRun])
+
   const onNotificationClose = () => {
-    setIsBatchClick(false)
+    setOpenBatchConfirmation(false)
   }
   const formValues = watch()
 
@@ -139,21 +147,6 @@ export const ConstructionPortalPayable = () => {
         </Box>
         <Card px="12px" py="16px">
           <Flex alignItems="center" mb="16px">
-            {/* <FormLabel variant="strong-label" size="lg" m="0" pl={2} whiteSpace="nowrap">
-            {t('dueProjects')}
-          </FormLabel>
-          <Box ml="2">
-            <Divider orientation="vertical" borderColor="#A0AEC0" h="23px" />
-          </Box> */}
-            {/*
-           This will be used in future 
-          <AccountWeekDayFilters
-            weekDayFilters={weekDayFilters}
-            onSelectDay={setSelectedDay}
-            selectedDay={selectedDay}
-            clear={clearAll}
-          /> */}
-
             <Spacer />
             <FormControl w="215px" mr={'10px'}>
               <ReactSelect
@@ -194,7 +187,7 @@ export const ConstructionPortalPayable = () => {
                 setColumnFilters={setColumnFilters}
                 queryStringWithoutPagination={queryStringWithoutPagination}
                 workOrders={workOrders as any}
-                isLoading={isLoading}
+                isLoading={isLoadingPayables}
                 totalPages={totalPages}
                 dataCount={dataCount}
                 refetchPayables={refetchPayables}
@@ -206,18 +199,17 @@ export const ConstructionPortalPayable = () => {
           )}
         </Card>
       </Box>
+      {openBatchConfirmation && (
+        <BatchConfirmationBox
+          title={t(`${ACCOUNTS}.batchProcess`)}
+          isOpen={openBatchConfirmation}
+          onClose={onNotificationClose}
+          batchData={batchRun}
+          isLoading={isLoadingBatchResult}
+          batchType={'PAYABLE'}
+        />
+      )}
 
-      <ConfirmationBox
-        title={t(`${ACCOUNTS}.batchProcess`)}
-        isOpen={!loading && isBatchClick}
-        onClose={onNotificationClose}
-        content={t(`${ACCOUNTS}.batchSuccess`)}
-        contentMsg={t(`${ACCOUNTS}.batchSucessFor`)}
-        idValues={workOrders?.filter(w => selectedIDs.includes(w.idd)).map(w => w.id)}
-        onConfirm={onNotificationClose}
-        yesButtonText={t(`${ACCOUNTS}.ok`)}
-        showNoButton={false}
-      />
       <DevTool control={control} />
     </form>
   )
