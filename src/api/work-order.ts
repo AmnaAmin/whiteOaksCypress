@@ -326,6 +326,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
             id: isNewSmartLineItem ? '' : a.id,
             smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
             orderNo: index,
+            location: a.location.label,
           }
           delete assignedItem.uploadedDoc
           return assignedItem
@@ -351,7 +352,8 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
   }
 }
 
-export const defaultValuesWODetails = (workOrder, defaultSkill) => {
+export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
+  console.log('locations', locations)
   const defaultValues = {
     cancel: {
       value: '',
@@ -367,7 +369,17 @@ export const defaultValuesWODetails = (workOrder, defaultSkill) => {
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {
-            return { ...e, uploadedDoc: null, clientAmount: (e.price ?? 0) * (e.quantity ?? 0) }
+            const loc = locations?.find(l => l.value === e.location)
+            console.log('loc', loc)
+            return {
+              ...e,
+              uploadedDoc: null,
+              clientAmount: (e.price ?? 0) * (e.quantity ?? 0),
+              location: {
+                label: loc?.value,
+                value: loc?.id,
+              },
+            }
           })
         : [],
     completePercentage: workOrder?.completePercentage,
@@ -420,6 +432,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
         id: '',
         smartLineItemId: a.id,
         orderNo: index,
+        location: a.location.label,
       }
       delete assignedItem.uploadedDoc
       return assignedItem

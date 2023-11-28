@@ -177,7 +177,7 @@ export const NewWorkOrder: React.FC<{
       assignLineItems(
         [
           ...values?.assignedItems?.map(a => {
-            return { ...a, isAssigned: true }
+            return { ...a, isAssigned: true, location: a?.location?.value }
           }),
         ],
         {
