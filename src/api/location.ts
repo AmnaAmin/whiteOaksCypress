@@ -1,20 +1,20 @@
 import { useToast } from '@chakra-ui/react'
 import { ColumnDef } from '@tanstack/table-core'
-import { PROJECT_TYPE } from 'features/project-type/project-type.i18n'
+import { LOCATION } from 'features/location/location.i18n'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
-export const CLIENT_TYPE_COLUMNS: ColumnDef<any>[] = [
+export const LOCATION_TYPE_COLUMNS: ColumnDef<any>[] = [
   {
-    header: `${PROJECT_TYPE}.type`,
+    header: `${LOCATION}.location`,
     accessorKey: 'value',
   },
   {
-    header: `${PROJECT_TYPE}.createdBy`,
+    header: `${LOCATION}.createdBy`,
     accessorKey: 'createdBy',
   },
   {
-    header: `${PROJECT_TYPE}.createdDate`,
+    header: `${LOCATION}.createdDate`,
     accessorKey: 'createdDate',
     accessorFn(cellInfo) {
       return datePickerFormat(cellInfo.createdDate)
@@ -26,11 +26,11 @@ export const CLIENT_TYPE_COLUMNS: ColumnDef<any>[] = [
     meta: { format: 'date' },
   },
   {
-    header: `${PROJECT_TYPE}.modifiedBy`,
+    header: `${LOCATION}.modifiedBy`,
     accessorKey: 'modifiedBy',
   },
   {
-    header: `${PROJECT_TYPE}.modifiedDate`,
+    header: `${LOCATION}.modifiedDate`,
     accessorKey: 'modifiedDate',
     accessorFn(cellInfo) {
       return datePickerFormat(cellInfo.modifiedDate)
