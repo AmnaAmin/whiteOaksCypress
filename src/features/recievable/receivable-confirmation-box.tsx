@@ -113,7 +113,7 @@ export function BatchConfirmationBox({
 
         <Divider mt={3} />
         <ModalFooter>
-          <Button colorScheme="brand" variant="solid" onClick={onClose}>
+          <Button colorScheme="brand" variant="solid" onClick={onClose} data-testid="close-confirmation-modal">
             Ok
           </Button>
         </ModalFooter>
