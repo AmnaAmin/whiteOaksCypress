@@ -359,7 +359,6 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
 }
 
 export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
-  console.log('locations', locations)
   const defaultValues = {
     cancel: {
       value: '',
@@ -375,16 +374,20 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {
-            const loc = locations?.find(l => l.value === e.location)
-            console.log('loc', loc)
+            const locationFound = locations?.find(l => l.value === e?.location)
+            let location
+            if (locationFound) {
+              location = { label: locationFound.value, value: locationFound.id }
+            } else if (!!e.location) {
+              location = { label: e?.location, value: e?.location }
+            } else {
+              location = null
+            }
             return {
               ...e,
               uploadedDoc: null,
               clientAmount: (e.price ?? 0) * (e.quantity ?? 0),
-              location: {
-                label: loc?.value,
-                value: loc?.id,
-              },
+              location,
             }
           })
         : [],

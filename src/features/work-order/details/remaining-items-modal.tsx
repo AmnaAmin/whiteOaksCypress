@@ -76,6 +76,7 @@ const RemainingItemsModal: React.FC<{
     reset({
       remainingItems: remainingItems?.map(r => {
         const locationFound = locations?.find(l => l.value === r.location)
+
         let location
         if (locationFound) {
           location = { label: locationFound.value, value: locationFound.id }
@@ -100,7 +101,7 @@ const RemainingItemsModal: React.FC<{
 
   const onSubmit = async values => {
     const allItems = values.remainingItems?.map((item, index) => {
-      return { ...item, sortOrder: index, location: item?.location?.value }
+      return { ...item, sortOrder: index, location: item?.location?.label }
     })
     const newLineItems = allItems.filter(r => r?.action === 'new')
     const updatedLineItems = allItems.filter(r => !!r.id)

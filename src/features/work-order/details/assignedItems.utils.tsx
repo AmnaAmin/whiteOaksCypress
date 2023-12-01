@@ -335,6 +335,7 @@ export const mapToRemainingItems = item => {
     ...item,
     unitPrice: item?.price,
     totalPrice: Number(item?.price) * Number(item?.quantity),
+    location: item?.location?.label,
   }
 }
 
@@ -947,7 +948,7 @@ export const useGetLineItemsColumn = ({
                           valueFormatter={null}
                           key={'assignedItems.' + [index]}
                           id={`assignedItems.${index}.location`}
-                          isDisabled={false}
+                          isDisabled={!allowEdit}
                           options={locationSelectOptions}
                         />
                       </>
