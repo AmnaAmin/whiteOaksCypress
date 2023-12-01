@@ -211,10 +211,16 @@ export const useNoteMutation = projectId => {
 export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) => {
   const client = useClient()
 
-  const { data: notes, ...rest } = useQuery<Array<Document>>(['notes', workOrderId], async () => {
-    const response = await client(`notes?workOrderId.equals=${workOrderId}&sort=modifiedDate,asc`, {})
-    return response?.data
-  })
+  const { data: notes, ...rest } = useQuery<Array<Document>>(
+    ['notes', workOrderId],
+    async () => {
+      const response = await client(`notes?workOrderId.equals=${workOrderId}&sort=modifiedDate,asc`, {})
+      return response?.data
+    },
+    {
+      enabled: !!workOrderId,
+    },
+  )
 
   return {
     notes,

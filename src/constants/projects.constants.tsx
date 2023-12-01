@@ -71,6 +71,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   projectStatusId: 'projectStatusId.in',
   clientSignoffDateStart: 'clientSignoffDate.greaterThanOrEqual',
   clientSignoffDateEnd: 'clientSignoffDate.lessThanOrEqual',
+  clientWalkthroughDateStart: 'clientWalkthroughDate.greaterThanOrEqual',
+  clientWalkthroughDateEnd: 'clientWalkthroughDate.lessThanOrEqual',
   sowNewAmount: 'sowNewAmount.equals',
   drawAmountSow: 'drawAmountSow.equals',
   drawAmountWo: 'drawAmountWo.equals',
@@ -182,6 +184,18 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'projects.projectTable.clientDue',
     accessorKey: 'clientDueDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientDueDate),
+    meta: { format: 'date' },
+  },
+  {
+    header: 'project.projectDetails.clientWalkthrough',
+    accessorKey: 'clientWalkthroughDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientWalkthroughDate),
+    meta: { format: 'date' },
+  },
+  {
+    header: 'project.projectDetails.clientSignOff',
+    accessorKey: 'clientSignoffDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientSignoffDate),
     meta: { format: 'date' },
   },
   {

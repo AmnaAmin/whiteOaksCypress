@@ -89,7 +89,6 @@ export const useTransactionsV1 = (projectId?: string) => {
             t.status = 'Partial Paid'
           }
           if (invoiceData.status === InvoiceStatusValues.paid) {
-           
             t.status = InvoiceStatusValues.paid
           }
         }),
@@ -97,7 +96,7 @@ export const useTransactionsV1 = (projectId?: string) => {
 
       return response?.data
     },
-    { enabled: projectId !== 'undefined' },
+    { enabled: projectId !== 'undefined' && !!projectId },
   )
 
   return {
