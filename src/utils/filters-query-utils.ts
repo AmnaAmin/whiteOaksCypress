@@ -39,7 +39,7 @@ export const getAPIFilterQueryString = (
         [
           'clientStartDate',
           'clientDueDate',
-          'clientWalkThroughDate',
+          'clientWalkthroughDate',
           'clientSignoffDate',
           'expectedPayDate',
           'workOrderStartDate',
