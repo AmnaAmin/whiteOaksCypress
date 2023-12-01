@@ -193,7 +193,7 @@ function Filter({
                   onSelect={() => {
                     setIsDateRangePickerOpen(false)
                   }}
-                  value={[selectionRange]}
+                  value={selectionRange}
                   zIndex={10000}
                   onChange={dateRange => {
                     setSelectionRange([dateRange.selection])
