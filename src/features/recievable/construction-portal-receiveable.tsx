@@ -14,7 +14,7 @@ import { useReceivableTableColumns } from 'features/recievable/hook'
 import { ACCOUNTS } from 'pages/accounts.i18n'
 import { BiChevronDown, BiChevronRight, BiSync } from 'react-icons/bi'
 import { RECEIVABLE_TABLE_QUERY_KEYS } from 'features/recievable/receivable.constants'
-import { ReceivableConfirmationBox } from 'features/recievable/receivable-confirmation-box'
+import { BatchConfirmationBox } from 'features/recievable/receivable-confirmation-box'
 import { useTranslation } from 'react-i18next'
 import { Card } from 'components/card/card'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
@@ -201,12 +201,13 @@ export const ConstructionPortalReceiveable: React.FC = () => {
         </Box>
         {batchLoading && <ViewLoader />}
         {batchRun?.length > 0 && !batchLoading && (
-          <ReceivableConfirmationBox
+          <BatchConfirmationBox
             title={t(`${ACCOUNTS}.batchProcess`)}
             isOpen={!loading && isBatchClick && batchRun?.length > 0}
             onClose={onNotificationClose}
             batchData={batchRun}
             isLoading={isLoading}
+            batchType={'RECEIVABLE'}
           />
         )}
       </form>

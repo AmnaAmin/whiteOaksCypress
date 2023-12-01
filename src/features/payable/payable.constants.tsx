@@ -5,6 +5,7 @@ import { dateFormat } from 'utils/date-time-utils'
 
 export const PAYABLE_TABLE_QUERY_KEYS = {
   projectId: 'projectId.equals',
+  woDisplayId: 'woDisplayId.contains',
   claimantName: 'claimantName.contains',
   propertyAddress: 'propertyAddress.contains',
   vendorAddress: 'vendorAddress.contains',
@@ -31,6 +32,10 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'id',
     accessorKey: 'displayId',
+  },
+  {
+    header: 'WO ID',
+    accessorKey: 'woDisplayId',
   },
   {
     header: 'vendorName',
