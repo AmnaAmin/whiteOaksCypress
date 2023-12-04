@@ -192,6 +192,7 @@ const RemainingListTable = (props: RemainingListType) => {
                           id={`assignedItems.${index}.location`}
                           isDisabled={false}
                           options={locationSelectOptions}
+                          newObjectFormatting={null}
                         />
                       </>
                     )

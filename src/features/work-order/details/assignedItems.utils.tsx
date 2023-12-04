@@ -945,11 +945,12 @@ export const useGetLineItemsColumn = ({
                         <CreatableSelectForTable
                           index={index}
                           field={field}
-                          valueFormatter={null}
                           key={'assignedItems.' + [index]}
                           id={`assignedItems.${index}.location`}
-                          isDisabled={!allowEdit}
                           options={locationSelectOptions}
+                          newObjectFormatting={null}
+                          isDisabled={isVendor}
+                          valueFormatter={null}
                         />
                       </>
                     )
@@ -1248,6 +1249,7 @@ export const useGetLineItemsColumn = ({
                           valueFormatter={typeof field.value === 'number' ? handleDropdownValue : null}
                           id={`assignedItems.${index}.completePercentage`}
                           isDisabled={isVendor}
+                          newObjectFormatting={newObjectFormatting}
                         />
                       </>
                     )
@@ -1414,7 +1416,16 @@ export const useGetLineItemsColumn = ({
   return columns
 }
 
-export const CreatableSelectForTable = ({ field, index, id, key, isDisabled, valueFormatter, options }) => {
+export const CreatableSelectForTable = ({
+  field,
+  index,
+  id,
+  key,
+  isDisabled,
+  valueFormatter,
+  options,
+  newObjectFormatting,
+}) => {
   const fontSizes = {
     sm: '10px',
     md: '12px',
@@ -1436,7 +1447,7 @@ export const CreatableSelectForTable = ({ field, index, id, key, isDisabled, val
       isDisabled={isDisabled}
       selectProps={{ widthAssign: '80%' }}
       onChange={option => {
-        if (option?.__isNew__) {
+        if (option?.__isNew__ && !!newObjectFormatting) {
           field.onChange(newObjectFormatting(option))
         } else {
           field.onChange(option)
