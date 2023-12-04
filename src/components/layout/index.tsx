@@ -101,6 +101,33 @@ export const Layout: React.FC = props => {
                             </Text>
                           </Flex>
                         )}
+                        {item.title === `${SIDE_NAV}.cypressTriggers` && (
+                          <Flex
+                            alignItems="center"
+                            h="43px"
+                            w="201px"
+                            style={{
+                              borderTop: '1px solid rgb(237, 242, 247, 0.25)',
+                              borderBottom: '1px solid rgb(237, 242, 247, 0.25)',
+                              paddingLeft: '26px',
+                              marginBottom: '21px',
+                              marginTop: '28px',
+                            }}
+                          >
+                            <Text
+                              as="span"
+                              style={{
+                                fontWeight: 6500,
+                                fontSize: '13px',
+                                lineHeight: '28px',
+                                color: '#A1A6B1',
+                                letterSpacing: '1px',
+                              }}
+                            >
+                              {t(`${SIDE_NAV}.devops`)}
+                            </Text>
+                          </Flex>
+                        )}
                         <Box w="201px" key={item.pathTo}>
                           <SidebarLink
                             pathTo={item.pathTo}

@@ -16,14 +16,15 @@ import { UserManagement } from './admin/user-management'
 import Dashboard from './admin/dashboard'
 import { ProjectType } from './admin/project-type'
 import { SupportTickets } from './admin/support-tickets'
-import SonarQubeDashboard from './sonarqube_dashboard'
-import AutomationDashboard from './automation-dashboard'
+import SonarQubeDashboard from './devops/sonarqube_dashboard'
+import AutomationDashboard from './devops/automation-dashboard'
 import { Estimates } from 'pages/estimates'
 import { EstimateDetails } from 'pages/estimate-details'
 import CypressReport from './cypress-report'
 import { AccessControl } from './access-control'
 import { ClientType } from './admin/client-type'
 import GeoQRScan from './vendor/geo-qr-scan'
+import CypressTiggers from './devops/cypress-triggers'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -68,6 +69,7 @@ export default function useRoutesConfig() {
     { path: 'clientType', element: ClientType, permissions: ['CLIENTTYPE.EDIT', 'CLIENTTYPE.READ', 'ALL'] },
     { path: 'sonarqubeDashboard', element: SonarQubeDashboard, permissions: ['SONARQUBEDASHBOARD.READ', 'ALL'] },
     { path: 'automationDashboard', element: AutomationDashboard, permissions: ['AUTOMATIONDASHBOARD.READ', 'ALL'] },
+    { path: 'cypressTriggers', element: CypressTiggers, permissions: ['CYPRESSTRIGGERS.READ', 'ALL'] },
     {
       path: 'project-details/:projectId',
       element: VendorProjectDetails,

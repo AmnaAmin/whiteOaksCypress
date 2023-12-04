@@ -13,7 +13,8 @@ import {
   BiError,
   BiQrScan,
   BiInfinite,
-  BiBugAlt
+  BiBugAlt,
+  BiGitRepoForked
 } from 'react-icons/bi'
 
 import { TiFlowParallel } from 'react-icons/ti'
@@ -197,20 +198,6 @@ export const MenusList: Menu[] = [
           color: '#3182CE',
           permissions: ['ALL'],
         },
-        {
-          pathTo: '/sonarqubeDashboard',
-          title: `${SIDE_NAV}.sonarqubeDashboard`,
-          Icon: BiBugAlt,
-          color: '#7182CE',
-          permissions: ['ALL'],
-        },
-        {
-          pathTo: '/automationDashboard',
-          title: `${SIDE_NAV}.automationDashboard`,
-          Icon: BiInfinite,
-          color: '#3092CE',
-          permissions: ['ALL'],
-        },
       ]
     : []),
     ...(showForPreProdAndLocal
@@ -223,7 +210,32 @@ export const MenusList: Menu[] = [
             permissions: ['ALL'],
           },
         ]
-      : [])
+      : []),
+      ...(showForPreProdAndLocal
+        ? [
+            {
+              pathTo: '/cypressTriggers',
+              title: `${SIDE_NAV}.cypressTriggers`,
+              Icon: BiGitRepoForked,
+              color: '#3182CE',
+              permissions: ['ALL'],
+            },
+            {
+              pathTo: '/sonarqubeDashboard',
+              title: `${SIDE_NAV}.sonarqubeDashboard`,
+              Icon: BiBugAlt,
+              color: '#7182CE',
+              permissions: ['ALL'],
+            },
+            {
+              pathTo: '/automationDashboard',
+              title: `${SIDE_NAV}.automationDashboard`,
+              Icon: BiInfinite,
+              color: '#3092CE',
+              permissions: ['ALL'],
+            },
+          ]
+        : []),
 ]
 
 export const APP_LOCAL_DATE_FORMAT_Z = 'yyyy-MM-dd'

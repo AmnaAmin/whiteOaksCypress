@@ -18,6 +18,7 @@ export const sideNav = {
         userMgmt: 'Users',
         administration: 'ADMINISTRATION',
         menu: 'MENU',
+        devops: 'DEVOPS',
         alerts: 'Alerts',
         projectType: 'Project Type',
         support: 'Support',
@@ -25,8 +26,9 @@ export const sideNav = {
         cypressReport: 'Cypress Report',
         accessControl: 'Access Control',
         vendorQRScan: 'QR Scan',
-        sonarqubeDashboard: 'SonarQube Dashboard',
-        automationDashboard: 'Automation Dashboard'
+        sonarqubeDashboard: 'SonarQube',
+        automationDashboard: 'Automation',
+        cypressTriggers: 'Cypress Triggers'
       },
     },
   },
@@ -47,6 +49,7 @@ export const sideNav = {
         userMgmt: 'Usuarias',
         administration: 'Administración',
         menu: 'MENÚ',
+        devops: 'DEVOPS',
         alerts: 'Alertas',
         projectType: 'Tipo de proyecto',
         support: 'Apoyo',
@@ -54,8 +57,9 @@ export const sideNav = {
         cypressReport: 'Informes de Cypress',
         accessControl: 'Control de acceso',
         vendorQRScan: 'QR Scan',
-        sonarqubeDashboard: 'Tablero de SonarQube',
-        automationDashboard: 'Tablero de Automation'
+        sonarqubeDashboard: 'SonarQube',
+        automationDashboard: 'Automation',
+        cypressTriggers: 'Cypress Triggers'
       },
     },
   },

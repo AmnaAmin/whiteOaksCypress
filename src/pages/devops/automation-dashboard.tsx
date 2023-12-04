@@ -1,5 +1,7 @@
 import { Box, Button } from '@chakra-ui/react'
+import {  Tabs, TabList, Tab, TabPanel, TabPanels } from '@chakra-ui/react'
 
+import DBRestoreWorkflow from '../../features/automation/db_restore'
 
 const AutomationDashboard = () => {
   const onButtonClick = () => {
@@ -12,10 +14,30 @@ const AutomationDashboard = () => {
 
   return (
     <Box>
-
+      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
       <Button onClick={onButtonClick} colorScheme="brand" fontSize="14px" minW={'140px'}>
       CloudWatch Dashboard
     </Button>
+    </div>
+
+    <Tabs variant="enclosed" colorScheme="brand">
+    <TabList>
+      <Tab>Restore DB</Tab>
+      <Tab>Merge Window</Tab>
+      <Tab>Infra Deployment</Tab>
+    </TabList>
+    <TabPanels>
+      <TabPanel>
+      <DBRestoreWorkflow />
+      </TabPanel>
+      <TabPanel>
+        <h1>in progress</h1>
+      </TabPanel>
+      <TabPanel>
+      <h1>in progress</h1>
+      </TabPanel>
+    </TabPanels>
+  </Tabs>
     
     </Box>
   )
