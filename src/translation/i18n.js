@@ -23,6 +23,7 @@ import { projectAwards } from 'features/work-order/project-award/projectAward.i1
 import { globalErrors } from './errors.i18n'
 import { performance } from 'features/performance/performance.i18n'
 import { accessControl } from 'features/access-control/access-control.i18n'
+import { location } from 'features/location/location.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -53,6 +54,7 @@ i18n.use(initReactI18next).init({
         ...globalErrors.en.translation,
         ...performance.en.translation,
         ...accessControl.en.translation,
+        ...location.en.translation,
 
         // DASHBOARDa
         vendorScore: 'Vendor Score',
@@ -621,6 +623,7 @@ i18n.use(initReactI18next).init({
         ...globalErrors.es.translation,
         ...performance.es.translation,
         ...accessControl.es.translation,
+        ...location.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',

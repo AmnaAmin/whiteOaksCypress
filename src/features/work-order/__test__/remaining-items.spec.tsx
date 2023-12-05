@@ -110,15 +110,15 @@ describe('Remaining Items test Cases', () => {
       swoProject: SWO_PROJECT,
       setAssignedItems,
     })
-    await userEvent.click(screen.getByTestId('cell-0-location'))
-    expect(screen.getByTestId('editableField-0-location')).toBeInTheDocument()
-    await userEvent.type(screen.getByTestId('editableField-0-location'), '-Gallery')
-    expect(screen.getByTestId('editableField-0-location')).toHaveFocus()
+    await userEvent.click(screen.getByTestId('cell-0-productName'))
+    expect(screen.getByTestId('editableField-0-productName')).toBeInTheDocument()
+    await userEvent.type(screen.getByTestId('editableField-0-productName'), '/Meter')
+    expect(screen.getByTestId('editableField-0-productName')).toHaveFocus()
     act(() => {
-      fireEvent.focusOut(screen.getByTestId('editableField-0-location'))
+      fireEvent.focusOut(screen.getByTestId('editableField-0-productName'))
     })
     await waitFor(() => {
-      expect(screen.getByTestId('cell-0-location').textContent).toEqual('Backyard-Gallery')
+      expect(screen.getByTestId('cell-0-productName').textContent).toEqual('Electrical/Meter')
     })
   })
 })

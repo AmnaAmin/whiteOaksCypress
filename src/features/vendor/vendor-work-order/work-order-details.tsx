@@ -38,6 +38,7 @@ import { useProjectAward } from 'api/project-award'
 import { Card } from 'features/login-form-centered/Card'
 import { TransactionsTab } from 'features/work-order/transactions/transactions-tab'
 import { TabCustom } from 'features/work-order/work-order-edit'
+import { useLocation as useLineItemsLocation } from 'api/location'
 
 export const WorkOrderDetails = ({
   workOrder,
@@ -75,6 +76,7 @@ export const WorkOrderDetails = ({
   const { mutate: updateWorkOrder } = useUpdateWorkOrderMutation({})
   const [isError, setIsError] = useState(false)
   const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems
+  const { data: locations } = useLineItemsLocation()
 
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
@@ -199,6 +201,7 @@ export const WorkOrderDetails = ({
                         displayAwardPlan={displayAwardPlan}
                         tabIndex={tabIndex}
                         setIsError={setIsError}
+                        locations={locations}
                       />
                     )}
                   </TabPanel>

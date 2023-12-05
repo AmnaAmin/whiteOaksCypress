@@ -745,13 +745,23 @@ const DragDropEnabledRows = ({
                     >
                       {row.getVisibleCells().map(cell => {
                         const value = flexRender(cell.column.columnDef.cell, cell.getContext())
+                        const metaData: any = cell.column.columnDef?.meta as any
+                        const title =
+                          typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
+                        const isDate = metaData?.format === 'date'
                         return (
                           <Td
                             py={0}
                             pr={'50px'}
                             key={cell.id}
                             isTruncated
-                            title={cell.getContext()?.getValue() as string}
+                            title={
+                              !metaData?.hideTitle && title
+                                ? isDate
+                                  ? dateFormat(title as string)
+                                  : (title as string)
+                                : ''
+                            }
                             {...getColumnMaxMinWidths(cell.column)}
                           >
                             {value}
