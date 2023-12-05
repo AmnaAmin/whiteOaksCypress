@@ -26,7 +26,8 @@ export const sideNav = {
         accessControl: 'Access Control',
         vendorQRScan: 'QR Scan',
         sonarqubeDashboard: 'SonarQube Dashboard',
-        automationDashboard: 'Automation Dashboard'
+        automationDashboard: 'Automation Dashboard',
+        locations: 'Locations',
       },
     },
   },
@@ -42,6 +43,7 @@ export const sideNav = {
         clients: 'Clientes',
         vendorsSkills: 'Comercios de proveedores',
         markets: 'Mercados',
+        location: 'Ubicación',
         reports: 'Informes',
         performance: 'Actuación',
         userMgmt: 'Usuarias',
@@ -55,7 +57,7 @@ export const sideNav = {
         accessControl: 'Control de acceso',
         vendorQRScan: 'QR Scan',
         sonarqubeDashboard: 'Tablero de SonarQube',
-        automationDashboard: 'Tablero de Automation'
+        automationDashboard: 'Tablero de Automation',
       },
     },
   },

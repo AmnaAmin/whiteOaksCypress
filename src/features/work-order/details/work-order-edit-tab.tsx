@@ -121,6 +121,7 @@ interface FormValues {
   vendorSkillId: number | string | null
   vendorId: number | string | null
   completePercentage?: completePercentage
+  locations?: any
 }
 
 const WorkOrderDetailTab = props => {
@@ -134,6 +135,7 @@ const WorkOrderDetailTab = props => {
     documentsData,
     isFetchingLineItems,
     isLoadingLineItems,
+    locations,
   } = props
 
   const defaultSkill = {
@@ -145,8 +147,8 @@ const WorkOrderDetailTab = props => {
   const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
 
   const defaultValues: FormValues = useMemo(() => {
-    return defaultValuesWODetails(workOrder, defaultSkill)
-  }, [workOrder])
+    return defaultValuesWODetails(workOrder, defaultSkill, locations)
+  }, [workOrder, locations])
 
   const formReturn = useForm<FormValues>({
     defaultValues: {

@@ -27,6 +27,7 @@ export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }
         displayAwardPlan={true}
         tabIndex={0}
         setIsError={setIsError}
+        locations={[]}
       />
     </Modal>,
     {
