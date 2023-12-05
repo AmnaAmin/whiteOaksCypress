@@ -3,6 +3,7 @@ import { Control, useWatch, FieldErrors } from 'react-hook-form'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { PROJECT_STATUS } from 'features/common/status'
+import { isValidDate } from 'utils/date-time-utils'
 
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, projectData?: any) => {
   const status = useWatch({ name: 'status', control })
@@ -166,10 +167,17 @@ export const useSubFormErrors = (errors: FieldErrors<ProjectDetailsFormValues>) 
 }
 
 // Min of woa start date will be client start date
-export const useWOAStartDateMin = (control: Control<ProjectDetailsFormValues>) => {
+// Min of woa completion date will be woa start date
+export const useMinMaxDateSelector = (control: Control<ProjectDetailsFormValues>) => {
   const clientStartDate = useWatch({ name: 'clientStartDate', control }) ?? new Date().toString()
+  const woaStartDate = useWatch({ name: 'woaStartDate', control }) ?? new Date().toString()
 
-  return new Date(clientStartDate).toISOString().split('T')[0]
+  return {
+    woaStartMin: isValidDate(new Date(clientStartDate))
+      ? new Date(clientStartDate)?.toISOString()?.split('T')?.[0]
+      : '',
+    woaCompletionMin: isValidDate(new Date(woaStartDate)) ? new Date(woaStartDate)?.toISOString()?.split('T')?.[0] : '',
+  }
 }
 
 // Current date

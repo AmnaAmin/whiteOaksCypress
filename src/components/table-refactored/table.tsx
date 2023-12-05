@@ -81,11 +81,13 @@ function Filter({
         endDate = new Date(columnFilterValue?.split(' - ')?.[1]?.toString())
       }
     }
-    return {
-      startDate,
-      endDate,
-      key: 'selection',
-    }
+    return [
+      {
+        startDate,
+        endDate,
+        key: 'selection',
+      },
+    ]
   })
 
   const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
@@ -110,16 +112,19 @@ function Filter({
     e.preventDefault()
     setIsDateRangePickerOpen(!isDateRangePickerOpen)
   }
+
   const handleClear = () => {
     column.setFilterValue('')
     setStickyFilter(null)
     setSelectedDateRange({ startDate: '', endDate: '', key: 'selection' })
     setIsDateRangePickerOpen(false)
-    setSelectionRange({
-      startDate: new Date(),
-      endDate: new Date(),
-      key: 'selection',
-    })
+    setSelectionRange([
+      {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: 'selection',
+      },
+    ])
   }
   const { datePickerState } = useContext(TableDatePickerContext)
 
@@ -184,20 +189,16 @@ function Filter({
                 <DateRange
                   showMonthArrow={false}
                   dragSelectionEnabled
-                  ranges={[selectionRange]}
+                  ranges={selectionRange}
                   onSelect={() => {
                     setIsDateRangePickerOpen(false)
                   }}
-                  value={[selectionRange]}
+                  value={selectionRange}
                   zIndex={10000}
                   onChange={dateRange => {
+                    setSelectionRange([dateRange.selection])
                     const selectedStartDate = dateRange.selection.startDate
                     const selectedEndDate = dateRange.selection.endDate
-                    setSelectionRange({
-                      startDate: selectedStartDate,
-                      endDate: selectedEndDate,
-                      key: 'selection',
-                    })
                     const formattedStartDate = moment(selectedStartDate).format('YYYY-MM-DD')
                     const formattedEndDate = moment(selectedEndDate).format('YYYY-MM-DD')
                     setSelectedDateRange({
