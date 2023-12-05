@@ -30,6 +30,7 @@ import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { AddIcon } from '@chakra-ui/icons'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
+import { useLocation } from 'api/location'
 
 const RemainingItemsModal: React.FC<{
   isOpen: boolean
@@ -52,6 +53,7 @@ const RemainingItemsModal: React.FC<{
   const { mutate: createLineItems } = useCreateLineItem({ swoProject, showToast: true, refetchLineItems: true })
   const { mutate: deleteLineItem, isLoading: isDeleteLoading } = useDeleteLineItems(swoProject?.id)
   const { refetch: refetchRemainingItems } = useRemainingLineItems(swoProject?.id)
+  const { data: locations } = useLocation()
   const toast = useToast()
 
   const {
@@ -71,8 +73,25 @@ const RemainingItemsModal: React.FC<{
   const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
 
   useEffect(() => {
-    reset({ remainingItems })
-  }, [remainingItems])
+    reset({
+      remainingItems: remainingItems?.map(r => {
+        const locationFound = locations?.find(l => l.value === r.location)
+
+        let location
+        if (locationFound) {
+          location = { label: locationFound.value, value: locationFound.id }
+        } else if (!!r.location) {
+          location = { label: r.location, value: r.location }
+        } else {
+          location = null
+        }
+        return {
+          ...r,
+          location,
+        }
+      }),
+    })
+  }, [remainingItems, locations?.length])
 
   useEffect(() => {
     if (swoProject?.status?.toLocaleUpperCase() === 'COMPLETED') {
@@ -82,7 +101,7 @@ const RemainingItemsModal: React.FC<{
 
   const onSubmit = async values => {
     const allItems = values.remainingItems?.map((item, index) => {
-      return { ...item, sortOrder: index }
+      return { ...item, sortOrder: index, location: item?.location?.label }
     })
     const newLineItems = allItems.filter(r => r?.action === 'new')
     const updatedLineItems = allItems.filter(r => !!r.id)

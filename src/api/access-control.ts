@@ -160,6 +160,7 @@ export const useGetSections = ({ isDevtekUser }) => {
     { value: 'PERFORMANCE', label: 'Performance' },
     { value: 'USERMANAGER', label: 'Users' },
     { value: 'MARKET', label: 'Markets' },
+    { value: 'LOCATION', label: 'Locations' },
     { value: 'VENDORSKILL', label: 'Vendor Skills' },
     { value: 'CLIENTTYPE', label: 'Client Type' },
     { value: 'PROJECTTYPE', label: 'Project Type' },

@@ -65,6 +65,7 @@ const WorkOrderDetailTab = ({
   displayAwardPlan,
   tabIndex,
   setIsError,
+  locations,
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
@@ -74,12 +75,21 @@ const WorkOrderDetailTab = ({
       setIsUpdating(false)
     },
   })
-  const getDefaultValues = () => {
+  const getDefaultValues = locations => {
     return {
       assignedItems:
         workOrderAssignedItems?.length > 0
           ? workOrderAssignedItems?.map(e => {
-              return { ...e, uploadedDoc: null, clientAmount: e.price ?? 0 * e.quantity ?? 0 }
+              const locationFound = locations?.find(l => l.value === e?.location)
+              let location
+              if (locationFound) {
+                location = { label: locationFound.value, value: locationFound.id }
+              } else if (!!e.location) {
+                location = { label: e?.location, value: e?.location }
+              } else {
+                location = null
+              }
+              return { ...e, uploadedDoc: null, clientAmount: e.price ?? 0 * e.quantity ?? 0, location }
             })
           : [],
       showPrice: workOrder.showPricing,
@@ -88,9 +98,8 @@ const WorkOrderDetailTab = ({
   }
 
   const defaultValues: FormValues = useMemo(() => {
-    
-    return getDefaultValues()
-  }, [workOrder, workOrderAssignedItems?.length])
+    return getDefaultValues(locations)
+  }, [workOrder, workOrderAssignedItems?.length, locations])
 
   const formReturn = useForm<FormValues>({
     defaultValues: {

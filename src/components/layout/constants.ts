@@ -13,9 +13,9 @@ import {
   BiError,
   BiQrScan,
   BiInfinite,
-  BiBugAlt
+  BiBugAlt,
 } from 'react-icons/bi'
-
+import { IoLocationSharp } from 'react-icons/io5'
 import { TiFlowParallel } from 'react-icons/ti'
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { SIDE_NAV } from './sideNav.i18n'
@@ -174,6 +174,13 @@ export const MenusList: Menu[] = [
     permissions: ['MARKET.EDIT', 'MARKET.READ', 'ALL'],
   },
   {
+    pathTo: '/location',
+    title: `${SIDE_NAV}.locations`,
+    Icon: IoLocationSharp,
+    color: '#9B2C2C',
+    permissions: ['LOCATION.EDIT', 'LOCATION.READ', 'ALL'],
+  },
+  {
     pathTo: '/support-tickets',
     title: `${SIDE_NAV}.support`,
     Icon: FaReact,
@@ -213,17 +220,17 @@ export const MenusList: Menu[] = [
         },
       ]
     : []),
-    ...(showForPreProdAndLocal
-      ? [
-          {
-            pathTo: '/vendor-scan',
-            title: `${SIDE_NAV}.vendorQRScan`,
-            Icon: BiQrScan,
-            color: '#D3D3D3',
-            permissions: ['ALL'],
-          },
-        ]
-      : [])
+  ...(showForPreProdAndLocal
+    ? [
+        {
+          pathTo: '/vendor-scan',
+          title: `${SIDE_NAV}.vendorQRScan`,
+          Icon: BiQrScan,
+          color: '#D3D3D3',
+          permissions: ['ALL'],
+        },
+      ]
+    : []),
 ]
 
 export const APP_LOCAL_DATE_FORMAT_Z = 'yyyy-MM-dd'

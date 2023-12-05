@@ -46,6 +46,7 @@ import { TransactionsTab } from './transactions/transactions-tab'
 import { useQueryClient } from 'react-query'
 import { useVendorEntity } from 'api/vendor-dashboard'
 import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
+import { useLocation as useLineItemsLocation } from 'api/location'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -93,6 +94,7 @@ const WorkOrderDetails = ({
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
   const { data: vendorEntity } = useVendorEntity(workOrder?.vendorId)
   const { hasExpiredDocumentOrLicense } = useDocumentLicenseMessage({ data: vendorEntity })
+  const { data: locations } = useLineItemsLocation()
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems
 
@@ -251,6 +253,7 @@ const WorkOrderDetails = ({
                         documentsData={documentsData}
                         isFetchingLineItems={isFetchingLineItems}
                         isLoadingLineItems={isLoadingLineItems}
+                        locations={locations}
                       />
                     )}
                   </TabPanel>
