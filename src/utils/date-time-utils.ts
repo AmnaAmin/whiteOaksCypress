@@ -82,12 +82,11 @@ export const getFormattedDate = (date: Date) => {
 }
 
 export const getDashedFormatDate = (date: Date) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0') // Month is zero-based
+  const day = String(date.getDate()).padStart(2, '0')
 
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is zero-based
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
+  return `${year}-${month}-${day}`
 }
 
 /**
@@ -216,3 +215,7 @@ export const monthOptionsPaidGraph = [
   { value: 11, label: 'November', year: year, month: '11' },
   { value: 13, label: 'December', year: year, month: '12' },
 ]
+
+export const isValidDate = dateObject => {
+  return new Date(dateObject).toString() !== 'Invalid Date'
+}
