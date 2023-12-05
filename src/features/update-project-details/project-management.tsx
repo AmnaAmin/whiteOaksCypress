@@ -25,7 +25,7 @@ import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
-import { useCurrentDate, useFieldsDisabled, useFieldsRequired, useWOAStartDateMin } from './hooks'
+import { useCurrentDate, useFieldsDisabled, useFieldsRequired, useMinMaxDateSelector } from './hooks'
 import { addDays } from 'date-fns'
 import moment from 'moment'
 import { capitalize } from 'utils/string-formatters'
@@ -73,7 +73,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const watchOverrideProjectStatus = useWatch({ name: 'overrideProjectStatus', control })
   const watchState = useWatch({ name: 'state', control })
 
-  const minOfWoaStartDate = useWOAStartDateMin(control)
+  const { woaCompletionMin, woaStartMin } = useMinMaxDateSelector(control)
   const currentDate = useCurrentDate()
   const watchIsReconciled = useWatch({ name: 'isReconciled', control })
 
@@ -299,7 +299,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 type="date"
                 isDisabled={isClientDueDateDisabled}
                 required
-                min={minOfWoaStartDate}
+                min={woaStartMin}
                 {...register('clientDueDate')}
                 onChange={e => {
                   const enteredDate = e.target.value
@@ -320,7 +320,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <Input
                 type="date"
                 isDisabled={isWOAStartDisabled}
-                min={minOfWoaStartDate}
+                min={woaStartMin}
                 {...register('woaStartDate', { required: isWOAStartDateRequired ? 'This is required' : false })}
               />
               <FormErrorMessage>{errors?.woaStartDate?.message}</FormErrorMessage>
@@ -336,6 +336,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 isDisabled={isWOACompletionDisabled}
                 variant={isWOACompletionDateRequired ? 'required-field' : 'outline'}
                 max={isAdmin ? '' : dateToday}
+                min={isAdmin ? '' : woaCompletionMin}
                 {...register('woaCompletionDate', {
                   required: isWOACompletionDateRequired ? 'This is required field.' : false,
                 })}
