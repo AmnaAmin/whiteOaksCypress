@@ -675,7 +675,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
         ...assignedItems.map(ai => {
           return {
             id: ai.id,
-            location: ai.location,
+            location: ai.location?.label,
             sku: ai.sku,
             productName: ai.productName,
             description: ai.description,
@@ -924,7 +924,7 @@ export const useGetLineItemsColumn = ({
       {
         header: `${WORK_ORDER}.location`,
         accessorKey: 'location',
-        size: 200,
+        size: 220,
         cell: ({ row }) => {
           const index = row?.index
           const {
@@ -934,7 +934,7 @@ export const useGetLineItemsColumn = ({
 
           return (
             <Box>
-              <FormControl isInvalid={!!errors.assignedItems?.[index]?.location} zIndex={9999 + 1} width="180px">
+              <FormControl isInvalid={!!errors.assignedItems?.[index]?.location} zIndex={9999 + 1} width="200px">
                 <Controller
                   control={control}
                   rules={{ required: true }}
@@ -1426,17 +1426,6 @@ export const CreatableSelectForTable = ({
   options,
   newObjectFormatting,
 }) => {
-  const fontSizes = {
-    sm: '10px',
-    md: '12px',
-    lg: '14px',
-  }
-
-  const getFontSize = (state: any) => {
-    const size = state?.selectProps?.size
-
-    return fontSizes[size] || size
-  }
   return (
     <CreatableSelect
       {...field}
@@ -1445,7 +1434,7 @@ export const CreatableSelectForTable = ({
       size="md"
       value={valueFormatter ? valueFormatter(field.value) : field.value}
       isDisabled={isDisabled}
-      selectProps={{ widthAssign: '80%' }}
+      selectProps={{ widthAssign: '100%' }}
       onChange={option => {
         if (option?.__isNew__ && !!newObjectFormatting) {
           field.onChange(newObjectFormatting(option))
@@ -1455,89 +1444,6 @@ export const CreatableSelectForTable = ({
       }}
       styles={{
         menuPortal: base => ({ ...base, zIndex: 99999, position: 'fixed' }),
-      }}
-      chakraStyles={{
-        container: (provided: any) => {
-          return {
-            ...provided,
-            pointerEvents: 'auto',
-            // background: '#F7FAFC',
-          }
-        },
-        placeholder: provider => ({
-          ...provider,
-          fontSize: '12px',
-          color: 'gray.600',
-          fontWeight: 400,
-        }),
-        menuList: (provided: any, state: any) => {
-          return { ...provided }
-        },
-        menu: (provided: any, state: any) => {
-          return {
-            ...provided,
-            boxShadow: 'lg',
-            borderWidth: '1px',
-            borderStyle: 'solid',
-            borderColor: 'gray.200',
-            borderRadius: 'md',
-            bg: 'white',
-            margin: '2px',
-          }
-        },
-
-        singleValue: (provider: any) => ({
-          ...provider,
-          color: '#2D3748',
-          fontWeight: '400',
-        }),
-        option: (provider: any, state: any) => {
-          return {
-            ...provider,
-            fontSize: getFontSize(state),
-            bg: state.isSelected ? 'gray.50' : 'white',
-            _hover: {
-              bg: state.isSelected ? 'gray.50' : 'blue.50',
-            },
-            color: state.isSelected ? 'gray.800' : '',
-            display: state.data?.isHidden ? 'none' : 'block',
-          }
-        },
-        valueContainer(provided: any) {
-          const px = {
-            sm: '12px',
-            md: '16px',
-            lg: '16px',
-          }
-
-          return {
-            ...provided,
-            padding: `0.125rem ${px['sm']}`,
-            color: 'gray.500',
-          }
-        },
-
-        dropdownIndicator: provided => ({
-          ...provided,
-          backgroundColor: 'transparent',
-          '&>svg': {
-            color: 'gray.600',
-          },
-        }),
-        control: (provider: any, state) => {
-          return {
-            ...provider,
-            // ...borderLeftStyle,
-            borderRadius: '6px',
-            fontSize: getFontSize('sm'),
-            // _focus: inputFocusStateStyle,
-            _disabled: {
-              opacity: 0.7,
-              cursor: 'not-allowed',
-              bg: 'gray.100',
-            },
-          }
-        },
       }}
       key={key}
       menuPosition="fixed"

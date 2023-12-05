@@ -167,7 +167,7 @@ const RemainingListTable = (props: RemainingListType) => {
       {
         header: `${WORK_ORDER}.location`,
         accessorKey: 'location',
-        size: 200,
+        size: 220,
         cell: ({ row }) => {
           const index = row?.index
           const {
@@ -177,7 +177,7 @@ const RemainingListTable = (props: RemainingListType) => {
 
           return (
             <Box>
-              <FormControl isInvalid={!!errors.remainingItems?.[index]?.location} width="180px">
+              <FormControl isInvalid={!!errors.remainingItems?.[index]?.location} width="200px">
                 <Controller
                   control={control}
                   name={`remainingItems.${index}.location`}
