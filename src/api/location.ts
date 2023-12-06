@@ -27,16 +27,16 @@ export const LOCATION_TYPE_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: `${LOCATION}.modifiedBy`,
-    accessorKey: 'modifiedBy',
+    accessorKey: 'lastModifiedBy',
   },
   {
     header: `${LOCATION}.modifiedDate`,
-    accessorKey: 'modifiedDate',
+    accessorKey: 'lastModifiedDate',
     accessorFn(cellInfo) {
-      return datePickerFormat(cellInfo.modifiedDate)
+      return datePickerFormat(cellInfo.lastModifiedDate)
     },
     cell: (row: any) => {
-      const value = row?.row.original?.modifiedDate
+      const value = row?.row.original?.lastModifiedDate
       return value ? dateFormat(value) : '- - -'
     },
     meta: { format: 'date' },
@@ -47,7 +47,7 @@ export const useLocation = () => {
   const client = useClient()
 
   const { data: locations, ...rest } = useQuery('location', async () => {
-    const response = await client(`location?page=&size=&sort=id,desc`, {})
+    const response = await client(`locations?page=&size=&sort=id,desc`, {})
 
     return response?.data
   })

@@ -94,7 +94,9 @@ export const getRemovedItems = (formValues, workOrderAssignedItems) => {
 export const getUnAssignedItems = (formValues, workOrderAssignedItems) => {
   /* check if work order is being cancelled we should unassign all line items */
   if (formValues?.cancel?.value === 35) {
-    return formValues.assignedItems
+    return formValues.assignedItems?.map(a => {
+      return { ...a, location: a?.location?.label }
+    })
   }
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.smartLineItemId)
@@ -675,7 +677,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
         ...assignedItems.map(ai => {
           return {
             id: ai.id,
-            location: ai.location,
+            location: ai.location?.label,
             sku: ai.sku,
             productName: ai.productName,
             description: ai.description,
@@ -924,7 +926,7 @@ export const useGetLineItemsColumn = ({
       {
         header: `${WORK_ORDER}.location`,
         accessorKey: 'location',
-        size: 200,
+        size: 250,
         cell: ({ row }) => {
           const index = row?.index
           const {
@@ -934,7 +936,7 @@ export const useGetLineItemsColumn = ({
 
           return (
             <Box>
-              <FormControl isInvalid={!!errors.assignedItems?.[index]?.location} zIndex={9999 + 1} width="180px">
+              <FormControl isInvalid={!!errors.assignedItems?.[index]?.location} zIndex={9999 + 1} width="220px">
                 <Controller
                   control={control}
                   rules={{ required: true }}
@@ -951,6 +953,7 @@ export const useGetLineItemsColumn = ({
                           newObjectFormatting={null}
                           isDisabled={isVendor}
                           valueFormatter={null}
+                          style={{ height: '115px' }}
                         />
                       </>
                     )
@@ -1195,6 +1198,7 @@ export const useGetLineItemsColumn = ({
       {
         header: () => <span style={{ marginLeft: '30px' }}> {t(`${WORK_ORDER}.completePercentage`)}</span>,
         accessorKey: 'completePercentage',
+        size: 200,
         cell: ({ row }) => {
           const index = row?.index
           const {
@@ -1232,7 +1236,7 @@ export const useGetLineItemsColumn = ({
                 ml="27px"
                 isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
                 zIndex={9999 + 1}
-                width="130px"
+                width="150"
               >
                 <Controller
                   control={control}
@@ -1416,27 +1420,28 @@ export const useGetLineItemsColumn = ({
   return columns
 }
 
+type CreatebleSelectType = {
+  field: any
+  id: string
+  key: string
+  isDisabled: boolean
+  valueFormatter: any
+  options: any
+  newObjectFormatting: any
+  style?: any
+  index: number
+}
+
 export const CreatableSelectForTable = ({
   field,
-  index,
   id,
   key,
   isDisabled,
   valueFormatter,
   options,
   newObjectFormatting,
-}) => {
-  const fontSizes = {
-    sm: '10px',
-    md: '12px',
-    lg: '14px',
-  }
-
-  const getFontSize = (state: any) => {
-    const size = state?.selectProps?.size
-
-    return fontSizes[size] || size
-  }
+  style,
+}: CreatebleSelectType) => {
   return (
     <CreatableSelect
       {...field}
@@ -1445,7 +1450,7 @@ export const CreatableSelectForTable = ({
       size="md"
       value={valueFormatter ? valueFormatter(field.value) : field.value}
       isDisabled={isDisabled}
-      selectProps={{ widthAssign: '80%' }}
+      selectProps={{ widthAssign: '100%', menuHeight: style?.height }}
       onChange={option => {
         if (option?.__isNew__ && !!newObjectFormatting) {
           field.onChange(newObjectFormatting(option))
@@ -1455,89 +1460,6 @@ export const CreatableSelectForTable = ({
       }}
       styles={{
         menuPortal: base => ({ ...base, zIndex: 99999, position: 'fixed' }),
-      }}
-      chakraStyles={{
-        container: (provided: any) => {
-          return {
-            ...provided,
-            pointerEvents: 'auto',
-            // background: '#F7FAFC',
-          }
-        },
-        placeholder: provider => ({
-          ...provider,
-          fontSize: '12px',
-          color: 'gray.600',
-          fontWeight: 400,
-        }),
-        menuList: (provided: any, state: any) => {
-          return { ...provided }
-        },
-        menu: (provided: any, state: any) => {
-          return {
-            ...provided,
-            boxShadow: 'lg',
-            borderWidth: '1px',
-            borderStyle: 'solid',
-            borderColor: 'gray.200',
-            borderRadius: 'md',
-            bg: 'white',
-            margin: '2px',
-          }
-        },
-
-        singleValue: (provider: any) => ({
-          ...provider,
-          color: '#2D3748',
-          fontWeight: '400',
-        }),
-        option: (provider: any, state: any) => {
-          return {
-            ...provider,
-            fontSize: getFontSize(state),
-            bg: state.isSelected ? 'gray.50' : 'white',
-            _hover: {
-              bg: state.isSelected ? 'gray.50' : 'blue.50',
-            },
-            color: state.isSelected ? 'gray.800' : '',
-            display: state.data?.isHidden ? 'none' : 'block',
-          }
-        },
-        valueContainer(provided: any) {
-          const px = {
-            sm: '12px',
-            md: '16px',
-            lg: '16px',
-          }
-
-          return {
-            ...provided,
-            padding: `0.125rem ${px['sm']}`,
-            color: 'gray.500',
-          }
-        },
-
-        dropdownIndicator: provided => ({
-          ...provided,
-          backgroundColor: 'transparent',
-          '&>svg': {
-            color: 'gray.600',
-          },
-        }),
-        control: (provider: any, state) => {
-          return {
-            ...provider,
-            // ...borderLeftStyle,
-            borderRadius: '6px',
-            fontSize: getFontSize('sm'),
-            // _focus: inputFocusStateStyle,
-            _disabled: {
-              opacity: 0.7,
-              cursor: 'not-allowed',
-              bg: 'gray.100',
-            },
-          }
-        },
       }}
       key={key}
       menuPosition="fixed"
