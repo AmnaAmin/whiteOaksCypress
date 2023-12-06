@@ -381,7 +381,7 @@ const WorkOrderDetailTab = props => {
   }
 
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
-  console.log(isCancelled)
+
   const inProgress = [STATUS.Active, STATUS.PastDue, STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
     workOrder.statusLabel?.toLowerCase(),
   )
