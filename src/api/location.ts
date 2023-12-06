@@ -47,7 +47,7 @@ export const useLocation = () => {
   const client = useClient()
 
   const { data: locations, ...rest } = useQuery('location', async () => {
-    const response = await client(`location?page=&size=&sort=id,desc`, {})
+    const response = await client(`locations?page=&size=&sort=id,desc`, {})
 
     return response?.data
   })
