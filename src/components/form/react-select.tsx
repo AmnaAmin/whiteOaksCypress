@@ -167,7 +167,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
 const MenuList: React.FC<any> = props => {
   const { children } = props
-  const { menuHeight } = props?.selectProps?.selectProps
+  const menuHeight = props?.selectProps?.selectProps?.menuHeight
 
   function rowRenderer({
     key, // Unique key within array of rows
