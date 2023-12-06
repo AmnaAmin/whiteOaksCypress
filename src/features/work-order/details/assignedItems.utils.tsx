@@ -953,6 +953,7 @@ export const useGetLineItemsColumn = ({
                           newObjectFormatting={null}
                           isDisabled={isVendor}
                           valueFormatter={null}
+                          style={{ height: '115px' }}
                         />
                       </>
                     )
@@ -1197,6 +1198,7 @@ export const useGetLineItemsColumn = ({
       {
         header: () => <span style={{ marginLeft: '30px' }}> {t(`${WORK_ORDER}.completePercentage`)}</span>,
         accessorKey: 'completePercentage',
+        size: 200,
         cell: ({ row }) => {
           const index = row?.index
           const {
@@ -1234,7 +1236,7 @@ export const useGetLineItemsColumn = ({
                 ml="27px"
                 isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
                 zIndex={9999 + 1}
-                width="130px"
+                width="150"
               >
                 <Controller
                   control={control}
@@ -1418,16 +1420,28 @@ export const useGetLineItemsColumn = ({
   return columns
 }
 
+type CreatebleSelectType = {
+  field: any
+  id: string
+  key: string
+  isDisabled: boolean
+  valueFormatter: any
+  options: any
+  newObjectFormatting: any
+  style?: any
+  index: number
+}
+
 export const CreatableSelectForTable = ({
   field,
-  index,
   id,
   key,
   isDisabled,
   valueFormatter,
   options,
   newObjectFormatting,
-}) => {
+  style,
+}: CreatebleSelectType) => {
   return (
     <CreatableSelect
       {...field}
@@ -1436,7 +1450,7 @@ export const CreatableSelectForTable = ({
       size="md"
       value={valueFormatter ? valueFormatter(field.value) : field.value}
       isDisabled={isDisabled}
-      selectProps={{ widthAssign: '100%', menuHeight: '115px' }}
+      selectProps={{ widthAssign: '100%', menuHeight: style?.height }}
       onChange={option => {
         if (option?.__isNew__ && !!newObjectFormatting) {
           field.onChange(newObjectFormatting(option))
