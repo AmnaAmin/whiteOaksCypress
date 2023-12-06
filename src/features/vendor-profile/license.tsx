@@ -134,7 +134,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
 
   return (
     <Box>
-      <VStack align="start" h="584px" spacing="15px" overflow="auto">
+      <VStack align="start" h="600px" spacing="15px" overflow="auto">
         <Box width={{ base: '100%', md: 'auto' }}>
           <Button
             ml={{ sm: '0px', md: '45px' }}

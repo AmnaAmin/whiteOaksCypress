@@ -74,7 +74,7 @@ const CreateVendorDetail: React.FC<{
 
   return (
     <Stack spacing={3}>
-      <Box overflow="auto">
+      <Box h='596px' overflow="auto">
         <HStack spacing="16px">
           <FormControl w="215px" isInvalid={!!errors.companyName}>
             <FormLabel variant="strong-label" size="md">
@@ -500,7 +500,6 @@ const CreateVendorDetail: React.FC<{
       <Flex
         height="72px"
         pt="8px"
-        mt="30px"
         id="footer"
         borderTop="1px solid #E2E8F0"
         alignItems="center"

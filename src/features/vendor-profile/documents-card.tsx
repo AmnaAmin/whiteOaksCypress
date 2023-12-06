@@ -140,7 +140,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
 
   return (
     <>
-      <VStack h="584px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px">
+      <VStack h="600px" overflow="auto" w="100%" alignItems="start" spacing="10px" pl="30px">
         <HStack
           flexDir={{ base: 'column', sm: 'row' }}
           spacing="16px"
