@@ -94,7 +94,9 @@ export const getRemovedItems = (formValues, workOrderAssignedItems) => {
 export const getUnAssignedItems = (formValues, workOrderAssignedItems) => {
   /* check if work order is being cancelled we should unassign all line items */
   if (formValues?.cancel?.value === 35) {
-    return formValues.assignedItems
+    return formValues.assignedItems?.map(a => {
+      return { ...a, location: a?.location?.label }
+    })
   }
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
   const formAssignedItemsIds = formValues?.assignedItems?.map(s => s.smartLineItemId)
@@ -924,7 +926,7 @@ export const useGetLineItemsColumn = ({
       {
         header: `${WORK_ORDER}.location`,
         accessorKey: 'location',
-        size: 220,
+        size: 250,
         cell: ({ row }) => {
           const index = row?.index
           const {
@@ -934,7 +936,7 @@ export const useGetLineItemsColumn = ({
 
           return (
             <Box>
-              <FormControl isInvalid={!!errors.assignedItems?.[index]?.location} zIndex={9999 + 1} width="200px">
+              <FormControl isInvalid={!!errors.assignedItems?.[index]?.location} zIndex={9999 + 1} width="220px">
                 <Controller
                   control={control}
                   rules={{ required: true }}
@@ -1434,7 +1436,7 @@ export const CreatableSelectForTable = ({
       size="md"
       value={valueFormatter ? valueFormatter(field.value) : field.value}
       isDisabled={isDisabled}
-      selectProps={{ widthAssign: '100%' }}
+      selectProps={{ widthAssign: '100%', menuHeight: '115px' }}
       onChange={option => {
         if (option?.__isNew__ && !!newObjectFormatting) {
           field.onChange(newObjectFormatting(option))
