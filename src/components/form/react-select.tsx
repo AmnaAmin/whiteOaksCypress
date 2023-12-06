@@ -72,7 +72,7 @@ export const chakraStyles = {
       display: state.data?.isHidden ? 'none' : 'block',
       padding: '10px',
       whiteSpace: 'nowrap',
-      overflow: 'hidden',
+      overflowX: 'hidden',
       textOverflow: 'ellipsis',
       ...styleOption,
     }
@@ -182,7 +182,14 @@ const MenuList: React.FC<any> = props => {
   }
 
   return (
-    <div style={{ backgroundColor: '#fff', zIndex: 999, height: menuHeight ?? '200px', maxWidth: '250px' }}>
+    <div
+      style={{
+        backgroundColor: '#fff',
+        zIndex: 999,
+        height: menuHeight ?? '200px',
+        maxWidth: '250px',
+      }}
+    >
       <List
         width={223}
         height={215}
