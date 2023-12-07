@@ -234,7 +234,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
   const isRefund = useWatch({ name: 'refund', control })
-  const watchStatus = watch('status')
+  const watchStatus = useWatch({ name: 'status', control })
+  const verifyByFPMStatus = useWatch({ name: 'verifiedByFpm', control })
+  const verifyByManagerStatus = useWatch({ name: 'verifiedByManager', control })
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const date = new Date(e.target.value)
@@ -428,7 +430,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   // If the admin changes amount in any other status (pending/denied/cancelled), he is allowed to enter an amount less than remaining amount.
   const isAdminEnabledToChange = () => {
     if (isAdmin) {
-      if ([TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(watchStatus?.value)) {
+      const statuses = [watchStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
+      const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
+        statuses.includes(p),
+      )
+      if (isBeingCancelled) {
         return true
       }
       if (
