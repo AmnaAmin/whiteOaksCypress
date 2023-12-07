@@ -222,7 +222,8 @@ export const useFieldDisabledEnabledDecision = (
       lateAndFactoringFeeForVendor ||
       isFactoringFeeSysGenerated ||
       statusFieldForVendor ||
-      isInvoicePayment || (!isAdmin && !isAccounting && transaction?.transactionType === TransactionTypeValues.draw ),
+      isInvoicePayment ||
+      (!isAdmin && !isAccounting && transaction?.transactionType === TransactionTypeValues.draw),
 
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
     isFactoringFeeSysGenerated,
@@ -316,6 +317,8 @@ export const useIsAwardSelect = ({
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
   const transactionType = useWatch({ name: 'transactionType', control })
+
+  const transactionStatus = useWatch({ name: 'status', control })
   const { amount: formTotalAmount } = useTotalAmount(control)
   const against = useWatch({ name: 'against', control })
   const savedTransactionAmount = transaction?.lineItems?.reduce((result, transaction) => {
@@ -330,7 +333,8 @@ export const useIsLienWaiverRequired = (control: Control<FormValues, any>, trans
     savedTransactionAmount !== formTotalAmount &&
     transactionType?.value === TransactionTypeValues.draw &&
     against &&
-    against.value !== AGAINST_DEFAULT_VALUE
+    against.value !== AGAINST_DEFAULT_VALUE &&
+    ![TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(transactionStatus?.value)
   )
 }
 
@@ -376,18 +380,24 @@ export const useAgainstOptions = (
 
     // In case of other users than vendors the first option of againstOptions is the
     // Project SOW which should be hide in case transactionType is material
-    if (transactionType?.value === TransactionTypeValues.material&& !isVendor) {
+    if (transactionType?.value === TransactionTypeValues.material && !isVendor) {
       return againstOptions.slice(1)
     }
     if (transactionType?.value === TransactionTypeValues.draw && !isVendor) {
-      return againstOptions.slice(1);
+      return againstOptions.slice(1)
     }
     // If the transaction is new and transaction type is draw and project status is invoiced or following state, hide Project SOW againstOption
     if (
       transactionType?.value === TransactionTypeValues.draw &&
       !isVendor &&
       !transaction?.id &&
-      ![StringProjectStatus.New, StringProjectStatus.Active, StringProjectStatus.Punch, StringProjectStatus.Closed, StringProjectStatus.Reconcile].includes(projectStatus?.toLowerCase())
+      ![
+        StringProjectStatus.New,
+        StringProjectStatus.Active,
+        StringProjectStatus.Punch,
+        StringProjectStatus.Closed,
+        StringProjectStatus.Reconcile,
+      ].includes(projectStatus?.toLowerCase())
     ) {
       return againstOptions.slice(1)
     }
