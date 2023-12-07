@@ -22,10 +22,14 @@ import {
 // import { useToast } from '@chakra-ui/toast'
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { ReadOnlyInput } from 'components/input-view/input-view'
-import { BiAddToQueue, BiCalendar, BiDetail, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
+// import { ReadOnlyInput } from 'components/input-view/input-view'
+import { BiAddToQueue, 
+  // BiCalendar, BiDetail,
+   BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { TRANSACTION } from '../project-details/transactions/transactions.i18n'
-import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { 
+  // dateFormat,
+   datePickerFormat } from 'utils/date-time-utils'
 import { InvoiceStatusValues, INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
 import { useAccountData } from 'api/user-account'
 import ReactSelect from 'components/form/react-select'
@@ -56,56 +60,56 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { useNavigate } from 'react-router-dom'
 import { Document } from 'types/vendor.types'
+//COMMENTING OUT FOR A TEST IF NOT APPROVED BY CLIENT THEN WE CAN REDO THIS
+// const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
+//   const { t } = useTranslation()
+//   const createdBy = invoice?.createdBy ?? account?.email
+//   const modifiedBy = invoice?.modifiedBy
+//   return (
+//     <Grid
+//       templateColumns="repeat(auto-fill, minmax(100px,1fr))"
+//       gap={{ base: '1rem 20px', sm: '3.5rem' }}
+//       borderBottom="1px solid #E2E8F0"
+//       borderColor="gray.200"
+//       py="5"
+//     >
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.dateCreated`)}
+//           name={'dateCreated'}
+//           value={dateFormat(invoice?.createdDate ?? new Date()) as string}
+//           Icon={BiCalendar}
+//         />
+//       </GridItem>
 
-const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
-  const { t } = useTranslation()
-  const createdBy = invoice?.createdBy ?? account?.email
-  const modifiedBy = invoice?.modifiedBy
-  return (
-    <Grid
-      templateColumns="repeat(auto-fill, minmax(100px,1fr))"
-      gap={{ base: '1rem 20px', sm: '3.5rem' }}
-      borderBottom="1px solid #E2E8F0"
-      borderColor="gray.200"
-      py="5"
-    >
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.dateCreated`)}
-          name={'dateCreated'}
-          value={dateFormat(invoice?.createdDate ?? new Date()) as string}
-          Icon={BiCalendar}
-        />
-      </GridItem>
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.dateModified`)}
+//           name={'dateModified'}
+//           value={invoice?.modifiedDate ? (dateFormat(invoice?.modifiedDate) as string) : '---'}
+//           Icon={BiCalendar}
+//         />
+//       </GridItem>
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.createdBy`)}
+//           name="createdBy"
+//           value={(createdBy as string) || '---'}
+//           Icon={BiDetail}
+//         />
+//       </GridItem>
 
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.dateModified`)}
-          name={'dateModified'}
-          value={invoice?.modifiedDate ? (dateFormat(invoice?.modifiedDate) as string) : '---'}
-          Icon={BiCalendar}
-        />
-      </GridItem>
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.createdBy`)}
-          name="createdBy"
-          value={(createdBy as string) || '---'}
-          Icon={BiDetail}
-        />
-      </GridItem>
-
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.modifiedBy`)}
-          name={'modifiedBy'}
-          value={(modifiedBy as string) || '----'}
-          Icon={BiDetail}
-        />
-      </GridItem>
-    </Grid>
-  )
-}
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.modifiedBy`)}
+//           name={'modifiedBy'}
+//           value={(modifiedBy as string) || '----'}
+//           Icon={BiDetail}
+//         />
+//       </GridItem>
+//     </Grid>
+//   )
+// }
 
 const InvoicingSummary: React.FC<any> = ({
   projectData,
@@ -455,9 +459,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
 
   return (
     <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)}>
-      <InvoicingReadOnlyInfo invoice={invoice} account={data} />
+      {/* <InvoicingReadOnlyInfo invoice={invoice} account={data} /> */}
       <Flex direction="column">
-        <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pt="20px" pb="4">
+        <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'}  pb="4">
           <GridItem>
             <FormControl isInvalid={!!errors.invoiceNumber} data-testid="invoiceNumber">
               <FormLabel variant="strong-label" size="md" htmlFor="invoiceNumber">
