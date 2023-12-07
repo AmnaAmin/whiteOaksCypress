@@ -16,7 +16,7 @@ import {
   BiBugAlt,
   BiGitRepoForked
 } from 'react-icons/bi'
-
+import { IoLocationSharp } from 'react-icons/io5'
 import { TiFlowParallel } from 'react-icons/ti'
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { SIDE_NAV } from './sideNav.i18n'
@@ -173,6 +173,13 @@ export const MenusList: Menu[] = [
     Icon: BiStats,
     color: '#68D391',
     permissions: ['MARKET.EDIT', 'MARKET.READ', 'ALL'],
+  },
+  {
+    pathTo: '/location',
+    title: `${SIDE_NAV}.locations`,
+    Icon: IoLocationSharp,
+    color: '#9B2C2C',
+    permissions: ['LOCATION.EDIT', 'LOCATION.READ', 'ALL'],
   },
   {
     pathTo: '/support-tickets',

@@ -29,6 +29,7 @@ export const sideNav = {
         sonarqubeDashboard: 'SonarQube',
         automationDashboard: 'Automation',
         cypressTriggers: 'Cypress Triggers'
+        locations: 'Locations',
       },
     },
   },
@@ -44,6 +45,7 @@ export const sideNav = {
         clients: 'Clientes',
         vendorsSkills: 'Comercios de proveedores',
         markets: 'Mercados',
+        location: 'Ubicación',
         reports: 'Informes',
         performance: 'Actuación',
         userMgmt: 'Usuarias',

@@ -25,6 +25,7 @@ import { AccessControl } from './access-control'
 import { ClientType } from './admin/client-type'
 import GeoQRScan from './vendor/geo-qr-scan'
 import CypressTiggers from './devops/cypress-triggers'
+import { Location } from './admin/location'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -61,6 +62,7 @@ export default function useRoutesConfig() {
     { path: 'clients', element: Clients, permissions: ['CLIENT.READ', 'CLIENT.EDIT', 'ALL'] },
     { path: 'reports', element: Reports, permissions: ['REPORT.READ', 'REPORT.EDIT', 'ALL'] },
     { path: 'markets', element: Markets, permissions: ['MARKET.READ', 'MARKET.EDIT', 'ALL'] },
+    { path: 'location', element: Location, permissions: ['LOCATION.READ', 'LOCATION.EDIT', 'ALL'] },
     { path: 'performance', element: PerformanceTab, permissions: ['PERFORMANCE.READ', 'PERFORMANCE.EDIT', 'ALL'] },
     { path: 'vendorSkills', element: VendorSkills, permissions: ['VENDORSKILL.READ', 'VENDORSKILL.EDIT', 'ALL'] },
     { path: 'alerts', element: Alerts, permissions: ['ALERT.READ', 'ALERT.EDIT', 'ALL'] },
@@ -79,7 +81,7 @@ export default function useRoutesConfig() {
     {
       path: 'vendor-scan',
       element: GeoQRScan,
-      permissions: ['ALL']
-    }
+      permissions: ['ALL'],
+    },
   ]
 }

@@ -121,6 +121,7 @@ interface FormValues {
   vendorSkillId: number | string | null
   vendorId: number | string | null
   completePercentage?: completePercentage
+  locations?: any
 }
 
 const WorkOrderDetailTab = props => {
@@ -134,6 +135,7 @@ const WorkOrderDetailTab = props => {
     documentsData,
     isFetchingLineItems,
     isLoadingLineItems,
+    locations,
   } = props
 
   const defaultSkill = {
@@ -145,8 +147,8 @@ const WorkOrderDetailTab = props => {
   const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
 
   const defaultValues: FormValues = useMemo(() => {
-    return defaultValuesWODetails(workOrder, defaultSkill)
-  }, [workOrder])
+    return defaultValuesWODetails(workOrder, defaultSkill, locations)
+  }, [workOrder, locations])
 
   const formReturn = useForm<FormValues>({
     defaultValues: {
@@ -180,7 +182,7 @@ const WorkOrderDetailTab = props => {
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
   const disabledSave =
     isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
-  const { isAdmin, isFPM, isProjectCoordinator } = useUserRolesSelector()
+  const { isAdmin } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
   const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
   const {
@@ -379,7 +381,7 @@ const WorkOrderDetailTab = props => {
   }
 
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
-  console.log(isCancelled)
+
   const inProgress = [STATUS.Active, STATUS.PastDue, STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
     workOrder.statusLabel?.toLowerCase(),
   )
@@ -535,7 +537,7 @@ const WorkOrderDetailTab = props => {
           </Stack>
           <Box mt="32px" mx="32px">
             <HStack spacing="16px">
-              {(isAdmin || isFPM || isProjectCoordinator) && !isCancelled && (
+              {cancelPermissions && !isCancelled && (
                 <Box w="215px" data-testid="note_submit">
                   <FormControl zIndex="2">
                     <FormLabel variant="strong-label" size="md">
