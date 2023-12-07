@@ -6,7 +6,7 @@ import { boxShadow } from 'theme/common-style'
 import { useState, useEffect } from 'react'
 import { InvoiceForm } from './invoice-form'
 import { TransactionTypeValues } from 'types/transaction.type'
-import { useFetchInvoiceDetail, useFetchInvoiceDetails } from 'api/invoicing'
+import { getInvoiceInitials, useFetchInvoiceDetails } from 'api/invoicing'
 import { useTransactionsV1 } from 'api/transactions'
 import { useGetClientSelectOptions } from 'api/project-details'
 import { usePCProject } from 'api/pc-projects'
@@ -28,15 +28,10 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, proje
   })
   const { projectData, isLoading: isLoadingProject } = usePCProject(`${invoice?.projectId ?? projectId}`)
   const { transactions, isLoading: isLoadingTransactions } = useTransactionsV1(`${projectData?.id}`)
-
-  const invoices = useFetchInvoiceDetail(`${projectData?.id}`)
-  const invoiceObj = invoices?.invoiceDetail?.data
-
-  // const invoiceNumber = getInvoiceInitials(
-  //   projectData,
-  //   transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length,
-  // )
-
+  const invoiceNumber = getInvoiceInitials(
+    projectData,
+    transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length,
+  )
   const { clientSelectOptions } = useGetClientSelectOptions()
   const clientSelected = clientSelectOptions?.find(c => c.label === projectData?.clientName)
   const isLoading = isLoadingTransactions || isLoadingProject || isLoadingInvoice
@@ -60,7 +55,7 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, proje
             </Box>
             <Divider orientation="vertical" border="1px" h={6} marginLeft={5} />
             <Box color="gray.500" fontWeight={'400'} ml={5}>
-              {!selectedInvoice ? invoiceObj?.invoiceNumber : invoice?.invoiceNumber}
+              {!selectedInvoice ? invoiceNumber : invoice?.invoiceNumber}
             </Box>
           </Flex>
         </ModalHeader>
@@ -81,7 +76,6 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, proje
                 isLoading={isLoading}
                 invoiceCount={transactions?.filter(t => t.transactionType === TransactionTypeValues.invoice)?.length}
                 isReceivable={isReceivable}
-                invoiceNumber={invoiceObj?.invoiceNumber}
               />
             )}
           </Card>
