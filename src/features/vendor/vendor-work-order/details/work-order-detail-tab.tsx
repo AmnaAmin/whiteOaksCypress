@@ -135,6 +135,7 @@ const WorkOrderDetailTab = ({
           ...a,
           orderNo: index,
           document: a.uploadedDoc ? a.uploadedDoc : a.document,
+          location: a.location?.label,
         }
         delete assignedItem.uploadedDoc
         return assignedItem
