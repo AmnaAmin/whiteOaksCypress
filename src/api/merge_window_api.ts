@@ -80,8 +80,6 @@ async function getProtectionRules(repo : string, branch : string){
       
       const isLockBranchEnabled = response.data.lock_branch.enabled;
 
-      console.log('Enabledddddd: '+ isLockBranchEnabled);
-
       if (isLockBranchEnabled === true) {
         return 0;
       } 

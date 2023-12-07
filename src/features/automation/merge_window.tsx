@@ -40,8 +40,6 @@ const MergeWindowActions: React.FC = () => {
   var userToken = window.prompt('Please enter your token:');
     const response = await triggerLockAPI(userToken, option, isChecked);
 
-    console.log('responseeee: '+response);
-
     if(response === 0)
     {
       setCheckedValue(option, true);
