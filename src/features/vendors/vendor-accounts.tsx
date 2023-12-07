@@ -95,7 +95,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
 
   return (
     <>
-      <Box maxH={'450px'} overflowY={'scroll'}>
+      <Box maxH={'632px'} overflowY={'scroll'}>
         <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px">
           <GridItem>
             <FormControl isInvalid={!!errors.einNumber}>
@@ -685,7 +685,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
       <Flex
         height="72px"
         pt="8px"
-        mt="30px"
         id="footer"
         borderTop="1px solid #E2E8F0"
         alignItems="center"
