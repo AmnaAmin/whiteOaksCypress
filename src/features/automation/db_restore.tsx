@@ -9,7 +9,8 @@ const DBRestoreWorkflow: React.FC = () => {
   const [buildStatus, setBuildStatus] = useState<string | null>(null);
 
   const handleButtonClick = async () => {
-    const status = await triggerDBWorkflow();
+    var userToken = window.prompt('Please enter the password:');
+    const status = await triggerDBWorkflow(userToken);
     setBuildStatus(status);
   };
 

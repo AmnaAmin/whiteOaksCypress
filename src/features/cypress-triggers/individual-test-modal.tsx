@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import {
   Box,
   Button,
@@ -34,12 +34,10 @@ export const IndividualTestModal: React.FC<IndividualTestModalProps> = ({ onClos
 
   const onSubmit = async (data) => {
     
-    const token = "bkua_381e83ae5ef0f1f90623f199aa89a1c79d902a3f";
+    const token = process.env.REACT_APP_BUILDKITE_TOKEN;
     const branch = "preprod-automation-module2";
-
-    console.log('Folder Number:', data.folderNumber);
+    
     try {
-      // Use axios to trigger the Buildkite REST API with the appropriate parameters
       const response = await axios.post(
         `https://api.buildkite.com/v2/organizations/DevTek/pipelines/next-gen-whiteoaks-ui/builds`,
         {
@@ -60,18 +58,17 @@ export const IndividualTestModal: React.FC<IndividualTestModalProps> = ({ onClos
           },
         }
       );
-      // Handle the response as needed
-      console.log('Build triggered successfully:', response.data);
+
+      if(response.status === 201){
+        return 'Triggerred Successfully';
+      }
+      
     } catch (error) {
-      // Handle errors
       console.error(error);
     }
-    onClose(); // Close the modal after submission
+    onClose(); 
   };
 
-  useEffect(() => {
-    // Additional setup logic on modal open
-  }, []);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md" isCentered>

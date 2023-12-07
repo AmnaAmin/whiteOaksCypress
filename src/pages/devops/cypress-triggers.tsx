@@ -3,16 +3,13 @@ import axios from 'axios';
 import { IndividualTestModal } from 'features/cypress-triggers/individual-test-modal'
 const CypressTiggers = () => {
   
-    const token = "bkua_381e83ae5ef0f1f90623f199aa89a1c79d902a3f";
+    const token = process.env.REACT_APP_BUILDKITE_TOKEN;
     const branch = "preprod-automation-module2";
-    // const org_slug = "DevTek";
-    // const pipeline_slug = "next-gen-whiteoaks-ui";
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     const onButtonClick = async (pipelineType: string) => {
         try {
-          // Use axios to trigger the Buildkite REST API with the appropriate parameters
           const response = await axios.post(
             `https://api.buildkite.com/v2/organizations/DevTek/pipelines/next-gen-whiteoaks-ui/builds`,
             {
@@ -30,10 +27,13 @@ const CypressTiggers = () => {
               },
             }
           );
-          // Handle the response as needed
-          console.log('Build triggered successfully:', response.data);
+
+          if(response.status === 201){
+            alert('Build triggered successfully')
+          }
+          
         } catch (error) {
-          // Handle errors
+          alert('Trigger failed! Please try again')
           console.error(error);
         }
       };

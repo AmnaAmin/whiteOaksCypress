@@ -1,9 +1,6 @@
 import { Octokit } from "@octokit/rest";
 
-const octokit = new Octokit({
-  auth: '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',
-  baseUrl: "https://api.github.com"
-});
+var octokit;
 
 const owner = 'DevTek-ai';
 const repo = 'restore_db';
@@ -41,7 +38,11 @@ var workflowID;
 
 }
 
-export async function triggerDBWorkflow(): Promise<string> {
+export async function triggerDBWorkflow(token): Promise<string> {
+  octokit = new Octokit({
+    auth: token,
+    baseUrl: "https://api.github.com"
+  });
   await getDBWorkflow();
   try {
     const response = await octokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
@@ -62,11 +63,16 @@ export async function triggerDBWorkflow(): Promise<string> {
 
         } catch (err) {
           console.error('Error triggering workflow:', err);
+          alert('Invalid Token');
           return 'Failed to trigger build';
         }
     } 
     
 export async function getDbRestoreStatus(): Promise<string> {
+  octokit = new Octokit({
+    auth: process.env.REACT_APP_GITHUB_TOKEN,
+    baseUrl: "https://api.github.com"
+  });
   await getDBWorkflow();
   try {
     const response = await octokit.request('GET /repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs', {
