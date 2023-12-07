@@ -96,30 +96,19 @@ export const Details: React.FC<clientDetailProps> = props => {
   })
 
   const phoneNumberRef = useRef<any>()
-  const phoneNumberRef2 = useRef<any>() 
+  const phoneNumberRef2 = useRef<any>()
   return (
-    <Box >
+    <Box>
       <Box overflow={'auto'} height={400} width={1145}>
         <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'}>
-        <GridItem>
+          <GridItem>
             <FormControl isInvalid={!!errors?.title}>
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.title`)}
               </FormLabel>
 
-              <Input
-                id="title"
-                {...register('title', {
-                 
-                })}
-                isDisabled={isReadOnly}
-               
-              />
-              {errors.title && (
-                <FormErrorMessage>
-                  {errors.title.type ===  'Cannot be only whitespace'}
-                </FormErrorMessage>
-              )}
+              <Input id="title" {...register('title', {})} isDisabled={isReadOnly} />
+              {errors.title && <FormErrorMessage>{errors.title.type === 'Cannot be only whitespace'}</FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -147,6 +136,17 @@ export const Details: React.FC<clientDetailProps> = props => {
               )}
             </FormControl>
           </GridItem>
+
+          <GridItem>
+            <FormControl isInvalid={!!errors?.abbreviation}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`${CLIENTS}.abbreviation`)}
+              </FormLabel>
+
+              <Input id="abbreviation" {...register('abbreviation')} isDisabled={isReadOnly} />
+            </FormControl>
+          </GridItem>
+
           <GridItem>
             <FormControl isInvalid={!!errors?.activated}>
               <FormLabel variant="strong-label" size="md">
@@ -171,9 +171,9 @@ export const Details: React.FC<clientDetailProps> = props => {
               />
             </FormControl>
           </GridItem>
-         </Grid>
-         <Grid templateColumns="repeat(4, 215px)" marginTop='20px' gap={'2rem 3rem'}>
-         <GridItem>
+        </Grid>
+        <Grid templateColumns="repeat(4, 215px)" marginTop="20px" gap={'2rem 3rem'}>
+          <GridItem>
             <FormControl isInvalid={!!errors?.paymentTerm}>
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.paymentTerms`)}
@@ -200,8 +200,6 @@ export const Details: React.FC<clientDetailProps> = props => {
               />
             </FormControl>
           </GridItem>
-
-
 
           <VStack width={'300px'}>
             <GridItem>
@@ -252,20 +250,20 @@ export const Details: React.FC<clientDetailProps> = props => {
                       }}
                       render={({ field, fieldState }) => (
                         <>
-                        <div data-testid="check_checkbox">
-                          <Checkbox
-                            colorScheme="brand"
-                            isChecked={field.value}
-                            onChange={event => {
-                              const isChecked = event.target.checked
-                              field.onChange(isChecked)
-                            }}
-                            mr="2px"
-                            isDisabled={isReadOnly}
-                          >
-                            {t(`${CLIENTS}.check`)}
-                          </Checkbox>
-                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          <div data-testid="check_checkbox">
+                            <Checkbox
+                              colorScheme="brand"
+                              isChecked={field.value}
+                              onChange={event => {
+                                const isChecked = event.target.checked
+                                field.onChange(isChecked)
+                              }}
+                              mr="2px"
+                              isDisabled={isReadOnly}
+                            >
+                              {t(`${CLIENTS}.check`)}
+                            </Checkbox>
+                            <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                           </div>
                         </>
                       )}
@@ -279,20 +277,20 @@ export const Details: React.FC<clientDetailProps> = props => {
                       }}
                       render={({ field, fieldState }) => (
                         <>
-                         <div data-testid="ach_checkbox">
-                          <Checkbox
-                            colorScheme="brand"
-                            isChecked={field.value}
-                            onChange={event => {
-                              const isChecked = event.target.checked
-                              field.onChange(isChecked)
-                            }}
-                            mr="2px"
-                            isDisabled={isReadOnly}
-                          >
-                            {t(`${CLIENTS}.ach`)}
-                          </Checkbox>
-                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          <div data-testid="ach_checkbox">
+                            <Checkbox
+                              colorScheme="brand"
+                              isChecked={field.value}
+                              onChange={event => {
+                                const isChecked = event.target.checked
+                                field.onChange(isChecked)
+                              }}
+                              mr="2px"
+                              isDisabled={isReadOnly}
+                            >
+                              {t(`${CLIENTS}.ach`)}
+                            </Checkbox>
+                            <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                           </div>
                         </>
                       )}
@@ -306,20 +304,20 @@ export const Details: React.FC<clientDetailProps> = props => {
                       }}
                       render={({ field, fieldState }) => (
                         <>
-                         <div data-testid="wired_checkbox">
-                          <Checkbox
-                            colorScheme="brand"
-                            isChecked={field.value}
-                            onChange={event => {
-                              const isChecked = event.target.checked
-                              field.onChange(isChecked)
-                            }}
-                            mr="2px"
-                            isDisabled={isReadOnly}
-                          >
-                            {t(`${CLIENTS}.wired`)}
-                          </Checkbox>
-                          <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
+                          <div data-testid="wired_checkbox">
+                            <Checkbox
+                              colorScheme="brand"
+                              isChecked={field.value}
+                              onChange={event => {
+                                const isChecked = event.target.checked
+                                field.onChange(isChecked)
+                              }}
+                              mr="2px"
+                              isDisabled={isReadOnly}
+                            >
+                              {t(`${CLIENTS}.wired`)}
+                            </Checkbox>
+                            <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                           </div>
                         </>
                       )}
@@ -330,8 +328,8 @@ export const Details: React.FC<clientDetailProps> = props => {
               </FormControl>
             </GridItem>
           </VStack>
-         </Grid>
-        <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3" marginTop='20px'>
+        </Grid>
+        <Grid templateColumns="repeat(4, 215px)" gap={'1rem 1.5rem'} py="3" marginTop="20px">
           <GridItem>
             <FormControl isInvalid={!!errors?.streetAddress}>
               <FormLabel variant="strong-label" size="md">
@@ -416,7 +414,7 @@ export const Details: React.FC<clientDetailProps> = props => {
         {contactsFields.map((contacts, index) => {
           return (
             <>
-              <Grid templateColumns="repeat(2, 215px) 110px repeat(2, 240px)" gap={'1rem 1.5rem'} py="3" >
+              <Grid templateColumns="repeat(2, 215px) 110px repeat(2, 240px)" gap={'1rem 1.5rem'} py="3">
                 <GridItem>
                   <FormControl isInvalid={!!errors?.contacts?.[index]?.contact}>
                     <FormLabel variant="strong-label" size="md">
@@ -508,7 +506,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       {...register(`contacts.${index}.emailAddress`, {
                         required: 'This is required',
                         pattern: {
-                          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                          value: /\S+@\S+\.\S+/,
                           message: 'Invalid Email Address',
                         },
                       })}
@@ -533,14 +531,13 @@ export const Details: React.FC<clientDetailProps> = props => {
                           render={({ field }) => (
                             <>
                               <div data-testid="market_id">
-                                 <ReactSelect
+                                <ReactSelect
                                   {...field}
                                   options={marketSelectOptions}
                                   selected={field.value}
                                   onChange={option => field.onChange(option)}
                                   isDisabled={isReadOnly}
-                                  selectProps={{ isBorderLeft: false, menuHeight: '180px'}}
-                                                     
+                                  selectProps={{ isBorderLeft: false, menuHeight: '180px' }}
                                 />
                                 <FormErrorMessage>{errors?.contacts?.[index]?.market?.message}</FormErrorMessage>
                               </div>
@@ -688,7 +685,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     {...register(`accountPayableContactInfos.${index}.emailAddress`, {
                       required: 'This is required',
                       pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                        value: /\S+@\S+\.\S+/,
                         message: 'Invalid Email Address',
                       },
                     })}

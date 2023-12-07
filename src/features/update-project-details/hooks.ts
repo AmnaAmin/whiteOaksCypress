@@ -4,6 +4,7 @@ import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { PROJECT_STATUS } from 'features/common/status'
 import { isValidDate } from 'utils/date-time-utils'
+import moment from 'moment'
 
 export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, projectData?: any) => {
   const status = useWatch({ name: 'status', control })
@@ -176,7 +177,7 @@ export const useMinMaxDateSelector = (control: Control<ProjectDetailsFormValues>
     woaStartMin: isValidDate(new Date(clientStartDate))
       ? new Date(clientStartDate)?.toISOString()?.split('T')?.[0]
       : '',
-    woaCompletionMin: isValidDate(new Date(woaStartDate)) ? new Date(woaStartDate)?.toISOString()?.split('T')?.[0] : '',
+    woaCompletionMin: isValidDate(new Date(woaStartDate)) ? moment.utc(woaStartDate).format('YYYY-MM-DD') : '',
   }
 }
 
