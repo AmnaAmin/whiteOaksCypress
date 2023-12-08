@@ -144,7 +144,35 @@ export async function triggerLockAPI(token, option : number, isLocked: boolean) 
 async function lockMergeWindow(repo : string, branch : string, isLocked: boolean){
   
   try {
-    const response = await octokit.request('PUT /repos/{owner}/{repo}/branches/{branch}/protection', {
+
+    var response;
+
+    if(repo === 'next-gen-whiteoaks-ui')
+    {
+      response = await octokit.request('PUT /repos/{owner}/{repo}/branches/{branch}/protection', {
+        owner: owner,
+        repo: repo,
+        branch: branch,
+        required_status_checks: {
+          strict: true,
+          check:{
+            "context": "Pre-Prod: Unit Tests?",
+            "app_id": 72
+          }
+        },
+        enforce_admins: null,
+        required_pull_request_reviews: {
+          required_approving_review_count: 1,
+        },
+        restrictions: null,
+        lock_branch: isLocked,
+        headers: {
+          'X-GitHub-Api-Version': '2022-11-28'
+        }
+      })
+    }
+    else{
+      response = await octokit.request('PUT /repos/{owner}/{repo}/branches/{branch}/protection', {
         owner: owner,
         repo: repo,
         branch: branch,
@@ -161,6 +189,8 @@ async function lockMergeWindow(repo : string, branch : string, isLocked: boolean
           'X-GitHub-Api-Version': '2022-11-28'
         }
       })
+    }
+    
       
       
       if (response.status === 200 && isLocked) {
