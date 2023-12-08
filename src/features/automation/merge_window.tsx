@@ -98,7 +98,7 @@ const MergeWindowActions: React.FC = () => {
       <ChakraSwitch
         id="toggle-switch"
         isChecked={isCheckedConstBe}
-        onChange={(e) => handleToggle(e.target.checked, 1)}
+        onChange={(e) => handleToggle(e.target.checked, 2)}
       />
     </FormControl>
 
