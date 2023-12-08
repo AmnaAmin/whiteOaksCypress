@@ -953,7 +953,7 @@ export const useGetLineItemsColumn = ({
                           newObjectFormatting={null}
                           isDisabled={isVendor}
                           valueFormatter={null}
-                          style={{ height: '115px' }}
+                          style={{ height: 115 }}
                         />
                       </>
                     )

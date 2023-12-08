@@ -74,6 +74,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const watchState = useWatch({ name: 'state', control })
 
   const { woaCompletionMin, woaStartMin } = useMinMaxDateSelector(control)
+  console.log("🚀 ~ file: project-management.tsx:77 ~ woaStartMin:", woaStartMin)
+  console.log("🚀 ~ file: project-management.tsx:77 ~ woaCompletionMin:", woaCompletionMin)
   const currentDate = useCurrentDate()
   const watchIsReconciled = useWatch({ name: 'isReconciled', control })
 

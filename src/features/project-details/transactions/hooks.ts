@@ -222,7 +222,8 @@ export const useFieldDisabledEnabledDecision = (
       lateAndFactoringFeeForVendor ||
       isFactoringFeeSysGenerated ||
       statusFieldForVendor ||
-      isInvoicePayment || (!isAdmin && !isAccounting && transaction?.transactionType === TransactionTypeValues.draw ),
+      isInvoicePayment ||
+      (!isAdmin && !isAccounting && transaction?.transactionType === TransactionTypeValues.draw),
 
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
     isFactoringFeeSysGenerated,
@@ -270,6 +271,14 @@ export const useIsAwardSelect = ({
 }) => {
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
+  const watchStatus = useWatch({ name: 'status', control })
+  const verifyByFPMStatus = useWatch({ name: 'verifiedByFpm', control })
+  const verifyByManagerStatus = useWatch({ name: 'verifiedByManager', control })
+  const statuses = [watchStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
+  const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
+    statuses.includes(p),
+  )
+
   const check = against?.awardStatus
   const isValidForAwardPlan = against?.isValidForAwardPlan
   const isDrawOrMaterial = transType?.label === 'Draw' || transType?.label === 'Material'
@@ -279,7 +288,8 @@ export const useIsAwardSelect = ({
     isValidForAwardPlan &&
     isDrawOrMaterial &&
     !isRefund &&
-    totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
+    totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining! &&
+    !isBeingCancelled
 
   const drawConsumed =
     transType?.label === 'Draw' &&
@@ -294,14 +304,18 @@ export const useIsAwardSelect = ({
 
   const isNotFinalPlan = selectedWorkOrder?.awardPlanId < 4
 
-  const isPlanExhausted = isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceededFlag)
+  const isPlanExhausted =
+    isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceededFlag) && !isBeingCancelled
 
-  const showUpgradeOption = isPlanExhausted && isNotFinalPlan
+  const showUpgradeOption = isPlanExhausted && isNotFinalPlan && !isBeingCancelled
 
-  const showLimitReached = isPlanExhausted && !isNotFinalPlan
+  const showLimitReached = isPlanExhausted && !isNotFinalPlan && !isBeingCancelled
 
   const isCompletedWorkLessThanNTEPercentage =
-    !isApproved && transType?.label === 'Draw' && totalItemsAmount > selectedWorkOrderStats?.allowedDrawAmount!
+    !isApproved &&
+    transType?.label === 'Draw' &&
+    totalItemsAmount > selectedWorkOrderStats?.allowedDrawAmount! &&
+    !isBeingCancelled
 
   return {
     check,
@@ -316,8 +330,16 @@ export const useIsAwardSelect = ({
 
 export const useIsLienWaiverRequired = (control: Control<FormValues, any>, transaction?: ChangeOrderType) => {
   const transactionType = useWatch({ name: 'transactionType', control })
+
+  const transactionStatus = useWatch({ name: 'status', control })
+  const verifyByFPMStatus = useWatch({ name: 'verifiedByFpm', control })
+  const verifyByManagerStatus = useWatch({ name: 'verifiedByManager', control })
   const { amount: formTotalAmount } = useTotalAmount(control)
   const against = useWatch({ name: 'against', control })
+  const statuses = [transactionStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
+  const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
+    statuses.includes(p),
+  )
   const savedTransactionAmount = transaction?.lineItems?.reduce((result, transaction) => {
     if (transaction.whiteoaksCost) {
       return result + Number(transaction.whiteoaksCost)
@@ -330,7 +352,8 @@ export const useIsLienWaiverRequired = (control: Control<FormValues, any>, trans
     savedTransactionAmount !== formTotalAmount &&
     transactionType?.value === TransactionTypeValues.draw &&
     against &&
-    against.value !== AGAINST_DEFAULT_VALUE
+    against.value !== AGAINST_DEFAULT_VALUE &&
+    !isBeingCancelled
   )
 }
 
@@ -376,18 +399,24 @@ export const useAgainstOptions = (
 
     // In case of other users than vendors the first option of againstOptions is the
     // Project SOW which should be hide in case transactionType is material
-    if (transactionType?.value === TransactionTypeValues.material&& !isVendor) {
+    if (transactionType?.value === TransactionTypeValues.material && !isVendor) {
       return againstOptions.slice(1)
     }
     if (transactionType?.value === TransactionTypeValues.draw && !isVendor) {
-      return againstOptions.slice(1);
+      return againstOptions.slice(1)
     }
     // If the transaction is new and transaction type is draw and project status is invoiced or following state, hide Project SOW againstOption
     if (
       transactionType?.value === TransactionTypeValues.draw &&
       !isVendor &&
       !transaction?.id &&
-      ![StringProjectStatus.New, StringProjectStatus.Active, StringProjectStatus.Punch, StringProjectStatus.Closed, StringProjectStatus.Reconcile].includes(projectStatus?.toLowerCase())
+      ![
+        StringProjectStatus.New,
+        StringProjectStatus.Active,
+        StringProjectStatus.Punch,
+        StringProjectStatus.Closed,
+        StringProjectStatus.Reconcile,
+      ].includes(projectStatus?.toLowerCase())
     ) {
       return againstOptions.slice(1)
     }
