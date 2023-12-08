@@ -321,8 +321,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           onChange(isChecked)
                         }}
                       >
-                          <span style={{ fontSize: '12px', color: '#3A5EA6' }}>{t(`${TRANSACTION}.refund`)}</span>
-                      
+                        <span style={{ fontSize: '12px', color: '#3A5EA6' }}>{t(`${TRANSACTION}.refund`)}</span>
                       </Checkbox>
                     )
                   }}
@@ -401,7 +400,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           setDisableBtn?.(false)
                           setAttachmentError(null)
                           setValue('attachment', null)
-                          setValue('transaction', [TRANSACTION_FEILD_DEFAULT])
                           if (inputRef.current) inputRef.current.value = ''
                           setFileParseMsg?.(false)
                         }}
