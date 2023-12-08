@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.8.1",
     "@hookform/resolvers": "^2.8.8",
     "@lourenci/react-kanban": "^2.1.0",
+    "@octokit/rest": "18.12.0",
     "@react-icons/all-files": "^4.1.0",
     "@tanstack/react-table": "^8.7.9",
     "@testing-library/jest-dom": "^5.11.4",
