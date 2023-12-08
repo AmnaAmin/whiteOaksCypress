@@ -103,7 +103,7 @@ export async function triggerLockAPI(token, option : number, isLocked: boolean) 
 
     const isTokenValid = await validateToken(token);
     var response = 2;
-    
+
     if(isTokenValid)
     {
 
@@ -150,7 +150,9 @@ async function lockMergeWindow(repo : string, branch : string, isLocked: boolean
         branch: branch,
         required_status_checks: null,
         enforce_admins: null,
-        required_pull_request_reviews: null,
+        required_pull_request_reviews: {
+          required_approving_review_count: 1,
+        },
         restrictions: null,
         lock_branch: isLocked,
         headers: {
@@ -174,6 +176,7 @@ async function lockMergeWindow(repo : string, branch : string, isLocked: boolean
       
 
   } catch (err) {
+    alert('Invalid or Expired User Token');
     console.error('Error :', err);
     return 2;
   }
