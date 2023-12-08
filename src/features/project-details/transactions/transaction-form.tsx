@@ -15,7 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
+import { Controller, FormProvider, useForm,useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 import addDays from 'date-fns/addDays'
 import { datePickerFormat } from 'utils/date-time-utils'
@@ -40,7 +40,7 @@ import {
   useManagerEnabled,
 } from 'api/transactions'
 import {
-  ChangeOrderType,
+  // ChangeOrderType,
   FormValues,
   SelectOption,
   TransactionStatusValues,
@@ -65,7 +65,7 @@ import { useRoleBasedPermissions, useUserProfile, useUserRolesSelector } from 'u
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
-import { ReadOnlyInput } from 'components/input-view/input-view'
+// import { ReadOnlyInput } from 'components/input-view/input-view'
 import {
   DrawLienWaiver,
   LienWaiverAlert,
@@ -74,7 +74,7 @@ import {
   ProjectTransactionRemainingAlert,
 } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
-import { BiCalendar, BiDetail } from 'react-icons/bi'
+// import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
@@ -88,56 +88,56 @@ import UpdateProjectAward from './update-project-award'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { useLocation } from 'react-router-dom'
 
-const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
-  const { t } = useTranslation()
-  const { getValues } = useFormContext<FormValues>()
-  const formValues = getValues()
+// const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
+//   const { t } = useTranslation()
+//   const { getValues } = useFormContext<FormValues>()
+//   const formValues = getValues()
 
-  return (
-    <Grid
-      templateColumns="repeat(auto-fill, minmax(100px,1fr))"
-      gap={{ base: '1rem 20px', sm: '3.5rem' }}
-      borderBottom="1px solid #E2E8F0"
-      borderColor="gray.200"
-      py="5"
-    >
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.dateCreated`)}
-          name={'dateCreated'}
-          value={formValues.dateCreated as string}
-          Icon={BiCalendar}
-        />
-      </GridItem>
+//   return (
+//     <Grid
+//       templateColumns="repeat(auto-fill, minmax(100px,1fr))"
+//       gap={{ base: '1rem 20px', sm: '3.5rem' }}
+//       borderBottom="1px solid #E2E8F0"
+//       borderColor="gray.200"
+//       py="5"
+//     >
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.dateCreated`)}
+//           name={'dateCreated'}
+//           value={formValues.dateCreated as string}
+//           Icon={BiCalendar}
+//         />
+//       </GridItem>
 
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.dateModified`)}
-          name={'dateModified'}
-          value={(formValues.modifiedDate as string) || '----'}
-          Icon={BiCalendar}
-        />
-      </GridItem>
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.createdBy`)}
-          name="createdBy"
-          value={formValues.createdBy as string}
-          Icon={BiDetail}
-        />
-      </GridItem>
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.dateModified`)}
+//           name={'dateModified'}
+//           value={(formValues.modifiedDate as string) || '----'}
+//           Icon={BiCalendar}
+//         />
+//       </GridItem>
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.createdBy`)}
+//           name="createdBy"
+//           value={formValues.createdBy as string}
+//           Icon={BiDetail}
+//         />
+//       </GridItem>
 
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.modifiedBy`)}
-          name={'modifiedBy'}
-          value={(formValues.modifiedBy as string) || '----'}
-          Icon={BiDetail}
-        />
-      </GridItem>
-    </Grid>
-  )
-}
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.modifiedBy`)}
+//           name={'modifiedBy'}
+//           value={(formValues.modifiedBy as string) || '----'}
+//           Icon={BiDetail}
+//         />
+//       </GridItem>
+//     </Grid>
+//   )
+// }
 
 export type TransactionFormProps = {
   onClose: () => void
@@ -598,9 +598,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">
           {/** In case Draw selected and user click next will show Lien Waiver Popover */}
           {!isShowLienWaiver ? (
-            <Flex flex={1} direction="column" minH="600px">
+            <Flex flex={1} direction="column" minH="400px">
               {/** Readonly information of Transaction */}
-              <TransactionReadOnlyInfo transaction={transaction} />
+              {/* <TransactionReadOnlyInfo transaction={transaction} /> */}
 
               {/** Editable form */}
               <Grid
