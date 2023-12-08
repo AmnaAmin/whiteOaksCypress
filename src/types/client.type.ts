@@ -94,6 +94,5 @@ export type ClientFormValues = {
   paymentWired?: boolean
   carrier?: Carrier[]
   title?: string
-  activated?: boolean
-  abbreviation?: string
+  activated?:boolean
 }

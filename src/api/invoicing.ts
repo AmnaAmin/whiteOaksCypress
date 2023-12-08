@@ -210,10 +210,11 @@ export const isReceivedTransaction = transaction => {
   return !transaction.parentWorkOrderId && compatibleType
 }
 const isAddedInFinalSow = transaction => {
-  const isInvoiceCancelled = t => {
-    if (t.invoiceStatus === 'CANCELLED') return true
+  const isInvoiceCancelled = (t) => {
+   
+    if ( t.invoiceStatus === 'CANCELLED' ) return true
 
-    return false
+    return false;
   }
 
   const compatibleType =
@@ -222,26 +223,17 @@ const isAddedInFinalSow = transaction => {
     transaction.transactionType === TransactionTypeValues.changeOrder ||
     transaction.transactionType === TransactionTypeValues.originalSOW
   return (
-    transaction.status === 'APPROVED' &&
-    !transaction.parentWorkOrderId &&
-    compatibleType &&
-    (!transaction.invoiceNumber || isInvoiceCancelled(transaction))
+    transaction.status === 'APPROVED' && !transaction.parentWorkOrderId && compatibleType &&  ( !transaction.invoiceNumber || isInvoiceCancelled(transaction) )
   )
 }
 
-export const invoiceDefaultValues = ({
-  invoice,
-  projectData,
-  invoiceCount,
-  clientSelected,
-  transactions,
-  invoiceNumber,
-}) => {
+export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelected, transactions }) => {
+  const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
   const invoicedDate = new Date()
   const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
   const paymentTerm = Number(clientSelected?.paymentTerm) ?? 0
   const woaExpectedDate = addDays(utcDate, paymentTerm)
-
+  
   let received = [] as any
   let finalSowLineItems = [] as any
   if (transactions?.length) {
@@ -261,10 +253,14 @@ export const invoiceDefaultValues = ({
     })
   }
 
+ 
+  
+
   if (!invoice) {
     if (transactions?.length) {
       transactions.forEach(t => {
-        if (isAddedInFinalSow(t)) {
+        
+        if (isAddedInFinalSow(t) ) {
           finalSowLineItems.push({
             id: null,
             transactionId: t.id,
@@ -281,7 +277,7 @@ export const invoiceDefaultValues = ({
   }
 
   return {
-    invoiceNumber: invoice?.invoiceNumber ?? invoiceNumber,
+    invoiceNumber: invoice?.invoiceNumber ?? invoiceInitials,
     invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
     paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? clientSelected?.paymentTerm)),
     woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPay ?? woaExpectedDate),
@@ -565,86 +561,69 @@ export const useUpdateInvoicingDocument = () => {
   })
 }
 
-export const useFetchInvoiceDetail = (projectId: string) => {
-  const client = useClient()
-
-  const { data: invoiceDetail, ...rest } = useQuery(
-    ['invoicesDetail', projectId],
-    async () => {
-      const response = await client(`project/${projectId}/invoiceNo`, {})
-
-      return response
-    },
-    {
-      enabled: !!projectId && projectId !== 'undefined',
-    },
-  )
-  return {
-    invoiceDetail,
-    ...rest,
-  }
-}
-
 export const useGenerateInvoicePDF = () => {
   const client = useClient()
 
-  return useCallback(async (invoiceId, woAddress, payload) => {
-    const transactionsResponse = await client(
-      `change-orders/v1?projectId=${payload.projectId}&sort=modifiedDate,asc`,
-      {},
-    )
-    const projectResponse = await client(`projects/${payload.projectId}?cacheBuster=${new Date().valueOf()}`, {})
-    const invoiceResponse = await client(`project-invoices/${invoiceId}`, {})
+  return useCallback(
+    async (invoiceId, woAddress, payload) => {
+      const transactionsResponse = await client(
+        `change-orders/v1?projectId=${payload.projectId}&sort=modifiedDate,asc`,
+        {},
+      )
+      const projectResponse = await client(`projects/${payload.projectId}?cacheBuster=${new Date().valueOf()}`, {})
+      const invoiceResponse = await client(`project-invoices/${invoiceId}`, {})
 
-    const invoice = invoiceResponse?.data
+      const invoice = invoiceResponse?.data
 
-    const transactions = transactionsResponse?.data
-    const projectData = projectResponse?.data
+      const transactions = transactionsResponse?.data
+      const projectData = projectResponse?.data
 
-    let received = [] as any
-    if (transactions?.length) {
-      transactions.forEach(t => {
-        if (isReceivedTransaction(t)) {
-          received.push({
-            id: null,
-            transactionId: t.id,
-            checked: false,
-            name: t.name,
-            type: 'receivedLineItems',
-            description: t.transactionTypeLabel,
-            amount: Math.abs(t.transactionTotal),
-            createdDate: datePickerFormat(t.modifiedDate),
-          })
-        }
-      })
-    }
-
-    const totalReceived = received?.reduce((result, item) => {
-      if (item.amount) {
-        return result + Number(item.amount)
-      } else {
-        return result
+      let received = [] as any
+      if (transactions?.length) {
+        transactions.forEach(t => {
+          if (isReceivedTransaction(t)) {
+            received.push({
+              id: null,
+              transactionId: t.id,
+              checked: false,
+              name: t.name,
+              type: 'receivedLineItems',
+              description: t.transactionTypeLabel,
+              amount: Math.abs(t.transactionTotal),
+              createdDate: datePickerFormat(t.modifiedDate),
+            })
+          }
+        })
       }
-    }, 0)
 
-    let form = new jsPDF()
-    form = await createInvoicePdf({
-      doc: form,
-      invoiceVals: payload,
-      address: woAddress,
-      projectData,
-      sowAmt: invoice?.sowAmount,
-      received: totalReceived,
-      receivedLineItems: received,
-    })
-    const pdfUri = form.output('datauristring')
-    return {
-      documentType: 42,
-      projectId: projectData?.id,
-      fileObject: pdfUri.split(',')[1],
-      fileObjectContentType: 'application/pdf',
-      fileType: 'Invoice.pdf',
-      projectInvoiceId: invoice?.id,
-    }
-  }, [])
+      const totalReceived = received?.reduce((result, item) => {
+        if (item.amount) {
+          return result + Number(item.amount)
+        } else {
+          return result
+        }
+      }, 0)
+     
+      let form = new jsPDF()
+      form = await createInvoicePdf({
+        doc: form,
+        invoiceVals: payload,
+        address: woAddress,
+        projectData,
+        sowAmt: invoice?.sowAmount,
+        received: totalReceived,
+        receivedLineItems: received,
+      })
+      const pdfUri = form.output('datauristring')
+      return {
+        documentType: 42,
+        projectId: projectData?.id,
+        fileObject: pdfUri.split(',')[1],
+        fileObjectContentType: 'application/pdf',
+        fileType: 'Invoice.pdf',
+        projectInvoiceId: invoice?.id,
+      }
+    },
+    [],
+  )
 }
