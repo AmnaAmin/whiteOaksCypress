@@ -43,7 +43,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; 
     <div>
       <Modal size="none" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8" bg="#F2F3F4">
+        <ModalContent w="1137px" rounded="6px" borderTop="2px solid #4E87F8" bg="#F2F3F4">
           <ModalHeader
             h="63px"
             borderBottom="1px solid #E2E8F0"
@@ -64,7 +64,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; 
             </HStack>
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
-          <ModalBody px="9px" pb="22px">
+          <ModalBody p="15px" px="9px" >
             <Box mt="14px">
               {isLoading ? (
                 <BlankSlate width="60px" />
