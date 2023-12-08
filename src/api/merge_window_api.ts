@@ -197,7 +197,7 @@ async function lockMergeWindow(repo : string, branch : string, isLocked: boolean
         }
       })
     }
-    
+
       
       
       if (response.status === 200 && isLocked) {
