@@ -271,6 +271,14 @@ export const useIsAwardSelect = ({
 }) => {
   const against = useWatch({ name: 'against', control })
   const transType = useWatch({ name: 'transactionType', control })
+  const watchStatus = useWatch({ name: 'status', control })
+  const verifyByFPMStatus = useWatch({ name: 'verifiedByFpm', control })
+  const verifyByManagerStatus = useWatch({ name: 'verifiedByManager', control })
+  const statuses = [watchStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
+  const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
+    statuses.includes(p),
+  )
+
   const check = against?.awardStatus
   const isValidForAwardPlan = against?.isValidForAwardPlan
   const isDrawOrMaterial = transType?.label === 'Draw' || transType?.label === 'Material'
@@ -280,7 +288,8 @@ export const useIsAwardSelect = ({
     isValidForAwardPlan &&
     isDrawOrMaterial &&
     !isRefund &&
-    totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
+    totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining! &&
+    !isBeingCancelled
 
   const drawConsumed =
     transType?.label === 'Draw' &&
@@ -295,14 +304,18 @@ export const useIsAwardSelect = ({
 
   const isNotFinalPlan = selectedWorkOrder?.awardPlanId < 4
 
-  const isPlanExhausted = isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceededFlag)
+  const isPlanExhausted =
+    isValidForAwardPlan && (drawConsumed || materialConsumed || remainingAmountExceededFlag) && !isBeingCancelled
 
-  const showUpgradeOption = isPlanExhausted && isNotFinalPlan
+  const showUpgradeOption = isPlanExhausted && isNotFinalPlan && !isBeingCancelled
 
-  const showLimitReached = isPlanExhausted && !isNotFinalPlan
+  const showLimitReached = isPlanExhausted && !isNotFinalPlan && !isBeingCancelled
 
   const isCompletedWorkLessThanNTEPercentage =
-    !isApproved && transType?.label === 'Draw' && totalItemsAmount > selectedWorkOrderStats?.allowedDrawAmount!
+    !isApproved &&
+    transType?.label === 'Draw' &&
+    totalItemsAmount > selectedWorkOrderStats?.allowedDrawAmount! &&
+    !isBeingCancelled
 
   return {
     check,
@@ -319,8 +332,14 @@ export const useIsLienWaiverRequired = (control: Control<FormValues, any>, trans
   const transactionType = useWatch({ name: 'transactionType', control })
 
   const transactionStatus = useWatch({ name: 'status', control })
+  const verifyByFPMStatus = useWatch({ name: 'verifiedByFpm', control })
+  const verifyByManagerStatus = useWatch({ name: 'verifiedByManager', control })
   const { amount: formTotalAmount } = useTotalAmount(control)
   const against = useWatch({ name: 'against', control })
+  const statuses = [transactionStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
+  const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
+    statuses.includes(p),
+  )
   const savedTransactionAmount = transaction?.lineItems?.reduce((result, transaction) => {
     if (transaction.whiteoaksCost) {
       return result + Number(transaction.whiteoaksCost)
@@ -334,7 +353,7 @@ export const useIsLienWaiverRequired = (control: Control<FormValues, any>, trans
     transactionType?.value === TransactionTypeValues.draw &&
     against &&
     against.value !== AGAINST_DEFAULT_VALUE &&
-    ![TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(transactionStatus?.value)
+    !isBeingCancelled
   )
 }
 
