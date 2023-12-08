@@ -14,6 +14,7 @@ import {
   BiQrScan,
   BiInfinite,
   BiBugAlt,
+  BiGitRepoForked
 } from 'react-icons/bi'
 import { IoLocationSharp } from 'react-icons/io5'
 import { TiFlowParallel } from 'react-icons/ti'
@@ -204,33 +205,44 @@ export const MenusList: Menu[] = [
           color: '#3182CE',
           permissions: ['ALL'],
         },
-        {
-          pathTo: '/sonarqubeDashboard',
-          title: `${SIDE_NAV}.sonarqubeDashboard`,
-          Icon: BiBugAlt,
-          color: '#7182CE',
-          permissions: ['ALL'],
-        },
-        {
-          pathTo: '/automationDashboard',
-          title: `${SIDE_NAV}.automationDashboard`,
-          Icon: BiInfinite,
-          color: '#3092CE',
-          permissions: ['ALL'],
-        },
       ]
     : []),
-  ...(showForPreProdAndLocal
-    ? [
-        {
-          pathTo: '/vendor-scan',
-          title: `${SIDE_NAV}.vendorQRScan`,
-          Icon: BiQrScan,
-          color: '#D3D3D3',
-          permissions: ['ALL'],
-        },
-      ]
-    : []),
+    ...(showForPreProdAndLocal
+      ? [
+          {
+            pathTo: '/vendor-scan',
+            title: `${SIDE_NAV}.vendorQRScan`,
+            Icon: BiQrScan,
+            color: '#D3D3D3',
+            permissions: ['ALL'],
+          },
+        ]
+      : []),
+      ...(showForPreProdAndLocal
+        ? [
+            {
+              pathTo: '/cypressTriggers',
+              title: `${SIDE_NAV}.cypressTriggers`,
+              Icon: BiGitRepoForked,
+              color: '#3182CE',
+              permissions: ['ALL'],
+            },
+            {
+              pathTo: '/sonarqubeDashboard',
+              title: `${SIDE_NAV}.sonarqubeDashboard`,
+              Icon: BiBugAlt,
+              color: '#7182CE',
+              permissions: ['ALL'],
+            },
+            {
+              pathTo: '/automationDashboard',
+              title: `${SIDE_NAV}.automationDashboard`,
+              Icon: BiInfinite,
+              color: '#3092CE',
+              permissions: ['ALL'],
+            },
+          ]
+        : []),
 ]
 
 export const APP_LOCAL_DATE_FORMAT_Z = 'yyyy-MM-dd'
