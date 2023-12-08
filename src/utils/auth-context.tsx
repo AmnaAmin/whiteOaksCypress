@@ -170,9 +170,9 @@ function useAuth(): AuthContextProps {
 
 function useClient(apiPrefix = '/api') {
   const authToken = getToken()
-
+  const toast = useToast()
   return React.useCallback(
-    (endpoint, config) => client(`${apiPrefix}/${endpoint}`, { ...config, token: authToken }),
+    (endpoint, config) => client(`${apiPrefix}/${endpoint}`, { ...config, token: authToken }, toast),
     [authToken, apiPrefix],
   )
 }
