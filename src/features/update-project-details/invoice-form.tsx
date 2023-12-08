@@ -37,6 +37,7 @@ import { SelectOption } from 'types/transaction.type'
 import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { FinalSowLineItems } from './final-sow-line-items'
+import { debounce } from 'lodash'
 import {
   createInvoicePdf,
   mapFormValuesToPayload,
@@ -889,9 +890,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
             {t(`project.projectDetails.cancel`)}
           </Button>
           <Button
-            onClick={() => {
-              formReturn.handleSubmit(onSubmit)()
-            }}
+           onClick={debounce(() => {
+            formReturn.handleSubmit(onSubmit)()
+          }, 300)}
             isLoading={isLoadingUpdate || isLoadingCreate}
             disabled={!invoiced || isPaid || !isAdminOrAcc}
             form="invoice-form"
@@ -913,3 +914,5 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     </form>
   )
 }
+
+
