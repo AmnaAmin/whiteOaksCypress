@@ -1,4 +1,5 @@
 import { Octokit } from "@octokit/rest";
+import users from '../data/users.json'
 
 var octokit;
 
@@ -100,12 +101,11 @@ async function getProtectionRules(repo : string, branch : string){
 
 export async function triggerLockAPI(token, option : number, isLocked: boolean) {
 
-    octokit = new Octokit({
-        auth: token,
-        baseUrl: "https://api.github.com"
-      });
-
-     var response;
+    const isTokenValid = await validateToken(token);
+    var response = 2;
+    
+    if(isTokenValid)
+    {
 
     switch(option){
         case 1:
@@ -135,13 +135,13 @@ export async function triggerLockAPI(token, option : number, isLocked: boolean) 
         default:
           break;              
     }
+  }
 
     return response
   
   }
-
  
-  async function lockMergeWindow(repo : string, branch : string, isLocked: boolean){
+async function lockMergeWindow(repo : string, branch : string, isLocked: boolean){
   
   try {
     const response = await octokit.request('PUT /repos/{owner}/{repo}/branches/{branch}/protection', {
@@ -174,11 +174,46 @@ export async function triggerLockAPI(token, option : number, isLocked: boolean) 
       
 
   } catch (err) {
-    alert('Invalid user token for '+ repo);
     console.error('Error :', err);
     return 2;
   }
 
 }
+
+async function validateToken(token){
+
+  octokit = new Octokit({
+    auth: token,
+    baseUrl: "https://api.github.com"
+  });
+  
+  try {
+    const response = await octokit.request('GET /user', {
+      headers: {
+        'X-GitHub-Api-Version': '2022-11-28'
+      }
+    })
+      
+    const userName = response.data.login;
+
+    console.log("list is: " + users);
+      
+      if (users.includes(userName)) {
+        return true;
+      } 
+      else {
+        alert('User does not have valid Permissions')
+        return false;
+      }
+      
+
+  } catch (err) {
+    alert('Invalid or Expired User Token');
+    console.error('Error :', err);
+    return 2;
+  }
+
+}
+
 
 

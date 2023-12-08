@@ -1,6 +1,6 @@
 import React, { useState} from 'react';
 import { Box, Button } from '@chakra-ui/react'
-import { triggerDBWorkflow, getDbRestoreStatus } from 'api/github_api';
+//import { triggerDBWorkflow, getDbRestoreStatus } from 'api/github_api';
 
 
 
@@ -9,14 +9,17 @@ const DBRestoreWorkflow: React.FC = () => {
   const [buildStatus, setBuildStatus] = useState<string | null>(null);
 
   const handleButtonClick = async () => {
-    var userToken = window.prompt('Please enter the password:');
-    const status = await triggerDBWorkflow(userToken);
-    setBuildStatus(status);
+    alert('Access Control Implementation in Process');
+    setBuildStatus('No build status available');
+    // var userToken = window.prompt('Please enter the password:');
+    // const status = await triggerDBWorkflow(userToken);
+    // setBuildStatus(status);
   };
 
   const getStatus = async () => {
-    const status = await getDbRestoreStatus();
-    alert(status);
+    alert('Access Control Implementation in Process');
+    // const status = await getDbRestoreStatus();
+    // alert(status);
   };
 
   return (
