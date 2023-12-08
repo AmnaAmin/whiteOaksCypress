@@ -19,7 +19,6 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-// import { useToast } from '@chakra-ui/toast'
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { ReadOnlyInput } from 'components/input-view/input-view'
@@ -190,6 +189,7 @@ export type InvoicingFormProps = {
   transactions?: any[]
   isLoading?: boolean
   isReceivable?: boolean
+  invoiceNumber?: string
 }
 
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({
@@ -201,6 +201,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   transactions,
   isLoading,
   isReceivable,
+  invoiceNumber,
 }) => {
   const { t } = useTranslation()
   const { mutate: createInvoiceMutate, isLoading: isLoadingCreate } = useCreateInvoiceMutation({
@@ -223,7 +224,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       return
     }
     formReturn.reset({
-      ...invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected, transactions }),
+      ...invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected, transactions, invoiceNumber }),
     })
   }, [invoice, transactions?.length, clientSelected])
 
@@ -253,7 +254,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const remainingPayVal = invoice?.remainingPayment as number
   const { mutate: updateInvoiceDocument } = useUpdateInvoicingDocument()
 
-  // const toast = useToast()
   const { invoiced, received } = useTotalAmount({
     invoiced: watchInvoiceArray,
     received: watchReceivedArray,
@@ -446,6 +446,10 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     }
     setValue('paymentReceivedDate', datePickerFormat(new Date()))
   }, [isPaymentReceivedDisabled])
+
+  useEffect(() => {
+    setValue('invoiceNumber', invoiceNumber as string)
+  }, [invoiceNumber])
 
   return (
     <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)}>
