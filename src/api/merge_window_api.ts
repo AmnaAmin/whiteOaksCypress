@@ -155,11 +155,16 @@ async function lockMergeWindow(repo : string, branch : string, isLocked: boolean
         branch: branch,
         required_status_checks: {
           strict: true,
-          check:{
-            "context": "Pre-Prod: Unit Tests?",
-            "app_id": 72
+          context: [
+            "Pre-Prod: Unit Tests?"
+          ],
+          checks: [
+            {
+            context: "Pre-Prod: Unit Tests?",
+            app_id: 72
           }
-        },
+        ]
+        }, 
         enforce_admins: null,
         required_pull_request_reviews: {
           required_approving_review_count: 1,
@@ -178,6 +183,8 @@ async function lockMergeWindow(repo : string, branch : string, isLocked: boolean
         branch: branch,
         required_status_checks: {
           strict: true,
+          context: [],
+          checks: []
         },
         enforce_admins: null,
         required_pull_request_reviews: {
