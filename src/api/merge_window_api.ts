@@ -148,7 +148,9 @@ async function lockMergeWindow(repo : string, branch : string, isLocked: boolean
         owner: owner,
         repo: repo,
         branch: branch,
-        required_status_checks: null,
+        required_status_checks: {
+          strict: true,
+        },
         enforce_admins: null,
         required_pull_request_reviews: {
           required_approving_review_count: 1,
