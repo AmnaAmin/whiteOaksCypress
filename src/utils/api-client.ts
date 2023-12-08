@@ -1,6 +1,6 @@
 import * as authApi from './auth-api'
 
-async function client(endpoint: string, httpConfig: any | undefined = {},toast?) {
+async function client(endpoint: string, httpConfig: any | undefined = {}, toast?) {
   const { data, token, headers: customHeaders, ...customConfig } = httpConfig
   const config = {
     method: data ? 'POST' : 'GET',
@@ -17,10 +17,8 @@ async function client(endpoint: string, httpConfig: any | undefined = {},toast?)
     const contentType = response.headers.get(`content-type`)
 
     if (response.status === 401) {
-      // For any other API if we get 401 logout.
-      // api/account returns 401 when user has been logged out.
       if (response.url?.includes('api/account')) {
-        if(toast){
+        if (toast) {
           toast({
             title: '401 Error',
             description: `User is unauthorized to access ${endpoint}`,
