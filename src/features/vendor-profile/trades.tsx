@@ -41,7 +41,7 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
 
   return (
     <>
-      <Box h="1000px" overflow="auto">
+      <Box h="608px" overflow="auto">
         <Flex id="Vendor_Trades" maxW="900px" wrap="wrap" gridGap={3}>
           {tradeCheckboxes?.map((checkbox, index) => {
             return (
@@ -75,10 +75,10 @@ export const TradeForm = ({ vendorProfileData, trades, onClose, isActive }: trad
         alignItems="center"
         w="100%"
         height="72px"
-        pt="10px"
+        pt="8px"
         justifyContent="end"
         borderTop="2px solid #CBD5E0"
-        mt={2}
+       
       >
         {onClose && (
           <Button variant={isReadOnly ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">

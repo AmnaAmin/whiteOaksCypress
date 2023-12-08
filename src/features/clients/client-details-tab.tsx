@@ -136,6 +136,17 @@ export const Details: React.FC<clientDetailProps> = props => {
               )}
             </FormControl>
           </GridItem>
+
+          <GridItem>
+            <FormControl isInvalid={!!errors?.abbreviation}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`${CLIENTS}.abbreviation`)}
+              </FormLabel>
+
+              <Input id="abbreviation" {...register('abbreviation')} isDisabled={isReadOnly} />
+            </FormControl>
+          </GridItem>
+
           <GridItem>
             <FormControl isInvalid={!!errors?.activated}>
               <FormLabel variant="strong-label" size="md">
