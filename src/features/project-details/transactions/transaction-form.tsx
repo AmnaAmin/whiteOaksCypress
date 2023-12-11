@@ -15,7 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Controller, FormProvider, useForm,useWatch } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 import addDays from 'date-fns/addDays'
 import { datePickerFormat } from 'utils/date-time-utils'
@@ -219,6 +219,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const {
     handleSubmit,
     register,
+    trigger,
     formState: { errors },
     setValue,
     getValues,
@@ -291,7 +292,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     totalItemsAmount,
     isRefund,
     selectedWorkOrder,
-    isApproved,
+    transaction,
   })
 
   const { permissions } = useRoleBasedPermissions()
@@ -312,7 +313,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const disableSave =
     !selectedCancelledOrDenied && //Check if the status is being changed to cancel/deny let the transaction be allowed.
     (projectAwardCheck || //when there is no project award
-      (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund + is not approved
+      (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund
       (isCompletedWorkLessThanNTEPercentage && !isEnabledToOverrideNTE)) //when %complete is less than NTE and user is not admin/accounting
 
   const {
@@ -1221,14 +1222,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             type="button"
             variant="solid"
             isDisabled={
-              !selectedCancelledOrDenied && (amount === 0 || (isPlanExhausted && !isApproved) || !invoicedDate) //Check if the status is being changed to cancel/deny let the transaction be allowed.
+              !selectedCancelledOrDenied &&
+              (amount === 0 || remainingAmountExceededFlag || (isPlanExhausted && !isApproved) || !invoicedDate) //Check if the status is being changed to cancel/deny let the transaction be allowed.
             }
             colorScheme="darkPrimary"
             onClick={event => {
-              event.stopPropagation()
-              setTimeout(() => {
-                setIsShowLienWaiver(true)
+              trigger(['transaction']).then(isValid => {
+                if (isValid) {
+                  setTimeout(() => {
+                    setIsShowLienWaiver(true)
+                  })
+                }
               })
+              event.stopPropagation()
             }}
           >
             {t(`${TRANSACTION}.next`)}
