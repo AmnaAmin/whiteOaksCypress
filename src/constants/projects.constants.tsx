@@ -90,6 +90,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   latestNoteAddedDateEnd: 'latestNoteAddedDate.lessThanOrEqual',
   noteOwner: 'noteOwner.contains',
   pcOrFpmUserId: 'pcOrFpmUserId.in',
+  convertedDateStart: 'convertedDate.greaterThanOrEqual',
+  convertedDateEnd: 'convertedDate.lessThanOrEqual',
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -196,6 +198,14 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'project.projectDetails.clientSignOff',
     accessorKey: 'clientSignoffDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientSignoffDate),
+    meta: { format: 'date' },
+  },
+  {
+    header: 'projects.projectTable.convertedDate',
+    accessorKey: 'convertedDate',
+    accessorFn(cellInfo: any) {
+      return !!cellInfo?.estimateId ? dateFormat(cellInfo.createdDate) : null
+    },
     meta: { format: 'date' },
   },
   {
