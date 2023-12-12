@@ -806,9 +806,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
     hoaPhoneNumberExtension: formValues?.hoaContactExtension,
     hoaEmailAddress: formValues?.hoaContactEmail,
     woaPayVariance: null,
-    newProperty: isNewAddress ? property : undefined,
+    newProperty:  property ,
     property,
-    newMarketId: isNewAddress ? formValues.market?.value : undefined,
+    newMarketId: formValues.market?.value ,
     propertyId: isNewAddress ? undefined : formValues?.address?.value,
 
     // Misc payload
