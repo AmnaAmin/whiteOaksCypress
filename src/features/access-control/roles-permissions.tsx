@@ -25,6 +25,10 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
 } from '@chakra-ui/react'
 import { ACCESS_CONTROL } from 'features/access-control/access-control.i18n'
 import { useTranslation } from 'react-i18next'
@@ -43,6 +47,9 @@ import {
   useUpdateRoleMutation,
 } from 'api/access-control'
 import { useAccountData } from 'api/user-account'
+import { Card } from 'components/card/card'
+import { TabCustom } from 'features/work-order/work-order-edit'
+import { EstimateRolePermissions } from './estimates-roles-permission'
 
 interface PemissionFormValues {
   roleName: string
@@ -87,6 +94,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
+
   return (
     <Box w="100%">
       <form
@@ -245,11 +253,11 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
   const { t } = useTranslation()
   const { control, setValue } = formControl
   const [selectedRow, setSelectedRow] = useState<number | null>()
-
   const { fields: permissions } = useFieldArray({
     control,
     name: 'permissions',
   })
+
 
   const watchPermissions = useWatch({ control, name: 'permissions' })
   const watchAssignment = useWatch({ control, name: 'assignment' })
@@ -450,10 +458,16 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
   const { t } = useTranslation()
   const { watch, setValue, control } = formReturn
   const advancedPermissionsWatch = watch('advancedPermissions')
-
+  const btnStyle = {
+    alignItems: 'center',
+    justifyContent: 'end',
+    borderTop: '1px solid #CBD5E0',
+  }
+  const [tabIndex, setTabIndex] = useState(0)
   const isSelectAll = advancedPermissionsWatch
     ? (Object?.values(advancedPermissionsWatch)?.every(item => item) as boolean)
     : false
+
   return (
     <Modal
       isOpen={isOpen}
@@ -464,8 +478,9 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
       size={'5xl'}
     >
       <ModalOverlay />
-      <ModalContent rounded="6">
+      <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8" backgroundColor="#fff">
         <ModalHeader
+          h="63px" 
           borderBottom="2px solid #E2E8F0"
           fontWeight={500}
           color="gray.600"
@@ -477,8 +492,17 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
         </ModalHeader>
         <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
 
-        <ModalBody>
-          <Checkbox
+        <ModalBody justifyContent="center" backgroundColor="#fff">
+     
+        <Tabs size="md" variant="enclosed" index={tabIndex} onChange={index => setTabIndex(index)} colorScheme="brand" >
+          <TabList borderBottom="none">
+            <TabCustom>{t('Construction')}</TabCustom>
+            <TabCustom>{t('Estimates')}</TabCustom>
+          </TabList>
+          <Card h='653px' borderTopLeftRadius="0px !important" borderTopRightRadius="6px" marginBottom='20px'>
+            <TabPanels mt="20px">
+            <TabPanel p="0px">
+            <Checkbox
             colorScheme="PrimaryCheckBox"
             style={{ background: 'white', border: '#DFDFDF' }}
             mr="2px"
@@ -1090,16 +1114,23 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                   </>
                 )}
               />
-            </VStack>
-          </HStack>
-        </ModalBody>
-        <Flex flexFlow="row-reverse">
-          <ModalFooter>
+               </VStack>
+              </HStack >
+              </TabPanel>
+              <TabPanel>
+              <EstimateRolePermissions formReturn={formReturn}/>
+              </TabPanel>
+            </TabPanels>
+            <Flex style={btnStyle} py="4" pt={5} marginTop={tabIndex ===1 ? '153px' : '20px' }>
+          <ModalFooter >
             <Button colorScheme="brand" data-testid="confirmation-no" mr={3} onClick={onClose}>
               {t(`save`)}
             </Button>
           </ModalFooter>
         </Flex>
+            </Card>
+        </Tabs>
+        </ModalBody> 
       </ModalContent>
     </Modal>
   )
