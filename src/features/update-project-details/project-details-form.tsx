@@ -41,7 +41,6 @@ import { TransactionStatusValues, TransactionTypeValues } from 'types/transactio
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
-import { Invoicing } from './invoicing'
 import InvoiceAndPayments from './invoicing-payments'
 import { ConfirmationBox } from 'components/Confirmation'
 
@@ -87,12 +86,11 @@ const ProjectDetailsTab = (props: tabProps) => {
     formState: { errors, isSubmitting },
     watch,
   } = formReturn
+  const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
+    useSubFormErrors(errors)
   const watchClient = watch('client')
 
   const carrierSelected = watchClient?.carrier?.filter(e => e.id === projectData?.carrierId)
-
-  const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
-    useSubFormErrors(errors)
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
       project: projectData,
@@ -270,11 +268,6 @@ const ProjectDetailsTab = (props: tabProps) => {
               <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
                 {t(`project.projectDetails.projectManagement`)}
               </TabCustom>
-              {projectData?.validForNewInvoice && (
-                <TabCustom isError={isInvoiceAndPaymentFormErrors && tabIndex !== 1}>
-                  {t(`project.projectDetails.invoicing`)}
-                </TabCustom>
-              )}
               <TabCustom
                 isError={!projectData?.validForNewInvoice ? isInvoiceAndPaymentFormErrors && tabIndex !== 1 : false}
               >
@@ -309,11 +302,6 @@ const ProjectDetailsTab = (props: tabProps) => {
                     isReadOnly={isReadOnly}
                   />
                 </TabPanel>
-                {projectData?.validForNewInvoice && (
-                  <TabPanel p="0" h="600px">
-                    <Invoicing isReadOnly={isReadOnly} projectData={projectData} clientSelected={watchClient} />
-                  </TabPanel>
-                )}
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
                   {!projectData?.validForNewInvoice ? (
                     <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
@@ -351,7 +339,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   <Divider border="1px solid" />
                 </Box>
                 <Box h="70px" w="100%" pb="3">
-                  {!isReadOnly && !(projectData?.validForNewInvoice && tabIndex === 1) && (
+                  {!isReadOnly  && (
                     <Button
                       mt="8px"
                       mr="32px"

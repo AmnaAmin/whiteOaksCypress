@@ -1,13 +1,22 @@
-import { Box, Checkbox, Icon } from '@chakra-ui/react'
+import { Box, Checkbox, FormControl, Icon } from '@chakra-ui/react'
 import Table from 'components/table-refactored/table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { difference } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
+import { Controller, FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
 import { BiXCircle } from 'react-icons/bi'
 import { currencyFormatter } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
-import { EditableField, InputField, LineItems, SelectCheckBox, selectedCell, SWOProject } from './assignedItems.utils'
+import {
+  CreatableSelectForTable,
+  EditableField,
+  InputField,
+  LineItems,
+  SelectCheckBox,
+  selectedCell,
+  SWOProject,
+} from './assignedItems.utils'
+import { useLocation } from 'api/location'
 
 type RemainingListType = {
   setSelectedItems: (items) => void
@@ -88,6 +97,7 @@ const RemainingListTable = (props: RemainingListType) => {
   const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
   const [total, setTotal] = useState<any>({ index: '', value: 0 })
   const [selectedCell, setSelectedCell] = useState<selectedCell | null | undefined>(null)
+  const { locationSelectOptions } = useLocation()
 
   useEffect(() => {
     setValue(`remainingItems.${total.index}.totalPrice`, total.value)
@@ -157,16 +167,41 @@ const RemainingListTable = (props: RemainingListType) => {
       {
         header: `${WORK_ORDER}.location`,
         accessorKey: 'location',
-        cell: ({ row }) =>
-          renderInput({
-            row: row,
-            values,
-            formControl,
-            fieldName: 'location',
-            selectedCell,
-            setSelectedCell,
-          }),
-        size: 200,
+        size: 250,
+        cell: ({ row }) => {
+          const index = row?.index
+          const {
+            formState: { errors },
+            control,
+          } = formControl
+
+          return (
+            <Box>
+              <FormControl isInvalid={!!errors.remainingItems?.[index]?.location} width="220px">
+                <Controller
+                  control={control}
+                  name={`remainingItems.${index}.location`}
+                  render={({ field }) => {
+                    return (
+                      <>
+                        <CreatableSelectForTable
+                          index={index}
+                          field={field}
+                          valueFormatter={null}
+                          key={'assignedItems.' + [index]}
+                          id={`assignedItems.${index}.location`}
+                          isDisabled={false}
+                          options={locationSelectOptions}
+                          newObjectFormatting={null}
+                        />
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Box>
+          )
+        },
       },
       {
         header: `${WORK_ORDER}.sku`,
@@ -267,7 +302,14 @@ const RemainingListTable = (props: RemainingListType) => {
         size: 150,
       },
     ]
-  }, [selectedCell, setSelectedCell, selectedItems, setSelectedItems, values.remainingItems])
+  }, [
+    selectedCell,
+    setSelectedCell,
+    selectedItems,
+    setSelectedItems,
+    values.remainingItems,
+    locationSelectOptions?.length,
+  ])
 
   const handleOnDragEnd = useCallback(
     result => {

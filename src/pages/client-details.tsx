@@ -83,6 +83,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
           ...c,
           market: c.market?.value,
         })),
+        activated:values.activated?.value,
         carrier: values?.carrier?.map(c => {
           return {
             id: c.id,
@@ -122,7 +123,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
             <TabCustom>{t('market')}</TabCustom>
             <TabCustom>{t('notes')}</TabCustom>
           </TabList>
-          <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px">
+          <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px" width='1165px'>
             <TabPanels mt="20px">
               <TabPanel p="0px">
                 <DetailsTab clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />

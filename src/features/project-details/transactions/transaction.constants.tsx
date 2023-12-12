@@ -1,5 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
-import { SelectOption, TransactionMarkAsValues, TransactionStatusValues } from 'types/transaction.type'
+import { SelectOption, TransactionMarkAsValues, TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
 import Status from 'features/common/status'
 import numeral from 'numeral'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
@@ -41,6 +41,7 @@ export const TRANSACTION_STATUS_OPTIONS = [
 ]
 
 export const TRANSACTION_FPM_DM_STATUS_OPTIONS = [
+  { value: TransactionStatusValues.pending, label: 'Pending' },
   { value: TransactionStatusValues.approved, label: 'Approved' },
   { value: TransactionStatusValues.cancelled, label: 'Cancelled' },
   { value: TransactionStatusValues.denied, label: 'Denied' },
@@ -78,44 +79,56 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: '',
     id: 'expander',
     size: 20,
-    cell: ({ row, getValue }) => (
-      <Flex
-        onClick={e => e.stopPropagation()}
-        style={{
-          paddingLeft: `${row.depth * 1.5}rem`,
-        }}
-      >
-        {row.getToggleExpandedHandler()}
-        <>
-          {row.getCanExpand() ? (
-            <button
-              data-testid="expension-&-compression-btn"
-              {...{
-                onClick: row.getToggleExpandedHandler(),
-                style: { cursor: 'pointer' },
-              }}
-            >
-              {row.getIsExpanded() ? (
-                <DownArrow
-                  style={{
-                    marginRight: '8px',
-                  }}
-                />
-              ) : (
-                <RightArrow
-                  style={{
-                    marginRight: '8px',
-                  }}
-                />
-              )}
-            </button>
-          ) : (
-            ''
-          )}{' '}
-          {getValue()}
-        </>
-      </Flex>
-    ),
+    cell: ({ row, getValue }) => {
+     
+
+      const transaction = row.original
+      // let isPaymentAgainstInvoice = false;
+     
+      if (!!transaction.invoiceId && transaction.transactionType === TransactionTypeValues.payment && !!transaction.invoiceNumber) {
+        // isPaymentAgainstInvoice = true;
+      }
+     
+      return (
+        <Flex
+          data-testid="expander-cont"
+          onClick={e => e.stopPropagation()}
+          style={{
+            paddingLeft: `${row.depth * 1.5}rem`,
+          }}
+        >
+          {row.getToggleExpandedHandler()}
+          <>
+            {row.getCanExpand() ? (
+              <button
+                data-testid="expension-&-compression-btn"
+                {...{
+                  onClick: row.getToggleExpandedHandler(),
+                  style: { cursor: 'pointer' },
+                }}
+              >
+                {row.getIsExpanded() ? (
+                  <DownArrow
+                    style={{
+                      marginRight: '8px',
+                    }}
+                  />
+                ) : (
+                  <RightArrow
+                    style={{
+                      marginRight: '8px',
+                    }}
+                  />
+                )}
+              </button>
+            ) : (
+              ''
+            )}{' '}
+            {getValue()}
+          </>
+        </Flex>
+      )
+    },
     accessorFn: cellInfo => {
       return (
         <div style={{ marginTop: '1px' }}>
@@ -132,6 +145,9 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${TRANSACTION}.type`,
     accessorKey: 'transactionTypeLabel',
+    accessorFn: cellInfo => {
+      return cellInfo.isInvoice ? 'Invoice' : cellInfo?.transactionTypeLabel || '- - -'
+    },
   },
   {
     header: `${TRANSACTION}.workOrderIdTransTable`,

@@ -214,7 +214,7 @@ export const VendorUsersTab: React.FC<UserProps> = ({ vendorProfileData, onClose
           <Box
             overflow={'auto'}
             w="100%"
-            h="530px"
+            h="565px"
             position="relative"
             roundedTop={6}
             border="1px solid #CBD5E0"

@@ -44,7 +44,7 @@ export const project = {
           depreciation: 'Depreciation',
           originalSOW: 'Original SOW',
           invoice: 'Invoice',
-          paymentError: `Unable to save payment due to 'Pending' Draw/Payment/Depreciation/Carrier Fee transaction against Project SOW.`,
+          paymentError: `Unable to save payment due to 'Pending' Depreciation/Carrier Fee transaction against Project SOW.`,
           resubmissionDate: 'Resubmission Date',
           notificationDate: 'Notification Date',
           newInvoice: 'New Invoice',
@@ -55,10 +55,16 @@ export const project = {
           subtotal: 'Subtotal',
           balancedue: 'Balance Due',
           paymentReceived: 'Payment Received',
-          balanceDueError: 'Balance Due must not be negative.',
+          partialPayment: 'Partial Payment',
+          balanceDueError: 'Invoiced Amount cannot be greater than AR.',
           received: 'Received',
           finalSow: 'Final Sow',
           invoiceAmount: 'Invoice Amount',
+          invoiced: 'Invoiced',
+          date: 'Date',
+          sowAmount: 'SOW Amount',
+          amountReceived: 'Amount Received',
+          remainingAR: 'Remaining AR',
 
           // Contacts
           contacts: 'Contacts',
@@ -165,10 +171,14 @@ export const project = {
           subtotal: 'Subtotal',
           balancedue: 'Saldo pendiente',
           paymentReceived: 'Pago recibido',
-          balanceDueError: 'El saldo adeudado no debe ser negativo.',
+          partialPayment: 'Pago parcial',
+
+          balanceDueError: 'El monto facturado no puede ser mayor que AR.',
           received: 'Recibió',
           finalSow: 'SOW Final',
           invoiceAmount: 'Importe de la factura',
+          invoiced: 'Facturado',
+          date: 'Fecha',
 
           // Contacts
           contacts: 'Contactos',

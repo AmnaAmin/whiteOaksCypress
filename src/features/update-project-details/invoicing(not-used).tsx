@@ -26,7 +26,7 @@ import { SelectOption } from 'types/transaction.type'
 type InvoicingProps = {
   isReadOnly?: boolean
   projectData: Project | undefined
-  clientSelected: SelectOption | undefined | null
+  clientSelected?: SelectOption | undefined | null
 }
 export const InvoicingContext = createContext<{ projectData?: Project; invoiceCount?: number }>({
   projectData: undefined,
@@ -34,7 +34,7 @@ export const InvoicingContext = createContext<{ projectData?: Project; invoiceCo
 })
 
 export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
-  const { isReadOnly, projectData, clientSelected } = props
+  const { isReadOnly, projectData } = props
   const { t } = useTranslation()
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
@@ -72,8 +72,6 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
     onInvoiceModalOpen()
   }
 
- 
-
   useEffect(() => {
     setTotalPages(Math.ceil((projectData?.resubmissionDTOList?.length ?? 0) / 50))
     setTotalRows(projectData?.resubmissionDTOList?.length ?? 0)
@@ -94,7 +92,7 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
           border="1px solid #CBD5E0"
           borderRadius="6px"
           roundedRight={{ base: '0px', sm: '6px' }}
-          h='550px'
+          h="550px"
         >
           <TableContextProvider
             totalPages={totalPages}
@@ -141,7 +139,6 @@ export const Invoicing = React.forwardRef((props: InvoicingProps, ref) => {
             setSelectedInvoice(null)
             onInvoiceModalClose()
           }}
-          clientSelected={clientSelected}
           selectedInvoice={selectedInvoice}
         />
       </InvoicingContext.Provider>

@@ -81,11 +81,13 @@ function Filter({
         endDate = new Date(columnFilterValue?.split(' - ')?.[1]?.toString())
       }
     }
-    return {
-      startDate,
-      endDate,
-      key: 'selection',
-    }
+    return [
+      {
+        startDate,
+        endDate,
+        key: 'selection',
+      },
+    ]
   })
 
   const [isDateRangePickerOpen, setIsDateRangePickerOpen] = useState(false)
@@ -110,16 +112,19 @@ function Filter({
     e.preventDefault()
     setIsDateRangePickerOpen(!isDateRangePickerOpen)
   }
+
   const handleClear = () => {
     column.setFilterValue('')
     setStickyFilter(null)
     setSelectedDateRange({ startDate: '', endDate: '', key: 'selection' })
     setIsDateRangePickerOpen(false)
-    setSelectionRange({
-      startDate: new Date(),
-      endDate: new Date(),
-      key: 'selection',
-    })
+    setSelectionRange([
+      {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: 'selection',
+      },
+    ])
   }
   const { datePickerState } = useContext(TableDatePickerContext)
 
@@ -144,12 +149,16 @@ function Filter({
                     ).format('M/D/YY')}`
               }
               onChange={value => {
-                if (!!selectedDateRange?.startDate && !!selectedDateRange?.endDate) {
-                  column.setFilterValue(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
-                  if (allowStickyFilters)
-                    setStickyFilter(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                if (!!metaData?.resetFilters) {
+                  handleClear()
                 } else {
-                  column.setFilterValue('')
+                  if (!!selectedDateRange?.startDate && !!selectedDateRange?.endDate) {
+                    column.setFilterValue(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                    if (allowStickyFilters)
+                      setStickyFilter(selectedDateRange.startDate + ' - ' + selectedDateRange.endDate)
+                  } else {
+                    column.setFilterValue('')
+                  }
                 }
               }}
               className="w-36 border shadow rounded "
@@ -180,20 +189,16 @@ function Filter({
                 <DateRange
                   showMonthArrow={false}
                   dragSelectionEnabled
-                  ranges={[selectionRange]}
+                  ranges={selectionRange}
                   onSelect={() => {
                     setIsDateRangePickerOpen(false)
                   }}
-                  value={[selectionRange]}
+                  value={selectionRange}
                   zIndex={10000}
                   onChange={dateRange => {
+                    setSelectionRange([dateRange.selection])
                     const selectedStartDate = dateRange.selection.startDate
                     const selectedEndDate = dateRange.selection.endDate
-                    setSelectionRange({
-                      startDate: selectedStartDate,
-                      endDate: selectedEndDate,
-                      key: 'selection',
-                    })
                     const formattedStartDate = moment(selectedStartDate).format('YYYY-MM-DD')
                     const formattedEndDate = moment(selectedEndDate).format('YYYY-MM-DD')
                     setSelectedDateRange({
@@ -740,13 +745,23 @@ const DragDropEnabledRows = ({
                     >
                       {row.getVisibleCells().map(cell => {
                         const value = flexRender(cell.column.columnDef.cell, cell.getContext())
+                        const metaData: any = cell.column.columnDef?.meta as any
+                        const title =
+                          typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
+                        const isDate = metaData?.format === 'date'
                         return (
                           <Td
                             py={0}
                             pr={'50px'}
                             key={cell.id}
                             isTruncated
-                            title={cell.getContext()?.getValue() as string}
+                            title={
+                              !metaData?.hideTitle && title
+                                ? isDate
+                                  ? dateFormat(title as string)
+                                  : (title as string)
+                                : ''
+                            }
                             {...getColumnMaxMinWidths(cell.column)}
                           >
                             {value}

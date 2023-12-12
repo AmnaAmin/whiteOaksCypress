@@ -11,8 +11,12 @@ import {
   BiUserPin,
   BiUserPlus,
   BiError,
+  BiQrScan,
+  BiInfinite,
+  BiBugAlt,
+  BiGitRepoForked
 } from 'react-icons/bi'
-
+import { IoLocationSharp } from 'react-icons/io5'
 import { TiFlowParallel } from 'react-icons/ti'
 import { FaAlignCenter, FaHome, FaReact } from 'react-icons/fa'
 import { SIDE_NAV } from './sideNav.i18n'
@@ -80,7 +84,7 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.receivable`,
     Icon: BiDollarCircle,
     color: '#4299E1',
-    permissions: ['RECEIVABLE.EDIT', 'RECEIVABLE.READ', 'ALL'],
+    permissions: ['RECEIVABLE.EDIT', 'RECEIVABLE.READ', 'ESTIMATERECEIVABLE.READ', 'ESTIMATERECEIVABLE.READ', 'ALL'],
     testId: 'recievableMenuItem',
   },
   {
@@ -171,6 +175,13 @@ export const MenusList: Menu[] = [
     permissions: ['MARKET.EDIT', 'MARKET.READ', 'ALL'],
   },
   {
+    pathTo: '/location',
+    title: `${SIDE_NAV}.locations`,
+    Icon: IoLocationSharp,
+    color: '#9B2C2C',
+    permissions: ['LOCATION.EDIT', 'LOCATION.READ', 'ALL'],
+  },
+  {
     pathTo: '/support-tickets',
     title: `${SIDE_NAV}.support`,
     Icon: FaReact,
@@ -196,6 +207,42 @@ export const MenusList: Menu[] = [
         },
       ]
     : []),
+    ...(showForPreProdAndLocal
+      ? [
+          {
+            pathTo: '/vendor-scan',
+            title: `${SIDE_NAV}.vendorQRScan`,
+            Icon: BiQrScan,
+            color: '#D3D3D3',
+            permissions: ['ALL'],
+          },
+        ]
+      : []),
+      ...(showForPreProdAndLocal
+        ? [
+            {
+              pathTo: '/cypressTriggers',
+              title: `${SIDE_NAV}.cypressTriggers`,
+              Icon: BiGitRepoForked,
+              color: '#3182CE',
+              permissions: ['ALL'],
+            },
+            {
+              pathTo: '/sonarqubeDashboard',
+              title: `${SIDE_NAV}.sonarqubeDashboard`,
+              Icon: BiBugAlt,
+              color: '#7182CE',
+              permissions: ['ALL'],
+            },
+            {
+              pathTo: '/automationDashboard',
+              title: `${SIDE_NAV}.automationDashboard`,
+              Icon: BiInfinite,
+              color: '#3092CE',
+              permissions: ['ALL'],
+            },
+          ]
+        : []),
 ]
 
 export const APP_LOCAL_DATE_FORMAT_Z = 'yyyy-MM-dd'

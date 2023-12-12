@@ -44,7 +44,7 @@ const Client = ({
     <div>
       <Modal size="none" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8">
+        <ModalContent w="1210px" rounded={6} borderTop="2px solid #4E87F8" pb='15px'>
           <ModalHeader h="63px" borderBottom="1px solid #E2E8F0" color="gray.600" fontSize={16} fontWeight={500}>
             <HStack spacing={4}>
               <HStack fontSize="16px" fontWeight={500} h="32px">
@@ -59,7 +59,7 @@ const Client = ({
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
-            <Box mt="18px">
+            <Box mt="18px" >
               <ClientDetailsTabs clientModalType="editClient" clientDetails={clientDetails} onClose={onClose} />
             </Box>
           </ModalBody>

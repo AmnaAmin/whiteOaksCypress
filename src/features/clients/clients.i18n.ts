@@ -11,7 +11,10 @@ export const clients = {
         newClient: 'New Client',
         phone: 'Phone',
         // Client Modal
+        title: 'Title',
         name: 'Name',
+        abbreviation: 'Abbreviation',
+        status: 'Status',
         paymentTerms: 'Payment Terms',
         paymentMethod: 'Payment Method',
         accPayConInfo: 'Accounts Payable Contact Details',
@@ -62,6 +65,7 @@ export const clients = {
         phone: 'Teléfono',
         // Client Modal
         name: 'Nombre',
+        abbreviation: 'Abreviatura',
         paymentTerms: 'Términos de pago',
         paymentMethod: 'Método de pago',
         accPayConInfo: 'Datos de contacto de cuentas por pagar',

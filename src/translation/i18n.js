@@ -23,6 +23,7 @@ import { projectAwards } from 'features/work-order/project-award/projectAward.i1
 import { globalErrors } from './errors.i18n'
 import { performance } from 'features/performance/performance.i18n'
 import { accessControl } from 'features/access-control/access-control.i18n'
+import { location } from 'features/location/location.i18n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -53,6 +54,7 @@ i18n.use(initReactI18next).init({
         ...globalErrors.en.translation,
         ...performance.en.translation,
         ...accessControl.en.translation,
+        ...location.en.translation,
 
         // DASHBOARDa
         vendorScore: 'Vendor Score',
@@ -277,6 +279,7 @@ i18n.use(initReactI18next).init({
         affectees: 'This document does not affect any of the following.',
         disputedClaims: 'Disputed claims for extras in the amount of: $',
         claimantsSignature: 'Claimant`s Signature',
+        signature: 'Signature',
         claimantsTitle: 'Claimant`s Title',
         dateOfSignature: 'Date Of Signature',
         apply: 'Apply',
@@ -620,6 +623,7 @@ i18n.use(initReactI18next).init({
         ...globalErrors.es.translation,
         ...performance.es.translation,
         ...accessControl.es.translation,
+        ...location.es.translation,
 
         //PC projectDetails
         projectCoordinator: 'Coordinador del proyecto',
@@ -904,6 +908,7 @@ i18n.use(initReactI18next).init({
         affectees: 'Este documento no afecta a ninguno de los siguientes.',
         disputedClaims: 'Reclamaciones en disputa por extras por la cantidad de: $ ',
         claimantsSignature: 'Firma del Reclamante',
+        signature: 'Firma',
         claimantsTitle: 'Título del reclamante',
         dateOfSignature: 'Fecha de la Firma',
         apply: 'Aplicar',

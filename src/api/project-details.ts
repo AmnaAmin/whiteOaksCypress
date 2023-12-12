@@ -119,7 +119,7 @@ export const useGetClientSelectOptions = () => {
   const client = useClient()
 
   const { data: clients, ...rest } = useQuery<Client[]>('clients', async () => {
-    const response = await client(`clients?sort=companyName,asc`, {})
+    const response = await client(`clients?activated.equals=true&sort=companyName,asc`, {})
 
     return response?.data
   })
@@ -806,9 +806,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
     hoaPhoneNumberExtension: formValues?.hoaContactExtension,
     hoaEmailAddress: formValues?.hoaContactEmail,
     woaPayVariance: null,
-    newProperty: isNewAddress ? property : undefined,
+    newProperty:  property ,
     property,
-    newMarketId: isNewAddress ? formValues.market?.value : undefined,
+    newMarketId: formValues.market?.value ,
     propertyId: isNewAddress ? undefined : formValues?.address?.value,
 
     // Misc payload

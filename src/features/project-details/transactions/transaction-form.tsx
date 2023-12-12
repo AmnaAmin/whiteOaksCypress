@@ -15,7 +15,7 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { Controller, FormProvider, useForm, useFormContext, useWatch } from 'react-hook-form'
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
 import addDays from 'date-fns/addDays'
 import { datePickerFormat } from 'utils/date-time-utils'
@@ -40,7 +40,7 @@ import {
   useManagerEnabled,
 } from 'api/transactions'
 import {
-  ChangeOrderType,
+  // ChangeOrderType,
   FormValues,
   SelectOption,
   TransactionStatusValues,
@@ -65,7 +65,7 @@ import { useRoleBasedPermissions, useUserProfile, useUserRolesSelector } from 'u
 import { useTranslation } from 'react-i18next'
 import { Account } from 'types/account.types'
 import { ViewLoader } from 'components/page-level-loader'
-import { ReadOnlyInput } from 'components/input-view/input-view'
+// import { ReadOnlyInput } from 'components/input-view/input-view'
 import {
   DrawLienWaiver,
   LienWaiverAlert,
@@ -74,7 +74,7 @@ import {
   ProjectTransactionRemainingAlert,
 } from './draw-transaction-lien-waiver'
 import { calendarIcon } from 'theme/common-style'
-import { BiCalendar, BiDetail } from 'react-icons/bi'
+// import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
   REQUIRED_FIELD_ERROR_MESSAGE,
@@ -88,56 +88,56 @@ import UpdateProjectAward from './update-project-award'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { useLocation } from 'react-router-dom'
 
-const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
-  const { t } = useTranslation()
-  const { getValues } = useFormContext<FormValues>()
-  const formValues = getValues()
+// const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
+//   const { t } = useTranslation()
+//   const { getValues } = useFormContext<FormValues>()
+//   const formValues = getValues()
 
-  return (
-    <Grid
-      templateColumns="repeat(auto-fill, minmax(100px,1fr))"
-      gap={{ base: '1rem 20px', sm: '3.5rem' }}
-      borderBottom="1px solid #E2E8F0"
-      borderColor="gray.200"
-      py="5"
-    >
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.dateCreated`)}
-          name={'dateCreated'}
-          value={formValues.dateCreated as string}
-          Icon={BiCalendar}
-        />
-      </GridItem>
+//   return (
+//     <Grid
+//       templateColumns="repeat(auto-fill, minmax(100px,1fr))"
+//       gap={{ base: '1rem 20px', sm: '3.5rem' }}
+//       borderBottom="1px solid #E2E8F0"
+//       borderColor="gray.200"
+//       py="5"
+//     >
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.dateCreated`)}
+//           name={'dateCreated'}
+//           value={formValues.dateCreated as string}
+//           Icon={BiCalendar}
+//         />
+//       </GridItem>
 
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.dateModified`)}
-          name={'dateModified'}
-          value={(formValues.modifiedDate as string) || '----'}
-          Icon={BiCalendar}
-        />
-      </GridItem>
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.createdBy`)}
-          name="createdBy"
-          value={formValues.createdBy as string}
-          Icon={BiDetail}
-        />
-      </GridItem>
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.dateModified`)}
+//           name={'dateModified'}
+//           value={(formValues.modifiedDate as string) || '----'}
+//           Icon={BiCalendar}
+//         />
+//       </GridItem>
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.createdBy`)}
+//           name="createdBy"
+//           value={formValues.createdBy as string}
+//           Icon={BiDetail}
+//         />
+//       </GridItem>
 
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.modifiedBy`)}
-          name={'modifiedBy'}
-          value={(formValues.modifiedBy as string) || '----'}
-          Icon={BiDetail}
-        />
-      </GridItem>
-    </Grid>
-  )
-}
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.modifiedBy`)}
+//           name={'modifiedBy'}
+//           value={(formValues.modifiedBy as string) || '----'}
+//           Icon={BiDetail}
+//         />
+//       </GridItem>
+//     </Grid>
+//   )
+// }
 
 export type TransactionFormProps = {
   onClose: () => void
@@ -159,7 +159,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   screen,
   currentWorkOrderId,
   setCreatedTransaction,
-  isVendorExpired,
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
@@ -220,6 +219,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const {
     handleSubmit,
     register,
+    trigger,
     formState: { errors },
     setValue,
     getValues,
@@ -234,7 +234,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
   const isRefund = useWatch({ name: 'refund', control })
-  const watchStatus = watch('status')
+  const watchStatus = useWatch({ name: 'status', control })
+  const verifyByFPMStatus = useWatch({ name: 'verifiedByFpm', control })
+  const verifyByManagerStatus = useWatch({ name: 'verifiedByManager', control })
 
   const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const date = new Date(e.target.value)
@@ -290,7 +292,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     totalItemsAmount,
     isRefund,
     selectedWorkOrder,
-    isApproved,
+    transaction,
   })
 
   const { permissions } = useRoleBasedPermissions()
@@ -311,7 +313,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const disableSave =
     !selectedCancelledOrDenied && //Check if the status is being changed to cancel/deny let the transaction be allowed.
     (projectAwardCheck || //when there is no project award
-      (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund + is not approved
+      (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund
       (isCompletedWorkLessThanNTEPercentage && !isEnabledToOverrideNTE)) //when %complete is less than NTE and user is not admin/accounting
 
   const {
@@ -396,8 +398,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       const pendingDraws = transactions?.filter(
         t =>
           [
-            TransactionTypeValues.draw,
-            TransactionTypeValues.payment,
+            //TransactionTypeValues.draw,
+            //TransactionTypeValues.payment,
             TransactionTypeValues.depreciation,
             TransactionTypeValues.carrierFee,
           ].includes(t.transactionType) &&
@@ -426,9 +428,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   // ---Example $50 were approved. Remaining is $20. Now he can enter any amount less than or equal to $70.
 
   // If the admin changes amount in any other status (pending/denied/cancelled), he is allowed to enter an amount less than remaining amount.
-  const isAdminEnabledToChange = () => {
+  const isAdminEnabledToChange = values => {
     if (isAdmin) {
-      if ([TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(watchStatus?.value)) {
+      const statuses = [watchStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
+      const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
+        statuses.includes(p),
+      )
+      if (isBeingCancelled) {
         return true
       }
       if (
@@ -469,7 +475,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       if (hasPendingDrawsOnPaymentSave(values)) {
         return
       }
-      if (!isAdminEnabledToChange()) {
+      if (!isAdminEnabledToChange(values)) {
         return
       }
       const queryOptions = {
@@ -498,6 +504,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       selectedWorkOrderStats,
       totalItemsAmount,
       watchStatus,
+      verifyByFPMStatus,
+      verifyByManagerStatus,
     ],
   )
 
@@ -591,9 +599,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">
           {/** In case Draw selected and user click next will show Lien Waiver Popover */}
           {!isShowLienWaiver ? (
-            <Flex flex={1} direction="column" minH="600px">
+            <Flex flex={1} direction="column" minH="400px">
               {/** Readonly information of Transaction */}
-              <TransactionReadOnlyInfo transaction={transaction} />
+              {/* <TransactionReadOnlyInfo transaction={transaction} /> */}
 
               {/** Editable form */}
               <Grid
@@ -1214,14 +1222,19 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             type="button"
             variant="solid"
             isDisabled={
-              !selectedCancelledOrDenied && (amount === 0 || (isPlanExhausted && !isApproved) || !invoicedDate) //Check if the status is being changed to cancel/deny let the transaction be allowed.
+              !selectedCancelledOrDenied &&
+              (amount === 0 || remainingAmountExceededFlag || (isPlanExhausted && !isApproved) || !invoicedDate) //Check if the status is being changed to cancel/deny let the transaction be allowed.
             }
             colorScheme="darkPrimary"
             onClick={event => {
-              event.stopPropagation()
-              setTimeout(() => {
-                setIsShowLienWaiver(true)
+              trigger(['transaction']).then(isValid => {
+                if (isValid) {
+                  setTimeout(() => {
+                    setIsShowLienWaiver(true)
+                  })
+                }
               })
+              event.stopPropagation()
             }}
           >
             {t(`${TRANSACTION}.next`)}

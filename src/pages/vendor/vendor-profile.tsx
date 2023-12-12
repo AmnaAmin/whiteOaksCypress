@@ -257,7 +257,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               )}
             </TabList>
 
-            <Box py="21px" bg="white" px="16px" display={{ base: 'block', sm: 'none' }}>
+            <Box  py="21px" px="16px" display={{ base: 'block', sm: 'none' }}>
               <Divider borderWidth="1px" color="#E2E8F0" />
             </Box>
 
@@ -269,11 +269,13 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               mb={isVendor ? 5 : { base: '4', sm: '0' }}
               width={isVendor ? '1250px' : '100%'}
               borderTopRightRadius="6px"
+              roundedBottom="6px"
               marginTop="1.7px"
               marginLeft="1px"
             >
               <TabPanels>
                 <TabPanel p="0px" mt="30px">
+                <Box h="680" w="100%">
                   {tabIndex === 0 ? (
                     VendorType === 'editVendor' ? (
                       <CreateDetails
@@ -289,9 +291,10 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                       />
                     )
                   ) : null}
+                  </Box>
                 </TabPanel>
                 <TabPanel p="0px" mt="30px">
-                  <Box h="100%" w="100%">
+                  <Box h="680" w="100%">
                     {tabIndex === 1 && (
                       <DocumentsCard
                         isActive={tabIndex === 1}
@@ -303,7 +306,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   </Box>
                 </TabPanel>
                 <TabPanel p="0px" mt="30px">
-                  <Box h="100%" w="100%">
+                  <Box h="680" w="100%">
                     {tabIndex === 2 && (
                       <License
                         isActive={tabIndex === 2}
@@ -314,6 +317,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   </Box>
                 </TabPanel>
                 <TabPanel p="0px" mt="30px">
+                <Box h="680" w="100%" overflow='auto'>
                   {tabIndex === 3 && (
                     <TradeList
                       isActive={tabIndex === 3}
@@ -321,8 +325,10 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                       onClose={props.onClose}
                     />
                   )}
+                  </Box>
                 </TabPanel>
                 <TabPanel p="0px" mt="30px">
+                <Box h="680" w="100%" >
                   {tabIndex === 4 && (
                     <MarketList
                       isActive={tabIndex === 4}
@@ -330,28 +336,35 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                       onClose={props.onClose}
                     />
                   )}
+                  </Box>
                 </TabPanel>
 
                 {!isVendor && vendorProfileData?.id && (
                   <TabPanel p="0px">
+                     <Box h="710" w="100%" >
                     {tabIndex === 5 && (
                       <VendorProjects vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
                     )}
+                    </Box>
                   </TabPanel>
                 )}
                 {!!vendorProfileData?.id && (
                   <TabPanel p="0px">
+                     <Box h="710px" w="100%" overflow='auto'>
                     <VendorUsersTab vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+                    </Box>
                   </TabPanel>
                 )}
 
                 {allowVendorAccounts && (
                   <TabPanel p="0px">
+                     <Box h="710" w="100%" overflow='auto'>
                     <VendorAccounts
                       isActive={vendorProfileData?.id ? tabIndex === 7 : tabIndex === 5}
                       vendorProfileData={vendorProfileData as VendorProfile}
                       onClose={props.onClose}
                     />
+                    </Box>
                   </TabPanel>
                 )}
 

@@ -822,6 +822,29 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
               </Text>
               <Controller
                 control={control}
+                name={`advancedPermissions.invoiceEdit`}
+                render={({ field, fieldState }) => (
+                  <>
+                    <Checkbox
+                      colorScheme="PrimaryCheckBox"
+                      isChecked={field.value}
+                      style={{ background: 'white', border: '#DFDFDF' }}
+                      mr="2px"
+                      size="md"
+                      onChange={value => {
+                        field.onChange(value)
+                      }}
+                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                    >
+                      <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
+                        Can Create Invoice
+                      </Text>
+                    </Checkbox>
+                  </>
+                )}
+              />
+              <Controller
+                control={control}
                 name={`advancedPermissions.invoiceDateEdit`}
                 render={({ field, fieldState }) => (
                   <>

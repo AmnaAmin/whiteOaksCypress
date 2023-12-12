@@ -339,6 +339,7 @@ export type ProjectFinancialOverview = {
   deductible: number
   depreciation: number
   legalFee: number
+  invoiceAmount: number
 }
 
 export type AddressInfo = { address: string | any; city: string; state: string; zipCode: string }

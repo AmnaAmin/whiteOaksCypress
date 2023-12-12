@@ -1,21 +1,25 @@
-import { Box } from '@chakra-ui/react'
+import {  Tabs, TabList, Tab, TabPanel, TabPanels } from '@chakra-ui/react'
+import CypressReport from 'features/cypress-reports/CypressReports';
+import DevCypressReport from 'features/cypress-reports/DevCypressReports'
 
-const CypressReport = () => {
-  const iframe_src = `https://preprod.woaharvest.com/sorry-cypress/output.html`
-  return (
-    <Box>
-      <Box h="calc(100vh - 150px)">
-        <iframe
-          title="Cypress Report"
-          id="woiframe"
-          src={iframe_src}
-          width="100%"
-          height="100%"
-          frameBorder="0"
-        ></iframe>
-      </Box>
-    </Box>
-  )
-}
 
-export default CypressReport
+
+const Reports = () =>
+  <Tabs variant="enclosed" colorScheme="brand">
+    <TabList>
+      <Tab>Report</Tab>
+      <Tab>Dev Report</Tab>
+    </TabList>
+    <TabPanels>
+      <TabPanel>
+        <CypressReport />
+      </TabPanel>
+      <TabPanel>
+        <DevCypressReport />
+      </TabPanel>
+    </TabPanels>
+  </Tabs>
+
+
+
+export default Reports;
