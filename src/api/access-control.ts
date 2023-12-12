@@ -152,6 +152,8 @@ export const useGetSections = ({ isDevtekUser }) => {
     ...(isDevtekUser ? [{ value: 'ADMINDASHBOARD', label: 'Dashboard' }] : []),
     ...(isDevtekUser ? [{ value: 'VENDORDASHBOARD', label: 'Vendor Dashboard' }] : []),
     ...(isDevtekUser ? [{ value: 'ESTIMATE', label: 'Estimates' }] : []),
+    ...(isDevtekUser ? [{ value: 'ESTPAYABLE', label: 'Estimates Payable' }] : []),
+    ...(isDevtekUser ? [{ value: 'ESTRECEIVABLE', label: 'Estimates Receivable' }] : []),
     { value: 'PROJECT', label: 'Projects' },
     { value: 'PAYABLE', label: 'Payable' },
     { value: 'RECEIVABLE', label: 'Receivable' },
@@ -241,6 +243,11 @@ export enum ADV_PERMISSIONS {
   verifiedByFPM = 'PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT',
   invoiceDateEdit = 'PROJECTDETAIL.INVOICING.INVOICEDATE.EDIT',
   invoiceEdit = 'PROJECTDETAIL.INVOICING.EDIT',
+  enableConvertProject = 'ESTIMATEDETAIL.CONVERTPROJECT.ENABLE',
+  estFpmEdit = 'ESTIMATEDETAILS.CONTACTS.FPM.EDIT',
+  estGateCodeEdit = 'ESTIMATEDETAILS.CONTACTS.GATECODE.EDIT',
+  estLockBoxEdit = 'ESTIMATEDETAILS.CONTACTS.LOCKBOX.EDIT',
+  carrierFeeCreateInApprovedStatus = 'ESTIMATEDETAILS.TRANSACTION.CARRIERFEEONAPPROVED.ENABLE',
 }
 
 export const mapFormValuestoPayload = (values, allPermissions) => {
@@ -306,6 +313,13 @@ export const permissionsDefaultValues = ({ permissions, sections }) => {
       verifiedByFPM: permissionSet?.some(p => [ADV_PERMISSIONS.verifiedByFPM, 'ALL'].includes(p)),
       invoiceDateEdit: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p)),
       invoiceEdit: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p)),
+      enableConvertProject: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p)),
+      estFpmEdit: permissionSet?.some(p => [ADV_PERMISSIONS.estFpmEdit, 'ALL'].includes(p)),
+      estGateCodeEdit: permissionSet?.some(p => [ADV_PERMISSIONS.estGateCodeEdit, 'ALL'].includes(p)),
+      estLockBoxEdit: permissionSet?.some(p => [ADV_PERMISSIONS.estLockBoxEdit, 'ALL'].includes(p)),
+      carrierFeeCreateInApprovedStatus: permissionSet?.some(p =>
+        [ADV_PERMISSIONS.carrierFeeCreateInApprovedStatus, 'ALL'].includes(p),
+      ),
     },
   }
 }
