@@ -1,6 +1,6 @@
 import * as authApi from './auth-api'
 
-async function client(endpoint: string, httpConfig: any | undefined = {}) {
+async function client(endpoint: string, httpConfig: any | undefined = {}, toast?) {
   const { data, token, headers: customHeaders, ...customConfig } = httpConfig
   const config = {
     method: data ? 'POST' : 'GET',

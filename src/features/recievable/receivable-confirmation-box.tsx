@@ -19,21 +19,23 @@ import { ACCOUNTS } from 'pages/accounts.i18n'
 import { useTranslation } from 'react-i18next'
 import { BiCheckCircle, BiErrorCircle } from 'react-icons/bi'
 
-interface ReceivableConfirmationBoxProps {
+interface BatchConfirmationBoxProps {
   isOpen?: any
   onClose: any
   title: string
   batchData?: any
   isLoading: boolean
+  batchType?: string
 }
 
-export function ReceivableConfirmationBox({
+export function BatchConfirmationBox({
   isOpen,
   onClose,
   title,
   batchData,
   isLoading,
-}: ReceivableConfirmationBoxProps) {
+  batchType,
+}: BatchConfirmationBoxProps) {
   const batchRunFailed = batchData?.filter(br => br?.statusId === 2) || []
   const batchRunSuccess = batchData?.filter(br => br?.statusId === 3) || []
   const { t } = useTranslation()
@@ -72,7 +74,9 @@ export function ReceivableConfirmationBox({
                         <HStack color="gray.500" fontSize="12px" fontWeight={400}>
                           <Text>{t(`${ACCOUNTS}.batchSuccessMsg`)}</Text>
                           <Text color="#345EA6">
-                            {t(`${ACCOUNTS}.projectID`) + 'C' + b.value + '.'}
+                            {batchType === 'PAYABLE'
+                              ? t(`${ACCOUNTS}.workOrderID`) + b.value + '.'
+                              : t(`${ACCOUNTS}.projectID`) + 'C' + b.value + '.'}
                             <br></br>
                           </Text>
                         </HStack>
@@ -90,10 +94,12 @@ export function ReceivableConfirmationBox({
                     batchRunFailed?.map(b => (
                       <HStack mb={1}>
                         <Icon as={BiErrorCircle} fontSize="18px" color={'red.400'} />
-                        <HStack color="gray.500" fontSize="12px" fontWeight={400}>
+                        <HStack color="gray.500" fontSize="12px" fontWeight={400} alignItems={'flex-start'}>
                           <Text>{batchRunFailed[0].description}</Text>
-                          <Text color="#345EA6">
-                            {t(`${ACCOUNTS}.projectID`) + b.value + '.'}
+                          <Text color="#345EA6" minW="140px">
+                            {batchType === 'PAYABLE'
+                              ? t(`${ACCOUNTS}.workOrderID`) + b.value + '.'
+                              : t(`${ACCOUNTS}.projectID`) + 'C' + b.value + '.'}
                             <br></br>
                           </Text>
                         </HStack>
@@ -107,7 +113,7 @@ export function ReceivableConfirmationBox({
 
         <Divider mt={3} />
         <ModalFooter>
-          <Button colorScheme="brand" variant="solid" onClick={onClose}>
+          <Button colorScheme="brand" variant="solid" onClick={onClose} data-testid="close-confirmation-modal">
             Ok
           </Button>
         </ModalFooter>

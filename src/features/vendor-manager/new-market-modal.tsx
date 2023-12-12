@@ -44,6 +44,7 @@ import NumberFormat from 'react-number-format'
 import { CustomRequiredInput } from 'components/input/input'
 import { SelectOption } from 'types/transaction.type'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { CLIENTS } from 'features/clients/clients.i18n'
 
 const InformationCard: React.FC<{
   Icon: React.ElementType
@@ -87,6 +88,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
       state: { label: selectedMarket?.stateName, id: selectedMarket?.stateId },
       metroServiceArea: selectedMarket?.metropolitanServiceArea,
       lienDue: stateSelectOptions?.find(s => s.id === selectedMarket?.stateId)?.lienDue,
+      abbreviation: selectedMarket?.abbreviation,
     }
   }, [stateSelectOptions])
 
@@ -98,6 +100,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
     createdDate: string
     modifiedBy: string
     modifiedDate: string
+    abbreviation?: string
   }>()
 
   useEffect(() => {
@@ -127,6 +130,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
       id: selectedMarket ? selectedMarket.id : '',
       method: selectedMarket ? 'PUT' : 'POST',
       lienDue: data?.lienDue,
+      abbreviation: data?.abbreviation,
     }
 
     createMarkets(arg, {
@@ -213,7 +217,13 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.metroServiceArea`)}
                   </FormLabel>
-                  <Input {...register('metroServiceArea')} type="text" variant="required-field" w="215px" disabled={isReadOnly} />
+                  <Input
+                    {...register('metroServiceArea')}
+                    type="text"
+                    variant="required-field"
+                    w="215px"
+                    disabled={isReadOnly}
+                  />
                 </Box>
 
                 <FormControl w="225px">
@@ -266,6 +276,13 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                   />
                 </FormControl>
               </HStack>
+              <Box mt={'5px'}>
+                <FormLabel variant="strong-label" size="md">
+                  {t(`${CLIENTS}.abbreviation`)}
+                </FormLabel>
+
+                <Input id="abbreviation" w="215px" {...register('abbreviation')} isDisabled={isReadOnly} />
+              </Box>
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px" justifyContent="space-between">
               <HStack spacing="16px">

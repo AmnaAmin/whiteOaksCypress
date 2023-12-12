@@ -121,6 +121,7 @@ interface FormValues {
   vendorSkillId: number | string | null
   vendorId: number | string | null
   completePercentage?: completePercentage
+  locations?: any
 }
 
 const WorkOrderDetailTab = props => {
@@ -134,6 +135,7 @@ const WorkOrderDetailTab = props => {
     documentsData,
     isFetchingLineItems,
     isLoadingLineItems,
+    locations,
   } = props
 
   const defaultSkill = {
@@ -145,8 +147,8 @@ const WorkOrderDetailTab = props => {
   const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
 
   const defaultValues: FormValues = useMemo(() => {
-    return defaultValuesWODetails(workOrder, defaultSkill)
-  }, [workOrder])
+    return defaultValuesWODetails(workOrder, defaultSkill, locations)
+  }, [workOrder, locations])
 
   const formReturn = useForm<FormValues>({
     defaultValues: {
@@ -183,7 +185,6 @@ const WorkOrderDetailTab = props => {
   const { isAdmin } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
   const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
-
   const {
     skillName,
     companyName,
@@ -380,18 +381,19 @@ const WorkOrderDetailTab = props => {
   }
 
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
+
   const inProgress = [STATUS.Active, STATUS.PastDue, STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
     workOrder.statusLabel?.toLowerCase(),
   )
   useEffect(() => {
     if (isReadOnly) {
-      Array.from(document.querySelectorAll("input")).forEach(input => {
-        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
-            input.setAttribute("disabled", "true");
-          }
-      });
-    };
-  }, []);
+      Array.from(document.querySelectorAll('input')).forEach(input => {
+        if (input.getAttribute('data-testid') !== 'tableFilterInputField') {
+          input.setAttribute('disabled', 'true')
+        }
+      })
+    }
+  }, [])
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -545,7 +547,7 @@ const WorkOrderDetailTab = props => {
                       control={control}
                       name="cancel"
                       render={({ field }) => (
-                        <>
+                        <div data-testid="cancel_Work_Order">
                           <ReactSelect
                             options={CANCEL_WO_OPTIONS}
                             onChange={option => field.onChange(option)}
@@ -554,7 +556,7 @@ const WorkOrderDetailTab = props => {
                               !cancelPermissions
                             }
                           />
-                        </>
+                        </div>
                       )}
                     />
                   </FormControl>

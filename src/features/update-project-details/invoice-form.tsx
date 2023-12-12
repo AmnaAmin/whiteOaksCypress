@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Box,
   Button,
@@ -19,20 +19,24 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
-import { useToast } from '@chakra-ui/toast'
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { ReadOnlyInput } from 'components/input-view/input-view'
-import { BiAddToQueue, BiCalendar, BiDetail, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
+// import { ReadOnlyInput } from 'components/input-view/input-view'
+import { BiAddToQueue, 
+  // BiCalendar, BiDetail,
+   BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { TRANSACTION } from '../project-details/transactions/transactions.i18n'
-import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
-import { INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
+import { 
+  // dateFormat,
+   datePickerFormat } from 'utils/date-time-utils'
+import { InvoiceStatusValues, INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
 import { useAccountData } from 'api/user-account'
 import ReactSelect from 'components/form/react-select'
 import { SelectOption } from 'types/transaction.type'
 import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { FinalSowLineItems } from './final-sow-line-items'
+import { debounce } from 'lodash'
 import {
   createInvoicePdf,
   mapFormValuesToPayload,
@@ -40,6 +44,8 @@ import {
   useTotalAmount,
   useUpdateInvoiceMutation,
   invoiceDefaultValues,
+  useUpdateInvoicingDocument,
+  useGenerateInvoicePDF,
 } from 'api/invoicing'
 import { ReceivedLineItems } from './received-line-items'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
@@ -53,58 +59,66 @@ import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { useNavigate } from 'react-router-dom'
+import { Document } from 'types/vendor.types'
+//COMMENTING OUT FOR A TEST IF NOT APPROVED BY CLIENT THEN WE CAN REDO THIS
+// const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
+//   const { t } = useTranslation()
+//   const createdBy = invoice?.createdBy ?? account?.email
+//   const modifiedBy = invoice?.modifiedBy
+//   return (
+//     <Grid
+//       templateColumns="repeat(auto-fill, minmax(100px,1fr))"
+//       gap={{ base: '1rem 20px', sm: '3.5rem' }}
+//       borderBottom="1px solid #E2E8F0"
+//       borderColor="gray.200"
+//       py="5"
+//     >
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.dateCreated`)}
+//           name={'dateCreated'}
+//           value={dateFormat(invoice?.createdDate ?? new Date()) as string}
+//           Icon={BiCalendar}
+//         />
+//       </GridItem>
 
-const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
-  const { t } = useTranslation()
-  const createdBy = invoice?.createdBy ?? account?.email
-  const modifiedBy = invoice?.modifiedBy
-  return (
-    <Grid
-      templateColumns="repeat(auto-fill, minmax(100px,1fr))"
-      gap={{ base: '1rem 20px', sm: '3.5rem' }}
-      borderBottom="1px solid #E2E8F0"
-      borderColor="gray.200"
-      py="5"
-    >
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.dateCreated`)}
-          name={'dateCreated'}
-          value={dateFormat(invoice?.createdDate ?? new Date()) as string}
-          Icon={BiCalendar}
-        />
-      </GridItem>
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.dateModified`)}
+//           name={'dateModified'}
+//           value={invoice?.modifiedDate ? (dateFormat(invoice?.modifiedDate) as string) : '---'}
+//           Icon={BiCalendar}
+//         />
+//       </GridItem>
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.createdBy`)}
+//           name="createdBy"
+//           value={(createdBy as string) || '---'}
+//           Icon={BiDetail}
+//         />
+//       </GridItem>
 
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.dateModified`)}
-          name={'dateModified'}
-          value={invoice?.modifiedDate ? (dateFormat(invoice?.modifiedDate) as string) : '---'}
-          Icon={BiCalendar}
-        />
-      </GridItem>
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.createdBy`)}
-          name="createdBy"
-          value={(createdBy as string) || '---'}
-          Icon={BiDetail}
-        />
-      </GridItem>
+//       <GridItem>
+//         <ReadOnlyInput
+//           label={t(`${TRANSACTION}.modifiedBy`)}
+//           name={'modifiedBy'}
+//           value={(modifiedBy as string) || '----'}
+//           Icon={BiDetail}
+//         />
+//       </GridItem>
+//     </Grid>
+//   )
+// }
 
-      <GridItem>
-        <ReadOnlyInput
-          label={t(`${TRANSACTION}.modifiedBy`)}
-          name={'modifiedBy'}
-          value={(modifiedBy as string) || '----'}
-          Icon={BiDetail}
-        />
-      </GridItem>
-    </Grid>
-  )
-}
-
-const InvoicingSummary: React.FC<any> = ({ projectData, received, invoiced, sowAmount }) => {
+const InvoicingSummary: React.FC<any> = ({
+  projectData,
+  received,
+  invoiced,
+  sowAmount,
+  isPartialPayment,
+  invoiceAmount,
+}) => {
   const { t } = useTranslation()
   const remainingAR = (sowAmount ?? projectData?.sowNewAmount) - received
   return (
@@ -121,43 +135,49 @@ const InvoicingSummary: React.FC<any> = ({ projectData, received, invoiced, sowA
       >
         <GridItem borderWidth="0 1px 0 0" borderStyle="solid" borderColor="gray.300" py="4" height="auto"></GridItem>
         <GridItem py={'3'} data-testid="total-amount" height={'auto'}>
-          <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
-            <Text fontWeight={600} color="gray.600">
-              {t('project.projectDetails.sowAmount')}
-              {':'}
-            </Text>
-            <Text ml={'10px'}>{currencyFormatter(sowAmount ?? (projectData?.sowNewAmount?.toString() as string))}</Text>
-          </Flex>
-          {projectData?.validForNewInvoice && (
-            <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
-              <Text fontWeight={600} color="gray.600">
-                {t('project.projectDetails.amountReceived')}
-                {':'}
-              </Text>
-              <Text ml={'10px'}>{currencyFormatter(received)}</Text>
-            </Flex>
+          {!isPartialPayment && (
+            <>
+              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px">
+                <Text fontWeight={600} color="gray.600">
+                  {t('project.projectDetails.sowAmount')}
+                  {':'}
+                </Text>
+                <Text ml={'10px'}>
+                  {currencyFormatter(sowAmount ?? (projectData?.sowNewAmount?.toString() as string))}
+                </Text>
+              </Flex>
+              {projectData?.validForNewInvoice && (
+                <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
+                  <Text fontWeight={600} color="gray.600">
+                    {t('project.projectDetails.amountReceived')}
+                    {':'}
+                  </Text>
+                  <Text ml={'10px'}>{currencyFormatter(received)}</Text>
+                </Flex>
+              )}
+              <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
+                <Text fontWeight={600} color="gray.600">
+                  {t('project.projectDetails.remainingAR')}
+                  {':'}
+                </Text>
+                <Text ml={'10px'}>{currencyFormatter(remainingAR)}</Text>
+              </Flex>
+            </>
           )}
-          <Flex direction={'row'} justifyContent={'space-between'} pl="30px" pr="30px" mt="10px">
-            <Text fontWeight={600} color="gray.600">
-              {t('project.projectDetails.remainingAR')}
-              {':'}
-            </Text>
-            <Text ml={'10px'}>{currencyFormatter(remainingAR)}</Text>
-          </Flex>
           <Flex
             direction={'row'}
             justifyContent={'space-between'}
             pl="30px"
             pr="30px"
             mt="10px"
-            borderTop="1px solid #CBD5E0"
+            borderTop={!isPartialPayment ? '1px solid #CBD5E0' : 'none'}
             pt="10px"
           >
             <Text fontWeight={600} color="gray.600">
               {t('project.projectDetails.invoiceAmount')}
               {':'}
             </Text>
-            <Text ml={'10px'}>{currencyFormatter(invoiced)}</Text>
+            <Text ml={'10px'}>{currencyFormatter(!isPartialPayment ? invoiced : invoiceAmount)}</Text>
           </Flex>
         </GridItem>
       </Grid>
@@ -174,6 +194,7 @@ export type InvoicingFormProps = {
   transactions?: any[]
   isLoading?: boolean
   isReceivable?: boolean
+  invoiceNumber?: string
 }
 
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({
@@ -185,6 +206,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   transactions,
   isLoading,
   isReceivable,
+  invoiceNumber,
 }) => {
   const { t } = useTranslation()
   const { mutate: createInvoiceMutate, isLoading: isLoadingCreate } = useCreateInvoiceMutation({
@@ -199,13 +221,15 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const attachment = invoice?.documents?.find(doc => doc.documentType === 1029)
   const formReturn = useForm<InvoicingType>()
   const navigate = useNavigate()
+  const [currStatusOptions, setCurrStatusOptions] = useState(INVOICE_STATUS_OPTIONS)
+  const isCancelled = invoice?.status === InvoiceStatusValues.cancelled
 
   useEffect(() => {
     if (isLoading) {
       return
     }
     formReturn.reset({
-      ...invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected, transactions }),
+      ...invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected, transactions, invoiceNumber }),
     })
   }, [invoice, transactions?.length, clientSelected])
 
@@ -233,8 +257,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const watchPayment = watch('payment')
   const watchAttachments = watch('attachments')
   const remainingPayVal = invoice?.remainingPayment as number
+  const { mutate: updateInvoiceDocument } = useUpdateInvoicingDocument()
 
-  const toast = useToast()
   const { invoiced, received } = useTotalAmount({
     invoiced: watchInvoiceArray,
     received: watchReceivedArray,
@@ -252,13 +276,13 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   useEffect(() => {
     if (!!invoice) {
       clearErrors('payment')
-      if (Number(watchPayment) > invoiced) {
+      if (Number(watchPayment) > invoiced?.toFixed(2)) {
         setError('payment', { type: 'custom', message: 'Payment cannot be greater than invoiced amount' })
       }
     }
   }, [invoiced, watchPayment])
 
-  const remainingAR = projectData?.sowNewAmount! - received
+  // const remainingAR = projectData?.sowNewAmount! - received
   const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
   const { permissions } = useRoleBasedPermissions()
   const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
@@ -316,17 +340,21 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     setValue('woaExpectedPayDate', datePickerFormat(woaExpectedDate))
   }
 
+  const generatePDFInvoiceDoc = useGenerateInvoicePDF()
+
   const onSubmit = async values => {
-    if (remainingAR - invoiced < 0) {
-      toast({
-        title: 'Error',
-        description: t(`project.projectDetails.balanceDueError`),
-        status: 'error',
-        isClosable: true,
-        position: 'top-left',
-      })
-      return
-    }
+    // console.log("Remaing AR:", remainingAR);
+    // console.log("Invoiced Amount: ", invoiced);
+    // if (remainingAR - invoiced < 0 && values?.status?.value !== InvoiceStatusValues.cancelled) {
+    //   toast({
+    //     title: 'Error',
+    //     description: t(`project.projectDetails.balanceDueError`),
+    //     status: 'error',
+    //     isClosable: true,
+    //     position: 'top-left',
+    //   })
+    //   return
+    // }
 
     let payload = await mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: invoiced })
     let form = new jsPDF()
@@ -350,7 +378,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
 
     if (!invoice) {
       createInvoiceMutate(payload, {
-        onSuccess: () => {
+        onSuccess: data => {
           onClose?.()
         },
         onError: error => {
@@ -359,8 +387,12 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       })
     } else {
       updateInvoiceMutate(payload, {
-        onSuccess: () => {
+        onSuccess: data => {
           onClose?.()
+
+          generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then(documentObj => {
+            updateInvoiceDocument(documentObj as Document)
+          })
         },
         onError: error => {
           console.log(error)
@@ -392,11 +424,43 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     })
   }, [append])
 
+  const isStatusDisabled = invoice?.status !== InvoiceStatusValues.pendingPayment || isCancelled
+
+  useEffect(() => {
+    if (!invoice) return
+    if (invoice?.status === InvoiceStatusValues.pendingPayment) {
+      setCurrStatusOptions(
+        currStatusOptions.filter(
+          c => c.value === InvoiceStatusValues.pendingPayment || c.value === InvoiceStatusValues.cancelled,
+        ),
+      )
+    } else if (isCancelled) {
+      setCurrStatusOptions(currStatusOptions.filter(c => c.value === InvoiceStatusValues.cancelled))
+    } else {
+      setCurrStatusOptions(INVOICE_STATUS_OPTIONS.filter(c => c.value !== InvoiceStatusValues.cancelled))
+    }
+  }, [invoice?.status, invoice])
+
+  const watchPaymentValue = parseFloat(watchPayment!?.toString())
+  const isPaymentReceivedDisabled = isNaN(watchPaymentValue) || watchPaymentValue <= 0 || isPaid || isCancelled
+
+  useEffect(() => {
+    if (isPaymentReceivedDisabled) {
+      setValue('paymentReceivedDate', null)
+      return
+    }
+    setValue('paymentReceivedDate', datePickerFormat(new Date()))
+  }, [isPaymentReceivedDisabled])
+
+  useEffect(() => {
+    setValue('invoiceNumber', invoiceNumber as string)
+  }, [invoiceNumber])
+
   return (
     <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)}>
-      <InvoicingReadOnlyInfo invoice={invoice} account={data} />
+      {/* <InvoicingReadOnlyInfo invoice={invoice} account={data} /> */}
       <Flex direction="column">
-        <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pt="20px" pb="4">
+        <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'}  pb="4">
           <GridItem>
             <FormControl isInvalid={!!errors.invoiceNumber} data-testid="invoiceNumber">
               <FormLabel variant="strong-label" size="md" htmlFor="invoiceNumber">
@@ -413,7 +477,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         data-testid="invoiceNumber"
                         id="invoiceNumber"
                         size="md"
-                        disabled={!isAdmin || isPaid}
+                        disabled={!isAdminOrAcc || isPaid || isCancelled}
                         {...register('invoiceNumber')}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -440,7 +504,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         type="date"
                         id="invoiceDate"
                         size="md"
-                        disabled={isPaid || !isInvoicedEnabled}
+                        disabled={isPaid || !isInvoicedEnabled || isCancelled}
                         {...register('invoiceDate')}
                         onChange={onInvoiceDateChange}
                       />
@@ -465,7 +529,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     <ReactSelect
                       {...field}
                       id="paymentTermDD"
-                      isDisabled={isPaid || !isAdminOrAcc}
+                      isDisabled={isPaid || !isAdminOrAcc || isCancelled}
                       options={PAYMENT_TERMS_OPTIONS}
                       selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                       onChange={(option: SelectOption) => {
@@ -557,7 +621,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                                 : Number(invoiced)?.toFixed(2),
                             )
                           }}
-                          disabled={isPaid || !isAdminOrAcc}
+                          disabled={isPaid || !isAdminOrAcc || isCancelled}
                           customInput={CustomRequiredInput}
                           thousandSeparator={true}
                           prefix={'$'}
@@ -582,8 +646,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         <ReactSelect
                           {...field}
                           id="status"
-                          isDisabled={true}
-                          options={INVOICE_STATUS_OPTIONS}
+                          isDisabled={isStatusDisabled}
+                          // options={INVOICE_STATUS_OPTIONS}
+                          options={currStatusOptions}
                           selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                           onChange={statusOption => {
                             field.onChange(statusOption)
@@ -613,7 +678,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       return (
                         <div data-testid="paymentReceivedDate">
                           <Input
-                            disabled={parseFloat(watchReminaingPayment!?.toString()) !== 0 || isPaid}
+                            disabled={isPaymentReceivedDisabled}
+                            // {...(isPaymentReceivedDisabled ? { value: datePickerFormat(new Date()) as string } : {})}
                             data-testid="paymentReceivedDate"
                             type="date"
                             id="paymentReceivedDate"
@@ -665,7 +731,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       size="sm"
                       colorScheme="darkPrimary"
                       onClick={addRow}
-                      disabled={isPaid || !isAdminOrAcc}
+                      disabled={isPaid || !isAdminOrAcc || isCancelled}
                       leftIcon={<BiAddToQueue />}
                     >
                       {t(`project.projectDetails.addNewRow`)}
@@ -674,7 +740,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       data-testid="delete-row-button"
                       variant="ghost"
                       size="sm"
-                      disabled={isPaid || !isAdminOrAcc}
+                      disabled={isPaid || !isAdminOrAcc || isCancelled}
                       colorScheme="darkPrimary"
                       ml="10px"
                       leftIcon={<RiDeleteBinLine />}
@@ -772,7 +838,13 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           </TabList>
           <TabPanels>
             <TabPanel padding="5px 0px 0px 0px">
-              <FinalSowLineItems formReturn={formReturn} invoice={invoice} projectData={projectData} fields={fields} />
+              <FinalSowLineItems
+                isAdminOrAcc={isAdminOrAcc}
+                formReturn={formReturn}
+                invoice={invoice}
+                projectData={projectData}
+                fields={fields}
+              />
             </TabPanel>
             {projectData?.validForNewInvoice && (
               <TabPanel h="100%" padding="5px 0px 0px 0px">
@@ -786,6 +858,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           invoiced={invoiced}
           received={received}
           sowAmount={invoice?.sowAmount}
+          isPartialPayment={invoice?.isPartialPayment}
+          invoiceAmount={invoice?.invoiceAmount}
         />
       </Flex>
       <Divider mt={3}></Divider>
@@ -820,9 +894,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
             {t(`project.projectDetails.cancel`)}
           </Button>
           <Button
-            onClick={() => {
-              formReturn.handleSubmit(onSubmit)()
-            }}
+           onClick={debounce(() => {
+            formReturn.handleSubmit(onSubmit)()
+          }, 300)}
             isLoading={isLoadingUpdate || isLoadingCreate}
             disabled={!invoiced || isPaid || !isAdminOrAcc}
             form="invoice-form"
@@ -844,3 +918,5 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     </form>
   )
 }
+
+

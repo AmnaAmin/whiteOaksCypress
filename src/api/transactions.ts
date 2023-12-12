@@ -44,6 +44,7 @@ import {
 } from 'features/project-details/transactions/transaction.constants'
 import { ACCONT_PAYABLE_API_KEY } from './account-payable'
 import { STATUS } from 'features/common/status'
+import { InvoiceStatusValues, InvoicingType } from 'types/invoice.types'
 
 export const GET_TRANSACTIONS_API_KEY = 'transactions'
 
@@ -74,9 +75,28 @@ export const useTransactionsV1 = (projectId?: string) => {
     async () => {
       const response = await client(`change-orders/v1?projectId=${projectId}&sort=modifiedDate,asc`, {})
 
+      await Promise.all(
+        response?.data?.map(async t => {
+          if (t.transactionType !== TransactionTypeValues.invoice) return
+
+          const invoiceId = t.invoiceId
+
+          const response = await client(`project-invoices/${invoiceId}`, {})
+
+          const invoiceData = response?.data as InvoicingType
+
+          if (invoiceData.status === InvoiceStatusValues.partialPaid) {
+            t.status = 'Partial Paid'
+          }
+          if (invoiceData.status === InvoiceStatusValues.paid) {
+            t.status = InvoiceStatusValues.paid
+          }
+        }),
+      )
+
       return response?.data
     },
-    { enabled: projectId !== 'undefined' },
+    { enabled: projectId !== 'undefined' && !!projectId },
   )
 
   return {

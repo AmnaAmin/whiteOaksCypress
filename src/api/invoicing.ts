@@ -13,6 +13,9 @@ import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { readFileContent } from './vendor-details'
 import { Project } from 'types/project.type'
+import { Document } from 'types/vendor.types'
+import { useCallback } from 'react'
+import jsPDF from 'jspdf'
 
 export const useFetchInvoices = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
@@ -67,6 +70,8 @@ export const useCreateInvoiceMutation = ({ projId }) => {
         queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['projectFinancialOverview', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['project', projectId?.toString()])
       },
       onError(error: any) {
         let description = error.title ?? 'Unable to save Invoice.'
@@ -98,9 +103,12 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
     },
     {
       onSuccess(res) {
+        queryClient.invalidateQueries(['project', projectId])
         queryClient.invalidateQueries(['invoices', projectId])
         queryClient.invalidateQueries(['transactions', projectId])
         queryClient.invalidateQueries(['projectFinancialOverview', projectId])
+        queryClient.invalidateQueries(['project', projectId])
+        queryClient.invalidateQueries(['project', projectId?.toString()])
       },
       onError(error: any) {
         let description = error.title ?? 'Unable to save Invoice.'
@@ -192,29 +200,48 @@ export const useTotalAmount = ({ invoiced, received }) => {
 export const isReceivedTransaction = transaction => {
   const compatibleType =
     transaction.status === 'APPROVED' &&
-    [TransactionTypeValues.deductible, TransactionTypeValues.depreciation, TransactionTypeValues.invoice].includes(
-      transaction.transactionType,
-    )
+    [
+      TransactionTypeValues.deductible,
+      TransactionTypeValues.depreciation,
+      TransactionTypeValues.invoice,
+      TransactionTypeValues.payment,
+    ].includes(transaction.transactionType)
 
   return !transaction.parentWorkOrderId && compatibleType
 }
 const isAddedInFinalSow = transaction => {
+  const isInvoiceCancelled = t => {
+    if (t.invoiceStatus === 'CANCELLED') return true
+
+    return false
+  }
+
   const compatibleType =
     transaction.transactionType === TransactionTypeValues.carrierFee ||
     transaction.transactionType === TransactionTypeValues.legalFee ||
     transaction.transactionType === TransactionTypeValues.changeOrder ||
     transaction.transactionType === TransactionTypeValues.originalSOW
   return (
-    transaction.status === 'APPROVED' && !transaction.parentWorkOrderId && compatibleType && !transaction.invoiceNumber
+    transaction.status === 'APPROVED' &&
+    !transaction.parentWorkOrderId &&
+    compatibleType &&
+    (!transaction.invoiceNumber || isInvoiceCancelled(transaction))
   )
 }
 
-export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clientSelected, transactions }) => {
-  const invoiceInitials = getInvoiceInitials(projectData, invoiceCount)
+export const invoiceDefaultValues = ({
+  invoice,
+  projectData,
+  invoiceCount,
+  clientSelected,
+  transactions,
+  invoiceNumber,
+}) => {
   const invoicedDate = new Date()
   const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
   const paymentTerm = Number(clientSelected?.paymentTerm) ?? 0
   const woaExpectedDate = addDays(utcDate, paymentTerm)
+
   let received = [] as any
   let finalSowLineItems = [] as any
   if (transactions?.length) {
@@ -233,6 +260,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
       }
     })
   }
+
   if (!invoice) {
     if (transactions?.length) {
       transactions.forEach(t => {
@@ -253,7 +281,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
   }
 
   return {
-    invoiceNumber: invoice?.invoiceNumber ?? invoiceInitials,
+    invoiceNumber: invoice?.invoiceNumber ?? invoiceNumber,
     invoiceDate: datePickerFormat(invoice?.invoiceDate ?? invoicedDate),
     paymentTerm: PAYMENT_TERMS_OPTIONS?.find(p => p.value === (invoice?.paymentTerm ?? clientSelected?.paymentTerm)),
     woaExpectedPayDate: datePickerFormat(invoice?.woaExpectedPay ?? woaExpectedDate),
@@ -261,8 +289,7 @@ export const invoiceDefaultValues = ({ invoice, projectData, invoiceCount, clien
       ? finalSowLineItems
       : invoice?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems'),
     // fetch saved received items once invoice is PAID, else it will be dynamically calculated from current transactions.
-    receivedLineItems:
-      invoice?.status === 'PAID' ? invoice?.invoiceLineItems?.filter(t => t.type === 'receivedLineItems') : received,
+    receivedLineItems: received,
     status: INVOICE_STATUS_OPTIONS?.find(o => o.value === invoice?.status) ?? INVOICE_STATUS_OPTIONS[0],
     paymentReceivedDate: datePickerFormat(invoice?.paymentReceived),
     attachments: undefined,
@@ -517,4 +544,107 @@ export const getInvoiceInitials = (projectData?: Project, revisedIndex?: number)
     projectData?.streetAddress?.split(' ').join('')?.slice(0, 7) +
     (revisedIndex && revisedIndex > 0 ? `-R${String(revisedIndex).padStart(2, '0')}` : '')
   )
+}
+
+export const useUpdateInvoicingDocument = () => {
+  const client = useClient()
+
+  return useMutation(async (payload: Document) => {
+    let documents = await client('documents?projectId.equals=' + payload.projectId, {})
+    if (documents?.data) {
+      documents = documents.data?.filter((d: Document) => d.projectInvoiceId === payload.projectInvoiceId)
+    }
+    if (documents && Array.isArray(documents)) {
+      payload.id = documents[0].id
+    }
+
+    return client('documents', {
+      data: payload,
+      method: 'PUT',
+    })
+  })
+}
+
+export const useFetchInvoiceDetail = (projectId: string) => {
+  const client = useClient()
+
+  const { data: invoiceDetail, ...rest } = useQuery(
+    ['invoicesDetail', projectId],
+    async () => {
+      const response = await client(`project/${projectId}/invoiceNo`, {})
+
+      return response
+    },
+    {
+      enabled: !!projectId && projectId !== 'undefined',
+    },
+  )
+  return {
+    invoiceDetail,
+    ...rest,
+  }
+}
+
+export const useGenerateInvoicePDF = () => {
+  const client = useClient()
+
+  return useCallback(async (invoiceId, woAddress, payload) => {
+    const transactionsResponse = await client(
+      `change-orders/v1?projectId=${payload.projectId}&sort=modifiedDate,asc`,
+      {},
+    )
+    const projectResponse = await client(`projects/${payload.projectId}?cacheBuster=${new Date().valueOf()}`, {})
+    const invoiceResponse = await client(`project-invoices/${invoiceId}`, {})
+
+    const invoice = invoiceResponse?.data
+
+    const transactions = transactionsResponse?.data
+    const projectData = projectResponse?.data
+
+    let received = [] as any
+    if (transactions?.length) {
+      transactions.forEach(t => {
+        if (isReceivedTransaction(t)) {
+          received.push({
+            id: null,
+            transactionId: t.id,
+            checked: false,
+            name: t.name,
+            type: 'receivedLineItems',
+            description: t.transactionTypeLabel,
+            amount: Math.abs(t.transactionTotal),
+            createdDate: datePickerFormat(t.modifiedDate),
+          })
+        }
+      })
+    }
+
+    const totalReceived = received?.reduce((result, item) => {
+      if (item.amount) {
+        return result + Number(item.amount)
+      } else {
+        return result
+      }
+    }, 0)
+
+    let form = new jsPDF()
+    form = await createInvoicePdf({
+      doc: form,
+      invoiceVals: payload,
+      address: woAddress,
+      projectData,
+      sowAmt: invoice?.sowAmount,
+      received: totalReceived,
+      receivedLineItems: received,
+    })
+    const pdfUri = form.output('datauristring')
+    return {
+      documentType: 42,
+      projectId: projectData?.id,
+      fileObject: pdfUri.split(',')[1],
+      fileObjectContentType: 'application/pdf',
+      fileType: 'Invoice.pdf',
+      projectInvoiceId: invoice?.id,
+    }
+  }, [])
 }

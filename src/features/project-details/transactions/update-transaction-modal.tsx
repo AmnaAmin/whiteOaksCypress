@@ -35,7 +35,7 @@ const UpdateTransactionModal: React.FC<Props> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={modalSize} variant="custom">
       <ModalOverlay />
-      <ModalContent minH="700px">
+      <ModalContent minH="400px">
         <ModalHeader data-testid="update-transaction">{heading}</ModalHeader>
         <ModalCloseButton _hover={{ bg: 'blue.50' }} />
         <ModalBody bg="bgGlobal.50" p={2}>

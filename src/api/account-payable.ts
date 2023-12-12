@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from '../utils/auth-context'
-import { useState } from 'react'
 import { usePaginationQuery } from 'api'
 declare global {
   interface Window {
@@ -9,11 +8,12 @@ declare global {
 }
 
 export const ACCONT_PAYABLE_API_KEY = 'account-payable'
+export const AP_CARDS = 'ap-cards'
 
 export const useAccountPayableCard = ({ userIds }) => {
   const client = useClient()
   const apiQuery = `ap-cards` + (userIds?.length > 0 ? `?userId=${userIds?.join(',')}` : '')
-  return useQuery([ACCONT_PAYABLE_API_KEY, userIds], async () => {
+  return useQuery([AP_CARDS, userIds], async () => {
     const response = await client(apiQuery, {})
     return { ...response?.data }
   })
@@ -73,8 +73,7 @@ export const useBatchProcessingMutation = () => {
   }, {})
 }
 
-export const useCheckBatch = (setLoading, loading, queryString) => {
-  const [isAPIEnabled, setAPIEnabled] = useState(false)
+export const useCheckBatch = (queryString, setLoading, fetchBatchResult, refetchInterval, setRefetchInterval) => {
   const client = useClient()
   const queryClient = useQueryClient()
   const apiQueryString = getPayableQueryString(queryString)
@@ -82,22 +81,36 @@ export const useCheckBatch = (setLoading, loading, queryString) => {
   return useQuery(
     ['accountPayableBatchCheck'],
     async data => {
-      setAPIEnabled(true)
       const response = await client(`batches/progress/1`, {})
       return response?.data
     },
     {
       onSuccess(isBatchProcessingInProgress) {
         if (!isBatchProcessingInProgress) {
-          setLoading(false)
-          setAPIEnabled(false)
-
           queryClient.invalidateQueries([ACCONT_PAYABLE_API_KEY, apiQueryString])
-          queryClient.invalidateQueries(ACCONT_PAYABLE_API_KEY)
+          queryClient.invalidateQueries(AP_CARDS)
+          setRefetchInterval(0)
+          setLoading(false)
+          fetchBatchResult()
         }
       },
-      enabled: loading && isAPIEnabled,
-      refetchInterval: 10000,
+      enabled: refetchInterval > 0,
+      refetchInterval: refetchInterval,
+    },
+  )
+}
+
+export const useBatchRun = batchId => {
+  const client = useClient()
+
+  return useQuery(
+    ['batchRun'],
+    async data => {
+      const response = await client(`batch-values/batchType/${batchId}`, {})
+      return response?.data
+    },
+    {
+      enabled: false,
     },
   )
 }

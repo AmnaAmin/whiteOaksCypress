@@ -135,7 +135,7 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
         <Box
           overflow={'auto'}
           w="100%"
-          h="530px"
+          h="574px"
           position="relative"
           roundedTop={6}
           pointerEvents={'auto'}

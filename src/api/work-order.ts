@@ -211,10 +211,16 @@ export const useNoteMutation = projectId => {
 export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) => {
   const client = useClient()
 
-  const { data: notes, ...rest } = useQuery<Array<Document>>(['notes', workOrderId], async () => {
-    const response = await client(`notes?workOrderId.equals=${workOrderId}&sort=modifiedDate,asc`, {})
-    return response?.data
-  })
+  const { data: notes, ...rest } = useQuery<Array<Document>>(
+    ['notes', workOrderId],
+    async () => {
+      const response = await client(`notes?workOrderId.equals=${workOrderId}&sort=modifiedDate,asc`, {})
+      return response?.data
+    },
+    {
+      enabled: !!workOrderId,
+    },
+  )
 
   return {
     notes,
@@ -326,6 +332,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
             id: isNewSmartLineItem ? '' : a.id,
             smartLineItemId: isNewSmartLineItem ? a.id : a.smartLineItemId,
             orderNo: index,
+            location: a.location.label,
           }
           delete assignedItem.uploadedDoc
           return assignedItem
@@ -351,7 +358,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
   }
 }
 
-export const defaultValuesWODetails = (workOrder, defaultSkill) => {
+export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
   const defaultValues = {
     cancel: {
       value: '',
@@ -367,7 +374,21 @@ export const defaultValuesWODetails = (workOrder, defaultSkill) => {
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {
-            return { ...e, uploadedDoc: null, clientAmount: (e.price ?? 0) * (e.quantity ?? 0) }
+            const locationFound = locations?.find(l => l.value === e?.location)
+            let location
+            if (locationFound) {
+              location = { label: locationFound.value, value: locationFound.id }
+            } else if (!!e.location) {
+              location = { label: e?.location, value: e?.location }
+            } else {
+              location = null
+            }
+            return {
+              ...e,
+              uploadedDoc: null,
+              clientAmount: (e.price ?? 0) * (e.quantity ?? 0),
+              location,
+            }
           })
         : [],
     completePercentage: workOrder?.completePercentage,
@@ -420,6 +441,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
         id: '',
         smartLineItemId: a.id,
         orderNo: index,
+        location: a.location.label,
       }
       delete assignedItem.uploadedDoc
       return assignedItem

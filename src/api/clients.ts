@@ -1,5 +1,5 @@
 import { useToast } from '@chakra-ui/react'
-import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
+import { CLIENT_STATUS_OPTIONS, PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { CLIENTS } from 'features/clients/clients.i18n'
 import { reset } from 'numeral'
 import { Control, FieldErrors, useWatch } from 'react-hook-form'
@@ -109,6 +109,8 @@ export const useUpdateClientDetails = () => {
 export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marketOptions, markets }) => {
   const stateValue = statesOptions?.find(b => b?.id === clientDetails?.state)
   const paymentTermsValue = PAYMENT_TERMS_OPTIONS?.find(s => s?.value === clientDetails?.paymentTerm)
+  const statusValue = CLIENT_STATUS_OPTIONS?.find(s => s?.value === clientDetails?.activated)
+
   const marketsId = clientDetails?.markets.map(m => m.id)
   const marketList = markets?.map(market => ({
     ...market,
@@ -158,6 +160,7 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
     contacts: contactsMarketsValue,
     accountPayableContactInfos: accPayInfoValue,
     carrier,
+    activated: statusValue
   }
   return defaultValues
 }

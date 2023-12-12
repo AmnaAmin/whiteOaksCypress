@@ -20,17 +20,26 @@ import { useTransactionsV1 } from 'api/transactions'
 import { TransactionTypeValues } from 'types/transaction.type'
 import { Project } from 'types/project.type'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
+import { InvoiceStatusValues } from 'types/invoice.types'
 
 type InvoiceItemsFormProps = {
   formReturn: UseFormReturn<InvoicingType>
   invoice?: InvoicingType
   projectData: Project | undefined
   fields: any
+  isAdminOrAcc?: boolean
 }
 
-export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn, invoice, projectData, fields }) => {
+export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
+  isAdminOrAcc,
+  formReturn,
+  invoice,
+  projectData,
+  fields,
+}) => {
   const { t } = useTranslation()
   const isPaid = (invoice?.status as string)?.toLocaleUpperCase() === 'PAID'
+  const isCancelled = invoice?.status === InvoiceStatusValues.cancelled
 
   const {
     control,
@@ -40,7 +49,16 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
     watch,
   } = formReturn
 
+  const isPaymentTypeData = value => value.type === 'Payment'
+
   const watchInvoiceArray = watch('finalSowLineItems')
+  const isPartialPayment = invoice?.isPartialPayment
+
+  const watchPaymentInvoiceArray = invoice?.invoiceLineItems.map(e => e)
+
+  const partialPayment = watchPaymentInvoiceArray?.filter(isPaymentTypeData)
+
+  const dataToMap = isPartialPayment ? partialPayment : watchInvoiceArray
 
   const { transactions } = useTransactionsV1(`${projectData?.id}`)
 
@@ -145,9 +163,9 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
           </Grid>
 
           <Box flex="1" overflow="auto" maxH="155px" minH="155px" id="amounts-list">
-            {watchInvoiceArray?.length > 0 ? (
+            {watchInvoiceArray?.length > 0 || partialPayment?.length > 0 ? (
               <>
-                {watchInvoiceArray?.map((invoiceItem, index) => {
+                {dataToMap?.map((invoiceItem, index) => {
                   const isPaidOrOriginalSOW =
                     ['Original SOW', 'Carrier Fee', 'Legal Fee', 'ChangeOrder'].includes(
                       invoiceItem?.description as string,
@@ -195,11 +213,12 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                               data-testid={`finalSowLineItems-type-${index}`}
                               type="text"
                               size="sm"
+                              value={isPartialPayment ? invoiceItem?.name : undefined}
                               autoComplete="off"
-                              placeholder="Add Type here"
+                              placeholder={!isPartialPayment ? 'Add Type here' : ''}
                               noOfLines={1}
                               variant={'required-field'}
-                              disabled={isPaidOrOriginalSOW || isPaid}
+                              disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !isAdminOrAcc}
                               {...register(`finalSowLineItems.${index}.name` as const, {
                                 required: 'This is required field',
                               })}
@@ -223,10 +242,11 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                               type="text"
                               size="sm"
                               autoComplete="off"
-                              placeholder="Add Description here"
+                              placeholder={!isPartialPayment ? 'Add Description here' : ''}
                               noOfLines={1}
+                              value={isPartialPayment ? invoiceItem?.description : undefined}
                               variant={'required-field'}
-                              disabled={isPaidOrOriginalSOW || isPaid}
+                              disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !isAdminOrAcc}
                               {...register(`finalSowLineItems.${index}.description` as const, {
                                 required: 'This is required field',
                               })}
@@ -249,8 +269,9 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                               data-testid={`finalSowLineItems-createdDate-${index}`}
                               type="date"
                               size="sm"
+                              value={isPartialPayment ? invoiceItem?.createdDate : undefined}
                               variant={'required-field'}
-                              disabled={isPaidOrOriginalSOW || isPaid}
+                              disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !isAdminOrAcc}
                               {...register(`finalSowLineItems.${index}.createdDate` as const, {
                                 required: false,
                               })}
@@ -276,9 +297,9 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({ formReturn,
                                     {...field}
                                     data-testid={`finalSowLineItems-amount-${index}`}
                                     customInput={Input}
-                                    value={watchInvoiceArray?.[index]?.amount}
-                                    placeholder="Add Amount"
-                                    disabled={isPaidOrOriginalSOW || isPaid}
+                                    value={isPartialPayment ? invoiceItem?.amount : watchInvoiceArray?.[index]?.amount}
+                                    placeholder={!isPartialPayment ? 'Add Amount' : ''}
+                                    disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !isAdminOrAcc}
                                     onValueChange={e => {
                                       const inputValue = e?.floatValue ?? ''
                                       field.onChange(inputValue)

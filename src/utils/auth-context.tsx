@@ -10,7 +10,6 @@ import { Box } from '@chakra-ui/layout'
 import { useToast } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useMutation } from 'react-query'
-import { useNavigate } from 'react-router-dom'
 
 type AuthState = {
   user: Account
@@ -24,7 +23,6 @@ type LoginPayload = {
 
 export const useLogin = () => {
   const { setData } = useAsync({})
-  const navigate = useNavigate()
 
   return useMutation({
     mutationFn: async (loginPayload: LoginPayload) => {
@@ -34,11 +32,11 @@ export const useLogin = () => {
 
       setData({ user: accountResponse?.data?.user, token: authLogin.id_token })
 
-      return accountResponse
+      return { accountResponse, signatureValid: authLogin.agreement_valid }
     },
-    onSuccess: () => {
-      navigate(0)
-    },
+    // onSuccess: () => {
+    //   navigate(0)
+    // },
   })
 }
 
@@ -172,9 +170,9 @@ function useAuth(): AuthContextProps {
 
 function useClient(apiPrefix = '/api') {
   const authToken = getToken()
-
+  const toast = useToast()
   return React.useCallback(
-    (endpoint, config) => client(`${apiPrefix}/${endpoint}`, { ...config, token: authToken }),
+    (endpoint, config) => client(`${apiPrefix}/${endpoint}`, { ...config, token: authToken }, toast),
     [authToken, apiPrefix],
   )
 }

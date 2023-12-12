@@ -70,6 +70,10 @@ export const chakraStyles = {
       },
       color: state.isSelected ? 'gray.800' : '',
       display: state.data?.isHidden ? 'none' : 'block',
+      padding: '10px',
+      whiteSpace: 'nowrap',
+      overflowX: 'hidden',
+      textOverflow: 'ellipsis',
       ...styleOption,
     }
   },
@@ -163,6 +167,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 
 const MenuList: React.FC<any> = props => {
   const { children } = props
+  const menuHeight = props?.selectProps?.selectProps?.menuHeight
 
   function rowRenderer({
     key, // Unique key within array of rows
@@ -170,19 +175,25 @@ const MenuList: React.FC<any> = props => {
     style, // Style object to be applied to row (to position it)
   }) {
     return (
-      <div key={key} style={style}>
+      <div key={key} style={style} title={children[index]?.props?.label ?? ''}>
         {children[index]}
       </div>
     )
   }
 
   return (
-    <div style={{ backgroundColor: '#fff', zIndex: 999, height: '200px', maxWidth: '250px' }}>
+    <div
+      style={{
+        backgroundColor: '#fff',
+        zIndex: 999,
+        maxWidth: '250px',
+      }}
+    >
       <List
         width={223}
-        height={215}
+        height={menuHeight ?? 220}
         rowCount={children.length}
-        rowHeight={35}
+        rowHeight={40}
         rowRenderer={rowRenderer}
         scrollToIndex={0}
       />

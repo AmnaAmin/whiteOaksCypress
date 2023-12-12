@@ -515,3 +515,33 @@ export const useUserDetails = ({ form, userInfo, queryString }) => {
     directStates?.length,
   ])
 }
+
+interface DirectReportsUser {
+  id: number,
+  firstName: string,
+  lastName: string;
+  parentFieldProjectManagerId: number;
+  login: string
+
+}
+export const useUserDirectReportsAllList = () => {
+  const client = useClient();
+  const {data, ...rest} = useQuery<Array<DirectReportsUser>>(["all_user_managements"], async () => {
+    const response = await client("users/list/directUsers", {});
+    return response?.data
+  });
+
+  const options =
+    data?.map(res => ({
+      value: res?.id,
+      label: res?.firstName + ' ' + res?.lastName,
+      parentId: res?.parentFieldProjectManagerId,
+    })) || []
+    options.sort((a, b) => a.label.localeCompare(b.label));
+
+    return {
+      userMgt: data,
+      options,
+      ...rest
+    }
+}
