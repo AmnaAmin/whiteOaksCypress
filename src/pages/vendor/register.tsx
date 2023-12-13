@@ -658,7 +658,7 @@ export const VendorRegister = () => {
 
   // Function to handle input change and trim spaces
   const handleInputChange = e => {
-    const trimmedValue = e.target.value.trim() // Trim spaces from the input
+    const trimmedValue = e.target.value // Trim spaces from the input
     setCompanyName(trimmedValue) // Update the state with the trimmed value
   }
   return (
