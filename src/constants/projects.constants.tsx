@@ -203,9 +203,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.convertedDate',
     accessorKey: 'convertedDate',
-    accessorFn(cellInfo: any) {
-      return !!cellInfo?.estimateId ? dateFormat(cellInfo.createdDate) : null
-    },
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.convertedDate),
     meta: { format: 'date' },
   },
   {
