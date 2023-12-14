@@ -29,7 +29,7 @@ const CypressTiggers = () => {
           );
 
           if(response.status === 201){
-            alert('Build triggered successfully')
+            alert('Build triggered successfully! Build URL: '+ response.data.build_url)
           }
           
         } catch (error) {
@@ -41,13 +41,13 @@ const CypressTiggers = () => {
     return (
       <Box>
          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-        <Button onClick={() => onButtonClick('Scheduled Build.')} colorScheme="brand" fontSize="14px" minW={'140px'}>
+        <Button onClick={() => onButtonClick('Scheduled Build.')} isDisabled={true} colorScheme="brand" fontSize="14px" minW={'140px'}>
           Run Parallel Test
         </Button>
-        <Button onClick={() => onButtonClick('Sequential Build.')} colorScheme="brand" fontSize="14px" minW={'140px'}>
+        <Button onClick={() => onButtonClick('Sequential Build.')} isDisabled={true} colorScheme="brand" fontSize="14px" minW={'140px'}>
           Run Sequential Test
         </Button>
-        <Button onClick={onOpen} colorScheme="brand" fontSize="14px" minW={'140px'}>
+        <Button onClick={onOpen} isDisabled={true} colorScheme="brand" fontSize="14px" minW={'140px'}>
           Run Individual Test
         </Button>
       </div>
