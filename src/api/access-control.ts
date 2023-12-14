@@ -258,8 +258,14 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
       return allPermissions?.find(a => a.key === key)
     })
 
-  for (const key in values.advancedPermissions) {
-    if (values.advancedPermissions[key]) {
+  for (const key in values.advancedPermissionsCons) {
+    if (values.advancedPermissionsCons[key]) {
+      const permissionObj = allPermissions?.find(a => a.key === ADV_PERMISSIONS[key])
+      permissions.push(permissionObj)
+    }
+  }
+  for (const key in values.advancedPermissionsEst) {
+    if (values.advancedPermissionsEst[key]) {
       const permissionObj = allPermissions?.find(a => a.key === ADV_PERMISSIONS[key])
       permissions.push(permissionObj)
     }
@@ -284,7 +290,7 @@ export const permissionsDefaultValues = ({ permissions, sections }) => {
     assignment: ASSIGNMENTS?.find(a => a.value === permission?.assignment) ?? ASSIGNMENTS[0],
     permissions: mapPermissionsToFormValues(permission, sections),
     systemRole: permission?.systemRole,
-    advancedPermissions: {
+    advancedPermissionsCons: {
       fpmEdit: permissionSet?.some(p => [ADV_PERMISSIONS.fpmEdit, 'ALL'].includes(p)),
       pcEdit: permissionSet?.some(p => [ADV_PERMISSIONS.pcEdit, 'ALL'].includes(p)),
       clientEdit: permissionSet?.some(p => [ADV_PERMISSIONS.clientEdit, 'ALL'].includes(p)),
@@ -313,6 +319,8 @@ export const permissionsDefaultValues = ({ permissions, sections }) => {
       verifiedByFPM: permissionSet?.some(p => [ADV_PERMISSIONS.verifiedByFPM, 'ALL'].includes(p)),
       invoiceDateEdit: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p)),
       invoiceEdit: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p)),
+    },
+    advancedPermissionsEst: {
       enableConvertProject: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p)),
       estFpmEdit: permissionSet?.some(p => [ADV_PERMISSIONS.estFpmEdit, 'ALL'].includes(p)),
       estGateCodeEdit: permissionSet?.some(p => [ADV_PERMISSIONS.estGateCodeEdit, 'ALL'].includes(p)),
@@ -327,48 +335,63 @@ export const permissionsDefaultValues = ({ permissions, sections }) => {
 export const setDefaultPermission = ({ setValue, value, section, assignment }) => {
   if (section === 'PROJECT') {
     if (assignment === 'FPM') {
-      setValue('advancedPermissions.gateCodeEdit', value)
-      setValue('advancedPermissions.lockBoxEdit', value)
-      setValue('advancedPermissions.hideCreateProject', value)
-      setValue('advancedPermissions.hidePaidProjects', value)
-      setValue('advancedPermissions.verifiedByFPM', value)
+      setValue('advancedPermissionsCons.gateCodeEdit', value)
+      setValue('advancedPermissionsCons.lockBoxEdit', value)
+      setValue('advancedPermissionsCons.hideCreateProject', value)
+      setValue('advancedPermissionsCons.hidePaidProjects', value)
+      setValue('advancedPermissionsCons.verifiedByFPM', value)
 
-      setValue('advancedPermissions.fpmEdit', false)
-      setValue('advancedPermissions.pcEdit', false)
-      setValue('advancedPermissions.clientEdit', false)
-      setValue('advancedPermissions.addressEdit', false)
-      setValue('advancedPermissions.marketEdit', false)
-      setValue('advancedPermissions.clientDueEdit', false)
-      setValue('advancedPermissions.clientStartEdit', false)
-      setValue('advancedPermissions.woaStartEdit', false)
-      setValue('advancedPermissions.verifyProjectEnable', false)
+      setValue('advancedPermissionsCons.fpmEdit', false)
+      setValue('advancedPermissionsCons.pcEdit', false)
+      setValue('advancedPermissionsCons.clientEdit', false)
+      setValue('advancedPermissionsCons.addressEdit', false)
+      setValue('advancedPermissionsCons.marketEdit', false)
+      setValue('advancedPermissionsCons.clientDueEdit', false)
+      setValue('advancedPermissionsCons.clientStartEdit', false)
+      setValue('advancedPermissionsCons.woaStartEdit', false)
+      setValue('advancedPermissionsCons.verifyProjectEnable', false)
     } else {
-      setValue('advancedPermissions.fpmEdit', value)
-      setValue('advancedPermissions.pcEdit', value)
-      setValue('advancedPermissions.clientEdit', value)
-      setValue('advancedPermissions.addressEdit', value)
-      setValue('advancedPermissions.marketEdit', value)
+      setValue('advancedPermissionsCons.fpmEdit', value)
+      setValue('advancedPermissionsCons.pcEdit', value)
+      setValue('advancedPermissionsCons.clientEdit', value)
+      setValue('advancedPermissionsCons.addressEdit', value)
+      setValue('advancedPermissionsCons.marketEdit', value)
 
-      setValue('advancedPermissions.gateCodeEdit', value)
-      setValue('advancedPermissions.lockBoxEdit', value)
-      setValue('advancedPermissions.clientDueEdit', value)
-      setValue('advancedPermissions.clientStartEdit', value)
-      setValue('advancedPermissions.woaStartEdit', value)
-      setValue('advancedPermissions.lockBoxEdit', value)
-      setValue('advancedPermissions.verifyProjectEnable', value)
+      setValue('advancedPermissionsCons.gateCodeEdit', value)
+      setValue('advancedPermissionsCons.lockBoxEdit', value)
+      setValue('advancedPermissionsCons.clientDueEdit', value)
+      setValue('advancedPermissionsCons.clientStartEdit', value)
+      setValue('advancedPermissionsCons.woaStartEdit', value)
+      setValue('advancedPermissionsCons.lockBoxEdit', value)
+      setValue('advancedPermissionsCons.verifyProjectEnable', value)
 
-      setValue('advancedPermissions.hideCreateProject', false)
-      setValue('advancedPermissions.hidePaidProjects', false)
-      setValue('advancedPermissions.verifiedByFPM', false)
+      setValue('advancedPermissionsCons.hideCreateProject', false)
+      setValue('advancedPermissionsCons.hidePaidProjects', false)
+      setValue('advancedPermissionsCons.verifiedByFPM', false)
     }
   }
   if (section === 'VENDOR') {
     if (assignment === 'PC' || assignment === 'All') {
-      setValue('advancedPermissions.verifyVendorDocuments', value)
-      setValue('advancedPermissions.deactivateVendor', value)
+      setValue('advancedPermissionsCons.verifyVendorDocuments', value)
+      setValue('advancedPermissionsCons.deactivateVendor', value)
     } else {
-      setValue('advancedPermissions.verifyVendorDocuments', false)
-      setValue('advancedPermissions.deactivateVendor', false)
+      setValue('advancedPermissionsCons.verifyVendorDocuments', false)
+      setValue('advancedPermissionsCons.deactivateVendor', false)
+    }
+  }
+  if (section === 'ESTIMATE') {
+    if (assignment === 'FPM') {
+      setValue('advancedPermissionsEst.estLockBoxEdit', value)
+      setValue('advancedPermissionsEst.estGateCodeEdit', value)
+      setValue('advancedPermissionsEst.enableConvertProject', false)
+      setValue('advancedPermissionsEst.estFpmEdit', false)
+      setValue('advancedPermissionsEst.carrierFeeCreateInApprovedStatus', false)
+    } else {
+      setValue('advancedPermissionsEst.estLockBoxEdit', value)
+      setValue('advancedPermissionsEst.estGateCodeEdit', value)
+      setValue('advancedPermissionsEst.enableConvertProject', value)
+      setValue('advancedPermissionsEst.estFpmEdit', false)
+      setValue('advancedPermissionsEst.carrierFeeCreateInApprovedStatus', false)
     }
   }
 }

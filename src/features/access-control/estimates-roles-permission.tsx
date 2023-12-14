@@ -3,10 +3,10 @@ import { Controller } from 'react-hook-form'
 
 export const EstimateRolePermissions = ({ formReturn }) => {
   const { watch, setValue, control } = formReturn
-  const advancedPermissionsWatch = watch('advancedPermissions')
+  const advancedPermissionsEstWatch = watch('advancedPermissionsEst')
 
-  const isSelectAll = advancedPermissionsWatch
-    ? (Object?.values(advancedPermissionsWatch)?.every(item => item) as boolean)
+  const isSelectAll = advancedPermissionsEstWatch
+    ? (Object?.values(advancedPermissionsEstWatch)?.every(item => item) as boolean)
     : false
   return (
     <>
@@ -18,8 +18,8 @@ export const EstimateRolePermissions = ({ formReturn }) => {
         size="md"
         isChecked={isSelectAll}
         onChange={value => {
-          for (const key in advancedPermissionsWatch) {
-            setValue(`advancedPermissions.${key}`, value.currentTarget.checked)
+          for (const key in advancedPermissionsEstWatch) {
+            setValue(`advancedPermissionsEst.${key}`, value.currentTarget.checked)
           }
         }}
       >
@@ -35,7 +35,7 @@ export const EstimateRolePermissions = ({ formReturn }) => {
 
           <Controller
             control={control}
-            name={`advancedPermissions.enableConvertProject`}
+            name={`advancedPermissionsEst.enableConvertProject`}
             render={({ field, fieldState }) => (
               <>
                 <Checkbox
@@ -60,7 +60,7 @@ export const EstimateRolePermissions = ({ formReturn }) => {
           </Text>
           <Controller
             control={control}
-            name={`advancedPermissions.estFpmEdit`}
+            name={`advancedPermissionsEst.estFpmEdit`}
             render={({ field, fieldState }) => (
               <>
                 <Checkbox
@@ -81,7 +81,7 @@ export const EstimateRolePermissions = ({ formReturn }) => {
           />
           <Controller
             control={control}
-            name={`advancedPermissions.estGateCodeEdit`}
+            name={`advancedPermissionsEst.estGateCodeEdit`}
             render={({ field, fieldState }) => (
               <>
                 <Checkbox
@@ -102,7 +102,7 @@ export const EstimateRolePermissions = ({ formReturn }) => {
           />
           <Controller
             control={control}
-            name={`advancedPermissions.estLockBoxEdit`}
+            name={`advancedPermissionsEst.estLockBoxEdit`}
             render={({ field, fieldState }) => (
               <>
                 <Checkbox
@@ -126,7 +126,7 @@ export const EstimateRolePermissions = ({ formReturn }) => {
           </Text>
           <Controller
             control={control}
-            name={`advancedPermissions.carrierFeeCreateInApprovedStatus`}
+            name={`advancedPermissionsEst.carrierFeeCreateInApprovedStatus`}
             render={({ field, fieldState }) => (
               <>
                 <Checkbox
