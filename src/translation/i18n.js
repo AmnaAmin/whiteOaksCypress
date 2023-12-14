@@ -977,6 +977,7 @@ i18n.use(initReactI18next).init({
         expectedPay: 'Fecha de pago esperada',
         // Project - Notes
         notes: 'Notas',
+        messages:'Mensajes',
         enterNewNote: 'Ingrese una nueva nota aquí',
         completeion: '% Terminación',
 
