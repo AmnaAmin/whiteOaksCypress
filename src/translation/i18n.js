@@ -348,6 +348,7 @@ i18n.use(initReactI18next).init({
         expectedPay: 'Expected Pay Date',
         // Project - Notes
         notes: 'Notes',
+        messages: 'Messages',
         enterNewNote: 'Enter New Note Here',
         completeion: '% Completion',
 

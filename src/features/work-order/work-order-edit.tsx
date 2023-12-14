@@ -47,6 +47,7 @@ import { useQueryClient } from 'react-query'
 import { useVendorEntity } from 'api/vendor-dashboard'
 import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
 import { useLocation as useLineItemsLocation } from 'api/location'
+import { Messages } from './messages/messages'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -211,6 +212,7 @@ const WorkOrderDetails = ({
                 <Tab data-testid="wo_lienWaiver">{t('lienWaiver')}</Tab>
                 <Tab data-testid="wo_invoice">{t('invoice')}</Tab>
                 <Tab data-testid="wo_payments">{t('payments')}</Tab>
+                <Tab data-testid="wo_messages">{t('messages')}</Tab>
                 <Tab data-testid="wo_notes">{t('notes')}</Tab>
 
                 {showRejectInvoice &&
@@ -346,6 +348,18 @@ const WorkOrderDetails = ({
                         rejectInvoiceCheck={rejectInvoice}
                         isLoading={isLoadingWorkOrder}
                       />
+                    )}
+                  </TabPanel>
+
+                  <TabPanel p={0}>
+                    {isLoadingWorkOrder ? (
+                      <Center h={'600px'}>
+                        <Spinner size="xl" />
+                      </Center>
+                    ) : (
+                      <Box w="100%" h="700px">
+                        <Messages workOrderId={workOrder.id} projectId={projectId} />
+                      </Box>
                     )}
                   </TabPanel>
 
