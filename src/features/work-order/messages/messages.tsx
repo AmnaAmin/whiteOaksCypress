@@ -1,6 +1,5 @@
-import { Box, useToast } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router'
 import { useAuth } from 'utils/auth-context'
 import { getToken } from 'utils/storage.utils'
 
@@ -14,8 +13,6 @@ export const Messages = (props: any) => {
 
     let iframeUrl = process.env.REACT_APP_CRM_URL + '?' + platformParam;
 
-
-    const navigate = useNavigate()
     const iframe = useRef<HTMLIFrameElement>(null)
 
     const sendMessage = () => {
@@ -25,7 +22,7 @@ export const Messages = (props: any) => {
         )
     }
 
-    const toast = useToast()
+    // const toast = useToast()
 
     useEffect(() => {
         window.addEventListener('message', (event: any) => {
