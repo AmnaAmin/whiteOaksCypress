@@ -26,7 +26,7 @@ const DBRestoreWorkflow: React.FC = () => {
     <div>
       <Box>
 
-      <Button onClick={handleButtonClick} colorScheme="brand" fontSize="14px" minW={'140px'}>
+      <Button onClick={handleButtonClick} isDisabled={true} colorScheme="brand" fontSize="14px" minW={'140px'}>
       Run Restore Preprod DB Workflow
     </Button>
 
@@ -35,7 +35,7 @@ const DBRestoreWorkflow: React.FC = () => {
       </Box>
 
     <Box>
-      <Button onClick={getStatus} colorScheme="brand" fontSize="14px" minW={'140px'}>
+      <Button onClick={getStatus} isDisabled={true} colorScheme="brand" fontSize="14px" minW={'140px'}>
       Check Status
     </Button>
     </Box>
