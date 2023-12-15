@@ -17,7 +17,7 @@ export const Messages = (props: any) => {
 
     const sendMessage = () => {
         iframe?.current?.contentWindow?.postMessage(
-            { token: getToken(), user: user, genericData: { projectId, workOrderId } },
+            { token: getToken(), user: user, payload: { projectId, workOrderId } },
             '*',
         )
     }
