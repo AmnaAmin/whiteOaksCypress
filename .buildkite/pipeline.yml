@@ -145,6 +145,7 @@ steps:
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
       REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
       REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
+      REACT_APP_CRM_URL: 'https://crm-dev.woaharvest.com'
 
   - wait
 
