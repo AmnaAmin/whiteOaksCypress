@@ -67,8 +67,10 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       const selectedDayData = days.find(day => day.dayName === selectedDay)
       clientDueDateFilter = {
         id: 'clientDueDate',
-        value: selectedDayData?.dueDate ? moment(selectedDayData?.dueDate).format('YYYY-MM-DD') : '',
-      }
+        value: selectedDayData
+        ? `${ moment(selectedDayData?.dueDate).format('YYYY-MM-DD')} - ${moment(selectedDayData?.dueDate).format('YYYY-MM-DD')}`
+        : '',
+    };
       finalFilters = [...finalFilters, clientDueDateFilter]
     }
     // This filter will apply when user select a FPM from the FPM list
