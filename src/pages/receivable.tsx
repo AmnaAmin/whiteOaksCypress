@@ -4,11 +4,14 @@ import { ConstructionPortalReceiveable } from 'features/recievable/construction-
 import { EstimatesPortalReceiveable } from 'features/recievable/estimates-portal-receiveable'
 import { MaintenancePortalReceiveable } from 'features/recievable/maintenance-portal-receiveable'
 import { useState } from 'react'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 
 export const Receivable = () => {
   const [, setTabIndex] = useState(0)
   const { data: account } = useAccountDetails()
   const isSystemRole = account?.authorityList?.[0]?.systemRole
+  const { permissions } = useRoleBasedPermissions()
+  const isRecievableReadOrEdit = permissions.some(p => ['ESTRECEIVABLE.READ', 'ESTRECEIVABLE.EDIT'].includes(p))
   const handleTabsChange = index => {
     setTabIndex(index)
   }
@@ -17,14 +20,14 @@ export const Receivable = () => {
       <Tabs variant="enclosed" colorScheme="brand" onChange={handleTabsChange}>
         <TabList>
           <Tab>Construction</Tab>
-          {isSystemRole && <Tab>Estimates</Tab>}
+          {isSystemRole && isRecievableReadOrEdit && <Tab>Estimates</Tab>}
           {isSystemRole && <Tab>Maintenance</Tab>}
         </TabList>
         <TabPanels>
           <TabPanel padding="5px 0px 0px 0px">
             <ConstructionPortalReceiveable />
           </TabPanel>
-          {isSystemRole && (
+          {isSystemRole && isRecievableReadOrEdit && (
             <TabPanel h="100vh" padding="5px 0px 0px 0px">
               <EstimatesPortalReceiveable />
             </TabPanel>

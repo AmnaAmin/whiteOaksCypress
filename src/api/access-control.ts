@@ -188,7 +188,6 @@ export const ASSIGNMENTS = [
 ]
 
 export const mapPermissionsToFormValues = (permission, sections) => {
-  const isAdmin = permission?.name === 'ROLE_ADMIN'
   const permissions = permission?.permissions
     ?.filter(p => {
       // select all permissions that are at module level like VENDOR.EDIT, PROJECT.EDIT
@@ -207,9 +206,9 @@ export const mapPermissionsToFormValues = (permission, sections) => {
     const permissionObj = permissions?.find(p => s.value === p.section && ['READ', 'EDIT'].includes(p.action))
     sectionWisePermissions?.push({
       name: s.value,
-      edit: permissionObj?.action === 'EDIT' || isAdmin,
+      edit: permissionObj?.action === 'EDIT',
       read: permissionObj?.action === 'READ',
-      hide: !permissionObj && !isAdmin,
+      hide: !permissionObj,
       label: s.label,
     })
   })
