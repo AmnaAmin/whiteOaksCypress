@@ -1442,11 +1442,12 @@ export const CreatableSelectForTable = ({
   newObjectFormatting,
   style,
 }: CreatebleSelectType) => {
+  const defaultOption = { label: 'Select', value: 'select', isDisabled: true }
   return (
     <CreatableSelect
       {...field}
       id={id}
-      options={options}
+      options={options.length === 0 ? [defaultOption] : options}
       size="md"
       value={valueFormatter ? valueFormatter(field.value) : field.value}
       isDisabled={isDisabled}
