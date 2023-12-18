@@ -896,7 +896,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           <Button
            onClick={debounce(() => {
             formReturn.handleSubmit(onSubmit)()
-          }, 300)}
+          }, 3000)}
             isLoading={isLoadingUpdate || isLoadingCreate}
             disabled={!invoiced || isPaid || !isAdminOrAcc}
             form="invoice-form"
