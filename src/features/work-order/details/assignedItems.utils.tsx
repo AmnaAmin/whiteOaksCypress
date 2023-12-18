@@ -1447,7 +1447,7 @@ export const CreatableSelectForTable = ({
     <CreatableSelect
       {...field}
       id={id}
-      options={options.length === 0 ? [defaultOption] : options}
+      options={options?.length === 0 ? [defaultOption] : options}
       size="md"
       value={valueFormatter ? valueFormatter(field.value) : field.value}
       isDisabled={isDisabled}
