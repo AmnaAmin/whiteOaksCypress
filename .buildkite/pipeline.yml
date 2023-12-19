@@ -147,8 +147,8 @@ steps:
       REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
       REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
       REACT_APP_CRM_URL: 'https://crm-dev.woaharvest.com'
-      REACT_APP_GITHUB_TOKEN: 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
-      TEST_VARIABLE: '${TEST_VARIABLE}'
+      # REACT_APP_GITHUB_TOKEN: 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
+      # TEST_VARIABLE: '${TEST_VARIABLE}'
 
   - wait
 
