@@ -1113,7 +1113,7 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
         <Flex flexFlow="row-reverse">
           <ModalFooter>
             <Button colorScheme="brand" data-testid="confirmation-no" mr={3} onClick={onClose}>
-              {t(`save`)}
+              {t(`done`)}
             </Button>
           </ModalFooter>
         </Flex>
