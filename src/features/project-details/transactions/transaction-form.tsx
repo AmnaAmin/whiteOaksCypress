@@ -802,7 +802,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           css={calendarIcon}
                           isDisabled={isApproved && !editInvoiceDate}
                           {...register('invoicedDate', {
-                            required: isInvoicedDateRequired,
+                            required: isInvoicedDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
                           })}
                           onChange={e => {
                             const dateInvSubmitted = e.target.value
@@ -814,7 +814,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               )
                               setValue('invoicedDate', datePickerFormat(dateInvSubmitted))
                               calculatePaymentDates(paymentTermDate?.toDate())
-                              trigger()
+                              // trigger()
                             } else {
                               setValue('paymentTermDate', null)
                               setValue('invoicedDate', null)
@@ -849,7 +849,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                     if (dateInvSubmitted && dateInvSubmitted !== '') {
                                       const paymentTermDate = moment(dateInvSubmitted).add(option.value, 'days')
                                       calculatePaymentDates(paymentTermDate?.toDate())
-                                      trigger()
+                                      // trigger()
                                     } else {
                                       setValue('paymentTermDate', null)
                                       setValue('payAfterDate', null)
