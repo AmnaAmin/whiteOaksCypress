@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState, ChangeEvent } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   FormErrorMessage,
   FormLabel,
@@ -17,7 +17,6 @@ import {
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
-import addDays from 'date-fns/addDays'
 import { datePickerFormat } from 'utils/date-time-utils'
 import Select from 'components/form/react-select'
 import { isWednesday, nextFriday, nextWednesday } from 'date-fns'
@@ -240,33 +239,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const watchStatus = useWatch({ name: 'status', control })
   const verifyByFPMStatus = useWatch({ name: 'verifiedByFpm', control })
   const verifyByManagerStatus = useWatch({ name: 'verifiedByManager', control })
-
-  const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const date = new Date(e.target.value)
-    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-    const paymentTerm = getValues().paymentTerm?.value
-
-    // Do not calculated WOA expect date if payment term is not selected
-    if (!paymentTerm) return
-
-    const payAfterDate = addDays(utcDate, paymentTerm)
-    setValue('payAfterDate', datePickerFormat(payAfterDate))
-  }
-
-  const onPaymentTermChange = (option: SelectOption) => {
-    const { invoicedDate } = getValues()
-    if (invoicedDate === null || invoicedDate === '') {
-      return
-    }
-
-    const date = new Date(invoicedDate as string)
-    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-    const paymentTerm = Number(option.value)
-
-    if (!date) return
-    const payAfterDate = addDays(utcDate, paymentTerm)
-    setValue('payAfterDate', datePickerFormat(payAfterDate))
-  }
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
