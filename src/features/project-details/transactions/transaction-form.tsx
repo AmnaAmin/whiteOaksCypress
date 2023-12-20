@@ -163,6 +163,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
+  const { pathname } = useLocation()
+  const { permissions } = useRoleBasedPermissions()
   const { isVendor } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
@@ -171,10 +173,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [disableBtn, setDisableBtn] = useState(false)
   const [fileParseMsg, setFileParseMsg] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
-  const { pathname } = useLocation()
+
   const isPayable = pathname?.includes('payable')
-  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
-  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isPayableRead = permissions.includes('PAYABLE.READ') && isPayable
+  const isProjRead = permissions?.includes('PROJECT.READ')
   const isReadOnly = isPayableRead || isProjRead
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
@@ -296,7 +298,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     transaction,
   })
 
-  const { permissions } = useRoleBasedPermissions()
   /* add permissions to verify by fpm and district manager*/
   const isEnabledToOverrideNTE = permissions.some(p =>
     ['PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE', 'ALL'].includes(p),
@@ -577,14 +578,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     setValue('payAfterDate', datePickerFormat(nextFriday(payAfter)))
   }
 
-  const calculateFirstFridayAfterDate = (date) => {
-    const processedDate = moment(date);
-    const daysUntilFriday = (5 - processedDate.day() + 7) % 7; // Calculate days until Friday
-    return processedDate.add(daysUntilFriday, 'days').toDate();
+  const calculateFirstFridayAfterDate = date => {
+    const processedDate = moment(date)
+    const daysUntilFriday = (5 - processedDate.day() + 7) % 7 // Calculate days until Friday
+    return processedDate.add(daysUntilFriday, 'days').toDate()
   }
- 
- 
- 
+
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
@@ -946,15 +945,14 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                               size="md"
                               css={calendarIcon}
                               {...register('paymentProcessed', {
-                                onChange: (dateProcessed) => {
-                                  setValue('paymentProcessed', dateProcessed);
-                            
+                                onChange: dateProcessed => {
+                                  setValue('paymentProcessed', dateProcessed)
+
                                   // Calculate and set the Pay after date
-                                  const payAfterDate = calculateFirstFridayAfterDate(dateProcessed);
-                                  setValue('payAfterDate', payAfterDate.toISOString().split('T')[0]);
+                                  const payAfterDate = calculateFirstFridayAfterDate(dateProcessed)
+                                  setValue('payAfterDate', payAfterDate.toISOString().split('T')[0])
                                 },
                               })}
-                             
                             />
                             <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage>
                           </FormControl>
