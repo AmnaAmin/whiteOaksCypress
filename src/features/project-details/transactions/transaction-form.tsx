@@ -582,11 +582,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     const daysUntilFriday = (5 - processedDate.day() + 7) % 7; // Calculate days until Friday
     return processedDate.add(daysUntilFriday, 'days').toDate();
   }
-  // const { pathname } = useLocation()
-  // const isPayable = pathname?.includes('payable')
-  // const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
-  // const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
-  const isReadOnly = true
+ 
+ 
+ 
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
