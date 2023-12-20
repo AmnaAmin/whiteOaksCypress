@@ -802,8 +802,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           css={calendarIcon}
                           isDisabled={isApproved && !editInvoiceDate}
                           {...register('invoicedDate', {
-                            required: isInvoicedDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
-                            // onChange: onInvoiceBackDateChange,
+                            required: isInvoicedDateRequired,
                           })}
                           onChange={e => {
                             const dateInvSubmitted = e.target.value
