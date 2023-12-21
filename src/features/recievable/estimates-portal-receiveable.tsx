@@ -25,6 +25,12 @@ export const EstimatesPortalReceiveable: React.FC = () => {
         sendMessage();
       }
 
+      if (event.data.redirectToEstimatePage) {
+        setTimeout(() => {
+          window.location.href = `estimate-details/${event.data.projectId}/`
+        }, 300)
+      }
+
     } );
 
    

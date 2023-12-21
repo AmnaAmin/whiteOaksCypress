@@ -206,6 +206,7 @@ i18n.use(initReactI18next).init({
         total: 'Total',
         close: 'Close',
         save: 'Save',
+        done: 'Done',
         finalSOW: 'Final SOW',
         accountpayable: 'Account Payable',
         projectcost: 'Project Cost',
@@ -846,6 +847,7 @@ i18n.use(initReactI18next).init({
         total: 'Total',
         close: 'Cerca',
         save: 'Ahorrar',
+        done: 'Hecho',
 
         // Project - WorkOrderDetails
         editVendorWorkOrder: 'Editar Orden de Trabajo de Proveedor',
@@ -977,7 +979,7 @@ i18n.use(initReactI18next).init({
         expectedPay: 'Fecha de pago esperada',
         // Project - Notes
         notes: 'Notas',
-        messages:'Mensajes',
+        messages: 'Mensajes',
         enterNewNote: 'Ingrese una nueva nota aquí',
         completeion: '% Terminación',
 
