@@ -200,12 +200,9 @@ export const useTotalAmount = ({ invoiced, received }) => {
 export const isReceivedTransaction = transaction => {
   const compatibleType =
     transaction.status === 'APPROVED' &&
-    [
-      TransactionTypeValues.deductible,
-      TransactionTypeValues.depreciation,
-      TransactionTypeValues.invoice,
-      TransactionTypeValues.payment,
-    ].includes(transaction.transactionType)
+    [TransactionTypeValues.deductible, TransactionTypeValues.depreciation, TransactionTypeValues.payment].includes(
+      transaction.transactionType,
+    )
 
   return !transaction.parentWorkOrderId && compatibleType
 }

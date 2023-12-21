@@ -345,40 +345,26 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const generatePDFInvoiceDoc = useGenerateInvoicePDF()
 
   const onSubmit = async values => {
-    // console.log("Remaing AR:", remainingAR);
-    // console.log("Invoiced Amount: ", invoiced);
-    // if (remainingAR - invoiced < 0 && values?.status?.value !== InvoiceStatusValues.cancelled) {
-    //   toast({
-    //     title: 'Error',
-    //     description: t(`project.projectDetails.balanceDueError`),
-    //     status: 'error',
-    //     isClosable: true,
-    //     position: 'top-left',
-    //   })
-    //   return
-    // }
-
     let payload = await mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: invoiced })
-    let form = new jsPDF()
-    form = await createInvoicePdf({
-      doc: form,
-      invoiceVals: payload,
-      address: woAddress,
-      projectData,
-      sowAmt: invoice?.sowAmount,
-      received,
-      receivedLineItems: watchReceivedArray,
-    })
-    const pdfUri = form.output('datauristring')
-    payload['documents']?.push({
-      documentType: 42,
-      projectId: projectData?.id,
-      fileObject: pdfUri.split(',')[1],
-      fileObjectContentType: 'application/pdf',
-      fileType: 'Invoice.pdf',
-    })
-
     if (!invoice) {
+      let form = new jsPDF()
+      form = await createInvoicePdf({
+        doc: form,
+        invoiceVals: payload,
+        address: woAddress,
+        projectData,
+        sowAmt: null,
+        received,
+        receivedLineItems: watchReceivedArray,
+      })
+      const pdfUri = form.output('datauristring')
+      payload['documents']?.push({
+        documentType: 42,
+        projectId: projectData?.id,
+        fileObject: pdfUri.split(',')[1],
+        fileObjectContentType: 'application/pdf',
+        fileType: 'Invoice.pdf',
+      })
       createInvoiceMutate(payload, {
         onSuccess: data => {
           onClose?.()
@@ -391,7 +377,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       updateInvoiceMutate(payload, {
         onSuccess: data => {
           onClose?.()
-
           generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then(documentObj => {
             updateInvoiceDocument(documentObj as Document)
           })
