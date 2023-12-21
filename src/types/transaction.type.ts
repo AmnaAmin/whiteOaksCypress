@@ -189,6 +189,7 @@ export interface FormValues {
   lienWaiverDocument: any
   invoicedDate: string | null
   paymentTerm: SelectOption | null
+  paymentTermDate: string | null
   paidDate: string | null
   payDateVariance: string
   paymentRecievedDate: string | null
@@ -224,6 +225,7 @@ export type ChangeOrderPayload = {
   lineItems: ChangeTransaction[]
   projectId: string
   paymentTerm: string | null
+  paymentTermDate: string | null
   payDateVariance: string | null
   documents?: Array<any>
   paymentProcessed: string | null
@@ -248,6 +250,7 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   vendorId: number | null
   systemGenerated: boolean | null
   paymentProcessed: string | null
+  paymentTermDate: string | null
   payAfterDate: string | null
   verifiedByFpm: SelectOption | null
   verifiedByManager: SelectOption | null
@@ -289,6 +292,7 @@ export type ChangeOrderType = {
   projectId: number
   vendorId: number | null
   paymentTerm: string | null
+  paymentTermDate: string | null
   clientApprovedDate: string | null
   paidDate: string | null
   lineItems: Array<LineItem> | null

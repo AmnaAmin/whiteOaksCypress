@@ -20,6 +20,7 @@ export const transaction = {
         changeOrder: 'Change Order',
         workOrder: 'Work Order',
         paymentTerm: 'Payment Term',
+        paymentTermDate: 'Payment Term Date',
         newExpectedCompletionDate: 'New Expected Completion',
         expectedCompletion: 'Expected Completion',
         paymentReceivedDate: 'Payment Received',
