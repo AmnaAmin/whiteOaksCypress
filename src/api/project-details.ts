@@ -568,9 +568,10 @@ export const parseFormValuesFromAPIData = ({
 
   const projectStatusSelectOptions = getProjectStatusSelectOptions()
   const remainingPayment = project.accountRecievable || 0
-  const carrier = findOptionByValue(clientSelectOptions, project.clientName)?.carrier?.find(
-    c => c.id === project.carrierId,
-  )
+  const carrier = findOptionByValue(
+    clientSelectOptions,
+    typeof project.clientName === 'string' ? project.clientName?.trim() : project.clientName,
+  )?.carrier?.find(c => c.id === project.carrierId)
 
   return {
     // Project Management form values
@@ -638,7 +639,7 @@ export const parseFormValuesFromAPIData = ({
     superPhoneNumber: project.superPhoneNumber,
     superPhoneNumberExtension: project.superPhoneNumberExtension,
     superEmail: project.superEmailAddress,
-    client: clientSelectOptions?.find(c => c?.label === project?.clientName),
+    client: clientSelectOptions?.find(c => c?.label === project?.clientName?.trim()),
     clientType: findOptionByValue(clientTypesSelectOptions, project.clientTypeId),
     homeOwnerName: project.homeOwnerName,
     homeOwnerPhone: project.homeOwnerPhone,
@@ -806,9 +807,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
     hoaPhoneNumberExtension: formValues?.hoaContactExtension,
     hoaEmailAddress: formValues?.hoaContactEmail,
     woaPayVariance: null,
-    newProperty:  property ,
+    newProperty: property,
     property,
-    newMarketId: formValues.market?.value ,
+    newMarketId: formValues.market?.value,
     propertyId: isNewAddress ? undefined : formValues?.address?.value,
 
     // Misc payload
