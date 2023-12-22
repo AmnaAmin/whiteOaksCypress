@@ -790,6 +790,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     homeOwnerPhone: formValues.homeOwnerPhone,
     homeOwnerEmail: formValues.homeOwnerEmail,
     carrierId: formValues.carrier?.value,
+    carrierName: formValues.carrier?.label,
     agentName: formValues.agentName,
     agentPhone: formValues.agentPhone,
     agentEmail: formValues.agentEmail,
