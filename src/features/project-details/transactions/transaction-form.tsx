@@ -186,7 +186,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isManagingFPM = managerEnabled?.allowed
   const isInvoiceTransaction =
     transaction?.transactionType === TransactionTypeValues.payment && !!transaction?.invoiceNumber
-  const isShowFpm = !!transaction
+ 
   const {
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
@@ -302,6 +302,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowPaymentRecievedDateField,
     isPaymentTermDisabled,
     isShowDM,
+    isShowFpm,
     isShowDrawFieldAgainstWO,
   } = useFieldShowHideDecision(control, transaction)
 
