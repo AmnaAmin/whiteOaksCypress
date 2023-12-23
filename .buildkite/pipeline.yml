@@ -117,6 +117,7 @@ steps:
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
       REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
       REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
+      REACT_APP_CRM_URL: 'https://crm-dev.woaharvest.com'
 
   - wait
 
@@ -125,6 +126,7 @@ steps:
     branches: 'master'
 
   - command:
+      - echo ${TEST_VARIABLE}
       - chmod 755 auto/build.sh
       - auto/build.sh
       - chmod 755 auto/deploy_preprod.sh
@@ -144,6 +146,9 @@ steps:
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
       REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
       REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
+      REACT_APP_CRM_URL: 'https://crm-dev.woaharvest.com'
+      # REACT_APP_GITHUB_TOKEN: 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
+      # TEST_VARIABLE: '${TEST_VARIABLE}'
 
   - wait
 

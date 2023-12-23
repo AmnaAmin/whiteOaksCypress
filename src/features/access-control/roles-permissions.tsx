@@ -43,6 +43,7 @@ import {
   useUpdateRoleMutation,
 } from 'api/access-control'
 import { useAccountData } from 'api/user-account'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 interface PemissionFormValues {
   roleName: string
@@ -54,8 +55,11 @@ interface PemissionFormValues {
 
 export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, allowEdit }) => {
   const formReturn = useForm<PemissionFormValues>()
+  const { isAdmin } = useUserRolesSelector()
   const {
     formState: { errors },
+    watch,
+    setValue,
   } = formReturn
   const { data: allPermissions } = useFetchAllPermissions()
   const { mutate: createRole } = useCreateNewRoleMutation()
@@ -69,6 +73,23 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
   useEffect(() => {
     reset(permissionsDefaultValues({ permissions, sections }))
   }, [reset, permissions, sections?.length])
+
+  const watchPermissions = watch('permissions')
+
+  const checkDefaultPermissions = assignment => {
+    const defaultSections = ['PROJECT', 'VENDOR', 'ESTIMATE']
+    if (!permissions?.[0]?.systemRole) {
+      defaultSections.forEach(section => {
+        const sectionPermission = watchPermissions?.find(p => p?.name === section)
+        setDefaultPermission({
+          setValue,
+          value: sectionPermission?.edit,
+          section: sectionPermission?.name,
+          assignment,
+        })
+      })
+    }
+  }
 
   const onSubmit = values => {
     let payload = mapFormValuestoPayload(values, allPermissions)
@@ -84,6 +105,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
       updateRole(payload as any)
     }
   }
+
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
@@ -136,6 +158,10 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                           options={ASSIGNMENTS}
                           selectProps={{ isBorderLeft: true }}
                           {...field}
+                          onChange={option => {
+                            field.onChange(option)
+                            checkDefaultPermissions(option.value)
+                          }}
                         />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </div>
@@ -198,7 +224,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
             )*/}
           </HStack>
           <VStack w="100%" justifyContent={'start'}>
-            {isDevtekUser && (
+            {isAdmin && (
               <HStack justifyContent={'space-between'} width="100%">
                 <Text data-testid="access-control" fontSize="18px" fontWeight={500} color="gray.700">
                   {t(`${ACCESS_CONTROL}.accessPermissions`)}
@@ -215,7 +241,11 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                 </FormLabel>
               </HStack>
             )}
-            <PermissionsTable formControl={formReturn} permissionsData={permissions} />
+            <PermissionsTable
+              formControl={formReturn}
+              permissionsData={permissions}
+              checkDefaultPermissions={checkDefaultPermissions}
+            />
             <Flex gap="10px" w="100%" justifyContent={'flex-end'}>
               <Button
                 variant={'outline'}
@@ -241,7 +271,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
   )
 }
 
-const PermissionsTable = ({ formControl, permissionsData }) => {
+const PermissionsTable = ({ formControl, permissionsData, checkDefaultPermissions }) => {
   const { t } = useTranslation()
   const { control, setValue } = formControl
   const [selectedRow, setSelectedRow] = useState<number | null>()
@@ -262,25 +292,6 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
   const isEditAll = watchPermissions
     ? (Object?.values(watchPermissions)?.every((item: any) => item?.edit) as boolean)
     : false
-
-  useEffect(() => {
-    const watchProjectPermissions = watchPermissions?.find(p => p?.name === 'PROJECT')
-    const watchVendorsPermissions = watchPermissions?.find(p => p?.name === 'VENDOR')
-    if (!permissionsData?.[0]?.systemRole) {
-      setDefaultPermission({
-        setValue,
-        value: watchProjectPermissions?.edit,
-        section: watchProjectPermissions?.name,
-        assignment: watchAssignment?.value,
-      })
-      setDefaultPermission({
-        setValue,
-        value: watchVendorsPermissions?.edit,
-        section: watchVendorsPermissions?.name,
-        assignment: watchAssignment?.value,
-      })
-    }
-  }, [watchPermissions, watchAssignment])
 
   return (
     <TableContainer w="100%" borderRadius={'6px'} border="1px solid #CBD5E0">
@@ -303,6 +314,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
                       setValue(`permissions.${key}.read`, !value.currentTarget.checked)
                     }
                   }
+                  checkDefaultPermissions(watchAssignment?.value)
                 }}
               ></Checkbox>
               {t(`${ACCESS_CONTROL}.hide`)}
@@ -322,6 +334,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
                       setValue(`permissions.${key}.hide`, !value.currentTarget.checked)
                     }
                   }
+                  checkDefaultPermissions(watchAssignment?.value)
                 }}
               ></Checkbox>
               {t(`${ACCESS_CONTROL}.read`)}
@@ -341,6 +354,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
                       setValue(`permissions.${key}.read`, !value.currentTarget.checked)
                     }
                   }
+                  checkDefaultPermissions(watchAssignment?.value)
                 }}
               ></Checkbox>
               {t(`${ACCESS_CONTROL}.edit`)}
@@ -383,6 +397,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
                               field.onChange(value)
                               setValue(`permissions.${index}.edit`, false)
                               setValue(`permissions.${index}.read`, false)
+                              checkDefaultPermissions(watchAssignment?.value)
                             }}
                             // disabled={watchPermissions?.[index]?.read || watchPermissions?.[index]?.edit}
                           ></Checkbox>
@@ -406,6 +421,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
                               field.onChange(value)
                               setValue(`permissions.${index}.hide`, false)
                               setValue(`permissions.${index}.edit`, false)
+                              checkDefaultPermissions(watchAssignment?.value)
                             }}
                             // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.edit}
                           ></Checkbox>
@@ -429,6 +445,7 @@ const PermissionsTable = ({ formControl, permissionsData }) => {
                               field.onChange(value)
                               setValue(`permissions.${index}.hide`, false)
                               setValue(`permissions.${index}.read`, false)
+                              checkDefaultPermissions(watchAssignment?.value)
                             }}
                             // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                           ></Checkbox>
@@ -1096,7 +1113,7 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
         <Flex flexFlow="row-reverse">
           <ModalFooter>
             <Button colorScheme="brand" data-testid="confirmation-no" mr={3} onClick={onClose}>
-              {t(`save`)}
+              {t(`done`)}
             </Button>
           </ModalFooter>
         </Flex>

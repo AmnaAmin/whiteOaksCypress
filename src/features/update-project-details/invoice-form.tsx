@@ -22,13 +22,18 @@ import {
 import { useForm, Controller, useFieldArray } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 // import { ReadOnlyInput } from 'components/input-view/input-view'
-import { BiAddToQueue, 
+import {
+  BiAddToQueue,
   // BiCalendar, BiDetail,
-   BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
+  BiDownload,
+  BiFile,
+  BiSpreadsheet,
+} from 'react-icons/bi'
 import { TRANSACTION } from '../project-details/transactions/transactions.i18n'
-import { 
+import {
   // dateFormat,
-   datePickerFormat } from 'utils/date-time-utils'
+  datePickerFormat,
+} from 'utils/date-time-utils'
 import { InvoiceStatusValues, INVOICE_STATUS_OPTIONS, InvoicingType } from 'types/invoice.types'
 import { useAccountData } from 'api/user-account'
 import ReactSelect from 'components/form/react-select'
@@ -48,7 +53,7 @@ import {
   useGenerateInvoicePDF,
 } from 'api/invoicing'
 import { ReceivedLineItems } from './received-line-items'
-import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { ADV_PERMISSIONS } from 'api/access-control'
 import jsPDF from 'jspdf'
 import { downloadFile } from 'utils/file-utils'
@@ -286,10 +291,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const isPaid = (invoice?.status as string)?.toUpperCase() === 'PAID'
   const { permissions } = useRoleBasedPermissions()
   const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
-  const { isAccounting } = useUserRolesSelector()
-  const isAdmin = permissions.includes('ALL')
-
-  const isAdminOrAcc = isAdmin || isAccounting || !invoice
+  const canCreateInvoice = permissions.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p))
 
   const {
     isOpen: isDeleteConfirmationModalOpen,
@@ -343,40 +345,26 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const generatePDFInvoiceDoc = useGenerateInvoicePDF()
 
   const onSubmit = async values => {
-    // console.log("Remaing AR:", remainingAR);
-    // console.log("Invoiced Amount: ", invoiced);
-    // if (remainingAR - invoiced < 0 && values?.status?.value !== InvoiceStatusValues.cancelled) {
-    //   toast({
-    //     title: 'Error',
-    //     description: t(`project.projectDetails.balanceDueError`),
-    //     status: 'error',
-    //     isClosable: true,
-    //     position: 'top-left',
-    //   })
-    //   return
-    // }
-
     let payload = await mapFormValuesToPayload({ projectData, invoice, values, account: data, invoiceAmount: invoiced })
-    let form = new jsPDF()
-    form = await createInvoicePdf({
-      doc: form,
-      invoiceVals: payload,
-      address: woAddress,
-      projectData,
-      sowAmt: invoice?.sowAmount,
-      received,
-      receivedLineItems: watchReceivedArray,
-    })
-    const pdfUri = form.output('datauristring')
-    payload['documents']?.push({
-      documentType: 42,
-      projectId: projectData?.id,
-      fileObject: pdfUri.split(',')[1],
-      fileObjectContentType: 'application/pdf',
-      fileType: 'Invoice.pdf',
-    })
-
     if (!invoice) {
+      let form = new jsPDF()
+      form = await createInvoicePdf({
+        doc: form,
+        invoiceVals: payload,
+        address: woAddress,
+        projectData,
+        sowAmt: null,
+        received,
+        receivedLineItems: watchReceivedArray,
+      })
+      const pdfUri = form.output('datauristring')
+      payload['documents']?.push({
+        documentType: 42,
+        projectId: projectData?.id,
+        fileObject: pdfUri.split(',')[1],
+        fileObjectContentType: 'application/pdf',
+        fileType: 'Invoice.pdf',
+      })
       createInvoiceMutate(payload, {
         onSuccess: data => {
           onClose?.()
@@ -389,7 +377,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       updateInvoiceMutate(payload, {
         onSuccess: data => {
           onClose?.()
-
           generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then(documentObj => {
             updateInvoiceDocument(documentObj as Document)
           })
@@ -460,7 +447,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     <form id="invoice-form" onSubmit={formReturn.handleSubmit(onSubmit)}>
       {/* <InvoicingReadOnlyInfo invoice={invoice} account={data} /> */}
       <Flex direction="column">
-        <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'}  pb="4">
+        <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pb="4">
           <GridItem>
             <FormControl isInvalid={!!errors.invoiceNumber} data-testid="invoiceNumber">
               <FormLabel variant="strong-label" size="md" htmlFor="invoiceNumber">
@@ -477,7 +464,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         data-testid="invoiceNumber"
                         id="invoiceNumber"
                         size="md"
-                        disabled={!isAdminOrAcc || isPaid || isCancelled}
+                        disabled={!canCreateInvoice || isPaid || isCancelled}
                         {...register('invoiceNumber')}
                       />
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -529,7 +516,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     <ReactSelect
                       {...field}
                       id="paymentTermDD"
-                      isDisabled={isPaid || !isAdminOrAcc || isCancelled}
+                      isDisabled={isPaid || !canCreateInvoice || isCancelled}
                       options={PAYMENT_TERMS_OPTIONS}
                       selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                       onChange={(option: SelectOption) => {
@@ -621,7 +608,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                                 : Number(invoiced)?.toFixed(2),
                             )
                           }}
-                          disabled={isPaid || !isAdminOrAcc || isCancelled}
+                          disabled={isPaid || !canCreateInvoice || isCancelled}
                           customInput={CustomRequiredInput}
                           thousandSeparator={true}
                           prefix={'$'}
@@ -646,7 +633,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         <ReactSelect
                           {...field}
                           id="status"
-                          isDisabled={isStatusDisabled}
+                          isDisabled={isStatusDisabled || !canCreateInvoice}
                           // options={INVOICE_STATUS_OPTIONS}
                           options={currStatusOptions}
                           selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
@@ -731,7 +718,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       size="sm"
                       colorScheme="darkPrimary"
                       onClick={addRow}
-                      disabled={isPaid || !isAdminOrAcc || isCancelled}
+                      disabled={isPaid || !canCreateInvoice || isCancelled}
                       leftIcon={<BiAddToQueue />}
                     >
                       {t(`project.projectDetails.addNewRow`)}
@@ -740,7 +727,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                       data-testid="delete-row-button"
                       variant="ghost"
                       size="sm"
-                      disabled={isPaid || !isAdminOrAcc || isCancelled}
+                      disabled={isPaid || !canCreateInvoice || isCancelled}
                       colorScheme="darkPrimary"
                       ml="10px"
                       leftIcon={<RiDeleteBinLine />}
@@ -839,7 +826,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           <TabPanels>
             <TabPanel padding="5px 0px 0px 0px">
               <FinalSowLineItems
-                isAdminOrAcc={isAdminOrAcc}
+                canCreateInvoice={canCreateInvoice}
                 formReturn={formReturn}
                 invoice={invoice}
                 projectData={projectData}
@@ -894,11 +881,11 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
             {t(`project.projectDetails.cancel`)}
           </Button>
           <Button
-           onClick={debounce(() => {
-            formReturn.handleSubmit(onSubmit)()
-          }, 300)}
+            onClick={debounce(() => {
+              formReturn.handleSubmit(onSubmit)()
+            }, 3000)}
             isLoading={isLoadingUpdate || isLoadingCreate}
-            disabled={!invoiced || isPaid || !isAdminOrAcc}
+            disabled={!invoiced || isPaid || !canCreateInvoice}
             form="invoice-form"
             data-testid="save-transaction"
             colorScheme="darkPrimary"
@@ -918,5 +905,3 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     </form>
   )
 }
-
-
