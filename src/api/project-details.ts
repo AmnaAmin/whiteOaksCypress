@@ -646,6 +646,7 @@ export const parseFormValuesFromAPIData = ({
     homeOwnerEmail: project.homeOwnerEmail,
     carrier: !!carrier ? { label: carrier?.name, value: carrier?.id } : null,
     agentName: project.agentName,
+    carrierName: project.carrier?.label ? project.carrier?.label : project?.carrierName,
     agentPhone: project.agentPhone,
     agentEmail: project.agentEmail,
 
@@ -789,8 +790,8 @@ export const parseProjectDetailsPayloadFromFormData = async (
     homeOwnerName: formValues.homeOwnerName,
     homeOwnerPhone: formValues.homeOwnerPhone,
     homeOwnerEmail: formValues.homeOwnerEmail,
-    carrierId: formValues.carrier?.value,
-    carrierName: formValues.carrier?.label,
+    carrierId: formValues.carrier?.value ? formValues.carrier?.value : project?.carrierId,
+    carrierName: formValues.carrier?.label ? formValues.carrier?.label : project?.carrierName,
     agentName: formValues.agentName,
     agentPhone: formValues.agentPhone,
     agentEmail: formValues.agentEmail,
