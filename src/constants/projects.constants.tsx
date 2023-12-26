@@ -92,6 +92,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   pcOrFpmUserId: 'pcOrFpmUserId.in',
   convertedDateStart: 'convertedDate.greaterThanOrEqual',
   convertedDateEnd: 'convertedDate.lessThanOrEqual',
+  carrierName:'carrierName.contains'
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -327,6 +328,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.market',
     accessorKey: 'market',
+  },
+  {
+    header: 'projects.projectTable.carrierName',
+    accessorKey: 'carrierName',
   },
   {
     header: 'projects.projectTable.state',
