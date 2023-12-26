@@ -186,7 +186,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isManagingFPM = managerEnabled?.allowed
   const isInvoiceTransaction =
     transaction?.transactionType === TransactionTypeValues.payment && !!transaction?.invoiceNumber
-  const isShowFpm = !!transaction
+ 
   const {
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
@@ -302,6 +302,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowPaymentRecievedDateField,
     isPaymentTermDisabled,
     isShowDM,
+    isShowFpm,
     isShowDrawFieldAgainstWO,
   } = useFieldShowHideDecision(control, transaction)
 
@@ -955,7 +956,64 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             <FormErrorMessage>{errors?.payAfterDate?.message}</FormErrorMessage>
                           </FormControl>
                         </GridItem>
-                        {isShowFpm && (
+                        
+                      </>
+                    )}
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.paidDate}>
+                        <FormLabel
+                          fontSize="14px"
+                          fontStyle="normal"
+                          fontWeight={500}
+                          color="gray.700"
+                          htmlFor="paidDate"
+                          whiteSpace="nowrap"
+                        >
+                          {t(`${TRANSACTION}.paidDate`)}
+                        </FormLabel>
+                        <Input
+                          data-testid="paid-date"
+                          id="paidDate"
+                          type="date"
+                          variant={isPaidDateRequired ? 'required-field' : 'outline'}
+                          size="md"
+                          isDisabled={isPaidDateDisabled || isVendor}
+                          css={calendarIcon}
+                          {...register('paidDate', {
+                            required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
+                          })}
+                        />
+                        <FormErrorMessage>{errors?.paidDate?.message}</FormErrorMessage>
+                      </FormControl>
+                    </GridItem>
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.payDateVariance}>
+                        <FormLabel
+                          fontSize="14px"
+                          fontStyle="normal"
+                          fontWeight={500}
+                          color="gray.700"
+                          htmlFor="payDateVariance"
+                          whiteSpace="nowrap"
+                        >
+                          {t(`${TRANSACTION}.payDateVariance`)}
+                        </FormLabel>
+                        <Input
+                          data-testid="pay-date-variance"
+                          id="payDateVariance"
+                          type="text"
+                          size="md"
+                          value={payDateVariance}
+                          css={calendarIcon}
+                          isDisabled
+                          {...register('payDateVariance')}
+                        />
+                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
+                      </FormControl>
+                    </GridItem>
+                  </>
+                )}
+{isShowFpm && (
                           <GridItem>
                             <FormControl isInvalid={!!errors.verifiedByFpm} data-testid="verified-by-fpm">
                               <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByFpm">
@@ -1015,63 +1073,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             </FormControl>
                           </GridItem>
                         )}
-                      </>
-                    )}
-                    <GridItem>
-                      <FormControl isInvalid={!!errors.paidDate}>
-                        <FormLabel
-                          fontSize="14px"
-                          fontStyle="normal"
-                          fontWeight={500}
-                          color="gray.700"
-                          htmlFor="paidDate"
-                          whiteSpace="nowrap"
-                        >
-                          {t(`${TRANSACTION}.paidDate`)}
-                        </FormLabel>
-                        <Input
-                          data-testid="paid-date"
-                          id="paidDate"
-                          type="date"
-                          variant={isPaidDateRequired ? 'required-field' : 'outline'}
-                          size="md"
-                          isDisabled={isPaidDateDisabled || isVendor}
-                          css={calendarIcon}
-                          {...register('paidDate', {
-                            required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
-                          })}
-                        />
-                        <FormErrorMessage>{errors?.paidDate?.message}</FormErrorMessage>
-                      </FormControl>
-                    </GridItem>
-                    <GridItem>
-                      <FormControl isInvalid={!!errors.payDateVariance}>
-                        <FormLabel
-                          fontSize="14px"
-                          fontStyle="normal"
-                          fontWeight={500}
-                          color="gray.700"
-                          htmlFor="payDateVariance"
-                          whiteSpace="nowrap"
-                        >
-                          {t(`${TRANSACTION}.payDateVariance`)}
-                        </FormLabel>
-                        <Input
-                          data-testid="pay-date-variance"
-                          id="payDateVariance"
-                          type="text"
-                          size="md"
-                          value={payDateVariance}
-                          css={calendarIcon}
-                          isDisabled
-                          {...register('payDateVariance')}
-                        />
-                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
-                      </FormControl>
-                    </GridItem>
-                  </>
-                )}
-
                 {isShowPaymentRecievedDateField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.paymentRecievedDate}>

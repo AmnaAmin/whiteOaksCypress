@@ -97,6 +97,7 @@ type ContactsFormValues = {
   agentName: string
   agentPhone: string
   agentEmail: string
+  carrierName: any
 }
 
 type ProjectDetailsLocationFormValues = {
@@ -208,6 +209,7 @@ export type ProjectDetailsAPIPayload = {
   homeOwnerPhone: string | null
   homeOwnerEmail: string | null
   carrierId: string | number | null
+  carrierName: any
   agentName: string | null
   agentPhone: string | null
   agentEmail: string | null

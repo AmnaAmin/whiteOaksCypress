@@ -167,6 +167,7 @@ const AddProjectForm: React.FC<AddProjectFormProps> = ({ onClose, setCreatedProj
         homeOwnerPhone: values.homeOwnerPhone,
         homeOwnerEmail: values.homeOwnerEmail,
         carrierId: values.carrier?.value,
+        carrierName: values.carrier?.label,
         agentName: values.agentName,
         agentPhone: values.agentPhone,
         agentEmail: values.agentEmail,
