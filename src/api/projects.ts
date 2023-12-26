@@ -19,7 +19,8 @@ export const useProjects = (filterQueryString?: string, page?: number, size: num
   const { data, ...rest } = usePaginationQuery<Array<Project>>(queryKey, endpoint, size || 10, { enabled: size > 0 })
 
   return {
-    projects: data?.data,
+     // making a duplicate parameter for now as BE will change its name later on
+     projects: data?.data?.map(e => ({ ...e, latestNoteAddedDate: e.latestNoteAddedTime })),
     totalPages: data?.totalCount,
     dataCount: data?.dataCount,
     ...rest,
