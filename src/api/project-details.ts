@@ -646,7 +646,6 @@ export const parseFormValuesFromAPIData = ({
     homeOwnerEmail: project.homeOwnerEmail,
     carrier: !!carrier ? { label: carrier?.name, value: carrier?.id } : null,
     agentName: project.agentName,
-    carrierName: project.carrier?.label ? project.carrier?.label : project?.carrierName,
     agentPhone: project.agentPhone,
     agentEmail: project.agentEmail,
 
