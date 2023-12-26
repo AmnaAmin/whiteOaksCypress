@@ -29,6 +29,7 @@ export const projects = {
           accountRecievable: 'AR',
           market: 'Market',
           ownerName: 'Home Owner Name',
+          carrierName: 'Carrier Name',
           state: 'State',
           woaFinish: 'WOA Finish',
           region: 'Region',
