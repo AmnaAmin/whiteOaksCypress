@@ -137,7 +137,6 @@ export type Project = {
   clientTypeId: string | number
   validForNewInvoice: boolean
   carrier?: SelectOption | null
-  carrierName: SelectOption | null
 }
 
 export type ProjectExtraAttributesType = {
