@@ -228,7 +228,7 @@ export const mapDataForExpandableRows = (transactions?: any, isVendor?: boolean)
         if (checkData) {
           data
             .find(d => d.parentWorkOrderId === transaction.parentWorkOrderId)
-            ?.['subRows']?.push({ ...transaction, parentWorkOrderId: '' })
+            ?.['subRows']?.push({ ...transaction, parentWorkOrderId: transaction.parentWorkOrderId })
         } else {
           data?.push({ ...transaction, subRows: [] })
         }
