@@ -189,7 +189,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 <InformationCard
                   Icon={BiCalendar}
                   label={t(`${VENDOR_MANAGER}.createdDate`)}
-                  value={dateFormat(new Date())}
+                  value={selectedMarket ? dateFormat(selectedMarket?.createdDate as any) : dateFormat(new Date())}
                   register={register('createdDate')}
                 />
                 {selectedMarket && (
