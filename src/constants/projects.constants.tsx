@@ -92,7 +92,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   pcOrFpmUserId: 'pcOrFpmUserId.in',
   convertedDateStart: 'convertedDate.greaterThanOrEqual',
   convertedDateEnd: 'convertedDate.lessThanOrEqual',
-  carrierName:'carrierName.contains'
+  carrierName: 'carrierName.contains',
 }
 
 const PopoverTooltip = ({ value, title }) => {
