@@ -55,12 +55,22 @@ export type Account = {
   features: string[]
   hfeWage: string | null
   authorities: string[]
+  authorityList: authority[]
 }
 
 export type PasswordFormValues = {
   currentPassword: string
   confirmPassword: string
   newPassword: string
+}
+
+export type authority = {
+  name: string
+  location: string
+  assignment: string
+  defaultRole: boolean | null
+  systemRole: boolean | null
+  userTypeId: string | null
 }
 
 export type PasswordPayload = Pick<PasswordFormValues, 'currentPassword' | 'newPassword'>

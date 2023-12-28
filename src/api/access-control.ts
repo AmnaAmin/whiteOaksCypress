@@ -15,6 +15,7 @@ export const useFetchRoles = () => {
       label: res?.name,
       location: res?.location,
       userTypeId: res?.userTypeId,
+      assignment: res?.assignment,
     })) || []
   return { data, options, ...rest }
 }
@@ -183,6 +184,7 @@ export const ASSIGNMENTS = [
   { value: 'All', label: 'All' },
   { value: 'FPM', label: 'FPM' },
   { value: 'PC', label: 'Project Coordinator' },
+  { value: 'VENDOR', label: 'Vendor' },
 ]
 
 export const mapPermissionsToFormValues = (permission, sections) => {
