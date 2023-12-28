@@ -1,11 +1,9 @@
 import { render } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { Providers } from 'providers'
 import { WORK_ORDERS, DOCUMENTS, SIGNATURE_IMG } from 'mocks/api/workorder/data'
-import { waitForLoadingToFinish, screen, act } from 'utils/test-utils'
+import { waitForLoadingToFinish } from 'utils/test-utils'
 import { LienWaiverTab } from '../lien-waiver/lien-waiver'
 import { Modal } from '@chakra-ui/react'
-import { dateFormat } from 'utils/date-time-utils'
 import { imgUtility } from 'utils/file-utils'
 import { BrowserRouter } from 'react-router-dom'
 
