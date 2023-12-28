@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Flex, FormLabel, HStack, ModalBody, ModalFooter } from '@chakra-ui/react'
+import { Box, Button, Flex, FormLabel, HStack, ModalBody, ModalFooter } from '@chakra-ui/react'
 import { parseProjectAwardValuesToPayload } from 'api/work-order'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -23,11 +23,11 @@ export const ProjectAwardTab: React.FC<any> = props => {
   const isReadOnly = isPayableRead || isProjRead
   const { isAdmin } = useUserRolesSelector()
   const [selectedCard, setSelectedCard] = useState<number | null>(null)
-  const [largeWorkOrder, setLargeWorkOrder] = useState<boolean>(workOrder?.largeWorkOrder)
+  const [largeWorkOrder] = useState<boolean>(workOrder?.largeWorkOrder)
 
   const isSaveDisable = isUpdating || !selectedCard || WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
-  const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId)
+  const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId, workOrder?.applyNewAwardPlan, workOrder?.id)
   interface FormValues {
     id?: number
   }
@@ -180,8 +180,8 @@ export const ProjectAwardTab: React.FC<any> = props => {
               </Box>
             </Flex>
             <HStack>
-              <TextCard />
-              {projectAwardData?.map(card => {
+              <TextCard isNewPlan={workOrder?.applyNewAwardPlan}  />
+              {workOrder?.applyNewAwardPlan ? (projectAwardData?.filter(p => p?.isNewPlan).map(card => {
                 return (
                   <ProjectAwardCard
                     workOrder={props?.workOrder}
@@ -194,21 +194,24 @@ export const ProjectAwardTab: React.FC<any> = props => {
                     key={card.id}
                   />
                 )
-              })}
+              })) : (projectAwardData?.filter(p => !p?.isNewPlan).map(card => {
+                return (
+                  <ProjectAwardCard
+                    workOrder={props?.workOrder}
+                    {...card}
+                    awardPlanScopeAmount={awardPlanScopeAmount}
+                    selectedCard={selectedCard}
+                    onSelectedCard={setSelectedCard}
+                    cardsvalues={card}
+                    isUpgradeProjectAward={isUpgradeProjectAward}
+                    key={card.id}
+                  />
+                )
+              })) }
+            
             </HStack>
           </ModalBody>
-          <Box mb={'5px'} ml={'9px'}>
-            <Checkbox
-              data-testid="largeWoCheckbox"
-              onChange={e => setLargeWorkOrder(e.target.checked)}
-              disabled={!isAdmin || awardPlanScopeAmount < 75000}
-              borderColor={'black'}
-              isChecked={largeWorkOrder}
-              size="lg"
-            >
-              Large WO
-            </Checkbox>
-          </Box>
+
           <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
             <Box w={'100%'}>
               <FormLabel color={'#4A5568'} fontSize="12px" fontWeight={400}>
@@ -219,7 +222,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               <Button data-testid="wo-cancel-btn" onClick={props?.onClose} variant="outline" colorScheme="brand">
                 {t('cancel')}
               </Button>
-              {!isReadOnly && (props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward) ? (
+              {!isReadOnly && (props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward) && !workOrder?.applyNewAwardPlan ? (
                 <Button type="submit" colorScheme="brand" disabled={isSaveDisable}>
                   {t('save')}
                 </Button>

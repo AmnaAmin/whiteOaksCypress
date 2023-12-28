@@ -9,7 +9,9 @@ import { PROJECT_AWARD } from './projectAward.i18n'
 import { PERFORM } from 'features/common/status'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 
-export const TextCard = () => {
+export const TextCard = ({ isNewPlan
+}) => {
+  
   const { t } = useTranslation()
 
   return (
@@ -40,9 +42,11 @@ export const TextCard = () => {
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
             {t(`${PROJECT_AWARD}.NTEmax`)}
           </Text>
+          {!isNewPlan &&
           <Text fontWeight="400" fontSize="14px" color="gray.600">
             {t(`${PROJECT_AWARD}.factoringFee`)}
           </Text>
+} 
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
             {truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayAmount`), 22)}
           </Text>
@@ -82,6 +86,10 @@ export const ProjectAwardCard = ({
     if (cardsvalues?.name === PERFORM.CoPer20) return 'NTE 50%'
     if (cardsvalues?.name === PERFORM.COPer14) return 'NTE 70%'
     if (cardsvalues?.name === PERFORM.CoPer7) return 'NTE 90%'
+    if (cardsvalues?.name === PERFORM.NewPlan1) return 'N/A'
+    if (cardsvalues?.name === PERFORM.NewPlan2) return 'NTE 30%'
+    if (cardsvalues?.name === PERFORM.NewPlan3) return 'NTE 60%'
+    if (cardsvalues?.name === PERFORM.NewPlan4) return 'NTE 90%'  
   }
   const awardPlanId = workOrder?.awardPlanId
 
@@ -92,6 +100,11 @@ export const ProjectAwardCard = ({
 
   const calFactorFeePercentage = per => {
     return (awardPlanScopeAmount / 100) * per
+  }
+
+
+  const calculateNewPercentage = () => {
+    return awardPlanScopeAmount
   }
 
   const calNteMax = p => {
@@ -105,6 +118,16 @@ export const ProjectAwardCard = ({
     if (cardsvalues?.name === PERFORM.CoPer7) return nteNintyPercentage
     return 0
   }
+  const calNewNteMax = () => {
+    const percentage = calculateNewPercentage()
+    const nteThirtyPercentage = (percentage / 100) * 30
+    const nteSixtyPercentage = (percentage / 100) * 60
+    const nteNintyPercentage = (percentage / 100) * 90
+    if (cardsvalues?.name === PERFORM.NewPlan2) return nteThirtyPercentage
+    if (cardsvalues?.name === PERFORM.NewPlan3) return nteSixtyPercentage
+    if (cardsvalues?.name === PERFORM.NewPlan4) return nteNintyPercentage
+    return 0
+  }
 
   const netFinalPayAmmount = () => {
     const factoringFee = cardsvalues?.factoringFee
@@ -113,8 +136,13 @@ export const ProjectAwardCard = ({
     return percentage - nteMax
   }
 
+  const netNewFinalPayAmmount = () => {
+    const percentage = calculateNewPercentage()
+    const nteMax = calNewNteMax()
+    return percentage - nteMax
+  }
   const handleSelected = () => {
-    if (WORK_ORDER_STATUS.Cancelled === workOrder?.status) {
+    if (WORK_ORDER_STATUS.Cancelled === workOrder?.status || cardsvalues?.isNewPlan ) {
       return false
     } else {
       onSelectedCard(cardsvalues?.id)
@@ -179,7 +207,9 @@ export const ProjectAwardCard = ({
               {t(`${PROJECT_AWARD}.scopeAmount`)}
             </Text>
             <Text fontWeight="600" fontSize="16px" color="brand.300">
-              {currencyFormatter(calculatePercentage(cardsvalues?.factoringFee))}
+            {!cardsvalues.isNewPlan ?
+              currencyFormatter(calculatePercentage(cardsvalues?.factoringFee)) :  currencyFormatter(calculateNewPercentage())}
+            
             </Text>
             <Divider borderColor="transparent" />
             <Text w={'100%'} bg={idChecker ? '' : 'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
@@ -195,8 +225,10 @@ export const ProjectAwardCard = ({
               {cardsvalues?.payTerm}
             </Text>
             <Text w={'100%'} bg={idChecker ? '' : 'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-              {currencyFormatter(calNteMax(cardsvalues.factoringFee))}
+            {!cardsvalues.isNewPlan ?
+              currencyFormatter(calNteMax(cardsvalues.factoringFee)):  currencyFormatter(calNewNteMax())}
             </Text>
+            {!cardsvalues.isNewPlan &&
             <HStack>
               <Text fontWeight="400" fontSize="14px" color="gray.600">
                 {currencyFormatter(calFactorFeePercentage(cardsvalues?.factoringFee))}
@@ -205,8 +237,10 @@ export const ProjectAwardCard = ({
                 {`${cardsvalues?.factoringFee}%`}
               </Text>
             </HStack>
+      }
             <Text w={'100%'} bg={idChecker ? '' : 'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-              {currencyFormatter(netFinalPayAmmount())}
+            {!cardsvalues.isNewPlan ?
+              currencyFormatter(netFinalPayAmmount()) :   currencyFormatter(netNewFinalPayAmmount())}
             </Text>
           </VStack>
         </Flex>

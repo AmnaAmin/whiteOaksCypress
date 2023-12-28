@@ -387,24 +387,30 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   }
 }
 
-export const useWorkOrderAwardStats = (workOrderId?: string) => {
+export const useWorkOrderAwardStats = (workOrderId?: string, applyNewAwardPlan?:boolean, projectWorkOrderId?: string|number) => {
   const client = useClient()
   const enabled = workOrderId !== null && workOrderId !== 'null' && workOrderId !== undefined
 
   const { data: awardPlansStats, ...rest } = useQuery<Array<WorkOrderAwardStats>>(
     ['changeOrders', workOrderId],
     async () => {
-      const response = await client(`projects/${workOrderId}/workOrderPlanStat`, {})
+      let response
 
-      return response?.data
-    },
-    {
-      enabled,
-    },
-  )
-
-  return { awardPlansStats, ...rest }
-}
+            if (applyNewAwardPlan) {
+              response = await client(`v1/projects/${workOrderId}/${projectWorkOrderId}/workOrderPlanStat`, {})
+            } else {
+              response = await client(`projects/${workOrderId}/workOrderPlanStat`, {})
+            }
+      
+            return response?.data
+          },
+          {
+            enabled,
+          },
+        )
+      
+        return { awardPlansStats, ...rest }
+      }
 
 export const getFileContents = async (document: any, documentType: number) => {
   if (!document) return Promise.resolve()
@@ -538,7 +544,7 @@ export const parseChangeOrderUpdateAPIPayload = async (
     modifiedDate1: formValues.dateCreated,
     modifiedBy: formValues.createdBy as string,
     vendorId: transaction.vendorId as number,
-    systemGenerated: transaction?.systemGenerated,
+    // systemGenerated: transaction?.systemGenerated,
     ...payload,
     verifiedByFpm: formValues.verifiedByFpm?.value,
     verifiedByManager: formValues.verifiedByManager?.value,
