@@ -36,7 +36,7 @@ export const VendorUsersTable = React.forwardRef((props: any, ref) => {
     })
 
   const { userMgt, isLoading, totalPages, dataCount } = useUsrMgt(
-    queryStringWithPagination + '&userType.equals=6&devAccount.equals=false',
+    queryStringWithPagination + '&authorityAssignment.equals=VENDOR&devAccount.equals=false',
     pagination.pageIndex,
     pagination.pageSize,
   )
