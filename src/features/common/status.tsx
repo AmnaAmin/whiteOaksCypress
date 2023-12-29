@@ -11,6 +11,10 @@ export enum PERFORM {
   CoPer20 = 'CO-Perform 20',
   COPer14 = 'CO-Perform 14',
   CoPer7 = 'CO-Perform 7',
+  NewPlan1='$0 - $10,000',
+  NewPlan2='$10,001 - $25,000',
+  NewPlan3='$25,001 - $50,000',
+  NewPlan4='> $50,001',
 }
 
 export enum STATUS {

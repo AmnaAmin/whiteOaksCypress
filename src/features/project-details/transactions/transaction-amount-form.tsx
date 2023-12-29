@@ -140,7 +140,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   }, [materialItems])
   // useOnRefundMaterialCheckboxChange(control, update)
   const { refundCheckbox } = useFieldShowHideDecision(control)
-  const { isApproved, isSysFactoringFee, lateAndFactoringFeeForVendor } = useFieldDisabledEnabledDecision(
+  const { isApproved, lateAndFactoringFeeForVendor } = useFieldDisabledEnabledDecision(
     control,
     changeOrder,
   )
@@ -240,7 +240,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     }
     onReplaceMaterialUploadClose()
   }
-  const isShowCheckboxes = !isApproved && transactionFields?.length > 1 && !isSysFactoringFee
+  const isShowCheckboxes = !isApproved && transactionFields?.length > 1 
   return (
     <Box overflowX={isApproved ? 'initial' : 'auto'} w="100%">
       <VStack alignItems="start" w="720px">
@@ -253,7 +253,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   variant="outline"
                   size="sm"
                   colorScheme="darkPrimary"
-                  disabled={isMaterialsLoading || isSysFactoringFee}
+                  disabled={isMaterialsLoading}
                   onClick={addRow}
                   color="darkPrimary.300"
                   leftIcon={<BiAddToQueue color="darkPrimary.300" />}
@@ -296,7 +296,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               onChange={onFileChange}
             ></input>
             <HStack
-              w={!isApproved || !isSysFactoringFee || !lateAndFactoringFeeForVendor ? 'auto' : '100%'}
+              w={!isApproved || !lateAndFactoringFeeForVendor ? 'auto' : '100%'}
               justifyContent="end"
             >
               {refundCheckbox.isVisible && (
@@ -313,7 +313,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                         isChecked={!!value}
                         colorScheme="darkPrimary"
                         isDisabled={
-                          isApproved || isMaterialsLoading || isSysFactoringFee || lateAndFactoringFeeForVendor
+                          isApproved || isMaterialsLoading || lateAndFactoringFeeForVendor
                         }
                         onChange={event => {
                           const isChecked = event.currentTarget.checked
@@ -377,7 +377,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 </>
               )}
 
-              {(!isApproved || !isSysFactoringFee) &&
+              {(!isApproved) &&
                 (document && !document.s3Url ? (
                   <Box color="#345EA6" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
                     <HStack spacing="5px" h="31px" padding="10px" align="center">
@@ -427,7 +427,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                       isDisabled={
                         isApproved ||
                         !values?.transactionType?.value ||
-                        isSysFactoringFee ||
+                        
                         lateAndFactoringFeeForVendor
                       }
                     >
@@ -470,7 +470,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   variant="normal"
                   colorScheme="PrimaryCheckBox"
                   isChecked={allChecked}
-                  isDisabled={isApproved || isSysFactoringFee}
+                  isDisabled={isApproved}
                   isIndeterminate={isIndeterminate}
                   onChange={toggleAllCheckboxes}
                 />
@@ -530,7 +530,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                 data-testid={`checkbox-${index}`}
                                 key={name}
                                 name={name}
-                                isDisabled={isApproved || isSysFactoringFee}
+                                isDisabled={isApproved}
                                 isChecked={transactionField.checked}
                                 onChange={(event: ChangeEvent<HTMLInputElement>) => {
                                   transactionField.checked = event.currentTarget.checked
@@ -553,10 +553,10 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                             placeholder="Add Description here"
                             noOfLines={1}
                             readOnly={
-                              (isApproved && !isAdminEnabled) || isSysFactoringFee || lateAndFactoringFeeForVendor
+                              (isApproved && !isAdminEnabled)  || lateAndFactoringFeeForVendor
                             }
                             variant={
-                              (isApproved && !isAdminEnabled) || isSysFactoringFee || lateAndFactoringFeeForVendor
+                              (isApproved && !isAdminEnabled) || lateAndFactoringFeeForVendor
                                 ? 'unstyled'
                                 : 'required-field'
                             }
@@ -580,7 +580,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                             return (
                               <>
                                 {(!isApproved || isAdminEnabled) &&
-                                !isSysFactoringFee &&
+                                
                                 !lateAndFactoringFeeForVendor ? (
                                   <NumberFormat
                                     data-testid={`transaction-amount-${index}`}
@@ -612,7 +612,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     data-testid={`transaction-amount-${index}`}
                                     size="sm"
                                     placeholder="Add Amount"
-                                    readOnly={isApproved || isSysFactoringFee || lateAndFactoringFeeForVendor}
+                                    readOnly={isApproved  || lateAndFactoringFeeForVendor}
                                     variant={'unstyled'}
                                     autoComplete="off"
                                     value={numeral(Number(field.value)).format('$0,0[.]00')}

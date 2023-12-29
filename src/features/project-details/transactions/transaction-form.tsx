@@ -250,7 +250,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isPaidDateDisabled,
     isStatusDisabled,
     lateAndFactoringFeeForVendor,
-    isFactoringFeeSysGenerated,
+    // isFactoringFeeSysGenerated,
   } = useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
 
   const {
@@ -1294,7 +1294,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           </Button>
         ) : (
           ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) &&
-          !isFactoringFeeSysGenerated && (
+           (
             <>
               <Button
                 type="submit"
