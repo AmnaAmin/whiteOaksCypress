@@ -278,6 +278,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     ['PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT', 'ALL'].includes(p),
   )
   const isAdmin = useRoleBasedPermissions()?.permissions?.includes('ALL')
+  const isAccounting = useRoleBasedPermissions()
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
   const selectedCancelledOrDenied = [TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(
@@ -426,7 +427,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           position: 'top-left',
         })
         return false
-      } else if (
+      } 
+    }
+    return true
+  }
+
+  const onSubmit = useCallback(
+    async (values: FormValues) => {
+      if (hasPendingDrawsOnPaymentSave(values)) {
+        return
+      }
+      if (
         transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
         materialAndDraw &&
         totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
@@ -440,15 +451,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           position: 'top-left',
         })
         return false
-      }
-    }
-    return true
-  }
-
-  const onSubmit = useCallback(
-    async (values: FormValues) => {
-      if (hasPendingDrawsOnPaymentSave(values)) {
-        return
       }
       if (!isAdminEnabledToChange(values)) {
         return
