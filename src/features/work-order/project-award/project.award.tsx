@@ -213,11 +213,6 @@ export const ProjectAwardTab: React.FC<any> = props => {
           </ModalBody>
 
           <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
-            <Box w={'100%'}>
-              <FormLabel color={'#4A5568'} fontSize="12px" fontWeight={400}>
-                {t(`${PROJECT_AWARD}.factoringFeeMsg`)}
-              </FormLabel>
-            </Box>
             <HStack spacing="16px" justifyContent="end">
               <Button data-testid="wo-cancel-btn" onClick={props?.onClose} variant="outline" colorScheme="brand">
                 {t('cancel')}
