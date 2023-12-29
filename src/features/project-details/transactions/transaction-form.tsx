@@ -426,7 +426,17 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           position: 'top-left',
         })
         return false
-      } else if (
+      } 
+    }
+    return true
+  }
+
+  const onSubmit = useCallback(
+    async (values: FormValues) => {
+      if (hasPendingDrawsOnPaymentSave(values)) {
+        return
+      }
+      if (
         transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
         materialAndDraw &&
         totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
@@ -440,15 +450,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           position: 'top-left',
         })
         return false
-      }
-    }
-    return true
-  }
-
-  const onSubmit = useCallback(
-    async (values: FormValues) => {
-      if (hasPendingDrawsOnPaymentSave(values)) {
-        return
       }
       if (!isAdminEnabledToChange(values)) {
         return
