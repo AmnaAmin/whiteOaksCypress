@@ -278,7 +278,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     ['PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT', 'ALL'].includes(p),
   )
   const isAdmin = useRoleBasedPermissions()?.permissions?.includes('ALL')
-  const isAccounting = useRoleBasedPermissions()
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
   const selectedCancelledOrDenied = [TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(
