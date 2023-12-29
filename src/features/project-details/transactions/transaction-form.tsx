@@ -897,6 +897,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                     {isShowDrawFieldAgainstWO && (
                       <>
+                      {!isVendor && (
                         <GridItem>
                           <FormControl isInvalid={!!errors.paymentProcessed}>
                             <FormLabel
@@ -929,7 +930,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage>
                           </FormControl>
                         </GridItem>
-
+)}
                         <GridItem>
                           <FormControl isInvalid={!!errors.payAfterDate}>
                             <FormLabel
