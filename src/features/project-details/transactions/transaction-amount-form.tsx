@@ -377,7 +377,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 </>
               )}
 
-              {(!isApproved) &&
+              { 
                 (document && !document.s3Url ? (
                   <Box color="#345EA6" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
                     <HStack spacing="5px" h="31px" padding="10px" align="center">
