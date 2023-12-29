@@ -14,7 +14,7 @@ export enum PERFORM {
   NewPlan1='$0 - $10,000',
   NewPlan2='$10,001 - $25,000',
   NewPlan3='$25,001 - $50,000',
-  NewPlan4='> $50,001',
+  NewPlan4='> $50,000',
 }
 
 export enum STATUS {

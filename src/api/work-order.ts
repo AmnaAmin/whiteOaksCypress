@@ -279,7 +279,7 @@ export const defaultValuesPayment = (workOrder, paymentsTerms) => {
     dateInvoiceSubmitted: datePickerFormat(workOrder?.dateInvoiceSubmitted),
     paymentTerm: workOrder?.paymentTerm
       ? paymentsTerms.find(p => p.value === workOrder?.paymentTerm)
-      : paymentsTerms.find(p => p.value === '20'),
+      : paymentsTerms.find(p => p.value === '30'),
     paymentTermDate: datePickerFormat(workOrder?.paymentTermDate),
     expectedPaymentDate: datePickerFormat(workOrder?.expectedPaymentDate),
     datePaymentProcessed: datePickerFormat(workOrder?.datePaymentProcessed),
