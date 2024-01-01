@@ -76,16 +76,17 @@ export const TransactionsTab = ({
           </Button>
         </HStack>
       </ModalFooter>
-
-      <AddNewTransactionModal
-        isOpen={isOpenTransactionModal}
-        onClose={onTransactionModalClose}
-        projectId={projectId as string}
-        projectStatus={projectStatus}
-        screen="WORK_ORDER_TRANSACTION_TABLE_MODAL"
-        currentWorkOrderId={workOrder.id}
-        isVendorExpired={isVendorExpired}
-      />
+  {workOrder &&
+  
+  <AddNewTransactionModal
+  isOpen={isOpenTransactionModal}
+  onClose={onTransactionModalClose}
+  projectId={projectId as string}
+  projectStatus={projectStatus}
+  screen="WORK_ORDER_TRANSACTION_TABLE_MODAL"
+  currentWorkOrderId={workOrder.id}
+  isVendorExpired={isVendorExpired}
+/>}
     </>
   )
 }
