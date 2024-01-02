@@ -95,6 +95,17 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
   const queryClient = useQueryClient()
   const { projectId } = useParams<'projectId'>() || projId
   
+  function updateInvoiceNumberByRevision(invoiceNo: string): string {
+    const revisionPattern = new RegExp(/^(\d+)-R(\d+)/);
+    const matchResult = revisionPattern.exec(invoiceNo);
+
+    if (matchResult) {
+        const newRevision = parseInt(matchResult[2]) + 1;
+        return invoiceNo.replace(revisionPattern, `$1-R${newRevision}`);
+    } else {
+        return invoiceNo.replace(/(\d+)/, `$1-R1`);
+    }
+}
 
   return useMutation(
     async (payload: any) => {
@@ -108,16 +119,26 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
 
       if ( isInvoiceChanged ) {
         const pattern = /^(\d+)-/;
+        //const revisionPattern = new RegExp(/^(\d+)-R(\d+)/);
         const currInvoiceNumber = payload.invoiceNumber;
         const match = currInvoiceNumber.match(pattern);
 
+        // console.log("New number: ", updateInvoiceNumberByRevision(currInvoiceNumber))
+
+        // console.log("revisions", revisionPattern.exec(currInvoiceNumber));
+
         if ( match ) {
-          const incrementedNumber = parseInt(match[1]) + 1;
-          const incrementedString = (incrementedNumber < 10 ? "0" : "") + incrementedNumber;
-          payload.invoiceNumber =  currInvoiceNumber.replace(pattern, incrementedString + "-");
+          
+          // const incrementedNumber = parseInt(match[1]) + 1;
+          // const incrementedString = (incrementedNumber < 10 ? "0" : "") + incrementedNumber;
+          // payload.invoiceNumber =  currInvoiceNumber.replace(pattern, incrementedString + "-");
+
+          payload.invoiceNumber = updateInvoiceNumberByRevision(currInvoiceNumber);
         }
 
       }
+
+     
 
       // console.log(payload); return;
 
