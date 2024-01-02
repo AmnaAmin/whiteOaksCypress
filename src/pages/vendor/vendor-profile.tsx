@@ -35,6 +35,7 @@ import { useLocation } from 'react-router-dom'
 import { VendorProjects } from 'features/vendor-profile/vendor-projects'
 import { VendorUsersTab } from 'features/vendors/vendor-users-table'
 import { VendorAccounts } from 'features/vendors/vendor-accounts'
+import { Messages } from 'features/messages/messages'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -79,6 +80,10 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
   const { mutate: saveAccounts } = useSaveVendorDetails('Accounts')
   const { mutate: createVendor } = useCreateVendorMutation()
+  const showForPreProdAndLocal =
+    window.location.href.includes('preprod') ||
+    window.location.href.includes('localhost:') ||
+    window.location.href.includes('dev')
 
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState<any>(0)
@@ -255,9 +260,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   {t('vendorProfileAccount')}
                 </Tab>
               )}
+              {!isVendor && vendorProfileData?.id && showForPreProdAndLocal && (
+                <Tab data-testid="vendor_messages">{t('messages')}</Tab>
+              )}
             </TabList>
 
-            <Box  py="21px" px="16px" display={{ base: 'block', sm: 'none' }}>
+            <Box py="21px" px="16px" display={{ base: 'block', sm: 'none' }}>
               <Divider borderWidth="1px" color="#E2E8F0" />
             </Box>
 
@@ -275,22 +283,22 @@ export const VendorProfileTabs: React.FC<Props> = props => {
             >
               <TabPanels>
                 <TabPanel p="0px" mt="30px">
-                <Box h="680" w="100%">
-                  {tabIndex === 0 ? (
-                    VendorType === 'editVendor' ? (
-                      <CreateDetails
-                        isActive={tabIndex === 0}
-                        vendorProfileData={vendorProfileData as VendorProfile}
-                        onClose={props.onClose}
-                      />
-                    ) : (
-                      <UpdateDetails
-                        isActive={tabIndex === 0}
-                        vendorProfileData={vendorProfileData as VendorProfile}
-                        onClose={props.onClose}
-                      />
-                    )
-                  ) : null}
+                  <Box h="680" w="100%">
+                    {tabIndex === 0 ? (
+                      VendorType === 'editVendor' ? (
+                        <CreateDetails
+                          isActive={tabIndex === 0}
+                          vendorProfileData={vendorProfileData as VendorProfile}
+                          onClose={props.onClose}
+                        />
+                      ) : (
+                        <UpdateDetails
+                          isActive={tabIndex === 0}
+                          vendorProfileData={vendorProfileData as VendorProfile}
+                          onClose={props.onClose}
+                        />
+                      )
+                    ) : null}
                   </Box>
                 </TabPanel>
                 <TabPanel p="0px" mt="30px">
@@ -317,53 +325,56 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   </Box>
                 </TabPanel>
                 <TabPanel p="0px" mt="30px">
-                <Box h="680" w="100%" overflow='auto'>
-                  {tabIndex === 3 && (
-                    <TradeList
-                      isActive={tabIndex === 3}
-                      vendorProfileData={vendorProfileData as VendorProfile}
-                      onClose={props.onClose}
-                    />
-                  )}
+                  <Box h="680" w="100%" overflow="auto">
+                    {tabIndex === 3 && (
+                      <TradeList
+                        isActive={tabIndex === 3}
+                        vendorProfileData={vendorProfileData as VendorProfile}
+                        onClose={props.onClose}
+                      />
+                    )}
                   </Box>
                 </TabPanel>
                 <TabPanel p="0px" mt="30px">
-                <Box h="680" w="100%" >
-                  {tabIndex === 4 && (
-                    <MarketList
-                      isActive={tabIndex === 4}
-                      vendorProfileData={vendorProfileData as VendorProfile}
-                      onClose={props.onClose}
-                    />
-                  )}
+                  <Box h="680" w="100%">
+                    {tabIndex === 4 && (
+                      <MarketList
+                        isActive={tabIndex === 4}
+                        vendorProfileData={vendorProfileData as VendorProfile}
+                        onClose={props.onClose}
+                      />
+                    )}
                   </Box>
                 </TabPanel>
 
                 {!isVendor && vendorProfileData?.id && (
                   <TabPanel p="0px">
-                     <Box h="710" w="100%" >
-                    {tabIndex === 5 && (
-                      <VendorProjects vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
-                    )}
+                    <Box h="710" w="100%">
+                      {tabIndex === 5 && (
+                        <VendorProjects
+                          vendorProfileData={vendorProfileData as VendorProfile}
+                          onClose={props.onClose}
+                        />
+                      )}
                     </Box>
                   </TabPanel>
                 )}
                 {!!vendorProfileData?.id && (
                   <TabPanel p="0px">
-                     <Box h="710px" w="100%" overflow='auto'>
-                    <VendorUsersTab vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
+                    <Box h="710px" w="100%" overflow="auto">
+                      <VendorUsersTab vendorProfileData={vendorProfileData as VendorProfile} onClose={props.onClose} />
                     </Box>
                   </TabPanel>
                 )}
 
                 {allowVendorAccounts && (
                   <TabPanel p="0px">
-                     <Box h="710" w="100%" overflow='auto'>
-                    <VendorAccounts
-                      isActive={vendorProfileData?.id ? tabIndex === 7 : tabIndex === 5}
-                      vendorProfileData={vendorProfileData as VendorProfile}
-                      onClose={props.onClose}
-                    />
+                    <Box h="710" w="100%" overflow="auto">
+                      <VendorAccounts
+                        isActive={vendorProfileData?.id ? tabIndex === 7 : tabIndex === 5}
+                        vendorProfileData={vendorProfileData as VendorProfile}
+                        onClose={props.onClose}
+                      />
                     </Box>
                   </TabPanel>
                 )}
@@ -379,6 +390,13 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     </Box>
               </TabPanel> */}
                 {/* <TabPanel p="0px"></TabPanel> */}
+                {!!vendorProfileData && showForPreProdAndLocal && (
+                  <TabPanel p={0}>
+                    <Box w="100%" h="710px">
+                      <Messages id={vendorProfileData?.id} entity="vendor" />
+                    </Box>
+                  </TabPanel>
+                )}
               </TabPanels>
             </Card>
           </Tabs>
