@@ -1235,6 +1235,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   setTotalItemAmount(amount)
                 }}
                 transaction={transaction}
+                currentWorkOrderId={currentWorkOrderId}
+                projectId={projectId}
                 setDisableBtn={setDisableBtn}
                 disableError={disableBtn}
                 setFileParseMsg={setFileParseMsg}
