@@ -215,6 +215,7 @@ i18n.use(initReactI18next).init({
         profitmargins: 'Profit Margins',
         resetSettings: 'Reset Settings',
         resetAllSettings: 'Clear All Users Settings',
+        amountLimitMessage: 'Based on work completed, the allowed limit',
 
         // Projects-WorkOrderDetails
         editVendorWorkOrder: 'Edit Vendor Work Order',
