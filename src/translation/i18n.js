@@ -849,6 +849,7 @@ i18n.use(initReactI18next).init({
         close: 'Cerca',
         save: 'Ahorrar',
         done: 'Hecho',
+        amountLimitMessage: 'Basado en el trabajo completado, el límite permitido',
 
         // Project - WorkOrderDetails
         editVendorWorkOrder: 'Editar Orden de Trabajo de Proveedor',
