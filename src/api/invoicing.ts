@@ -36,6 +36,7 @@ export const useFetchInvoices = ({ projectId }: { projectId: string | number | u
 }
 export const useFetchInvoiceDetails = ({ invoiceId }: { invoiceId: string | number | undefined | null }) => {
   const client = useClient()
+  
   const { data: invoiceDetails, ...rest } = useQuery<InvoicingType>(
     ['invoice-details', invoiceId],
     async () => {
@@ -93,9 +94,34 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
   const toast = useToast()
   const queryClient = useQueryClient()
   const { projectId } = useParams<'projectId'>() || projId
+  
 
   return useMutation(
-    (payload: any) => {
+    async (payload: any) => {
+      const responseInvoiceDetails = await client(`project-invoices/${payload.id}`, {});
+      const invoiceDetails = responseInvoiceDetails?.data as InvoicingType;
+      let isInvoiceChanged = false;
+      if ( payload.paymentTerm !== invoiceDetails.paymentTerm ) isInvoiceChanged = true;
+      if ( payload.invoiceDate !== invoiceDetails.invoiceDate ) isInvoiceChanged = true;
+      // if ( !!payload.receivedLineItems?.length && !!invoiceDetails.receivedLineItems?.length && ( payload.receivedLineItems.length !== invoiceDetails.receivedLineItems.length )  ) isInvoiceChanged = true;
+      if ( !!payload.finalSowLineItems?.length && !!invoiceDetails.finalSowLineItems?.length && ( payload.finalSowLineItems.length !== invoiceDetails.finalSowLineItems.length )  ) isInvoiceChanged = true;
+
+      if ( isInvoiceChanged ) {
+        const pattern = /^(\d+)-/;
+        const currInvoiceNumber = payload.invoiceNumber;
+        const match = currInvoiceNumber.match(pattern);
+
+        if ( match ) {
+          const incrementedNumber = parseInt(match[1]) + 1;
+          const incrementedString = (incrementedNumber < 10 ? "0" : "") + incrementedNumber;
+          payload.invoiceNumber =  currInvoiceNumber.replace(pattern, incrementedString + "-");
+        }
+
+      }
+
+      // console.log(payload); return;
+
+
       return client('project-invoices', {
         data: payload,
         method: 'PUT',
