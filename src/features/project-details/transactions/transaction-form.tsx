@@ -438,7 +438,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       }
       if (
         transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
-        materialAndDraw &&
+        materialAndDraw &&  !isRefund &&
         totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
       ) {
         toast({
