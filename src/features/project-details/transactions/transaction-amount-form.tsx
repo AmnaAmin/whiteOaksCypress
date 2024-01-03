@@ -651,7 +651,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               >
                 {isEdit && (
                   <>
-                    {t('amountLimitMessage')} = {awardPlanRemainingAmount}
+                    {t('amountLimitMessage')} = ${awardPlanRemainingAmount}
                   </>
                 )}
               </GridItem>
