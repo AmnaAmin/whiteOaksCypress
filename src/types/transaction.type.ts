@@ -69,6 +69,7 @@ export type WorkOrderAwardStats = {
   materialAmountConsume: number
   totalAmountConsume: number
   totalAmountRemaining: null | number
+  allowedDrawAmount: number | null
 }
 
 export type TransactionType = {

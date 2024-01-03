@@ -8,10 +8,9 @@ import { currencyFormatter, truncateWithEllipsis } from 'utils/string-formatters
 import { PROJECT_AWARD } from './projectAward.i18n'
 import { PERFORM } from 'features/common/status'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
+import { sum } from 'lodash'
 
-export const TextCard = ({ isNewPlan
-}) => {
-  
+export const TextCard = ({ isNewPlan }) => {
   const { t } = useTranslation()
 
   return (
@@ -39,15 +38,25 @@ export const TextCard = ({ isNewPlan
           <Text fontWeight="400" fontSize="14px" color="gray.600">
             {truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayTerms`), 22)}
           </Text>
+          {isNewPlan && (
+            <>
+              <Text  w={'100%'} fontWeight="400" fontSize="14px" color="gray.600"  bg={'gray.50'}>
+                {t(`${PROJECT_AWARD}.drawRatio`)}
+              </Text>
+              <Text  w={'100%'} fontWeight="400" fontSize="14px" color="gray.600"  >
+                {t(`${PROJECT_AWARD}.finalPayment`)}
+              </Text>
+            </>
+          )}
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
             {t(`${PROJECT_AWARD}.NTEmax`)}
           </Text>
-          {!isNewPlan &&
-          <Text fontWeight="400" fontSize="14px" color="gray.600">
-            {t(`${PROJECT_AWARD}.factoringFee`)}
-          </Text>
-} 
-          <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
+          {!isNewPlan && (
+            <Text fontWeight="400" fontSize="14px" color="gray.600">
+              {t(`${PROJECT_AWARD}.factoringFee`)}
+            </Text>
+          )}
+          <Text w={'100%'} bg={isNewPlan ? '' : 'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
             {truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayAmount`), 22)}
           </Text>
         </VStack>
@@ -76,6 +85,7 @@ export const ProjectAwardCard = ({
   id,
   awardPlanScopeAmount,
   isUpgradeProjectAward,
+  isNewPlan,
 }) => {
   const [checkIcon, setCheckIcon] = useState(false)
   const { t } = useTranslation()
@@ -89,7 +99,7 @@ export const ProjectAwardCard = ({
     if (cardsvalues?.name === PERFORM.NewPlan1) return 'N/A'
     if (cardsvalues?.name === PERFORM.NewPlan2) return 'NTE 30%'
     if (cardsvalues?.name === PERFORM.NewPlan3) return 'NTE 60%'
-    if (cardsvalues?.name === PERFORM.NewPlan4) return 'NTE 90%'  
+    if (cardsvalues?.name === PERFORM.NewPlan4) return 'NTE 90%'
   }
   const awardPlanId = workOrder?.awardPlanId
 
@@ -101,7 +111,6 @@ export const ProjectAwardCard = ({
   const calFactorFeePercentage = per => {
     return (awardPlanScopeAmount / 100) * per
   }
-
 
   const calculateNewPercentage = () => {
     return awardPlanScopeAmount
@@ -142,7 +151,7 @@ export const ProjectAwardCard = ({
     return percentage - nteMax
   }
   const handleSelected = () => {
-    if (WORK_ORDER_STATUS.Cancelled === workOrder?.status || cardsvalues?.isNewPlan ) {
+    if (WORK_ORDER_STATUS.Cancelled === workOrder?.status || cardsvalues?.isNewPlan) {
       return false
     } else {
       onSelectedCard(cardsvalues?.id)
@@ -163,7 +172,8 @@ export const ProjectAwardCard = ({
       }
     }
   }, [selectedCard])
-
+  const paymentBreakdownArray = cardsvalues?.paymentBreakdown?.replaceAll('-1', '')?.split(',')?.map(Number)
+  const finalPayment = cardsvalues?.paymentBreakdown ? sum(paymentBreakdownArray) : 0
   return (
     <>
       {!cardsvalues ? (
@@ -171,10 +181,10 @@ export const ProjectAwardCard = ({
       ) : (
         <Flex
           flexWrap="nowrap"
-          onMouseOver={() => setCheckIcon(true)}
-          onMouseOut={() => setCheckIcon(false)}
+          onMouseOver={() => !isNewPlan && setCheckIcon(true)}
+          onMouseOut={() => !isNewPlan && setCheckIcon(false)}
           //   boxShadow=" 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06)"
-          h="380px"
+          h={isNewPlan ? "401px" : "380px"}
           w="195px"
           borderRadius="12px"
           bg="#FFFFFF"
@@ -191,7 +201,8 @@ export const ProjectAwardCard = ({
           onClick={handleSelected}
           bgColor={selectedCard === id ? 'blue.50' : ''}
           borderColor={selectedCard === id ? 'brand.300' : ''}
-          _hover={{ bg: 'gray.100' }}
+          // _hover={{ bg: 'gray.100' }}
+          _hover={!isNewPlan ? { bg: 'gray.100' } : {}}
         >
           <VStack w="195px" px={'10px'} alignItems={'Start'} spacing={3}>
             <HStack w={'100%'} justifyContent={'space-between'}>
@@ -207,9 +218,9 @@ export const ProjectAwardCard = ({
               {t(`${PROJECT_AWARD}.scopeAmount`)}
             </Text>
             <Text fontWeight="600" fontSize="16px" color="brand.300">
-            {!cardsvalues.isNewPlan ?
-              currencyFormatter(calculatePercentage(cardsvalues?.factoringFee)) :  currencyFormatter(calculateNewPercentage())}
-            
+              {!cardsvalues.isNewPlan
+                ? currencyFormatter(calculatePercentage(cardsvalues?.factoringFee))
+                : currencyFormatter(calculateNewPercentage())}
             </Text>
             <Divider borderColor="transparent" />
             <Text w={'100%'} bg={idChecker ? '' : 'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
@@ -224,23 +235,39 @@ export const ProjectAwardCard = ({
             <Text fontWeight="400" fontSize="14px" color="gray.600">
               {cardsvalues?.payTerm}
             </Text>
-            <Text w={'100%'} bg={idChecker ? '' : 'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-            {!cardsvalues.isNewPlan ?
-              currencyFormatter(calNteMax(cardsvalues.factoringFee)):  currencyFormatter(calNewNteMax())}
+            {isNewPlan && (
+              <><Text w={'100%'} fontWeight="400" bg={idChecker ? '' : 'gray.50'} fontSize="14px" color="gray.600">
+                  {!!cardsvalues?.paymentBreakdown ? cardsvalues?.paymentBreakdown?.replaceAll('-1','%') : 0}
+
+                </Text><Text w={'100%'} fontWeight="400" fontSize="14px" color="gray.600">
+                {100 - finalPayment}%
+                  </Text></>
+            )}
+            <Text w={'100%'} fontWeight="400" fontSize="14px" color="gray.600" bg={idChecker ? '' : 'gray.50'}>
+              {!cardsvalues.isNewPlan
+                ? currencyFormatter(calNteMax(cardsvalues.factoringFee))
+                : currencyFormatter(calNewNteMax())}
             </Text>
-            {!cardsvalues.isNewPlan &&
-            <HStack>
-              <Text fontWeight="400" fontSize="14px" color="gray.600">
-                {currencyFormatter(calFactorFeePercentage(cardsvalues?.factoringFee))}
-              </Text>
-              <Text fontWeight="400" fontSize="12px" color="brand.300" bg="blue.50" py="1px" px="5px">
-                {`${cardsvalues?.factoringFee}%`}
-              </Text>
-            </HStack>
-      }
-            <Text w={'100%'} bg={idChecker ? '' : 'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
-            {!cardsvalues.isNewPlan ?
-              currencyFormatter(netFinalPayAmmount()) :   currencyFormatter(netNewFinalPayAmmount())}
+            {!cardsvalues.isNewPlan && (
+              <HStack>
+                <Text fontWeight="400" fontSize="14px" color="gray.600">
+                  {currencyFormatter(calFactorFeePercentage(cardsvalues?.factoringFee))}
+                </Text>
+                <Text fontWeight="400" fontSize="12px" color="brand.300" bg="blue.50" py="1px" px="5px">
+                  {`${cardsvalues?.factoringFee}%`}
+                </Text>
+              </HStack>
+            )}
+            <Text
+              w={'100%'}
+              bg={isNewPlan ? '' : idChecker ? '' : 'gray.50'}
+              fontWeight="400"
+              fontSize="14px"
+              color="gray.600"
+            >
+              {!cardsvalues.isNewPlan
+                ? currencyFormatter(netFinalPayAmmount())
+                : currencyFormatter(netNewFinalPayAmmount())}
             </Text>
           </VStack>
         </Flex>
