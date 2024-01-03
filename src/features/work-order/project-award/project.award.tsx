@@ -27,7 +27,11 @@ export const ProjectAwardTab: React.FC<any> = props => {
 
   const isSaveDisable = isUpdating || !selectedCard || WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
-  const { awardPlansStats } = useWorkOrderAwardStats(props?.workOrder?.projectId, workOrder?.applyNewAwardPlan, workOrder?.id)
+  const { awardPlansStats } = useWorkOrderAwardStats(
+    props?.workOrder?.projectId,
+    workOrder?.applyNewAwardPlan,
+    workOrder?.id,
+  )
   interface FormValues {
     id?: number
   }
@@ -174,41 +178,50 @@ export const ProjectAwardTab: React.FC<any> = props => {
             </Box>
             <Flex w="100%" alignContent="space-between" pos="relative">
               <Box flex="4" minW="59em">
-                <FormLabel color={'gray.700'} fontWeight={500}>
-                  {t(`${PROJECT_AWARD}.selectPerformance`)}
-                </FormLabel>
+                {workOrder?.applyNewAwardPlan ? null : (
+                  <FormLabel color={'gray.700'} fontWeight={500}>
+                    {t(`${PROJECT_AWARD}.selectPerformance`)}
+                  </FormLabel>
+                )}
               </Box>
             </Flex>
             <HStack>
-              <TextCard isNewPlan={workOrder?.applyNewAwardPlan}  />
-              {workOrder?.applyNewAwardPlan ? (projectAwardData?.filter(p => p?.isNewPlan).map(card => {
-                return (
-                  <ProjectAwardCard
-                    workOrder={props?.workOrder}
-                    {...card}
-                    awardPlanScopeAmount={awardPlanScopeAmount}
-                    selectedCard={selectedCard}
-                    onSelectedCard={setSelectedCard}
-                    cardsvalues={card}
-                    isUpgradeProjectAward={isUpgradeProjectAward}
-                    key={card.id}
-                  />
-                )
-              })) : (projectAwardData?.filter(p => !p?.isNewPlan).map(card => {
-                return (
-                  <ProjectAwardCard
-                    workOrder={props?.workOrder}
-                    {...card}
-                    awardPlanScopeAmount={awardPlanScopeAmount}
-                    selectedCard={selectedCard}
-                    onSelectedCard={setSelectedCard}
-                    cardsvalues={card}
-                    isUpgradeProjectAward={isUpgradeProjectAward}
-                    key={card.id}
-                  />
-                )
-              })) }
-            
+              <TextCard isNewPlan={workOrder?.applyNewAwardPlan} />
+              {workOrder?.applyNewAwardPlan
+                ? projectAwardData
+                    ?.filter(p => p?.isNewPlan)
+                    .map(card => {
+                      return (
+                        <ProjectAwardCard
+                          workOrder={props?.workOrder}
+                          {...card}
+                          isNewPlan={card?.isNewPlan} 
+                          awardPlanScopeAmount={awardPlanScopeAmount}
+                          selectedCard={selectedCard}
+                          onSelectedCard={setSelectedCard}
+                          cardsvalues={card}
+                          isUpgradeProjectAward={isUpgradeProjectAward}
+                          key={card.id}
+                        />
+                      )
+                    })
+                : projectAwardData
+                    ?.filter(p => !p?.isNewPlan)
+                    .map(card => {
+                      return (
+                        <ProjectAwardCard
+                          workOrder={props?.workOrder}
+                          {...card}
+                          isNewPlan={card?.isNewPlan} 
+                          awardPlanScopeAmount={awardPlanScopeAmount}
+                          selectedCard={selectedCard}
+                          onSelectedCard={setSelectedCard}
+                          cardsvalues={card}
+                          isUpgradeProjectAward={isUpgradeProjectAward}
+                          key={card.id}
+                        />
+                      )
+                    })}
             </HStack>
           </ModalBody>
 
@@ -217,7 +230,9 @@ export const ProjectAwardTab: React.FC<any> = props => {
               <Button data-testid="wo-cancel-btn" onClick={props?.onClose} variant="outline" colorScheme="brand">
                 {t('cancel')}
               </Button>
-              {!isReadOnly && (props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward) && !workOrder?.applyNewAwardPlan ? (
+              {!isReadOnly &&
+              (props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward) &&
+              !workOrder?.applyNewAwardPlan ? (
                 <Button type="submit" colorScheme="brand" disabled={isSaveDisable}>
                   {t('save')}
                 </Button>
