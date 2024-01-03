@@ -80,14 +80,15 @@ export const ProjectAwardTab: React.FC<any> = props => {
               justifyContent="center"
               borderRadius="6px"
               height="auto"
-              width="1000px"
+              marginLeft="202px"
+              width="807px"
               border="1px solid #CBD5E0"
               marginBottom="20px"
               marginTop="-9px"
               padding={{ base: '100px 0', md: '0px 0px' }}
             >
               <Box
-                flex={{ base: '1', md: '2' }}
+                flex="1"
                 h="60px"
                 bg="gray.50"
                 fontSize="14px"
@@ -195,7 +196,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
                         <ProjectAwardCard
                           workOrder={props?.workOrder}
                           {...card}
-                          isNewPlan={card?.isNewPlan} 
+                          isNewPlan={card?.isNewPlan}
                           awardPlanScopeAmount={awardPlanScopeAmount}
                           selectedCard={selectedCard}
                           onSelectedCard={setSelectedCard}
@@ -212,7 +213,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
                         <ProjectAwardCard
                           workOrder={props?.workOrder}
                           {...card}
-                          isNewPlan={card?.isNewPlan} 
+                          isNewPlan={card?.isNewPlan}
                           awardPlanScopeAmount={awardPlanScopeAmount}
                           selectedCard={selectedCard}
                           onSelectedCard={setSelectedCard}
@@ -226,6 +227,13 @@ export const ProjectAwardTab: React.FC<any> = props => {
           </ModalBody>
 
           <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+            { !workOrder?.applyNewAwardPlan && (
+              <Box w={'100%'}>
+                <FormLabel color={'#4A5568'} fontSize="12px" fontWeight={400}>
+                  {t(`${PROJECT_AWARD}.factoringFeeMsg`)}
+                </FormLabel>
+              </Box>
+            )}
             <HStack spacing="16px" justifyContent="end">
               <Button data-testid="wo-cancel-btn" onClick={props?.onClose} variant="outline" colorScheme="brand">
                 {t('cancel')}
