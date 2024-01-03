@@ -770,11 +770,12 @@ export const Details: React.FC<clientDetailProps> = props => {
           <Button
             isDisabled={isNewClientDetails || isContactSection || isAccountPayableSection}
             colorScheme="brand"
-            form="clientDetails"
             ml={2}
-            onClick={props?.setNextTab}
+            // onClick={props?.setNextTab}
+            type="submit"
+            form="clientDetails"
           >
-            {t(`${CLIENTS}.next`)}
+            {t(`${CLIENTS}.save`)}
           </Button>
         )}
       </Flex>

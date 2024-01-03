@@ -66,10 +66,11 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
             colorScheme="brand"
             form="clientDetails"
             ml={2}
-            onClick={props?.setNextTab}
+            type="submit"
+            // onClick={props?.setNextTab}
             disabled={!validateMarket(markets) || props.saveLoading}
           >
-            {t(`${CLIENTS}.next`)}
+            {t(`${CLIENTS}.save`)}
           </Button>
         )}
       </Flex>
