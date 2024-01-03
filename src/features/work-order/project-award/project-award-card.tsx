@@ -16,7 +16,7 @@ export const TextCard = ({ isNewPlan }) => {
   return (
     <Box as="label">
       <Flex
-        h="392px"
+        h={isNewPlan ? "401px" : "392px"}
         w="195px"
         bg="#FFFFFF"
         alignItems="center"
