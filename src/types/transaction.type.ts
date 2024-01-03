@@ -69,6 +69,7 @@ export type WorkOrderAwardStats = {
   materialAmountConsume: number
   totalAmountConsume: number
   totalAmountRemaining: null | number
+  allowedDrawAmount: number | null
 }
 
 export type TransactionType = {
@@ -248,7 +249,7 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   modifiedDate1: string | null
   modifiedBy: string
   vendorId: number | null
-  systemGenerated: boolean | null
+  // systemGenerated: boolean | null
   paymentProcessed: string | null
   paymentTermDate: string | null
   payAfterDate: string | null
@@ -298,7 +299,7 @@ export type ChangeOrderType = {
   lineItems: Array<LineItem> | null
   paymentReceived: string | null
   documents: Document[]
-  systemGenerated: boolean
+  // systemGenerated: boolean
   verifiedByFpm: SelectOption | null
   verifiedByManager: SelectOption | null
   paymentProcessed: null

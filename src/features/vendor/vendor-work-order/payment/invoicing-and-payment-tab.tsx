@@ -5,6 +5,7 @@ import { dateFormatNew } from 'utils/date-time-utils'
 import { useTranslation } from 'react-i18next'
 import { Button } from 'components/button/button'
 import { STATUS } from 'features/common/status'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 type InvoiceAndPaymentData = {
   dateInvoiceSubmitted: string
@@ -30,6 +31,7 @@ const InvoicingAndPaymentTab = ({
   onClose: () => void
 }) => {
   const { t } = useTranslation()
+  const { isVendor } = useUserRolesSelector()
   return (
     <Box>
       <ModalBody h="600px" pl="26px" pr="25px" pt="10px">
@@ -176,6 +178,7 @@ const InvoicingAndPaymentTab = ({
               }
             />
           </GridItem>
+          {!isVendor && (
           <GridItem flex={{ base: '1', sm: 'unset' }}>
             <InputView
               showDivider={false}
@@ -191,17 +194,9 @@ const InvoicingAndPaymentTab = ({
                 )
               }
             />
+          
           </GridItem>
-        </Grid>
-        <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" />
-        <Grid
-          templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(170px,1fr))' }}
-          gap={5}
-          alignItems={'center'}
-          my="30px"
-          flexWrap="wrap"
-          display={{ base: 'flex', sm: 'grid' }}
-        >
+          )}
           <GridItem>
             <InputView
               showDivider={false}
@@ -220,6 +215,17 @@ const InvoicingAndPaymentTab = ({
             />
           </GridItem>
         </Grid>
+        {/* <Divider borderBottomWidth={1} borderColor="gray.200" orientation="horizontal" />
+        <Grid
+          templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(170px,1fr))' }}
+          gap={5}
+          alignItems={'center'}
+          my="30px"
+          flexWrap="wrap"
+          display={{ base: 'flex', sm: 'grid' }}
+        >
+          
+        </Grid> */}
       </ModalBody>
       <ModalFooter borderTop="1px solid #E2E8F0" p={5}>
         <Flex w="100%" justifyContent="end">

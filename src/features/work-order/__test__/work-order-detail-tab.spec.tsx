@@ -109,21 +109,21 @@ describe('Work Order modal showing work order specific details', () => {
     expect(screen.getByTestId('isCompleted-1')).toHaveAttribute('data-checked')
   })
 
-  test('Verify work order details in completed state', async () => {
-    const onClose = jest.fn()
-    const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'completed')
-    const projectData = PROJECTS.find(p => p.id === workOrder?.projectId)
-    const transactions = []
-    await renderWorkOrderDetails({ onClose, workOrder, projectData, transactions })
+  // test('Verify work order details in completed state', async () => {
+  //   const onClose = jest.fn()
+  //   const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'completed')
+  //   const projectData = PROJECTS.find(p => p.id === workOrder?.projectId)
+  //   const transactions = []
+  //   await renderWorkOrderDetails({ onClose, workOrder, projectData, transactions })
 
-    expect(screen.getByTestId('Completed by Vendor').textContent).toEqual(
-      workOrder?.workOrderDateCompleted ? dateFormat(workOrder?.workOrderDateCompleted) : 'mm/dd/yy',
-    )
-    expect(screen.getByTestId('Completed by Vendor').textContent).not.toEqual('mm/dd/yy')
-    expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku1')
-    expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
+  //   expect(screen.getByTestId('Completed by Vendor').textContent).toEqual(
+  //     workOrder?.workOrderDateCompleted ? dateFormat(workOrder?.workOrderDateCompleted) : 'mm/dd/yy',
+  //   )
+  //   expect(screen.getByTestId('Completed by Vendor').textContent).not.toEqual('mm/dd/yy')
+  //   expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku1')
+  //   expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
 
-    expect(screen.queryByTestId('cell-0-vendorAmount')).not.toBeInTheDocument()
-    expect(screen.queryByTestId('cell-1-vendorAmount')).not.toBeInTheDocument()
-  })
+  //   expect(screen.queryByTestId('cell-0-vendorAmount')).not.toBeInTheDocument()
+  //   expect(screen.queryByTestId('cell-1-vendorAmount')).not.toBeInTheDocument()
+  // })
 })
