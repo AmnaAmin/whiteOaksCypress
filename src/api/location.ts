@@ -131,7 +131,7 @@ export const useCreateLocation = () => {
 
       onError(error: any) {
         toast({
-          title: 'Client Type',
+          title: 'Location',
           description: (error.title as string) ?? 'Unable to save location.',
           status: 'error',
           duration: 9000,
