@@ -8,6 +8,7 @@ import { currencyFormatter, truncateWithEllipsis } from 'utils/string-formatters
 import { PROJECT_AWARD } from './projectAward.i18n'
 import { PERFORM } from 'features/common/status'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
+import { sum } from 'lodash'
 
 export const TextCard = ({ isNewPlan }) => {
   const { t } = useTranslation()
@@ -15,7 +16,7 @@ export const TextCard = ({ isNewPlan }) => {
   return (
     <Box as="label">
       <Flex
-        h="392px"
+        h={isNewPlan ? "401px" : "392px"}
         w="195px"
         bg="#FFFFFF"
         alignItems="center"
@@ -37,9 +38,16 @@ export const TextCard = ({ isNewPlan }) => {
           <Text fontWeight="400" fontSize="14px" color="gray.600">
             {truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayTerms`), 22)}
           </Text>
-          <Text fontWeight="400" fontSize="14px" color="gray.600">
-            {t(`${PROJECT_AWARD}.drawRatio`)}
-          </Text>
+          {isNewPlan && (
+            <>
+              <Text  w={'100%'} fontWeight="400" fontSize="14px" color="gray.600"  bg={'gray.50'}>
+                {t(`${PROJECT_AWARD}.drawRatio`)}
+              </Text>
+              <Text  w={'100%'} fontWeight="400" fontSize="14px" color="gray.600"  >
+                {t(`${PROJECT_AWARD}.finalPayment`)}
+              </Text>
+            </>
+          )}
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
             {t(`${PROJECT_AWARD}.NTEmax`)}
           </Text>
@@ -164,7 +172,8 @@ export const ProjectAwardCard = ({
       }
     }
   }, [selectedCard])
-
+  const paymentBreakdownArray = cardsvalues?.paymentBreakdown?.replaceAll('-1', '')?.split(',')?.map(Number)
+  const finalPayment = cardsvalues?.paymentBreakdown ? sum(paymentBreakdownArray) : 0
   return (
     <>
       {!cardsvalues ? (
@@ -226,10 +235,15 @@ export const ProjectAwardCard = ({
             <Text fontWeight="400" fontSize="14px" color="gray.600">
               {cardsvalues?.payTerm}
             </Text>
-            <Text w={'100%'} fontWeight="400" bg={idChecker ? '' : 'gray.50'} fontSize="14px" color="gray.600">
-              {!!cardsvalues?.paymentBreakdown ? cardsvalues?.paymentBreakdown?.replaceAll('-1', '%') : 0}
-            </Text>
-            <Text w={'100%'} fontWeight="400" fontSize="14px" color="gray.600">
+            {isNewPlan && (
+              <><Text w={'100%'} fontWeight="400" bg={idChecker ? '' : 'gray.50'} fontSize="14px" color="gray.600">
+                  {!!cardsvalues?.paymentBreakdown ? cardsvalues?.paymentBreakdown?.replaceAll('-1','%') : 0}
+
+                </Text><Text w={'100%'} fontWeight="400" fontSize="14px" color="gray.600">
+                {100 - finalPayment}%
+                  </Text></>
+            )}
+            <Text w={'100%'} fontWeight="400" fontSize="14px" color="gray.600" bg={idChecker ? '' : 'gray.50'}>
               {!cardsvalues.isNewPlan
                 ? currencyFormatter(calNteMax(cardsvalues.factoringFee))
                 : currencyFormatter(calNewNteMax())}
