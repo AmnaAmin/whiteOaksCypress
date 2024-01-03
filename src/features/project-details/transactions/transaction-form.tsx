@@ -556,7 +556,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     const daysUntilFriday = (5 - processedDate.day() + 7) % 7 // Calculate days until Friday
     return processedDate.add(daysUntilFriday, 'days').toDate()
   }
-
+  const vFpm = transaction?.verifiedByFpm as unknown as string
+  const vDM = transaction?.verifiedByManager as unknown as string
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
@@ -1279,7 +1280,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             variant="solid"
             isDisabled={
               !selectedCancelledOrDenied &&
-              (amount === 0 || remainingAmountExceededFlag || (isPlanExhausted && !isApproved) || !invoicedDate) //Check if the status is being changed to cancel/deny let the transaction be allowed.
+              (
+                (amount === 0 || remainingAmountExceededFlag || (isPlanExhausted && !isApproved) || !invoicedDate) ||
+                 (isVendor && vFpm && vDM))
+               //Check if the status is being changed to cancel/deny let the transaction be allowed.
             }
             colorScheme="darkPrimary"
             onClick={event => {
@@ -1306,7 +1310,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 colorScheme="darkPrimary"
                 variant="solid"
                 disabled={
-                  isFormSubmitLoading || isMaterialsLoading || disableSave || disableBtn || isInvoiceTransaction
+                 ( isFormSubmitLoading ||isMaterialsLoading ||disableSave ||disableBtn ||isInvoiceTransaction )||
+                  (isVendor && vFpm && vDM)  
                 }
               >
                 {t(`${TRANSACTION}.save`)}
