@@ -37,6 +37,9 @@ export const TextCard = ({ isNewPlan }) => {
           <Text fontWeight="400" fontSize="14px" color="gray.600">
             {truncateWithEllipsis(t(`${PROJECT_AWARD}.netFinalPayTerms`), 22)}
           </Text>
+          <Text fontWeight="400" fontSize="14px" color="gray.600">
+            {t(`${PROJECT_AWARD}.drawRatio`)}
+          </Text>
           <Text w={'100%'} bg={'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
             {t(`${PROJECT_AWARD}.NTEmax`)}
           </Text>
@@ -223,7 +226,10 @@ export const ProjectAwardCard = ({
             <Text fontWeight="400" fontSize="14px" color="gray.600">
               {cardsvalues?.payTerm}
             </Text>
-            <Text w={'100%'} bg={idChecker ? '' : 'gray.50'} fontWeight="400" fontSize="14px" color="gray.600">
+            <Text w={'100%'} fontWeight="400" bg={idChecker ? '' : 'gray.50'} fontSize="14px" color="gray.600">
+              {!!cardsvalues?.paymentBreakdown ? cardsvalues?.paymentBreakdown?.replaceAll('-1', '%') : 0}
+            </Text>
+            <Text w={'100%'} fontWeight="400" fontSize="14px" color="gray.600">
               {!cardsvalues.isNewPlan
                 ? currencyFormatter(calNteMax(cardsvalues.factoringFee))
                 : currencyFormatter(calNewNteMax())}
@@ -238,7 +244,13 @@ export const ProjectAwardCard = ({
                 </Text>
               </HStack>
             )}
-            <Text w={'100%'} bg={isNewPlan ? '' : (idChecker ? '' : 'gray.50')}fontWeight="400" fontSize="14px" color="gray.600">
+            <Text
+              w={'100%'}
+              bg={isNewPlan ? '' : idChecker ? '' : 'gray.50'}
+              fontWeight="400"
+              fontSize="14px"
+              color="gray.600"
+            >
               {!cardsvalues.isNewPlan
                 ? currencyFormatter(netFinalPayAmmount())
                 : currencyFormatter(netNewFinalPayAmmount())}
