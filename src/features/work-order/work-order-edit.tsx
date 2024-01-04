@@ -376,7 +376,7 @@ const WorkOrderDetails = ({
                         </Center>
                       ) : (
                         <Box w="100%" h="680px">
-                          <Messages id={workOrder.id} entity="workOrder" projectId={projectId} />
+                          <Messages id={workOrder.id} entity="workOrder" projectId={projectId} value={projectData} />
                         </Box>
                       )}
                     </TabPanel>
