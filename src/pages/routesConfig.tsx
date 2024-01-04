@@ -26,6 +26,7 @@ import { ClientType } from './admin/client-type'
 import GeoQRScan from './vendor/geo-qr-scan'
 import CypressTiggers from './devops/cypress-triggers'
 import { Location } from './admin/location'
+import { AllMessages } from './all-messages'
 
 const VendorDashboard = lazy(() => import('pages/vendor/dashboard'))
 const VendorProjects = lazy(() => import('pages/vendor/projects'))
@@ -78,6 +79,7 @@ export default function useRoutesConfig() {
       permissions: ['VENDORPROJECT.READ', 'VENDORPROJECT.EDIT'],
     },
     { path: 'vendors', element: VendorProfilePage, permissions: ['VENDORPROFILE.EDIT', 'VENDORPROFILE.READ'] },
+    { path: 'messages', element: AllMessages, permissions: ['MESSAGES.EDIT', 'MESSAGES.READ', 'ALL'] },
     {
       path: 'vendor-scan',
       element: GeoQRScan,
