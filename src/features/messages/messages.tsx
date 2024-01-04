@@ -6,18 +6,18 @@ import { getToken } from 'utils/storage.utils'
 document.addEventListener('DOMContentLoaded', () => {})
 
 export const Messages = (props: any) => {
-  const { projectId, id, entity } = props
+  const { projectId, id, entity, value } = props
   const { data } = useAuth()
   const user = data?.user
   const platformParam = 'platform=1'
 
-  let iframeUrl = 'http://localhost:3001/?' + platformParam
+  let iframeUrl = process.env.REACT_APP_CRM_URL + '?' + platformParam
 
   const iframe = useRef<HTMLIFrameElement>(null)
 
   const sendMessage = () => {
     iframe?.current?.contentWindow?.postMessage(
-      { token: getToken(), user: user, payload: { projectId, id, entity } },
+      { token: getToken(), user: user, payload: { projectId, id, entity, data: value } },
       '*',
     )
   }
