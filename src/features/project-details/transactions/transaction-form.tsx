@@ -481,6 +481,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       watchStatus,
       verifyByFPMStatus,
       verifyByManagerStatus,
+      isRefund,
     ],
   )
 
