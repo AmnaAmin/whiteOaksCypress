@@ -405,13 +405,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   // If the admin changes amount in any other status (pending/denied/cancelled), he is allowed to enter an amount less than remaining amount.
   const isAdminEnabledToChange = values => {
     if (isAdmin) {
-      const statuses = [watchStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
-      const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
-        statuses.includes(p),
-      )
-      if (isBeingCancelled) {
-        return true
-      }
       if (
         transaction?.status?.toLocaleUpperCase() === TransactionStatusValues.approved &&
         materialAndDraw &&
@@ -426,33 +419,39 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           position: 'top-left',
         })
         return false
-      } 
+      }
     }
     return true
   }
 
   const onSubmit = useCallback(
     async (values: FormValues) => {
-      if (hasPendingDrawsOnPaymentSave(values)) {
-        return
-      }
-      if (
-        transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
-        materialAndDraw &&
-        totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
-      ) {
-        toast({
-          title: 'Error',
-          description: t(`PaymentRemaining`),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        return false
-      }
-      if (!isAdminEnabledToChange(values)) {
-        return
+      const statuses = [watchStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
+      const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
+        statuses.includes(p),
+      )
+      if (!isBeingCancelled) {
+        if (hasPendingDrawsOnPaymentSave(values)) {
+          return
+        }
+        if (!isAdminEnabledToChange(values)) {
+          return
+        }
+        if (
+          transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
+          materialAndDraw && !isRefund &&
+          totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
+        ) {
+          toast({
+            title: 'Error',
+            description: t(`PaymentRemaining`),
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          return false
+        }
       }
       const queryOptions = {
         onSuccess(res) {
@@ -461,7 +460,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           reset()
         },
       }
-
+ 
       // In case of id exists in transaction object it will be update call to save transaction.
       if (transaction?.id) {
         const payload = await parseChangeOrderUpdateAPIPayload(values, transaction, projectId)
@@ -1235,6 +1234,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   setTotalItemAmount(amount)
                 }}
                 transaction={transaction}
+                currentWorkOrderId={currentWorkOrderId}
+                projectId={projectId}
                 setDisableBtn={setDisableBtn}
                 disableError={disableBtn}
                 setFileParseMsg={setFileParseMsg}
