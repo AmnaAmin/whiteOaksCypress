@@ -22,6 +22,7 @@ export const transaction = {
         paymentTerm: 'Payment Term',
         paymentTermDate: 'Payment Term Date',
         newExpectedCompletionDate: 'New Expected Completion',
+        reason:'Reason',
         expectedCompletion: 'Expected Completion',
         paymentReceivedDate: 'Payment Received',
         paidDate: 'Paid Date',

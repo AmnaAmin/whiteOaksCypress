@@ -188,6 +188,7 @@ i18n.use(initReactI18next).init({
         workOrder: 'Work Order',
         paymentTerm: 'Payment Term',
         newExpectedCompletionDate: 'New Expected Completion',
+        reason:'Reason',
         paymentReceivedDate: 'Payment Received',
         paidDate: 'Paid Date',
         paidDateVariance: 'Paid Date Variance',
