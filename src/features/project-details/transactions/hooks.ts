@@ -66,6 +66,9 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const isTransactionTypeChangeOrderSelected =
     selectedTransactionTypeId &&
     [TransactionTypeValues.changeOrder, TransactionTypeValues.legalFee].includes(selectedTransactionTypeId)
+    const isLegalFeeExcluded  =
+    selectedTransactionTypeId &&
+    [TransactionTypeValues.changeOrder].includes(selectedTransactionTypeId)
   const isTransactionTypeOverpaymentSelected =
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
@@ -124,6 +127,7 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowChangeOrderSelectField: isAgainstProjectSOWOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowNewExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
+    isShowReasonField: isAgainstProjectSOWOptionSelected && isLegalFeeExcluded,
     isShowStatusField,
     isShowDrawFieldAgainstWO: isAgainstWorkOrderOptionSelected,
     drawTransaction,
