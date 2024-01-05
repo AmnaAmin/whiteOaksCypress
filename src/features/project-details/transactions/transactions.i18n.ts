@@ -116,6 +116,7 @@ export const transaction = {
         newDocument: 'Nuevo Documento',
         newAlert: 'Nueva Alerta',
         transaction: 'Transacción',
+        reason:'Razón',
         vendorWorkOrders: 'Órdenes de Trabajo del Proveedor',
         documents: 'Documentos',
         alerts: 'Alertas',

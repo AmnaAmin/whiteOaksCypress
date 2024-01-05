@@ -819,6 +819,7 @@ i18n.use(initReactI18next).init({
         WODueDate: 'Fecha de vencimiento de OT',
         dueDateWO: 'Fecha de vencimiento OT',
         trade: 'Comercio',
+        reason:'Razón',
         auditLogs: 'Registros de auditoría',
         totalAmount: 'Cantidad Total',
         submit: 'Entregar',
