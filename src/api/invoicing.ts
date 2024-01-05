@@ -105,7 +105,24 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
     } else {
         return invoiceNo.replace(/(\d+)/, `$1-R1`);
     }
+  }
+  function compareInvoiceLineItems(payloadLineItems: [], invoiceDetailsLineItems: []) {
+    if (payloadLineItems.length !== invoiceDetailsLineItems.length) {
+        return false;
+    }
+
+    for (let i = 0; i < payloadLineItems.length; i++) {
+        const payloadItemKeys = Object.keys(payloadLineItems[i]);
+        
+        for (const key of payloadItemKeys) {
+            if (payloadLineItems[i][key] !== invoiceDetailsLineItems[i][key]) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
+
 
   return useMutation(
     async (payload: any) => {
@@ -115,7 +132,13 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
       if ( payload.paymentTerm !== invoiceDetails.paymentTerm ) isInvoiceChanged = true;
       if ( payload.invoiceDate !== invoiceDetails.invoiceDate ) isInvoiceChanged = true;
       // if ( !!payload.receivedLineItems?.length && !!invoiceDetails.receivedLineItems?.length && ( payload.receivedLineItems.length !== invoiceDetails.receivedLineItems.length )  ) isInvoiceChanged = true;
-      if ( !!payload.finalSowLineItems?.length && !!invoiceDetails.finalSowLineItems?.length && ( payload.finalSowLineItems.length !== invoiceDetails.finalSowLineItems.length )  ) isInvoiceChanged = true;
+      // if ( !!payload.invoiceLineItems?.length && !!invoiceDetails.invoiceLineItems?.length && ( payload.invoiceLineItems.length !== invoiceDetails.invoiceLineItems.length )  ) isInvoiceChanged = true;
+
+      //compare length and each single property value
+       if ( ! compareInvoiceLineItems(payload.invoiceLineItems, invoiceDetails.invoiceLineItems) ) isInvoiceChanged = true;
+
+      // console.log("Payload: ", payload);
+      // console.log("Details: ", invoiceDetails);
 
       if ( isInvoiceChanged ) {
         const pattern = /^(\d+)-/;
