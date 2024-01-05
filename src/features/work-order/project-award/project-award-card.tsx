@@ -190,7 +190,7 @@ export const ProjectAwardCard = ({
           bg="#FFFFFF"
           alignItems="center"
           transition="0.3s all"
-          cursor={'pointer'}
+          cursor={isNewPlan ? 'default' : 'pointer'}        
           pointerEvents={
             !awardPlanId || isAdmin || (isUpgradeProjectAward && cardsvalues?.id > awardPlanId) ? undefined : 'none'
           }

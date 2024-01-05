@@ -21,6 +21,7 @@ import { BiErrorCircle } from 'react-icons/bi'
 import { Card } from 'components/card/card'
 import { CLIENTS } from 'features/clients/clients.i18n'
 import { CarrierTab } from 'features/clients/client-carrier-tab'
+import { Messages } from 'features/messages/messages'
 
 type ClientDetailsTabsProps = {
   refetch?: () => void
@@ -43,6 +44,10 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const { marketSelectOptions: marketOptions, markets } = useMarkets()
   const [message, setMessage] = useState('')
   const { mutate: createNotes } = useClientNoteMutation(null)
+  const showForPreProdAndLocal =
+    window.location.href.includes('preprod') ||
+    window.location.href.includes('localhost:') ||
+    window.location.href.includes('dev')
 
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
@@ -83,7 +88,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
           ...c,
           market: c.market?.value,
         })),
-        activated:values.activated?.value,
+        activated: values.activated?.value,
         carrier: values?.carrier?.map(c => {
           return {
             id: c.id,
@@ -122,8 +127,9 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
             <TabCustom isError={isCarrierTabErrors && tabIndex !== 1}>{t(`${CLIENTS}.carrier`)}</TabCustom>
             <TabCustom>{t('market')}</TabCustom>
             <TabCustom>{t('notes')}</TabCustom>
+            {clientDetails && showForPreProdAndLocal && <Tab data-testid="client_messages">{t('messages')}</Tab>}
           </TabList>
-          <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px" width='1165px'>
+          <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px" width="1165px">
             <TabPanels mt="20px">
               <TabPanel p="0px">
                 <DetailsTab clientDetails={clientDetails} onClose={props.onClose} setNextTab={setNextTab} />
@@ -142,6 +148,13 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
               <TabPanel p="0px">
                 <ClientNotes clientDetails={clientDetails} onClose={props.onClose} setMessage={setMessage} />
               </TabPanel>
+              {clientDetails && showForPreProdAndLocal && (
+                <TabPanel p="0px">
+                  <Box w="100%" height={493}>
+                    <Messages id={clientDetails.id} entity="client" />
+                  </Box>
+                </TabPanel>
+              )}
             </TabPanels>
           </Card>
         </Tabs>
