@@ -121,7 +121,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const [correlationId, setCorrelationId] = useState<null | string | undefined>(null)
   const [refetchInterval, setRefetchInterval] = useState<number>(5000)
   const { materialItems } = useFetchMaterialItems(correlationId, refetchInterval)
-
+  const { isVendor } = useUserRolesSelector()
   const checkedItems = useMemo(() => {
     return transaction?.map(item => item.checked)
   }, [transaction])
@@ -253,6 +253,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     onReplaceMaterialUploadClose()
   }
   const isShowCheckboxes = !isApproved && transactionFields?.length > 1
+  const vFpm = changeOrder?.verifiedByFpm as unknown as string
+  const vDM = changeOrder?.verifiedByManager as unknown as string
   return (
     <Box overflowX={isApproved ? 'initial' : 'auto'} w="100%">
       <VStack alignItems="start" w="720px">
@@ -547,6 +549,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                       <FormControl px={7} isInvalid={!!errors.transaction?.[index]?.description}>
                         <Tooltip label={transaction?.[index]?.description} placement="top" bg="#ffffff" color="black">
                           <Input
+                            isDisabled={isVendor && vDM && vFpm as any} 
                             data-testid={`transaction-description-${index}`}
                             type="text"
                             size="sm"
@@ -580,6 +583,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                               <>
                                 {(!isApproved || isAdminEnabled) && !lateAndFactoringFeeForVendor ? (
                                   <NumberFormat
+                                     disabled={isVendor && vDM && vFpm}
                                     data-testid={`transaction-amount-${index}`}
                                     customInput={Input}
                                     value={field.value}
