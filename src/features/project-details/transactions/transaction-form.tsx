@@ -204,8 +204,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { mutate: createChangeOrder, isLoading: isChangeOrderSubmitLoading } = useChangeOrderMutation(projectId)
   const { mutate: updateChangeOrder, isLoading: isChangeOrderUpdateLoading } = useChangeOrderUpdateMutation(projectId)
 
-  const isFormLoading = isAgainstLoading || isChangeOrderLoading || isWorkOrderLoading
-  const isFormSubmitLoading = isChangeOrderSubmitLoading || isChangeOrderUpdateLoading
+ 
 
   const { login = '' } = useUserProfile() as Account
 
@@ -280,16 +279,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   )
   const isAdmin = permissions?.includes('ALL')
 
-  const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
-  const selectedCancelledOrDenied = [TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(
-    watchStatus?.value,
-  )
-  const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
-  const disableSave =
-    !selectedCancelledOrDenied && //Check if the status is being changed to cancel/deny let the transaction be allowed.
-    (projectAwardCheck || //when there is no project award
-      (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund
-      (isCompletedWorkLessThanNTEPercentage && !isEnabledToOverrideNTE)) //when %complete is less than NTE and user is not admin/accounting
+ 
 
   const {
     isShowChangeOrderSelectField,
@@ -559,7 +549,20 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     const daysUntilFriday = (5 - processedDate.day() + 7) % 7 // Calculate days until Friday
     return processedDate.add(daysUntilFriday, 'days').toDate()
   }
-
+  const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
+  const selectedCancelledOrDenied = [TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(
+    watchStatus?.value,
+  )
+  const projectAwardCheck = !check && isValidForAwardPlan && materialAndDraw && !isRefund
+  const disableSave =
+    !selectedCancelledOrDenied && //Check if the status is being changed to cancel/deny let the transaction be allowed.
+    (projectAwardCheck || //when there is no project award
+      (remainingAmountExceededFlag && !isAdmin) || //when remaining amount exceeds for material/draw + is not Refund
+      (isCompletedWorkLessThanNTEPercentage && !isEnabledToOverrideNTE)) //when %complete is less than NTE and user is not admin/accounting
+  const isFormLoading = isAgainstLoading || isChangeOrderLoading || isWorkOrderLoading
+  const isFormSubmitLoading = isChangeOrderSubmitLoading || isChangeOrderUpdateLoading
+  const vFpm = transaction?.verifiedByFpm as unknown as string
+  const vDM = transaction?.verifiedByManager as unknown as string
   return (
     <Flex direction="column">
       {isFormLoading && <ViewLoader />}
@@ -1322,7 +1325,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             variant="solid"
             isDisabled={
               !selectedCancelledOrDenied &&
-              (amount === 0 || remainingAmountExceededFlag || (isPlanExhausted && !isApproved) || !invoicedDate) //Check if the status is being changed to cancel/deny let the transaction be allowed.
+              (
+                (amount === 0 || remainingAmountExceededFlag || (isPlanExhausted && !isApproved) || !invoicedDate) ||
+                 (isVendor && vFpm && vDM))
+               //Check if the status is being changed to cancel/deny let the transaction be allowed.
             }
             colorScheme="darkPrimary"
             onClick={event => {
@@ -1349,7 +1355,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 colorScheme="darkPrimary"
                 variant="solid"
                 disabled={
-                  isFormSubmitLoading || isMaterialsLoading || disableSave || disableBtn || isInvoiceTransaction
+                 ( isFormSubmitLoading ||isMaterialsLoading ||disableSave ||disableBtn ||isInvoiceTransaction )||
+                  (isVendor && vFpm && vDM)  
                 }
               >
                 {t(`${TRANSACTION}.save`)}
