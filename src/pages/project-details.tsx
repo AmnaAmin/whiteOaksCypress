@@ -33,6 +33,7 @@ import { boxShadow } from 'theme/common-style'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import InvoiceModal from 'features/update-project-details/add-invoice-modal'
 import { ADV_PERMISSIONS } from 'api/access-control'
+import { Messages } from 'features/messages/messages'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -55,7 +56,11 @@ export const ProjectDetails: React.FC = props => {
   const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
   const [createdTransID, setCreatedTransID] = useState()
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
-  
+  const showForPreProdAndLocal =
+    window.location.href.includes('preprod') ||
+    window.location.href.includes('localhost:') ||
+    window.location.href.includes('dev')
+
   const setCreatedTransaction = e => {
     setCreatedTransID(e?.data)
   }
@@ -121,142 +126,136 @@ export const ProjectDetails: React.FC = props => {
   // }, [tabIndex])
 
   return (
-   
-      <Stack w={{ base: '971px', xl: '100%' }} spacing={'16px'} ref={tabsContainerRef} h="calc(100vh - 160px)">
-        <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
-        <AmountDetailsCard projectId={projectId} />
+    <Stack w={{ base: '971px', xl: '100%' }} spacing={'16px'} ref={tabsContainerRef} h="calc(100vh - 160px)">
+      <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
+      <AmountDetailsCard projectId={projectId} />
 
-        <Stack marginTop="-1px !important" w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
-          <Tabs
-            index={tabIndex}
-            size="sm"
-            variant="enclosed"
-            colorScheme="brand"
-            onChange={index => setTabIndex(index)}
+      <Stack marginTop="-1px !important" w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
+        <Tabs index={tabIndex} size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
+          <TabList h={'50px'} alignItems="end" border="none">
+            <Flex h={'40px'} py={'1px'}>
+              <Tab>{t('projects.projectDetails.transactions')}</Tab>
+              <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
+              <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
+              <Tab>{t('projects.projectDetails.schedule')}</Tab>
+              <Tab>{t('projects.projectDetails.documents')}</Tab>
+              <Tab>{t('projects.projectDetails.notes')}</Tab>
+              {<Tab>{t('projects.projectDetails.auditLogs')}</Tab>}
+              {showForPreProdAndLocal && <Tab data-testid="project_messages">{t('messages')}</Tab>}
+            </Flex>
+          </TabList>
+
+          <Card
+            rounded="0px"
+            roundedRight={{ base: '0px', md: '6px' }}
+            roundedBottom="6px"
+            style={boxShadow}
+            pr={{ base: 0, sm: '15px' }}
           >
-            <TabList h={'50px'} alignItems="end" border="none">
-              <Flex h={'40px'} py={'1px'}>
-                <Tab>{t('projects.projectDetails.transactions')}</Tab>
-                <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
-                <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
-                <Tab>{t('projects.projectDetails.schedule')}</Tab>
-                <Tab>{t('projects.projectDetails.documents')}</Tab>
-                <Tab>{t('projects.projectDetails.notes')}</Tab>
-                {<Tab>{t('projects.projectDetails.auditLogs')}</Tab>}
-              </Flex>
-            </TabList>
-
-            <Card
-              rounded="0px"
-              roundedRight={{ base: '0px', md: '6px' }}
-              roundedBottom="6px"
-              style={boxShadow}
-              pr={{ base: 0, sm: '15px' }}
-            >
-              <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
-                {!isReadOnly &&
-                  tabIndex === 2 &&
-                  ![
-                    STATUS.Closed,
-                    STATUS.Invoiced,
-                    STATUS.Cancelled,
-                    STATUS.Paid,
-                    STATUS.Punch,
-                    STATUS.ClientPaid,
-                    STATUS.Overpayment,
-                    STATUS.Reconcile,
-                  ].includes(projectStatus as STATUS) && (
-                    <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen} mb="15px">
-                      {t('newWorkOrder')}
-                    </Button>
-                  )}
-                {!isReadOnly && tabIndex === 4 && (
-                  <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />} mb="15px">
-                    {t('projects.projectDetails.upload')}
+            <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
+              {!isReadOnly &&
+                tabIndex === 2 &&
+                ![
+                  STATUS.Closed,
+                  STATUS.Invoiced,
+                  STATUS.Cancelled,
+                  STATUS.Paid,
+                  STATUS.Punch,
+                  STATUS.ClientPaid,
+                  STATUS.Overpayment,
+                  STATUS.Reconcile,
+                ].includes(projectStatus as STATUS) && (
+                  <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen} mb="15px">
+                    {t('newWorkOrder')}
                   </Button>
                 )}
-                {tabIndex === 0 && (
-                  <Flex justifyContent={'end'} w="100%" gap={'10px'}>
-                    <Box mt={'14px'}>
-                      <FormControl display="flex" alignItems="center">
-                        <FormLabel
-                          fontWeight="600"
-                          htmlFor="view-details"
-                          mb="0"
-                          variant="light-label"
-                          color="gray.500"
-                          size="md"
-                        >
-                          {t('projects.projectDetails.viewDetails')}
-                        </FormLabel>
-                        <Switch
-                          size="sm"
-                          id="view-details"
-                          outline="4px solid white"
-                          color="brand.300"
-                          rounded="full"
-                          isChecked={isShowProjectFinancialOverview}
-                          onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
-                        />
-                      </FormControl>
-                    </Box>
-                    {!isReadOnly && (
-                      <>
-                        <Box>
-                          {isAllowedInvoicing && (
-                            <Button colorScheme="brand" onClick={onInvoiceModalOpen} leftIcon={<BiBookAdd />} mb="15px">
-                              {t('project.projectDetails.newInvoice')}
-                            </Button>
-                          )}
-                        </Box>
-                        <Button
-                          variant="solid"
-                          colorScheme="brand"
-                          onClick={onTransactionModalOpen}
-                          isDisabled={preventNewTransaction}
-                          leftIcon={<BiAddToQueue />}
-                        >
-                          {t('projects.projectDetails.newTransaction')}
-                        </Button>
-                      </>
-                    )}
-                  </Flex>
-                )}
-              </Box>
-              <TabPanels h="100%">
-                <TabPanel p="0px" h="100%" mt="7px">
-                  <Box h="100%">
-                    {isShowProjectFinancialOverview ? (
-                      <TransactionDetails ref={tabsContainerRef} />
-                    ) : (
-                      <TransactionsTable
-                        ref={tabsContainerRef}
-                        projectStatus={projectData?.projectStatus as string}
-                        defaultSelected={transaction}
-                        transId={createdTransID}
-                        isReadOnly={isReadOnly}
-                        projectData={projectData as Project}
+              {!isReadOnly && tabIndex === 4 && (
+                <Button colorScheme="brand" onClick={onDocumentModalOpen} leftIcon={<BiUpload />} mb="15px">
+                  {t('projects.projectDetails.upload')}
+                </Button>
+              )}
+              {tabIndex === 0 && (
+                <Flex justifyContent={'end'} w="100%" gap={'10px'}>
+                  <Box mt={'14px'}>
+                    <FormControl display="flex" alignItems="center">
+                      <FormLabel
+                        fontWeight="600"
+                        htmlFor="view-details"
+                        mb="0"
+                        variant="light-label"
+                        color="gray.500"
+                        size="md"
+                      >
+                        {t('projects.projectDetails.viewDetails')}
+                      </FormLabel>
+                      <Switch
+                        size="sm"
+                        id="view-details"
+                        outline="4px solid white"
+                        color="brand.300"
+                        rounded="full"
+                        isChecked={isShowProjectFinancialOverview}
+                        onChange={event => setIsShowProjectFinancialOverview(event.target.checked)}
                       />
-                    )}
+                    </FormControl>
                   </Box>
-                </TabPanel>
-                <TabPanel p="0px">
-                  <Card rounded="6px" padding="0" h="100%">
-                    <ProjectDetailsTab projectData={projectData as Project} />
-                  </Card>
-                </TabPanel>
+                  {!isReadOnly && (
+                    <>
+                      <Box>
+                        {isAllowedInvoicing && (
+                          <Button colorScheme="brand" onClick={onInvoiceModalOpen} leftIcon={<BiBookAdd />} mb="15px">
+                            {t('project.projectDetails.newInvoice')}
+                          </Button>
+                        )}
+                      </Box>
+                      <Button
+                        variant="solid"
+                        colorScheme="brand"
+                        onClick={onTransactionModalOpen}
+                        isDisabled={preventNewTransaction}
+                        leftIcon={<BiAddToQueue />}
+                      >
+                        {t('projects.projectDetails.newTransaction')}
+                      </Button>
+                    </>
+                  )}
+                </Flex>
+              )}
+            </Box>
+            <TabPanels h="100%">
+              <TabPanel p="0px" h="100%" mt="7px">
+                <Box h="100%">
+                  {isShowProjectFinancialOverview ? (
+                    <TransactionDetails ref={tabsContainerRef} />
+                  ) : (
+                    <TransactionsTable
+                      ref={tabsContainerRef}
+                      projectStatus={projectData?.projectStatus as string}
+                      defaultSelected={transaction}
+                      transId={createdTransID}
+                      isReadOnly={isReadOnly}
+                      projectData={projectData as Project}
+                    />
+                  )}
+                </Box>
+              </TabPanel>
+              <TabPanel p="0px">
+                <Card rounded="6px" padding="0" h="100%">
+                  <ProjectDetailsTab projectData={projectData as Project} />
+                </Card>
+              </TabPanel>
 
-                <TabPanel p="0px">
-                  <WorkOrdersTable ref={tabsContainerRef} defaultSelected={workOrder} />
-                </TabPanel>
-                <TabPanel p="0px" minH="calc(100vh - 409px)">
-                  <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
-                </TabPanel>
-                <TabPanel p="0px">
-                  <VendorDocumentsTable ref={tabsContainerRef} isReadOnly={isReadOnly} />
-                </TabPanel>
+              <TabPanel p="0px">
+                <WorkOrdersTable ref={tabsContainerRef} defaultSelected={workOrder} />
+              </TabPanel>
+              <TabPanel p="0px" minH="calc(100vh - 409px)">
+                <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
+              </TabPanel>
+              <TabPanel p="0px">
+                <VendorDocumentsTable ref={tabsContainerRef} isReadOnly={isReadOnly} />
+              </TabPanel>
 
-                {/* <TabPanel px="0">
+              {/* <TabPanel px="0">
                 <TriggeredAlertsTable
                   onRowClick={(e, row) => {
                     selectedAlertRow(row.values)
@@ -266,45 +265,49 @@ export const ProjectDetails: React.FC = props => {
                 />
               </TabPanel> */}
 
-                <TabPanel p="0" minH="calc(100vh - 408px)">
-                  <ProjectNotes projectData={projectData} projectId={projectId} />
+              <TabPanel p="0" minH="calc(100vh - 408px)">
+                <ProjectNotes projectData={projectData} projectId={projectId} />
+              </TabPanel>
+              {
+                <TabPanel p="0px" minH="calc(100vh - 450px)">
+                  <AuditLogsTable
+                    auditLogs={auditLogs}
+                    isLoading={isLoadingAudits}
+                    refetch={refetchAudits}
+                    isReadOnly={isReadOnly}
+                  />
                 </TabPanel>
-                {
-                  <TabPanel p="0px" minH="calc(100vh - 450px)">
-                    <AuditLogsTable
-                      auditLogs={auditLogs}
-                      isLoading={isLoadingAudits}
-                      refetch={refetchAudits}
-                      isReadOnly={isReadOnly}
-                    />
-                  </TabPanel>
-                }
-              </TabPanels>
-            </Card>
-          </Tabs>
-        </Stack>
-
-        <AddNewTransactionModal
-          isOpen={isOpenTransactionModal}
-          onClose={onTransactionModalClose}
-          setCreatedTransaction={setCreatedTransaction}
-          projectId={projectId as string}
-          projectStatus={projectStatus}
-        />
-        {isOpen && <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />}
-        {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
-        <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
-
-        <InvoiceModal
-          isOpen={isOpenInvoiceModal}
-          onClose={() => {
-            setSelectedInvoice(null)
-            onInvoiceModalClose()
-          }}
-          projectId={projectData?.id}
-          selectedInvoice={selectedInvoice}
-        />
+              }
+              {showForPreProdAndLocal && (
+                <TabPanel h="680px">
+                  <Messages projectId={projectId} entity="project" id={projectId} />
+                </TabPanel>
+              )}
+            </TabPanels>
+          </Card>
+        </Tabs>
       </Stack>
-   
+
+      <AddNewTransactionModal
+        isOpen={isOpenTransactionModal}
+        onClose={onTransactionModalClose}
+        setCreatedTransaction={setCreatedTransaction}
+        projectId={projectId as string}
+        projectStatus={projectStatus}
+      />
+      {isOpen && <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />}
+      {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
+      <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
+
+      <InvoiceModal
+        isOpen={isOpenInvoiceModal}
+        onClose={() => {
+          setSelectedInvoice(null)
+          onInvoiceModalClose()
+        }}
+        projectId={projectData?.id}
+        selectedInvoice={selectedInvoice}
+      />
+    </Stack>
   )
 }
