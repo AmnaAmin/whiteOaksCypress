@@ -428,9 +428,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.lienRightsExpires',
     accessorKey: 'lienRightExpireDate',
-    accessorFn: (cellInfo: any) => {
-      dateFormat(cellInfo.lienRightExpireDate)
-    },
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.lienRightExpireDate),
     meta: { format: 'date' },
   },
 ]
