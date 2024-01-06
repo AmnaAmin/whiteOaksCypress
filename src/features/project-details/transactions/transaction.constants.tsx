@@ -40,6 +40,14 @@ export const TRANSACTION_STATUS_OPTIONS = [
   { value: TransactionStatusValues.denied, label: 'Denied' },
 ]
 
+export const REASON_STATUS_OPTIONS = [
+  {  value: 'Unforeseen', label:'Unforeseen' },
+  {  value: 'Incorrect Scoping/Scoping', label:'Incorrect Scoping/Scoping' },
+  {  value: 'Client Request', label:'Client Request' },
+  {  value:'Additional Punch Work Requested', label:'Additional Punch Work Requested' },
+]
+
+
 export const TRANSACTION_FPM_DM_STATUS_OPTIONS = [
   { value: TransactionStatusValues.pending, label: 'Pending' },
   { value: TransactionStatusValues.approved, label: 'Approved' },

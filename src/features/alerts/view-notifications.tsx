@@ -47,10 +47,12 @@ export const Notifications = () => {
     if (element) {
       const option = { threshold: 0, root: document.querySelector('#scrollArea') }
       const divHeight = (element as any)?.clientHeight
-      option.threshold = 1 / divHeight
-      const observer = new IntersectionObserver(handleObserver, option)
-      observer.observe(element as any)
-      return () => observer.unobserve(element as any)
+      if (option) {
+        option.threshold = 1 / divHeight
+        const observer = new IntersectionObserver(handleObserver, option)
+        observer.observe(element as any)
+        return () => observer.unobserve(element as any)
+      }
     }
   }, [handleObserver, fetchNextPage, hasNextPage])
 

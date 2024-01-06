@@ -47,7 +47,7 @@ import { useQueryClient } from 'react-query'
 import { useVendorEntity } from 'api/vendor-dashboard'
 import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
 import { useLocation as useLineItemsLocation } from 'api/location'
-import { Messages } from './messages/messages'
+import { Messages } from '../messages/messages'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -97,8 +97,8 @@ const WorkOrderDetails = ({
   const { hasExpiredDocumentOrLicense } = useDocumentLicenseMessage({ data: vendorEntity })
   const { data: locations } = useLineItemsLocation()
   const tabsContainerRef = useRef<HTMLDivElement>(null)
-  const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems;
-  const showForPreProd = window.location.href.includes('preprod');
+  const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems
+  const showForPreProd = window.location.href.includes('preprod')
   const showForPreProdAndLocal =
     showForPreProd || window.location.href.includes('localhost:') || window.location.href.includes('dev')
 
@@ -368,17 +368,19 @@ const WorkOrderDetails = ({
                       />
                     )}
                   </TabPanel>
-                  {showForPreProdAndLocal && <TabPanel p={0}>
-                    {isLoadingWorkOrder ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <Box w="100%" h="700px">
-                        <Messages workOrderId={workOrder.id} projectId={projectId} />
-                      </Box>
-                    )}
-                  </TabPanel>}
+                  {showForPreProdAndLocal && (
+                    <TabPanel p={0}>
+                      {isLoadingWorkOrder ? (
+                        <Center h={'600px'}>
+                          <Spinner size="xl" />
+                        </Center>
+                      ) : (
+                        <Box w="100%" h="680px">
+                          <Messages id={workOrder.id} entity="workOrder" projectId={projectId} value={projectData} />
+                        </Box>
+                      )}
+                    </TabPanel>
+                  )}
                 </TabPanels>
               </Card>
             </Tabs>

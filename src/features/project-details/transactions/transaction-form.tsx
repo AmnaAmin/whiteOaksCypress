@@ -76,6 +76,7 @@ import { calendarIcon } from 'theme/common-style'
 // import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
+  REASON_STATUS_OPTIONS,
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
   TRANSACTION_FPM_DM_STATUS_OPTIONS,
@@ -277,7 +278,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isEnabledForVerifyingAsFPM = permissions.some(p =>
     ['PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT', 'ALL'].includes(p),
   )
-  const isAdmin = useRoleBasedPermissions()?.permissions?.includes('ALL')
+  const isAdmin = permissions?.includes('ALL')
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
   const selectedCancelledOrDenied = [TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(
@@ -295,6 +296,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowWorkOrderSelectField,
     isShowNewExpectedCompletionDateField,
     isShowExpectedCompletionDateField,
+     isShowReasonField,
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     isShowPaidBackDateField,
@@ -405,13 +407,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   // If the admin changes amount in any other status (pending/denied/cancelled), he is allowed to enter an amount less than remaining amount.
   const isAdminEnabledToChange = values => {
     if (isAdmin) {
-      const statuses = [watchStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
-      const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
-        statuses.includes(p),
-      )
-      if (isBeingCancelled) {
-        return true
-      }
       if (
         transaction?.status?.toLocaleUpperCase() === TransactionStatusValues.approved &&
         materialAndDraw &&
@@ -426,33 +421,39 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           position: 'top-left',
         })
         return false
-      } 
+      }
     }
     return true
   }
 
   const onSubmit = useCallback(
     async (values: FormValues) => {
-      if (hasPendingDrawsOnPaymentSave(values)) {
-        return
-      }
-      if (
-        transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
-        materialAndDraw &&
-        totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
-      ) {
-        toast({
-          title: 'Error',
-          description: t(`PaymentRemaining`),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        return false
-      }
-      if (!isAdminEnabledToChange(values)) {
-        return
+      const statuses = [watchStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
+      const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
+        statuses.includes(p),
+      )
+      if (!isBeingCancelled) {
+        if (hasPendingDrawsOnPaymentSave(values)) {
+          return
+        }
+        if (!isAdminEnabledToChange(values)) {
+          return
+        }
+        if (
+          transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
+          materialAndDraw && !isRefund &&
+          totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
+        ) {
+          toast({
+            title: 'Error',
+            description: t(`PaymentRemaining`),
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          return false
+        }
       }
       const queryOptions = {
         onSuccess(res) {
@@ -461,7 +462,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           reset()
         },
       }
-
+ 
       // In case of id exists in transaction object it will be update call to save transaction.
       if (transaction?.id) {
         const payload = await parseChangeOrderUpdateAPIPayload(values, transaction, projectId)
@@ -482,6 +483,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       watchStatus,
       verifyByFPMStatus,
       verifyByManagerStatus,
+      isRefund,
     ],
   )
 
@@ -775,6 +777,46 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         css={calendarIcon}
                         isDisabled={isApproved}
                         {...register('newExpectedCompletionDate')}
+                      />
+
+                      <FormErrorMessage>{errors?.newExpectedCompletionDate?.message}</FormErrorMessage>
+                    </FormControl>
+                  </GridItem>
+                )}
+                {isShowReasonField &&(
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.reason}>
+                      <FormLabel
+                        fontSize="14px"
+                        fontStyle="normal"
+                        fontWeight={500}
+                        color="gray.700"
+                        htmlFor="reason"
+                        whiteSpace="nowrap"
+                      >
+                        {t(`${TRANSACTION}.reason`)}
+                      </FormLabel>
+
+                      <Controller
+                        control={control}
+                        name="reason"
+                        rules={{ required: true }}
+                        render={({ field, fieldState }) => (
+                          <>
+                            <div data-testid="reason">
+                              <Select
+                              options={REASON_STATUS_OPTIONS}
+                              //  options={reasonTypes.map(reason => ({
+                              //   label: reason.value,
+                              //   value: reason.value,
+                              // }))}
+                                selectProps={{ isBorderLeft: true }}
+                                {...field}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </div>
+                          </>
+                        )}
                       />
 
                       <FormErrorMessage>{errors?.newExpectedCompletionDate?.message}</FormErrorMessage>
@@ -1235,6 +1277,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   setTotalItemAmount(amount)
                 }}
                 transaction={transaction}
+                currentWorkOrderId={currentWorkOrderId}
+                projectId={projectId}
                 setDisableBtn={setDisableBtn}
                 disableError={disableBtn}
                 setFileParseMsg={setFileParseMsg}

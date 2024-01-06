@@ -37,6 +37,7 @@ import {
   CHANGE_ORDER_DEFAULT_OPTION,
   CHANGE_ORDER_DEFAULT_VALUE,
   LIEN_WAIVER_DEFAULT_VALUES,
+  REASON_STATUS_OPTIONS,
   TRANSACTION_FEILD_DEFAULT,
   TRANSACTION_FPM_DM_STATUS_OPTIONS,
   TRANSACTION_MARK_AS_OPTIONS,
@@ -427,7 +428,20 @@ export const getFileContents = async (document: any, documentType: number) => {
     })
   })
 }
+export const useReasonTypes = () => {
+  const client = useClient()
 
+  return useQuery('reasonTypes', async () => {
+    const response = await client(`lk_value/lookupType/22`, {})
+
+    const formattedData = response?.data?.map(reasonType => ({
+      label: reasonType.label,
+      value: reasonType.value, 
+    }))
+
+    return formattedData;
+  })
+}
 const generateLienWaiverPDF = async (lienWaiver: FormValues['lienWaiver'] | undefined) => {
   if (!lienWaiver?.claimantsSignature) return Promise.resolve(null)
 
@@ -523,6 +537,7 @@ export const parseChangeOrderAPIPayload = async (
     payAfterDate: formValues.payAfterDate,
     verifiedByFpm: formValues.verifiedByFpm?.value,
     verifiedByManager: formValues.verifiedByManager?.value,
+    reason:formValues.reason?.value,
     ...againstProjectSOWPayload,
   }
 }
@@ -550,6 +565,7 @@ export const parseChangeOrderUpdateAPIPayload = async (
     verifiedByManager: formValues.verifiedByManager?.value,
     invoiceId: transaction?.invoiceId,
     invoiceNumber: transaction?.invoiceNumber,
+    reason:formValues?.reason?.value,
   }
 }
 
@@ -578,6 +594,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     payDateVariance: '',
     expectedCompletionDate: '',
     newExpectedCompletionDate: '',
+    reason: null,
     refund: false,
     paymentProcessed: null,
     payAfterDate: null,
@@ -686,6 +703,7 @@ export const parseTransactionToFormValues = (
       label: transaction.transactionTypeLabel,
       value: transaction.transactionType,
     },
+    reason: REASON_STATUS_OPTIONS.find(v => v.value.toLowerCase()=== transaction?.reason?.toLocaleLowerCase()) ?? null,
     against: againstOption,
     workOrder: workOrderOption,
     changeOrder: changeOrderOption,
@@ -746,6 +764,7 @@ export const useChangeOrderMutation = (projectId?: string) => {
         queryClient.invalidateQueries(ACCONT_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(ACCOUNT_CARDS_RECEIVABLE_API_KEY)
         queryClient.invalidateQueries(['audit-logs', projectId])
+        queryClient.invalidateQueries('reasonTypes')
 
         toast({
           title: 'New Transaction.',

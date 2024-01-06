@@ -214,6 +214,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
 
   const watchRequiredField =
     !formValues?.email ||
+    !formValues?.state ||
     formValues?.email.trim() === '' ||
     !formValues?.firstName ||
     formValues?.firstName.trim() === '' ||

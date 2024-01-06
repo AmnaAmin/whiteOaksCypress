@@ -56,6 +56,7 @@ export type ProjectWorkOrder = {
   workOrderStartDate: string
   awardPlanPayTerm: string
   vendorStatusId?: number
+  reason: string | null
 }
 
 export type WorkOrderAwardStats = {
@@ -69,6 +70,7 @@ export type WorkOrderAwardStats = {
   materialAmountConsume: number
   totalAmountConsume: number
   totalAmountRemaining: null | number
+  allowedDrawAmount: number | null
 }
 
 export type TransactionType = {
@@ -185,6 +187,7 @@ export interface FormValues {
   status: SelectOption | null
   expectedCompletionDate: string
   newExpectedCompletionDate: string | null
+  reason: SelectOption | null
   attachment: any
   lienWaiverDocument: any
   invoicedDate: string | null
@@ -232,6 +235,7 @@ export type ChangeOrderPayload = {
   payAfterDate: string | null
   verifiedByFpm: SelectOption | null
   verifiedByManager: SelectOption | null
+  reason: string | null
 }
 
 export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
@@ -248,6 +252,7 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   modifiedDate1: string | null
   modifiedBy: string
   vendorId: number | null
+  reason?: SelectOption | null
   // systemGenerated: boolean | null
   paymentProcessed: string | null
   paymentTermDate: string | null
@@ -256,6 +261,7 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   verifiedByManager: SelectOption | null
   invoiceId: number | string | null
   invoiceNumber?: number | string | null
+
 }
 
 type LineItem = {
@@ -288,6 +294,7 @@ export type ChangeOrderType = {
   modifiedDate: string | null
   parentWorkOrderExpectedCompletionDate: string | null
   newExpectedCompletionDate: string | null
+  reason:string | null
   parentWorkOrderId: number
   projectId: number
   vendorId: number | null

@@ -36,11 +36,13 @@ import {
   mapMaterialItemstoTransactions,
   useFetchMaterialItems,
   useUploadMaterialAttachment,
+  useWorkOrderAwardStats,
 } from 'api/transactions'
 import { useAccountDetails } from 'api/vendor-details'
 import NumberFormat from 'react-number-format'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
+import { useProjectWorkOrders } from 'api/projects'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
@@ -53,6 +55,8 @@ type TransactionAmountFormProps = {
   setDisableBtn?: (value) => void
   disableError?: boolean
   setFileParseMsg?: (value) => void
+  currentWorkOrderId?: any
+  projectId?: any
 }
 
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
@@ -66,9 +70,15 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   setDisableBtn,
   disableError,
   setFileParseMsg,
+  currentWorkOrderId,
+  projectId,
 }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
+  const workOrderId = changeOrder?.parentWorkOrderId || currentWorkOrderId
+  const { data: workOrders } = useProjectWorkOrders(projectId)
+  const workOrder = workOrders?.find(wo => wo.id === workOrderId) as any
+  const { awardPlansStats } = useWorkOrderAwardStats(workOrder?.projectId, workOrder?.applyNewAwardPlan, workOrder?.id)
 
   const {
     control,
@@ -79,8 +89,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   } = formReturn
   const values = getValues()
   const transaction = useWatch({ name: 'transaction', control })
+  const tType = useWatch({ name: 'transactionType', control })
   const [attachmentError, setAttachmentError] = useState(null)
-
   useEffect(() => {
     let total_Amount = 0
     transaction?.forEach(transaction => {
@@ -111,7 +121,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const [correlationId, setCorrelationId] = useState<null | string | undefined>(null)
   const [refetchInterval, setRefetchInterval] = useState<number>(5000)
   const { materialItems } = useFetchMaterialItems(correlationId, refetchInterval)
-
+  const { isVendor } = useUserRolesSelector()
   const checkedItems = useMemo(() => {
     return transaction?.map(item => item.checked)
   }, [transaction])
@@ -140,12 +150,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   }, [materialItems])
   // useOnRefundMaterialCheckboxChange(control, update)
   const { refundCheckbox } = useFieldShowHideDecision(control)
-  const { isApproved, lateAndFactoringFeeForVendor } = useFieldDisabledEnabledDecision(
-    control,
-    changeOrder,
-  )
+  const { isApproved, lateAndFactoringFeeForVendor } = useFieldDisabledEnabledDecision(control, changeOrder)
   const { isAdmin } = useUserRolesSelector()
 
+  let awardPlanRemainingAmount
+  if (awardPlansStats?.length) {
+    awardPlanRemainingAmount = awardPlansStats[0].allowedDrawAmount as number
+  }
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
   const isIndeterminate = someChecked && !allChecked
@@ -154,8 +165,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     !!selectedTransactionId &&
     transaction?.length > 0
   const { formattedAmount: totalAmount } = useTotalAmount(control)
+  // const { transaction: transactionDetails } = useTransaction(selectedTransactionId as any)
   const isAdminEnabled = isAdmin && isManualTransaction(changeOrder?.transactionType)
-
+  const isEdit = tType?.value === TransactionTypeValues.draw
   const toggleAllCheckboxes = useCallback(
     event => {
       setValue(
@@ -240,7 +252,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     }
     onReplaceMaterialUploadClose()
   }
-  const isShowCheckboxes = !isApproved && transactionFields?.length > 1 
+  const isShowCheckboxes = !isApproved && transactionFields?.length > 1
+  const vFpm = changeOrder?.verifiedByFpm as unknown as string
+  const vDM = changeOrder?.verifiedByManager as unknown as string
   return (
     <Box overflowX={isApproved ? 'initial' : 'auto'} w="100%">
       <VStack alignItems="start" w="720px">
@@ -295,10 +309,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
               style={{ display: 'none' }}
               onChange={onFileChange}
             ></input>
-            <HStack
-              w={!isApproved || !lateAndFactoringFeeForVendor ? 'auto' : '100%'}
-              justifyContent="end"
-            >
+            <HStack w={!isApproved || !lateAndFactoringFeeForVendor ? 'auto' : '100%'} justifyContent="end">
               {refundCheckbox.isVisible && (
                 <Controller
                   control={control}
@@ -312,9 +323,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                         _focus={{ outline: 'none' }}
                         isChecked={!!value}
                         colorScheme="darkPrimary"
-                        isDisabled={
-                          isApproved || isMaterialsLoading || lateAndFactoringFeeForVendor
-                        }
+                        isDisabled={isApproved || isMaterialsLoading || lateAndFactoringFeeForVendor}
                         onChange={event => {
                           const isChecked = event.currentTarget.checked
                           onToggleRefundCheckbox(isChecked)
@@ -377,64 +386,58 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 </>
               )}
 
-              { 
-                (document && !document.s3Url ? (
-                  <Box color="#345EA6" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
-                    <HStack spacing="5px" h="31px" padding="10px" align="center">
-                      <Text
-                        color={disableError ? 'red' : ''}
-                        as="span"
-                        maxW="120px"
-                        isTruncated
-                        title={document?.name || document.fileType}
-                      >
-                        {document?.name || document.fileType}
-                      </Text>
-                      <MdOutlineCancel
-                        color={disableError ? 'red' : ''}
-                        cursor={isMaterialsLoading ? 'default' : 'pointer'}
-                        onClick={() => {
-                          if (isMaterialsLoading) {
-                            return
-                          }
-                          setDisableBtn?.(false)
-                          setAttachmentError(null)
-                          setValue('attachment', null)
-                          if (inputRef.current) inputRef.current.value = ''
-                          setFileParseMsg?.(false)
-                        }}
-                      />
-                    </HStack>
-                  </Box>
-                ) : (
-                  <>
-                    <Button
-                      onClick={e => {
-                        if (isEditMaterialTransaction) {
-                          onReplaceMaterialUploadOpen()
-                        } else {
-                          if (inputRef.current) {
-                            inputRef.current.click()
-                          }
-                        }
-                      }}
-                      leftIcon={<BiFile color="darkPrimary.300" />}
-                      variant="outline"
-                      size="sm"
-                      colorScheme="darkPrimary"
-                      color="darkPrimary.300"
-                      border={'1px solid #345EA6'}
-                      isDisabled={
-                        isApproved ||
-                        !values?.transactionType?.value ||
-                        
-                        lateAndFactoringFeeForVendor
-                      }
+              {document && !document.s3Url ? (
+                <Box color="#345EA6" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
+                  <HStack spacing="5px" h="31px" padding="10px" align="center">
+                    <Text
+                      color={disableError ? 'red' : ''}
+                      as="span"
+                      maxW="120px"
+                      isTruncated
+                      title={document?.name || document.fileType}
                     >
-                      {t(`${TRANSACTION}.attachment`)}
-                    </Button>
-                  </>
-                ))}
+                      {document?.name || document.fileType}
+                    </Text>
+                    <MdOutlineCancel
+                      color={disableError ? 'red' : ''}
+                      cursor={isMaterialsLoading ? 'default' : 'pointer'}
+                      onClick={() => {
+                        if (isMaterialsLoading) {
+                          return
+                        }
+                        setDisableBtn?.(false)
+                        setAttachmentError(null)
+                        setValue('attachment', null)
+                        if (inputRef.current) inputRef.current.value = ''
+                        setFileParseMsg?.(false)
+                      }}
+                    />
+                  </HStack>
+                </Box>
+              ) : (
+                <>
+                  <Button
+                    onClick={e => {
+                      if (isEditMaterialTransaction) {
+                        onReplaceMaterialUploadOpen()
+                      } else {
+                        if (inputRef.current) {
+                          inputRef.current.click()
+                        }
+                      }
+                    }}
+                    leftIcon={<BiFile color="darkPrimary.300" />}
+                    variant="outline"
+                    size="sm"
+                    colorScheme="darkPrimary"
+                    color="darkPrimary.300"
+                    border={'1px solid #345EA6'}
+                    isDisabled={isApproved || !values?.transactionType?.value || lateAndFactoringFeeForVendor}
+                  >
+                    {t(`${TRANSACTION}.attachment`)}
+                  </Button>
+                </>
+              )}
             </HStack>
             {attachmentError && <Text color="red">{attachmentError}</Text>}
           </Box>
@@ -546,15 +549,14 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                       <FormControl px={7} isInvalid={!!errors.transaction?.[index]?.description}>
                         <Tooltip label={transaction?.[index]?.description} placement="top" bg="#ffffff" color="black">
                           <Input
+                            isDisabled={isVendor && vDM && vFpm as any} 
                             data-testid={`transaction-description-${index}`}
                             type="text"
                             size="sm"
                             autoComplete="off"
                             placeholder="Add Description here"
                             noOfLines={1}
-                            readOnly={
-                              (isApproved && !isAdminEnabled)  || lateAndFactoringFeeForVendor
-                            }
+                            readOnly={(isApproved && !isAdminEnabled) || lateAndFactoringFeeForVendor}
                             variant={
                               (isApproved && !isAdminEnabled) || lateAndFactoringFeeForVendor
                                 ? 'unstyled'
@@ -579,10 +581,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           render={({ field, fieldState }) => {
                             return (
                               <>
-                                {(!isApproved || isAdminEnabled) &&
-                                
-                                !lateAndFactoringFeeForVendor ? (
+                                {(!isApproved || isAdminEnabled) && !lateAndFactoringFeeForVendor ? (
                                   <NumberFormat
+                                     disabled={isVendor && vDM && vFpm}
                                     data-testid={`transaction-amount-${index}`}
                                     customInput={Input}
                                     value={field.value}
@@ -612,7 +613,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     data-testid={`transaction-amount-${index}`}
                                     size="sm"
                                     placeholder="Add Amount"
-                                    readOnly={isApproved  || lateAndFactoringFeeForVendor}
+                                    readOnly={isApproved || lateAndFactoringFeeForVendor}
                                     variant={'unstyled'}
                                     autoComplete="off"
                                     value={numeral(Number(field.value)).format('$0,0[.]00')}
@@ -650,7 +651,15 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                 borderColor="gray.300"
                 py="4"
                 height="auto"
-              ></GridItem>
+                marginLeft="16px"
+              >
+                {isEdit && (
+                  <>
+                    {t('amountLimitMessage')} = ${awardPlanRemainingAmount}
+                  </>
+                )}
+              </GridItem>
+
               <GridItem py={'3'} fontWeight="bold" data-testid="total-amount">
                 {t('total')}: {totalAmount}
               </GridItem>
