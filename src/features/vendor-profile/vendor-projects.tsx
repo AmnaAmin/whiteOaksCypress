@@ -205,11 +205,6 @@ export const VendorProjects: React.FC<ProjectProps> = ({ onClose, vendorProfileD
             {t('cancel')}
           </Button>
         )}
-        {!isReadOnly && (
-          <Button type="submit" variant="solid" colorScheme="brand" data-testid="saveMarkets" isDisabled={isReadOnly}>
-            {t('save')}
-          </Button>
-        )}
       </Flex>
     </>
   )
