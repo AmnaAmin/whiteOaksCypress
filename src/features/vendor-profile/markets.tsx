@@ -81,7 +81,7 @@ export const MarketForm = ({ vendorProfileData, onClose, isActive }: marketFormP
         justifyContent="end"
       >
         {onClose && (
-          <Button variant={isReadOnly ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
