@@ -130,16 +130,25 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
       const responseInvoiceDetails = await client(`project-invoices/${payload.id}`, {});
       const invoiceDetails = responseInvoiceDetails?.data as InvoicingType;
       let isInvoiceChanged = false;
-      if (payload.paymentTerm !== invoiceDetails.paymentTerm) isInvoiceChanged = true;
-      if (payload.invoiceDate !== invoiceDetails.invoiceDate) isInvoiceChanged = true;
+      if (payload.paymentTerm !== invoiceDetails.paymentTerm)  {
+        console.log("Invoice name changed reason: payment term")
+        isInvoiceChanged = true;
+      }
+      if (payload.invoiceDate !== invoiceDetails.invoiceDate) {
+        console.log("Invoice name changed reason: invoice date")
+        isInvoiceChanged = true;
+      }
       // if ( !!payload.receivedLineItems?.length && !!invoiceDetails.receivedLineItems?.length && ( payload.receivedLineItems.length !== invoiceDetails.receivedLineItems.length )  ) isInvoiceChanged = true;
       // if ( !!payload.invoiceLineItems?.length && !!invoiceDetails.invoiceLineItems?.length && ( payload.invoiceLineItems.length !== invoiceDetails.invoiceLineItems.length )  ) isInvoiceChanged = true;
 
       //compare length and each single property value
-      if (!compareInvoiceLineItems(payload.invoiceLineItems, invoiceDetails.invoiceLineItems)) isInvoiceChanged = true;
+      if (!compareInvoiceLineItems(payload.invoiceLineItems?.filter( l => l.type === 'finalSowLineItems' ), invoiceDetails.invoiceLineItems))  {
+        console.log("Invoice name changed reason: invoice line items")
+        isInvoiceChanged = true;
+      }
 
-      // console.log("Payload: ", payload);
-      // console.log("Details: ", invoiceDetails);
+      console.log("Payload: ", payload);
+      console.log("Details: ", invoiceDetails);
 
       if (isInvoiceChanged) {
         const pattern = /-(\d+)(?:-R(\d+))?$/;
