@@ -105,7 +105,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
     return queryString
   }, [tabIndex])
 
-  const { options: usersList, isLoading: loadingUsersList, userMgt: userData } = useUserDirectReportsAllList()
+  const { options: usersList, isLoading: loadingUsersList, userMgt: userData } = useUserDirectReportsAllList(user?.id)
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   const {
     register,
