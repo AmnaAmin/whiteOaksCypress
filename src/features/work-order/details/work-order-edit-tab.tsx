@@ -290,7 +290,12 @@ const WorkOrderDetailTab = props => {
   useEffect(() => {
     const option = [] as any
     if (vendors && vendors?.length > 0) {
-      vendors?.forEach(v => {
+      const activeVendors = vendors?.filter(option => {
+        if (option.companyName === companyName) return option
+        else return option?.statusLabel?.toLocaleLowerCase() !== 'expired'
+      })
+
+      activeVendors?.forEach(v => {
         option.push({
           label:
             v.statusLabel?.toLocaleLowerCase() === 'expired' ? v.companyName + ' (Expired)' : (v.companyName as string),

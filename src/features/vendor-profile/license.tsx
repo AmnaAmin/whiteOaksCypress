@@ -334,7 +334,7 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
         )}
 
         {onClose && (
-          <Button variant={isReadOnly ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
