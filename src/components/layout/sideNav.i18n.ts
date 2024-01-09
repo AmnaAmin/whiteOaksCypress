@@ -30,6 +30,7 @@ export const sideNav = {
         automationDashboard: 'Automation',
         cypressTriggers: 'Cypress Triggers',
         locations: 'Locations',
+        messages: 'Messages',
       },
     },
   },
@@ -61,7 +62,8 @@ export const sideNav = {
         vendorQRScan: 'QR Scan',
         sonarqubeDashboard: 'SonarQube',
         automationDashboard: 'Automation',
-        cypressTriggers: 'Cypress Triggers'
+        cypressTriggers: 'Cypress Triggers',
+        messages: 'Messages',
       },
     },
   },
