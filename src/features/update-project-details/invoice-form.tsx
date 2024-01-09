@@ -411,7 +411,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     })
   }, [append])
 
-  const isStatusDisabled = invoice?.status !== InvoiceStatusValues.pendingPayment || isCancelled
+  const isStatusDisabled = isCancelled
 
   useEffect(() => {
     if (!invoice) return
@@ -421,7 +421,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           c => c.value === InvoiceStatusValues.pendingPayment || c.value === InvoiceStatusValues.cancelled,
         ),
       )
-    } else if (isCancelled) {
+    } else if (isCancelled || InvoiceStatusValues.paid || InvoiceStatusValues.partialPaid) {
       setCurrStatusOptions(currStatusOptions.filter(c => c.value === InvoiceStatusValues.cancelled))
     } else {
       setCurrStatusOptions(INVOICE_STATUS_OPTIONS.filter(c => c.value !== InvoiceStatusValues.cancelled))
@@ -885,7 +885,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
               formReturn.handleSubmit(onSubmit)()
             }, 3000)}
             isLoading={isLoadingUpdate || isLoadingCreate}
-            disabled={!invoiced || isPaid || !canCreateInvoice}
+            disabled={!invoiced || isCancelled || !canCreateInvoice}
             form="invoice-form"
             data-testid="save-transaction"
             colorScheme="darkPrimary"
