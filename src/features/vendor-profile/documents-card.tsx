@@ -646,7 +646,7 @@ export const DocumentsForm = ({ vendor, onClose, isActive }: DocumentFormProps) 
           </Button>
         )}
         {onClose && (
-          <Button variant={isReadOnly ? 'solid' : 'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
+          <Button variant={'outline'} colorScheme="darkPrimary" onClick={onClose} mr="3">
             Cancel
           </Button>
         )}
