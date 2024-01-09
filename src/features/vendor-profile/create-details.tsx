@@ -506,7 +506,7 @@ const CreateVendorDetail: React.FC<{
         justifyContent="end"
       >
         {onClose && (
-          <Button variant={isReadOnly ? 'solid' : 'outline'} colorScheme="brand" onClick={onClose} mr="3">
+          <Button variant={'outline'} colorScheme="brand" onClick={onClose} mr="3">
             {t('cancel')}
           </Button>
         )}
