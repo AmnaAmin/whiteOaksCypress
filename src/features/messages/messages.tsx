@@ -11,7 +11,7 @@ export const Messages = (props: any) => {
   const user = data?.user
   const platformParam = 'platform=1'
 
-  let iframeUrl = 'http://localhost:3001' + '?' + platformParam
+  let iframeUrl = process.env.REACT_APP_CRM_URL + '?' + platformParam
 
   const iframe = useRef<HTMLIFrameElement>(null)
 
