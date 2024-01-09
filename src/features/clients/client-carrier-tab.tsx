@@ -184,7 +184,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
         })}
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
-        <Button variant={!isReadOnly ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
+        <Button variant={'outline'}  colorScheme="brand" onClick={props?.onClose}>
           {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isReadOnly && (
