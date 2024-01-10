@@ -19,7 +19,7 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
      <Center flexDir="column" borderRight="1px solid  #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
         <Box fontSize="14px" fontWeight={400} fontFamily="poppins">
           <Tooltip label={title} color="black" bg='white' placement="top">
-            <Text color="gray.700" whiteSpace={{ base: 'nowrap', md: 'unset' }} noOfLines={[0, 1]} fontSize='14px'>
+            <Text color="gray.700" whiteSpace={{ base: 'nowrap', md: 'unset' }} noOfLines={[0, 1]} fontSize='14px' fontWeight="500">
               {title}
             </Text>
           </Tooltip>
