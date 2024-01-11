@@ -21,7 +21,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { calendarIcon } from 'theme/common-style'
 import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecision } from 'api/work-order'
 import { isWednesday, nextFriday, nextWednesday } from 'date-fns'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { STATUS } from 'features/common/status'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
@@ -110,7 +110,7 @@ const PaymentInfoTab = props => {
   const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   const isReadOnly = isPayableRead || isProjRead
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
-
+  const contactFormValue = watch()
   useEffect(() => {
     if ([STATUS.Rejected]?.includes(workOrder?.statusLabel?.toLowerCase())) {
       setValue('dateInvoiceSubmitted', null)
@@ -162,13 +162,16 @@ const PaymentInfoTab = props => {
 
   useEffect(() => {
     if (isReadOnly) {
-      Array.from(document.querySelectorAll("input")).forEach(input => {
-        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
-            input.setAttribute("disabled", "true");
-          }
-      });
-    };
+      Array.from(document.querySelectorAll('input')).forEach(input => {
+        if (input.getAttribute('data-testid') !== 'tableFilterInputField') {
+          input.setAttribute('disabled', 'true')
+        }
+      })
+    }
   }, [])
+  const decimalRegex = /^(\d{1,14}(\.\d{1,3})?)?$/
+  const [decimalState, setDecimalState] = useState<number>(0)
+  console.log('decimalState', decimalState)
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -377,11 +380,30 @@ const PaymentInfoTab = props => {
                             thousandSeparator
                             customInput={CustomRequiredInput}
                             prefix={'$'}
+                            decimalScale={5}
                             disabled={!invoiceAmountEnabled || isWOCancelled}
                             onValueChange={e => {
-                              field.onChange(e.floatValue ?? '')
+                              // Check if the value is numeric (not a string or special characters)
+                              if (!isNaN(e.floatValue as number)) {
+                                // Check the length of the numeric value
+                                if (e.floatValue && decimalRegex.test(decimalState.toString())) {
+                                  field.onChange(e.floatValue)
+                                  setDecimalState(e.floatValue)
+                                }
+                                else {
+                                  console.log('decimalState',decimalState)
+                                  field.onChange(decimalState)
+                                }
+                              }
+                              
                             }}
                           />
+
+                          {!!decimalState && !decimalRegex.test(decimalState.toString()) && (
+                            <Text color="red" fontSize="xs" w="215px">
+                              Invalid decimal Amount
+                            </Text>
+                          )}
                           <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                         </>
                       )
