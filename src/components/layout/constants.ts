@@ -112,6 +112,13 @@ export const MenusList: Menu[] = [
     testId: 'clientMenuItem',
   },
   {
+    pathTo: '/messages',
+    title: `${SIDE_NAV}.messages`,
+    Icon: FaMailBulk,
+    color: '#ED64A6',
+    permissions: ['MESSAGES.EDIT', 'MESSAGES.READ', 'ALL'],
+  },
+  {
     pathTo: '/reports',
     title: `${SIDE_NAV}.reports`,
     Icon: BiBarChartSquare,
@@ -197,13 +204,6 @@ export const MenusList: Menu[] = [
           Icon: BiError,
           color: '#ED64A6',
           permissions: ['ALERT.EDIT', 'ALERT.READ', 'ALL'],
-        },
-        {
-          pathTo: '/messages',
-          title: `${SIDE_NAV}.messages`,
-          Icon: FaMailBulk,
-          color: '#ED64A6',
-          permissions: ['MESSAGES.EDIT', 'MESSAGES.READ', 'ALL'],
         },
         {
           pathTo: '/cypressReport',
