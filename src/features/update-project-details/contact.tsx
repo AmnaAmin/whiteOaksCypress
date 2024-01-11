@@ -28,7 +28,7 @@ import { useParams } from 'react-router'
 import { usePCProject } from 'api/pc-projects'
 import { ConfirmationBox } from 'components/Confirmation'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
-
+import { Text } from '@chakra-ui/react';
 const InputLabel: React.FC<FormLabelProps> = ({ title, htmlFor }) => {
   const { t } = useTranslation()
 
@@ -81,6 +81,13 @@ const Contact: React.FC<ContactProps> = ({
   const superPhoneNumberExtensionValue = watch('superPhoneNumberExtension')
   const superPhoneNumberSuper = watch('superPhoneNumber')
   const homeOwnerPhoneValue = watch('homeOwnerPhone')
+  const superName=useWatch({ name: 'superName', control }) as string
+ const watchSuperEmail= useWatch({ name: 'superEmail', control}) as string
+ const watchAgentName=  useWatch({ name: 'agentName', control}) as string
+ const watchHomeOwnerName= useWatch({ name: 'homeOwnerName', control}) as string
+ const watchHomeOwnerEmail = useWatch({ name: 'homeOwnerEmail', control}) as string
+ 
+ const watchPhoneExtension = useWatch({ name: 'superPhoneNumberExtension', control}) as string
   useEffect(() => {
     setCarrierOption(
       clientWatch?.carrier?.map(c => {
@@ -255,7 +262,22 @@ const Contact: React.FC<ContactProps> = ({
         <Box h="40px">
           <FormControl isInvalid={!!errors?.superName}>
             <InputLabel title={'project.projectDetails.superName'} htmlFor={'superName'} />
-            <Input size="md" id="superName" {...register('superName')} w="215px" />
+            <Input size="md" id="superName" 
+            {...register('superName', {
+              maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+              validate: {
+                notOnlyWhitespace: value =>
+                  value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+              },
+            })}
+            w="215px" 
+            autoComplete="off"
+            maxLength={255}/>
+             {superName !== undefined && superName.length === 255 && (
+  <Text color="red" fontSize="xs" w="215px">
+    Please use 255 characters only.
+  </Text>
+)}
             <FormErrorMessage>{errors?.superName?.message}</FormErrorMessage>
           </FormControl>
         </Box>
@@ -302,12 +324,28 @@ const Contact: React.FC<ContactProps> = ({
             <Input
               size="md"
               id="superPhoneNumberExtension"
-              {...register('superPhoneNumberExtension')}
+              {...register('superPhoneNumberExtension', {
+                maxLength: { value: 20, message: 'Character limit reached (maximum 20 characters)' },
+                validate: {
+                  notOnlyWhitespace: value =>
+                    value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+                },
+              })}
               w="124px"
+              autoComplete="off"
+              maxLength={20}
               value={extensionValue}
               onChange={handleExtensionChange}
               type="text"
             />
+             {console.log('watchPhoneExtension:', watchPhoneExtension)}
+             {watchPhoneExtension !== undefined && watchPhoneExtension.length ===  20 && (
+                <Text color="red" fontSize="10px" w="215px">
+                 Please Use 20 Characters Only.
+                </Text>
+              )}
+
+
             <FormErrorMessage>{errors?.superPhoneNumberExtension?.message}</FormErrorMessage>
           </FormControl>
         </Box>
@@ -315,7 +353,23 @@ const Contact: React.FC<ContactProps> = ({
         <Box h="40px">
           <FormControl isInvalid={!!errors.superEmail}>
             <InputLabel title={'project.projectDetails.superEmail'} htmlFor={'superEmail'} />
-            <Input size="md" id="superEmail" {...register('superEmail')} w="215px" />
+            <Input size="md" id="superEmail" 
+            {...register('superEmail', {
+              maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+              validate: {
+                notOnlyWhitespace: value =>
+                  value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+              },
+            })}
+            w="215px" 
+            autoComplete="off"
+            maxLength={255}/>
+             {watchSuperEmail !== undefined && watchSuperEmail.length ===  255 && (
+                <Text color="red" fontSize="10px" w="215px">
+                 Please Use 255 Characters Only.
+                </Text>
+              )}
+            
             <FormErrorMessage>{errors?.superEmail?.message}</FormErrorMessage>
           </FormControl>
         </Box>
@@ -416,7 +470,22 @@ const Contact: React.FC<ContactProps> = ({
         <Box h="40px">
           <FormControl w="215px" isInvalid={!!errors?.agentName}>
             <InputLabel title={t(`${NEW_PROJECT}.agentName`)} htmlFor={'agentName'} />
-            <Input size="md" isDisabled={isFieldProjectManagerDisabled} id="agentName" {...register('agentName')} />
+            <Input size="md" isDisabled={isFieldProjectManagerDisabled} id="agentName"
+             {...register('agentName', {
+              maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+              validate: {
+                notOnlyWhitespace: value =>
+                  value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+              },
+            })}
+            w="215px" 
+            autoComplete="off"
+            maxLength={255}/>
+            {watchAgentName !== undefined && watchAgentName.length ===  255 && (
+                <Text color="red" fontSize="10px" w="215px">
+                 Please Use 255 Characters Only.
+                </Text>
+              )}
             <FormErrorMessage>{errors?.agentName?.message}</FormErrorMessage>
           </FormControl>
         </Box>
@@ -483,8 +552,21 @@ const Contact: React.FC<ContactProps> = ({
               size="md"
               isDisabled={isFieldProjectManagerDisabled}
               id="homeOwnerName"
-              {...register('homeOwnerName')}
-            />
+              {...register('homeOwnerName', {
+                maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                validate: {
+                  notOnlyWhitespace: value =>
+                    value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+                },
+              })}
+              w="215px" 
+              autoComplete="off"
+              maxLength={255}/>
+             {watchHomeOwnerName !== undefined && watchHomeOwnerName.length ===  255 && (
+                <Text color="red" fontSize="10px" w="215px">
+                 Please Use 255 Characters Only.
+                </Text>
+              )}
             <FormErrorMessage>{errors?.homeOwnerName?.message}</FormErrorMessage>
           </FormControl>
         </Box>
@@ -531,8 +613,22 @@ const Contact: React.FC<ContactProps> = ({
               size="md"
               isDisabled={isFieldProjectManagerDisabled}
               id="homeOwnerEmail"
-              {...register('homeOwnerEmail')}
+              {...register('homeOwnerEmail', {
+                maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                validate: {
+                  notOnlyWhitespace: value =>
+                    value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+                },
+              })}
+              w="215px" 
+              autoComplete="off"
+              maxLength={255}
             />
+            {watchHomeOwnerEmail !== undefined && watchHomeOwnerEmail.length ===  255 && (
+                <Text color="red" fontSize="10px" w="215px">
+                 Please Use 255 Characters Only.
+                </Text>
+              )}
             <FormErrorMessage>{errors?.homeOwnerEmail?.message}</FormErrorMessage>
           </FormControl>
         </Box>

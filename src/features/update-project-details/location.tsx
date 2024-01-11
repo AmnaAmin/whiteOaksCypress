@@ -134,6 +134,11 @@ const Location: React.FC<LocationProps> = ({
   }
 
   const state = useWatch({ name: 'state', control })
+  const watchZipCode = useWatch({ name: 'zip', control }) as string
+  const watchGateCode = useWatch({ name: 'gateCode', control }) as string
+  const watchLockBoxCode = useWatch({ name: 'lockBoxCode', control }) as string
+  const watchhoaEmail = useWatch({ name: 'hoaContactEmail', control }) as string
+  const watchHoaExt = useWatch({ name: 'hoaContactExtension', control }) as string
   const { marketSelectOptionsStateWise } = useMarketStateWise(state?.id)
 
   return (
@@ -264,15 +269,23 @@ const Location: React.FC<LocationProps> = ({
                 id="zip"
                 {...register('zip', {
                   required: 'This is required field',
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   validate: {
                     notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'This is a required field',
+                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only.',
                   },
                   onChange: e => {
                     setVerifiedAddress(false)
                   },
                 })}
+                autoComplete="off"
+                maxLength={255}
               />
+              {watchZipCode !== undefined && watchZipCode.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage>{errors.zip && errors.zip.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -316,8 +329,21 @@ const Location: React.FC<LocationProps> = ({
                 border=" 1px solid #E2E8F0"
                 disabled={isGateCodeDisabled}
                 id="gateCode"
-                {...register('gateCode')}
+                {...register('gateCode', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only.',
+                  },
+                })}
+                autoComplete="off"
+                maxLength={255}
               />
+              {watchGateCode !== undefined && watchGateCode.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage>{errors.gateCode && errors.gateCode.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -332,8 +358,21 @@ const Location: React.FC<LocationProps> = ({
                 border=" 1px solid #E2E8F0"
                 disabled={isLockBoxCodeDisabled}
                 id="lockBoxCode"
-                {...register('lockBoxCode')}
+                {...register('lockBoxCode', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only.',
+                  },
+                })}
+                autoComplete="off"
+                maxLength={255}
               />
+              {watchLockBoxCode !== undefined && watchLockBoxCode.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage>{errors.lockBoxCode && errors.lockBoxCode.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -374,8 +413,22 @@ const Location: React.FC<LocationProps> = ({
                 size="md"
                 border=" 1px solid #E2E8F0"
                 id="hoaContactExtension"
-                {...register('hoaContactExtension')}
+                {...register('hoaContactExtension', {
+                  maxLength: { value: 20, message: 'Character limit reached (maximum 20 characters)' },
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only.',
+                  },
+                })}
+                autoComplete="off"
+                maxLength={20}
               />
+              {watchHoaExt !== undefined && watchHoaExt.length === 20 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 20 characters only.
+                </Text>
+              )}
+
               <FormErrorMessage>{errors?.hoaContactExtension?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -393,8 +446,21 @@ const Location: React.FC<LocationProps> = ({
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                     message: 'Invalid Email Address',
                   },
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only.',
+                  },
                 })}
+                autoComplete="off"
+                maxLength={255}
               />
+              {watchhoaEmail !== undefined && watchhoaEmail.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
+
               <FormErrorMessage>{errors.hoaContactEmail && errors.hoaContactEmail.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
