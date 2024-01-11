@@ -82,6 +82,7 @@ const Contact: React.FC<ContactProps> = ({
   const superPhoneNumberExtensionValue = watch('superPhoneNumberExtension')
   const superPhoneNumberSuper = watch('superPhoneNumber')
   const homeOwnerPhoneValue = watch('homeOwnerPhone')
+  
   useEffect(() => {
     setCarrierOption(
       clientWatch?.carrier?.map(c => {
@@ -328,13 +329,13 @@ const contactFormValue = watch()
               })}
               w="124px"
               autoComplete="off"
-              maxLength={2}
+              maxLength={20}
               value={extensionValue}
               onChange={handleExtensionChange}
               type="text"
             />
              
-           {contactFormValue.superPhoneNumberExtension && contactFormValue.superPhoneNumberExtension?.length === 2 && (
+           {contactFormValue.superPhoneNumberExtension && contactFormValue.superPhoneNumberExtension?.length === 20 && (
   <Text color="red" fontSize="10px" w="215px">
     Please Use 20 Characters Only.
   </Text>
