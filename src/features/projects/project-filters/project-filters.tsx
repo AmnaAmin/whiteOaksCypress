@@ -45,6 +45,13 @@ const useProjectCardJson = cards => {
       IconElement: <IconElement Icon={SummaryIconSecond} bg="#E5ECF9" />,
     },
     {
+      id: 'awaitingPunch',
+      title: t('projects.projectFilter.awaitingPunch'),
+      value: 'aawaitingPunch',
+      number: cards?.find(c => c?.status === 9)?.count || 0,
+      IconElement: <IconElement Icon={SummaryIconThird} bg="#E6FFFA" />,
+    },
+    {
       id: 'punch',
       title: t('projects.projectFilter.punch'),
       value: 'punch',

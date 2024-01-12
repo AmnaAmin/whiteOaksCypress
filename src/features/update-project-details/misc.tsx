@@ -34,6 +34,7 @@ const Misc: React.FC = () => {
     reconcileDate,
     emailNotificationDate,
     verifiedDate,
+    awaitingPunchDate,
   } = getValues()
   const { isAdmin } = useUserRolesSelector()
   const { t } = useTranslation()
@@ -63,6 +64,17 @@ const Misc: React.FC = () => {
             </FormLabel>
 
             <DatePickerInput testId="proj-active" value={activeDate ? dateFormat(activeDate) : 'mm/dd/yyyy'} disable />
+
+            <FormErrorMessage></FormErrorMessage>
+          </FormControl>
+        </GridItem>
+        <GridItem>
+          <FormControl>
+            <FormLabel variant="strong-label" size="md">
+              {t(`project.projectDetails.awaitingPunch`)}
+            </FormLabel>
+
+            <DatePickerInput testId="proj-awaitingPunch" value={awaitingPunchDate ? dateFormat(awaitingPunchDate) : 'mm/dd/yyyy'} disable />
 
             <FormErrorMessage></FormErrorMessage>
           </FormControl>

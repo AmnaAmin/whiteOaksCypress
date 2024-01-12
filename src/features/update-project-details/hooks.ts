@@ -137,14 +137,15 @@ export const useFieldsRequired = (control: Control<ProjectDetailsFormValues>) =>
   const projectStatus = status?.value
   const isStatusActive = projectStatus === STATUS.Active
   const isStatusClosed = projectStatus === STATUS.Closed
+  const isStatusAwaitingPunch = projectStatus === STATUS.AwaitingPunch
   const isStatusPunch = projectStatus === STATUS.Punch
   const isStatusReconcile = projectStatus === STATUS.Reconcile
 
   return {
     // Project Management form fields states
     isWOAStartDateRequired: isStatusActive,
-    isWOACompletionDateRequired: isStatusClosed || isStatusPunch || isStatusReconcile,
-    isClientWalkthroughDateRequired: isStatusClosed,
+    isWOACompletionDateRequired: isStatusClosed || isStatusAwaitingPunch || isStatusReconcile,
+    isClientWalkthroughDateRequired: isStatusPunch,
     isClientSignOffDateRequired: isStatusClosed,
   }
 }

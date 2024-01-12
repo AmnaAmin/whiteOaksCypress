@@ -9,6 +9,10 @@ const OPTIONS = {
     value: ProjectStatus.Active,
     label: 'Active',
   },
+  [ProjectStatus.AwaitingPunch]: {
+    value: ProjectStatus.AwaitingPunch,
+    label: 'Awaiting Punch',
+  },
   [ProjectStatus.Punch]: {
     value: ProjectStatus.Punch,
     label: 'Punch',
@@ -51,12 +55,17 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
   [ProjectStatus.New]: [OPTIONS[ProjectStatus.New], OPTIONS[ProjectStatus.Active], OPTIONS[ProjectStatus.Cancelled]],
   [ProjectStatus.Active]: [
     OPTIONS[ProjectStatus.Active],
+    OPTIONS[ProjectStatus.AwaitingPunch],
+   
+  ],
+  [ProjectStatus.AwaitingPunch]: [
+    OPTIONS[ProjectStatus.Active],
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Cancelled],
-    OPTIONS[ProjectStatus.Disputed],
   ],
   [ProjectStatus.Punch]: [
     OPTIONS[ProjectStatus.Active],
+    OPTIONS[ProjectStatus.AwaitingPunch],
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Reconcile],
     OPTIONS[ProjectStatus.Closed],
@@ -65,6 +74,7 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
   ],
   [ProjectStatus.Reconcile]: [
     OPTIONS[ProjectStatus.Active],
+    OPTIONS[ProjectStatus.AwaitingPunch],
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Closed],
     OPTIONS[ProjectStatus.Cancelled],

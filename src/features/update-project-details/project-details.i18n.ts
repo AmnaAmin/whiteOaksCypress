@@ -94,6 +94,7 @@ export const project = {
           created: 'Created',
           new: 'New',
           active: 'Active',
+          awaitingPunch: 'Awaiting Punch',
           punch: 'Punch',
           closed: 'Closed',
           clientPaid: 'Client Paid',

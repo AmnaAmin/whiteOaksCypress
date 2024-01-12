@@ -224,11 +224,11 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       }
 
       // if Project status is Active and some workorders are not completed then
-      // Project punch status should be disabled
+      // Project Awaiting punch status should be disabled
       if (
         numberOfWorkOrders !== numberOfCompletedWorkOrders &&
         projectStatusId === ProjectStatus.Active &&
-        optionValue === ProjectStatus.Punch
+        optionValue === ProjectStatus.AwaitingPunch
       ) {
         return {
           ...selectOption,
@@ -238,11 +238,11 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       }
 
       // if Project status is Active and some workorders are not completed then
-      // Project punch status should be disabled
+      // Project Awaiting punch status should be disabled
       if (
         numberOfWorkOrders !== numberOfCompletedWorkOrders &&
         projectStatusId === ProjectStatus.Disputed &&
-        optionValue === ProjectStatus.Punch
+        optionValue === ProjectStatus.AwaitingPunch
       ) {
         return {
           ...selectOption,
@@ -356,13 +356,21 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       if (projectStatusId === Number(PROJECT_STATUS.active.value)) {
         overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.new, PROJECT_STATUS.disputed]
       }
+       // Project Status -> Awaiting Punch
+       else if (projectStatusId === Number(PROJECT_STATUS.awaitingPunch.value)) {
+        overrideProjectStatusOptions = [
+          selectOption,
+          PROJECT_STATUS.new,
+          PROJECT_STATUS.active,
+        ]
+      }
       // Project Status -> Punch
       else if (projectStatusId === Number(PROJECT_STATUS.punch.value)) {
         overrideProjectStatusOptions = [
           selectOption,
           PROJECT_STATUS.new,
           PROJECT_STATUS.active,
-          PROJECT_STATUS.disputed,
+          PROJECT_STATUS.awaitingPunch,
         ]
       }
       // Project Status -> Reconcile
