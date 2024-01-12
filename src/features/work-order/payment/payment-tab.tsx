@@ -103,6 +103,7 @@ const PaymentInfoTab = props => {
     mode: 'onChange',
     defaultValues: defaultValuesPayment(workOrder, paymentsTerms),
   })
+  console.log('Default Values:', defaultValuesPayment(workOrder, paymentsTerms))
   const watchPartialPayment = watch('partialPayment')
   const watchPaymentDate = watch('paymentDate')
   const { pathname } = useLocation()
@@ -145,6 +146,7 @@ const PaymentInfoTab = props => {
     onSave(parsePaymentValuesToPayload(values))
   }
 
+  console.log('watch',watch())
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
@@ -376,7 +378,8 @@ const PaymentInfoTab = props => {
                       },
                       required: 'This is required',
                     }}
-                    render={({ field, fieldState }) => (
+                    render={({ field, fieldState }) => {
+                      return (
                       <>
                         <NumberFormat
                           value={field.value}
@@ -386,8 +389,7 @@ const PaymentInfoTab = props => {
                           prefix={'$'}
                           disabled={!invoiceAmountEnabled || isWOCancelled}
                           onValueChange={e => {
-                            const value = e.floatValue ?? ''
-                            field.onChange(value)
+                            field.onChange(e.floatValue ?? '')
                           }}
                         />
                         {(fieldState?.error?.type === 'matchPattern' || fieldState?.error?.type === 'required') && (
@@ -395,8 +397,9 @@ const PaymentInfoTab = props => {
                             {fieldState?.error?.message || 'Exceeding maximum length'}
                           </Text>
                         )}
+                        
                       </>
-                    )}
+                    )}}
                   />
                 </FormControl>
               </Box>
