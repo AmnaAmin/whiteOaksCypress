@@ -21,7 +21,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { calendarIcon } from 'theme/common-style'
 import { defaultValuesPayment, parsePaymentValuesToPayload, useFieldEnableDecision } from 'api/work-order'
 import { isWednesday, nextFriday, nextWednesday } from 'date-fns'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { STATUS } from 'features/common/status'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
@@ -100,6 +100,7 @@ const PaymentInfoTab = props => {
     watch,
     reset: resetPayments,
   } = useForm<FormValues>({
+    mode: 'onChange',
     defaultValues: defaultValuesPayment(workOrder, paymentsTerms),
   })
   const watchPartialPayment = watch('partialPayment')
@@ -110,7 +111,7 @@ const PaymentInfoTab = props => {
   const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   const isReadOnly = isPayableRead || isProjRead
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
-  const contactFormValue = watch()
+
   useEffect(() => {
     if ([STATUS.Rejected]?.includes(workOrder?.statusLabel?.toLowerCase())) {
       setValue('dateInvoiceSubmitted', null)
@@ -169,9 +170,6 @@ const PaymentInfoTab = props => {
       })
     }
   }, [])
-  const decimalRegex = /^(\d{1,14}(\.\d{1,3})?)?$/
-  const [decimalState, setDecimalState] = useState<number>(0)
-  console.log('decimalState', decimalState)
   return (
     <Box>
       <form onSubmit={handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -370,44 +368,35 @@ const PaymentInfoTab = props => {
                   <Controller
                     control={control}
                     name="invoiceAmount"
-                    rules={{ required: 'This is required' }}
-                    render={({ field, fieldState }) => {
-                      return (
-                        <>
-                          <NumberFormat
-                            value={field.value}
-                            data-testid="invoiceAmount"
-                            thousandSeparator
-                            customInput={CustomRequiredInput}
-                            prefix={'$'}
-                            decimalScale={5}
-                            disabled={!invoiceAmountEnabled || isWOCancelled}
-                            onValueChange={e => {
-                              // Check if the value is numeric (not a string or special characters)
-                              if (!isNaN(e.floatValue as number)) {
-                                // Check the length of the numeric value
-                                if (e.floatValue && decimalRegex.test(decimalState.toString())) {
-                                  field.onChange(e.floatValue)
-                                  setDecimalState(e.floatValue)
-                                }
-                                else {
-                                  console.log('decimalState',decimalState)
-                                  field.onChange(decimalState)
-                                }
-                              }
-                              
-                            }}
-                          />
-
-                          {!!decimalState && !decimalRegex.test(decimalState.toString()) && (
-                            <Text color="red" fontSize="xs" w="215px">
-                              Invalid decimal Amount
-                            </Text>
-                          )}
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                        </>
-                      )
+                    rules={{
+                      validate: {
+                        matchPattern: (v: any) =>
+                          (!v || /^(?!0\d|$)\d{1,19}(\.\d{1,4})?$/.test(v.toString())) &&
+                          v?.toString().replace('.', '').length <= 26,
+                      },
+                      required: 'This is required',
                     }}
+                    render={({ field, fieldState }) => (
+                      <>
+                        <NumberFormat
+                          value={field.value}
+                          data-testid="invoiceAmount"
+                          thousandSeparator
+                          customInput={CustomRequiredInput}
+                          prefix={'$'}
+                          disabled={!invoiceAmountEnabled || isWOCancelled}
+                          onValueChange={e => {
+                            const value = e.floatValue ?? ''
+                            field.onChange(value)
+                          }}
+                        />
+                        {(fieldState?.error?.type === 'matchPattern' || fieldState?.error?.type === 'required') && (
+                          <Text color="red" fontSize="xs" w="150px">
+                            {fieldState?.error?.message || 'Exceeding maximum length'}
+                          </Text>
+                        )}
+                      </>
+                    )}
                   />
                 </FormControl>
               </Box>
@@ -419,7 +408,14 @@ const PaymentInfoTab = props => {
                   <Controller
                     control={control}
                     name="clientOriginalApprovedAmount"
-                    rules={{ required: 'This is required' }}
+                    rules={{
+                      validate: {
+                        matchPattern: (v: any) =>
+                          (!v || /^(?!0\d|$)\d{1,19}(\.\d{1,4})?$/.test(v.toString())) &&
+                          v?.toString().replace('.', '').length <= 26,
+                      },
+                      required: 'This is required',
+                    }}
                     render={({ field, fieldState }) => {
                       return (
                         <>
@@ -434,7 +430,12 @@ const PaymentInfoTab = props => {
                               field.onChange(e.floatValue ?? '')
                             }}
                           />
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                           {(fieldState?.error?.type === 'matchPattern' || fieldState?.error?.type === 'required') && (
+                          <Text color="red" fontSize="xs" w="150px">
+                            {fieldState?.error?.message || 'Exceeding maximum length'}
+                          </Text>
+                        )}
+                        
                         </>
                       )
                     }}
@@ -458,7 +459,14 @@ const PaymentInfoTab = props => {
                   <Controller
                     control={control}
                     name="clientApprovedAmount"
-                    rules={{ required: 'This is required' }}
+                    rules={{
+                      validate: {
+                        matchPattern: (v: any) =>
+                          (!v || /^(?!0\d|$)\d{1,19}(\.\d{1,4})?$/.test(v.toString())) &&
+                          v?.toString().replace('.', '').length <= 26,
+                      },
+                      required: 'This is required',
+                    }}
                     render={({ field, fieldState }) => {
                       return (
                         <>
@@ -473,7 +481,11 @@ const PaymentInfoTab = props => {
                               field.onChange(e.floatValue ?? '')
                             }}
                           />
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                           {(fieldState?.error?.type === 'matchPattern' || fieldState?.error?.type === 'required') && (
+                          <Text color="red" fontSize="xs" w="150px">
+                            {fieldState?.error?.message || 'Exceeding maximum length'}
+                          </Text>
+                        )}
                         </>
                       )
                     }}
