@@ -31,23 +31,31 @@ steps:
   #     ENV: 'dev-IntegrationTests'
   #     REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
 
-  # - command:
-  #     - chmod 755 auto/build.sh
-  #     - auto/build.sh
-  #     - chmod 755 auto/deploy_dev.sh
-  #     - auto/deploy_dev.sh
-  #   label: ':package: & :rocket: Build & Deploy Dev: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
-  #   branches: dev
-  #   agents:
-  #     queue: 'wo:dev'
-  #   retry:
-  #     automatic:
-  #       - exit_status: -1
-  #         limit: 1
-  #   env:
-  #     BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
-  #     ENV: 'dev'
-  #     REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
+  - wait
+
+  - block: ':green_button: Deploy to DEV'
+    prompt: 'Deploy WO to DEV environment?'
+    branches: 'dev2-preprod'
+
+  - command:
+      - chmod 755 auto/build.sh
+      - auto/build.sh
+      - chmod 755 auto/deploy_dev.sh
+      - auto/deploy_dev.sh
+    label: ':package: & :rocket: Build & Deploy DEV: VERSION -> ${BUILDKITE_BUILD_NUMBER}'
+    branches: dev2-preprod
+    agents:
+      queue: 'wo:preprod'
+    retry:
+      automatic:
+        - exit_status: -1
+          limit: 1
+    env:
+      BUILD_VERSION: '${BUILDKITE_BUILD_NUMBER}'
+      ENV: 'dev'
+      REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
+      REACT_APP_ESTIMATES_URL: 'https://estimates-dev.woaharvest.com'
+      REACT_APP_CRM_URL: 'https://crm-dev.woaharvest.com'
 
   # - command:
   #     - chmod 755 auto/build.sh
@@ -117,7 +125,7 @@ steps:
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
       REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
       REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
-      REACT_APP_CRM_URL: 'https://crm-dev.woaharvest.com'
+      REACT_APP_CRM_URL: 'https://crm-preprod.woaharvest.com'
 
   - wait
 
@@ -126,7 +134,6 @@ steps:
     branches: 'master'
 
   - command:
-      - echo ${TEST_VARIABLE}
       - chmod 755 auto/build.sh
       - auto/build.sh
       - chmod 755 auto/deploy_preprod.sh
@@ -146,9 +153,7 @@ steps:
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
       REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
       REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
-      REACT_APP_CRM_URL: 'https://crm-dev.woaharvest.com'
-      # REACT_APP_GITHUB_TOKEN: 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
-      # TEST_VARIABLE: '${TEST_VARIABLE}'
+      REACT_APP_CRM_URL: 'https://crm-preprod.woaharvest.com'
 
   - wait
 
@@ -176,3 +181,4 @@ steps:
       REACT_APP_SUPERSET_URL: 'https://bi.woaharvest.com'
       REACT_APP_ESTIMATES_URL: 'https://estimates.woaharvest.com'
       REACT_APP_MAINTENANCE_URL: 'https://mm.woaharvest.com'
+      REACT_APP_CRM_URL: 'https://crm.woaharvest.com'
