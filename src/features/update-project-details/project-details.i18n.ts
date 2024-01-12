@@ -209,6 +209,7 @@ export const project = {
           created: 'Creado',
           new: 'Nuevo',
           active: 'Activo',
+          awaitingPunch:'Esperando Puñetazo',
           punch: 'Puñetazo',
           closed: 'Cerrado',
           clientPaid: 'Cliente pagado',
