@@ -349,6 +349,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     showPricing: formValues.showPrice,
     assignedItems: [...assignedItems],
     notifyVendor: formValues.notifyVendor,
+    visibleToVendor: formValues.visibleToVendor,
     vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
     completePercentage:
@@ -371,6 +372,7 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
     showPrice: workOrder.showPricing ?? false,
     notifyVendor: workOrder.notifyVendor ?? false,
+    visibleToVendor: workOrder.visibleToVendor ?? false,
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {
@@ -473,6 +475,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     status: 34,
     showPricing: formValues.showPrice,
     notifyVendor: formValues.notifyVendor,
+    visibleToVendor: formValues.assignToVendor,
     projectId: projectId,
   }
 }

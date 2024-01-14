@@ -122,6 +122,7 @@ interface FormValues {
   vendorId: number | string | null
   completePercentage?: completePercentage
   locations?: any
+  assignToVendor?: boolean
 }
 
 const WorkOrderDetailTab = props => {
@@ -167,6 +168,8 @@ const WorkOrderDetailTab = props => {
     name: 'assignedItems',
   })
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const assignVendor = useWatch({ name: 'assignToVendor', control })
+
   const assignItemsSum = assignedItemsArray.fields.map(a => a.completePercentage).reduce((prev, curr) => prev + curr, 0)
   const totalAssignItems = assignedItemsArray.fields.length
 
@@ -435,7 +438,7 @@ const WorkOrderDetailTab = props => {
                             </FormLabel>
                             <Controller
                               control={control}
-                              rules={{ required: 'This is required' }}
+                              rules={assignVendor ? { required: 'This is required' } : undefined}
                               name="vendorSkillId"
                               render={({ field, fieldState }) => {
                                 return (
@@ -450,7 +453,11 @@ const WorkOrderDetailTab = props => {
                                         setValue('vendorId', null)
                                         field.onChange(option)
                                       }}
-                                      selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
+                                      selectProps={
+                                        assignVendor
+                                          ? { isBorderLeft: true, menuHeight: '175px' }
+                                          : { menuHeight: '175px' }
+                                      }
                                     />
                                   </>
                                 )
@@ -469,7 +476,7 @@ const WorkOrderDetailTab = props => {
                             </FormLabel>
                             <Controller
                               control={control}
-                              rules={{ required: 'This is required' }}
+                              rules={assignVendor ? { required: 'This is required' } : undefined}
                               name="vendorId"
                               render={({ field, fieldState }) => {
                                 return (
@@ -479,7 +486,11 @@ const WorkOrderDetailTab = props => {
                                       options={vendorOptions}
                                       size="md"
                                       loadingCheck={loadingVendors}
-                                      selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
+                                      selectProps={
+                                        assignVendor
+                                          ? { isBorderLeft: true, menuHeight: '175px' }
+                                          : { menuHeight: '175px' }
+                                      }
                                       onChange={option => {
                                         setSelectedVendorId(option.value)
                                         field.onChange(option)
@@ -580,9 +591,9 @@ const WorkOrderDetailTab = props => {
                     css={calendarIcon}
                     isDisabled={!workOrderStartDateEnable || isWOCancelled}
                     min={clientStart as any}
-                    variant="required-field"
+                    variant={assignVendor ? 'required-field' : 'outline'}
                     {...register('workOrderStartDate', {
-                      required: 'This is required field.',
+                      required: assignVendor ? 'This is required field.' : undefined,
                     })}
                   />
                 </FormControl>
@@ -600,9 +611,9 @@ const WorkOrderDetailTab = props => {
                     css={calendarIcon}
                     min={woStartDate as string}
                     isDisabled={!workOrderExpectedCompletionDateEnable || isWOCancelled}
-                    variant="required-field"
+                    variant={assignVendor ? 'required-field' : 'outline'}
                     {...register('workOrderExpectedCompletionDate', {
-                      required: 'This is required field.',
+                      required: assignVendor ? 'This is required field.' : undefined,
                     })}
                   />
                 </FormControl>
