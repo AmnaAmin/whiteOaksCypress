@@ -349,7 +349,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     showPricing: formValues.showPrice,
     assignedItems: [...assignedItems],
     notifyVendor: formValues.notifyVendor,
-    visibleToVendor: formValues.visibleToVendor,
+    visibleToVendor: formValues.assignToVendor,
     vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
     completePercentage:
@@ -472,7 +472,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     capacity: selectedCapacity,
     assignedItems: formValues?.assignedItems?.length > 0 ? assignedItems : [],
     documents,
-    status: 34,
+    status: formValues.assignToVendor ? 34 : 1035,
     showPricing: formValues.showPrice,
     notifyVendor: formValues.notifyVendor,
     visibleToVendor: formValues.assignToVendor,
