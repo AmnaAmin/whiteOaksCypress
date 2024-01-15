@@ -44,11 +44,6 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
   const { marketSelectOptions: marketOptions, markets } = useMarkets()
   const [message, setMessage] = useState('')
   const { mutate: createNotes } = useClientNoteMutation(null)
-  const showForPreProdAndLocal =
-    window.location.href.includes('preprod') ||
-    window.location.href.includes('localhost:') ||
-    window.location.href.includes('dev')
-
   const setNextTab = () => {
     setTabIndex(tabIndex + 1)
   }
@@ -127,7 +122,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
             <TabCustom isError={isCarrierTabErrors && tabIndex !== 1}>{t(`${CLIENTS}.carrier`)}</TabCustom>
             <TabCustom>{t('market')}</TabCustom>
             <TabCustom>{t('notes')}</TabCustom>
-            {clientDetails && showForPreProdAndLocal && <Tab data-testid="client_messages">{t('messages')}</Tab>}
+            {clientDetails && <Tab data-testid="client_messages">{t('messages')}</Tab>}
           </TabList>
           <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px" width="1165px">
             <TabPanels mt="20px">
@@ -148,7 +143,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
               <TabPanel p="0px">
                 <ClientNotes clientDetails={clientDetails} onClose={props.onClose} setMessage={setMessage} />
               </TabPanel>
-              {clientDetails && showForPreProdAndLocal && (
+              {clientDetails && (
                 <TabPanel p="0px">
                   <Box w="100%" height={493}>
                     <Messages id={clientDetails.id} entity="client" />
