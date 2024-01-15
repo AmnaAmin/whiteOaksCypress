@@ -13,6 +13,7 @@ import {
   FormErrorMessage,
   Checkbox,
   Image,
+  Text,
   IconButton,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -55,7 +56,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     register,
     watch,
   } = formReturn
-
+  const contactFormValue = watch()
   const { t } = useTranslation()
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
@@ -229,17 +230,24 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 {t('businessName')}
               </FormLabel>
               <Input
-                type="text"
-                data-testId="companyName"
-                variant="required-field"
-                {...register('companyName', {
-                  required: isActive && 'This is required',
-                  onChange: e => {
-                    setValue('companyName', e.target.value)
-                  },
-                })}
-                size="md"
-              />
+              type="text"
+              data-testId="companyName"
+              variant="required-field"
+              {...register('companyName', {
+                required: isActive && 'This is required',
+                maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                onChange: e => {
+                  setValue('companyName', e.target.value)
+                },
+              })}
+              size="md"
+              maxLength={255}
+            />
+            {contactFormValue.companyName !== undefined && contactFormValue.companyName?.length === 255 && (
+              <Text color="red" fontSize="xs" w="215px">
+                Please use 255 characters only.
+              </Text>
+            )}
               <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -253,12 +261,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant="required-field"
                 {...register('ownerName', {
                   required: isActive && 'This is required',
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 20 characters)' },
                   onChange: e => {
                     setValue('ownerName', e.target.value)
                   },
                 })}
                 size="md"
-              />
+                maxLength={255}
+                />
+                {contactFormValue.ownerName !== undefined && contactFormValue.ownerName?.length === 255 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos="absolute">{errors.ownerName && errors.ownerName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -272,14 +287,20 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="email"
                 {...register('businessEmailAddress', {
-                  required: isActive && 'This is required',
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   onChange: e => {
                     setValue('businessEmailAddress', e.target.value)
                   },
                 })}
                 variant="required-field"
-                size="md"
-              />
+                size="md"       
+                maxLength={255}
+                />
+                {contactFormValue.businessEmailAddress !== undefined && contactFormValue.businessEmailAddress?.length === 255 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -343,6 +364,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 type="text"
                 {...register('streetAddress', {
                   required: isActive && 'This is required',
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   onChange: e => {
                     setValue('streetAddress', e.target.value)
                   },
@@ -350,7 +372,13 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant="required-field"
                 size="md"
-              />
+                maxLength={255}
+                />
+                {contactFormValue.streetAddress !== undefined && contactFormValue.streetAddress?.length === 255 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -362,6 +390,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="text"
                 {...register('city', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   required: isActive && 'This is required',
                   onChange: e => {
                     setValue('city', e.target.value)
@@ -371,7 +400,13 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant="required-field"
                 size="md"
                 onKeyPress={preventNumber}
-              />
+                maxLength={255}
+                />
+                {contactFormValue.city !== undefined && contactFormValue.city?.length === 255 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -407,6 +442,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 type="number"
                 {...register('zipCode', {
                   required: isActive && 'This is required',
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   onChange: e => {
                     setValue('zipCode', e.target.value)
                   },
@@ -414,7 +450,13 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant="required-field"
                 size="md"
-              />
+                maxLength={255}
+                />
+                {contactFormValue.zipCode !== undefined && contactFormValue.zipCode?.length === 255 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -433,13 +475,21 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 id="bankName"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 {...register('bankName', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 size="md"
+                maxLength={255}
               />
+              {contactFormValue.bankName !== undefined && contactFormValue.bankName?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.bankName && errors.bankName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
+
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.bankPrimaryContact}>
               <FormLabel variant="strong-label" size="md">
@@ -450,10 +500,17 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 id="bankPrimaryContact"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 {...register('bankPrimaryContact', {
+                  maxLength: { value: 45, message: 'Character limit reached (maximum 45 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 size="md"
-              />
+                maxLength={45}
+                />
+                {contactFormValue.bankPrimaryContact !== undefined && contactFormValue.bankPrimaryContact?.length === 45 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 45 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos="absolute">
                 {errors.bankPrimaryContact && errors.bankPrimaryContact?.message}
               </FormErrorMessage>
@@ -469,11 +526,18 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="email"
                 {...register('bankEmail', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-              />
+                maxLength={255}
+                />
+                {contactFormValue.bankEmail !== undefined && contactFormValue.bankEmail?.length === 255 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos={'absolute'}>{errors.bankEmail?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -519,12 +583,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="text"
                 {...register('bankAddress', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-              />
+                maxLength={255}
+                />
+                {contactFormValue.bankAddress !== undefined && contactFormValue.bankAddress?.length === 255 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos="absolute">{errors.bankAddress?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -536,13 +607,20 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="text"
                 {...register('bankCity', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 onKeyPress={preventNumber}
-              />
+                maxLength={255}
+                />
+                {contactFormValue.bankCity !== undefined && contactFormValue.bankCity?.length === 255 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos="absolute">{errors.bankCity?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -577,12 +655,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="number"
                 {...register('bankZipCode', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-              />
+                maxLength={255}
+                />
+                {contactFormValue.bankZipCode !== undefined && contactFormValue.bankZipCode?.length === 255 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos="absolute">{errors.bankZipCode?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -594,12 +679,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="number"
                 {...register('bankRoutingNo', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-              />
+                maxLength={255}
+                />
+                {contactFormValue.bankRoutingNo !== undefined && contactFormValue.bankRoutingNo?.length === 255 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos="absolute">{errors.bankRoutingNo?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -611,12 +703,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <Input
                 type="number"
                 {...register('bankAccountingNo', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-              />
+                maxLength={2}
+                />
+                {contactFormValue.bankAccountingNo !== undefined && contactFormValue.bankAccountingNo?.length === 2 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 255 characters only.
+                  </Text>
+                )}
               <FormErrorMessage pos="absolute">{errors.bankAccountingNo?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
