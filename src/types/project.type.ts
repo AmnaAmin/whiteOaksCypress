@@ -116,6 +116,7 @@ export type Project = {
   reconciledbyDesc: string | null
   projectStartDate: string | null
   punchDate?: string | null
+  awaitingPunchDate?: string | null
   closedDate?: string | null
   disputedDate?: string | null
   payDateVariance?: number | null
