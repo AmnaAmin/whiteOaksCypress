@@ -409,7 +409,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     if (isAdmin) {
       if (
         transaction?.status?.toLocaleUpperCase() === TransactionStatusValues.approved &&
-        materialAndDraw &&
+        materialAndDraw &&  !isRefund &&
         totalItemsAmount > -1 * transaction?.changeOrderAmount! + selectedWorkOrderStats?.totalAmountRemaining!
       ) {
         toast({

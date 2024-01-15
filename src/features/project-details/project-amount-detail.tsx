@@ -18,18 +18,18 @@ const InfoStructureCard: React.FC<{ amount; isLoading: boolean, icon: IconType, 
   ...rest
 }) => {
   return (
-    <Center flexDir="column"  bg={bg} borderRight="1px solid  #E5E5E5" height="68px" marginBottom={5} marginTop={0} px={4} flex={rest.flex || 1} {...rest}>
+    <Center flexDir="column" borderRight="1px solid  #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
       <Box fontSize="16px" fontWeight={500} color="#4A5568" >
-      <Flex alignItems="center">
+      <Flex alignItems="center" mt='17px'>
     <Icon as={icon} boxSize={6} marginLeft={2} color={iconColor}/>
-    <Text fontSize="12px"  marginLeft={2} >
+    <Text fontSize="14px" marginLeft={2}>
       {title}
     </Text>
   </Flex>
         {isLoading ? (
           <BlankSlate size="sm" />
         ) : (
-          <Text data-testid={testId}  color="#4A5568" marginLeft={7} fontSize="20px" fontStyle="medium" fontWeight="500" >
+          <Text data-testid={testId} color="#4A5568" marginLeft={7} fontSize="20px" fontStyle="medium" fontWeight="500" marginBottom={4}>
             {amount}
           </Text>
         )}
@@ -53,7 +53,16 @@ export const AmountDetailsCard: React.FC<{ projectId?: string }> = ({ projectId 
   } = useGetProjectFinancialOverview(projectId) // revenue
 
   return (
-    <Flex marginTop="9px !important" py={3} h={{ base: 'unset', xl: '97px' }} w="100%" bg="white" borderRadius="4px" border="1px solid #E5E5E5" box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)">
+    <Flex
+      marginTop="9px !important"
+      py={5}
+      h={{ base: 'unset', xl: '80px' }}
+      w="100%"
+      bg="white"
+      borderRadius="4px"
+      border="1px solid #E5E5E5"
+      box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
+    >
      <InfoStructureCard
      bg='42CA7E'
   icon={FinalSowIcon}
