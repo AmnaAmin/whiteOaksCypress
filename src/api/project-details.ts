@@ -427,8 +427,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       // Project Status -> Disputed
       // In case of disputed, all the cases will be implemented on the basis of previous Status
       else if (projectStatusId === Number(PROJECT_STATUS.disputed.value)) {
-        overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.reconcile,
-          PROJECT_STATUS.awaitingpunch]
+        overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.reconcile]
         // Last Project Status -> Active
         if (previousProjectStatus === Number(PROJECT_STATUS.active.value)) {
           overrideProjectStatusOptions = [
