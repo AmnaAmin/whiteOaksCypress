@@ -137,7 +137,7 @@ export const useFieldsRequired = (control: Control<ProjectDetailsFormValues>) =>
   const projectStatus = status?.value
   const isStatusActive = projectStatus === STATUS.Active
   const isStatusClosed = projectStatus === STATUS.Closed
-  const isStatusAwaitingPunch = projectStatus === STATUS.AwaitingPunch
+  const isStatusAwaitingPunch = projectStatus === STATUS.Awaitingpunch
   const isStatusPunch = projectStatus === STATUS.Punch
   const isStatusReconcile = projectStatus === STATUS.Reconcile
 

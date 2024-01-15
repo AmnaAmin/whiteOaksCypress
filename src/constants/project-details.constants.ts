@@ -9,8 +9,8 @@ const OPTIONS = {
     value: ProjectStatus.Active,
     label: 'Active',
   },
-  [ProjectStatus.AwaitingPunch]: {
-    value: ProjectStatus.AwaitingPunch,
+  [ProjectStatus.Awaitingpunch]: {
+    value: ProjectStatus.Awaitingpunch,
     label: 'Awaiting Punch',
   },
   [ProjectStatus.Punch]: {
@@ -55,17 +55,17 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
   [ProjectStatus.New]: [OPTIONS[ProjectStatus.New], OPTIONS[ProjectStatus.Active], OPTIONS[ProjectStatus.Cancelled]],
   [ProjectStatus.Active]: [
     OPTIONS[ProjectStatus.Active],
-    OPTIONS[ProjectStatus.AwaitingPunch],
+    OPTIONS[ProjectStatus.Awaitingpunch],
    
   ],
-  [ProjectStatus.AwaitingPunch]: [
+  [ProjectStatus.Awaitingpunch]: [
     OPTIONS[ProjectStatus.Active],
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Cancelled],
   ],
   [ProjectStatus.Punch]: [
     OPTIONS[ProjectStatus.Active],
-    OPTIONS[ProjectStatus.AwaitingPunch],
+    OPTIONS[ProjectStatus.Awaitingpunch],
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Reconcile],
     OPTIONS[ProjectStatus.Closed],
@@ -74,7 +74,7 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
   ],
   [ProjectStatus.Reconcile]: [
     OPTIONS[ProjectStatus.Active],
-    OPTIONS[ProjectStatus.AwaitingPunch],
+    OPTIONS[ProjectStatus.Awaitingpunch],
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Closed],
     OPTIONS[ProjectStatus.Cancelled],

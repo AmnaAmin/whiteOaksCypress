@@ -228,7 +228,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       if (
         numberOfWorkOrders !== numberOfCompletedWorkOrders &&
         projectStatusId === ProjectStatus.Active &&
-        optionValue === ProjectStatus.AwaitingPunch
+        optionValue === ProjectStatus.Awaitingpunch
       ) {
         return {
           ...selectOption,
@@ -242,7 +242,7 @@ export const useProjectStatusSelectOptions = (project: Project) => {
       if (
         numberOfWorkOrders !== numberOfCompletedWorkOrders &&
         projectStatusId === ProjectStatus.Disputed &&
-        optionValue === ProjectStatus.AwaitingPunch
+        optionValue === ProjectStatus.Awaitingpunch
       ) {
         return {
           ...selectOption,
