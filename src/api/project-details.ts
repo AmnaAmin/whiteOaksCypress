@@ -675,6 +675,7 @@ export const parseFormValuesFromAPIData = ({
     // Misc form values
     dateCreated: getLocalTimeZoneDate(project.createdDate as string),
     activeDate: getLocalTimeZoneDate(projectExtraAttributes?.activeDate as string),
+    awaitingPunchDate:getLocalTimeZoneDate(projectExtraAttributes?.awaitingPunchDate as string),
     punchDate: getLocalTimeZoneDate(projectExtraAttributes?.punchDate as string),
     closedDate: getLocalTimeZoneDate(project.projectClosedDate as string),
     clientPaidDate: getLocalTimeZoneDate(project.clientPaidDate as string),
