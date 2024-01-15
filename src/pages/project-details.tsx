@@ -156,7 +156,7 @@ export const ProjectDetails: React.FC = props => {
                   STATUS.Cancelled,
                   STATUS.Paid,
                   STATUS.Punch,
-                  STATUS.AwaitingPunch,
+                  STATUS.Awaiting_punch,
                   STATUS.ClientPaid,
                   STATUS.Overpayment,
                   STATUS.Reconcile,
