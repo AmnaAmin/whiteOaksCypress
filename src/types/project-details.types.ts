@@ -22,7 +22,7 @@ export enum ProjectStatus {
   Overpayment = 109,
   Disputed = 220,
   Reconcile = 120,
-  AwaitingPunch = 121,
+  AwaitingPunch = 190,
 }
 
 type ProjectManagementValues = {
