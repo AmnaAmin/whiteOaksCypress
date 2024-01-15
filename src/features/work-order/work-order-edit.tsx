@@ -98,9 +98,6 @@ const WorkOrderDetails = ({
   const { data: locations } = useLineItemsLocation()
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems
-  const showForPreProd = window.location.href.includes('preprod')
-  const showForPreProdAndLocal =
-    showForPreProd || window.location.href.includes('localhost:') || window.location.href.includes('dev')
 
   useEffect(() => {
     if (workOrderDetails) {
@@ -216,7 +213,7 @@ const WorkOrderDetails = ({
                 <Tab data-testid="wo_invoice">{t('invoice')}</Tab>
                 <Tab data-testid="wo_payments">{t('payments')}</Tab>
                 <Tab data-testid="wo_notes">{t('notes')}</Tab>
-                {showForPreProdAndLocal && <Tab data-testid="wo_messages">{t('messages')}</Tab>}
+                <Tab data-testid="wo_messages">{t('messages')}</Tab>
 
                 {showRejectInvoice &&
                   [STATUS.Invoiced, STATUS.Rejected].includes(
@@ -368,19 +365,17 @@ const WorkOrderDetails = ({
                       />
                     )}
                   </TabPanel>
-                  {showForPreProdAndLocal && (
-                    <TabPanel p={0}>
-                      {isLoadingWorkOrder ? (
-                        <Center h={'600px'}>
-                          <Spinner size="xl" />
-                        </Center>
-                      ) : (
-                        <Box w="100%" h="680px">
-                          <Messages id={workOrder.id} entity="workOrder" projectId={projectId} value={projectData} />
-                        </Box>
-                      )}
-                    </TabPanel>
-                  )}
+                  <TabPanel p={0}>
+                    {isLoadingWorkOrder ? (
+                      <Center h={'600px'}>
+                        <Spinner size="xl" />
+                      </Center>
+                    ) : (
+                      <Box w="100%" h="680px">
+                        <Messages id={workOrder.id} entity="workOrder" projectId={projectId} value={projectData} />
+                      </Box>
+                    )}
+                  </TabPanel>
                 </TabPanels>
               </Card>
             </Tabs>
