@@ -80,6 +80,10 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
   const { mutate: saveAccounts } = useSaveVendorDetails('Accounts')
   const { mutate: createVendor } = useCreateVendorMutation()
+  const showForPreProdAndLocal =
+    window.location.href.includes('preprod') ||
+    window.location.href.includes('localhost:') ||
+    window.location.href.includes('dev')
 
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState<any>(0)
@@ -256,7 +260,9 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   {t('vendorProfileAccount')}
                 </Tab>
               )}
-              {!isVendor && vendorProfileData?.id && <Tab data-testid="vendor_messages">{t('messages')}</Tab>}
+              {!isVendor && vendorProfileData?.id && showForPreProdAndLocal && (
+                <Tab data-testid="vendor_messages">{t('messages')}</Tab>
+              )}
             </TabList>
 
             <Box py="21px" px="16px" display={{ base: 'block', sm: 'none' }}>
@@ -384,7 +390,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                     </Box>
               </TabPanel> */}
                 {/* <TabPanel p="0px"></TabPanel> */}
-                {!!vendorProfileData && (
+                {!!vendorProfileData && showForPreProdAndLocal && (
                   <TabPanel p={0}>
                     <Box w="100%" h="710px">
                       <Messages id={vendorProfileData?.id} entity="vendor" />
