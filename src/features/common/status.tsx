@@ -11,13 +11,14 @@ export enum PERFORM {
   CoPer20 = 'CO-Perform 20',
   COPer14 = 'CO-Perform 14',
   CoPer7 = 'CO-Perform 7',
-  NewPlan1='$0 - $10,000',
-  NewPlan2='$10,001 - $25,000',
-  NewPlan3='$25,001 - $50,000',
-  NewPlan4='> $50,000',
+  NewPlan1 = '$0 - $10,000',
+  NewPlan2 = '$10,001 - $25,000',
+  NewPlan3 = '$25,001 - $50,000',
+  NewPlan4 = '> $50,000',
 }
 
 export enum STATUS {
+  Draft = 'draft',
   Paid = 'paid',
   Active = 'active',
   Approved = 'approved',
@@ -43,7 +44,7 @@ export enum STATUS {
   Reconcile = 'reconcile',
   Rejected = 'rejected',
   Pending_payment = 'pending_payment',
-  Partial_paid = 'partial paid'
+  Partial_paid = 'partial paid',
 }
 
 const STATUS_COLOR = {
@@ -72,7 +73,7 @@ const STATUS_COLOR = {
   [STATUS.Rejected]: { color: '#9F7AEA', backgroundColor: '#FAF5FF' },
   [STATUS.Reconcile]: { color: '#4A5568', backgroundColor: '#F8F6CD' },
   [STATUS.Pending_payment]: { color: '#0BC5EA', backgroundColor: '#C4F1F9' },
-  [STATUS.Partial_paid]: { color: '#D69E2E', backgroundColor: '#FFFBF4' }
+  [STATUS.Partial_paid]: { color: '#D69E2E', backgroundColor: '#FFFBF4' },
 }
 
 const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {

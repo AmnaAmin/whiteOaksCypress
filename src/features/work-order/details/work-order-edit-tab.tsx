@@ -390,9 +390,15 @@ const WorkOrderDetailTab = props => {
 
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
 
-  const inProgress = [STATUS.Active, STATUS.PastDue, STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
-    workOrder.statusLabel?.toLowerCase(),
-  )
+  const inProgress = [
+    STATUS.Draft,
+    STATUS.Active,
+    STATUS.PastDue,
+    STATUS.Completed,
+    STATUS.Invoiced,
+    STATUS.Rejected,
+  ].includes(workOrder.statusLabel?.toLowerCase())
+
   useEffect(() => {
     if (isReadOnly) {
       Array.from(document.querySelectorAll('input')).forEach(input => {
@@ -509,18 +515,22 @@ const WorkOrderDetailTab = props => {
                           date={companyName}
                         />
                       )}
-                      <InformationCard
-                        testId="email"
-                        title={t(`${WORK_ORDER}.email`)}
-                        date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
-                        customStyle={{ width: '150px', height: '20px' }}
-                      />
-                      <InformationCard
-                        testId="phone"
-                        title={t(`${WORK_ORDER}.phone`)}
-                        date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
-                        customStyle={{ width: '150px', height: '20px' }}
-                      />
+                      {businessPhoneNumber && businessEmailAddress && (
+                        <>
+                          <InformationCard
+                            testId="email"
+                            title={t(`${WORK_ORDER}.email`)}
+                            date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
+                            customStyle={{ width: '150px', height: '20px' }}
+                          />
+                          <InformationCard
+                            testId="phone"
+                            title={t(`${WORK_ORDER}.phone`)}
+                            date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
+                            customStyle={{ width: '150px', height: '20px' }}
+                          />
+                        </>
+                      )}
                     </HStack>
                   </Box>
                 </>
