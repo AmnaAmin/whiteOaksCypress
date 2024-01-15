@@ -59,8 +59,10 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
    
   ],
   [ProjectStatus.Awaitingpunch]: [
+    OPTIONS[ProjectStatus.Awaitingpunch],
     OPTIONS[ProjectStatus.Active],
     OPTIONS[ProjectStatus.Punch],
+    OPTIONS[ProjectStatus.Disputed],
     OPTIONS[ProjectStatus.Cancelled],
   ],
   [ProjectStatus.Punch]: [

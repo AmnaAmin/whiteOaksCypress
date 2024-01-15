@@ -27,7 +27,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
   const isStatusPaid = projectStatus === STATUS.Paid
   // const isStatusPastDue = projectStatus === STATUS.PastDue
   const isStatusCancelled = projectStatus === STATUS.Cancelled
-
+  const isStatusAwaitingPunch = projectStatus === STATUS.Awaitingpunch
   const isStatusReconciled = projectStatus === STATUS.Reconcile
   // Enabled field status on location tab
   const newActivePunchEnabledFieldStatus =
@@ -80,6 +80,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isClientWalkthroughDisabled:
       isStatusNew ||
       isStatusActive ||
+      isStatusAwaitingPunch||
       isStatusInvoiced ||
       (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
@@ -87,6 +88,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isClientSignOffDisabled:
       isStatusNew ||
       isStatusActive ||
+      isStatusAwaitingPunch||
       (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
       isStatusOverPayment ||

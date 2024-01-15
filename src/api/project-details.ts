@@ -357,7 +357,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
         overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.new, PROJECT_STATUS.disputed]
       }
        // Project Status -> Awaiting Punch
-       else if (projectStatusId === Number(PROJECT_STATUS.awaitingPunch.value)) {
+       else if (projectStatusId === Number(PROJECT_STATUS.awaitingpunch.value)) {
         overrideProjectStatusOptions = [
           selectOption,
           PROJECT_STATUS.new,
@@ -370,7 +370,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
           selectOption,
           PROJECT_STATUS.new,
           PROJECT_STATUS.active,
-          PROJECT_STATUS.awaitingPunch,
+          PROJECT_STATUS.awaitingpunch,
         ]
       }
       // Project Status -> Reconcile
@@ -383,6 +383,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
           selectOption,
           PROJECT_STATUS.new,
           PROJECT_STATUS.active,
+          PROJECT_STATUS.awaitingpunch,
           PROJECT_STATUS.punch,
           PROJECT_STATUS.disputed,
         ]

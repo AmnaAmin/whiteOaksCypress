@@ -113,5 +113,5 @@ export const PROJECT_STATUS = {
   overpayment: { value: '109', label: 'Overpayment' },
   disputed: { value: '220', label: 'DISPUTED' },
   reconcile: { value: '120', label: 'RECONCILE' },
-  awaitingPunch: { value: '190', label: 'AWAITING PUNCH' },
+  awaitingpunch: { value: '190', label: 'AWAITING PUNCH' },
 }
