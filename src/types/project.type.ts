@@ -136,6 +136,8 @@ export type Project = {
   resubmissionDTOList: ResubmissionListItem[]
   clientTypeId: string | number
   validForNewInvoice: boolean
+  carrier?: SelectOption | null
+  carrierName: SelectOption | null
 }
 
 export type ProjectExtraAttributesType = {
@@ -280,6 +282,7 @@ export type ProjectFormValues = {
   agentPhone: string | null
   agentEmail: string | null
   clientType: string | null
+  carrierName: SelectOption | null
 }
 
 export type Market = {

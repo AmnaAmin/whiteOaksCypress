@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState, ChangeEvent } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   FormErrorMessage,
   FormLabel,
@@ -17,10 +17,9 @@ import {
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
-import addDays from 'date-fns/addDays'
 import { datePickerFormat } from 'utils/date-time-utils'
 import Select from 'components/form/react-select'
-
+import { isWednesday, nextFriday, nextWednesday } from 'date-fns'
 import {
   AGAINST_DEFAULT_VALUE,
   parseChangeOrderAPIPayload,
@@ -77,6 +76,7 @@ import { calendarIcon } from 'theme/common-style'
 // import { BiCalendar, BiDetail } from 'react-icons/bi'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import {
+  REASON_STATUS_OPTIONS,
   REQUIRED_FIELD_ERROR_MESSAGE,
   STATUS_SHOULD_NOT_BE_PENDING_ERROR_MESSAGE,
   TRANSACTION_FPM_DM_STATUS_OPTIONS,
@@ -87,6 +87,7 @@ import { format } from 'date-fns'
 import UpdateProjectAward from './update-project-award'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
 import { useLocation } from 'react-router-dom'
+import moment from 'moment'
 
 // const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
 //   const { t } = useTranslation()
@@ -162,6 +163,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
+  const { pathname } = useLocation()
+  const { permissions } = useRoleBasedPermissions()
   const { isVendor } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
@@ -170,10 +173,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const [disableBtn, setDisableBtn] = useState(false)
   const [fileParseMsg, setFileParseMsg] = useState(false)
   const { isOpen: isProjectAwardOpen, onClose: onProjectAwardClose, onOpen: onProjectAwardOpen } = useDisclosure()
-  const { pathname } = useLocation()
+
   const isPayable = pathname?.includes('payable')
-  const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
-  const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isPayableRead = permissions.includes('PAYABLE.READ') && isPayable
+  const isProjRead = permissions?.includes('PROJECT.READ')
   const isReadOnly = isPayableRead || isProjRead
   // const [document, setDocument] = useState<File | null>(null)
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
@@ -184,7 +187,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isManagingFPM = managerEnabled?.allowed
   const isInvoiceTransaction =
     transaction?.transactionType === TransactionTypeValues.payment && !!transaction?.invoiceNumber
-  const isShowFpm = !!transaction
+ 
   const {
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
@@ -196,7 +199,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
 
-  const { awardPlansStats, refetch: refetchAwardStats } = useWorkOrderAwardStats(projectId)
+
 
   const { mutate: createChangeOrder, isLoading: isChangeOrderSubmitLoading } = useChangeOrderMutation(projectId)
   const { mutate: updateChangeOrder, isLoading: isChangeOrderUpdateLoading } = useChangeOrderUpdateMutation(projectId)
@@ -229,7 +232,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   } = formReturn
 
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
-  const against = useWatch({ name: 'against', control })
+  const against = useWatch({ name: 'against', control }) as any
   const transType = useWatch({ name: 'transactionType', control })
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
@@ -237,33 +240,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const watchStatus = useWatch({ name: 'status', control })
   const verifyByFPMStatus = useWatch({ name: 'verifiedByFpm', control })
   const verifyByManagerStatus = useWatch({ name: 'verifiedByManager', control })
-
-  const onInvoiceBackDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const date = new Date(e.target.value)
-    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-    const paymentTerm = getValues().paymentTerm?.value
-
-    // Do not calculated WOA expect date if payment term is not selected
-    if (!paymentTerm) return
-
-    const payAfterDate = addDays(utcDate, paymentTerm)
-    setValue('payAfterDate', datePickerFormat(payAfterDate))
-  }
-
-  const onPaymentTermChange = (option: SelectOption) => {
-    const { invoicedDate } = getValues()
-    if (invoicedDate === null || invoicedDate === '') {
-      return
-    }
-
-    const date = new Date(invoicedDate as string)
-    const utcDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate())
-    const paymentTerm = Number(option.value)
-
-    if (!date) return
-    const payAfterDate = addDays(utcDate, paymentTerm)
-    setValue('payAfterDate', datePickerFormat(payAfterDate))
-  }
+  const { awardPlansStats, refetch: refetchAwardStats } = useWorkOrderAwardStats(projectId,against?.isValidForNewAwardPlan, workOrderId)
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
@@ -275,7 +252,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isPaidDateDisabled,
     isStatusDisabled,
     lateAndFactoringFeeForVendor,
-    isFactoringFeeSysGenerated,
+    // isFactoringFeeSysGenerated,
   } = useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
 
   const {
@@ -295,7 +272,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     transaction,
   })
 
-  const { permissions } = useRoleBasedPermissions()
   /* add permissions to verify by fpm and district manager*/
   const isEnabledToOverrideNTE = permissions.some(p =>
     ['PROJECTDETAIL.TRANSACTION.NTEPERCENTAGE.OVERRIDE', 'ALL'].includes(p),
@@ -303,7 +279,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isEnabledForVerifyingAsFPM = permissions.some(p =>
     ['PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT', 'ALL'].includes(p),
   )
-  const isAdmin = useRoleBasedPermissions()?.permissions?.includes('ALL')
+  const isAdmin = permissions?.includes('ALL')
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
   const selectedCancelledOrDenied = [TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(
@@ -321,6 +297,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowWorkOrderSelectField,
     isShowNewExpectedCompletionDateField,
     isShowExpectedCompletionDateField,
+     isShowReasonField,
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     isShowPaidBackDateField,
@@ -328,6 +305,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowPaymentRecievedDateField,
     isPaymentTermDisabled,
     isShowDM,
+    isShowFpm,
     isShowDrawFieldAgainstWO,
   } = useFieldShowHideDecision(control, transaction)
 
@@ -430,31 +408,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   // If the admin changes amount in any other status (pending/denied/cancelled), he is allowed to enter an amount less than remaining amount.
   const isAdminEnabledToChange = values => {
     if (isAdmin) {
-      const statuses = [watchStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
-      const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
-        statuses.includes(p),
-      )
-      if (isBeingCancelled) {
-        return true
-      }
       if (
         transaction?.status?.toLocaleUpperCase() === TransactionStatusValues.approved &&
-        materialAndDraw &&
+        materialAndDraw &&  !isRefund &&
         totalItemsAmount > -1 * transaction?.changeOrderAmount! + selectedWorkOrderStats?.totalAmountRemaining!
-      ) {
-        toast({
-          title: 'Error',
-          description: t(`PaymentRemaining`),
-          status: 'error',
-          duration: 9000,
-          isClosable: true,
-          position: 'top-left',
-        })
-        return false
-      } else if (
-        transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
-        materialAndDraw &&
-        totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
       ) {
         toast({
           title: 'Error',
@@ -472,11 +429,32 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const onSubmit = useCallback(
     async (values: FormValues) => {
-      if (hasPendingDrawsOnPaymentSave(values)) {
-        return
-      }
-      if (!isAdminEnabledToChange(values)) {
-        return
+      const statuses = [watchStatus?.value, verifyByFPMStatus?.value, verifyByManagerStatus?.value]
+      const isBeingCancelled = [TransactionStatusValues.cancelled, TransactionStatusValues.denied]?.some(p =>
+        statuses.includes(p),
+      )
+      if (!isBeingCancelled) {
+        if (hasPendingDrawsOnPaymentSave(values)) {
+          return
+        }
+        if (!isAdminEnabledToChange(values)) {
+          return
+        }
+        if (
+          transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
+          materialAndDraw && !isRefund &&
+          totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
+        ) {
+          toast({
+            title: 'Error',
+            description: t(`PaymentRemaining`),
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position: 'top-left',
+          })
+          return false
+        }
       }
       const queryOptions = {
         onSuccess(res) {
@@ -485,7 +463,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           reset()
         },
       }
-
+ 
       // In case of id exists in transaction object it will be update call to save transaction.
       if (transaction?.id) {
         const payload = await parseChangeOrderUpdateAPIPayload(values, transaction, projectId)
@@ -506,6 +484,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       watchStatus,
       verifyByFPMStatus,
       verifyByManagerStatus,
+      isRefund,
     ],
   )
 
@@ -564,6 +543,22 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const onModalClose = () => {
     reset(defaultValues)
     onClose()
+  }
+  const calculatePaymentDates = paymentTermDate => {
+    setValue('paymentTermDate', datePickerFormat(paymentTermDate))
+    if (!isWednesday(paymentTermDate)) {
+      setValue('paymentProcessed', datePickerFormat(nextWednesday(paymentTermDate)))
+    } else {
+      setValue('paymentProcessed', datePickerFormat(paymentTermDate))
+    }
+    const payAfter = moment(getValues('paymentProcessed') as string)?.toDate()
+    setValue('payAfterDate', datePickerFormat(nextFriday(payAfter)))
+  }
+
+  const calculateFirstFridayAfterDate = date => {
+    const processedDate = moment(date)
+    const daysUntilFriday = (5 - processedDate.day() + 7) % 7 // Calculate days until Friday
+    return processedDate.add(daysUntilFriday, 'days').toDate()
   }
 
   return (
@@ -789,39 +784,49 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                     </FormControl>
                   </GridItem>
                 )}
+                {isShowReasonField &&(
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.reason}>
+                      <FormLabel
+                        fontSize="14px"
+                        fontStyle="normal"
+                        fontWeight={500}
+                        color="gray.700"
+                        htmlFor="reason"
+                        whiteSpace="nowrap"
+                      >
+                        {t(`${TRANSACTION}.reason`)}
+                      </FormLabel>
+
+                      <Controller
+                        control={control}
+                        name="reason"
+                        rules={{ required: true }}
+                        render={({ field, fieldState }) => (
+                          <>
+                            <div data-testid="reason">
+                              <Select
+                              options={REASON_STATUS_OPTIONS}
+                              //  options={reasonTypes.map(reason => ({
+                              //   label: reason.value,
+                              //   value: reason.value,
+                              // }))}
+                                selectProps={{ isBorderLeft: true }}
+                                {...field}
+                              />
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </div>
+                          </>
+                        )}
+                      />
+
+                      <FormErrorMessage>{errors?.newExpectedCompletionDate?.message}</FormErrorMessage>
+                    </FormControl>
+                  </GridItem>
+                )}
 
                 {isTransactionTypeDrawAgainstProjectSOWSelected && (
                   <>
-                    <GridItem>
-                      <FormControl isInvalid={!!errors.paymentTerm}>
-                        <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.700" fontWeight={500}>
-                          {t(`${TRANSACTION}.paymentTerm`)}
-                        </FormLabel>
-                        <Controller
-                          control={control}
-                          name="paymentTerm"
-                          rules={{ required: isPaymentTermRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '' }}
-                          render={({ field, fieldState }) => (
-                            <>
-                              <div data-testid="payment-term-select">
-                                <Select
-                                  {...field}
-                                  selectProps={{ isBorderLeft: isPaymentTermRequired }}
-                                  options={PAYMENT_TERMS_OPTIONS}
-                                  isDisabled={isPaymentTermDisabled}
-                                  onChange={paymentTermOption => {
-                                    field.onChange(paymentTermOption)
-                                    onPaymentTermChange(paymentTermOption)
-                                  }}
-                                />
-                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                              </div>
-                            </>
-                          )}
-                        />
-                      </FormControl>
-                    </GridItem>
-
                     <GridItem>
                       <FormControl isInvalid={!!errors.invoicedDate}>
                         <FormLabel
@@ -843,38 +848,162 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           isDisabled={isApproved && !editInvoiceDate}
                           {...register('invoicedDate', {
                             required: isInvoicedDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
-                            onChange: onInvoiceBackDateChange,
                           })}
+                          onChange={e => {
+                            const dateInvSubmitted = e.target.value
+                            if (dateInvSubmitted && dateInvSubmitted !== '') {
+                              //using moment here to convert to date, to avoid shifting due to timezone
+                              const paymentTermDate = moment(dateInvSubmitted).add(
+                                parseInt(getValues('paymentTerm')?.value, 10),
+                                'days',
+                              )
+                              setValue('invoicedDate', datePickerFormat(dateInvSubmitted))
+                              calculatePaymentDates(paymentTermDate?.toDate())
+                              // trigger()
+                            } else {
+                              setValue('paymentTermDate', null)
+                              setValue('invoicedDate', null)
+                              setValue('payAfterDate', null)
+                              setValue('paymentProcessed', null)
+                            }
+                          }}
                         />
                         <FormErrorMessage>{errors?.invoicedDate?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
                     <GridItem>
-                      <FormControl isInvalid={!!errors.payDateVariance}>
+                      <FormControl isInvalid={!!errors.paymentTerm}>
+                        <FormLabel htmlFor="paymentTerm" fontSize="14px" color="gray.700" fontWeight={500}>
+                          {t(`${TRANSACTION}.paymentTerm`)}
+                        </FormLabel>
+                        <Controller
+                          control={control}
+                          name="paymentTerm"
+                          rules={{ required: isPaymentTermRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '' }}
+                          render={({ field, fieldState }) => (
+                            <>
+                              <div data-testid="payment-term-select">
+                                <Select
+                                  {...field}
+                                  selectProps={{ isBorderLeft: isPaymentTermRequired }}
+                                  options={PAYMENT_TERMS_OPTIONS}
+                                  isDisabled={isPaymentTermDisabled}
+                                  onChange={option => {
+                                    const dateInvSubmitted = getValues('invoicedDate')
+                                    field.onChange(option)
+                                    if (dateInvSubmitted && dateInvSubmitted !== '') {
+                                      const paymentTermDate = moment(dateInvSubmitted).add(option.value, 'days')
+                                      calculatePaymentDates(paymentTermDate?.toDate())
+                                      // trigger()
+                                    } else {
+                                      setValue('paymentTermDate', null)
+                                      setValue('payAfterDate', null)
+                                      setValue('invoicedDate', null)
+                                      setValue('paymentProcessed', null)
+                                    }
+                                  }}
+                                />
+                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              </div>
+                            </>
+                          )}
+                        />
+                      </FormControl>
+                    </GridItem>
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.paymentTermDate}>
                         <FormLabel
                           fontSize="14px"
                           fontStyle="normal"
                           fontWeight={500}
                           color="gray.700"
-                          htmlFor="payDateVariance"
+                          htmlFor="payTermDate"
                           whiteSpace="nowrap"
                         >
-                          {t(`${TRANSACTION}.payDateVariance`)}
+                          {t(`${TRANSACTION}.paymentTermDate`)}
                         </FormLabel>
                         <Input
-                          data-testid="pay-date-variance"
-                          id="payDateVariance"
-                          type="text"
-                          size="md"
-                          value={payDateVariance}
-                          css={calendarIcon}
+                          data-testid="pay-term-date"
+                          id="payTermDate"
+                          type="date"
+                          variant="outline"
                           isDisabled
-                          {...register('payDateVariance')}
+                          css={calendarIcon}
+                          isReadOnly
+                          {...register('paymentTermDate', {
+                            required: 'This is required',
+                          })}
                         />
-                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
+
+                        <FormErrorMessage>{errors?.paymentTermDate?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
 
+                    {isShowDrawFieldAgainstWO && (
+                      <>
+                      {!isVendor && (
+                        <GridItem>
+                          <FormControl isInvalid={!!errors.paymentProcessed}>
+                            <FormLabel
+                              fontSize="14px"
+                              fontStyle="normal"
+                              fontWeight={500}
+                              color="gray.700"
+                              htmlFor="paymentProcessed"
+                              whiteSpace="nowrap"
+                            >
+                              {t(`${TRANSACTION}.paymentProcessed`)}
+                            </FormLabel>
+                            <Input
+                              data-testid="payment-processed"
+                              id="paymentProcessed"
+                              type="date"
+                              isDisabled
+                              size="md"
+                              css={calendarIcon}
+                              {...register('paymentProcessed', {
+                                onChange: dateProcessed => {
+                                  setValue('paymentProcessed', dateProcessed)
+
+                                  // Calculate and set the Pay after date
+                                  const payAfterDate = calculateFirstFridayAfterDate(dateProcessed)
+                                  setValue('payAfterDate', payAfterDate.toISOString().split('T')[0])
+                                },
+                              })}
+                            />
+                            <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage>
+                          </FormControl>
+                        </GridItem>
+)}
+                        <GridItem>
+                          <FormControl isInvalid={!!errors.payAfterDate}>
+                            <FormLabel
+                              fontSize="14px"
+                              fontStyle="normal"
+                              fontWeight={500}
+                              color="gray.700"
+                              htmlFor="payAfterDate"
+                              whiteSpace="nowrap"
+                            >
+                              {t(`${TRANSACTION}.payAfterDate`)}
+                            </FormLabel>
+                            <Input
+                              data-testid="pay-after"
+                              id="payAfterDate"
+                              type="date"
+                              size="md"
+                              isDisabled
+                              css={calendarIcon}
+                              {...register('payAfterDate', {
+                                required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
+                              })}
+                            />
+                            <FormErrorMessage>{errors?.payAfterDate?.message}</FormErrorMessage>
+                          </FormControl>
+                        </GridItem>
+                        
+                      </>
+                    )}
                     <GridItem>
                       <FormControl isInvalid={!!errors.paidDate}>
                         <FormLabel
@@ -902,60 +1031,34 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                         <FormErrorMessage>{errors?.paidDate?.message}</FormErrorMessage>
                       </FormControl>
                     </GridItem>
-                    {isShowDrawFieldAgainstWO && (
-                      <>
-                        <GridItem>
-                          <FormControl isInvalid={!!errors.paymentProcessed}>
-                            <FormLabel
-                              fontSize="14px"
-                              fontStyle="normal"
-                              fontWeight={500}
-                              color="gray.700"
-                              htmlFor="paymentProcessed"
-                              whiteSpace="nowrap"
-                            >
-                              {t(`${TRANSACTION}.paymentProcessed`)}
-                            </FormLabel>
-                            <Input
-                              data-testid="payment-processed"
-                              id="paymentProcessed"
-                              type="date"
-                              isDisabled={isVendor}
-                              size="md"
-                              css={calendarIcon}
-                              {...register('paymentProcessed')}
-                            />
-                            <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage>
-                          </FormControl>
-                        </GridItem>
-
-                        <GridItem>
-                          <FormControl isInvalid={!!errors.payAfterDate}>
-                            <FormLabel
-                              fontSize="14px"
-                              fontStyle="normal"
-                              fontWeight={500}
-                              color="gray.700"
-                              htmlFor="payAfterDate"
-                              whiteSpace="nowrap"
-                            >
-                              {t(`${TRANSACTION}.payAfterDate`)}
-                            </FormLabel>
-                            <Input
-                              data-testid="pay-after"
-                              id="payAfterDate"
-                              type="date"
-                              size="md"
-                              isDisabled
-                              css={calendarIcon}
-                              {...register('payAfterDate', {
-                                required: isPaidDateRequired ? REQUIRED_FIELD_ERROR_MESSAGE : '',
-                              })}
-                            />
-                            <FormErrorMessage>{errors?.payAfterDate?.message}</FormErrorMessage>
-                          </FormControl>
-                        </GridItem>
-                        {isShowFpm && (
+                    <GridItem>
+                      <FormControl isInvalid={!!errors.payDateVariance}>
+                        <FormLabel
+                          fontSize="14px"
+                          fontStyle="normal"
+                          fontWeight={500}
+                          color="gray.700"
+                          htmlFor="payDateVariance"
+                          whiteSpace="nowrap"
+                        >
+                          {t(`${TRANSACTION}.payDateVariance`)}
+                        </FormLabel>
+                        <Input
+                          data-testid="pay-date-variance"
+                          id="payDateVariance"
+                          type="text"
+                          size="md"
+                          value={payDateVariance}
+                          css={calendarIcon}
+                          isDisabled
+                          {...register('payDateVariance')}
+                        />
+                        <FormErrorMessage>{errors?.payDateVariance?.message}</FormErrorMessage>
+                      </FormControl>
+                    </GridItem>
+                  </>
+                )}
+{isShowFpm && (
                           <GridItem>
                             <FormControl isInvalid={!!errors.verifiedByFpm} data-testid="verified-by-fpm">
                               <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByFpm">
@@ -1015,11 +1118,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             </FormControl>
                           </GridItem>
                         )}
-                      </>
-                    )}
-                  </>
-                )}
-
                 {isShowPaymentRecievedDateField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.paymentRecievedDate}>
@@ -1180,6 +1278,9 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   setTotalItemAmount(amount)
                 }}
                 transaction={transaction}
+                selectedWorkOrderStats={selectedWorkOrderStats}
+                currentWorkOrderId={currentWorkOrderId}
+                projectId={projectId}
                 setDisableBtn={setDisableBtn}
                 disableError={disableBtn}
                 setFileParseMsg={setFileParseMsg}
@@ -1241,7 +1342,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           </Button>
         ) : (
           ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) &&
-          !isFactoringFeeSysGenerated && (
+           (
             <>
               <Button
                 type="submit"

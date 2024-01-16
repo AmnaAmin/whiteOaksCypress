@@ -56,6 +56,8 @@ export type ProjectWorkOrder = {
   workOrderStartDate: string
   awardPlanPayTerm: string
   vendorStatusId?: number
+  reason: string | null
+  applyNewAwardPlan: boolean
 }
 
 export type WorkOrderAwardStats = {
@@ -69,6 +71,7 @@ export type WorkOrderAwardStats = {
   materialAmountConsume: number
   totalAmountConsume: number
   totalAmountRemaining: null | number
+  allowedDrawAmount: number | null
 }
 
 export type TransactionType = {
@@ -185,10 +188,12 @@ export interface FormValues {
   status: SelectOption | null
   expectedCompletionDate: string
   newExpectedCompletionDate: string | null
+  reason: SelectOption | null
   attachment: any
   lienWaiverDocument: any
   invoicedDate: string | null
   paymentTerm: SelectOption | null
+  paymentTermDate: string | null
   paidDate: string | null
   payDateVariance: string
   paymentRecievedDate: string | null
@@ -224,12 +229,14 @@ export type ChangeOrderPayload = {
   lineItems: ChangeTransaction[]
   projectId: string
   paymentTerm: string | null
+  paymentTermDate: string | null
   payDateVariance: string | null
   documents?: Array<any>
   paymentProcessed: string | null
   payAfterDate: string | null
   verifiedByFpm: SelectOption | null
   verifiedByManager: SelectOption | null
+  reason: string | null
 }
 
 export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
@@ -246,13 +253,16 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   modifiedDate1: string | null
   modifiedBy: string
   vendorId: number | null
-  systemGenerated: boolean | null
+  reason?: SelectOption | null
+  // systemGenerated: boolean | null
   paymentProcessed: string | null
+  paymentTermDate: string | null
   payAfterDate: string | null
   verifiedByFpm: SelectOption | null
   verifiedByManager: SelectOption | null
   invoiceId: number | string | null
   invoiceNumber?: number | string | null
+
 }
 
 type LineItem = {
@@ -285,16 +295,18 @@ export type ChangeOrderType = {
   modifiedDate: string | null
   parentWorkOrderExpectedCompletionDate: string | null
   newExpectedCompletionDate: string | null
+  reason:string | null
   parentWorkOrderId: number
   projectId: number
   vendorId: number | null
   paymentTerm: string | null
+  paymentTermDate: string | null
   clientApprovedDate: string | null
   paidDate: string | null
   lineItems: Array<LineItem> | null
   paymentReceived: string | null
   documents: Document[]
-  systemGenerated: boolean
+  // systemGenerated: boolean
   verifiedByFpm: SelectOption | null
   verifiedByManager: SelectOption | null
   paymentProcessed: null

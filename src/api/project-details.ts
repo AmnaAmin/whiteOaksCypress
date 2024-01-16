@@ -568,9 +568,10 @@ export const parseFormValuesFromAPIData = ({
 
   const projectStatusSelectOptions = getProjectStatusSelectOptions()
   const remainingPayment = project.accountRecievable || 0
-  const carrier = findOptionByValue(clientSelectOptions, project.clientName)?.carrier?.find(
-    c => c.id === project.carrierId,
-  )
+  const carrier = findOptionByValue(
+    clientSelectOptions,
+    typeof project.clientName === 'string' ? project.clientName?.trim() : project.clientName,
+  )?.carrier?.find(c => c.id === project.carrierId)
 
   return {
     // Project Management form values
@@ -608,7 +609,7 @@ export const parseFormValuesFromAPIData = ({
     invoiceBackDate: getLocalTimeZoneDate(project.woaBackdatedInvoiceDate as string),
     invoiceLink: project.invoiceLink,
     paymentTerms: findOptionByValue(PAYMENT_TERMS_OPTIONS, project.paymentTerm),
-    woaInvoiceDate: getLocalTimeZoneDate(project.woaInvoiceDate as string),
+    //woaInvoiceDate: getLocalTimeZoneDate(project.woaInvoiceDate as string),
     woaExpectedPayDate: project.expectedPaymentDate as string,
     overPayment: overPayment?.sum,
     remainingPayment: remainingPayment < 0 ? 0 : remainingPayment,
@@ -638,13 +639,14 @@ export const parseFormValuesFromAPIData = ({
     superPhoneNumber: project.superPhoneNumber,
     superPhoneNumberExtension: project.superPhoneNumberExtension,
     superEmail: project.superEmailAddress,
-    client: clientSelectOptions?.find(c => c?.label === project?.clientName),
+    client: clientSelectOptions?.find(c => c?.label === project?.clientName?.trim()),
     clientType: findOptionByValue(clientTypesSelectOptions, project.clientTypeId),
     homeOwnerName: project.homeOwnerName,
     homeOwnerPhone: project.homeOwnerPhone,
     homeOwnerEmail: project.homeOwnerEmail,
     carrier: !!carrier ? { label: carrier?.name, value: carrier?.id } : null,
     agentName: project.agentName,
+    carrierName: project.carrier?.label ? project.carrier?.label : project?.carrierName,
     agentPhone: project.agentPhone,
     agentEmail: project.agentEmail,
 
@@ -763,7 +765,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     documents,
     woaBackdatedInvoiceDate: dateISOFormat(formValues?.invoiceBackDate),
     paymentTerm: formValues?.paymentTerms?.value || null,
-    woaInvoiceDate: dateISOFormat(formValues?.woaInvoiceDate),
+    //woaInvoiceDate: dateISOFormat(formValues?.woaInvoiceDate),
     expectedPaymentDate: dateISOFormat(formValues?.woaExpectedPayDate),
     overPayment: formValues?.overPayment,
     remainingPayment: formValues?.remainingPayment,
@@ -788,7 +790,8 @@ export const parseProjectDetailsPayloadFromFormData = async (
     homeOwnerName: formValues.homeOwnerName,
     homeOwnerPhone: formValues.homeOwnerPhone,
     homeOwnerEmail: formValues.homeOwnerEmail,
-    carrierId: formValues.carrier?.value,
+    carrierId: formValues.carrier?.value ? formValues.carrier?.value : project?.carrierId,
+    carrierName: formValues.carrier?.label ? formValues.carrier?.label : project?.carrierName,
     agentName: formValues.agentName,
     agentPhone: formValues.agentPhone,
     agentEmail: formValues.agentEmail,
@@ -806,9 +809,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
     hoaPhoneNumberExtension: formValues?.hoaContactExtension,
     hoaEmailAddress: formValues?.hoaContactEmail,
     woaPayVariance: null,
-    newProperty:  property ,
+    newProperty: property,
     property,
-    newMarketId: formValues.market?.value ,
+    newMarketId: formValues.market?.value,
     propertyId: isNewAddress ? undefined : formValues?.address?.value,
 
     // Misc payload

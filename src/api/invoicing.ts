@@ -36,6 +36,7 @@ export const useFetchInvoices = ({ projectId }: { projectId: string | number | u
 }
 export const useFetchInvoiceDetails = ({ invoiceId }: { invoiceId: string | number | undefined | null }) => {
   const client = useClient()
+
   const { data: invoiceDetails, ...rest } = useQuery<InvoicingType>(
     ['invoice-details', invoiceId],
     async () => {
@@ -94,8 +95,85 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
   const queryClient = useQueryClient()
   const { projectId } = useParams<'projectId'>() || projId
 
+  function updateInvoiceNumberByRevision(invoiceNo: string): string {
+    const revisionPattern = new RegExp(/(\d+)-R(\d+)$/);
+    const matchResult = revisionPattern.exec(invoiceNo);
+
+    if (matchResult) {
+      const newRevision = parseInt(matchResult[2]) + 1;
+      return invoiceNo.replace(revisionPattern, `$1-R${newRevision}`);
+    } else {
+      // If no match at the end, add '-R1' to the end
+      return `${invoiceNo}-R1`;
+    }
+  }
+  function compareInvoiceLineItems(payloadLineItems: [], invoiceDetailsLineItems: []) {
+    if (payloadLineItems.length !== invoiceDetailsLineItems.length) {
+      return false;
+    }
+
+    for (let i = 0; i < payloadLineItems.length; i++) {
+      const payloadItemKeys = Object.keys(payloadLineItems[i]);
+
+      for (const key of payloadItemKeys) {
+        if (payloadLineItems[i][key] !== invoiceDetailsLineItems[i][key]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+
   return useMutation(
-    (payload: any) => {
+    async (payload: any) => {
+      const responseInvoiceDetails = await client(`project-invoices/${payload.id}`, {});
+      const invoiceDetails = responseInvoiceDetails?.data as InvoicingType;
+      let isInvoiceChanged = false;
+      if (payload.paymentTerm !== invoiceDetails.paymentTerm)  {
+        console.log("Invoice name changed reason: payment term")
+        isInvoiceChanged = true;
+      }
+      if (payload.invoiceDate !== invoiceDetails.invoiceDate) {
+        console.log("Invoice name changed reason: invoice date")
+        isInvoiceChanged = true;
+      }
+      // if ( !!payload.receivedLineItems?.length && !!invoiceDetails.receivedLineItems?.length && ( payload.receivedLineItems.length !== invoiceDetails.receivedLineItems.length )  ) isInvoiceChanged = true;
+      // if ( !!payload.invoiceLineItems?.length && !!invoiceDetails.invoiceLineItems?.length && ( payload.invoiceLineItems.length !== invoiceDetails.invoiceLineItems.length )  ) isInvoiceChanged = true;
+
+      //compare length and each single property value
+      if (!compareInvoiceLineItems(payload.invoiceLineItems?.filter( l => l.type === 'finalSowLineItems' ), invoiceDetails.invoiceLineItems))  {
+        console.log("Invoice name changed reason: invoice line items")
+        isInvoiceChanged = true;
+      }
+
+      console.log("Payload: ", payload);
+      console.log("Details: ", invoiceDetails);
+
+      if (isInvoiceChanged) {
+        const pattern = /-(\d+)(?:-R(\d+))?$/;
+        //const revisionPattern = new RegExp(/^(\d+)-R(\d+)/);
+        const currInvoiceNumber = payload.invoiceNumber;
+        const match = currInvoiceNumber.match(pattern);
+        
+        // console.log("New number: ", updateInvoiceNumberByRevision(currInvoiceNumber))
+        // console.log("revisions", revisionPattern.exec(currInvoiceNumber));
+
+        if (match) {
+          // const incrementedNumber = parseInt(match[1]) + 1;
+          // const incrementedString = (incrementedNumber < 10 ? "0" : "") + incrementedNumber;
+          // payload.invoiceNumber =  currInvoiceNumber.replace(pattern, incrementedString + "-");
+
+          payload.invoiceNumber = updateInvoiceNumberByRevision(currInvoiceNumber);
+        }
+
+      }
+
+
+
+      // console.log(payload); return;
+
+
       return client('project-invoices', {
         data: payload,
         method: 'PUT',
@@ -200,12 +278,9 @@ export const useTotalAmount = ({ invoiced, received }) => {
 export const isReceivedTransaction = transaction => {
   const compatibleType =
     transaction.status === 'APPROVED' &&
-    [
-      TransactionTypeValues.deductible,
-      TransactionTypeValues.depreciation,
-      TransactionTypeValues.invoice,
-      TransactionTypeValues.payment,
-    ].includes(transaction.transactionType)
+    [TransactionTypeValues.deductible, TransactionTypeValues.depreciation, TransactionTypeValues.payment].includes(
+      transaction.transactionType,
+    )
 
   return !transaction.parentWorkOrderId && compatibleType
 }

@@ -90,6 +90,9 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   latestNoteAddedDateEnd: 'latestNoteAddedDate.lessThanOrEqual',
   noteOwner: 'noteOwner.contains',
   pcOrFpmUserId: 'pcOrFpmUserId.in',
+  convertedDateStart: 'convertedDate.greaterThanOrEqual',
+  convertedDateEnd: 'convertedDate.lessThanOrEqual',
+  carrierName: 'carrierName.contains',
 }
 
 const PopoverTooltip = ({ value, title }) => {
@@ -196,6 +199,12 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     header: 'project.projectDetails.clientSignOff',
     accessorKey: 'clientSignoffDate',
     accessorFn: (cellInfo: any) => dateFormat(cellInfo.clientSignoffDate),
+    meta: { format: 'date' },
+  },
+  {
+    header: 'projects.projectTable.convertedDate',
+    accessorKey: 'convertedDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.convertedDate),
     meta: { format: 'date' },
   },
   {
@@ -321,6 +330,10 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'market',
   },
   {
+    header: 'projects.projectTable.carrierName',
+    accessorKey: 'carrierName',
+  },
+  {
     header: 'projects.projectTable.state',
     accessorKey: 'state',
   },
@@ -415,9 +428,7 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.lienRightsExpires',
     accessorKey: 'lienRightExpireDate',
-    accessorFn: (cellInfo: any) => {
-      dateFormat(cellInfo.lienRightExpireDate)
-    },
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.lienRightExpireDate),
     meta: { format: 'date' },
   },
 ]

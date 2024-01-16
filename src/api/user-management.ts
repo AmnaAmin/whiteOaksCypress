@@ -110,8 +110,7 @@ export const useSaveUserDetails = () => {
           position: 'top-left',
         })
       },
-      onError(error: any) {
-      },
+      onError(error: any) {},
     },
   )
 }
@@ -517,19 +516,18 @@ export const useUserDetails = ({ form, userInfo, queryString }) => {
 }
 
 interface DirectReportsUser {
-  id: number,
-  firstName: string,
-  lastName: string;
-  parentFieldProjectManagerId: number;
+  id: number
+  firstName: string
+  lastName: string
+  parentFieldProjectManagerId: number
   login: string
-
 }
-export const useUserDirectReportsAllList = () => {
-  const client = useClient();
-  const {data, ...rest} = useQuery<Array<DirectReportsUser>>(["all_user_managements"], async () => {
-    const response = await client("users/list/directUsers", {});
+export const useUserDirectReportsAllList = (userID?: number) => {
+  const client = useClient()
+  const { data, ...rest } = useQuery<Array<DirectReportsUser>>(['all_user_managements'], async () => {
+    const response = await client(`users/list/directUsers?isIgnoreCurrentUser=1&userId=${userID}`, {})
     return response?.data
-  });
+  })
 
   const options =
     data?.map(res => ({
@@ -537,11 +535,11 @@ export const useUserDirectReportsAllList = () => {
       label: res?.firstName + ' ' + res?.lastName,
       parentId: res?.parentFieldProjectManagerId,
     })) || []
-    options.sort((a, b) => a.label.localeCompare(b.label));
+  options.sort((a, b) => a.label.localeCompare(b.label))
 
-    return {
-      userMgt: data,
-      options,
-      ...rest
-    }
+  return {
+    userMgt: data,
+    options,
+    ...rest,
+  }
 }

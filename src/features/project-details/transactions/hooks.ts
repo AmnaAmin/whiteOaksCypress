@@ -66,6 +66,9 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const isTransactionTypeChangeOrderSelected =
     selectedTransactionTypeId &&
     [TransactionTypeValues.changeOrder, TransactionTypeValues.legalFee].includes(selectedTransactionTypeId)
+    const isLegalFeeExcluded  =
+    selectedTransactionTypeId &&
+    [TransactionTypeValues.changeOrder].includes(selectedTransactionTypeId)
   const isTransactionTypeOverpaymentSelected =
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
@@ -124,12 +127,14 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
     isShowChangeOrderSelectField: isAgainstProjectSOWOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
     isShowNewExpectedCompletionDateField: isAgainstWorkOrderOptionSelected && isTransactionTypeChangeOrderSelected,
+    isShowReasonField: isAgainstProjectSOWOptionSelected && isLegalFeeExcluded,
     isShowStatusField,
     isShowDrawFieldAgainstWO: isAgainstWorkOrderOptionSelected,
     drawTransaction,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     refundCheckbox,
     isShowDM: vFpm === TransactionStatusValues.approved,
+    isShowFpm: !!transaction && drawTransaction,
     isPaymentTermDisabled,
     isShowPaymentRecievedDateField: [
       TransactionTypeValues.payment,
@@ -207,26 +212,26 @@ export const useFieldDisabledEnabledDecision = (
     transaction?.status === TransactionStatusValues.approved ||
     transaction?.status === TransactionStatusValues.cancelled ||
     transaction?.status === TransactionStatusValues.denied
-  const isFactoringFeeSysGenerated =
-    transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
+  // const isFactoringFeeSysGenerated =
+  //   transaction?.transactionType === TransactionTypeValues.factoring && transaction?.systemGenerated
   const isInvoicePayment =
     transaction?.transactionType === TransactionTypeValues.payment && !!transaction?.invoiceNumber
   return {
     isUpdateForm,
     isApproved: isStatusApproved,
-    isSysFactoringFee: isFactoringFeeSysGenerated,
+    // isSysFactoringFee: isFactoringFeeSysGenerated,
     isPaidDateDisabled: !transaction && isStatusApproved && !paidEditPermission,
     isStatusDisabled:
       (isStatusApproved && !statusEditPermission) ||
       isMaterialsLoading ||
       lateAndFactoringFeeForVendor ||
-      isFactoringFeeSysGenerated ||
+      // isFactoringFeeSysGenerated ||
       statusFieldForVendor ||
       isInvoicePayment ||
       (!isAdmin && !isAccounting && transaction?.transactionType === TransactionTypeValues.draw),
 
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
-    isFactoringFeeSysGenerated,
+    // isFactoringFeeSysGenerated,
   }
 }
 

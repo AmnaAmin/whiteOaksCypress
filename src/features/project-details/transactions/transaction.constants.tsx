@@ -40,6 +40,14 @@ export const TRANSACTION_STATUS_OPTIONS = [
   { value: TransactionStatusValues.denied, label: 'Denied' },
 ]
 
+export const REASON_STATUS_OPTIONS = [
+  {  value: 'Unforeseen', label:'Unforeseen' },
+  {  value: 'Incorrect Scoping/Scoping', label:'Incorrect Scoping/Scoping' },
+  {  value: 'Client Request', label:'Client Request' },
+  {  value:'Additional Punch Work Requested', label:'Additional Punch Work Requested' },
+]
+
+
 export const TRANSACTION_FPM_DM_STATUS_OPTIONS = [
   { value: TransactionStatusValues.pending, label: 'Pending' },
   { value: TransactionStatusValues.approved, label: 'Approved' },
@@ -78,7 +86,7 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: '',
     id: 'expander',
-    size: 20,
+    size: 40,
     cell: ({ row, getValue }) => {
      
 
@@ -228,7 +236,7 @@ export const mapDataForExpandableRows = (transactions?: any, isVendor?: boolean)
         if (checkData) {
           data
             .find(d => d.parentWorkOrderId === transaction.parentWorkOrderId)
-            ?.['subRows']?.push({ ...transaction, parentWorkOrderId: '' })
+            ?.['subRows']?.push({ ...transaction, parentWorkOrderId: transaction.parentWorkOrderId })
         } else {
           data?.push({ ...transaction, subRows: [] })
         }

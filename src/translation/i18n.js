@@ -188,6 +188,7 @@ i18n.use(initReactI18next).init({
         workOrder: 'Work Order',
         paymentTerm: 'Payment Term',
         newExpectedCompletionDate: 'New Expected Completion',
+        reason:'Reason',
         paymentReceivedDate: 'Payment Received',
         paidDate: 'Paid Date',
         paidDateVariance: 'Paid Date Variance',
@@ -206,6 +207,7 @@ i18n.use(initReactI18next).init({
         total: 'Total',
         close: 'Close',
         save: 'Save',
+        done: 'Done',
         finalSOW: 'Final SOW',
         accountpayable: 'Account Payable',
         projectcost: 'Project Cost',
@@ -214,6 +216,7 @@ i18n.use(initReactI18next).init({
         profitmargins: 'Profit Margins',
         resetSettings: 'Reset Settings',
         resetAllSettings: 'Clear All Users Settings',
+        amountLimitMessage: 'Based on work completed, the allowed limit',
 
         // Projects-WorkOrderDetails
         editVendorWorkOrder: 'Edit Vendor Work Order',
@@ -348,6 +351,7 @@ i18n.use(initReactI18next).init({
         expectedPay: 'Expected Pay Date',
         // Project - Notes
         notes: 'Notes',
+        messages: 'Messages',
         enterNewNote: 'Enter New Note Here',
         completeion: '% Completion',
 
@@ -815,6 +819,7 @@ i18n.use(initReactI18next).init({
         WODueDate: 'Fecha de vencimiento de OT',
         dueDateWO: 'Fecha de vencimiento OT',
         trade: 'Comercio',
+        reason:'Razón',
         auditLogs: 'Registros de auditoría',
         totalAmount: 'Cantidad Total',
         submit: 'Entregar',
@@ -845,6 +850,8 @@ i18n.use(initReactI18next).init({
         total: 'Total',
         close: 'Cerca',
         save: 'Ahorrar',
+        done: 'Hecho',
+        amountLimitMessage: 'Basado en el trabajo completado, el límite permitido',
 
         // Project - WorkOrderDetails
         editVendorWorkOrder: 'Editar Orden de Trabajo de Proveedor',
@@ -976,6 +983,7 @@ i18n.use(initReactI18next).init({
         expectedPay: 'Fecha de pago esperada',
         // Project - Notes
         notes: 'Notas',
+        messages: 'Mensajes',
         enterNewNote: 'Ingrese una nueva nota aquí',
         completeion: '% Terminación',
 

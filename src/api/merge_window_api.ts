@@ -6,29 +6,29 @@ var octokit;
 const owner = 'DevTek-ai';
 
 const frontendRepo: { repo: string; branch: string }[] = [
-    { repo: 'next-gen-whiteoaks-ui', branch: 'master' },
-    { repo: 'whiteoaks-estimates-ui', branch: 'master' },
-    { repo: 'whiteoaks-maintenance-portal-ui', branch: 'master' },
+    { repo: 'woa-fe-const-ui', branch: 'master' },
+    { repo: 'woa-fe-est-ui', branch: 'master' },
+    { repo: 'woa-fe-mnt-ui', branch: 'master' },
   ];
 
 const constBackend: { repo: string; branch: string }[] = [
-{ repo: 'whiteoaks', branch: 'master' },
-{ repo: 'whiteoaks-audit-service', branch: 'master' },
-{ repo: 'ms-smartwo', branch: 'master' },
-{ repo: 'alerting', branch: 'master' },
-{ repo: 'messaging', branch: 'master' },
+{ repo: 'woa-be-const-api', branch: 'master' },
+{ repo: 'woa-be-const-audit', branch: 'master' },
+{ repo: 'woa-be-const-swo', branch: 'master' },
+{ repo: 'woa-be-const-alerting', branch: 'master' },
+{ repo: 'woa-be-const-messaging', branch: 'master' },
 ];  
 
 const estBackend: { repo: string; branch: string }[] = [
-    { repo: 'ms-estimates', branch: 'master' },
+    { repo: 'woa-be-est-api', branch: 'master' },
 ];  
 
 const maintBackend: { repo: string; branch: string }[] = [
-    { repo: 'ms-maintenance', branch: 'master' },
-    { repo: 'ms-messaging-maintenance', branch: 'master' },
-    { repo: 'ms-smartwo-maintenance', branch: 'master' },
-    { repo: 'ms-crm', branch: 'main' },
-    { repo: 'whiteoaks-maintenance-twilio-service', branch: 'master' },
+    { repo: 'woa-be-mnt-api', branch: 'master' },
+    { repo: 'woa-be-mnt-messaging', branch: 'master' },
+    { repo: 'woa-be-mnt-swo', branch: 'master' },
+    { repo: 'woa-be-mnt-contact-center', branch: 'master' },
+    { repo: 'woa-be-mnt-contact-service', branch: 'master' },
 ];  
 
 export async function checkBranchLocked(option : number) {
@@ -147,7 +147,7 @@ async function lockMergeWindow(repo : string, branch : string, isLocked: boolean
 
     var response;
 
-    if(repo === 'next-gen-whiteoaks-ui')
+    if(repo === 'woa-fe-const-ui')
     {
       response = await octokit.request('PUT /repos/{owner}/{repo}/branches/{branch}/protection', {
         owner: owner,

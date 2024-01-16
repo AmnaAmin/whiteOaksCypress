@@ -105,7 +105,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
     return queryString
   }, [tabIndex])
 
-  const { options: usersList, isLoading: loadingUsersList, userMgt: userData } = useUserDirectReportsAllList();
+  const { options: usersList, isLoading: loadingUsersList, userMgt: userData } = useUserDirectReportsAllList(user?.id)
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('USERMANAGER.READ')
   const {
     register,
@@ -138,7 +138,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
   // const directReportsSelected = formValues?.directReports
 
   const isEditUser = !!(user && user.id)
-  const isVendor = accountType?.label?.toLowerCase() === 'vendor'
+  const isVendor = accountType?.assignment === 'VENDOR'
 
   const showMarkets = useMemo(() => {
     if (accountType?.location === 'MARKET') {
@@ -214,6 +214,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
 
   const watchRequiredField =
     !formValues?.email ||
+    !formValues?.state ||
     formValues?.email.trim() === '' ||
     !formValues?.firstName ||
     formValues?.firstName.trim() === '' ||
@@ -300,15 +301,14 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
 
   useEffect(() => {
     if (isReadOnly) {
-      Array.from(document.querySelectorAll("input")).forEach(input => {
-        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
-            input.setAttribute("disabled", "true");
-          }
-      });
+      Array.from(document.querySelectorAll('input')).forEach(input => {
+        if (input.getAttribute('data-testid') !== 'tableFilterInputField') {
+          input.setAttribute('disabled', 'true')
+        }
+      })
     }
-  }, []);
+  }, [])
 
- 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -408,7 +408,12 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             control={control}
             name="langKey"
             render={({ field }) => (
-              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} isDisabled={isReadOnly} />
+              <ReactSelect
+                selectProps={{ isBorderLeft: true }}
+                {...field}
+                options={languageOptions}
+                isDisabled={isReadOnly}
+              />
             )}
           />
         </FormControl>
@@ -935,8 +940,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
         />
         <ConfirmationBox
           title={t(`${USER_MANAGEMENT}.modal.deleteUserModal`)}
-          content = {`${t(`${USER_MANAGEMENT}.modal.deactivateUser`)}`}
-          extraContent={ `Project Id: ${updateUserError?.missing_project_id}`}
+          content={`${t(`${USER_MANAGEMENT}.modal.deactivateUser`)}`}
+          extraContent={`Project Id: ${updateUserError?.missing_project_id}`}
           isOpen={isModalOpen}
           onClose={() => setModalOpen(false)}
           onConfirm={() => setModalOpen(false)}

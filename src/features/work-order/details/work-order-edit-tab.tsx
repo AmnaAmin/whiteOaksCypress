@@ -39,7 +39,6 @@ import {
   getRemovedItems,
   getUnAssignedItems,
   useAssignLineItems,
-  useDeleteLineIds,
   LineItems,
   useAllowLineItemsAssignment,
   useRemainingLineItems,
@@ -172,7 +171,6 @@ const WorkOrderDetailTab = props => {
 
   const assignedItemsWatch = useWatch({ name: 'assignedItems', control })
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
-  const { mutate: deleteLineItems } = useDeleteLineIds()
   const { remainingItems, isLoading: isRemainingItemsLoading } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
@@ -290,7 +288,12 @@ const WorkOrderDetailTab = props => {
   useEffect(() => {
     const option = [] as any
     if (vendors && vendors?.length > 0) {
-      vendors?.forEach(v => {
+      const activeVendors = vendors?.filter(option => {
+        if (option.companyName === companyName) return option
+        else return option?.statusLabel?.toLocaleLowerCase() !== 'expired'
+      })
+
+      activeVendors?.forEach(v => {
         option.push({
           label:
             v.statusLabel?.toLocaleLowerCase() === 'expired' ? v.companyName + ' (Expired)' : (v.companyName as string),
@@ -317,18 +320,7 @@ const WorkOrderDetailTab = props => {
   }, [vendorOptions?.length, setValue])
 
   const updateWorkOrderLineItems = (deletedItems, payload) => {
-    if (deletedItems?.length > 0) {
-      deleteLineItems(
-        { deletedIds: [...deletedItems.map(a => a.id)].join(',') },
-        {
-          onSuccess: () => {
-            onSave(payload)
-          },
-        },
-      )
-    } else {
-      onSave(payload)
-    }
+    onSave(payload, deletedItems)
   }
 
   /* -If we have new Smart work Order items added, they will be assigned in SWO.

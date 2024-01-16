@@ -58,7 +58,7 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
         </Flex>
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
-        <Button variant={!isReadOnly ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
+        <Button variant={'outline'}  colorScheme="brand" onClick={props?.onClose}>
           {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isReadOnly && (
@@ -66,10 +66,11 @@ export const Market = React.forwardRef((props: clientDetailProps) => {
             colorScheme="brand"
             form="clientDetails"
             ml={2}
-            onClick={props?.setNextTab}
+            type="submit"
+            // onClick={props?.setNextTab}
             disabled={!validateMarket(markets) || props.saveLoading}
           >
-            {t(`${CLIENTS}.next`)}
+            {t(`${CLIENTS}.save`)}
           </Button>
         )}
       </Flex>

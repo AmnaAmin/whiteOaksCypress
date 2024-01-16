@@ -29,6 +29,7 @@ export const projects = {
           accountRecievable: 'AR',
           market: 'Market',
           ownerName: 'Home Owner Name',
+          carrierName: 'Carrier',
           state: 'State',
           woaFinish: 'WOA Finish',
           region: 'Region',
@@ -48,6 +49,7 @@ export const projects = {
           claimNumber: 'Claim #',
           woaStartDate: 'WOA Start',
           lienRightsExpires: 'Lien Rights Expires',
+          convertedDate: 'Converted Date',
         },
         projectFilter: {
           new: 'New',
@@ -163,6 +165,7 @@ export const projects = {
           invoiceDate: 'Fecha de la factura',
           claimNumber: 'Reclamo',
           woaStartDate: 'Inicio de WOA',
+          convertedDate: 'Fecha de conversión',
         },
         projectFilter: {
           new: 'Nuevo',

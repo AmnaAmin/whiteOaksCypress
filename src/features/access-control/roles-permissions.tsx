@@ -52,6 +52,7 @@ import { TabCustom } from 'features/work-order/work-order-edit'
 import { EstimateRolePermissions } from './estimates-roles-permission'
 import { forEach } from 'lodash'
 import { ConstructionRolePermissions } from './construction-roles-permissions'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 interface PemissionFormValues {
   roleName: string
@@ -63,6 +64,7 @@ interface PemissionFormValues {
 
 export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, allowEdit }) => {
   const formReturn = useForm<PemissionFormValues>()
+  const { isAdmin } = useUserRolesSelector()
   const {
     formState: { errors },
     setValue,
@@ -85,7 +87,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
   const checkDefaultPermissions = assignment => {
     const defaultSections = ['PROJECT', 'VENDOR', 'ESTIMATE']
     if (!permissions?.[0]?.systemRole) {
-      forEach(defaultSections, section => {
+      defaultSections.forEach(section => {
         const sectionPermission = watchPermissions?.find(p => p?.name === section)
         setDefaultPermission({
           setValue,
@@ -111,6 +113,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
       updateRole(payload as any)
     }
   }
+
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
@@ -230,7 +233,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
             )*/}
           </HStack>
           <VStack w="100%" justifyContent={'start'}>
-            {isDevtekUser && (
+            {isAdmin && (
               <HStack justifyContent={'space-between'} width="100%">
                 <Text data-testid="access-control" fontSize="18px" fontWeight={500} color="gray.700">
                   {t(`${ACCESS_CONTROL}.accessPermissions`)}

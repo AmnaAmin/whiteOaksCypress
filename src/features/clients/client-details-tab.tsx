@@ -763,18 +763,19 @@ export const Details: React.FC<clientDetailProps> = props => {
         )}
       </Box>
       <Flex style={btnStyle} py="4" pt={5} mt={4}>
-        <Button variant={!isReadOnly ? 'outline' : 'solid'} colorScheme="brand" onClick={props?.onClose}>
+        <Button variant={'outline'} colorScheme="brand" onClick={props?.onClose}>
           {t(`${CLIENTS}.cancel`)}
         </Button>
         {!isReadOnly && (
           <Button
             isDisabled={isNewClientDetails || isContactSection || isAccountPayableSection}
             colorScheme="brand"
-            form="clientDetails"
             ml={2}
-            onClick={props?.setNextTab}
+            // onClick={props?.setNextTab}
+            type="submit"
+            form="clientDetails"
           >
-            {t(`${CLIENTS}.next`)}
+            {t(`${CLIENTS}.save`)}
           </Button>
         )}
       </Flex>

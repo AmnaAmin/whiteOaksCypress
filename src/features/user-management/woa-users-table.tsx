@@ -36,7 +36,7 @@ export const WOAUsersTable = React.forwardRef((props: any, ref) => {
     })
 
   const { userMgt, isLoading, totalPages, dataCount } = useUsrMgt(
-    queryStringWithPagination + '&userType.notIn=6&devAccount.equals=false',
+    queryStringWithPagination + '&authorityAssignment.doesNotContain=VENDOR&devAccount.equals=false',
     pagination.pageIndex,
     pagination.pageSize,
   )

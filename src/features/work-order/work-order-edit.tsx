@@ -37,7 +37,7 @@ import { usePCProject } from 'api/pc-projects'
 import { useDocuments, useVendorAddress } from 'api/vendor-projects'
 import { useTransactionsV1 } from 'api/transactions'
 import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
-import { useFetchProjectId } from './details/assignedItems.utils'
+import { useDeleteLineIds, useFetchProjectId } from './details/assignedItems.utils'
 import { ProjectAwardTab } from './project-award/project.award'
 import { useProjectAward } from 'api/project-award'
 import { Card } from 'components/card/card'
@@ -47,6 +47,7 @@ import { useQueryClient } from 'react-query'
 import { useVendorEntity } from 'api/vendor-dashboard'
 import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
 import { useLocation as useLineItemsLocation } from 'api/location'
+import { Messages } from '../messages/messages'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -89,6 +90,7 @@ const WorkOrderDetails = ({
   })
 
   const { projectAwardData } = useProjectAward(workOrderDetails?.largeWorkOrder)
+  const { mutate: deleteLineItems } = useDeleteLineIds()
 
   const navigate = useNavigate()
   const { data: vendorAddress } = useVendorAddress(workOrder?.vendorId || 0)
@@ -97,6 +99,9 @@ const WorkOrderDetails = ({
   const { data: locations } = useLineItemsLocation()
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems
+  const showForPreProd = window.location.href.includes('preprod')
+  const showForPreProdAndLocal =
+    showForPreProd || window.location.href.includes('localhost:') || window.location.href.includes('dev')
 
   useEffect(() => {
     if (workOrderDetails) {
@@ -119,7 +124,7 @@ const WorkOrderDetails = ({
   }, [workOrderDetails?.length, onClose])
 
   const queryClient = useQueryClient()
-  const onSave = values => {
+  const onSave = (values, deletedItems) => {
     const payload = { ...workOrderDetails, ...values }
     const { assignedItems } = values
     const hasMarkedSomeComplete = assignedItems?.some(item => item.isCompleted)
@@ -146,6 +151,17 @@ const WorkOrderDetails = ({
 
     updateWorkOrder(payload, {
       onSuccess: res => {
+        if (deletedItems?.length > 0) {
+          deleteLineItems(
+            { deletedIds: [...deletedItems.map(a => a.id)].join(',') },
+            {
+              onSuccess() {
+                queryClient.invalidateQueries(['WorkOrderDetails', workOrder?.id])
+              },
+            },
+          )
+        }
+
         queryClient.invalidateQueries('transactions_work_order')
         if (res?.data) {
           const workOrder = res?.data
@@ -212,6 +228,7 @@ const WorkOrderDetails = ({
                 <Tab data-testid="wo_invoice">{t('invoice')}</Tab>
                 <Tab data-testid="wo_payments">{t('payments')}</Tab>
                 <Tab data-testid="wo_notes">{t('notes')}</Tab>
+                {showForPreProdAndLocal && <Tab data-testid="wo_messages">{t('messages')}</Tab>}
 
                 {showRejectInvoice &&
                   [STATUS.Invoiced, STATUS.Rejected].includes(
@@ -348,7 +365,6 @@ const WorkOrderDetails = ({
                       />
                     )}
                   </TabPanel>
-
                   <TabPanel p={0}>
                     {isLoadingWorkOrder ? (
                       <Center h={'600px'}>
@@ -364,6 +380,19 @@ const WorkOrderDetails = ({
                       />
                     )}
                   </TabPanel>
+                  {showForPreProdAndLocal && (
+                    <TabPanel p={0}>
+                      {isLoadingWorkOrder ? (
+                        <Center h={'600px'}>
+                          <Spinner size="xl" />
+                        </Center>
+                      ) : (
+                        <Box w="100%" h="680px">
+                          <Messages id={workOrder.id} entity="workOrder" projectId={projectId} value={projectData} />
+                        </Box>
+                      )}
+                    </TabPanel>
+                  )}
                 </TabPanels>
               </Card>
             </Tabs>
