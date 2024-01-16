@@ -162,7 +162,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                     <div data-testid="proj-status">
                       <ReactSelect
                         {...field}
-                        isDisabled={isReadOnly || !isAdmin}
+                        isDisabled={isReadOnly}
                         options={projectStatusSelectOptions}
                         isOptionDisabled={option => option.disabled}
                         onChange={option => {
