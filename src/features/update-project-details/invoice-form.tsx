@@ -430,6 +430,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
 
   const watchPaymentValue = parseFloat(watchPayment!?.toString())
   const isPaymentReceivedDisabled = isNaN(watchPaymentValue) || watchPaymentValue <= 0 || isPaid || isCancelled
+  const isInvoiceEmpty = watch('invoiceNumber')?.trim() === ''
 
   useEffect(() => {
     if (isPaymentReceivedDisabled) {
@@ -464,6 +465,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         data-testid="invoiceNumber"
                         id="invoiceNumber"
                         size="md"
+                        variant="required-field"
+                        maxLength={100}
                         disabled={!canCreateInvoice || isPaid || isCancelled}
                         {...register('invoiceNumber')}
                       />
@@ -885,7 +888,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
               formReturn.handleSubmit(onSubmit)()
             }, 3000)}
             isLoading={isLoadingUpdate || isLoadingCreate}
-            disabled={!invoiced || isCancelled || !canCreateInvoice}
+            disabled={!invoiced || isCancelled || !canCreateInvoice || isInvoiceEmpty}
             form="invoice-form"
             data-testid="save-transaction"
             colorScheme="darkPrimary"
@@ -905,3 +908,4 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     </form>
   )
 }
+ 
