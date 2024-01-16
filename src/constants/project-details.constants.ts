@@ -1,6 +1,6 @@
 import { ProjectStatus } from 'types/project-details.types'
 
-const OPTIONS = {
+export const OPTIONS = {
   [ProjectStatus.New]: {
     value: ProjectStatus.New,
     label: 'New',
@@ -54,59 +54,6 @@ const OPTIONS = {
 export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
   [ProjectStatus.New]: [OPTIONS[ProjectStatus.New], OPTIONS[ProjectStatus.Active], OPTIONS[ProjectStatus.Cancelled]],
   [ProjectStatus.Active]: [
-    OPTIONS[ProjectStatus.Active],
-    OPTIONS[ProjectStatus.Punch],
-    OPTIONS[ProjectStatus.Disputed],
-    OPTIONS[ProjectStatus.Cancelled],
-  ],
-  [ProjectStatus.Punch]: [
-    OPTIONS[ProjectStatus.Active],
-    OPTIONS[ProjectStatus.Punch],
-    OPTIONS[ProjectStatus.Reconcile],
-    OPTIONS[ProjectStatus.Closed],
-    OPTIONS[ProjectStatus.Cancelled],
-    OPTIONS[ProjectStatus.Disputed],
-  ],
-  [ProjectStatus.Reconcile]: [
-    OPTIONS[ProjectStatus.Active],
-    OPTIONS[ProjectStatus.Punch],
-    OPTIONS[ProjectStatus.Closed],
-    OPTIONS[ProjectStatus.Cancelled],
-    OPTIONS[ProjectStatus.Disputed],
-  ],
-  [ProjectStatus.Closed]: [
-    OPTIONS[ProjectStatus.Closed],
-    OPTIONS[ProjectStatus.Invoiced],
-    OPTIONS[ProjectStatus.Disputed],
-    OPTIONS[ProjectStatus.Reconcile],
-  ],
-  [ProjectStatus.Invoiced]: [
-    OPTIONS[ProjectStatus.Invoiced],
-    OPTIONS[ProjectStatus.ClientPaid],
-    OPTIONS[ProjectStatus.Disputed],
-    OPTIONS[ProjectStatus.Reconcile],
-  ],
-  [ProjectStatus.ClientPaid]: [
-    OPTIONS[ProjectStatus.ClientPaid],
-    OPTIONS[ProjectStatus.Paid],
-    OPTIONS[ProjectStatus.Disputed],
-  ],
-
-  [ProjectStatus.Overpayment]: [OPTIONS[ProjectStatus.Overpayment], OPTIONS[ProjectStatus.Disputed]],
-
-  [ProjectStatus.Paid]: [OPTIONS[ProjectStatus.Paid], OPTIONS[ProjectStatus.Disputed]],
-  [ProjectStatus.Cancelled]: [OPTIONS[ProjectStatus.Cancelled]],
-  [ProjectStatus.Disputed]: [OPTIONS[ProjectStatus.Disputed]],
-}
-export const PROJECT_STATUSES_ASSOCIATE_WITH_NEW_CURRENT_STATUS = {
-  [ProjectStatus.New]: [OPTIONS[ProjectStatus.New], OPTIONS[ProjectStatus.Active], OPTIONS[ProjectStatus.Cancelled]],
-  [ProjectStatus.Active]: [
-    OPTIONS[ProjectStatus.Active],
-    OPTIONS[ProjectStatus.Awaitingpunch],
-   
-  ],
-  [ProjectStatus.Awaitingpunch]: [
-    OPTIONS[ProjectStatus.Awaitingpunch],
     OPTIONS[ProjectStatus.Active],
     OPTIONS[ProjectStatus.Punch],
     OPTIONS[ProjectStatus.Disputed],

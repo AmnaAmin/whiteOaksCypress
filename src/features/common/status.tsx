@@ -74,7 +74,7 @@ const STATUS_COLOR = {
   [STATUS.Reconcile]: { color: '#4A5568', backgroundColor: '#F8F6CD' },
   [STATUS.Pending_payment]: { color: '#0BC5EA', backgroundColor: '#C4F1F9' },
   [STATUS.Partial_paid]: { color: '#D69E2E', backgroundColor: '#FFFBF4' },
-  [STATUS.Awaiting_punch]: { color: '#FEFCBF', backgroundColor: '#B7791F' }
+  [STATUS.Awaiting_punch]: { color: '#B7791F', backgroundColor: '#FEFCBF' }
 }
 
 const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {

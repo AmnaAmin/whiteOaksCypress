@@ -1,6 +1,6 @@
 import { useToast } from '@chakra-ui/react'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
-import { PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS, PROJECT_STATUSES_ASSOCIATE_WITH_NEW_CURRENT_STATUS } from 'constants/project-details.constants'
+import { OPTIONS, PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS } from 'constants/project-details.constants'
 import { useContext, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Client, ErrorType, ProjectType, State, User } from 'types/common.types'
@@ -187,7 +187,23 @@ export const useProjectDetailsUpdateMutation = () => {
     },
   )
 }
-
+export const statusArrayApplicableforCurrentStatus = (isvalidForAwaitingPunch: Boolean) => {
+  const statusArray = PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS
+  if (isvalidForAwaitingPunch) {
+    statusArray[ProjectStatus.Awaitingpunch] = [
+      OPTIONS[ProjectStatus.Awaitingpunch],
+      OPTIONS[ProjectStatus.Active],
+      OPTIONS[ProjectStatus.Punch],
+      OPTIONS[ProjectStatus.Disputed],
+      OPTIONS[ProjectStatus.Cancelled],
+    ]
+    statusArray[ProjectStatus.Active] = [
+      OPTIONS[ProjectStatus.Active],
+      OPTIONS[ProjectStatus.Awaitingpunch],
+    ]
+  }
+  return statusArray
+  }
 export const getProjectStatusSelectOptions = () => {
   return Object.entries(ProjectStatus).map(([key, value]) => ({
     value: value,
@@ -208,10 +224,11 @@ export const useProjectStatusSelectOptions = (project: Project) => {
 
     if (!projectStatusId) return []
 
-     let projectStatusSelectOptions =PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS[projectStatusId] || []
-if (isvalidForAwaitingPunch){
-   projectStatusSelectOptions = PROJECT_STATUSES_ASSOCIATE_WITH_NEW_CURRENT_STATUS[projectStatusId] || []
-}
+//      let projectStatusSelectOptions =PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS[projectStatusId] || []
+// if (isvalidForAwaitingPunch){
+//    projectStatusSelectOptions = PROJECT_STATUSES_ASSOCIATE_WITH_NEW_CURRENT_STATUS[projectStatusId] || []
+// }
+const projectStatusSelectOptions = statusArrayApplicableforCurrentStatus(isvalidForAwaitingPunch)[projectStatusId] || [];
 
     const selectOptionWithDisableEnabled = projectStatusSelectOptions.map((selectOption: SelectOption) => {
       const optionValue = selectOption?.value
