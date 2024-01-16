@@ -314,6 +314,7 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
           awardStatus: workOrder?.assignAwardPlan,
           value: `${workOrder.id}`,
           isValidForAwardPlan: workOrder?.validForAwardPlan,
+          isValidForNewAwardPlan: workOrder?.applyNewAwardPlan,
         })),
     [workOrders],
   )
@@ -393,7 +394,7 @@ export const useWorkOrderAwardStats = (workOrderId?: string, applyNewAwardPlan?:
   const enabled = workOrderId !== null && workOrderId !== 'null' && workOrderId !== undefined
 
   const { data: awardPlansStats, ...rest } = useQuery<Array<WorkOrderAwardStats>>(
-    ['changeOrders', workOrderId],
+    ['changeOrders', workOrderId,applyNewAwardPlan,projectWorkOrderId],
     async () => {
       let response
 
