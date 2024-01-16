@@ -70,8 +70,12 @@ export const InvoiceInfo: React.FC<{ title: string; value: string; icons: React.
           fontSize="14px"
           fontStyle="normal"
           fontWeight={400}
-          noOfLines={[0, 1]}
           title={value}
+          isTruncated
+          whiteSpace="nowrap"
+          maxW="100px"
+          overflow="hidden"
+          textOverflow="ellipsis"
         >
           {value}
         </Text>

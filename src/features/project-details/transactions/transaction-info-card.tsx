@@ -16,17 +16,10 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({ chi
       borderBottom={{ base: '1px solid #CBD5E0', md: 'none' }}
       _last={{ border: 'none' }}
     >
-      <Center
-        justifyContent={{ base: 'start', md: 'center' }}
-        px={5}
-        flex={rest.flex || 1}
-        position="relative"
-        borderLeft="1px solid #CBD5E0"
-        {...rest}
-      >
+     <Center flexDir="column" borderRight="1px solid  #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
         <Box fontSize="14px" fontWeight={400} fontFamily="poppins">
           <Tooltip label={title} color="black" bg='white' placement="top">
-            <Text color="gray.700" whiteSpace={{ base: 'nowrap', md: 'unset' }} noOfLines={[0, 1]}>
+            <Text color="gray.700" whiteSpace={{ base: 'nowrap', md: 'unset' }} noOfLines={[0, 1]} fontSize='14px' fontWeight="500">
               {title}
             </Text>
           </Tooltip>
@@ -44,7 +37,7 @@ export const TransactionInfoCard: React.FC<{
   const { t } = useTranslation()
   
   return (
-    <Flex flexWrap="wrap" w="100%" bg="white" borderRadius="6px" style={boxShadow} mt={{ base: 5, sm: 0 }}>
+    <Flex flexWrap="wrap" w="100%" bg="white"  h={{ base: 'unset', xl: '80px' }} borderRadius="6px" style={boxShadow} mt={{ base: 5, sm: 0 }} >
       <InfoStructureCard
         title={t('projectID')}
         isLoading={isLoading}
