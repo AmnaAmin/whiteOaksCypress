@@ -93,7 +93,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 
   const {
     isWOACompletionDateRequired,
+    isWOACompletionDateRequiredNew,
     isClientWalkthroughDateRequired,
+    isClientWalkthroughDateRequiredNew,
     isWOAStartDateRequired,
     isClientSignOffDateRequired,
   } = useFieldsRequired(control)
@@ -427,11 +429,11 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <Input
                 type="date"
                 isDisabled={isWOACompletionDisabled}
-                variant={isWOACompletionDateRequired ? 'required-field' : 'outline'}
+                variant={isWOACompletionDateRequired || isWOACompletionDateRequiredNew? 'required-field' : 'outline'}
                 max={isAdmin ? '' : dateToday}
                 min={isAdmin ? '' : woaCompletionMin}
                 {...register('woaCompletionDate', {
-                  required: isWOACompletionDateRequired ? 'This is required field.' : false,
+                  required: isWOACompletionDateRequired || isWOACompletionDateRequiredNew? 'This is required field.' : false,
                 })}
                 onChange={e => {
                   const woaCompletion = e.target.value
@@ -460,10 +462,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <Input
                 type="date"
                 isDisabled={isClientWalkthroughDisabled}
-                variant={isClientWalkthroughDateRequired ? 'required-field' : 'outline'}
+                variant={isClientWalkthroughDateRequired  || isClientWalkthroughDateRequiredNew? 'required-field' : 'outline'}
                 max={isAdmin ? '' : dateToday}
                 {...register('clientWalkthroughDate', {
-                  required: isClientWalkthroughDateRequired ? 'This is required field.' : false,
+                  required: isClientWalkthroughDateRequired || isClientWalkthroughDateRequiredNew? 'This is required field.' : false,
                 })}
               />
               <FormErrorMessage>{errors?.clientWalkthroughDate?.message}</FormErrorMessage>

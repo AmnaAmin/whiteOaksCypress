@@ -52,6 +52,7 @@ export type Project = {
   paymentTerm: string | null
   pendingTransactions: number | null
   poNumber: string | null
+  validForAwaitingPunchStatus: boolean
   pcPhoneNumber: string | null
   pcPhoneNumberExtension: string | null
   pmPhoneNumberExtension: string | null
