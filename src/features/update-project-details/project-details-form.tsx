@@ -40,7 +40,6 @@ import { TransactionStatusValues, TransactionTypeValues } from 'types/transactio
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
-import InvoiceAndPayments from './invoicing-payments'
 import { ConfirmationBox } from 'components/Confirmation'
 
 type tabProps = {
@@ -85,8 +84,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     formState: { errors, isSubmitting },
     watch,
   } = formReturn
-  const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
-    useSubFormErrors(errors)
+  const { isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } = useSubFormErrors(errors)
   const watchClient = watch('client')
 
   const carrierSelected = watchClient?.carrier?.filter(e => e.id === projectData?.carrierId)
@@ -267,14 +265,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
                 {t(`project.projectDetails.projectManagement`)}
               </TabCustom>
-              {!projectData?.validForNewInvoice && (
-                <TabCustom
-                  isError={!projectData?.validForNewInvoice ? isInvoiceAndPaymentFormErrors && tabIndex !== 1 : false}
-                >
-                  {t(`project.projectDetails.invoicingPayment`)}
-                  {/* // : t(`project.projectDetails.payments`)} */}
-                </TabCustom>
-              )}
+
               <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 3}>
                 {t(`project.projectDetails.contacts`)}
               </TabCustom>
@@ -302,14 +293,6 @@ const ProjectDetailsTab = (props: tabProps) => {
                     isReadOnly={isReadOnly}
                   />
                 </TabPanel>
-                {!projectData?.validForNewInvoice && (
-                  <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                    <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
-                    {/* // : (
-                  //   <Payments isReadOnly={isReadOnly} projectData={projectData} />
-                  // )} */}
-                  </TabPanel>
-                )}
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
                   <Contact
