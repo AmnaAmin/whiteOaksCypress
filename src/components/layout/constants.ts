@@ -76,7 +76,7 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.payable`,
     Icon: BiCreditCard,
     color: '#68D391',
-    permissions: ['PAYABLE.EDIT', 'PAYABLE.READ', 'ALL'],
+    permissions: ['PAYABLE.EDIT', 'PAYABLE.READ', 'ALL', 'ESTPAYABLE.READ', 'ESTPAYABLE.EDIT'],
     testId: 'payableMenuItem',
   },
   {
@@ -84,7 +84,7 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.receivable`,
     Icon: BiDollarCircle,
     color: '#4299E1',
-    permissions: ['RECEIVABLE.EDIT', 'RECEIVABLE.READ', 'ESTIMATERECEIVABLE.READ', 'ESTIMATERECEIVABLE.READ', 'ALL'],
+    permissions: ['RECEIVABLE.EDIT', 'RECEIVABLE.READ', 'ESTRECEIVABLE.EDIT', 'ESTRECEIVABLE.READ', 'ALL'],
     testId: 'recievableMenuItem',
   },
   {

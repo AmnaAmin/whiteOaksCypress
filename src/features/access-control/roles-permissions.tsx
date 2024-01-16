@@ -50,7 +50,6 @@ import { useAccountData } from 'api/user-account'
 import { Card } from 'components/card/card'
 import { TabCustom } from 'features/work-order/work-order-edit'
 import { EstimateRolePermissions } from './estimates-roles-permission'
-import { forEach } from 'lodash'
 import { ConstructionRolePermissions } from './construction-roles-permissions'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
@@ -470,11 +469,6 @@ const PermissionsTable = ({ formControl, checkDefaultPermissions }) => {
 
 const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
   const { t } = useTranslation()
-  const btnStyle = {
-    alignItems: 'center',
-    justifyContent: 'end',
-    borderTop: '1px solid #CBD5E0',
-  }
   const [tabIndex, setTabIndex] = useState(0)
 
   return (
@@ -513,7 +507,7 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
               <TabCustom>{t('Construction')}</TabCustom>
               <TabCustom>{t('Estimates')}</TabCustom>
             </TabList>
-            <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px" marginBottom="20px">
+            <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px">
               <TabPanels mt="10px">
                 <TabPanel pt="0px" pl="3px" pb="0px" h="550px" mb="20px" overflowY={'auto'}>
                   <ConstructionRolePermissions formReturn={formReturn} />
@@ -522,16 +516,14 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
                   <EstimateRolePermissions formReturn={formReturn} />
                 </TabPanel>
               </TabPanels>
-              <Flex style={btnStyle}>
-                <ModalFooter>
-                  <Button mt="10px" colorScheme="brand" data-testid="save-advanced-permissons" onClick={onClose}>
-                    {t(`save`)}
-                  </Button>
-                </ModalFooter>
-              </Flex>
             </Card>
           </Tabs>
         </ModalBody>
+        <ModalFooter>
+          <Button colorScheme="brand" data-testid="confirmation-no" mr={3} onClick={onClose}>
+            {t(`done`)}
+          </Button>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   )

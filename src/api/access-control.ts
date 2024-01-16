@@ -250,9 +250,12 @@ export enum ADV_PERMISSIONS {
   estGateCodeEdit = 'ESTIMATEDETAILS.CONTACTS.GATECODE.EDIT',
   estLockBoxEdit = 'ESTIMATEDETAILS.CONTACTS.LOCKBOX.EDIT',
   carrierFeeCreateInApprovedStatus = 'ESTIMATEDETAILS.TRANSACTION.CARRIERFEEONAPPROVED.ENABLE',
+  invoiceDateEditEst = 'ESTIMATEDETAILS.INVOICING.INVOICEDATE.EDIT',
+  invoiceEditEst = 'ESTIMATEDETAILS.INVOICING.EDIT',
 }
 
 export const mapFormValuestoPayload = (values, allPermissions) => {
+  console.log('allPermissions', allPermissions)
   let permissions = values.permissions
     ?.filter(p => !p.hide && (p.edit || p.read)) //remove all hidden. And select ones that have edit or read true
     ?.map(p => {
@@ -323,13 +326,15 @@ export const permissionsDefaultValues = ({ permissions, sections }) => {
       invoiceEdit: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p)),
     },
     advancedPermissionsEst: {
-      enableConvertProject: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p)),
+      enableConvertProject: permissionSet?.some(p => [ADV_PERMISSIONS.enableConvertProject, 'ALL'].includes(p)),
       estFpmEdit: permissionSet?.some(p => [ADV_PERMISSIONS.estFpmEdit, 'ALL'].includes(p)),
       estGateCodeEdit: permissionSet?.some(p => [ADV_PERMISSIONS.estGateCodeEdit, 'ALL'].includes(p)),
       estLockBoxEdit: permissionSet?.some(p => [ADV_PERMISSIONS.estLockBoxEdit, 'ALL'].includes(p)),
       carrierFeeCreateInApprovedStatus: permissionSet?.some(p =>
         [ADV_PERMISSIONS.carrierFeeCreateInApprovedStatus, 'ALL'].includes(p),
       ),
+      invoiceDateEditEst: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceDateEditEst, 'ALL'].includes(p)),
+      invoiceEditEst: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceEditEst, 'ALL'].includes(p)),
     },
   }
 }

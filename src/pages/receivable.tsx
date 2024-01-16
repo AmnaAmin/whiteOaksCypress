@@ -11,7 +11,8 @@ export const Receivable = () => {
   const { data: account } = useAccountDetails()
   const isSystemRole = account?.authorityList?.[0]?.systemRole
   const { permissions } = useRoleBasedPermissions()
-  const isRecievableReadOrEdit = permissions.some(p => ['ESTRECEIVABLE.READ', 'ESTRECEIVABLE.EDIT'].includes(p))
+  const isRecievableReadOrEditEst = permissions.some(p => ['ESTRECEIVABLE.READ', 'ESTRECEIVABLE.EDIT'].includes(p))
+  const isRecievableReadOrEditCons = permissions.some(p => ['RECEIVABLE.READ', 'RECEIVABLE.EDIT'].includes(p))
   const handleTabsChange = index => {
     setTabIndex(index)
   }
@@ -19,15 +20,17 @@ export const Receivable = () => {
     <>
       <Tabs variant="enclosed" colorScheme="brand" onChange={handleTabsChange}>
         <TabList>
-          <Tab>Construction</Tab>
-          {isSystemRole && isRecievableReadOrEdit && <Tab>Estimates</Tab>}
+          {isRecievableReadOrEditCons && <Tab>Construction</Tab>}
+          {isRecievableReadOrEditEst && <Tab>Estimates</Tab>}
           {isSystemRole && <Tab>Maintenance</Tab>}
         </TabList>
         <TabPanels>
-          <TabPanel padding="5px 0px 0px 0px">
-            <ConstructionPortalReceiveable />
-          </TabPanel>
-          {isSystemRole && isRecievableReadOrEdit && (
+          {isRecievableReadOrEditCons && (
+            <TabPanel padding="5px 0px 0px 0px">
+              <ConstructionPortalReceiveable />
+            </TabPanel>
+          )}
+          {isRecievableReadOrEditEst && (
             <TabPanel h="100vh" padding="5px 0px 0px 0px">
               <EstimatesPortalReceiveable />
             </TabPanel>

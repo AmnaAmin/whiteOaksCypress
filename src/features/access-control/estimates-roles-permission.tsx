@@ -145,6 +145,55 @@ export const EstimateRolePermissions = ({ formReturn }) => {
               </>
             )}
           />
+          <Text color="gray.500" mt="25px !important" fontWeight={500}>
+            Invoicing
+          </Text>
+          <Controller
+            control={control}
+            name={`advancedPermissionsEst.invoiceEditEst`}
+            render={({ field, fieldState }) => (
+              <>
+                <Checkbox
+                  colorScheme="PrimaryCheckBox"
+                  isChecked={field.value}
+                  style={{ background: 'white', border: '#DFDFDF' }}
+                  mr="2px"
+                  size="md"
+                  onChange={value => {
+                    field.onChange(value)
+                  }}
+                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                >
+                  <Text fontSize="14px" overflow="hidden" wordBreak={'break-word'}>
+                    Can Create Invoice
+                  </Text>
+                </Checkbox>
+              </>
+            )}
+          />
+          <Controller
+            control={control}
+            name={`advancedPermissionsEst.invoiceDateEditEst`}
+            render={({ field, fieldState }) => (
+              <>
+                <Checkbox
+                  colorScheme="PrimaryCheckBox"
+                  isChecked={field.value}
+                  style={{ background: 'white', border: '#DFDFDF' }}
+                  mr="2px"
+                  size="md"
+                  onChange={value => {
+                    field.onChange(value)
+                  }}
+                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                >
+                  <Text fontSize="14px" overflow="hidden" wordBreak={'break-word'}>
+                    Can Change Invoice Date
+                  </Text>
+                </Checkbox>
+              </>
+            )}
+          />
         </VStack>
       </HStack>
     </>
