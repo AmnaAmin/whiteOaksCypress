@@ -427,8 +427,8 @@ export const useMarkets = () => {
     ...(markets?.map(market => ({
       value: market?.id,
       label: market?.metropolitanServiceArea,
-    })) || [])
-  ];
+    })) || []),
+  ]
 
   return {
     marketSelectOptions,
@@ -699,6 +699,8 @@ export const useGanttChart = (projectId?: string): any => {
 }
 
 export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired, currentVendorId }) => {
+  const currVendID = currentVendorId !== null ? currentVendorId : 0
+
   const status_active = 12
   const status_expired = 15
   const capacity = 1 // sfor new workorder capacity is fixed
@@ -715,7 +717,7 @@ export const useFilteredVendors = ({ vendorSkillId, projectId, showExpired, curr
     '&projectsId.equals=' +
     projectId +
     '&currentVendorId.equals=' +
-    currentVendorId
+    currVendID
   const { data, ...rest } = useQuery<Array<Vendors>>(
     ['FETCH_FILTERED_VENDORS', vendorSkillId],
     async () => {
