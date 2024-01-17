@@ -235,18 +235,18 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   // not used for now -  const completedState = [STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
-    dateInvoiceSubmittedEnabled: defaultStatus || isAdmin,
-    paymentTermEnabled: defaultStatus || (workOrder?.assignAwardPlan && isAdmin),
-    paymentTermDateEnabled: defaultStatus || isAdmin,
-    expectedPaymentDateEnabled: defaultStatus || isAdmin,
-    datePaymentProcessedEnabled: defaultStatus || isAdmin,
-    datePaidEnabled: defaultStatus || invoicedState || isAdmin,
-    invoiceAmountEnabled: defaultStatus || isAdmin,
-    clientOriginalApprovedAmountEnabled: defaultStatus || isAdmin,
-    clientApprovedAmountEnabled: defaultStatus || isAdmin,
+    dateInvoiceSubmittedEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
+    paymentTermEnabled: defaultStatus || (workOrder?.assignAwardPlan && isAdmin && workOrder?.visibleToVendor),
+    paymentTermDateEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
+    expectedPaymentDateEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
+    datePaymentProcessedEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
+    datePaidEnabled: defaultStatus || invoicedState || (isAdmin && workOrder?.visibleToVendor),
+    invoiceAmountEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
+    clientOriginalApprovedAmountEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
+    clientApprovedAmountEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
     finalInvoiceAmountEnabled: defaultStatus,
-    paymentDateEnabled: !isAdmin ? defaultStatus || invoicedState : true,
-    partialPaymentEnabled: !isAdmin ? defaultStatus || invoicedState : true,
+    paymentDateEnabled: !isAdmin ? defaultStatus || invoicedState : true && workOrder?.visibleToVendor,
+    partialPaymentEnabled: !isAdmin ? defaultStatus || invoicedState : true && workOrder?.visibleToVendor,
   }
 }
 
@@ -372,7 +372,7 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
     workOrderExpectedCompletionDate: datePickerFormat(workOrder?.workOrderExpectedCompletionDate),
     showPrice: workOrder.showPricing ?? false,
     notifyVendor: workOrder.notifyVendor ?? false,
-    visibleToVendor: workOrder.visibleToVendor ?? false,
+    assignToVendor: workOrder.visibleToVendor ?? false,
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {

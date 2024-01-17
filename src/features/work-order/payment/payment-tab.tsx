@@ -162,12 +162,12 @@ const PaymentInfoTab = props => {
 
   useEffect(() => {
     if (isReadOnly) {
-      Array.from(document.querySelectorAll("input")).forEach(input => {
-        if (input.getAttribute("data-testid") !== "tableFilterInputField") {
-            input.setAttribute("disabled", "true");
-          }
-      });
-    };
+      Array.from(document.querySelectorAll('input')).forEach(input => {
+        if (input.getAttribute('data-testid') !== 'tableFilterInputField') {
+          input.setAttribute('disabled', 'true')
+        }
+      })
+    }
   }, [])
   return (
     <Box>
@@ -561,7 +561,7 @@ const PaymentInfoTab = props => {
                   type="submit"
                   data-testid="submit-btn"
                   colorScheme="brand"
-                  disabled={isWorkOrderUpdating || isWOCancelled}
+                  disabled={isWorkOrderUpdating || isWOCancelled || !workOrder?.visibleToVendor}
                 >
                   {t('save')}
                 </Button>

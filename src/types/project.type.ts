@@ -184,6 +184,7 @@ export type ProjectColumnType = {
 
 export type ProjectWorkOrderType = {
   awardPlanId: number
+  visibleToVendor?: boolean
   id: number
   displayAwardPlan: boolean
   lienWaiverAccepted: boolean
