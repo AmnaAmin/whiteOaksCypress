@@ -409,12 +409,15 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 min={woaStartMin}
                 {...register('woaStartDate', {
                   required: isWOAStartDateRequired ? 'This is required' : false,
-                  validate: (value) => {
+                  validate: value => {
                     if (!value) {
                       return true
                     }
-              
-                    return new Date(value) >= new Date(woaStartMin) || 'WOA start date cannot be less than client start date.';
+
+                    return (
+                      new Date(value) >= new Date(woaStartMin) ||
+                      'WOA start date cannot be less than client start date.'
+                    )
                   },
                 })}
               />

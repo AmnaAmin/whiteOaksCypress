@@ -211,7 +211,7 @@ export const getProjectStatusSelectOptions = () => {
   }))
 }
 
-export const useProjectStatusSelectOptions = (project: Project) => {
+export const useProjectStatusSelectOptions = (project: Project, isAdmin?: boolean) => {
   return useMemo(() => {
     if (!project) return []
     const isvalidForAwaitingPunch = project?.validForAwaitingPunchStatus
@@ -348,6 +348,14 @@ const projectStatusSelectOptions = statusArrayApplicableforCurrentStatus(isvalid
         return {
           ...selectOption,
           label: `${selectOption.label} (You have pending transactions)`,
+          disabled: true,
+        }
+      }
+
+      if (!isAdmin && optionValue === ProjectStatus.Invoiced) {
+        return {
+          ...selectOption,
+          label: `${selectOption.label}`,
           disabled: true,
         }
       }
