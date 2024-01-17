@@ -53,11 +53,13 @@ const CreateVendorDetail: React.FC<{
     control,
     register,
     watch,
+    trigger,
+    clearErrors,
     setValue,
   } = useFormContext<VendorProfileDetailsFormData>()
   const { disableDetailsNext } = useVendorNext({ control })
   const contactFormValue = watch()
-  console.log('contactFormValue',contactFormValue)
+  console.log('contactFormValue', contactFormValue)
   const capacityError = useWatch({ name: 'capacity', control })
 
   // Set Document Status dropdown if Status is Expired
@@ -76,7 +78,7 @@ const CreateVendorDetail: React.FC<{
 
   return (
     <Stack spacing={3}>
-      <Box h='596px' overflow="auto">
+      <Box h="596px" overflow="auto">
         <HStack spacing="16px">
           <FormControl w="215px" isInvalid={!!errors.companyName}>
             <FormLabel variant="strong-label" size="md">
@@ -196,12 +198,12 @@ const CreateVendorDetail: React.FC<{
                 size="md"
                 isDisabled={isReadOnly}
                 maxLength={255}
-                />
-                {contactFormValue.streetAddress !== undefined && contactFormValue.streetAddress?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.streetAddress !== undefined && contactFormValue.streetAddress?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -229,12 +231,12 @@ const CreateVendorDetail: React.FC<{
                 isDisabled={isReadOnly}
                 onKeyPress={preventNumber}
                 maxLength={255}
-                />
-                {contactFormValue.city !== undefined && contactFormValue.city?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.city !== undefined && contactFormValue.city?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -282,12 +284,12 @@ const CreateVendorDetail: React.FC<{
                 data-testid="vendorZipCode"
                 isDisabled={isReadOnly}
                 maxLength={255}
-                />
-                {contactFormValue.zipCode !== undefined && contactFormValue.zipCode?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.zipCode !== undefined && contactFormValue.zipCode?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -312,8 +314,9 @@ const CreateVendorDetail: React.FC<{
                 size="md"
                 isDisabled={isReadOnly}
                 maxLength={255}
-                />
-                {contactFormValue.businessEmailAddress !== undefined && contactFormValue.businessEmailAddress?.length === 255 && (
+              />
+              {contactFormValue.businessEmailAddress !== undefined &&
+                contactFormValue.businessEmailAddress?.length === 255 && (
                   <Text color="red" fontSize="xs" w="215px">
                     Please use 255 characters only.
                   </Text>
@@ -355,7 +358,7 @@ const CreateVendorDetail: React.FC<{
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl h="70px">
+            <FormControl h="70px" isInvalid={!!errors.businessPhoneNumberExtension}>
               <FormLabel variant="strong-label" size="md">
                 {t('ext')}
               </FormLabel>
@@ -365,6 +368,8 @@ const CreateVendorDetail: React.FC<{
                   maxLength: { value: 20, message: 'Character limit reached (maximum 20 characters)' },
                   onChange: e => {
                     setValue('businessPhoneNumberExtension', e.target.value)
+                    if (e?.target?.value?.length > 20) trigger('businessPhoneNumberExtension')
+                    else clearErrors('businessPhoneNumberExtension')
                   },
                 })}
                 w="121px"
@@ -372,13 +377,10 @@ const CreateVendorDetail: React.FC<{
                 size="md"
                 isDisabled={isReadOnly}
                 type="number"
-                maxLength={20}
-                />
-                {contactFormValue.businessPhoneNumberExtension !== undefined && contactFormValue.businessPhoneNumberExtension?.length === 20 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 20 characters only.
-                  </Text>
-                )}
+              />
+              {!!errors.businessPhoneNumberExtension && (
+                <FormErrorMessage> {errors?.businessPhoneNumberExtension?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
         </Grid>
@@ -454,12 +456,12 @@ const CreateVendorDetail: React.FC<{
                 size="md"
                 isDisabled={isReadOnly}
                 maxLength={255}
-                />
-                {contactFormValue.ownerName !== undefined && contactFormValue.ownerName?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.ownerName !== undefined && contactFormValue.ownerName?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.ownerName && errors.ownerName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
