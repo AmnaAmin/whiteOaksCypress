@@ -93,7 +93,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 
   const {
     isWOACompletionDateRequired,
+    isWOACompletionDateRequiredNew,
     isClientWalkthroughDateRequired,
+    isClientWalkthroughDateRequiredNew,
     isWOAStartDateRequired,
     isClientSignOffDateRequired,
   } = useFieldsRequired(control)
@@ -206,7 +208,23 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="woNumber">
                 {t(`project.projectDetails.woNumber`)}
               </FormLabel>
-              <Input id="woNumber" {...register('woNumber')} autoComplete="off" />
+              <Input
+                id="woNumber"
+                {...register('woNumber', {
+                  maxLength: { value: 50, message: 'Character limit reached (maximum 50 characters)' },
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+                  },
+                })}
+                autoComplete="off"
+                maxLength={50}
+              />
+              {watchForm?.woNumber && watchForm?.woNumber.length === 50 && (
+                <Text color="red" fontSize="xs">
+                  Please Use 50 Characters only.
+                </Text>
+              )}
               <FormErrorMessage>{errors.woNumber && errors.woNumber.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -215,7 +233,23 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="poNumber">
                 {t(`project.projectDetails.poNumber`)}
               </FormLabel>
-              <Input id="poNumber" {...register('poNumber')} autoComplete="off" />
+              <Input
+                id="poNumber"
+                {...register('poNumber', {
+                  maxLength: { value: 50, message: 'Character limit reached (maximum 50 characters)' },
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+                  },
+                })}
+                autoComplete="off"
+                maxLength={50}
+              />
+              {watchForm?.poNumber && watchForm?.poNumber.length === 50 && (
+                <Text color="red" fontSize="xs">
+                  Please Use 50 Characters only.
+                </Text>
+              )}
               <FormErrorMessage>{errors.poNumber && errors.poNumber.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -224,7 +258,24 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="claimNumber">
                 {t(`project.projectDetails.claimNumber`)}
               </FormLabel>
-              <Input size="md" id="claimNumber" {...register('claimNumber')} autoComplete="off" />
+              <Input
+                size="md"
+                id="claimNumber"
+                {...register('claimNumber', {
+                  maxLength: { value: 50, message: 'Character limit reached (maximum 50 characters)' },
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+                  },
+                })}
+                autoComplete="off"
+                maxLength={50}
+              />
+              {watchForm?.claimNumber && watchForm?.claimNumber.length === 50 && (
+                <Text color="red" fontSize="xs">
+                  Please Use 50 Characters only.
+                </Text>
+              )}
               <FormErrorMessage>{errors.claimNumber && errors.claimNumber.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -234,7 +285,24 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="reoNumber">
                 {t(`project.projectDetails.reoNumber`)}
               </FormLabel>
-              <Input size="md" id="reoNumber" {...register('reoNumber')} autoComplete="off" />
+              <Input
+                size="md"
+                id="reoNumber"
+                {...register('reoNumber', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+                  },
+                })}
+                autoComplete="off"
+                maxLength={255}
+              />
+              {watchForm?.reoNumber && watchForm?.reoNumber.length === 255 && (
+                <Text color="red" fontSize="xs">
+                  Please Use 255 Characters only.
+                </Text>
+              )}
               <FormErrorMessage>{errors.reoNumber && errors.reoNumber.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -271,7 +339,24 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <FormLabel variant="strong-label" size="md" htmlFor="projectName">
                 {t(`project.projectDetails.projectName`)}
               </FormLabel>
-              <Input size="md" id="projectName" {...register('projectName')} autoComplete="off" />
+              <Input
+                size="md"
+                id="projectName"
+                {...register('projectName', {
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  validate: {
+                    notOnlyWhitespace: value =>
+                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
+                  },
+                })}
+                autoComplete="off"
+                maxLength={255}
+              />
+              {watchForm?.projectName && watchForm?.projectName.length === 255 && (
+                <Text color="red" fontSize="xs">
+                  Please Use 255 Characters only.
+                </Text>
+              )}
               <FormErrorMessage>{errors.projectName && errors.projectName.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -324,12 +409,15 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 min={woaStartMin}
                 {...register('woaStartDate', {
                   required: isWOAStartDateRequired ? 'This is required' : false,
-                  validate: (value) => {
+                  validate: value => {
                     if (!value) {
                       return true
                     }
-              
-                    return new Date(value) >= new Date(woaStartMin) || 'WOA start date cannot be less than client start date.';
+
+                    return (
+                      new Date(value) >= new Date(woaStartMin) ||
+                      'WOA start date cannot be less than client start date.'
+                    )
                   },
                 })}
               />
@@ -344,11 +432,11 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <Input
                 type="date"
                 isDisabled={isWOACompletionDisabled}
-                variant={isWOACompletionDateRequired ? 'required-field' : 'outline'}
+                variant={isWOACompletionDateRequired || isWOACompletionDateRequiredNew? 'required-field' : 'outline'}
                 max={isAdmin ? '' : dateToday}
                 min={isAdmin ? '' : woaCompletionMin}
                 {...register('woaCompletionDate', {
-                  required: isWOACompletionDateRequired ? 'This is required field.' : false,
+                  required: isWOACompletionDateRequired || isWOACompletionDateRequiredNew? 'This is required field.' : false,
                 })}
                 onChange={e => {
                   const woaCompletion = e.target.value
@@ -377,10 +465,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <Input
                 type="date"
                 isDisabled={isClientWalkthroughDisabled}
-                variant={isClientWalkthroughDateRequired ? 'required-field' : 'outline'}
+                variant={isClientWalkthroughDateRequired  || isClientWalkthroughDateRequiredNew? 'required-field' : 'outline'}
                 max={isAdmin ? '' : dateToday}
                 {...register('clientWalkthroughDate', {
-                  required: isClientWalkthroughDateRequired ? 'This is required field.' : false,
+                  required: isClientWalkthroughDateRequired || isClientWalkthroughDateRequiredNew? 'This is required field.' : false,
                 })}
               />
               <FormErrorMessage>{errors?.clientWalkthroughDate?.message}</FormErrorMessage>

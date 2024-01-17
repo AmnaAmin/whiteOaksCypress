@@ -10,6 +10,7 @@ import SummaryIconFirst, {
   SummaryIconNinth,
   SummaryIconTenth,
   SummaryIconEleventh,
+  SummaryIconAwaitingPunch,
 } from 'icons/pc-project-icons'
 import React from 'react'
 import { useProjectCards } from 'api/pc-projects'
@@ -43,6 +44,13 @@ const useProjectCardJson = cards => {
       value: 'active',
       number: cards?.find(c => c?.status === 8)?.count || 0,
       IconElement: <IconElement Icon={SummaryIconSecond} bg="#E5ECF9" />,
+    },
+    {
+      id: 'awaiting_punch',
+      title: t('projects.projectFilter.awaitingPunch'),
+      value: 'awaiting punch',
+      number: cards?.find(c => c?.status === 190)?.count || 0,
+      IconElement: <IconElement Icon={SummaryIconAwaitingPunch} bg="#F8F3FD" />,
     },
     {
       id: 'punch',
