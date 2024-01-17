@@ -36,13 +36,12 @@ import {
   mapMaterialItemstoTransactions,
   useFetchMaterialItems,
   useUploadMaterialAttachment,
-  useWorkOrderAwardStats,
 } from 'api/transactions'
 import { useAccountDetails } from 'api/vendor-details'
 import NumberFormat from 'react-number-format'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
-import { useProjectWorkOrders } from 'api/projects'
+
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
@@ -57,6 +56,7 @@ type TransactionAmountFormProps = {
   setFileParseMsg?: (value) => void
   currentWorkOrderId?: any
   projectId?: any
+  selectedWorkOrderStats?: any
 }
 
 export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
@@ -70,15 +70,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   setDisableBtn,
   disableError,
   setFileParseMsg,
-  currentWorkOrderId,
-  projectId,
+  selectedWorkOrderStats,
 }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const workOrderId = changeOrder?.parentWorkOrderId || currentWorkOrderId
-  const { data: workOrders } = useProjectWorkOrders(projectId)
-  const workOrder = workOrders?.find(wo => wo.id === workOrderId) as any
-  const { awardPlansStats } = useWorkOrderAwardStats(workOrder?.projectId, workOrder?.applyNewAwardPlan, workOrder?.id)
+  const  awardPlansStats  =selectedWorkOrderStats
 
   const {
     control,
@@ -153,10 +149,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
   const { isApproved, lateAndFactoringFeeForVendor } = useFieldDisabledEnabledDecision(control, changeOrder)
   const { isAdmin } = useUserRolesSelector()
 
-  let awardPlanRemainingAmount
-  if (awardPlansStats?.length) {
-    awardPlanRemainingAmount = awardPlansStats[0].allowedDrawAmount as number
-  }
+  let awardPlanRemainingAmount = awardPlansStats?.allowedDrawAmount as number
   const allChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).every(Boolean) : false
   const someChecked = isValidAndNonEmptyObject(checkedItems) ? Object.values(checkedItems).some(Boolean) : false
   const isIndeterminate = someChecked && !allChecked

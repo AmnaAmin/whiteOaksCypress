@@ -20,7 +20,7 @@ const InfoStructureCard: React.FC<{ isLoading: boolean } & CenterProps> = ({
     <Center flexDir="column" borderRight="1px solid #E5E5E5" px={4} flex={rest.flex || 1} {...rest}>
       <Box fontSize="14px" color="gray.500">
         <Tooltip label={title} color="black" placement="top" bg="#ffffff">
-          <FormLabel fontSize={fontSize} variant="strong-label" size="md" noOfLines={1}>
+          <FormLabel fontSize='14px' variant="strong-label" size="md" noOfLines={1} mt='3px'>
             {title}
           </FormLabel>
         </Tooltip>
@@ -43,7 +43,7 @@ export const ProjectSummaryCard: React.FC<{
         <Flex>
           <Flex
             py={6}
-            h={{ base: 'unset', xl: '97px' }}
+            h={{ base: 'unset', xl: '80px' }}
             w="100%"
             bg="white"
             border="1px solid #E5E5E5"
@@ -51,12 +51,12 @@ export const ProjectSummaryCard: React.FC<{
             box-shadow="0px 20px 70px rgba(86, 89, 146, 0.1)"
           >
             <InfoStructureCard title={t('projects.projectSummary.projectID')} isLoading={isLoading} fontSize="12px">
-              <FormLabel variant="light-label" size="md">
+              <FormLabel variant="light-label" size="md" mt='-9px'>
                 {projectData?.displayId}{' '}
               </FormLabel>
             </InfoStructureCard>
             <InfoStructureCard title={t('projects.projectSummary.status')} isLoading={isLoading} fontSize="12px">
-              <FormLabel variant="light-label" size="md">
+              <FormLabel variant="light-label" size="md" mt='-9px'>
                 <Box>
                   {projectData?.projectStatus ? (
                     <Status value={projectData?.projectStatus} id={projectData?.projectStatus} />
@@ -67,17 +67,17 @@ export const ProjectSummaryCard: React.FC<{
               </FormLabel>
             </InfoStructureCard>
             <InfoStructureCard title={t('projects.projectSummary.client')} isLoading={isLoading} fontSize="12px">
-              <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.clientName}`}>
+              <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.clientName}`} mt='-9px'>
                 {projectData?.clientName}
               </FormLabel>
             </InfoStructureCard>
             <InfoStructureCard title={t('projects.projectSummary.projectDue')} isLoading={isLoading} fontSize="12px">
-              <FormLabel variant="light-label" size="md" noOfLines={1}>
+              <FormLabel variant="light-label" size="md" noOfLines={1} mt='-9px'>
                 {dateFormat(projectData?.clientDueDate as string)}
               </FormLabel>
             </InfoStructureCard>
             <InfoStructureCard title={t('projects.projectSummary.fpmName')} isLoading={isLoading} fontSize="12px">
-              <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManager}`}>
+              <FormLabel variant="light-label" size="md" noOfLines={1} title={`${projectData?.projectManager}`} mt='-9px'>
                 {projectData?.projectManager}
               </FormLabel>
             </InfoStructureCard>
@@ -86,6 +86,7 @@ export const ProjectSummaryCard: React.FC<{
                 variant="light-label"
                 size="md"
                 noOfLines={1}
+                mt='-9px'
                 title={`${projectData?.projectManagerPhoneNumber}`}
               >
                 {projectData?.projectManagerPhoneNumber}
@@ -98,6 +99,7 @@ export const ProjectSummaryCard: React.FC<{
               fontSize="12px"
             >
               <FormLabel
+              mt='-9px'
                 variant="light-label"
                 size="md"
                 noOfLines={1}
@@ -118,7 +120,7 @@ export const ProjectSummaryCard: React.FC<{
                   setSummaryPanel(2)
                 }}
               >
-                <Box mt="35px">
+                <Box mt="27px">
                   <BiCaretRight color="white" size={25} />
                 </Box>
               </Box>

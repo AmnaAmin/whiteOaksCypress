@@ -213,6 +213,15 @@ function SummaryIconEleventh(props: SVGAttributes<SVGElement>) {
     </svg>
   )
 }
+function SummaryIconAwaitingPunch(props: SVGAttributes<SVGElement>) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="0 0 46 46" fill="none">
+    <rect x="0.875" y="0.874268" width="44.293" height="44.293" rx="22.1465" fill="#FAF5FF"/>
+    <path d="M23.5149 15.3105C18.9921 15.3105 15.3125 18.9901 15.3125 23.513C15.3125 28.0358 18.9921 31.7154 23.5149 31.7154C28.0377 31.7154 31.7173 28.0358 31.7173 23.513C31.7173 18.9901 28.0377 15.3105 23.5149 15.3105ZM23.5149 30.0749C19.8968 30.0749 16.953 27.131 16.953 23.513C16.953 19.8949 19.8968 16.951 23.5149 16.951C27.133 16.951 30.0768 19.8949 30.0768 23.513C30.0768 27.131 27.133 30.0749 23.5149 30.0749Z" fill="#4A5568"/>
+    <path d="M24.3358 19.4116H22.6953V24.3331H27.6168V22.6926H24.3358V19.4116Z" fill="#4A5568"/>
+    </svg>
+  )
+}
 export default SummaryIconFirst
 export {
   SummaryIconSecond,
@@ -225,4 +234,5 @@ export {
   SummaryIconNinth,
   SummaryIconEleventh,
   SummaryIconTenth,
+  SummaryIconAwaitingPunch,
 }

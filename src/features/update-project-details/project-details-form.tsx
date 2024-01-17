@@ -5,7 +5,6 @@ import Location from './location'
 import Contact from './contact'
 import ProjectManagement from './project-management'
 import Misc from './misc'
-import Payments from './payments'
 import { BiErrorCircle, BiSpreadsheet } from 'react-icons/bi'
 import { AddressInfo, Project } from 'types/project.type'
 import { ProjectDetailsFormValues } from 'types/project-details.types'
@@ -39,9 +38,8 @@ import { useTranslation } from 'react-i18next'
 import { useTransactionsV1 } from 'api/transactions'
 import { TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
-import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
-import InvoiceAndPayments from './invoicing-payments'
 import { ConfirmationBox } from 'components/Confirmation'
 
 type tabProps = {
@@ -68,7 +66,8 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { userSelectOptions: projectCoordinatorSelectOptions } = useGetUsersByType(112)
   const { clientSelectOptions } = useGetClientSelectOptions()
   const { clientTypesSelectOptions } = useClientType()
-  const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData)
+  const { isAdmin } = useUserRolesSelector()
+  const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData, isAdmin)
   const { data: overPayment } = useGetOverpayment(projectData?.id)
   const { stateSelectOptions, states } = useStates()
   const { marketSelectOptions, markets } = useMarkets()
@@ -86,8 +85,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     formState: { errors, isSubmitting },
     watch,
   } = formReturn
-  const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
-    useSubFormErrors(errors)
+  const { isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } = useSubFormErrors(errors)
   const watchClient = watch('client')
 
   const carrierSelected = watchClient?.carrier?.filter(e => e.id === projectData?.carrierId)
@@ -268,13 +266,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
                 {t(`project.projectDetails.projectManagement`)}
               </TabCustom>
-              <TabCustom
-                isError={!projectData?.validForNewInvoice ? isInvoiceAndPaymentFormErrors && tabIndex !== 1 : false}
-              >
-                {!projectData?.validForNewInvoice
-                  ? t(`project.projectDetails.invoicingPayment`)
-                  : t(`project.projectDetails.payments`)}
-              </TabCustom>
+
               <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 3}>
                 {t(`project.projectDetails.contacts`)}
               </TabCustom>
@@ -302,13 +294,6 @@ const ProjectDetailsTab = (props: tabProps) => {
                     isReadOnly={isReadOnly}
                   />
                 </TabPanel>
-                <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  {!projectData?.validForNewInvoice ? (
-                    <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
-                  ) : (
-                    <Payments isReadOnly={isReadOnly} projectData={projectData} />
-                  )}
-                </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
                   <Contact
@@ -330,7 +315,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  <Misc />
+                  <Misc
+                  projectData={projectData} />
                 </TabPanel>
               </TabPanels>
 
@@ -339,7 +325,7 @@ const ProjectDetailsTab = (props: tabProps) => {
                   <Divider border="1px solid" />
                 </Box>
                 <Box h="70px" w="100%" pb="3">
-                  {!isReadOnly  && (
+                  {!isReadOnly && (
                     <Button
                       mt="8px"
                       mr="32px"
