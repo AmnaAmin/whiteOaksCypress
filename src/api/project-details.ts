@@ -191,8 +191,8 @@ export const statusArrayApplicableforCurrentStatus = (isvalidForAwaitingPunch: B
   const statusArray = PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS
   if (isvalidForAwaitingPunch) {
     statusArray[ProjectStatus.Awaitingpunch] = [
-      OPTIONS[ProjectStatus.Awaitingpunch],
       OPTIONS[ProjectStatus.Active],
+      OPTIONS[ProjectStatus.Awaitingpunch],
       OPTIONS[ProjectStatus.Punch],
       OPTIONS[ProjectStatus.Disputed],
       OPTIONS[ProjectStatus.Cancelled],
