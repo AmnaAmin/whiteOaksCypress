@@ -315,7 +315,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  <Misc />
+                  <Misc
+                  projectData={projectData} />
                 </TabPanel>
               </TabPanels>
 

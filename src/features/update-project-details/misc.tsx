@@ -9,7 +9,7 @@ import { ProjectDetailsFormValues } from 'types/project-details.types'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
-const Misc: React.FC = () => {
+const Misc = ({projectData}) => {
   const {
     register,
     getValues,
@@ -34,6 +34,7 @@ const Misc: React.FC = () => {
     reconcileDate,
     emailNotificationDate,
     verifiedDate,
+    awaitingPunchDate,
   } = getValues()
   const { isAdmin } = useUserRolesSelector()
   const { t } = useTranslation()
@@ -67,6 +68,19 @@ const Misc: React.FC = () => {
             <FormErrorMessage></FormErrorMessage>
           </FormControl>
         </GridItem>
+        {projectData?.validForAwaitingPunchStatus && (
+        <GridItem>
+          <FormControl>
+            <FormLabel variant="strong-label" size="md">
+              {t(`project.projectDetails.awaitingPunch`)}
+            </FormLabel>
+
+            <DatePickerInput testId="proj-awaitingPunch" value={awaitingPunchDate ? dateFormat(awaitingPunchDate) : 'mm/dd/yyyy'} disable />
+
+            <FormErrorMessage></FormErrorMessage>
+          </FormControl>
+        </GridItem>
+        )}
         <GridItem>
           <FormControl>
             <FormLabel variant="strong-label" size="md">
