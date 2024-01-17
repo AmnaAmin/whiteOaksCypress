@@ -27,7 +27,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
   const isStatusPaid = projectStatus === STATUS.Paid
   // const isStatusPastDue = projectStatus === STATUS.PastDue
   const isStatusCancelled = projectStatus === STATUS.Cancelled
-
+  const isStatusAwaitingPunch = projectStatus === STATUS.Awaitingpunch
   const isStatusReconciled = projectStatus === STATUS.Reconcile
   // Enabled field status on location tab
   const newActivePunchEnabledFieldStatus =
@@ -80,6 +80,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isClientWalkthroughDisabled:
       isStatusNew ||
       isStatusActive ||
+      isStatusAwaitingPunch||
       isStatusInvoiced ||
       (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
@@ -87,6 +88,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isClientSignOffDisabled:
       isStatusNew ||
       isStatusActive ||
+      isStatusAwaitingPunch||
       (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
       isStatusOverPayment ||
@@ -137,6 +139,7 @@ export const useFieldsRequired = (control: Control<ProjectDetailsFormValues>) =>
   const projectStatus = status?.value
   const isStatusActive = projectStatus === STATUS.Active
   const isStatusClosed = projectStatus === STATUS.Closed
+  const isStatusAwaitingPunch = projectStatus === STATUS.Awaitingpunch
   const isStatusPunch = projectStatus === STATUS.Punch
   const isStatusReconcile = projectStatus === STATUS.Reconcile
 
@@ -144,7 +147,9 @@ export const useFieldsRequired = (control: Control<ProjectDetailsFormValues>) =>
     // Project Management form fields states
     isWOAStartDateRequired: isStatusActive,
     isWOACompletionDateRequired: isStatusClosed || isStatusPunch || isStatusReconcile,
+    isWOACompletionDateRequiredNew: isStatusClosed || isStatusAwaitingPunch || isStatusReconcile,
     isClientWalkthroughDateRequired: isStatusClosed,
+    isClientWalkthroughDateRequiredNew: isStatusPunch,
     isClientSignOffDateRequired: isStatusClosed,
   }
 }

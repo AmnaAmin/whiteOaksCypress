@@ -1,6 +1,6 @@
 import { ProjectStatus } from 'types/project-details.types'
 
-const OPTIONS = {
+export const OPTIONS = {
   [ProjectStatus.New]: {
     value: ProjectStatus.New,
     label: 'New',
@@ -8,6 +8,10 @@ const OPTIONS = {
   [ProjectStatus.Active]: {
     value: ProjectStatus.Active,
     label: 'Active',
+  },
+  [ProjectStatus.Awaitingpunch]: {
+    value: ProjectStatus.Awaitingpunch,
+    label: 'Awaiting Punch',
   },
   [ProjectStatus.Punch]: {
     value: ProjectStatus.Punch,
@@ -52,8 +56,8 @@ export const PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS = {
   [ProjectStatus.Active]: [
     OPTIONS[ProjectStatus.Active],
     OPTIONS[ProjectStatus.Punch],
-    OPTIONS[ProjectStatus.Cancelled],
     OPTIONS[ProjectStatus.Disputed],
+    OPTIONS[ProjectStatus.Cancelled],
   ],
   [ProjectStatus.Punch]: [
     OPTIONS[ProjectStatus.Active],

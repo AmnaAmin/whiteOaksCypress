@@ -38,7 +38,7 @@ import { useTranslation } from 'react-i18next'
 import { useTransactionsV1 } from 'api/transactions'
 import { TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
-import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
 import { ConfirmationBox } from 'components/Confirmation'
 
@@ -66,7 +66,8 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { userSelectOptions: projectCoordinatorSelectOptions } = useGetUsersByType(112)
   const { clientSelectOptions } = useGetClientSelectOptions()
   const { clientTypesSelectOptions } = useClientType()
-  const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData)
+  const { isAdmin } = useUserRolesSelector()
+  const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData, isAdmin)
   const { data: overPayment } = useGetOverpayment(projectData?.id)
   const { stateSelectOptions, states } = useStates()
   const { marketSelectOptions, markets } = useMarkets()
@@ -314,7 +315,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  <Misc />
+                  <Misc
+                  projectData={projectData} />
                 </TabPanel>
               </TabPanels>
 

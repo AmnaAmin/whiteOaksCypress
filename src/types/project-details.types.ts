@@ -6,6 +6,7 @@ export enum StringProjectStatus{
   Punch='punch',
   Closed='closed',
   Reconcile='reconcile',
+  
 
 }
 
@@ -21,6 +22,7 @@ export enum ProjectStatus {
   Overpayment = 109,
   Disputed = 220,
   Reconcile = 120,
+  Awaitingpunch = 190,
 }
 
 type ProjectManagementValues = {
@@ -127,6 +129,7 @@ type PropertyAddress = {
 type ProjectDetailsMiscFormValues = {
   dateCreated: string | null
   activeDate: string | null
+  awaitingPunchDate: string | null
   punchDate: string | null
   closedDate: string | null
   clientPaidDate: string | null
@@ -233,6 +236,7 @@ export type ProjectDetailsAPIPayload = {
   // Misc payload
   createdDate: string | null
   activeDate?: string | null
+  awaitingPunchDate?: string | null
   punchDate?: string | null
   closedDate?: string | null
   clientPaidDate?: string | null
