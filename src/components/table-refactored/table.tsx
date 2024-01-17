@@ -652,6 +652,7 @@ export const Table: React.FC<TableProps> = ({
                                     : ''
                                 }
                                 {...getColumnMaxMinWidths(cell.column)}
+                                data-testid={`cell-${cell.column.id}-${index}`}
                               >
                                 {isValidAndNonEmpty(cell?.renderValue())
                                   ? isDate && typeof value === 'string'
