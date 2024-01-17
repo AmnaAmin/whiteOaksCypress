@@ -261,7 +261,7 @@ const ProjectDetailsTab = (props: tabProps) => {
               marginBottom="1px"
               bg={style?.backgroundColor ? '' : '#F7FAFC'}
               rounded="6px 6px 0px 0px"
-              pt={isRecievable ? 2 : 7}
+             
             >
               <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
                 {t(`project.projectDetails.projectManagement`)}
