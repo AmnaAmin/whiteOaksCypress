@@ -276,6 +276,8 @@ const CreateVendorDetail: React.FC<{
                   maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
                   onChange: e => {
                     setValue('zipCode', e.target.value)
+                    if (e?.target?.value?.length > 255) trigger('zipCode')
+                    else clearErrors('zipCode')
                   },
                 })}
                 w="215px"

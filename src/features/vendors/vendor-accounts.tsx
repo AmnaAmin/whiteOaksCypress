@@ -55,6 +55,8 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     setValue,
     register,
     watch,
+    clearErrors,
+    trigger,
   } = formReturn
   const contactFormValue = watch()
   const { t } = useTranslation()
@@ -336,22 +338,29 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl h="70px">
+          <FormControl h="70px" isInvalid={!!errors.businessPhoneNumberExtension}>
               <FormLabel variant="strong-label" size="md">
                 {t('ext')}
               </FormLabel>
 
               <Input
                 {...register('businessPhoneNumberExtension', {
+                  maxLength: { value: 20, message: 'Character limit reached (maximum 20 characters)' },
                   onChange: e => {
                     setValue('businessPhoneNumberExtension', e.target.value)
+                    if (e?.target?.value?.length > 20) trigger('businessPhoneNumberExtension')
+                    else clearErrors('businessPhoneNumberExtension')
                   },
                 })}
                 w="121px"
                 variant="outline"
                 size="md"
+               
                 type="number"
               />
+              {!!errors.businessPhoneNumberExtension && (
+                <FormErrorMessage> {errors?.businessPhoneNumberExtension?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
