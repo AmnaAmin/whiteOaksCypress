@@ -186,7 +186,7 @@ const WorkOrderDetailTab = props => {
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
   const disabledSave =
     isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isVendor } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
   const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
   const {
@@ -698,7 +698,7 @@ const WorkOrderDetailTab = props => {
                 </Box>
               )}
             </HStack>
-            {uploadedWO && uploadedWO?.s3Url && (
+            {uploadedWO && uploadedWO?.s3Url && !isVendor && (
               <Box pt={7}>
                 <Checkbox
                   isDisabled={workOrder?.visibleToVendor}
