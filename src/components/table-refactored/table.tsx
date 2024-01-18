@@ -651,7 +651,8 @@ export const Table: React.FC<TableProps> = ({
                                       : (title as string)
                                     : ''
                                 }
-                                {...getColumnMaxMinWidths(cell.column)}
+                                {...getColumnMaxMinWidths(cell.column)} 
+                                data-testid={`cell-${cell.column.id}-${index}`}
                               >
                                 {isValidAndNonEmpty(cell?.renderValue())
                                   ? isDate && typeof value === 'string'
@@ -763,6 +764,7 @@ const DragDropEnabledRows = ({
                                 : ''
                             }
                             {...getColumnMaxMinWidths(cell.column)}
+                            data-testid={`table-cell-${row.id}-${cell.id}`}
                           >
                             {value}
                           </Td>
