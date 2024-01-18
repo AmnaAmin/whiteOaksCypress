@@ -764,6 +764,7 @@ const DragDropEnabledRows = ({
                                 : ''
                             }
                             {...getColumnMaxMinWidths(cell.column)}
+                            data-testid={`table-cell-${row.id}-${cell.id}`}
                           >
                             {value}
                           </Td>
