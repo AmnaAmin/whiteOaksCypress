@@ -138,6 +138,7 @@ type NewWorkOrderType = {
   percentage: string | number | null
   assignedItems: LineItems[]
   uploadWO: any
+  assignToVendor?: boolean
 }
 
 export const NewWorkOrder: React.FC<{
@@ -287,11 +288,12 @@ export const NewWorkOrderForm: React.FC<{
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { append } = assignedItemsArray
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder: null, swoProject })
-  const [woStartDate, watchPercentage, watchUploadWO, woExpectedCompletionDate] = watch([
+  const [woStartDate, watchPercentage, watchUploadWO, woExpectedCompletionDate, watchAssignToVendor] = watch([
     'workOrderStartDate',
     'percentage',
     'uploadWO',
     'workOrderExpectedCompletionDate',
+    'assignToVendor',
   ])
 
   const watchLineItems = useWatch({ name: 'assignedItems', control })
@@ -469,7 +471,7 @@ export const NewWorkOrderForm: React.FC<{
                       </FormLabel>
                       <Controller
                         control={control}
-                        rules={{ required: 'This field is required' }}
+                        rules={{ required: watchAssignToVendor ? 'This field is required' : undefined }}
                         name="vendorSkillId"
                         render={({ field, fieldState }) => {
                           return (
@@ -484,9 +486,9 @@ export const NewWorkOrderForm: React.FC<{
                                   setValue('vendorId', null)
                                   field.onChange(option)
                                 }}
-                                selectProps={{ isBorderLeft: true }}
+                                selectProps={watchAssignToVendor ? { isBorderLeft: true } : null}
                               />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              {watchAssignToVendor && <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>}
                             </>
                           )
                         }}
@@ -506,7 +508,7 @@ export const NewWorkOrderForm: React.FC<{
                       </FormLabel>
                       <Controller
                         control={control}
-                        rules={{ required: 'This field is required' }}
+                        rules={{ required: watchAssignToVendor ? 'This field is required' : undefined }}
                         name="vendorId"
                         render={({ field, fieldState }) => {
                           return (
@@ -516,9 +518,9 @@ export const NewWorkOrderForm: React.FC<{
                                 loadingCheck={vendorsLoading}
                                 options={vendorOptions}
                                 size="md"
-                                selectProps={{ isBorderLeft: true }}
+                                selectProps={watchAssignToVendor ? { isBorderLeft: true } : null}
                               />
-                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                              {watchAssignToVendor && <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>}
                             </>
                           )
                         }}
@@ -668,12 +670,12 @@ export const NewWorkOrderForm: React.FC<{
                         data-testid="workOrderStartDate"
                         type="date"
                         height="40px"
-                        variant="required-field"
+                        variant={watchAssignToVendor ? 'required-field' : 'outline'}
                         focusBorderColor="none"
                         min={clientStart as any}
                         max={isAdmin ? '' : (clientEnd as any)}
                         {...register('workOrderStartDate', {
-                          required: 'This field is required.',
+                          required: watchAssignToVendor ? 'This field is required.' : undefined,
                           validate: (date: any) => {
                             if (!projectData?.clientStartDate) return false
 
@@ -689,13 +691,14 @@ export const NewWorkOrderForm: React.FC<{
                           },
                         })}
                       />
-
-                      <FormErrorMessage>
-                        {errors.workOrderStartDate && errors.workOrderStartDate.message}
-                        {errors.workOrderStartDate && errors.workOrderStartDate.type === 'validate' && (
-                          <span>Earlier then client start date</span>
-                        )}
-                      </FormErrorMessage>
+                      {watchAssignToVendor && (
+                        <FormErrorMessage>
+                          {errors.workOrderStartDate && errors.workOrderStartDate.message}
+                          {errors.workOrderStartDate && errors.workOrderStartDate.type === 'validate' && (
+                            <span>Earlier then client start date</span>
+                          )}
+                        </FormErrorMessage>
+                      )}
                     </FormControl>
                   </Box>
                   <Box>
@@ -714,17 +717,18 @@ export const NewWorkOrderForm: React.FC<{
                         type="date"
                         height="40px"
                         data-testid="workOrderExpectedCompletionDate"
-                        variant="required-field"
+                        variant={watchAssignToVendor ? 'required-field' : 'outline'}
                         min={woStartDate || (clientStart as any)}
                         focusBorderColor="none"
                         {...register('workOrderExpectedCompletionDate', {
-                          required: 'This field is required.',
+                          required: watchAssignToVendor ? 'This field is required.' : undefined,
                         })}
                       />
-
-                      <FormErrorMessage>
-                        {errors.workOrderExpectedCompletionDate && errors.workOrderExpectedCompletionDate.message}
-                      </FormErrorMessage>
+                      {watchAssignToVendor && (
+                        <FormErrorMessage>
+                          {errors.workOrderExpectedCompletionDate && errors.workOrderExpectedCompletionDate.message}
+                        </FormErrorMessage>
+                      )}
                     </FormControl>
                   </Box>
                 </SimpleGrid>

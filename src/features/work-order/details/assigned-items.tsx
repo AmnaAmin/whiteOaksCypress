@@ -225,6 +225,18 @@ const AssignedItems = (props: AssignedItemType) => {
             w={{ base: '100%', lg: 'unset' }}
             flexWrap={{ base: 'wrap', lg: 'unset' }}
           >
+            {!isVendor && (
+              <Checkbox
+                isDisabled={workOrder?.visibleToVendor}
+                variant={'outLinePrimary'}
+                data-testid="assignToVendor"
+                size="md"
+                {...register('assignToVendor')}
+              >
+                {t(`${WORK_ORDER}.assignVendor`)}
+              </Checkbox>
+            )}
+
             {showPriceCheckBox && (
               <Checkbox variant={'outLinePrimary'} data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}

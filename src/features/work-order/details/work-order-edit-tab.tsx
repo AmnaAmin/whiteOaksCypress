@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Center,
+  Checkbox,
   Divider,
   Flex,
   FormControl,
@@ -121,6 +122,7 @@ interface FormValues {
   vendorId: number | string | null
   completePercentage?: completePercentage
   locations?: any
+  assignToVendor?: boolean
 }
 
 const WorkOrderDetailTab = props => {
@@ -166,6 +168,8 @@ const WorkOrderDetailTab = props => {
     name: 'assignedItems',
   })
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
+  const assignVendor = useWatch({ name: 'assignToVendor', control })
+
   const assignItemsSum = assignedItemsArray.fields.map(a => a.completePercentage).reduce((prev, curr) => prev + curr, 0)
   const totalAssignItems = assignedItemsArray.fields.length
 
@@ -180,7 +184,7 @@ const WorkOrderDetailTab = props => {
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
   const disabledSave =
     isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isVendor } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
   const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
   const {
@@ -374,9 +378,15 @@ const WorkOrderDetailTab = props => {
 
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
 
-  const inProgress = [STATUS.Active, STATUS.PastDue, STATUS.Completed, STATUS.Invoiced, STATUS.Rejected].includes(
-    workOrder.statusLabel?.toLowerCase(),
-  )
+  const inProgress = [
+    STATUS.Draft,
+    STATUS.Active,
+    STATUS.PastDue,
+    STATUS.Completed,
+    STATUS.Invoiced,
+    STATUS.Rejected,
+  ].includes(workOrder.statusLabel?.toLowerCase())
+
   useEffect(() => {
     if (isReadOnly) {
       Array.from(document.querySelectorAll('input')).forEach(input => {
@@ -422,7 +432,7 @@ const WorkOrderDetailTab = props => {
                             </FormLabel>
                             <Controller
                               control={control}
-                              rules={{ required: 'This is required' }}
+                              rules={assignVendor ? { required: 'This is required' } : undefined}
                               name="vendorSkillId"
                               render={({ field, fieldState }) => {
                                 return (
@@ -437,7 +447,11 @@ const WorkOrderDetailTab = props => {
                                         setValue('vendorId', null)
                                         field.onChange(option)
                                       }}
-                                      selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
+                                      selectProps={
+                                        assignVendor
+                                          ? { isBorderLeft: true, menuHeight: '175px' }
+                                          : { menuHeight: '175px' }
+                                      }
                                     />
                                   </>
                                 )
@@ -456,7 +470,7 @@ const WorkOrderDetailTab = props => {
                             </FormLabel>
                             <Controller
                               control={control}
-                              rules={{ required: 'This is required' }}
+                              rules={assignVendor ? { required: 'This is required' } : undefined}
                               name="vendorId"
                               render={({ field, fieldState }) => {
                                 return (
@@ -466,7 +480,11 @@ const WorkOrderDetailTab = props => {
                                       options={vendorOptions}
                                       size="md"
                                       loadingCheck={loadingVendors}
-                                      selectProps={{ isBorderLeft: true, menuHeight: '175px' }}
+                                      selectProps={
+                                        assignVendor
+                                          ? { isBorderLeft: true, menuHeight: '175px' }
+                                          : { menuHeight: '175px' }
+                                      }
                                       onChange={option => {
                                         setSelectedVendorId(option.value)
                                         field.onChange(option)
@@ -485,18 +503,22 @@ const WorkOrderDetailTab = props => {
                           date={companyName}
                         />
                       )}
-                      <InformationCard
-                        testId="email"
-                        title={t(`${WORK_ORDER}.email`)}
-                        date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
-                        customStyle={{ width: '150px', height: '20px' }}
-                      />
-                      <InformationCard
-                        testId="phone"
-                        title={t(`${WORK_ORDER}.phone`)}
-                        date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
-                        customStyle={{ width: '150px', height: '20px' }}
-                      />
+                      {businessPhoneNumber && businessEmailAddress && (
+                        <>
+                          <InformationCard
+                            testId="email"
+                            title={t(`${WORK_ORDER}.email`)}
+                            date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
+                            customStyle={{ width: '150px', height: '20px' }}
+                          />
+                          <InformationCard
+                            testId="phone"
+                            title={t(`${WORK_ORDER}.phone`)}
+                            date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
+                            customStyle={{ width: '150px', height: '20px' }}
+                          />
+                        </>
+                      )}
                     </HStack>
                   </Box>
                 </>
@@ -567,9 +589,9 @@ const WorkOrderDetailTab = props => {
                     css={calendarIcon}
                     isDisabled={!workOrderStartDateEnable || isWOCancelled}
                     min={clientStart as any}
-                    variant="required-field"
+                    variant={assignVendor ? 'required-field' : 'outline'}
                     {...register('workOrderStartDate', {
-                      required: 'This is required field.',
+                      required: assignVendor ? 'This is required field.' : undefined,
                     })}
                   />
                 </FormControl>
@@ -587,9 +609,9 @@ const WorkOrderDetailTab = props => {
                     css={calendarIcon}
                     min={woStartDate as string}
                     isDisabled={!workOrderExpectedCompletionDateEnable || isWOCancelled}
-                    variant="required-field"
+                    variant={assignVendor ? 'required-field' : 'outline'}
                     {...register('workOrderExpectedCompletionDate', {
-                      required: 'This is required field.',
+                      required: assignVendor ? 'This is required field.' : undefined,
                     })}
                   />
                 </FormControl>
@@ -663,6 +685,19 @@ const WorkOrderDetailTab = props => {
                 </Box>
               )}
             </HStack>
+            {uploadedWO && uploadedWO?.s3Url && !isVendor && (
+              <Box pt={7}>
+                <Checkbox
+                  isDisabled={workOrder?.visibleToVendor}
+                  variant={'outLinePrimary'}
+                  data-testid="assignToVendor"
+                  size="md"
+                  {...register('assignToVendor')}
+                >
+                  {t(`${WORK_ORDER}.assignVendor`)}
+                </Checkbox>
+              </Box>
+            )}
           </Box>
           {!(uploadedWO && uploadedWO?.s3Url) && (
             <Box mx="32px" mt={10}>

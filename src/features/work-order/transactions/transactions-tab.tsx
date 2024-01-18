@@ -38,7 +38,8 @@ export const TransactionsTab = ({
   const isReadOnly = isPayableRead || isProjRead
   const preventNewTransaction =
     !!(workOrderStatus === 'paid' || workOrderStatus === 'cancelled' || workOrderStatus === 'invoiced') ||
-    (isVendorExpired && !isAdmin)
+    (isVendorExpired && !isAdmin) ||
+    !workOrder?.visibleToVendor
 
   return (
     <>
@@ -76,17 +77,17 @@ export const TransactionsTab = ({
           </Button>
         </HStack>
       </ModalFooter>
-  {workOrder &&
-  
-  <AddNewTransactionModal
-  isOpen={isOpenTransactionModal}
-  onClose={onTransactionModalClose}
-  projectId={projectId as string}
-  projectStatus={projectStatus}
-  screen="WORK_ORDER_TRANSACTION_TABLE_MODAL"
-  currentWorkOrderId={workOrder.id}
-  isVendorExpired={isVendorExpired}
-/>}
+      {workOrder && (
+        <AddNewTransactionModal
+          isOpen={isOpenTransactionModal}
+          onClose={onTransactionModalClose}
+          projectId={projectId as string}
+          projectStatus={projectStatus}
+          screen="WORK_ORDER_TRANSACTION_TABLE_MODAL"
+          currentWorkOrderId={workOrder.id}
+          isVendorExpired={isVendorExpired}
+        />
+      )}
     </>
   )
 }

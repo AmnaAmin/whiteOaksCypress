@@ -216,6 +216,7 @@ export const useProjectStatusSelectOptions = (project: Project, isAdmin?: boolea
     if (!project) return []
     const isvalidForAwaitingPunch = project?.validForAwaitingPunchStatus
     const projectStatusId = project.projectStatusId
+    const numberOfActiveWorkOrders = project.numberOfActiveWorkOrders
     const numberOfWorkOrders = project.numberOfWorkOrders
     const numberOfCompletedWorkOrders = project.numberOfCompletedWorkOrders
     const numberOfPaidWorkOrders = project.numberOfPaidWorkOrders
@@ -235,7 +236,11 @@ const projectStatusSelectOptions = statusArrayApplicableforCurrentStatus(isvalid
 
       // if project in new status and there are zero work orders then
       // active status should be disabled
-      if (numberOfWorkOrders === 0 && projectStatusId === ProjectStatus.New && optionValue === ProjectStatus.Active) {
+      if (
+        (numberOfActiveWorkOrders === 0 || numberOfWorkOrders === 0) &&
+        projectStatusId === ProjectStatus.New &&
+        optionValue === ProjectStatus.Active
+      ) {
         return {
           ...selectOption,
           label: `${selectOption.label} (Minimum 1 Workorder Required)`,
