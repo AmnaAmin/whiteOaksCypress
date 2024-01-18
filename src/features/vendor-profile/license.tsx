@@ -64,6 +64,8 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
     register,
     setValue,
     watch,
+    clearErrors,
+    trigger,
   } = useFormContext<LicenseFormValues>()
 
   const {
@@ -218,11 +220,20 @@ export const LicenseForm = ({ vendor, isActive, onClose }: licenseFormProps) => 
                   controlStyle={{
                     w: { ...{ sm: '100%', md: '215px' } },
                     maxW: { ...{ sm: '95%', md: '215px' } },
+                   
+                    
                   }}
+                  
                   elementStyle={{
                     bg: 'white',
                   }}
-                  rules={{ required: isActive && 'This is required field' }}
+                  onChange={(e) => {
+                    setValue(`licenses.${index}.licenseNumber`, e.target.value);
+                    if (e?.target?.value?.length > 255) trigger(`licenses.${index}.licenseNumber`);
+                    else clearErrors('licenses');
+                  }}
+                  rules={{ required: isActive && 'This is required field' ,
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },}}
                   name={`licenses.${index}.licenseNumber`}
                   testId={`licenseNumber-` + index}
                   variant="required-field"
