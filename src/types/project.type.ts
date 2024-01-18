@@ -52,6 +52,7 @@ export type Project = {
   paymentTerm: string | null
   pendingTransactions: number | null
   poNumber: string | null
+  validForAwaitingPunchStatus: boolean
   pcPhoneNumber: string | null
   pcPhoneNumberExtension: string | null
   pmPhoneNumberExtension: string | null
@@ -116,6 +117,7 @@ export type Project = {
   reconciledbyDesc: string | null
   projectStartDate: string | null
   punchDate?: string | null
+  awaitingPunchDate?: string | null
   closedDate?: string | null
   disputedDate?: string | null
   payDateVariance?: number | null
@@ -144,6 +146,7 @@ export type ProjectExtraAttributesType = {
   id: number
   projectId: number
   punchDate: string | null
+  awaitingPunchDate: string | null
   collectionDate: string | null
   disputedDate: string | null
   activeDate: string | null

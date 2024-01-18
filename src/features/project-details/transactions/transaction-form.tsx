@@ -199,7 +199,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
 
-  const { awardPlansStats, refetch: refetchAwardStats } = useWorkOrderAwardStats(projectId)
+
 
   const { mutate: createChangeOrder, isLoading: isChangeOrderSubmitLoading } = useChangeOrderMutation(projectId)
   const { mutate: updateChangeOrder, isLoading: isChangeOrderUpdateLoading } = useChangeOrderUpdateMutation(projectId)
@@ -232,7 +232,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   } = formReturn
 
   const selectedWorkOrder = useSelectedWorkOrder(control, workOrdersKeyValues)
-  const against = useWatch({ name: 'against', control })
+  const against = useWatch({ name: 'against', control }) as any
   const transType = useWatch({ name: 'transactionType', control })
   const invoicedDate = useWatch({ name: 'invoicedDate', control })
   const workOrderId = against?.value
@@ -240,6 +240,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const watchStatus = useWatch({ name: 'status', control })
   const verifyByFPMStatus = useWatch({ name: 'verifiedByFpm', control })
   const verifyByManagerStatus = useWatch({ name: 'verifiedByManager', control })
+  const { awardPlansStats, refetch: refetchAwardStats } = useWorkOrderAwardStats(projectId,against?.isValidForNewAwardPlan, workOrderId)
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
@@ -409,7 +410,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     if (isAdmin) {
       if (
         transaction?.status?.toLocaleUpperCase() === TransactionStatusValues.approved &&
-        materialAndDraw &&
+        materialAndDraw &&  !isRefund &&
         totalItemsAmount > -1 * transaction?.changeOrderAmount! + selectedWorkOrderStats?.totalAmountRemaining!
       ) {
         toast({
@@ -1277,6 +1278,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   setTotalItemAmount(amount)
                 }}
                 transaction={transaction}
+                selectedWorkOrderStats={selectedWorkOrderStats}
                 currentWorkOrderId={currentWorkOrderId}
                 projectId={projectId}
                 setDisableBtn={setDisableBtn}

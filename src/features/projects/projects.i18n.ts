@@ -56,6 +56,7 @@ export const projects = {
           new: 'New',
           active: 'Active',
           punch: 'Punch',
+          awaitingPunch:'Awaiting Punch',
           reconcile: 'Reconcile',
           closed: 'Closed',
           invoiced: 'Invoiced',

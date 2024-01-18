@@ -21,7 +21,7 @@ export const DOCUMENTS_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: '',
     id: 'expander',
-    size: 20,
+    size: 40,
     cell: ({ row, getValue }) => (
       <Flex
         onClick={e => e.stopPropagation()}

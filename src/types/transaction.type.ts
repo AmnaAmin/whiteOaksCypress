@@ -57,6 +57,7 @@ export type ProjectWorkOrder = {
   awardPlanPayTerm: string
   vendorStatusId?: number
   reason: string | null
+  applyNewAwardPlan: boolean
 }
 
 export type WorkOrderAwardStats = {
