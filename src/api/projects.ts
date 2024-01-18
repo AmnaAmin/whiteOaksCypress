@@ -220,7 +220,7 @@ export const useWorkOrders = (queryString: string, pageSize: number) => {
 
   const { data, ...rest } = usePaginationQuery<VendorWorkOrder>(
     [VENDOR_WORK_ORDER_QUERY_KEY, apiQueryString],
-    `vendor/workorders?${apiQueryString}&status.notEquals=35?visibleToVendor=true`,
+    `vendor/workorders?${apiQueryString}&status.notEquals=35&visibleToVendor.equals=true`,
     pageSize,
   )
 

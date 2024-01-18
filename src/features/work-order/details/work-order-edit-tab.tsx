@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   Center,
+  Checkbox,
   Divider,
   Flex,
   FormControl,
@@ -697,6 +698,19 @@ const WorkOrderDetailTab = props => {
                 </Box>
               )}
             </HStack>
+            {uploadedWO && uploadedWO?.s3Url && (
+              <Box pt={7}>
+                <Checkbox
+                  isDisabled={workOrder?.visibleToVendor}
+                  variant={'outLinePrimary'}
+                  data-testid="assignToVendor"
+                  size="md"
+                  {...register('assignToVendor')}
+                >
+                  {t(`${WORK_ORDER}.assignVendor`)}
+                </Checkbox>
+              </Box>
+            )}
           </Box>
           {!(uploadedWO && uploadedWO?.s3Url) && (
             <Box mx="32px" mt={10}>
