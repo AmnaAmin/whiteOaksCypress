@@ -651,8 +651,7 @@ export const Table: React.FC<TableProps> = ({
                                       : (title as string)
                                     : ''
                                 }
-                                {...getColumnMaxMinWidths(cell.column)}
-                                
+                                {...getColumnMaxMinWidths(cell.column)} 
                                 data-testid={`cell-${cell.column.id}-${index}`}
                               >
                                 {isValidAndNonEmpty(cell?.renderValue())
