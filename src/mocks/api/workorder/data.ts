@@ -277,6 +277,7 @@ export const WORK_ORDERS = [
     capacity: 1,
     status: 114,
     statusLabel: 'PAST DUE',
+    visibleToVendor: true,
     createdBy: 'admin@devtek.ai',
     createdDate: '2022-07-14T08:43:40Z',
     datePermitsPulled: null,

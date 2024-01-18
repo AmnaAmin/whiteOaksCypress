@@ -235,18 +235,18 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   // not used for now -  const completedState = [STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
-    dateInvoiceSubmittedEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
-    paymentTermEnabled: defaultStatus || (workOrder?.assignAwardPlan && isAdmin && workOrder?.visibleToVendor),
-    paymentTermDateEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
-    expectedPaymentDateEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
-    datePaymentProcessedEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
-    datePaidEnabled: defaultStatus || invoicedState || (isAdmin && workOrder?.visibleToVendor),
-    invoiceAmountEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
-    clientOriginalApprovedAmountEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
-    clientApprovedAmountEnabled: defaultStatus || (isAdmin && workOrder?.visibleToVendor),
+    dateInvoiceSubmittedEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
+    paymentTermEnabled: defaultStatus || (workOrder?.assignAwardPlan && isAdmin) || workOrder?.visibleToVendor,
+    paymentTermDateEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
+    expectedPaymentDateEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
+    datePaymentProcessedEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
+    datePaidEnabled: (defaultStatus || invoicedState || isAdmin) && workOrder?.visibleToVendor,
+    invoiceAmountEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
+    clientOriginalApprovedAmountEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
+    clientApprovedAmountEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
     finalInvoiceAmountEnabled: defaultStatus,
-    paymentDateEnabled: !isAdmin ? defaultStatus || invoicedState : true && workOrder?.visibleToVendor,
-    partialPaymentEnabled: !isAdmin ? defaultStatus || invoicedState : true && workOrder?.visibleToVendor,
+    paymentDateEnabled: (!isAdmin ? defaultStatus || invoicedState : true) && workOrder?.visibleToVendor,
+    partialPaymentEnabled: (!isAdmin ? defaultStatus || invoicedState : true) && workOrder?.visibleToVendor,
   }
 }
 
