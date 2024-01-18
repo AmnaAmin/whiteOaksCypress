@@ -121,7 +121,7 @@ describe('Work Order Invoice Test Cases', () => {
 
     await waitFor(() => {
       /* Add payment term to date invoiced */
-      const paymentTermDate = addDays(moment(workOrder?.dateInvoiceSubmitted as string).toDate(), 29)
+      const paymentTermDate = addDays(moment(workOrder?.dateInvoiceSubmitted as string).toDate(), 30)
       expect((screen.getByTestId('paymentTermDate') as HTMLInputElement).value).toEqual(
         datePickerFormat(paymentTermDate),
       )
