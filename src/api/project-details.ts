@@ -1,6 +1,6 @@
 import { useToast } from '@chakra-ui/react'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
-import { PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS } from 'constants/project-details.constants'
+import { OPTIONS, PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS } from 'constants/project-details.constants'
 import { useContext, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { Client, ErrorType, ProjectType, State, User } from 'types/common.types'
@@ -187,7 +187,23 @@ export const useProjectDetailsUpdateMutation = () => {
     },
   )
 }
-
+export const statusArrayApplicableforCurrentStatus = (isvalidForAwaitingPunch: Boolean) => {
+  const statusArray = PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS
+  if (isvalidForAwaitingPunch) {
+    statusArray[ProjectStatus.Awaitingpunch] = [
+      OPTIONS[ProjectStatus.Active],
+      OPTIONS[ProjectStatus.Awaitingpunch],
+      OPTIONS[ProjectStatus.Punch],
+      OPTIONS[ProjectStatus.Disputed],
+      OPTIONS[ProjectStatus.Cancelled],
+    ]
+    statusArray[ProjectStatus.Active] = [
+      OPTIONS[ProjectStatus.Active],
+      OPTIONS[ProjectStatus.Awaitingpunch],
+    ]
+  }
+  return statusArray
+  }
 export const getProjectStatusSelectOptions = () => {
   return Object.entries(ProjectStatus).map(([key, value]) => ({
     value: value,
@@ -195,10 +211,10 @@ export const getProjectStatusSelectOptions = () => {
   }))
 }
 
-export const useProjectStatusSelectOptions = (project: Project) => {
+export const useProjectStatusSelectOptions = (project: Project, isAdmin?: boolean) => {
   return useMemo(() => {
     if (!project) return []
-
+    const isvalidForAwaitingPunch = project?.validForAwaitingPunchStatus
     const projectStatusId = project.projectStatusId
     const numberOfActiveWorkOrders = project.numberOfActiveWorkOrders
     const numberOfWorkOrders = project.numberOfWorkOrders
@@ -209,7 +225,11 @@ export const useProjectStatusSelectOptions = (project: Project) => {
 
     if (!projectStatusId) return []
 
-    const projectStatusSelectOptions = PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS[projectStatusId] || []
+//      let projectStatusSelectOptions =PROJECT_STATUSES_ASSOCIATE_WITH_CURRENT_STATUS[projectStatusId] || []
+// if (isvalidForAwaitingPunch){
+//    projectStatusSelectOptions = PROJECT_STATUSES_ASSOCIATE_WITH_NEW_CURRENT_STATUS[projectStatusId] || []
+// }
+const projectStatusSelectOptions = statusArrayApplicableforCurrentStatus(isvalidForAwaitingPunch)[projectStatusId] || [];
 
     const selectOptionWithDisableEnabled = projectStatusSelectOptions.map((selectOption: SelectOption) => {
       const optionValue = selectOption?.value
@@ -227,13 +247,12 @@ export const useProjectStatusSelectOptions = (project: Project) => {
           disabled: true,
         }
       }
-
-      // if Project status is Active and some workorders are not completed then
-      // Project punch status should be disabled
+        // if Project status is Active and some workorders are not completed then
+      // Project Awaiting punch status should be disabled
       if (
-        numberOfWorkOrders !== numberOfCompletedWorkOrders &&
+        numberOfWorkOrders !== numberOfCompletedWorkOrders && isvalidForAwaitingPunch &&
         projectStatusId === ProjectStatus.Active &&
-        optionValue === ProjectStatus.Punch
+        optionValue === ProjectStatus.Awaitingpunch
       ) {
         return {
           ...selectOption,
@@ -241,12 +260,11 @@ export const useProjectStatusSelectOptions = (project: Project) => {
           disabled: true,
         }
       }
-
       // if Project status is Active and some workorders are not completed then
-      // Project punch status should be disabled
+      // Project  punch status should be disabled
       if (
         numberOfWorkOrders !== numberOfCompletedWorkOrders &&
-        projectStatusId === ProjectStatus.Disputed &&
+        projectStatusId === ProjectStatus.Active &&
         optionValue === ProjectStatus.Punch
       ) {
         return {
@@ -339,6 +357,14 @@ export const useProjectStatusSelectOptions = (project: Project) => {
         }
       }
 
+      if (!isAdmin && optionValue === ProjectStatus.Invoiced) {
+        return {
+          ...selectOption,
+          label: `${selectOption.label}`,
+          disabled: true,
+        }
+      }
+
       return selectOption
     })
 
@@ -351,7 +377,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
   const projectStatusId = projectData?.projectStatusId
   const previousProjectStatus = projectData?.previousStatus
   const selectOption = { value: null, label: 'Select' }
-
+  const isvalidForAwaitingPunch = projectData?.validForAwaitingPunchStatus
   return useMemo(() => {
     if (!projectStatusId) return []
     // Setting Override Status dropdown on the basis of Project Status
@@ -361,13 +387,21 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       if (projectStatusId === Number(PROJECT_STATUS.active.value)) {
         overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.new, PROJECT_STATUS.disputed]
       }
+       // Project Status -> Awaiting Punch
+       else if (projectStatusId === Number(PROJECT_STATUS.awaitingpunch.value)) {
+        overrideProjectStatusOptions = [
+          selectOption,
+          PROJECT_STATUS.new,
+          PROJECT_STATUS.active,
+        ]
+      }
       // Project Status -> Punch
       else if (projectStatusId === Number(PROJECT_STATUS.punch.value)) {
         overrideProjectStatusOptions = [
           selectOption,
           PROJECT_STATUS.new,
           PROJECT_STATUS.active,
-          PROJECT_STATUS.disputed,
+          (isvalidForAwaitingPunch ? PROJECT_STATUS.awaitingpunch : PROJECT_STATUS.disputed),
         ]
       }
       // Project Status -> Reconcile
@@ -375,7 +409,7 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
         overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.new, PROJECT_STATUS.active, PROJECT_STATUS.punch]
       }
       // Project Status -> Closed
-      else if (projectStatusId === Number(PROJECT_STATUS.closed.value)) {
+      else if (projectStatusId === Number(PROJECT_STATUS.closed.value)) {     
         overrideProjectStatusOptions = [
           selectOption,
           PROJECT_STATUS.new,
@@ -383,7 +417,12 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
           PROJECT_STATUS.punch,
           PROJECT_STATUS.disputed,
         ]
+
+        if (isvalidForAwaitingPunch){
+          overrideProjectStatusOptions.push(PROJECT_STATUS.awaitingpunch)
+        }
       }
+      
       // Project Status -> Invoiced
       else if (projectStatusId === Number(PROJECT_STATUS.invoiced.value)) {
         overrideProjectStatusOptions = [
@@ -423,7 +462,8 @@ export const useProjectOverrideStatusSelectOptions = projectData => {
       // Project Status -> Disputed
       // In case of disputed, all the cases will be implemented on the basis of previous Status
       else if (projectStatusId === Number(PROJECT_STATUS.disputed.value)) {
-        overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.reconcile]
+        overrideProjectStatusOptions = [selectOption, PROJECT_STATUS.reconcile,
+          PROJECT_STATUS.awaitingpunch]
         // Last Project Status -> Active
         if (previousProjectStatus === Number(PROJECT_STATUS.active.value)) {
           overrideProjectStatusOptions = [
@@ -595,6 +635,7 @@ export const parseFormValuesFromAPIData = ({
     reoNumber: project.reoNumber,
     overrideProjectStatus: '',
     isReconciled: project.isReconciled as boolean,
+    awaitingPunchDate:project.awaitingPunchDate as string,
     reconcileDate: project.reconcileDate as string,
     verifiedDate: project.verifiedDate as string,
     reconciledBy: project.reconciledBy as string,

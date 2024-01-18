@@ -523,9 +523,10 @@ interface DirectReportsUser {
   login: string
 }
 export const useUserDirectReportsAllList = (userID?: number) => {
+  const queryString = 'users/list/directUsers'
   const client = useClient()
   const { data, ...rest } = useQuery<Array<DirectReportsUser>>(['all_user_managements'], async () => {
-    const response = await client(`users/list/directUsers?isIgnoreCurrentUser=1&userId=${userID}`, {})
+    const response = await client(userID ? `${queryString}?isIgnoreCurrentUser=1&userId=${userID}` : queryString, {})
     return response?.data
   })
 

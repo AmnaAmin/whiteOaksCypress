@@ -45,6 +45,7 @@ export enum STATUS {
   Rejected = 'rejected',
   Pending_payment = 'pending_payment',
   Partial_paid = 'partial paid',
+  Awaiting_punch='awaiting punch'
 }
 
 const STATUS_COLOR = {
@@ -74,6 +75,8 @@ const STATUS_COLOR = {
   [STATUS.Reconcile]: { color: '#4A5568', backgroundColor: '#F8F6CD' },
   [STATUS.Pending_payment]: { color: '#0BC5EA', backgroundColor: '#C4F1F9' },
   [STATUS.Partial_paid]: { color: '#D69E2E', backgroundColor: '#FFFBF4' },
+  [STATUS.Awaiting_punch]: { color: '#B7791F', backgroundColor: '#FEFCBF' }
+
 }
 
 const Status = ({ value = '', id = '' }: { value?: string; id?: string }) => {
@@ -112,4 +115,5 @@ export const PROJECT_STATUS = {
   overpayment: { value: '109', label: 'Overpayment' },
   disputed: { value: '220', label: 'DISPUTED' },
   reconcile: { value: '120', label: 'RECONCILE' },
+  awaitingpunch: { value: '190', label: 'AWAITING PUNCH' },
 }

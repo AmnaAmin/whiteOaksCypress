@@ -84,14 +84,14 @@ export const LocationModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, 
             ? location?.lastModifiedBy
             : `${data?.user?.firstName} ${data?.user?.lastName}`,
         lastModifiedDate: watchLocation === location?.value ? location?.lastModifiedDate : new Date().toISOString(),
-        value: value.location,
+        value: value.location?.replace(/\s+/g, ' ').trim(),
       }
 
       editLocation(editPayload, { onSuccess: () => onClose() })
     } else {
       const payload = {
         createdBy: `${data?.user?.firstName} ${data?.user?.lastName}`,
-        value: value.location,
+        value: value.location?.replace(/\s+/g, ' ').trim(),
         createdDate: new Date().toISOString(),
         id: location?.id,
       }
