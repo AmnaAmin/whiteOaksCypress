@@ -15,7 +15,7 @@ export const project = {
           clientStart: 'Client Start',
           clientDue: 'Client Due',
           woaStart: 'WOA Start',
-          woaCompletion: 'WOA Completion',
+          woaCompletion: 'WOA Finish',
           clientWalkthrough: 'Client Walkthrough',
           clientSignOff: 'Client Sign Off',
           overrideStatus: 'Override Status',

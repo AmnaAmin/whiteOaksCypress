@@ -212,10 +212,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 id="woNumber"
                 {...register('woNumber', {
                   maxLength: { value: 50, message: 'Character limit reached (maximum 50 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={50}
@@ -237,10 +233,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 id="poNumber"
                 {...register('poNumber', {
                   maxLength: { value: 50, message: 'Character limit reached (maximum 50 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={50}
@@ -263,10 +255,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 id="claimNumber"
                 {...register('claimNumber', {
                   maxLength: { value: 50, message: 'Character limit reached (maximum 50 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={50}
@@ -290,10 +278,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 id="reoNumber"
                 {...register('reoNumber', {
                   maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={255}
@@ -344,10 +328,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 id="projectName"
                 {...register('projectName', {
                   maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={255}
