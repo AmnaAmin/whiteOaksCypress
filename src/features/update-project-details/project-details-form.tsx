@@ -198,8 +198,8 @@ const ProjectDetailsTab = (props: tabProps) => {
   }
 
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
-    formValues.woNumber = validateAndDiscardSpaces(formValues.woNumber)
-    formValues.poNumber = validateAndDiscardSpaces(formValues.poNumber)
+    formValues.woNumber = validateAndDiscardSpaces(formValues?.woNumber)
+    formValues.poNumber = validateAndDiscardSpaces(formValues?.poNumber)
     formValues.projectName = validateAndDiscardSpaces(formValues?.projectName)
     formValues.reoNumber = validateAndDiscardSpaces(formValues?.reoNumber)
     formValues.claimNumber = validateAndDiscardSpaces(formValues?.claimNumber)
