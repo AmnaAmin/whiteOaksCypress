@@ -325,6 +325,7 @@ i18n.use(initReactI18next).init({
         createdBy: 'Created By',
         uploadFile: 'Upload File',
         workOrderId: 'Work Order ID',
+        documentId:'Document ID',
         // Project - Alerts
         value: 'Value',
         category: 'Category',
