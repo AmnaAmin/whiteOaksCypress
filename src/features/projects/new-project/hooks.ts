@@ -27,6 +27,7 @@ export const usePropertyInformationNextDisabled = (
   const isAcknowledgeCheck = formValues?.property && isDuplicateAddress ? formValues?.acknowledgeCheck : true
   const isHomeOwnerPhoneValue = formValues?.homeOwnerPhone === '' || isValidPhoneNumber(formValues?.homeOwnerPhone)
   const isHomeOwnerEmailValid = formValues?.homeOwnerEmail === '' || isValidEmail(formValues?.homeOwnerEmail)
+  const isHoaEmailValid = formValues?.hoaEmailAddress === '' || isValidEmail(formValues?.hoaEmailAddress)
   const isCityNotEmpty = formValues?.city && formValues?.city.trim() !== '';
   return (
     !formValues.streetAddress ||
@@ -36,6 +37,7 @@ export const usePropertyInformationNextDisabled = (
     !formValues.newMarket?.value ||
     !isHomeOwnerPhoneValue ||
     !isHomeOwnerEmailValid ||
+    !isHoaEmailValid ||
     !isAcknowledgeCheck
   )
 }

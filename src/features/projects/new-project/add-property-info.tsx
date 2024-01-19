@@ -131,23 +131,26 @@ export const AddPropertyInfo: React.FC<{
   }
 
   // Email Validation
-  const handleEmailChange = event => {
-    const enteredEmail = event.target.value
-
+  const handleEmailChange = (event) => {
+    const enteredEmail = event.target.value;
+  
     if (enteredEmail.trim() === '') {
       // Clear the error message if the field is empty
-      setError('')
+      setError('');
+      // Reset the value to an empty string
+      event.target.value = '';
     } else if (!isValidEmail(enteredEmail)) {
       // Show "Invalid Email Address" error for invalid emails
-      setError('Invalid Email Address')
+      setError('Invalid Email Address');
     } else {
       // Clear the error if the entered email is valid
-      setError('')
+      setError('');
     }
-
+  
     // Update the message variable with the entered value
-    setMessage(enteredEmail)
-  }
+    setMessage(enteredEmail.trim());
+  };
+  
 
   return (
     <>
@@ -379,7 +382,13 @@ export const AddPropertyInfo: React.FC<{
                 </FormLabel>
                 <Input
                   id="hoaContactEmail"
-                  {...register('hoaEmailAddress')}
+                  // {...register('hoaEmailAddress')}
+                  {...register('hoaEmailAddress', {
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: 'Invalid Email Address',
+                    },
+                  })}
                   value={message}
                   onChange={handleEmailChange}
                 />
