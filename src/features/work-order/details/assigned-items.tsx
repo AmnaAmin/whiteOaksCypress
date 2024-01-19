@@ -114,7 +114,9 @@ const AssignedItems = (props: AssignedItemType) => {
 
   const { isVendor } = useUserRolesSelector()
 
-  const allowEdit = !isVendor && !workOrder
+  const isVendorAssign = workOrder?.visibleToVendor
+
+  const allowEdit = (!isVendor && !workOrder) || !isVendorAssign
 
   const ASSIGNED_ITEMS_COLUMNS = useGetLineItemsColumn({
     unassignedItems,
@@ -225,17 +227,20 @@ const AssignedItems = (props: AssignedItemType) => {
             w={{ base: '100%', lg: 'unset' }}
             flexWrap={{ base: 'wrap', lg: 'unset' }}
           >
-            {!isVendor && (
-              <Checkbox
-                isDisabled={workOrder?.visibleToVendor}
-                variant={'outLinePrimary'}
-                data-testid="assignToVendor"
-                size="md"
-                {...register('assignToVendor')}
-              >
-                {t(`${WORK_ORDER}.assignVendor`)}
-              </Checkbox>
-            )}
+            {/* temporarly added this margin left, will remove it */}
+            <Box ml={-4}>
+              {!isVendor && (
+                <Checkbox
+                  isDisabled={workOrder?.visibleToVendor}
+                  variant={'outLinePrimary'}
+                  data-testid="assignToVendor"
+                  size="md"
+                  {...register('assignToVendor')}
+                >
+                  {t(`${WORK_ORDER}.assignVendor`)}
+                </Checkbox>
+              )}
+            </Box>
 
             {showPriceCheckBox && (
               <Checkbox variant={'outLinePrimary'} data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
