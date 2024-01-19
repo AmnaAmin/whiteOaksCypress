@@ -260,11 +260,7 @@ const contactFormValue = watch()
             <InputLabel title={'project.projectDetails.superName'} htmlFor={'superName'} />
             <Input size="md" id="superName" 
             {...register('superName', {
-              maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-              validate: {
-                notOnlyWhitespace: value =>
-                  value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-              },
+              maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },           
             })}
             w="215px" 
             autoComplete="off"
@@ -322,10 +318,6 @@ const contactFormValue = watch()
               id="superPhoneNumberExtension"
               {...register('superPhoneNumberExtension', {
                 maxLength: { value: 20, message: 'Character limit reached (maximum 2 characters)' },
-                validate: {
-                  notOnlyWhitespace: value =>
-                    value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                },
               })}
               w="124px"
               autoComplete="off"
@@ -352,10 +344,6 @@ const contactFormValue = watch()
             <Input size="md" id="superEmail" 
             {...register('superEmail', {
               maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-              validate: {
-                notOnlyWhitespace: value =>
-                  value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-              },
             })}
             w="215px" 
             autoComplete="off"
@@ -469,10 +457,6 @@ const contactFormValue = watch()
             <Input size="md" isDisabled={isFieldProjectManagerDisabled} id="agentName"
              {...register('agentName', {
               maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-              validate: {
-                notOnlyWhitespace: value =>
-                  value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-              },
             })}
             w="215px" 
             autoComplete="off"
@@ -550,10 +534,6 @@ const contactFormValue = watch()
               id="homeOwnerName"
               {...register('homeOwnerName', {
                 maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                validate: {
-                  notOnlyWhitespace: value =>
-                    value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                },
               })}
               w="215px" 
               autoComplete="off"
@@ -611,10 +591,6 @@ const contactFormValue = watch()
               id="homeOwnerEmail"
               {...register('homeOwnerEmail', {
                 maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                validate: {
-                  notOnlyWhitespace: value =>
-                    value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                },
               })}
               w="215px" 
               autoComplete="off"
