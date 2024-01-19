@@ -186,8 +186,14 @@ const WorkOrderDetailTab = props => {
 
   const { t } = useTranslation()
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
+
+  const assignItemsLengthCheck = assignedItemsWatch?.length === 0 && assignVendor
   const disabledSave =
-    isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
+    isWorkOrderUpdating ||
+    (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) ||
+    isWOCancelled ||
+    assignItemsLengthCheck
+
   const { isAdmin, isVendor } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
   const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))

@@ -317,7 +317,7 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   //const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
 
   const isAssignmentAllowed =
-    (!workOrder && ['COMPLETED', 'FAILED'].includes(swoProject?.status?.toUpperCase())) || !workOrder?.visibleToVendor
+    (!workOrder || !workOrder?.visibleToVendor) && ['COMPLETED', 'FAILED'].includes(swoProject?.status?.toUpperCase())
   return { isAssignmentAllowed }
 }
 
@@ -759,7 +759,7 @@ export const useFieldEnableDecision = ({ workOrder, lineItems }) => {
 }
 
 const setColumnsByConditions = (columns, workOrder, isVendor) => {
-  if (workOrder && workOrder?.visibleToVendor) {
+  if (workOrder) {
     columns = columns.filter(c => !['assigned'].includes(c.accessorKey))
     if (isVendor) {
       if (workOrder.showPricing) {
