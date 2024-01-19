@@ -114,7 +114,9 @@ const AssignedItems = (props: AssignedItemType) => {
 
   const { isVendor } = useUserRolesSelector()
 
-  const allowEdit = !isVendor && !workOrder
+  const isVendorAssign = workOrder?.visibleToVendor
+
+  const allowEdit = (!isVendor && !workOrder) || !isVendorAssign
 
   const ASSIGNED_ITEMS_COLUMNS = useGetLineItemsColumn({
     unassignedItems,
