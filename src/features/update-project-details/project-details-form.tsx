@@ -188,8 +188,33 @@ const ProjectDetailsTab = (props: tabProps) => {
     onOpen: onDeleteProjecModalOpen,
     onClose: onDeleteProjecModalClose,
   } = useDisclosure()
+  
+  const validateAndDiscardSpaces = (value) => {   
+    if (value === null || value === undefined) {
+      return null
+    }
+    const trimmedValue = value.trim()
+    return trimmedValue === '' ? null : trimmedValue
+  }
 
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
+    formValues.woNumber = validateAndDiscardSpaces(formValues?.woNumber)
+    formValues.poNumber = validateAndDiscardSpaces(formValues?.poNumber)
+    formValues.projectName = validateAndDiscardSpaces(formValues?.projectName)
+    formValues.reoNumber = validateAndDiscardSpaces(formValues?.reoNumber)
+    formValues.claimNumber = validateAndDiscardSpaces(formValues?.claimNumber)
+    formValues.superName = validateAndDiscardSpaces(formValues?.superName)
+    formValues.superPhoneNumberExtension = validateAndDiscardSpaces(formValues?.superPhoneNumberExtension)
+    formValues.superEmail = validateAndDiscardSpaces(formValues?.superEmail)
+    formValues.agentName = validateAndDiscardSpaces(formValues?.agentName)
+    formValues.homeOwnerName = validateAndDiscardSpaces(formValues?.homeOwnerName)
+    formValues.homeOwnerEmail = validateAndDiscardSpaces(formValues?.homeOwnerEmail)
+    formValues.superEmail = validateAndDiscardSpaces(formValues?.superEmail)
+    formValues.gateCode = validateAndDiscardSpaces(formValues?.gateCode)
+    formValues.lockBoxCode = validateAndDiscardSpaces(formValues?.lockBoxCode)
+    formValues.hoaContactEmail = validateAndDiscardSpaces(formValues?.hoaContactEmail)
+    formValues.hoaContactExtension = validateAndDiscardSpaces(formValues?.hoaContactExtension)
+    formValues.superEmail = validateAndDiscardSpaces(formValues?.superEmail)
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
     }
