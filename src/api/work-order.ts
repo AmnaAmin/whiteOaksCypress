@@ -352,6 +352,9 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     visibleToVendor: formValues.assignToVendor,
     vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
+    invoiceAmount: removeCurrencyFormat(formValues?.invoiceAmount),
+    clientApprovedAmount: removeCurrencyFormat(formValues?.clientApprovedAmount),
+    percentage: formValues?.percentage,
     completePercentage:
       typeof formValues.completePercentage === 'number'
         ? formValues.completePercentage
@@ -373,6 +376,9 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
     showPrice: workOrder.showPricing ?? false,
     notifyVendor: workOrder.notifyVendor ?? false,
     assignToVendor: workOrder.visibleToVendor ?? false,
+    invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
+    clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    percentage: workOrder?.percentage,
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {
