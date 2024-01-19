@@ -231,7 +231,7 @@ const AssignedItems = (props: AssignedItemType) => {
             <Box ml={-4}>
               {!isVendor && (
                 <Checkbox
-                  isDisabled={workOrder?.visibleToVendor}
+                  isDisabled={true}
                   variant={'outLinePrimary'}
                   data-testid="assignToVendor"
                   size="md"
