@@ -316,7 +316,8 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   // commenting this out but this condition will be used in upcoming stories.
   //const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
 
-  const isAssignmentAllowed = !workOrder && ['COMPLETED', 'FAILED'].includes(swoProject?.status?.toUpperCase())
+  const isAssignmentAllowed =
+    (!workOrder || !workOrder?.visibleToVendor) && ['COMPLETED', 'FAILED'].includes(swoProject?.status?.toUpperCase())
   return { isAssignmentAllowed }
 }
 

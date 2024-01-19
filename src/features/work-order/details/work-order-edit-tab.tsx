@@ -45,6 +45,7 @@ import {
   useRemainingLineItems,
   createInvoicePdf,
   mapToUnAssignItem,
+  mapToLineItems,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
@@ -167,6 +168,9 @@ const WorkOrderDetailTab = props => {
     control,
     name: 'assignedItems',
   })
+
+  const { append } = assignedItemsArray
+
   const woStartDate = useWatch({ name: 'workOrderStartDate', control })
   const assignVendor = useWatch({ name: 'assignToVendor', control })
 
@@ -182,8 +186,14 @@ const WorkOrderDetailTab = props => {
 
   const { t } = useTranslation()
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
+
+  const assignItemsLengthCheck = assignedItemsWatch?.length === 0 && assignVendor
   const disabledSave =
-    isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
+    isWorkOrderUpdating ||
+    (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) ||
+    isWOCancelled ||
+    assignItemsLengthCheck
+
   const { isAdmin, isVendor } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
   const cancelPermissions = permissions.some(p => ['PROJECTDETAIL.WORKORDER.CANCEL.EDIT', 'ALL'].includes(p))
@@ -222,8 +232,6 @@ const WorkOrderDetailTab = props => {
 
   const setAssignedItems = useCallback(
     items => {
-      /*
-      not used now, will be used in upcoming stories
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
@@ -231,7 +239,7 @@ const WorkOrderDetailTab = props => {
         }),
       ]
       append(assigned)
-      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])*/
+      setUnAssignedItems([...unassignedItems.filter(i => !selectedIds.includes(i.id))])
     },
     [unassignedItems, setUnAssignedItems],
   )
