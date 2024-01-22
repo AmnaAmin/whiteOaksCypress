@@ -303,9 +303,14 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
     formValues?.assignedItems?.length < 1
   return {
     completedByVendor: completedByVendor,
-    workOrderStartDateEnable: [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) || isAdmin,
+    workOrderStartDateEnable:
+      [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) ||
+      isAdmin ||
+      !workOrder?.visibleToVendor,
     workOrderExpectedCompletionDateEnable:
-      [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) || isAdmin,
+      [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) ||
+      isAdmin ||
+      !workOrder?.visibleToVendor,
   }
 }
 
