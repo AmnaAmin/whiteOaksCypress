@@ -441,7 +441,7 @@ const WorkOrderDetailTab = props => {
                 </Alert>
               )}
             </Box>
-            {!isAdmin ? (
+            {!isAdmin && workOrder?.visibleToVendor ? (
               <SimpleGrid columns={5}>
                 <>
                   <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
@@ -501,7 +501,7 @@ const WorkOrderDetailTab = props => {
                             </FormLabel>
                             <Controller
                               control={control}
-                              rules={assignVendor ? { required: 'This is required' } : undefined}
+                              rules={{ required: assignVendor ? 'This field is required' : undefined }}
                               name="vendorId"
                               render={({ field, fieldState }) => {
                                 return (
@@ -725,8 +725,8 @@ const WorkOrderDetailTab = props => {
                   size="md"
                   {...register('assignToVendor')}
                   onChange={e => {
-                    setValue('assignToVendor', e.target.checked)
-                    setValue('notifyVendor', e.target.checked)
+                    setValue('assignToVendor', e.target.checked ?? false)
+                    setValue('notifyVendor', e.target.checked ?? false)
                   }}
                 >
                   {t(`${WORK_ORDER}.assignVendor`)}

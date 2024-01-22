@@ -227,7 +227,7 @@ const AssignedItems = (props: AssignedItemType) => {
             w={{ base: '100%', lg: 'unset' }}
             flexWrap={{ base: 'wrap', lg: 'unset' }}
           >
-            {/* temporarly added this margin left, will remove it */}
+            {/* temporarly added this margin left, will remove it upon design upgration*/}
             <Box ml={-2}>
               {showAssignVendor && (
                 <Checkbox
@@ -237,8 +237,8 @@ const AssignedItems = (props: AssignedItemType) => {
                   size="md"
                   {...register('assignToVendor')}
                   onChange={e => {
-                    setValue('assignToVendor', e.target.checked)
-                    setValue('notifyVendor', e.target.checked)
+                    setValue('assignToVendor', e.target.checked ?? false)
+                    setValue('notifyVendor', e.target.checked ?? false)
                   }}
                 >
                   {t(`${WORK_ORDER}.assignVendor`)}
@@ -251,7 +251,6 @@ const AssignedItems = (props: AssignedItemType) => {
                 {t(`${WORK_ORDER}.showPrice`)}
               </Checkbox>
             )}
-
             {downloadPdf && (
               <Button
                 variant="outline"
