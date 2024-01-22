@@ -193,9 +193,12 @@ const WorkOrderDetailTab = props => {
   const { t } = useTranslation()
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
-  // const assignItemsLengthCheck = assignedItemsWatch?.length === 0 && assignVendor
+  const assignItemsLengthCheck = assignedItemsWatch?.length === 0 && assignVendor && !(uploadedWO && uploadedWO?.s3Url)
   const disabledSave =
-    isWorkOrderUpdating || (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) || isWOCancelled
+    isWorkOrderUpdating ||
+    (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) ||
+    isWOCancelled ||
+    assignItemsLengthCheck
 
   const { isAdmin, isVendor } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
