@@ -718,9 +718,9 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                maxLength={2}
+                maxLength={255}
                 />
-                {contactFormValue.bankAccountingNo !== undefined && contactFormValue.bankAccountingNo?.length === 2 && (
+                {contactFormValue.bankAccountingNo !== undefined && contactFormValue.bankAccountingNo?.length === 255 && (
                   <Text color="red" fontSize="xs" w="215px">
                     Please use 255 characters only.
                   </Text>
