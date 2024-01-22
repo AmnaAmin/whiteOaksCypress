@@ -124,8 +124,8 @@ const contactFormValue = watch()
   useEffect(() => {
     if (carrierSelected) {
       setSelectedOption({ label: carrierSelected[0]?.name, value: carrierSelected[0]?.id })
-    }
-  }, [carrierSelected])
+    }  
+  }, [carrierSelected?.length])
   return (
     <Stack spacing={14} minH="624px">
       <HStack spacing="32px" >
