@@ -110,7 +110,7 @@ const AssignedItems = (props: AssignedItemType) => {
     }
   }, [lineItems])
 
-  const { showPriceCheckBox, notifyVendorCheckBox } = useActionsShowDecision({ workOrder })
+  const { showPriceCheckBox, showAssignVendor } = useActionsShowDecision({ workOrder })
 
   const { isVendor } = useUserRolesSelector()
 
@@ -228,14 +228,18 @@ const AssignedItems = (props: AssignedItemType) => {
             flexWrap={{ base: 'wrap', lg: 'unset' }}
           >
             {/* temporarly added this margin left, will remove it */}
-            <Box ml={-4}>
-              {!isVendor && (
+            <Box ml={-2}>
+              {showAssignVendor && (
                 <Checkbox
                   isDisabled={workOrder?.visibleToVendor}
                   variant={'outLinePrimary'}
                   data-testid="assignToVendor"
                   size="md"
                   {...register('assignToVendor')}
+                  onChange={e => {
+                    setValue('assignToVendor', e.target.checked)
+                    setValue('notifyVendor', e.target.checked)
+                  }}
                 >
                   {t(`${WORK_ORDER}.assignVendor`)}
                 </Checkbox>
@@ -245,17 +249,6 @@ const AssignedItems = (props: AssignedItemType) => {
             {showPriceCheckBox && (
               <Checkbox variant={'outLinePrimary'} data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}
-              </Checkbox>
-            )}
-            {notifyVendorCheckBox && (
-              <Checkbox
-                defaultChecked
-                variant={'outLinePrimary'}
-                data-testid="notifyVendorCheckBox"
-                size="md"
-                {...register('notifyVendor')}
-              >
-                {t(`${WORK_ORDER}.sendNotification`)}
               </Checkbox>
             )}
 
