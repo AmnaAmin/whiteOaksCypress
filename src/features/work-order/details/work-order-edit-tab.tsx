@@ -46,6 +46,7 @@ import {
   createInvoicePdf,
   mapToUnAssignItem,
   mapToLineItems,
+  calculateProfit,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
@@ -58,6 +59,8 @@ import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 import { useLocation } from 'react-router-dom'
+import round from 'lodash/round'
+import { isValidAndNonEmpty } from 'utils'
 
 export type SelectVendorOption = {
   label: string
@@ -124,6 +127,9 @@ interface FormValues {
   completePercentage?: completePercentage
   locations?: any
   assignToVendor?: boolean
+  invoiceAmount: string | number | null | undefined
+  clientApprovedAmount: string | number | null
+  percentage: string | number | null
 }
 
 const WorkOrderDetailTab = props => {
@@ -232,7 +238,7 @@ const WorkOrderDetailTab = props => {
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return mapToLineItems(s)
+          return { ...mapToLineItems(s), profit: 0, completePercentage: { value: 0, label: '0%' } }
         }),
       ]
       append(assigned)
@@ -380,6 +386,22 @@ const WorkOrderDetailTab = props => {
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
+
+  useEffect(() => {
+    const clientAmount = assignedItemsWatch?.reduce(
+      (partialSum, a) =>
+        partialSum +
+        Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) * Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
+      0,
+    )
+    const vendorAmount = assignedItemsWatch?.reduce(
+      (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
+      0,
+    )
+    setValue('clientApprovedAmount', round(clientAmount ?? 0, 2))
+    setValue('invoiceAmount', round(vendorAmount ?? 0, 2))
+    setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+  }, [assignedItemsWatch])
 
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
 
