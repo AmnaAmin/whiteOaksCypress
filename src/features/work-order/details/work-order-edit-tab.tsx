@@ -440,7 +440,7 @@ const WorkOrderDetailTab = props => {
                 </Alert>
               )}
             </Box>
-            {!isAdmin && workOrder?.visableToVendor ? (
+            {!isAdmin && workOrder?.visibleToVendor ? (
               <SimpleGrid columns={5}>
                 <>
                   <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
