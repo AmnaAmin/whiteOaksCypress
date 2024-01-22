@@ -166,7 +166,7 @@ export const useGetSections = ({ isDevtekUser }) => {
     { value: 'CLIENTTYPE', label: 'Client Type' },
     { value: 'PROJECTTYPE', label: 'Project Type' },
     { value: 'SUPPORT', label: 'Support' },
-    ...(isDevtekUser ? [{ value: 'MESSAGES', label: 'Messages' }] : []),
+    { value: 'MESSAGES', label: 'Messages' },
     ...(isDevtekUser ? [{ value: 'VENDORPROJECT', label: 'Vendor Projects' }] : []),
     ...(isDevtekUser ? [{ value: 'VENDORPROFILE', label: 'Vendor Profile' }] : []),
     ...(isDevtekUser ? [{ value: 'ALERT', label: 'Alerts' }] : []),
