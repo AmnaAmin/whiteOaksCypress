@@ -49,6 +49,8 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   resubmissionInvoiceNumber: 'resubmissionInvoiceNumber.contains',
   woaInvoiceDateStart: 'woaInvoiceDate.greaterThanOrEqual',
   woaInvoiceDateEnd: 'woaInvoiceDate.lessThanOrEqual',
+  firstWorkOrderDateStart: 'firstWorkOrderDate.greaterThanOrEqual',
+  firstWorkOrderDateEnd: 'firstWorkOrderDate.lessThanOrEqual',
   accountRecievable: 'displayAccountRecievable.contains',
   market: 'market.contains',
   state: 'state.contains',
@@ -310,6 +312,12 @@ export const PROJECT_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projects.projectTable.invoiceNumber',
     accessorKey: 'resubmissionInvoiceNumber',
+  },
+  {
+    header: 'projects.projectTable.woCreatedDate',
+    accessorKey: 'firstWorkOrderDate',
+    accessorFn: (cellInfo: any) => dateFormat(cellInfo.firstWorkOrderDate),
+    meta: { format: 'date' },
   },
   {
     header: 'projects.projectTable.invoiceDate',

@@ -316,7 +316,8 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
   // commenting this out but this condition will be used in upcoming stories.
   //const activePastDue = [STATUS.Active, STATUS.PastDue].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
 
-  const isAssignmentAllowed = !workOrder && ['COMPLETED', 'FAILED'].includes(swoProject?.status?.toUpperCase())
+  const isAssignmentAllowed =
+    (!workOrder || !workOrder?.visibleToVendor) && ['COMPLETED', 'FAILED'].includes(swoProject?.status?.toUpperCase())
   return { isAssignmentAllowed }
 }
 
@@ -335,6 +336,7 @@ export const calculateProfit = (clientAmount, vendorAmount) => {
 export const mapToRemainingItems = item => {
   return {
     ...item,
+    id: item.smartLineItemId ? item.smartLineItemId : item.id,
     unitPrice: item?.price,
     totalPrice: Number(item?.price) * Number(item?.quantity),
     location: item?.location?.label,
@@ -732,7 +734,7 @@ export const useActionsShowDecision = ({ workOrder }) => {
 
   return {
     showPriceCheckBox: !isVendor,
-    notifyVendorCheckBox: !isVendor,
+    showAssignVendor: !isVendor,
     showMarkAllIsVerified: !isVendor && workOrder,
     showMarkAllIsCompleted: !!workOrder,
     showVerification: !!workOrder,
@@ -759,13 +761,17 @@ export const useFieldEnableDecision = ({ workOrder, lineItems }) => {
 
 const setColumnsByConditions = (columns, workOrder, isVendor) => {
   if (workOrder) {
-    columns = columns.filter(c => !['assigned'].includes(c.accessorKey))
+    if (workOrder?.visibleToVendor) {
+      columns = columns.filter(c => !['assigned'].includes(c.accessorKey))
+    }
     if (isVendor) {
       if (workOrder.showPricing) {
-        columns = columns.filter(c => !['price', 'profit', 'clientAmount', 'isVerified'].includes(c.accessorKey))
+        columns = columns.filter(
+          c => !['price', 'assigned', 'profit', 'clientAmount', 'isVerified'].includes(c.accessorKey),
+        )
       } else {
         columns = columns.filter(
-          c => !['price', 'profit', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessorKey),
+          c => !['price', 'profit', 'assigned', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessorKey),
         )
       }
     }

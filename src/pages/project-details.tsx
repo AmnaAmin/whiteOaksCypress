@@ -56,10 +56,6 @@ export const ProjectDetails: React.FC = props => {
   const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
   const [createdTransID, setCreatedTransID] = useState()
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
-  const showForPreProdAndLocal =
-    window.location.href.includes('preprod') ||
-    window.location.href.includes('localhost:') ||
-    window.location.href.includes('dev')
 
   const setCreatedTransaction = e => {
     setCreatedTransID(e?.data)
@@ -140,8 +136,8 @@ export const ProjectDetails: React.FC = props => {
               <Tab>{t('projects.projectDetails.schedule')}</Tab>
               <Tab>{t('projects.projectDetails.documents')}</Tab>
               <Tab>{t('projects.projectDetails.notes')}</Tab>
-              {<Tab>{t('projects.projectDetails.auditLogs')}</Tab>}
-              {showForPreProdAndLocal && <Tab data-testid="project_messages">{t('messages')}</Tab>}
+              <Tab>{t('projects.projectDetails.auditLogs')}</Tab>
+              <Tab data-testid="project_messages">{t('messages')}</Tab>
             </Flex>
           </TabList>
 
@@ -161,6 +157,7 @@ export const ProjectDetails: React.FC = props => {
                   STATUS.Cancelled,
                   STATUS.Paid,
                   STATUS.Punch,
+                  STATUS.Awaiting_punch,
                   STATUS.ClientPaid,
                   STATUS.Overpayment,
                   STATUS.Reconcile,
@@ -278,11 +275,9 @@ export const ProjectDetails: React.FC = props => {
                   />
                 </TabPanel>
               }
-              {showForPreProdAndLocal && (
-                <TabPanel h="680px">
-                  <Messages projectId={projectId} entity="project" id={projectId} />
-                </TabPanel>
-              )}
+              <TabPanel h="680px">
+                <Messages projectId={projectId} entity="project" id={projectId} />
+              </TabPanel>
             </TabPanels>
           </Card>
         </Tabs>

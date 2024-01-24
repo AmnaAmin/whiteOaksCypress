@@ -328,10 +328,6 @@ const Location: React.FC<LocationProps> = ({
                 id="gateCode"
                 {...register('gateCode', {
                   maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only.',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={255}
@@ -357,10 +353,6 @@ const Location: React.FC<LocationProps> = ({
                 id="lockBoxCode"
                 {...register('lockBoxCode', {
                   maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only.',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={255}
@@ -412,10 +404,6 @@ const Location: React.FC<LocationProps> = ({
                 id="hoaContactExtension"
                 {...register('hoaContactExtension', {
                   maxLength: { value: 20, message: 'Character limit reached (maximum 20 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only.',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={20}
@@ -444,10 +432,6 @@ const Location: React.FC<LocationProps> = ({
                     message: 'Invalid Email Address',
                   },
                   maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only.',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={255}

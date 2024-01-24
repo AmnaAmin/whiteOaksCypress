@@ -29,6 +29,8 @@ import { useCurrentDate, useFieldsDisabled, useFieldsRequired, useMinMaxDateSele
 import { addDays } from 'date-fns'
 import moment from 'moment'
 import { capitalize } from 'utils/string-formatters'
+import { useGetProjectFinancialOverview } from 'api/projects'
+import { ConfirmationBox } from 'components/Confirmation'
 
 type ProjectManagerProps = {
   projectStatusSelectOptions: SelectOption[]
@@ -37,6 +39,7 @@ type ProjectManagerProps = {
   projectData: Project
   isReadOnly?: boolean
 }
+
 const ProjectManagement: React.FC<ProjectManagerProps> = ({
   projectStatusSelectOptions,
   projectTypeSelectOptions,
@@ -44,6 +47,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   projectData,
   isReadOnly,
 }) => {
+  const [remainingArCheck, setRemainingArCheck] = useState<boolean>(false)
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
@@ -93,7 +97,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 
   const {
     isWOACompletionDateRequired,
+    isWOACompletionDateRequiredNew,
     isClientWalkthroughDateRequired,
+    isClientWalkthroughDateRequiredNew,
     isWOAStartDateRequired,
     isClientSignOffDateRequired,
   } = useFieldsRequired(control)
@@ -140,6 +146,13 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     }
   }
 
+  const { financialOveriewTableData } = useGetProjectFinancialOverview(projectData?.id)
+  const checkRemainingAR = projectStatus => {
+    if (projectStatus.value === ProjectStatus.Invoiced && financialOveriewTableData[0]?.accountReceivable > 0)
+      setRemainingArCheck(true)
+    else setRemainingArCheck(false)
+  }
+
   const sentenceCaseReconcile = capitalize(STATUS.Reconcile)
   const overrideProjectStatusOptionsLowercase = projectOverrideStatusSelectOptions.map(option => {
     return { ...option, label: capitalize(option.label) }
@@ -166,6 +179,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                         options={projectStatusSelectOptions}
                         isOptionDisabled={option => option.disabled}
                         onChange={option => {
+                          checkRemainingAR(option)
                           clearErrors()
                           updateProjCloseDueDate(option)
                           field.onChange(option)
@@ -210,10 +224,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 id="woNumber"
                 {...register('woNumber', {
                   maxLength: { value: 50, message: 'Character limit reached (maximum 50 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={50}
@@ -235,10 +245,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 id="poNumber"
                 {...register('poNumber', {
                   maxLength: { value: 50, message: 'Character limit reached (maximum 50 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={50}
@@ -261,10 +267,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 id="claimNumber"
                 {...register('claimNumber', {
                   maxLength: { value: 50, message: 'Character limit reached (maximum 50 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={50}
@@ -288,10 +290,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 id="reoNumber"
                 {...register('reoNumber', {
                   maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={255}
@@ -342,10 +340,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 id="projectName"
                 {...register('projectName', {
                   maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                  validate: {
-                    notOnlyWhitespace: value =>
-                      value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only',
-                  },
                 })}
                 autoComplete="off"
                 maxLength={255}
@@ -407,12 +401,15 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 min={woaStartMin}
                 {...register('woaStartDate', {
                   required: isWOAStartDateRequired ? 'This is required' : false,
-                  validate: (value) => {
+                  validate: value => {
                     if (!value) {
                       return true
                     }
-              
-                    return new Date(value) >= new Date(woaStartMin) || 'WOA start date cannot be less than client start date.';
+
+                    return (
+                      new Date(value) >= new Date(woaStartMin) ||
+                      'WOA start date cannot be less than client start date.'
+                    )
                   },
                 })}
               />
@@ -427,11 +424,12 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <Input
                 type="date"
                 isDisabled={isWOACompletionDisabled}
-                variant={isWOACompletionDateRequired ? 'required-field' : 'outline'}
+                variant={isWOACompletionDateRequired || isWOACompletionDateRequiredNew ? 'required-field' : 'outline'}
                 max={isAdmin ? '' : dateToday}
                 min={isAdmin ? '' : woaCompletionMin}
                 {...register('woaCompletionDate', {
-                  required: isWOACompletionDateRequired ? 'This is required field.' : false,
+                  required:
+                    isWOACompletionDateRequired || isWOACompletionDateRequiredNew ? 'This is required field.' : false,
                 })}
                 onChange={e => {
                   const woaCompletion = e.target.value
@@ -460,10 +458,15 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               <Input
                 type="date"
                 isDisabled={isClientWalkthroughDisabled}
-                variant={isClientWalkthroughDateRequired ? 'required-field' : 'outline'}
+                variant={
+                  isClientWalkthroughDateRequired || isClientWalkthroughDateRequiredNew ? 'required-field' : 'outline'
+                }
                 max={isAdmin ? '' : dateToday}
                 {...register('clientWalkthroughDate', {
-                  required: isClientWalkthroughDateRequired ? 'This is required field.' : false,
+                  required:
+                    isClientWalkthroughDateRequired || isClientWalkthroughDateRequiredNew
+                      ? 'This is required field.'
+                      : false,
                 })}
               />
               <FormErrorMessage>{errors?.clientWalkthroughDate?.message}</FormErrorMessage>
@@ -570,6 +573,15 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
           )}
         </Grid>
       </VStack>
+      <ConfirmationBox
+        title={t(`remaininAR`)}
+        content={t(`remainARAlert`)}
+        isOpen={remainingArCheck}
+        onClose={() => setRemainingArCheck(false)}
+        onConfirm={() => setRemainingArCheck(false)}
+        showNoButton={false}
+        yesButtonText={t(`acknowledge`)}
+      />
     </Box>
   )
 }

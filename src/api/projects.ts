@@ -121,7 +121,7 @@ export const useProjectTypes = () => {
 
 export const PROJECT_FINANCIAL_OVERVIEW_API_KEY = 'projectFinancialOverview'
 
-export const useGetProjectFinancialOverview = (projectId?: string) => {
+export const useGetProjectFinancialOverview = (projectId?: string | number | null) => {
   const client = useClient()
 
   const { data: projectFinacialOverview, ...rest } = useQuery<ProjectFinancialOverview[]>(
@@ -188,11 +188,7 @@ export const useGetProjectFinancialOverview = (projectId?: string) => {
         accountReceivable:
           (fo?.newAmount || 0) +
           (fo?.draw || 0) -
-          (
-            (fo?.partialPayment || 0) 
-            + (fo?.deductible || 0) 
-            + (fo?.depreciation || 0) 
-            ),
+          ((fo?.partialPayment || 0) + (fo?.deductible || 0) + (fo?.depreciation || 0)),
       })) || [],
     workOrderFinancialOverviews: restProjectFinancialOverviews,
     vendorPaymentPercentage,
@@ -224,7 +220,7 @@ export const useWorkOrders = (queryString: string, pageSize: number) => {
 
   const { data, ...rest } = usePaginationQuery<VendorWorkOrder>(
     [VENDOR_WORK_ORDER_QUERY_KEY, apiQueryString],
-    `vendor/workorders?${apiQueryString}&status.notEquals=35`,
+    `vendor/workorders?${apiQueryString}&status.notEquals=35&visibleToVendor.equals=true`,
     pageSize,
   )
 

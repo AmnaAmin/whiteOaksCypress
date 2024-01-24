@@ -3,6 +3,7 @@ import { Document } from './vendor.types'
 
 export type ProjectWorkOrder = {
   largeWorkOrder: boolean
+  visibleToVendor?: boolean
   validForAwardPlan: boolean
   assignAwardPlan: boolean
   businessEmailAddress: string
@@ -262,7 +263,6 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   verifiedByManager: SelectOption | null
   invoiceId: number | string | null
   invoiceNumber?: number | string | null
-
 }
 
 type LineItem = {
@@ -295,7 +295,7 @@ export type ChangeOrderType = {
   modifiedDate: string | null
   parentWorkOrderExpectedCompletionDate: string | null
   newExpectedCompletionDate: string | null
-  reason:string | null
+  reason: string | null
   parentWorkOrderId: number
   projectId: number
   vendorId: number | null

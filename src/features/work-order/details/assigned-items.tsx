@@ -110,11 +110,13 @@ const AssignedItems = (props: AssignedItemType) => {
     }
   }, [lineItems])
 
-  const { showPriceCheckBox, notifyVendorCheckBox } = useActionsShowDecision({ workOrder })
+  const { showPriceCheckBox, showAssignVendor } = useActionsShowDecision({ workOrder })
 
   const { isVendor } = useUserRolesSelector()
 
-  const allowEdit = !isVendor && !workOrder
+  const isVendorAssign = workOrder?.visibleToVendor
+
+  const allowEdit = (!isVendor && !workOrder) || !isVendorAssign
 
   const ASSIGNED_ITEMS_COLUMNS = useGetLineItemsColumn({
     unassignedItems,
@@ -225,23 +227,30 @@ const AssignedItems = (props: AssignedItemType) => {
             w={{ base: '100%', lg: 'unset' }}
             flexWrap={{ base: 'wrap', lg: 'unset' }}
           >
+            {/* temporarly added this margin left, will remove it upon design upgration*/}
+            <Box ml={-2}>
+              {showAssignVendor && (
+                <Checkbox
+                  isDisabled={workOrder?.visibleToVendor}
+                  variant={'outLinePrimary'}
+                  data-testid="assignToVendor"
+                  size="md"
+                  {...register('assignToVendor')}
+                  onChange={e => {
+                    setValue('assignToVendor', e.target.checked ?? false)
+                    setValue('notifyVendor', e.target.checked ?? false)
+                  }}
+                >
+                  {t(`${WORK_ORDER}.assignVendor`)}
+                </Checkbox>
+              )}
+            </Box>
+
             {showPriceCheckBox && (
               <Checkbox variant={'outLinePrimary'} data-testid="showPriceCheckBox" size="md" {...register('showPrice')}>
                 {t(`${WORK_ORDER}.showPrice`)}
               </Checkbox>
             )}
-            {notifyVendorCheckBox && (
-              <Checkbox
-                defaultChecked
-                variant={'outLinePrimary'}
-                data-testid="notifyVendorCheckBox"
-                size="md"
-                {...register('notifyVendor')}
-              >
-                {t(`${WORK_ORDER}.sendNotification`)}
-              </Checkbox>
-            )}
-
             {downloadPdf && (
               <Button
                 variant="outline"

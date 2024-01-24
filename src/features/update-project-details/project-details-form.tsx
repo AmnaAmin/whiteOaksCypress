@@ -38,9 +38,8 @@ import { useTranslation } from 'react-i18next'
 import { useTransactionsV1 } from 'api/transactions'
 import { TransactionStatusValues, TransactionTypeValues } from 'types/transaction.type'
 import { AddressVerificationModal } from 'features/projects/new-project/address-verification-modal'
-import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useClientType } from 'api/client-type'
-import InvoiceAndPayments from './invoicing-payments'
 import { ConfirmationBox } from 'components/Confirmation'
 
 type tabProps = {
@@ -67,7 +66,8 @@ const ProjectDetailsTab = (props: tabProps) => {
   const { userSelectOptions: projectCoordinatorSelectOptions } = useGetUsersByType(112)
   const { clientSelectOptions } = useGetClientSelectOptions()
   const { clientTypesSelectOptions } = useClientType()
-  const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData)
+  const { isAdmin } = useUserRolesSelector()
+  const projectStatusSelectOptions = useProjectStatusSelectOptions(projectData, isAdmin)
   const { data: overPayment } = useGetOverpayment(projectData?.id)
   const { stateSelectOptions, states } = useStates()
   const { marketSelectOptions, markets } = useMarkets()
@@ -85,8 +85,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     formState: { errors, isSubmitting },
     watch,
   } = formReturn
-  const { isInvoiceAndPaymentFormErrors, isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } =
-    useSubFormErrors(errors)
+  const { isProjectManagementFormErrors, isContactsFormErrors, isLocationFormErrors } = useSubFormErrors(errors)
   const watchClient = watch('client')
 
   const carrierSelected = watchClient?.carrier?.filter(e => e.id === projectData?.carrierId)
@@ -189,8 +188,33 @@ const ProjectDetailsTab = (props: tabProps) => {
     onOpen: onDeleteProjecModalOpen,
     onClose: onDeleteProjecModalClose,
   } = useDisclosure()
+  
+  const validateAndDiscardSpaces = (value) => {   
+    if (value === null || value === undefined) {
+      return null
+    }
+    const trimmedValue = value.trim()
+    return trimmedValue === '' ? null : trimmedValue
+  }
 
   const onSubmit = async (formValues: ProjectDetailsFormValues) => {
+    formValues.woNumber = validateAndDiscardSpaces(formValues?.woNumber)
+    formValues.poNumber = validateAndDiscardSpaces(formValues?.poNumber)
+    formValues.projectName = validateAndDiscardSpaces(formValues?.projectName)
+    formValues.reoNumber = validateAndDiscardSpaces(formValues?.reoNumber)
+    formValues.claimNumber = validateAndDiscardSpaces(formValues?.claimNumber)
+    formValues.superName = validateAndDiscardSpaces(formValues?.superName)
+    formValues.superPhoneNumberExtension = validateAndDiscardSpaces(formValues?.superPhoneNumberExtension)
+    formValues.superEmail = validateAndDiscardSpaces(formValues?.superEmail)
+    formValues.agentName = validateAndDiscardSpaces(formValues?.agentName)
+    formValues.homeOwnerName = validateAndDiscardSpaces(formValues?.homeOwnerName)
+    formValues.homeOwnerEmail = validateAndDiscardSpaces(formValues?.homeOwnerEmail)
+    formValues.superEmail = validateAndDiscardSpaces(formValues?.superEmail)
+    formValues.gateCode = validateAndDiscardSpaces(formValues?.gateCode)
+    formValues.lockBoxCode = validateAndDiscardSpaces(formValues?.lockBoxCode)
+    formValues.hoaContactEmail = validateAndDiscardSpaces(formValues?.hoaContactEmail)
+    formValues.hoaContactExtension = validateAndDiscardSpaces(formValues?.hoaContactExtension)
+    formValues.superEmail = validateAndDiscardSpaces(formValues?.superEmail)
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
     }
@@ -262,19 +286,12 @@ const ProjectDetailsTab = (props: tabProps) => {
               marginBottom="1px"
               bg={style?.backgroundColor ? '' : '#F7FAFC'}
               rounded="6px 6px 0px 0px"
-              pt={isRecievable ? 2 : 7}
+             
             >
               <TabCustom isError={isProjectManagementFormErrors && tabIndex !== 0}>
                 {t(`project.projectDetails.projectManagement`)}
               </TabCustom>
-              {!projectData?.validForNewInvoice && (
-                <TabCustom
-                  isError={!projectData?.validForNewInvoice ? isInvoiceAndPaymentFormErrors && tabIndex !== 1 : false}
-                >
-                  {t(`project.projectDetails.invoicingPayment`)}
-                  {/* // : t(`project.projectDetails.payments`)} */}
-                </TabCustom>
-              )}
+
               <TabCustom datatest-id="contacts-1" isError={isContactsFormErrors && tabIndex !== 3}>
                 {t(`project.projectDetails.contacts`)}
               </TabCustom>
@@ -302,14 +319,6 @@ const ProjectDetailsTab = (props: tabProps) => {
                     isReadOnly={isReadOnly}
                   />
                 </TabPanel>
-                {!projectData?.validForNewInvoice && (
-                  <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                    <InvoiceAndPayments isReadOnly={isReadOnly} projectData={projectData} />
-                    {/* // : (
-                  //   <Payments isReadOnly={isReadOnly} projectData={projectData} />
-                  // )} */}
-                  </TabPanel>
-                )}
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'} overflow={style?.height ? 'auto' : 'none'}>
                   <Contact
@@ -331,7 +340,8 @@ const ProjectDetailsTab = (props: tabProps) => {
                 </TabPanel>
 
                 <TabPanel p="0" ml="32px" h={style?.height ?? 'auto'}>
-                  <Misc />
+                  <Misc
+                  projectData={projectData} />
                 </TabPanel>
               </TabPanels>
 
