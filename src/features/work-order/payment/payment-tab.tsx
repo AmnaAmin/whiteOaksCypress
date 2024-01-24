@@ -110,7 +110,6 @@ const PaymentInfoTab = props => {
   const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   const isReadOnly = isPayableRead || isProjRead
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
-  const amountPattern = /^(?!0\d|$)\d{1,19}(\.\d{1,4})?$/
   useEffect(() => {
     if ([STATUS.Rejected]?.includes(workOrder?.statusLabel?.toLowerCase())) {
       setValue('dateInvoiceSubmitted', null)
@@ -418,7 +417,6 @@ const PaymentInfoTab = props => {
                       required: 'This is required',
                     }}
                     render={({ field, fieldState }) => {
-                      const inputValue = field.value ?? '' // Define inputValue here
 
                       return (
                         <>
@@ -471,7 +469,7 @@ const PaymentInfoTab = props => {
                       required: 'This is required',
                     }}
                     render={({ field, fieldState }) => {
-                      const inputValue = field.value ?? ''
+                    
                       return (
                         <>
                           <NumberFormat
