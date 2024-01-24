@@ -121,7 +121,7 @@ export const useProjectTypes = () => {
 
 export const PROJECT_FINANCIAL_OVERVIEW_API_KEY = 'projectFinancialOverview'
 
-export const useGetProjectFinancialOverview = (projectId?: string) => {
+export const useGetProjectFinancialOverview = (projectId?: string | number | null) => {
   const client = useClient()
 
   const { data: projectFinacialOverview, ...rest } = useQuery<ProjectFinancialOverview[]>(
