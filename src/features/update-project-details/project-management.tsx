@@ -51,7 +51,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
-  console.log(remainingArCheck)
 
   useEffect(() => {
     if (isReadOnly) {
@@ -148,11 +147,12 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   }
 
   const { financialOveriewTableData } = useGetProjectFinancialOverview(projectData?.id)
-  const checkREmainingAR = projectStatus => {
-    if (projectStatus.value === 11 && financialOveriewTableData[0]?.accountReceivable > 0)
-      return setRemainingArCheck(true)
-    else return setRemainingArCheck(false)
+  const checkRemainingAR = projectStatus => {
+    if (projectStatus.value === ProjectStatus.Invoiced && financialOveriewTableData[0]?.accountReceivable > 0)
+      setRemainingArCheck(true)
+    else setRemainingArCheck(false)
   }
+
   const sentenceCaseReconcile = capitalize(STATUS.Reconcile)
   const overrideProjectStatusOptionsLowercase = projectOverrideStatusSelectOptions.map(option => {
     return { ...option, label: capitalize(option.label) }
@@ -179,7 +179,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                         options={projectStatusSelectOptions}
                         isOptionDisabled={option => option.disabled}
                         onChange={option => {
-                          checkREmainingAR(option)
+                          checkRemainingAR(option)
                           clearErrors()
                           updateProjCloseDueDate(option)
                           field.onChange(option)
