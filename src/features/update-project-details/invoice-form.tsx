@@ -292,6 +292,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   const { permissions } = useRoleBasedPermissions()
   const isInvoicedEnabled = permissions.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p))
   const canCreateInvoice = permissions.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p))
+  const isAdmin = useRoleBasedPermissions()?.permissions?.includes('ALL')
 
   const {
     isOpen: isDeleteConfirmationModalOpen,
@@ -519,7 +520,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     <ReactSelect
                       {...field}
                       id="paymentTermDD"
-                      isDisabled={isPaid || !canCreateInvoice || isCancelled}
+                      isDisabled={isPaid || !canCreateInvoice || isCancelled || !isAdmin}
                       options={PAYMENT_TERMS_OPTIONS}
                       selectProps={{ isBorderLeft: true, menuHeight: '100px' }}
                       onChange={(option: SelectOption) => {
