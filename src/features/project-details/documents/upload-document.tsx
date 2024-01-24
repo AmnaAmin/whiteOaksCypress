@@ -172,7 +172,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                   </GridItem>
                   {watchPermitOption && (
                     <GridItem>
-                      <FormControl isInvalid={!!errors?.against} data-testid="document-type">
+                      <FormControl isInvalid={!!errors?.against} data-testid="document-type-against">
                         <FormLabel htmlFor="documentType" variant="strong-label" size="md">
                           {t('against')}
                         </FormLabel>
