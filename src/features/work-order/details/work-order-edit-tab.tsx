@@ -127,6 +127,7 @@ interface FormValues {
   completePercentage?: completePercentage
   locations?: any
   assignToVendor?: boolean
+  notifyVendor?: boolean
   invoiceAmount: string | number | null | undefined
   clientApprovedAmount: string | number | null
   percentage: string | number | null
@@ -723,6 +724,10 @@ const WorkOrderDetailTab = props => {
                   data-testid="assignToVendor"
                   size="md"
                   {...register('assignToVendor')}
+                  onChange={e => {
+                    setValue('assignToVendor', e.target.checked ?? false)
+                    setValue('notifyVendor', e.target.checked ?? false)
+                  }}
                 >
                   {t(`${WORK_ORDER}.assignVendor`)}
                 </Checkbox>
