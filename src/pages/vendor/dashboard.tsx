@@ -2,8 +2,16 @@ import { Box, Text, useMediaQuery, Heading, Tabs, TabList, Tab, TabPanels, TabPa
 import ConstructionDashboard from 'features/vendor/construction portal/construction-dashboard'
 import { EstimatesPortalDashboard } from 'features/vendor/construction portal/estimates-dashboard'
 import { t } from 'i18next'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 const Dashboard: React.FC = () => {
   const [isLessThanOrEq320] = useMediaQuery('(max-width: 320px)')
+  const { permissions } = useRoleBasedPermissions()
+  const isVendorDashboardReadOrEdit = permissions.some(p =>
+    ['VENDORDASHBOARD.READ', 'VENDORDASHBOARD.EDIT'].includes(p),
+  )
+  const isVendorEstDashboardReadOrEdit = permissions.some(p =>
+    ['VENDORDASHBOARDEST.READ', 'VENDORDASHBOARDESTEST.EDIT'].includes(p),
+  )
   if (isLessThanOrEq320) {
     return (
       <Box mt="50%">
@@ -23,16 +31,20 @@ const Dashboard: React.FC = () => {
   return (
     <Tabs variant="enclosed" colorScheme="brand">
       <TabList>
-        <Tab data-testid="construction-tab">Construction</Tab>
-        <Tab data-testid="estimates-tab">Estimates</Tab>
+        {isVendorDashboardReadOrEdit && <Tab data-testid="construction-tab">Construction</Tab>}
+        {isVendorEstDashboardReadOrEdit && <Tab data-testid="estimates-tab">Estimates</Tab>}
       </TabList>
       <TabPanels h={'100%'}>
-        <TabPanel h="100vh" padding="5px 0px 0px 0px">
-          <ConstructionDashboard />
-        </TabPanel>
-        <TabPanel h="100vh" padding="5px 0px 0px 0px">
-          <EstimatesPortalDashboard />
-        </TabPanel>
+        {isVendorDashboardReadOrEdit && (
+          <TabPanel h="100vh" padding="5px 0px 0px 0px">
+            <ConstructionDashboard />
+          </TabPanel>
+        )}
+        {isVendorEstDashboardReadOrEdit && (
+          <TabPanel h="100vh" padding="5px 0px 0px 0px">
+            <EstimatesPortalDashboard />
+          </TabPanel>
+        )}
       </TabPanels>
     </Tabs>
   )

@@ -52,7 +52,7 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.dashboard`,
     Icon: FaHome,
     color: '#F6AD55',
-    permissions: ['VENDORDASHBOARD.EDIT', 'VENDORDASHBOARD.READ'],
+    permissions: ['VENDORDASHBOARD.EDIT', 'VENDORDASHBOARD.READ', 'VENDORDASHBOARDEST.READ', 'VENDORDASHBOARDEST.EDIT'],
     testId: 'vendorDashboardMenuItem',
   },
   {
@@ -76,7 +76,15 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.payable`,
     Icon: BiCreditCard,
     color: '#68D391',
-    permissions: ['PAYABLE.EDIT', 'PAYABLE.READ', 'ALL', 'ESTPAYABLE.READ', 'ESTPAYABLE.EDIT'],
+    permissions: [
+      'PAYABLE.EDIT',
+      'PAYABLE.READ',
+      'ALL',
+      'ESTPAYABLE.READ',
+      'ESTPAYABLE.EDIT',
+      'MAINTENANCEPAYABLE.EDIT',
+      'MAINTENANCEPAYABLE.READ',
+    ],
     testId: 'payableMenuItem',
   },
   {
@@ -84,7 +92,15 @@ export const MenusList: Menu[] = [
     title: `${SIDE_NAV}.receivable`,
     Icon: BiDollarCircle,
     color: '#4299E1',
-    permissions: ['RECEIVABLE.EDIT', 'RECEIVABLE.READ', 'ESTRECEIVABLE.EDIT', 'ESTRECEIVABLE.READ', 'ALL'],
+    permissions: [
+      'RECEIVABLE.EDIT',
+      'RECEIVABLE.READ',
+      'ESTRECEIVABLE.EDIT',
+      'ESTRECEIVABLE.READ',
+      'ALL',
+      'MAINTENANCERECEIVABLE.EDIT',
+      'MAINTENANCERECEIVABLE.READ',
+    ],
     testId: 'recievableMenuItem',
   },
   {

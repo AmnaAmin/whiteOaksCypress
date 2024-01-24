@@ -85,15 +85,17 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
 
   const checkDefaultPermissions = assignment => {
     const defaultSections = ['PROJECT', 'VENDOR', 'ESTIMATE']
+    let sectionPermission = [] as any
+    defaultSections.forEach(section => {
+      const permission = watchPermissions?.find(p => p?.name === section)
+      sectionPermission.push({ name: section, isEdit: permission?.edit })
+    })
+
     if (!permissions?.[0]?.systemRole) {
-      defaultSections.forEach(section => {
-        const sectionPermission = watchPermissions?.find(p => p?.name === section)
-        setDefaultPermission({
-          setValue,
-          value: sectionPermission?.edit,
-          section: sectionPermission?.name,
-          assignment,
-        })
+      setDefaultPermission({
+        setValue,
+        sectionPermission,
+        assignment,
       })
     }
   }
