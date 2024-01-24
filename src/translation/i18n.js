@@ -810,7 +810,7 @@ i18n.use(initReactI18next).init({
         newAlert: 'Nueva Alerta',
         editAlert: 'Editar Alerta',
         transaction: 'Transacción',
-        remainARAlert: 'you have remaining AR, do you still want to proceed.',
+        remainARAlert: 'te queda AR, ¿aún quieres continuar?',
         acknowledge: 'Ack.',
         remaininAR: 'Alerta AR restante',
         vendorWorkOrders: 'Órdenes de Trabajo del Proveedor',
