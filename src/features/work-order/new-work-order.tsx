@@ -257,7 +257,7 @@ export const NewWorkOrderForm: React.FC<{
       workOrderStartDate: undefined,
       invoiceAmount: 0,
       clientApprovedAmount: 0,
-      percentage: 0,
+      percentage: 35,
       assignedItems: [],
       uploadWO: null,
       assignToVendor: false,
@@ -316,19 +316,22 @@ export const NewWorkOrderForm: React.FC<{
   }, [watchPercentage])
 
   useEffect(() => {
-    const clientAmount = watchLineItems?.reduce(
-      (partialSum, a) =>
-        partialSum +
-        Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) * Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
-      0,
-    )
-    const vendorAmount = watchLineItems?.reduce(
-      (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
-      0,
-    )
-    setValue('clientApprovedAmount', round(clientAmount, 2))
-    setValue('invoiceAmount', round(vendorAmount, 2))
-    setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+    if (watchLineItems?.length > 0) {
+      const clientAmount = watchLineItems?.reduce(
+        (partialSum, a) =>
+          partialSum +
+          Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) *
+            Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
+        0,
+      )
+      const vendorAmount = watchLineItems?.reduce(
+        (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
+        0,
+      )
+      setValue('clientApprovedAmount', round(clientAmount, 2))
+      setValue('invoiceAmount', round(vendorAmount, 2))
+      setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+    }
   }, [watchLineItems])
 
   const resetLineItemsProfit = profit => {
@@ -769,7 +772,7 @@ export const NewWorkOrderForm: React.FC<{
                               setUnAssignedItems([...formValues.assignedItems, ...unassignedItems])
                             }
                             setValue('assignedItems', [])
-                            setValue('percentage', 0)
+                            // setValue('percentage', 0)
                             field.onChange(file)
                           } else {
                             field.onChange(null)
