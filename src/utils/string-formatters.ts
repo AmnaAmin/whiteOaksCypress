@@ -80,3 +80,14 @@ export const preventSpecialCharacter = e => {
 export const capitalize = text => {
   return text?.charAt(0)?.toUpperCase() + text?.slice(1)?.toLowerCase()
 }
+export const validateAmountDigits = (amount, countBeforeDecimal?, countAfterDecimal?) => {
+  const value = amount?.replace('$', '')?.replaceAll(',', '')
+  const amountParts = value?.split('.')
+  if (
+    !amountParts ||
+    (amountParts?.[0]?.length <= (countBeforeDecimal ?? 19) &&
+      (!amountParts?.[1] || amountParts?.[1]?.length <= (countAfterDecimal ?? 4)))
+  )
+    return true
+  else return 'Invalid Format.'
+}
