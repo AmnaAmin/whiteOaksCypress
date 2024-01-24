@@ -236,7 +236,7 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   return {
     dateInvoiceSubmittedEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
-    paymentTermEnabled: defaultStatus || (workOrder?.assignAwardPlan && isAdmin) || workOrder?.visibleToVendor,
+    paymentTermEnabled: defaultStatus || (workOrder?.assignAwardPlan && isAdmin && workOrder?.visibleToVendor),
     paymentTermDateEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
     expectedPaymentDateEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
     datePaymentProcessedEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
@@ -303,9 +303,14 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
     formValues?.assignedItems?.length < 1
   return {
     completedByVendor: completedByVendor,
-    workOrderStartDateEnable: [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) || isAdmin,
+    workOrderStartDateEnable:
+      [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) ||
+      isAdmin ||
+      !workOrder?.visibleToVendor,
     workOrderExpectedCompletionDateEnable:
-      [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) || isAdmin,
+      [STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) ||
+      isAdmin ||
+      !workOrder?.visibleToVendor,
   }
 }
 
@@ -352,6 +357,9 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     visibleToVendor: formValues.assignToVendor,
     vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
+    invoiceAmount: removeCurrencyFormat(formValues?.invoiceAmount),
+    clientApprovedAmount: removeCurrencyFormat(formValues?.clientApprovedAmount),
+    percentage: formValues?.percentage,
     completePercentage:
       typeof formValues.completePercentage === 'number'
         ? formValues.completePercentage
@@ -373,6 +381,9 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
     showPrice: workOrder.showPricing ?? false,
     notifyVendor: workOrder.notifyVendor ?? false,
     assignToVendor: workOrder.visibleToVendor ?? false,
+    invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
+    clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    percentage: workOrder?.percentage,
     assignedItems:
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {

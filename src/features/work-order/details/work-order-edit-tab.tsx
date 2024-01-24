@@ -46,6 +46,7 @@ import {
   createInvoicePdf,
   mapToUnAssignItem,
   mapToLineItems,
+  calculateProfit,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
@@ -58,6 +59,8 @@ import { useFilteredVendors } from 'api/pc-projects'
 import { useTrades } from 'api/vendor-details'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 import { useLocation } from 'react-router-dom'
+import round from 'lodash/round'
+import { isValidAndNonEmpty } from 'utils'
 
 export type SelectVendorOption = {
   label: string
@@ -124,6 +127,10 @@ interface FormValues {
   completePercentage?: completePercentage
   locations?: any
   assignToVendor?: boolean
+  notifyVendor?: boolean
+  invoiceAmount: string | number | null | undefined
+  clientApprovedAmount: string | number | null
+  percentage: string | number | null
 }
 
 const WorkOrderDetailTab = props => {
@@ -187,7 +194,7 @@ const WorkOrderDetailTab = props => {
   const { t } = useTranslation()
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
 
-  const assignItemsLengthCheck = assignedItemsWatch?.length === 0 && assignVendor
+  const assignItemsLengthCheck = assignedItemsWatch?.length === 0 && assignVendor && !(uploadedWO && uploadedWO?.s3Url)
   const disabledSave =
     isWorkOrderUpdating ||
     (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) ||
@@ -235,7 +242,7 @@ const WorkOrderDetailTab = props => {
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return mapToLineItems(s)
+          return { ...mapToLineItems(s), profit: 0, completePercentage: { value: 0, label: '0%' } }
         }),
       ]
       append(assigned)
@@ -384,6 +391,22 @@ const WorkOrderDetailTab = props => {
     if (e.code === 'Enter') e.preventDefault()
   }
 
+  useEffect(() => {
+    const clientAmount = assignedItemsWatch?.reduce(
+      (partialSum, a) =>
+        partialSum +
+        Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) * Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
+      0,
+    )
+    const vendorAmount = assignedItemsWatch?.reduce(
+      (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
+      0,
+    )
+    setValue('clientApprovedAmount', round(clientAmount ?? 0, 2))
+    setValue('invoiceAmount', round(vendorAmount ?? 0, 2))
+    setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+  }, [assignedItemsWatch])
+
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
 
   const inProgress = [
@@ -418,7 +441,7 @@ const WorkOrderDetailTab = props => {
                 </Alert>
               )}
             </Box>
-            {!isAdmin ? (
+            {!isAdmin && workOrder?.visibleToVendor ? (
               <SimpleGrid columns={5}>
                 <>
                   <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
@@ -478,7 +501,7 @@ const WorkOrderDetailTab = props => {
                             </FormLabel>
                             <Controller
                               control={control}
-                              rules={assignVendor ? { required: 'This is required' } : undefined}
+                              rules={{ required: assignVendor ? 'This field is required' : undefined }}
                               name="vendorId"
                               render={({ field, fieldState }) => {
                                 return (
@@ -701,6 +724,10 @@ const WorkOrderDetailTab = props => {
                   data-testid="assignToVendor"
                   size="md"
                   {...register('assignToVendor')}
+                  onChange={e => {
+                    setValue('assignToVendor', e.target.checked ?? false)
+                    setValue('notifyVendor', e.target.checked ?? false)
+                  }}
                 >
                   {t(`${WORK_ORDER}.assignVendor`)}
                 </Checkbox>

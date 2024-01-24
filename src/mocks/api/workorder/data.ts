@@ -338,6 +338,7 @@ export const WORK_ORDERS = [
     capacity: 1,
     status: 110,
     statusLabel: 'Invoiced',
+    visibleToVendor: true,
     createdBy: 'admin@devtek.ai',
     createdDate: '2022-07-15T13:01:03Z',
     datePermitsPulled: null,

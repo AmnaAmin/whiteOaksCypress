@@ -260,6 +260,7 @@ export const NewWorkOrderForm: React.FC<{
       percentage: 0,
       assignedItems: [],
       uploadWO: null,
+      assignToVendor: false,
     }
   }
   // Hook form initialization
