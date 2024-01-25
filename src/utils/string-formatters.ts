@@ -81,13 +81,22 @@ export const capitalize = text => {
   return text?.charAt(0)?.toUpperCase() + text?.slice(1)?.toLowerCase()
 }
 export const validateAmountDigits = (amount, countBeforeDecimal?, countAfterDecimal?) => {
-  const value = amount?.replace('$', '')?.replaceAll(',', '')
-  const amountParts = value?.split('.')
+  // Ensure that amount is a string, replace '$' and ',' characters
+  const value = (amount ?? '').toString().replace('$', '').replaceAll(',', '')
+
+  // Split the numeric value into integer and decimal parts
+  const amountParts = value.split('.')
+
+  // Check if the numeric value meets the specified criteria
   if (
     !amountParts ||
-    (amountParts?.[0]?.length <= (countBeforeDecimal ?? 19) &&
-      (!amountParts?.[1] || amountParts?.[1]?.length <= (countAfterDecimal ?? 4)))
-  )
+    (amountParts[0]?.length <= (countBeforeDecimal ?? 19) &&
+      (!amountParts[1] || amountParts[1]?.length <= (countAfterDecimal ?? 4)))
+  ) {
+    // Return true if the amount is valid
     return true
-  else return 'Invalid Format.'
+  } else {
+    // Return an error message if the amount is invalid
+    return 'Invalid Format.'
+  }
 }
