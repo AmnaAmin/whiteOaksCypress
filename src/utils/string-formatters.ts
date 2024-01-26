@@ -81,8 +81,9 @@ export const capitalize = text => {
   return text?.charAt(0)?.toUpperCase() + text?.slice(1)?.toLowerCase()
 }
 export const validateAmountDigits = (amount, countBeforeDecimal?, countAfterDecimal?) => {
+  console.log('amount',amount)
   // Ensure that amount is a string, replace '$' and ',' characters
-  const value = (amount ?? '').toString().replace('$', '').replaceAll(',', '')
+  const value = (amount ?? '').toString().replace(/\$/g, '').replace(/,/g, '');
 
   // Split the numeric value into integer and decimal parts
   const amountParts = value.split('.')
