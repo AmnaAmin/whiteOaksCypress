@@ -91,6 +91,7 @@ const AssignedItems = (props: AssignedItemType) => {
     isAssignmentAllowed,
     swoProject,
     workOrder,
+    downloadPdf,
     documentsData,
   } = props
   const { control, register, getValues, setValue, watch } = formControl
@@ -274,7 +275,7 @@ const AssignedItems = (props: AssignedItemType) => {
                 {t(`${WORK_ORDER}.showPrice`)}
               </Checkbox>
             )}
-           
+           {downloadPdf && (
               <Button
                 variant="outline"
                 colorScheme="darkPrimary"
@@ -285,7 +286,7 @@ const AssignedItems = (props: AssignedItemType) => {
               >
                 {t(`${WORK_ORDER}.downloadPDF`)}
               </Button>
-          
+           )}
           </HStack>
         </Stack>
 
