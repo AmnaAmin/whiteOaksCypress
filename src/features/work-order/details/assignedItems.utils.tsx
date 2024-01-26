@@ -15,7 +15,7 @@ import {
 import { CreatableSelect } from 'components/form/react-select'
 
 import { STATUS } from 'features/common/status'
-import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
+import { Controller, FieldErrors, UseFormReturn, useWatch } from 'react-hook-form'
 import { useState, useRef, useCallback, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
@@ -35,6 +35,7 @@ import { readFileContent } from 'api/vendor-details'
 import { completePercentage } from './work-order-edit-tab'
 import { completePercentageValues, newObjectFormatting } from 'api/work-order'
 import { useLocation } from 'api/location'
+import { addImages } from 'utils/file-utils'
 
 const swoPrefix = '/smartwo/api'
 
@@ -601,7 +602,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
   )
 }
 
-export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
+export const createInvoicePdf = async({ doc, workOrder, projectData, assignedItems, hideAward }) => {
   const workOrderInfo = [
     { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
     { label: 'Expected Completion:', value: workOrder?.workOrderExpectedCompletionDate ?? '' },
@@ -622,9 +623,8 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
   doc.text(heading, startx, 20)
   var img = new Image()
   img.src = 'wo-logo-tree.png'
-  img.onload = function () {
-    doc.addImage(img, 'png', 160, 5, 35, 35)
-
+  const images = await addImages(['wo-logo-tree.png'])
+  doc.addImage(images[0], 'png', 160, 5, 35, 35)
     doc.setFontSize(11)
     doc.setFont(summaryFont, 'bold')
     doc.text('Property Address:', startx, 55)
@@ -679,7 +679,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
         ...assignedItems.map(ai => {
           return {
             id: ai.id,
-            location: ai.location?.label,
+            location: ai.location?.label || ai.location,
             sku: ai.sku,
             productName: ai.productName,
             description: ai.description,
@@ -704,9 +704,10 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     })
     doc.setFontSize(10)
     doc.setFont(basicFont, 'normal')
-    doc.save(`${workOrder?.id}_${workOrder?.companyName}_${workOrder?.propertyAddress}.pdf`)
+    return doc
+    // doc.save(`${workOrder?.id}_${workOrder?.companyName}_${workOrder?.propertyAddress}.pdf`)
   }
-}
+
 
 // !workOrder is a check for new work order modal.
 // In case of edit, workorder will be a non-nullable object.

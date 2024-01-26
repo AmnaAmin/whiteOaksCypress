@@ -37,7 +37,7 @@ import { usePCProject } from 'api/pc-projects'
 import { useDocuments, useVendorAddress } from 'api/vendor-projects'
 import { useTransactionsV1 } from 'api/transactions'
 import { useFetchWorkOrder, useUpdateWorkOrderMutation } from 'api/work-order'
-import { useDeleteLineIds, useFetchProjectId } from './details/assignedItems.utils'
+import { createInvoicePdf, useDeleteLineIds, useFetchProjectId } from './details/assignedItems.utils'
 import { ProjectAwardTab } from './project-award/project.award'
 import { useProjectAward } from 'api/project-award'
 import { Card } from 'components/card/card'
@@ -48,6 +48,7 @@ import { useVendorEntity } from 'api/vendor-dashboard'
 import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
 import { useLocation as useLineItemsLocation } from 'api/location'
 import { Messages } from '../messages/messages'
+import jsPDF from 'jspdf'
 
 const WorkOrderDetails = ({
   workOrder,
@@ -84,6 +85,7 @@ const WorkOrderDetails = ({
     isFetching: isFetchingLineItems,
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
+  const [hasChanges, setHasChanges] = useState(false)
 
   const { mutate: updateWorkOrder, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({
     swoProjectId: swoProject?.id,
@@ -121,8 +123,58 @@ const WorkOrderDetails = ({
   }, [workOrderDetails?.length, onClose])
 
   const queryClient = useQueryClient()
-  const onSave = (values, deletedItems) => {
+  const onSave = async (values, deletedItems) => {
     const payload = { ...workOrderDetails, ...values }
+    const updatedLineItems = payload.assignedItems
+    const existingLineItems =  workOrderDetails?.assignedItems
+    const changedPropertiesForAllPairs = existingLineItems.map((existingItem, index) => {
+      const updatedItem = updatedLineItems[index]
+      const changedProperties: [string, any][] = []
+
+      // Compare 'location.label'
+      const existingLocationLabel = existingItem.location
+      const updatedLocationLabel = updatedItem.location
+
+      if (existingLocationLabel !== updatedLocationLabel) {
+        changedProperties.push(['location.label', updatedLocationLabel])
+      }
+
+      // Compare 'sku'
+      if (existingItem.sku !== updatedItem.sku) {
+        changedProperties.push(['sku', updatedItem.sku])
+      }
+
+      // Compare 'productName'
+      if (existingItem.productName !== updatedItem.productName) {
+        changedProperties.push(['productName', updatedItem.productName])
+      }
+
+      // Compare 'quantity'
+      if (existingItem.quantity !== updatedItem.quantity) {
+        changedProperties.push(['quantity', updatedItem.quantity])
+      }
+
+      // Compare 'description'
+      if (existingItem.description !== updatedItem.description) {
+        changedProperties.push(['description', updatedItem.description])
+      }
+
+      // Compare 'price'
+      if (existingItem.price !== updatedItem.price) {
+        changedProperties.push(['price', updatedItem.price])
+      }
+
+      return changedProperties
+    })
+
+    // Flatten the array of changed properties for each pair of items
+    const flattenedChangedProperties = changedPropertiesForAllPairs.map(changedProperties => {
+      return changedProperties.map(([key, value]) => `${key}: ${value}`)
+    })
+    // Check if any changes are observed and update the state
+   let hasChangesNow = flattenedChangedProperties.some(properties => properties.length > 0)
+    setHasChanges(hasChangesNow)
+
     const { assignedItems } = values
     const hasMarkedSomeComplete = assignedItems?.some(item => item.isCompleted)
 
@@ -145,7 +197,32 @@ const WorkOrderDetails = ({
     } else {
       setIsError(false)
     }
+    const lineItemDocuments = documentsData?.filter((x) => x.workOrderId  === workOrder?.id  && x.documentType===1036)
 
+    const newIndex = lineItemDocuments.length + 1
+      let doc = new jsPDF() as any
+       doc = await createInvoicePdf({
+        doc,
+        workOrder,
+        projectData,
+        assignedItems: values?.assignedItems,
+        hideAward: false,
+      })
+   
+    const pdfUri = doc.output('datauristring')
+    
+    if (hasChangesNow) {
+      payload.documents=[
+       
+        {
+          documentType: 1036,
+          workOrderId: workOrder.id,
+          fileObject: pdfUri.split(',')[1],
+          fileObjectContentType: 'application/pdf',
+          fileType: `LineItem_${newIndex}.pdf`,
+        },
+      ]
+    }
     updateWorkOrder(payload, {
       onSuccess: res => {
         if (deletedItems?.length > 0) {
@@ -235,7 +312,6 @@ const WorkOrderDetails = ({
                       <Checkbox
                         variant={'outLinePrimary'}
                         onChange={() => {
-                          console.log('InChange', rejectInvoice)
                           setRejectInvoice(!rejectInvoice)
                         }}
                         isChecked={rejectInvoice}
