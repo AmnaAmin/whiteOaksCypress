@@ -14,18 +14,20 @@ import {
   ModalOverlay,
   Progress,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react'
 
 import { useCallback, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiCalendar, BiDetail } from 'react-icons/bi'
+import { BiCalendar, BiDetail, BiTrash } from 'react-icons/bi'
 import { useAuth } from 'utils/auth-context'
 import { dateFormat } from 'utils/date-time-utils'
 import { PROJECT_TYPE } from 'features/project-type/project-type.i18n'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { LOCATION } from './location.i18n'
-import { useCreateLocation, useUpdateLocation } from 'api/location'
+import { useCreateLocation, useDeleteLocation, useUpdateLocation } from 'api/location'
+import { ConfirmationBox } from 'components/Confirmation'
 
 const ReadonlyFileStructure: React.FC<{ label: string; value: string; icons: React.ElementType; testid: string }> = ({
   label,
@@ -62,14 +64,24 @@ export const LocationModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, 
   const { register, handleSubmit, setValue, watch, reset } = useForm()
   const { mutate: createLocation, isLoading: loadingNewLocation } = useCreateLocation()
   const { mutate: editLocation, isLoading: loadingEditLocation } = useUpdateLocation()
+  const { mutate: delLocation ,isLoading: loadingDel} = useDeleteLocation()
   const { data } = useAuth()
   const watchLocation = watch('location')
   const Loading = loadingNewLocation || loadingEditLocation
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('LOCATION.READ')
-
+  const { isOpen: isOpenDeleteLocation, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+ 
   const onClose = useCallback(() => {
     close()
   }, [close])
+  const deleteLocation = () => {
+    delLocation(location, {
+      onSuccess: () => {
+        onCloseDisclosure()
+        onClose()
+      },
+    })
+  }
 
   const onSubmit = value => {
     if (location) {
@@ -171,7 +183,20 @@ export const LocationModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, 
               </Box>
             </Box>
           </ModalBody>
-          <ModalFooter borderTop="1px solid #E2E8F0" mt="40px">
+          <ModalFooter  borderTop="1px solid #E2E8F0" mt="30px" justifyContent="space-between">
+          <HStack spacing="16px">
+                {!isReadOnly && location && (
+                  <Button
+                    data-testid="delete-Location-btn"
+                    variant="outline"
+                    colorScheme="brand"
+                    onClick={onOpen}
+                    leftIcon={<BiTrash />}
+                  >
+                    {t(`${LOCATION}.delete`)}
+                  </Button>
+                )}
+              </HStack>
             <HStack w="100%" justifyContent="end">
               <Button
                 variant="outline"
@@ -197,6 +222,16 @@ export const LocationModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, 
             </HStack>
           </ModalFooter>
         </form>
+        {isOpenDeleteLocation && (
+        <ConfirmationBox
+          title="Location"
+          content={t(`${LOCATION}.delConfirmText`)}
+          isOpen={isOpenDeleteLocation}
+          onClose={onCloseDisclosure}
+          isLoading={loadingDel}
+          onConfirm={deleteLocation}
+        />
+        )}
       </ModalContent>
     </Modal>
   )
