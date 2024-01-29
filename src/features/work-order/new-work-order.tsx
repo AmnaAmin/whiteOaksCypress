@@ -402,7 +402,8 @@ export const NewWorkOrderForm: React.FC<{
   const resetAmounts = () => {
     setValue('invoiceAmount', 0)
     setValue('clientApprovedAmount', 0)
-    setValue('percentage', 0)
+    // asper new implementation, we didnt need  to set percentage 0 on this function anymore now
+    // setValue('percentage', 0)
   }
 
   /*  commenting as requirement yet to be confirmed 
