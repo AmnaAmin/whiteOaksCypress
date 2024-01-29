@@ -348,7 +348,7 @@ const DEFAULTPERMISSIONS = {
       'woaStartEdit',
       'verifyProjectEnable',
     ],
-    ALL: [
+    All: [
       'fpmEdit',
       'pcEdit',
       'clientEdit',
@@ -367,13 +367,13 @@ const DEFAULTPERMISSIONS = {
   VENDOR: {
     PC: ['verifyVendorDocuments', 'deactivateVendor'],
     VENDOR: [],
-    ALL: ['verifyVendorDocuments', 'deactivateVendor'],
+    All: ['verifyVendorDocuments', 'deactivateVendor'],
     FPM: [],
   },
   ESTIMATE: {
     FPM: ['estLockBoxEdit', 'estGateCodeEdit'],
     PC: ['estLockBoxEdit', 'estGateCodeEdit', 'enableConvertProject'],
-    ALL: ['estLockBoxEdit', 'estGateCodeEdit', 'enableConvertProject'],
+    All: ['estLockBoxEdit', 'estGateCodeEdit', 'enableConvertProject'],
     VENDOR: [],
   },
 }
