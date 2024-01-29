@@ -392,19 +392,24 @@ const WorkOrderDetailTab = props => {
   }
 
   useEffect(() => {
-    const clientAmount = assignedItemsWatch?.reduce(
-      (partialSum, a) =>
-        partialSum +
-        Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) * Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
-      0,
-    )
-    const vendorAmount = assignedItemsWatch?.reduce(
-      (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
-      0,
-    )
-    setValue('clientApprovedAmount', round(clientAmount ?? 0, 2))
-    setValue('invoiceAmount', round(vendorAmount ?? 0, 2))
-    setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+    // ignoring the below line for avoiding clientApprovedAmount to set 0 in case of zero lineItems
+    // @ts-ignore
+    if (assignedItemsWatch?.length > 0) {
+      const clientAmount = assignedItemsWatch?.reduce(
+        (partialSum, a) =>
+          partialSum +
+          Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) *
+            Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
+        0,
+      )
+      const vendorAmount = assignedItemsWatch?.reduce(
+        (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
+        0,
+      )
+      setValue('clientApprovedAmount', round(clientAmount ?? 0, 2))
+      setValue('invoiceAmount', round(vendorAmount ?? 0, 2))
+      setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+    }
   }, [assignedItemsWatch])
 
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
@@ -752,6 +757,8 @@ const WorkOrderDetailTab = props => {
                   swoProject={swoProject}
                   downloadPdf={downloadPdf}
                   workOrder={workOrder}
+                  documentsData={documentsData}
+                
                 />
               )}
             </Box>
