@@ -52,15 +52,18 @@ export const useLocation = () => {
     return response?.data
   })
 
+  // Sort the locations alphabetically by name
+  const sortedLocations = locations?.sort((a, b) => a.value.localeCompare(b.value));
+
   const locationSelectOptions =
-    locations?.map(loc => ({
+    sortedLocations?.map(loc => ({
       value: loc.id,
       label: loc.value,
     })) || []
 
   return {
     locationSelectOptions,
-    data: locations,
+    data: sortedLocations,
     ...rest,
   }
 }

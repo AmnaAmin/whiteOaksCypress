@@ -159,6 +159,7 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries([GET_TRANSACTIONS_API_KEY, projectId])
         queryClient.invalidateQueries([PROJECT_FINANCIAL_OVERVIEW_API_KEY, projectId])
         queryClient.invalidateQueries(['audit-logs', projectId])
+        queryClient.invalidateQueries(['invoicesDetail', projectId])
         queryClient.invalidateQueries(['properties'])
 
         receiveableFormReturn?.resetField('id')
