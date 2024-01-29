@@ -757,6 +757,8 @@ const WorkOrderDetailTab = props => {
                   swoProject={swoProject}
                   downloadPdf={downloadPdf}
                   workOrder={workOrder}
+                  documentsData={documentsData}
+                
                 />
               )}
             </Box>
