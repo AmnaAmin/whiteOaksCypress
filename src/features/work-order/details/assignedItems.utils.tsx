@@ -15,7 +15,7 @@ import {
 import { CreatableSelect } from 'components/form/react-select'
 
 import { STATUS } from 'features/common/status'
-import { Controller, FieldErrors, UseFormReturn, useWatch } from 'react-hook-form'
+import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
 import { useState, useRef, useCallback, useMemo } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
@@ -660,11 +660,11 @@ export const createInvoicePdf = async({ doc, workOrder, projectData, assignedIte
     doc.setFont(summaryFont, 'bold')
     doc.text('Work Type:', startx, y + 20)
     doc.setFont(summaryFont, 'normal')
-    doc.text(workOrder?.skillName ?? '', startx + 30, y + 20)
+    doc.text(workOrder?.skillName ?? workOrder?.vendorSkillName ?? '', startx + 30, y + 20)
     doc.setFont(summaryFont, 'bold')
     doc.text('Sub Contractor:', startx, y + 25)
     doc.setFont(summaryFont, 'normal')
-    doc.text(workOrder.companyName ?? '', startx + 30, y + 25)
+    doc.text(workOrder.companyName ?? workOrder?.vendorName ?? '', startx + 30, y + 25)
     doc.setFont(summaryFont, 'bold')
     doc.text('Total:', x + 5, y + 25)
     doc.setFont(summaryFont, 'normal')
