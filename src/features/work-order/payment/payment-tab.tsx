@@ -25,7 +25,7 @@ import { useEffect } from 'react'
 import { STATUS } from 'features/common/status'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
 import NumberFormat from 'react-number-format'
-import { truncateWithEllipsis } from 'utils/string-formatters'
+import { truncateWithEllipsis, validateAmountDigits } from 'utils/string-formatters'
 import moment from 'moment'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { WORK_ORDER_STATUS } from 'components/chart/Overview'
@@ -110,7 +110,6 @@ const PaymentInfoTab = props => {
   const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   const isReadOnly = isPayableRead || isProjRead
   const isWOCancelled = WORK_ORDER_STATUS.Cancelled === workOrder?.status
-
   useEffect(() => {
     if ([STATUS.Rejected]?.includes(workOrder?.statusLabel?.toLowerCase())) {
       setValue('dateInvoiceSubmitted', null)
@@ -367,7 +366,14 @@ const PaymentInfoTab = props => {
                   <Controller
                     control={control}
                     name="invoiceAmount"
-                    rules={{ required: 'This is required' }}
+                    rules={{
+                      validate: {
+                        matchPattern: (v: any) => {
+                          return validateAmountDigits(v)
+                        }, 
+                      },
+                      required: 'This is required',
+                    }}
                     render={({ field, fieldState }) => {
                       return (
                         <>
@@ -379,10 +385,15 @@ const PaymentInfoTab = props => {
                             prefix={'$'}
                             disabled={!invoiceAmountEnabled || isWOCancelled}
                             onValueChange={e => {
-                              field.onChange(e.floatValue ?? '')
+                              clearErrors('invoiceAmount')
+                              const inputValue = e.value ?? ''
+                              field.onChange(inputValue)
+                              trigger('invoiceAmount')
                             }}
                           />
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          {!!errors.invoiceAmount && (
+                            <FormErrorMessage>{errors?.invoiceAmount?.message}</FormErrorMessage>
+                          )}
                         </>
                       )
                     }}
@@ -397,8 +408,16 @@ const PaymentInfoTab = props => {
                   <Controller
                     control={control}
                     name="clientOriginalApprovedAmount"
-                    rules={{ required: 'This is required' }}
+                    rules={{
+                      validate: {
+                        matchPattern: (v: any) => {
+                          return validateAmountDigits(v)
+                        }, 
+                      },
+                      required: 'This is required',
+                    }}
                     render={({ field, fieldState }) => {
+
                       return (
                         <>
                           <NumberFormat
@@ -409,10 +428,15 @@ const PaymentInfoTab = props => {
                             prefix={'$'}
                             disabled={!clientOriginalApprovedAmountEnabled || isWOCancelled}
                             onValueChange={e => {
-                              field.onChange(e.floatValue ?? '')
+                              const inputValue = e.value ?? ''
+                              field.onChange(inputValue) // Update the form state using e.value
+                              trigger('clientOriginalApprovedAmount')
+                            
                             }}
                           />
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                          {!!errors.clientOriginalApprovedAmount && (
+                            <FormErrorMessage>{errors?.clientOriginalApprovedAmount?.message}</FormErrorMessage>
+                          )}
                         </>
                       )
                     }}
@@ -436,8 +460,16 @@ const PaymentInfoTab = props => {
                   <Controller
                     control={control}
                     name="clientApprovedAmount"
-                    rules={{ required: 'This is required' }}
+                    rules={{
+                      validate: {
+                        matchPattern: (v: any) => {
+                          return validateAmountDigits(v)
+                        }, 
+                      },
+                      required: 'This is required',
+                    }}
                     render={({ field, fieldState }) => {
+                    
                       return (
                         <>
                           <NumberFormat
@@ -448,10 +480,15 @@ const PaymentInfoTab = props => {
                             prefix={'$'}
                             disabled={!clientApprovedAmountEnabled || isWOCancelled}
                             onValueChange={e => {
-                              field.onChange(e.floatValue ?? '')
+                              const inputValue = e.value ?? ''
+                              field.onChange(inputValue) 
+                              trigger('clientApprovedAmount')
+                             
                             }}
                           />
-                          <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                           {!!errors.clientApprovedAmount && (
+                            <FormErrorMessage>{errors?.clientApprovedAmount?.message}</FormErrorMessage>
+                          )}
                         </>
                       )
                     }}
