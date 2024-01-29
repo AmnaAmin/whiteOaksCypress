@@ -10,8 +10,9 @@ const Dashboard: React.FC = () => {
     ['VENDORDASHBOARD.READ', 'VENDORDASHBOARD.EDIT'].includes(p),
   )
   const isVendorEstDashboardReadOrEdit = permissions.some(p =>
-    ['VENDORDASHBOARDEST.READ', 'VENDORDASHBOARDESTEST.EDIT'].includes(p),
+    ['VENDORDASHBOARDEST.READ', 'VENDORDASHBOARDEST.EDIT'].includes(p),
   )
+
   if (isLessThanOrEq320) {
     return (
       <Box mt="50%">

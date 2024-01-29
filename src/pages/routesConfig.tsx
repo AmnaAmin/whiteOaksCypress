@@ -39,7 +39,12 @@ export default function useRoutesConfig() {
     {
       path: 'vendorDashboard',
       element: VendorDashboard,
-      permissions: ['VENDORDASHBOARD.READ', 'VENDORDASHBOARD.EDIT'],
+      permissions: [
+        'VENDORDASHBOARD.EDIT',
+        'VENDORDASHBOARD.READ',
+        'VENDORDASHBOARDEST.READ',
+        'VENDORDASHBOARDEST.EDIT',
+      ],
     },
     { path: 'projects', element: Projects, permissions: ['PROJECT.READ', 'PROJECT.EDIT', 'ALL'] },
     {
@@ -59,13 +64,29 @@ export default function useRoutesConfig() {
     {
       path: 'payable',
       element: Payable,
-      permissions: ['PAYABLE.EDIT', 'PAYABLE.READ', 'ALL', 'ESTPAYABLE.READ', 'ESTPAYABLE.EDIT'],
+      permissions: [
+        'PAYABLE.EDIT',
+        'PAYABLE.READ',
+        'ALL',
+        'ESTPAYABLE.READ',
+        'ESTPAYABLE.EDIT',
+        'MAINTENANCEPAYABLE.EDIT',
+        'MAINTENANCEPAYABLE.READ',
+      ],
     },
     { path: 'support-tickets', element: SupportTickets, permissions: ['SUPPORT.READ', 'SUPPORT.EDIT', 'ALL'] },
     {
       path: 'receivable',
       element: Receivable,
-      permissions: ['RECEIVABLE.EDIT', 'RECEIVABLE.READ', 'ESTRECEIVABLE.EDIT', 'ESTRECEIVABLE.READ', 'ALL'],
+      permissions: [
+        'RECEIVABLE.EDIT',
+        'RECEIVABLE.READ',
+        'ESTRECEIVABLE.EDIT',
+        'ESTRECEIVABLE.READ',
+        'ALL',
+        'MAINTENANCERECEIVABLE.EDIT',
+        'MAINTENANCERECEIVABLE.READ',
+      ],
     },
     { path: 'vendors', element: Vendors, permissions: ['VENDOR.READ', 'VENDOR.EDIT', 'ALL'] },
     { path: 'clients', element: Clients, permissions: ['CLIENT.READ', 'CLIENT.EDIT', 'ALL'] },
