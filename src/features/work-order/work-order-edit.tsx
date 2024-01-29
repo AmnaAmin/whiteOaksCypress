@@ -165,6 +165,10 @@ const WorkOrderDetails = ({
         changedProperties.push(['price', updatedItem.price]);
         hasChangesNow = true;
       }
+      if (updatedLineItems.length > existingLineItems.length) {
+        // New assigned item added
+        hasChangesNow = true;
+      }
   
       return changedProperties;
     });
@@ -236,7 +240,8 @@ const WorkOrderDetails = ({
     ]
   }
   updateWorkOrder(payload, {
-    onSuccess: res => {
+    onSuccess: async res => {
+
       if (deletedItems?.length > 0) {
         deleteLineItems(
           { deletedIds: [...deletedItems.map(a => a.id)].join(',') },
@@ -246,6 +251,32 @@ const WorkOrderDetails = ({
             },
           },
         )
+      }
+      const lineItemDocuments = documentsData?.filter((x) => x.workOrderId  === workOrder?.id  && x.documentType===1036)
+
+      const newIndex = lineItemDocuments.length + 1
+        let doc = new jsPDF() as any
+         doc = await createInvoicePdf({
+          doc,
+          workOrder,
+          projectData,
+          assignedItems: values?.assignedItems,
+          hideAward: false,
+        })
+     
+      const pdfUri = doc.output('datauristring')
+      console.log('hasChangesNow',hasChangesNow)
+      if (hasChangesNow) {
+        payload.documents=[
+     
+          {
+            documentType: 1036,
+            workOrderId: workOrder.id,
+            fileObject: pdfUri.split(',')[1],
+            fileObjectContentType: 'application/pdf',
+            fileType: `LineItem_${newIndex}.pdf`,
+          },
+        ]
       }
 
       queryClient.invalidateQueries('transactions_work_order')
