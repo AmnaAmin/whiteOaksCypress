@@ -267,6 +267,7 @@ const WorkOrderDetailTab = ({
                     isAssignmentAllowed={false}
                     downloadPdf={downloadPdf}
                     workOrder={workOrder}
+                    documentsData={documentsData}
                   />
                 )}
               </>

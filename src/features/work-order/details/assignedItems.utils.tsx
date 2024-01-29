@@ -35,6 +35,7 @@ import { readFileContent } from 'api/vendor-details'
 import { completePercentage } from './work-order-edit-tab'
 import { completePercentageValues, newObjectFormatting } from 'api/work-order'
 import { useLocation } from 'api/location'
+import { addImages } from 'utils/file-utils'
 
 const swoPrefix = '/smartwo/api'
 
@@ -601,7 +602,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
   )
 }
 
-export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
+export const createInvoicePdf = async({ doc, workOrder, projectData, assignedItems, hideAward }) => {
   const workOrderInfo = [
     { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
     { label: 'Expected Completion:', value: workOrder?.workOrderExpectedCompletionDate ?? '' },
@@ -622,9 +623,8 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
   doc.text(heading, startx, 20)
   var img = new Image()
   img.src = 'wo-logo-tree.png'
-  img.onload = function () {
-    doc.addImage(img, 'png', 160, 5, 35, 35)
-
+  const images = await addImages(['wo-logo-tree.png'])
+  doc.addImage(images[0], 'png', 160, 5, 35, 35)
     doc.setFontSize(11)
     doc.setFont(summaryFont, 'bold')
     doc.text('Property Address:', startx, 55)
@@ -660,11 +660,11 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     doc.setFont(summaryFont, 'bold')
     doc.text('Work Type:', startx, y + 20)
     doc.setFont(summaryFont, 'normal')
-    doc.text(workOrder?.skillName ?? '', startx + 30, y + 20)
+    doc.text(workOrder?.skillName ?? workOrder?.vendorSkillName ?? '', startx + 30, y + 20)
     doc.setFont(summaryFont, 'bold')
     doc.text('Sub Contractor:', startx, y + 25)
     doc.setFont(summaryFont, 'normal')
-    doc.text(workOrder.companyName ?? '', startx + 30, y + 25)
+    doc.text(workOrder.companyName ?? workOrder?.vendorName ?? '', startx + 30, y + 25)
     doc.setFont(summaryFont, 'bold')
     doc.text('Total:', x + 5, y + 25)
     doc.setFont(summaryFont, 'normal')
@@ -679,7 +679,7 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
         ...assignedItems.map(ai => {
           return {
             id: ai.id,
-            location: ai.location?.label,
+            location: ai.location?.label || ai.location,
             sku: ai.sku,
             productName: ai.productName,
             description: ai.description,
@@ -704,9 +704,10 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
     })
     doc.setFontSize(10)
     doc.setFont(basicFont, 'normal')
-    doc.save(`${workOrder?.id}_${workOrder?.companyName}_${workOrder?.propertyAddress}.pdf`)
+    return doc
+    // doc.save(`${workOrder?.id}_${workOrder?.companyName}_${workOrder?.propertyAddress}.pdf`)
   }
-}
+
 
 // !workOrder is a check for new work order modal.
 // In case of edit, workorder will be a non-nullable object.
