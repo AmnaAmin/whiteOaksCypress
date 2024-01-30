@@ -61,6 +61,7 @@ import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 import { useLocation } from 'react-router-dom'
 import round from 'lodash/round'
 import { isValidAndNonEmpty } from 'utils'
+import { useUploadDocument } from 'api/vendor-projects'
 
 export type SelectVendorOption = {
   label: string
@@ -189,6 +190,7 @@ const WorkOrderDetailTab = props => {
   const { remainingItems, isLoading: isRemainingItemsLoading } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
+  const { mutate: saveDocument } = useUploadDocument()
   const [uploadedWO, setUploadedWO] = useState<any>(null)
 
   const { t } = useTranslation()
@@ -226,15 +228,33 @@ const WorkOrderDetailTab = props => {
     onOpen: onOpenRemainingItemsModal,
   } = useDisclosure()
 
-  const downloadPdf = useCallback(() => {
+  const downloadPdf = useCallback(async () => {
     let doc = new jsPDF()
-    createInvoicePdf({
+    doc = await createInvoicePdf({
       doc,
       workOrder,
       projectData,
       assignedItems: assignedItemsWatch ?? [],
       hideAward: false,
     })
+    const pdfUri = doc.output('datauristring')
+    saveDocument(
+      [
+        {
+          documentType: 1036,
+          workOrderId: workOrder?.id,
+          fileObject: pdfUri.split(',')[1],
+          fileObjectContentType: 'application/pdf',
+          fileType: `LineItem_1.pdf`,
+          projectId: workOrder?.projectId,
+        },
+      ],
+      {
+        onSuccess: () => {
+          doc.save(`LineItem_1.pdf`)
+        },
+      },
+    )
   }, [assignedItemsWatch, projectData, workOrder])
 
   const setAssignedItems = useCallback(
