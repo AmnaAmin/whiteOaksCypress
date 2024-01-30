@@ -191,7 +191,6 @@ export const NewWorkOrder: React.FC<{
             createWorkOrder(payload as any, {
               onSuccess: async data => {
                 const workOrder = data?.data
-                console.log('workOrder', data)
                 let doc = new jsPDF()
 
                 doc = await createInvoicePdf({
