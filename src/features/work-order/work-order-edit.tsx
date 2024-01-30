@@ -86,7 +86,6 @@ const WorkOrderDetails = ({
     isLoading: isLoadingLineItems,
   } = useFetchWorkOrder({ workOrderId: workOrder?.id })
 
-
   const { mutate: updateWorkOrder, isLoading: isWorkOrderUpdating } = useUpdateWorkOrderMutation({
     swoProjectId: swoProject?.id,
   })
@@ -124,173 +123,166 @@ const WorkOrderDetails = ({
 
   const queryClient = useQueryClient()
   const compareLineItems = (existingLineItems, updatedLineItems) => {
-    let hasChangesNow = false;
-  
+    let hasChangesNow = false
+
     const changedPropertiesForAllPairs = existingLineItems.map((existingItem, index) => {
-      const updatedItem = updatedLineItems[index];
+      const updatedItem = updatedLineItems?.[index]
       let changedProperties: Array<[string, any]> = []
-  
+
       // Compare 'location.label'
-      if (existingItem.location !== updatedItem.location) {
-        changedProperties.push(['location.label', updatedItem.location]);
-        hasChangesNow = true; // Set the flag to true when a change is detected
+      if (existingItem?.location !== updatedItem?.location) {
+        changedProperties.push(['location.label', updatedItem?.location])
+        hasChangesNow = true // Set the flag to true when a change is detected
       }
-  
+
       // Compare 'sku'
-      if (existingItem.sku !== updatedItem.sku) {
-        changedProperties.push(['sku', updatedItem.sku]);
-        hasChangesNow = true;
+      if (existingItem?.sku !== updatedItem?.sku) {
+        changedProperties.push(['sku', updatedItem?.sku])
+        hasChangesNow = true
       }
-  
+
       // Compare 'productName'
-      if (existingItem.productName !== updatedItem.productName) {
-        changedProperties.push(['productName', updatedItem.productName]);
-        hasChangesNow = true;
+      if (existingItem?.productName !== updatedItem?.productName) {
+        changedProperties.push(['productName', updatedItem?.productName])
+        hasChangesNow = true
       }
-  
+
       // Compare 'quantity'
-      if (existingItem.quantity !== updatedItem.quantity) {
-        changedProperties.push(['quantity', updatedItem.quantity]);
-        hasChangesNow = true;
+      if (existingItem?.quantity !== updatedItem?.quantity) {
+        changedProperties.push(['quantity', updatedItem?.quantity])
+        hasChangesNow = true
       }
-  
+
       // Compare 'description'
-      if (existingItem.description !== updatedItem.description) {
-        changedProperties.push(['description', updatedItem.description]);
-        hasChangesNow = true;
+      if (existingItem?.description !== updatedItem?.description) {
+        changedProperties.push(['description', updatedItem?.description])
+        hasChangesNow = true
       }
-  
+
       // Compare 'price'
-      if (existingItem.price !== updatedItem.price) {
-        changedProperties.push(['price', updatedItem.price]);
-        hasChangesNow = true;
+      if (existingItem?.price !== updatedItem?.price) {
+        changedProperties.push(['price', updatedItem?.price])
+        hasChangesNow = true
       }
-      if (updatedLineItems.length > existingLineItems.length) {
+      if (updatedLineItems?.length > existingLineItems?.length) {
         // New assigned item added
-        hasChangesNow = true;
+        hasChangesNow = true
       }
-  
-      return changedProperties;
-    });
-  
+
+      return changedProperties
+    })
+
     // Flatten the array of changed properties for each pair of items
-    const flattenedChangedProperties = changedPropertiesForAllPairs.map(changedProperties =>
-      changedProperties.map(([key, value]) => `${key}: ${value}`)
-    );
-  
+    const flattenedChangedProperties = changedPropertiesForAllPairs?.map(changedProperties =>
+      changedProperties.map(([key, value]) => `${key}: ${value}`),
+    )
+
     // Check if any changes are observed and update the state
     return { hasChangesNow, flattenedChangedProperties }
-  };
-  
-  const onSave = async (values, deletedItems) => {
-  const payload = { ...workOrderDetails, ...values };
-  const updatedLineItems = payload.assignedItems;
-  const existingLineItems = workOrderDetails?.assignedItems;
-
-  const { hasChangesNow } = compareLineItems(existingLineItems, updatedLineItems);
-
- 
-
-  const { assignedItems } = values
-  const hasMarkedSomeComplete = assignedItems?.some(item => item.isCompleted)
-
-  if (
-    displayAwardPlan &&
-    !workOrderDetails?.awardPlanId &&
-    (values?.workOrderDateCompleted || hasMarkedSomeComplete) &&
-    tabIndex === 0
-  ) {
-    setIsError(true)
-    toast({
-      title: 'Work Order',
-      description: 'Award Plan is missing.',
-      status: 'error',
-      duration: 9000,
-      isClosable: true,
-      position: 'top-left',
-    })
-    return
-  } else {
-    setIsError(false)
   }
-  const lineItemDocuments = documentsData?.filter((x) => x.workOrderId  === workOrder?.id  && x.documentType===1036)
 
-  const newIndex = lineItemDocuments.length + 1
+  const onSave = async (values, deletedItems) => {
+    const payload = { ...workOrderDetails, ...values }
+    const updatedLineItems = payload?.assignedItems
+    const existingLineItems = workOrderDetails?.assignedItems
+
+    const { hasChangesNow } = compareLineItems(existingLineItems, updatedLineItems)
+
+    const { assignedItems } = values
+    const hasMarkedSomeComplete = assignedItems?.some(item => item.isCompleted)
+
+    if (
+      displayAwardPlan &&
+      !workOrderDetails?.awardPlanId &&
+      (values?.workOrderDateCompleted || hasMarkedSomeComplete) &&
+      tabIndex === 0
+    ) {
+      setIsError(true)
+      toast({
+        title: 'Work Order',
+        description: 'Award Plan is missing.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position: 'top-left',
+      })
+      return
+    } else {
+      setIsError(false)
+    }
+    const lineItemDocuments = documentsData?.filter(x => x.workOrderId === workOrder?.id && x.documentType === 1036)
+
+    const newIndex = lineItemDocuments.length + 1
     let doc = new jsPDF() as any
-     doc = await createInvoicePdf({
+    doc = await createInvoicePdf({
       doc,
       workOrder,
       projectData,
-      assignedItems: values?.assignedItems,
+      assignedItems: values?.assignedItems ?? [],
       hideAward: false,
     })
- 
-  const pdfUri = doc.output('datauristring')
-  
-  if (hasChangesNow) {
-    payload.documents=[
-     
-      {
-        documentType: 1036,
-        workOrderId: workOrder.id,
-        fileObject: pdfUri.split(',')[1],
-        fileObjectContentType: 'application/pdf',
-        fileType: `LineItem_${newIndex}.pdf`,
-      },
-    ]
-  }
-  updateWorkOrder(payload, {
-    onSuccess: async res => {
 
-      if (deletedItems?.length > 0) {
-        deleteLineItems(
-          { deletedIds: [...deletedItems.map(a => a.id)].join(',') },
-          {
-            onSuccess() {
-              queryClient.invalidateQueries(['WorkOrderDetails', workOrder?.id])
+    const pdfUri = doc.output('datauristring')
+
+    if (hasChangesNow) {
+      payload.documents = [
+        {
+          documentType: 1036,
+          workOrderId: workOrder.id,
+          fileObject: pdfUri.split(',')[1],
+          fileObjectContentType: 'application/pdf',
+          fileType: `LineItem_${newIndex}.pdf`,
+        },
+      ]
+    }
+    updateWorkOrder(payload, {
+      onSuccess: async res => {
+        if (deletedItems?.length > 0) {
+          deleteLineItems(
+            { deletedIds: [...deletedItems.map(a => a.id)].join(',') },
+            {
+              onSuccess() {
+                queryClient.invalidateQueries(['WorkOrderDetails', workOrder?.id])
+              },
             },
-          },
-        )
-      }
-      const lineItemDocuments = documentsData?.filter((x) => x.workOrderId  === workOrder?.id  && x.documentType===1036)
+          )
+        }
+        const lineItemDocuments = documentsData?.filter(x => x.workOrderId === workOrder?.id && x.documentType === 1036)
 
-      const newIndex = lineItemDocuments.length + 1
+        const newIndex = lineItemDocuments.length + 1
         let doc = new jsPDF() as any
-         doc = await createInvoicePdf({
+        doc = await createInvoicePdf({
           doc,
           workOrder,
           projectData,
-          assignedItems: values?.assignedItems,
+          assignedItems: values?.assignedItems ?? [],
           hideAward: false,
         })
-     
-      const pdfUri = doc.output('datauristring')
-      console.log('hasChangesNow',hasChangesNow)
-      if (hasChangesNow) {
-        payload.documents=[
-     
-          {
-            documentType: 1036,
-            workOrderId: workOrder.id,
-            fileObject: pdfUri.split(',')[1],
-            fileObjectContentType: 'application/pdf',
-            fileType: `LineItem_${newIndex}.pdf`,
-          },
-        ]
-      }
 
-      queryClient.invalidateQueries('transactions_work_order')
-      if (res?.data) {
-        const workOrder = res?.data
-        if (isPayable && ![STATUS_CODE.INVOICED].includes(workOrder.status)) {
-          onClose()
-          setTabIndex(0)
+        const pdfUri = doc.output('datauristring')
+        if (hasChangesNow) {
+          payload.documents = [
+            {
+              documentType: 1036,
+              workOrderId: workOrder.id,
+              fileObject: pdfUri.split(',')[1],
+              fileObjectContentType: 'application/pdf',
+              fileType: `LineItem_${newIndex}.pdf`,
+            },
+          ]
         }
-      }
-    },
-  })
-}
 
+        queryClient.invalidateQueries('transactions_work_order')
+        if (res?.data) {
+          const workOrder = res?.data
+          if (isPayable && ![STATUS_CODE.INVOICED].includes(workOrder.status)) {
+            onClose()
+            setTabIndex(0)
+          }
+        }
+      },
+    })
+  }
 
   const navigateToProjectDetails = () => {
     navigate(`/project-details/${workOrderDetails.projectId}`)
