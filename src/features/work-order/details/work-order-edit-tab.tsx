@@ -232,7 +232,7 @@ const WorkOrderDetailTab = props => {
       doc,
       workOrder,
       projectData,
-      assignedItems: assignedItemsWatch,
+      assignedItems: assignedItemsWatch ?? [],
       hideAward: false,
     })
   }, [assignedItemsWatch, projectData, workOrder])
@@ -758,7 +758,6 @@ const WorkOrderDetailTab = props => {
                   downloadPdf={downloadPdf}
                   workOrder={workOrder}
                   documentsData={documentsData}
-                
                 />
               )}
             </Box>
