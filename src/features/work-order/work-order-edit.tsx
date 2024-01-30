@@ -260,7 +260,6 @@ const WorkOrderDetails = ({
         })
 
         const pdfUri = doc.output('datauristring')
-        console.log('hasChangesNow', hasChangesNow)
         if (hasChangesNow) {
           payload.documents = [
             {
