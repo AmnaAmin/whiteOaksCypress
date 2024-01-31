@@ -25,6 +25,10 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
 } from '@chakra-ui/react'
 import { ACCESS_CONTROL } from 'features/access-control/access-control.i18n'
 import { useTranslation } from 'react-i18next'
@@ -43,6 +47,10 @@ import {
   useUpdateRoleMutation,
 } from 'api/access-control'
 import { useAccountData } from 'api/user-account'
+import { Card } from 'components/card/card'
+import { TabCustom } from 'features/work-order/work-order-edit'
+import { EstimateRolePermissions } from './estimates-roles-permission'
+import { ConstructionRolePermissions } from './construction-roles-permissions'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 interface PemissionFormValues {
@@ -58,14 +66,13 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
   const { isAdmin } = useUserRolesSelector()
   const {
     formState: { errors },
-    watch,
     setValue,
   } = formReturn
   const { data: allPermissions } = useFetchAllPermissions()
   const { mutate: createRole } = useCreateNewRoleMutation()
   const { mutate: updateRole } = useUpdateRoleMutation(permissions?.[0]?.name)
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const { control, register, reset } = formReturn
+  const { control, register, reset, watch } = formReturn
   const { data } = useAccountData()
   const isDevtekUser = data?.devAccount
   const sections = useGetSections({ isDevtekUser })
@@ -78,15 +85,17 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
 
   const checkDefaultPermissions = assignment => {
     const defaultSections = ['PROJECT', 'VENDOR', 'ESTIMATE']
+    let sectionPermission = [] as any
+    defaultSections.forEach(section => {
+      const permission = watchPermissions?.find(p => p?.name === section)
+      sectionPermission.push({ name: section, isEdit: permission?.edit })
+    })
+
     if (!permissions?.[0]?.systemRole) {
-      defaultSections.forEach(section => {
-        const sectionPermission = watchPermissions?.find(p => p?.name === section)
-        setDefaultPermission({
-          setValue,
-          value: sectionPermission?.edit,
-          section: sectionPermission?.name,
-          assignment,
-        })
+      setDefaultPermission({
+        setValue,
+        sectionPermission,
+        assignment,
       })
     }
   }
@@ -109,6 +118,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
+
   return (
     <Box w="100%">
       <form
@@ -241,11 +251,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                 </FormLabel>
               </HStack>
             )}
-            <PermissionsTable
-              formControl={formReturn}
-              permissionsData={permissions}
-              checkDefaultPermissions={checkDefaultPermissions}
-            />
+            <PermissionsTable formControl={formReturn} checkDefaultPermissions={checkDefaultPermissions} />
             <Flex gap="10px" w="100%" justifyContent={'flex-end'}>
               <Button
                 variant={'outline'}
@@ -271,11 +277,10 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
   )
 }
 
-const PermissionsTable = ({ formControl, permissionsData, checkDefaultPermissions }) => {
+const PermissionsTable = ({ formControl, checkDefaultPermissions }) => {
   const { t } = useTranslation()
   const { control, setValue } = formControl
   const [selectedRow, setSelectedRow] = useState<number | null>()
-
   const { fields: permissions } = useFieldArray({
     control,
     name: 'permissions',
@@ -283,6 +288,7 @@ const PermissionsTable = ({ formControl, permissionsData, checkDefaultPermission
 
   const watchPermissions = useWatch({ control, name: 'permissions' })
   const watchAssignment = useWatch({ control, name: 'assignment' })
+
   const isHideAll = watchPermissions
     ? (Object?.values(watchPermissions)?.every((item: any) => item?.hide) as boolean)
     : false
@@ -465,12 +471,8 @@ const PermissionsTable = ({ formControl, permissionsData, checkDefaultPermission
 
 const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
   const { t } = useTranslation()
-  const { watch, setValue, control } = formReturn
-  const advancedPermissionsWatch = watch('advancedPermissions')
+  const [tabIndex, setTabIndex] = useState(0)
 
-  const isSelectAll = advancedPermissionsWatch
-    ? (Object?.values(advancedPermissionsWatch)?.every(item => item) as boolean)
-    : false
   return (
     <Modal
       isOpen={isOpen}
@@ -481,8 +483,9 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
       size={'5xl'}
     >
       <ModalOverlay />
-      <ModalContent rounded="6">
+      <ModalContent w="1137px" rounded={3} borderTop="2px solid #4E87F8" backgroundColor="#fff">
         <ModalHeader
+          h="63px"
           borderBottom="2px solid #E2E8F0"
           fontWeight={500}
           color="gray.600"
@@ -494,629 +497,35 @@ const AdvancedPermissions = ({ isOpen, onClose, formReturn }) => {
         </ModalHeader>
         <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
 
-        <ModalBody>
-          <Checkbox
-            colorScheme="PrimaryCheckBox"
-            style={{ background: 'white', border: '#DFDFDF' }}
-            mr="2px"
-            mb="20px"
+        <ModalBody justifyContent="center" backgroundColor="#fff">
+          <Tabs
             size="md"
-            isChecked={isSelectAll}
-            onChange={value => {
-              for (const key in advancedPermissionsWatch) {
-                setValue(`advancedPermissions.${key}`, value.currentTarget.checked)
-              }
-            }}
+            variant="enclosed"
+            index={tabIndex}
+            onChange={index => setTabIndex(index)}
+            colorScheme="brand"
           >
-            <Text fontSize="16px" color="gray.600">
-              Select All
-            </Text>
-          </Checkbox>
-          <HStack alignItems={'flex-start'}>
-            <VStack w="33%" alignItems={'flex-start'}>
-              <Text color="gray.500" fontWeight={500}>
-                Project Management
-              </Text>
-              <Controller
-                control={control}
-                name={`advancedPermissions.hideCreateProject`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px" fontWeight={400}>
-                        Hide Project Creation
-                      </Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.hidePaidProjects`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px" fontWeight={400}>
-                        Hide Paid Projects
-                      </Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.woaStartEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px" fontWeight={400}>
-                        Can Change WOA Start Date
-                      </Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.clientStartEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Client Start Date</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.clientDueEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Client Due Date</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.verifyProjectEnable`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Verify Project</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Text color="gray.500" mt="25px !important" fontWeight={500}>
-                Contacts
-              </Text>
-              <Controller
-                control={control}
-                name={`advancedPermissions.fpmEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change FPM</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.pcEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Project Coordinator</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.clientEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Client</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-            </VStack>
-            <VStack
-              w="40%"
-              pl="40px"
-              alignItems={'flex-start'}
-              borderLeft="1px solid #E2E8F0"
-              borderRight="1px solid #E2E8F0"
-            >
-              <Text color="gray.500" fontWeight={500}>
-                Location
-              </Text>
-              <Controller
-                control={control}
-                name={`advancedPermissions.addressEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Address</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.marketEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Market</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.lockBoxEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Lock Box Code</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.gateCodeEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Gate Code</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Text color="gray.500" mt="25px !important" fontWeight={500}>
-                Invoicing
-              </Text>
-              <Controller
-                control={control}
-                name={`advancedPermissions.invoiceEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
-                        Can Create Invoice
-                      </Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.invoiceDateEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
-                        Can Change Invoice Date
-                      </Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Text color="gray.500" mt="25px !important" fontWeight={500}>
-                Work Order
-              </Text>
-              <Controller
-                control={control}
-                name={`advancedPermissions.cancelWorkOrderEnable`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Cancel Work order</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Text color="gray.500" mt="25px !important" fontWeight={500}>
-                Vendor
-              </Text>
-              <Controller
-                control={control}
-                name={`advancedPermissions.deactivateVendor`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Deactivate Vendor</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.vendorAccountEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Edit Vendor Accounts</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.verifyVendorDocuments`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Verify Documents</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-            </VStack>
-            <VStack pl="20px" alignItems={'flex-start'}>
-              <Text color="gray.500" fontWeight={500}>
-                Transaction
-              </Text>
-              <Controller
-                control={control}
-                name={`advancedPermissions.transStatusEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Status</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.transPaidDateEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Paid Date</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.transPaymentReceivedEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Payment Received</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.transInvoicedDateEdit`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px">Can Change Invoiced Date</Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.futureDateEnabled`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
-                        Enable Future Date for Payment Received
-                      </Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.overrideDrawRestrictionOnPercentageCompletion`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
-                        Enable Creating Draw Without Percentage Completion Restrictions
-                      </Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-              <Controller
-                control={control}
-                name={`advancedPermissions.verifiedByFPM`}
-                render={({ field, fieldState }) => (
-                  <>
-                    <Checkbox
-                      colorScheme="PrimaryCheckBox"
-                      isChecked={field.value}
-                      style={{ background: 'white', border: '#DFDFDF' }}
-                      mr="2px"
-                      size="md"
-                      onChange={value => {
-                        field.onChange(value)
-                      }}
-                      // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
-                    >
-                      <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
-                        Enable Verified By FPM
-                      </Text>
-                    </Checkbox>
-                  </>
-                )}
-              />
-            </VStack>
-          </HStack>
+            <TabList borderBottom="none">
+              <TabCustom>{t('Construction')}</TabCustom>
+              <TabCustom>{t('Estimates')}</TabCustom>
+            </TabList>
+            <Card borderTopLeftRadius="0px !important" borderTopRightRadius="6px">
+              <TabPanels mt="10px">
+                <TabPanel pt="0px" pl="3px" pb="0px" h="550px" mb="20px" overflowY={'auto'}>
+                  <ConstructionRolePermissions formReturn={formReturn} />
+                </TabPanel>
+                <TabPanel pt="0px" pl="3px" pb="0px" h="550px" mb="20px" overflowY={'auto'}>
+                  <EstimateRolePermissions formReturn={formReturn} />
+                </TabPanel>
+              </TabPanels>
+            </Card>
+          </Tabs>
         </ModalBody>
-        <Flex flexFlow="row-reverse">
-          <ModalFooter>
-            <Button colorScheme="brand" data-testid="confirmation-no" mr={3} onClick={onClose}>
-              {t(`done`)}
-            </Button>
-          </ModalFooter>
-        </Flex>
+        <ModalFooter>
+          <Button colorScheme="brand" data-testid="confirmation-no" mr={3} onClick={onClose}>
+            {t(`done`)}
+          </Button>
+        </ModalFooter>
       </ModalContent>
     </Modal>
   )

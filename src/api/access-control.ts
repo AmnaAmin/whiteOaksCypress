@@ -152,7 +152,12 @@ export const useGetSections = ({ isDevtekUser }) => {
   return [
     ...(isDevtekUser ? [{ value: 'ADMINDASHBOARD', label: 'Dashboard' }] : []),
     ...(isDevtekUser ? [{ value: 'VENDORDASHBOARD', label: 'Vendor Dashboard' }] : []),
-    ...(isDevtekUser ? [{ value: 'ESTIMATE', label: 'Estimates' }] : []),
+    ...(isDevtekUser ? [{ value: 'VENDORDASHBOARDEST', label: 'Vendor Estimates Dashboard' }] : []),
+    { value: 'ESTIMATE', label: 'Estimates' },
+    { value: 'ESTPAYABLE', label: 'Estimates Payable' },
+    { value: 'ESTRECEIVABLE', label: 'Estimates Receivable' },
+    ...(isDevtekUser ? [{ value: 'MAINTENANCEPAYABLE', label: 'Maintenance Payable' }] : []),
+    ...(isDevtekUser ? [{ value: 'MAINTENANCERECEIVABLE', label: 'Maintenance Receivable' }] : []),
     { value: 'PROJECT', label: 'Projects' },
     { value: 'PAYABLE', label: 'Payable' },
     { value: 'RECEIVABLE', label: 'Receivable' },
@@ -243,9 +248,17 @@ export enum ADV_PERMISSIONS {
   verifiedByFPM = 'PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT',
   invoiceDateEdit = 'PROJECTDETAIL.INVOICING.INVOICEDATE.EDIT',
   invoiceEdit = 'PROJECTDETAIL.INVOICING.EDIT',
+  enableConvertProject = 'ESTIMATEDETAIL.CONVERTPROJECT.ENABLE',
+  estFpmEdit = 'ESTIMATEDETAILS.CONTACTS.FPM.EDIT',
+  estGateCodeEdit = 'ESTIMATEDETAILS.CONTACTS.GATECODE.EDIT',
+  estLockBoxEdit = 'ESTIMATEDETAILS.CONTACTS.LOCKBOX.EDIT',
+  carrierFeeCreateInApprovedStatus = 'ESTIMATEDETAILS.TRANSACTION.CARRIERFEEONAPPROVED.ENABLE',
+  invoiceDateEditEst = 'ESTIMATEDETAILS.INVOICING.INVOICEDATE.EDIT',
+  invoiceEditEst = 'ESTIMATEDETAILS.INVOICING.EDIT',
 }
 
 export const mapFormValuestoPayload = (values, allPermissions) => {
+  console.log('allPermissions', allPermissions)
   let permissions = values.permissions
     ?.filter(p => !p.hide && (p.edit || p.read)) //remove all hidden. And select ones that have edit or read true
     ?.map(p => {
@@ -253,8 +266,14 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
       return allPermissions?.find(a => a.key === key)
     })
 
-  for (const key in values.advancedPermissions) {
-    if (values.advancedPermissions[key]) {
+  for (const key in values.advancedPermissionsCons) {
+    if (values.advancedPermissionsCons[key]) {
+      const permissionObj = allPermissions?.find(a => a.key === ADV_PERMISSIONS[key])
+      permissions.push(permissionObj)
+    }
+  }
+  for (const key in values.advancedPermissionsEst) {
+    if (values.advancedPermissionsEst[key]) {
       const permissionObj = allPermissions?.find(a => a.key === ADV_PERMISSIONS[key])
       permissions.push(permissionObj)
     }
@@ -273,90 +292,128 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
 export const permissionsDefaultValues = ({ permissions, sections }) => {
   const permission = permissions?.[0]
   const permissionSet = permission?.name === 'ROLE_ADMIN' ? ['ALL'] : permission?.permissions?.map(p => p.key)
+  let advancedPermissionsCons = []
+  let advancedPermissionsEst = []
+  advancedPermissions.advancedPermissionsCons.forEach(p => {
+    if (p === 'hideCreateProject' || p === 'hidePaidProjects') {
+      advancedPermissionsCons[p] = permissionSet?.some(ps => [ADV_PERMISSIONS.hideCreateProject].includes(ps))
+    } else {
+      advancedPermissionsCons[p] = permissionSet?.some(ps => [ADV_PERMISSIONS[p], 'ALL'].includes(ps))
+    }
+  })
+  advancedPermissions.advancedPermissionsEst.forEach(p => {
+    advancedPermissionsEst[p] = permissionSet?.some(ps => [ADV_PERMISSIONS[p], 'ALL'].includes(ps))
+  })
   return {
     roleName: permission?.name ?? '',
     location: LOCATIONS?.find(l => l.value === permission?.location) ?? LOCATIONS[0],
     assignment: ASSIGNMENTS?.find(a => a.value === permission?.assignment) ?? ASSIGNMENTS[0],
     permissions: mapPermissionsToFormValues(permission, sections),
     systemRole: permission?.systemRole,
-    advancedPermissions: {
-      fpmEdit: permissionSet?.some(p => [ADV_PERMISSIONS.fpmEdit, 'ALL'].includes(p)),
-      pcEdit: permissionSet?.some(p => [ADV_PERMISSIONS.pcEdit, 'ALL'].includes(p)),
-      clientEdit: permissionSet?.some(p => [ADV_PERMISSIONS.clientEdit, 'ALL'].includes(p)),
-      addressEdit: permissionSet?.some(p => [ADV_PERMISSIONS.addressEdit, 'ALL'].includes(p)),
-      marketEdit: permissionSet?.some(p => [ADV_PERMISSIONS.marketEdit, 'ALL'].includes(p)),
-      gateCodeEdit: permissionSet?.some(p => [ADV_PERMISSIONS.gateCodeEdit, 'ALL'].includes(p)),
-      lockBoxEdit: permissionSet?.some(p => [ADV_PERMISSIONS.lockBoxEdit, 'ALL'].includes(p)),
-      clientDueEdit: permissionSet?.some(p => [ADV_PERMISSIONS.clientDueEdit, 'ALL'].includes(p)),
-      clientStartEdit: permissionSet?.some(p => [ADV_PERMISSIONS.clientStartEdit, 'ALL'].includes(p)),
-      woaStartEdit: permissionSet?.some(p => [ADV_PERMISSIONS.woaStartEdit, 'ALL'].includes(p)),
-      verifyProjectEnable: permissionSet?.some(p => [ADV_PERMISSIONS.verifyProjectEnable, 'ALL'].includes(p)),
-      deactivateVendor: permissionSet?.some(p => [ADV_PERMISSIONS.deactivateVendor, 'ALL'].includes(p)),
-      transStatusEdit: permissionSet?.some(p => [ADV_PERMISSIONS.transStatusEdit, 'ALL'].includes(p)),
-      transPaidDateEdit: permissionSet?.some(p => [ADV_PERMISSIONS.transPaidDateEdit, 'ALL'].includes(p)),
-      transPaymentReceivedEdit: permissionSet?.some(p => [ADV_PERMISSIONS.transPaymentReceivedEdit, 'ALL'].includes(p)),
-      transInvoicedDateEdit: permissionSet?.some(p => [ADV_PERMISSIONS.transInvoicedDateEdit, 'ALL'].includes(p)),
-      futureDateEnabled: permissionSet?.some(p => [ADV_PERMISSIONS.futureDateEnabled, 'ALL'].includes(p)),
-      cancelWorkOrderEnable: permissionSet?.some(p => [ADV_PERMISSIONS.cancelWorkOrderEnable, 'ALL'].includes(p)),
-      hideCreateProject: permissionSet?.some(p => [ADV_PERMISSIONS.hideCreateProject].includes(p)),
-      hidePaidProjects: permissionSet?.some(p => [ADV_PERMISSIONS.hidePaidProjects].includes(p)),
-      vendorAccountEdit: permissionSet?.some(p => [ADV_PERMISSIONS.vendorAccountEdit, 'ALL'].includes(p)),
-      overrideDrawRestrictionOnPercentageCompletion: permissionSet?.some(p =>
-        [ADV_PERMISSIONS.overrideDrawRestrictionOnPercentageCompletion, 'ALL'].includes(p),
-      ),
-      verifyVendorDocuments: permissionSet?.some(p => [ADV_PERMISSIONS.verifyVendorDocuments, 'ALL'].includes(p)),
-      verifiedByFPM: permissionSet?.some(p => [ADV_PERMISSIONS.verifiedByFPM, 'ALL'].includes(p)),
-      invoiceDateEdit: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceDateEdit, 'ALL'].includes(p)),
-      invoiceEdit: permissionSet?.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p)),
-    },
+    advancedPermissionsCons,
+    advancedPermissionsEst,
   }
 }
 
-export const setDefaultPermission = ({ setValue, value, section, assignment }) => {
-  if (section === 'PROJECT') {
-    if (assignment === 'FPM') {
-      setValue('advancedPermissions.gateCodeEdit', value)
-      setValue('advancedPermissions.lockBoxEdit', value)
-      setValue('advancedPermissions.hideCreateProject', value)
-      setValue('advancedPermissions.hidePaidProjects', value)
-      setValue('advancedPermissions.verifiedByFPM', value)
-
-      setValue('advancedPermissions.fpmEdit', false)
-      setValue('advancedPermissions.pcEdit', false)
-      setValue('advancedPermissions.clientEdit', false)
-      setValue('advancedPermissions.addressEdit', false)
-      setValue('advancedPermissions.marketEdit', false)
-      setValue('advancedPermissions.clientDueEdit', false)
-      setValue('advancedPermissions.clientStartEdit', false)
-      setValue('advancedPermissions.woaStartEdit', false)
-      setValue('advancedPermissions.verifyProjectEnable', false)
-    } else {
-      setValue('advancedPermissions.fpmEdit', value)
-      setValue('advancedPermissions.pcEdit', value)
-      setValue('advancedPermissions.clientEdit', value)
-      setValue('advancedPermissions.addressEdit', value)
-      setValue('advancedPermissions.marketEdit', value)
-
-      setValue('advancedPermissions.gateCodeEdit', value)
-      setValue('advancedPermissions.lockBoxEdit', value)
-      setValue('advancedPermissions.clientDueEdit', value)
-      setValue('advancedPermissions.clientStartEdit', value)
-      setValue('advancedPermissions.woaStartEdit', value)
-      setValue('advancedPermissions.lockBoxEdit', value)
-      setValue('advancedPermissions.verifyProjectEnable', value)
-
-      setValue('advancedPermissions.hideCreateProject', false)
-      setValue('advancedPermissions.hidePaidProjects', false)
-      setValue('advancedPermissions.verifiedByFPM', false)
+export const setDefaultPermission = ({ setValue, sectionPermission, assignment }) => {
+  let defaultPermissions = [] as any
+  sectionPermission.forEach(section => {
+    if (section.isEdit) {
+      defaultPermissions = [...defaultPermissions, ...DEFAULTPERMISSIONS[section.name][assignment]]
     }
-  }
-  if (section === 'VENDOR') {
-    if (assignment === 'PC' || assignment === 'All') {
-      setValue('advancedPermissions.verifyVendorDocuments', value)
-      setValue('advancedPermissions.deactivateVendor', value)
-    } else {
-      setValue('advancedPermissions.verifyVendorDocuments', false)
-      setValue('advancedPermissions.deactivateVendor', false)
-    }
-  }
+  })
+  advancedPermissions.advancedPermissionsEst.forEach(p => {
+    if (defaultPermissions.includes(p)) setValue(`advancedPermissionsEst.${p}`, true)
+    else setValue(`advancedPermissionsEst.${p}`, false)
+  })
+  advancedPermissions.advancedPermissionsCons.forEach(p => {
+    if (defaultPermissions.includes(p)) setValue(`advancedPermissionsCons.${p}`, true)
+    else setValue(`advancedPermissionsCons.${p}`, false)
+  })
+}
+
+const DEFAULTPERMISSIONS = {
+  PROJECT: {
+    FPM: ['gateCodeEdit', 'lockBoxEdit', 'hideCreateProject', 'hidePaidProjects', 'verifiedByFPM'],
+    PC: [
+      'fpmEdit',
+      'pcEdit',
+      'clientEdit',
+      'addressEdit',
+      'marketEdit',
+      'gateCodeEdit',
+      'lockBoxEdit',
+      'clientDueEdit',
+      'clientStartEdit',
+      'woaStartEdit',
+      'verifyProjectEnable',
+    ],
+    All: [
+      'fpmEdit',
+      'pcEdit',
+      'clientEdit',
+      'addressEdit',
+      'marketEdit',
+      'gateCodeEdit',
+      'lockBoxEdit',
+      'clientDueEdit',
+      'clientStartEdit',
+      'woaStartEdit',
+      'verifyProjectEnable',
+    ],
+    VENDOR: [],
+  },
+
+  VENDOR: {
+    PC: ['verifyVendorDocuments', 'deactivateVendor'],
+    VENDOR: [],
+    All: ['verifyVendorDocuments', 'deactivateVendor'],
+    FPM: [],
+  },
+  ESTIMATE: {
+    FPM: ['estLockBoxEdit', 'estGateCodeEdit'],
+    PC: ['estLockBoxEdit', 'estGateCodeEdit', 'enableConvertProject'],
+    All: ['estLockBoxEdit', 'estGateCodeEdit', 'enableConvertProject'],
+    VENDOR: [],
+  },
+}
+
+const advancedPermissions = {
+  advancedPermissionsCons: [
+    'fpmEdit',
+    'pcEdit',
+    'clientEdit',
+    'addressEdit',
+    'marketEdit',
+    'gateCodeEdit',
+    'lockBoxEdit',
+    'clientDueEdit',
+    'clientStartEdit',
+    'woaStartEdit',
+    'verifyProjectEnable',
+    'deactivateVendor',
+    'transStatusEdit',
+    'transPaidDateEdit',
+    'transPaymentReceivedEdit',
+    'transInvoicedDateEdit',
+    'futureDateEnabled',
+    'cancelWorkOrderEnable',
+    'hideCreateProject',
+    'hidePaidProjects',
+    'vendorAccountEdit',
+    'overrideDrawRestrictionOnPercentageCompletion',
+    'verifyVendorDocuments',
+    'verifiedByFPM',
+    'invoiceDateEdit',
+    'invoiceEdit',
+  ],
+  advancedPermissionsEst: [
+    'enableConvertProject',
+    'estFpmEdit',
+    'estGateCodeEdit',
+    'estLockBoxEdit',
+    'carrierFeeCreateInApprovedStatus',
+    'invoiceDateEditEst',
+    'invoiceEditEst',
+  ],
 }
