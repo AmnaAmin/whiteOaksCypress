@@ -8,10 +8,12 @@ import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 export const Receivable = () => {
   const [, setTabIndex] = useState(0)
   const { permissions } = useRoleBasedPermissions()
-  const isRecievableReadOrEditEst = permissions.some(p => ['ESTRECEIVABLE.READ', 'ESTRECEIVABLE.EDIT'].includes(p))
-  const isRecievableReadOrEditCons = permissions.some(p => ['RECEIVABLE.READ', 'RECEIVABLE.EDIT'].includes(p))
+  const isRecievableReadOrEditEst = permissions.some(p =>
+    ['ESTRECEIVABLE.READ', 'ESTRECEIVABLE.EDIT', 'ALL'].includes(p),
+  )
+  const isRecievableReadOrEditCons = permissions.some(p => ['RECEIVABLE.READ', 'RECEIVABLE.EDIT', 'ALL'].includes(p))
   const isPayableReadOrEditMaint = permissions.some(p =>
-    ['MAINTENANCERECEIVABLE.READ', 'MAINTENANCERECEIVABLE.EDIT'].includes(p),
+    ['MAINTENANCERECEIVABLE.READ', 'MAINTENANCERECEIVABLE.EDIT', 'ALL'].includes(p),
   )
   const handleTabsChange = index => {
     setTabIndex(index)
