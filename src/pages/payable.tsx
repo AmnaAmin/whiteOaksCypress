@@ -8,10 +8,10 @@ import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 export const Payable = () => {
   const [, setTabIndex] = useState(0)
   const { permissions } = useRoleBasedPermissions()
-  const isPayableReadOrEditEst = permissions.some(p => ['ESTPAYABLE.READ', 'ESTPAYABLE.EDIT'].includes(p))
-  const isPayableReadOrEditConst = permissions.some(p => ['PAYABLE.READ', 'PAYABLE.EDIT'].includes(p))
+  const isPayableReadOrEditEst = permissions.some(p => ['ESTPAYABLE.READ', 'ESTPAYABLE.EDIT', 'ALL'].includes(p))
+  const isPayableReadOrEditConst = permissions.some(p => ['PAYABLE.READ', 'PAYABLE.EDIT', 'ALL'].includes(p))
   const isPayableReadOrEditMaint = permissions.some(p =>
-    ['MAINTENANCEPAYABLE.READ', 'MAINTENANCEPAYABLE.EDIT'].includes(p),
+    ['MAINTENANCEPAYABLE.READ', 'MAINTENANCEPAYABLE.EDIT', 'ALL'].includes(p),
   )
   const handleTabsChange = index => {
     setTabIndex(index)
