@@ -275,9 +275,11 @@ export const ProjectDetails: React.FC = props => {
                   />
                 </TabPanel>
               }
-              <TabPanel h="680px">
-                <Messages projectId={projectId} entity="project" id={projectId} />
-              </TabPanel>
+              {(!isLoading && projectData) &&
+                <TabPanel h="680px">
+                  <Messages projectId={projectId} entity="project" id={projectId} value={projectData} />
+                </TabPanel>
+              }
             </TabPanels>
           </Card>
         </Tabs>
