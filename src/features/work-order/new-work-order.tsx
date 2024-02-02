@@ -49,6 +49,7 @@ import {
   calculateVendorAmount,
   calculateProfit,
   SWOProject,
+  createInvoicePdf,
 } from './details/assignedItems.utils'
 import RemainingItemsModal from './details/remaining-items-modal'
 import { useParams } from 'react-router-dom'
@@ -57,6 +58,8 @@ import { WORK_ORDER } from './workOrder.i18n'
 import { MdOutlineCancel } from 'react-icons/md'
 import { isValidAndNonEmpty } from 'utils'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import jsPDF from 'jspdf'
+import { useUploadDocument } from 'api/vendor-projects'
 
 const CalenderCard = props => {
   return (
@@ -150,6 +153,7 @@ export const NewWorkOrder: React.FC<{
   const { swoProject } = useFetchProjectId(projectData?.id)
   const { data: trades } = useTrades()
   const [vendorSkillId, setVendorSkillId] = useState(null)
+  const { mutate: saveDocument } = useUploadDocument()
   const { vendors, isLoading: vendorsLoading } = useFilteredVendors({
     vendorSkillId,
     projectId: projectData?.id,
@@ -184,7 +188,31 @@ export const NewWorkOrder: React.FC<{
         {
           onSuccess: async () => {
             const payload = await parseNewWoValuesToPayload(values, projectData.id)
-            createWorkOrder(payload as any)
+            createWorkOrder(payload as any, {
+              onSuccess: async data => {
+                const workOrder = data?.data
+                let doc = new jsPDF()
+
+                doc = await createInvoicePdf({
+                  doc,
+                  workOrder,
+                  projectData,
+                  assignedItems: values?.assignedItems ?? [],
+                  hideAward: false,
+                })
+                const pdfUri = doc.output('datauristring')
+                saveDocument([
+                  {
+                    documentType: 1036,
+                    projectId: projectData.id as number,
+                    workOrderId: workOrder.id,
+                    fileObject: pdfUri.split(',')[1],
+                    fileObjectContentType: 'application/pdf',
+                    fileType: 'LineItem.pdf',
+                  },
+                ])
+              },
+            })
           },
         },
       )
@@ -743,6 +771,7 @@ export const NewWorkOrderForm: React.FC<{
                     isAssignmentAllowed={isAssignmentAllowed}
                     swoProject={swoProject}
                     workOrder={null}
+                    documentsData={null}
                   />
                 </Box>
               </Box>

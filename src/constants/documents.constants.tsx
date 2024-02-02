@@ -3,11 +3,12 @@ import { ColumnDef } from '@tanstack/react-table'
 import { BiDownArrowCircle } from 'react-icons/bi'
 import { Text, Flex, Box, Icon, Spacer } from '@chakra-ui/react'
 import { downloadFileOnly } from 'utils/file-utils'
-import { dateFormat, datePickerFormat} from 'utils/date-time-utils'
+import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { DownArrow, RightArrow } from 'components/expension-grid-arrows'
 
 export const DOCUMENT_TYPES = {
   ORIGINAL_SOW: 39,
+  INVOICE: 42,
 }
 
 const withPreviewCell = cellInfo => {

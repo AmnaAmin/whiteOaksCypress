@@ -120,7 +120,7 @@ const WorkOrderDetailTab = ({
       doc,
       workOrder,
       projectData,
-      assignedItems: values.assignedItems,
+      assignedItems: values.assignedItems ?? [],
       hideAward: true,
     })
   }
@@ -267,6 +267,7 @@ const WorkOrderDetailTab = ({
                     isAssignmentAllowed={false}
                     downloadPdf={downloadPdf}
                     workOrder={workOrder}
+                    documentsData={documentsData}
                   />
                 )}
               </>

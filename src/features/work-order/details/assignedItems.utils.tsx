@@ -35,6 +35,7 @@ import { readFileContent } from 'api/vendor-details'
 import { completePercentage } from './work-order-edit-tab'
 import { completePercentageValues, newObjectFormatting } from 'api/work-order'
 import { useLocation } from 'api/location'
+import { addImages } from 'utils/file-utils'
 
 const swoPrefix = '/smartwo/api'
 
@@ -601,7 +602,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
   )
 }
 
-export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
+export const createInvoicePdf = async ({ doc, workOrder, projectData, assignedItems, hideAward }) => {
   const workOrderInfo = [
     { label: 'Start Date:', value: workOrder?.workOrderStartDate ?? '' },
     { label: 'Expected Completion:', value: workOrder?.workOrderExpectedCompletionDate ?? '' },
@@ -622,90 +623,89 @@ export const createInvoicePdf = ({ doc, workOrder, projectData, assignedItems, h
   doc.text(heading, startx, 20)
   var img = new Image()
   img.src = 'wo-logo-tree.png'
-  img.onload = function () {
-    doc.addImage(img, 'png', 160, 5, 35, 35)
+  const images = await addImages(['wo-logo-tree.png'])
+  doc.addImage(images[0], 'png', 160, 5, 35, 35)
+  doc.setFontSize(11)
+  doc.setFont(summaryFont, 'bold')
+  doc.text('Property Address:', startx, 55)
+  doc.setFont(summaryFont, 'normal')
+  doc.text(projectData?.streetAddress ?? '', startx, 60)
+  doc.text(projectData?.city + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
 
-    doc.setFontSize(11)
-    doc.setFont(summaryFont, 'bold')
-    doc.text('Property Address:', startx, 55)
-    doc.setFont(summaryFont, 'normal')
-    doc.text(projectData?.streetAddress ?? '', startx, 60)
-    doc.text(projectData?.city + ' ' + projectData?.state + ' , ' + projectData?.zipCode, startx, 65)
+  doc.setFont(summaryFont, 'bold')
+  const centerTextX = 75
+  doc.text('FPM:', centerTextX, 55)
+  doc.setFont(summaryFont, 'normal')
+  doc.text(projectData?.projectManager ?? '', centerTextX + 15, 55)
+  doc.setFont(summaryFont, 'bold')
+  doc.text('Contact:', centerTextX, 60)
+  doc.setFont(summaryFont, 'normal')
+  doc.text(projectData?.projectManagerPhoneNumber ?? '', centerTextX + 15, 60)
 
-    doc.setFont(summaryFont, 'bold')
-    const centerTextX = 75
-    doc.text('FPM:', centerTextX, 55)
-    doc.setFont(summaryFont, 'normal')
-    doc.text(projectData?.projectManager ?? '', centerTextX + 15, 55)
-    doc.setFont(summaryFont, 'bold')
-    doc.text('Contact:', centerTextX, 60)
-    doc.setFont(summaryFont, 'normal')
-    doc.text(projectData?.projectManagerPhoneNumber ?? '', centerTextX + 15, 60)
+  const x = 130
+  let y = 50
 
-    const x = 130
-    let y = 50
-
-    workOrderInfo.forEach(inv => {
-      doc.setFont(summaryFont, 'bold')
-      doc.text(inv.label, x + 5, y + 5)
-      doc.setFont(summaryFont, 'normal')
-      doc.text(
-        inv.label === 'Start Date:' || inv.label === 'Expected Completion:' ? dateFormat(inv.value) || '' : inv.value,
-        x + 45,
-        y + 5,
-      )
-      y = y + 5
-    })
-
+  workOrderInfo.forEach(inv => {
     doc.setFont(summaryFont, 'bold')
-    doc.text('Work Type:', startx, y + 20)
+    doc.text(inv.label, x + 5, y + 5)
     doc.setFont(summaryFont, 'normal')
-    doc.text(workOrder?.skillName ?? '', startx + 30, y + 20)
-    doc.setFont(summaryFont, 'bold')
-    doc.text('Sub Contractor:', startx, y + 25)
-    doc.setFont(summaryFont, 'normal')
-    doc.text(workOrder.companyName ?? '', startx + 30, y + 25)
-    doc.setFont(summaryFont, 'bold')
-    doc.text('Total:', x + 5, y + 25)
-    doc.setFont(summaryFont, 'normal')
-    doc.text(currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + 45, y + 25)
+    doc.text(
+      inv.label === 'Start Date:' || inv.label === 'Expected Completion:' ? dateFormat(inv.value) || '' : inv.value,
+      x + 45,
+      y + 5,
+    )
+    y = y + 5
+  })
 
-    autoTable(doc, {
-      startY: y + 35,
-      headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
-      theme: 'grid',
-      bodyStyles: { lineColor: '#000000', minCellHeight: 15 },
-      body: [
-        ...assignedItems.map(ai => {
-          return {
-            id: ai.id,
-            location: ai.location?.label,
-            sku: ai.sku,
-            productName: ai.productName,
-            description: ai.description,
-            quantity: ai.quantity,
-          }
-        }),
-      ],
-      columnStyles: {
-        location: { cellWidth: 30 },
-        sku: { cellWidth: 30 },
-        productName: { cellWidth: 40 },
-        description: { cellWidth: 50 },
-        quantity: { cellWidth: 30 },
-      },
-      columns: [
-        { header: 'Location', dataKey: 'location' },
-        { header: 'SKU', dataKey: 'sku' },
-        { header: 'Product Name', dataKey: 'productName' },
-        { header: 'Description', dataKey: 'description' },
-        { header: 'Quantity', dataKey: 'quantity' },
-      ],
-    })
-    doc.setFontSize(10)
-    doc.setFont(basicFont, 'normal')
-    doc.save(`${workOrder?.id}_${workOrder?.companyName}_${workOrder?.propertyAddress}.pdf`)
-  }
+  doc.setFont(summaryFont, 'bold')
+  doc.text('Work Type:', startx, y + 20)
+  doc.setFont(summaryFont, 'normal')
+  doc.text(workOrder?.skillName ?? workOrder?.vendorSkillName ?? '', startx + 30, y + 20)
+  doc.setFont(summaryFont, 'bold')
+  doc.text('Sub Contractor:', startx, y + 25)
+  doc.setFont(summaryFont, 'normal')
+  doc.text(workOrder?.companyName ?? workOrder?.vendorName ?? '', startx + 30, y + 25)
+  doc.setFont(summaryFont, 'bold')
+  doc.text('Total:', x + 5, y + 25)
+  doc.setFont(summaryFont, 'normal')
+  doc.text(currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + 45, y + 25)
+
+  autoTable(doc, {
+    startY: y + 35,
+    headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
+    theme: 'grid',
+    bodyStyles: { lineColor: '#000000', minCellHeight: 15 },
+    body: [
+      ...assignedItems?.map(ai => {
+        return {
+          id: ai.id,
+          location: ai.location?.label || ai.location,
+          sku: ai.sku,
+          productName: ai.productName,
+          description: ai.description,
+          quantity: ai.quantity,
+        }
+      }),
+    ],
+    columnStyles: {
+      location: { cellWidth: 30 },
+      sku: { cellWidth: 30 },
+      productName: { cellWidth: 40 },
+      description: { cellWidth: 50 },
+      quantity: { cellWidth: 30 },
+    },
+    columns: [
+      { header: 'Location', dataKey: 'location' },
+      { header: 'SKU', dataKey: 'sku' },
+      { header: 'Product Name', dataKey: 'productName' },
+      { header: 'Description', dataKey: 'description' },
+      { header: 'Quantity', dataKey: 'quantity' },
+    ],
+  })
+  doc.setFontSize(10)
+  doc.setFont(basicFont, 'normal')
+  return doc
+  // doc.save(`${workOrder?.id}_${workOrder?.companyName}_${workOrder?.propertyAddress}.pdf`)
 }
 
 // !workOrder is a check for new work order modal.

@@ -23,7 +23,8 @@ import { ProjectWorkOrderType } from 'types/project.type'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
-
+import { orderBy } from 'lodash'
+import { downloadFile } from 'utils/file-utils'
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
 
@@ -75,6 +76,7 @@ type AssignedItemType = {
   swoProject?: SWOProject
   downloadPdf?: () => void
   workOrder: ProjectWorkOrderType | null
+  documentsData
 }
 
 const AssignedItems = (props: AssignedItemType) => {
@@ -87,18 +89,39 @@ const AssignedItems = (props: AssignedItemType) => {
     formControl,
     isAssignmentAllowed,
     swoProject,
-    downloadPdf,
     workOrder,
+    downloadPdf,
+    documentsData,
   } = props
   const { control, register, getValues, setValue, watch } = formControl
   const { t } = useTranslation()
-  const { fields: assignedItems } = assignedItemsArray
+  const [recentLineItems, setRecentLineItems] = useState<any>(null)
   const [overflowXVal, setOverflowXVal] = useState<ResponsiveValue<any> | undefined>('auto')
 
   const values = getValues()
 
   const lineItems = useWatch({ name: 'assignedItems', control })
   const watchUploadWO = watch('uploadWO')
+  useEffect(() => {
+    if (documentsData && documentsData.length > 0) {
+      let lineItemsdoc = documentsData.filter(d => d.documentType === 1036 && d.workOrderId === workOrder?.id)
+      if (lineItemsdoc.length > 0) {
+        /* sorting invoices by created datetime to fetch latest */
+        lineItemsdoc = orderBy(
+          lineItemsdoc,
+          [
+            item => {
+              const createdDate = new Date(item.createdDate)
+              return createdDate
+            },
+          ],
+          ['desc'],
+        )
+        const recentLineItems = lineItemsdoc[0]
+        setRecentLineItems({ s3Url: recentLineItems.s3Url, fileType: recentLineItems.fileType })
+      }
+    }
+  }, [documentsData])
 
   useEffect(() => {
     const allVerified = lineItems?.length > 0 && lineItems?.every(l => l.isCompleted && l.isVerified)
@@ -254,11 +277,17 @@ const AssignedItems = (props: AssignedItemType) => {
             {downloadPdf && (
               <Button
                 variant="outline"
-                data-testid="downloadPdf"
-                onClick={downloadPdf}
                 colorScheme="darkPrimary"
-                disabled={assignedItems?.length < 1}
-                leftIcon={<Icon as={BiDownload} boxSize={4} />}
+                size="md"
+                data-testid="seeInvoice"
+                onClick={() => {
+                  if (recentLineItems?.s3Url) {
+                    downloadFile(recentLineItems?.s3Url)
+                  } else {
+                    downloadPdf()
+                  }
+                }}
+                leftIcon={<BiDownload />}
               >
                 {t(`${WORK_ORDER}.downloadPDF`)}
               </Button>

@@ -61,6 +61,7 @@ import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 import { useLocation } from 'react-router-dom'
 import round from 'lodash/round'
 import { isValidAndNonEmpty } from 'utils'
+import { useUploadDocument } from 'api/vendor-projects'
 
 export type SelectVendorOption = {
   label: string
@@ -189,6 +190,7 @@ const WorkOrderDetailTab = props => {
   const { remainingItems, isLoading: isRemainingItemsLoading } = useRemainingLineItems(swoProject?.id)
   const [unassignedItems, setUnAssignedItems] = useState<LineItems[]>([])
   const { isAssignmentAllowed } = useAllowLineItemsAssignment({ workOrder, swoProject })
+  const { mutate: saveDocument } = useUploadDocument()
   const [uploadedWO, setUploadedWO] = useState<any>(null)
 
   const { t } = useTranslation()
@@ -226,15 +228,33 @@ const WorkOrderDetailTab = props => {
     onOpen: onOpenRemainingItemsModal,
   } = useDisclosure()
 
-  const downloadPdf = useCallback(() => {
+  const downloadPdf = useCallback(async () => {
     let doc = new jsPDF()
-    createInvoicePdf({
+    doc = await createInvoicePdf({
       doc,
       workOrder,
       projectData,
-      assignedItems: assignedItemsWatch,
+      assignedItems: assignedItemsWatch ?? [],
       hideAward: false,
     })
+    const pdfUri = doc.output('datauristring')
+    saveDocument(
+      [
+        {
+          documentType: 1036,
+          workOrderId: workOrder?.id,
+          fileObject: pdfUri.split(',')[1],
+          fileObjectContentType: 'application/pdf',
+          fileType: `LineItem_1.pdf`,
+          projectId: workOrder?.projectId,
+        },
+      ],
+      {
+        onSuccess: () => {
+          doc.save(`LineItem_1.pdf`)
+        },
+      },
+    )
   }, [assignedItemsWatch, projectData, workOrder])
 
   const setAssignedItems = useCallback(
@@ -392,19 +412,24 @@ const WorkOrderDetailTab = props => {
   }
 
   useEffect(() => {
-    const clientAmount = assignedItemsWatch?.reduce(
-      (partialSum, a) =>
-        partialSum +
-        Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) * Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
-      0,
-    )
-    const vendorAmount = assignedItemsWatch?.reduce(
-      (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
-      0,
-    )
-    setValue('clientApprovedAmount', round(clientAmount ?? 0, 2))
-    setValue('invoiceAmount', round(vendorAmount ?? 0, 2))
-    setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+    // ignoring the below line for avoiding clientApprovedAmount to set 0 in case of zero lineItems
+    // @ts-ignore
+    if (assignedItemsWatch?.length > 0) {
+      const clientAmount = assignedItemsWatch?.reduce(
+        (partialSum, a) =>
+          partialSum +
+          Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) *
+            Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
+        0,
+      )
+      const vendorAmount = assignedItemsWatch?.reduce(
+        (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
+        0,
+      )
+      setValue('clientApprovedAmount', round(clientAmount ?? 0, 2))
+      setValue('invoiceAmount', round(vendorAmount ?? 0, 2))
+      setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+    }
   }, [assignedItemsWatch])
 
   const isCancelled = workOrder.statusLabel?.toLowerCase() === STATUS.Cancelled
@@ -752,6 +777,7 @@ const WorkOrderDetailTab = props => {
                   swoProject={swoProject}
                   downloadPdf={downloadPdf}
                   workOrder={workOrder}
+                  documentsData={documentsData}
                 />
               )}
             </Box>
