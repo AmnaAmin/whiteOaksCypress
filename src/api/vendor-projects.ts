@@ -213,7 +213,7 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
     rightMarginX + 160,
     60,
   )
-  doc.text(workOrder.paymentTermDate ? dateFormatNew(workOrder?.paymentTermDate) : 'mm/dd/yyyy', rightMarginX + 160, 65)
+  doc.text(workOrder?.expectedPaymentDate ? dateFormatNew(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy', rightMarginX + 160, 65)
 
   // Table
   autoTable(doc, {
