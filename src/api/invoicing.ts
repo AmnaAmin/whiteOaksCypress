@@ -16,6 +16,8 @@ import { Project } from 'types/project.type'
 import { Document } from 'types/vendor.types'
 import { useCallback } from 'react'
 import jsPDF from 'jspdf'
+import { DOCUMENT_TYPES } from 'constants/documents.constants'
+import { orderBy } from 'lodash'
 
 export const useFetchInvoices = ({ projectId }: { projectId: string | number | undefined }) => {
   const client = useClient()
@@ -96,66 +98,70 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
   const { projectId } = useParams<'projectId'>() || projId
 
   function updateInvoiceNumberByRevision(invoiceNo: string): string {
-    const revisionPattern = new RegExp(/(\d+)-R(\d+)$/);
-    const matchResult = revisionPattern.exec(invoiceNo);
+    const revisionPattern = new RegExp(/(\d+)-R(\d+)$/)
+    const matchResult = revisionPattern.exec(invoiceNo)
 
     if (matchResult) {
-      const newRevision = parseInt(matchResult[2]) + 1;
-      return invoiceNo.replace(revisionPattern, `$1-R${newRevision}`);
+      const newRevision = parseInt(matchResult[2]) + 1
+      return invoiceNo.replace(revisionPattern, `$1-R${newRevision}`)
     } else {
       // If no match at the end, add '-R1' to the end
-      return `${invoiceNo}-R1`;
+      return `${invoiceNo}-R1`
     }
   }
   function compareInvoiceLineItems(payloadLineItems: [], invoiceDetailsLineItems: []) {
     if (payloadLineItems.length !== invoiceDetailsLineItems.length) {
-      return false;
+      return false
     }
 
     for (let i = 0; i < payloadLineItems.length; i++) {
-      const payloadItemKeys = Object.keys(payloadLineItems[i]);
+      const payloadItemKeys = Object.keys(payloadLineItems[i])
 
       for (const key of payloadItemKeys) {
         if (payloadLineItems[i][key] !== invoiceDetailsLineItems[i][key]) {
-          return false;
+          return false
         }
       }
     }
-    return true;
+    return true
   }
-
 
   return useMutation(
     async (payload: any) => {
-      const responseInvoiceDetails = await client(`project-invoices/${payload.id}`, {});
-      const invoiceDetails = responseInvoiceDetails?.data as InvoicingType;
-      let isInvoiceChanged = false;
-      if (payload.paymentTerm !== invoiceDetails.paymentTerm)  {
-        console.log("Invoice name changed reason: payment term")
-        isInvoiceChanged = true;
+      const responseInvoiceDetails = await client(`project-invoices/${payload.id}`, {})
+      const invoiceDetails = responseInvoiceDetails?.data as InvoicingType
+      let isInvoiceChanged = false
+      if (payload.paymentTerm !== invoiceDetails.paymentTerm) {
+        console.log('Invoice name changed reason: payment term')
+        isInvoiceChanged = true
       }
       if (payload.invoiceDate !== invoiceDetails.invoiceDate) {
-        console.log("Invoice name changed reason: invoice date")
-        isInvoiceChanged = true;
+        console.log('Invoice name changed reason: invoice date')
+        isInvoiceChanged = true
       }
       // if ( !!payload.receivedLineItems?.length && !!invoiceDetails.receivedLineItems?.length && ( payload.receivedLineItems.length !== invoiceDetails.receivedLineItems.length )  ) isInvoiceChanged = true;
       // if ( !!payload.invoiceLineItems?.length && !!invoiceDetails.invoiceLineItems?.length && ( payload.invoiceLineItems.length !== invoiceDetails.invoiceLineItems.length )  ) isInvoiceChanged = true;
 
       //compare length and each single property value
-      if (!compareInvoiceLineItems(payload.invoiceLineItems?.filter( l => l.type === 'finalSowLineItems' ), invoiceDetails.invoiceLineItems))  {
-        console.log("Invoice name changed reason: invoice line items")
-        isInvoiceChanged = true;
+      if (
+        !compareInvoiceLineItems(
+          payload.invoiceLineItems?.filter(l => l.type === 'finalSowLineItems'),
+          invoiceDetails.invoiceLineItems,
+        )
+      ) {
+        console.log('Invoice name changed reason: invoice line items')
+        isInvoiceChanged = true
       }
 
-      console.log("Payload: ", payload);
-      console.log("Details: ", invoiceDetails);
+      console.log('Payload: ', payload)
+      console.log('Details: ', invoiceDetails)
 
       if (isInvoiceChanged) {
-        const pattern = /-(\d+)(?:-R(\d+))?$/;
+        const pattern = /-(\d+)(?:-R(\d+))?$/
         //const revisionPattern = new RegExp(/^(\d+)-R(\d+)/);
-        const currInvoiceNumber = payload.invoiceNumber;
-        const match = currInvoiceNumber.match(pattern);
-        
+        const currInvoiceNumber = payload.invoiceNumber
+        const match = currInvoiceNumber.match(pattern)
+
         // console.log("New number: ", updateInvoiceNumberByRevision(currInvoiceNumber))
         // console.log("revisions", revisionPattern.exec(currInvoiceNumber));
 
@@ -164,15 +170,11 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
           // const incrementedString = (incrementedNumber < 10 ? "0" : "") + incrementedNumber;
           // payload.invoiceNumber =  currInvoiceNumber.replace(pattern, incrementedString + "-");
 
-          payload.invoiceNumber = updateInvoiceNumberByRevision(currInvoiceNumber);
+          payload.invoiceNumber = updateInvoiceNumberByRevision(currInvoiceNumber)
         }
-
       }
 
-
-
       // console.log(payload); return;
-
 
       return client('project-invoices', {
         data: payload,
@@ -625,12 +627,26 @@ export const useUpdateInvoicingDocument = () => {
   const client = useClient()
 
   return useMutation(async (payload: Document) => {
-    let documents = await client('documents?projectId.equals=' + payload.projectId, {})
-    if (documents?.data) {
-      documents = documents.data?.filter((d: Document) => d.projectInvoiceId === payload.projectInvoiceId)
+    let documentsData = await client('documents?projectId.equals=' + payload?.projectId, {})
+    let documents = documentsData?.data
+    if (documents) {
+      documents = documents?.filter(
+        (d: Document) =>
+          d?.projectInvoiceId === payload?.projectInvoiceId && d?.documentType === DOCUMENT_TYPES.INVOICE,
+      )
+      documents = orderBy(
+        documents,
+        [
+          item => {
+            const modifiedDate = new Date(item?.modifiedDate)
+            return modifiedDate
+          },
+        ],
+        ['desc'],
+      )
     }
     if (documents && Array.isArray(documents)) {
-      payload.id = documents[0].id
+      payload.id = documents?.[0]?.id
     }
 
     return client('documents', {

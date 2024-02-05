@@ -191,22 +191,20 @@ export const NewWorkOrder: React.FC<{
             createWorkOrder(payload as any, {
               onSuccess: async data => {
                 const workOrder = data?.data
-                console.log('workOrder', data)
                 let doc = new jsPDF()
 
-              
                 doc = await createInvoicePdf({
                   doc,
                   workOrder,
                   projectData,
-                  assignedItems: values?.assignedItems,
+                  assignedItems: values?.assignedItems ?? [],
                   hideAward: false,
                 })
                 const pdfUri = doc.output('datauristring')
                 saveDocument([
                   {
                     documentType: 1036,
-                    projectId:projectData.id as number,
+                    projectId: projectData.id as number,
                     workOrderId: workOrder.id,
                     fileObject: pdfUri.split(',')[1],
                     fileObjectContentType: 'application/pdf',

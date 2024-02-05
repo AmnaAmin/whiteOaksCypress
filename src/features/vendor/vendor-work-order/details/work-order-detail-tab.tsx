@@ -120,7 +120,7 @@ const WorkOrderDetailTab = ({
       doc,
       workOrder,
       projectData,
-      assignedItems: values.assignedItems,
+      assignedItems: values.assignedItems ?? [],
       hideAward: true,
     })
   }

@@ -77,7 +77,6 @@ type AssignedItemType = {
   downloadPdf?: () => void
   workOrder: ProjectWorkOrderType | null
   documentsData
-  
 }
 
 const AssignedItems = (props: AssignedItemType) => {
@@ -275,18 +274,24 @@ const AssignedItems = (props: AssignedItemType) => {
                 {t(`${WORK_ORDER}.showPrice`)}
               </Checkbox>
             )}
-           {downloadPdf && (
+            {downloadPdf && (
               <Button
                 variant="outline"
                 colorScheme="darkPrimary"
                 size="md"
                 data-testid="seeInvoice"
-                onClick={() => downloadFile(recentLineItems?.s3Url)}
+                onClick={() => {
+                  if (recentLineItems?.s3Url) {
+                    downloadFile(recentLineItems?.s3Url)
+                  } else {
+                    downloadPdf()
+                  }
+                }}
                 leftIcon={<BiDownload />}
               >
                 {t(`${WORK_ORDER}.downloadPDF`)}
               </Button>
-           )}
+            )}
           </HStack>
         </Stack>
 
