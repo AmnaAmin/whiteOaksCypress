@@ -176,6 +176,8 @@ const WorkOrderDetailTab = props => {
     control,
     name: 'assignedItems',
   })
+  // @ts-ignore
+  const lineitemErr = errors?.assignedItems?.length > 0
 
   const { append } = assignedItemsArray
 
@@ -201,7 +203,8 @@ const WorkOrderDetailTab = props => {
     isWorkOrderUpdating ||
     (!(uploadedWO && uploadedWO?.s3Url) && isFetchingLineItems) ||
     isWOCancelled ||
-    assignItemsLengthCheck
+    assignItemsLengthCheck ||
+    lineitemErr
 
   const { isAdmin, isVendor } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
