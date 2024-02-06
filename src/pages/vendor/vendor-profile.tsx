@@ -1,6 +1,6 @@
 // Revisit, Separate the vendor profile forms from vendor profile page.
 
-import { Box, Divider, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
+import { Box, Divider, Flex, Icon, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 import { Card } from 'features/login-form-centered/Card'
@@ -36,6 +36,9 @@ import { VendorProjects } from 'features/vendor-profile/vendor-projects'
 import { VendorUsersTab } from 'features/vendors/vendor-users-table'
 import { VendorAccounts } from 'features/vendors/vendor-accounts'
 import { Messages } from 'features/messages/messages'
+import { useVendorSubFormErrors } from './vendor-hooks'
+import { BiErrorCircle } from 'react-icons/bi'
+import { TabCustom } from 'features/work-order/work-order-edit'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -85,6 +88,9 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const [tabIndex, setTabIndex] = useState<any>(0)
   const [reachTabIndex, setReachTabIndex] = useState(0)
   const formReturn = useForm<VendorProfileDetailsFormData>()
+  const { formState: { errors } } = formReturn;
+  const { isAccountFormErrors } = useVendorSubFormErrors(errors);
+  console.log("🚀 ~ isAccountFormErrors:", isAccountFormErrors)
 
   useVendorDetails({ form: formReturn, vendorProfileData })
   const showError = name => {
@@ -252,10 +258,15 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
               {!!vendorProfileData?.id && <Tab>Users</Tab>}
               {allowVendorAccounts && (
+                <TabCustom isError={isAccountFormErrors} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id} >
+                  {t('vendorProfileAccount')}
+                </TabCustom>
+              )}
+              {/* {allowVendorAccounts && (
                 <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id}>
                   {t('vendorProfileAccount')}
                 </Tab>
-              )}
+              )} */}
               {!isVendor && vendorProfileData?.id && <Tab data-testid="vendor_messages">{t('messages')}</Tab>}
             </TabList>
 
