@@ -90,7 +90,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const formReturn = useForm<VendorProfileDetailsFormData>()
   const { formState: { errors } } = formReturn;
   const { isAccountFormErrors } = useVendorSubFormErrors(errors);
-  console.log("🚀 ~ isAccountFormErrors:", isAccountFormErrors)
 
   useVendorDetails({ form: formReturn, vendorProfileData })
   const showError = name => {
@@ -262,11 +261,6 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   {t('vendorProfileAccount')}
                 </TabCustom>
               )}
-              {/* {allowVendorAccounts && (
-                <Tab _disabled={{ cursor: 'not-allowed' }} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id}>
-                  {t('vendorProfileAccount')}
-                </Tab>
-              )} */}
               {!isVendor && vendorProfileData?.id && <Tab data-testid="vendor_messages">{t('messages')}</Tab>}
             </TabList>
 
