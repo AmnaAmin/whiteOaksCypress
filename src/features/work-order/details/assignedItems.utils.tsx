@@ -901,7 +901,7 @@ export const useGetLineItemsColumn = ({
       setClrState(true)
       setError(`assignedItems.${index}.completePercentage`, {
         type: 'custom',
-        message: '%complete must be 100% to mark complete a WO',
+        message: '%complete must be 100%',
       })
     } else {
       setClrState(false)
@@ -1343,7 +1343,7 @@ export const useGetLineItemsColumn = ({
                     ) {
                       setError(`assignedItems.${index}.completePercentage`, {
                         type: 'custom',
-                        message: '%complete must be 100% to mark complete a WO',
+                        message: '%complete must be 100%',
                       })
                       setClrState(true)
                     } else {
@@ -1410,7 +1410,7 @@ export const useGetLineItemsColumn = ({
                           ) {
                             setError(`assignedItems.${index}.completePercentage`, {
                               type: 'custom',
-                              message: '%complete must be 100% to mark complete a WO',
+                              message: '%complete must be 100%',
                             })
                           } else {
                             clearErrors(`assignedItems.${index}.completePercentage`)
