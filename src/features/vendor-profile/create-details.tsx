@@ -59,7 +59,6 @@ const CreateVendorDetail: React.FC<{
   } = useFormContext<VendorProfileDetailsFormData>()
   const { disableDetailsNext } = useVendorNext({ control })
   const contactFormValue = watch()
-  console.log('contactFormValue', contactFormValue)
   const capacityError = useWatch({ name: 'capacity', control })
 
   // Set Document Status dropdown if Status is Expired
