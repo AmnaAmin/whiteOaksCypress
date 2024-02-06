@@ -160,6 +160,7 @@ i18n.use(initReactI18next).init({
         // Projects-Transactions
         newTransaction: 'New Transaction',
         newWorkOrder: 'New Work Order',
+        PercentageCompletionMsg: '%complete must be 100%',
         newDocument: 'New Document',
         newAlert: 'New Alert',
         editAlert: 'Edit Alert',
@@ -328,7 +329,7 @@ i18n.use(initReactI18next).init({
         createdBy: 'Created By',
         uploadFile: 'Upload File',
         workOrderId: 'Work Order ID',
-        documentId:'Document ID',
+        documentId: 'Document ID',
         // Project - Alerts
         value: 'Value',
         category: 'Category',
@@ -807,6 +808,7 @@ i18n.use(initReactI18next).init({
         updateTransaction: 'Actualizar transacción',
         newTransaction: 'Nueva Transacción',
         newWorkOrder: 'Nueva Orden de Trabajo',
+        PercentageCompletionMsg: '%completo debe ser 100%',
         newDocument: 'Nuevo Documento',
         newAlert: 'Nueva Alerta',
         editAlert: 'Editar Alerta',
