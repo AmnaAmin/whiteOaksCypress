@@ -1,6 +1,6 @@
 // Revisit, Separate the vendor profile forms from vendor profile page.
 
-import { Box, Divider, Flex, Icon, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
+import { Box, Divider, Stack, Tab, TabList, TabPanel, TabPanels, Tabs, useToast } from '@chakra-ui/react'
 import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 import { Card } from 'features/login-form-centered/Card'
@@ -37,7 +37,6 @@ import { VendorUsersTab } from 'features/vendors/vendor-users-table'
 import { VendorAccounts } from 'features/vendors/vendor-accounts'
 import { Messages } from 'features/messages/messages'
 import { useVendorSubFormErrors } from './vendor-hooks'
-import { BiErrorCircle } from 'react-icons/bi'
 import { TabCustom } from 'features/work-order/work-order-edit'
 
 type Props = {
