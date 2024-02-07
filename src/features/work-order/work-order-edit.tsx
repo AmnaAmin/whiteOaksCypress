@@ -100,6 +100,9 @@ const WorkOrderDetails = ({
   const { data: locations } = useLineItemsLocation()
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems
+  const showForPreProd = window.location.href.includes('preprod')
+  const showForPreProdAndLocal = 
+    showForPreProd || window.location.href.includes('localhost:') || window.location.href.includes('dev')
 
   useEffect(() => {
     if (workOrderDetails) {
@@ -338,7 +341,8 @@ const WorkOrderDetails = ({
                 <Tab data-testid="wo_invoice">{t('invoice')}</Tab>
                 <Tab data-testid="wo_payments">{t('payments')}</Tab>
                 <Tab data-testid="wo_notes">{t('notes')}</Tab>
-                <Tab data-testid="wo_messages">{t('messages')}</Tab>
+                {showForPreProdAndLocal && <Tab data-testid="wo_messages">{t('messages')}</Tab>}
+
 
                 {showRejectInvoice &&
                   [STATUS.Invoiced, STATUS.Rejected].includes(
@@ -489,7 +493,8 @@ const WorkOrderDetails = ({
                       />
                     )}
                   </TabPanel>
-                  <TabPanel p={0}>
+                  { showForPreProdAndLocal && 
+                    <TabPanel p={0}>
                     {isLoadingWorkOrder ? (
                       <Center h={'600px'}>
                         <Spinner size="xl" />
@@ -500,6 +505,8 @@ const WorkOrderDetails = ({
                       </Box>
                     )}
                   </TabPanel>
+                  }
+                  
                 </TabPanels>
               </Card>
             </Tabs>
@@ -510,7 +517,7 @@ const WorkOrderDetails = ({
   )
 }
 
-export const TabCustom: React.FC<{ isError?: boolean, isDisabled?: boolean }> = ({ isError, isDisabled=false, children }) => {
+export const TabCustom: React.FC<{ isError?: boolean, isDisabled?: boolean }> = ({ isError, isDisabled = false, children }) => {
   return (
     <Tab _focus={{ outline: 'none' }} _disabled={{ cursor: 'not-allowed' }} isDisabled={isDisabled}>
       {isError ? (
