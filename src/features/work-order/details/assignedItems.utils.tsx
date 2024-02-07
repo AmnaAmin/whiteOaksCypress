@@ -792,9 +792,10 @@ export const useGetLineItemsColumn = ({
   workOrder,
 }) => {
   const [selectedCell, setSelectedCell] = useState<selectedCell | null>(null)
+  const [clrState, setClrState] = useState<boolean>(false)
   const { t } = useTranslation()
   const { fields: assignedItems, remove: removeAssigned } = assignedItemsArray
-  const { setValue, getValues, watch, control } = formControl
+  const { setValue, getValues, watch, control, setError, clearErrors } = formControl
   const values = getValues()
   const watchFieldArray = watch('assignedItems')
   const { isVendor } = useUserRolesSelector()
@@ -806,7 +807,15 @@ export const useGetLineItemsColumn = ({
       ...watchFieldArray[index],
     }
   })
-  const markAllCompleted = controlledAssignedItems?.length > 0 && controlledAssignedItems.every(l => l.isCompleted)
+  const { isAdmin } = useUserRolesSelector()
+
+  //update this check as %completion came in two form i.e completePercentage & completePercentage.value
+  const markAllCompleted =
+    controlledAssignedItems?.length > 0 &&
+    controlledAssignedItems.every(
+      l => l.isCompleted && (l?.completePercentage.value === 100 || l?.completePercentage === 100),
+    )
+
   const allVerified =
     controlledAssignedItems?.length > 0 && controlledAssignedItems?.every(l => l.isCompleted && l.isVerified)
 
@@ -877,6 +886,27 @@ export const useGetLineItemsColumn = ({
         </HStack>
       </a>
     )
+  }
+
+  //this will execute on change of %completion dropdown
+  const onChangeFn = (option?: any, index?: any) => {
+    const watchIsCompleted = watch(`assignedItems.${index}.isCompleted`)
+    //this check will checks if value of %completion is 100% then mark that checkbox true
+    if (option?.value === 100) setValue(`assignedItems.${index}.isCompleted`, true)
+
+    // this check will execute for all users other than admin to setError if value is less then 100%
+    // of %completion & check box of line item is checked, else it will clearError and color of %completion column
+    if (!isAdmin && option?.value !== 100 && watchIsCompleted) {
+      // below useState is for handle color of %completion column
+      setClrState(true)
+      setError(`assignedItems.${index}.completePercentage`, {
+        type: 'custom',
+        message: t('PercentageCompletionMsg'),
+      })
+    } else {
+      setClrState(false)
+      clearErrors(`assignedItems.${index}.completePercentage`)
+    }
   }
 
   let columns = useMemo(() => {
@@ -1202,7 +1232,12 @@ export const useGetLineItemsColumn = ({
         },
       },
       {
-        header: () => <span style={{ marginLeft: '30px' }}> {t(`${WORK_ORDER}.completePercentage`)}</span>,
+        header: () => (
+          <span style={{ marginLeft: '30px', color: clrState ? 'red' : '' }}>
+            {' '}
+            {t(`${WORK_ORDER}.completePercentage`)}
+          </span>
+        ),
         accessorKey: 'completePercentage',
         size: 200,
         cell: ({ row }) => {
@@ -1248,7 +1283,7 @@ export const useGetLineItemsColumn = ({
                   control={control}
                   // rules={{ required: true }}
                   name={`assignedItems.${index}.completePercentage`}
-                  render={({ field }) => {
+                  render={({ field, fieldState }) => {
                     return (
                       <>
                         <CreatableSelectForTable
@@ -1260,7 +1295,9 @@ export const useGetLineItemsColumn = ({
                           id={`assignedItems.${index}.completePercentage`}
                           isDisabled={isVendor}
                           newObjectFormatting={newObjectFormatting}
+                          onChangeFn={onChangeFn}
                         />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </>
                     )
                   }}
@@ -1284,7 +1321,37 @@ export const useGetLineItemsColumn = ({
                 disabled={!statusEnabled}
                 onChange={e => {
                   controlledAssignedItems.forEach((item, index) => {
-                    setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
+                    const checkBoxData = watch(`assignedItems.${index}`)
+                    // here it will check if user isAdmin & top checkbox of column is checked then it will
+                    // change %completion dropdoen value to 100% of all dropdowns of &completion
+                    if (isAdmin) {
+                      setValue(`assignedItems.${index}.completePercentage`, {
+                        value: 100,
+                        label: '100%',
+                      })
+                      setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
+                    }
+
+                    // this check will execute for all users other than Admin upon clicking on checkbox
+                    // of line item's top checkbox
+                    if (
+                      !isAdmin &&
+                      e.target.checked &&
+                      (checkBoxData?.completePercentage === 0 ||
+                        checkBoxData?.completePercentage < 100 ||
+                        checkBoxData?.completePercentage.value < 100)
+                    ) {
+                      setError(`assignedItems.${index}.completePercentage`, {
+                        type: 'custom',
+                        message: t('PercentageCompletionMsg'),
+                      })
+                      setClrState(true)
+                    } else {
+                      setClrState(false)
+                      clearErrors(`assignedItems.${index}.completePercentage`)
+                      setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
+                    }
+
                     if (!e.target.checked) {
                       setValue(`assignedItems.${index}.isVerified`, false)
                     }
@@ -1297,27 +1364,65 @@ export const useGetLineItemsColumn = ({
           )
         },
         cell: cellInfo => {
+          const {
+            formState: { errors },
+            control,
+          } = formControl
           const index = cellInfo?.row?.index
           return (
             <HStack justifyContent={'center'} h="28px">
-              <Controller
-                control={control}
-                name={`assignedItems.${index}.isCompleted`}
-                render={({ field, fieldState }) => (
-                  <CustomCheckBox
-                    testid={`isCompleted-` + index}
-                    // text="Completed"
-                    isChecked={field.value}
-                    disabled={!statusEnabled}
-                    onChange={e => {
-                      if (!e.target.checked) {
-                        setValue(`assignedItems.${index}.isVerified`, false)
-                      }
-                      field.onChange(e.currentTarget.checked)
-                    }}
-                  ></CustomCheckBox>
-                )}
-              ></Controller>
+              <FormControl isInvalid={!!errors.assignedItems?.[index]?.isCompleted}>
+                <Controller
+                  control={control}
+                  name={`assignedItems.${index}.isCompleted`}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <CustomCheckBox
+                        testid={`isCompleted-` + index}
+                        // text="Completed"
+                        isChecked={field.value}
+                        disabled={!statusEnabled}
+                        onChange={e => {
+                          const checkBoxData = watch(`assignedItems.${index}` as any)
+
+                          // here it will check if user isAdmin & checkbox is checked then it will
+                          // change related line items checkbox's %completion dropdoen value to 100%
+                          if (isAdmin) {
+                            setValue(`assignedItems.${index}.completePercentage`, {
+                              value: 100,
+                              label: '100%',
+                            })
+                            setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
+                          }
+
+                          if (!e.target.checked) {
+                            setValue(`assignedItems.${index}.isVerified`, false)
+                          }
+
+                          // this check will execute for all users other than Admin upon clicking on checkbox
+                          // of  individual line item's
+                          if (
+                            !isAdmin &&
+                            e.target.checked &&
+                            (checkBoxData?.completePercentage === 0 ||
+                              checkBoxData?.completePercentage < 100 ||
+                              checkBoxData?.completePercentage.value < 100)
+                          ) {
+                            setError(`assignedItems.${index}.completePercentage`, {
+                              type: 'custom',
+                              message: t('PercentageCompletionMsg'),
+                            })
+                          } else {
+                            clearErrors(`assignedItems.${index}.completePercentage`)
+                            field.onChange(e.currentTarget.checked)
+                          }
+                        }}
+                      ></CustomCheckBox>
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                ></Controller>
+              </FormControl>
             </HStack>
           )
         },
@@ -1413,6 +1518,7 @@ export const useGetLineItemsColumn = ({
   }, [
     selectedCell,
     setSelectedCell,
+    clrState,
     unassignedItems,
     setUnAssignedItems,
     verificationEnabled,
@@ -1436,6 +1542,7 @@ type CreatebleSelectType = {
   newObjectFormatting: any
   style?: any
   index: number
+  onChangeFn?: any
 }
 
 export const CreatableSelectForTable = ({
@@ -1447,6 +1554,8 @@ export const CreatableSelectForTable = ({
   options,
   newObjectFormatting,
   style,
+  index,
+  onChangeFn,
 }: CreatebleSelectType) => {
   const defaultOption = { label: 'Select', value: 'select', isDisabled: true }
   return (
@@ -1459,6 +1568,9 @@ export const CreatableSelectForTable = ({
       isDisabled={isDisabled}
       selectProps={{ widthAssign: '100%', menuHeight: style?.height }}
       onChange={option => {
+        // this above component is resusable, for avoiding the issue its handle here
+        // as if we have prop for onChangeFn then only it will execute
+        if (onChangeFn) onChangeFn(option, index)
         if (option?.__isNew__ && !!newObjectFormatting) {
           field.onChange(newObjectFormatting(option))
         } else {
