@@ -101,7 +101,7 @@ const WorkOrderDetails = ({
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems
   const showForPreProd = window.location.href.includes('preprod')
-  const showForPreProdAndLocal = 
+  const showForPreProdAndLocal =
     showForPreProd || window.location.href.includes('localhost:') || window.location.href.includes('dev')
 
   useEffect(() => {
@@ -493,20 +493,20 @@ const WorkOrderDetails = ({
                       />
                     )}
                   </TabPanel>
-                  { showForPreProdAndLocal && 
+                  {showForPreProdAndLocal &&
                     <TabPanel p={0}>
-                    {isLoadingWorkOrder ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <Box w="100%" h="680px">
-                        <Messages id={workOrder.id} entity="projectWorkOrder" projectId={projectId} value={workOrder} />
-                      </Box>
-                    )}
-                  </TabPanel>
+                      {isLoadingWorkOrder ? (
+                        <Center h={'600px'}>
+                          <Spinner size="xl" />
+                        </Center>
+                      ) : (
+                        <Box w="100%" h="680px">
+                          <Messages id={workOrder.id} entity="projectWorkOrder" projectId={projectId} value={{ ...workOrder, estimateId: projectData?.estimateId }} />
+                        </Box>
+                      )}
+                    </TabPanel>
                   }
-                  
+
                 </TabPanels>
               </Card>
             </Tabs>
