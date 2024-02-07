@@ -94,7 +94,7 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
   {
     header: '% Completion',
     accessorKey: 'completePercentage',
-    accessorFn: (row: any) => `${(row.completePercentage).toString()}%`,
+    accessorFn: (row: any) => `${(row?.completePercentage)?.toString()}%`,
     filterFn: 'includesString',
     cell: (row: any) => {
       return `${row?.row.original?.completePercentage}%`
