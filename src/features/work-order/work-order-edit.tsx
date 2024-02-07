@@ -496,7 +496,7 @@ const WorkOrderDetails = ({
                       </Center>
                     ) : (
                       <Box w="100%" h="680px">
-                        <Messages id={workOrder.id} entity="workOrder" projectId={projectId} value={projectData} />
+                        <Messages id={workOrder.id} entity="projectWorkOrder" projectId={projectId} value={workOrder} />
                       </Box>
                     )}
                   </TabPanel>
@@ -510,9 +510,9 @@ const WorkOrderDetails = ({
   )
 }
 
-export const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }) => {
+export const TabCustom: React.FC<{ isError?: boolean, isDisabled?: boolean }> = ({ isError, isDisabled=false, children }) => {
   return (
-    <Tab _focus={{ outline: 'none' }}>
+    <Tab _focus={{ outline: 'none' }} _disabled={{ cursor: 'not-allowed' }} isDisabled={isDisabled}>
       {isError ? (
         <Flex alignItems="center">
           <Icon as={BiErrorCircle} size="18px" color="red.400" mr="1" />
