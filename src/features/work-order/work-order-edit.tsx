@@ -340,6 +340,7 @@ const WorkOrderDetails = ({
                 <Tab data-testid="wo_notes">{t('notes')}</Tab>
                 <Tab data-testid="wo_messages">{t('messages')}</Tab>
 
+
                 {showRejectInvoice &&
                   [STATUS.Invoiced, STATUS.Rejected].includes(
                     workOrderDetails?.statusLabel?.toLocaleLowerCase() as STATUS,
@@ -489,17 +490,17 @@ const WorkOrderDetails = ({
                       />
                     )}
                   </TabPanel>
-                  <TabPanel p={0}>
-                    {isLoadingWorkOrder ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <Box w="100%" h="680px">
-                        <Messages id={workOrder.id} entity="projectWorkOrder" projectId={projectId} value={workOrder} />
-                      </Box>
-                    )}
-                  </TabPanel>
+                    <TabPanel p={0}>
+                      {isLoadingWorkOrder ? (
+                        <Center h={'600px'}>
+                          <Spinner size="xl" />
+                        </Center>
+                      ) : (
+                        <Box w="100%" h="680px">
+                          <Messages id={workOrder.id} entity="projectWorkOrder" projectId={projectId} value={{ ...workOrder, estimateId: projectData?.estimateId }} />
+                        </Box>
+                      )}
+                    </TabPanel>
                 </TabPanels>
               </Card>
             </Tabs>
@@ -510,7 +511,7 @@ const WorkOrderDetails = ({
   )
 }
 
-export const TabCustom: React.FC<{ isError?: boolean, isDisabled?: boolean }> = ({ isError, isDisabled=false, children }) => {
+export const TabCustom: React.FC<{ isError?: boolean, isDisabled?: boolean }> = ({ isError, isDisabled = false, children }) => {
   return (
     <Tab _focus={{ outline: 'none' }} _disabled={{ cursor: 'not-allowed' }} isDisabled={isDisabled}>
       {isError ? (
