@@ -47,7 +47,7 @@ export const ProjectDetails: React.FC = props => {
 
   const [tabIndex, setTabIndex] = useState(0)
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
-  const { ganttChartData, isLoading: isGanttChartLoading } = useGanttChart(projectId)
+  const { ganttChartData, isLoading: isGanttChartLoading, refetch: refetchGantt } = useGanttChart(projectId)
   const [formattedGanttData, setFormattedGanttData] = useState<any[]>([])
 
   const {
@@ -262,8 +262,7 @@ export const ProjectDetails: React.FC = props => {
                     workOrder={selectedWorkOrder as ProjectWorkOrderType}
                     onClose={() => {
                       setSelectedWorkOrder(undefined)
-                      // refetchGantt()
-                      // onCloseDisclosure()
+                      refetchGantt()
                       setShowNewWO(false)
                     }}
                     isOpen={showNewWO}

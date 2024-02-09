@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Box, Center, Spinner } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useProjectWorkOrders } from 'api/projects'
-import { ProjectWorkOrderType } from 'types/project.type'
-import { useGanttChart } from 'api/pc-projects'
+
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
 import { WORK_ORDER_TABLE_COLUMNS } from 'features/vendor/vendor-work-order/work-order.constants'
@@ -25,7 +24,6 @@ export const WorkOrdersTable = props => {
   const [totalRows, setTotalRows] = useState(0)
 
   const { data: workOrders, isFetching, isLoading } = useProjectWorkOrders(projectId)
-  const { refetch: refetchGantt } = useGanttChart(projectId)
 
   useEffect(() => {
     if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
@@ -73,6 +71,8 @@ export const WorkOrdersTable = props => {
 
   return (
     <Box>
+      {/* //commented here the modal view for keeping it as a reference */}
+
       {/* {isOpen && (
         <WorkOrderDetails
           workOrder={selectedWorkOrder as ProjectWorkOrderType}
@@ -85,18 +85,6 @@ export const WorkOrdersTable = props => {
         />
       )} */}
 
-      {/* {showNewWO && (
-        <WorkOrderDetailsPage
-          workOrder={selectedWorkOrder as ProjectWorkOrderType}
-          onClose={() => {
-            setSelectedWorkOrder(undefined)
-            refetchGantt()
-            // onCloseDisclosure()
-            setShowNewWO(false)
-          }}
-          isOpen={showNewWO}
-        />
-      )} */}
       {isLoading && (
         <Center minH="calc(100vh - 450px)">
           <Spinner size="lg" />
