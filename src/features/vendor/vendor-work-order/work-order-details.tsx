@@ -82,6 +82,10 @@ export const WorkOrderDetails = ({
   const [isMobile] = useMediaQuery('(max-width: 480px)')
 
   const [modalSize, setModalSize] = useState<string>('flexible')
+  // Show tab on preprod only
+  const showForPreProd = window.location.href.includes('preprod')
+  const showForPreProdAndLocal =
+    showForPreProd || window.location.href.includes('localhost:') || window.location.href.includes('dev')
 
   useEffect(() => {
     if (isMobile) {
@@ -179,7 +183,7 @@ export const WorkOrderDetails = ({
                   <Tab data-testid="invoice">{t('invoice')}</Tab>
                   <Tab data-testid="payments">{t('payments')}</Tab>
                   <Tab data-testid="notes">{t('notes')}</Tab>
-                  <Tab data-testid="wo_messages">{t('messages')}</Tab>
+                  {showForPreProdAndLocal && <Tab data-testid="wo_messages">{t('messages')}</Tab>}
                 </TabList>
               </Card>
               <Card mb={3} p="0px !important" roundedTop={0} roundedRight={{ base: 0, md: 12 }}>
@@ -315,7 +319,7 @@ export const WorkOrderDetails = ({
                       <WorkOrderNotes workOrder={workOrderDetails} onClose={onClose} />
                     )}
                   </TabPanel>
-                  <TabPanel p={0}>
+                  {showForPreProdAndLocal && <TabPanel p={0}>
                     {isLoadingWorkOrder ? (
                       <Center h={'600px'}>
                         <Spinner size="xl" />
@@ -325,7 +329,7 @@ export const WorkOrderDetails = ({
                         <Messages id={workOrder.id} entity="workOrder" projectId={projectId} value={projectData} />
                       </Box>
                     )}
-                  </TabPanel>
+                  </TabPanel>}
                 </TabPanels>
               </Card>
             </Tabs>
