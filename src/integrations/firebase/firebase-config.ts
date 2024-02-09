@@ -4,14 +4,14 @@ import { getMessaging, getToken, onMessage, isSupported } from 'firebase/messagi
 import { addAlertCount } from 'features/alerts/alerts-service'
 
 export const firebaseConfig = {
-  apiKey: 'AIzaSyDubiFzyOj0iar4chN2Z1Fg356LfYDGagQ',
-  authDomain: 'whiteoaks-9dc51.firebaseapp.com',
-  databaseURL: 'https://whiteoaks-9dc51.firebaseio.com',
-  projectId: 'whiteoaks-9dc51',
-  storageBucket: 'whiteoaks-9dc51.appspot.com',
-  messagingSenderId: '884836479897',
-  appId: '1:884836479897:web:3425d1369f17258b1c9908',
-  measurementId: 'G-WNCM8PYDCZ',
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 }
 export const vapidKey = 'BCGZ9afTA7Jh2qf9_4_-FDLgWB5ndeiq6DxTw6PrWhK6AvRcbY2hs2O43lQYruPeXFDXVIDg1rsYMzGJD44b_DI'
 
