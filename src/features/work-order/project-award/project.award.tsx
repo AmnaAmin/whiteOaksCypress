@@ -227,7 +227,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
           </HStack>
           {/* </ModalBody> */}
 
-          <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
+          <ModalFooter mt={5} borderTop="1px solid #CBD5E0" p={5}>
             {!workOrder?.applyNewAwardPlan && (
               <Box w={'100%'}>
                 <FormLabel color={'#4A5568'} fontSize="12px" fontWeight={400}>
@@ -236,7 +236,7 @@ export const ProjectAwardTab: React.FC<any> = props => {
               </Box>
             )}
             <HStack spacing="16px" justifyContent="end">
-              {!props.hideCancellBtn && (
+              {props.onClose && (
                 <Button data-testid="wo-cancel-btn" onClick={props?.onClose} variant="outline" colorScheme="brand">
                   {t('cancel')}
                 </Button>

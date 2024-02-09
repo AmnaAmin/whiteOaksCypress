@@ -13,7 +13,6 @@ interface Props {
   onClose: any
   workOrder: any
   isVendorExpired?: boolean
-  hideCancellBtn?: boolean
 }
 export const TransactionsTab = ({
   projectData,
@@ -22,7 +21,6 @@ export const TransactionsTab = ({
   projectId,
   workOrder,
   isVendorExpired,
-  hideCancellBtn,
 }: Props) => {
   const {
     isOpen: isOpenTransactionModal,
@@ -73,7 +71,7 @@ export const TransactionsTab = ({
       {/* </ModalBody> */}
 
       <ModalFooter borderTop="1px solid #CBD5E0" p={2}>
-        {!hideCancellBtn && (
+        {onClose && (
           <HStack spacing="16px" justifyContent="end">
             <Button onClick={onClose} variant="outline" colorScheme="brand">
               {t('cancel')}

@@ -96,7 +96,6 @@ export const InvoiceTab = ({
   isWorkOrderUpdating,
   vendorAddress,
   isVendorExpired,
-  hideCancellBtn,
 }) => {
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
@@ -475,7 +474,7 @@ export const InvoiceTab = ({
             </>
           ) : (
             <>
-              {!hideCancellBtn && (
+              {onClose && (
                 <Button onClick={onClose} variant="outline" colorScheme="darkPrimary">
                   {t('cancel')}
                 </Button>

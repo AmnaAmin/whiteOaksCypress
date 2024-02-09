@@ -68,7 +68,7 @@ const InformationCard = props => {
 }
 
 const PaymentInfoTab = props => {
-  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, isLoading, hideCancellBtn } = props
+  const { workOrder, onSave, navigateToProjectDetails, isWorkOrderUpdating, isLoading } = props
 
   const { t } = useTranslation()
   const { dateLeanWaiverSubmitted, datePermitsPulled, workOrderPayDateVariance } = props.workOrder
@@ -584,7 +584,7 @@ const PaymentInfoTab = props => {
             )}
           </HStack>
           <HStack justifyContent="end">
-            {!hideCancellBtn && (
+            {props.onClose && (
               <Button data-testid="wo-cancel-btn" variant="outline" onClick={props.onClose} colorScheme="brand">
                 {t('cancel')}
               </Button>

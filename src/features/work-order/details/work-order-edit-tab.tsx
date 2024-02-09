@@ -131,7 +131,6 @@ interface FormValues {
   invoiceAmount: string | number | null | undefined
   clientApprovedAmount: string | number | null
   percentage: string | number | null
-  hideCancellBtn?: boolean
 }
 
 const WorkOrderDetailTab = props => {
@@ -146,7 +145,6 @@ const WorkOrderDetailTab = props => {
     isFetchingLineItems,
     isLoadingLineItems,
     locations,
-    hideCancellBtn,
   } = props
 
   const defaultSkill = {
@@ -809,7 +807,7 @@ const WorkOrderDetailTab = props => {
             )}
           </HStack>
           <HStack spacing="16px" w="100%" justifyContent="end">
-            {!hideCancellBtn && (
+            {props.onClose && (
               <Button data-testid="wo-cancel-btn" onClick={props.onClose} colorScheme="brand" variant="outline">
                 {t('cancel')}
               </Button>

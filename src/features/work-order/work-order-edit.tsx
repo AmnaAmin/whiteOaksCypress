@@ -424,7 +424,6 @@ const WorkOrderDetails = ({
                         setTabIndex={setTabIndex}
                         projectData={projectData}
                         isVendorExpired={hasExpiredDocumentOrLicense}
-                        hideCancellBtn={false}
                       />
                     )}
                   </TabPanel>

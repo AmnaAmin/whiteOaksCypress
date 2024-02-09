@@ -43,16 +43,8 @@ import { useLocation } from 'react-router-dom'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const {
-    workOrder,
-    onClose,
-    onProjectTabChange,
-    documentsData,
-    navigateToProjectDetails,
-    isUpdating,
-    setIsUpdating,
-    hideCancellBtn,
-  } = props
+  const { workOrder, onClose, onProjectTabChange, documentsData, navigateToProjectDetails, isUpdating, setIsUpdating } =
+    props
   const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation({
     setUpdating: () => {
       setIsUpdating(false)
@@ -539,7 +531,7 @@ export const LienWaiverTab: React.FC<any> = props => {
             ))}
         </HStack>
         <HStack spacing="16px" justifyContent="end">
-          {!hideCancellBtn && (
+          {onClose && (
             <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
               {t('cancel')}
             </Button>

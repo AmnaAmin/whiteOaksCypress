@@ -372,7 +372,7 @@ const WorkOrderDetailsPage = ({
                   <WorkOrderDetailTab
                     navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                     workOrder={workOrderDetails}
-                    onClose={onClose}
+                    onClose={null}
                     onSave={onSave}
                     isWorkOrderUpdating={isWorkOrderUpdating}
                     swoProject={swoProject}
@@ -381,7 +381,6 @@ const WorkOrderDetailsPage = ({
                     isFetchingLineItems={isFetchingLineItems}
                     isLoadingLineItems={isLoadingLineItems}
                     locations={locations}
-                    hideCancellBtn={true}
                   />
                 )}
               </TabPanel>
@@ -395,10 +394,9 @@ const WorkOrderDetailsPage = ({
                     projectId={projectId as string}
                     tabsContainerRef={tabsContainerRef}
                     projectData={projectData}
-                    onClose={onClose}
+                    onClose={null}
                     workOrder={workOrderDetails}
                     isVendorExpired={hasExpiredDocumentOrLicense}
-                    hideCancellBtn={true}
                   />
                 )}
               </TabPanel>
@@ -413,10 +411,9 @@ const WorkOrderDetailsPage = ({
                       workOrder={workOrderDetails}
                       isUpdating={isWorkOrderUpdating}
                       onSave={onSave}
-                      onClose={onClose}
+                      onClose={null}
                       awardPlanScopeAmount={awardPlanScopeAmount}
                       projectAwardData={projectAwardData}
-                      hideCancellBtn={true}
                     />
                   )}
                 </TabPanel>
@@ -433,9 +430,8 @@ const WorkOrderDetailsPage = ({
                     navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                     documentsData={documentsData}
                     workOrder={workOrderDetails}
-                    onClose={onClose}
+                    onClose={null}
                     rejectChecked={!rejectLW}
-                    hideCancellBtn={true}
                   />
                 )}
               </TabPanel>
@@ -453,12 +449,11 @@ const WorkOrderDetailsPage = ({
                     workOrder={workOrderDetails}
                     vendorAddress={vendorAddress || []}
                     isWorkOrderUpdating={isWorkOrderUpdating}
-                    onClose={onClose}
+                    onClose={null}
                     onSave={onSave}
                     setTabIndex={setTabIndex}
                     projectData={projectData}
                     isVendorExpired={hasExpiredDocumentOrLicense}
-                    hideCancellBtn={true}
                   />
                 )}
               </TabPanel>
@@ -473,11 +468,10 @@ const WorkOrderDetailsPage = ({
                     projectData={projectData}
                     workOrder={workOrderDetails}
                     isWorkOrderUpdating={isWorkOrderUpdating}
-                    onClose={onClose}
+                    onClose={null}
                     onSave={onSave}
                     rejectInvoiceCheck={rejectInvoice}
                     isLoading={isLoadingWorkOrder}
-                    hideCancellBtn={true}
                   />
                 )}
               </TabPanel>
@@ -490,10 +484,9 @@ const WorkOrderDetailsPage = ({
                   <WorkOrderNotes
                     navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                     workOrder={workOrderDetails}
-                    onClose={onClose}
+                    onClose={null}
                     // setNotesCount={setNotesCount}
                     onSave={onSave}
-                    hideCancellBtn={true}
                   />
                 )}
               </TabPanel>
