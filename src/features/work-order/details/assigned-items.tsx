@@ -222,7 +222,7 @@ const AssignedItems = (props: AssignedItemType) => {
             {isAssignmentAllowed && (
               <>
                 <Box pl="2" pr="1" display={{ base: 'none', sm: 'unset' }}>
-                  <Divider size="lg" orientation="vertical" h="25px" />
+                  <Divider borderColor={'gray'} size="lg" orientation="vertical" h="25px" />
                 </Box>
                 <Button
                   variant="ghost"
