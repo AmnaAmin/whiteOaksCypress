@@ -47,7 +47,7 @@ export const WorkOrderNotes: React.FC<any> = props => {
         isWOCancelled={isWOCancelled}
         navigateToProjectDetails={navigateToProjectDetails}
         messageBoxStyle={{ resize: 'none' }}
-        contentStyle={{ padding: { base: '0px', lg: '25px' }, maxHeight: 'calc(100vh - 300px)' }}
+        contentStyle={{ padding: { base: '0px', lg: '25px' }, maxHeight: 'calc(100vh - 500px)' }}
         pageLayoutStyle={{ overflow: 'hidden', borderRadius: '3px' }}
       />
     </>

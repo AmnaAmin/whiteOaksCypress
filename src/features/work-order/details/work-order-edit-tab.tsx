@@ -12,7 +12,6 @@ import {
   FormLabel,
   HStack,
   Input,
-  ModalBody,
   ModalFooter,
   SimpleGrid,
   Spinner,
@@ -458,334 +457,330 @@ const WorkOrderDetailTab = props => {
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
-        <ModalBody h="600px" overflow={'auto'}>
-          <Stack spacing="32px" m="25px">
-            <Box>
-              {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
-                <Alert status="info" variant="custom" size="sm">
-                  <AlertIcon />
+        {/* <ModalBody h="600px" overflow={'auto'}> */}
+        <Stack spacing="32px" m="25px">
+          <Box>
+            {[STATUS.Rejected].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
+              <Alert status="info" variant="custom" size="sm">
+                <AlertIcon />
 
-                  <AlertDescription>{t(`${WORK_ORDER}.rejectedInvoiceInfo`)}</AlertDescription>
-                </Alert>
-              )}
-            </Box>
-            {!isAdmin && workOrder?.visibleToVendor ? (
-              <SimpleGrid columns={5}>
-                <>
-                  <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
-                  <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
-                  <InformationCard testId="email" title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
-                  <InformationCard testId="phone" title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
-                </>
-              </SimpleGrid>
-            ) : (
-              <>
-                <>
-                  <Box mt="32px" mx="32px">
-                    <HStack spacing="16px" gap={'20px'}>
-                      {inProgress ? (
-                        <Box w="215px" mt={-7}>
-                          <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
-                            <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
-                              {t('trade')}
-                            </FormLabel>
-                            <Controller
-                              control={control}
-                              rules={assignVendor ? { required: 'This is required' } : undefined}
-                              name="vendorSkillId"
-                              render={({ field, fieldState }) => {
-                                return (
-                                  <>
-                                    <Select
-                                      {...field}
-                                      options={tradeOptions}
-                                      size="md"
-                                      value={field.value}
-                                      onChange={option => {
-                                        setVendorSkillId(option.value)
-                                        setValue('vendorId', null)
-                                        field.onChange(option)
-                                      }}
-                                      selectProps={
-                                        assignVendor
-                                          ? { isBorderLeft: true, menuHeight: '175px' }
-                                          : { menuHeight: '175px' }
-                                      }
-                                    />
-                                  </>
-                                )
-                              }}
-                            />
-                          </FormControl>
-                        </Box>
-                      ) : (
-                        <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
-                      )}
-                      {inProgress ? (
-                        <Box w="215px">
-                          <FormControl isInvalid={!!errors.vendorId} data-testid="vendorId">
-                            <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
-                              {t('companyName')}
-                            </FormLabel>
-                            <Controller
-                              control={control}
-                              rules={{ required: assignVendor ? 'This field is required' : undefined }}
-                              name="vendorId"
-                              render={({ field, fieldState }) => {
-                                return (
-                                  <>
-                                    <Select
-                                      {...field}
-                                      options={vendorOptions}
-                                      size="md"
-                                      loadingCheck={loadingVendors}
-                                      selectProps={
-                                        assignVendor
-                                          ? { isBorderLeft: true, menuHeight: '175px' }
-                                          : { menuHeight: '175px' }
-                                      }
-                                      onChange={option => {
-                                        setSelectedVendorId(option.value)
-                                        field.onChange(option)
-                                      }}
-                                    />
-                                  </>
-                                )
-                              }}
-                            />
-                          </FormControl>
-                        </Box>
-                      ) : (
-                        <InformationCard
-                          testId="companyName"
-                          title={t(`${WORK_ORDER}.companyName`)}
-                          date={companyName}
-                        />
-                      )}
-                      {businessPhoneNumber && businessEmailAddress && (
-                        <>
-                          <InformationCard
-                            testId="email"
-                            title={t(`${WORK_ORDER}.email`)}
-                            date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
-                            customStyle={{ width: '150px', height: '20px' }}
-                          />
-                          <InformationCard
-                            testId="phone"
-                            title={t(`${WORK_ORDER}.phone`)}
-                            date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
-                            customStyle={{ width: '150px', height: '20px' }}
-                          />
-                        </>
-                      )}
-                    </HStack>
-                  </Box>
-                </>
-              </>
+                <AlertDescription>{t(`${WORK_ORDER}.rejectedInvoiceInfo`)}</AlertDescription>
+              </Alert>
             )}
-            <Box>
-              <Divider borderColor="#CBD5E0" />
-            </Box>
-            <SimpleGrid columns={5} gap={4}>
-              <CalenderCard
-                testId={'woIssued'}
-                title={t(`${WORK_ORDER}.woIssued`)}
-                date={dateFormatNew(workOrderIssueDate)}
-              />
-              <CalenderCard
-                testId={'lwSubmitted'}
-                title={t(`${WORK_ORDER}.lwSubmitted`)}
-                date={dateLeanWaiverSubmitted ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
-              />
-              {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
-              <CalenderCard
-                testId={'completionVariance'}
-                title={t(`${WORK_ORDER}.completionVariance`)}
-                date={workOrderCompletionDateVariance ?? '0'}
-              />
+          </Box>
+          {!isAdmin && workOrder?.visibleToVendor ? (
+            <SimpleGrid columns={5}>
+              <>
+                <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
+                <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
+                <InformationCard testId="email" title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
+                <InformationCard testId="phone" title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
+              </>
             </SimpleGrid>
-            <Box>
-              <Divider borderColor="#CBD5E0" />
-            </Box>
-          </Stack>
-          <Box mt="32px" mx="32px">
-            <HStack spacing="16px">
-              {cancelPermissions && !isCancelled && (
-                <Box w="215px" data-testid="note_submit">
-                  <FormControl zIndex="2">
-                    <FormLabel variant="strong-label" size="md">
-                      {t('cancelWorkOrder')}
-                    </FormLabel>
-                    <Controller
-                      control={control}
-                      name="cancel"
-                      render={({ field }) => (
-                        <div data-testid="cancel_Work_Order">
-                          <ReactSelect
-                            options={CANCEL_WO_OPTIONS}
-                            onChange={option => field.onChange(option)}
-                            isDisabled={
-                              ![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) &&
-                              !cancelPermissions
-                            }
+          ) : (
+            <>
+              <>
+                <Box mt="32px" mx="32px">
+                  <HStack spacing="16px" gap={'20px'}>
+                    {inProgress ? (
+                      <Box w="215px" mt={-7}>
+                        <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
+                          <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
+                            {t('trade')}
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            rules={assignVendor ? { required: 'This is required' } : undefined}
+                            name="vendorSkillId"
+                            render={({ field, fieldState }) => {
+                              return (
+                                <>
+                                  <Select
+                                    {...field}
+                                    options={tradeOptions}
+                                    size="md"
+                                    value={field.value}
+                                    onChange={option => {
+                                      setVendorSkillId(option.value)
+                                      setValue('vendorId', null)
+                                      field.onChange(option)
+                                    }}
+                                    selectProps={
+                                      assignVendor
+                                        ? { isBorderLeft: true, menuHeight: '175px' }
+                                        : { menuHeight: '175px' }
+                                    }
+                                  />
+                                </>
+                              )
+                            }}
                           />
-                        </div>
-                      )}
-                    />
-                  </FormControl>
+                        </FormControl>
+                      </Box>
+                    ) : (
+                      <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
+                    )}
+                    {inProgress ? (
+                      <Box w="215px">
+                        <FormControl isInvalid={!!errors.vendorId} data-testid="vendorId">
+                          <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
+                            {t('companyName')}
+                          </FormLabel>
+                          <Controller
+                            control={control}
+                            rules={{ required: assignVendor ? 'This field is required' : undefined }}
+                            name="vendorId"
+                            render={({ field, fieldState }) => {
+                              return (
+                                <>
+                                  <Select
+                                    {...field}
+                                    options={vendorOptions}
+                                    size="md"
+                                    loadingCheck={loadingVendors}
+                                    selectProps={
+                                      assignVendor
+                                        ? { isBorderLeft: true, menuHeight: '175px' }
+                                        : { menuHeight: '175px' }
+                                    }
+                                    onChange={option => {
+                                      setSelectedVendorId(option.value)
+                                      field.onChange(option)
+                                    }}
+                                  />
+                                </>
+                              )
+                            }}
+                          />
+                        </FormControl>
+                      </Box>
+                    ) : (
+                      <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
+                    )}
+                    {businessPhoneNumber && businessEmailAddress && (
+                      <>
+                        <InformationCard
+                          testId="email"
+                          title={t(`${WORK_ORDER}.email`)}
+                          date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
+                          customStyle={{ width: '150px', height: '20px' }}
+                        />
+                        <InformationCard
+                          testId="phone"
+                          title={t(`${WORK_ORDER}.phone`)}
+                          date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
+                          customStyle={{ width: '150px', height: '20px' }}
+                        />
+                      </>
+                    )}
+                  </HStack>
                 </Box>
-              )}
-              <Box w="215px">
-                <FormControl zIndex="2" isInvalid={!!errors.workOrderStartDate}>
+              </>
+            </>
+          )}
+          <Box>
+            <Divider borderColor="#CBD5E0" />
+          </Box>
+          <SimpleGrid columns={5} gap={4}>
+            <CalenderCard
+              testId={'woIssued'}
+              title={t(`${WORK_ORDER}.woIssued`)}
+              date={dateFormatNew(workOrderIssueDate)}
+            />
+            <CalenderCard
+              testId={'lwSubmitted'}
+              title={t(`${WORK_ORDER}.lwSubmitted`)}
+              date={dateLeanWaiverSubmitted ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
+            />
+            {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
+            <CalenderCard
+              testId={'completionVariance'}
+              title={t(`${WORK_ORDER}.completionVariance`)}
+              date={workOrderCompletionDateVariance ?? '0'}
+            />
+          </SimpleGrid>
+          <Box>
+            <Divider borderColor="#CBD5E0" />
+          </Box>
+        </Stack>
+        <Box mt="32px" mx="32px">
+          <HStack spacing="16px">
+            {cancelPermissions && !isCancelled && (
+              <Box w="215px" data-testid="note_submit">
+                <FormControl zIndex="2">
                   <FormLabel variant="strong-label" size="md">
-                    {t('expectedStart')}
+                    {t('cancelWorkOrder')}
                   </FormLabel>
-                  <Input
-                    data-testid="workOrderStartDate"
-                    id="workOrderStartDate"
-                    type="date"
-                    size="md"
-                    css={calendarIcon}
-                    isDisabled={!workOrderStartDateEnable || isWOCancelled}
-                    min={clientStart as any}
-                    variant={assignVendor ? 'required-field' : 'outline'}
-                    {...register('workOrderStartDate', {
-                      required: assignVendor ? 'This is required field.' : undefined,
-                    })}
+                  <Controller
+                    control={control}
+                    name="cancel"
+                    render={({ field }) => (
+                      <div data-testid="cancel_Work_Order">
+                        <ReactSelect
+                          options={CANCEL_WO_OPTIONS}
+                          onChange={option => field.onChange(option)}
+                          isDisabled={
+                            ![STATUS.Active, STATUS.PastDue].includes(workOrder.statusLabel?.toLowerCase()) &&
+                            !cancelPermissions
+                          }
+                        />
+                      </div>
+                    )}
                   />
                 </FormControl>
               </Box>
-              <Box w="215px">
-                <FormControl isInvalid={!!errors.workOrderExpectedCompletionDate}>
-                  <FormLabel variant="strong-label" size="md">
-                    {t('expectedCompletion')}
-                  </FormLabel>
-                  <Input
-                    data-testid="workOrderExpectedCompletionDate"
-                    id="workOrderExpectedCompletionDate"
-                    type="date"
-                    size="md"
-                    css={calendarIcon}
-                    min={woStartDate as string}
-                    isDisabled={!workOrderExpectedCompletionDateEnable || isWOCancelled}
-                    variant={assignVendor ? 'required-field' : 'outline'}
-                    {...register('workOrderExpectedCompletionDate', {
-                      required: assignVendor ? 'This is required field.' : undefined,
-                    })}
-                  />
-                </FormControl>
-              </Box>
+            )}
+            <Box w="215px">
+              <FormControl zIndex="2" isInvalid={!!errors.workOrderStartDate}>
+                <FormLabel variant="strong-label" size="md">
+                  {t('expectedStart')}
+                </FormLabel>
+                <Input
+                  data-testid="workOrderStartDate"
+                  id="workOrderStartDate"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  isDisabled={!workOrderStartDateEnable || isWOCancelled}
+                  min={clientStart as any}
+                  variant={assignVendor ? 'required-field' : 'outline'}
+                  {...register('workOrderStartDate', {
+                    required: assignVendor ? 'This is required field.' : undefined,
+                  })}
+                />
+              </FormControl>
+            </Box>
+            <Box w="215px">
+              <FormControl isInvalid={!!errors.workOrderExpectedCompletionDate}>
+                <FormLabel variant="strong-label" size="md">
+                  {t('expectedCompletion')}
+                </FormLabel>
+                <Input
+                  data-testid="workOrderExpectedCompletionDate"
+                  id="workOrderExpectedCompletionDate"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  min={woStartDate as string}
+                  isDisabled={!workOrderExpectedCompletionDateEnable || isWOCancelled}
+                  variant={assignVendor ? 'required-field' : 'outline'}
+                  {...register('workOrderExpectedCompletionDate', {
+                    required: assignVendor ? 'This is required field.' : undefined,
+                  })}
+                />
+              </FormControl>
+            </Box>
+            <Box w="215px">
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  {t('completedByVendor')}
+                </FormLabel>
+                <Input
+                  data-testid="workOrderDateCompleted"
+                  id="workOrderDateCompleted"
+                  type="date"
+                  size="md"
+                  css={calendarIcon}
+                  isDisabled={!completedByVendor}
+                  variant="outline"
+                  {...register('workOrderDateCompleted')}
+                />
+              </FormControl>
+            </Box>
+            {uploadedWO && uploadedWO?.s3Url && (
               <Box w="215px">
                 <FormControl>
                   <FormLabel variant="strong-label" size="md">
-                    {t('completedByVendor')}
+                    {t(`${WORK_ORDER}.completePercentage`)}
                   </FormLabel>
-                  <Input
-                    data-testid="workOrderDateCompleted"
-                    id="workOrderDateCompleted"
-                    type="date"
-                    size="md"
-                    css={calendarIcon}
-                    isDisabled={!completedByVendor}
-                    variant="outline"
-                    {...register('workOrderDateCompleted')}
+                  <Controller
+                    control={control}
+                    // rules={{ required: true }}
+                    name={'completePercentage'}
+                    render={({ field }) => {
+                      return (
+                        <CreatableSelect
+                          {...field}
+                          isDisabled={isWOCancelled}
+                          id={`completePercentage`}
+                          options={completePercentageValues}
+                          size="md"
+                          value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
+                          // isDisabled={isVendor}
+                          onChange={option => {
+                            if (option?.__isNew__) {
+                              field.onChange(newObjectFormatting(option))
+                            } else {
+                              field.onChange(option)
+                            }
+                          }}
+                        />
+                      )
+                    }}
                   />
                 </FormControl>
               </Box>
-              {uploadedWO && uploadedWO?.s3Url && (
-                <Box w="215px">
-                  <FormControl>
-                    <FormLabel variant="strong-label" size="md">
-                      {t(`${WORK_ORDER}.completePercentage`)}
-                    </FormLabel>
-                    <Controller
-                      control={control}
-                      // rules={{ required: true }}
-                      name={'completePercentage'}
-                      render={({ field }) => {
-                        return (
-                          <CreatableSelect
-                            {...field}
-                            isDisabled={isWOCancelled}
-                            id={`completePercentage`}
-                            options={completePercentageValues}
-                            size="md"
-                            value={typeof field.value === 'number' ? handleDropdownValue(field.value) : field.value}
-                            // isDisabled={isVendor}
-                            onChange={option => {
-                              if (option?.__isNew__) {
-                                field.onChange(newObjectFormatting(option))
-                              } else {
-                                field.onChange(option)
-                              }
-                            }}
-                          />
-                        )
-                      }}
-                    />
-                  </FormControl>
-                </Box>
-              )}
-              {!(uploadedWO && uploadedWO?.s3Url) && (
-                <Box w="215px">
-                  <FormControl data-testid="completedPercentageField">
-                    <FormLabel variant="strong-label" size="md">
-                      {t(`${WORK_ORDER}.completePercentage`)}
-                    </FormLabel>
-                    <Input
-                      data-testid="completedPercentage"
-                      size="md"
-                      isDisabled={!completedByVendor}
-                      variant="outline"
-                      value={assignItemsSum ? `${assignItemsSum / totalAssignItems}%` : 0}
-                      // {...register('workOrderDateCompleted')}
-                    />
-                  </FormControl>
-                </Box>
-              )}
-            </HStack>
-            {uploadedWO && uploadedWO?.s3Url && !isVendor && (
-              <Box pt={7}>
-                <Checkbox
-                  isDisabled={workOrder?.visibleToVendor}
-                  variant={'outLinePrimary'}
-                  data-testid="assignToVendor"
-                  size="md"
-                  {...register('assignToVendor')}
-                  onChange={e => {
-                    setValue('assignToVendor', e.target.checked ?? false)
-                    setValue('notifyVendor', e.target.checked ?? false)
-                  }}
-                >
-                  {t(`${WORK_ORDER}.assignVendor`)}
-                </Checkbox>
+            )}
+            {!(uploadedWO && uploadedWO?.s3Url) && (
+              <Box w="215px">
+                <FormControl data-testid="completedPercentageField">
+                  <FormLabel variant="strong-label" size="md">
+                    {t(`${WORK_ORDER}.completePercentage`)}
+                  </FormLabel>
+                  <Input
+                    data-testid="completedPercentage"
+                    size="md"
+                    isDisabled={!completedByVendor}
+                    variant="outline"
+                    value={assignItemsSum ? `${assignItemsSum / totalAssignItems}%` : 0}
+                    // {...register('workOrderDateCompleted')}
+                  />
+                </FormControl>
               </Box>
             )}
-          </Box>
-          {!(uploadedWO && uploadedWO?.s3Url) && (
-            <Box mx="32px" mt={10}>
-              {isLoadingLineItems ? (
-                <Center>
-                  <Spinner size={'lg'} />
-                </Center>
-              ) : (
-                <AssignedItems
-                  isLoadingLineItems={isFetchingLineItems}
-                  onOpenRemainingItemsModal={onOpenRemainingItemsModal}
-                  unassignedItems={unassignedItems}
-                  setUnAssignedItems={setUnAssignedItems}
-                  formControl={formReturn as UseFormReturn<any>}
-                  assignedItemsArray={assignedItemsArray}
-                  isAssignmentAllowed={isAssignmentAllowed}
-                  swoProject={swoProject}
-                  downloadPdf={downloadPdf}
-                  workOrder={workOrder}
-                  documentsData={documentsData}
-                />
-              )}
+          </HStack>
+          {uploadedWO && uploadedWO?.s3Url && !isVendor && (
+            <Box pt={7}>
+              <Checkbox
+                isDisabled={workOrder?.visibleToVendor}
+                variant={'outLinePrimary'}
+                data-testid="assignToVendor"
+                size="md"
+                {...register('assignToVendor')}
+                onChange={e => {
+                  setValue('assignToVendor', e.target.checked ?? false)
+                  setValue('notifyVendor', e.target.checked ?? false)
+                }}
+              >
+                {t(`${WORK_ORDER}.assignVendor`)}
+              </Checkbox>
             </Box>
           )}
-        </ModalBody>
+        </Box>
+        {!(uploadedWO && uploadedWO?.s3Url) && (
+          <Box mx="32px" mt={10}>
+            {isLoadingLineItems ? (
+              <Center>
+                <Spinner size={'lg'} />
+              </Center>
+            ) : (
+              <AssignedItems
+                isLoadingLineItems={isFetchingLineItems}
+                onOpenRemainingItemsModal={onOpenRemainingItemsModal}
+                unassignedItems={unassignedItems}
+                setUnAssignedItems={setUnAssignedItems}
+                formControl={formReturn as UseFormReturn<any>}
+                assignedItemsArray={assignedItemsArray}
+                isAssignmentAllowed={isAssignmentAllowed}
+                swoProject={swoProject}
+                downloadPdf={downloadPdf}
+                workOrder={workOrder}
+                documentsData={documentsData}
+              />
+            )}
+          </Box>
+        )}
+        {/* </ModalBody> */}
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
           <HStack justifyContent="start" w="100%">
             {navigateToProjectDetails && (
@@ -812,9 +807,11 @@ const WorkOrderDetailTab = props => {
             )}
           </HStack>
           <HStack spacing="16px" w="100%" justifyContent="end">
-            <Button data-testid="wo-cancel-btn" onClick={props.onClose} colorScheme="brand" variant="outline">
-              {t('cancel')}
-            </Button>
+            {props.onClose && (
+              <Button data-testid="wo-cancel-btn" onClick={props.onClose} colorScheme="brand" variant="outline">
+                {t('cancel')}
+              </Button>
+            )}
             <>
               {!isReadOnly && (
                 <Button data-testid="updateBtn" colorScheme="brand" type="submit" disabled={disabledSave}>

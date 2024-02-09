@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormLabel, HStack, ModalBody, ModalFooter } from '@chakra-ui/react'
+import { Box, Button, Flex, FormLabel, HStack, ModalFooter } from '@chakra-ui/react'
 import { parseProjectAwardValuesToPayload } from 'api/work-order'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -72,162 +72,163 @@ export const ProjectAwardTab: React.FC<any> = props => {
     <>
       {projectAwardData && (
         <form onSubmit={handleSubmit(onSubmit)}>
-          <ModalBody h="600px" p="25px" overflow={'auto'}>
+          {/* <ModalBody h="600px" p="25px" overflow={'auto'}> */}
+          <Box
+            display={{ base: 'block', md: 'flex' }}
+            flexDirection={{ base: 'column', md: 'row' }}
+            alignItems="center"
+            justifyContent="center"
+            borderRadius="6px"
+            height="auto"
+            marginLeft="202px"
+            width="807px"
+            border="1px solid #CBD5E0"
+            marginBottom="20px"
+            marginTop="-9px"
+            padding={{ base: '100px 0', md: '0px 0px' }}
+            mt={'10px'}
+          >
             <Box
-              display={{ base: 'block', md: 'flex' }}
-              flexDirection={{ base: 'column', md: 'row' }}
-              alignItems="center"
+              flex="1"
+              h="60px"
+              bg="gray.50"
+              fontSize="14px"
+              fontWeight="400"
+              textColor="gray.600"
+              borderTopLeftRadius="6px"
+              borderBottomLeftRadius={{ base: '6px', md: '6px' }}
+              borderRight={{ base: 'none', md: '1px solid #CBD5E0' }}
+              textAlign="center"
+              display="flex"
+              flexDirection="column"
               justifyContent="center"
-              borderRadius="6px"
-              height="auto"
-              marginLeft="202px"
-              width="807px"
-              border="1px solid #CBD5E0"
-              marginBottom="20px"
-              marginTop="-9px"
-              padding={{ base: '100px 0', md: '0px 0px' }}
             >
-              <Box
-                flex="1"
-                h="60px"
-                bg="gray.50"
-                fontSize="14px"
-                fontWeight="400"
-                textColor="gray.600"
-                borderTopLeftRadius="6px"
-                borderBottomLeftRadius={{ base: '6px', md: '6px' }}
-                borderRight={{ base: 'none', md: '1px solid #CBD5E0' }}
-                textAlign="center"
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-              >
-                {t(`${PROJECT_AWARD}.originalscopeamount`)}
-                <Text fontWeight="600" fontSize="16px" color="brand.300">
-                  {factoringFee !== null && !isNaN(factoringFee)
-                    ? currencyFormatter(calculatePercentage(factoringFee)) || '0'
-                    : '0'}
-                </Text>
-              </Box>
-              <Box
-                flex="1"
-                h="59px"
-                bg="gray.50"
-                fontSize="14px"
-                fontWeight="400"
-                textColor="gray.600"
-                borderRight={{ base: 'none', md: '1px solid #CBD5E0' }}
-                textAlign="center"
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-              >
-                {t(`${PROJECT_AWARD}.materialDraws`)}
-                <Text
-                  fontWeight="600"
-                  fontSize="16px"
-                  color={materialRemaining !== null && materialRemaining === 0 ? 'red.500' : 'brand.300'}
-                >
-                  {materialRemaining ? materialRemaining : 0}
-                </Text>
-              </Box>
-              <Box
-                flex="1"
-                h="59px"
-                bg="gray.50"
-                fontSize="14px"
-                fontWeight="400"
-                textColor="gray.600"
-                borderRight={{ base: 'none', md: '1px solid #CBD5E0' }}
-                textAlign="center"
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-              >
-                {t(`${PROJECT_AWARD}.laborDraws`)}
-                <Text
-                  fontWeight="600"
-                  fontSize="16px"
-                  color={drawRemaining !== null && drawRemaining === 0 ? 'red.500' : 'brand.300'}
-                >
-                  {drawRemaining ? drawRemaining : 0}
-                </Text>
-              </Box>
-              <Box
-                flex="1"
-                h="59px"
-                borderTopRightRadius={{ base: '6px', md: '6px' }}
-                fontSize="14px"
-                fontWeight="400"
-                textColor="gray.600"
-                borderBottomRightRadius="6px"
-                bg="gray.50"
-                textAlign="center"
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-              >
-                {t(`${PROJECT_AWARD}.NTEmax`)}
-                <Text
-                  fontWeight="600"
-                  fontSize="16px"
-                  color={totalAmountRemaining !== null && totalAmountRemaining === 0 ? 'red.500' : 'brand.300'}
-                >
-                  {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : 0}
-                </Text>
-              </Box>
+              {t(`${PROJECT_AWARD}.originalscopeamount`)}
+              <Text fontWeight="600" fontSize="16px" color="brand.300">
+                {factoringFee !== null && !isNaN(factoringFee)
+                  ? currencyFormatter(calculatePercentage(factoringFee)) || '0'
+                  : '0'}
+              </Text>
             </Box>
-            <Flex w="100%" alignContent="space-between" pos="relative">
-              <Box flex="4" minW="59em">
-                {workOrder?.applyNewAwardPlan ? null : (
-                  <FormLabel color={'gray.700'} fontWeight={500}>
-                    {t(`${PROJECT_AWARD}.selectPerformance`)}
-                  </FormLabel>
-                )}
-              </Box>
-            </Flex>
-            <HStack>
-              <TextCard isNewPlan={workOrder?.applyNewAwardPlan} />
-              {workOrder?.applyNewAwardPlan
-                ? projectAwardData
-                    ?.filter(p => p?.isNewPlan)
-                    .map(card => {
-                      return (
-                        <ProjectAwardCard
-                          workOrder={props?.workOrder}
-                          {...card}
-                          isNewPlan={card?.isNewPlan}
-                          awardPlanScopeAmount={awardPlanScopeAmount}
-                          selectedCard={selectedCard}
-                          onSelectedCard={setSelectedCard}
-                          cardsvalues={card}
-                          isUpgradeProjectAward={isUpgradeProjectAward}
-                          key={card.id}
-                        />
-                      )
-                    })
-                : projectAwardData
-                    ?.filter(p => !p?.isNewPlan)
-                    .map(card => {
-                      return (
-                        <ProjectAwardCard
-                          workOrder={props?.workOrder}
-                          {...card}
-                          isNewPlan={card?.isNewPlan}
-                          awardPlanScopeAmount={awardPlanScopeAmount}
-                          selectedCard={selectedCard}
-                          onSelectedCard={setSelectedCard}
-                          cardsvalues={card}
-                          isUpgradeProjectAward={isUpgradeProjectAward}
-                          key={card.id}
-                        />
-                      )
-                    })}
-            </HStack>
-          </ModalBody>
+            <Box
+              flex="1"
+              h="59px"
+              bg="gray.50"
+              fontSize="14px"
+              fontWeight="400"
+              textColor="gray.600"
+              borderRight={{ base: 'none', md: '1px solid #CBD5E0' }}
+              textAlign="center"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+            >
+              {t(`${PROJECT_AWARD}.materialDraws`)}
+              <Text
+                fontWeight="600"
+                fontSize="16px"
+                color={materialRemaining !== null && materialRemaining === 0 ? 'red.500' : 'brand.300'}
+              >
+                {materialRemaining ? materialRemaining : 0}
+              </Text>
+            </Box>
+            <Box
+              flex="1"
+              h="59px"
+              bg="gray.50"
+              fontSize="14px"
+              fontWeight="400"
+              textColor="gray.600"
+              borderRight={{ base: 'none', md: '1px solid #CBD5E0' }}
+              textAlign="center"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+            >
+              {t(`${PROJECT_AWARD}.laborDraws`)}
+              <Text
+                fontWeight="600"
+                fontSize="16px"
+                color={drawRemaining !== null && drawRemaining === 0 ? 'red.500' : 'brand.300'}
+              >
+                {drawRemaining ? drawRemaining : 0}
+              </Text>
+            </Box>
+            <Box
+              flex="1"
+              h="59px"
+              borderTopRightRadius={{ base: '6px', md: '6px' }}
+              fontSize="14px"
+              fontWeight="400"
+              textColor="gray.600"
+              borderBottomRightRadius="6px"
+              bg="gray.50"
+              textAlign="center"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+            >
+              {t(`${PROJECT_AWARD}.NTEmax`)}
+              <Text
+                fontWeight="600"
+                fontSize="16px"
+                color={totalAmountRemaining !== null && totalAmountRemaining === 0 ? 'red.500' : 'brand.300'}
+              >
+                {totalAmountRemaining ? currencyFormatter(totalAmountRemaining) : 0}
+              </Text>
+            </Box>
+          </Box>
+          <Flex w="100%" alignContent="space-between" pos="relative">
+            <Box flex="4" minW="59em">
+              {workOrder?.applyNewAwardPlan ? null : (
+                <FormLabel color={'gray.700'} fontWeight={500}>
+                  {t(`${PROJECT_AWARD}.selectPerformance`)}
+                </FormLabel>
+              )}
+            </Box>
+          </Flex>
+          <HStack>
+            <TextCard isNewPlan={workOrder?.applyNewAwardPlan} />
+            {workOrder?.applyNewAwardPlan
+              ? projectAwardData
+                  ?.filter(p => p?.isNewPlan)
+                  .map(card => {
+                    return (
+                      <ProjectAwardCard
+                        workOrder={props?.workOrder}
+                        {...card}
+                        isNewPlan={card?.isNewPlan}
+                        awardPlanScopeAmount={awardPlanScopeAmount}
+                        selectedCard={selectedCard}
+                        onSelectedCard={setSelectedCard}
+                        cardsvalues={card}
+                        isUpgradeProjectAward={isUpgradeProjectAward}
+                        key={card.id}
+                      />
+                    )
+                  })
+              : projectAwardData
+                  ?.filter(p => !p?.isNewPlan)
+                  .map(card => {
+                    return (
+                      <ProjectAwardCard
+                        workOrder={props?.workOrder}
+                        {...card}
+                        isNewPlan={card?.isNewPlan}
+                        awardPlanScopeAmount={awardPlanScopeAmount}
+                        selectedCard={selectedCard}
+                        onSelectedCard={setSelectedCard}
+                        cardsvalues={card}
+                        isUpgradeProjectAward={isUpgradeProjectAward}
+                        key={card.id}
+                      />
+                    )
+                  })}
+          </HStack>
+          {/* </ModalBody> */}
 
-          <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
-            { !workOrder?.applyNewAwardPlan && (
+          <ModalFooter mt={5} borderTop="1px solid #CBD5E0" p={5}>
+            {!workOrder?.applyNewAwardPlan && (
               <Box w={'100%'}>
                 <FormLabel color={'#4A5568'} fontSize="12px" fontWeight={400}>
                   {t(`${PROJECT_AWARD}.factoringFeeMsg`)}
@@ -235,9 +236,11 @@ export const ProjectAwardTab: React.FC<any> = props => {
               </Box>
             )}
             <HStack spacing="16px" justifyContent="end">
-              <Button data-testid="wo-cancel-btn" onClick={props?.onClose} variant="outline" colorScheme="brand">
-                {t('cancel')}
-              </Button>
+              {props.onClose && (
+                <Button data-testid="wo-cancel-btn" onClick={props?.onClose} variant="outline" colorScheme="brand">
+                  {t('cancel')}
+                </Button>
+              )}
               {!isReadOnly &&
               (props?.workOrder?.awardPlanId === null || isAdmin || isUpgradeProjectAward) &&
               !workOrder?.applyNewAwardPlan ? (

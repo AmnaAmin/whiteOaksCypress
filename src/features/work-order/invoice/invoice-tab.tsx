@@ -6,7 +6,6 @@ import {
   Grid,
   HStack,
   Icon,
-  ModalBody,
   ModalFooter,
   Table,
   Tbody,
@@ -264,160 +263,159 @@ export const InvoiceTab = ({
     (isVendorExpired && !isAdmin)
 
   return (
-    <Box>
-      <ModalBody mx={{ base: 0, lg: '25px' }} h="600px">
-        {isVendorExpired && (
-          <Box>
-            <AlertError
-              styleBox={{ width: 'max-content', marginTop: '9px' }}
-              msg={
-                isVendor
-                  ? `${WORK_ORDER}.expirationInvoiceMessageForVendor`
-                  : `${WORK_ORDER}.expirationInvoiceMessageForAdmin`
-              }
-            />
-          </Box>
-        )}
-        <Grid
-          templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(150px,1fr))' }}
-          gap={5}
-          alignItems={'center'}
-          py="24px"
-          display={{ base: 'flex', sm: 'grid' }}
-          flexWrap="wrap"
-        >
-          <Box flex={{ base: '1', sm: 'unset' }}>
-            <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
-          </Box>
-          <Box flex={{ base: '1', sm: 'unset' }}>
-            <InvoiceInfo
-              title={t('finalInvoice')}
-              value={currencyFormatter(workOrder?.finalInvoiceAmount)}
-              icons={BiDollarCircle}
-            />
-          </Box>
-          <Box flex={{ base: '1', sm: 'unset' }}>
-            <InvoiceInfo
-              title={t('PONumber')}
-              value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
-              icons={BiFile}
-            />
-          </Box>
-
-          <Box flex={{ base: '1', sm: 'unset' }}>
-            <InvoiceInfo
-              title={t('invoiceDate')}
-              value={
-                workOrder.dateInvoiceSubmitted &&
-                ![STATUS.Rejected]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                  ? (dateFormatNew(workOrder?.dateInvoiceSubmitted) as any)
-                  : 'mm/dd/yy'
-              }
-              icons={BiCalendar}
-            />
-          </Box>
-          <Box flex={{ base: '1', sm: 'unset' }}>
-            <InvoiceInfo
-              title={t('dueDate')}
-              value={
-                workOrder.paymentTermDate && ![STATUS.Rejected]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
-                  ? (dateFormatNew(workOrder?.expectedPaymentDate) as any)
-                  : 'mm/dd/yy'
-              }
-              icons={BiCalendar}
-            />
-          </Box>
-        </Grid>
-
-        <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
-
-        <Box
-          h={isVendorExpired ? '410px' : '470px'}
-          overflow="auto"
-          borderRadius={7}
-          borderBottom="1px solid #CBD5E0"
-          border="1px solid #CBD5E0"
-          mb="16px"
-        >
-          <Table variant="simple" size="sm">
-            <Thead position="sticky" top={0}>
-              <Tr h={'45px'} bg={'#ECEDEE !important'}>
-                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
-                  {t('item')}
-                </Td>
-                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
-                  {t('description')}
-                </Td>
-                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
-                  {t('type')}{' '}
-                </Td>
-                <Td color={'gray.900'} fontWeight={500} fontSize={'14px'} w={300} pr={12} textAlign={'end'}>
-                  {t('total')}
-                </Td>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {items.map((item, index) => {
-                return (
-                  <Tr h="45px !important" key={index} data-testid={'invoice-items'}>
-                    <Td maxWidth={300} w={300}>
-                      {item.id}
-                    </Td>
-                    <Td width={400}>{item.name}</Td>
-                    <Td width={400}>{item.transactionTypeLabel}</Td>
-                    <Td pr={12} textAlign={'end'}>
-                      <Text>{currencyFormatter(item.transactionTotal)}</Text>
-                    </Td>
-                  </Tr>
-                )
-              })}
-              <Tr>
-                <Td></Td>
-                <Td></Td>
-                <Td></Td>
-                <Td pr={12} borderLeft="1px solid #EDF2F7">
-                  <VStack alignItems="end" fontSize="14px" fontWeight={500} color="gray.600">
-                    <Box>
-                      <HStack w={300} height="35px" justifyContent="space-between">
-                        <Text fontWeight={500} color={'gray.600'}>
-                          {t('subTotal')}:
-                        </Text>
-                        <Text fontWeight={500} color={'gray.600'} data-testid={'subTotal'}>
-                          {currencyFormatter(workOrder.subTotal)}
-                        </Text>
-                      </HStack>
-                      <HStack w={300} height="35px" justifyContent="space-between">
-                        <Text fontWeight={500} color={'gray.600'}>
-                          {t('totalAmountPaid')}:
-                        </Text>
-                        <Text fontWeight={500} color={'gray.600'} data-testid={'totalAmountPaid'}>
-                          {currencyFormatter(workOrder.totalAmountPaid)}
-                        </Text>
-                      </HStack>
-                      <HStack w={300} height="35px" justifyContent="space-between">
-                        <Text fontWeight={500} color={'gray.600'}>
-                          {t('pendingDraw')}
-                        </Text>
-                        <Text fontWeight={500} color={'gray.600'} data-testid={'pendingDraw'}>
-                          {currencyFormatter(totalPendingDrawAmount)}
-                        </Text>
-                      </HStack>
-                      <HStack w={300} height="35px" justifyContent="space-between">
-                        <Text fontWeight={500} color={'gray.600'}>
-                          {t('balanceDue')}
-                        </Text>
-                        <Text fontWeight={500} color={'gray.600'} data-testid={'balanceDue'}>
-                          {currencyFormatter(workOrder.finalInvoiceAmount)}
-                        </Text>
-                      </HStack>
-                    </Box>
-                  </VStack>
-                </Td>
-              </Tr>
-            </Tbody>
-          </Table>
+    <Box mx={{ base: 0, lg: '25px' }} h="680px" overflow={'auto'}>
+      {/* <ModalBody mx={{ base: 0, lg: '25px' }} h="600px"> */}
+      {isVendorExpired && (
+        <Box>
+          <AlertError
+            styleBox={{ width: 'max-content', marginTop: '9px' }}
+            msg={
+              isVendor
+                ? `${WORK_ORDER}.expirationInvoiceMessageForVendor`
+                : `${WORK_ORDER}.expirationInvoiceMessageForAdmin`
+            }
+          />
         </Box>
-      </ModalBody>
+      )}
+      <Grid
+        templateColumns={{ base: 'unset', sm: 'repeat(auto-fit ,minmax(150px,1fr))' }}
+        gap={5}
+        alignItems={'center'}
+        py="24px"
+        display={{ base: 'flex', sm: 'grid' }}
+        flexWrap="wrap"
+      >
+        <Box flex={{ base: '1', sm: 'unset' }}>
+          <InvoiceInfo title={t('invoiceNo')} value={workOrder?.invoiceNumber} icons={BiFile} />
+        </Box>
+        <Box flex={{ base: '1', sm: 'unset' }}>
+          <InvoiceInfo
+            title={t('finalInvoice')}
+            value={currencyFormatter(workOrder?.finalInvoiceAmount)}
+            icons={BiDollarCircle}
+          />
+        </Box>
+        <Box flex={{ base: '1', sm: 'unset' }}>
+          <InvoiceInfo
+            title={t('PONumber')}
+            value={workOrder.propertyAddress ? workOrder.propertyAddress : ''}
+            icons={BiFile}
+          />
+        </Box>
+
+        <Box flex={{ base: '1', sm: 'unset' }}>
+          <InvoiceInfo
+            title={t('invoiceDate')}
+            value={
+              workOrder.dateInvoiceSubmitted && ![STATUS.Rejected]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                ? (dateFormatNew(workOrder?.dateInvoiceSubmitted) as any)
+                : 'mm/dd/yy'
+            }
+            icons={BiCalendar}
+          />
+        </Box>
+        <Box flex={{ base: '1', sm: 'unset' }}>
+          <InvoiceInfo
+            title={t('dueDate')}
+            value={
+              workOrder.paymentTermDate && ![STATUS.Rejected]?.includes(workOrder.statusLabel?.toLocaleLowerCase())
+                ? (dateFormatNew(workOrder?.expectedPaymentDate) as any)
+                : 'mm/dd/yy'
+            }
+            icons={BiCalendar}
+          />
+        </Box>
+      </Grid>
+
+      <Divider borderColor="1px solid #CBD5E0" mb="16px" color="gray.300" w="99.8%" />
+
+      <Box
+        h={isVendorExpired ? '410px' : '470px'}
+        overflow="auto"
+        borderRadius={7}
+        borderBottom="1px solid #CBD5E0"
+        border="1px solid #CBD5E0"
+        mb="16px"
+      >
+        <Table variant="simple" size="sm">
+          <Thead position="sticky" top={0}>
+            <Tr h={'45px'} bg={'#ECEDEE !important'}>
+              <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
+                {t('item')}
+              </Td>
+              <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
+                {t('description')}
+              </Td>
+              <Td color={'gray.900'} fontWeight={500} fontSize={'14px'}>
+                {t('type')}{' '}
+              </Td>
+              <Td color={'gray.900'} fontWeight={500} fontSize={'14px'} w={300} pr={12} textAlign={'end'}>
+                {t('total')}
+              </Td>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {items.map((item, index) => {
+              return (
+                <Tr h="45px !important" key={index} data-testid={'invoice-items'}>
+                  <Td maxWidth={300} w={300}>
+                    {item.id}
+                  </Td>
+                  <Td width={400}>{item.name}</Td>
+                  <Td width={400}>{item.transactionTypeLabel}</Td>
+                  <Td pr={12} textAlign={'end'}>
+                    <Text>{currencyFormatter(item.transactionTotal)}</Text>
+                  </Td>
+                </Tr>
+              )
+            })}
+            <Tr>
+              <Td></Td>
+              <Td></Td>
+              <Td></Td>
+              <Td pr={12} borderLeft="1px solid #EDF2F7">
+                <VStack alignItems="end" fontSize="14px" fontWeight={500} color="gray.600">
+                  <Box>
+                    <HStack w={300} height="35px" justifyContent="space-between">
+                      <Text fontWeight={500} color={'gray.600'}>
+                        {t('subTotal')}:
+                      </Text>
+                      <Text fontWeight={500} color={'gray.600'} data-testid={'subTotal'}>
+                        {currencyFormatter(workOrder.subTotal)}
+                      </Text>
+                    </HStack>
+                    <HStack w={300} height="35px" justifyContent="space-between">
+                      <Text fontWeight={500} color={'gray.600'}>
+                        {t('totalAmountPaid')}:
+                      </Text>
+                      <Text fontWeight={500} color={'gray.600'} data-testid={'totalAmountPaid'}>
+                        {currencyFormatter(workOrder.totalAmountPaid)}
+                      </Text>
+                    </HStack>
+                    <HStack w={300} height="35px" justifyContent="space-between">
+                      <Text fontWeight={500} color={'gray.600'}>
+                        {t('pendingDraw')}
+                      </Text>
+                      <Text fontWeight={500} color={'gray.600'} data-testid={'pendingDraw'}>
+                        {currencyFormatter(totalPendingDrawAmount)}
+                      </Text>
+                    </HStack>
+                    <HStack w={300} height="35px" justifyContent="space-between">
+                      <Text fontWeight={500} color={'gray.600'}>
+                        {t('balanceDue')}
+                      </Text>
+                      <Text fontWeight={500} color={'gray.600'} data-testid={'balanceDue'}>
+                        {currencyFormatter(workOrder.finalInvoiceAmount)}
+                      </Text>
+                    </HStack>
+                  </Box>
+                </VStack>
+              </Td>
+            </Tr>
+          </Tbody>
+        </Table>
+      </Box>
+      {/* </ModalBody> */}
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
         <HStack justifyContent="start" w="100%">
           {navigateToProjectDetails && (
@@ -475,9 +473,13 @@ export const InvoiceTab = ({
               )}
             </>
           ) : (
-            <Button onClick={onClose} variant="outline" colorScheme="darkPrimary">
-              {t('cancel')}
-            </Button>
+            <>
+              {onClose && (
+                <Button onClick={onClose} variant="outline" colorScheme="darkPrimary">
+                  {t('cancel')}
+                </Button>
+              )}
+            </>
           )}
         </HStack>
       </ModalFooter>
