@@ -86,6 +86,7 @@ type NotesProps = {
   projectCompletion?: boolean
   isPercentageDisabled?: boolean
   isWOCancelled?: boolean
+  hideCancellBtn?: boolean
 }
 
 export const NotesTab = (props: NotesProps) => {
@@ -106,6 +107,7 @@ export const NotesTab = (props: NotesProps) => {
     projectCompletion,
     isPercentageDisabled,
     isWOCancelled,
+    hideCancellBtn,
   } = props
   const { handleSubmit, register, setValue, reset, control } = useForm()
   const { data: account } = useAccountDetails()
@@ -207,7 +209,7 @@ export const NotesTab = (props: NotesProps) => {
               )}
             </HStack>
             <HStack padding={5} spacing="16px" w="100%" justifyContent="end">
-              {onClose && (
+              {onClose && !hideCancellBtn && (
                 <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
                   {t('cancel')}
                 </Button>

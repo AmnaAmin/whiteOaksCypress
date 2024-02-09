@@ -1,4 +1,4 @@
-import { ModalBody, Flex, Box, Button, ModalFooter, HStack, useDisclosure } from '@chakra-ui/react'
+import { Flex, Box, Button, ModalFooter, HStack, useDisclosure } from '@chakra-ui/react'
 import AddNewTransactionModal from 'features/project-details/transactions/add-transaction-modal'
 import { WOTransactionsTable } from './wo-transactions-table'
 import { t } from 'i18next'
@@ -13,6 +13,7 @@ interface Props {
   onClose: any
   workOrder: any
   isVendorExpired?: boolean
+  hideCancellBtn?: boolean
 }
 export const TransactionsTab = ({
   projectData,
@@ -21,6 +22,7 @@ export const TransactionsTab = ({
   projectId,
   workOrder,
   isVendorExpired,
+  hideCancellBtn,
 }: Props) => {
   const {
     isOpen: isOpenTransactionModal,
@@ -43,39 +45,41 @@ export const TransactionsTab = ({
 
   return (
     <>
-      <ModalBody h="600px" p="10px" overflow={'auto'}>
-        <Flex w="100%" alignContent="space-between" pos="relative">
-          <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" p="11px">
-            <>
-              {!isReadOnly && (
-                <Button
-                  variant="solid"
-                  colorScheme="brand"
-                  onClick={onTransactionModalOpen}
-                  isDisabled={preventNewTransaction}
-                  leftIcon={<BiAddToQueue />}
-                  mt="-5px"
-                >
-                  {t('projects.projectDetails.newTransaction')}
-                </Button>
-              )}
-            </>
-          </Box>
-        </Flex>
-        <WOTransactionsTable
-          ref={tabsContainerRef}
-          projectStatus={projectData?.projectStatus as string}
-          workOrderId={workOrder.id}
-          projectId={projectData?.id}
-        />
-      </ModalBody>
+      {/* <ModalBody h="600px" p="10px" overflow={'auto'}> */}
+      <Flex w="100%" alignContent="space-between" pos="relative">
+        <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative" p="11px">
+          <>
+            {!isReadOnly && (
+              <Button
+                variant="solid"
+                colorScheme="brand"
+                onClick={onTransactionModalOpen}
+                isDisabled={preventNewTransaction}
+                leftIcon={<BiAddToQueue />}
+                mt="-5px"
+              >
+                {t('projects.projectDetails.newTransaction')}
+              </Button>
+            )}
+          </>
+        </Box>
+      </Flex>
+      <WOTransactionsTable
+        ref={tabsContainerRef}
+        projectStatus={projectData?.projectStatus as string}
+        workOrderId={workOrder.id}
+        projectId={projectData?.id}
+      />
+      {/* </ModalBody> */}
 
-      <ModalFooter borderTop="1px solid #CBD5E0" p={6}>
-        <HStack spacing="16px" justifyContent="end">
-          <Button onClick={onClose} variant="outline" colorScheme="brand">
-            {t('cancel')}
-          </Button>
-        </HStack>
+      <ModalFooter borderTop="1px solid #CBD5E0" p={2}>
+        {!hideCancellBtn && (
+          <HStack spacing="16px" justifyContent="end">
+            <Button onClick={onClose} variant="outline" colorScheme="brand">
+              {t('cancel')}
+            </Button>
+          </HStack>
+        )}
       </ModalFooter>
       {workOrder && (
         <AddNewTransactionModal

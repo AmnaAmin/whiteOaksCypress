@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Center, Spinner, useDisclosure } from '@chakra-ui/react'
+import { Box, Center, Spinner } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom'
 import { useProjectWorkOrders } from 'api/projects'
 import { ProjectWorkOrderType } from 'types/project.type'
-import WorkOrderDetails from 'features/work-order/work-order-edit'
 import { useGanttChart } from 'api/pc-projects'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import Table from 'components/table-refactored/table'
@@ -19,13 +18,11 @@ import {
 import { TableFooter } from 'components/table-refactored/table-footer'
 
 export const WorkOrdersTable = props => {
-  const { defaultSelected } = props
+  const { defaultSelected, setShowNewWO, setSelectedWorkOrder, selectedWorkOrder } = props
   const { projectId } = useParams<'projectId'>()
-  const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+  // const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
-
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
 
   const { data: workOrders, isFetching, isLoading } = useProjectWorkOrders(projectId)
   const { refetch: refetchGantt } = useGanttChart(projectId)
@@ -42,13 +39,16 @@ export const WorkOrdersTable = props => {
   useEffect(() => {
     if (defaultSelected?.id) {
       setSelectedWorkOrder(defaultSelected)
-      onOpen()
+      setShowNewWO(true)
+
+      // onOpen()
     }
   }, [defaultSelected])
 
   const onRowClick = row => {
     setSelectedWorkOrder(row)
-    onOpen()
+    setShowNewWO(true)
+    // onOpen()
   }
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export const WorkOrdersTable = props => {
 
   return (
     <Box>
-      {isOpen && (
+      {/* {isOpen && (
         <WorkOrderDetails
           workOrder={selectedWorkOrder as ProjectWorkOrderType}
           onClose={() => {
@@ -83,7 +83,20 @@ export const WorkOrdersTable = props => {
           }}
           isOpen={isOpen}
         />
-      )}
+      )} */}
+
+      {/* {showNewWO && (
+        <WorkOrderDetailsPage
+          workOrder={selectedWorkOrder as ProjectWorkOrderType}
+          onClose={() => {
+            setSelectedWorkOrder(undefined)
+            refetchGantt()
+            // onCloseDisclosure()
+            setShowNewWO(false)
+          }}
+          isOpen={showNewWO}
+        />
+      )} */}
       {isLoading && (
         <Center minH="calc(100vh - 450px)">
           <Spinner size="lg" />

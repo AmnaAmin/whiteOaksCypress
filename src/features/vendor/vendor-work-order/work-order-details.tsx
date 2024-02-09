@@ -276,6 +276,7 @@ export const WorkOrderDetails = ({
                         onSave={null}
                         isWorkOrderUpdating={null}
                         isVendorExpired={isVendorExpired}
+                        hideCancellBtn={false}
                       />
                     )}
                   </TabPanel>

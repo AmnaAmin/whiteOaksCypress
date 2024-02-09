@@ -1,10 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   Text,
   Tabs,
   TabList,
@@ -22,6 +17,7 @@ import {
   Icon,
   useToast,
   Spinner,
+  Button,
 } from '@chakra-ui/react'
 import { ProjectWorkOrderType } from 'types/project.type'
 import { LienWaiverTab } from './lien-waiver/lien-waiver'
@@ -49,8 +45,9 @@ import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
 import { useLocation as useLineItemsLocation } from 'api/location'
 import { Messages } from '../messages/messages'
 import jsPDF from 'jspdf'
+import { GoArrowLeft } from 'react-icons/go'
 
-const WorkOrderDetails = ({
+const WorkOrderDetailsPage = ({
   workOrder,
   onClose,
   isOpen,
@@ -116,10 +113,10 @@ const WorkOrderDetails = ({
         setIsError(false)
       }
     } else {
-      onClose()
+      //   onClose()
       setTabIndex(0)
     }
-  }, [workOrderDetails?.length, onClose])
+  }, [workOrderDetails?.length])
 
   const queryClient = useQueryClient()
   const compareLineItems = (existingLineItems, updatedLineItems) => {
@@ -276,7 +273,7 @@ const WorkOrderDetails = ({
         if (res?.data) {
           const workOrder = res?.data
           if (isPayable && ![STATUS_CODE.INVOICED].includes(workOrder.status)) {
-            onClose()
+            // onClose()
             setTabIndex(0)
           }
         }
@@ -290,224 +287,232 @@ const WorkOrderDetails = ({
   const showRejectInvoice = (displayAwardPlan && tabIndex === 4) || (!displayAwardPlan && tabIndex === 3)
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="flexible" variant={'custom'} closeOnOverlayClick={false}>
-      <>
-        <ModalOverlay />
-        <ModalContent bg="#F2F3F4" maxW="1100px" maxH="900px">
-          <ModalHeader bg="white">
-            <HStack spacing={4}>
-              <HStack fontSize="16px" fontWeight={500}>
-                <Text
-                  color={'gray.600'}
-                  fontWeight="400"
-                  fontSize={'16px'}
-                  borderRight="1px solid #E2E8F0"
-                  lineHeight="22px"
-                  h="22px"
-                  pr={2}
-                >
-                  WO {workOrder?.id}
-                </Text>
-                <Text fontSize="16px" color={'gray.600'} fontWeight="400" lineHeight="22px" h="22px">
-                  {workOrder?.companyName}
-                </Text>
-              </HStack>
+    <Box>
+      {/* <ModalHeader bg="white"> */}
+      <HStack spacing={4}>
+        <Button color={'#345EA6'} colorScheme="" leftIcon={<GoArrowLeft size={20} />} onClick={onClose}>
+          {t('back')}
+        </Button>
 
-              <Status value={workOrder?.statusLabel} id={workOrder?.statusLabel} />
-            </HStack>
-          </ModalHeader>
+        <Box pl="2" pr="1" display={{ base: 'none', sm: 'unset' }}>
+          <Divider borderColor={'gray'} orientation="vertical" h="25px" />
+        </Box>
+        <HStack fontSize="16px" fontWeight={500}>
+          <Text
+            color={'gray.600'}
+            fontWeight="400"
+            fontSize={'16px'}
+            borderRight="1px solid #E2E8F0"
+            lineHeight="22px"
+            h="22px"
+            pr={2}
+          >
+            WO {workOrder?.id}
+          </Text>
+          <Text fontSize="16px" color={'gray.600'} fontWeight="400" lineHeight="22px" h="22px">
+            {workOrder?.companyName}
+          </Text>
+        </HStack>
+        {!(isLoadingWorkOrder || isProjectLoading) && (
+          <Status value={workOrderDetails?.statusLabel} id={workOrderDetails?.statusLabel} />
+        )}
+      </HStack>
+      {/* </ModalHeader> */}
 
-          <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} />
-          {(isWorkOrderUpdating || isUpdating) && (
-            <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />
-          )}
-          <Divider mb={3} />
-          <Stack>
-            <Tabs
-              variant="enclosed"
-              colorScheme="brand"
-              size="md"
-              onChange={index => setTabIndex(index)}
-              whiteSpace="nowrap"
-            >
-              <TabList color="gray.600" ml="10px" mr="20px">
-                <Tab>{t('workOrderDetails')}</Tab>
-                <Tab data-testid="wo_transaction_tab">{t('projects.projectDetails.transactions')}</Tab>
-                {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
-                <Tab data-testid="wo_lienWaiver">{t('lienWaiver')}</Tab>
-                <Tab data-testid="wo_invoice">{t('invoice')}</Tab>
-                <Tab data-testid="wo_payments">{t('payments')}</Tab>
-                <Tab data-testid="wo_notes">{t('notes')}</Tab>
-                <Tab data-testid="wo_messages">{t('messages')}</Tab>
+      {(isWorkOrderUpdating || isUpdating) && (
+        <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />
+      )}
+      <Divider mb={3} />
+      <Stack>
+        <Tabs
+          variant="enclosed"
+          colorScheme="brand"
+          size="md"
+          onChange={index => setTabIndex(index)}
+          whiteSpace="nowrap"
+        >
+          <TabList color="gray.600" ml="10px" mr="20px">
+            <Tab>{t('workOrderDetails')}</Tab>
+            <Tab data-testid="wo_transaction_tab">{t('projects.projectDetails.transactions')}</Tab>
+            {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
+            <Tab data-testid="wo_lienWaiver">{t('lienWaiver')}</Tab>
+            <Tab data-testid="wo_invoice">{t('invoice')}</Tab>
+            <Tab data-testid="wo_payments">{t('payments')}</Tab>
+            <Tab data-testid="wo_notes">{t('notes')}</Tab>
+            <Tab data-testid="wo_messages">{t('messages')}</Tab>
 
-                {showRejectInvoice &&
-                  [STATUS.Invoiced, STATUS.Rejected].includes(
-                    workOrderDetails?.statusLabel?.toLocaleLowerCase() as STATUS,
-                  ) && (
-                    <Center w="100%" justifyContent="end">
-                      <Checkbox
-                        variant={'outLinePrimary'}
-                        onChange={() => {
-                          setRejectInvoice(!rejectInvoice)
-                        }}
-                        isChecked={rejectInvoice}
-                        disabled={workOrderDetails.status === 111}
-                        fontSize="14px"
-                        fontWeight={500}
-                      >
-                        {t('rejectInvoice')}
-                      </Checkbox>
+            {showRejectInvoice &&
+              [STATUS.Invoiced, STATUS.Rejected].includes(
+                workOrderDetails?.statusLabel?.toLocaleLowerCase() as STATUS,
+              ) && (
+                <Center w="100%" justifyContent="end">
+                  <Checkbox
+                    variant={'outLinePrimary'}
+                    onChange={() => {
+                      setRejectInvoice(!rejectInvoice)
+                    }}
+                    isChecked={rejectInvoice}
+                    disabled={workOrderDetails.status === 111}
+                    fontSize="14px"
+                    fontWeight={500}
+                  >
+                    {t('rejectInvoice')}
+                  </Checkbox>
+                </Center>
+              )}
+          </TabList>
+          <Card mx="10px" mb="10px" roundedTopLeft={0} p={0}>
+            <TabPanels>
+              <TabPanel p={0}>
+                {isLoadingWorkOrder || isProjectLoading ? (
+                  <Center h={'600px'}>
+                    <Spinner size="xl" />
+                  </Center>
+                ) : (
+                  <WorkOrderDetailTab
+                    navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                    workOrder={workOrderDetails}
+                    onClose={onClose}
+                    onSave={onSave}
+                    isWorkOrderUpdating={isWorkOrderUpdating}
+                    swoProject={swoProject}
+                    projectData={projectData}
+                    documentsData={documentsData}
+                    isFetchingLineItems={isFetchingLineItems}
+                    isLoadingLineItems={isLoadingLineItems}
+                    locations={locations}
+                    hideCancellBtn={true}
+                  />
+                )}
+              </TabPanel>
+              <TabPanel p={0}>
+                {isProjectLoading ? (
+                  <Center h={'600px'}>
+                    <Spinner size="xl" />
+                  </Center>
+                ) : (
+                  <TransactionsTab
+                    projectId={projectId as string}
+                    tabsContainerRef={tabsContainerRef}
+                    projectData={projectData}
+                    onClose={onClose}
+                    workOrder={workOrderDetails}
+                    isVendorExpired={hasExpiredDocumentOrLicense}
+                    hideCancellBtn={true}
+                  />
+                )}
+              </TabPanel>
+              {displayAwardPlan && (
+                <TabPanel p={0}>
+                  {isLoadingWorkOrder ? (
+                    <Center h={'600px'}>
+                      <Spinner size="xl" />
                     </Center>
+                  ) : (
+                    <ProjectAwardTab
+                      workOrder={workOrderDetails}
+                      isUpdating={isWorkOrderUpdating}
+                      onSave={onSave}
+                      onClose={onClose}
+                      awardPlanScopeAmount={awardPlanScopeAmount}
+                      projectAwardData={projectAwardData}
+                      hideCancellBtn={true}
+                    />
                   )}
-              </TabList>
-              <Card mx="10px" mb="10px" roundedTopLeft={0} p={0}>
-                <TabPanels>
-                  <TabPanel p={0}>
-                    {isLoadingWorkOrder || isProjectLoading ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <WorkOrderDetailTab
-                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                        workOrder={workOrderDetails}
-                        onClose={onClose}
-                        onSave={onSave}
-                        isWorkOrderUpdating={isWorkOrderUpdating}
-                        swoProject={swoProject}
-                        projectData={projectData}
-                        documentsData={documentsData}
-                        isFetchingLineItems={isFetchingLineItems}
-                        isLoadingLineItems={isLoadingLineItems}
-                        locations={locations}
-                      />
-                    )}
-                  </TabPanel>
-                  <TabPanel p={0}>
-                    {isProjectLoading ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <TransactionsTab
-                        projectId={projectId as string}
-                        tabsContainerRef={tabsContainerRef}
-                        projectData={projectData}
-                        onClose={onClose}
-                        workOrder={workOrderDetails}
-                        isVendorExpired={hasExpiredDocumentOrLicense}
-                      />
-                    )}
-                  </TabPanel>
-                  {displayAwardPlan && (
-                    <TabPanel p={0}>
-                      {isLoadingWorkOrder ? (
-                        <Center h={'600px'}>
-                          <Spinner size="xl" />
-                        </Center>
-                      ) : (
-                        <ProjectAwardTab
-                          workOrder={workOrderDetails}
-                          isUpdating={isWorkOrderUpdating}
-                          onSave={onSave}
-                          onClose={onClose}
-                          awardPlanScopeAmount={awardPlanScopeAmount}
-                          projectAwardData={projectAwardData}
-                        />
-                      )}
-                    </TabPanel>
-                  )}
-                  <TabPanel p={0}>
-                    {isLoadingWorkOrder || isDocumentsLoading ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <LienWaiverTab
-                        isUpdating={isUpdating}
-                        setIsUpdating={setIsUpdating}
-                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                        documentsData={documentsData}
-                        workOrder={workOrderDetails}
-                        onClose={onClose}
-                        rejectChecked={!rejectLW}
-                      />
-                    )}
-                  </TabPanel>
-                  <TabPanel p={0}>
-                    {isLoadingWorkOrder || isDocumentsLoading || isTransLoading ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <InvoiceTab
-                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                        rejectInvoiceCheck={rejectInvoice}
-                        transactions={transactions}
-                        documentsData={documentsData}
-                        workOrder={workOrderDetails}
-                        vendorAddress={vendorAddress || []}
-                        isWorkOrderUpdating={isWorkOrderUpdating}
-                        onClose={onClose}
-                        onSave={onSave}
-                        setTabIndex={setTabIndex}
-                        projectData={projectData}
-                        isVendorExpired={hasExpiredDocumentOrLicense}
-                        hideCancellBtn={false}
-                      />
-                    )}
-                  </TabPanel>
-                  <TabPanel p={0}>
-                    {isLoadingWorkOrder || isProjectLoading ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <PaymentInfoTab
-                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                        projectData={projectData}
-                        workOrder={workOrderDetails}
-                        isWorkOrderUpdating={isWorkOrderUpdating}
-                        onClose={onClose}
-                        onSave={onSave}
-                        rejectInvoiceCheck={rejectInvoice}
-                        isLoading={isLoadingWorkOrder}
-                      />
-                    )}
-                  </TabPanel>
-                  <TabPanel p={0}>
-                    {isLoadingWorkOrder ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <WorkOrderNotes
-                        navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
-                        workOrder={workOrderDetails}
-                        onClose={onClose}
-                        // setNotesCount={setNotesCount}
-                        onSave={onSave}
-                      />
-                    )}
-                  </TabPanel>
-                  <TabPanel p={0}>
-                    {isLoadingWorkOrder ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <Box w="100%" h="680px">
-                        <Messages id={workOrder.id} entity="projectWorkOrder" projectId={projectId} value={workOrder} />
-                      </Box>
-                    )}
-                  </TabPanel>
-                </TabPanels>
-              </Card>
-            </Tabs>
-          </Stack>
-        </ModalContent>
-      </>
-    </Modal>
+                </TabPanel>
+              )}
+              <TabPanel p={0}>
+                {isLoadingWorkOrder || isDocumentsLoading ? (
+                  <Center h={'600px'}>
+                    <Spinner size="xl" />
+                  </Center>
+                ) : (
+                  <LienWaiverTab
+                    isUpdating={isUpdating}
+                    setIsUpdating={setIsUpdating}
+                    navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                    documentsData={documentsData}
+                    workOrder={workOrderDetails}
+                    onClose={onClose}
+                    rejectChecked={!rejectLW}
+                    hideCancellBtn={true}
+                  />
+                )}
+              </TabPanel>
+              <TabPanel p={0}>
+                {isLoadingWorkOrder || isDocumentsLoading || isTransLoading ? (
+                  <Center h={'600px'}>
+                    <Spinner size="xl" />
+                  </Center>
+                ) : (
+                  <InvoiceTab
+                    navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                    rejectInvoiceCheck={rejectInvoice}
+                    transactions={transactions}
+                    documentsData={documentsData}
+                    workOrder={workOrderDetails}
+                    vendorAddress={vendorAddress || []}
+                    isWorkOrderUpdating={isWorkOrderUpdating}
+                    onClose={onClose}
+                    onSave={onSave}
+                    setTabIndex={setTabIndex}
+                    projectData={projectData}
+                    isVendorExpired={hasExpiredDocumentOrLicense}
+                    hideCancellBtn={true}
+                  />
+                )}
+              </TabPanel>
+              <TabPanel p={0}>
+                {isLoadingWorkOrder || isProjectLoading ? (
+                  <Center h={'600px'}>
+                    <Spinner size="xl" />
+                  </Center>
+                ) : (
+                  <PaymentInfoTab
+                    navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                    projectData={projectData}
+                    workOrder={workOrderDetails}
+                    isWorkOrderUpdating={isWorkOrderUpdating}
+                    onClose={onClose}
+                    onSave={onSave}
+                    rejectInvoiceCheck={rejectInvoice}
+                    isLoading={isLoadingWorkOrder}
+                    hideCancellBtn={true}
+                  />
+                )}
+              </TabPanel>
+              <TabPanel p={0}>
+                {isLoadingWorkOrder ? (
+                  <Center h={'600px'}>
+                    <Spinner size="xl" />
+                  </Center>
+                ) : (
+                  <WorkOrderNotes
+                    navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
+                    workOrder={workOrderDetails}
+                    onClose={onClose}
+                    // setNotesCount={setNotesCount}
+                    onSave={onSave}
+                    hideCancellBtn={true}
+                  />
+                )}
+              </TabPanel>
+              <TabPanel p={0}>
+                {isLoadingWorkOrder ? (
+                  <Center h={'600px'}>
+                    <Spinner size="xl" />
+                  </Center>
+                ) : (
+                  <Box w="100%" h="680px">
+                    <Messages id={workOrder.id} entity="projectWorkOrder" projectId={projectId} value={workOrder} />
+                  </Box>
+                )}
+              </TabPanel>
+            </TabPanels>
+          </Card>
+        </Tabs>
+      </Stack>
+    </Box>
   )
 }
 
@@ -526,4 +531,4 @@ export const TabCustom: React.FC<{ isError?: boolean }> = ({ isError, children }
   )
 }
 
-export default WorkOrderDetails
+export default WorkOrderDetailsPage

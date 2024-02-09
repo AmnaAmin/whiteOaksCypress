@@ -7,7 +7,7 @@ import { WORK_ORDER_STATUS } from 'components/chart/Overview'
 import { useLocation } from 'react-router-dom'
 
 export const WorkOrderNotes: React.FC<any> = props => {
-  const { workOrder, onClose, setNotesCount, navigateToProjectDetails } = props
+  const { workOrder, onClose, setNotesCount, navigateToProjectDetails, hideCancellBtn } = props
   const { mutate: createNotes, isLoading: isNotesLoading } = useNoteMutation(workOrder?.id)
   const { data: account } = useAccountDetails()
   const { pathname } = useLocation()
@@ -47,8 +47,9 @@ export const WorkOrderNotes: React.FC<any> = props => {
         isWOCancelled={isWOCancelled}
         navigateToProjectDetails={navigateToProjectDetails}
         messageBoxStyle={{ resize: 'none' }}
-        contentStyle={{ padding: { base: '0px', lg: '25px' }, maxHeight: 'calc(100vh - 300px)' }}
+        contentStyle={{ padding: { base: '0px', lg: '25px' }, maxHeight: 'calc(100vh - 500px)' }}
         pageLayoutStyle={{ overflow: 'hidden', borderRadius: '3px' }}
+        hideCancellBtn={hideCancellBtn}
       />
     </>
   )

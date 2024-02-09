@@ -27,6 +27,7 @@ export const renderInvoice = async ({ onClose, workOrder, documentsData, transac
           isWorkOrderUpdating={false}
           vendorAddress={vendorAddress}
           isVendorExpired={false}
+          hideCancellBtn={false}
         />
       </Modal>
     </BrowserRouter>,

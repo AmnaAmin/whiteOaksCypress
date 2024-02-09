@@ -10,7 +10,6 @@ import {
   ModalFooter,
   Text,
   VStack,
-  ModalBody,
   IconButton,
   useDisclosure,
   Grid,
@@ -44,8 +43,16 @@ import { useLocation } from 'react-router-dom'
 
 export const LienWaiverTab: React.FC<any> = props => {
   const { t } = useTranslation()
-  const { workOrder, onClose, onProjectTabChange, documentsData, navigateToProjectDetails, isUpdating, setIsUpdating } =
-    props
+  const {
+    workOrder,
+    onClose,
+    onProjectTabChange,
+    documentsData,
+    navigateToProjectDetails,
+    isUpdating,
+    setIsUpdating,
+    hideCancellBtn,
+  } = props
   const { mutate: updateLienWaiver, isSuccess } = useUpdateWorkOrderMutation({
     setUpdating: () => {
       setIsUpdating(false)
@@ -256,122 +263,134 @@ export const LienWaiverTab: React.FC<any> = props => {
   return (
     <form className="lienWaver" id="lienWaverForm" onSubmit={handleSubmit(onGenerateLWOpen)}>
       <SignatureModal setSignature={onSignatureChange} open={openSignature} onClose={() => setOpenSignature(false)} />
-      <ModalBody h="600px" p="25px" overflow={'auto'}>
-        <FormControl>
-          <VStack align="start" spacing="30px">
-            {workOrder?.leanWaiverSubmitted && !workOrder?.lienWaiverAccepted && isVendor && (
-              <Alert data-testid="lienWaiverRejectInfo" status="info" variant="custom" size="sm">
-                <AlertIcon />
-                <AlertDescription>{workOrder?.rejectedUserRole + ' ' + t('lienWaiverRejectInfo')}</AlertDescription>
-                <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
-              </Alert>
-            )}
-            <Flex alignContent="space-between" pos="relative">
-              <Box overflowWrap={'break-word'} whiteSpace="normal" w="48em">
-                <HelpText>{GetHelpText()}</HelpText>
-              </Box>
-            </Flex>
-            <Box w="100%">
+      {/* <ModalBody h="600px" p="25px" overflow={'auto'}> */}
+      <FormControl h="600px" overflow={'auto'} p="25px">
+        <VStack align="start" spacing="30px">
+          {workOrder?.leanWaiverSubmitted && !workOrder?.lienWaiverAccepted && isVendor && (
+            <Alert data-testid="lienWaiverRejectInfo" status="info" variant="custom" size="sm">
+              <AlertIcon />
+              <AlertDescription>{workOrder?.rejectedUserRole + ' ' + t('lienWaiverRejectInfo')}</AlertDescription>
+              <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
+            </Alert>
+          )}
+          <Flex alignContent="space-between" pos="relative">
+            <Box overflowWrap={'break-word'} whiteSpace="normal" w="48em">
+              <HelpText>{GetHelpText()}</HelpText>
+            </Box>
+          </Flex>
+          <Box w="100%">
+            <Grid
+              templateColumns={{
+                base: 'repeat(auto-fill,minmax(215px ,1fr))',
+                md: 'repeat(auto-fill,minmax(215px ,0fr))',
+              }}
+              gap={20}
+              w={{ base: '100%', lg: '630px' }}
+            >
+              <GridItem>
+                <InputView
+                  label={t('nameofClaimant')}
+                  InputElem={
+                    <Text data-testid="nameOfClaimant">{truncateWithEllipsis(workOrder.claimantName, 25)}</Text>
+                  }
+                />
+              </GridItem>
+              <GridItem>
+                <InputView
+                  label={t('jobLocation')}
+                  InputElem={<Text data-testid="propertyAddress">{workOrder.propertyAddress}</Text>}
+                />
+              </GridItem>
+              <GridItem>
+                <InputView
+                  label={t('makerOfCheck')}
+                  InputElem={<Text data-testid="makerOfCheck">{workOrder.makerOfCheck}</Text>}
+                />
+              </GridItem>
+              <GridItem>
+                <InputView
+                  label={t('amountOfCheck')}
+                  InputElem={<Text data-testid="amountOfCheck">${workOrder.finalInvoiceAmount}</Text>}
+                />
+              </GridItem>
+            </Grid>
+            {isVendor ? (
               <Grid
                 templateColumns={{
                   base: 'repeat(auto-fill,minmax(215px ,1fr))',
                   md: 'repeat(auto-fill,minmax(215px ,0fr))',
                 }}
                 gap={10}
-                w={{ base: '100%', lg: '630px' }}
+                mt={8}
               >
                 <GridItem>
-                  <InputView
-                    label={t('nameofClaimant')}
-                    InputElem={
-                      <Text data-testid="nameOfClaimant">{truncateWithEllipsis(workOrder.claimantName, 25)}</Text>
-                    }
+                  <FormInput
+                    errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
+                    label={t('claimantsTitle')}
+                    placeholder=""
+                    variant="required-field"
+                    register={register}
+                    disabled={isFieldsDisabled}
+                    testId="claimantsTitle"
+                    rules={{ required: 'This is required field' }}
+                    name={`claimantTitle`}
                   />
                 </GridItem>
                 <GridItem>
-                  <InputView
-                    label={t('jobLocation')}
-                    InputElem={<Text data-testid="propertyAddress">{workOrder.propertyAddress}</Text>}
-                  />
-                </GridItem>
-                <GridItem>
-                  <InputView
-                    label={t('makerOfCheck')}
-                    InputElem={<Text data-testid="makerOfCheck">{workOrder.makerOfCheck}</Text>}
-                  />
-                </GridItem>
-                <GridItem>
-                  <InputView
-                    label={t('amountOfCheck')}
-                    InputElem={<Text data-testid="amountOfCheck">${workOrder.finalInvoiceAmount}</Text>}
-                  />
-                </GridItem>
-              </Grid>
-              {isVendor ? (
-                <Grid
-                  templateColumns={{
-                    base: 'repeat(auto-fill,minmax(215px ,1fr))',
-                    md: 'repeat(auto-fill,minmax(215px ,0fr))',
-                  }}
-                  gap={10}
-                  mt={8}
-                >
-                  <GridItem>
-                    <FormInput
-                      errorMessage={errors.claimantTitle && errors.claimantTitle?.message}
-                      label={t('claimantsTitle')}
-                      placeholder=""
-                      variant="required-field"
-                      register={register}
+                  <FormControl isInvalid={!claimantsSignature}>
+                    <FormLabel fontWeight={500} fontSize="14px" color="gray.700">
+                      {t('claimantsSignature')}
+                    </FormLabel>
+                    <Button
+                      pos="relative"
+                      border={'1px solid'}
+                      borderColor="gray.200"
+                      borderRadius="6px"
+                      bg="white"
+                      height={'40px'}
+                      borderLeftWidth={'2.5px'}
+                      borderLeftColor="#345EA6"
+                      alignItems="center"
+                      px={4}
+                      ml={0}
+                      justifyContent="left"
+                      variant="ghost"
+                      w="100%"
+                      _hover={{ bg: 'white' }}
+                      _active={{ bg: 'white' }}
+                      _disabled={{
+                        bg: 'gray.100',
+                        _hover: { bg: 'gray.100' },
+                        _active: { bg: 'gray.100' },
+                      }}
                       disabled={isFieldsDisabled}
-                      testId="claimantsTitle"
-                      rules={{ required: 'This is required field' }}
-                      name={`claimantTitle`}
-                    />
-                  </GridItem>
-                  <GridItem>
-                    <FormControl isInvalid={!claimantsSignature}>
-                      <FormLabel fontWeight={500} fontSize="14px" color="gray.700">
-                        {t('claimantsSignature')}
-                      </FormLabel>
-                      <Button
-                        pos="relative"
-                        border={'1px solid'}
-                        borderColor="gray.200"
-                        borderRadius="6px"
-                        bg="white"
-                        height={'40px'}
-                        borderLeftWidth={'2.5px'}
-                        borderLeftColor="#345EA6"
-                        alignItems="center"
-                        px={4}
-                        ml={0}
-                        justifyContent="left"
-                        variant="ghost"
-                        w="100%"
-                        _hover={{ bg: 'white' }}
-                        _active={{ bg: 'white' }}
-                        _disabled={{
-                          bg: 'gray.100',
-                          _hover: { bg: 'gray.100' },
-                          _active: { bg: 'gray.100' },
-                        }}
-                        disabled={isFieldsDisabled}
-                        onClick={() => setOpenSignature(true)}
-                      >
-                        <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
-                        <Image
-                          data-testid="claimantsSignature"
-                          hidden={!claimantsSignature}
-                          maxW={'100%'}
-                          src={claimantsSignature}
-                          {...register('claimantsSignature', {
-                            required: 'This is required field',
-                          })}
-                          ref={sigRef}
-                        />
-                        {!isFieldsDisabled && (
-                          <HStack pos={'absolute'} right="10px" top="11px" spacing={3}>
+                      onClick={() => setOpenSignature(true)}
+                    >
+                      <canvas hidden ref={canvasRef} height={'64px'} width={'1000px'}></canvas>
+                      <Image
+                        data-testid="claimantsSignature"
+                        hidden={!claimantsSignature}
+                        maxW={'100%'}
+                        src={claimantsSignature}
+                        {...register('claimantsSignature', {
+                          required: 'This is required field',
+                        })}
+                        ref={sigRef}
+                      />
+                      {!isFieldsDisabled && (
+                        <HStack pos={'absolute'} right="10px" top="11px" spacing={3}>
+                          <IconButton
+                            aria-label="open-signature"
+                            variant="ghost"
+                            minW="auto"
+                            height="auto"
+                            _hover={{ bg: 'inherit' }}
+                            disabled={isFieldsDisabled}
+                            data-testid="openSignature"
+                          >
+                            <BiAddToQueue color="#A0AEC0" />
+                          </IconButton>
+                          {claimantsSignature && (
                             <IconButton
                               aria-label="open-signature"
                               variant="ghost"
@@ -379,90 +398,76 @@ export const LienWaiverTab: React.FC<any> = props => {
                               height="auto"
                               _hover={{ bg: 'inherit' }}
                               disabled={isFieldsDisabled}
-                              data-testid="openSignature"
+                              data-testid="removeSignature"
+                              onClick={e => {
+                                onRemoveSignature()
+                                e.stopPropagation()
+                              }}
                             >
-                              <BiAddToQueue color="#A0AEC0" />
+                              <BiTrash className="mr-1" color="#A0AEC0" />
                             </IconButton>
-                            {claimantsSignature && (
-                              <IconButton
-                                aria-label="open-signature"
-                                variant="ghost"
-                                minW="auto"
-                                height="auto"
-                                _hover={{ bg: 'inherit' }}
-                                disabled={isFieldsDisabled}
-                                data-testid="removeSignature"
-                                onClick={e => {
-                                  onRemoveSignature()
-                                  e.stopPropagation()
-                                }}
-                              >
-                                <BiTrash className="mr-1" color="#A0AEC0" />
-                              </IconButton>
-                            )}
-                          </HStack>
-                        )}
-                      </Button>
-                      {errors?.claimantsSignature?.message && (
-                        <FormErrorMessage>This is required field</FormErrorMessage>
+                          )}
+                        </HStack>
                       )}
-                    </FormControl>
-                  </GridItem>
-                  <GridItem>
-                    <FormInput
-                      errorMessage={errors?.dateOfSignature?.message}
-                      label={t('dateOfSignature')}
-                      testId="signature-date"
-                      placeholder="mm/dd/yy"
-                      register={register}
-                      name={`dateOfSignature`}
-                      value={dateFormatNew(formValues?.dateOfSignature as string)}
-                      elementStyle={{
-                        bg: 'white',
-                        borderWidth: '0 0 1px 0',
-                        borderColor: 'gray.200',
-                        rounded: '0',
-                        paddingLeft: 0,
-                      }}
-                      rules={{ required: 'This is required field' }}
-                      readOnly
-                    />
-                  </GridItem>
-                </Grid>
-              ) : (
-                <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" mt={8} gap={10}>
-                  <GridItem>
-                    <InputView
-                      controlStyle={{ w: '14em' }}
-                      label="Date of signature"
-                      InputElem={
-                        <>
-                          {workOrder?.lienWaiverAccepted && workOrder?.dateOfSignature
-                            ? dateFormatNew(workOrder?.dateOfSignature)
-                            : 'mm/dd/yy'}
-                        </>
-                      }
-                    />
-                  </GridItem>
-                  <GridItem>
-                    <InputView
-                      controlStyle={{ mb: '5px' }}
-                      label="Claimant Signature"
-                      InputElem={
-                        workOrder?.lienWaiverAccepted && claimantsSignature ? (
-                          <Image mt="7px" hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
-                        ) : (
-                          <></>
-                        )
-                      }
-                    />
-                  </GridItem>
-                </Grid>
-              )}
-            </Box>
-          </VStack>
-        </FormControl>
-      </ModalBody>
+                    </Button>
+                    {errors?.claimantsSignature?.message && <FormErrorMessage>This is required field</FormErrorMessage>}
+                  </FormControl>
+                </GridItem>
+                <GridItem>
+                  <FormInput
+                    errorMessage={errors?.dateOfSignature?.message}
+                    label={t('dateOfSignature')}
+                    testId="signature-date"
+                    placeholder="mm/dd/yy"
+                    register={register}
+                    name={`dateOfSignature`}
+                    value={dateFormatNew(formValues?.dateOfSignature as string)}
+                    elementStyle={{
+                      bg: 'white',
+                      borderWidth: '0 0 1px 0',
+                      borderColor: 'gray.200',
+                      rounded: '0',
+                      paddingLeft: 0,
+                    }}
+                    rules={{ required: 'This is required field' }}
+                    readOnly
+                  />
+                </GridItem>
+              </Grid>
+            ) : (
+              <Grid templateColumns="repeat(auto-fill,minmax(215px ,0fr))" mt={69} gap={20}>
+                <GridItem>
+                  <InputView
+                    controlStyle={{ w: '14em' }}
+                    label="Date of signature"
+                    InputElem={
+                      <>
+                        {workOrder?.lienWaiverAccepted && workOrder?.dateOfSignature
+                          ? dateFormatNew(workOrder?.dateOfSignature)
+                          : 'mm/dd/yy'}
+                      </>
+                    }
+                  />
+                </GridItem>
+                <GridItem>
+                  <InputView
+                    controlStyle={{ mb: '5px' }}
+                    label="Claimant Signature"
+                    InputElem={
+                      workOrder?.lienWaiverAccepted && claimantsSignature ? (
+                        <Image mt="7px" hidden={!claimantsSignature} maxW={'100%'} src={claimantsSignature} />
+                      ) : (
+                        <></>
+                      )
+                    }
+                  />
+                </GridItem>
+              </Grid>
+            )}
+          </Box>
+        </VStack>
+      </FormControl>
+      {/* </ModalBody> */}
       <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
         <HStack justifyContent="start" w="100%">
           {navigateToProjectDetails && (
@@ -534,9 +539,11 @@ export const LienWaiverTab: React.FC<any> = props => {
             ))}
         </HStack>
         <HStack spacing="16px" justifyContent="end">
-          <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
-            {t('cancel')}
-          </Button>
+          {!hideCancellBtn && (
+            <Button variant="outline" colorScheme="darkPrimary" onClick={onClose}>
+              {t('cancel')}
+            </Button>
+          )}
           <>
             {!isVendor ? (
               <>
