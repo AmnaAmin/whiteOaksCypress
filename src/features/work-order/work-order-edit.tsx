@@ -147,9 +147,9 @@ const WorkOrderDetails = ({
         hasChangesNow = true
       }
 
-      // Compare 'quantity'
-      if (existingItem?.quantity !== updatedItem?.quantity) {
-        changedProperties.push(['quantity', updatedItem?.quantity])
+      // Compare 'vendorAmount'. This will include changes from profit, quantity and price
+      if (existingItem?.vendorAmount !== updatedItem?.vendorAmount) {
+        changedProperties.push(['vendorAmount', updatedItem?.vendorAmount])
         hasChangesNow = true
       }
 
@@ -159,11 +159,6 @@ const WorkOrderDetails = ({
         hasChangesNow = true
       }
 
-      // Compare 'price'
-      if (existingItem?.price !== updatedItem?.price) {
-        changedProperties.push(['price', updatedItem?.price])
-        hasChangesNow = true
-      }
       if (updatedLineItems?.length > existingLineItems?.length) {
         // New assigned item added
         hasChangesNow = true
@@ -247,30 +242,6 @@ const WorkOrderDetails = ({
             },
           )
         }
-        const lineItemDocuments = documentsData?.filter(x => x.workOrderId === workOrder?.id && x.documentType === 1036)
-
-        const newIndex = lineItemDocuments.length + 1
-        let doc = new jsPDF() as any
-        doc = await createInvoicePdf({
-          doc,
-          workOrder,
-          projectData,
-          assignedItems: values?.assignedItems ?? [],
-          hideAward: false,
-        })
-
-        const pdfUri = doc.output('datauristring')
-        if (hasChangesNow) {
-          payload.documents = [
-            {
-              documentType: 1036,
-              workOrderId: workOrder.id,
-              fileObject: pdfUri.split(',')[1],
-              fileObjectContentType: 'application/pdf',
-              fileType: `LineItem_${newIndex}.pdf`,
-            },
-          ]
-        }
 
         queryClient.invalidateQueries('transactions_work_order')
         if (res?.data) {
@@ -339,7 +310,6 @@ const WorkOrderDetails = ({
                 <Tab data-testid="wo_payments">{t('payments')}</Tab>
                 <Tab data-testid="wo_notes">{t('notes')}</Tab>
                 <Tab data-testid="wo_messages">{t('messages')}</Tab>
-
 
                 {showRejectInvoice &&
                   [STATUS.Invoiced, STATUS.Rejected].includes(
@@ -490,17 +460,22 @@ const WorkOrderDetails = ({
                       />
                     )}
                   </TabPanel>
-                    <TabPanel p={0}>
-                      {isLoadingWorkOrder ? (
-                        <Center h={'600px'}>
-                          <Spinner size="xl" />
-                        </Center>
-                      ) : (
-                        <Box w="100%" h="680px">
-                          <Messages id={workOrder.id} entity="projectWorkOrder" projectId={projectId} value={{ ...workOrder, estimateId: projectData?.estimateId }} />
-                        </Box>
-                      )}
-                    </TabPanel>
+                  <TabPanel p={0}>
+                    {isLoadingWorkOrder ? (
+                      <Center h={'600px'}>
+                        <Spinner size="xl" />
+                      </Center>
+                    ) : (
+                      <Box w="100%" h="680px">
+                        <Messages
+                          id={workOrder.id}
+                          entity="projectWorkOrder"
+                          projectId={projectId}
+                          value={{ ...workOrder, estimateId: projectData?.estimateId }}
+                        />
+                      </Box>
+                    )}
+                  </TabPanel>
                 </TabPanels>
               </Card>
             </Tabs>
@@ -511,7 +486,11 @@ const WorkOrderDetails = ({
   )
 }
 
-export const TabCustom: React.FC<{ isError?: boolean, isDisabled?: boolean }> = ({ isError, isDisabled = false, children }) => {
+export const TabCustom: React.FC<{ isError?: boolean; isDisabled?: boolean }> = ({
+  isError,
+  isDisabled = false,
+  children,
+}) => {
   return (
     <Tab _focus={{ outline: 'none' }} _disabled={{ cursor: 'not-allowed' }} isDisabled={isDisabled}>
       {isError ? (
