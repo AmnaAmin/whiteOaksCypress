@@ -12,7 +12,6 @@ import { AmountDetailsCard } from 'features/project-details/project-amount-detai
 import { BiAddToQueue, BiBookAdd, BiUpload } from 'react-icons/bi'
 
 import ProjectDetailsTab from 'features/update-project-details/project-details-form'
-import NewWorkOrder from 'features/work-order/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/work-order/work-orders-table'
 import AddNewTransactionModal from 'features/project-details/transactions/add-transaction-modal'
@@ -35,6 +34,7 @@ import InvoiceModal from 'features/update-project-details/add-invoice-modal'
 import { ADV_PERMISSIONS } from 'api/access-control'
 import { Messages } from 'features/messages/messages'
 import WorkOrderDetailsPage from 'features/work-order/work-order-edit-page'
+import NewWorkOrder from 'features/work-order/new-work-order'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -56,7 +56,7 @@ export const ProjectDetails: React.FC = props => {
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onClose } = useDisclosure()
   const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
   const [createdTransID, setCreatedTransID] = useState()
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
@@ -167,7 +167,7 @@ export const ProjectDetails: React.FC = props => {
                   STATUS.Overpayment,
                   STATUS.Reconcile,
                 ].includes(projectStatus as STATUS) && (
-                  <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen} mb="15px">
+                  <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={() => setShowNewWO(true)} mb="15px">
                     {t('newWorkOrder')}
                   </Button>
                 )}
@@ -268,6 +268,14 @@ export const ProjectDetails: React.FC = props => {
                     isOpen={showNewWO}
                   />
                 )}
+                {showNewWO && !selectedWorkOrder && (
+                  <NewWorkOrder
+                    setState={setShowNewWO}
+                    projectData={projectData as Project}
+                    isOpen={isOpen}
+                    onClose={onClose}
+                  />
+                )}
               </TabPanel>
               <TabPanel p="0px" minH="calc(100vh - 409px)">
                 <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
@@ -316,7 +324,6 @@ export const ProjectDetails: React.FC = props => {
         projectId={projectId as string}
         projectStatus={projectStatus}
       />
-      {isOpen && <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />}
       {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
       <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
 
