@@ -7,12 +7,11 @@ import { ProjectSummaryCard } from 'features/project-details/project-summary-car
 import { useTranslation } from 'react-i18next'
 import { TransactionsTable } from 'features/project-details/transactions/transactions-table'
 import { usePCProject } from 'api/pc-projects'
-import { Project } from 'types/project.type'
+import { Project, ProjectWorkOrderType } from 'types/project.type'
 import { AmountDetailsCard } from 'features/project-details/project-amount-detail'
 import { BiAddToQueue, BiBookAdd, BiUpload } from 'react-icons/bi'
 
 import ProjectDetailsTab from 'features/update-project-details/project-details-form'
-import NewWorkOrder from 'features/work-order/new-work-order'
 import { Tabs, TabList, TabPanels, Tab, TabPanel } from 'components/tabs/tabs'
 import { WorkOrdersTable } from 'features/work-order/work-orders-table'
 import AddNewTransactionModal from 'features/project-details/transactions/add-transaction-modal'
@@ -34,6 +33,8 @@ import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import InvoiceModal from 'features/update-project-details/add-invoice-modal'
 import { ADV_PERMISSIONS } from 'api/access-control'
 import { Messages } from 'features/messages/messages'
+import WorkOrderDetailsPage from 'features/work-order/work-order-edit-page'
+import NewWorkOrder from 'features/work-order/new-work-order'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -41,9 +42,12 @@ export const ProjectDetails: React.FC = props => {
 
   const { projectData, isLoading } = usePCProject(projectId)
   const tabsContainerRef = useRef<HTMLDivElement>(null)
+  const [showNewWO, setShowNewWO] = useState(false)
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState<ProjectWorkOrderType>()
+
   const [tabIndex, setTabIndex] = useState(0)
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
-  const { ganttChartData, isLoading: isGanttChartLoading } = useGanttChart(projectId)
+  const { ganttChartData, isLoading: isGanttChartLoading, refetch: refetchGantt } = useGanttChart(projectId)
   const [formattedGanttData, setFormattedGanttData] = useState<any[]>([])
 
   const {
@@ -52,7 +56,7 @@ export const ProjectDetails: React.FC = props => {
     onOpen: onTransactionModalOpen,
   } = useDisclosure()
   const { isOpen: isOpenDocumentModal, onClose: onDocumentModalClose, onOpen: onDocumentModalOpen } = useDisclosure()
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { isOpen, onClose } = useDisclosure()
   const { auditLogs, isLoading: isLoadingAudits, refetch: refetchAudits } = useProjectAuditLogs(projectId)
   const [createdTransID, setCreatedTransID] = useState()
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
@@ -151,6 +155,7 @@ export const ProjectDetails: React.FC = props => {
             <Box w="100%" display="flex" justifyContent={{ base: 'center', sm: 'end' }} position="relative">
               {!isReadOnly &&
                 tabIndex === 2 &&
+                !showNewWO &&
                 ![
                   STATUS.Closed,
                   STATUS.Invoiced,
@@ -162,7 +167,7 @@ export const ProjectDetails: React.FC = props => {
                   STATUS.Overpayment,
                   STATUS.Reconcile,
                 ].includes(projectStatus as STATUS) && (
-                  <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={onOpen} mb="15px">
+                  <Button colorScheme="brand" leftIcon={<BiAddToQueue />} onClick={() => setShowNewWO(true)} mb="15px">
                     {t('newWorkOrder')}
                   </Button>
                 )}
@@ -243,7 +248,34 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
 
               <TabPanel p="0px">
-                <WorkOrdersTable ref={tabsContainerRef} defaultSelected={workOrder} />
+                {!showNewWO && (
+                  <WorkOrdersTable
+                    setShowNewWO={setShowNewWO}
+                    setSelectedWorkOrder={setSelectedWorkOrder}
+                    selectedWorkOrder={selectedWorkOrder}
+                    ref={tabsContainerRef}
+                    defaultSelected={workOrder}
+                  />
+                )}
+                {showNewWO && selectedWorkOrder && (
+                  <WorkOrderDetailsPage
+                    workOrder={selectedWorkOrder as ProjectWorkOrderType}
+                    onClose={() => {
+                      setSelectedWorkOrder(undefined)
+                      refetchGantt()
+                      setShowNewWO(false)
+                    }}
+                    isOpen={showNewWO}
+                  />
+                )}
+                {showNewWO && !selectedWorkOrder && (
+                  <NewWorkOrder
+                    setState={setShowNewWO}
+                    projectData={projectData as Project}
+                    isOpen={isOpen}
+                    onClose={onClose}
+                  />
+                )}
               </TabPanel>
               <TabPanel p="0px" minH="calc(100vh - 409px)">
                 <ScheduleTab data={formattedGanttData} isLoading={isGanttChartLoading} />
@@ -275,11 +307,11 @@ export const ProjectDetails: React.FC = props => {
                   />
                 </TabPanel>
               }
-              {(!isLoading && projectData) &&
+              {!isLoading && projectData && (
                 <TabPanel h="680px">
                   <Messages projectId={projectId} entity="project" id={projectId} value={projectData} />
                 </TabPanel>
-              }
+              )}
             </TabPanels>
           </Card>
         </Tabs>
@@ -292,7 +324,6 @@ export const ProjectDetails: React.FC = props => {
         projectId={projectId as string}
         projectStatus={projectStatus}
       />
-      {isOpen && <NewWorkOrder projectData={projectData as Project} isOpen={isOpen} onClose={onClose} />}
       {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
       <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
 
