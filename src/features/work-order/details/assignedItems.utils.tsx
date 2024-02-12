@@ -609,11 +609,7 @@ export const createInvoicePdf = async ({ doc, workOrder, projectData, assignedIt
     { label: 'Lock Box Code:', value: projectData?.lockBoxCode ?? '' },
     { label: 'Gate Code:', value: projectData?.gateCode ?? '' },
   ]
-  /* commenting because of unclear requirements 
-  const totalAward = assignedItems?.reduce(
-    (partialSum, a) => partialSum + Number(a?.price ?? 0) * Number(a?.quantity ?? 0),
-    0,
-  ) */
+
   const basicFont = undefined
   const summaryFont = 'Times-Roman'
   const heading = 'Work Order # ' + workOrder?.id
@@ -656,6 +652,7 @@ export const createInvoicePdf = async ({ doc, workOrder, projectData, assignedIt
     )
     y = y + 5
   })
+  const totalAward = assignedItems?.reduce((partialSum, a) => partialSum + Number(a?.vendorAmount ?? 0), 0)
 
   doc.setFont(summaryFont, 'bold')
   doc.text('Work Type:', startx, y + 20)
@@ -668,7 +665,7 @@ export const createInvoicePdf = async ({ doc, workOrder, projectData, assignedIt
   doc.setFont(summaryFont, 'bold')
   doc.text('Total:', x + 5, y + 25)
   doc.setFont(summaryFont, 'normal')
-  doc.text(currencyFormatter(workOrder?.finalInvoiceAmount ?? 0), x + 45, y + 25)
+  doc.text(currencyFormatter(totalAward ?? 0), x + 45, y + 25)
 
   autoTable(doc, {
     startY: y + 35,

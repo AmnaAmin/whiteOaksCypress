@@ -318,17 +318,19 @@ export const WorkOrderDetails = ({
                       <WorkOrderNotes workOrder={workOrderDetails} onClose={onClose} />
                     )}
                   </TabPanel>
-                  {showForPreProdAndLocal && <TabPanel p={0}>
-                    {isLoadingWorkOrder ? (
-                      <Center h={'600px'}>
-                        <Spinner size="xl" />
-                      </Center>
-                    ) : (
-                      <Box w="100%" h="680px">
-                        <Messages id={workOrder.id} entity="workOrder" projectId={projectId} value={projectData} />
-                      </Box>
-                    )}
-                  </TabPanel>}
+                  {showForPreProdAndLocal && (
+                    <TabPanel p={0}>
+                      {isLoadingWorkOrder ? (
+                        <Center h={'600px'}>
+                          <Spinner size="xl" />
+                        </Center>
+                      ) : (
+                        <Box w="100%" h="680px">
+                          <Messages id={workOrder.id} entity="workOrder" projectId={projectId} value={projectData} />
+                        </Box>
+                      )}
+                    </TabPanel>
+                  )}
                 </TabPanels>
               </Card>
             </Tabs>
