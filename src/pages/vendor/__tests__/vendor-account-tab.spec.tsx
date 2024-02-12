@@ -1,5 +1,4 @@
 import { render, screen, waitForLoadingToFinish } from 'utils/test-utils'
-import App from 'App'
 import { VendorProfileTabs } from '../vendor-profile'
 import { Providers } from 'providers'
 import { BrowserRouter } from 'react-router-dom'

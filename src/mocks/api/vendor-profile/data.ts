@@ -1,5 +1,3 @@
-import { VendorProfile } from "types/vendor.types"
-
 export const PAYMENT_OPTIONS = [
   {
     id: 105,
