@@ -87,6 +87,7 @@ const CreateVendorDetail: React.FC<{
               type="text"
               id="companyName"
               variant="required-field"
+              data-testid="companyName"
               {...register('companyName', {
                 required: isActive && 'This is required',
                 maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
@@ -375,6 +376,7 @@ const CreateVendorDetail: React.FC<{
                 })}
                 w="121px"
                 variant="outline"
+                data-testid="ext"
                 size="md"
                 isDisabled={isReadOnly}
                 type="number"
@@ -478,6 +480,7 @@ const CreateVendorDetail: React.FC<{
                 })}
                 w="215px"
                 variant="required-field"
+                data-testid="capacity"
                 size="md"
                 isDisabled={isReadOnly}
               />
@@ -497,7 +500,7 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input type="text" {...register('secondName')} variant="outline" size="md" isDisabled={isReadOnly} />
+            <Input type="text" {...register('secondName')} data-testid="secondName" variant="outline" size="md" isDisabled={isReadOnly} />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -513,6 +516,7 @@ const CreateVendorDetail: React.FC<{
                 },
               })}
               variant="outline"
+              data-testid="email"
               size="md"
               isDisabled={isReadOnly}
             />
