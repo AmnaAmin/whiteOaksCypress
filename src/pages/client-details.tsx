@@ -147,7 +147,7 @@ export const ClientDetailsTabs = React.forwardRef((props: ClientDetailsTabsProps
               {clientDetails && (
                 <TabPanel p="0px">
                   <Box w="100%" height={493}>
-                    <Messages id={clientDetails.id} entity="client" />
+                    <Messages id={clientDetails?.id} entity="client" />
                   </Box>
                 </TabPanel>
               )}
