@@ -497,7 +497,7 @@ const WorkOrderDetailsPage = ({
                   </Center>
                 ) : (
                   <Box w="100%" h="680px">
-                    <Messages id={workOrder.id} entity="projectWorkOrder" projectId={projectId} value={workOrder} />
+                    <Messages id={workOrder?.id} entity="projectWorkOrder" projectId={projectId} value={workOrder} />
                   </Box>
                 )}
               </TabPanel>

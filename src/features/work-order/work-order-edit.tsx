@@ -468,7 +468,7 @@ const WorkOrderDetails = ({
                     ) : (
                       <Box w="100%" h="680px">
                         <Messages
-                          id={workOrder.id}
+                          id={workOrder?.id}
                           entity="projectWorkOrder"
                           projectId={projectId}
                           value={{ ...workOrder, estimateId: projectData?.estimateId }}
