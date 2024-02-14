@@ -324,14 +324,8 @@ const WorkOrderDetailsPage = ({
       )}
       <Divider mb={3} />
       <Stack>
-        <Tabs
-          variant="enclosed"
-          colorScheme="brand"
-          size="md"
-          onChange={index => setTabIndex(index)}
-          whiteSpace="nowrap"
-        >
-          <TabList color="gray.600" ml="10px" mr="20px">
+        <Tabs variant="line" colorScheme="brand" size="md" onChange={index => setTabIndex(index)} whiteSpace="nowrap">
+          <TabList color="gray.600" ml="10px" mr="20px" bg={'#F7FAFC'} rounded="6px 6px 0px 0px">
             <Tab>{t('workOrderDetails')}</Tab>
             <Tab data-testid="wo_transaction_tab">{t('projects.projectDetails.transactions')}</Tab>
             {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
