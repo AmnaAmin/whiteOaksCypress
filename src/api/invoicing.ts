@@ -25,7 +25,6 @@ export const useFetchInvoices = ({ projectId }: { projectId: string | number | u
     ['invoices', projectId],
     async () => {
       const response = await client(`project-invoices?projectId.equals=${projectId}&sort=modifiedDate,asc`, {})
-
       return response?.data ? response?.data : []
     },
     { enabled: !!projectId && projectId !== 'undefined' },
@@ -43,7 +42,6 @@ export const useFetchInvoiceDetails = ({ invoiceId }: { invoiceId: string | numb
     ['invoice-details', invoiceId],
     async () => {
       const response = await client(`project-invoices/${invoiceId}`, {})
-
       return response?.data ? response?.data : []
     },
     { enabled: !!invoiceId && invoiceId !== 'undefined' },
@@ -139,7 +137,7 @@ export const useUpdateInvoiceMutation = ({ projId }) => {
       //   console.log('Invoice name changed reason: invoice date')
       //   isInvoiceChanged = true
       // }
-      
+
       // if (
       //   !compareInvoiceLineItems(
       //     payload.invoiceLineItems?.filter(l => l.type === 'finalSowLineItems'),
@@ -640,12 +638,10 @@ export const useUpdateInvoicingDocument = () => {
 
 export const useFetchInvoiceDetail = (projectId: string) => {
   const client = useClient()
-
   const { data: invoiceDetail, ...rest } = useQuery(
     ['invoicesDetail', projectId],
     async () => {
       const response = await client(`project/${projectId}/invoiceNo`, {})
-
       return response
     },
     {
@@ -668,9 +664,7 @@ export const useGenerateInvoicePDF = () => {
     )
     const projectResponse = await client(`projects/${payload.projectId}?cacheBuster=${new Date().valueOf()}`, {})
     const invoiceResponse = await client(`project-invoices/${invoiceId}`, {})
-
     const invoice = invoiceResponse?.data
-
     const transactions = transactionsResponse?.data
     const projectData = projectResponse?.data
 
