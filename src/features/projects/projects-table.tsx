@@ -36,6 +36,7 @@ type ProjectProps = {
   onNewProjectModalClose: () => void
   createdProject: string | number | null
   setCreatedProject: (value: string | number | null) => void
+  selectedPreInvoice?: boolean
 }
 
 export const ProjectsTable: React.FC<ProjectProps> = ({
@@ -48,6 +49,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
   createdProject,
   setCreatedProject,
   onNewProjectModalClose,
+  selectedPreInvoice
 }) => {
   const navigate = useNavigate()
   const { email } = useUserProfile() as Account
@@ -68,6 +70,7 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
       userIds,
       days,
       selectedFlagged,
+      selectedPreInvoice
     })
 
   const { projects, isLoading, totalPages, dataCount } = useProjects(

@@ -16,7 +16,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { STATUS } from 'features/common/status'
+import { PROJECT_STATUS, STATUS } from 'features/common/status'
 import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -51,6 +51,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
   const { isAdmin } = useUserRolesSelector()
+  const projectStatusId: number = (projectData?.projectStatusId || -1);
 
   useEffect(() => {
     if (isReadOnly) {
@@ -103,6 +104,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     isWOAStartDateRequired,
     isClientSignOffDateRequired,
   } = useFieldsRequired(control)
+
+  //invoiced, cancelled, client paid, paid, disputed
+  const disabledPreIvoiceStatusIds = [ProjectStatus.Invoiced, ProjectStatus.Cancelled, ProjectStatus.ClientPaid, ProjectStatus.Paid, ProjectStatus.Disputed]
 
   const sentenceCaseActive = STATUS.Active.charAt(0).toUpperCase() + STATUS.Active.slice(1).toLowerCase()
 
@@ -540,6 +544,24 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                     ? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`
                     : ''}
                 </Text>
+              </Checkbox>
+            </FormControl>
+          </GridItem>
+
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                Pre Invoice
+              </FormLabel>
+              <Checkbox
+                colorScheme="PrimaryCheckBox"
+                isChecked={projectData?.preInvoiced}
+                variant={'normal'}
+                data-testid="preInvoiceCheckbox"
+                disabled={disabledPreIvoiceStatusIds.includes(projectStatusId)}
+                size="md"
+                {...register('preInvoiced')}
+              >
               </Checkbox>
             </FormControl>
           </GridItem>
