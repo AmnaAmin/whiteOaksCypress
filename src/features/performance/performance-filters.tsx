@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, FormLabel, Grid, GridItem, HStack } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { MonthOption } from 'api/performance'
+import { monthNamesOptions, MonthOption, MonthOptionTypes } from 'api/performance'
 import { SelectOption } from 'types/transaction.type'
 import { PERFORMANCE } from './performance.i18n'
 import { useTranslation } from 'react-i18next'
@@ -13,10 +13,12 @@ export const PerformanceFilters: React.FC<{
   fpmOption: (SelectOption | null)[]
   setMonthOption: (val) => void
   monthOption: SelectOption
-  filterGraphData: (selectedFpms, selectedMonth) => void
+  filterGraphData: (selectedFpms, selectedMonth, isMonthNameDropdownSelected?) => void
   fieldProjectManagerOptions: SelectOption[]
   setDefaultToTopFive: (val: boolean) => void
   setFpmFilter: (val) => void
+  monthNameOption: SelectOption[]
+  setMonthNameOption: (val) => void
 }> = ({
   yearFilter,
   setYearFilter,
@@ -28,8 +30,11 @@ export const PerformanceFilters: React.FC<{
   fieldProjectManagerOptions,
   setDefaultToTopFive,
   setFpmFilter,
+  monthNameOption,
+  setMonthNameOption
 }) => {
   const { t } = useTranslation()
+  const [disableMonthNamesDropdown, setDisableMonthNamesDropdown] = useState<Boolean>(true);
 
   const onFpmOptionChange = options => {
     if (options?.length < 1) {
@@ -50,7 +55,7 @@ export const PerformanceFilters: React.FC<{
 
     setFpmOption(selectedFpmOption)
     setFpmFilter(selectedFpmOption)
-    filterGraphData(selectedFpmOption, monthOption)
+    filterGraphData(selectedFpmOption, monthOption, false)
   }
 
   const getMonthValue = monthOption => {
@@ -59,6 +64,12 @@ export const PerformanceFilters: React.FC<{
     const currentMonth = new Date().getMonth()
     const isCurrentYearData = yearFilter === currentYear || !yearFilter
     const isPastYearData = yearFilter === currentYear - 1
+
+    if ([MonthOptionTypes.lastYear, MonthOptionTypes.currentYear].includes(monthOption?.value)) setDisableMonthNamesDropdown(false);
+    else {
+      setDisableMonthNamesDropdown(true);
+      setMonthNameOption([]);
+    }
 
     setFpmOption(selectedFpm) //empty select
     setFpmFilter(selectedFpm) //empty fpm query data
@@ -84,22 +95,26 @@ export const PerformanceFilters: React.FC<{
       (monthOption?.label === 'Past Quarter' && [0, 1, 2].includes(currentMonth))
     ) {
       if (isPastYearData) {
-        filterGraphData(selectedFpm, monthOption)
+        filterGraphData(selectedFpm, monthOption, false)
       } else {
         setYearFilter(currentYear - 1)
       }
     }
   }
 
+  const onMonthNameChange = (monthOption) => {
+    setMonthNameOption(monthOption)
+  }
+
   return (
     <Box mt={3} mb={3} bg="white" border="1px solid #EAE6E6" rounded={'6px'}>
-      <Grid h="40px" templateColumns="repeat(3, 1fr)" gap={0} m={5}>
-        <GridItem rowSpan={2} colSpan={2} colStart={1} colEnd={2}>
+      <Grid h="100px" templateColumns="repeat(3, 1fr)" gap={0} m={5}>
+        <GridItem rowSpan={2} colSpan={2} colStart={1} colEnd={2} mr={10}>
           <HStack>
-            <FormLabel ml={8} variant="strong-label" size="md">
-              {t(`${PERFORMANCE}.filterByMonth`)}
+            <FormLabel ml={8} variant="strong-label" size="md" w={"120px"}>
+              {t(`${PERFORMANCE}.filterBy`)}
             </FormLabel>
-            <Box width={'50%'}>
+            <Box width={'80%'}>
               <ReactSelect
                 name={`monthsDropdown`}
                 options={MonthOption.filter(m => m.value !== 'all')}
@@ -108,6 +123,24 @@ export const PerformanceFilters: React.FC<{
                 selected={setMonthOption}
                 variant="light-label"
                 size="md"
+              />
+            </Box>
+          </HStack>
+          <HStack mt={6}>
+            <FormLabel ml={8} variant="strong-label" size="md" w={"120px"}>
+              {t(`${PERFORMANCE}.filterByMonth`)}
+            </FormLabel>
+            <Box width={'80%'}>
+              <ReactSelect
+                name={`monthsNamesDropdown`}
+                options={monthNamesOptions}
+                isDisabled={disableMonthNamesDropdown}
+                onChange={onMonthNameChange}
+                value={monthNameOption}
+                selected={setMonthOption}
+                variant="light-label"
+                size="md"
+                isMulti
               />
             </Box>
           </HStack>
