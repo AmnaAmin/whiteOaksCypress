@@ -24,6 +24,7 @@ describe('Vendor Work Orders Table', () => {
       expect(screen.queryByText('Final Invoice')).toBeInTheDocument()
       expect(screen.queryByText('Issue')).toBeInTheDocument()
       expect(screen.queryByText('Expected Completion')).toBeInTheDocument()
+      expect(screen.queryByText('% Completion')).toBeInTheDocument()
 
       // Completed Work Order Row
       expect(screen.getByRole('gridcell', { name: 'General Labor' })).toBeInTheDocument()
