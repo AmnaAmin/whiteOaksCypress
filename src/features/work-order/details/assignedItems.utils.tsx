@@ -1073,6 +1073,84 @@ export const useGetLineItemsColumn = ({
         },
         size: 250,
       },
+
+      {
+        header: () => (
+          <span style={{ marginLeft: '30px', color: clrState ? 'red' : '' }}>
+            {' '}
+            {t(`${WORK_ORDER}.completePercentage`)}
+          </span>
+        ),
+        accessorKey: 'completePercentage',
+        size: 200,
+        cell: ({ row }) => {
+          const index = row?.index
+          const {
+            formState: { errors },
+            control,
+          } = formControl
+
+          return (
+            <Box pos="relative">
+              {index !== 0 && (
+                <Box
+                  w="50px"
+                  pos="absolute"
+                  left="-10px"
+                  top="10px"
+                  _hover={{
+                    '.delete-row-icon': { visibility: 'visible' },
+                  }}
+                >
+                  <Icon
+                    as={BiXCircle}
+                    boxSize={5}
+                    data-testid={'unassign-' + index}
+                    color="brand.300"
+                    visibility="hidden"
+                    className="delete-row-icon"
+                    onClick={() => {
+                      removeAssigned(index)
+                    }}
+                    cursor="pointer"
+                  ></Icon>
+                </Box>
+              )}
+              <FormControl
+                ml="27px"
+                isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
+                zIndex={9999 + 1}
+                width="150"
+              >
+                <Controller
+                  control={control}
+                  // rules={{ required: true }}
+                  name={`assignedItems.${index}.completePercentage`}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <CreatableSelectForTable
+                          index={index}
+                          options={completePercentageValues}
+                          field={field}
+                          key={'assignedItems.' + [index]}
+                          valueFormatter={typeof field.value === 'number' ? handleDropdownValue : null}
+                          id={`assignedItems.${index}.completePercentage`}
+                          isDisabled={isVendor}
+                          newObjectFormatting={newObjectFormatting}
+                          onChangeFn={onChangeFn}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Box>
+          )
+        },
+      },
+
       {
         header: () => {
           return (
@@ -1228,82 +1306,7 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
-      {
-        header: () => (
-          <span style={{ marginLeft: '30px', color: clrState ? 'red' : '' }}>
-            {' '}
-            {t(`${WORK_ORDER}.completePercentage`)}
-          </span>
-        ),
-        accessorKey: 'completePercentage',
-        size: 200,
-        cell: ({ row }) => {
-          const index = row?.index
-          const {
-            formState: { errors },
-            control,
-          } = formControl
 
-          return (
-            <Box pos="relative">
-              {index !== 0 && (
-                <Box
-                  w="50px"
-                  pos="absolute"
-                  left="-10px"
-                  top="10px"
-                  _hover={{
-                    '.delete-row-icon': { visibility: 'visible' },
-                  }}
-                >
-                  <Icon
-                    as={BiXCircle}
-                    boxSize={5}
-                    data-testid={'unassign-' + index}
-                    color="brand.300"
-                    visibility="hidden"
-                    className="delete-row-icon"
-                    onClick={() => {
-                      removeAssigned(index)
-                    }}
-                    cursor="pointer"
-                  ></Icon>
-                </Box>
-              )}
-              <FormControl
-                ml="27px"
-                isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
-                zIndex={9999 + 1}
-                width="150"
-              >
-                <Controller
-                  control={control}
-                  // rules={{ required: true }}
-                  name={`assignedItems.${index}.completePercentage`}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <>
-                        <CreatableSelectForTable
-                          index={index}
-                          options={completePercentageValues}
-                          field={field}
-                          key={'assignedItems.' + [index]}
-                          valueFormatter={typeof field.value === 'number' ? handleDropdownValue : null}
-                          id={`assignedItems.${index}.completePercentage`}
-                          isDisabled={isVendor}
-                          newObjectFormatting={newObjectFormatting}
-                          onChangeFn={onChangeFn}
-                        />
-                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                      </>
-                    )
-                  }}
-                />
-              </FormControl>
-            </Box>
-          )
-        },
-      },
       {
         // header: `${WORK_ORDER}.complete`,
         accessorKey: 'isCompleted',
