@@ -108,7 +108,7 @@ export const PerformanceFilters: React.FC<{
 
   return (
     <Box mt={3} mb={3} bg="white" border="1px solid #EAE6E6" rounded={'6px'}>
-      <Grid h="100px" templateColumns="repeat(3, 1fr)" gap={0} m={5}>
+      <Grid templateColumns="repeat(3, 1fr)" gap={0} m={5}>
         <GridItem rowSpan={2} colSpan={2} colStart={1} colEnd={2} mr={10}>
           <HStack>
             <FormLabel ml={8} variant="strong-label" size="md" w={"120px"}>
