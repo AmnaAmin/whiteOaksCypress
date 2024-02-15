@@ -19,7 +19,6 @@ import {
 } from '@chakra-ui/react'
 import { currencyFormatter } from 'utils/string-formatters'
 import { dateFormatNew, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
-
 import { BiCalendar, BiDollarCircle, BiDownload, BiFile, BiSpreadsheet } from 'react-icons/bi'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
