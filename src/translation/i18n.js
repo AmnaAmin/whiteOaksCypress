@@ -213,6 +213,7 @@ i18n.use(initReactI18next).init({
         save: 'Save',
         done: 'Done',
         finalSOW: 'Final SOW',
+        
         accountpayable: 'Account Payable',
         projectcost: 'Project Cost',
         revenue: 'Revenue',
@@ -500,7 +501,7 @@ i18n.use(initReactI18next).init({
         // Project details
         originalSowAmount: 'Original SOW Amount',
         finalSowAmount: ' Final SOW Amount',
-
+        balanceSOW: 'Balance SOW',
         paymentsTerms: 'Payments terms',
         woaExpectedPay: 'WOA Expected Pay',
         woaInvoiceDate: 'WOA Invoice Date',
@@ -688,6 +689,7 @@ i18n.use(initReactI18next).init({
         // Project details
         originalSowAmount: 'Importe de la SOW original',
         finalSowAmount: 'Importe de la SOW final',
+        balanceSOW: 'Balance SOW',
         paymentsTerms: 'Condiciones de pago',
         woaExpectedPay: 'Pago esperado de WOA',
         downloadOriginalSow: 'Descargar SOW original',
