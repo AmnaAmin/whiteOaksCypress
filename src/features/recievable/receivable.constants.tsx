@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
+import Status from 'features/common/status'
 import numeral from 'numeral'
 import { dateFormat } from 'utils/date-time-utils'
 
@@ -10,6 +11,14 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'client',
     accessorKey: 'clientName',
+  },
+  {
+    header: 'ticketStatus',
+    accessorKey: 'projectStatus',
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return <Status value={value} id={value} />
+    },
   },
   {
     header: 'address',
@@ -85,6 +94,7 @@ export const RECEIVABLE_TABLE_QUERY_KEYS = {
   woaInvoiceDateEnd: 'woaInvoiceDate.lessThanOrEqual',
   status: 'status.contains',
   clientName: 'clientName.contains',
+  projectStatus: 'projectStatus.contains',
   gridPaymentTerm: 'gridPaymentTerm.equals',
   gridExpectedPaymentDateStart: 'gridExpectedPaymentDate.greaterThanOrEqual',
   gridExpectedPaymentDateEnd: 'gridExpectedPaymentDate.lessThanOrEqual',
