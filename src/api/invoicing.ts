@@ -222,7 +222,7 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
       }
     }),
     woaExpectedPay: values.woaExpectedPayDate,
-    invoiceNumber: values.invoiceNumber,
+    invoiceNumber: values.invoiceNumber?.trim(),
     invoiceDate: values.invoiceDate,
     paymentReceived: values.paymentReceivedDate,
     changeOrderId: invoice ? invoice?.changeOrderId : null,

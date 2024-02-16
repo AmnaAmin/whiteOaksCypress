@@ -97,7 +97,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   carrierName: 'carrierName.contains',
 }
 
-const PopoverTooltip = ({ value, title }) => {
+export const PopoverTooltip = ({ value, title }) => {
   return (
     <Popover trigger="hover">
       <PopoverTrigger>

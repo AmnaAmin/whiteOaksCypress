@@ -36,6 +36,7 @@ import { completePercentage } from './work-order-edit-tab'
 import { completePercentageValues, newObjectFormatting } from 'api/work-order'
 import { useLocation } from 'api/location'
 import { addImages } from 'utils/file-utils'
+import { onChangeCheckbox, onChangeHeaderCheckbox } from './utils'
 
 const swoPrefix = '/smartwo/api'
 
@@ -890,6 +891,7 @@ export const useGetLineItemsColumn = ({
     const watchIsCompleted = watch(`assignedItems.${index}.isCompleted`)
     //this check will checks if value of %completion is 100% then mark that checkbox true
     if (option?.value === 100) setValue(`assignedItems.${index}.isCompleted`, true)
+    else setValue(`assignedItems.${index}.isCompleted`, false)
 
     // this check will execute for all users other than admin to setError if value is less then 100%
     // of %completion & check box of line item is checked, else it will clearError and color of %completion column
@@ -1073,6 +1075,84 @@ export const useGetLineItemsColumn = ({
         },
         size: 250,
       },
+
+      {
+        header: () => (
+          <span style={{ marginLeft: '30px', color: clrState ? 'red' : '' }}>
+            {' '}
+            {t(`${WORK_ORDER}.completePercentage`)}
+          </span>
+        ),
+        accessorKey: 'completePercentage',
+        size: 200,
+        cell: ({ row }) => {
+          const index = row?.index
+          const {
+            formState: { errors },
+            control,
+          } = formControl
+
+          return (
+            <Box pos="relative">
+              {index !== 0 && (
+                <Box
+                  w="50px"
+                  pos="absolute"
+                  left="-10px"
+                  top="10px"
+                  _hover={{
+                    '.delete-row-icon': { visibility: 'visible' },
+                  }}
+                >
+                  <Icon
+                    as={BiXCircle}
+                    boxSize={5}
+                    data-testid={'unassign-' + index}
+                    color="brand.300"
+                    visibility="hidden"
+                    className="delete-row-icon"
+                    onClick={() => {
+                      removeAssigned(index)
+                    }}
+                    cursor="pointer"
+                  ></Icon>
+                </Box>
+              )}
+              <FormControl
+                ml="27px"
+                isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
+                zIndex={9999 + 1}
+                width="150"
+              >
+                <Controller
+                  control={control}
+                  // rules={{ required: true }}
+                  name={`assignedItems.${index}.completePercentage`}
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <CreatableSelectForTable
+                          index={index}
+                          options={completePercentageValues}
+                          field={field}
+                          key={'assignedItems.' + [index]}
+                          valueFormatter={typeof field.value === 'number' ? handleDropdownValue : null}
+                          id={`assignedItems.${index}.completePercentage`}
+                          isDisabled={isVendor}
+                          newObjectFormatting={newObjectFormatting}
+                          onChangeFn={onChangeFn}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Box>
+          )
+        },
+      },
+
       {
         header: () => {
           return (
@@ -1228,82 +1308,7 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
-      {
-        header: () => (
-          <span style={{ marginLeft: '30px', color: clrState ? 'red' : '' }}>
-            {' '}
-            {t(`${WORK_ORDER}.completePercentage`)}
-          </span>
-        ),
-        accessorKey: 'completePercentage',
-        size: 200,
-        cell: ({ row }) => {
-          const index = row?.index
-          const {
-            formState: { errors },
-            control,
-          } = formControl
 
-          return (
-            <Box pos="relative">
-              {index !== 0 && (
-                <Box
-                  w="50px"
-                  pos="absolute"
-                  left="-10px"
-                  top="10px"
-                  _hover={{
-                    '.delete-row-icon': { visibility: 'visible' },
-                  }}
-                >
-                  <Icon
-                    as={BiXCircle}
-                    boxSize={5}
-                    data-testid={'unassign-' + index}
-                    color="brand.300"
-                    visibility="hidden"
-                    className="delete-row-icon"
-                    onClick={() => {
-                      removeAssigned(index)
-                    }}
-                    cursor="pointer"
-                  ></Icon>
-                </Box>
-              )}
-              <FormControl
-                ml="27px"
-                isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
-                zIndex={9999 + 1}
-                width="150"
-              >
-                <Controller
-                  control={control}
-                  // rules={{ required: true }}
-                  name={`assignedItems.${index}.completePercentage`}
-                  render={({ field, fieldState }) => {
-                    return (
-                      <>
-                        <CreatableSelectForTable
-                          index={index}
-                          options={completePercentageValues}
-                          field={field}
-                          key={'assignedItems.' + [index]}
-                          valueFormatter={typeof field.value === 'number' ? handleDropdownValue : null}
-                          id={`assignedItems.${index}.completePercentage`}
-                          isDisabled={isVendor}
-                          newObjectFormatting={newObjectFormatting}
-                          onChangeFn={onChangeFn}
-                        />
-                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                      </>
-                    )
-                  }}
-                />
-              </FormControl>
-            </Box>
-          )
-        },
-      },
       {
         // header: `${WORK_ORDER}.complete`,
         accessorKey: 'isCompleted',
@@ -1317,42 +1322,7 @@ export const useGetLineItemsColumn = ({
                 data-testid="complete_checkbox"
                 disabled={!statusEnabled}
                 onChange={e => {
-                  controlledAssignedItems.forEach((item, index) => {
-                    const checkBoxData = watch(`assignedItems.${index}`)
-                    // here it will check if user isAdmin & top checkbox of column is checked then it will
-                    // change %completion dropdoen value to 100% of all dropdowns of &completion
-                    if (isAdmin) {
-                      setValue(`assignedItems.${index}.completePercentage`, {
-                        value: 100,
-                        label: '100%',
-                      })
-                      setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
-                    }
-
-                    // this check will execute for all users other than Admin upon clicking on checkbox
-                    // of line item's top checkbox
-                    if (
-                      !isAdmin &&
-                      e.target.checked &&
-                      (checkBoxData?.completePercentage === 0 ||
-                        checkBoxData?.completePercentage < 100 ||
-                        checkBoxData?.completePercentage.value < 100)
-                    ) {
-                      setError(`assignedItems.${index}.completePercentage`, {
-                        type: 'custom',
-                        message: t('PercentageCompletionMsg'),
-                      })
-                      setClrState(true)
-                    } else {
-                      setClrState(false)
-                      clearErrors(`assignedItems.${index}.completePercentage`)
-                      setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
-                    }
-
-                    if (!e.target.checked) {
-                      setValue(`assignedItems.${index}.isVerified`, false)
-                    }
-                  })
+                  onChangeHeaderCheckbox(controlledAssignedItems, e, formControl, isAdmin, setClrState)
                 }}
                 isChecked={markAllCompleted}
               ></Checkbox>
@@ -1380,39 +1350,7 @@ export const useGetLineItemsColumn = ({
                         isChecked={field.value}
                         disabled={!statusEnabled}
                         onChange={e => {
-                          const checkBoxData = watch(`assignedItems.${index}` as any)
-
-                          // here it will check if user isAdmin & checkbox is checked then it will
-                          // change related line items checkbox's %completion dropdoen value to 100%
-                          if (isAdmin) {
-                            setValue(`assignedItems.${index}.completePercentage`, {
-                              value: 100,
-                              label: '100%',
-                            })
-                            setValue(`assignedItems.${index}.isCompleted`, e.currentTarget.checked)
-                          }
-
-                          if (!e.target.checked) {
-                            setValue(`assignedItems.${index}.isVerified`, false)
-                          }
-
-                          // this check will execute for all users other than Admin upon clicking on checkbox
-                          // of  individual line item's
-                          if (
-                            !isAdmin &&
-                            e.target.checked &&
-                            (checkBoxData?.completePercentage === 0 ||
-                              checkBoxData?.completePercentage < 100 ||
-                              checkBoxData?.completePercentage.value < 100)
-                          ) {
-                            setError(`assignedItems.${index}.completePercentage`, {
-                              type: 'custom',
-                              message: t('PercentageCompletionMsg'),
-                            })
-                          } else {
-                            clearErrors(`assignedItems.${index}.completePercentage`)
-                            field.onChange(e.currentTarget.checked)
-                          }
+                          onChangeCheckbox(e, isAdmin, formControl, field, index)
                         }}
                       ></CustomCheckBox>
                       <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>

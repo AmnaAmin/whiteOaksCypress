@@ -1,4 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
+import { PopoverTooltip } from 'constants/projects.constants'
 import Status from 'features/common/status'
 import numeral from 'numeral'
 import { dateFormat } from 'utils/date-time-utils'
@@ -25,6 +26,7 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   type: 'type.contains',
   displayId: 'displayId.contains',
   clientName: 'clientName.contains',
+  paymentMethods: 'paymentMethods.contains',
   pcOrFpmUserId: 'directReportUserOnly.equals',
 }
 
@@ -61,6 +63,16 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     header: 'paymentType',
     accessorKey: 'paymentType',
   },
+  {
+    header: 'paymentMethod',
+    accessorKey: 'paymentMethods',
+    meta: { hideTitle: true },
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return <PopoverTooltip value={value} title={'paymentMethod'} />
+    },
+  },
+
   {
     header: 'expectedPayDate',
     accessorKey: 'expectedPaymentDate',
