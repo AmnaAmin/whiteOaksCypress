@@ -170,7 +170,6 @@ export const MonthOption = [
 ]
 
 export const monthNamesOptions = [
-  { value: MonthOptionTypes.all, label: "All" },
   { value: "1", label: "January" },
   { value: "2", label: "February" },
   { value: "3", label: "March" },
