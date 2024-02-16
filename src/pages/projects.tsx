@@ -74,18 +74,21 @@ export const Projects = () => {
             }}
             onSelectCard={selection => {
               setSelectedFlagged(null)
+              setSelectedPreInvoiced(false)
               setSelectedCard(selection)
             }}
             selectedUsers={selectedUserIds}
             selectedCard={selectedCard}
             onSelectFlagged={selection => {
               setSelectedCard(null)
+              setSelectedPreInvoiced(false)
               setSelectedFlagged(selection)
             }}
             selectedPreInvoiced={selectedPreInvoiced}
             onSelectPreInvoiced={(selection) => {
               setSelectedCard(null)
               setSelectedPreInvoiced(selection)
+              console.log(selection);
             }}
             selectedFlagged={selectedFlagged}
           />

@@ -127,8 +127,8 @@ const useProjectCardJson = cards => {
       id: 'preinvoiced',
       title: t('projects.projectFilter.preinvoiced'),
       value: 'preinvoiced',
-      number: cards?.find(c => c?.status === 1)?.count || 0,
-      IconElement: <IconElement Icon={BiFlag} bg="#FFE1E1" />,
+      number: cards?.find(c => c?.status === 2)?.count || 0,
+      IconElement: <IconElement Icon={SummaryIconEight} bg="#FAE6E5" />,
     },
   ]
 
@@ -161,7 +161,7 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({
 }) => {
   const { data: values, isLoading } = useProjectCards(selectedUsers?.join(','))
   const cards = useProjectCardJson(values)
-
+  console.log("CARDS",cards);
   return (
     <>
       <Grid gap={3} gridTemplateColumns="repeat(auto-fit,minmax(230px,1fr))">
@@ -180,7 +180,7 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({
               />
             )
           } else if (card.id === 'preinvoiced') {
-            <ProjectCard
+            return (<ProjectCard
               clear={clear}
               key={card.id}
               {...card}
@@ -189,7 +189,7 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({
               isLoading={isLoading}
               selectedPreInvoiced={selectedPreInvoiced}
               onSelectPreInvoiced={onSelectPreInvoiced}
-            />
+            />)
           } else {
             return (
               <ProjectCard

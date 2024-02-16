@@ -555,7 +555,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               </FormLabel>
               <Checkbox
                 colorScheme="PrimaryCheckBox"
-                isChecked={projectData?.preInvoiced}
+                defaultChecked={projectData?.preInvoiced}
                 variant={'normal'}
                 data-testid="preInvoiceCheckbox"
                 disabled={disabledPreIvoiceStatusIds.includes(projectStatusId)}

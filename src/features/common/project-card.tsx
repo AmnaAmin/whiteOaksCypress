@@ -58,7 +58,7 @@ export const ProjectCard = ({
             clear()
           }
         }}
-        borderColor={selectedCard === value || selectedFlagged === 'yes' ? 'brand.300' : ''}
+        borderColor={selectedCard === value || selectedFlagged === 'yes' || selectedPreInvoiced ? 'brand.300' : ''}
         _hover={{ bg: 'blue.50' }}
       >
         <Flex w="100%" mb="5px">

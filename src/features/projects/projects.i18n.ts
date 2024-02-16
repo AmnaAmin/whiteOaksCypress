@@ -66,6 +66,7 @@ export const projects = {
           disputed: 'Disputed',
           collection: 'Collection',
           flagged: 'Flagged',
+          preinvoiced:'Pre Invoicing'
         },
         projectSummary: {
           projectID: 'Project ID',
@@ -183,6 +184,7 @@ export const projects = {
           disputed: 'Cuestionado',
           collection: 'Recopilación',
           flagged: 'marcado',
+          preinvoiced:'Prefacturado'
         },
         projectSummary: {
           projectID: 'Projecto ID',

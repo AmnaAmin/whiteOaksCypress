@@ -95,6 +95,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   convertedDateStart: 'convertedDate.greaterThanOrEqual',
   convertedDateEnd: 'convertedDate.lessThanOrEqual',
   carrierName: 'carrierName.contains',
+  preInvoiced:'preInvoiced.equals'
 }
 
 const PopoverTooltip = ({ value, title }) => {

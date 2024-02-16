@@ -83,8 +83,9 @@ export const getAPIFilterQueryString = (
       modifiedFilters.push(filter)
     }
   })
-
+  console.log(queryAndTableColumnMapKeys)
   const filterKeyValues = reduceQueriesArrayToObject(modifiedFilters, 'id', 'value', queryAndTableColumnMapKeys || {})
+  console.log(filterKeyValues);
   return getQueryString({
     ...filterKeyValues,
     page: page || 0,

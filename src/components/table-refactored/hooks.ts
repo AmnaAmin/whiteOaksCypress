@@ -64,6 +64,13 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       ]
     }
 
+    if (selectedPreInvoice) {
+      finalFilters = [
+        ...columnFilters,
+        { id: 'preInvoiced', value: selectedPreInvoice},
+      ]
+    }
+
     // This filter will apply when user select a day from the project due days list
     if (!!selectedDay && days?.length) {
       const selectedDayData = days.find(day => day.dayName === selectedDay)
