@@ -13,7 +13,7 @@ export const RECEIVABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'clientName',
   },
   {
-    header: 'ticketStatus',
+    header: 'projectStatus',
     accessorKey: 'projectStatus',
     cell: (row: any) => {
       const value = row.cell.getValue()
