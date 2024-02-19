@@ -16,7 +16,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
-import { PROJECT_STATUS, STATUS } from 'features/common/status'
+import { STATUS } from 'features/common/status'
 import React, { useEffect, useState } from 'react'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -50,7 +50,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const [remainingArCheck, setRemainingArCheck] = useState<boolean>(false)
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isProjectCoordinator } = useUserRolesSelector()
   const projectStatusId: number = (projectData?.projectStatusId || -1);
 
   useEffect(() => {
@@ -558,7 +558,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 defaultChecked={projectData?.preInvoiced}
                 variant={'normal'}
                 data-testid="preInvoiceCheckbox"
-                disabled={disabledPreIvoiceStatusIds.includes(projectStatusId)}
+                disabled={disabledPreIvoiceStatusIds.includes(projectStatusId) || (!isAdmin && !isProjectCoordinator)}
                 size="md"
                 {...register('preInvoiced')}
               >
