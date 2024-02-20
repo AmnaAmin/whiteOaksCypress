@@ -131,7 +131,16 @@ export const ProjectDetails: React.FC = props => {
       <AmountDetailsCard projectId={projectId} />
 
       <Stack marginTop="-1px !important" w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
-        <Tabs index={tabIndex} size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
+        <Tabs
+          index={tabIndex}
+          size="sm"
+          variant="enclosed"
+          colorScheme="brand"
+          onChange={index => {
+            setShowNewWO(false)
+            setTabIndex(index)
+          }}
+        >
           <TabList h={'50px'} alignItems="end" border="none">
             <Flex h={'40px'} py={'1px'}>
               <Tab>{t('projects.projectDetails.transactions')}</Tab>
