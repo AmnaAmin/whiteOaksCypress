@@ -53,7 +53,7 @@ export const ProjectCard = ({
         onClick={() => {
           !disabled && onSelectCard(selectedCard !== value ? value : null)
           onSelectFlagged && onSelectFlagged(selectedFlagged !== 'yes' ? 'yes' : null)
-          onSelectPreInvoiced && onSelectPreInvoiced(selectedPreInvoiced == true ? false : true)
+          onSelectPreInvoiced && onSelectPreInvoiced(selectedPreInvoiced === true ? false : true)
           if (selectedCard === value) {
             clear()
           }
