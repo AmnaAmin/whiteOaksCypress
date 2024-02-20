@@ -24,7 +24,7 @@ import { ProjectDetailsFormValues, ProjectStatus } from 'types/project-details.t
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useCurrentDate, useFieldsDisabled, useFieldsRequired, useMinMaxDateSelector } from './hooks'
 import { addDays } from 'date-fns'
 import moment from 'moment'
@@ -50,7 +50,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const [remainingArCheck, setRemainingArCheck] = useState<boolean>(false)
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
-  const { isAdmin, isProjectCoordinator } = useUserRolesSelector()
+  const { permissions } = useRoleBasedPermissions()
+  const isAdmin = permissions?.includes('ALL')
+  const canPreInvoice = permissions.some(p => ['PREINVOICED.EDIT', 'ALL'].includes(p))
   const projectStatusId: number = (projectData?.projectStatusId || -1);
 
   useEffect(() => {
@@ -558,7 +560,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 defaultChecked={projectData?.preInvoiced}
                 variant={'normal'}
                 data-testid="preInvoiceCheckbox"
-                disabled={disabledPreIvoiceStatusIds.includes(projectStatusId) || (!isAdmin && !isProjectCoordinator)}
+                disabled={disabledPreIvoiceStatusIds.includes(projectStatusId) || (!canPreInvoice)}
                 size="md"
                 {...register('preInvoiced')}
               >

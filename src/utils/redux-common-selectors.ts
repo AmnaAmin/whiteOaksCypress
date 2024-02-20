@@ -29,6 +29,7 @@ export enum UserTypes {
   regularManager = 61,
 }
 
+//Its depricated don't use anywhere
 export const useUserRolesSelector = (): UserRoles => {
   const { data } = useAuth()
 

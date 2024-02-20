@@ -369,6 +369,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       createInvoiceMutate(payload, {
         onSuccess: data => {
           onClose?.()
+          window.location.reload()
         },
         onError: error => {
           console.log(error)
