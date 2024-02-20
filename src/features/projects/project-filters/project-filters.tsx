@@ -161,7 +161,6 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({
 }) => {
   const { data: values, isLoading } = useProjectCards(selectedUsers?.join(','))
   const cards = useProjectCardJson(values)
-  console.log("CARDS",cards);
   return (
     <>
       <Grid gap={3} gridTemplateColumns="repeat(auto-fit,minmax(230px,1fr))">
