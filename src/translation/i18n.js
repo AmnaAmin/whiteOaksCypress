@@ -130,6 +130,7 @@ i18n.use(initReactI18next).init({
         client: 'Client',
         terms: 'Terms',
         paymentTypes: 'Payment Types',
+        ticketStatus: 'Ticket Status',
         balance: 'Balance',
         woInvoiceDate: 'WO Invoice Date',
         poNo: 'PO No',
@@ -768,6 +769,7 @@ i18n.use(initReactI18next).init({
         client: 'Cliente',
         terms: 'Términos',
         paymentTypes: 'Formas De Pago',
+        ticketStatus: 'Estado del billete',
         balance: 'Balance',
 
         woInvoiceDate: 'Fecha de factura de OT',
