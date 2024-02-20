@@ -793,6 +793,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     lienRightFileDate: dateISOFormat(formValues.lienFiled),
     projectClosedDueDate: dateISOFormat(formValues.projectClosedDueDate),
     lienRightExpireDate: dateISOFormat(formValues.lienExpiryDate),
+    preInvoiced:formValues.preInvoiced ?? false,
 
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,

@@ -24,7 +24,7 @@ import { ProjectDetailsFormValues, ProjectStatus } from 'types/project-details.t
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import { useCurrentDate, useFieldsDisabled, useFieldsRequired, useMinMaxDateSelector } from './hooks'
 import { addDays } from 'date-fns'
 import moment from 'moment'
@@ -50,7 +50,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const [remainingArCheck, setRemainingArCheck] = useState<boolean>(false)
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
-  const { isAdmin } = useUserRolesSelector()
+  const { permissions } = useRoleBasedPermissions()
+  const isAdmin = permissions?.includes('ALL')
+  const canPreInvoice = permissions.some(p => ['PREINVOICED.EDIT', 'ALL'].includes(p))
+  const projectStatusId: number = (projectData?.projectStatusId || -1);
 
   useEffect(() => {
     if (isReadOnly) {
@@ -103,6 +106,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     isWOAStartDateRequired,
     isClientSignOffDateRequired,
   } = useFieldsRequired(control)
+
+  //invoiced, cancelled, client paid, paid, disputed
+  const disabledPreIvoiceStatusIds = [ProjectStatus.Invoiced, ProjectStatus.Cancelled, ProjectStatus.ClientPaid, ProjectStatus.Paid, ProjectStatus.Disputed]
 
   const sentenceCaseActive = STATUS.Active.charAt(0).toUpperCase() + STATUS.Active.slice(1).toLowerCase()
 
@@ -540,6 +546,24 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                     ? `${t(`verifyProjectDesc`)} ${watchForm.verifiedbyDesc} on ${dateFormat(watchForm.verifiedDate)}`
                     : ''}
                 </Text>
+              </Checkbox>
+            </FormControl>
+          </GridItem>
+
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                Pre Invoice
+              </FormLabel>
+              <Checkbox
+                colorScheme="PrimaryCheckBox"
+                defaultChecked={projectData?.preInvoiced}
+                variant={'normal'}
+                data-testid="preInvoiceCheckbox"
+                disabled={disabledPreIvoiceStatusIds.includes(projectStatusId) || (!canPreInvoice)}
+                size="md"
+                {...register('preInvoiced')}
+              >
               </Checkbox>
             </FormControl>
           </GridItem>
