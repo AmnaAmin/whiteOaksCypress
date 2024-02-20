@@ -9,6 +9,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { act } from 'react-dom/test-utils'
 import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
+import { setToken } from 'utils/storage.utils'
 
 export const renderWorkOrderDetails = async ({ onClose, workOrder, projectData }: any) => {
   const setIsError = jest.fn()
@@ -60,6 +61,9 @@ export const rendeWorkOrderModal = async ({ onClose, workOrder, projectData, tra
 
 jest.setTimeout(150000)
 describe('Work Order modal showing work order specific details', () => {
+  beforeAll(() => {
+    setToken('admin')
+  })
   test('Verify work order modal content', async () => {
     const onClose = jest.fn()
     const workOrder = WORK_ORDERS.find(w => w.statusLabel?.toLocaleLowerCase() === 'past due')
@@ -104,10 +108,9 @@ describe('Work Order modal showing work order specific details', () => {
       await userEvent.click(screen.getByTestId('complete_checkbox'))
     })
 
-    // skipping for now
-    // expect(screen.getByTestId('complete_checkbox')).toHaveAttribute('data-checked')
-    // expect(screen.getByTestId('isCompleted-0')).toHaveAttribute('data-checked')
-    // expect(screen.getByTestId('isCompleted-1')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('complete_checkbox')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isCompleted-0')).toHaveAttribute('data-checked')
+    expect(screen.getByTestId('isCompleted-1')).toHaveAttribute('data-checked')
   })
 
   // test('Verify work order details in completed state', async () => {

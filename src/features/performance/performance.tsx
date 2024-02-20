@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react'
-import { MonthOption, usePerformance, useRevenuePerformance } from 'api/performance'
+import { MonthOption, MonthOptionTypes, usePerformance, useRevenuePerformance } from 'api/performance'
 import { format, subMonths } from 'date-fns'
 import _, { last } from 'lodash'
 import { useEffect, useMemo, useState } from 'react'
@@ -21,8 +21,8 @@ type GraphData = {
   Profit: any
 }[]
 
-const useMapMonths = monthOption => {
-  var monthFilter
+const useMapMonths = (monthOption, monthNameOption) => {
+  let monthFilter;
 
   const quarters = [
     {
@@ -50,6 +50,19 @@ const useMapMonths = monthOption => {
   } else if (monthOption?.value === 'pastQuarter') {
     const lq = lastQuarter !== 0 ? lastQuarter : 4
     monthFilter = quarters.find(q => q.key === lq)?.value
+  } else if (Array.isArray(monthNameOption)) {
+    // Handle months name dropdown logic
+    if (monthNameOption?.some(m => m?.value?.toLocaleLowerCase() === MonthOptionTypes.all?.toLocaleLowerCase())) {
+      monthFilter = "1,2,3,4,5,6,7,8,9,10,11,12"
+    } else {
+      monthFilter = monthNameOption?.reduce((acc, option, index) => {
+        if (index === 0) {
+            return option.value;
+        } else {
+            return acc + ',' + option.value;
+        }
+    }, '');
+    }
   }
   return {
     monthFilter,
@@ -67,6 +80,7 @@ export const PerformanceTab = () => {
   const [yearFilter, setYearFilter] = useState(undefined)
   const [graphData, setGraphData] = useState<GraphData>()
   const [monthOption, setMonthOption] = useState(MonthOption[0])
+  const [monthNameOption, setMonthNameOption] = useState([]);
   const [fpmOption, setFpmOption] = useState<Array<SelectOption | null>>([])
   const [defaultToTopFive, setDefaultToTopFive] = useState<boolean>(false)
   const [fpmFilter, setFpmFilter] = useState<Array<SelectOption | null>>()
@@ -76,7 +90,7 @@ export const PerformanceTab = () => {
     refetch: refetchGraph,
     isFetching,
   } = useRevenuePerformance(yearFilter)
-  const { monthFilter } = useMapMonths(monthOption)
+  const { monthFilter } = useMapMonths(monthOption, monthNameOption)
   const [fpmPerformanceData, setFPMPerformanceData] = useState<Array<FPMMonthlyData> | null>()
   const { fieldProjectManagerOptions } = useFPMs()
 
@@ -164,8 +178,9 @@ export const PerformanceTab = () => {
     return graphs
   }, [performanceChart])
 
-  const filterGraphData = (selectedFpm, monthOption) => {
-    let selectedMonth, selectedQuater
+  const filterGraphData = (selectedFpm, monthOption, isMonthNameOptionSelected) => {
+    let selectedMonth, selectedQuater;
+    const selectedMonthName: string[] = [];
 
     // Checks if this month is selected, then returns month in the short form like Jan, Feb
     if (monthOption?.label === 'This Month') {
@@ -183,20 +198,29 @@ export const PerformanceTab = () => {
     if (monthOption?.label === 'Past Quarter') {
       selectedQuater = getLastQuarterByDate() !== 0 ? getLastQuarterByDate() : 4
     }
-
+    // Checks if option is selected in the month's name dropdown list
+    if (Boolean(isMonthNameOptionSelected) && !monthNameOption?.find((m: any) => m?.value === MonthOptionTypes.all)) {
+      monthNameOption?.forEach((m: any) => {
+        const date = new Date();
+        date.setMonth(Number(m?.value) - 1); // Adjust for zero-based index
+        if (monthOption?.value !== MonthOptionTypes.all) selectedMonthName.push(format(date, 'LLL', { locale: enUS })); 
+      })
+      
+    }
     selectedFpm = selectedFpm?.map(n => n?.value)
     const finalGraphData = data?.filter(
       a =>
         (!selectedMonth || a?.month === selectedMonth) &&
         (!selectedQuater || a?.quarter === selectedQuater) &&
-        (!selectedFpm?.length || selectedFpm?.includes(a?.userId)),
+        (!selectedFpm?.length || selectedFpm?.includes(a?.userId)) &&
+        (!selectedMonthName?.length || selectedMonthName?.includes(a?.month)),
     )
     setGraphData(finalGraphData)
   }
 
   useEffect(() => {
-    filterGraphData(fpmOption, monthOption)
-  }, [data, fpmOption])
+    filterGraphData(fpmOption, monthOption, monthNameOption?.length)
+  }, [data, fpmOption, monthNameOption?.length])
 
   return (
     <Box pb="2">
@@ -211,6 +235,8 @@ export const PerformanceTab = () => {
         fieldProjectManagerOptions={fieldProjectManagerOptions}
         setDefaultToTopFive={setDefaultToTopFive}
         setFpmFilter={setFpmFilter}
+        monthNameOption={monthNameOption}
+        setMonthNameOption={setMonthNameOption}
       />
       <Box p={0} rounded="13px" flex={1}>
         <PerformanceGraphWithUsers
