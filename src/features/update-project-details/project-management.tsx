@@ -85,9 +85,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const currentDate = useCurrentDate()
   const watchIsReconciled = useWatch({ name: 'isReconciled', control })
   const watchPreInvoiced = useWatch({ name: 'preInvoiced', control })
-
-  console.log('PRE INVOICED WATCH',watchPreInvoiced);
-
   const watchForm = useWatch({ control })
   const [lienDue, setLienDue] = useState<number | undefined>()
 
