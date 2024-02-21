@@ -685,6 +685,7 @@ export const parseFormValuesFromAPIData = ({
     carrierName: project.carrier?.label ? project.carrier?.label : project?.carrierName,
     agentPhone: project.agentPhone,
     agentEmail: project.agentEmail,
+    preInvoiced: project.preInvoiced ?? false,
 
     // Location Form values
     address: findOptionByValue(propertySelectOptions, project?.propertyId),
