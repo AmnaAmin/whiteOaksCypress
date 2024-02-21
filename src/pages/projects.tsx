@@ -49,6 +49,7 @@ export const Projects = () => {
   const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay')
 
   const [selectedFlagged, setSelectedFlagged] = useState<string | null>()
+  const [selectedPreInvoiced, setSelectedPreInvoiced] = useState<boolean>(false)
   const [createdProject, setCreatedProject] = useState<string | number | null>(null)
 
   const { t } = useTranslation()
@@ -73,13 +74,20 @@ export const Projects = () => {
             }}
             onSelectCard={selection => {
               setSelectedFlagged(null)
+              setSelectedPreInvoiced(false)
               setSelectedCard(selection)
             }}
             selectedUsers={selectedUserIds}
             selectedCard={selectedCard}
             onSelectFlagged={selection => {
               setSelectedCard(null)
+              setSelectedPreInvoiced(false)
               setSelectedFlagged(selection)
+            }}
+            selectedPreInvoiced={selectedPreInvoiced}
+            onSelectPreInvoiced={(selection) => {
+              setSelectedCard(null)
+              setSelectedPreInvoiced(selection)
             }}
             selectedFlagged={selectedFlagged}
           />
@@ -141,6 +149,7 @@ export const Projects = () => {
               isReadOnly={isReadOnly}
               onNewProjectModalClose={onNewProjectModalClose}
               createdProject={createdProject}
+              selectedPreInvoice={selectedPreInvoiced}
               setCreatedProject={setCreatedProject}
             />
           </Box>

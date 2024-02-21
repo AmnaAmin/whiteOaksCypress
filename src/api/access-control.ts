@@ -256,6 +256,7 @@ export enum ADV_PERMISSIONS {
   carrierFeeCreateInApprovedStatus = 'ESTIMATEDETAILS.TRANSACTION.CARRIERFEEONAPPROVED.ENABLE',
   invoiceDateEditEst = 'ESTIMATEDETAILS.INVOICING.INVOICEDATE.EDIT',
   invoiceEditEst = 'ESTIMATEDETAILS.INVOICING.EDIT',
+  preInvoicingEdit = 'PREINVOICED.EDIT'
 }
 
 export const mapFormValuestoPayload = (values, allPermissions) => {
@@ -348,6 +349,7 @@ const DEFAULTPERMISSIONS = {
       'clientStartEdit',
       'woaStartEdit',
       'verifyProjectEnable',
+      'preInvoicingEdit'
     ],
     All: [
       'fpmEdit',
@@ -407,6 +409,7 @@ const advancedPermissions = {
     'verifiedByFPM',
     'invoiceDateEdit',
     'invoiceEdit',
+    'preInvoicingEdit'
   ],
   advancedPermissionsEst: [
     'enableConvertProject',

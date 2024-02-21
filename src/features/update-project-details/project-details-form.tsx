@@ -218,7 +218,7 @@ const ProjectDetailsTab = (props: tabProps) => {
     if (hasPendingDrawsOnPaymentSave(formValues.payment, formValues.depreciation)) {
       return
     }
-
+    
     if (!isVerifiedAddress) {
       refetch()
       onAddressVerificationModalOpen()

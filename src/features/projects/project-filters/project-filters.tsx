@@ -123,6 +123,13 @@ const useProjectCardJson = cards => {
       number: cards?.find(c => c?.status === 1)?.count || 0,
       IconElement: <IconElement Icon={BiFlag} bg="#FFE1E1" />,
     },
+    {
+      id: 'preinvoiced',
+      title: t('projects.projectFilter.preinvoiced'),
+      value: 'preinvoiced',
+      number: cards?.find(c => c?.status === 2)?.count || 0,
+      IconElement: <IconElement Icon={SummaryIconEight} bg="#FAE6E5" />,
+    },
   ]
 
   if (hidePaidProjects) {
@@ -132,11 +139,13 @@ const useProjectCardJson = cards => {
 }
 
 export type ProjectCardProps = {
-  onSelectCard: (string) => void
+  onSelectCard: (string: string) => void
   selectedCard: string
   selectedUsers?: any
-  onSelectFlagged?: (string) => void
+  onSelectFlagged?: (string: string) => void
   selectedFlagged?: any
+  selectedPreInvoiced?: boolean
+  onSelectPreInvoiced?: (selection: boolean) => void
   clear?: any
 }
 
@@ -146,36 +155,52 @@ export const ProjectFilters: React.FC<ProjectCardProps> = ({
   selectedUsers,
   onSelectFlagged,
   selectedFlagged,
-  clear,
+  selectedPreInvoiced,
+  onSelectPreInvoiced,
+  clear
 }) => {
   const { data: values, isLoading } = useProjectCards(selectedUsers?.join(','))
   const cards = useProjectCardJson(values)
-
   return (
     <>
       <Grid gap={3} gridTemplateColumns="repeat(auto-fit,minmax(230px,1fr))">
         {cards.map(card => {
-          return card.id === 'flagged' ? (
-            <ProjectCard
+          if (card.id === 'flagged') {
+            return (
+              <ProjectCard
+                clear={clear}
+                key={card.id}
+                {...card}
+                onSelectCard={onSelectCard}
+                selectedCard={selectedCard}
+                isLoading={isLoading}
+                selectedFlagged={selectedFlagged}
+                onSelectFlagged={onSelectFlagged}
+              />
+            )
+          } else if (card.id === 'preinvoiced') {
+            return (<ProjectCard
               clear={clear}
               key={card.id}
               {...card}
               onSelectCard={onSelectCard}
               selectedCard={selectedCard}
               isLoading={isLoading}
-              selectedFlagged={selectedFlagged}
-              onSelectFlagged={onSelectFlagged}
-            />
-          ) : (
-            <ProjectCard
-              clear={clear}
-              key={card.id}
-              {...card}
-              onSelectCard={onSelectCard}
-              selectedCard={selectedCard}
-              isLoading={isLoading}
-            />
-          )
+              selectedPreInvoiced={selectedPreInvoiced}
+              onSelectPreInvoiced={onSelectPreInvoiced}
+            />)
+          } else {
+            return (
+              <ProjectCard
+                clear={clear}
+                key={card.id}
+                {...card}
+                onSelectCard={onSelectCard}
+                selectedCard={selectedCard}
+                isLoading={isLoading}
+              />
+            )
+          }
         })}
       </Grid>
     </>
