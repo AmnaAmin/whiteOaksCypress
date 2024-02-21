@@ -84,6 +84,9 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
 
   const currentDate = useCurrentDate()
   const watchIsReconciled = useWatch({ name: 'isReconciled', control })
+  const watchPreInvoiced = useWatch({ name: 'preInvoiced', control })
+
+  console.log('PRE INVOICED WATCH',watchPreInvoiced);
 
   const watchForm = useWatch({ control })
   const [lienDue, setLienDue] = useState<number | undefined>()
@@ -557,8 +560,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               </FormLabel>
               <Checkbox
                 colorScheme="PrimaryCheckBox"
-                defaultChecked={projectData?.preInvoiced}
                 variant={'normal'}
+                isChecked={watchPreInvoiced === null ? false : watchPreInvoiced}
                 data-testid="preInvoiceCheckbox"
                 disabled={disabledPreIvoiceStatusIds.includes(projectStatusId) || (!canPreInvoice)}
                 size="md"
