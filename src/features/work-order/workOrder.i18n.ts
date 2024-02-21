@@ -69,6 +69,7 @@ export const workOrder = {
         clientEnd: 'Client End',
         profitPercentage: 'Profit Percentage',
         finalSowAmount: 'Final SOW Amount',
+        balanceSOW: 'Balance SOW',
         type: 'Skill',
         clientApprovedAmount: 'Client Approved Amount',
         vendorWorkOrderAmount: 'Vendor WO Amount',
@@ -82,6 +83,7 @@ export const workOrder = {
   es: {
     translation: {
       [WORK_ORDER]: {
+        balanceSOW: 'Balance SOW',
         assignedLineItems: 'Elementos de línea asignados',
         remainingItems: 'Artículos restantes',
         downloadPDF: 'Descargar como PDF',
