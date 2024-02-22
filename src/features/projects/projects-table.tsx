@@ -132,12 +132,6 @@ export const ProjectsTable: React.FC<ProjectProps> = ({
     }
   }, [settingColumns?.length])
 
-  // useEffect(() => {
-  //   if (selectedPreInvoice) {
-  //     setColumnFilters([])
-  //   }
-  // },[selectedPreInvoice])
-
   const onSave = (columns: any) => {
     postGridColumn(columns)
   }
