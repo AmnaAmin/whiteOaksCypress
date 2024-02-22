@@ -72,7 +72,6 @@ export const TableContextProvider: React.FC<TableWrapperProps> = ({
 
   const [columnFiltersState, setColumnFiltersState] = React.useState<ColumnFiltersState>([])
   const [sortingState, setSortingState] = React.useState<SortingState>([])
-
   // Create pagination state in case pagination object enabled
   const paginationState: { pagination: PaginationState } | {} = React.useMemo(() => {
     return pagination
