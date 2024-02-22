@@ -166,7 +166,11 @@ const WorkOrderDetailTab = ({
       setIsError(false)
     }
     setIsUpdating(true)
-    updateWorkOrderDetails({ ...workOrder, ...updatedValues })
+    updateWorkOrderDetails({ ...workOrder, ...updatedValues }, {
+      onSettled: () => {
+        setIsUpdating(false)
+      },
+    })
   }
 
   useEffect(() => {
