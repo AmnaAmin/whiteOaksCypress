@@ -481,7 +481,7 @@ const WorkOrderDetailTab = props => {
                 <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
                 <InformationCard testId="email" title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
                 <InformationCard testId="phone" title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
-               
+                <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
               </>
             </SimpleGrid>
           ) : (
