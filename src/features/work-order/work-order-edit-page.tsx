@@ -61,6 +61,8 @@ const WorkOrderDetailsPage = ({
   const toast = useToast()
   const [rejectLW, setRejectLW] = useState(false)
   const [rejectInvoice, setRejectInvoice] = useState(false)
+  console.log(rejectInvoice)
+
   const { projectId } = useParams<{ projectId: string }>()
   const [projId, setProjId] = useState<string | undefined>(projectId)
   const { projectData, isLoading: isProjectLoading } = usePCProject(projId)
@@ -100,6 +102,8 @@ const WorkOrderDetailsPage = ({
 
   useEffect(() => {
     if (workOrderDetails) {
+      console.log(workOrderDetails)
+
       setRejectInvoice(workOrderDetails.status === 111)
       if (workOrderDetails.leanWaiverSubmitted) {
         setRejectLW(!workOrderDetails.lienWaiverAccepted)
@@ -116,7 +120,7 @@ const WorkOrderDetailsPage = ({
       //   onClose()
       setTabIndex(0)
     }
-  }, [workOrderDetails?.length])
+  }, [workOrderDetails?.length, workOrderDetails?.status])
 
   const queryClient = useQueryClient()
   const compareLineItems = (existingLineItems, updatedLineItems) => {
