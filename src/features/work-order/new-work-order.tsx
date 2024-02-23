@@ -27,7 +27,7 @@ import { BiCalendar } from 'react-icons/bi'
 import { Project } from 'types/project.type'
 import { dateFormat } from 'utils/date-time-utils'
 import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projects'
-import { removePercentageFormat } from 'utils/string-formatters'
+import { currencyFormatter, removeCurrencyFormat, removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
 import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
@@ -266,7 +266,12 @@ export const NewWorkOrderForm: React.FC<{
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
   const { projectId } = useParams<{ projectId: string }>()
-  const { finalSOWAmount } = useGetProjectFinancialOverview(projectId)
+  const { finalSOWAmount, projectTotalCost } = useGetProjectFinancialOverview(projectId)
+  const finalSOWAmountNumber = Number(removeCurrencyFormat(finalSOWAmount))
+  const projectTotalCostNumber = Number(removeCurrencyFormat(projectTotalCost))
+
+  const balanceSOWAmount =
+    currencyFormatter(finalSOWAmountNumber - Math.abs(projectTotalCostNumber))
 
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
@@ -496,6 +501,7 @@ export const NewWorkOrderForm: React.FC<{
             />
 
             <InformationCard title="finalSowAmount" testId="finalSowAmount" date={finalSOWAmount} />
+            <InformationCard title="balanceSOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
             {/*  commenting as requirement yet to be confirmed
                       <InformationCard title=" Email" date={vendorEmail} />
                     <InformationCard title=" Phone No" date={vendorPhone} />*/}

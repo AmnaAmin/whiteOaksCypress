@@ -61,6 +61,8 @@ import { useLocation } from 'react-router-dom'
 import round from 'lodash/round'
 import { isValidAndNonEmpty } from 'utils'
 import { useUploadDocument } from 'api/vendor-projects'
+import { useGetProjectFinancialOverview } from 'api/projects'
+import { removeCurrencyFormat, currencyFormatter } from 'utils/string-formatters'
 
 export type SelectVendorOption = {
   label: string
@@ -152,7 +154,11 @@ const WorkOrderDetailTab = props => {
     label: workOrder?.skillName as string,
     title: workOrder?.skillName as string,
   }
+  const { finalSOWAmount, projectTotalCost } = useGetProjectFinancialOverview(projectData?.id)
+  const finalSOWAmountNumber = Number(removeCurrencyFormat(finalSOWAmount))
+  const projectTotalCostNumber = Number(removeCurrencyFormat(projectTotalCost))
 
+  const balanceSOWAmount = currencyFormatter(finalSOWAmountNumber - Math.abs(projectTotalCostNumber))
   const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
 
   const defaultValues: FormValues = useMemo(() => {
@@ -475,6 +481,7 @@ const WorkOrderDetailTab = props => {
                 <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
                 <InformationCard testId="email" title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
                 <InformationCard testId="phone" title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
+                <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
               </>
             </SimpleGrid>
           ) : (
@@ -571,6 +578,7 @@ const WorkOrderDetailTab = props => {
                           date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
                           customStyle={{ width: '150px', height: '20px' }}
                         />
+                         <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
                       </>
                     )}
                   </HStack>

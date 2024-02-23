@@ -685,6 +685,7 @@ export const parseFormValuesFromAPIData = ({
     carrierName: project.carrier?.label ? project.carrier?.label : project?.carrierName,
     agentPhone: project.agentPhone,
     agentEmail: project.agentEmail,
+    preInvoiced: project.preInvoiced ?? false,
 
     // Location Form values
     address: findOptionByValue(propertySelectOptions, project?.propertyId),
@@ -793,6 +794,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     lienRightFileDate: dateISOFormat(formValues.lienFiled),
     projectClosedDueDate: dateISOFormat(formValues.projectClosedDueDate),
     lienRightExpireDate: dateISOFormat(formValues.lienExpiryDate),
+    preInvoiced:formValues.preInvoiced ?? false,
 
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,

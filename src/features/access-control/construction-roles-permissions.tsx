@@ -46,7 +46,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px" fontWeight={400}>
                     Hide Project Creation
@@ -69,7 +69,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px" fontWeight={400}>
                     Hide Paid Projects
@@ -92,7 +92,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px" fontWeight={400}>
                     Can Change WOA Start Date
@@ -115,7 +115,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Client Start Date</Text>
                 </Checkbox>
@@ -136,7 +136,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Client Due Date</Text>
                 </Checkbox>
@@ -157,7 +157,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Verify Project</Text>
                 </Checkbox>
@@ -181,7 +181,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change FPM</Text>
                 </Checkbox>
@@ -202,7 +202,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Project Coordinator</Text>
                 </Checkbox>
@@ -223,7 +223,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Client</Text>
                 </Checkbox>
@@ -255,7 +255,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Address</Text>
                 </Checkbox>
@@ -276,7 +276,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Market</Text>
                 </Checkbox>
@@ -297,7 +297,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Lock Box Code</Text>
                 </Checkbox>
@@ -318,7 +318,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Gate Code</Text>
                 </Checkbox>
@@ -342,7 +342,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
                     Can Create Invoice
@@ -365,10 +365,33 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
                     Can Change Invoice Date
+                  </Text>
+                </Checkbox>
+              </>
+            )}
+          />
+          <Controller
+            control={control}
+            name={`advancedPermissionsCons.preInvoicingEdit`}
+            render={({ field, fieldState }) => (
+              <>
+                <Checkbox
+                  colorScheme="PrimaryCheckBox"
+                  isChecked={field.value}
+                  style={{ background: 'white', border: '#DFDFDF' }}
+                  mr="2px"
+                  size="md"
+                  onChange={value => {
+                    field.onChange(value)
+                  }}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                >
+                  <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
+                    Can Pre Invoice Project
                   </Text>
                 </Checkbox>
               </>
@@ -391,7 +414,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Cancel Work order</Text>
                 </Checkbox>
@@ -415,7 +438,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Deactivate Vendor</Text>
                 </Checkbox>
@@ -436,7 +459,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Edit Vendor Accounts</Text>
                 </Checkbox>
@@ -457,7 +480,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Verify Documents</Text>
                 </Checkbox>
@@ -483,7 +506,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Status</Text>
                 </Checkbox>
@@ -504,7 +527,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Paid Date</Text>
                 </Checkbox>
@@ -525,7 +548,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Payment Received</Text>
                 </Checkbox>
@@ -546,7 +569,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px">Can Change Invoiced Date</Text>
                 </Checkbox>
@@ -567,7 +590,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
                     Enable Future Date for Payment Received
@@ -590,7 +613,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
                     Enable Creating Draw Without Percentage Completion Restrictions
@@ -613,7 +636,7 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
                   onChange={value => {
                     field.onChange(value)
                   }}
-                  // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
                 >
                   <Text fontSize="14px" overflow="hidden" maxW="98%" wordBreak={'break-word'}>
                     Enable Verified By FPM
