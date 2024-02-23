@@ -1,7 +1,7 @@
 import { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table'
 import { useState, useMemo, useEffect } from 'react'
 import { getAPIFilterQueryString } from 'utils/filters-query-utils'
-import { datePickerFormat} from 'utils/date-time-utils'
+import { datePickerFormat } from 'utils/date-time-utils'
 
 type UseColumnFiltersQueryStringProps = {
   queryStringAPIFilterKeys: { [key: string]: string }
@@ -13,6 +13,7 @@ type UseColumnFiltersQueryStringProps = {
   days?: any
   sorting?: SortingState
   selectedFlagged?: any
+  selectedPreInvoice?: boolean
 }
 export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryStringProps) => {
   const {
@@ -25,6 +26,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     days,
     sorting,
     selectedFlagged,
+    selectedPreInvoice,
   } = options
   const { pageIndex, pageSize } = pagination || {}
 
@@ -62,6 +64,13 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       ]
     }
 
+    if (selectedPreInvoice) {
+      finalFilters = [
+        ...columnFilters,
+        { id: 'preInvoiced', value: selectedPreInvoice},
+      ]
+    }
+
     // This filter will apply when user select a day from the project due days list
     if (!!selectedDay && days?.length) {
       const selectedDayData = days.find(day => day.dayName === selectedDay)
@@ -69,12 +78,12 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       if (selectedDayData) {
         const startDate = datePickerFormat(selectedDayData.dueDate)
         const endDate = datePickerFormat(selectedDayData.dueDate)
-    
+
         clientDueDateFilter = {
           id: 'clientDueDate',
           value: `${startDate} - ${endDate}`,
         }
-    
+
         finalFilters = [...finalFilters, clientDueDateFilter];
       }
     }
@@ -103,7 +112,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       queryStringWithoutPagination,
       queryStringWithPagination,
     }
-  }, [selectedCard, selectedDay, columnFilters, pageIndex, pageSize, userIds, days, sorting, selectedFlagged])
+  }, [selectedCard, selectedDay, columnFilters, pageIndex, pageSize, userIds, days, sorting, selectedFlagged, selectedPreInvoice])
 
   useEffect(() => {
     if (!pagination) return
@@ -111,7 +120,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
     if (selectedCard || selectedDay || userIds || columnFilters?.length > 0 || selectedFlagged) {
       setPagination?.({ ...pagination, pageIndex: 0 })
     }
-  }, [columnFilters, selectedCard, selectedDay, userIds, selectedFlagged])
+  }, [columnFilters, selectedCard, selectedDay, userIds, selectedFlagged, selectedPreInvoice])
 
   return {
     columnFilters,

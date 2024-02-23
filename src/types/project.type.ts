@@ -140,6 +140,7 @@ export type Project = {
   validForNewInvoice: boolean
   carrier?: SelectOption | null
   carrierName: SelectOption | null
+  preInvoiced: boolean
 }
 
 export type ProjectExtraAttributesType = {

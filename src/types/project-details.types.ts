@@ -1,12 +1,12 @@
 import { SelectOption } from './transaction.type'
 
-export enum StringProjectStatus{
-  New= 'new',
-  Active='active',
-  Punch='punch',
-  Closed='closed',
-  Reconcile='reconcile',
-  
+export enum StringProjectStatus {
+  New = 'new',
+  Active = 'active',
+  Punch = 'punch',
+  Closed = 'closed',
+  Reconcile = 'reconcile',
+
 
 }
 
@@ -49,6 +49,7 @@ type ProjectManagementValues = {
   lienFiled: Date | string | null
   claimNumber: string | null
   reoNumber: string | null
+  preInvoiced: boolean | false
 }
 
 type ProjectInvoicingAndPaymentFormValues = {
@@ -180,6 +181,7 @@ export type ProjectDetailsAPIPayload = {
   projectClosedDueDate: string | null
   lienRightFileDate: string | null
   lienRightExpireDate: string | null
+  preInvoiced: boolean | false
 
   // invoicing and payment payload
   sowOriginalContractAmount: number | null
