@@ -115,15 +115,17 @@ export const PerformanceFilters: React.FC<{
               {t(`${PERFORMANCE}.filterBy`)}
             </FormLabel>
             <Box width={'80%'}>
+            <div data-testid="filter_by_time">
               <ReactSelect
-                name={`monthsDropdown`}
-                options={MonthOption.filter(m => m.value !== 'all')}
-                onChange={getMonthValue}
-                defaultValue={monthOption}
-                selected={setMonthOption}
-                variant="light-label"
-                size="md"
-              />
+                  name={`monthsDropdown`}
+                  options={MonthOption.filter(m => m.value !== 'all')}
+                  onChange={getMonthValue}
+                  defaultValue={monthOption}
+                  selected={setMonthOption}
+                  variant="light-label"
+                  size="md"
+                />
+            </div>
             </Box>
           </HStack>
           <HStack mt={6}>
@@ -131,17 +133,19 @@ export const PerformanceFilters: React.FC<{
               {t(`${PERFORMANCE}.filterByMonth`)}
             </FormLabel>
             <Box width={'80%'}>
-              <ReactSelect
-                name={`monthsNamesDropdown`}
-                options={monthNamesOptions}
-                isDisabled={disableMonthNamesDropdown}
-                onChange={onMonthNameChange}
-                value={monthNameOption}
-                selected={setMonthOption}
-                variant="light-label"
-                size="md"
-                isMulti
-              />
+              <div data-testid="filter_by_month">
+                <ReactSelect
+                  name={`monthsNamesDropdown`}
+                  options={monthNamesOptions}
+                  isDisabled={disableMonthNamesDropdown}
+                  onChange={onMonthNameChange}
+                  value={monthNameOption}
+                  selected={setMonthOption}
+                  variant="light-label"
+                  size="md"
+                  isMulti
+                />
+              </div>
             </Box>
           </HStack>
         </GridItem>
@@ -151,18 +155,20 @@ export const PerformanceFilters: React.FC<{
               {t(`${PERFORMANCE}.filterBy`)}
             </FormLabel>
             <Box width={'90%'} pr={8} minHeight={'40px'}>
-              <ReactSelect
-                name={`fpmDropdown`}
-                value={fpmOption}
-                options={fieldProjectManagerOptions}
-                onChange={onFpmOptionChange}
-                defaultValue={fpmOption}
-                isOptionDisabled={() => fpmOption.length >= 5}
-                isClearable={false}
-                variant="light-label"
-                size="md"
-                isMulti
-              />
+              <div data-testid="filter_by_fpm">
+                <ReactSelect
+                  name={`fpmDropdown`}
+                  value={fpmOption}
+                  options={fieldProjectManagerOptions}
+                  onChange={onFpmOptionChange}
+                  defaultValue={fpmOption}
+                  isOptionDisabled={() => fpmOption.length >= 5}
+                  isClearable={false}
+                  variant="light-label"
+                  size="md"
+                  isMulti
+                />
+              </div>
             </Box>
           </HStack>
         </GridItem>
