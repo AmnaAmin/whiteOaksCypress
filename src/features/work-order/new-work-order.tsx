@@ -270,8 +270,7 @@ export const NewWorkOrderForm: React.FC<{
   const finalSOWAmountNumber = Number(removeCurrencyFormat(finalSOWAmount))
   const projectTotalCostNumber = Number(removeCurrencyFormat(projectTotalCost))
 
-  const balanceSOWAmount =
-    currencyFormatter(finalSOWAmountNumber - Math.abs(projectTotalCostNumber))
+  const balanceSOWAmount = currencyFormatter(finalSOWAmountNumber - Math.abs(projectTotalCostNumber))
 
   // commenting as requirement yet to be confirmed
   // const [vendorPhone, setVendorPhone] = useState<string | undefined>()
@@ -288,7 +287,7 @@ export const NewWorkOrderForm: React.FC<{
       workOrderStartDate: undefined,
       invoiceAmount: 0,
       clientApprovedAmount: 0,
-      percentage: 35,
+      percentage: 45,
       assignedItems: [],
       uploadWO: null,
       assignToVendor: false,
