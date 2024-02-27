@@ -270,7 +270,7 @@ const WorkOrderDetailTab = props => {
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...mapToLineItems(s), profit: 35, completePercentage: { value: 0, label: '0%' } }
+          return { ...mapToLineItems(s), profit: 45, completePercentage: { value: 0, label: '0%' } }
         }),
       ]
       append(assigned)
@@ -578,7 +578,7 @@ const WorkOrderDetailTab = props => {
                           date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
                           customStyle={{ width: '150px', height: '20px' }}
                         />
-                         <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
+                        <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
                       </>
                     )}
                   </HStack>
