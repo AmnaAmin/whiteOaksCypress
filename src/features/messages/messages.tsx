@@ -10,7 +10,7 @@ export const Messages = (props: any) => {
   const { data } = useAuth()
   const user = data?.user
   let platformParam = 'platform=1'
-  if (entity == 'all') {
+  if (entity === 'all') {
     platformParam += '&entity=all'
   }
 
