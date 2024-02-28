@@ -237,6 +237,8 @@ export const PerformanceTab = () => {
         setFpmFilter={setFpmFilter}
         monthNameOption={monthNameOption}
         setMonthNameOption={setMonthNameOption}
+        isRevenuePerformanceLoading={isLoading || isFetching}
+        isUsePerformanceLoading={isPerformanceTableLoading || isPerformanceTableFetching}
       />
       <Box p={0} rounded="13px" flex={1}>
         <PerformanceGraphWithUsers
