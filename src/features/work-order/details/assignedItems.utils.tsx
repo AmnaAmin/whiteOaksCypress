@@ -763,10 +763,11 @@ const setColumnsByConditions = (columns, workOrder, isVendor) => {
     if (workOrder?.visibleToVendor) {
       columns = columns.filter(c => !['assigned'].includes(c.accessorKey))
     }
+
     if (isVendor) {
       if (workOrder.showPricing) {
         columns = columns.filter(
-          c => !['price', 'assigned', 'profit', 'clientAmount', 'isVerified'].includes(c.accessorKey),
+          c => !['price', 'assigned', 'profit', 'clientAmount', 'isVerified', 'paymentGroup'].includes(c.accessorKey),
         )
       } else {
         columns = columns.filter(
