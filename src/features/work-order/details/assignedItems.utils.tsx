@@ -34,7 +34,7 @@ import { CustomCheckBox } from './assigned-items'
 import { readFileContent } from 'api/vendor-details'
 import { completePercentage } from './work-order-edit-tab'
 import { completePercentageValues, newObjectFormatting } from 'api/work-order'
-import { useLocation } from 'api/location'
+import { useLocation, usePaymentGroupVals } from 'api/location'
 import { addImages } from 'utils/file-utils'
 import { onChangeCheckbox, onChangeHeaderCheckbox } from './utils'
 
@@ -66,6 +66,7 @@ export type LineItems = {
   vendorAmount?: number | null
   profit?: number | null
   location?: any
+  paymentGroup?: any
 }
 
 export type SWOProject = {
@@ -769,7 +770,10 @@ const setColumnsByConditions = (columns, workOrder, isVendor) => {
         )
       } else {
         columns = columns.filter(
-          c => !['price', 'profit', 'assigned', 'clientAmount', 'vendorAmount', 'isVerified'].includes(c.accessorKey),
+          c =>
+            !['price', 'profit', 'assigned', 'clientAmount', 'vendorAmount', 'isVerified', 'paymentGroup'].includes(
+              c.accessorKey,
+            ),
         )
       }
     }
@@ -788,6 +792,7 @@ export const useGetLineItemsColumn = ({
   allowEdit,
   assignedItemsArray,
   workOrder,
+  clientName,
 }) => {
   const [selectedCell, setSelectedCell] = useState<selectedCell | null>(null)
   const [clrState, setClrState] = useState<boolean>(false)
@@ -798,6 +803,7 @@ export const useGetLineItemsColumn = ({
   const watchFieldArray = watch('assignedItems')
   const { isVendor } = useUserRolesSelector()
   const { locationSelectOptions } = useLocation()
+  const { paymentGroupValsOptions } = usePaymentGroupVals()
   const { statusEnabled, verificationEnabled } = useFieldEnableDecision({ workOrder, lineItems: watchFieldArray })
   const controlledAssignedItems = assignedItems.map((field, index) => {
     return {
@@ -806,6 +812,7 @@ export const useGetLineItemsColumn = ({
     }
   })
   const { isAdmin } = useUserRolesSelector()
+  const makePayGrpCompulsory = clientName === 'FNMA'
 
   //update this check as %completion came in two form i.e completePercentage & completePercentage.value
   const markAllCompleted =
@@ -958,6 +965,7 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
+
       {
         header: `${WORK_ORDER}.location`,
         accessorKey: 'location',
@@ -1310,6 +1318,48 @@ export const useGetLineItemsColumn = ({
       },
 
       {
+        header: `${WORK_ORDER}.paymentGroup`,
+        accessorKey: 'paymentGroup',
+        size: 250,
+        cell: ({ row }) => {
+          const index = row?.index
+          const {
+            formState: { errors },
+            control,
+          } = formControl
+
+          return (
+            <Box>
+              <FormControl isInvalid={!!errors.assignedItems?.[index]?.paymentGroup} zIndex={9999 + 1} width="220px">
+                <Controller
+                  control={control}
+                  rules={makePayGrpCompulsory ? { required: true } : { required: false }}
+                  name={`assignedItems.${index}.paymentGroup`}
+                  render={({ field }) => {
+                    return (
+                      <>
+                        <CreatableSelectForTable
+                          index={index}
+                          field={field}
+                          key={'assignedItems.' + [index]}
+                          id={`assignedItems.${index}.paymentGroup`}
+                          options={paymentGroupValsOptions}
+                          newObjectFormatting={null}
+                          isDisabled={isVendor}
+                          valueFormatter={null}
+                          style={{ height: 115 }}
+                        />
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Box>
+          )
+        },
+      },
+
+      {
         // header: `${WORK_ORDER}.complete`,
         accessorKey: 'isCompleted',
         enableSorting: false,
@@ -1462,6 +1512,7 @@ export const useGetLineItemsColumn = ({
     allVerified,
     controlledAssignedItems?.length,
     locationSelectOptions?.length,
+    paymentGroupValsOptions?.length,
   ])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns

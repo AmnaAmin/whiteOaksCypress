@@ -77,6 +77,7 @@ type AssignedItemType = {
   downloadPdf?: () => void
   workOrder: ProjectWorkOrderType | null
   documentsData
+  clientName?: string | null
 }
 
 const AssignedItems = (props: AssignedItemType) => {
@@ -92,6 +93,7 @@ const AssignedItems = (props: AssignedItemType) => {
     workOrder,
     downloadPdf,
     documentsData,
+    clientName,
   } = props
   const { control, register, getValues, setValue, watch } = formControl
   const { t } = useTranslation()
@@ -148,6 +150,7 @@ const AssignedItems = (props: AssignedItemType) => {
     allowEdit,
     assignedItemsArray,
     workOrder,
+    clientName,
   })
 
   const handleOnDragEnd = useCallback(
