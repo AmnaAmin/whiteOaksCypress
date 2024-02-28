@@ -177,7 +177,7 @@ export const NewWorkOrder: React.FC<{
       assignLineItems(
         [
           ...values?.assignedItems?.map(a => {
-            return { ...a, isAssigned: true, location: a?.location?.value }
+            return { ...a, isAssigned: true, location: a?.location?.value, paymentGroup: a?.paymentGroup?.label }
           }),
         ],
         {
@@ -786,6 +786,7 @@ export const NewWorkOrderForm: React.FC<{
                 swoProject={swoProject}
                 workOrder={null}
                 documentsData={null}
+                clientName={projectData?.clientName}
               />
             </Box>
           </Box>
