@@ -19,6 +19,8 @@ export const PerformanceFilters: React.FC<{
   setFpmFilter: (val) => void
   monthNameOption: SelectOption[]
   setMonthNameOption: (val) => void
+  isRevenuePerformanceLoading?: boolean;
+  isUsePerformanceLoading?: boolean
 }> = ({
   yearFilter,
   setYearFilter,
@@ -31,7 +33,9 @@ export const PerformanceFilters: React.FC<{
   setDefaultToTopFive,
   setFpmFilter,
   monthNameOption,
-  setMonthNameOption
+  setMonthNameOption,
+  isRevenuePerformanceLoading,
+  isUsePerformanceLoading
 }) => {
   const { t } = useTranslation()
   const [disableMonthNamesDropdown, setDisableMonthNamesDropdown] = useState<Boolean>(true);
@@ -120,6 +124,7 @@ export const PerformanceFilters: React.FC<{
                   name={`monthsDropdown`}
                   options={MonthOption.filter(m => m.value !== 'all')}
                   onChange={getMonthValue}
+                  isDisabled={isRevenuePerformanceLoading || isUsePerformanceLoading}
                   defaultValue={monthOption}
                   selected={setMonthOption}
                   variant="light-label"
@@ -137,7 +142,7 @@ export const PerformanceFilters: React.FC<{
                 <ReactSelect
                   name={`monthsNamesDropdown`}
                   options={monthNamesOptions}
-                  isDisabled={disableMonthNamesDropdown}
+                  isDisabled={disableMonthNamesDropdown || isRevenuePerformanceLoading || isUsePerformanceLoading}
                   onChange={onMonthNameChange}
                   value={monthNameOption}
                   selected={setMonthOption}
@@ -161,6 +166,7 @@ export const PerformanceFilters: React.FC<{
                   value={fpmOption}
                   options={fieldProjectManagerOptions}
                   onChange={onFpmOptionChange}
+                  isDisabled={isRevenuePerformanceLoading || isUsePerformanceLoading}
                   defaultValue={fpmOption}
                   isOptionDisabled={() => fpmOption.length >= 5}
                   isClearable={false}
