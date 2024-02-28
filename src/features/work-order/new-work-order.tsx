@@ -287,7 +287,7 @@ export const NewWorkOrderForm: React.FC<{
       workOrderStartDate: undefined,
       invoiceAmount: 0,
       clientApprovedAmount: 0,
-      percentage: 35,
+      percentage: 45,
       assignedItems: [],
       uploadWO: null,
       assignToVendor: false,

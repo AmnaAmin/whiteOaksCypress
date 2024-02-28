@@ -116,7 +116,7 @@ const WorkOrderDetailsPage = ({
       //   onClose()
       setTabIndex(0)
     }
-  }, [workOrderDetails?.length])
+  }, [workOrderDetails?.length, workOrderDetails?.status])
 
   const queryClient = useQueryClient()
   const compareLineItems = (existingLineItems, updatedLineItems) => {

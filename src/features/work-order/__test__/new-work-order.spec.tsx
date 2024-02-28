@@ -194,13 +194,14 @@ describe('New Work Order modal test cases', () => {
     expect(screen.getByTestId('uploadedSOW').textContent).toEqual('test-sow.png')
     userEvent.type(screen.getByTestId('clientApprovedAmount'), '100')
 
-    // commenting it for now as default value now will be 35% for percentageFormatter
+    // commenting it for now & keeping it for reference
+    // as default value now will be 45% for percentageFormatter
     // userEvent.type(screen.getByTestId('percentage'), '10')
 
-    //expect that percentage will by default carry 35% in field
-    expect(screen.getByTestId('percentage')).toHaveAttribute('value', '35%')
-    //according to that, 35% of 100 will be 65$
-    expect(screen.getByTestId('vendorWorkOrderAmount')).toHaveAttribute('value', '$65')
+    //expect that percentage will by default carry 45% in field
+    expect(screen.getByTestId('percentage')).toHaveAttribute('value', '45%')
+    //according to that, 45% of 100 will be 65$
+    expect(screen.getByTestId('vendorWorkOrderAmount')).toHaveAttribute('value', '$55')
 
     act(() => {
       fireEvent.submit(screen.getByTestId('saveWorkOrder'))

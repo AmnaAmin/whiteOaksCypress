@@ -63,6 +63,14 @@ export const Projects = () => {
     setSelectedDay('')
     setSelectedFlagged('')
   }
+
+  const clearColumnFilters = () => {
+    setResetAllFilters(true)
+    setTimeout(() => {
+      setResetAllFilters(false)
+    }, 2000)
+  }
+
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   return (
     <>
@@ -83,11 +91,15 @@ export const Projects = () => {
               setSelectedCard(null)
               setSelectedPreInvoiced(false)
               setSelectedFlagged(selection)
+              clearColumnFilters()
+
             }}
             selectedPreInvoiced={selectedPreInvoiced}
             onSelectPreInvoiced={(selection) => {
               setSelectedCard(null)
+              setSelectedFlagged(null)
               setSelectedPreInvoiced(selection)
+              clearColumnFilters()
             }}
             selectedFlagged={selectedFlagged}
           />
