@@ -16,7 +16,7 @@ import {
   selectedCell,
   SWOProject,
 } from './assignedItems.utils'
-import { useLocation } from 'api/location'
+import { useLocation, usePaymentGroupVals } from 'api/location'
 
 type RemainingListType = {
   setSelectedItems: (items) => void
@@ -98,6 +98,7 @@ const RemainingListTable = (props: RemainingListType) => {
   const [total, setTotal] = useState<any>({ index: '', value: 0 })
   const [selectedCell, setSelectedCell] = useState<selectedCell | null | undefined>(null)
   const { locationSelectOptions } = useLocation()
+  const { paymentGroupValsOptions } = usePaymentGroupVals()
 
   useEffect(() => {
     setValue(`remainingItems.${total.index}.totalPrice`, total.value)
@@ -164,6 +165,7 @@ const RemainingListTable = (props: RemainingListType) => {
           )
         },
       },
+
       {
         header: `${WORK_ORDER}.location`,
         accessorKey: 'location',
@@ -301,6 +303,45 @@ const RemainingListTable = (props: RemainingListType) => {
         },
         size: 150,
       },
+      {
+        header: `${WORK_ORDER}.paymentGroup`,
+        accessorKey: 'paymentGroup',
+        size: 250,
+        cell: ({ row }) => {
+          const index = row?.index
+          const {
+            formState: { errors },
+            control,
+          } = formControl
+
+          return (
+            <Box>
+              <FormControl isInvalid={!!errors.remainingItems?.[index]?.paymentGroup} width="220px">
+                <Controller
+                  control={control}
+                  name={`remainingItems.${index}.paymentGroup`}
+                  render={({ field }) => {
+                    return (
+                      <>
+                        <CreatableSelectForTable
+                          index={index}
+                          field={field}
+                          valueFormatter={null}
+                          key={'paymentGroup.' + [index]}
+                          id={`assignedItems.${index}.paymentGroup`}
+                          isDisabled={false}
+                          options={paymentGroupValsOptions}
+                          newObjectFormatting={null}
+                        />
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Box>
+          )
+        },
+      },
     ]
   }, [
     selectedCell,
@@ -309,6 +350,7 @@ const RemainingListTable = (props: RemainingListType) => {
     setSelectedItems,
     values.remainingItems,
     locationSelectOptions?.length,
+    paymentGroupValsOptions?.length,
   ])
 
   const handleOnDragEnd = useCallback(
