@@ -142,7 +142,7 @@ export type ProjectCardProps = {
   onSelectCard: (string: string) => void
   selectedCard: string
   selectedUsers?: any
-  onSelectFlagged?: (string: string) => void
+  onSelectFlagged?: (string: string[] | [] | null) => void
   selectedFlagged?: any
   selectedPreInvoiced?: boolean
   onSelectPreInvoiced?: (selection: boolean) => void
