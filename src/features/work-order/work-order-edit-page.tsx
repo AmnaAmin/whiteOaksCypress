@@ -236,7 +236,10 @@ const WorkOrderDetailsPage = ({
     const mutatePayload = {
       ...payload,
       assignedItems: payload.assignedItems.map(item => {
-        return { ...item, paymentGroup: item?.paymentGroup?.label }
+        return {
+          ...item,
+          paymentGroup: typeof item?.paymentGroup === 'object' ? item?.paymentGroup?.label : item?.paymentGroup,
+        }
       }),
     }
 
