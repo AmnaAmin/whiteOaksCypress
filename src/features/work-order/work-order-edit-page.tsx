@@ -232,7 +232,18 @@ const WorkOrderDetailsPage = ({
         },
       ]
     }
-    updateWorkOrder(payload, {
+
+    const mutatePayload = {
+      ...payload,
+      assignedItems: payload.assignedItems.map(item => {
+        return {
+          ...item,
+          paymentGroup: typeof item?.paymentGroup === 'object' ? item?.paymentGroup?.label : item?.paymentGroup,
+        }
+      }),
+    }
+
+    updateWorkOrder(mutatePayload, {
       onSuccess: async res => {
         if (deletedItems?.length > 0) {
           deleteLineItems(

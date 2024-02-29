@@ -53,7 +53,7 @@ export const useLocation = () => {
   })
 
   // Sort the locations alphabetically by name
-  const sortedLocations = locations?.sort((a, b) => a.value.localeCompare(b.value));
+  const sortedLocations = locations?.sort((a, b) => a.value.localeCompare(b.value))
 
   const locationSelectOptions =
     sortedLocations?.map(loc => ({
@@ -64,6 +64,27 @@ export const useLocation = () => {
   return {
     locationSelectOptions,
     data: sortedLocations,
+    ...rest,
+  }
+}
+
+export const usePaymentGroupVals = () => {
+  const client = useClient()
+
+  const { data: paymentGroupVals, ...rest } = useQuery('paymentGroup', async () => {
+    const response = await client(`lk_value/lookupType/23`, {})
+
+    return response?.data
+  })
+
+  const paymentGroupValsOptions =
+    paymentGroupVals?.map(payGrp => ({
+      value: payGrp.id,
+      label: payGrp.value,
+    })) || []
+
+  return {
+    paymentGroupValsOptions,
     ...rest,
   }
 }
