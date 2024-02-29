@@ -367,7 +367,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
   }
 }
 
-export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
+export const defaultValuesWODetails = (workOrder, defaultSkill, locations, paymentGroupValsOptions) => {
   const defaultValues = {
     cancel: {
       value: '',
@@ -388,7 +388,17 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
       workOrder?.assignedItems?.length > 0
         ? workOrder?.assignedItems?.map(e => {
             const locationFound = locations?.find(l => l.value === e?.location)
+            const payFound = paymentGroupValsOptions?.find(l => l.label === e?.paymentGroup)
             let location
+            let paymentGroup
+            if (payFound) {
+              paymentGroup = { label: payFound.label, value: payFound.id }
+            } else if (!!e.paymentGroup) {
+              paymentGroup = { label: e?.paymentGroup, value: e?.paymentGroup }
+            } else {
+              paymentGroup = null
+            }
+
             if (locationFound) {
               location = { label: locationFound.value, value: locationFound.id }
             } else if (!!e.location) {
@@ -401,6 +411,7 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations) => {
               uploadedDoc: null,
               clientAmount: (e.price ?? 0) * (e.quantity ?? 0),
               location,
+              paymentGroup,
             }
           })
         : [],
@@ -455,6 +466,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
         smartLineItemId: a.id,
         orderNo: index,
         location: a.location.label,
+        paymentGroup: a?.paymentGroup?.label,
       }
       delete assignedItem.uploadedDoc
       return assignedItem
