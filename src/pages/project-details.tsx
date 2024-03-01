@@ -293,7 +293,7 @@ export const ProjectDetails: React.FC = props => {
                 {showNewWO && selectedWorkOrder && (
                   <WorkOrderDetailsPage
                     workOrder={selectedWorkOrder as ProjectWorkOrderType}
-                    defaultSelected={paramWorkorder != null ? true : false}
+                    defaultSelected={!!paramWorkorder}
                     onClose={() => {
                       setSelectedWorkOrder(undefined)
                       refetchGantt()
