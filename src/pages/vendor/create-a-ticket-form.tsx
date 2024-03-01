@@ -109,6 +109,8 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
     handleSubmit,
     reset,
     watch,
+    clearErrors,
+    setError,
   } = useForm<SupportFormValues>({
     defaultValues,
   })
@@ -331,8 +333,23 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                 bg="white"
                 disabled={isReadOnly}
                 {...register('title', {
-                  required: 'This is required field',
+                  required: 'This is a required field',
+                  maxLength: {
+                    value: 100,
+                    message: 'Please Use 100 characters Only.',
+                  },
                 })}
+                onChange={e => {
+                  const title = e.target.value
+                  if (title.length > 100) {
+                    setError('title', {
+                      type: 'maxLength',
+                      message: 'Please Use 100 characters Only.',
+                    })
+                  } else {
+                    clearErrors('title')
+                  }
+                }}
                 data-testid="title-input"
                 borderLeft={'2px solid #345EA6'}
                 _hover={{
@@ -357,9 +374,24 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
               id="description"
               {...register('description', {
                 required: 'This is required field',
+                maxLength: {
+                  value: 1000,
+                  message: 'Please Use 1000 characters Only',
+                },
               })}
               isDisabled={isReadOnly}
               _disabled={{ bg: '#EDF2F7', cursor: 'not-allowed' }}
+              onChange={e => {
+                const title = e.target.value
+                if (title.length > 1000) {
+                  setError('description', {
+                    type: 'maxLength',
+                    message: 'Please Use 1000 characters Only',
+                  })
+                } else {
+                  clearErrors('description')
+                }
+              }}
               data-testid="descriptions"
               borderLeft={'2px solid #345EA6'}
               _hover={{
@@ -373,7 +405,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
         </Box>
 
         <Box w="449px" mt="30px">
-          <FormControl>
+          <FormControl isInvalid={!!errors.resolution?.message}>
             <FormLabel htmlFor="resolution" variant="strong-label" color="gray.600">
               {t(`${SUPPORT}.resolution`)}
             </FormLabel>
@@ -384,10 +416,27 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
               bg="white"
               h="100px"
               id="resolution"
-              {...register('resolution')}
+              {...register('resolution', {
+                maxLength: {
+                  value: 1000,
+                  message: 'Please Use 1000 characters Only',
+                },
+              })}
+              onChange={e => {
+                const title = e.target.value
+                if (title.length > 1000) {
+                  setError('resolution', {
+                    type: 'maxLength',
+                    message: 'Please Use 1000 characters Only',
+                  })
+                } else {
+                  clearErrors('resolution')
+                }
+              }}
               fontSize="12px"
               color="gray.600"
             />
+            <FormErrorMessage>{errors.resolution?.message}</FormErrorMessage>
           </FormControl>
         </Box>
 
