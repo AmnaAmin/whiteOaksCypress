@@ -608,7 +608,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                       }
                                     }}
                                     onValueChange={e => {
-                                      const inputValue = e?.floatValue ?? ''
+                                      const inputValue = e.value ?? ''
                                       field.onChange(inputValue)
                                       trigger(`transaction.${index}.amount`) // Trigger validation manually
                                     }}

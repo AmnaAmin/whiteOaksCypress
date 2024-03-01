@@ -278,7 +278,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                               }}
                             />
                           </Tooltip>
-                         
+
                           <FormErrorMessage>
                             {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
                           </FormErrorMessage>
@@ -333,7 +333,8 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                                     placeholder={!isPartialPayment ? 'Add Amount' : ''}
                                     disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !canCreateInvoice}
                                     onValueChange={e => {
-                                      const inputValue = e?.floatValue ?? ''
+                                      clearErrors(`finalSowLineItems.${index}.amount`)
+                                      const inputValue = e.value ?? ''
                                       field.onChange(inputValue)
                                       trigger(`finalSowLineItems.${index}.amount`)
                                     }}
@@ -352,11 +353,11 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                                   value={numeral(Number(field.value)).format('$0,0[.]00')}
                                 />
                               */}
-                               {!!errors.finalSowLineItems?.[index]?.amount && (
-                         <FormErrorMessage> {errors?.finalSowLineItems?.[index]?.amount?.message ?? ''}</FormErrorMessage>
-                        )}
-                                 
-                                 
+                                  {!!errors.finalSowLineItems?.[index]?.amount && (
+                                    <FormErrorMessage>
+                                      {errors?.finalSowLineItems?.[index]?.amount?.message}
+                                    </FormErrorMessage>
+                                  )}
                                 </>
                               )
                             }}
