@@ -10,7 +10,6 @@ import {
   Grid,
   VStack,
   Tooltip,
-  Text,
 } from '@chakra-ui/react'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
@@ -50,8 +49,10 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
     setValue,
     trigger,
     watch,
+    setError,
+    clearErrors,
   } = formReturn
-  const contactFormValue = watch()
+
   const isPaymentTypeData = value => value.type === 'Payment'
 
   const watchInvoiceArray = watch('finalSowLineItems')
@@ -224,17 +225,21 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                               disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !canCreateInvoice}
                               {...register(`finalSowLineItems.${index}.name` as const, {
                                 required: 'This is a required field',
-                                maxLength: { value: 100, message: '' },
+                                maxLength: { value: 100, message: 'Please Use 100 characters Only' },
                               })}
-                              maxLength={101}
+                              onChange={e => {
+                                const title = e.target.value
+                                if (title.length > 100) {
+                                  setError(`finalSowLineItems.${index}.name`, {
+                                    type: 'maxLength',
+                                    message: 'Please Use 100 characters Only.',
+                                  })
+                                } else {
+                                  clearErrors(`finalSowLineItems.${index}.name`)
+                                }
+                              }}
                             />
                           </Tooltip>
-                          {contactFormValue.finalSowLineItems?.[index]?.name !== undefined &&
-                            contactFormValue.finalSowLineItems?.[index]?.name?.length === 101 && (
-                              <Text color="red" fontSize="xs" w="215px">
-                                Please use 100 characters only.
-                              </Text>
-                            )}
                           <FormErrorMessage>{errors?.finalSowLineItems?.[index]?.name?.message ?? ''}</FormErrorMessage>
                         </FormControl>
                       </GridItem>
@@ -258,17 +263,22 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                               disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !canCreateInvoice}
                               {...register(`finalSowLineItems.${index}.description` as const, {
                                 required: 'This is required field',
-                                maxLength: { value: 255, message: '' },
+                                maxLength: { value: 255, message: 'Please Use 255 characters Only.' },
                               })}
-                              maxLength={256}
+                              onChange={e => {
+                                const title = e.target.value
+                                if (title.length > 255) {
+                                  setError(`finalSowLineItems.${index}.description`, {
+                                    type: 'maxLength',
+                                    message: 'Please Use 255 characters Only.',
+                                  })
+                                } else {
+                                  clearErrors(`finalSowLineItems.${index}.description`)
+                                }
+                              }}
                             />
                           </Tooltip>
-                          {contactFormValue.finalSowLineItems?.[index]?.description !== undefined &&
-                            contactFormValue.finalSowLineItems?.[index]?.description?.length === 256 && (
-                              <Text color="red" fontSize="xs" w="215px">
-                                Please use 255 characters only.
-                              </Text>
-                            )}
+                         
                           <FormErrorMessage>
                             {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
                           </FormErrorMessage>

@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
-import { isValidAndNonEmpty, isValidAndNonEmptyObject } from 'utils'
+import {  isValidAndNonEmptyObject } from 'utils'
 import { isManualTransaction, useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
 import { ChangeOrderType, FormValues, TransactionTypeValues } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -83,6 +83,8 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     getValues,
     setValue,
     trigger,
+    setError,
+    clearErrors,
   } = formReturn
   const values = getValues()
   const transaction = useWatch({ name: 'transaction', control })
@@ -210,7 +212,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     },
     [setValue, values, setCorrelationId],
   )
-  const [descriptionLengthError, setDescriptionLengthError] = useState(false)
   const uploadMaterialDocument = async document => {
     let payload = (await getFileContents(document, values?.transactionType?.value)) as any
     payload.correlationId = (account.id + '-' + +new Date()) as string
@@ -498,7 +499,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   TransactionTypeValues.carrierFee,
                   TransactionTypeValues.permitFee,
                 ].some(id => id === values?.transactionType?.value)
-                const isRefund = values?.refund
+                
 
                 return (
                   <Grid
@@ -558,13 +559,17 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                             }
                             {...register(`transaction.${index}.description` as const, {
                               required: 'This is a required field',
-                              maxLength: { value: 1024, message: 'Description cannot exceed 1024 characters' },
+                              maxLength: { value: 1024, message: 'Please Use 1024 characters Only.' },
                             })}
-                            maxLength={1025}
                             onChange={e => {
-                              const description = e.target.value
-                              if (description.length === 1025) {
-                                trigger(`transaction.${index}.description`)
+                              const title = e.target.value
+                              if (title.length > 1024) {
+                                setError(`transaction.${index}.description`, {
+                                  type: 'maxLength',
+                                  message: 'Please Use 1024 characters Only.',
+                                })
+                              } else {
+                                clearErrors(`transaction.${index}.description`)
                               }
                             }}
                           />

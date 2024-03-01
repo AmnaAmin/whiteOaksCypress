@@ -458,7 +458,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
               <Controller
                 rules={{
                   required: 'This is required',
-                  maxLength: { value: 100, message: '' },
+                  maxLength: { value: 100, message: 'Please use 100 characters only.' },
                 }}
                 control={control}
                 name="invoiceNumber"
@@ -471,16 +471,26 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         id="invoiceNumber"
                         size="md"
                         variant="required-field"
-                        disabled={!canCreateInvoice || isPaid || isCancelled}
-                        onChange={e => field?.onChange(e?.target?.value)} // Update onChange handler to set the field value
-                        maxLength={101}
+                        disabled={!canCreateInvoice || isPaid || isCancelled}               
+                        onChange={e => {
+                          const value = e?.target?.value
+                          field.onChange(value)
+                          if (value?.length > 100) {
+                            setError('invoiceNumber', {
+                              type: 'maxLength',
+                              message: 'Please use 100 characters only.',
+                            });
+                          } else {
+                            clearErrors('invoiceNumber');
+                          }
+                        }}
                       />
-
+{/* 
                       {contactFormValue.invoiceNumber !== undefined && contactFormValue.invoiceNumber?.length === 101 && (
                         <Text color="red" fontSize="xs" w="215px">
                           Please use 100 characters only.
                         </Text>
-                      )}
+                      )} */}
                       {!!errors.invoiceNumber && <FormErrorMessage>{errors?.invoiceNumber?.message}</FormErrorMessage>}
                     </div>
                   )
