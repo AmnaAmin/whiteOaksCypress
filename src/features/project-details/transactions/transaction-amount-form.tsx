@@ -41,6 +41,7 @@ import { useAccountDetails } from 'api/vendor-details'
 import NumberFormat from 'react-number-format'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
+import { validateAmountDigits } from 'utils/string-formatters'
 
 
 type TransactionAmountFormProps = {
@@ -82,6 +83,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     formState: { errors },
     getValues,
     setValue,
+    trigger,
   } = formReturn
   const values = getValues()
   const transaction = useWatch({ name: 'transaction', control })
@@ -209,7 +211,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     },
     [setValue, values, setCorrelationId],
   )
-
+  const [descriptionLengthError, setDescriptionLengthError] = useState(false)
   const uploadMaterialDocument = async document => {
     let payload = (await getFileContents(document, values?.transactionType?.value)) as any
     payload.correlationId = (account.id + '-' + +new Date()) as string
@@ -556,11 +558,23 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                 : 'required-field'
                             }
                             {...register(`transaction.${index}.description` as const, {
-                              required: 'This is required field',
+                              required: 'This is a required field',
+                              maxLength: { value: 1024, message: 'Description cannot exceed 1024 characters' },
                             })}
+                            maxLength={1025}
+                            onChange={e => {
+                              const description = e.target.value
+                              if (description.length === 1025) {
+                                trigger(`transaction.${index}.description`)
+                              }
+                            }}
                           />
                         </Tooltip>
-                        <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
+                        {!!errors.transaction?.[index]?.description && (
+                          <FormErrorMessage>
+                            {errors?.transaction?.[index]?.description?.message ?? ''}
+                          </FormErrorMessage>
+                        )}
                       </FormControl>
                     </GridItem>
                     <GridItem pr="7">
@@ -570,7 +584,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           control={control}
                           rules={{
                             required: 'This is required field',
-                          }}
+                              validate: {
+                                matchPattern: (v: any) => {
+                                  return validateAmountDigits(v)
+                                },
+                              },                          }}
                           render={({ field, fieldState }) => {
                             return (
                               <>
@@ -589,6 +607,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     onValueChange={e => {
                                       if (!isValidAndNonEmpty(e.formattedValue)) {
                                         field.onChange('')
+                                        trigger(`transaction.${index}.amount`)
                                         return
                                       }
                                       onSetTotalRemainingAmount(Math.abs(e?.floatValue as number))
@@ -610,6 +629,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     variant={'unstyled'}
                                     autoComplete="off"
                                     value={numeral(Number(field.value)).format('$0,0[.]00')}
+                                    // onChange={e => {
+                                    //   const inputValue = e.target.value
+                                    //   field.onChange(inputValue)
+                                    //   trigger(`transaction.${index}.amount`)
+                                    // }}
                                   />
                                 )}
                                 <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>

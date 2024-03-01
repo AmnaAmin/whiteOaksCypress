@@ -78,3 +78,11 @@ export const onChangeCheckbox = (e, isAdmin, formControl, field, index) => {
     field.onChange(e.currentTarget.checked)
   }
 }
+
+export const validateAndDiscardSpaces = (value) => {   
+  if (value === null || value === undefined) {
+    return null
+  }
+  const trimmedValue = value.trim()
+  return trimmedValue === '' ? null : trimmedValue
+}

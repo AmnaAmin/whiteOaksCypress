@@ -10,6 +10,7 @@ import {
   Grid,
   VStack,
   Tooltip,
+  Text,
 } from '@chakra-ui/react'
 import { Controller, UseFormReturn } from 'react-hook-form'
 import { isValidAndNonEmptyObject } from 'utils'
@@ -21,6 +22,7 @@ import { TransactionTypeValues } from 'types/transaction.type'
 import { Project } from 'types/project.type'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { InvoiceStatusValues } from 'types/invoice.types'
+import { validateAmountDigits } from 'utils/string-formatters'
 
 type InvoiceItemsFormProps = {
   formReturn: UseFormReturn<InvoicingType>
@@ -46,9 +48,10 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
     register,
     formState: { errors },
     setValue,
+    trigger,
     watch,
   } = formReturn
-
+  const contactFormValue = watch()
   const isPaymentTypeData = value => value.type === 'Payment'
 
   const watchInvoiceArray = watch('finalSowLineItems')
@@ -220,13 +223,19 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                               variant={'required-field'}
                               disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !canCreateInvoice}
                               {...register(`finalSowLineItems.${index}.name` as const, {
-                                required: 'This is required field',
+                                required: 'This is a required field',
+                                maxLength: { value: 100, message: '' },
                               })}
+                              maxLength={101}
                             />
                           </Tooltip>
-                          <FormErrorMessage>
-                            {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
-                          </FormErrorMessage>
+                          {contactFormValue.finalSowLineItems?.[index]?.name !== undefined &&
+                            contactFormValue.finalSowLineItems?.[index]?.name?.length === 101 && (
+                              <Text color="red" fontSize="xs" w="215px">
+                                Please use 100 characters only.
+                              </Text>
+                            )}
+                          <FormErrorMessage>{errors?.finalSowLineItems?.[index]?.name?.message ?? ''}</FormErrorMessage>
                         </FormControl>
                       </GridItem>
                       <GridItem>
@@ -249,9 +258,17 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                               disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !canCreateInvoice}
                               {...register(`finalSowLineItems.${index}.description` as const, {
                                 required: 'This is required field',
+                                maxLength: { value: 255, message: '' },
                               })}
+                              maxLength={256}
                             />
                           </Tooltip>
+                          {contactFormValue.finalSowLineItems?.[index]?.description !== undefined &&
+                            contactFormValue.finalSowLineItems?.[index]?.description?.length === 256 && (
+                              <Text color="red" fontSize="xs" w="215px">
+                                Please use 255 characters only.
+                              </Text>
+                            )}
                           <FormErrorMessage>
                             {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
                           </FormErrorMessage>
@@ -288,7 +305,12 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                             name={`finalSowLineItems.${index}.amount` as const}
                             control={control}
                             rules={{
-                              required: 'This is required field',
+                              validate: {
+                                matchPattern: (v: any) => {
+                                  return validateAmountDigits(v)
+                                },
+                              },
+                              required: 'This is required',
                             }}
                             render={({ field, fieldState }) => {
                               return (
@@ -303,6 +325,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                                     onValueChange={e => {
                                       const inputValue = e?.floatValue ?? ''
                                       field.onChange(inputValue)
+                                      trigger(`finalSowLineItems.${index}.amount`)
                                     }}
                                     variant={'required-field'}
                                     size="sm"
@@ -319,7 +342,11 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                                   value={numeral(Number(field.value)).format('$0,0[.]00')}
                                 />
                               */}
-                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                               {!!errors.finalSowLineItems?.[index]?.amount && (
+                         <FormErrorMessage> {errors?.finalSowLineItems?.[index]?.amount?.message ?? ''}</FormErrorMessage>
+                        )}
+                                 
+                                 
                                 </>
                               )
                             }}
