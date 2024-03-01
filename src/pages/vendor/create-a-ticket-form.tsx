@@ -357,7 +357,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                 }}
               />
 
-              <FormErrorMessage>{errors.title?.message}</FormErrorMessage>
+              <FormErrorMessage data-testid="title-error-message">{errors.title?.message}</FormErrorMessage>
             </FormControl>
           </Grid>
         </Box>
@@ -400,7 +400,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
               fontSize="12px"
               color="gray.600"
             />
-            <FormErrorMessage>{errors.description?.message}</FormErrorMessage>
+            <FormErrorMessage data-testid="description-error-message">{errors.description?.message}</FormErrorMessage>
           </FormControl>
         </Box>
 
@@ -436,7 +436,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
               fontSize="12px"
               color="gray.600"
             />
-            <FormErrorMessage>{errors.resolution?.message}</FormErrorMessage>
+            <FormErrorMessage data-testid="resolution-error-message">{errors.resolution?.message}</FormErrorMessage>
           </FormControl>
         </Box>
 
