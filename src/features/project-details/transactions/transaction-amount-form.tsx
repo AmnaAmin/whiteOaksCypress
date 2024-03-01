@@ -629,11 +629,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     variant={'unstyled'}
                                     autoComplete="off"
                                     value={numeral(Number(field.value)).format('$0,0[.]00')}
-                                    // onChange={e => {
-                                    //   const inputValue = e.target.value
-                                    //   field.onChange(inputValue)
-                                    //   trigger(`transaction.${index}.amount`)
-                                    // }}
                                   />
                                 )}
                                 <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
