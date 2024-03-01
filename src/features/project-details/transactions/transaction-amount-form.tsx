@@ -43,7 +43,6 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
 import { validateAmountDigits } from 'utils/string-formatters'
 
-
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
   transaction?: ChangeOrderType
@@ -75,7 +74,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const  awardPlansStats  =selectedWorkOrderStats
+  const awardPlansStats = selectedWorkOrderStats
 
   const {
     control,
@@ -544,7 +543,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                       <FormControl px={7} isInvalid={!!errors.transaction?.[index]?.description}>
                         <Tooltip label={transaction?.[index]?.description} placement="top" bg="#ffffff" color="black">
                           <Input
-                            isDisabled={isVendor && vDM && vFpm as any} 
+                            isDisabled={isVendor && vDM && (vFpm as any)}
                             data-testid={`transaction-description-${index}`}
                             type="text"
                             size="sm"
@@ -584,17 +583,16 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           control={control}
                           rules={{
                             required: 'This is required field',
-                              validate: {
-                                matchPattern: (v: any) => {
-                                  return validateAmountDigits(v)
-                                },
-                              },                          }}
+                            validate: {
+                              matchPattern: (v: any) => validateAmountDigits(v) || 'Invalid Amount',
+                            },
+                          }}
                           render={({ field, fieldState }) => {
                             return (
                               <>
                                 {(!isApproved || isAdminEnabled) && !lateAndFactoringFeeForVendor ? (
                                   <NumberFormat
-                                     disabled={isVendor && vDM && vFpm}
+                                    disabled={isVendor && vDM && vFpm}
                                     data-testid={`transaction-amount-${index}`}
                                     customInput={Input}
                                     value={field.value}
@@ -605,16 +603,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                       }
                                     }}
                                     onValueChange={e => {
-                                      if (!isValidAndNonEmpty(e.formattedValue)) {
-                                        field.onChange('')
-                                        trigger(`transaction.${index}.amount`)
-                                        return
-                                      }
-                                      onSetTotalRemainingAmount(Math.abs(e?.floatValue as number))
-                                      const inputValue = e?.floatValue
-                                      field.onChange(
-                                        defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
-                                      )
+                                      const inputValue = e?.floatValue ?? ''
+                                      field.onChange(inputValue)
+                                      trigger(`transaction.${index}.amount`) // Trigger validation manually
                                     }}
                                     variant={'required-field'}
                                     size="sm"
@@ -629,6 +620,11 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     variant={'unstyled'}
                                     autoComplete="off"
                                     value={numeral(Number(field.value)).format('$0,0[.]00')}
+                                    onChange={e => {
+                                      const inputValue = e.target.value
+                                      field.onChange(inputValue)
+                                      trigger(`transaction.${index}.amount`) 
+                                    }}
                                   />
                                 )}
                                 <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
