@@ -181,6 +181,10 @@ type ProjectProps = {
   isReadOnly?: boolean
 }
 
+type VendorIdType = {
+  id: number
+}
+
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }) => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -212,7 +216,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
     pagination.pageSize,
   )
 
-  const [selectedVendor, setSelectedVendor] = useState<VendorType>()
+  const [selectedVendor, setSelectedVendor] = useState<VendorType | VendorIdType>()
   const { refetch: allVendorsRefetch, isLoading: isAllExportDataLoading } = useGetAllVendors(
     user,
     filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
@@ -233,13 +237,10 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
   }, [vendor])
 
   useEffect(() => {
-    if (vendorId && vendors) {
-      let vendor = vendors?.find(v => v.id === Number(vendorId))
-      if (vendor) {
-        setSelectedVendor(vendor)
-      }
+    if (vendorId) {
+      setSelectedVendor({ id: Number(vendorId) })
     }
-  }, [vendorId,vendors])
+  }, [vendorId])
 
   useEffect(() => {
     if (selectedCard) {
@@ -259,11 +260,12 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
     setSearchParams(searchParams)
   }
 
+
   return (
     <Box overflow="auto">
       {selectedVendor && (
         <Vendor
-          vendorDetails={selectedVendor as VendorType}
+          vendorId={selectedVendor.id}
           onClose={() => {
             setSelectedVendor(undefined)
             resetParams()

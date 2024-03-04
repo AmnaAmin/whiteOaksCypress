@@ -184,14 +184,16 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box>
-      {isOpen && (
+      {(selectedClient && selectedClient.id && isOpen) && (
         <Client
-          clientDetails={selectedClient as Clients}
+          clientId={selectedClient.id}
           onClose={() => {
             refetch()
             setSelectedClient(undefined)
             onCloseDisclosure()
-            resetParams()
+            if (clientId) {
+              resetParams()
+            }
           }}
           isOpen={isOpen}
         />
