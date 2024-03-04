@@ -2,6 +2,7 @@ import { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/rea
 import { useState, useMemo, useEffect } from 'react'
 import { getAPIFilterQueryString } from 'utils/filters-query-utils'
 import { datePickerFormat } from 'utils/date-time-utils'
+import { FlagEnum } from 'features/common/project-card'
 
 type UseColumnFiltersQueryStringProps = {
   queryStringAPIFilterKeys: { [key: string]: string }
@@ -56,12 +57,13 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
         finalFilters = [...columnFilters, projectStatusFilter]
       }
     }
-    if (selectedFlagged) {
+    if (selectedFlagged !== null && selectedFlagged?.length) {
       finalFilters = [
         ...columnFilters,
-        { id: 'noteFlag', value: selectedFlagged },
-        { id: 'lienDueFlag', value: selectedFlagged },
       ]
+      if (selectedFlagged?.includes(FlagEnum.NOTES)) finalFilters.push({ id: 'noteFlag', value: "yes" });
+      if (selectedFlagged?.includes(FlagEnum.LEIN_DUE_EXPIRY)) finalFilters.push({ id: 'lienDueFlag', value: "yes" });
+      if (selectedFlagged?.includes(FlagEnum.ALL)) finalFilters.push({ id: 'flagCheck', value: "yes" });
     }
 
     if (selectedPreInvoice) {

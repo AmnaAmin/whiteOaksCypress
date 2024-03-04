@@ -48,7 +48,7 @@ export const Projects = () => {
   const [selectedCard, setSelectedCard] = useStickyState(null, 'project.selectedCard')
   const [selectedDay, setSelectedDay] = useStickyState(null, 'project.selectedDay')
 
-  const [selectedFlagged, setSelectedFlagged] = useState<string | null>()
+  const [selectedFlagged, setSelectedFlagged] = useState<string[] | [] | null>([])
   const [selectedPreInvoiced, setSelectedPreInvoiced] = useState<boolean>(false)
   const [createdProject, setCreatedProject] = useState<string | number | null>(null)
 
@@ -61,7 +61,7 @@ export const Projects = () => {
     }, 2000)
     setSelectedCard('')
     setSelectedDay('')
-    setSelectedFlagged('')
+    setSelectedFlagged(null)
   }
 
   const clearColumnFilters = () => {
@@ -87,7 +87,7 @@ export const Projects = () => {
             }}
             selectedUsers={selectedUserIds}
             selectedCard={selectedCard}
-            onSelectFlagged={selection => {
+            onSelectFlagged={(selection: string[] | [] | null) => {
               setSelectedCard(null)
               setSelectedPreInvoiced(false)
               setSelectedFlagged(selection)

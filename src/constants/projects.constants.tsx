@@ -81,6 +81,7 @@ export const PROJECT_TABLE_QUERIES_KEY = {
   disqualifiedRevenueFlag: 'disqualifiedRevenueFlag.equals',
   noteFlag: 'noteFlag.equals',
   lienDueFlag: 'lienDueFlag.equals',
+  flagCheck: 'flagCheck.equals',
   displayId: 'displayId.contains',
   percentageCompletion: 'displayPercentageCompletion.contains',
   flag: 'flag.contains',
