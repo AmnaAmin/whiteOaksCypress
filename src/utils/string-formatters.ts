@@ -101,3 +101,5 @@ export const validateAmountDigits = (amount, countBeforeDecimal?, countAfterDeci
     return 'Invalid Format.'
   }
 }
+
+
