@@ -196,6 +196,7 @@ export type VendorEntity = Vendor & {
 
 export type Document = {
   id?: number
+  deleted?: boolean
   documentType: number
   fileObject: string
   fileObjectContentType: string
