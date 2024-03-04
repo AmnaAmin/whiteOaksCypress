@@ -159,6 +159,7 @@ export const NewWorkOrder: React.FC<{
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
 
   const onSubmit = async values => {
+    console.log("🚀 ~ onSubmit ~ values:", values)
     if (values?.assignedItems?.length > 0) {
       const isValid = values?.assignedItems?.every(
         l => isValidAndNonEmpty(l.description) && isValidAndNonEmpty(l.quantity) && isValidAndNonEmpty(l.price),
@@ -208,6 +209,15 @@ export const NewWorkOrder: React.FC<{
                 ])
                 setState?.(false)
               },
+              onError: async (err) => {
+                console.error("An exception has occurred. Performing rollback on line items, exception:", err);
+                assignLineItems(
+                  [
+                    ...values?.assignedItems?.map(a => {
+                      return { ...a, isAssigned: false, location: a?.location?.label, paymentGroup: a?.paymentGroup?.label }
+                    }),
+                  ]);
+              }
             })
           },
         },
