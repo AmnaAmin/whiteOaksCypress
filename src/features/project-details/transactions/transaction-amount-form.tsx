@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
-import { isValidAndNonEmpty, isValidAndNonEmptyObject } from 'utils'
+import {  isValidAndNonEmptyObject } from 'utils'
 import { isManualTransaction, useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
 import { ChangeOrderType, FormValues, TransactionTypeValues } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -41,7 +41,7 @@ import { useAccountDetails } from 'api/vendor-details'
 import NumberFormat from 'react-number-format'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { NEW_PROJECT } from 'features/vendor/projects/projects.i18n'
-
+import { validateAmountDigits } from 'utils/string-formatters'
 
 type TransactionAmountFormProps = {
   formReturn: UseFormReturn<FormValues>
@@ -74,7 +74,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
 }) => {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const  awardPlansStats  =selectedWorkOrderStats
+  const awardPlansStats = selectedWorkOrderStats
 
   const {
     control,
@@ -82,6 +82,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     formState: { errors },
     getValues,
     setValue,
+    trigger,
+    setError,
+    clearErrors,
   } = formReturn
   const values = getValues()
   const transaction = useWatch({ name: 'transaction', control })
@@ -209,7 +212,6 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
     },
     [setValue, values, setCorrelationId],
   )
-
   const uploadMaterialDocument = async document => {
     let payload = (await getFileContents(document, values?.transactionType?.value)) as any
     payload.correlationId = (account.id + '-' + +new Date()) as string
@@ -497,7 +499,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   TransactionTypeValues.carrierFee,
                   TransactionTypeValues.permitFee,
                 ].some(id => id === values?.transactionType?.value)
-                const isRefund = values?.refund
+                
 
                 return (
                   <Grid
@@ -542,7 +544,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                       <FormControl px={7} isInvalid={!!errors.transaction?.[index]?.description}>
                         <Tooltip label={transaction?.[index]?.description} placement="top" bg="#ffffff" color="black">
                           <Input
-                            isDisabled={isVendor && vDM && vFpm as any} 
+                            isDisabled={isVendor && vDM && (vFpm as any)}
                             data-testid={`transaction-description-${index}`}
                             type="text"
                             size="sm"
@@ -556,11 +558,27 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                 : 'required-field'
                             }
                             {...register(`transaction.${index}.description` as const, {
-                              required: 'This is required field',
+                              required: 'This is a required field',
+                              maxLength: { value: 1024, message: 'Please Use 1024 characters Only.' },
                             })}
+                            onChange={e => {
+                              const title = e.target.value
+                              if (title.length > 1024) {
+                                setError(`transaction.${index}.description`, {
+                                  type: 'maxLength',
+                                  message: 'Please Use 1024 characters Only.',
+                                })
+                              } else {
+                                clearErrors(`transaction.${index}.description`)
+                              }
+                            }}
                           />
                         </Tooltip>
-                        <FormErrorMessage>{errors?.transaction?.[index]?.description?.message ?? ''}</FormErrorMessage>
+                        {!!errors.transaction?.[index]?.description && (
+                          <FormErrorMessage data-testid="trans_description">
+                            {errors?.transaction?.[index]?.description?.message ?? ''}
+                          </FormErrorMessage>
+                        )}
                       </FormControl>
                     </GridItem>
                     <GridItem pr="7">
@@ -570,13 +588,16 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           control={control}
                           rules={{
                             required: 'This is required field',
+                            validate: {
+                              matchPattern: (v: any) => validateAmountDigits(v) || 'Invalid Amount',
+                            },
                           }}
                           render={({ field, fieldState }) => {
                             return (
                               <>
                                 {(!isApproved || isAdminEnabled) && !lateAndFactoringFeeForVendor ? (
                                   <NumberFormat
-                                     disabled={isVendor && vDM && vFpm}
+                                    disabled={isVendor && vDM && vFpm}
                                     data-testid={`transaction-amount-${index}`}
                                     customInput={Input}
                                     value={field.value}
@@ -587,15 +608,9 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                       }
                                     }}
                                     onValueChange={e => {
-                                      if (!isValidAndNonEmpty(e.formattedValue)) {
-                                        field.onChange('')
-                                        return
-                                      }
-                                      onSetTotalRemainingAmount(Math.abs(e?.floatValue as number))
-                                      const inputValue = e?.floatValue
-                                      field.onChange(
-                                        defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValue)) : inputValue,
-                                      )
+                                      const inputValue = e.value ?? ''
+                                      field.onChange(inputValue)
+                                      trigger(`transaction.${index}.amount`) // Trigger validation manually
                                     }}
                                     variant={'required-field'}
                                     size="sm"
@@ -610,9 +625,14 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     variant={'unstyled'}
                                     autoComplete="off"
                                     value={numeral(Number(field.value)).format('$0,0[.]00')}
+                                    onChange={e => {
+                                      const inputValue = e.target.value
+                                      field.onChange(inputValue)
+                                      trigger(`transaction.${index}.amount`) 
+                                    }}
                                   />
                                 )}
-                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                <FormErrorMessage data-testid="trans_amount">{fieldState.error?.message}</FormErrorMessage>
                               </>
                             )
                           }}

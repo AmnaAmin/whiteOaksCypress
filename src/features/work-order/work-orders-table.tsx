@@ -17,7 +17,7 @@ import {
 import { TableFooter } from 'components/table-refactored/table-footer'
 
 export const WorkOrdersTable = props => {
-  const { defaultSelected, setShowNewWO, setSelectedWorkOrder, selectedWorkOrder } = props
+  const { defaultSelected, setShowNewWO, setSelectedWorkOrder, selectedWorkOrder, defaultWorkorderId, setDefaultWorkorder } = props
   const { projectId } = useParams<'projectId'>()
   // const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [totalPages, setTotalPages] = useState(0)
@@ -29,24 +29,34 @@ export const WorkOrdersTable = props => {
     if (workOrders && workOrders.length > 0 && selectedWorkOrder?.id) {
       const updatedWorkOrder = workOrders?.find(wo => wo.id === selectedWorkOrder?.id)
       if (updatedWorkOrder) {
+        setDefaultWorkorder(null)
         setSelectedWorkOrder({ ...updatedWorkOrder })
       }
     }
   }, [workOrders])
 
   useEffect(() => {
+    if (workOrders && workOrders.length > 0 && defaultWorkorderId) {
+      const wo = workOrders?.find(wo => wo.id === defaultWorkorderId)
+      if (wo) {
+        setSelectedWorkOrder({ ...wo })
+        setShowNewWO(true)
+      }
+    }
+  }, [defaultWorkorderId, workOrders])
+
+  useEffect(() => {
     if (defaultSelected?.id) {
+      setDefaultWorkorder(null)
       setSelectedWorkOrder(defaultSelected)
       setShowNewWO(true)
-
-      // onOpen()
     }
   }, [defaultSelected])
 
   const onRowClick = row => {
+    setDefaultWorkorder(null)
     setSelectedWorkOrder(row)
     setShowNewWO(true)
-    // onOpen()
   }
 
   useEffect(() => {
