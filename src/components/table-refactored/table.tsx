@@ -567,7 +567,7 @@ export const Table: React.FC<TableProps> = ({
                                 borderBottom: '1px solid #CBD5E0',
                               }}
                             >
-                              {header.id !== 'expander' && (
+                              {header.id !== 'expander' && header.id !== 'deleteBtn' && (
                                 <Filter
                                   isFilteredByApi={isFilteredByApi}
                                   allowStickyFilters={allowStickyFilters}
@@ -651,7 +651,7 @@ export const Table: React.FC<TableProps> = ({
                                       : (title as string)
                                     : ''
                                 }
-                                {...getColumnMaxMinWidths(cell.column)} 
+                                {...getColumnMaxMinWidths(cell.column)}
                                 data-testid={`cell-${cell.column.id}-${index}`}
                               >
                                 {isValidAndNonEmpty(cell?.renderValue())
