@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react'
 import { useEffect, useRef } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from 'utils/auth-context'
 import { getToken } from 'utils/storage.utils'
 
@@ -8,13 +8,16 @@ export const EstimateDetails = () => {
   const { data } = useAuth()
   const user = data?.user
   const { projectId } = useParams<{ projectId: string }>()
+  const [searchParams, setSearchParams] = useSearchParams()
+  let workorderId: any = searchParams.get('workorderId');
 
-  const iframeUrl = process.env.REACT_APP_ESTIMATES_URL + `/estimate-details/${projectId}`
+  const iframeUrl = process.env.REACT_APP_ESTIMATES_URL + `/estimate-details/${projectId}?workorderId=${workorderId}`
+
 
   const iframe = useRef<HTMLIFrameElement>(null)
 
   const sendMessage = () => {
-    ;(document.getElementById('estimatesPortalIframe') as HTMLIFrameElement).contentWindow?.postMessage(
+    ; (document.getElementById('estimatesPortalIframe') as HTMLIFrameElement).contentWindow?.postMessage(
       { token: getToken(), user: user },
       '*',
     )
@@ -37,6 +40,11 @@ export const EstimateDetails = () => {
         setTimeout(() => {
           window.location.href = `project-details/${event.data.projectId}/`
         }, 300)
+      }
+      if (event.data.clearWOParams) {
+        searchParams.delete('workorderId')
+        setSearchParams(searchParams)
+        console.log('AFTER DELETE',searchParams)
       }
     })
   }, [])

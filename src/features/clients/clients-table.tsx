@@ -25,6 +25,7 @@ import { CLIENT_TABLE_QUERY_KEYS, useGetAllClients } from 'api/clients'
 import { useTranslation } from 'react-i18next'
 import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
+import { useSearchParams } from 'react-router-dom'
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { defaultSelected, isReadOnly } = props
@@ -32,6 +33,8 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const clientId = searchParams.get('clientId');
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
@@ -66,6 +69,17 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
       setSelectedClient(undefined)
     }
   }, [clients])
+
+  useEffect(() => {
+    if (clientId && clients) {
+
+      let client = clients?.find(v => v.id === Number(clientId))
+      if (client) {
+        setSelectedClient(client)
+        onOpen()
+      }
+    }
+  }, [clientId, clients])
 
   useEffect(() => {
     if (defaultSelected?.id) {
@@ -163,6 +177,11 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     }
   }
 
+  const resetParams = () => {
+    searchParams.delete('clientId')
+    setSearchParams(searchParams)
+  }
+
   return (
     <Box>
       {isOpen && (
@@ -172,6 +191,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
             refetch()
             setSelectedClient(undefined)
             onCloseDisclosure()
+            resetParams()
           }}
           isOpen={isOpen}
         />
