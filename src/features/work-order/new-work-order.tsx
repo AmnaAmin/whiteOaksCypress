@@ -208,6 +208,15 @@ export const NewWorkOrder: React.FC<{
                 ])
                 setState?.(false)
               },
+              onError: async (err) => {
+                console.error("An exception has occurred. Performing rollback on line items, exception:", err);
+                assignLineItems(
+                  [
+                    ...values?.assignedItems?.map(a => {
+                      return { ...a, isAssigned: false, location: a?.location?.label, paymentGroup: a?.paymentGroup?.label }
+                    }),
+                  ]);
+              }
             })
           },
         },
