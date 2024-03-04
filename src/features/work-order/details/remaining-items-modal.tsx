@@ -84,7 +84,7 @@ const RemainingItemsModal: React.FC<{
 
         if (payFound) {
           paymentGroup = { label: payFound.label, value: payFound.id }
-        } else if (!!r.paymentGroup) {
+        } else if (!!r.paymentGroup && payFound) {
           paymentGroup = { label: r?.paymentGroup, value: r?.paymentGroup }
         } else {
           paymentGroup = null
