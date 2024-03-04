@@ -21,6 +21,7 @@ import { TransactionTypeValues } from 'types/transaction.type'
 import { Project } from 'types/project.type'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { InvoiceStatusValues } from 'types/invoice.types'
+import { validateAmountDigits } from 'utils/string-formatters'
 
 type InvoiceItemsFormProps = {
   formReturn: UseFormReturn<InvoicingType>
@@ -46,7 +47,10 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
     register,
     formState: { errors },
     setValue,
+    trigger,
     watch,
+    setError,
+    clearErrors,
   } = formReturn
 
   const isPaymentTypeData = value => value.type === 'Payment'
@@ -220,13 +224,23 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                               variant={'required-field'}
                               disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !canCreateInvoice}
                               {...register(`finalSowLineItems.${index}.name` as const, {
-                                required: 'This is required field',
+                                required: 'This is a required field',
+                                maxLength: { value: 100, message: 'Please Use 100 characters Only' },
                               })}
+                              onChange={e => {
+                                const title = e.target.value
+                                if (title.length > 100) {
+                                  setError(`finalSowLineItems.${index}.name`, {
+                                    type: 'maxLength',
+                                    message: 'Please Use 100 characters Only.',
+                                  })
+                                } else {
+                                  clearErrors(`finalSowLineItems.${index}.name`)
+                                }
+                              }}
                             />
                           </Tooltip>
-                          <FormErrorMessage>
-                            {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
-                          </FormErrorMessage>
+                          <FormErrorMessage data-testid="finalSowLineItems">{errors?.finalSowLineItems?.[index]?.name?.message ?? ''}</FormErrorMessage>
                         </FormControl>
                       </GridItem>
                       <GridItem>
@@ -249,9 +263,22 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                               disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !canCreateInvoice}
                               {...register(`finalSowLineItems.${index}.description` as const, {
                                 required: 'This is required field',
+                                maxLength: { value: 255, message: 'Please Use 255 characters Only.' },
                               })}
+                              onChange={e => {
+                                const title = e.target.value
+                                if (title.length > 255) {
+                                  setError(`finalSowLineItems.${index}.description`, {
+                                    type: 'maxLength',
+                                    message: 'Please Use 255 characters Only.',
+                                  })
+                                } else {
+                                  clearErrors(`finalSowLineItems.${index}.description`)
+                                }
+                              }}
                             />
                           </Tooltip>
+
                           <FormErrorMessage>
                             {errors?.finalSowLineItems?.[index]?.description?.message ?? ''}
                           </FormErrorMessage>
@@ -288,7 +315,12 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                             name={`finalSowLineItems.${index}.amount` as const}
                             control={control}
                             rules={{
-                              required: 'This is required field',
+                              validate: {
+                                matchPattern: (v: any) => {
+                                  return validateAmountDigits(v)
+                                },
+                              },
+                              required: 'This is required',
                             }}
                             render={({ field, fieldState }) => {
                               return (
@@ -301,8 +333,10 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                                     placeholder={!isPartialPayment ? 'Add Amount' : ''}
                                     disabled={isPaidOrOriginalSOW || isPaid || isCancelled || !canCreateInvoice}
                                     onValueChange={e => {
-                                      const inputValue = e?.floatValue ?? ''
+                                      clearErrors(`finalSowLineItems.${index}.amount`)
+                                      const inputValue = e.value ?? ''
                                       field.onChange(inputValue)
+                                      trigger(`finalSowLineItems.${index}.amount`)
                                     }}
                                     variant={'required-field'}
                                     size="sm"
@@ -319,7 +353,11 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                                   value={numeral(Number(field.value)).format('$0,0[.]00')}
                                 />
                               */}
-                                  <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                  {!!errors.finalSowLineItems?.[index]?.amount && (
+                                    <FormErrorMessage>
+                                      {errors?.finalSowLineItems?.[index]?.amount?.message}
+                                    </FormErrorMessage>
+                                  )}
                                 </>
                               )
                             }}
