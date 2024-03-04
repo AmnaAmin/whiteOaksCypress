@@ -240,7 +240,7 @@ export const FinalSowLineItems: React.FC<InvoiceItemsFormProps> = ({
                               }}
                             />
                           </Tooltip>
-                          <FormErrorMessage>{errors?.finalSowLineItems?.[index]?.name?.message ?? ''}</FormErrorMessage>
+                          <FormErrorMessage data-testid="finalSowLineItems">{errors?.finalSowLineItems?.[index]?.name?.message ?? ''}</FormErrorMessage>
                         </FormControl>
                       </GridItem>
                       <GridItem>

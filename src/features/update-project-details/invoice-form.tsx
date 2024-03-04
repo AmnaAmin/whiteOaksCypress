@@ -251,7 +251,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     clearErrors,
     watch,
   } = formReturn
-  const contactFormValue = watch()
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'finalSowLineItems',
@@ -491,7 +490,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                           Please use 100 characters only.
                         </Text>
                       )} */}
-                      {!!errors.invoiceNumber && <FormErrorMessage>{errors?.invoiceNumber?.message}</FormErrorMessage>}
+                      {!!errors.invoiceNumber && <FormErrorMessage data-testid="invoice-number-error">{errors?.invoiceNumber?.message}</FormErrorMessage>}
                     </div>
                   )
                 }}

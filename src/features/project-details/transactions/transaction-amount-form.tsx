@@ -575,7 +575,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                           />
                         </Tooltip>
                         {!!errors.transaction?.[index]?.description && (
-                          <FormErrorMessage>
+                          <FormErrorMessage data-testid="trans_description">
                             {errors?.transaction?.[index]?.description?.message ?? ''}
                           </FormErrorMessage>
                         )}
@@ -632,7 +632,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     }}
                                   />
                                 )}
-                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                                <FormErrorMessage data-testid="trans_amount">{fieldState.error?.message}</FormErrorMessage>
                               </>
                             )
                           }}
