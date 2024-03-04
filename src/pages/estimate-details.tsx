@@ -44,7 +44,6 @@ export const EstimateDetails = () => {
       if (event.data.clearWOParams) {
         searchParams.delete('workorderId')
         setSearchParams(searchParams)
-        console.log('AFTER DELETE',searchParams)
       }
     })
   }, [])
