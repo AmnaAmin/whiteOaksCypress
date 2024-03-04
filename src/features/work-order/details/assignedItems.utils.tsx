@@ -369,6 +369,7 @@ export const mapToUnAssignItem = item => {
     ...item,
     unitPrice: item?.price,
     id: item.smartLineItemId,
+    paymentGroup: item?.paymentGroup?.label,
     isAssigned: false,
     totalPrice: Number(item?.price) * Number(item?.quantity),
   }
