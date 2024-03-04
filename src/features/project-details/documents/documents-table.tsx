@@ -87,8 +87,10 @@ export const VendorDocumentsTable = React.forwardRef((props: DocumentsProps, ref
   const { isVendor } = useUserRolesSelector()
 
   useEffect(() => {
+    const mutateDocuments = documents?.filter(e => e.deleted !== true)
+
     if (documents && documents?.length > 0) {
-      setDataDocx(mapDataForDocxExpandableRows(documents as any, isVendor as boolean))
+      setDataDocx(mapDataForDocxExpandableRows(mutateDocuments as any, isVendor as boolean))
     }
   }, [documents])
 
