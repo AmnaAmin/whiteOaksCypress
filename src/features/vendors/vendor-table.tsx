@@ -22,7 +22,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAccountData } from 'api/user-account'
 
 export const VENDOR_TABLE_QUERY_KEYS = {
@@ -184,6 +184,8 @@ type ProjectProps = {
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }) => {
   const location = useLocation()
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const vendorId = searchParams.get('vendorId');
   const vendor = (location?.state as any)?.data || {}
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
@@ -231,6 +233,15 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
   }, [vendor])
 
   useEffect(() => {
+    if (vendorId && vendors) {
+      let vendor = vendors?.find(v => v.id === Number(vendorId))
+      if (vendor) {
+        setSelectedVendor(vendor)
+      }
+    }
+  }, [vendorId,vendors])
+
+  useEffect(() => {
     if (selectedCard) {
       setFilteredUrl(VENDORS_SELECTED_CARD_MAP_URL[selectedCard])
       setPagination({ pageIndex: 0, pageSize: 20 })
@@ -243,6 +254,11 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
     postGridColumn(columns)
   }
 
+  const resetParams = () => {
+    searchParams.delete('vendorId')
+    setSearchParams(searchParams)
+  }
+
   return (
     <Box overflow="auto">
       {selectedVendor && (
@@ -250,6 +266,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
           vendorDetails={selectedVendor as VendorType}
           onClose={() => {
             setSelectedVendor(undefined)
+            resetParams()
           }}
         />
       )}
