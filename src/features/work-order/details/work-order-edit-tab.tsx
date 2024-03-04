@@ -63,6 +63,7 @@ import { isValidAndNonEmpty } from 'utils'
 import { useUploadDocument } from 'api/vendor-projects'
 import { useGetProjectFinancialOverview } from 'api/projects'
 import { removeCurrencyFormat, currencyFormatter } from 'utils/string-formatters'
+import { usePaymentGroupVals } from 'api/location'
 
 export type SelectVendorOption = {
   label: string
@@ -160,9 +161,10 @@ const WorkOrderDetailTab = props => {
 
   const balanceSOWAmount = currencyFormatter(finalSOWAmountNumber - Math.abs(projectTotalCostNumber))
   const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
+  const { paymentGroupValsOptions } = usePaymentGroupVals()
 
   const defaultValues: FormValues = useMemo(() => {
-    return defaultValuesWODetails(workOrder, defaultSkill, locations)
+    return defaultValuesWODetails(workOrder, defaultSkill, locations, paymentGroupValsOptions)
   }, [workOrder, locations])
 
   const formReturn = useForm<FormValues>({
@@ -270,7 +272,7 @@ const WorkOrderDetailTab = props => {
       const selectedIds = items.map(i => i.id)
       const assigned = [
         ...items.map(s => {
-          return { ...mapToLineItems(s), profit: 35, completePercentage: { value: 0, label: '0%' } }
+          return { ...mapToLineItems(s), profit: 45, completePercentage: { value: 0, label: '0%' } }
         }),
       ]
       append(assigned)
@@ -481,7 +483,7 @@ const WorkOrderDetailTab = props => {
                 <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
                 <InformationCard testId="email" title={t(`${WORK_ORDER}.email`)} date={businessEmailAddress} />
                 <InformationCard testId="phone" title={t(`${WORK_ORDER}.phone`)} date={businessPhoneNumber} />
-               
+                <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
               </>
             </SimpleGrid>
           ) : (
@@ -578,7 +580,7 @@ const WorkOrderDetailTab = props => {
                           date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
                           customStyle={{ width: '150px', height: '20px' }}
                         />
-                         <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
+                        <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
                       </>
                     )}
                   </HStack>
@@ -784,6 +786,7 @@ const WorkOrderDetailTab = props => {
                 downloadPdf={downloadPdf}
                 workOrder={workOrder}
                 documentsData={documentsData}
+                clientName={projectData?.clientName}
               />
             )}
           </Box>

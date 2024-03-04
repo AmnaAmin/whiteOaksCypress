@@ -49,10 +49,12 @@ import { GoArrowLeft } from 'react-icons/go'
 
 const WorkOrderDetailsPage = ({
   workOrder,
+  defaultSelected,
   onClose,
   isOpen,
 }: {
-  workOrder: ProjectWorkOrderType
+  workOrder: ProjectWorkOrderType,
+  defaultSelected: boolean,
   onClose: () => void
   isOpen: boolean
 }) => {
@@ -116,7 +118,7 @@ const WorkOrderDetailsPage = ({
       //   onClose()
       setTabIndex(0)
     }
-  }, [workOrderDetails?.length])
+  }, [workOrderDetails?.length, workOrderDetails?.status])
 
   const queryClient = useQueryClient()
   const compareLineItems = (existingLineItems, updatedLineItems) => {
@@ -232,7 +234,18 @@ const WorkOrderDetailsPage = ({
         },
       ]
     }
-    updateWorkOrder(payload, {
+
+    const mutatePayload = {
+      ...payload,
+      assignedItems: payload.assignedItems.map(item => {
+        return {
+          ...item,
+          paymentGroup: typeof item?.paymentGroup === 'object' ? item?.paymentGroup?.label : item?.paymentGroup,
+        }
+      }),
+    }
+
+    updateWorkOrder(mutatePayload, {
       onSuccess: async res => {
         if (deletedItems?.length > 0) {
           deleteLineItems(
@@ -281,6 +294,12 @@ const WorkOrderDetailsPage = ({
     })
   }
 
+  useEffect(() => {
+    if (defaultSelected) {
+      setTabIndex(1)
+    }
+  }, [defaultSelected])
+
   const navigateToProjectDetails = () => {
     navigate(`/project-details/${workOrderDetails.projectId}`)
   }
@@ -324,8 +343,8 @@ const WorkOrderDetailsPage = ({
       )}
       <Divider mb={3} />
       <Stack>
-        <Tabs variant="line" colorScheme="brand" size="md" onChange={index => setTabIndex(index)} whiteSpace="nowrap">
-          <TabList color="gray.600" ml="10px" mr="20px" bg={'#F7FAFC'} rounded="6px 6px 0px 0px">
+        <Tabs variant="line" colorScheme="brand" size="md" index={tabIndex} onChange={index => setTabIndex(index)} whiteSpace="nowrap">
+          <TabList color="gray.600" ml="10px" mr="20px" bg={'#F7FAFC'} rounded="6px 6px 0px 0px" >
             <Tab>{t('workOrderDetails')}</Tab>
             <Tab data-testid="wo_transaction_tab">{t('projects.projectDetails.transactions')}</Tab>
             {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}

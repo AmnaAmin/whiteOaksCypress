@@ -30,7 +30,7 @@ import { useFieldArray, useForm, useWatch } from 'react-hook-form'
 import { AddIcon } from '@chakra-ui/icons'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
-import { useLocation } from 'api/location'
+import { useLocation, usePaymentGroupVals } from 'api/location'
 
 const RemainingItemsModal: React.FC<{
   isOpen: boolean
@@ -71,13 +71,25 @@ const RemainingItemsModal: React.FC<{
     name: 'remainingItems',
   })
   const remainingItemsWatch = useWatch({ name: 'remainingItems', control })
+  const { paymentGroupValsOptions } = usePaymentGroupVals()
 
   useEffect(() => {
     reset({
       remainingItems: remainingItems?.map(r => {
         const locationFound = locations?.find(l => l.value === r.location)
+        const payFound = paymentGroupValsOptions?.find(l => l.label === r?.paymentGroup)
 
+        let paymentGroup
         let location
+
+        if (payFound) {
+          paymentGroup = { label: payFound.label, value: payFound.id }
+        } else if (!!r.paymentGroup && payFound) {
+          paymentGroup = { label: r?.paymentGroup, value: r?.paymentGroup }
+        } else {
+          paymentGroup = null
+        }
+
         if (locationFound) {
           location = { label: locationFound.value, value: locationFound.id }
         } else if (!!r.location) {
@@ -88,6 +100,7 @@ const RemainingItemsModal: React.FC<{
         return {
           ...r,
           location,
+          paymentGroup,
         }
       }),
     })
@@ -101,7 +114,7 @@ const RemainingItemsModal: React.FC<{
 
   const onSubmit = async values => {
     const allItems = values.remainingItems?.map((item, index) => {
-      return { ...item, sortOrder: index, location: item?.location?.label }
+      return { ...item, sortOrder: index, location: item?.location?.label, paymentGroup: item?.paymentGroup?.label }
     })
     const newLineItems = allItems.filter(r => r?.action === 'new')
     const updatedLineItems = allItems.filter(r => !!r.id)

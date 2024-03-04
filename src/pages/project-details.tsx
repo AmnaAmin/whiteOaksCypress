@@ -35,6 +35,7 @@ import { ADV_PERMISSIONS } from 'api/access-control'
 import { Messages } from 'features/messages/messages'
 import WorkOrderDetailsPage from 'features/work-order/work-order-edit-page'
 import NewWorkOrder from 'features/work-order/new-work-order'
+import { useSearchParams } from 'react-router-dom'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -74,9 +75,14 @@ export const ProjectDetails: React.FC = props => {
   const location = useLocation()
   const navigate = useNavigate()
   const workOrder = (location?.state as any)?.workOrder || {}
+  const [paramWorkorder, setParamWorkorder] = useState<Number | null>(null);
   const transaction = (location?.state as any)?.transaction || {}
   const { permissions } = useRoleBasedPermissions()
   const isAllowedInvoicing = permissions.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p))
+
+  //Extracting workorder id from query params
+  const [searchParams, setSearchParams] = useSearchParams()
+  const workorderId = searchParams.get('workorder');
 
   useEffect(() => {
     if (workOrder?.id) {
@@ -86,11 +92,19 @@ export const ProjectDetails: React.FC = props => {
   }, [workOrder])
 
   useEffect(() => {
+    if (workorderId) {
+      setTabIndex(2)
+      setParamWorkorder(Number(workorderId))
+    }
+  }, [workorderId])
+
+  useEffect(() => {
     if (transaction?.id) {
       setTabIndex(0)
       navigate(location.pathname, {})
     }
   }, [transaction])
+
 
   useEffect(() => {
     if (ganttChartData?.length > 0 && projectData) {
@@ -119,6 +133,14 @@ export const ProjectDetails: React.FC = props => {
     }
   }, [ganttChartData, projectData])
 
+  function removeWOParam() {
+    if (paramWorkorder) {
+      setParamWorkorder(null)
+      searchParams.delete('workorder')
+      setSearchParams(searchParams)
+    }
+  }
+
   // useEffect(() => {
   //   if (tabIndex === 6) {
   //     refetchAudits()
@@ -131,7 +153,16 @@ export const ProjectDetails: React.FC = props => {
       <AmountDetailsCard projectId={projectId} />
 
       <Stack marginTop="-1px !important" w={{ base: '971px', xl: '100%' }} spacing={5} pb="4">
-        <Tabs index={tabIndex} size="sm" variant="enclosed" colorScheme="brand" onChange={index => setTabIndex(index)}>
+        <Tabs
+          index={tabIndex}
+          size="sm"
+          variant="enclosed"
+          colorScheme="brand"
+          onChange={index => {
+            setShowNewWO(false)
+            setTabIndex(index)
+          }}
+        >
           <TabList h={'50px'} alignItems="end" border="none">
             <Flex h={'40px'} py={'1px'}>
               <Tab>{t('projects.projectDetails.transactions')}</Tab>
@@ -255,15 +286,19 @@ export const ProjectDetails: React.FC = props => {
                     selectedWorkOrder={selectedWorkOrder}
                     ref={tabsContainerRef}
                     defaultSelected={workOrder}
+                    defaultWorkorderId={paramWorkorder}
+                    setDefaultWorkorder={setParamWorkorder}
                   />
                 )}
                 {showNewWO && selectedWorkOrder && (
                   <WorkOrderDetailsPage
                     workOrder={selectedWorkOrder as ProjectWorkOrderType}
+                    defaultSelected={!!paramWorkorder}
                     onClose={() => {
                       setSelectedWorkOrder(undefined)
                       refetchGantt()
                       setShowNewWO(false)
+                      removeWOParam()
                     }}
                     isOpen={showNewWO}
                   />

@@ -114,15 +114,17 @@ const WorkOrderDetailTab = ({
     name: 'assignedItems',
   })
 
-  const downloadPdf = () => {
+  const downloadPdf = async () => {
     let doc = new jsPDF()
-    createInvoicePdf({
+    doc = await createInvoicePdf({
       doc,
       workOrder,
       projectData,
       assignedItems: values.assignedItems ?? [],
       hideAward: true,
     })
+    const pdfUri = doc.output('datauristring')
+    downloadFile(pdfUri)
   }
 
   const parseAssignedItems = values => {
@@ -166,7 +168,11 @@ const WorkOrderDetailTab = ({
       setIsError(false)
     }
     setIsUpdating(true)
-    updateWorkOrderDetails({ ...workOrder, ...updatedValues })
+    updateWorkOrderDetails({ ...workOrder, ...updatedValues }, {
+      onSettled: () => {
+        setIsUpdating(false)
+      },
+    })
   }
 
   useEffect(() => {
