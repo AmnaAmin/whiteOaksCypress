@@ -201,6 +201,9 @@ i18n.use(initReactI18next).init({
         newRow: 'New Row',
         rejectedInvoiceInfo: 'Rejected Invoice Info',
         deleteRow: 'Delete Row',
+        delete: 'Delete',
+        deleteDocument: 'Delete Document',
+        deleteDocMsg: 'Document has been deleted successfully.',
         attachment: 'Attachment',
         dateCreated: 'Date Created',
         contact: 'Contact',
@@ -214,7 +217,7 @@ i18n.use(initReactI18next).init({
         save: 'Save',
         done: 'Done',
         finalSOW: 'Final SOW',
-        
+
         accountpayable: 'Account Payable',
         projectcost: 'Project Cost',
         revenue: 'Revenue',
@@ -323,6 +326,8 @@ i18n.use(initReactI18next).init({
           'This document waives and releases lien, stop payment notice, and payment bond rights the claimant has for labor and service provided, and equipment and material delivered, to the customer on this job through the Through Date of this document. Rights based upon labor or service provided, or equipment or material delivered, pursuant to a written change order that has been fully executed by the parties prior to the date that this document is signed by the claimant, are waived and released by this document, unless listed as an Exception below. This document is effective only on the claimant`s schedule to receive or receipt of payment from the financial institution on which the following check is drawn:',
         // Projects-Documents
         document: 'Document',
+        deleteDocumentsMsg: 'Do you really want to delete this document?',
+        sureConfirmation: 'Are you sure?',
         documentType: 'Document Type',
         fileType: 'File Type',
         vendorGL: 'Vendor',
@@ -852,6 +857,9 @@ i18n.use(initReactI18next).init({
         newRow: 'Fila nueva',
         rejectedInvoiceInfo: 'Información de factura rechazada',
         deleteRow: 'Borrar Fila',
+        delete: 'Borrar',
+        deleteDocument: 'Eliminar documento',
+        deleteDocMsg: 'El documento se ha eliminado correctamente.',
         attachment: 'Adjunto Archivo',
         dateCreated: 'Fecha de Creacion',
         contact: 'Contacto',
@@ -962,6 +970,8 @@ i18n.use(initReactI18next).init({
           'Este documento renuncia y libera el gravamen, el aviso de suspensión de pago y los derechos de fianza de pago que tiene el reclamante por la mano de obra y el servicio prestados, y el equipo y el material entregados al cliente en este trabajo hasta la fecha de finalización de este documento. Los derechos basados ​​en la mano de obra o el servicio proporcionado, o el equipo o el material entregado, de conformidad con una orden de cambio por escrito que haya sido completamente ejecutada por las partes antes de la fecha en que el reclamante firme este documento, se renuncian y se liberan mediante este documento, a menos que enumerados como una excepción a continuación. Este documento es efectivo solo en el cronograma del reclamante para recibir o recibir el pago de la institución financiera contra la cual se gira el siguiente cheque:',
         // Projects - Documents
         document: 'Documento',
+        deleteDocumentsMsg: 'Realmente deseas eliminar este documento?',
+        sureConfirmation: 'Estas seguro?',
         documentType: 'Tipo de Documento',
         fileType: 'Tipo de Archivo',
         vendorGL: 'Vendedor',
