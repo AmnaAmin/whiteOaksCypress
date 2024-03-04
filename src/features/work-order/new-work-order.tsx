@@ -159,7 +159,6 @@ export const NewWorkOrder: React.FC<{
   const { mutate: assignLineItems } = useAssignLineItems({ swoProjectId: swoProject?.id, refetchLineItems: true })
 
   const onSubmit = async values => {
-    console.log("🚀 ~ onSubmit ~ values:", values)
     if (values?.assignedItems?.length > 0) {
       const isValid = values?.assignedItems?.every(
         l => isValidAndNonEmpty(l.description) && isValidAndNonEmpty(l.quantity) && isValidAndNonEmpty(l.price),
