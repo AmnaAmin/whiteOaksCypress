@@ -4,8 +4,6 @@ import { ProjectWorkOrderType } from 'types/project.type'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import Status from 'features/common/status'
 import numeral from 'numeral'
-import { PopoverTooltip } from 'constants/projects.constants'
-import { WORK_ORDER } from '../../work-order/workOrder.i18n'
 
 export const WORK_ORDER_TABLE_QUERY_KEYS = {
   statusLabel: 'statusLabel.equals',
