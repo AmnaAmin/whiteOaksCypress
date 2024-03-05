@@ -606,22 +606,23 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                       if (defaultNegative && e?.code === 'Minus') {
                                         e.preventDefault()
                                       }
-                                    }}                               
+                                    }}
                                     onValueChange={e => {
                                       const inputValueField = e.value ?? ''
                                       field.onChange(inputValueField)
                                       trigger(`transaction.${index}.amount`)
                                       if (!isValidAndNonEmpty(e.formattedValue)) {
-                                          field.onChange('')
-                                          return
+                                        field.onChange('')
+                                        return
                                       }
                                       onSetTotalRemainingAmount(Math.abs(e?.floatValue as number))
                                       const inputValueCalculation = e?.floatValue
                                       field.onChange(
-                                          defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValueCalculation)) : inputValueCalculation,
+                                        defaultNegative && !isRefund
+                                          ? -1 * Math.abs(Number(inputValueCalculation))
+                                          : inputValueCalculation,
                                       )
-                                  }}
-                                 
+                                    }}
                                     variant={'required-field'}
                                     size="sm"
                                   />
@@ -638,11 +639,13 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                     onChange={e => {
                                       const inputValue = e.target.value
                                       field.onChange(inputValue)
-                                      trigger(`transaction.${index}.amount`) 
+                                      trigger(`transaction.${index}.amount`)
                                     }}
                                   />
                                 )}
-                                <FormErrorMessage data-testid="trans_amount">{fieldState.error?.message}</FormErrorMessage>
+                                <FormErrorMessage data-testid="trans_amount">
+                                  {fieldState.error?.message}
+                                </FormErrorMessage>
                               </>
                             )
                           }}
