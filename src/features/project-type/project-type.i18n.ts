@@ -6,7 +6,7 @@ export const projectType = {
         //Page
         projectType: 'Project Type',
         clientType: 'Client Type',
-        titleDel: 'delete Project Type',
+        titleDel: 'Delete Project Type',
         delMsg: 'Project Type has been deleted successfully.',
         failedMsg: 'Unable to delete Project Type.',
         delConfirmText: 'Do you really want to delete this Project Type?',
