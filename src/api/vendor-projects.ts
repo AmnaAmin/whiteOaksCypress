@@ -9,6 +9,7 @@ import { currencyFormatter, truncateWithEllipsisInCenter } from 'utils/string-fo
 import { Project } from 'types/project.type'
 import { useMemo } from 'react'
 import { SelectOption } from 'types/transaction.type'
+import { t } from 'i18next'
 
 export const useUploadDocument = () => {
   const { projectId } = useParams<'projectId'>()
@@ -76,9 +77,10 @@ export const useDocumentTypes = () => {
   })
 }
 
-export const useDeleteDocument = () => {
+export const useDeleteDocument = (docTable?: boolean) => {
   const client = useClient()
-
+  const queryClient = useQueryClient()
+  const toast = useToast()
   return useMutation(
     docId => {
       return client('documents/' + docId, {
@@ -86,6 +88,20 @@ export const useDeleteDocument = () => {
       })
     },
     {
+      onSuccess() {
+        // as this delete call is being used on vendor's acc on signature removal,& can be used here aswell
+        // so handle here with check to show toast only when this call will use from documents table only
+        if (docTable) {
+          queryClient.invalidateQueries(['documents'])
+          toast({
+            title: t('deleteDocument'),
+            description: t('deleteDocMsg'),
+            status: 'success',
+            isClosable: true,
+            position: 'top-left',
+          })
+        }
+      },
       onError(error: any) {
         console.log('Unable to delete document', error)
       },
@@ -213,7 +229,11 @@ export const createInvoice = (doc, workOrder, projectData: Project, items, summa
     rightMarginX + 160,
     60,
   )
-  doc.text(workOrder?.expectedPaymentDate ? dateFormatNew(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy', rightMarginX + 160, 65)
+  doc.text(
+    workOrder?.expectedPaymentDate ? dateFormatNew(workOrder?.expectedPaymentDate) : 'mm/dd/yyyy',
+    rightMarginX + 160,
+    65,
+  )
 
   // Table
   autoTable(doc, {

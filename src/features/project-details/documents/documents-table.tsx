@@ -1,11 +1,10 @@
-import { Box, Center, Spinner } from '@chakra-ui/react'
+import { Box, Center, Spinner, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { TableNames } from 'types/table-column.types'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
-import { useDocuments } from 'api/vendor-projects'
-import { DOCUMENTS_TABLE_COLUMNS } from 'constants/documents.constants'
+import { useDeleteDocument, useDocuments } from 'api/vendor-projects'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { ButtonsWrapper, CustomDivider, TableFooter } from 'components/table-refactored/table-footer'
 import { Table } from 'components/table-refactored/table'
@@ -20,25 +19,44 @@ import {
 } from 'components/table-refactored/pagination'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { mapDataForDocxExpandableRows } from '../transactions/transaction.constants'
+import { ConfirmationBox } from 'components/Confirmation'
+import { useGetDocumentsTableColumn } from 'constants/documents.constants'
+import { t } from 'i18next'
 type DocumentsProps = {
   isReadOnly?: boolean
 }
 export const VendorDocumentsTable = React.forwardRef((props: DocumentsProps, ref) => {
   const { projectId } = useParams<'projectId'>()
-  const { documents, isLoading: isLoadingDocuments } = useDocuments({
+  const {
+    documents,
+    isLoading: isLoadingDocuments,
+    isFetching: isDocumentsFetching,
+  } = useDocuments({
     projectId,
   })
+  const { mutate: deleteSignature, isLoading: isDocmentDeleting } = useDeleteDocument(true)
   const [dataDocx, setDataDocx] = useState<any>([])
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
+  const [docId, setDocId] = useState(undefined)
 
+  const getDocId = e => {
+    setDocId(e?.id)
+  }
+  const {
+    isOpen: isResetConfirmationModalOpen,
+    onClose: onResetConfirmationModalClose,
+    onOpen: onResetConfirmationModalOpen,
+  } = useDisclosure()
+
+  const DOCUMENTS_TABLE_COLUMNS = useGetDocumentsTableColumn(onResetConfirmationModalOpen, getDocId)
   const { mutate: postDocumentColumn } = useTableColumnSettingsUpdateMutation(TableNames.document)
   const {
     tableColumns,
     settingColumns,
     isLoading,
     refetch: refetchColumns,
-  } = useTableColumnSettings(DOCUMENTS_TABLE_COLUMNS, TableNames.document)
+  } = useTableColumnSettings(DOCUMENTS_TABLE_COLUMNS as any, TableNames.document)
 
   const onSave = columns => {
     postDocumentColumn(columns)
@@ -67,10 +85,14 @@ export const VendorDocumentsTable = React.forwardRef((props: DocumentsProps, ref
   const onRowClick = row => {}
 
   const { isVendor } = useUserRolesSelector()
+  const columnsWithoutDeleteBtn = tableColumns.filter(e => e.id !== 'deleteBtn')
+  const hideDeleteButtonForAdmin = isVendor ? columnsWithoutDeleteBtn : tableColumns
 
   useEffect(() => {
+    const mutateDocuments = documents?.filter(e => e.deleted !== true)
+
     if (documents && documents?.length > 0) {
-      setDataDocx(mapDataForDocxExpandableRows(documents as any, isVendor as boolean))
+      setDataDocx(mapDataForDocxExpandableRows(mutateDocuments as any, isVendor as boolean))
     }
   }, [documents])
 
@@ -100,13 +122,17 @@ export const VendorDocumentsTable = React.forwardRef((props: DocumentsProps, ref
             totalPages={documents?.length ? totalPages : -1}
             manualPagination={false}
             data={sortTransData(dataDocx)}
-            columns={tableColumns}
+            columns={hideDeleteButtonForAdmin}
             isExpandable={true}
           >
-            <Table onRowClick={onRowClick} isLoading={isLoading} isEmpty={!isLoading && !documents?.length} />
+            <Table
+              onRowClick={onRowClick}
+              isLoading={isLoading || isDocumentsFetching}
+              isEmpty={!isLoading && !documents?.length}
+            />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <ButtonsWrapper>
-                <ExportCustomButton columns={tableColumns} data={documents} fileName="documents" />
+                <ExportCustomButton columns={hideDeleteButtonForAdmin} data={documents} fileName="documents" />
                 <CustomDivider />
                 {settingColumns && (
                   <TableColumnSettings
@@ -128,6 +154,22 @@ export const VendorDocumentsTable = React.forwardRef((props: DocumentsProps, ref
               </TablePagination>
             </TableFooter>
           </TableContextProvider>
+          <ConfirmationBox
+            title={t('sureConfirmation')}
+            yesButtonText={t('delete')}
+            content={t(`deleteDocumentsMsg`)}
+            isOpen={isResetConfirmationModalOpen}
+            onClose={onResetConfirmationModalClose}
+            isLoading={isDocmentDeleting}
+            onConfirm={() => {
+              deleteSignature(docId, {
+                onSuccess() {
+                  onResetConfirmationModalClose()
+                  setDocId(undefined)
+                },
+              })
+            }}
+          />
         </Box>
       )}
     </>
