@@ -147,6 +147,7 @@ const WorkOrderDetailTab = props => {
     documentsData,
     isFetchingLineItems,
     isLoadingLineItems,
+    paymentGroupValsOptions,
     locations,
   } = props
 
@@ -161,7 +162,6 @@ const WorkOrderDetailTab = props => {
 
   const balanceSOWAmount = currencyFormatter(finalSOWAmountNumber - Math.abs(projectTotalCostNumber))
   const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
-  const { paymentGroupValsOptions } = usePaymentGroupVals()
 
   const defaultValues: FormValues = useMemo(() => {
     return defaultValuesWODetails(workOrder, defaultSkill, locations, paymentGroupValsOptions)
