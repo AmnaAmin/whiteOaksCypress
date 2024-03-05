@@ -21,7 +21,7 @@ import {
 } from '@chakra-ui/react'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { Controller, useFieldArray, useWatch, UseFormReturn } from 'react-hook-form'
-import {  isValidAndNonEmptyObject } from 'utils'
+import { isValidAndNonEmpty, isValidAndNonEmptyObject } from 'utils'
 import { isManualTransaction, useFieldDisabledEnabledDecision, useFieldShowHideDecision, useTotalAmount } from './hooks'
 import { ChangeOrderType, FormValues, TransactionTypeValues } from 'types/transaction.type'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -499,7 +499,7 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                   TransactionTypeValues.carrierFee,
                   TransactionTypeValues.permitFee,
                 ].some(id => id === values?.transactionType?.value)
-                
+                const isRefund = values?.refund
 
                 return (
                   <Grid
@@ -606,12 +606,22 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                                       if (defaultNegative && e?.code === 'Minus') {
                                         e.preventDefault()
                                       }
-                                    }}
+                                    }}                               
                                     onValueChange={e => {
-                                      const inputValue = e.value ?? ''
-                                      field.onChange(inputValue)
-                                      trigger(`transaction.${index}.amount`) // Trigger validation manually
-                                    }}
+                                      const inputValueField = e.value ?? ''
+                                      field.onChange(inputValueField)
+                                      trigger(`transaction.${index}.amount`)
+                                      if (!isValidAndNonEmpty(e.formattedValue)) {
+                                          field.onChange('')
+                                          return
+                                      }
+                                      onSetTotalRemainingAmount(Math.abs(e?.floatValue as number))
+                                      const inputValueCalculation = e?.floatValue
+                                      field.onChange(
+                                          defaultNegative && !isRefund ? -1 * Math.abs(Number(inputValueCalculation)) : inputValueCalculation,
+                                      )
+                                  }}
+                                 
                                     variant={'required-field'}
                                     size="sm"
                                   />
