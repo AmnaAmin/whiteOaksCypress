@@ -63,7 +63,6 @@ import { isValidAndNonEmpty } from 'utils'
 import { useUploadDocument } from 'api/vendor-projects'
 import { useGetProjectFinancialOverview } from 'api/projects'
 import { removeCurrencyFormat, currencyFormatter } from 'utils/string-formatters'
-import { usePaymentGroupVals } from 'api/location'
 
 export type SelectVendorOption = {
   label: string
