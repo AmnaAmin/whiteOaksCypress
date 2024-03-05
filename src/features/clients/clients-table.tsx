@@ -27,9 +27,13 @@ import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
 import { useSearchParams } from 'react-router-dom'
 
+export type ClientWithIdOnly = {
+  id: number
+}
+
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { defaultSelected, isReadOnly } = props
-  const [selectedClient, setSelectedClient] = useState<Clients>()
+  const [selectedClient, setSelectedClient] = useState<Clients | ClientWithIdOnly>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -71,13 +75,9 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   }, [clients])
 
   useEffect(() => {
-    if (clientId && clients) {
-
-      let client = clients?.find(v => v.id === Number(clientId))
-      if (client) {
-        setSelectedClient(client)
-        onOpen()
-      }
+    if (clientId) {
+      setSelectedClient({ id: Number(clientId) })
+      onOpen()
     }
   }, [clientId, clients])
 
