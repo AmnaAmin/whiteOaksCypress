@@ -181,10 +181,6 @@ type ProjectProps = {
   isReadOnly?: boolean
 }
 
-type VendorIdType = {
-  id: number
-}
-
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }) => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -216,7 +212,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
     pagination.pageSize,
   )
 
-  const [selectedVendor, setSelectedVendor] = useState<VendorType | VendorIdType>()
+  const [selectedVendorId, setSelectedVendorId] = useState<number>()
   const { refetch: allVendorsRefetch, isLoading: isAllExportDataLoading } = useGetAllVendors(
     user,
     filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
@@ -231,14 +227,14 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
 
   useEffect(() => {
     if (vendor?.id) {
-      setSelectedVendor(vendor)
+      setSelectedVendorId(vendor.id)
       navigate(location.pathname, {})
     }
   }, [vendor])
 
   useEffect(() => {
     if (vendorId) {
-      setSelectedVendor({ id: Number(vendorId) })
+      setSelectedVendorId(Number(vendorId))
     }
   }, [vendorId])
 
@@ -263,11 +259,11 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
 
   return (
     <Box overflow="auto">
-      {selectedVendor && (
+      {selectedVendorId && (
         <Vendor
-          vendorId={selectedVendor.id}
+          vendorId={selectedVendorId}
           onClose={() => {
-            setSelectedVendor(undefined)
+            setSelectedVendorId(undefined)
             resetParams()
           }}
         />
@@ -286,7 +282,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
           setSorting={setSorting}
         >
           <Table
-            onRowClick={row => setSelectedVendor(row)}
+            onRowClick={row => setSelectedVendorId(row.id)}
             isFilteredByApi={true}
             isLoading={vendorsLoading}
             isEmpty={!vendorsLoading && !vendors?.length}

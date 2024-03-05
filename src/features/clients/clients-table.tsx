@@ -27,13 +27,9 @@ import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
 import { useSearchParams } from 'react-router-dom'
 
-export type ClientWithIdOnly = {
-  id: number
-}
-
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { defaultSelected, isReadOnly } = props
-  const [selectedClient, setSelectedClient] = useState<Clients | ClientWithIdOnly>()
+  const [selectedClientId, setSelectedClientId] = useState<number>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -62,28 +58,28 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { t } = useTranslation()
 
   useEffect(() => {
-    if (clients && clients.length > 0 && selectedClient?.id) {
-      const updatedClient = clients?.find(c => c.id === selectedClient?.id)
+    if (clients && clients.length > 0 && selectedClientId) {
+      const updatedClient = clients?.find(c => c.id === selectedClientId)
       if (updatedClient) {
-        setSelectedClient({ ...updatedClient })
+        setSelectedClientId(updatedClient.id)
       } else {
-        setSelectedClient(undefined)
+        setSelectedClientId(undefined)
       }
     } else {
-      setSelectedClient(undefined)
+      setSelectedClientId(undefined)
     }
   }, [clients])
 
   useEffect(() => {
     if (clientId) {
-      setSelectedClient({ id: Number(clientId) })
+      setSelectedClientId(Number(clientId))
       onOpen()
     }
   }, [clientId, clients])
 
   useEffect(() => {
     if (defaultSelected?.id) {
-      setSelectedClient(defaultSelected)
+      setSelectedClientId(defaultSelected.id)
       setPagination({ pageIndex: 0, pageSize: 20 })
       onOpen()
     }
@@ -184,12 +180,12 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
 
   return (
     <Box>
-      {(selectedClient && selectedClient.id && isOpen) && (
+      {(selectedClientId && isOpen) && (
         <Client
-          clientId={selectedClient.id}
+          clientId={selectedClientId}
           onClose={() => {
             refetch()
-            setSelectedClient(undefined)
+            setSelectedClientId(undefined)
             onCloseDisclosure()
             if (clientId) {
               resetParams()
@@ -213,7 +209,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
         >
           <Table
             onRowClick={row => {
-              setSelectedClient(row)
+              setSelectedClientId(row.id)
               onOpen()
             }}
             isFilteredByApi={true}
