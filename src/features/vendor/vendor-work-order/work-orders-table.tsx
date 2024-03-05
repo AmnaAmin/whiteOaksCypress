@@ -29,6 +29,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData, isV
   const { transactions = [] } = useTransactions(projectId)
   const [totalPages, setTotalPages] = useState(0)
   const [totalRows, setTotalRows] = useState(0)
+  let WORK_ORDER_TABLE_COLUMNS_FILTERED = WORK_ORDER_TABLE_COLUMNS.filter(c => c.header !== 'Payment Groups')
 
   const { data: workOrders, isLoading, refetch } = useProjectWorkOrders(projectId)
   // Do not show WO which have been cancelled
@@ -93,7 +94,7 @@ export const WorkOrdersTable = React.forwardRef(({ onTabChange, projectData, isV
           <TableContextProvider
             totalPages={workOrdersNotCancelled?.length ? totalPages : -1}
             data={workOrdersNotCancelled}
-            columns={WORK_ORDER_TABLE_COLUMNS}
+            columns={WORK_ORDER_TABLE_COLUMNS_FILTERED}
             manualPagination={false}
           >
             <Table
