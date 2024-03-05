@@ -413,7 +413,9 @@ const WorkOrderDetailTab = props => {
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrder?.assignedItems)
     const removedItems = getRemovedItems(formValues, workOrder?.assignedItems)
-    const payload = parseWODetailValuesToPayload(values, workOrder)
+    const updatedWorkOrderDetails = { ...workOrder, isWorkOrderDetailsEdit: true }
+    
+    const payload = parseWODetailValuesToPayload(values, updatedWorkOrderDetails)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
 
