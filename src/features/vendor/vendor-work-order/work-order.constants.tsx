@@ -105,10 +105,6 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
   {
     header: 'Payment Groups',
     accessorKey: 'paymentGroups',
-    filterFn: 'includesString',
-    cell: (row: any) => {
-      const value = row.cell.getValue()
-      return <PopoverTooltip value={value} title={`${WORK_ORDER}.paymentGroup`} />
-    },
+    filterFn: 'includesString'
   },
 ]
