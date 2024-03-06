@@ -46,7 +46,7 @@ import { TransactionsTab } from './transactions/transactions-tab'
 import { useQueryClient } from 'react-query'
 import { useVendorEntity } from 'api/vendor-dashboard'
 import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
-import { useLocation as useLineItemsLocation } from 'api/location'
+import { useLocation as useLineItemsLocation, usePaymentGroupVals } from 'api/location'
 import { Messages } from '../messages/messages'
 import jsPDF from 'jspdf'
 
@@ -67,6 +67,7 @@ const WorkOrderDetails = ({
   const { projectId } = useParams<{ projectId: string }>()
   const [projId, setProjId] = useState<string | undefined>(projectId)
   const { projectData, isLoading: isProjectLoading } = usePCProject(projId)
+  const { paymentGroupValsOptions, isLoading: isPaymentGroupValsLoading } = usePaymentGroupVals()
   const { swoProject } = useFetchProjectId(projId)
   const { documents: documentsData = [], isLoading: isDocumentsLoading } = useDocuments({
     projectId: projId,
@@ -334,7 +335,7 @@ const WorkOrderDetails = ({
               <Card mx="10px" mb="10px" roundedTopLeft={0} p={0}>
                 <TabPanels>
                   <TabPanel p={0}>
-                    {isLoadingWorkOrder || isProjectLoading ? (
+                    {isLoadingWorkOrder || isProjectLoading || isPaymentGroupValsLoading ? (
                       <Center h={'600px'}>
                         <Spinner size="xl" />
                       </Center>
@@ -344,6 +345,7 @@ const WorkOrderDetails = ({
                         workOrder={workOrderDetails}
                         onClose={onClose}
                         onSave={onSave}
+                        paymentGroupValsOptions={paymentGroupValsOptions}
                         isWorkOrderUpdating={isWorkOrderUpdating}
                         swoProject={swoProject}
                         projectData={projectData}
