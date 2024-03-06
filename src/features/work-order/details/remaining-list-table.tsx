@@ -206,6 +206,45 @@ const RemainingListTable = (props: RemainingListType) => {
         },
       },
       {
+        header: `${WORK_ORDER}.paymentGroup`,
+        accessorKey: 'paymentGroup',
+        size: 250,
+        cell: ({ row }) => {
+          const index = row?.index
+          const {
+            formState: { errors },
+            control,
+          } = formControl
+
+          return (
+            <Box>
+              <FormControl isInvalid={!!errors.remainingItems?.[index]?.paymentGroup} width="220px">
+                <Controller
+                  control={control}
+                  name={`remainingItems.${index}.paymentGroup`}
+                  render={({ field }) => {
+                    return (
+                      <>
+                        <CreatableSelectForTable
+                          index={index}
+                          field={field}
+                          valueFormatter={null}
+                          key={'paymentGroup.' + [index]}
+                          id={`assignedItems.${index}.paymentGroup`}
+                          isDisabled={false}
+                          options={paymentGroupValsOptions}
+                          newObjectFormatting={null}
+                        />
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Box>
+          )
+        },
+      },
+      {
         header: `${WORK_ORDER}.sku`,
         accessorKey: 'sku',
         cell: ({ row }) =>
@@ -302,45 +341,6 @@ const RemainingListTable = (props: RemainingListType) => {
           )
         },
         size: 150,
-      },
-      {
-        header: `${WORK_ORDER}.paymentGroup`,
-        accessorKey: 'paymentGroup',
-        size: 250,
-        cell: ({ row }) => {
-          const index = row?.index
-          const {
-            formState: { errors },
-            control,
-          } = formControl
-
-          return (
-            <Box>
-              <FormControl isInvalid={!!errors.remainingItems?.[index]?.paymentGroup} width="220px">
-                <Controller
-                  control={control}
-                  name={`remainingItems.${index}.paymentGroup`}
-                  render={({ field }) => {
-                    return (
-                      <>
-                        <CreatableSelectForTable
-                          index={index}
-                          field={field}
-                          valueFormatter={null}
-                          key={'paymentGroup.' + [index]}
-                          id={`assignedItems.${index}.paymentGroup`}
-                          isDisabled={false}
-                          options={paymentGroupValsOptions}
-                          newObjectFormatting={null}
-                        />
-                      </>
-                    )
-                  }}
-                />
-              </FormControl>
-            </Box>
-          )
-        },
       },
     ]
   }, [
