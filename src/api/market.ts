@@ -23,7 +23,7 @@ export const useDeleteMarket = () => {
       queryClient.invalidateQueries(MARKET_KEY)
 
       toast({
-        title: `Market Deleted`,
+        title: `Delete Market`,
         description: `Market have been Deleted Successfully.`,
         status: 'success',
         isClosable: true,

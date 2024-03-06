@@ -114,6 +114,8 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
     control,
     setValue,
     reset,
+    setError,
+    clearErrors,
     watch,
   } = form
 
@@ -337,27 +339,71 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             type="email"
             {...register('email', {
               required: 'This is required',
+              maxLength: { value: 50, message: 'Please use 50 characters only.' },
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: 'Invalid Email Address',
+                
               },
             })}
+            onChange={e => {
+              const title = e?.target.value
+              setValue('email', title)
+              if (title?.length > 50) {
+                setError('email', {
+                  type: 'maxLength',
+                  message: 'Please use 50 characters only.',
+                })
+              } else {
+                clearErrors('email')
+              }
+            }}
           />
           <FormErrorMessage pos={'absolute'}>{errors.email?.message}</FormErrorMessage>
         </FormControl>
 
-        <FormControl w={215}>
+        <FormControl w={215} isInvalid={!!errors.firstName}  h="77px">
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.firstName`)}
           </FormLabel>
-          <Input variant="required-field" type="text" {...register('firstName')} />
+          <Input variant="required-field" type="text" {...register('firstName', { 
+              maxLength: { value: 50, message: 'Please use 50 characters only.' },
+            })}
+            onChange={e => {
+              const title = e?.target.value
+              setValue('firstName', title)
+              if (title?.length > 50) {
+                setError('firstName', {
+                  type: 'maxLength',
+                  message: 'Please use 50 characters only.',
+                })
+              } else {
+                clearErrors('firstName')
+              }
+            }}/>
+             <FormErrorMessage pos={'absolute'}>{errors.firstName?.message}</FormErrorMessage>
         </FormControl>
 
-        <FormControl w={215}>
+        <FormControl w={215} isInvalid={!!errors.lastName}  h="77px">
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.lastName`)}
           </FormLabel>
-          <Input autoComplete="off" variant="required-field" type="text" {...register('lastName')} />
+          <Input autoComplete="off" variant="required-field" type="text" {...register('lastName', { 
+              maxLength: { value: 50, message: 'Please use 50 characters only.' },
+            })}
+            onChange={e => {
+              const title = e?.target.value
+              setValue('lastName', title)
+              if (title?.length > 50) {
+                setError('lastName', {
+                  type: 'maxLength',
+                  message: 'Please use 50 characters only.',
+                })
+              } else {
+                clearErrors('lastName')
+              }
+            }} />
+             <FormErrorMessage pos={'absolute'}>{errors.lastName?.message}</FormErrorMessage>
         </FormControl>
       </HStack>
 
@@ -781,21 +827,51 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
         </>
       ) : null}
       <HStack mt="30px" spacing={15}>
-        <FormControl w={215}>
+        <FormControl w={215} isInvalid={!!errors.streetAddress} h='77px'>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.address`)}
           </FormLabel>
-          <Input variant="required-field" type="text" {...register('streetAddress')} />
+          <Input variant="required-field" type="text" {...register('streetAddress', { 
+              maxLength: { value: 200, message: 'Please use 200 characters only.' },
+            })}
+            onChange={e => {
+              const title = e?.target.value
+              setValue('streetAddress', title)
+              if (title?.length > 200) {
+                setError('streetAddress', {
+                  type: 'maxLength',
+                  message: 'Please use 200 characters only.',
+                })
+              } else {
+                clearErrors('streetAddress')
+              }
+            }}  />
+             <FormErrorMessage pos={'absolute'}>{errors.streetAddress?.message}</FormErrorMessage>
         </FormControl>
 
-        <FormControl w={215}>
+        <FormControl w={215} isInvalid={!!errors.city} h='77px'>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.city`)}
           </FormLabel>
-          <Input type="text" {...register('city')} variant="required-field" />
+          <Input type="text" {...register('city', { 
+              maxLength: { value: 45, message: 'Please use 45 characters only.' },
+            })}
+            onChange={e => {
+              const title = e?.target.value
+              setValue('city', title)
+              if (title?.length > 45) {
+                setError('city', {
+                  type: 'maxLength',
+                  message: 'Please use 45 characters only.',
+                })
+              } else {
+                clearErrors('city')
+              }
+            }} variant="required-field" />
+            <FormErrorMessage pos={'absolute'}>{errors.city?.message}</FormErrorMessage>
         </FormControl>
 
-        <FormControl w={215}>
+        <FormControl w={215} h='77px'>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.state`)}
           </FormLabel>
@@ -814,16 +890,32 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
           />
         </FormControl>
 
-        <FormControl w={215}>
+        <FormControl w={215}  isInvalid={!!errors.zipCode} h='77px'>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.zipcode`)}
           </FormLabel>
-          <Input type="number" {...register('zipCode')} variant="required-field" />
+          <Input type="number" {...register('zipCode', { 
+              maxLength: { value: 45, message: 'Please use 45 characters only.' },
+            })}
+            onChange={e => {
+              const title = e?.target.value
+              setValue('zipCode', title)
+              if (title?.length > 45) {
+                setError('zipCode', {
+                  type: 'maxLength',
+                  message: 'Please use 45 characters only.',
+                })
+              } else {
+                clearErrors('zipCode')
+              }
+            }} 
+            variant="required-field" />
+            <FormErrorMessage pos={'absolute'}>{errors.zipCode?.message}</FormErrorMessage>
         </FormControl>
       </HStack>
 
       <HStack mt="30px" spacing={15}>
-        <FormControl w={215} isInvalid={!invalidTelePhone}>
+        <FormControl w={215} isInvalid={!invalidTelePhone} h='77px'>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.telephone`)}
           </FormLabel>
@@ -850,21 +942,53 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
           </Box>
         </FormControl>
 
-        <FormControl w={215}>
+        <FormControl w={215} isInvalid={!!errors.telephoneNumberExtension} h='77px'>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.ext`)}
           </FormLabel>
           <Box height="70px">
-            <Input type="text" {...register('telephoneNumberExtension')} />
+            <Input type="text" {...register('telephoneNumberExtension', { 
+              maxLength: { value: 45, message: 'Please use 45 characters only.' },
+            })}
+            onChange={e => {
+              const title = e?.target.value
+              setValue('telephoneNumberExtension', title)
+              if (title?.length > 45) {
+                setError('telephoneNumberExtension', {
+                  type: 'maxLength',
+                  message: 'Please use 45 characters only.',
+                })
+              } else {
+                clearErrors('telephoneNumberExtension')
+              }
+            }} 
+           />
+            <FormErrorMessage pos={'absolute'}>{errors.telephoneNumberExtension?.message}</FormErrorMessage> 
           </Box>
         </FormControl>
 
-        <FormControl w={215}>
+        <FormControl w={215} isInvalid={!!errors.employeeId} h='77px'>
           <FormLabel variant="strong-label" size="md">
             {t(`${USER_MANAGEMENT}.modal.employeeID`)}
           </FormLabel>
           <Box height="70px">
-            <Input maxLength={255} type="text" {...register('employeeId')} />
+            <Input type="text" {...register('employeeId', { 
+              maxLength: { value: 255, message: 'Please use 255 characters only.' },
+            })}
+            onChange={e => {
+              const title = e?.target.value
+              setValue('employeeId', title)
+              if (title?.length > 255) {
+                setError('employeeId', {
+                  type: 'maxLength',
+                  message: 'Please use 255 characters only.',
+                })
+              } else {
+                clearErrors('employeeId')
+              }
+            }} 
+           />
+            <FormErrorMessage pos={'absolute'}>{errors.employeeId?.message}</FormErrorMessage> 
           </Box>
         </FormControl>
       </HStack>

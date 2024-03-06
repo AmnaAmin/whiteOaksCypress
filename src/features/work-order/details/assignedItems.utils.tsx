@@ -814,7 +814,6 @@ export const useGetLineItemsColumn = ({
     }
   })
   const { isAdmin } = useUserRolesSelector()
-  const makePayGrpCompulsory = clientName === 'FNMA'
 
   //update this check as %completion came in two form i.e completePercentage & completePercentage.value
   const markAllCompleted =
@@ -1025,7 +1024,6 @@ export const useGetLineItemsColumn = ({
               <FormControl isInvalid={!!errors.assignedItems?.[index]?.paymentGroup} zIndex={9999 + 1} width="220px">
                 <Controller
                   control={control}
-                  rules={makePayGrpCompulsory ? { required: true } : { required: false }}
                   name={`assignedItems.${index}.paymentGroup`}
                   render={({ field }) => {
                     return (
