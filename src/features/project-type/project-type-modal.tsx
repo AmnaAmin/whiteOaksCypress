@@ -1,6 +1,8 @@
 import {
   Box,
   Button,
+  FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Icon,
@@ -59,7 +61,16 @@ export type ProjectTypeFormTypes = {
 
 export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, projectTypeDetails, isOpen }) => {
   const { t } = useTranslation()
-  const { register, handleSubmit, setValue, watch, reset } = useForm()
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm()
   const { mutate: projectTypePayload, isLoading } = useProjectTypeMutation()
   const { mutate: delProjType, isLoading: loadingDel } = useProjTypeDelMutation()
   const { mutate: projectTypeEditPayload, isLoading: loading } = useProjectTypeEditMutation()
@@ -164,16 +175,36 @@ export const ProjectTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: clos
                     />
                   </HStack>
                 )}
-                <Box w="215px" mt="30px">
+                <Box width="215px" marginTop="30px">
+                  <FormControl isInvalid={!!errors?.type}>
                   <FormLabel variant="strong-label">{t(`${PROJECT_TYPE}.type`)}</FormLabel>
                   <Input
                     type="text"
                     variant="required-field"
-                    {...register('type')}
+                    {...register('type', {
+                        required: 'This is a required field',
+                        maxLength: { value: 100, message: 'Please use 100 characters only.' },
+                      })}
+                      onChange={e => {
+                        const title = e?.target.value
+                        setValue('type', title)
+                        if (title?.length > 100) {
+                          setError('type', {
+                            type: 'maxLength',
+                            message: 'Please use 100 characters only.',
+                          })
+                        } else {
+                          clearErrors('type')
+                        }
+                      }}
                     title={typeFieldWatch}
                     data-testid="type"
                     isDisabled={isReadOnly}
                   />
+                    {!!errors?.type && (
+                      <FormErrorMessage data-testid="projType_error">{errors?.type?.message}</FormErrorMessage>
+                    )}
+                  </FormControl>
                 </Box>
               </Box>
             </Box>
