@@ -364,6 +364,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
       typeof formValues.completePercentage === 'number'
         ? formValues.completePercentage
         : Number(formValues.completePercentage?.label?.slice(0, -1)),
+    isWorkOrderDetailsEdit:  !!workOrder?.isWorkOrderDetailsEdit
   }
 }
 
