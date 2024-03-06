@@ -92,7 +92,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
     }
   }, [stateSelectOptions])
 
-  const { control, register, handleSubmit, reset, setValue, watch, setError,clearErrors, formState: { errors }  } = useForm<{
+  const { control, register, handleSubmit, reset, setValue, watch, setError,clearErrors, formState: { errors },trigger  } = useForm<{
     state: SelectOption
     metroServiceArea: string
     lienDue: string | number
@@ -214,7 +214,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 <GridItem> */}
               <HStack spacing="16px">
                 <Box>
-                  <FormControl  isInvalid={!!errors?.metroServiceArea}>
+                  <FormControl  isInvalid={!!errors?.metroServiceArea} h='77px'>
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.metroServiceArea`)}
                   </FormLabel>
@@ -268,13 +268,16 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                       </>
                     )}
                   />
-                </FormControl>
-                <FormControl w="225px">
+                </FormControl >
+                <FormControl w="225px"  isInvalid={!!errors?.lienDue}>
                   <FormLabel variant="strong-label" size="md" htmlFor="lienDue" noOfLines={1}>
                     {t(`${VENDOR_MANAGER}.lienDue`)}
                   </FormLabel>
                   <Controller
                     control={control}
+                    rules={{
+                      maxLength: { value: 2147483647, message: 'Please use 2147483647 characters only.' },
+                    }}
                     name="lienDue"
                     render={({ field, fieldState }) => {
                       return (
@@ -283,12 +286,16 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                             customInput={CustomRequiredInput}
                             value={field.value}
                             disabled={isReadOnly}
-                            onValueChange={values => {
-                              const { floatValue } = values
-                              field.onChange(floatValue ?? '')
+                            onValueChange={e => {
+                              clearErrors('lienDue')
+                              const inputValue = e.value ?? ''
+                              field.onChange(inputValue)
+                              trigger('lienDue')
                             }}
                           />
-                          <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                          {!!errors?.lienDue && (
+                      <FormErrorMessage data-testid="market_error">{errors?.lienDue?.message}</FormErrorMessage>
+                    )}
                         </>
                       )
                     }}
@@ -296,7 +303,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 </FormControl>
               </HStack>
               <Box mt={'5px'}>
-                <FormControl isInvalid={!!errors?.abbreviation}>
+                <FormControl isInvalid={!!errors?.abbreviation} h='77px'>
                 <FormLabel variant="strong-label" size="md">
                   {t(`${CLIENTS}.abbreviation`)}
                 </FormLabel>
