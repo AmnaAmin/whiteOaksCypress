@@ -11,7 +11,6 @@ import { ExportButton } from 'components/table-refactored/export-button'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { Vendor as VendorType } from 'types/vendor.types'
 import Vendor from './selected-vendor-modal'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import {
@@ -22,7 +21,7 @@ import {
   ShowCurrentRecordsWithTotalRecords,
   TablePagination,
 } from 'components/table-refactored/pagination'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { useAccountData } from 'api/user-account'
 
 export const VENDOR_TABLE_QUERY_KEYS = {
@@ -184,6 +183,8 @@ type ProjectProps = {
 export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }) => {
   const location = useLocation()
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const vendorId = searchParams.get('vendorId');
   const vendor = (location?.state as any)?.data || {}
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [filteredUrl, setFilteredUrl] = useState<string | null>(null)
@@ -210,7 +211,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
     pagination.pageSize,
   )
 
-  const [selectedVendor, setSelectedVendor] = useState<VendorType>()
+  const [selectedVendorId, setSelectedVendorId] = useState<number>()
   const { refetch: allVendorsRefetch, isLoading: isAllExportDataLoading } = useGetAllVendors(
     user,
     filteredUrl ? filteredUrl + '&' + queryStringWithoutPagination : queryStringWithoutPagination,
@@ -225,10 +226,16 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
 
   useEffect(() => {
     if (vendor?.id) {
-      setSelectedVendor(vendor)
+      setSelectedVendorId(vendor.id)
       navigate(location.pathname, {})
     }
   }, [vendor])
+
+  useEffect(() => {
+    if (vendorId) {
+      setSelectedVendorId(Number(vendorId))
+    }
+  }, [vendorId])
 
   useEffect(() => {
     if (selectedCard) {
@@ -243,13 +250,20 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
     postGridColumn(columns)
   }
 
+  const resetParams = () => {
+    searchParams.delete('vendorId')
+    setSearchParams(searchParams)
+  }
+
+
   return (
     <Box overflow="auto">
-      {selectedVendor && (
+      {selectedVendorId && (
         <Vendor
-          vendorDetails={selectedVendor as VendorType}
+          vendorId={selectedVendorId}
           onClose={() => {
-            setSelectedVendor(undefined)
+            setSelectedVendorId(undefined)
+            resetParams()
           }}
         />
       )}
@@ -267,7 +281,7 @@ export const VendorTable: React.FC<ProjectProps> = ({ selectedCard, isReadOnly }
           setSorting={setSorting}
         >
           <Table
-            onRowClick={row => setSelectedVendor(row)}
+            onRowClick={row => setSelectedVendorId(row.id)}
             isFilteredByApi={true}
             isLoading={vendorsLoading}
             isEmpty={!vendorsLoading && !vendors?.length}

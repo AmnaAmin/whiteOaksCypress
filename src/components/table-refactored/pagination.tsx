@@ -125,7 +125,7 @@ export const GotoNextPage: React.FC<ButtonProps> = () => {
   }
 
   return (
-    <PaginationButton onClick={handlePageNext} disabled={!tableInstance.getCanNextPage()}>
+    <PaginationButton data-testid="project_next_page" onClick={handlePageNext} disabled={!tableInstance.getCanNextPage()}>
       <MdOutlineArrowForwardIos />
     </PaginationButton>
   )

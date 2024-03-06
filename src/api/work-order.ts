@@ -393,7 +393,7 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations, payme
             let location
             let paymentGroup
             if (payFound) {
-              paymentGroup = { label: payFound.label, value: payFound.id }
+              paymentGroup = { label: payFound?.label, value: payFound?.id ?? payFound?.value }
             } else if (!!e.paymentGroup && payFound) {
               paymentGroup = { label: e?.paymentGroup, value: e?.paymentGroup }
             } else {

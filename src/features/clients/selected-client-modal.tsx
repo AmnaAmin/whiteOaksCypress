@@ -14,19 +14,22 @@ import { useTranslation } from 'react-i18next'
 
 import { ClientDetailsTabs } from 'pages/client-details'
 import { useCallback, useEffect } from 'react'
-import { ClientFormValues } from 'types/client.type'
+import { useGetClient } from 'api/clients'
+import { BlankSlate } from 'components/skeletons/skeleton-unit'
 
 const Client = ({
-  clientDetails,
+  clientId,
   onClose: close,
   isOpen: open,
 }: {
-  clientDetails: ClientFormValues
+  clientId: number
   onClose: () => void
   isOpen: boolean
 }) => {
   const { t } = useTranslation()
+  const { data: clientDetails, isLoading } = useGetClient(clientId)
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
+
   const onClose = useCallback(() => {
     onCloseDisclosure()
     close()
@@ -51,16 +54,17 @@ const Client = ({
                 <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
                   {t('details')}
                 </Text>
-                <Text lineHeight="22px" h="22px">
+                {!isLoading && <Text lineHeight="22px" h="22px">
                   {clientDetails?.companyName}
-                </Text>
+                </Text>}
               </HStack>
             </HStack>
           </ModalHeader>
           <ModalCloseButton _hover={{ bg: 'blue.50' }} />
           <ModalBody justifyContent="center">
             <Box mt="18px" >
-              <ClientDetailsTabs clientModalType="editClient" clientDetails={clientDetails} onClose={onClose} />
+              {isLoading ? <BlankSlate width="60px" /> :
+                <ClientDetailsTabs clientModalType="editClient" clientDetails={clientDetails} onClose={onClose} />}
             </Box>
           </ModalBody>
         </ModalContent>

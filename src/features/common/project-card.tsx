@@ -99,7 +99,7 @@ export const ProjectCard = ({
         {isCardFlag &&
           <Menu closeOnSelect={false}>
             {({ isOpen }) => (<>
-              <MenuButton as={Button} minW={"20px"} padding={"0px"} w={"20px"} colorScheme={'brand'} h={'full'} borderLeftRadius={"0px"} borderRightRadius={"5px"}>
+              <MenuButton data-testid='flag_menu_button' as={Button} minW={"20px"} padding={"0px"} w={"20px"} colorScheme={'brand'} h={'full'} borderLeftRadius={"0px"} borderRightRadius={"5px"}>
                 <Box display={"flex"} alignItems={"center"} justifyContent={"center"} cursor={"pointer"} position={"relative"} >
                   <BsFillTriangleFill size={"9"} color='#fff' style={{ transform: isOpen ? 'rotate(0deg)' : 'rotate(180deg)' }} />
                 </Box>
@@ -111,8 +111,8 @@ export const ProjectCard = ({
                     else onSelectFlagged(value)
                   }
                 }}>
-                  <MenuItemOption value={FlagEnum.NOTES}><Icon title="Note Flag" as={RiFlag2Fill} color="rgba(252, 129, 129, 1)" mr={2} /> Notes</MenuItemOption>
-                  <MenuItemOption value={FlagEnum.LEIN_DUE_EXPIRY}><Icon title="Lien Due Expiry Flag" as={RiFlag2Fill} color="rgb(236, 201, 75,1)" mr={2} /> Lein Due Expiry</MenuItemOption>
+                  <MenuItemOption data-testid={FlagEnum.NOTES} value={FlagEnum.NOTES}><Icon title="Note Flag" as={RiFlag2Fill} color="rgba(252, 129, 129, 1)" mr={2} /> Notes</MenuItemOption>
+                  <MenuItemOption data-testid={FlagEnum.LEIN_DUE_EXPIRY} value={FlagEnum.LEIN_DUE_EXPIRY}><Icon title="Lien Due Expiry Flag" as={RiFlag2Fill} color="rgb(236, 201, 75,1)" mr={2} /> Lein Due Expiry</MenuItemOption>
                 </MenuOptionGroup>
               </MenuList>
             </>)}

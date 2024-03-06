@@ -15,13 +15,12 @@ import { t } from 'i18next'
 
 import { VendorProfileTabs } from 'pages/vendor/vendor-profile'
 import { useVendorProfile } from 'api/vendor-details'
-import { Vendor as VendorType } from 'types/vendor.types'
 import { useCallback, useEffect } from 'react'
 import { useQueryClient } from 'react-query'
 
-const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; onClose: () => void }) => {
+const Vendor = ({ vendorId, onClose: close }: { vendorId: number; onClose: () => void }) => {
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
-  const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorDetails.id)
+  const { data: vendorProfileData, isLoading, refetch } = useVendorProfile(vendorId)
 
   const queryClient = useQueryClient()
   const onClose = useCallback(() => {
@@ -32,13 +31,14 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; 
   }, [close, onCloseDisclosure])
 
   useEffect(() => {
-    if (vendorDetails) {
+    if (vendorProfileData) {
       onOpen()
     } else {
       onCloseDisclosure()
     }
     queryClient.resetQueries('vendor-users-list')
-  }, [onCloseDisclosure, onOpen, vendorDetails])
+  }, [onCloseDisclosure, onOpen, vendorProfileData])
+
   return (
     <div>
       <Modal size="none" isOpen={isOpen} onClose={onClose}>
@@ -57,9 +57,9 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; 
                 <Text borderRight="1px solid #E2E8F0" lineHeight="22px" h="22px" pr={2}>
                   {t('vendorDetail')}
                 </Text>
-                <Text lineHeight="22px" h="22px">
-                  {vendorDetails?.companyName}
-                </Text>
+                {!isLoading && <Text lineHeight="22px" h="22px">
+                  {vendorProfileData?.companyName}
+                </Text>}
               </HStack>
             </HStack>
           </ModalHeader>
@@ -70,7 +70,7 @@ const Vendor = ({ vendorDetails, onClose: close }: { vendorDetails: VendorType; 
                 <BlankSlate width="60px" />
               ) : (
                 <VendorProfileTabs
-                  vendorId={vendorDetails.id}
+                  vendorId={vendorProfileData?.id}
                   vendorProfileData={vendorProfileData}
                   refetch={refetch}
                   vendorModalType="editVendor"

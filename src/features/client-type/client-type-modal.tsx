@@ -1,6 +1,8 @@
 import {
   Box,
   Button,
+  FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Icon,
@@ -60,7 +62,16 @@ export type ProjectTypeFormTypes = {
 
 export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, clientTypeDetails, isOpen }) => {
   const { t } = useTranslation()
-  const { register, handleSubmit, setValue, watch, reset } = useForm()
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm()
   const { mutate: clientTypePayload, isLoading: loadingNewClient } = useClientTypeMutation()
   const { mutate: clientTypeEditPayload, isLoading: loadingEditClient } = useClientTypeEditMutation()
   const { mutate: delClientType, isLoading: loadingDel } = useClientTypeDelMutation()
@@ -165,15 +176,34 @@ export const ClientTypeModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close
                   </HStack>
                 )}
                 <Box w="215px" mt="30px">
-                  <FormLabel variant="strong-label">{t(`${PROJECT_TYPE}.type`)}</FormLabel>
-                  <Input
-                    type="text"
-                    variant="required-field"
-                    {...register('type')}
-                    title={typeFieldWatch}
-                    data-testid="type"
-                    isDisabled={isReadOnly}
-                  />
+                  <FormControl isInvalid={!!errors?.type}>
+                    <FormLabel variant="strong-label">{t(`${PROJECT_TYPE}.type`)}</FormLabel>
+                    <Input
+                      type="text"
+                      variant="required-field"
+                      {...register('type', {
+                        maxLength: { value: 255, message: 'Please use 255 characters only.' },
+                      })}
+                      title={typeFieldWatch}
+                      data-testid="type"
+                      isDisabled={isReadOnly}
+                      onChange={e => {
+                        const title = e?.target.value
+                        setValue('type', title)
+                        if (title?.length > 255) {
+                          setError('type', {
+                            type: 'maxLength',
+                            message: 'Please use 255 characters only.',
+                          })
+                        } else {
+                          clearErrors('type')
+                        }
+                      }}
+                    />
+                    {!!errors?.type && (
+                      <FormErrorMessage data-testid="clientType_error">{errors?.type?.message}</FormErrorMessage>
+                    )}
+                  </FormControl>
                 </Box>
               </Box>
             </Box>
