@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import { mappingDataForClientExport, useClients } from 'api/clients'
-import { Clients } from 'types/client.type'
 import Client from 'features/clients/selected-client-modal'
 import { CLIENTS } from './clients.i18n'
 import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'

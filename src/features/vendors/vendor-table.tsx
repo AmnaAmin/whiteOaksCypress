@@ -11,7 +11,6 @@ import { ExportButton } from 'components/table-refactored/export-button'
 import { useTableColumnSettings, useTableColumnSettingsUpdateMutation } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import TableColumnSettings from 'components/table/table-column-settings'
-import { Vendor as VendorType } from 'types/vendor.types'
 import Vendor from './selected-vendor-modal'
 import { useColumnFiltersQueryString } from 'components/table-refactored/hooks'
 import {
