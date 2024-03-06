@@ -340,6 +340,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
             location: a.location.label,
           }
           delete assignedItem.uploadedDoc
+          if (assignedItem?.paymentGroup && typeof assignedItem?.paymentGroup === 'object') assignedItem.paymentGroup = assignedItem?.paymentGroup?.label;
           return assignedItem
         }),
       ]
