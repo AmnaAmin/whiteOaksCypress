@@ -36,6 +36,7 @@ export const useClients = (queryString: string = '', pageSize: number = 20) => {
 }
 
 const GET_ALL_CLIENT_QUERY_KEY = 'all_clients'
+const GET_CLIENT_QUERY_KEY = 'client'
 
 export const useGetAllClients = (queryString: string) => {
   const client = useClient()
@@ -49,6 +50,18 @@ export const useGetAllClients = (queryString: string) => {
     {
       enabled: false,
     },
+  )
+}
+
+export const useGetClient = (clientId: number) => {
+  const client = useClient()
+  return useQuery(
+    [GET_CLIENT_QUERY_KEY, clientId],
+    async () => {
+      const response = await client(`clients/${clientId}`, {})
+      return response?.data
+    },
+    { enabled: !!clientId },
   )
 }
 
@@ -119,29 +132,29 @@ export const clientDetailsDefaultValues = ({ clientDetails, statesOptions, marke
   const contactsMarketsValue =
     clientDetails?.contacts?.length > 0
       ? clientDetails?.contacts?.map(c => {
-          const selectedMarket = marketOptions?.find(m => m.value === Number(c.market))
-          return {
-            contact: c.contact,
-            phoneNumber: c.phoneNumber,
-            emailAddress: c.emailAddress,
-            market: selectedMarket,
-            phoneNumberExtension: c.phoneNumberExtension,
-          }
-        })
+        const selectedMarket = marketOptions?.find(m => m.value === Number(c.market))
+        return {
+          contact: c.contact,
+          phoneNumber: c.phoneNumber,
+          emailAddress: c.emailAddress,
+          market: selectedMarket,
+          phoneNumberExtension: c.phoneNumberExtension,
+        }
+      })
       : [{ contact: '', phoneNumber: '', emailAddress: '', market: '' }]
   const accPayInfoValue =
     clientDetails?.accountPayableContactInfos?.length > 0
       ? [
-          ...clientDetails?.accountPayableContactInfos?.map(c => {
-            return {
-              contact: c.contact,
-              phoneNumber: c.phoneNumber,
-              emailAddress: c.emailAddress,
-              comments: c.comments,
-              phoneNumberExtension: c.phoneNumberExtension,
-            }
-          }),
-        ]
+        ...clientDetails?.accountPayableContactInfos?.map(c => {
+          return {
+            contact: c.contact,
+            phoneNumber: c.phoneNumber,
+            emailAddress: c.emailAddress,
+            comments: c.comments,
+            phoneNumberExtension: c.phoneNumberExtension,
+          }
+        }),
+      ]
       : [{ contact: '', phoneNumber: '', emailAddress: '', comments: '' }]
 
   const carrier = clientDetails?.carrier?.map(c => {

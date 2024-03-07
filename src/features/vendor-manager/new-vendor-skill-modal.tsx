@@ -17,6 +17,8 @@ import {
   Icon,
   Text,
   useDisclosure,
+  FormControl,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import { BiCalendar, BiDetail, BiTrash } from 'react-icons/bi'
 import { useForm, useWatch } from 'react-hook-form'
@@ -60,7 +62,9 @@ type newVendorSkillsTypes = {
 export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen, selectedVendorSkills }) => {
   const { data: account } = useAccountDetails()
   const { mutate: createVendorSkills, isLoading } = useVendorSkillsMutation()
-  const { control, register, handleSubmit, reset, setValue } = useForm()
+  const { control, register, handleSubmit, reset, setValue ,  setError,
+    clearErrors,
+    formState: { errors }} = useForm()
   const toast = useToast()
   const queryClient = useQueryClient()
   const { isOpen: isOpenDeleteSkill, onOpen, onClose: onCloseDisclosure } = useDisclosure()
@@ -158,11 +162,27 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
               </HStack>
               <Divider border="1px solid #E2E8F0 !important" my="30px" />
               <Box>
+               <FormControl isInvalid={!!errors?.skill}>
                 <FormLabel variant="strong-label" size="md">
                   {t(`${VENDOR_MANAGER}.skills`)}
                 </FormLabel>
                 <Input
-                  {...register('skill')}
+                  {...register('skill', {
+                    required: 'This is a required field',
+                    maxLength: { value: 255, message: 'Please use 255 characters only.' },
+                  })}
+                  onChange={e => {
+                    const title = e?.target.value
+                    setValue('skill', title)
+                    if (title?.length > 255) {
+                      setError('skill', {
+                        type: 'maxLength',
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('skill')
+                    }
+                  }}
                   type="text"
                   variant="required-field"
                   w="215px"
@@ -170,6 +190,10 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                   title={watchvalue}
                   isDisabled={isReadOnly}
                 />
+                 {!!errors?.skill && (
+                      <FormErrorMessage data-testid="skill_error">{errors?.skill?.message}</FormErrorMessage>
+                    )}
+                </FormControl>
               </Box>
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px">

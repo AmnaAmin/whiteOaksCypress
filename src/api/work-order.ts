@@ -353,6 +353,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
             location: a.location.label,
           }
           delete assignedItem.uploadedDoc
+          if (assignedItem?.paymentGroup && typeof assignedItem?.paymentGroup === 'object') assignedItem.paymentGroup = assignedItem?.paymentGroup?.label;
           return assignedItem
         }),
       ]
@@ -377,6 +378,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
       typeof formValues.completePercentage === 'number'
         ? formValues.completePercentage
         : Number(formValues.completePercentage?.label?.slice(0, -1)),
+    isWorkOrderDetailsEdit:  !!workOrder?.isWorkOrderDetailsEdit
   }
 }
 
@@ -405,7 +407,7 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations, payme
             let location
             let paymentGroup
             if (payFound) {
-              paymentGroup = { label: payFound.label, value: payFound.id }
+              paymentGroup = { label: payFound?.label, value: payFound?.id ?? payFound?.value }
             } else if (!!e.paymentGroup && payFound) {
               paymentGroup = { label: e?.paymentGroup, value: e?.paymentGroup }
             } else {

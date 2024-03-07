@@ -63,7 +63,6 @@ import { isValidAndNonEmpty } from 'utils'
 import { useUploadDocument } from 'api/vendor-projects'
 import { useGetProjectFinancialOverview } from 'api/projects'
 import { removeCurrencyFormat, currencyFormatter } from 'utils/string-formatters'
-import { usePaymentGroupVals } from 'api/location'
 
 export type SelectVendorOption = {
   label: string
@@ -147,6 +146,7 @@ const WorkOrderDetailTab = props => {
     documentsData,
     isFetchingLineItems,
     isLoadingLineItems,
+    paymentGroupValsOptions,
     locations,
   } = props
 
@@ -161,7 +161,6 @@ const WorkOrderDetailTab = props => {
 
   const balanceSOWAmount = currencyFormatter(finalSOWAmountNumber - Math.abs(projectTotalCostNumber))
   const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
-  const { paymentGroupValsOptions } = usePaymentGroupVals()
 
   const defaultValues: FormValues = useMemo(() => {
     return defaultValuesWODetails(workOrder, defaultSkill, locations, paymentGroupValsOptions)
@@ -413,7 +412,9 @@ const WorkOrderDetailTab = props => {
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrder?.assignedItems)
     const removedItems = getRemovedItems(formValues, workOrder?.assignedItems)
-    const payload = parseWODetailValuesToPayload(values, workOrder)
+    const updatedWorkOrderDetails = { ...workOrder, isWorkOrderDetailsEdit: true }
+    
+    const payload = parseWODetailValuesToPayload(values, updatedWorkOrderDetails)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
 

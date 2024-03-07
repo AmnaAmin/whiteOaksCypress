@@ -61,6 +61,8 @@ export const Details: React.FC<clientDetailProps> = props => {
     register,
     formState: { errors },
     control,
+    setValue,
+    setError,
     clearErrors,
   } = useFormContext<ClientFormValues>()
 
@@ -107,8 +109,29 @@ export const Details: React.FC<clientDetailProps> = props => {
                 {t(`${CLIENTS}.title`)}
               </FormLabel>
 
-              <Input id="title" {...register('title', {})} isDisabled={isReadOnly} />
+              <Input
+                id="title"
+                {...register('title', {
+                  maxLength: { value: 255, message: 'Please use 255 characters only.' },
+                })}
+                isDisabled={isReadOnly}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('title', title)
+                  if (title?.length > 255) {
+                    setError('title', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('title')
+                  }
+                }}
+              />
               {errors.title && <FormErrorMessage>{errors.title.type === 'Cannot be only whitespace'}</FormErrorMessage>}
+              {!!errors?.title && (
+                <FormErrorMessage data-testid="clientType_error">{errors?.title?.message}</FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -121,6 +144,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 id="companyName"
                 {...register('companyName', {
                   required: 'This is required',
+                  maxLength: { value: 255, message: 'Please use 255 characters only.' },
                   validate: {
                     whitespace: validateWhitespace,
                   },
@@ -128,10 +152,24 @@ export const Details: React.FC<clientDetailProps> = props => {
                 isDisabled={isReadOnly}
                 variant={'required-field'}
                 onKeyPress={e => preventSpecialCharacter(e)}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('companyName', title)
+                  if (title?.length > 255) {
+                    setError('companyName', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('companyName')
+                  }
+                }}
               />
               {errors.companyName && (
                 <FormErrorMessage>
-                  {errors.companyName.type === 'required' ? 'This field is required' : 'Cannot be only whitespace'}
+                  {errors.companyName.type === 'required'
+                    ? 'This field is required'
+                    : errors?.companyName?.message || 'Cannot be only whitespace'}
                 </FormErrorMessage>
               )}
             </FormControl>
@@ -143,7 +181,28 @@ export const Details: React.FC<clientDetailProps> = props => {
                 {t(`${CLIENTS}.abbreviation`)}
               </FormLabel>
 
-              <Input id="abbreviation" {...register('abbreviation')} isDisabled={isReadOnly} />
+              <Input
+                id="abbreviation"
+                {...register('abbreviation', {
+                  maxLength: { value: 255, message: 'Please use 255 characters only.' },
+                })}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('abbreviation', title)
+                  if (title?.length > 255) {
+                    setError('abbreviation', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('abbreviation')
+                  }
+                }}
+                isDisabled={isReadOnly}
+              />
+              {!!errors?.abbreviation && (
+                <FormErrorMessage data-testid="abbreviation_error">{errors?.abbreviation?.message}</FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
 
@@ -339,10 +398,23 @@ export const Details: React.FC<clientDetailProps> = props => {
                 id="streetAddress"
                 {...register('streetAddress', {
                   required: 'This is required',
+                  maxLength: { value: 255, message: 'Please use 255 characters only.' },
                   validate: {
                     whitespace: validateWhitespace,
                   },
                 })}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('streetAddress', title)
+                  if (title?.length > 255) {
+                    setError('streetAddress', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('streetAddress')
+                  }
+                }}
                 style={disabledTextStyle}
                 isDisabled={isReadOnly}
                 variant={'required-field'}
@@ -359,12 +431,25 @@ export const Details: React.FC<clientDetailProps> = props => {
                 id="city"
                 {...register('city', {
                   required: 'This is required',
+                  maxLength: { value: 255, message: 'Please use 255 characters only.' },
                   validate: {
                     whitespace: validateWhitespace,
                   },
                 })}
                 isDisabled={isReadOnly}
                 variant={'required-field'}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('city', title)
+                  if (title?.length > 255) {
+                    setError('city', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('city')
+                  }
+                }}
               />
               <FormErrorMessage>{errors?.city?.message}</FormErrorMessage>
             </FormControl>
@@ -397,11 +482,31 @@ export const Details: React.FC<clientDetailProps> = props => {
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.zipCode}>
               <FormLabel variant="strong-label" size="md">
                 {t(`${CLIENTS}.zipCode`)}
               </FormLabel>
-              <Input id="zipCode" {...register('zipCode')} style={disabledTextStyle} isDisabled={isReadOnly} />
+              <Input
+                id="zipCode"
+                {...register('zipCode', {
+                  maxLength: { value: 255, message: 'Please use 255 characters only.' },
+                })}
+                style={disabledTextStyle}
+                isDisabled={isReadOnly}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('zipCode', title)
+                  if (title?.length > 255) {
+                    setError('zipCode', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('zipCode')
+                  }
+                }}
+              />
+              <FormErrorMessage>{errors?.zipCode?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
         </Grid>
@@ -423,6 +528,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                     <Input
                       id="contact"
                       {...register(`contacts.${index}.contact`, {
+                        maxLength: { value: 255, message: 'Please use 255 characters only.' },
                         required: 'This is required',
                         validate: {
                           whitespace: validateWhitespace,
@@ -433,6 +539,18 @@ export const Details: React.FC<clientDetailProps> = props => {
                       variant={'required-field'}
                       type="text"
                       onKeyPress={e => preventSpecialCharacter(e)}
+                      onChange={e => {
+                        const title = e?.target.value
+                        setValue(`contacts.${index}.contact`, title)
+                        if (title?.length > 255) {
+                          setError(`contacts.${index}.contact`, {
+                            type: 'maxLength',
+                            message: 'Please use 255 characters only.',
+                          })
+                        } else {
+                          clearErrors(`contacts.${index}.contact`)
+                        }
+                      }}
                     />
                     <FormErrorMessage>{errors?.contacts?.[index]?.contact?.message}</FormErrorMessage>
                   </FormControl>
@@ -504,12 +622,25 @@ export const Details: React.FC<clientDetailProps> = props => {
                     <Input
                       id="emailAddress"
                       {...register(`contacts.${index}.emailAddress`, {
+                        maxLength: { value: 255, message: 'Please use 255 characters only.' },
                         required: 'This is required',
                         pattern: {
                           value: /\S+@\S+\.\S+/,
                           message: 'Invalid Email Address',
                         },
                       })}
+                      onChange={e => {
+                        const title = e?.target.value
+                        setValue(`contacts.${index}.emailAddress`, title)
+                        if (title?.length > 255) {
+                          setError(`contacts.${index}.emailAddress`, {
+                            type: 'maxLength',
+                            message: 'Please use 255 characters only.',
+                          })
+                        } else {
+                          clearErrors(`contacts.${index}.emailAddress`)
+                        }
+                      }}
                       variant={'required-field'}
                       style={disabledTextStyle}
                       isDisabled={isReadOnly}
@@ -600,11 +731,24 @@ export const Details: React.FC<clientDetailProps> = props => {
                   <Input
                     id="contact"
                     {...register(`accountPayableContactInfos.${index}.contact`, {
+                      maxLength: { value: 255, message: 'Please use 255 characters only.' },
                       required: 'This is required',
                       validate: {
                         whitespace: validateWhitespace,
                       },
                     })}
+                    onChange={e => {
+                      const title = e?.target.value
+                      setValue(`accountPayableContactInfos.${index}.contact`, title)
+                      if (title?.length > 255) {
+                        setError(`accountPayableContactInfos.${index}.contact`, {
+                          type: 'maxLength',
+                          message: 'Please use 255 characters only.',
+                        })
+                      } else {
+                        clearErrors(`accountPayableContactInfos.${index}.contact`)
+                      }
+                    }}
                     style={disabledTextStyle}
                     isDisabled={isReadOnly}
                     variant={'required-field'}
@@ -665,10 +809,24 @@ export const Details: React.FC<clientDetailProps> = props => {
                   </FormLabel>
                   <Input
                     id="phoneNumberExtension"
-                    {...register(`accountPayableContactInfos.${index}.phoneNumberExtension`)}
+                    {...register(`accountPayableContactInfos.${index}.phoneNumberExtension`, {
+                      maxLength: { value: 255, message: 'Please use 255 characters only.' },
+                    })}
                     style={disabledTextStyle}
                     isDisabled={isReadOnly}
                     type="number"
+                    onChange={e => {
+                      const title = e?.target.value
+                      setValue(`accountPayableContactInfos.${index}.phoneNumberExtension`, title)
+                      if (title?.length > 255) {
+                        setError(`accountPayableContactInfos.${index}.phoneNumberExtension`, {
+                          type: 'maxLength',
+                          message: 'Please use 255 characters only.',
+                        })
+                      } else {
+                        clearErrors(`accountPayableContactInfos.${index}.phoneNumberExtension`)
+                      }
+                    }}
                   />
                   <FormErrorMessage>
                     {errors?.accountPayableContactInfos?.[index]?.phoneNumberExtension?.message}
@@ -683,6 +841,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   <Input
                     id="emailAddress"
                     {...register(`accountPayableContactInfos.${index}.emailAddress`, {
+                      maxLength: { value: 255, message: 'Please use 255 characters only.' },
                       required: 'This is required',
                       pattern: {
                         value: /\S+@\S+\.\S+/,
@@ -693,6 +852,18 @@ export const Details: React.FC<clientDetailProps> = props => {
                     style={disabledTextStyle}
                     isDisabled={isReadOnly}
                     type="email"
+                    onChange={e => {
+                      const title = e?.target.value
+                      setValue(`accountPayableContactInfos.${index}.emailAddress`, title)
+                      if (title?.length > 255) {
+                        setError(`accountPayableContactInfos.${index}.emailAddress`, {
+                          type: 'maxLength',
+                          message: 'Please use 255 characters only.',
+                        })
+                      } else {
+                        clearErrors(`accountPayableContactInfos.${index}.emailAddress`)
+                      }
+                    }}
                   />
                   <FormErrorMessage>
                     {errors?.accountPayableContactInfos?.[index]?.emailAddress?.message}
@@ -700,7 +871,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                 </FormControl>
               </GridItem>
               <GridItem>
-                <FormControl>
+                <FormControl isInvalid={!!errors?.accountPayableContactInfos?.[index]?.comments}>
                   <FormLabel variant="strong-label" size="md">
                     {t(`${CLIENTS}.comment`)}
                   </FormLabel>
@@ -710,6 +881,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                       <Input
                         id="comments"
                         {...register(`accountPayableContactInfos.${index}.comments`, {
+                          maxLength: { value: 255, message: 'Please use 255 characters only.' },
                           required: 'This is required',
                           validate: {
                             whitespace: validateWhitespace,
@@ -718,6 +890,18 @@ export const Details: React.FC<clientDetailProps> = props => {
                         style={disabledTextStyle}
                         isDisabled={isReadOnly}
                         variant={'required-field'}
+                        onChange={e => {
+                          const title = e?.target.value
+                          setValue(`accountPayableContactInfos.${index}.comments`, title)
+                          if (title?.length > 255) {
+                            setError(`accountPayableContactInfos.${index}.comments`, {
+                              type: 'maxLength',
+                              message: 'Please use 255 characters only.',
+                            })
+                          } else {
+                            clearErrors(`accountPayableContactInfos.${index}.comments`)
+                          }
+                        }}
                       />
                       <FormErrorMessage>
                         {errors?.accountPayableContactInfos?.[index]?.comments?.message}

@@ -17,6 +17,7 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   finalInvoiceAmount: 'displayFinalInvoiceAmount.contains',
   marketName: 'marketName.contains',
   onHold: 'onHold.equals',
+  projectStatus: 'projectStatus.contains',
   workOrderStartDateStart: 'workOrderStartDate.greaterThanOrEqual',
   workOrderStartDateEnd: 'workOrderStartDate.lessThanOrEqual',
   workOrderDateCompletedStart: 'workOrderDateCompleted.greaterThanOrEqual',
@@ -39,6 +40,14 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'WO ID',
     accessorKey: 'woDisplayId',
+  },
+  {
+    header: 'projectStatusAp',
+    accessorKey: 'projectStatus',
+    cell: (row: any) => {
+      const value = row.cell.getValue()
+      return <Status value={value} id={value} />
+    },
   },
   {
     header: 'vendorName',

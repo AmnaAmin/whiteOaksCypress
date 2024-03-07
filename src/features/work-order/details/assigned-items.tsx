@@ -221,7 +221,6 @@ const AssignedItems = (props: AssignedItemType) => {
                 ></Button>
               </>
             )}
-
             {isAssignmentAllowed && (
               <>
                 <Box pl="2" pr="1" display={{ base: 'none', sm: 'unset' }}>

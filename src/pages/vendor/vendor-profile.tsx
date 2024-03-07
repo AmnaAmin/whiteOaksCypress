@@ -391,7 +391,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                 {!!vendorProfileData && (
                   <TabPanel p={0}>
                     <Box w="100%" h="710px">
-                      <Messages id={vendorProfileData?.id} entity="vendor" />
+                      <Messages id={vendorProfileData?.id} entity="vendor" value={vendorProfileData} />
                     </Box>
                   </TabPanel>
                 )}

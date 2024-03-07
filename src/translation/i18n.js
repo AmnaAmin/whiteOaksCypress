@@ -141,6 +141,7 @@ i18n.use(initReactI18next).init({
 
         // Payable
         propertyAddress: 'Property Address',
+        projectStatusAp: 'Project Status',
         vendorAddress: 'Street Address',
         wOCompletedDate: 'WO Completed Date',
         wOIssueDate: 'WO Issue Date',
@@ -787,6 +788,7 @@ i18n.use(initReactI18next).init({
 
         // Payable
         propertyAddress: 'Dirección de Propiedad',
+        projectStatusAp: 'Estado del proyecto',
         vendorAddress: 'Dirección del proveedor',
         wOCompletedDate: 'Fecha de finalización de la OT',
         wOIssueDate: 'Fecha de emisión de OT',
