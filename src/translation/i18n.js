@@ -146,6 +146,7 @@ i18n.use(initReactI18next).init({
         wOIssueDate: 'WO Issue Date',
         id: 'ID',
         woStartDate: 'WO Start Date',
+        onHold: 'Hold',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Type',

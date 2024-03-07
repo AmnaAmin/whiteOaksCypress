@@ -16,6 +16,7 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   expectedPaymentDateEnd: 'expectedPaymentDate.lessThanOrEqual',
   finalInvoiceAmount: 'displayFinalInvoiceAmount.contains',
   marketName: 'marketName.contains',
+  onHold: 'onHold.equals',
   workOrderStartDateStart: 'workOrderStartDate.greaterThanOrEqual',
   workOrderStartDateEnd: 'workOrderStartDate.lessThanOrEqual',
   workOrderDateCompletedStart: 'workOrderDateCompleted.greaterThanOrEqual',
@@ -100,6 +101,10 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
       return dateFormat(cellInfo.workOrderStartDate)
     },
     meta: { format: 'date' },
+  },
+  {
+    header: 'onHold',
+    accessorKey: 'onHold',
   },
   {
     header: 'wOCompletedDate',
