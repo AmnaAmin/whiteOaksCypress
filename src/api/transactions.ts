@@ -607,6 +607,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     payAfterDate: null,
     verifiedByFpm: null,
     verifiedByManager: null,
+    drawOnHold: null,
   }
 }
 

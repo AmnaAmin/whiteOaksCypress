@@ -335,7 +335,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   )
   const payDateVariance = useCalculatePayDateVariance(control)
   const watchTransactionType = watch('transactionType')
-  const watchDrawOnHold = watch('drawOnHold')
+  // const watchDrawOnHold = watch('drawOnHold')
+  const [onHoldDraw, setOnHoldDraw] = useState<boolean>()
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   useEffect(() => {
@@ -518,6 +519,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.
+
       const formValues = parseTransactionToFormValues(
         transaction,
         againstOptions,
@@ -570,6 +572,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return processedDate.add(daysUntilFriday, 'days').toDate()
   }
 
+  useEffect(() => setOnHoldDraw(transaction?.drawOnHold as any), [transaction])
+
   return (
     <Flex direction="column">
       <HStack>
@@ -607,6 +611,10 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             aria-label="loading"
           />
         )}
+
+        {transType?.label === 'Draw' && onHoldDraw && !isAdminOrAccount && (
+          <PercentageCompletionLessThanNTEAlert msg="Draw is on Hold" />
+        )}
         {transType?.label === 'Draw' && (
           <FormControl justifyContent={'end'} alignItems="end" display="flex">
             <FormLabel
@@ -628,8 +636,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
               color="brand.300"
               rounded="full"
               {...register('drawOnHold')}
-              isChecked={watchDrawOnHold}
-              // onChange={event => setValue('drawOnHold', event.target.checked)}
+              isChecked={onHoldDraw as any}
+              onChange={event => setOnHoldDraw(event.target.checked)}
             />
           </FormControl>
         )}
@@ -1385,8 +1393,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) &&
-          !onHold && (
+          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
             <>
               <Button
                 type="submit"
@@ -1400,8 +1407,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   disableSave ||
                   disableBtn ||
                   isInvoiceTransaction ||
-                  onHold ||
-                  (transaction?.drawOnHold && !(isAdmin || isAccounting))
+                  ((onHold || transaction?.drawOnHold) && !(isAdmin || isAccounting))
                 }
               >
                 {t(`${TRANSACTION}.save`)}

@@ -189,7 +189,7 @@ export interface FormValues {
   transaction: TransactionFormValues[]
   status: SelectOption | null
   expectedCompletionDate: string
-  drawOnHold?: boolean
+  drawOnHold: boolean | null | any //for defaultResetPayload as undefined error being occuring
   newExpectedCompletionDate: string | null
   reason: SelectOption | null
   attachment: any
@@ -240,7 +240,7 @@ export type ChangeOrderPayload = {
   verifiedByFpm: SelectOption | null
   verifiedByManager: SelectOption | null
   reason: string | null
-  drawOnHold?: boolean
+  drawOnHold: boolean | null
 }
 
 export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
@@ -266,7 +266,7 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   verifiedByManager: SelectOption | null
   invoiceId: number | string | null
   invoiceNumber?: number | string | null
-  drawOnHold?: boolean | null
+  drawOnHold: boolean | null
 }
 
 type LineItem = {
@@ -281,7 +281,7 @@ type LineItem = {
 
 export type ChangeOrderType = {
   id: number
-  drawOnHold?: boolean
+  drawOnHold: boolean | null
   changeOrderAmount: number
   quantity: number | null
   totalVendorCost: number | null

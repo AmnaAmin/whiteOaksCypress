@@ -130,7 +130,7 @@ export const usePayableColumns = (control, register) => {
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
               <Checkbox
                 value={idd}
-                isDisabled={!(isAccounting || isAdmin) && row?.original?.onHold}
+                isDisabled={!(isAccounting || isAdmin) && row?.original?.onHold === 'true'}
                 {...register(`id.${idd}`)}
                 isChecked={!!formValues?.id?.[idd]}
                 onChange={e => {
