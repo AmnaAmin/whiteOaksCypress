@@ -24,8 +24,8 @@ export const vendor_manager = {
         deleteSkill: 'Delete Skill',
         delConfirmText: 'Delete Vendor Skill',
         delConfirmContent: 'Are you sure you want to delete this vendor skill ?',
-        deleteToastTitle: 'Vendor Skill',
-        deleteSuccessMessage: 'Vendor skill deleted successfully.',
+        deleteToastTitle: 'Delete Vendor Skill',
+        deleteSuccessMessage: 'Vendor skill has been deleted successfully.',
         deleteFailureMessage: 'Unable to delete vendor skill.',
 
         //Markets

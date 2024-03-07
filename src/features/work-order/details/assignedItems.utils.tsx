@@ -301,7 +301,7 @@ export const useDeleteLineIds = () => {
       })
     },
     {
-      onSuccess() {},
+      onSuccess() { },
       onError(error: any) {
         toast({
           title: 'Work Order',
@@ -438,8 +438,8 @@ export const EditableField = (props: EditableCellType) => {
               {valueFormatter && isValidAndNonEmpty(remainingItemsWatch[index]?.[fieldName])
                 ? valueFormatter(remainingItemsWatch[index]?.[fieldName])
                 : isValidAndNonEmpty(remainingItemsWatch[index]?.[fieldName])
-                ? remainingItemsWatch[index]?.[fieldName]
-                : '- - -'}
+                  ? remainingItemsWatch[index]?.[fieldName]
+                  : '- - -'}
             </Box>
           ) : (
             <FormControl>
@@ -1009,6 +1009,46 @@ export const useGetLineItemsColumn = ({
         },
       },
       {
+        header: `${WORK_ORDER}.paymentGroup`,
+        accessorKey: 'paymentGroup',
+        size: 250,
+        cell: ({ row }) => {
+          const index = row?.index
+          const {
+            formState: { errors },
+            control,
+          } = formControl
+
+          return (
+            <Box>
+              <FormControl isInvalid={!!errors.assignedItems?.[index]?.paymentGroup} zIndex={9999 + 1} width="220px">
+                <Controller
+                  control={control}
+                  name={`assignedItems.${index}.paymentGroup`}
+                  render={({ field }) => {
+                    return (
+                      <>
+                        <CreatableSelectForTable
+                          index={index}
+                          field={field}
+                          key={'assignedItems.' + [index]}
+                          id={`assignedItems.${index}.paymentGroup`}
+                          options={paymentGroupValsOptions}
+                          newObjectFormatting={null}
+                          isDisabled={isVendor}
+                          valueFormatter={null}
+                          style={{ height: 115 }}
+                        />
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Box>
+          )
+        },
+      },
+      {
         header: `${WORK_ORDER}.sku`,
         accessorKey: 'sku',
         cell: cellInfo => {
@@ -1317,48 +1357,6 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
-
-      {
-        header: `${WORK_ORDER}.paymentGroup`,
-        accessorKey: 'paymentGroup',
-        size: 250,
-        cell: ({ row }) => {
-          const index = row?.index
-          const {
-            formState: { errors },
-            control,
-          } = formControl
-
-          return (
-            <Box>
-              <FormControl isInvalid={!!errors.assignedItems?.[index]?.paymentGroup} zIndex={9999 + 1} width="220px">
-                <Controller
-                  control={control}
-                  name={`assignedItems.${index}.paymentGroup`}
-                  render={({ field }) => {
-                    return (
-                      <>
-                        <CreatableSelectForTable
-                          index={index}
-                          field={field}
-                          key={'assignedItems.' + [index]}
-                          id={`assignedItems.${index}.paymentGroup`}
-                          options={paymentGroupValsOptions}
-                          newObjectFormatting={null}
-                          isDisabled={isVendor}
-                          valueFormatter={null}
-                          style={{ height: 115 }}
-                        />
-                      </>
-                    )
-                  }}
-                />
-              </FormControl>
-            </Box>
-          )
-        },
-      },
-
       {
         // header: `${WORK_ORDER}.complete`,
         accessorKey: 'isCompleted',

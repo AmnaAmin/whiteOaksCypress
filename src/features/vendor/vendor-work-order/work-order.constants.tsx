@@ -99,5 +99,10 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
     cell: (row: any) => {
       return `${row?.row.original?.completePercentage}%`
     }
-  }, 
+  },
+  {
+    header: 'Payment Groups',
+    accessorKey: 'paymentGroups',
+    filterFn: 'includesString'
+  },
 ]
