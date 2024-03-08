@@ -19,6 +19,7 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  Icon,
 } from '@chakra-ui/react'
 import { VendorAccountsFormValues, VendorProfile, preventNumber } from 'types/vendor.types'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
@@ -34,7 +35,7 @@ import ChooseFileField from 'components/choose-file/choose-file'
 import { dateFormatNew, datePickerFormat } from 'utils/date-time-utils'
 import { downloadDocument } from 'features/vendor-profile/documents-card'
 import { AdminPortalVerifyDocument, VendorPortalVerifyDocument } from 'features/vendor-profile/verify-documents'
-import { BiAddToQueue, BiDownload, BiTrash } from 'react-icons/bi'
+import { BiAddToQueue, BiBookAdd, BiDownload, BiTrash } from 'react-icons/bi'
 import { FormInput } from 'components/react-hook-form-fields/input'
 import SignatureModal from 'features/vendor/vendor-work-order/lien-waiver/signature-modal'
 import { imgUtility } from 'utils/file-utils'
@@ -45,6 +46,7 @@ import { convertImageToDataURL } from 'components/table/util'
 import { useDeleteDocument } from 'api/vendor-projects'
 import { ConfirmationBox } from 'components/Confirmation'
 import { NumberInput } from 'components/input/input'
+import UserAccountsTable from 'features/user-management/user-accounts-table'
 
 type UserProps = {
   onClose?: () => void
@@ -100,6 +102,10 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
       createACHForm(form, { ...vendorProfileData }, dimention, dataUrl)
     })
   }
+
+  const onNewBtnClick = () => {
+    
+  };
 
   return (
     <>
@@ -316,6 +322,14 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 <FormErrorMessage pos="absolute">{errors.check?.message}</FormErrorMessage>
               </FormControl>
             </VStack>
+          </GridItem>
+          <GridItem colSpan={4}>
+            <Flex w='full' alignItems={"end"} justifyContent={"end"} pb={4}>
+              <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onNewBtnClick}>
+                New
+              </Button>
+            </Flex>
+            <UserAccountsTable />
           </GridItem>
           <GridItem colSpan={4}>
             <FormLabel variant="strong-label" color={'gray.500'}>

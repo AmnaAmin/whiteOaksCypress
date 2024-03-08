@@ -1,7 +1,7 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { StatusUserMgt } from './status-user-mgt'
-import { USER_MANAGEMENT } from './user-management.i8n'
+import { USER_ACCOUNT_MANAGEMENT, USER_MANAGEMENT } from './user-management.i8n'
 import { capitalize } from 'utils/string-formatters'
 
 //TODO - Move to constants file
@@ -159,5 +159,32 @@ export const USER_MGT_COLUMNS: ColumnDef<any>[] = [
       return dateFormat(value)
     },
     meta: { format: 'date' },
+  },
+]
+
+export const USER_ACCOUNT_COLUMNS: ColumnDef<any>[] = [
+  {
+    header: `${USER_ACCOUNT_MANAGEMENT}.table.email`,
+    accessorKey: 'email',
+  },
+  {
+    header: `${USER_ACCOUNT_MANAGEMENT}.table.firstName`,
+    accessorKey: 'firstName',
+  },
+  {
+    header: `${USER_ACCOUNT_MANAGEMENT}.table.lastName`,
+    accessorKey: 'lastName',
+  },
+  {
+    header: `${USER_ACCOUNT_MANAGEMENT}.table.type`,
+    accessorKey: 'type',
+  },
+  {
+    header: `${USER_ACCOUNT_MANAGEMENT}.table.contact`,
+    accessorKey: 'contact',
+  },
+  {
+    header: `${USER_ACCOUNT_MANAGEMENT}.table.state`,
+    accessorKey: 'state',
   },
 ]

@@ -132,3 +132,42 @@ export const userManagementTranslation = {
     },
   },
 }
+
+export const USER_ACCOUNT_MANAGEMENT = "userAccountManagement"
+
+export const userAccountManagementTranslation = {
+  en: {
+    translation: {
+      [USER_ACCOUNT_MANAGEMENT]: {
+        table: {
+          email: 'Email',
+          firstName: 'First Name',
+          lastName: 'Last Name',
+          type: 'Type',
+          contact: 'Contact',
+          state: 'State'
+        },
+        modal: {
+          new: "New"
+        },
+      },
+    },
+  },
+  es: {
+    translation: {
+      [USER_ACCOUNT_MANAGEMENT]: {
+        table: {
+          email: 'Correo electrónico',
+          firstName: 'Primer nombre',
+          lastName: 'Apellido',
+          type: 'Tipo',
+          contact: 'Contacto',
+          state: 'Estado'
+        },
+        modal: {
+          new: "Nuevo"
+        }
+      },
+    },
+  },
+}
