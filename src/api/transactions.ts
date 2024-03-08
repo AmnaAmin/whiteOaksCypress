@@ -312,6 +312,7 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
         .map(workOrder => ({
           label: createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
           awardStatus: workOrder?.assignAwardPlan,
+          onHoldWO: workOrder?.onHold,
           value: `${workOrder.id}`,
           isValidForAwardPlan: workOrder?.validForAwardPlan,
           isValidForNewAwardPlan: workOrder?.applyNewAwardPlan,
