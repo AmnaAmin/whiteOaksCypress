@@ -167,10 +167,7 @@ const transactionTypeOptions = [
     value: TransactionTypeValues.lateFee,
     label: 'Late Fee',
   },
-  {
-    value: TransactionTypeValues.factoring,
-    label: 'Factoring',
-  },
+ 
   {
     value: TransactionTypeValues.shippingFee,
     label: 'Shipping Fee',
