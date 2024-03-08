@@ -14,6 +14,7 @@ import {
   Divider,
   useDisclosure,
   useToast,
+  Switch,
 } from '@chakra-ui/react'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { DevTool } from '@hookform/devtools'
@@ -150,6 +151,7 @@ export type TransactionFormProps = {
   currentWorkOrderId?: number
   setCreatedTransaction?: any
   isVendorExpired?: boolean
+  onHold?: boolean
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -160,12 +162,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   screen,
   currentWorkOrderId,
   setCreatedTransaction,
+  onHold,
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
   const { pathname } = useLocation()
   const { permissions } = useRoleBasedPermissions()
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAccounting } = useUserRolesSelector()
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -187,7 +190,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const isManagingFPM = managerEnabled?.allowed
   const isInvoiceTransaction =
     transaction?.transactionType === TransactionTypeValues.payment && !!transaction?.invoiceNumber
- 
+
   const {
     againstOptions: againstSelectOptions,
     workOrdersKeyValues,
@@ -198,8 +201,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const transactionStatusOptions = useTransactionStatusOptions()
   const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
-
-
 
   const { mutate: createChangeOrder, isLoading: isChangeOrderSubmitLoading } = useChangeOrderMutation(projectId)
   const { mutate: updateChangeOrder, isLoading: isChangeOrderUpdateLoading } = useChangeOrderUpdateMutation(projectId)
@@ -240,7 +241,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const watchStatus = useWatch({ name: 'status', control })
   const verifyByFPMStatus = useWatch({ name: 'verifiedByFpm', control })
   const verifyByManagerStatus = useWatch({ name: 'verifiedByManager', control })
-  const { awardPlansStats, refetch: refetchAwardStats } = useWorkOrderAwardStats(projectId,against?.isValidForNewAwardPlan, workOrderId)
+  const { awardPlansStats, refetch: refetchAwardStats } = useWorkOrderAwardStats(
+    projectId,
+    against?.isValidForNewAwardPlan,
+    workOrderId,
+  )
 
   const selectedWorkOrderStats = useMemo(() => {
     return awardPlansStats?.filter(plan => plan.workOrderId === Number(workOrderId))[0]
@@ -253,7 +258,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isStatusDisabled,
     lateAndFactoringFeeForVendor,
     // isFactoringFeeSysGenerated,
-  } = useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading)
+  } = useFieldDisabledEnabledDecision(control, transaction, isMaterialsLoading, onHold)
 
   const {
     check,
@@ -280,6 +285,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     ['PROJECTDETAIL.TRANSACTION.VERIFIEDBYFPM.EDIT', 'ALL'].includes(p),
   )
   const isAdmin = permissions?.includes('ALL')
+  const isAdminOrAccount = isAdmin || isAccounting
 
   const materialAndDraw = transType?.label === 'Material' || transType?.label === 'Draw'
   const selectedCancelledOrDenied = [TransactionStatusValues.cancelled, TransactionStatusValues.denied].includes(
@@ -297,7 +303,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     isShowWorkOrderSelectField,
     isShowNewExpectedCompletionDateField,
     isShowExpectedCompletionDateField,
-     isShowReasonField,
+    isShowReasonField,
     isShowStatusField,
     isTransactionTypeDrawAgainstProjectSOWSelected,
     isShowPaidBackDateField,
@@ -329,6 +335,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   )
   const payDateVariance = useCalculatePayDateVariance(control)
   const watchTransactionType = watch('transactionType')
+  // const watchDrawOnHold = watch('drawOnHold')
+  const [onHoldDraw, setOnHoldDraw] = useState<boolean>()
   useLienWaiverFormValues(control, selectedWorkOrder, setValue)
 
   useEffect(() => {
@@ -410,7 +418,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     if (isAdmin) {
       if (
         transaction?.status?.toLocaleUpperCase() === TransactionStatusValues.approved &&
-        materialAndDraw &&  !isRefund &&
+        materialAndDraw &&
+        !isRefund &&
         totalItemsAmount > -1 * transaction?.changeOrderAmount! + selectedWorkOrderStats?.totalAmountRemaining!
       ) {
         toast({
@@ -442,7 +451,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
         }
         if (
           transaction?.status?.toLocaleUpperCase() !== TransactionStatusValues.approved &&
-          materialAndDraw && !isRefund &&
+          materialAndDraw &&
+          !isRefund &&
           totalItemsAmount > selectedWorkOrderStats?.totalAmountRemaining!
         ) {
           toast({
@@ -463,7 +473,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
           reset()
         },
       }
- 
+
       // In case of id exists in transaction object it will be update call to save transaction.
       if (transaction?.id) {
         const payload = await parseChangeOrderUpdateAPIPayload(values, transaction, projectId)
@@ -509,6 +519,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   useEffect(() => {
     if (transaction && againstOptions && workOrderSelectOptions && changeOrderSelectOptions) {
       // Reset the default values of form fields in case transaction and againstOptions options exists.
+
       const formValues = parseTransactionToFormValues(
         transaction,
         againstOptions,
@@ -561,34 +572,76 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return processedDate.add(daysUntilFriday, 'days').toDate()
   }
 
+  useEffect(() => setOnHoldDraw(transaction?.drawOnHold as any), [transaction])
+
   return (
     <Flex direction="column">
-      {isFormLoading && <ViewLoader />}
-      {check && isLienWaiverRequired && !isPlanExhausted && <LienWaiverAlert />}
-      {projectAwardCheck ? <ProjectAwardAlert /> : null}
-      {check && showUpgradeOption && !isApproved && (
-        <ProjectTransactionRemainingAlert
-          msg="DrawRemaining"
-          onOpen={onProjectAwardOpen}
-          onClose={onClose}
-          isUpgradeProjectAward={true}
-        />
-      )}
+      <HStack>
+        {isFormLoading && <ViewLoader />}
+        {check && isLienWaiverRequired && !isPlanExhausted && <LienWaiverAlert />}
+        {projectAwardCheck ? <ProjectAwardAlert /> : null}
+        {check && showUpgradeOption && !isApproved && (
+          <ProjectTransactionRemainingAlert
+            msg="DrawRemaining"
+            onOpen={onProjectAwardOpen}
+            onClose={onClose}
+            isUpgradeProjectAward={true}
+          />
+        )}
 
-      {check && showLimitReached && <ProjectTransactionRemainingAlert msg="PlanLimitExceed" />}
+        {check && showLimitReached && <ProjectTransactionRemainingAlert msg="PlanLimitExceed" />}
 
-      {remainingAmountExceededFlag && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
-      {fileParseMsg && <PercentageCompletionLessThanNTEAlert msg={t(`${WORK_ORDER}.attachmentParsingFailure`)} />}
-      {isCompletedWorkLessThanNTEPercentage &&
-        (isEnabledToOverrideNTE ? (
-          <PercentageCompletionLessThanNTEAlert msg="PercentageCompletionForAdminAndAccount" />
-        ) : (
-          <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />
-        ))}
+        {remainingAmountExceededFlag && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
+        {fileParseMsg && <PercentageCompletionLessThanNTEAlert msg={t(`${WORK_ORDER}.attachmentParsingFailure`)} />}
+        {isCompletedWorkLessThanNTEPercentage &&
+          (isEnabledToOverrideNTE ? (
+            <PercentageCompletionLessThanNTEAlert msg="PercentageCompletionForAdminAndAccount" />
+          ) : (
+            <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />
+          ))}
 
-      {isFormSubmitLoading && (
-        <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
-      )}
+        {isFormSubmitLoading && (
+          <Progress
+            size="xs"
+            isIndeterminate
+            position="absolute"
+            top="60px"
+            left="0"
+            width="100%"
+            aria-label="loading"
+          />
+        )}
+
+        {transType?.label === 'Draw' && onHoldDraw && !isAdminOrAccount && (
+          <PercentageCompletionLessThanNTEAlert msg="Draw is on Hold" />
+        )}
+        {transType?.label === 'Draw' && (
+          <FormControl justifyContent={'end'} alignItems="end" display="flex">
+            <FormLabel
+              fontWeight="600"
+              htmlFor="hold-checkbox"
+              mt="9px"
+              mb="-2px"
+              variant="light-label"
+              color="gray.500"
+              size="md"
+            >
+              {t('projects.projectDetails.hold')}
+            </FormLabel>
+            <Switch
+              size="sm"
+              id="hold-checkbox"
+              isDisabled={!isAdminOrAccount}
+              outline="4px solid white"
+              color="brand.300"
+              rounded="full"
+              {...register('drawOnHold')}
+              isChecked={onHoldDraw as any}
+              onChange={event => setOnHoldDraw(event.target.checked)}
+            />
+          </FormControl>
+        )}
+      </HStack>
 
       <FormProvider {...formReturn}>
         <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">
@@ -784,7 +837,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                     </FormControl>
                   </GridItem>
                 )}
-                {isShowReasonField &&(
+                {isShowReasonField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.reason}>
                       <FormLabel
@@ -806,11 +859,11 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           <>
                             <div data-testid="reason">
                               <Select
-                              options={REASON_STATUS_OPTIONS}
-                              //  options={reasonTypes.map(reason => ({
-                              //   label: reason.value,
-                              //   value: reason.value,
-                              // }))}
+                                options={REASON_STATUS_OPTIONS}
+                                //  options={reasonTypes.map(reason => ({
+                                //   label: reason.value,
+                                //   value: reason.value,
+                                // }))}
                                 selectProps={{ isBorderLeft: true }}
                                 {...field}
                               />
@@ -941,40 +994,40 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
                     {isShowDrawFieldAgainstWO && (
                       <>
-                      {!isVendor && (
-                        <GridItem>
-                          <FormControl isInvalid={!!errors.paymentProcessed}>
-                            <FormLabel
-                              fontSize="14px"
-                              fontStyle="normal"
-                              fontWeight={500}
-                              color="gray.700"
-                              htmlFor="paymentProcessed"
-                              whiteSpace="nowrap"
-                            >
-                              {t(`${TRANSACTION}.paymentProcessed`)}
-                            </FormLabel>
-                            <Input
-                              data-testid="payment-processed"
-                              id="paymentProcessed"
-                              type="date"
-                              isDisabled
-                              size="md"
-                              css={calendarIcon}
-                              {...register('paymentProcessed', {
-                                onChange: dateProcessed => {
-                                  setValue('paymentProcessed', dateProcessed)
+                        {!isVendor && (
+                          <GridItem>
+                            <FormControl isInvalid={!!errors.paymentProcessed}>
+                              <FormLabel
+                                fontSize="14px"
+                                fontStyle="normal"
+                                fontWeight={500}
+                                color="gray.700"
+                                htmlFor="paymentProcessed"
+                                whiteSpace="nowrap"
+                              >
+                                {t(`${TRANSACTION}.paymentProcessed`)}
+                              </FormLabel>
+                              <Input
+                                data-testid="payment-processed"
+                                id="paymentProcessed"
+                                type="date"
+                                isDisabled
+                                size="md"
+                                css={calendarIcon}
+                                {...register('paymentProcessed', {
+                                  onChange: dateProcessed => {
+                                    setValue('paymentProcessed', dateProcessed)
 
-                                  // Calculate and set the Pay after date
-                                  const payAfterDate = calculateFirstFridayAfterDate(dateProcessed)
-                                  setValue('payAfterDate', payAfterDate.toISOString().split('T')[0])
-                                },
-                              })}
-                            />
-                            <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage>
-                          </FormControl>
-                        </GridItem>
-)}
+                                    // Calculate and set the Pay after date
+                                    const payAfterDate = calculateFirstFridayAfterDate(dateProcessed)
+                                    setValue('payAfterDate', payAfterDate.toISOString().split('T')[0])
+                                  },
+                                })}
+                              />
+                              <FormErrorMessage>{errors?.paymentProcessed?.message}</FormErrorMessage>
+                            </FormControl>
+                          </GridItem>
+                        )}
                         <GridItem>
                           <FormControl isInvalid={!!errors.payAfterDate}>
                             <FormLabel
@@ -1001,7 +1054,6 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                             <FormErrorMessage>{errors?.payAfterDate?.message}</FormErrorMessage>
                           </FormControl>
                         </GridItem>
-                        
                       </>
                     )}
                     <GridItem>
@@ -1058,66 +1110,66 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                     </GridItem>
                   </>
                 )}
-{isShowFpm && (
-                          <GridItem>
-                            <FormControl isInvalid={!!errors.verifiedByFpm} data-testid="verified-by-fpm">
-                              <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByFpm">
-                                {t(`${TRANSACTION}.verifiedByFpm`)}
-                              </FormLabel>
-                              <Controller
-                                control={control}
-                                name="verifiedByFpm"
-                                render={({ field, fieldState }) => {
-                                  return (
-                                    <>
-                                      <Select
-                                        {...field}
-                                        options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                        isDisabled={!isEnabledForVerifyingAsFPM}
-                                        size="md"
-                                        selectProps={{ isBorderLeft: true }}
-                                        onChange={statusOption => {
-                                          field.onChange(statusOption)
-                                        }}
-                                      />
-                                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                                    </>
-                                  )
+                {isShowFpm && (
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.verifiedByFpm} data-testid="verified-by-fpm">
+                      <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByFpm">
+                        {t(`${TRANSACTION}.verifiedByFpm`)}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        name="verifiedByFpm"
+                        render={({ field, fieldState }) => {
+                          return (
+                            <>
+                              <Select
+                                {...field}
+                                options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
+                                isDisabled={!isEnabledForVerifyingAsFPM}
+                                size="md"
+                                selectProps={{ isBorderLeft: true }}
+                                onChange={statusOption => {
+                                  field.onChange(statusOption)
                                 }}
                               />
-                            </FormControl>
-                          </GridItem>
-                        )}
-                        {isShowDM && (
-                          <GridItem>
-                            <FormControl isInvalid={!!errors.verifiedByManager} data-testid="verified-by-dm">
-                              <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByManager">
-                                {t(`${TRANSACTION}.verifiedByManager`)}
-                              </FormLabel>
-                              <Controller
-                                control={control}
-                                name="verifiedByManager"
-                                render={({ field, fieldState }) => {
-                                  return (
-                                    <>
-                                      <Select
-                                        {...field}
-                                        options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
-                                        isDisabled={!isManagingFPM}
-                                        size="md"
-                                        selectProps={{ isBorderLeft: true }}
-                                        onChange={statusOption => {
-                                          field.onChange(statusOption)
-                                        }}
-                                      />
-                                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                                    </>
-                                  )
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                )}
+                {isShowDM && (
+                  <GridItem>
+                    <FormControl isInvalid={!!errors.verifiedByManager} data-testid="verified-by-dm">
+                      <FormLabel fontSize="14px" color="gray.700" fontWeight={500} htmlFor="verifiedByManager">
+                        {t(`${TRANSACTION}.verifiedByManager`)}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        name="verifiedByManager"
+                        render={({ field, fieldState }) => {
+                          return (
+                            <>
+                              <Select
+                                {...field}
+                                options={TRANSACTION_FPM_DM_STATUS_OPTIONS}
+                                isDisabled={!isManagingFPM}
+                                size="md"
+                                selectProps={{ isBorderLeft: true }}
+                                onChange={statusOption => {
+                                  field.onChange(statusOption)
                                 }}
                               />
-                            </FormControl>
-                          </GridItem>
-                        )}
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
+                )}
                 {isShowPaymentRecievedDateField && (
                   <GridItem>
                     <FormControl isInvalid={!!errors.paymentRecievedDate}>
@@ -1341,8 +1393,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
             {t(`${TRANSACTION}.next`)}
           </Button>
         ) : (
-          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) &&
-           (
+          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
             <>
               <Button
                 type="submit"
@@ -1351,7 +1402,12 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 colorScheme="darkPrimary"
                 variant="solid"
                 disabled={
-                  isFormSubmitLoading || isMaterialsLoading || disableSave || disableBtn || isInvoiceTransaction
+                  isFormSubmitLoading ||
+                  isMaterialsLoading ||
+                  disableSave ||
+                  disableBtn ||
+                  isInvoiceTransaction ||
+                  ((onHold || transaction?.drawOnHold) && !(isAdmin || isAccounting))
                 }
               >
                 {t(`${TRANSACTION}.save`)}

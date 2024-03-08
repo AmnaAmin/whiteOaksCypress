@@ -66,9 +66,8 @@ export const useFieldShowHideDecision = (control: Control<FormValues, any>, tran
   const isTransactionTypeChangeOrderSelected =
     selectedTransactionTypeId &&
     [TransactionTypeValues.changeOrder, TransactionTypeValues.legalFee].includes(selectedTransactionTypeId)
-    const isLegalFeeExcluded  =
-    selectedTransactionTypeId &&
-    [TransactionTypeValues.changeOrder].includes(selectedTransactionTypeId)
+  const isLegalFeeExcluded =
+    selectedTransactionTypeId && [TransactionTypeValues.changeOrder].includes(selectedTransactionTypeId)
   const isTransactionTypeOverpaymentSelected =
     selectedTransactionTypeId && selectedTransactionTypeId === TransactionTypeValues.overpayment
   const isAgainstWorkOrderOptionSelected = selectedAgainstId && selectedAgainstId !== AGAINST_DEFAULT_VALUE
@@ -195,6 +194,7 @@ export const useFieldDisabledEnabledDecision = (
   control: Control<FormValues, any>,
   transaction?: ChangeOrderType,
   isMaterialsLoading?: boolean,
+  onHold?: boolean,
 ) => {
   const { permissions } = useRoleBasedPermissions()
   const { isVendor, isAccounting } = useUserRolesSelector()
@@ -228,7 +228,8 @@ export const useFieldDisabledEnabledDecision = (
       // isFactoringFeeSysGenerated ||
       statusFieldForVendor ||
       isInvoicePayment ||
-      (!isAdmin && !isAccounting && transaction?.transactionType === TransactionTypeValues.draw),
+      (!isAdmin && !isAccounting && transaction?.transactionType === TransactionTypeValues.draw) ||
+      onHold,
 
     lateAndFactoringFeeForVendor: lateAndFactoringFeeForVendor,
     // isFactoringFeeSysGenerated,

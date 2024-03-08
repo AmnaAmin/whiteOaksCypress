@@ -3,6 +3,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { usePCRecievable } from 'api/account-receivable'
 import { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { PAYABLE_TABLE_COLUMNS } from './payable.constants'
 
 const WEEK_FILTERS = [
@@ -111,6 +112,7 @@ export const useWeeklyCount = () => {
 
 export const usePayableColumns = (control, register) => {
   const formValues = useWatch({ control })
+  const { isAccounting, isAdmin } = useUserRolesSelector()
   const payableColumns: ColumnDef<any>[] = useMemo(
     () => [
       ...PAYABLE_TABLE_COLUMNS,
@@ -128,6 +130,7 @@ export const usePayableColumns = (control, register) => {
             <Flex justifyContent="center" onClick={e => e.stopPropagation()}>
               <Checkbox
                 value={idd}
+                isDisabled={!(isAccounting || isAdmin) && row?.original?.onHold === 'true'}
                 {...register(`id.${idd}`)}
                 isChecked={!!formValues?.id?.[idd]}
                 onChange={e => {
