@@ -169,6 +169,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { pathname } = useLocation()
   const { permissions } = useRoleBasedPermissions()
   const { isVendor, isAccounting } = useUserRolesSelector()
+  const [holdWOState, setHoldWOState] = useState<boolean>(false)
   const [isMaterialsLoading, setMaterialsLoading] = useState<boolean>(false)
   const [isShowLienWaiver, setIsShowLienWaiver] = useState<Boolean>(false)
   const [selectedWorkOrderId, setSelectedWorkOrderId] = useState<string>()
@@ -572,76 +573,81 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     return processedDate.add(daysUntilFriday, 'days').toDate()
   }
 
+  //filter onHold WO's for putting check for disabling the save button & alert that
+  //selected WO is onHold
+  const holdWOData = againstOptions.filter(e => e?.value === against?.value && e.onHoldWO === true)
+  useEffect(() => {
+    if (holdWOData.length > 0) {
+      holdWOData.forEach((e, i) => {
+        if (e?.value === against?.value && !isAdminOrAccount) setHoldWOState(true)
+        else setHoldWOState(false)
+      })
+    } else setHoldWOState(false)
+  }, [against, againstOptions])
+
   useEffect(() => setOnHoldDraw(transaction?.drawOnHold as any), [transaction])
 
   return (
     <Flex direction="column">
-      <HStack>
-        {isFormLoading && <ViewLoader />}
-        {check && isLienWaiverRequired && !isPlanExhausted && <LienWaiverAlert />}
-        {projectAwardCheck ? <ProjectAwardAlert /> : null}
-        {check && showUpgradeOption && !isApproved && (
-          <ProjectTransactionRemainingAlert
-            msg="DrawRemaining"
-            onOpen={onProjectAwardOpen}
-            onClose={onClose}
-            isUpgradeProjectAward={true}
+      {isFormLoading && <ViewLoader />}
+      {check && isLienWaiverRequired && !isPlanExhausted && <LienWaiverAlert />}
+      {projectAwardCheck ? <ProjectAwardAlert /> : null}
+      {check && showUpgradeOption && !isApproved && (
+        <ProjectTransactionRemainingAlert
+          msg="DrawRemaining"
+          onOpen={onProjectAwardOpen}
+          onClose={onClose}
+          isUpgradeProjectAward={true}
+        />
+      )}
+
+      {check && showLimitReached && !holdWOState && <ProjectTransactionRemainingAlert msg="PlanLimitExceed" />}
+
+      {remainingAmountExceededFlag && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
+      {fileParseMsg && <PercentageCompletionLessThanNTEAlert msg={t(`${WORK_ORDER}.attachmentParsingFailure`)} />}
+      {isCompletedWorkLessThanNTEPercentage &&
+        (isEnabledToOverrideNTE ? (
+          <PercentageCompletionLessThanNTEAlert msg="PercentageCompletionForAdminAndAccount" />
+        ) : (
+          <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />
+        ))}
+
+      {isFormSubmitLoading && (
+        <Progress size="xs" isIndeterminate position="absolute" top="60px" left="0" width="100%" aria-label="loading" />
+      )}
+
+      {transType?.label === 'Draw' && onHoldDraw && !isAdminOrAccount && (
+        <PercentageCompletionLessThanNTEAlert msg="DrawonHold" />
+      )}
+
+      {holdWOState && <PercentageCompletionLessThanNTEAlert msg="onHoldSelectedWO" />}
+
+      {transType?.label === 'Draw' && (
+        <FormControl justifyContent={'end'} alignItems="end" display="flex">
+          <FormLabel
+            fontWeight="600"
+            htmlFor="hold-checkbox"
+            mt="9px"
+            mb="-2px"
+            variant="light-label"
+            color="gray.500"
+            size="md"
+          >
+            {t('projects.projectDetails.hold')}
+          </FormLabel>
+          <Switch
+            size="sm"
+            id="hold-checkbox"
+            isDisabled={!isAdminOrAccount}
+            outline="4px solid white"
+            color="brand.300"
+            rounded="full"
+            {...register('drawOnHold')}
+            isChecked={onHoldDraw as any}
+            onChange={event => setOnHoldDraw(event.target.checked)}
           />
-        )}
-
-        {check && showLimitReached && <ProjectTransactionRemainingAlert msg="PlanLimitExceed" />}
-
-        {remainingAmountExceededFlag && <ProjectTransactionRemainingAlert msg="PaymentRemaining" />}
-        {fileParseMsg && <PercentageCompletionLessThanNTEAlert msg={t(`${WORK_ORDER}.attachmentParsingFailure`)} />}
-        {isCompletedWorkLessThanNTEPercentage &&
-          (isEnabledToOverrideNTE ? (
-            <PercentageCompletionLessThanNTEAlert msg="PercentageCompletionForAdminAndAccount" />
-          ) : (
-            <PercentageCompletionLessThanNTEAlert msg="PercentageCompletion" />
-          ))}
-
-        {isFormSubmitLoading && (
-          <Progress
-            size="xs"
-            isIndeterminate
-            position="absolute"
-            top="60px"
-            left="0"
-            width="100%"
-            aria-label="loading"
-          />
-        )}
-
-        {transType?.label === 'Draw' && onHoldDraw && !isAdminOrAccount && (
-          <PercentageCompletionLessThanNTEAlert msg="Draw is on Hold" />
-        )}
-        {transType?.label === 'Draw' && (
-          <FormControl justifyContent={'end'} alignItems="end" display="flex">
-            <FormLabel
-              fontWeight="600"
-              htmlFor="hold-checkbox"
-              mt="9px"
-              mb="-2px"
-              variant="light-label"
-              color="gray.500"
-              size="md"
-            >
-              {t('projects.projectDetails.hold')}
-            </FormLabel>
-            <Switch
-              size="sm"
-              id="hold-checkbox"
-              isDisabled={!isAdminOrAccount}
-              outline="4px solid white"
-              color="brand.300"
-              rounded="full"
-              {...register('drawOnHold')}
-              isChecked={onHoldDraw as any}
-              onChange={event => setOnHoldDraw(event.target.checked)}
-            />
-          </FormControl>
-        )}
-      </HStack>
+        </FormControl>
+      )}
 
       <FormProvider {...formReturn}>
         <form onSubmit={handleSubmit(onSubmit)} id="newTransactionForm">
@@ -1407,7 +1413,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                   disableSave ||
                   disableBtn ||
                   isInvoiceTransaction ||
-                  ((onHold || transaction?.drawOnHold) && !(isAdmin || isAccounting))
+                  ((onHold || transaction?.drawOnHold) && !(isAdmin || isAccounting)) ||
+                  holdWOState
                 }
               >
                 {t(`${TRANSACTION}.save`)}
