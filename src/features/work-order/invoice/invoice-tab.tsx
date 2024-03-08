@@ -96,6 +96,7 @@ export const InvoiceTab = ({
   vendorAddress,
   isVendorExpired,
 }) => {
+  console.log(workOrder)
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
@@ -104,7 +105,8 @@ export const InvoiceTab = ({
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
   const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
-  const { isVendor, isAdmin } = useUserRolesSelector()
+  const { isVendor, isAccounting, isAdmin } = useUserRolesSelector()
+  const isAdminOrAccount = isAdmin || isAccounting
   const { pathname } = useLocation()
   const isPayable = pathname?.includes('payable')
   const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
@@ -445,7 +447,7 @@ export const InvoiceTab = ({
             <Button
               variant="outline"
               data-testid="generateInvoice"
-              disabled={disableGenerateInvoice}
+              disabled={disableGenerateInvoice || (workOrder?.onHold && !isAdminOrAccount)}
               colorScheme="darkPrimary"
               size="md"
               leftIcon={<BiSpreadsheet />}

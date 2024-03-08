@@ -201,7 +201,9 @@ export const NotesTab = (props: NotesProps) => {
               })}
               onChange={e => {
                 const title = e.target.value
+                setValue('message', title)
                 if (title.length > 65535) {
+                 
                   setError('message', {
                     type: 'maxLength',
                     message: 'Please Use 65535 characters Only.',

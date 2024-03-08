@@ -65,7 +65,7 @@ export const ProjectTransactionRemainingAlert = ({ msg, onOpen, isUpgradeProject
   const { t } = useTranslation()
 
   return (
-    <Alert mt={2} status="info" variant="custom" size="sm">
+    <Alert w={'313rem'} mt={2} status="info" variant="custom" size="sm">
       <AlertIcon />
       <AlertDescription maxW="90%">{t(`${msg}`)}</AlertDescription>
       <Spacer />
