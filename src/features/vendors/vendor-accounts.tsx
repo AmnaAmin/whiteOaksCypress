@@ -16,6 +16,9 @@ import {
   Text,
   IconButton,
   useDisclosure,
+  Radio,
+  RadioGroup,
+  Stack,
 } from '@chakra-ui/react'
 import { VendorAccountsFormValues, VendorProfile, preventNumber } from 'types/vendor.types'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
@@ -41,6 +44,7 @@ import jsPDF from 'jspdf'
 import { convertImageToDataURL } from 'components/table/util'
 import { useDeleteDocument } from 'api/vendor-projects'
 import { ConfirmationBox } from 'components/Confirmation'
+import { NumberInput } from 'components/input/input'
 
 type UserProps = {
   onClose?: () => void
@@ -53,6 +57,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     formState: { errors },
     control,
     setValue,
+    getValues,
     register,
     watch,
     clearErrors,
@@ -99,7 +104,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   return (
     <>
       <Box maxH={'632px'} overflowY={'scroll'}>
-        <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px">
+        <Grid templateColumns="repeat(4,235px)" rowGap="30px" columnGap="16px">
           <GridItem>
             <FormControl isInvalid={!!errors.einNumber}>
               <FormLabel variant="strong-label" size="md">
@@ -221,6 +226,97 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               </FormControl>
             </VStack>
           </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t('monthlySubscriptionFee')}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="monthlySubscriptionFee"
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberInput
+                        datatest-id="monthlySubscriptionFee"
+                        value={field.value}
+                        onValueChange={values => {
+                          const { floatValue } = values
+                          field.onChange(floatValue)
+                        }}
+                        customInput={Input}
+                        thousandSeparator={true}
+                        prefix={'$'}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }} />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t('oneTimeSetupFee')}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="oneTimeSetupFee"
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberInput
+                        datatest-id="oneTimeSetupFee"
+                        value={field.value}
+                        onValueChange={values => {
+                          const { floatValue } = values
+                          field.onChange(floatValue)
+                        }}
+                        customInput={Input}
+                        thousandSeparator={true}
+                        prefix={'$'}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              ></Controller>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl>
+              <FormLabel variant="strong-label" size="md">
+                {t('billingDate')}
+              </FormLabel>
+              <Input
+                type="date"
+                {...register('billingDate')}
+                data-testid="billingDate"
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
+                {t('subscription')}
+              </FormLabel>
+              <FormControl>
+                <HStack spacing="16px">
+                  <RadioGroup w="100%" justifyContent={'flex-start'} value={!!getValues("isSubscriptionOn") ? "true" : "false"} onChange={() => {
+                    const isSubscription = Boolean(getValues("isSubscriptionOn"));
+                    setValue("isSubscriptionOn", !isSubscription);
+                  }}
+                  >
+                    <Stack direction="row">
+                      <Radio value={"true"} pr={4}>ON</Radio>
+                      <Radio value={"false"}>OFF</Radio>
+                    </Stack>
+                  </RadioGroup>
+                </HStack>
+                <FormErrorMessage pos="absolute">{errors.check?.message}</FormErrorMessage>
+              </FormControl>
+            </VStack>
+          </GridItem>
           <GridItem colSpan={4}>
             <FormLabel variant="strong-label" color={'gray.500'}>
               Vendor Automated Request Form
@@ -232,24 +328,24 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 {t('businessName')}
               </FormLabel>
               <Input
-              type="text"
-              data-testId="companyName"
-              variant="required-field"
-              {...register('companyName', {
-                required: isActive && 'This is required',
-                maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                onChange: e => {
-                  setValue('companyName', e.target.value)
-                },
-              })}
-              size="md"
-              maxLength={255}
-            />
-            {contactFormValue.companyName !== undefined && contactFormValue.companyName?.length === 255 && (
-              <Text color="red" fontSize="xs" w="215px">
-                Please use 255 characters only.
-              </Text>
-            )}
+                type="text"
+                data-testId="companyName"
+                variant="required-field"
+                {...register('companyName', {
+                  required: isActive && 'This is required',
+                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  onChange: e => {
+                    setValue('companyName', e.target.value)
+                  },
+                })}
+                size="md"
+                maxLength={255}
+              />
+              {contactFormValue.companyName !== undefined && contactFormValue.companyName?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -270,12 +366,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 })}
                 size="md"
                 maxLength={255}
-                />
-                {contactFormValue.ownerName !== undefined && contactFormValue.ownerName?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.ownerName !== undefined && contactFormValue.ownerName?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.ownerName && errors.ownerName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -295,14 +391,14 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   },
                 })}
                 variant="required-field"
-                size="md"       
+                size="md"
                 maxLength={255}
-                />
-                {contactFormValue.businessEmailAddress !== undefined && contactFormValue.businessEmailAddress?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.businessEmailAddress !== undefined && contactFormValue.businessEmailAddress?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -338,7 +434,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormControl>
           </GridItem>
           <GridItem>
-          <FormControl h="70px" isInvalid={!!errors.businessPhoneNumberExtension}>
+            <FormControl h="70px" isInvalid={!!errors.businessPhoneNumberExtension}>
               <FormLabel variant="strong-label" size="md">
                 {t('ext')}
               </FormLabel>
@@ -355,7 +451,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="121px"
                 variant="outline"
                 size="md"
-               
+
                 type="number"
               />
               {!!errors.businessPhoneNumberExtension && (
@@ -382,12 +478,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant="required-field"
                 size="md"
                 maxLength={255}
-                />
-                {contactFormValue.streetAddress !== undefined && contactFormValue.streetAddress?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.streetAddress !== undefined && contactFormValue.streetAddress?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -410,12 +506,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 size="md"
                 onKeyPress={preventNumber}
                 maxLength={255}
-                />
-                {contactFormValue.city !== undefined && contactFormValue.city?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.city !== undefined && contactFormValue.city?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -460,12 +556,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant="required-field"
                 size="md"
                 maxLength={255}
-                />
-                {contactFormValue.zipCode !== undefined && contactFormValue.zipCode?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.zipCode !== undefined && contactFormValue.zipCode?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -514,12 +610,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 })}
                 size="md"
                 maxLength={45}
-                />
-                {contactFormValue.bankPrimaryContact !== undefined && contactFormValue.bankPrimaryContact?.length === 45 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 45 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.bankPrimaryContact !== undefined && contactFormValue.bankPrimaryContact?.length === 45 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 45 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">
                 {errors.bankPrimaryContact && errors.bankPrimaryContact?.message}
               </FormErrorMessage>
@@ -541,12 +637,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 maxLength={255}
-                />
-                {contactFormValue.bankEmail !== undefined && contactFormValue.bankEmail?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.bankEmail !== undefined && contactFormValue.bankEmail?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos={'absolute'}>{errors.bankEmail?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -599,12 +695,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 maxLength={255}
-                />
-                {contactFormValue.bankAddress !== undefined && contactFormValue.bankAddress?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.bankAddress !== undefined && contactFormValue.bankAddress?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.bankAddress?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -624,12 +720,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 size="md"
                 onKeyPress={preventNumber}
                 maxLength={255}
-                />
-                {contactFormValue.bankCity !== undefined && contactFormValue.bankCity?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.bankCity !== undefined && contactFormValue.bankCity?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.bankCity?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -671,12 +767,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 maxLength={255}
-                />
-                {contactFormValue.bankZipCode !== undefined && contactFormValue.bankZipCode?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.bankZipCode !== undefined && contactFormValue.bankZipCode?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.bankZipCode?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -695,12 +791,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 maxLength={255}
-                />
-                {contactFormValue.bankRoutingNo !== undefined && contactFormValue.bankRoutingNo?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.bankRoutingNo !== undefined && contactFormValue.bankRoutingNo?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.bankRoutingNo?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -719,12 +815,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 maxLength={255}
-                />
-                {contactFormValue.bankAccountingNo !== undefined && contactFormValue.bankAccountingNo?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
+              />
+              {contactFormValue.bankAccountingNo !== undefined && contactFormValue.bankAccountingNo?.length === 255 && (
+                <Text color="red" fontSize="xs" w="215px">
+                  Please use 255 characters only.
+                </Text>
+              )}
               <FormErrorMessage pos="absolute">{errors.bankAccountingNo?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>

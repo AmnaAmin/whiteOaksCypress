@@ -245,6 +245,10 @@ export const parseAccountsFormDataToAPIData = async (
     bankAccountingNo: formValues?.bankAccountingNo,
     einNumber: formValues?.einNumber,
     ssnNumber: formValues?.ssnNumber,
+    monthlySubscriptionFee: formValues?.monthlySubscriptionFee,
+    oneTimeSetupFee: formValues?.oneTimeSetupFee,
+    billingDate: dateISOFormatWithZeroTime(formValues?.billingDate),
+    isSubscriptionOn: Boolean(formValues?.isSubscriptionOn),
   }
 }
 

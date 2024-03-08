@@ -105,6 +105,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
 
   const submitForm = useCallback(
     async formData => {
+      console.log("🚀 ~ formData:", formData)
+      console.log("🚀 ~ tabIndex:", tabIndex)
       if (vendorProfileData?.id) {
         switch (tabIndex) {
           case 0:

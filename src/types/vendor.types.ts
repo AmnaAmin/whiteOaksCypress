@@ -165,6 +165,10 @@ export type VendorProfilePayload = {
   bankDateSignature?: string | null | Date
   bankRoutingNo?: number | string | null
   bankAccountingNo?: number | string | null
+  monthlySubscriptionFee?: number | null
+  oneTimeSetupFee?: number | null
+  billingDate?: string | null
+  isSubscriptionOn?: boolean
 }
 
 export type LicenseDocument = {
@@ -313,6 +317,10 @@ export type VendorAccountsFormValues = {
   bankVoidedCheckStatus?: boolean | string | null
   ownersSignature: any
   bankDateSignature: string | Date | null
+  monthlySubscriptionFee?: number | null
+  oneTimeSetupFee?: number | null
+  billingDate?: string | null
+  isSubscriptionOn?: boolean
 }
 type TradeFormValues = {
   trade: Trade
