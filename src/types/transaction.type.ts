@@ -151,6 +151,7 @@ export type SelectOption = {
   lienDue?: number | undefined
   __isNew__?: boolean
   property?: any
+  onHoldWO?: boolean
 }
 
 export type TransactionFormValues = {
