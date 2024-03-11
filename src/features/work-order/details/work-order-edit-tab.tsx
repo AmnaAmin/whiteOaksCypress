@@ -150,6 +150,7 @@ const WorkOrderDetailTab = props => {
     locations,
   } = props
 
+  console.log("Work order: ", workOrder)
   const defaultSkill = {
     value: workOrder?.vendorSkillId as number,
     label: workOrder?.skillName as string,
@@ -413,7 +414,7 @@ const WorkOrderDetailTab = props => {
     const unAssignedItems = getUnAssignedItems(formValues, workOrder?.assignedItems)
     const removedItems = getRemovedItems(formValues, workOrder?.assignedItems)
     const updatedWorkOrderDetails = { ...workOrder, isWorkOrderDetailsEdit: true }
-    
+
     const payload = parseWODetailValuesToPayload(values, updatedWorkOrderDetails)
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
@@ -488,106 +489,98 @@ const WorkOrderDetailTab = props => {
               </>
             </SimpleGrid>
           ) : (
-            <>
-              <>
-                <Box mt="32px" mx="32px">
-                  <HStack spacing="16px" gap={'20px'}>
-                    {inProgress ? (
-                      <Box w="215px" mt={-7}>
-                        <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
-                          <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
-                            {t('trade')}
-                          </FormLabel>
-                          <Controller
-                            control={control}
-                            rules={assignVendor ? { required: 'This is required' } : undefined}
-                            name="vendorSkillId"
-                            render={({ field, fieldState }) => {
-                              return (
-                                <>
-                                  <Select
-                                    {...field}
-                                    options={tradeOptions}
-                                    size="md"
-                                    value={field.value}
-                                    onChange={option => {
-                                      setVendorSkillId(option.value)
-                                      setValue('vendorId', null)
-                                      field.onChange(option)
-                                    }}
-                                    selectProps={
-                                      assignVendor
-                                        ? { isBorderLeft: true, menuHeight: '175px' }
-                                        : { menuHeight: '175px' }
-                                    }
-                                  />
-                                </>
-                              )
-                            }}
-                          />
-                        </FormControl>
-                      </Box>
-                    ) : (
-                      <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
-                    )}
-                    {inProgress ? (
-                      <Box w="215px">
-                        <FormControl isInvalid={!!errors.vendorId} data-testid="vendorId">
-                          <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
-                            {t('companyName')}
-                          </FormLabel>
-                          <Controller
-                            control={control}
-                            rules={{ required: assignVendor ? 'This field is required' : undefined }}
-                            name="vendorId"
-                            render={({ field, fieldState }) => {
-                              return (
-                                <>
-                                  <Select
-                                    {...field}
-                                    options={vendorOptions}
-                                    size="md"
-                                    loadingCheck={loadingVendors}
-                                    selectProps={
-                                      assignVendor
-                                        ? { isBorderLeft: true, menuHeight: '175px' }
-                                        : { menuHeight: '175px' }
-                                    }
-                                    onChange={option => {
-                                      setSelectedVendorId(option.value)
-                                      field.onChange(option)
-                                    }}
-                                  />
-                                </>
-                              )
-                            }}
-                          />
-                        </FormControl>
-                      </Box>
-                    ) : (
-                      <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
-                    )}
-                    {businessPhoneNumber && businessEmailAddress && (
-                      <>
-                        <InformationCard
-                          testId="email"
-                          title={t(`${WORK_ORDER}.email`)}
-                          date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
-                          customStyle={{ width: '150px', height: '20px' }}
-                        />
-                        <InformationCard
-                          testId="phone"
-                          title={t(`${WORK_ORDER}.phone`)}
-                          date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
-                          customStyle={{ width: '150px', height: '20px' }}
-                        />
-                        <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
-                      </>
-                    )}
-                  </HStack>
-                </Box>
-              </>
-            </>
+            <Box mt="32px" mx="32px">
+              <HStack spacing="16px" gap={'20px'}>
+                {inProgress ? (
+                  <Box w="215px" mt={-7}>
+                    <FormControl height="40px" isInvalid={!!errors.vendorSkillId} data-testid="vendorSkillId">
+                      <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
+                        {t('trade')}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        rules={assignVendor ? { required: 'This is required' } : undefined}
+                        name="vendorSkillId"
+                        render={({ field, fieldState }) => {
+                          return (
+                            <>
+                              <Select
+                                {...field}
+                                options={tradeOptions}
+                                size="md"
+                                value={field.value}
+                                onChange={option => {
+                                  setVendorSkillId(option.value)
+                                  setValue('vendorId', null)
+                                  field.onChange(option)
+                                }}
+                                selectProps={
+                                  assignVendor ? { isBorderLeft: true, menuHeight: '175px' } : { menuHeight: '175px' }
+                                }
+                              />
+                            </>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </Box>
+                ) : (
+                  <InformationCard testId="vendorType" title={t(`${WORK_ORDER}.vendorType`)} date={skillName} />
+                )}
+                {inProgress ? (
+                  <Box w="215px">
+                    <FormControl isInvalid={!!errors.vendorId} data-testid="vendorId">
+                      <FormLabel fontSize="14px" fontWeight={500} color="gray.700">
+                        {t('companyName')}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        rules={{ required: assignVendor ? 'This field is required' : undefined }}
+                        name="vendorId"
+                        render={({ field, fieldState }) => {
+                          return (
+                            <>
+                              <Select
+                                {...field}
+                                options={vendorOptions}
+                                size="md"
+                                loadingCheck={loadingVendors}
+                                selectProps={
+                                  assignVendor ? { isBorderLeft: true, menuHeight: '175px' } : { menuHeight: '175px' }
+                                }
+                                onChange={option => {
+                                  setSelectedVendorId(option.value)
+                                  field.onChange(option)
+                                }}
+                              />
+                            </>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </Box>
+                ) : (
+                  <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
+                )}
+                {businessPhoneNumber && businessEmailAddress && (
+                  <>
+                    <InformationCard
+                      testId="email"
+                      title={t(`${WORK_ORDER}.email`)}
+                      date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
+                      customStyle={{ width: '150px', height: '20px' }}
+                    />
+                    <InformationCard
+                      testId="phone"
+                      title={t(`${WORK_ORDER}.phone`)}
+                      date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
+                      customStyle={{ width: '150px', height: '20px' }}
+                    />
+                    <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
+                  </>
+                )}
+              </HStack>
+            </Box>
           )}
           <Box>
             <Divider borderColor="#CBD5E0" />
@@ -768,6 +761,7 @@ const WorkOrderDetailTab = props => {
             </Box>
           )}
         </Box>
+      
         {!(uploadedWO && uploadedWO?.s3Url) && (
           <Box mx="32px" mt={10}>
             {isLoadingLineItems ? (
