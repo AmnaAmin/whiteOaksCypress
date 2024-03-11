@@ -369,6 +369,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     assignedItems: [...assignedItems],
     notifyVendor: formValues.notifyVendor,
     visibleToVendor: formValues.assignToVendor,
+    byPassSOWRule: formValues.byPassSOWRule,
     vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
     invoiceAmount: removeCurrencyFormat(formValues?.invoiceAmount),
@@ -396,6 +397,7 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations, payme
     showPrice: workOrder.showPricing ?? false,
     notifyVendor: workOrder.notifyVendor ?? false,
     assignToVendor: workOrder.visibleToVendor ?? false,
+    byPassSOWRule: workOrder.byPassSOWRule ?? false,
     invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
     clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
     percentage: workOrder?.percentage,
@@ -514,6 +516,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     showPricing: formValues.showPrice,
     notifyVendor: formValues.notifyVendor,
     visibleToVendor: formValues.assignToVendor,
+    byPassSOWRule: formValues.byPassSOWRule,
     projectId: projectId,
   }
 }
