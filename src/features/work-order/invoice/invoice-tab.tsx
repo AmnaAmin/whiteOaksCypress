@@ -96,7 +96,6 @@ export const InvoiceTab = ({
   vendorAddress,
   isVendorExpired,
 }) => {
-  console.log(workOrder)
   const [recentInvoice, setRecentInvoice] = useState<any>(null)
   const { t } = useTranslation()
   const [items, setItems] = useState<Array<TransactionType>>([])
