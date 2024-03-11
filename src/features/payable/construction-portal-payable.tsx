@@ -138,7 +138,7 @@ export const ConstructionPortalPayable = () => {
       reset()
     }
   }, [loading])
-
+const isDraw= workOrders?.some(payable => payable?.paymentType?.toLowerCase() === 'wo draw')
   return (
     <form method="post">
       <Box pb="2">
@@ -207,6 +207,7 @@ export const ConstructionPortalPayable = () => {
           batchData={batchRun}
           isLoading={isLoadingBatchResult}
           batchType={'PAYABLE'}
+         isDraw={isDraw}
         />
       )}
 
