@@ -45,7 +45,7 @@ export const projects = {
           woNo: 'WO No',
           poNo: 'PO No',
           invoiceDate: 'Invoice Date',
-          woCreatedDate:'WO Created Date',
+          woCreatedDate: 'WO Created Date',
           disqualifiedRevenueFlag: 'Disqualified Revenue',
           claimNumber: 'Claim #',
           woaStartDate: 'WOA Start',
@@ -56,7 +56,7 @@ export const projects = {
           new: 'New',
           active: 'Active',
           punch: 'Punch',
-          awaitingPunch:'Awaiting Punch',
+          awaitingPunch: 'Awaiting Punch',
           reconcile: 'Reconcile',
           closed: 'Closed',
           invoiced: 'Invoiced',
@@ -66,7 +66,7 @@ export const projects = {
           disputed: 'Disputed',
           collection: 'Collection',
           flagged: 'Flagged',
-          preinvoiced:'Pre Invoicing'
+          preinvoiced: 'Pre Invoicing',
         },
         projectSummary: {
           projectID: 'Project ID',
@@ -107,6 +107,7 @@ export const projects = {
         projectDetails: {
           transactions: 'Transactions',
           viewDetails: 'View Details',
+          hold: 'Hold',
           newTransaction: 'New Transaction',
           projectDetails: 'Project Details',
           vendorWorkOrders: 'Vendor Work Orders',
@@ -166,7 +167,7 @@ export const projects = {
           woNo: 'WO No',
           poNo: 'PO No',
           invoiceDate: 'Fecha de la factura',
-          woCreatedDate:'Fecha de creación de la OMS',
+          woCreatedDate: 'Fecha de creación de la OMS',
           claimNumber: 'Reclamo',
           woaStartDate: 'Inicio de WOA',
           convertedDate: 'Fecha de conversión',
@@ -184,7 +185,7 @@ export const projects = {
           disputed: 'Cuestionado',
           collection: 'Recopilación',
           flagged: 'marcado',
-          preinvoiced:'Prefacturado'
+          preinvoiced: 'Prefacturado',
         },
         projectSummary: {
           projectID: 'Projecto ID',
@@ -224,6 +225,7 @@ export const projects = {
         projectDetails: {
           transactions: 'Transaccións',
           viewDetails: 'Ver detalles',
+          hold: 'Sostener',
           newTransaction: 'Nueva Transacción',
           projectDetails: 'Detalles de ganancias',
           schedule: 'Calendario',

@@ -3,6 +3,7 @@ import { Document } from './vendor.types'
 
 export type ProjectWorkOrder = {
   largeWorkOrder: boolean
+  onHold?: boolean
   visibleToVendor?: boolean
   validForAwardPlan: boolean
   assignAwardPlan: boolean
@@ -150,6 +151,7 @@ export type SelectOption = {
   lienDue?: number | undefined
   __isNew__?: boolean
   property?: any
+  onHoldWO?: boolean
 }
 
 export type TransactionFormValues = {
@@ -188,6 +190,7 @@ export interface FormValues {
   transaction: TransactionFormValues[]
   status: SelectOption | null
   expectedCompletionDate: string
+  drawOnHold: boolean | null | any //for defaultResetPayload as undefined error being occuring
   newExpectedCompletionDate: string | null
   reason: SelectOption | null
   attachment: any
@@ -238,6 +241,7 @@ export type ChangeOrderPayload = {
   verifiedByFpm: SelectOption | null
   verifiedByManager: SelectOption | null
   reason: string | null
+  drawOnHold: boolean | null
 }
 
 export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
@@ -263,6 +267,7 @@ export type ChangeOrderUpdatePayload = ChangeOrderPayload & {
   verifiedByManager: SelectOption | null
   invoiceId: number | string | null
   invoiceNumber?: number | string | null
+  drawOnHold: boolean | null
 }
 
 type LineItem = {
@@ -277,6 +282,7 @@ type LineItem = {
 
 export type ChangeOrderType = {
   id: number
+  drawOnHold: boolean | null
   changeOrderAmount: number
   quantity: number | null
   totalVendorCost: number | null

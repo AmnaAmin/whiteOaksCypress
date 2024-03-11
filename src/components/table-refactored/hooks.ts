@@ -48,7 +48,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
 
         // Account Payable Cards contains 1, 2, 3, 4, 5, 6, which represents
         // past due, 7 days, 14 days, 20 days, 30 days, and overpayment
-      } else if (['1', '2', '3', '4', '5', '6'].includes(selectedCard)) {
+      } else if (['1', '2', '3', '4', '5', '6', '8'].includes(selectedCard)) {
         const durationCategoryFilters = [{ id: 'durationCategory', value: selectedCard }]
         finalFilters = [...finalFilters, ...durationCategoryFilters]
       } else {
@@ -58,19 +58,14 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       }
     }
     if (selectedFlagged !== null && selectedFlagged?.length) {
-      finalFilters = [
-        ...columnFilters,
-      ]
-      if (selectedFlagged?.includes(FlagEnum.NOTES)) finalFilters.push({ id: 'noteFlag', value: "yes" });
-      if (selectedFlagged?.includes(FlagEnum.LEIN_DUE_EXPIRY)) finalFilters.push({ id: 'lienDueFlag', value: "yes" });
-      if (selectedFlagged?.includes(FlagEnum.ALL)) finalFilters.push({ id: 'flagCheck', value: "yes" });
+      finalFilters = [...columnFilters]
+      if (selectedFlagged?.includes(FlagEnum.NOTES)) finalFilters.push({ id: 'noteFlag', value: 'yes' })
+      if (selectedFlagged?.includes(FlagEnum.LEIN_DUE_EXPIRY)) finalFilters.push({ id: 'lienDueFlag', value: 'yes' })
+      if (selectedFlagged?.includes(FlagEnum.ALL)) finalFilters.push({ id: 'flagCheck', value: 'yes' })
     }
 
     if (selectedPreInvoice) {
-      finalFilters = [
-        ...columnFilters,
-        { id: 'preInvoiced', value: selectedPreInvoice},
-      ]
+      finalFilters = [...columnFilters, { id: 'preInvoiced', value: selectedPreInvoice }]
     }
 
     // This filter will apply when user select a day from the project due days list
@@ -86,7 +81,7 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
           value: `${startDate} - ${endDate}`,
         }
 
-        finalFilters = [...finalFilters, clientDueDateFilter];
+        finalFilters = [...finalFilters, clientDueDateFilter]
       }
     }
     // This filter will apply when user select a FPM from the FPM list
@@ -114,7 +109,18 @@ export const useColumnFiltersQueryString = (options: UseColumnFiltersQueryString
       queryStringWithoutPagination,
       queryStringWithPagination,
     }
-  }, [selectedCard, selectedDay, columnFilters, pageIndex, pageSize, userIds, days, sorting, selectedFlagged, selectedPreInvoice])
+  }, [
+    selectedCard,
+    selectedDay,
+    columnFilters,
+    pageIndex,
+    pageSize,
+    userIds,
+    days,
+    sorting,
+    selectedFlagged,
+    selectedPreInvoice,
+  ])
 
   useEffect(() => {
     if (!pagination) return
