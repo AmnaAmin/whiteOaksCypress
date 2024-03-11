@@ -150,7 +150,7 @@ const WorkOrderDetailTab = props => {
     locations,
   } = props
 
-  console.log("Work order: ", workOrder)
+
   const defaultSkill = {
     value: workOrder?.vendorSkillId as number,
     label: workOrder?.skillName as string,
