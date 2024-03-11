@@ -26,6 +26,7 @@ interface BatchConfirmationBoxProps {
   batchData?: any
   isLoading: boolean
   batchType?: string
+  isDraw?: boolean
 }
 
 export function BatchConfirmationBox({
@@ -35,6 +36,7 @@ export function BatchConfirmationBox({
   batchData,
   isLoading,
   batchType,
+  isDraw,
 }: BatchConfirmationBoxProps) {
   const batchRunFailed = batchData?.filter(br => br?.statusId === 2) || []
   const batchRunSuccess = batchData?.filter(br => br?.statusId === 3) || []
@@ -97,7 +99,9 @@ export function BatchConfirmationBox({
                         <HStack color="gray.500" fontSize="12px" fontWeight={400} alignItems={'flex-start'}>
                           <Text>{batchRunFailed[0].description}</Text>
                           <Text color="#345EA6" minW="140px">
-                            {batchType === 'PAYABLE'
+                            {isDraw
+                              ? t(`${ACCOUNTS}.drawID`) + b.value + '.'
+                              : batchType === 'PAYABLE'
                               ? t(`${ACCOUNTS}.workOrderID`) + b.value + '.'
                               : t(`${ACCOUNTS}.projectID`) + 'C' + b.value + '.'}
                             <br></br>
