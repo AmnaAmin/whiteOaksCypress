@@ -207,6 +207,7 @@ export const ConstructionPortalPayable = () => {
           batchData={batchRun}
           isLoading={isLoadingBatchResult}
           batchType={'PAYABLE'}
+         isDraw={workOrders?.some(payable => payable.paymentType?.toLowerCase() === 'wo draw')}
         />
       )}
 
