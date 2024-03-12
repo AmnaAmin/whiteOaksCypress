@@ -139,7 +139,7 @@ export const ManageProject: React.FC<{
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.superFirstName}>
               <FormLabel size="md">{t(`${NEW_PROJECT}.clientSuperName`)}</FormLabel>
               <Input
                 id="clientSuperName"
