@@ -67,7 +67,26 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.name`)} size="md" htmlFor="name">
                 {t(`${NEW_PROJECT}.name`)}
               </FormLabel>
-              <Input id="name" {...register('name', {})} autoComplete="off" />
+              <Input
+                id="name"
+                {...register('name', {
+                  maxLength: { value: 255, message: 'Please use 255 characters Only.' },
+                })}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('name', title)
+                  if (title?.length > 255) {
+                    setError('name', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('name')
+                  }
+                }}
+                autoComplete="off"
+              />
+              {!!errors?.name && <FormErrorMessage data-testid="name_error">{errors?.name?.message}</FormErrorMessage>}
             </FormControl>
           </GridItem>
 
@@ -101,7 +120,29 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.woNumber`)} size="md" htmlFor="woNumber">
                 {t(`${NEW_PROJECT}.woNumber`)}
               </FormLabel>
-              <Input id="woNumber" {...register('woNumber')} autoComplete="off" type="text" />
+              <Input
+                id="woNumber"
+                {...register('woNumber', {
+                  maxLength: { value: 50, message: 'Please use 50 characters only.' },
+                })}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('woNumber', title)
+                  if (title?.length > 50) {
+                    setError('woNumber', {
+                      type: 'maxLength',
+                      message: 'Please use 50 characters only.',
+                    })
+                  } else {
+                    clearErrors('woNumber')
+                  }
+                }}
+                autoComplete="off"
+                type="text"
+              />
+              {!!errors?.woNumber && (
+                <FormErrorMessage data-testid="woNumber_error">{errors?.woNumber?.message}</FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
 
@@ -110,7 +151,29 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.poNumber`)} size="md" htmlFor="poNumber">
                 {t(`${NEW_PROJECT}.poNumber`)}
               </FormLabel>
-              <Input id="poNumber" {...register('poNumber')} autoComplete="off" type="text" />
+              <Input
+                id="poNumber"
+                {...register('poNumber', {
+                  maxLength: { value: 50, message: 'Please use 50 characters only.' },
+                })}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('poNumber', title)
+                  if (title?.length > 50) {
+                    setError('poNumber', {
+                      type: 'maxLength',
+                      message: 'Please use 50 characters only.',
+                    })
+                  } else {
+                    clearErrors('poNumber')
+                  }
+                }}
+                autoComplete="off"
+                type="text"
+              />
+              {!!errors?.poNumber && (
+                <FormErrorMessage data-testid="poNumber_error">{errors?.poNumber?.message}</FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
         </Grid>
