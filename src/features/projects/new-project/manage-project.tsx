@@ -21,6 +21,8 @@ export const ManageProject: React.FC<{
     control,
     setValue,
     getValues,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useFormContext<ProjectFormValues>()
   const values = getValues()
@@ -141,9 +143,24 @@ export const ManageProject: React.FC<{
               <FormLabel size="md">{t(`${NEW_PROJECT}.clientSuperName`)}</FormLabel>
               <Input
                 id="clientSuperName"
-                {...register('superFirstName')}
+                {...register('superFirstName', {
+                  maxLength: { value: 255, message: 'Please Use 255 Characters Only.' },
+                })}
                 value={formattedClientName}
-                onChange={handleChange}
+                
+                onChange={e => {
+                  handleChange(e)
+                  const title = e.target.value
+                  setValue('superFirstName', title)
+                  if (title.length > 255) {
+                    setError('superFirstName', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('superFirstName')
+                  }
+                }}
               />
                <FormErrorMessage>
                   {errors?.superFirstName && errors?.superFirstName.message}
@@ -181,11 +198,29 @@ export const ManageProject: React.FC<{
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl>
+            <FormControl isInvalid={!!errors?.superPhoneNumberExtension}>
               <FormLabel size="md" htmlFor="superPhoneNumberExtension">
                 {t(`${NEW_PROJECT}.ext`)}
               </FormLabel>
-              <Input id="superPhoneNumberExtension" {...register('superPhoneNumberExtension')} type="number" />
+              <Input id="superPhoneNumberExtension" {...register('superPhoneNumberExtension', {
+                    maxLength: { value: 20, message: 'Please Use 20 Characters Only.' },
+                  })}
+                  onChange={e => {
+                    const title = e?.target.value
+                    setValue('superPhoneNumberExtension', title)
+                    if (title?.length > 20) {
+                      setError('superPhoneNumberExtension', {
+                        type: 'maxLength',
+                        message: 'Please use 20 characters only.',
+                      })
+                    } else {
+                      clearErrors('superPhoneNumberExtension')
+                    }
+                  }}
+                   type="number" />
+                    <FormErrorMessage>
+                  {errors?.superPhoneNumberExtension && errors?.superPhoneNumberExtension.message}
+                </FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
@@ -200,9 +235,22 @@ export const ManageProject: React.FC<{
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                     message: 'Invalid Email Address',
                   },
+                  maxLength: { value: 255, message: 'Please Use 255 Characters Only.' },
                 })}
+                onChange={e => {
+                  const title = e.target.value
+                  setValue('superEmailAddress', title)
+                  if (title.length > 255) {
+                    setError('superEmailAddress', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('superEmailAddress')
+                  }
+                }}
               />
-              <FormErrorMessage>{errors.superEmailAddress && errors.superEmailAddress.message}</FormErrorMessage>
+              <FormErrorMessage>{errors?.superEmailAddress && errors?.superEmailAddress.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
 
@@ -258,11 +306,27 @@ export const ManageProject: React.FC<{
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors?.name} height="100px">
+            <FormControl isInvalid={!!errors?.agentName} height="100px">
               <FormLabel isTruncated title={t(`${NEW_PROJECT}.agentName`)} size="md" htmlFor="name">
                 {t(`${NEW_PROJECT}.agentName`)}
               </FormLabel>
-              <Input id="agentName" {...register('agentName', {})} autoComplete="off" />
+              <Input id="agentName" {...register('agentName', {
+                  maxLength: { value: 255, message: 'Please Use 255 Characters Only.' },
+                })} 
+                onChange={e => {
+                  const title = e.target.value
+                  setValue('agentName', title)
+                  if (title.length > 255) {
+                    setError('agentName', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('agentName')
+                  }
+                }}
+                autoComplete="off" />
+                 <FormErrorMessage>{errors?.agentName && errors?.agentName.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
@@ -306,7 +370,20 @@ export const ManageProject: React.FC<{
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                     message: 'Invalid Email Address',
                   },
+                  maxLength: { value: 255, message: 'Please Use 255 Characters Only.' },
                 })}
+                onChange={e => {
+                  const title = e.target.value
+                  setValue('agentEmail', title)
+                  if (title.length > 255) {
+                    setError('agentEmail', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('agentEmail')
+                  }
+                }}
               />
               <FormErrorMessage>{errors?.agentEmail?.message}</FormErrorMessage>
             </FormControl>

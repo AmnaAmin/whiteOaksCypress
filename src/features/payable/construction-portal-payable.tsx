@@ -76,7 +76,8 @@ export const ConstructionPortalPayable = () => {
     refetchInterval,
     setRefetchInterval,
   )
-  const[isDrawForBatch, setIsDrawForBatch] = useState(false)
+const[isDrawForBatch, setIsDrawForBatch] = useState(false) 
+
   const Submit = formValues => {
     const id = [] as any
     for (let [key, value] of Object.entries(formValues.id)) {
@@ -91,6 +92,7 @@ export const ConstructionPortalPayable = () => {
       const payable = workOrders?.find(w => w.idd === selectedID)
       const isDraw = payable?.paymentType?.toLowerCase() === 'wo draw'
       setIsDrawForBatch(isDraw)
+      
       if (isDraw) {
         const objDraw = {
           transactionId: parseInt(payable.transactionId as string),
@@ -139,7 +141,6 @@ export const ConstructionPortalPayable = () => {
       reset()
     }
   }, [loading])
-const isDraw= workOrders?.some(payable => payable?.paymentType?.toLowerCase() === 'wo draw')
   return (
     <form method="post">
       <Box pb="2">
@@ -208,7 +209,7 @@ const isDraw= workOrders?.some(payable => payable?.paymentType?.toLowerCase() ==
           batchData={batchRun}
           isLoading={isLoadingBatchResult}
           batchType={'PAYABLE'}
-          isDraw={isDrawForBatch}
+         isDraw={isDrawForBatch}
         />
       )}
 
