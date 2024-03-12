@@ -26,6 +26,7 @@ type TransactionProps = {
   projectStatus: string
   workOrderId: string
   projectId?: string
+  onHold?: boolean
 }
 
 export const WOTransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
@@ -75,8 +76,6 @@ export const WOTransactionsTable = React.forwardRef((props: TransactionProps, re
     setTotalPages(Math.ceil((rows?.length ?? 0) / 50))
     setTotalRows(rows?.length)
   }
-
-
 
   return (
     <>
@@ -136,6 +135,7 @@ export const WOTransactionsTable = React.forwardRef((props: TransactionProps, re
         projectId={projectId as string}
         projectStatus={props?.projectStatus as string}
         screen="WORK_ORDER_TRANSACTION_TABLE_MODAL"
+        onHold={props.onHold}
       />
       <TransactionDetailsModal
         isOpen={isOpenTransactionDetailsModal}

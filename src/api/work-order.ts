@@ -230,7 +230,8 @@ export const useNotes = ({ workOrderId }: { workOrderId: number | undefined }) =
 
 /* WorkOrder Payments */
 export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
-  const { isAdmin } = useUserRolesSelector()
+  const { isAdmin, isAccounting } = useUserRolesSelector()
+  const isAdminOrAccount = isAdmin || isAccounting
   const defaultStatus = false
   // not used for now -  const completedState = [STATUS.Completed].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
   const invoicedState = [STATUS.Invoiced].includes(workOrder?.statusLabel?.toLocaleLowerCase() as STATUS)
@@ -240,13 +241,19 @@ export const useFieldEnableDecision = (workOrder?: ProjectWorkOrder) => {
     paymentTermDateEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
     expectedPaymentDateEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
     datePaymentProcessedEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
-    datePaidEnabled: (defaultStatus || invoicedState || isAdmin) && workOrder?.visibleToVendor,
+    datePaidEnabled:
+      (defaultStatus || invoicedState || isAdmin) &&
+      workOrder?.visibleToVendor &&
+      (workOrder?.onHold && !isAdminOrAccount ? defaultStatus : true),
     invoiceAmountEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
     clientOriginalApprovedAmountEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
     clientApprovedAmountEnabled: (defaultStatus || isAdmin) && workOrder?.visibleToVendor,
     finalInvoiceAmountEnabled: defaultStatus,
     paymentDateEnabled: (!isAdmin ? defaultStatus || invoicedState : true) && workOrder?.visibleToVendor,
-    partialPaymentEnabled: (!isAdmin ? defaultStatus || invoicedState : true) && workOrder?.visibleToVendor,
+    partialPaymentEnabled:
+      (!isAdmin ? defaultStatus || invoicedState : true) &&
+      workOrder?.visibleToVendor &&
+      (workOrder?.onHold && !isAdminOrAccount ? defaultStatus : true),
   }
 }
 
@@ -271,6 +278,12 @@ export const parseProjectAwardValuesToPayload = (id, projectAwardData, largeWork
     awardPlanId: id,
     paymentTerm: projectAwardData.find(pa => pa.id === id)?.payTerm,
     largeWorkOrder: largeWorkOrder ? largeWorkOrder : false,
+  }
+}
+
+export const parseTransactionsValuesToPayload = onHold => {
+  return {
+    onHold: onHold,
   }
 }
 
@@ -356,6 +369,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     assignedItems: [...assignedItems],
     notifyVendor: formValues.notifyVendor,
     visibleToVendor: formValues.assignToVendor,
+    byPassSOWRule: formValues.byPassSOWRule,
     vendorId: formValues.vendorId?.value ?? workOrder?.vendorId,
     vendorSkillId: formValues.vendorSkillId?.value,
     invoiceAmount: removeCurrencyFormat(formValues?.invoiceAmount),
@@ -383,6 +397,7 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations, payme
     showPrice: workOrder.showPricing ?? false,
     notifyVendor: workOrder.notifyVendor ?? false,
     assignToVendor: workOrder.visibleToVendor ?? false,
+    byPassSOWRule: workOrder.byPassSOWRule ?? false,
     invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
     clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
     percentage: workOrder?.percentage,
@@ -501,6 +516,7 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     showPricing: formValues.showPrice,
     notifyVendor: formValues.notifyVendor,
     visibleToVendor: formValues.assignToVendor,
+    byPassSOWRule: formValues.byPassSOWRule,
     projectId: projectId,
   }
 }

@@ -11,6 +11,7 @@ type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   heading?: string
   projectStatus: string
   screen?: string
+  onHold?: boolean
 }
 
 const UpdateTransactionModal: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const UpdateTransactionModal: React.FC<Props> = ({
   projectId,
   projectStatus,
   screen,
+  onHold,
 }) => {
   const [isMobile] = useMediaQuery('(max-width: 480px)')
   const [modalSize, setModalSize] = useState<string>('3xl')
@@ -47,6 +49,7 @@ const UpdateTransactionModal: React.FC<Props> = ({
               projectId={projectId}
               projectStatus={projectStatus}
               screen={screen}
+              onHold={onHold}
             />
           </Card>
         </ModalBody>

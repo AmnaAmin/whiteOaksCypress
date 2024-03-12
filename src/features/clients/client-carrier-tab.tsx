@@ -39,6 +39,9 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
     register,
     formState: { errors },
     control,
+    setError,
+    clearErrors,
+    setValue
   } = useFormContext<ClientFormValues>()
   const phoneNumberRef = useRef<any>()
   const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('CLIENT.READ')
@@ -87,12 +90,25 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
                     id="carrier"
                     data-testid="carrier-name"
                     {...register(`carrier.${index}.name`, {
+                      maxLength: { value: 255, message: 'Please use 255 characters only.' },
                       required: 'This is required',
                       validate: value => value?.trim().length > 0 || 'This is required',
                     })}
                     variant={'required-field'}
                     type="text"
                     isDisabled={isReadOnly}
+                    onChange={e => {
+                      const title = e?.target.value
+                      setValue(`carrier.${index}.name`, title)
+                      if (title?.length > 255) {
+                        setError(`carrier.${index}.name`, {
+                          type: 'maxLength',
+                          message: 'Please use 255 characters only.',
+                        })
+                      } else {
+                        clearErrors(`carrier.${index}.name`)
+                      }
+                    }}
                   />
                   <FormErrorMessage>{errors?.carrier?.[index]?.name?.message}</FormErrorMessage>
                 </FormControl>
@@ -150,6 +166,7 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
                     id="emailAddress"
                     data-testid="carrier-emailAddress"
                     {...register(`carrier.${index}.emailAddress`, {
+                      maxLength: { value: 255, message: 'Please use 255 characters only.' },
                       required: 'This is required',
                       pattern: {
                         value: /\S+@\S+\.\S+/,
@@ -159,6 +176,18 @@ export const CarrierTab = React.forwardRef((props: clientDetailProps) => {
                     variant={'required-field'}
                     type="email"
                     isDisabled={isReadOnly}
+                    onChange={e => {
+                      const title = e?.target.value
+                      setValue(`carrier.${index}.emailAddress`, title)
+                      if (title?.length > 255) {
+                        setError(`carrier.${index}.emailAddress`, {
+                          type: 'maxLength',
+                          message: 'Please use 255 characters only.',
+                        })
+                      } else {
+                        clearErrors(`carrier.${index}.emailAddress`)
+                      }
+                    }}
                   />
                   <FormErrorMessage>{errors?.carrier?.[index]?.emailAddress?.message}</FormErrorMessage>
                 </FormControl>
