@@ -145,6 +145,10 @@ export const ManageProject: React.FC<{
                 value={formattedClientName}
                 onChange={handleChange}
               />
+               <FormErrorMessage>
+                  {errors?.superFirstName && errors?.superFirstName.message}
+                </FormErrorMessage>
+              
             </FormControl>
           </GridItem>
         </Grid>
