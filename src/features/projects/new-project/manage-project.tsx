@@ -162,7 +162,10 @@ export const ManageProject: React.FC<{
                   }
                 }}
               />
-              <FormErrorMessage>{errors?.superFirstName?.message}</FormErrorMessage>
+               <FormErrorMessage>
+                  {errors?.superFirstName && errors?.superFirstName.message}
+                </FormErrorMessage>
+              
             </FormControl>
           </GridItem>
         </Grid>

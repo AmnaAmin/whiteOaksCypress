@@ -26,7 +26,7 @@ interface BatchConfirmationBoxProps {
   batchData?: any
   isLoading: boolean
   batchType?: string
-  isDraw?:any
+  isDraw?: any
 }
 
 export function BatchConfirmationBox({
