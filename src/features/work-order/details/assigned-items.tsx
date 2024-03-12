@@ -254,8 +254,9 @@ const AssignedItems = (props: AssignedItemType) => {
             flexWrap={{ base: 'wrap', lg: 'unset' }}
           >
             <Box ml={-2}>
-              {isAdmin && (
+              {!isVendor && (
                 <Checkbox
+                  isDisabled={isAdmin ? false : true}
                   variant={'outLinePrimary'}
                   data-testid="byPassSOWRule"
                   size="md"
