@@ -87,8 +87,9 @@ import { TRANSACTION } from './transactions.i18n'
 import { format } from 'date-fns'
 import UpdateProjectAward from './update-project-award'
 import { WORK_ORDER } from 'features/work-order/workOrder.i18n'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import moment from 'moment'
+import { BiSpreadsheet } from 'react-icons/bi'
 
 // const TransactionReadOnlyInfo: React.FC<{ transaction?: ChangeOrderType }> = ({ transaction }) => {
 //   const { t } = useTranslation()
@@ -152,6 +153,8 @@ export type TransactionFormProps = {
   setCreatedTransaction?: any
   isVendorExpired?: boolean
   onHold?: boolean
+  selectedTransactionData?: any
+  setStateForSelectedDrawRef?: (val) => void
 }
 
 export const TransactionForm: React.FC<TransactionFormProps> = ({
@@ -163,6 +166,8 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   currentWorkOrderId,
   setCreatedTransaction,
   onHold,
+  selectedTransactionData,
+  setStateForSelectedDrawRef,
 }) => {
   const { t } = useTranslation()
   const toast = useToast()
@@ -554,6 +559,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
   const onModalClose = () => {
     reset(defaultValues)
+    setStateForSelectedDrawRef?.(undefined)
     onClose()
   }
   const calculatePaymentDates = paymentTermDate => {
@@ -571,6 +577,13 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
     const processedDate = moment(date)
     const daysUntilFriday = (5 - processedDate.day() + 7) % 7 // Calculate days until Friday
     return processedDate.add(daysUntilFriday, 'days').toDate()
+  }
+  const navigate = useNavigate()
+
+  const navigateToProjectDetails = () => {
+    navigate(`/project-details/${projectId}`, {
+      state: { selectedDrawData: selectedTransactionData ?? undefined },
+    })
   }
 
   //filter onHold WO's for putting check for disabling the save button & alert that
@@ -1359,77 +1372,95 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
       </FormProvider>
 
       <Divider mt={3}></Divider>
-      <HStack alignItems="center" justifyContent="end" mt="16px" spacing="16px">
-        {isShowLienWaiver ? (
-          <Button onClick={() => setIsShowLienWaiver(false)} variant="outline" colorScheme="darkPrimary">
-            {t(`${TRANSACTION}.back`)}
-          </Button>
-        ) : (
-          <Button
-            onClick={onModalClose}
-            variant={'outline'}
-            colorScheme="darkPrimary"
-            data-testid="close-transaction-form"
-          >
-            {t(`${TRANSACTION}.cancel`)}
-          </Button>
-        )}
 
-        {isLienWaiverRequired && !isShowLienWaiver ? (
-          <Button
-            data-testid="next-to-lien-waiver-form"
-            type="button"
-            variant="solid"
-            isDisabled={
-              !selectedCancelledOrDenied &&
-              (amount === 0 || remainingAmountExceededFlag || (isPlanExhausted && !isApproved) || !invoicedDate) //Check if the status is being changed to cancel/deny let the transaction be allowed.
-            }
-            colorScheme="darkPrimary"
-            onClick={event => {
-              trigger(['transaction']).then(isValid => {
-                if (isValid) {
-                  setTimeout(() => {
-                    setIsShowLienWaiver(true)
-                  })
-                }
-              })
-              event.stopPropagation()
-            }}
-          >
-            {t(`${TRANSACTION}.next`)}
-          </Button>
-        ) : (
-          ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
-            <>
+      <>
+        <HStack alignItems="center" justifyContent="end" mt="16px" spacing="16px">
+          {selectedTransactionData && (
+            <HStack justifyContent="start" w="100%">
+              {/* {navigateToProjectDetails && ( */}
               <Button
-                type="submit"
-                form="newTransactionForm"
-                data-testid="save-transaction"
-                colorScheme="darkPrimary"
-                variant="solid"
-                disabled={
-                  isFormSubmitLoading ||
-                  isMaterialsLoading ||
-                  disableSave ||
-                  disableBtn ||
-                  isInvoiceTransaction ||
-                  ((onHold || transaction?.drawOnHold) && !(isAdmin || isAccounting)) ||
-                  holdWOState
-                }
+                variant="outline"
+                colorScheme="brand"
+                size="md"
+                onClick={navigateToProjectDetails}
+                leftIcon={<BiSpreadsheet />}
               >
-                {t(`${TRANSACTION}.save`)}
+                {t('seeProjectDetails')}
               </Button>
-            </>
-          )
-        )}
-        <UpdateProjectAward
-          isOpen={isProjectAwardOpen}
-          onClose={onProjectAwardClose}
-          selectedWorkOrder={selectedWorkOrder}
-          refetchAwardStats={refetchAwardStats}
-          refetchWOKey={refetchWOKey}
-        />
-      </HStack>
+              {/* // )} */}
+            </HStack>
+          )}
+          {isShowLienWaiver ? (
+            <Button onClick={() => setIsShowLienWaiver(false)} variant="outline" colorScheme="darkPrimary">
+              {t(`${TRANSACTION}.back`)}
+            </Button>
+          ) : (
+            <Button
+              onClick={onModalClose}
+              variant={'outline'}
+              colorScheme="darkPrimary"
+              data-testid="close-transaction-form"
+            >
+              {t(`${TRANSACTION}.cancel`)}
+            </Button>
+          )}
+
+          {isLienWaiverRequired && !isShowLienWaiver ? (
+            <Button
+              data-testid="next-to-lien-waiver-form"
+              type="button"
+              variant="solid"
+              isDisabled={
+                !selectedCancelledOrDenied &&
+                (amount === 0 || remainingAmountExceededFlag || (isPlanExhausted && !isApproved) || !invoicedDate) //Check if the status is being changed to cancel/deny let the transaction be allowed.
+              }
+              colorScheme="darkPrimary"
+              onClick={event => {
+                trigger(['transaction']).then(isValid => {
+                  if (isValid) {
+                    setTimeout(() => {
+                      setIsShowLienWaiver(true)
+                    })
+                  }
+                })
+                event.stopPropagation()
+              }}
+            >
+              {t(`${TRANSACTION}.next`)}
+            </Button>
+          ) : (
+            ((!isReadOnly && !isApproved && !lateAndFactoringFeeForVendor) || allowSaveOnApproved) && (
+              <>
+                <Button
+                  type="submit"
+                  form="newTransactionForm"
+                  data-testid="save-transaction"
+                  colorScheme="darkPrimary"
+                  variant="solid"
+                  disabled={
+                    isFormSubmitLoading ||
+                    isMaterialsLoading ||
+                    disableSave ||
+                    disableBtn ||
+                    isInvoiceTransaction ||
+                    ((onHold || transaction?.drawOnHold) && !(isAdmin || isAccounting)) ||
+                    holdWOState
+                  }
+                >
+                  {t(`${TRANSACTION}.save`)}
+                </Button>
+              </>
+            )
+          )}
+          <UpdateProjectAward
+            isOpen={isProjectAwardOpen}
+            onClose={onProjectAwardClose}
+            selectedWorkOrder={selectedWorkOrder}
+            refetchAwardStats={refetchAwardStats}
+            refetchWOKey={refetchWOKey}
+          />
+        </HStack>
+      </>
     </Flex>
   )
 }
