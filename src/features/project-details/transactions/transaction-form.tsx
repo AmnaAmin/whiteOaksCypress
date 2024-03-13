@@ -1384,6 +1384,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                 size="md"
                 onClick={navigateToProjectDetails}
                 leftIcon={<BiSpreadsheet />}
+                data-testid="draw-navigatation-button"
               >
                 {t('seeProjectDetails')}
               </Button>
