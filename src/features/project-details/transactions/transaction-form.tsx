@@ -191,7 +191,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   const { transactionTypeOptions } = useTransactionTypes(screen, projectStatus)
 
   // API calls
-  const { transaction } = useTransaction(selectedTransactionId)
+  const { transaction, isLoading: isCOLoading } = useTransaction(selectedTransactionId)
   const { managerEnabled } = useManagerEnabled(projectId)
   const isManagingFPM = managerEnabled?.allowed
   const isInvoiceTransaction =
@@ -205,13 +205,15 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
   } = useProjectWorkOrders(projectId, !!selectedTransactionId)
 
   const transactionStatusOptions = useTransactionStatusOptions()
-  const { workOrderSelectOptions, isLoading: isChangeOrderLoading } = useProjectWorkOrdersWithChangeOrders(projectId)
+  const { workOrderSelectOptions, isLoading: isWorkordersWithCOLoading } =
+    useProjectWorkOrdersWithChangeOrders(projectId)
   const { changeOrderSelectOptions, isLoading: isWorkOrderLoading } = useWorkOrderChangeOrders(selectedWorkOrderId)
 
   const { mutate: createChangeOrder, isLoading: isChangeOrderSubmitLoading } = useChangeOrderMutation(projectId)
   const { mutate: updateChangeOrder, isLoading: isChangeOrderUpdateLoading } = useChangeOrderUpdateMutation(projectId)
 
-  const isFormLoading = isAgainstLoading || isChangeOrderLoading || isWorkOrderLoading
+  //CO stands for Change-Order (transactions)
+  const isFormLoading = isAgainstLoading || isWorkordersWithCOLoading || isWorkOrderLoading || isCOLoading
   const isFormSubmitLoading = isChangeOrderSubmitLoading || isChangeOrderUpdateLoading
 
   const { login = '' } = useUserProfile() as Account
