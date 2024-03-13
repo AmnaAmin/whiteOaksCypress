@@ -1191,7 +1191,7 @@ export const useGetLineItemsColumn = ({
                 ml="27px"
                 isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
                 zIndex={9999 + 1}
-                width="150"
+                width="100px"            
               >
                 <Controller
                   control={control}
@@ -1210,6 +1210,7 @@ export const useGetLineItemsColumn = ({
                           isDisabled={isVendor}
                           newObjectFormatting={newObjectFormatting}
                           onChangeFn={onChangeFn}
+                          style={{ height: 115, width: 100 }}
                         />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </>
@@ -1588,7 +1589,7 @@ export const CreatableSelectForTable = ({
       size="md"
       value={valueFormatter ? valueFormatter(field.value) : field.value}
       isDisabled={isDisabled}
-      selectProps={{ widthAssign: '100%', menuHeight: style?.height }}
+      selectProps={{ widthAssign: '100%', menuHeight: style?.height, menuWidth: style?.width }}
       onChange={option => {
         // this above component is resusable, for avoiding the issue its handle here
         // as if we have prop for onChangeFn then only it will execute
