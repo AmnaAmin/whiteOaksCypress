@@ -22,12 +22,11 @@ export const chakraStyles = {
   // which prevents the `not-allowed` cursor style from chakra
   // from getting applied to the Control
 
-  container: (provided: AnyCnameRecord, { width }: { width: string }) => {
+  container: (provided: AnyCnameRecord) => {
     return {
       ...provided,
       pointerEvents: 'auto',
       // background: '#F7FAFC',
-      width: width,
     }
   },
 
@@ -169,7 +168,6 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
 const MenuList: React.FC<any> = props => {
   const { children } = props
   const menuHeight = props?.selectProps?.selectProps?.menuHeight
-  const menuWidth = props?.selectProps?.selectProps?.menuWidth
 
   function rowRenderer({
     key, // Unique key within array of rows
@@ -192,7 +190,7 @@ const MenuList: React.FC<any> = props => {
       }}
     >
       <List
-        width={menuWidth||223}
+        width={223}
         height={menuHeight ?? 220}
         rowCount={children.length}
         rowHeight={40}
