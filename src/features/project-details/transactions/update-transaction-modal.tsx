@@ -12,6 +12,8 @@ type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
   projectStatus: string
   screen?: string
   onHold?: boolean
+  selectedTransaction?: any
+  setStateForSelectedDrawRef?: (vals) => void
 }
 
 const UpdateTransactionModal: React.FC<Props> = ({
@@ -23,6 +25,8 @@ const UpdateTransactionModal: React.FC<Props> = ({
   projectStatus,
   screen,
   onHold,
+  selectedTransaction,
+  setStateForSelectedDrawRef,
 }) => {
   const [isMobile] = useMediaQuery('(max-width: 480px)')
   const [modalSize, setModalSize] = useState<string>('3xl')
@@ -39,7 +43,7 @@ const UpdateTransactionModal: React.FC<Props> = ({
       <ModalOverlay />
       <ModalContent minH="400px">
         <ModalHeader data-testid="update-transaction">{heading}</ModalHeader>
-        <ModalCloseButton _hover={{ bg: 'blue.50' }} />
+        <ModalCloseButton onClick={() => setStateForSelectedDrawRef?.(undefined)} _hover={{ bg: 'blue.50' }} />
         <ModalBody bg="bgGlobal.50" p={2}>
           <Card style={boxShadow}>
             <TransactionForm
@@ -50,6 +54,8 @@ const UpdateTransactionModal: React.FC<Props> = ({
               projectStatus={projectStatus}
               screen={screen}
               onHold={onHold}
+              selectedTransactionData={selectedTransaction}
+              setStateForSelectedDrawRef={setStateForSelectedDrawRef}
             />
           </Card>
         </ModalBody>

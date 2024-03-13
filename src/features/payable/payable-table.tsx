@@ -180,6 +180,7 @@ export const PayableTable: React.FC<PayablePropsTyep> = React.forwardRef(
             selectedTransactionId={selectedTransaction?.transactionId as number}
             projectId={`${selectedTransaction?.projectId}`}
             projectStatus={''}
+            selectedTransaction={selectedTransaction}
           />
         )}
 
