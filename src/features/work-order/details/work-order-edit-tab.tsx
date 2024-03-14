@@ -491,10 +491,13 @@ const WorkOrderDetailTab = props => {
         0,
       )
       setValue('clientApprovedAmount', round(clientAmount, 2))
+      setValue('clientOriginalApprovedAmount' as any, round(clientAmount, 2))
+     
       setValue('invoiceAmount', round(vendorAmount, 2))
       setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
     } else {
       setValue('clientApprovedAmount', 0.0)
+      setValue('clientOriginalApprovedAmount' as any, 0.0);
       setValue('invoiceAmount', 0.0)
       setValue('percentage', 0.0)
     }
