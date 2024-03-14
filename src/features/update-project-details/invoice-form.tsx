@@ -377,7 +377,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       updateInvoiceMutate(payload, {
         onSuccess: data => {
           onClose?.()
-          generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then(documentObj => {
+          generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then((documentObj : Document)=> {
+            documentObj.invoiceName= invoice?.invoiceName ?? null
             updateInvoiceDocument(documentObj as Document)
           })
         },
