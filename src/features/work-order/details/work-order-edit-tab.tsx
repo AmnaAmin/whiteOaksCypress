@@ -636,7 +636,7 @@ const WorkOrderDetailTab = props => {
                   <InformationCard
                       title={t(`${WORK_ORDER}.profitPercentage`)}
                       testId="profitPercentage"
-                      date={profitPercentage}
+                      date={workOrder?.profitPercentage}
                       customStyle={{ width: '100%', height: '20px' }}
                     />
                       <InformationCard
