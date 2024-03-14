@@ -378,7 +378,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
         onSuccess: data => {
           onClose?.()
           generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then((documentObj : Document)=> {
-            documentObj.invoiceName= invoice?.invoiceName ?? null
+            documentObj.invoiceName= invoice?.invoiceNumber ?? null
             updateInvoiceDocument(documentObj as Document)
           })
         },

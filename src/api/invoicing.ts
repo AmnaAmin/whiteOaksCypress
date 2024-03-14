@@ -712,7 +712,7 @@ export const useGenerateInvoicePDF = () => {
       fileObjectContentType: 'application/pdf',
       fileType: 'Invoice.pdf',
       projectInvoiceId: invoice?.id,
-      invoiceName: invoice?.invoiceName,
+   
     }
   }, [])
 }
