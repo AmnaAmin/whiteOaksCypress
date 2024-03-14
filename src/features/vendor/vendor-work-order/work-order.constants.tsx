@@ -105,4 +105,14 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
     accessorKey: 'paymentGroups',
     filterFn: 'includesString'
   },
+
+  {
+    header: 'Profit Percentage',
+    accessorKey: 'profitPercentage',
+    accessorFn: (row: any) => `${(row?.profitPercentage)?.toString()}%`,
+    filterFn: 'includesString',
+    cell: (row: any) => {
+      return `${row?.row.original?.profitPercentage}%`
+    }
+  },
 ]

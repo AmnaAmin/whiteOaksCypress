@@ -93,7 +93,7 @@ const InformationCard = props => {
   return (
     <Flex>
       <Box lineHeight="20px">
-        <Text color="gray.700" fontWeight={500} fontSize="14px" fontStyle="normal" mb="1">
+        <Text color="gray.700" fontWeight={500} isTruncated={true} fontSize="14px" fontStyle="normal" mb="1">
           {props.title}
         </Text>
         <Text
@@ -417,9 +417,14 @@ const WorkOrderDetailTab = props => {
     const updatedWorkOrderDetails = { ...workOrder, isWorkOrderDetailsEdit: true }
 
     const payload = parseWODetailValuesToPayload(values, updatedWorkOrderDetails)
+   
+    let clientOriginalApprovedAmount = 0;
+    assignedItemsWatch?.forEach((e: any) => {
+      clientOriginalApprovedAmount += e.clientAmount
+    })
+    payload['clientOriginalApprovedAmount'] = clientOriginalApprovedAmount;
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
-
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
@@ -465,54 +470,50 @@ const WorkOrderDetailTab = props => {
       })
     }
   }, [])
+ 
+  function calculateProfitPercentage(clientApprovedAmount, profit) {
+    if (clientApprovedAmount > 0) {
+      return (profit / clientApprovedAmount) * 100
+    } else {
+      return 0 // Prevent division by zero
+    }
+  }
+  const [totalClientApprovedWOAmount ,settotaClientApprovedWOAmount] = useState(0)
+  // Function to calculate profit and client approved amount from assigned items array
+  function calculateProfitAndClientApprovedAmount(assignedItems) {
+    let totalClientApprovedAmount = 0
+    let totalVendorWOAmount = 0
+    let totalProfit = 0
+    if (!Array.isArray(assignedItems)) {
+      return { totalClientApprovedAmount, totalVendorWOAmount, totalProfit }
+    }
+    assignedItems.forEach(item => {
+      totalClientApprovedAmount += item.clientAmount
+      totalVendorWOAmount += item.vendorAmount
+    })
+    console.log('totalVendorWOAmount', totalVendorWOAmount)
+    totalProfit = totalClientApprovedAmount - totalVendorWOAmount
+
+    // Calculate profit percentage
+    const profitPercentage = calculateProfitPercentage(totalClientApprovedAmount, totalProfit)
+
+    // Log the profit percentage to the console
+    console.log('Profit Percentage:', profitPercentage)
+
+    return { totalClientApprovedAmount, totalVendorWOAmount, totalProfit }
+  }
+  const [profitPercentage, setProfitPercentage] = useState(0)
+  
+
+  useEffect(() => {
+    const { totalClientApprovedAmount, totalProfit } = calculateProfitAndClientApprovedAmount(assignedItemsArray)
+  
+    const percentage = calculateProfitPercentage(totalClientApprovedAmount, totalProfit)
+    setProfitPercentage(percentage)
+    settotaClientApprovedWOAmount(totalClientApprovedAmount)
+  }, [assignedItemsArray])
 
  
-
-  const watchPercentage = useWatch({ name: 'percentage', control })
-  const watchLineItems = useWatch({ name: 'assignedItems', control })
-
-  useEffect(() => {
-    if (watchPercentage === 0) {
-      resetLineItemsProfit(0)
-    }
-  }, [watchPercentage])
-
-  useEffect(() => {
-    if (watchLineItems && watchLineItems?.length > 0) {
-      const clientAmount = watchLineItems?.reduce(
-        (partialSum, a) =>
-          partialSum +
-          Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) *
-            Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
-        0,
-      )
-      const vendorAmount = watchLineItems?.reduce(
-        (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
-        0,
-      )
-      setValue('clientApprovedAmount', round(clientAmount, 2))
-      setValue('clientOriginalApprovedAmount' as any, round(clientAmount, 2))
-     
-      setValue('invoiceAmount', round(vendorAmount, 2))
-      setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
-    } else {
-      setValue('clientApprovedAmount', 0.0)
-      setValue('clientOriginalApprovedAmount' as any, 0.0);
-      setValue('invoiceAmount', 0.0)
-      setValue('percentage', 0.0)
-    }
-  }, [watchLineItems])
-
-  const resetLineItemsProfit = profit => {
-    formValues.assignedItems?.forEach((item, index) => {
-      const clientAmount =
-        Number(isValidAndNonEmpty(watchLineItems?.[index]?.price) ? watchLineItems?.[index]?.price : 0) *
-        Number(isValidAndNonEmpty(watchLineItems?.[index]?.quantity) ? watchLineItems?.[index]?.quantity : 0)
-      setValue(`assignedItems.${index}.profit`, profit)
-      setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(clientAmount, profit))
-    })
-  }
-
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -611,23 +612,71 @@ const WorkOrderDetailTab = props => {
                 ) : (
                   <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
                 )}
-                {businessPhoneNumber && businessEmailAddress && (
-                  <>
-                    <InformationCard
+               {assignVendor && businessPhoneNumber && businessEmailAddress? 
+               <>
+                <InformationCard
                       testId="email"
                       title={t(`${WORK_ORDER}.email`)}
                       date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
-                      customStyle={{ width: '150px', height: '20px' }}
+                      customStyle={{  width: '100px', height: '20px' }}
                     />
                     <InformationCard
                       testId="phone"
                       title={t(`${WORK_ORDER}.phone`)}
                       date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
-                      customStyle={{ width: '150px', height: '20px' }}
+                      customStyle={{ width: '100%', height: '20px' }}
                     />
-                    <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
-                  </>
-                )}
+                  
+                    <InformationCard
+                      title="Balance SOW"
+                      testId="balanceSOWAmount"
+                      date={balanceSOWAmount}
+                      customStyle={{ width: '100%', height: '20px' }}
+                    />
+                  <InformationCard
+                      title={t(`${WORK_ORDER}.profitPercentage`)}
+                      testId="profitPercentage"
+                      date={profitPercentage}
+                      customStyle={{ width: '100%', height: '20px' }}
+                    />
+                      <InformationCard
+                      testId="vendorAmount"
+                      title={t(`${WORK_ORDER}.vendorWoAmount`)}
+                      date={workOrder?.invoiceAmount}
+                      customStyle={{ width: '100%', height: '20px' }}
+                    />
+
+                    <InformationCard
+                      testId="clientFinalAmount"
+                      title={t(`${WORK_ORDER}.clientFinalAmount`)}
+                      date={workOrder?.clientApprovedAmount}
+                      customStyle={{ width: '100%', height: '20px' }}
+                    />
+                  
+                  </> :
+                  <>
+                   <InformationCard
+                      title={t(`${WORK_ORDER}.profitPercentage`)}
+                      testId="profitPercentage"
+                      date={profitPercentage}
+                      customStyle={{ width: '100%', height: '20px' }}
+                    />
+                      <InformationCard
+                      testId="vendorAmount"
+                      title={t(`${WORK_ORDER}.vendorWoAmount`)}
+                      date={workOrder?.invoiceAmount}
+                      customStyle={{ width: '100%', height: '20px' }}
+                    />
+
+                    <InformationCard
+                      testId="clientFinalAmount"
+                      title={t(`${WORK_ORDER}.clientFinalAmount`)}
+                      date={workOrder?.clientApprovedAmount}
+                      customStyle={{ width: '100%', height: '20px' }}
+                    />
+                    </>
+               }
+               
               </HStack>
             </Box>
           )}
@@ -810,7 +859,7 @@ const WorkOrderDetailTab = props => {
             </Box>
           )}
         </Box>
-      
+
         {!(uploadedWO && uploadedWO?.s3Url) && (
           <Box mx="32px" mt={10}>
             {isLoadingLineItems ? (
