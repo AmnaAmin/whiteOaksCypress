@@ -46,6 +46,7 @@ import {
   mapToUnAssignItem,
   mapToLineItems,
   calculateProfit,
+  calculateVendorAmount,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
@@ -464,6 +465,54 @@ const WorkOrderDetailTab = props => {
       })
     }
   }, [])
+
+ 
+
+  const watchPercentage = useWatch({ name: 'percentage', control })
+  const watchLineItems = useWatch({ name: 'assignedItems', control })
+
+  useEffect(() => {
+    if (watchPercentage === 0) {
+      resetLineItemsProfit(0)
+    }
+  }, [watchPercentage])
+
+  useEffect(() => {
+    if (watchLineItems && watchLineItems?.length > 0) {
+      const clientAmount = watchLineItems?.reduce(
+        (partialSum, a) =>
+          partialSum +
+          Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) *
+            Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
+        0,
+      )
+      const vendorAmount = watchLineItems?.reduce(
+        (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
+        0,
+      )
+      setValue('clientApprovedAmount', round(clientAmount, 2))
+      setValue('clientOriginalApprovedAmount' as any, round(clientAmount, 2))
+     
+      setValue('invoiceAmount', round(vendorAmount, 2))
+      setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+    } else {
+      setValue('clientApprovedAmount', 0.0)
+      setValue('clientOriginalApprovedAmount' as any, 0.0);
+      setValue('invoiceAmount', 0.0)
+      setValue('percentage', 0.0)
+    }
+  }, [watchLineItems])
+
+  const resetLineItemsProfit = profit => {
+    formValues.assignedItems?.forEach((item, index) => {
+      const clientAmount =
+        Number(isValidAndNonEmpty(watchLineItems?.[index]?.price) ? watchLineItems?.[index]?.price : 0) *
+        Number(isValidAndNonEmpty(watchLineItems?.[index]?.quantity) ? watchLineItems?.[index]?.quantity : 0)
+      setValue(`assignedItems.${index}.profit`, profit)
+      setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(clientAmount, profit))
+    })
+  }
+
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
