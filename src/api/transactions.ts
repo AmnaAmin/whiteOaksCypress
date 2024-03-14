@@ -168,10 +168,6 @@ const transactionTypeOptions = [
     label: 'Late Fee',
   },
   {
-    value: TransactionTypeValues.factoring,
-    label: 'Factoring',
-  },
-  {
     value: TransactionTypeValues.shippingFee,
     label: 'Shipping Fee',
   },
@@ -203,7 +199,7 @@ export const useTransactionTypes = (screen?: string, projectStatus?: string) => 
   if (screen === 'WORK_ORDER_TRANSACTION_TABLE_MODAL' && !isVendor) {
     const transactionType = transactionTypeOptions.filter(option => option.label !== 'Payment')
     return {
-      transactionTypeOptions: transactionType.slice(0, 5),
+      transactionTypeOptions: transactionType.slice(0, 4),
     }
   }
   if (projectStatus && [STATUS.Cancelled, STATUS.ClientPaid, STATUS.Paid].includes(projectStatus as STATUS)) {

@@ -61,6 +61,8 @@ export const AddPropertyInfo: React.FC<{
     formState: { errors },
     control,
     setValue,
+    setError,
+    clearErrors,
   } = useFormContext<ProjectFormValues>()
 
   // API calls
@@ -69,7 +71,7 @@ export const AddPropertyInfo: React.FC<{
   const { stateSelectOptions, states } = useStates()
   const { markets } = useMarkets()
   const [message, setMessage] = useState('')
-  const [error, setError] = useState('')
+  const [error, setErrors] = useState('')
   const { data: isAddressVerified, refetch, isLoading } = useGetAddressVerification(addressInfo)
   const isNextButtonDisabled = usePropertyInformationNextDisabled(control, isDuplicateAddress)
   const addressShouldBeVerified = useAddressShouldBeVerified(control)
@@ -131,26 +133,25 @@ export const AddPropertyInfo: React.FC<{
   }
 
   // Email Validation
-  const handleEmailChange = (event) => {
-    const enteredEmail = event.target.value;
-  
+  const handleEmailChange = event => {
+    const enteredEmail = event.target.value
+
     if (enteredEmail.trim() === '') {
       // Clear the error message if the field is empty
-      setError('');
+      setErrors('')
       // Reset the value to an empty string
-      event.target.value = '';
+      event.target.value = ''
     } else if (!isValidEmail(enteredEmail)) {
       // Show "Invalid Email Address" error for invalid emails
-      setError('Invalid Email Address');
+      setErrors('Invalid Email Address')
     } else {
       // Clear the error if the entered email is valid
-      setError('');
+      setErrors('')
     }
-  
+
     // Update the message variable with the entered value
-    setMessage(enteredEmail.trim());
-  };
-  
+    setMessage(enteredEmail.trim())
+  }
 
   return (
     <>
@@ -217,11 +218,19 @@ export const AddPropertyInfo: React.FC<{
                   id="city"
                   variant="required-field"
                   {...register('city', {
+                    maxLength: { value: 255, message: 'Please use 255 characters only.' },
                     required: true,
                     onChange: e => {
-                      const city = e.target.value?.replace(/[^a-zA-Z\s]/g, '')
-                      setValue('city', city)
-                      setAddressInfo({ ...addressInfo, city })
+                      let city = e.target.value?.replace(/[^a-zA-Z\s]/g, '') // Remove non-alphabet characters
+                      setValue('city', city) // Update form value
+                      setAddressInfo({ ...addressInfo, city }) // Update address info
+                      if (city?.length > 255) {
+                        setError('city', {
+                          message: 'Please use 255 characters only.',
+                        })
+                      } else {
+                        clearErrors('city')
+                      }
                     },
                   })}
                 />
@@ -267,14 +276,24 @@ export const AddPropertyInfo: React.FC<{
                   id="zipCode"
                   variant="required-field"
                   {...register('zipCode', {
+                    maxLength: { value: 255, message: 'Please use 255 characters only.' },
                     required: true,
-                    onChange: e => {
-                      setAddressInfo({ ...addressInfo, zipCode: e.target.value })
-                    },
                   })}
+                  onChange={e => {
+                    const zipCode = e?.target.value
+                    setValue('zipCode', zipCode) // Update form value
+                    setAddressInfo({ ...addressInfo }) // Update address info
+                    if (zipCode?.length > 255) {
+                      setError('zipCode', {
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('zipCode')
+                    }
+                  }}
                   type="number"
                 />
-                <FormErrorMessage>{errors?.zipCode && errors?.zipCode?.message}</FormErrorMessage>
+                <FormErrorMessage>{errors?.zipCode && errors?.zipCode.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
           </Grid>
@@ -310,29 +329,84 @@ export const AddPropertyInfo: React.FC<{
             </GridItem>
 
             <GridItem>
-              <FormControl>
+              <FormControl isInvalid={!!errors?.gateCode}>
                 <FormLabel htmlFor="gateCode" size="md">
                   {t(`${NEW_PROJECT}.gateCode`)}
                 </FormLabel>
-                <Input id="gateCode" {...register('gateCode')} type="number" />
+                <Input
+                  id="gateCode"
+                  {...register('gateCode', {
+                    maxLength: { value: 255, message: 'Please Use 255 Characters Only.' },
+                  })}
+                  onChange={e => {
+                    const title = e?.target.value
+                    setValue('gateCode', title)
+                    if (title?.length > 255) {
+                      setError('gateCode', {
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('gateCode')
+                    }
+                  }}
+                  type="number"
+                />
+                <FormErrorMessage>{errors?.gateCode && errors?.gateCode.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
 
             <GridItem>
-              <FormControl>
+              <FormControl isInvalid={!!errors?.lockBoxCode}>
                 <FormLabel htmlFor="lockBoxCode" size="md">
                   {t(`${NEW_PROJECT}.lockBoxCode`)}
                 </FormLabel>
-                <Input id="lockBoxCode" {...register('lockBoxCode')} type="number" />
+                <Input
+                  id="lockBoxCode"
+                  {...register('lockBoxCode', {
+                    maxLength: { value: 255, message: 'Please Use 255 Characters Only.' },
+                  })}
+                  onChange={e => {
+                    const title = e?.target.value
+                    setValue('lockBoxCode', title)
+                    if (title?.length > 255) {
+                      setError('lockBoxCode', {
+                        type: 'maxLength',
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('lockBoxCode')
+                    }
+                  }}
+                  type="number"
+                />
+                <FormErrorMessage>{errors?.lockBoxCode && errors?.lockBoxCode.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
 
             <GridItem>
-              <FormControl>
+              <FormControl isInvalid={!!errors?.claimNumber}>
                 <FormLabel htmlFor="claimNumber" size="md">
                   {t(`${NEW_PROJECT}.claimNumber`)}
                 </FormLabel>
-                <Input id="claimNumber" {...register('claimNumber')} />
+                <Input
+                  id="claimNumber"
+                  {...register('claimNumber', {
+                    maxLength: { value: 50, message: 'Please Use 50 Characters Only.' },
+                  })}
+                  onChange={e => {
+                    const title = e?.target.value
+                    setValue('claimNumber', title)
+                    if (title?.length > 50) {
+                      setError('claimNumber', {
+                        type: 'maxLength',
+                        message: 'Please use 50 characters only.',
+                      })
+                    } else {
+                      clearErrors('claimNumber')
+                    }
+                  }}
+                />
+                <FormErrorMessage>{errors?.claimNumber && errors?.claimNumber.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
           </Grid>
@@ -368,11 +442,32 @@ export const AddPropertyInfo: React.FC<{
               </FormControl>
             </GridItem>
             <GridItem>
-              <FormControl>
+              <FormControl isInvalid={!!errors?.hoaPhoneNumberExtension}>
                 <FormLabel htmlFor="ext" size="md">
                   {t(`${NEW_PROJECT}.ext`)}
                 </FormLabel>
-                <Input id="ext" {...register('hoaPhoneNumberExtension')} type="number" />
+                <Input
+                  id="ext"
+                  {...register('hoaPhoneNumberExtension', {
+                    maxLength: { value: 20, message: 'Please Use 20 Characters Only.' },
+                  })}
+                  onChange={e => {
+                    const title = e?.target.value
+                    setValue('hoaPhoneNumberExtension', title)
+                    if (title?.length > 20) {
+                      setError('hoaPhoneNumberExtension', {
+                        type: 'maxLength',
+                        message: 'Please use 20 characters only.',
+                      })
+                    } else {
+                      clearErrors('hoaPhoneNumberExtension')
+                    }
+                  }}
+                  type="number"
+                />
+                <FormErrorMessage>
+                  {errors?.hoaPhoneNumberExtension && errors?.hoaPhoneNumberExtension.message}
+                </FormErrorMessage>
               </FormControl>
             </GridItem>
             <GridItem pb={1}>
@@ -388,22 +483,52 @@ export const AddPropertyInfo: React.FC<{
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                       message: 'Invalid Email Address',
                     },
+                    maxLength: { value: 255, message: 'Please Use 255 Characters Only.' },
                   })}
                   value={message}
-                  onChange={handleEmailChange}
+                  onChange={e => {
+                    handleEmailChange(e)
+
+                    const title = e.target.value
+                    setValue('hoaEmailAddress', title)
+                    if (title.length > 255) {
+                      setError('hoaEmailAddress', {
+                        type: 'maxLength',
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('hoaEmailAddress')
+                    }
+                  }}
                 />
                 <Text color="red" fontSize="14px" fontWeight="400">
                   {error ? error : ''}
                 </Text>
+                <FormErrorMessage>{errors?.hoaEmailAddress && errors?.hoaEmailAddress.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
 
             <GridItem>
-              <FormControl>
+              <FormControl isInvalid={!!errors.reoNumber}>
                 <FormLabel htmlFor="reoNumber" size="md">
                   {t(`${NEW_PROJECT}.reoNumber`)}
                 </FormLabel>
-                <Input id="reoNumber" {...register('reoNumber')} />
+                <Input id="reoNumber" {...register('reoNumber', {
+                    maxLength: { value: 255, message: 'Please Use 255 Characters Only.' },
+                  })} 
+                  onChange={e => {
+                    const title = e?.target.value
+                    setValue('reoNumber', title)
+                    if (title?.length > 255) {
+                      setError('reoNumber', {
+                        type: 'maxLength',
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('reoNumber')
+                    }
+                  }}/>
+                  <FormErrorMessage>{errors?.reoNumber && errors?.reoNumber.message}</FormErrorMessage>
               </FormControl>
             </GridItem>
           </Grid>
@@ -413,11 +538,26 @@ export const AddPropertyInfo: React.FC<{
             </FormLabel>
             <Grid templateColumns="repeat(3, 225px)" gap={'1rem 1.5rem'} m="0px">
               <GridItem>
-                <FormControl isInvalid={!!errors?.name} height="100px">
+                <FormControl isInvalid={!!errors?.homeOwnerName} height="100px">
                   <FormLabel isTruncated title={t(`${NEW_PROJECT}.name`)} size="md" htmlFor="name">
                     {t(`${NEW_PROJECT}.name`)}
                   </FormLabel>
-                  <Input id="homeOwnerName" {...register('homeOwnerName', {})} autoComplete="off" />
+                  <Input id="homeOwnerName" {...register('homeOwnerName', {
+                    maxLength: { value: 255, message: 'Please Use 255 Characters Only.' },
+                  })} 
+                  onChange={e => {
+                    const title = e?.target.value
+                    setValue('homeOwnerName', title)
+                    if (title?.length > 255) {
+                      setError('homeOwnerName', {
+                        type: 'maxLength',
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('homeOwnerName')
+                    }
+                  }} autoComplete="off" />
+                    <FormErrorMessage>{errors?.homeOwnerName && errors?.homeOwnerName.message}</FormErrorMessage>
                 </FormControl>
               </GridItem>
               <GridItem>
@@ -461,7 +601,20 @@ export const AddPropertyInfo: React.FC<{
                         value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
                         message: 'Invalid Email Address',
                       },
+                      maxLength: { value: 255, message: 'Please Use 255 Characters Only.' },
                     })}
+                    onChange={e => {
+                      const title = e.target.value
+                      setValue('homeOwnerEmail', title)
+                      if (title.length > 255) {
+                        setError('homeOwnerEmail', {
+                          type: 'maxLength',
+                          message: 'Please use 255 characters only.',
+                        })
+                      } else {
+                        clearErrors('homeOwnerEmail')
+                      }
+                    }}
                   />
                   <FormErrorMessage>{errors?.homeOwnerEmail?.message}</FormErrorMessage>
                 </FormControl>

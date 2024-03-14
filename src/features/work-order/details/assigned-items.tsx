@@ -330,7 +330,7 @@ const AssignedItems = (props: AssignedItemType) => {
               handleOnDragStart={handleOnDragStart}
               isLoading={isLoadingLineItems}
               isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
-              isHideFilters={true}
+              isHideFilters={false}
             />
           </TableContextProvider>
         </Box>

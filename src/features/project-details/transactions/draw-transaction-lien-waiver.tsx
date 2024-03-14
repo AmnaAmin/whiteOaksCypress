@@ -44,7 +44,6 @@ export const LienWaiverAlert = () => {
     <Alert status="info" variant="custom" size="sm">
       <AlertIcon />
       <AlertDescription>{t('LWrequired')}</AlertDescription>
-      <CloseButton alignSelf="flex-start" position="absolute" right={2} top={2} size="sm" />
     </Alert>
   )
 }

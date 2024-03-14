@@ -74,7 +74,24 @@ const CreateVendorDetail: React.FC<{
       setStatusOptions(documentStatus)
     }
   })
+  const handleInputChange = (event) => {
+    const { key } = event
 
+    // Check if the pressed key is a digit (0-9)
+    const isDigit = /^\d$/.test(key);
+
+    // Allow backspace and delete keys
+    const isSpecialKey = key === 'Backspace' || key === 'Delete'
+
+    // Allow navigation keys (arrows, home, end, etc.)
+    const isNavigationKey =
+      ['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(key) !== -1
+
+    // Allow only if the key is a digit, a special key, or a navigation key
+    if (!(isDigit || isSpecialKey || isNavigationKey) || key === '-') {
+      event.preventDefault()
+    }
+  }
   return (
     <Stack spacing={3}>
       <Box h="596px" overflow="auto">
@@ -480,6 +497,7 @@ const CreateVendorDetail: React.FC<{
                 })}
                 w="215px"
                 variant="required-field"
+                onKeyDown={handleInputChange}
                 data-testid="capacity"
                 size="md"
                 isDisabled={isReadOnly}
