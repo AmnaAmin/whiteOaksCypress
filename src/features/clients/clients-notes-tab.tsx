@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { MessagesTypes } from 'features/common/notes-tab'
 import { useClientNoteMutation, useNotes } from 'api/clients'
-import { Box, Button, Center, Flex, FormControl, FormLabel, Textarea } from '@chakra-ui/react'
+import { Box, Button, Center, Flex, FormControl, FormErrorMessage, FormLabel, Textarea } from '@chakra-ui/react'
 import { useTranslation } from 'react-i18next'
 import { useAccountDetails } from 'api/vendor-details'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
@@ -33,8 +33,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
     justifyContent: 'end',
     borderTop: '1px solid #CBD5E0',
   }
-
-  const { register, control, reset } = useForm()
+  const { register, control, reset, setError,setValue,clearErrors, formState: { errors }} = useForm()
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -86,7 +85,7 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
             </Box>
           )}
           {!isReadOnly && (
-            <FormControl {...textAreaStyle}>
+            <FormControl {...textAreaStyle}  isInvalid={!!errors.message}>
               <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
                 {t(`${CLIENTS}.enterNewNote`)}
               </FormLabel>
@@ -95,8 +94,26 @@ export const ClientNotes = React.forwardRef((props: clientNotesProps) => {
                 flexWrap="wrap"
                 h={'120px'}
                 {...messageBoxStyle}
-                {...register('message')}
+                {...register('message', {
+                  maxLength: { value: 65535, message: 'Please Use 65535 characters Only.' },
+                })}
+                onChange={e => {
+                  const title = e.target.value
+                  setValue('message', title)
+                  if (title.length > 65535) {
+                   
+                    setError('message', {
+                      type: 'maxLength',
+                      message: 'Please Use 65535 characters Only.',
+                    })
+                  } else {
+                    clearErrors('message')
+                  }
+                }}
               />
+              {errors.message && errors.message.type === 'maxLength' && (
+              <FormErrorMessage data-testid="trans_description">{errors.message.message}</FormErrorMessage>
+            )}
             </FormControl>
           )}
         </form>

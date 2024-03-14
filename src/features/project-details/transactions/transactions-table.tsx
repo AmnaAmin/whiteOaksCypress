@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { Box, Center, Spinner, useDisclosure } from '@chakra-ui/react'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { useTransactionsV1 } from 'api/transactions'
@@ -41,6 +42,9 @@ type TransactionProps = {
 export const TransactionsTable = React.forwardRef((props: TransactionProps, ref) => {
   // const { isVendorExpired } = props
   const { projectId } = useParams<'projectId'>()
+  const { isVendor } = useUserRolesSelector()
+  const { state } = useLocation()
+  const [stateForSelectedDrawRef, setStateForSelectedDrawRef] = useState<any>()
   const { isOpen: isOpenInvoiceModal, onClose: onInvoiceModalClose, onOpen: onInvoiceModalOpen } = useDisclosure()
   const { defaultSelected } = props
   const [dataTrans, setDataTrans] = useState<any>([])
@@ -131,7 +135,10 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
     }
   }, [transactions])
 
-  const { isVendor } = useUserRolesSelector()
+  useEffect(() => {
+    /* @ts-ignore */
+    setStateForSelectedDrawRef(state?.selectedDrawData)
+  }, [])
 
   return (
     <>
@@ -187,10 +194,11 @@ export const TransactionsTable = React.forwardRef((props: TransactionProps, ref)
       )}
 
       <UpdateTransactionModal
-        isOpen={isOpenEditModal}
+        isOpen={isOpenEditModal || !!stateForSelectedDrawRef}
+        setStateForSelectedDrawRef={setStateForSelectedDrawRef}
         onClose={onEditModalClose}
-        heading={selectedTransactionName as string}
-        selectedTransactionId={selectedTransactionId as number}
+        heading={(selectedTransactionName as string) || stateForSelectedDrawRef?.transactionName}
+        selectedTransactionId={(selectedTransactionId as number) || (stateForSelectedDrawRef?.transactionId as number)}
         projectId={projectId as string}
         projectStatus={props?.projectStatus as string}
       />

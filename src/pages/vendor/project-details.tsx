@@ -21,6 +21,7 @@ import { useRoleBasedPermissions, useUserProfile } from 'utils/redux-common-sele
 import { Account } from 'types/account.types'
 import { useVendorEntity } from 'api/vendor-dashboard'
 import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
+import { Messages } from 'features/messages/messages'
 
 const tabesStyle = {
   h: { base: '52px', sm: 'unset' },
@@ -46,7 +47,7 @@ const ProjectDetails: React.FC = props => {
   const isNewTransactionAllow = vendorWOStatusValue
     ? ![STATUS.Paid, STATUS.Cancelled, STATUS.Invoiced].includes(vendorWOStatusValue?.toLocaleLowerCase() as STATUS)
     : true
-    const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const isReadOnly = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   return (
     <>
       <Stack w="100%" spacing="15px" ref={tabsContainerRef} h="calc(100vh - 160px)">
@@ -79,6 +80,7 @@ const ProjectDetails: React.FC = props => {
                 <Tab aria-labelledby="documents-tab" {...tabesStyle}>
                   {t('documents')}
                 </Tab>
+                <Tab data-testid="project_messages">{t('messages')}</Tab>
 
                 {/* <Tab {...tabesStyle}>{t('alerts')}</Tab> */}
               </TabList>
@@ -154,7 +156,7 @@ const ProjectDetails: React.FC = props => {
                   />
                 </TabPanel>
                 <TabPanel p="0px">
-                  <VendorDocumentsTable ref={tabsContainerRef} isReadOnly={isReadOnly}/>
+                  <VendorDocumentsTable ref={tabsContainerRef} isReadOnly={isReadOnly} />
                 </TabPanel>
                 {/*<TabPanel p="0px">
                   <TriggeredAlertsTable
@@ -165,6 +167,11 @@ const ProjectDetails: React.FC = props => {
                     ref={tabsContainerRef}
                   />
                 </TabPanel>*/}
+                {!isLoading && projectData && (
+                  <TabPanel h="680px">
+                    <Messages projectId={projectId} entity="project" id={projectId} value={projectData} />
+                  </TabPanel>
+                )}
               </TabPanels>
             </Card>
           </Tabs>
