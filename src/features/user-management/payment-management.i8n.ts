@@ -1,0 +1,76 @@
+export const PAYMENT_MANAGEMENT = 'userPaymentManagement'
+
+export const paymentManagementTranslation = {
+  en: {
+    translation: {
+      [PAYMENT_MANAGEMENT]: {
+        table: {
+          email: 'Email',
+          firstName: 'First Name',
+          lastName: 'Last Name',
+          type: 'Type',
+          contact: 'Contact',
+          state: 'State',
+        },
+        modal: {
+          new: 'New',
+          cardNumber: 'Card Number',
+          expirationDate: 'Expiration Date',
+          cvc: 'CVC',
+          creditCardInformation: 'Credit Card Information',
+          cardHolderInformation: 'Card Holder Information',
+          firstName: 'First Name',
+          lastName: 'Last Name',
+          contactNumber: 'Contact Number',
+          email: 'Email',
+          billingAddress: 'Billing Address',
+          address: 'Address',
+          city: 'City',
+          state: 'State',
+          zipCode: 'Zip Code',
+          save: 'Save',
+          cancel: 'Cancel',
+          selectAnOptionToContinue: 'Please Select An Option To Continue',
+          accountType: 'Account Type',
+          newCreditCard: 'New Credit Card',
+        },
+      },
+    },
+  },
+  es: {
+    translation: {
+      [PAYMENT_MANAGEMENT]: {
+        table: {
+          email: 'Correo electrónico',
+          firstName: 'Primer nombre',
+          lastName: 'Apellido',
+          type: 'Tipo',
+          contact: 'Contacto',
+          state: 'Estado',
+        },
+        modal: {
+          new: 'Nuevo',
+          cardNumber: 'Número de Tarjeta',
+          expirationDate: 'Fecha de Expiración',
+          cvc: 'CVC',
+          creditCardInformation: 'Información de la Tarjeta de Crédito',
+          cardHolderInformation: 'Información del Titular de la Tarjeta',
+          firstName: 'Nombre',
+          lastName: 'Apellido',
+          contactNumber: 'Número de Contacto',
+          email: 'Correo electrónico',
+          billingAddress: 'Dirección de Facturación',
+          address: 'Dirección',
+          city: 'Ciudad',
+          state: 'Estado',
+          zipCode: 'Código Postal',
+          save: 'Guardar',
+          cancel: 'Cancelar',
+          selectAnOptionToContinue: 'Por favor seleccione una opción para continuar',
+          accountType: 'Tipo de Cuenta',
+          newCreditCard: 'Nueva Tarjeta de Crédito',
+        },
+      },
+    },
+  },
+}

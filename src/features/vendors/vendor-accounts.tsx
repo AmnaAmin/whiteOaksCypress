@@ -47,6 +47,10 @@ import { useDeleteDocument } from 'api/vendor-projects'
 import { ConfirmationBox } from 'components/Confirmation'
 import { NumberInput } from 'components/input/input'
 import UserAccountsTable from 'features/user-management/user-accounts-table'
+import { AccountType, VendorFinancialAccountType } from './vendor-payments/vendor-financial-account-type'
+import VendorCCModal from './vendor-payments/vendor-cc-modal'
+import { Elements } from '@stripe/react-stripe-js'
+import getStripe from 'utils/stripe'
 
 type UserProps = {
   onClose?: () => void
@@ -55,6 +59,9 @@ type UserProps = {
 }
 export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive }) => {
   const formReturn = useFormContext<VendorAccountsFormValues>()
+  const { isOpen: isAccountTypeOpen, onOpen: onAccountTypeOpen, onClose: onAccountTypeClose } = useDisclosure();
+  const { isOpen: isCCModalOpen, onOpen: onCCModalOpen, onClose: onCCModalClose } = useDisclosure();
+  // const { isOpen: isACHModalOpen, onOpen: onACHModalOpen, onClose: onACHModalClose } = useDisclosure();
   const {
     formState: { errors },
     control,
@@ -103,12 +110,17 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     })
   }
 
-  const onNewBtnClick = () => {
-    
+  const onNewBtnClick = () => onAccountTypeOpen();
+
+  const onAccountTypeConfirm = (selectedValue: AccountType | null) => {
+    onAccountTypeClose();
+    if (selectedValue === AccountType.CREDIT_CARD) onCCModalOpen();
+    // else if (selectedValue === AccountType.ACH_BANK) onACHModalOpen();
   };
 
   return (
     <>
+      <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onCCModalClose} vendorProfileData={vendorProfileData} />
       <Box maxH={'632px'} overflowY={'scroll'}>
         <Grid templateColumns="repeat(4,235px)" rowGap="30px" columnGap="16px">
           <GridItem>
@@ -940,6 +952,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
           </Button>
         </HStack>
       </Flex>
+      <VendorFinancialAccountType isOpen={isAccountTypeOpen} onClose={onAccountTypeClose} onConfirm={onAccountTypeConfirm} />
     </>
   )
 }
@@ -1215,3 +1228,11 @@ const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef }) =
     </HStack>
   )
 }
+
+const StripeCreditCardModalForm = ({ isCCModalOpen, onCCModalClose, vendorProfileData} : { isCCModalOpen: boolean, onCCModalClose: () => void, vendorProfileData: VendorProfile }) => {
+  return (
+    <Elements stripe={getStripe()}>
+      <VendorCCModal isOpen={isCCModalOpen} onClose={onCCModalClose} vendorProfileData={vendorProfileData} />
+    </Elements>
+  );
+};

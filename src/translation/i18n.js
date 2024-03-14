@@ -7,7 +7,7 @@ import { vendor_manager } from 'features/vendor-manager/vendor-manager.i18n'
 import { workOrder } from 'features/work-order/workOrder.i18n'
 import { transaction } from 'features/project-details/transactions/transactions.i18n'
 import { projects } from 'features/projects/projects.i18n'
-import { userAccountManagementTranslation, userManagementTranslation } from 'features/user-management/user-management.i8n'
+import { userManagementTranslation } from 'features/user-management/user-management.i8n'
 import { project } from 'features/update-project-details/project-details.i18n'
 import { fpmCards } from 'features/fpm/fpmCards.i18n'
 import { clients } from 'features/clients/clients.i18n'
@@ -24,6 +24,7 @@ import { globalErrors } from './errors.i18n'
 import { performance } from 'features/performance/performance.i18n'
 import { accessControl } from 'features/access-control/access-control.i18n'
 import { location } from 'features/location/location.i18n'
+import { paymentManagementTranslation } from 'features/user-management/payment-management.i8n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -39,7 +40,7 @@ i18n.use(initReactI18next).init({
         ...transaction.en.translation,
         ...projects.en.translation,
         ...userManagementTranslation.en.translation,
-        ...userAccountManagementTranslation.en.translation,
+        ...paymentManagementTranslation.en.translation,
         ...project.en.translation,
         ...fpmCards.en.translation,
         ...clients.en.translation,
@@ -630,7 +631,7 @@ i18n.use(initReactI18next).init({
         ...transaction.es.translation,
         ...projects.es.translation,
         ...userManagementTranslation.es.translation,
-        ...userAccountManagementTranslation.es.translation,
+        ...paymentManagementTranslation.es.translation,
         ...project.es.translation,
         ...fpmCards.es.translation,
         ...clients.es.translation,

@@ -18,7 +18,7 @@ import { TableNames } from 'types/table-column.types'
 import { ExportButton } from 'components/table-refactored/export-button'
 import TableColumnSettings from 'components/table/table-column-settings'
 import { Box } from '@chakra-ui/react'
-import { USER_ACCOUNT_COLUMNS } from './constants'
+import { PAYMENT_COLUMNS } from './constants'
 
 
 const UserAccountsTable = () => {
@@ -29,7 +29,7 @@ const UserAccountsTable = () => {
     tableColumns,
     settingColumns,
     refetch: refetchColumns,
-  } = useTableColumnSettings(USER_ACCOUNT_COLUMNS, TableNames.vendorAccountTable)
+  } = useTableColumnSettings(PAYMENT_COLUMNS, TableNames.vendorPaymentAccountTable)
 
 
   return (

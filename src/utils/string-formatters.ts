@@ -77,6 +77,25 @@ export const preventSpecialCharacter = e => {
   }
 }
 
+export function textInputToPreventText(e: any) {
+  // Allow numeric keys, backspace, delete, and arrow keys without preventing default
+  if (
+      (e.key >= "0" && e.key <= "9") ||
+      e.key === "-" ||
+      e.key === "Backspace" ||
+      e.key === "Delete" ||
+      e.key === "ArrowUp" ||
+      e.key === "ArrowDown" ||
+      e.key === "ArrowLeft" ||
+      e.key === "ArrowRight"
+  ) {
+      return;
+  }
+
+  // Prevent default for all other keys
+  e.preventDefault();
+}
+
 export const capitalize = text => {
   return text?.charAt(0)?.toUpperCase() + text?.slice(1)?.toLowerCase()
 }

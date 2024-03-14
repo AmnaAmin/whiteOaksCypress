@@ -42,7 +42,7 @@ export enum TableNames {
   performance = 'performance',
   vendorUsers = 'vendor-users',
   vendorUsersTable = 'vendor-users-table',
-  vendorAccountTable = 'vendor-account-table',
+  vendorPaymentAccountTable = 'vendor-payment-account-table',
   woaUsersTable = 'woa-users-table',
   devtekUsersTable = 'devtek-users-table',
   vendorProject = 'vendorProject',
