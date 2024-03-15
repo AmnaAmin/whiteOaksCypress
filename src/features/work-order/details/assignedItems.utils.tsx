@@ -40,6 +40,17 @@ import { onChangeCheckbox, onChangeHeaderCheckbox } from './utils'
 
 const swoPrefix = '/smartwo/api'
 
+export const columnsCannotFilter = [
+  'assigned',
+  'location',
+  'paymentGroup',
+  'completePercentage',
+  'isCompleted',
+  'isVerified',
+  'images',
+  'checkbox',
+]
+
 export type LineItems = {
   id?: number | string | null
   completePercentage?: completePercentage | any // place "any" here type because completePercentage vary in lineItems payload
@@ -301,7 +312,7 @@ export const useDeleteLineIds = () => {
       })
     },
     {
-      onSuccess() { },
+      onSuccess() {},
       onError(error: any) {
         toast({
           title: 'Work Order',
@@ -438,8 +449,8 @@ export const EditableField = (props: EditableCellType) => {
               {valueFormatter && isValidAndNonEmpty(remainingItemsWatch[index]?.[fieldName])
                 ? valueFormatter(remainingItemsWatch[index]?.[fieldName])
                 : isValidAndNonEmpty(remainingItemsWatch[index]?.[fieldName])
-                  ? remainingItemsWatch[index]?.[fieldName]
-                  : '- - -'}
+                ? remainingItemsWatch[index]?.[fieldName]
+                : '- - -'}
             </Box>
           ) : (
             <FormControl>
@@ -1051,6 +1062,9 @@ export const useGetLineItemsColumn = ({
       {
         header: `${WORK_ORDER}.sku`,
         accessorKey: 'sku',
+        accessorFn: cellInfo => {
+          return cellInfo.sku ? cellInfo.sku?.toString() : '- - -'
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1072,6 +1086,9 @@ export const useGetLineItemsColumn = ({
       {
         header: `${WORK_ORDER}.productName`,
         accessorKey: 'productName',
+        accessorFn: cellInfo => {
+          return cellInfo.productName ? cellInfo.productName?.toString() : '- - -'
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1105,6 +1122,9 @@ export const useGetLineItemsColumn = ({
           )
         },
         accessorKey: 'description',
+        accessorFn: cellInfo => {
+          return cellInfo.description ? cellInfo.description?.toString() : '- - -'
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1218,6 +1238,9 @@ export const useGetLineItemsColumn = ({
         },
         size: 100,
         accessorKey: 'quantity',
+        accessorFn: cellInfo => {
+          return cellInfo.quantity ? cellInfo.quantity?.toString() : '- - -'
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1254,6 +1277,10 @@ export const useGetLineItemsColumn = ({
         },
         size: 100,
         accessorKey: 'price',
+        accessorFn(cellInfo: any) {
+          return cellInfo.price?.toString()
+        },
+        filterFn: 'includesString',
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1280,6 +1307,10 @@ export const useGetLineItemsColumn = ({
         header: `${WORK_ORDER}.clientAmount`,
         accessorKey: 'clientAmount',
         size: 150,
+        accessorFn(cellInfo: any) {
+          return cellInfo.clientAmount?.toString()
+        },
+        filterFn: 'includesString',
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1301,6 +1332,9 @@ export const useGetLineItemsColumn = ({
         header: `${WORK_ORDER}.profit`,
         accessorKey: 'profit',
         size: 100,
+        accessorFn(cellInfo: any) {
+          return cellInfo.profit?.toString()
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1334,6 +1368,10 @@ export const useGetLineItemsColumn = ({
             return <>{t(`${WORK_ORDER}.amount`)}</>
           }
         },
+        accessorFn(cellInfo: any) {
+          return cellInfo.vendorAmount?.toString()
+        },
+        filterFn: 'includesString',
         accessorKey: 'vendorAmount',
         size: 160,
         cell: cellInfo => {
