@@ -447,6 +447,27 @@ export const ConstructionRolePermissions = ({ formReturn }) => {
           />
           <Controller
             control={control}
+            name={`advancedPermissionsCons.vendorAccountsTabView`}
+            render={({ field, fieldState }) => (
+              <>
+                <Checkbox
+                  colorScheme="PrimaryCheckBox"
+                  isChecked={field.value}
+                  style={{ background: 'white', border: '#DFDFDF' }}
+                  mr="2px"
+                  size="md"
+                  onChange={value => {
+                    field.onChange(value)
+                  }}
+                // disabled={watchPermissions?.[index]?.hide || watchPermissions?.[index]?.read}
+                >
+                  <Text fontSize="14px">Can Access Vendor Accounts Tab </Text>
+                </Checkbox>
+              </>
+            )}
+          />
+          <Controller
+            control={control}
             name={`advancedPermissionsCons.vendorAccountEdit`}
             render={({ field, fieldState }) => (
               <>
