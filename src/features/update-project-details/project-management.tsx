@@ -138,9 +138,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     }
   }, [watchStatus?.label, watchOverrideProjectStatus?.label, projectData?.projectStatusId])
 
-  const redirectToEstimateDetails = pId => {
-    window.location.href = `estimate-details/${pId}/`
-  }
   const updateProjCloseDueDate = op => {
     //checking if project status selected is reconcile from dropdown then set its value accordingly
     if (op.value === ProjectStatus.Reconcile) {
