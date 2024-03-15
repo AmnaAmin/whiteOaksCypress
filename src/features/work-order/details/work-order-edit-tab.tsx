@@ -17,13 +17,14 @@ import {
   Spinner,
   Stack,
   Text,
+  Tooltip,
   useDisclosure,
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
+import { BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormatNew } from 'utils/date-time-utils'
 import Select, { CreatableSelect } from 'components/form/react-select'
@@ -46,7 +47,6 @@ import {
   mapToUnAssignItem,
   mapToLineItems,
   calculateProfit,
-  calculateVendorAmount,
 } from './assignedItems.utils'
 import RemainingItemsModal from './remaining-items-modal'
 import jsPDF from 'jspdf'
@@ -63,7 +63,7 @@ import round from 'lodash/round'
 import { isValidAndNonEmpty } from 'utils'
 import { useUploadDocument } from 'api/vendor-projects'
 import { useGetProjectFinancialOverview } from 'api/projects'
-import { removeCurrencyFormat, currencyFormatter } from 'utils/string-formatters'
+import { removeCurrencyFormat, currencyFormatter, truncateWithEllipsis } from 'utils/string-formatters'
 
 export type SelectVendorOption = {
   label: string
@@ -71,31 +71,19 @@ export type SelectVendorOption = {
   title: any
 }
 
-const CalenderCard = props => {
-  return (
-    <Flex>
-      <Box pr={4}>
-        <BiCalendar size={23} color="#4A5568" />
-      </Box>
-      <Box lineHeight="20px">
-        <Text color="gray.700" fontWeight={500} fontSize="14px" fontStyle="normal" mb="1">
-          {props.title}
-        </Text>
-        <Text color="gray.600" data-testid={props.testId} fontSize="14px" fontStyle="normal" fontWeight={400}>
-          {props?.date || 'mm/dd/yyyy'}
-        </Text>
-      </Box>
-    </Flex>
-  )
-}
+
 
 const InformationCard = props => {
   return (
     <Flex>
       <Box lineHeight="20px">
-        <Text color="gray.700" fontWeight={500} isTruncated={true} fontSize="14px" fontStyle="normal" mb="1">
-          {props.title}
+      <Tooltip label={props.title} placement="top">
+        <Text color="gray.700" fontWeight={500}  whiteSpace={'nowrap'}
+                  textOverflow={'ellipsis'} overflow={'hidden'}fontSize="14px" fontStyle="normal" mb="1">
+        {truncateWithEllipsis(props.title.trim(), 30)}
+        
         </Text>
+        </Tooltip>
         <Text
           data-testid={props.testId}
           color="gray.600"
@@ -150,7 +138,6 @@ const WorkOrderDetailTab = props => {
     paymentGroupValsOptions,
     locations,
   } = props
-
 
   const defaultSkill = {
     value: workOrder?.vendorSkillId as number,
@@ -417,12 +404,12 @@ const WorkOrderDetailTab = props => {
     const updatedWorkOrderDetails = { ...workOrder, isWorkOrderDetailsEdit: true }
 
     const payload = parseWODetailValuesToPayload(values, updatedWorkOrderDetails)
-   
-    let clientOriginalApprovedAmount = 0;
+
+    let clientOriginalApprovedAmount = 0
     assignedItemsWatch?.forEach((e: any) => {
       clientOriginalApprovedAmount += e.clientAmount
     })
-    payload['clientOriginalApprovedAmount'] = clientOriginalApprovedAmount;
+    payload['clientOriginalApprovedAmount'] = clientOriginalApprovedAmount
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
   const checkKeyDown = e => {
@@ -471,49 +458,9 @@ const WorkOrderDetailTab = props => {
     }
   }, [])
  
-  function calculateProfitPercentage(clientApprovedAmount, profit) {
-    if (clientApprovedAmount > 0) {
-      return (profit / clientApprovedAmount) * 100
-    } else {
-      return 0 // Prevent division by zero
-    }
-  }
-  const [totalClientApprovedWOAmount ,settotaClientApprovedWOAmount] = useState(0)
-  // Function to calculate profit and client approved amount from assigned items array
-  function calculateProfitAndClientApprovedAmount(assignedItems) {
-    let totalClientApprovedAmount = 0
-    let totalVendorWOAmount = 0
-    let totalProfit = 0
-    if (!Array.isArray(assignedItems)) {
-      return { totalClientApprovedAmount, totalVendorWOAmount, totalProfit }
-    }
-    assignedItems.forEach(item => {
-      totalClientApprovedAmount += item.clientAmount
-      totalVendorWOAmount += item.vendorAmount
-    })
-    console.log('totalVendorWOAmount', totalVendorWOAmount)
-    totalProfit = totalClientApprovedAmount - totalVendorWOAmount
-
-    // Calculate profit percentage
-    const profitPercentage = calculateProfitPercentage(totalClientApprovedAmount, totalProfit)
-
-    // Log the profit percentage to the console
-    console.log('Profit Percentage:', profitPercentage)
-
-    return { totalClientApprovedAmount, totalVendorWOAmount, totalProfit }
-  }
-  const [profitPercentage, setProfitPercentage] = useState(0)
-  
-
-  useEffect(() => {
-    const { totalClientApprovedAmount, totalProfit } = calculateProfitAndClientApprovedAmount(assignedItemsArray)
-  
-    const percentage = calculateProfitPercentage(totalClientApprovedAmount, totalProfit)
-    setProfitPercentage(percentage)
-    settotaClientApprovedWOAmount(totalClientApprovedAmount)
-  }, [assignedItemsArray])
 
  
+
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -612,93 +559,69 @@ const WorkOrderDetailTab = props => {
                 ) : (
                   <InformationCard testId="companyName" title={t(`${WORK_ORDER}.companyName`)} date={companyName} />
                 )}
-               {assignVendor && businessPhoneNumber && businessEmailAddress? 
-               <>
-                <InformationCard
+                {businessPhoneNumber && businessEmailAddress && (
+                  <>
+                  <SimpleGrid columns={3} >
+                    <InformationCard
                       testId="email"
                       title={t(`${WORK_ORDER}.email`)}
                       date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
-                      customStyle={{  width: '100px', height: '20px' }}
+                      customStyle={{ width: '200px', height: '20px' }}
                     />
                     <InformationCard
                       testId="phone"
                       title={t(`${WORK_ORDER}.phone`)}
                       date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
-                      customStyle={{ width: '100%', height: '20px' }}
+                      customStyle={{ width: '200px', height: '20px' }}
                     />
-                  
-                    <InformationCard
-                      title="Balance SOW"
-                      testId="balanceSOWAmount"
-                      date={balanceSOWAmount}
-                      customStyle={{ width: '100%', height: '20px' }}
-                    />
-                  <InformationCard
-                      title={t(`${WORK_ORDER}.profitPercentage`)}
-                      testId="profitPercentage"
-                      date={workOrder?.profitPercentage}
-                      customStyle={{ width: '100%', height: '20px' }}
-                    />
-                      <InformationCard
-                      testId="vendorAmount"
-                      title={t(`${WORK_ORDER}.vendorWoAmount`)}
-                      date={workOrder?.invoiceAmount}
-                      customStyle={{ width: '100%', height: '20px' }}
-                    />
-
-                    <InformationCard
-                      testId="clientFinalAmount"
-                      title={t(`${WORK_ORDER}.clientFinalAmount`)}
-                      date={workOrder?.clientApprovedAmount}
-                      customStyle={{ width: '100%', height: '20px' }}
-                    />
-                  
-                  </> :
-                  <>
-                   <InformationCard
-                      title={t(`${WORK_ORDER}.profitPercentage`)}
-                      testId="profitPercentage"
-                      date={profitPercentage}
-                      customStyle={{ width: '100%', height: '20px' }}
-                    />
-                      <InformationCard
-                      testId="vendorAmount"
-                      title={t(`${WORK_ORDER}.vendorWoAmount`)}
-                      date={workOrder?.invoiceAmount}
-                      customStyle={{ width: '100%', height: '20px' }}
-                    />
-
-                    <InformationCard
-                      testId="clientFinalAmount"
-                      title={t(`${WORK_ORDER}.clientFinalAmount`)}
-                      date={workOrder?.clientApprovedAmount}
-                      customStyle={{ width: '100%', height: '20px' }}
-                    />
-                    </>
-               }
-               
+                    <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
+                    </SimpleGrid>
+                  </>
+                )}
               </HStack>
             </Box>
           )}
           <Box>
             <Divider borderColor="#CBD5E0" />
           </Box>
-          <SimpleGrid columns={5} gap={4}>
-            <CalenderCard
+          <SimpleGrid columns={6} gap={6}>
+            <InformationCard
+              title={t(`${WORK_ORDER}.profitPercentage`)}
+              testId="profitPercentage"
+              date={workOrder?.profitPercentage}
+              customStyle={{ width: '100%', height: '20px' }}
+            />
+            <InformationCard
+              testId="vendorAmount"
+              title={t(`${WORK_ORDER}.vendorWoAmount`)}
+              date={workOrder?.invoiceAmount}
+              customStyle={{ width: '100%', height: '20px' }}
+            />
+
+            <InformationCard
+              testId="clientFinalAmount"
+              title={t(`${WORK_ORDER}.clientFinalAmount`)}
+              date={workOrder?.clientApprovedAmount}
+              customStyle={{ width: '100%', height: '20px' }}
+            />
+            <InformationCard
               testId={'woIssued'}
               title={t(`${WORK_ORDER}.woIssued`)}
               date={dateFormatNew(workOrderIssueDate)}
+               customStyle={{ width: '100%', height: '20px' }}
             />
-            <CalenderCard
+            <InformationCard
               testId={'lwSubmitted'}
               title={t(`${WORK_ORDER}.lwSubmitted`)}
               date={dateLeanWaiverSubmitted ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
+              customStyle={{ width: '100%', height: '20px' }}
             />
             {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
-            <CalenderCard
+            <InformationCard
               testId={'completionVariance'}
               title={t(`${WORK_ORDER}.completionVariance`)}
               date={workOrderCompletionDateVariance ?? '0'}
+              customStyle={{ width: '100%', height: '20px' }}
             />
           </SimpleGrid>
           <Box>
