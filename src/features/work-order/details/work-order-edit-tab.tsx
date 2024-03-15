@@ -589,20 +589,20 @@ const WorkOrderDetailTab = props => {
             <InformationCard
               title={t(`${WORK_ORDER}.profitPercentage`)}
               testId="profitPercentage"
-              date={workOrder?.profitPercentage}
+              date={workOrder?.profitPercentage +'%'}
               customStyle={{ width: '100%', height: '20px' }}
             />
             <InformationCard
               testId="vendorAmount"
               title={t(`${WORK_ORDER}.vendorWoAmount`)}
-              date={workOrder?.invoiceAmount}
+              date={'$'+workOrder?.invoiceAmount}
               customStyle={{ width: '100%', height: '20px' }}
             />
 
             <InformationCard
               testId="clientFinalAmount"
               title={t(`${WORK_ORDER}.clientFinalAmount`)}
-              date={workOrder?.clientApprovedAmount}
+              date={'$'+workOrder?.clientApprovedAmount}
               customStyle={{ width: '100%', height: '20px' }}
             />
             <InformationCard
