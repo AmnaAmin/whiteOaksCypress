@@ -19,6 +19,7 @@ import {
   Text,
   Tooltip,
   useDisclosure,
+  useMediaQuery,
 } from '@chakra-ui/react'
 import { STATUS } from 'features/common/status'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -461,7 +462,7 @@ const WorkOrderDetailTab = props => {
  
 
  
-
+  const [isTruncate] = useMediaQuery('(max-width: 1600px)')
   return (
     <Box>
       <form onSubmit={formReturn.handleSubmit(onSubmit)} onKeyDown={e => checkKeyDown(e)}>
@@ -585,11 +586,12 @@ const WorkOrderDetailTab = props => {
           <Box>
             <Divider borderColor="#CBD5E0" />
           </Box>
+          <Box maxWidth='1600px'>
           <SimpleGrid columns={6} gap={6}>
             <InformationCard
               title={t(`${WORK_ORDER}.profitPercentage`)}
               testId="profitPercentage"
-              date={workOrder?.profitPercentage +'%'}
+              date={workOrder?.profitPercentage ? workOrder?.profitPercentage +'%' :'---' }
               customStyle={{ width: '100%', height: '20px' }}
             />
             <InformationCard
@@ -601,7 +603,7 @@ const WorkOrderDetailTab = props => {
 
             <InformationCard
               testId="clientFinalAmount"
-              title={t(`${WORK_ORDER}.clientFinalAmount`)}
+              title={isTruncate ? truncateWithEllipsis(t(`${WORK_ORDER}.clientFinalAmount`),20) :t(`${WORK_ORDER}.clientFinalAmount`) }
               date={'$'+workOrder?.clientApprovedAmount}
               customStyle={{ width: '100%', height: '20px' }}
             />
@@ -625,6 +627,7 @@ const WorkOrderDetailTab = props => {
               customStyle={{ width: '100%', height: '20px' }}
             />
           </SimpleGrid>
+          </Box>
           <Box>
             <Divider borderColor="#CBD5E0" />
           </Box>
