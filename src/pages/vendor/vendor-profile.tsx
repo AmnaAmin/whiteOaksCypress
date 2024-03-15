@@ -74,6 +74,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { permissions } = useRoleBasedPermissions()
   const allowVendorAccounts = permissions.some(p => ['VENDOR.VENDORACCOUNTS.EDIT', 'ALL'].includes(p))
   const allowVendorAccountsEdit = permissions.some(p => ['VENDOR.ACCOUNTS.EDIT','ALL'].includes(p))
+  const allowVendorAccountsTabView = allowVendorAccounts || allowVendorAccountsEdit
   const { t } = useTranslation()
   const toast = useToast()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
@@ -256,7 +257,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
               {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
               {!!vendorProfileData?.id && <Tab>Users</Tab>}
-              {(allowVendorAccounts || allowVendorAccountsEdit) && (
+              {(allowVendorAccountsTabView) && (
                 <TabCustom isError={isAccountFormErrors} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id} >
                   {t('vendorProfileAccount')}
                 </TabCustom>
@@ -366,7 +367,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   </TabPanel>
                 )}
 
-                {(allowVendorAccounts || allowVendorAccountsEdit) && (
+                {(allowVendorAccountsTabView) && (
                   <TabPanel p="0px">
                     <Box h="710" w="100%" overflow="auto">
                       <VendorAccounts
