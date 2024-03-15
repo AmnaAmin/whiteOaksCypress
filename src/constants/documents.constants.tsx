@@ -130,6 +130,13 @@ export const useGetDocumentsTableColumn = (onResetConfirmationModalOpen: () => v
         accessorKey: 'fileObjectContentType',
         cell: withPreviewCell,
       },
+      {
+        id: 'invoiceName',
+        header: 'File Name',
+        accessorKey: 'invoiceName',
+        cell: withPreviewCell,
+        filterFn: 'includesString',
+      },
 
       {
         header: 'createdBy',
