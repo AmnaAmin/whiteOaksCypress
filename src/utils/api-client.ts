@@ -42,7 +42,7 @@ async function client(endpoint: string, httpConfig: any | undefined = {}, custom
       } else {
         return Promise.reject(data)
       }
-    } else if (contentType && contentType.includes('text/xml')) {
+    } else if (contentType && (contentType.includes('text/xml') || contentType.includes('text'))) {
       const data = await response.text()
       if (response.ok) {
         return { data, headers: response.headers }

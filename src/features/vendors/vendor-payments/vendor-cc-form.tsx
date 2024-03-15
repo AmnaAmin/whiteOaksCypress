@@ -1,7 +1,6 @@
 import { Box, GridItem, FormControl, Input, FormLabel, FormErrorMessage, Grid } from '@chakra-ui/react'
-import { Controller } from 'react-hook-form';
+import { Controller, UseFormReturn } from 'react-hook-form';
 import Select from 'components/form/react-select'
-import { useStates } from 'api/pc-projects';
 import { validateWhitespace } from 'api/clients';
 import { textInputToPreventText } from 'utils/string-formatters';
 import { CardCvcElement, CardExpiryElement, CardNumberElement } from '@stripe/react-stripe-js';
@@ -11,6 +10,7 @@ import { CustomRequiredInput } from 'components/input/input';
 import { useState } from 'react';
 import { t } from 'i18next'
 import { PAYMENT_MANAGEMENT } from 'features/user-management/payment-management.i8n';
+import { CreditCardFormValues } from './vendor-cc-add-modal';
 
 const cardInputStyle = {
     base: {
@@ -23,9 +23,13 @@ const cardInputStyle = {
     },
 };
 
-const VendorCCForm = (props: any) => {
-    const { formReturn } = props;
-    const { stateSelectOptions } = useStates();
+export interface VendorCCFormProps {
+    formReturn: UseFormReturn<CreditCardFormValues>
+    stateSelectOptions: any
+}
+
+const VendorCCForm = (props: VendorCCFormProps) => {
+    const { formReturn, stateSelectOptions } = props;
     const [cardError, setCardError] = useState({
         isEmpty: false,
         message: ''
@@ -59,7 +63,7 @@ const VendorCCForm = (props: any) => {
                     </FormLabel>
                 </GridItem>
                 <GridItem colSpan={3}>
-                    <FormControl isInvalid={!!errors?.cardNumber}>
+                    <FormControl>
                         <FormLabel variant="strong-label" size="md">
                             {t(`${PAYMENT_MANAGEMENT}.modal.cardNumber`)}
                         </FormLabel>

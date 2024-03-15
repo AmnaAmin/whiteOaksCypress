@@ -17,9 +17,9 @@ import { useStripe, useElements, CardNumberElement } from '@stripe/react-stripe-
 import { mapCCFormValuesToPayload, useCreateNewCreditCard } from 'api/payment';
 import { VendorProfile } from 'types/vendor.types'
 import { PAYMENT_MANAGEMENT } from 'features/user-management/payment-management.i8n';
+import { useStates } from 'api/pc-projects';
 
 export interface CreditCardFormValues {
-    city: string;
     billingAddress: {
         line1: string;
         city: string;
@@ -32,18 +32,18 @@ export interface CreditCardFormValues {
     phone: string;
 }
 
-const VendorCCModal: React.FC<{
+const VendorCCAddModal: React.FC<{
     isOpen: boolean
     onClose: () => void
     vendorProfileData: VendorProfile
 }> = ({ isOpen, onClose, vendorProfileData }) => {
     const stripe = useStripe();
     const elements = useElements();
+    const { stateSelectOptions } = useStates();
 
-    const { mutate: createCreditCard, isLoading: isCreateCreditCardLoading } = useCreateNewCreditCard();
+    const { mutate: createCreditCard, isLoading: isCreateCreditCardLoading } = useCreateNewCreditCard(vendorProfileData?.id);
 
-
-    const formReturn = useForm<CreditCardFormValues>()
+    const formReturn = useForm<CreditCardFormValues>();
 
     const {
         handleSubmit,
@@ -62,7 +62,12 @@ const VendorCCModal: React.FC<{
             return;
         }
         const payload = mapCCFormValuesToPayload(values, stripeTokenData, vendorProfileData);
-        createCreditCard(payload);
+        createCreditCard(payload, {
+            onSuccess: () => {
+                onClose();
+                reset();
+            }
+        });
     }
 
 
@@ -93,7 +98,7 @@ const VendorCCModal: React.FC<{
                     <ModalCloseButton _hover={{ bg: 'blue.50' }} />
                     <ModalBody justifyContent="center">
                         <Box>
-                            <VendorCCForm formReturn={formReturn} />
+                            <VendorCCForm formReturn={formReturn} stateSelectOptions={stateSelectOptions} />
                         </Box>
                     </ModalBody>
                     <ModalFooter>
@@ -126,4 +131,4 @@ const VendorCCModal: React.FC<{
     )
 }
 
-export default VendorCCModal
+export default VendorCCAddModal

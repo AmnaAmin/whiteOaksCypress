@@ -420,6 +420,68 @@ export type Vendors = {
   businessPhoneNumber: string
 }
 
+export type StripeBillingDetails = {
+  address?: {
+    city: string
+    country: string
+    line1: string
+    line2?: string
+    postal_code: string
+    state: string
+  }
+  email?: string
+  name: string
+  phone?: string
+}
+
+export type StripeCreditCard = {
+  brand: string
+  checks: {
+    cvc_check: string
+  }
+  country: string
+  exp_month: number
+  exp_year: number
+  fingerprint: string
+  funding: string
+  last4: string
+  networks: {
+    available: string[]
+  }
+  three_d_secure_usage: {
+    supported: boolean
+  }
+}
+
+export type StripeUSBankAccount = {
+  account_holder_type: string
+  account_type: string
+  bank_name: string
+  fingerprint: string
+  last4: string
+  networks: {
+    preferred: string
+    supported: string[]
+  }
+  routing_number: string
+  status_details: {}
+}
+
+export type StripePayment = {
+  billing_details: StripeBillingDetails
+  card?: StripeCreditCard
+  us_bank_account?: StripeUSBankAccount
+  created: number
+  customer: {
+    id: string
+  }
+  id: string
+  livemode: boolean
+  metadata: {}
+  object: string
+  type: string
+}
+
 export const preventNumber = e => {
   let keyCode = e.keyCode ? e.keyCode : e.which
   //  to prevent the special characters and Numbers

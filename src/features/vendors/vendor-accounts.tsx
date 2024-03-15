@@ -21,7 +21,7 @@ import {
   Stack,
   Icon,
 } from '@chakra-ui/react'
-import { VendorAccountsFormValues, VendorProfile, preventNumber } from 'types/vendor.types'
+import { VendorAccountsFormValues, VendorProfile, preventNumber, StripePayment } from 'types/vendor.types'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import { useTranslation } from 'react-i18next'
@@ -46,11 +46,12 @@ import { convertImageToDataURL } from 'components/table/util'
 import { useDeleteDocument } from 'api/vendor-projects'
 import { ConfirmationBox } from 'components/Confirmation'
 import { NumberInput } from 'components/input/input'
-import UserAccountsTable from 'features/user-management/user-accounts-table'
+import UserPaymentAccountsTable from 'features/user-management/user-payment-accounts-table'
 import { AccountType, VendorFinancialAccountType } from './vendor-payments/vendor-financial-account-type'
-import VendorCCModal from './vendor-payments/vendor-cc-modal'
+import VendorCCAddModal from './vendor-payments/vendor-cc-add-modal'
 import { Elements } from '@stripe/react-stripe-js'
 import getStripe from 'utils/stripe'
+import VendorCCUpdateModal from './vendor-payments/vendor-cc-update-modal'
 
 type UserProps = {
   onClose?: () => void
@@ -341,7 +342,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 New
               </Button>
             </Flex>
-            <UserAccountsTable />
+            <UserPaymentAccountsTable vendorProfile={vendorProfileData} />
           </GridItem>
           <GridItem colSpan={4}>
             <FormLabel variant="strong-label" color={'gray.500'}>
@@ -1229,10 +1230,18 @@ const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef }) =
   )
 }
 
-const StripeCreditCardModalForm = ({ isCCModalOpen, onCCModalClose, vendorProfileData} : { isCCModalOpen: boolean, onCCModalClose: () => void, vendorProfileData: VendorProfile }) => {
-  return (
-    <Elements stripe={getStripe()}>
-      <VendorCCModal isOpen={isCCModalOpen} onClose={onCCModalClose} vendorProfileData={vendorProfileData} />
-    </Elements>
-  );
+export const StripeCreditCardModalForm = ({ isCCModalOpen, onCCModalClose, vendorProfileData, creditCardData }: { isCCModalOpen: boolean, onCCModalClose: () => void, vendorProfileData: VendorProfile, creditCardData?: StripePayment | null }) => {
+  if (!creditCardData) {
+    return (
+      <Elements stripe={getStripe()}>
+        <VendorCCAddModal isOpen={isCCModalOpen} onClose={onCCModalClose} vendorProfileData={vendorProfileData} />
+      </Elements>
+    )
+  } else {
+    return (
+      <Elements stripe={getStripe()}>
+        <VendorCCUpdateModal isOpen={isCCModalOpen} onClose={onCCModalClose} vendorProfileData={vendorProfileData} creditCardData={creditCardData} />
+      </Elements>
+    )
+  }
 };

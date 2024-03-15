@@ -168,26 +168,87 @@ export const USER_MGT_COLUMNS: ColumnDef<any>[] = [
 export const PAYMENT_COLUMNS: ColumnDef<any>[] = [
   {
     header: `${PAYMENT_MANAGEMENT}.table.email`,
-    accessorKey: 'email',
+    accessorKey: 'billing_details.email',
   },
   {
     header: `${PAYMENT_MANAGEMENT}.table.firstName`,
-    accessorKey: 'firstName',
+    accessorKey: 'billing_details.name',
+    id: "firstName",
+    cell: (row: any) => {
+      const name = row?.row.original?.billing_details?.name;
+      let value = '---'
+      if (name.includes(",")) {
+        value = name?.split(",")[1];
+      } else {
+        value = name?.split(" ")[0];
+      }
+      return value;
+    }
   },
   {
     header: `${PAYMENT_MANAGEMENT}.table.lastName`,
-    accessorKey: 'lastName',
+    accessorKey: 'billing_details.name',
+    id: "lastName",
+    cell: (row: any) => {
+      const name = row?.row.original?.billing_details?.name;
+      let value = '---'
+      if (name.includes(",")) {
+        value = name?.split(",")[0];
+      } else {
+        value = name?.split(" ")[1];
+      }
+      return value;
+    }
   },
   {
     header: `${PAYMENT_MANAGEMENT}.table.type`,
     accessorKey: 'type',
+    accessorFn: (row) => row?.type?.toUpperCase()
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.bankNameOrCardBrand`,
+    id: 'bankNameOrCardBrand',
+    accessorFn: (row) => {
+      const card = row?.card;
+      const bank = row?.us_bank_account;
+      if (card) {
+        return card?.brand?.toUpperCase();
+      } else {
+        return bank?.bank_name?.toUpperCase();
+      }
+    },
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.last4Digits`,
+    id: 'last4Digits',
+    accessorFn: (row: any) => {
+      const card = row?.card;
+      const bank = row?.us_bank_account;
+      if (card) {
+        return card?.last4;
+      } else {
+        return bank?.last4;
+      }
+    }
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.expiration`,
+    id: 'expDate',
+    accessorFn: (row: any) => {
+      const card = row?.card;
+      if (card) {
+        return `${card?.exp_month}/${card?.exp_year}`;
+      } else {
+        return "---";
+      }
+    }
   },
   {
     header: `${PAYMENT_MANAGEMENT}.table.contact`,
-    accessorKey: 'contact',
+    accessorKey: 'billing_details.phone',
   },
   {
     header: `${PAYMENT_MANAGEMENT}.table.state`,
-    accessorKey: 'state',
+    accessorKey: 'billing_details.address.state'
   },
 ]
