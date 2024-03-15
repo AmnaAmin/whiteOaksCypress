@@ -104,6 +104,7 @@ const AssignedItems = (props: AssignedItemType) => {
 
   const lineItems = useWatch({ name: 'assignedItems', control })
   const watchUploadWO = watch('uploadWO')
+
   useEffect(() => {
     if (documentsData && documentsData.length > 0) {
       let lineItemsdoc = documentsData.filter(d => d.documentType === 1036 && d.workOrderId === workOrder?.id)
@@ -137,7 +138,7 @@ const AssignedItems = (props: AssignedItemType) => {
 
   const { showPriceCheckBox, showAssignVendor } = useActionsShowDecision({ workOrder })
 
-  const { isVendor } = useUserRolesSelector()
+  const { isVendor, isAdmin } = useUserRolesSelector()
 
   const isVendorAssign = workOrder?.visibleToVendor
 
@@ -252,6 +253,23 @@ const AssignedItems = (props: AssignedItemType) => {
             w={{ base: '100%', lg: 'unset' }}
             flexWrap={{ base: 'wrap', lg: 'unset' }}
           >
+            <Box ml={-2}>
+              {!isVendor && (
+                <Checkbox
+                  isDisabled={isAdmin ? false : true}
+                  variant={'outLinePrimary'}
+                  data-testid="byPassSOWRule"
+                  size="md"
+                  {...register('byPassSOWRule')}
+                  onChange={e => {
+                    setValue('byPassSOWRule', e.target.checked ?? false)
+                  }}
+                >
+                  {t(`${WORK_ORDER}.byPassRule`)}
+                </Checkbox>
+              )}
+            </Box>
+
             {/* temporarly added this margin left, will remove it upon design upgration*/}
             <Box ml={-2}>
               {showAssignVendor && (
@@ -312,7 +330,7 @@ const AssignedItems = (props: AssignedItemType) => {
               handleOnDragStart={handleOnDragStart}
               isLoading={isLoadingLineItems}
               isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
-              isHideFilters={true}
+              isHideFilters={false}
             />
           </TableContextProvider>
         </Box>

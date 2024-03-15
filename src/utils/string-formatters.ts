@@ -114,7 +114,7 @@ export const validateAmountDigits = (amount, countBeforeDecimal?, countAfterDeci
   // Check if the numeric value meets the specified criteria
   if (
     !amountParts ||
-    (amountParts[0]?.length <= (countBeforeDecimal ?? 19) &&
+    (amountParts[0]?.length <= (countBeforeDecimal ?? 15) &&
       (!amountParts[1] || amountParts[1]?.length <= (countAfterDecimal ?? 4)))
   ) {
     // Return true if the amount is valid

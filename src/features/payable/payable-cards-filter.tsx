@@ -15,6 +15,7 @@ export const PayableCardsFilter = ({ cardSelected, onSelected, userIds }) => {
     TwentyToThirdayDays = '5',
     ThirtyToFourtyDays = '6',
     // OverPayment = '0',
+    onHold = '8',
   }
 
   const pastDue = payableCards?.find(a => a.category === PayableCardTypes.PastDue)
@@ -23,6 +24,7 @@ export const PayableCardsFilter = ({ cardSelected, onSelected, userIds }) => {
   const tenToTwentyDays = payableCards?.find(a => a.category === PayableCardTypes.TenToTwentyDays)
   const twentyToThirdayDays = payableCards?.find(a => a.category === PayableCardTypes.TwentyToThirdayDays)
   // const overPayment = payableCards?.find(a => a.category === PayableCardTypes.OverPayment)
+  const onHold = payableCards?.find(a => a.category === PayableCardTypes.onHold)
 
   const payableData = [
     {
@@ -60,13 +62,13 @@ export const PayableCardsFilter = ({ cardSelected, onSelected, userIds }) => {
       number: twentyToThirdayDays?.dueCount || 0,
       iconColor: '#D6BCFA',
     },
-    // {
-    //   id: '6',
-    //   text: 'Overpayment',
-    //   value: currencyFormatter(overPayment?.finalAmount || 0),
-    //   number: overPayment?.dueCount || 0,
-    //   iconColor: '#FBB6CE',
-    // },
+    {
+      id: '8',
+      text: 'onHold',
+      value: currencyFormatter(onHold?.finalAmount || 0),
+      number: onHold?.dueCount || 0,
+      iconColor: '#FBB6CE',
+    },
   ]
 
   return (

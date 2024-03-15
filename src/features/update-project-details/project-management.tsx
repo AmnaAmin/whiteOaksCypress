@@ -12,7 +12,7 @@ import {
   HStack,
   Button,
   Divider,
-  Link as LinkChakra,
+  Link,
   VStack,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
@@ -138,9 +138,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
     }
   }, [watchStatus?.label, watchOverrideProjectStatus?.label, projectData?.projectStatusId])
 
-  const redirectToEstimateDetails = pId => {
-    window.location.href = `estimate-details/${pId}/`
-  }
   const updateProjCloseDueDate = op => {
     //checking if project status selected is reconcile from dropdown then set its value accordingly
     if (op.value === ProjectStatus.Reconcile) {
@@ -580,15 +577,14 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                     <Divider orientation={'vertical'} height="30px" borderLeft={'1px solid #CBD5E0'} />
                     <Text w="250px" lineHeight="22px" h="40px" color="gray.500" fontSize={'10px'} fontWeight={400}>
                       {t(`project.projectDetails.estimatedText`)}{' '}
-                      <LinkChakra
+                      <Link
+                        data-testid="estimate_id"
                         color="brand.300"
                         fontWeight={'500'}
-                        onClick={() => {
-                          redirectToEstimateDetails(projectData?.estimateId)
-                        }}
+                        href={`estimate-details/${projectData?.estimateId}/`}
                       >
                         Id: E{projectData?.estimateId}
-                      </LinkChakra>
+                      </Link>
                     </Text>
                   </>
                 </HStack>

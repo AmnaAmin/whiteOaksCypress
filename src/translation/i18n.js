@@ -149,6 +149,7 @@ i18n.use(initReactI18next).init({
         wOIssueDate: 'WO Issue Date',
         id: 'ID',
         woStartDate: 'WO Start Date',
+        onHold: 'Hold',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Type',
@@ -248,6 +249,7 @@ i18n.use(initReactI18next).init({
         lienWaiverRejectInfo: 'has made changes, you are required to generate LW again.',
         rejectLienWaiver: 'Reject Lien Waiver',
         saveLWError: 'Please save Lien Waiver before generating Invoice',
+        pendingDrawError: 'The WO will go into overpayment. Please adjust amounts before generating invoice',
         updateLWError: 'Please update Lien Waiver before generating Invoice',
         rejectInvoice: 'Reject Invoice',
         reject: 'Reject',
@@ -283,6 +285,8 @@ i18n.use(initReactI18next).init({
         PlanLimitExceed:
           'WO has reached its allowed limits under the selected award plan, No more Labor Draw Or Material Draw transactions can be created.',
         PercentageCompletion: 'Cannot create draw against WO with % completion less than NTE % in PAN',
+        onHoldSelectedWO: 'Selected WO is onHold',
+        DrawonHold: 'Draw is on Hold',
         PercentageCompletionForAdminAndAccount: '% completion is less than NTE max',
         nameofClaimant: 'Name of Claimant',
         customerName: 'Customer Name',
@@ -899,6 +903,7 @@ i18n.use(initReactI18next).init({
         issue: 'Asunto',
         rejectLienWaiver: 'Rechazar exención de gravamen',
         saveLWError: 'Guarde la exención de gravamen antes de generar la factura',
+        pendingDrawError: 'El WO entrará en pago en exceso. Por favor ajuste los montos antes de generar la factura.',
         updateLWError: 'Actualice la exención de gravamen antes de generar la factura',
         rejectInvoice: 'Rechazar Factura',
         lienWaiver: 'Exención de gravamen',
@@ -934,6 +939,8 @@ i18n.use(initReactI18next).init({
           'WO ha alcanzado sus límites permitidos según el plan de adjudicación seleccionado, no se pueden crear más transacciones de extracción de mano de obra o extracción de material.',
         PercentageCompletion:
           'No se puede crear un sorteo contra WO con un % de finalización inferior al % de NTE en PAN',
+        onHoldSelectedWO: 'La OT seleccionada está en espera',
+        DrawonHold: 'El sorteo está en espera',
         PercentageCompletionForAdminAndAccount: '% de finalización inferior al % de NTE en PAN',
         nameofClaimant: 'Nombre del Reclamante',
         customerName: 'Nombre del Cliente',
