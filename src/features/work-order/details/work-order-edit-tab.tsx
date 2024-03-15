@@ -78,11 +78,12 @@ const InformationCard = props => {
     <Flex>
       <Box lineHeight="20px">
       <Tooltip label={props.title} placement="top">
-        <Text color="gray.700" fontWeight={500}  whiteSpace={'nowrap'}
-                  textOverflow={'ellipsis'} overflow={'hidden'}fontSize="14px" fontStyle="normal" mb="1">
+     
+        <Text color="gray.700" fontWeight={500} whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}fontSize="14px" fontStyle="normal" mb="1">
         {truncateWithEllipsis(props.title.trim(), 30)}
         
         </Text>
+       
         </Tooltip>
         <Text
           data-testid={props.testId}
