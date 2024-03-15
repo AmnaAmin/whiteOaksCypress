@@ -374,6 +374,7 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
     vendorSkillId: formValues.vendorSkillId?.value,
     invoiceAmount: removeCurrencyFormat(formValues?.invoiceAmount),
     clientApprovedAmount: removeCurrencyFormat(formValues?.clientApprovedAmount),
+    clientOriginalApprovedAmount: removeCurrencyFormat(formValues?.clientOriginalApprovedAmount),
     percentage: formValues?.percentage,
     completePercentage:
       typeof formValues.completePercentage === 'number'

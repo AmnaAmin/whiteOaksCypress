@@ -560,6 +560,10 @@ export const TransactionAmountForm: React.FC<TransactionAmountFormProps> = ({
                             {...register(`transaction.${index}.description` as const, {
                               required: 'This is a required field',
                               maxLength: { value: 1024, message: 'Please Use 1024 characters Only.' },
+                              validate: {
+                                notOnlyWhitespace: value =>
+                                  value !== null && !/^\s+$/.test(value) ? true : 'Cannot be whitespaces only.',
+                              },
                             })}
                             onChange={e => {
                               const title = e.target.value
