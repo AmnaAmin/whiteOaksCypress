@@ -182,7 +182,14 @@ export const NewWorkOrder: React.FC<{
         ],
         {
           onSuccess: async () => {
+            let clientOriginalApprovedAmount = 0
+            values?.assignedItems?.forEach((e: any) => {
+              clientOriginalApprovedAmount += e.clientAmount
+            });
+  
             const payload = await parseNewWoValuesToPayload(values, projectData.id)
+            payload['clientOriginalApprovedAmount'] = clientOriginalApprovedAmount
+  
             createWorkOrder(payload as any, {
               onSuccess: async data => {
                 const workOrder = data?.data

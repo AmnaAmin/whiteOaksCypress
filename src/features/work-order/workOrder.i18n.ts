@@ -35,6 +35,8 @@ export const workOrder = {
         profit: 'Profit',
         clientAmount: 'Client Amount',
         vendorAmount: 'Vendor Amount',
+        clientFinalAmount: 'Client Final Approved Amount',
+        vendorWoAmount:'Vendor Wo Amount',
         actions: 'Actions',
         upload: 'Upload',
         select: 'Select',

@@ -217,6 +217,7 @@ export type Document = {
   workOrderName?: string
   workOrderId?: number
   projectInvoiceId?: number
+  invoiceName?: string | null
 }
 
 type Select = {
