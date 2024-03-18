@@ -4,6 +4,8 @@ import { StatusUserMgt } from './status-user-mgt'
 import { USER_MANAGEMENT } from './user-management.i8n'
 import { PAYMENT_MANAGEMENT } from './payment-management.i8n'
 import { capitalize } from 'utils/string-formatters'
+import { convertDateTimeToServerISO } from 'components/table/util'
+
 
 //TODO - Move to constants file
 export const BONUS = [
@@ -233,11 +235,12 @@ export const PAYMENT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: `${PAYMENT_MANAGEMENT}.table.expiration`,
-    id: 'expDate',
+    id: 'expirationDate',
     accessorFn: (row: any) => {
       const card = row?.card;
       if (card) {
-        return `${card?.exp_month}/${card?.exp_year}`;
+        const date = convertDateTimeToServerISO(new Date(card?.exp_year, card?.exp_month - 1))?.substring(0, 10);
+        return date;
       } else {
         return "---";
       }
