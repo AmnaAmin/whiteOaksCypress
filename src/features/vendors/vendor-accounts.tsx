@@ -245,105 +245,67 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               </FormControl>
             </VStack>
           </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                {t('monthlySubscriptionFee')}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="monthlySubscriptionFee"
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberInput
-                        datatest-id="monthlySubscriptionFee"
-                        value={field.value}
-                        onValueChange={values => {
-                          const { floatValue } = values
-                          field.onChange(floatValue)
-                        }}
-                        customInput={Input}
-                        thousandSeparator={true}
-                        prefix={'$'}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }} />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                {t('oneTimeSetupFee')}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="oneTimeSetupFee"
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberInput
-                        datatest-id="oneTimeSetupFee"
-                        value={field.value}
-                        onValueChange={values => {
-                          const { floatValue } = values
-                          field.onChange(floatValue)
-                        }}
-                        customInput={Input}
-                        thousandSeparator={true}
-                        prefix={'$'}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              ></Controller>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                {t('billingDate')}
-              </FormLabel>
-              <Input
-                type="date"
-                {...register('billingDate')}
-                data-testid="billingDate"
-              />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
-              <FormLabel variant="strong-label" size="md">
-                {t('subscription')}
-              </FormLabel>
+          {/* HN-PSWOA-9944 | The below fields should only be visible on edit only */}
+          {vendorProfileData && <>
+            <GridItem>
               <FormControl>
-                <HStack spacing="16px">
-                  <RadioGroup w="100%" justifyContent={'flex-start'} value={!!getValues("isSubscriptionOn") ? "true" : "false"} onChange={() => {
-                    const isSubscription = Boolean(getValues("isSubscriptionOn"));
-                    setValue("isSubscriptionOn", !isSubscription);
-                  }}
-                  >
-                    <Stack direction="row">
-                      <Radio value={"true"} pr={4}>ON</Radio>
-                      <Radio value={"false"}>OFF</Radio>
-                    </Stack>
-                  </RadioGroup>
-                </HStack>
-                <FormErrorMessage pos="absolute">{errors.check?.message}</FormErrorMessage>
+                <FormLabel variant="strong-label" size="md">
+                  {t('monthlySubscriptionFee')}
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="monthlySubscriptionFee"
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <NumberInput
+                          datatest-id="monthlySubscriptionFee"
+                          value={field.value}
+                          onValueChange={values => {
+                            const { floatValue } = values
+                            field.onChange(floatValue)
+                          }}
+                          customInput={Input}
+                          thousandSeparator={true}
+                          prefix={'$'}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </>
+                    )
+                  }} />
               </FormControl>
-            </VStack>
-          </GridItem>
-          <GridItem colSpan={4}>
-            <Flex w='full' alignItems={"end"} justifyContent={"end"} pb={4}>
-              <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onNewBtnClick}>
-                New
-              </Button>
-            </Flex>
-            <UserPaymentAccountsTable vendorProfile={vendorProfileData} />
-          </GridItem>
+            </GridItem>
+            <GridItem>
+              <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+                <FormLabel variant="strong-label" size="md">
+                  {t('subscription')}
+                </FormLabel>
+                <FormControl>
+                  <HStack spacing="16px">
+                    <RadioGroup w="100%" justifyContent={'flex-start'} value={!!getValues("isSubscriptionOn") ? "true" : "false"} onChange={() => {
+                      const isSubscription = Boolean(getValues("isSubscriptionOn"));
+                      setValue("isSubscriptionOn", !isSubscription);
+                    }}
+                    >
+                      <Stack direction="row">
+                        <Radio value={"true"} pr={4}>ON</Radio>
+                        <Radio value={"false"}>OFF</Radio>
+                      </Stack>
+                    </RadioGroup>
+                  </HStack>
+                  <FormErrorMessage pos="absolute">{errors.check?.message}</FormErrorMessage>
+                </FormControl>
+              </VStack>
+            </GridItem>
+            <GridItem colSpan={4}>
+              <Flex w='full' alignItems={"end"} justifyContent={"end"} pb={4}>
+                <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onNewBtnClick}>
+                  New
+                </Button>
+              </Flex>
+              <UserPaymentAccountsTable vendorProfile={vendorProfileData} />
+            </GridItem>
+          </>}
           <GridItem colSpan={4}>
             <FormLabel variant="strong-label" color={'gray.500'}>
               Vendor Automated Request Form

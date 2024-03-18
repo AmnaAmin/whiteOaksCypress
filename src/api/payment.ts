@@ -7,6 +7,8 @@ import { useClient } from 'utils/auth-context'
 
 type CreditCardPayload = {
   organizationId: number
+  organizationName: string
+  organizationEmail: string
   platform: string | undefined
   billingAddress: {
     line1: string
@@ -51,6 +53,8 @@ export const mapCCFormValuesToPayload = (
 ) => {
   const payload: CreditCardPayload = {
     organizationId: vendorProfileData?.id,
+    organizationEmail: vendorProfileData?.businessEmailAddress,
+    organizationName: vendorProfileData?.companyName,
     platform: woaPlatformId?.toString(),
     billingAddress: {
       line1: values?.billingAddress?.line1,
@@ -97,7 +101,7 @@ export const useCreateNewCreditCard = (id: string | number) => {
       },
       onError(error: any) {
         console.error('Exception encountered in useCreateNewCreditCard:', error)
-        let description = `${error.title}: ${error?.detail}` ?? 'Unable to save the credit card.'
+        let description = `${error?.detail}` ?? 'Unable to save the credit card.'
         toast({
           title: 'Payment Method',
           position: 'top-left',
@@ -110,7 +114,7 @@ export const useCreateNewCreditCard = (id: string | number) => {
   )
 }
 
-export const useFetchPaymentMethods = (id: string | number) => {
+export const useFetchPaymentMethods = (id: string | number | undefined) => {
   const client = useClient()
   const toast = useToast()
 
@@ -118,6 +122,7 @@ export const useFetchPaymentMethods = (id: string | number) => {
   return useQuery(
     ['payment-methods', id],
     async () => {
+      if (!id) return;
       const response = await client(`payments/payment-methods/${urlPathVariable}`, {}, paymentServiceUrl)
       if (response) {
         const jsonResponse = JSON.parse(response.data)
@@ -129,7 +134,7 @@ export const useFetchPaymentMethods = (id: string | number) => {
     {
       onError(error: any) {
         console.error('Exception encountered in useFetchPaymentMethods:', error)
-        let description = `${error.title}: ${error?.detail}` ?? 'Something went wrong. Unable to retrieve payment methods.'
+        let description = `${error?.detail}` ?? 'Something went wrong. Unable to retrieve payment methods.'
         toast({
           title: 'Payment Method',
           position: 'top-left',
@@ -170,7 +175,7 @@ export const useUpdateCredtCard = (id: string | number, paymentMethodId: string)
       },
       onError(error: any) {
         console.error('Exception encountered in useUpdateCredtCard:', error)
-        let description = `${error.title}: ${error?.detail}` ?? 'Unable to update the credit card.'
+        let description = `${error?.detail}` ?? 'Unable to update the credit card.'
         toast({
           title: 'Payment Method',
           position: 'top-left',

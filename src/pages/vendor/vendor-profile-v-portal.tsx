@@ -37,6 +37,7 @@ import { VendorUsersTab } from 'features/vendors/vendor-users-table'
 import { useAuth } from 'utils/auth-context'
 import { VendorAccounts } from 'features/vendors/vendor-accounts'
 import { DocumentsCard } from 'features/vendor-profile/documents-card'
+import { useFetchPaymentMethods } from 'api/payment'
 
 type Props = {
   vendorId?: number | string | undefined
@@ -80,6 +81,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveAccounts } = useSaveVendorDetails('Accounts')
   const { mutate: createVendor } = useCreateVendorMutation()
   const { data: paymentsMethods } = usePaymentMethods()
+  const { data: stripePaymentMethods } = useFetchPaymentMethods(vendorProfileData?.id);
   const [tabIndex, setTabIndex] = useState<any>(0)
   const [reachTabIndex, setReachTabIndex] = useState(0)
   const formReturn = useForm<VendorProfileDetailsFormData>()
@@ -143,7 +145,16 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           case 6:
             //Accounts
             const accountsPayload = await parseAccountsFormDataToAPIData(formData, paymentsMethods, vendorProfileData)
-            saveAccounts(accountsPayload)
+            if (accountsPayload.isSubscriptionOn && !stripePaymentMethods?.paymentMethods?.length) {
+              toast({
+                description: `Please add atleast one payment method to turn on the subscription.`,
+                status: 'error',
+                isClosable: true,
+                position: 'top-left',
+              })
+            } else {
+              saveAccounts(accountsPayload)
+            }
             break
 
           default:
