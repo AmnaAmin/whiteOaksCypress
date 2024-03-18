@@ -110,7 +110,7 @@ const InformationCard = props => {
           fontStyle="normal"
           fontWeight={400}
           isTruncated={true}
-          maxW="100px"
+          maxW="150px"
           title={props.date}
           {...props.customStyle}
         >
