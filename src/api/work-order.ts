@@ -401,6 +401,7 @@ export const defaultValuesWODetails = (workOrder, defaultSkill, locations, payme
     byPassSOWRule: workOrder.byPassSOWRule ?? false,
     invoiceAmount: currencyFormatter(workOrder?.invoiceAmount),
     clientApprovedAmount: currencyFormatter(workOrder?.clientApprovedAmount),
+    clientOriginalApprovedAmount: removeCurrencyFormat(workOrder?.clientOriginalApprovedAmount),
     percentage: workOrder?.percentage,
     assignedItems:
       workOrder?.assignedItems?.length > 0
