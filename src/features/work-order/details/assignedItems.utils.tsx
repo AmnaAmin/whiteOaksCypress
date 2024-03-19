@@ -96,7 +96,7 @@ export type selectedCell = { id: string; value: string }
 
 export const getRemovedItems = (formValues, workOrderAssignedItems) => {
   if (formValues?.cancel?.value === 35) {
-    return formValues.assignedItems
+    return workOrderAssignedItems
   }
 
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
@@ -840,7 +840,7 @@ export const useGetLineItemsColumn = ({
     (e, index) => {
       const price = Number(controlledAssignedItems?.[index]?.price ?? 0)
       const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
-      const newQuantity = Number(e.target.value)
+      const newQuantity = Math.abs(Number(e.target.value))
       const vendorAmount = calculateVendorAmount(price * newQuantity, profit)
       setValue(`assignedItems.${index}.clientAmount`, price * newQuantity)
       setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
@@ -1191,7 +1191,7 @@ export const useGetLineItemsColumn = ({
                 ml="27px"
                 isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
                 zIndex={9999 + 1}
-                width="100px"            
+                width="100px"
               >
                 <Controller
                   control={control}
@@ -1252,7 +1252,7 @@ export const useGetLineItemsColumn = ({
                 fieldName="quantity"
                 fieldArray="assignedItems"
                 formControl={formControl}
-                inputType="text"
+                inputType="number"
                 allowEdit={allowEdit}
                 onChange={e => {
                   handleItemQtyChange(e, index)

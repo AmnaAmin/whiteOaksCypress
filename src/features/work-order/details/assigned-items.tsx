@@ -314,7 +314,6 @@ const AssignedItems = (props: AssignedItemType) => {
             )}
           </HStack>
         </Stack>
-
         <Box
           width="100%"
           overflowX={overflowXVal}
