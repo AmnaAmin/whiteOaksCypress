@@ -16,7 +16,7 @@ import { CreatableSelect } from 'components/form/react-select'
 
 import { STATUS } from 'features/common/status'
 import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
-import { useState, useRef, useCallback, useMemo } from 'react'
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { MdOutlineCancel } from 'react-icons/md'
@@ -868,6 +868,15 @@ export const useGetLineItemsColumn = ({
     },
     [controlledAssignedItems],
   )
+
+  useEffect(() => {
+    //  set by default value of profit% 45 line lineitem table with condition that
+    // if item.profit exist then add it otherwise on newly line items added put profit 45% as ask
+    values.assignedItems?.forEach((item, index) => {
+      setValue(`assignedItems.${index}.profit`, item.profit ?? 45)
+      setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(item.clientAmount, item.profit ?? 45))
+    })
+  }, [values.assignedItems])
 
   const handleItemVendorAmountChange = useCallback(
     (e, index) => {
