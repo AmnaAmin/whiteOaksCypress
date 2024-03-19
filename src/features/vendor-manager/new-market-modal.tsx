@@ -92,7 +92,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
     }
   }, [stateSelectOptions])
 
-  const { control, register, handleSubmit, reset, setValue, watch } = useForm<{
+  const { control, register, handleSubmit, reset, setValue, watch, setError,clearErrors, formState: { errors },trigger  } = useForm<{
     state: SelectOption
     metroServiceArea: string
     lienDue: string | number
@@ -214,16 +214,35 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 <GridItem> */}
               <HStack spacing="16px">
                 <Box>
+                  <FormControl  isInvalid={!!errors?.metroServiceArea} h='77px'>
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.metroServiceArea`)}
                   </FormLabel>
                   <Input
-                    {...register('metroServiceArea')}
+                    {...register('metroServiceArea',{
+                      maxLength: { value: 255, message: 'Please use 255 characters only.' },
+                    })}
                     type="text"
                     variant="required-field"
                     w="215px"
                     disabled={isReadOnly}
+                    onChange={e => {
+                      const title = e?.target.value
+                      setValue('metroServiceArea', title)
+                      if (title?.length > 255) {
+                        setError('metroServiceArea', {
+                          type: 'maxLength',
+                          message: 'Please use 255 characters only.',
+                        })
+                      } else {
+                        clearErrors('metroServiceArea')
+                      }
+                    }}
                   />
+                   {!!errors?.metroServiceArea && (
+                      <FormErrorMessage data-testid="market_error">{errors?.metroServiceArea?.message}</FormErrorMessage>
+                    )}
+                  </FormControl>
                 </Box>
 
                 <FormControl w="225px">
@@ -249,13 +268,16 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                       </>
                     )}
                   />
-                </FormControl>
-                <FormControl w="225px">
+                </FormControl >
+                <FormControl w="225px"  isInvalid={!!errors?.lienDue}>
                   <FormLabel variant="strong-label" size="md" htmlFor="lienDue" noOfLines={1}>
                     {t(`${VENDOR_MANAGER}.lienDue`)}
                   </FormLabel>
                   <Controller
                     control={control}
+                    rules={{
+                      maxLength: { value: 2147483647, message: 'Please use 2147483647 characters only.' },
+                    }}
                     name="lienDue"
                     render={({ field, fieldState }) => {
                       return (
@@ -264,12 +286,16 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                             customInput={CustomRequiredInput}
                             value={field.value}
                             disabled={isReadOnly}
-                            onValueChange={values => {
-                              const { floatValue } = values
-                              field.onChange(floatValue ?? '')
+                            onValueChange={e => {
+                              clearErrors('lienDue')
+                              const inputValue = e.value ?? ''
+                              field.onChange(inputValue)
+                              trigger('lienDue')
                             }}
                           />
-                          <FormErrorMessage>{fieldState?.error?.message}</FormErrorMessage>
+                          {!!errors?.lienDue && (
+                      <FormErrorMessage data-testid="market_error">{errors?.lienDue?.message}</FormErrorMessage>
+                    )}
                         </>
                       )
                     }}
@@ -277,11 +303,31 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                 </FormControl>
               </HStack>
               <Box mt={'5px'}>
+                <FormControl isInvalid={!!errors?.abbreviation} h='77px'>
                 <FormLabel variant="strong-label" size="md">
                   {t(`${CLIENTS}.abbreviation`)}
                 </FormLabel>
 
-                <Input id="abbreviation" w="215px" {...register('abbreviation')} isDisabled={isReadOnly} />
+                <Input id="abbreviation" w="215px" {...register('abbreviation',{
+                      maxLength: { value: 255, message: 'Please use 255 characters only.' },
+                    })}
+                     isDisabled={isReadOnly}  
+                     onChange={e => {
+                      const title = e?.target.value
+                      setValue('abbreviation', title)
+                      if (title?.length > 255) {
+                        setError('abbreviation', {
+                          type: 'maxLength',
+                          message: 'Please use 255 characters only.',
+                        })
+                      } else {
+                        clearErrors('abbreviation')
+                      }
+                    }}/>
+                     {!!errors?.abbreviation && (
+                      <FormErrorMessage data-testid="abbreviation_error">{errors?.abbreviation?.message}</FormErrorMessage>
+                    )}
+                </FormControl>
               </Box>
             </ModalBody>
             <ModalFooter borderTop="1px solid #E2E8F0" mt="30px" justifyContent="space-between">

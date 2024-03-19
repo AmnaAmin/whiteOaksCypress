@@ -40,6 +40,17 @@ import { onChangeCheckbox, onChangeHeaderCheckbox } from './utils'
 
 const swoPrefix = '/smartwo/api'
 
+export const columnsCannotFilter = [
+  'assigned',
+  'location',
+  'paymentGroup',
+  'completePercentage',
+  'isCompleted',
+  'isVerified',
+  'images',
+  'checkbox',
+]
+
 export type LineItems = {
   id?: number | string | null
   completePercentage?: completePercentage | any // place "any" here type because completePercentage vary in lineItems payload
@@ -369,6 +380,7 @@ export const mapToUnAssignItem = item => {
     ...item,
     unitPrice: item?.price,
     id: item.smartLineItemId,
+    paymentGroup: item?.paymentGroup?.label,
     isAssigned: false,
     totalPrice: Number(item?.price) * Number(item?.quantity),
   }
@@ -813,7 +825,6 @@ export const useGetLineItemsColumn = ({
     }
   })
   const { isAdmin } = useUserRolesSelector()
-  const makePayGrpCompulsory = clientName === 'FNMA'
 
   //update this check as %completion came in two form i.e completePercentage & completePercentage.value
   const markAllCompleted =
@@ -1009,8 +1020,51 @@ export const useGetLineItemsColumn = ({
         },
       },
       {
+        header: `${WORK_ORDER}.paymentGroup`,
+        accessorKey: 'paymentGroup',
+        size: 250,
+        cell: ({ row }) => {
+          const index = row?.index
+          const {
+            formState: { errors },
+            control,
+          } = formControl
+
+          return (
+            <Box>
+              <FormControl isInvalid={!!errors.assignedItems?.[index]?.paymentGroup} zIndex={9999 + 1} width="220px">
+                <Controller
+                  control={control}
+                  name={`assignedItems.${index}.paymentGroup`}
+                  render={({ field }) => {
+                    return (
+                      <>
+                        <CreatableSelectForTable
+                          index={index}
+                          field={field}
+                          key={'assignedItems.' + [index]}
+                          id={`assignedItems.${index}.paymentGroup`}
+                          options={paymentGroupValsOptions}
+                          newObjectFormatting={null}
+                          isDisabled={isVendor}
+                          valueFormatter={null}
+                          style={{ height: 115 }}
+                        />
+                      </>
+                    )
+                  }}
+                />
+              </FormControl>
+            </Box>
+          )
+        },
+      },
+      {
         header: `${WORK_ORDER}.sku`,
         accessorKey: 'sku',
+        accessorFn: cellInfo => {
+          return cellInfo.sku ? cellInfo.sku?.toString() : '- - -'
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1032,6 +1086,9 @@ export const useGetLineItemsColumn = ({
       {
         header: `${WORK_ORDER}.productName`,
         accessorKey: 'productName',
+        accessorFn: cellInfo => {
+          return cellInfo.productName ? cellInfo.productName?.toString() : '- - -'
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1065,6 +1122,9 @@ export const useGetLineItemsColumn = ({
           )
         },
         accessorKey: 'description',
+        accessorFn: cellInfo => {
+          return cellInfo.description ? cellInfo.description?.toString() : '- - -'
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1131,7 +1191,7 @@ export const useGetLineItemsColumn = ({
                 ml="27px"
                 isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
                 zIndex={9999 + 1}
-                width="150"
+                width="100px"            
               >
                 <Controller
                   control={control}
@@ -1150,6 +1210,7 @@ export const useGetLineItemsColumn = ({
                           isDisabled={isVendor}
                           newObjectFormatting={newObjectFormatting}
                           onChangeFn={onChangeFn}
+                          style={{ height: 115, width: 100 }}
                         />
                         <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
                       </>
@@ -1177,6 +1238,9 @@ export const useGetLineItemsColumn = ({
         },
         size: 100,
         accessorKey: 'quantity',
+        accessorFn: cellInfo => {
+          return cellInfo.quantity ? cellInfo.quantity?.toString() : '- - -'
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1213,6 +1277,10 @@ export const useGetLineItemsColumn = ({
         },
         size: 100,
         accessorKey: 'price',
+        accessorFn(cellInfo: any) {
+          return cellInfo.price?.toString()
+        },
+        filterFn: 'includesString',
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1239,6 +1307,10 @@ export const useGetLineItemsColumn = ({
         header: `${WORK_ORDER}.clientAmount`,
         accessorKey: 'clientAmount',
         size: 150,
+        accessorFn(cellInfo: any) {
+          return cellInfo.clientAmount?.toString()
+        },
+        filterFn: 'includesString',
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1260,6 +1332,9 @@ export const useGetLineItemsColumn = ({
         header: `${WORK_ORDER}.profit`,
         accessorKey: 'profit',
         size: 100,
+        accessorFn(cellInfo: any) {
+          return cellInfo.profit?.toString()
+        },
         cell: cellInfo => {
           const index = cellInfo?.row?.index
           return (
@@ -1293,6 +1368,10 @@ export const useGetLineItemsColumn = ({
             return <>{t(`${WORK_ORDER}.amount`)}</>
           }
         },
+        accessorFn(cellInfo: any) {
+          return cellInfo.vendorAmount?.toString()
+        },
+        filterFn: 'includesString',
         accessorKey: 'vendorAmount',
         size: 160,
         cell: cellInfo => {
@@ -1317,49 +1396,6 @@ export const useGetLineItemsColumn = ({
           )
         },
       },
-
-      {
-        header: `${WORK_ORDER}.paymentGroup`,
-        accessorKey: 'paymentGroup',
-        size: 250,
-        cell: ({ row }) => {
-          const index = row?.index
-          const {
-            formState: { errors },
-            control,
-          } = formControl
-
-          return (
-            <Box>
-              <FormControl isInvalid={!!errors.assignedItems?.[index]?.paymentGroup} zIndex={9999 + 1} width="220px">
-                <Controller
-                  control={control}
-                  rules={makePayGrpCompulsory ? { required: true } : { required: false }}
-                  name={`assignedItems.${index}.paymentGroup`}
-                  render={({ field }) => {
-                    return (
-                      <>
-                        <CreatableSelectForTable
-                          index={index}
-                          field={field}
-                          key={'assignedItems.' + [index]}
-                          id={`assignedItems.${index}.paymentGroup`}
-                          options={paymentGroupValsOptions}
-                          newObjectFormatting={null}
-                          isDisabled={isVendor}
-                          valueFormatter={null}
-                          style={{ height: 115 }}
-                        />
-                      </>
-                    )
-                  }}
-                />
-              </FormControl>
-            </Box>
-          )
-        },
-      },
-
       {
         // header: `${WORK_ORDER}.complete`,
         accessorKey: 'isCompleted',
@@ -1553,7 +1589,7 @@ export const CreatableSelectForTable = ({
       size="md"
       value={valueFormatter ? valueFormatter(field.value) : field.value}
       isDisabled={isDisabled}
-      selectProps={{ widthAssign: '100%', menuHeight: style?.height }}
+      selectProps={{ widthAssign: '100%', menuHeight: style?.height, menuWidth: style?.width }}
       onChange={option => {
         // this above component is resusable, for avoiding the issue its handle here
         // as if we have prop for onChangeFn then only it will execute

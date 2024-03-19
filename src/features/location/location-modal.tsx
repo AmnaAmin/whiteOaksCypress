@@ -1,6 +1,8 @@
 import {
   Box,
   Button,
+  FormControl,
+  FormErrorMessage,
   FormLabel,
   HStack,
   Icon,
@@ -61,7 +63,7 @@ export type ProjectTypeFormTypes = {
 
 export const LocationModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, location, isOpen }) => {
   const { t } = useTranslation()
-  const { register, handleSubmit, setValue, watch, reset } = useForm()
+  const { register, handleSubmit, setValue, watch, reset,setError,clearErrors, formState: { errors }  } = useForm()
   const { mutate: createLocation, isLoading: loadingNewLocation } = useCreateLocation()
   const { mutate: editLocation, isLoading: loadingEditLocation } = useUpdateLocation()
   const { mutate: delLocation ,isLoading: loadingDel} = useDeleteLocation()
@@ -171,14 +173,33 @@ export const LocationModal: React.FC<ProjectTypeFormTypes> = ({ onClose: close, 
                   </HStack>
                 )}
                 <Box w="215px" mt="30px">
+                  <FormControl isInvalid={!!errors?.location}>
                   <FormLabel variant="strong-label">{t(`${LOCATION}.location`)}</FormLabel>
                   <Input
                     type="text"
                     variant="required-field"
-                    {...register('location')}
+                    {...register('location',{
+                      maxLength: { value: 255, message: 'Please use 255 characters only.' },
+                    })}
+                    onChange={e => {
+                      const title = e?.target.value
+                      setValue('location', title)
+                      if (title?.length > 255) {
+                        setError('location', {
+                          type: 'maxLength',
+                          message: 'Please use 255 characters only.',
+                        })
+                      } else {
+                        clearErrors('location')
+                      }
+                    }}
                     data-testid="location"
                     isDisabled={isReadOnly}
                   />
+                   {!!errors?.location && (
+                      <FormErrorMessage data-testid="location_error">{errors?.location?.message}</FormErrorMessage>
+                    )}
+                  </FormControl>
                 </Box>
               </Box>
             </Box>

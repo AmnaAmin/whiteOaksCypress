@@ -85,10 +85,14 @@ export const VendorDocumentsTable = React.forwardRef((props: DocumentsProps, ref
   const onRowClick = row => {}
 
   const { isVendor } = useUserRolesSelector()
+  const columnsWithoutDeleteBtn = tableColumns.filter(e => e.id !== 'deleteBtn')
+  const hideDeleteButtonForAdmin = isVendor ? columnsWithoutDeleteBtn : tableColumns
 
   useEffect(() => {
+    const mutateDocuments = documents?.filter(e => e.deleted !== true)
+
     if (documents && documents?.length > 0) {
-      setDataDocx(mapDataForDocxExpandableRows(documents as any, isVendor as boolean))
+      setDataDocx(mapDataForDocxExpandableRows(mutateDocuments as any, isVendor as boolean))
     }
   }, [documents])
 
@@ -118,7 +122,7 @@ export const VendorDocumentsTable = React.forwardRef((props: DocumentsProps, ref
             totalPages={documents?.length ? totalPages : -1}
             manualPagination={false}
             data={sortTransData(dataDocx)}
-            columns={tableColumns}
+            columns={hideDeleteButtonForAdmin}
             isExpandable={true}
           >
             <Table
@@ -128,7 +132,7 @@ export const VendorDocumentsTable = React.forwardRef((props: DocumentsProps, ref
             />
             <TableFooter position="sticky" bottom="0" left="0" right="0">
               <ButtonsWrapper>
-                <ExportCustomButton columns={tableColumns} data={documents} fileName="documents" />
+                <ExportCustomButton columns={hideDeleteButtonForAdmin} data={documents} fileName="documents" />
                 <CustomDivider />
                 {settingColumns && (
                   <TableColumnSettings

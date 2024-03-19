@@ -42,10 +42,11 @@ import { TransactionsTab } from './transactions/transactions-tab'
 import { useQueryClient } from 'react-query'
 import { useVendorEntity } from 'api/vendor-dashboard'
 import { useDocumentLicenseMessage } from 'features/vendor-profile/hook'
-import { useLocation as useLineItemsLocation } from 'api/location'
+import { useLocation as useLineItemsLocation, usePaymentGroupVals } from 'api/location'
 import { Messages } from '../messages/messages'
 import jsPDF from 'jspdf'
 import { GoArrowLeft } from 'react-icons/go'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 const WorkOrderDetailsPage = ({
   workOrder,
@@ -53,8 +54,8 @@ const WorkOrderDetailsPage = ({
   onClose,
   isOpen,
 }: {
-  workOrder: ProjectWorkOrderType,
-  defaultSelected: boolean,
+  workOrder: ProjectWorkOrderType
+  defaultSelected: boolean
   onClose: () => void
   isOpen: boolean
 }) => {
@@ -66,6 +67,7 @@ const WorkOrderDetailsPage = ({
   const { projectId } = useParams<{ projectId: string }>()
   const [projId, setProjId] = useState<string | undefined>(projectId)
   const { projectData, isLoading: isProjectLoading } = usePCProject(projId)
+  const { paymentGroupValsOptions, isLoading: isPaymentGroupValsLoading } = usePaymentGroupVals()
   const { swoProject } = useFetchProjectId(projId)
   const { documents: documentsData = [], isLoading: isDocumentsLoading } = useDocuments({
     projectId: projId,
@@ -99,6 +101,8 @@ const WorkOrderDetailsPage = ({
   const { data: locations } = useLineItemsLocation()
   const tabsContainerRef = useRef<HTMLDivElement>(null)
   const isLoadingWorkOrder = isLoadingLineItems || isFetchingLineItems
+  const { isAdmin, isAccounting } = useUserRolesSelector()
+  const isAdminOrAccount = isAdmin || isAccounting
 
   useEffect(() => {
     if (workOrderDetails) {
@@ -343,8 +347,15 @@ const WorkOrderDetailsPage = ({
       )}
       <Divider mb={3} />
       <Stack>
-        <Tabs variant="line" colorScheme="brand" size="md" index={tabIndex} onChange={index => setTabIndex(index)} whiteSpace="nowrap">
-          <TabList color="gray.600" ml="10px" mr="20px" bg={'#F7FAFC'} rounded="6px 6px 0px 0px" >
+        <Tabs
+          variant="line"
+          colorScheme="brand"
+          size="md"
+          index={tabIndex}
+          onChange={index => setTabIndex(index)}
+          whiteSpace="nowrap"
+        >
+          <TabList color="gray.600" ml="10px" mr="20px" bg={'#F7FAFC'} rounded="6px 6px 0px 0px">
             <Tab>{t('workOrderDetails')}</Tab>
             <Tab data-testid="wo_transaction_tab">{t('projects.projectDetails.transactions')}</Tab>
             {displayAwardPlan && <TabCustom isError={isError && tabIndex === 0}>{t('projectAward')}</TabCustom>}
@@ -365,7 +376,7 @@ const WorkOrderDetailsPage = ({
                       setRejectInvoice(!rejectInvoice)
                     }}
                     isChecked={rejectInvoice}
-                    disabled={workOrderDetails.status === 111}
+                    disabled={workOrderDetails.status === 111 || (workOrderDetails?.onHold && !isAdminOrAccount)}
                     fontSize="14px"
                     fontWeight={500}
                   >
@@ -377,7 +388,7 @@ const WorkOrderDetailsPage = ({
           <Card mx="10px" mb="10px" roundedTopLeft={0} p={0}>
             <TabPanels>
               <TabPanel p={0}>
-                {isLoadingWorkOrder || isProjectLoading ? (
+                {isLoadingWorkOrder || isProjectLoading || isPaymentGroupValsLoading ? (
                   <Center h={'600px'}>
                     <Spinner size="xl" />
                   </Center>
@@ -386,6 +397,7 @@ const WorkOrderDetailsPage = ({
                     navigateToProjectDetails={isPayable ? navigateToProjectDetails : null}
                     workOrder={workOrderDetails}
                     onClose={null}
+                    paymentGroupValsOptions={paymentGroupValsOptions}
                     onSave={onSave}
                     isWorkOrderUpdating={isWorkOrderUpdating}
                     swoProject={swoProject}
@@ -410,6 +422,8 @@ const WorkOrderDetailsPage = ({
                     onClose={null}
                     workOrder={workOrderDetails}
                     isVendorExpired={hasExpiredDocumentOrLicense}
+                    onSave={onSave}
+                    isWorkOrderUpdating={isWorkOrderUpdating}
                   />
                 )}
               </TabPanel>

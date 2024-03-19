@@ -104,7 +104,8 @@ export const InvoiceTab = ({
   const [isWorkOrderUpdated, setWorkOrderUpdating] = useState(false)
   const toast = useToast()
   const { mutate: rejectLW } = useUpdateWorkOrderMutation({ hideToast: true })
-  const { isVendor, isAdmin } = useUserRolesSelector()
+  const { isVendor, isAccounting, isAdmin } = useUserRolesSelector()
+  const isAdminOrAccount = isAdmin || isAccounting
   const { pathname } = useLocation()
   const isPayable = pathname?.includes('payable')
   const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
@@ -115,6 +116,9 @@ export const InvoiceTab = ({
     onClose: onGenerateInvoiceClose,
     onOpen: onGenerateInvoiceOpen,
   } = useDisclosure()
+
+  //pending draw is greater then balance due then show error
+  const isDrawGreaterThenBalancedue = Math.abs(totalPendingDrawAmount) > workOrder.finalInvoiceAmount
 
   useEffect(() => {
     if (documentsData && documentsData.length > 0) {
@@ -150,7 +154,9 @@ export const InvoiceTab = ({
   }, [transactions])
 
   const rejectInvoice = () => {
-    if (onSave) {
+    if (isDrawGreaterThenBalancedue) {
+      pendingDrawError()
+    } else if (onSave) {
       onSave({
         status: STATUS_CODE.DECLINED,
         declineDate: new Date(),
@@ -227,6 +233,18 @@ export const InvoiceTab = ({
     setTabIndex(1)
     onGenerateInvoiceClose()
   }
+
+  const pendingDrawError = () => {
+    toast({
+      title: 'Work Order',
+      description: t('pendingDrawError'),
+      status: 'error',
+      isClosable: true,
+      position: 'top-left',
+    })
+    onGenerateInvoiceClose()
+  }
+
   const rejectLienWaiver = () => {
     const desc = t('updateLWError')
     rejectLW(
@@ -245,13 +263,17 @@ export const InvoiceTab = ({
     )
   }
   const generatePdf = useCallback(async () => {
-    setWorkOrderUpdating(true)
-    if (!workOrder.lienWaiverAccepted) {
-      redirectToLienWaiver()
-    } else if (Math.abs(workOrder?.amountOfCheck - workOrder?.finalInvoiceAmount) !== 0) {
-      rejectLienWaiver()
+    if (isDrawGreaterThenBalancedue) {
+      pendingDrawError()
     } else {
-      generateInvoice()
+      setWorkOrderUpdating(true)
+      if (!workOrder.lienWaiverAccepted) {
+        redirectToLienWaiver()
+      } else if (Math.abs(workOrder?.amountOfCheck - workOrder?.finalInvoiceAmount) !== 0) {
+        rejectLienWaiver()
+      } else {
+        generateInvoice()
+      }
     }
   }, [items, workOrder, projectData, vendorAddress])
   const disableGenerateInvoice =
@@ -445,7 +467,7 @@ export const InvoiceTab = ({
             <Button
               variant="outline"
               data-testid="generateInvoice"
-              disabled={disableGenerateInvoice}
+              disabled={disableGenerateInvoice || (workOrder?.onHold && !isAdminOrAccount)}
               colorScheme="darkPrimary"
               size="md"
               leftIcon={<BiSpreadsheet />}

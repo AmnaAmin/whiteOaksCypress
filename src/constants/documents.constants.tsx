@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react'
-import { BiDownArrowCircle } from 'react-icons/bi'
-import { Text, Flex, Box, Icon, Spacer } from '@chakra-ui/react'
+import { BiDownArrowCircle, BiTrash } from 'react-icons/bi'
+import { Text, Flex, Box, Icon, Spacer, IconButton } from '@chakra-ui/react'
 import { downloadFileOnly } from 'utils/file-utils'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { DownArrow, RightArrow } from 'components/expension-grid-arrows'
-import { DeleteIcon } from '@chakra-ui/icons'
 
 export const DOCUMENT_TYPES = {
   ORIGINAL_SOW: 39,
@@ -131,6 +130,13 @@ export const useGetDocumentsTableColumn = (onResetConfirmationModalOpen: () => v
         accessorKey: 'fileObjectContentType',
         cell: withPreviewCell,
       },
+      {
+        id: 'invoiceName',
+        header: 'File Name',
+        accessorKey: 'invoiceName',
+        cell: withPreviewCell,
+        filterFn: 'includesString',
+      },
 
       {
         header: 'createdBy',
@@ -191,20 +197,22 @@ export const useGetDocumentsTableColumn = (onResetConfirmationModalOpen: () => v
             <>
               {cellInfo?.row?.original?.label !== 'Project SOW' && (
                 <Flex
-                  ml="-9px"
+                  ml="-11px"
                   onClick={() => {
                     onResetConfirmationModalOpen()
                     getDocId(cellInfo?.row?.original)
                   }}
                 >
-                  {/* <Box mr={2}>{dateFormat(cellInfo.getValue() as string)}</Box> */}
-                  <DeleteIcon
-                    style={{
-                      marginRight: '8px',
-                      color: '#345EA6',
-                      fontSize: 18,
-                    }}
-                  />
+                  <IconButton
+                    aria-label="open-signature"
+                    variant="ghost"
+                    minW="auto"
+                    height="auto"
+                    _hover={{ color: '#345EA6' }}
+                    data-testid="openSignature"
+                  >
+                    <BiTrash fontSize={24} color="gray.300" />
+                  </IconButton>
                 </Flex>
               )}
             </>
