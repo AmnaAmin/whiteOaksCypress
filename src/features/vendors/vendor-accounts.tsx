@@ -43,7 +43,7 @@ import { imgUtility } from 'utils/file-utils'
 import { VENDORPROFILE } from 'features/vendor-profile/vendor-profile.i18n'
 import { SaveChangedFieldAlert } from 'features/vendor-profile/save-change-field'
 import jsPDF from 'jspdf'
-import { convertImageToDataURL } from 'components/table/util'
+import { convertImageToDataURL, getNextMonthFirstDate } from 'components/table/util'
 import { useDeleteDocument } from 'api/vendor-projects'
 import { ConfirmationBox } from 'components/Confirmation'
 import { NumberInput } from 'components/input/input'
@@ -59,8 +59,9 @@ type UserProps = {
   onClose?: () => void
   vendorProfileData: VendorProfile
   isActive
+  isUserVendorAdmin?: boolean
 }
-export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive }) => {
+export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive, isUserVendorAdmin = false }) => {
   const formReturn = useFormContext<VendorAccountsFormValues>()
   const { data: stripePaymentMethods } = useFetchPaymentMethods(vendorProfileData?.id);
   const { isOpen: isAccountTypeOpen, onOpen: onAccountTypeOpen, onClose: onAccountTypeClose } = useDisclosure();
@@ -127,7 +128,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     <>
       <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onCCModalClose} vendorProfileData={vendorProfileData} />
       <Box maxH={'632px'} overflowY={'scroll'}>
-        <Grid templateColumns="repeat(4,235px)" rowGap="30px" columnGap="16px">
+        <Grid templateColumns="repeat(4,265px)" rowGap="30px" columnGap="16px">
+          <GridItem colSpan={4}>
+            <FormLabel variant="strong-label" color={'gray.500'}>
+              Work Order Payment
+            </FormLabel>
+          </GridItem>
           <GridItem>
             <FormControl isInvalid={!!errors.einNumber}>
               <FormLabel variant="strong-label" size="md">
@@ -249,6 +255,14 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               </FormControl>
             </VStack>
           </GridItem>
+          <GridItem colSpan={4}>
+            <Divider border="1px solid" />
+          </GridItem>
+          <GridItem colSpan={4}>
+            <FormLabel variant="strong-label" color={'gray.500'}>
+              Subscription Details
+            </FormLabel>
+          </GridItem>
           {/* HN-PSWOA-9944 | The below fields should only be visible on edit only */}
           {vendorProfileData && <>
             <GridItem>
@@ -265,6 +279,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                         <NumberInput
                           datatest-id="monthlySubscriptionFee"
                           value={field.value}
+                          disabled={isUserVendorAdmin}
                           onValueChange={values => {
                             const { floatValue } = values
                             field.onChange(floatValue)
@@ -279,18 +294,62 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   }} />
               </FormControl>
             </GridItem>
-            <GridItem colSpan={2}>
+            <GridItem>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  {t('setupFee')}
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="oneTimeSetupFee"
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <NumberInput
+                          datatest-id="setupFee"
+                          value={field.value}
+                          disabled={isUserVendorAdmin}
+                          onValueChange={values => {
+                            const { floatValue } = values
+                            field.onChange(floatValue)
+                          }}
+                          customInput={Input}
+                          thousandSeparator={true}
+                          prefix={'$'}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </>
+                    )
+                  }}
+                ></Controller>
+              </FormControl>
+            </GridItem>
+            <GridItem>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  {t('billingDate')}
+                </FormLabel>
+                <Input
+                  type="date"
+                  {...register('billingDate')}
+                  data-testid="billingDate"
+                  value={getNextMonthFirstDate()}
+                  disabled={true}
+                />
+              </FormControl>
+            </GridItem>
+            {!isUserVendorAdmin && <GridItem>
               <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600" w="full">
                 <FormLabel variant="strong-label" size="md">
                   <Flex w='full' alignItems={"start"} justifyContent={"center"} direction="column">
-                  <Box>
-                    {t('subscription')}
-                  </Box>
-                  {!enableSubscriptionField && <Box>
-                    <Text fontSize={"12px"}>
-                      (Add a Credit Card first to enable subscription)
-                    </Text>
-                  </Box>}
+                    <Box>
+                      {t('subscription')}
+                    </Box>
+                    {!enableSubscriptionField && <Box>
+                      <Text fontSize={"12px"}>
+                        (Add a Credit Card first to enable subscription)
+                      </Text>
+                    </Box>}
                   </Flex>
                 </FormLabel>
                 <FormControl>
@@ -309,7 +368,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   <FormErrorMessage pos="absolute">{errors.check?.message}</FormErrorMessage>
                 </FormControl>
               </VStack>
-            </GridItem>
+            </GridItem>}
             <GridItem colSpan={4}>
               <Flex w='full' alignItems={"end"} justifyContent={"end"} pb={4}>
                 <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onNewBtnClick}>

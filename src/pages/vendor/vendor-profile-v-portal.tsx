@@ -404,6 +404,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                           isActive={tabIndex === 6}
                           vendorProfileData={vendorProfileData as VendorProfile}
                           onClose={props.onClose}
+                          isUserVendorAdmin={true}
                         />
                       </TabPanel>
                     )}
