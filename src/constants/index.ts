@@ -44,3 +44,14 @@ export const CANCEL_WO_OPTIONS = [
     label: 'No',
   },
 ]
+
+export const SERVICE_SKILLS_OPTIONS = [
+  {
+    value: 1,
+    label: 'Yes',
+  },
+  {
+    value: 0,
+    label: 'No',
+  },
+]
