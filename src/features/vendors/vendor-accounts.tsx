@@ -20,6 +20,7 @@ import {
   RadioGroup,
   Stack,
   Icon,
+  Divider
 } from '@chakra-ui/react'
 import { VendorAccountsFormValues, VendorProfile, preventNumber, StripePayment } from 'types/vendor.types'
 import { Controller, useFormContext, useWatch } from 'react-hook-form'
@@ -52,6 +53,7 @@ import VendorCCAddModal from './vendor-payments/vendor-cc-add-modal'
 import { Elements } from '@stripe/react-stripe-js'
 import getStripe from 'utils/stripe'
 import VendorCCUpdateModal from './vendor-payments/vendor-cc-update-modal'
+import { useFetchPaymentMethods } from 'api/payment'
 
 type UserProps = {
   onClose?: () => void
@@ -60,6 +62,7 @@ type UserProps = {
 }
 export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive }) => {
   const formReturn = useFormContext<VendorAccountsFormValues>()
+  const { data: stripePaymentMethods } = useFetchPaymentMethods(vendorProfileData?.id);
   const { isOpen: isAccountTypeOpen, onOpen: onAccountTypeOpen, onClose: onAccountTypeClose } = useDisclosure();
   const { isOpen: isCCModalOpen, onOpen: onCCModalOpen, onClose: onCCModalClose } = useDisclosure();
   // const { isOpen: isACHModalOpen, onOpen: onACHModalOpen, onClose: onACHModalClose } = useDisclosure();
@@ -87,6 +90,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const watchVoidCheckFile = watch('voidedCheckFile')
   const watchOwnersSignature = watch('ownersSignature')
   const hasOwnerSignature = !!watchOwnersSignature && !watchOwnersSignature?.fileObject // signature has saved s3url and not fileobject
+  const enableSubscriptionField = !!stripePaymentMethods?.paymentMethods?.length;
 
   const isVoidedCheckChange =
     watchVoidCheckDate !== datePickerFormat(vendorProfileData?.bankVoidedCheckDate) || watchVoidCheckFile
@@ -275,14 +279,23 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   }} />
               </FormControl>
             </GridItem>
-            <GridItem>
-              <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+            <GridItem colSpan={2}>
+              <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600" w="full">
                 <FormLabel variant="strong-label" size="md">
-                  {t('subscription')}
+                  <Flex w='full' alignItems={"start"} justifyContent={"center"} direction="column">
+                  <Box>
+                    {t('subscription')}
+                  </Box>
+                  {!enableSubscriptionField && <Box>
+                    <Text fontSize={"12px"}>
+                      (Add a Credit Card first to enable subscription)
+                    </Text>
+                  </Box>}
+                  </Flex>
                 </FormLabel>
                 <FormControl>
                   <HStack spacing="16px">
-                    <RadioGroup w="100%" justifyContent={'flex-start'} value={!!getValues("isSubscriptionOn") ? "true" : "false"} onChange={() => {
+                    <RadioGroup w="100%" justifyContent={'flex-start'} value={!!getValues("isSubscriptionOn") ? "true" : "false"} isDisabled={!enableSubscriptionField} onChange={() => {
                       const isSubscription = Boolean(getValues("isSubscriptionOn"));
                       setValue("isSubscriptionOn", !isSubscription);
                     }}
@@ -305,10 +318,13 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               </Flex>
               <UserPaymentAccountsTable vendorProfile={vendorProfileData} />
             </GridItem>
+            <GridItem colSpan={4}>
+              <Divider border="1px solid" />
+            </GridItem>
           </>}
           <GridItem colSpan={4}>
             <FormLabel variant="strong-label" color={'gray.500'}>
-              Vendor Automated Request Form
+              Vendor ACH Authorization Form
             </FormLabel>
           </GridItem>
           <GridItem>
