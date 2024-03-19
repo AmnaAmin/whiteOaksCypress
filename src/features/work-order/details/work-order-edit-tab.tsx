@@ -748,6 +748,7 @@ const WorkOrderDetailTab = props => {
                     render={({ field }) => {
                       return (
                         <CreatableSelect
+                        classNamePrefix={'lcomplete%'}
                           {...field}
                           isDisabled={isWOCancelled}
                           id={`completePercentage`}
