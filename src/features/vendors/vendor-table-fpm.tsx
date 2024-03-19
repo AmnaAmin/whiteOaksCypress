@@ -121,7 +121,7 @@ export const FPMVendors: React.FC<ProjectProps> = ({ selectedCard }) => {
     <Box overflow="auto">
       {selectedVendor && (
         <Vendor
-          vendorDetails={selectedVendor as VendorType}
+          vendorId={selectedVendor.id}
           onClose={() => {
             setSelectedVendor(undefined)
           }}

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, useDisclosure } from '@chakra-ui/react'
 import { mappingDataForClientExport, useClients } from 'api/clients'
-import { Clients } from 'types/client.type'
 import Client from 'features/clients/selected-client-modal'
 import { CLIENTS } from './clients.i18n'
 import { ColumnDef, PaginationState, SortingState } from '@tanstack/react-table'
@@ -25,13 +24,16 @@ import { CLIENT_TABLE_QUERY_KEYS, useGetAllClients } from 'api/clients'
 import { useTranslation } from 'react-i18next'
 import Excel from 'exceljs'
 import { saveAs } from 'file-saver'
+import { useSearchParams } from 'react-router-dom'
 
 export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { defaultSelected, isReadOnly } = props
-  const [selectedClient, setSelectedClient] = useState<Clients>()
+  const [selectedClientId, setSelectedClientId] = useState<number>()
   const { isOpen, onOpen, onClose: onCloseDisclosure } = useDisclosure()
   const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 20 })
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const clientId = searchParams.get('clientId');
 
   const { columnFilters, setColumnFilters, queryStringWithPagination, queryStringWithoutPagination } =
     useColumnFiltersQueryString({
@@ -55,21 +57,28 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
   const { t } = useTranslation()
 
   useEffect(() => {
-    if (clients && clients.length > 0 && selectedClient?.id) {
-      const updatedClient = clients?.find(c => c.id === selectedClient?.id)
+    if (clients && clients.length > 0 && selectedClientId) {
+      const updatedClient = clients?.find(c => c.id === selectedClientId)
       if (updatedClient) {
-        setSelectedClient({ ...updatedClient })
+        setSelectedClientId(updatedClient.id)
       } else {
-        setSelectedClient(undefined)
+        setSelectedClientId(undefined)
       }
     } else {
-      setSelectedClient(undefined)
+      setSelectedClientId(undefined)
     }
   }, [clients])
 
   useEffect(() => {
+    if (clientId) {
+      setSelectedClientId(Number(clientId))
+      onOpen()
+    }
+  }, [clientId, clients])
+
+  useEffect(() => {
     if (defaultSelected?.id) {
-      setSelectedClient(defaultSelected)
+      setSelectedClientId(defaultSelected.id)
       setPagination({ pageIndex: 0, pageSize: 20 })
       onOpen()
     }
@@ -163,15 +172,23 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
     }
   }
 
+  const resetParams = () => {
+    searchParams.delete('clientId')
+    setSearchParams(searchParams)
+  }
+
   return (
     <Box>
-      {isOpen && (
+      {(selectedClientId && isOpen) && (
         <Client
-          clientDetails={selectedClient as Clients}
+          clientId={selectedClientId}
           onClose={() => {
             refetch()
-            setSelectedClient(undefined)
+            setSelectedClientId(undefined)
             onCloseDisclosure()
+            if (clientId) {
+              resetParams()
+            }
           }}
           isOpen={isOpen}
         />
@@ -191,7 +208,7 @@ export const ClientsTable = React.forwardRef((props: any, ref) => {
         >
           <Table
             onRowClick={row => {
-              setSelectedClient(row)
+              setSelectedClientId(row.id)
               onOpen()
             }}
             isFilteredByApi={true}

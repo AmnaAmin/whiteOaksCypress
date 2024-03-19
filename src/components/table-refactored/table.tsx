@@ -33,6 +33,7 @@ import { DateRange } from 'react-date-range'
 import moment from 'moment'
 
 import { tableContextReducer, TableDatePickerContext, TableReducerActionType } from './TableContext'
+import { columnsCannotFilter } from 'features/work-order/details/assignedItems.utils'
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
   name: string
 }
@@ -69,7 +70,7 @@ function Filter({
     () => (typeof firstValue === 'number' ? [] : Array.from(column.getFacetedUniqueValues().keys()).sort()),
     [column.getFacetedUniqueValues()],
   )
-  const isCheckBox = column.id === 'checkbox'
+  const enableFilterCanSearch = columnsCannotFilter.includes(column.id)
 
   const [selectionRange, setSelectionRange] = useState(() => {
     let startDate = new Date()
@@ -232,7 +233,7 @@ function Filter({
         </>
       ) : (
         <div>
-          {!isCheckBox && (
+          {!enableFilterCanSearch && (
             <DebouncedInput
               type={dateFilter ? 'date' : currencyFilter ? 'number' : 'text'}
               value={(dateFilter ? datePickerFormat(columnFilterValue as string) : (columnFilterValue as string)) ?? ''}
@@ -584,8 +585,7 @@ export const Table: React.FC<TableProps> = ({
                 )
               })}
           </Thead>
-
-          {isEmpty ? (
+          {isEmpty || getRowModel().rows.length === 0 ? (
             <Tbody>
               <Tr>
                 <Td colSpan={100} border="0">

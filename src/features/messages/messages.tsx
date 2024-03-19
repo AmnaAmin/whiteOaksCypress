@@ -3,13 +3,16 @@ import { useEffect, useRef } from 'react'
 import { useAuth } from 'utils/auth-context'
 import { getToken } from 'utils/storage.utils'
 
-document.addEventListener('DOMContentLoaded', () => {})
+document.addEventListener('DOMContentLoaded', () => { })
 
 export const Messages = (props: any) => {
   const { projectId, id, entity, value } = props
   const { data } = useAuth()
   const user = data?.user
-  const platformParam = 'platform=1'
+  let platformParam = 'platform=1'
+  if (entity === 'all') {
+    platformParam += '&entity=all'
+  }
 
   let iframeUrl = process.env.REACT_APP_CRM_URL + '?' + platformParam
 

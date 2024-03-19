@@ -10,6 +10,7 @@ import {
   FormControl,
   Progress,
   Input,
+  FormErrorMessage,
 } from '@chakra-ui/react'
 import { Button } from 'components/button/button'
 import { Controller, useForm, useWatch } from 'react-hook-form'
@@ -107,7 +108,16 @@ export const NotesTab = (props: NotesProps) => {
     isPercentageDisabled,
     isWOCancelled,
   } = props
-  const { handleSubmit, register, setValue, reset, control } = useForm()
+  const {
+    handleSubmit,
+    register,
+    setValue,
+    reset,
+    control,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm()
   const { data: account } = useAccountDetails()
   const { t } = useTranslation()
   const messagesEndRef = useRef<null | HTMLDivElement>(null)
@@ -176,7 +186,7 @@ export const NotesTab = (props: NotesProps) => {
               </Box>
             )}
           </Box>
-          <FormControl {...textAreaStyle}>
+          <FormControl {...textAreaStyle} isInvalid={!!errors.message}>
             <FormLabel fontSize="16px" color="gray.600" fontWeight={500}>
               {t('enterNewNote')}
             </FormLabel>
@@ -186,9 +196,28 @@ export const NotesTab = (props: NotesProps) => {
               flexWrap="wrap"
               h={'120px'}
               {...messageBoxStyle}
-              {...register('message')}
+              {...register('message', {
+                maxLength: { value: 65535, message: 'Please Use 65535 characters Only.' },
+              })}
+              onChange={e => {
+                const title = e.target.value
+                setValue('message', title)
+                if (title.length > 65535) {
+                 
+                  setError('message', {
+                    type: 'maxLength',
+                    message: 'Please Use 65535 characters Only.',
+                  })
+                } else {
+                  clearErrors('message')
+                }
+              }}
               data-testid="note_textarea"
             />
+
+            {errors.message && errors.message.type === 'maxLength' && (
+              <FormErrorMessage data-testid="trans_description">{errors.message.message}</FormErrorMessage>
+            )}
           </FormControl>
         </Flex>
         {!hideFooter && (

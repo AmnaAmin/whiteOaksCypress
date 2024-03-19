@@ -81,9 +81,13 @@ export const capitalize = text => {
   return text?.charAt(0)?.toUpperCase() + text?.slice(1)?.toLowerCase()
 }
 export const validateAmountDigits = (amount, countBeforeDecimal?, countAfterDecimal?) => {
-  console.log('amount',amount)
   // Ensure that amount is a string, replace '$' and ',' characters
-  const value = (amount ?? '').toString().replace(/\$/g, '').replace(/,/g, '');
+  let value = (amount ?? '').toString().replace(/\$/g, '').replace(/,/g, '')
+
+  // Ignore negative sign if present
+  if (value.startsWith('-')) {
+    value = value.substring(1)
+  }
 
   // Split the numeric value into integer and decimal parts
   const amountParts = value.split('.')
@@ -91,7 +95,7 @@ export const validateAmountDigits = (amount, countBeforeDecimal?, countAfterDeci
   // Check if the numeric value meets the specified criteria
   if (
     !amountParts ||
-    (amountParts[0]?.length <= (countBeforeDecimal ?? 19) &&
+    (amountParts[0]?.length <= (countBeforeDecimal ?? 15) &&
       (!amountParts[1] || amountParts[1]?.length <= (countAfterDecimal ?? 4)))
   ) {
     // Return true if the amount is valid
@@ -101,3 +105,5 @@ export const validateAmountDigits = (amount, countBeforeDecimal?, countAfterDeci
     return 'Invalid Format.'
   }
 }
+
+

@@ -168,10 +168,6 @@ const transactionTypeOptions = [
     label: 'Late Fee',
   },
   {
-    value: TransactionTypeValues.factoring,
-    label: 'Factoring',
-  },
-  {
     value: TransactionTypeValues.shippingFee,
     label: 'Shipping Fee',
   },
@@ -203,7 +199,7 @@ export const useTransactionTypes = (screen?: string, projectStatus?: string) => 
   if (screen === 'WORK_ORDER_TRANSACTION_TABLE_MODAL' && !isVendor) {
     const transactionType = transactionTypeOptions.filter(option => option.label !== 'Payment')
     return {
-      transactionTypeOptions: transactionType.slice(0, 5),
+      transactionTypeOptions: transactionType.slice(0, 4),
     }
   }
   if (projectStatus && [STATUS.Cancelled, STATUS.ClientPaid, STATUS.Paid].includes(projectStatus as STATUS)) {
@@ -312,6 +308,7 @@ export const useProjectWorkOrders = (projectId?: string, isUpdating?: boolean) =
         .map(workOrder => ({
           label: createAgainstLabel(workOrder.companyName, `${workOrder.id}`),
           awardStatus: workOrder?.assignAwardPlan,
+          onHoldWO: workOrder?.onHold,
           value: `${workOrder.id}`,
           isValidForAwardPlan: workOrder?.validForAwardPlan,
           isValidForNewAwardPlan: workOrder?.applyNewAwardPlan,
@@ -389,30 +386,34 @@ export const useWorkOrderChangeOrders = (workOrderId?: string) => {
   }
 }
 
-export const useWorkOrderAwardStats = (workOrderId?: string, applyNewAwardPlan?:boolean, projectWorkOrderId?: string|number) => {
+export const useWorkOrderAwardStats = (
+  workOrderId?: string,
+  applyNewAwardPlan?: boolean,
+  projectWorkOrderId?: string | number,
+) => {
   const client = useClient()
   const enabled = workOrderId !== null && workOrderId !== 'null' && workOrderId !== undefined
 
   const { data: awardPlansStats, ...rest } = useQuery<Array<WorkOrderAwardStats>>(
-    ['changeOrders', workOrderId,applyNewAwardPlan,projectWorkOrderId],
+    ['changeOrders', workOrderId, applyNewAwardPlan, projectWorkOrderId],
     async () => {
       let response
 
-            if (applyNewAwardPlan) {
-              response = await client(`v1/projects/${workOrderId}/${projectWorkOrderId}/workOrderPlanStat`, {})
-            } else {
-              response = await client(`projects/${workOrderId}/workOrderPlanStat`, {})
-            }
-      
-            return response?.data
-          },
-          {
-            enabled,
-          },
-        )
-      
-        return { awardPlansStats, ...rest }
+      if (applyNewAwardPlan) {
+        response = await client(`v1/projects/${workOrderId}/${projectWorkOrderId}/workOrderPlanStat`, {})
+      } else {
+        response = await client(`projects/${workOrderId}/workOrderPlanStat`, {})
       }
+
+      return response?.data
+    },
+    {
+      enabled,
+    },
+  )
+
+  return { awardPlansStats, ...rest }
+}
 
 export const getFileContents = async (document: any, documentType: number) => {
   if (!document) return Promise.resolve()
@@ -437,10 +438,10 @@ export const useReasonTypes = () => {
 
     const formattedData = response?.data?.map(reasonType => ({
       label: reasonType.label,
-      value: reasonType.value, 
+      value: reasonType.value,
     }))
 
-    return formattedData;
+    return formattedData
   })
 }
 const generateLienWaiverPDF = async (lienWaiver: FormValues['lienWaiver'] | undefined) => {
@@ -538,7 +539,8 @@ export const parseChangeOrderAPIPayload = async (
     payAfterDate: formValues.payAfterDate,
     verifiedByFpm: formValues.verifiedByFpm?.value,
     verifiedByManager: formValues.verifiedByManager?.value,
-    reason:formValues.reason?.value,
+    reason: formValues.reason?.value,
+    drawOnHold: formValues?.drawOnHold,
     ...againstProjectSOWPayload,
   }
 }
@@ -566,7 +568,8 @@ export const parseChangeOrderUpdateAPIPayload = async (
     verifiedByManager: formValues.verifiedByManager?.value,
     invoiceId: transaction?.invoiceId,
     invoiceNumber: transaction?.invoiceNumber,
-    reason:formValues?.reason?.value,
+    reason: formValues?.reason?.value,
+    drawOnHold: formValues?.drawOnHold,
   }
 }
 
@@ -590,7 +593,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     paymentRecievedDate: null,
     invoicedDate: null,
     paymentTerm: null,
-    paymentTermDate:null,
+    paymentTermDate: null,
     paidDate: null,
     payDateVariance: '',
     expectedCompletionDate: '',
@@ -601,6 +604,7 @@ export const transactionDefaultFormValues = (createdBy: string): FormValues => {
     payAfterDate: null,
     verifiedByFpm: null,
     verifiedByManager: null,
+    drawOnHold: null,
   }
 }
 
@@ -659,7 +663,7 @@ export const parseTransactionToFormValues = (
   }
 
   const payDateVariance = calculatePayDateVariance(transaction.clientApprovedDate, transaction.paidDate)
-
+  const drawOnHold = transaction?.drawOnHold
   const lienWaiverDocument = getLatestDocument(transaction.documents?.filter(doc => doc.fileType === 'lienWaiver.pdf'))
   const attachment = getLatestDocument(transaction.documents?.filter(doc => doc.fileType !== 'lienWaiver.pdf'))
 
@@ -704,7 +708,8 @@ export const parseTransactionToFormValues = (
       label: transaction.transactionTypeLabel,
       value: transaction.transactionType,
     },
-    reason: REASON_STATUS_OPTIONS.find(v => v.value.toLowerCase()=== transaction?.reason?.toLocaleLowerCase()) ?? null,
+    reason: REASON_STATUS_OPTIONS.find(v => v.value.toLowerCase() === transaction?.reason?.toLocaleLowerCase()) ?? null,
+    drawOnHold,
     against: againstOption,
     workOrder: workOrderOption,
     changeOrder: changeOrderOption,
@@ -721,7 +726,7 @@ export const parseTransactionToFormValues = (
     modifiedDate: dateFormat(transaction.modifiedDate as string),
     invoicedDate: datePickerFormat(transaction.clientApprovedDate as string),
     paymentTerm: findOption(`${transaction.paymentTerm}`, PAYMENT_TERMS_OPTIONS),
-    paymentTermDate:transaction.paymentTermDate,
+    paymentTermDate: transaction.paymentTermDate,
     paidDate: datePickerFormat(transaction.paidDate as string),
     payDateVariance,
     paymentProcessed: transaction.paymentProcessed,

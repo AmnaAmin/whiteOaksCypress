@@ -58,7 +58,7 @@ import { ADV_PERMISSIONS } from 'api/access-control'
 import jsPDF from 'jspdf'
 import { downloadFile } from 'utils/file-utils'
 import { Project } from 'types/project.type'
-import { currencyFormatter } from 'utils/string-formatters'
+import { currencyFormatter, validateAmountDigits } from 'utils/string-formatters'
 import { MdOutlineCancel } from 'react-icons/md'
 import { RiDeleteBinLine } from 'react-icons/ri'
 import { ConfirmationBox } from 'components/Confirmation'
@@ -251,7 +251,6 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     clearErrors,
     watch,
   } = formReturn
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'finalSowLineItems',
@@ -378,7 +377,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       updateInvoiceMutate(payload, {
         onSuccess: data => {
           onClose?.()
-          generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then(documentObj => {
+          generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then((documentObj : Document)=> {
+            documentObj.invoiceName= invoice?.invoiceNumber ?? null
             updateInvoiceDocument(documentObj as Document)
           })
         },
@@ -456,22 +456,42 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                 {t(`project.projectDetails.invoiceNo`)}
               </FormLabel>
               <Controller
-                rules={{ required: 'This is required' }}
+                rules={{
+                  required: 'This is required',
+                  maxLength: { value: 100, message: 'Please use 100 characters only.' },
+                }}
                 control={control}
                 name="invoiceNumber"
                 render={({ field, fieldState }) => {
                   return (
                     <div data-testid="invoice-number">
                       <Input
+                        value={field?.value as any}
                         data-testid="invoiceNumber"
                         id="invoiceNumber"
                         size="md"
                         variant="required-field"
-                        maxLength={100}
-                        disabled={!canCreateInvoice || isPaid || isCancelled}
-                        {...register('invoiceNumber')}
+                        disabled={!canCreateInvoice || isPaid || isCancelled}               
+                        onChange={e => {
+                          const value = e?.target?.value
+                          field.onChange(value)
+                          if (value?.length > 100) {
+                            setError('invoiceNumber', {
+                              type: 'maxLength',
+                              message: 'Please use 100 characters only.',
+                            });
+                          } else {
+                            clearErrors('invoiceNumber');
+                          }
+                        }}
                       />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+{/* 
+                      {contactFormValue.invoiceNumber !== undefined && contactFormValue.invoiceNumber?.length === 101 && (
+                        <Text color="red" fontSize="xs" w="215px">
+                          Please use 100 characters only.
+                        </Text>
+                      )} */}
+                      {!!errors.invoiceNumber && <FormErrorMessage data-testid="invoice-number-error">{errors?.invoiceNumber?.message}</FormErrorMessage>}
                     </div>
                   )
                 }}
@@ -597,7 +617,14 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                   <Controller
                     control={control}
                     name="payment"
-                    rules={{ required: 'This is required' }}
+                    rules={{
+                      validate: {
+                        matchPattern: (v: any) => {
+                          return validateAmountDigits(v)
+                        },
+                      },
+                      required: 'This is required',
+                    }}
                     render={({ field }) => {
                       return (
                         <NumberInput
@@ -909,4 +936,3 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     </form>
   )
 }
- 
