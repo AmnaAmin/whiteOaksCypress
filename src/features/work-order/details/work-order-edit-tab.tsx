@@ -25,7 +25,7 @@ import { STATUS } from 'features/common/status'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, useFieldArray, useForm, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { BiCalendar, BiDownload, BiSpreadsheet } from 'react-icons/bi'
+import { BiDownload, BiSpreadsheet } from 'react-icons/bi'
 import { calendarIcon } from 'theme/common-style'
 import { dateFormatNew } from 'utils/date-time-utils'
 import Select, { CreatableSelect } from 'components/form/react-select'
@@ -73,23 +73,6 @@ export type SelectVendorOption = {
   title: any
 }
 
-const CalenderCard = props => {
-  return (
-    <Flex>
-      <Box pr={4}>
-        <BiCalendar size={23} color="#4A5568" />
-      </Box>
-      <Box lineHeight="20px">
-        <Text color="gray.700" fontWeight={500} fontSize="14px" fontStyle="normal" mb="1">
-          {props.title}
-        </Text>
-        <Text color="gray.600" data-testid={props.testId} fontSize="14px" fontStyle="normal" fontWeight={400}>
-          {props?.date || 'mm/dd/yyyy'}
-        </Text>
-      </Box>
-    </Flex>
-  )
-}
 
 const InformationCard = props => {
   return (
