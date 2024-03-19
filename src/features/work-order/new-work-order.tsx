@@ -537,6 +537,7 @@ export const NewWorkOrderForm: React.FC<{
                         <>
                           <Select
                             {...field}
+                            classNamePrefix={'tradeOptionsVendor'}
                             options={tradeOptions}
                             size="md"
                             value={field.value}
@@ -574,6 +575,7 @@ export const NewWorkOrderForm: React.FC<{
                         <>
                           <Select
                             {...field}
+                            classNamePrefix={'vendorOptions'}
                             loadingCheck={vendorsLoading}
                             options={vendorOptions}
                             size="md"

@@ -126,6 +126,7 @@ const PerformanceGraph: React.FC<{ chartData?: any; isLoading: boolean; yearFilt
               </Flex>
               <Box width={'150px'}>
                 <ReactSelect
+                classNamePrefix={'performancePerMonth'}
                   name={`monthsDropdown`}
                   options={MonthOption.filter(m => m.value !== 'all')}
                   onChange={getMonthValue}

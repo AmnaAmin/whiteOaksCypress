@@ -264,6 +264,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect
+                       classNamePrefix={'issueTypeDropdown'}
                         id="issueType"
                         isDisabled={isReadOnly}
                         options={ISSUE_TYPE_OPTIONS}
@@ -287,6 +288,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect
+                       classNamePrefix={'severityDropdown'}
                         id="severity"
                         options={SEVERITY_OPTIONS}
                         isDisabled={isReadOnly}
@@ -309,6 +311,7 @@ export const CreateATicketForm: React.FC<CreateATicketTypes> = ({
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect
+                       classNamePrefix={'ticketStatus'}
                         id="status"
                         options={STATUS_OPTIONS}
                         {...field}

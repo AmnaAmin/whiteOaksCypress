@@ -218,6 +218,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   <>
                     <div data-testid="client_activated">
                       <ReactSelect
+                      classNamePrefix={'clientStatus'}
                         options={CLIENT_STATUS_OPTIONS}
                         menuPosition="fixed"
                         {...field}
@@ -245,6 +246,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   <>
                     <div data-testid="payment_term">
                       <ReactSelect
+                      classNamePrefix={'paymentTermOptions'}
                         options={PAYMENT_TERMS_OPTIONS}
                         menuPosition="fixed"
                         maxMenuHeight={80}
@@ -467,6 +469,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                   <>
                     <div data-testid="state_id">
                       <Select
+                       classNamePrefix={'stateID'}
                         {...field}
                         options={stateSelectOptions}
                         selected={field.value}
@@ -664,6 +667,7 @@ export const Details: React.FC<clientDetailProps> = props => {
                               <div data-testid="market_id">
                                 <ReactSelect
                                   {...field}
+                                  classNamePrefix={'marketSelectOptions'}
                                   options={marketSelectOptions}
                                   selected={field.value}
                                   onChange={option => field.onChange(option)}

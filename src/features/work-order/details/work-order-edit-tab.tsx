@@ -521,6 +521,7 @@ const WorkOrderDetailTab = props => {
                             <>
                               <Select
                                 {...field}
+                                classNamePrefix={'tradeOptionsDropdown'}
                                 options={tradeOptions}
                                 size="md"
                                 value={field.value}
@@ -557,6 +558,7 @@ const WorkOrderDetailTab = props => {
                             <>
                               <Select
                                 {...field}
+                                classNamePrefix={'vendorOptionsDropdown'}
                                 options={vendorOptions}
                                 size="md"
                                 loadingCheck={loadingVendors}
@@ -662,6 +664,7 @@ const WorkOrderDetailTab = props => {
                     render={({ field }) => (
                       <div data-testid="cancel_Work_Order">
                         <ReactSelect
+                         classNamePrefix={'cancelWorkOrder'}
                           options={CANCEL_WO_OPTIONS}
                           onChange={option => field.onChange(option)}
                           isDisabled={
