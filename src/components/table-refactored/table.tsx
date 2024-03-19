@@ -585,8 +585,7 @@ export const Table: React.FC<TableProps> = ({
                 )
               })}
           </Thead>
-
-          {isEmpty ? (
+          {isEmpty || getRowModel().rows.length === 0 ? (
             <Tbody>
               <Tr>
                 <Td colSpan={100} border="0">
