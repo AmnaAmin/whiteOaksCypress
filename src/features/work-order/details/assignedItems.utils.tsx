@@ -861,8 +861,6 @@ export const useGetLineItemsColumn = ({
 
   const handleItemProfitChange = useCallback(
     (e, index) => {
-      console.log('aw')
-
       const newProfit = e.target.value ?? 0
       const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
       const vendorAmount = calculateVendorAmount(clientAmount, newProfit)
