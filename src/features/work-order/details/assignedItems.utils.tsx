@@ -840,7 +840,7 @@ export const useGetLineItemsColumn = ({
     (e, index) => {
       const price = Number(controlledAssignedItems?.[index]?.price ?? 0)
       const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
-      const newQuantity = Number(e.target.value)
+      const newQuantity = Math.abs(Number(e.target.value))
       const vendorAmount = calculateVendorAmount(price * newQuantity, profit)
       setValue(`assignedItems.${index}.clientAmount`, price * newQuantity)
       setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
@@ -1252,7 +1252,7 @@ export const useGetLineItemsColumn = ({
                 fieldName="quantity"
                 fieldArray="assignedItems"
                 formControl={formControl}
-                inputType="text"
+                inputType="number"
                 allowEdit={allowEdit}
                 onChange={e => {
                   handleItemQtyChange(e, index)
