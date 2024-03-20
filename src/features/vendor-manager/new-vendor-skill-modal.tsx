@@ -222,7 +222,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                   )}
                 </FormControl>
 
-                <FormControl w="225px">
+                <FormControl w="225px" data-testid="services_select">
                   <FormLabel variant="strong-label" size="md">
                     {t(`${VENDOR_MANAGER}.services`)}
                   </FormLabel>
@@ -275,6 +275,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                       disabled={isLoading || !watchServicesValue || !watchvalue || watchvalue.trim() === ''}
                       type="submit"
                       colorScheme="brand"
+                      data-testid="vendor_skill_save_btn"
                     >
                       {t(`${VENDOR_MANAGER}.save`)}
                     </Button>
