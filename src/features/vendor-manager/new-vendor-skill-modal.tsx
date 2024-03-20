@@ -240,7 +240,6 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                           selectProps={{ isBorderLeft: true, menuHeight: '103px' }}
                           onChange={option => {
                             field.onChange(option)
-                            console.log(option)
                             if (option.value) setStateForServiceDD(true)
                           }}
                         />
