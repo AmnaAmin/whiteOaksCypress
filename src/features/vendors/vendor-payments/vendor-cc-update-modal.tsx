@@ -18,19 +18,8 @@ import { mapCCFormValuesToPayload, mapCCToFormValues, useUpdateCredtCard } from 
 import { StripePayment, VendorProfile } from 'types/vendor.types'
 import { PAYMENT_MANAGEMENT } from 'features/user-management/payment-management.i8n';
 import { useStates } from 'api/pc-projects';
+import { CreditCardFormValues } from './vendor-cc-add-modal';
 
-export interface CreditCardFormValues {
-    billingAddress: {
-        line1: string;
-        city: string;
-        postalCode: string;
-        state: { label: string; value: string; type: string };
-    }
-    email: string;
-    firstName: string;
-    lastName: string;
-    phone: string;
-}
 
 const VendorCCUpdateModal: React.FC<{
     isOpen: boolean
@@ -65,7 +54,7 @@ const VendorCCUpdateModal: React.FC<{
             console.error("Error creating stripe token", stripeTokenData.error);
             return;
         }
-        const payload = mapCCFormValuesToPayload(values, stripeTokenData, vendorProfileData);
+        const payload = mapCCFormValuesToPayload(values, stripeTokenData, vendorProfileData, true);
         updateCreditCard(payload, {
             onSuccess: () => {
                 onClose();
@@ -101,7 +90,7 @@ const VendorCCUpdateModal: React.FC<{
                     <ModalCloseButton _hover={{ bg: 'blue.50' }} />
                     <ModalBody justifyContent="center">
                         <Box>
-                            <VendorCCForm formReturn={formReturn} stateSelectOptions={stateSelectOptions} />
+                            <VendorCCForm formReturn={formReturn} stateSelectOptions={stateSelectOptions} isUpdate={!!vendorProfileData} />
                         </Box>
                     </ModalBody>
                     <ModalFooter>

@@ -1,4 +1,4 @@
-import { Box, GridItem, FormControl, Input, FormLabel, FormErrorMessage, Grid } from '@chakra-ui/react'
+import { Box, GridItem, FormControl, Input, FormLabel, FormErrorMessage, Grid, Checkbox, Text } from '@chakra-ui/react'
 import { Controller, UseFormReturn } from 'react-hook-form';
 import Select from 'components/form/react-select'
 import { validateWhitespace } from 'api/clients';
@@ -26,10 +26,11 @@ const cardInputStyle = {
 export interface VendorCCFormProps {
     formReturn: UseFormReturn<CreditCardFormValues>
     stateSelectOptions: any
+    isUpdate?: boolean
 }
 
 const VendorCCForm = (props: VendorCCFormProps) => {
-    const { formReturn, stateSelectOptions } = props;
+    const { formReturn, stateSelectOptions, isUpdate } = props;
     const [cardError, setCardError] = useState({
         isEmpty: false,
         message: ''
@@ -354,6 +355,30 @@ const VendorCCForm = (props: VendorCCFormProps) => {
                         )}
                     </FormControl>
                 </GridItem>
+                {isUpdate && <GridItem colSpan={3}>
+                    <Controller
+                        control={control}
+                        name={`isPaymentMethodDefault`}
+                        render={({ field }) => (
+                            <>
+                                <Checkbox
+                                    colorScheme="PrimaryCheckBox"
+                                    isChecked={field.value}
+                                    style={{ background: 'white', border: '#DFDFDF' }}
+                                    mr="2px"
+                                    size="md"
+                                    onChange={value => {
+                                        field.onChange(value)
+                                    }}
+                                >
+                                    <Text fontSize="14px" w="full" wordBreak={'break-word'}>
+                                        Use this as default payment method
+                                    </Text>
+                                </Checkbox>
+                            </>
+                        )}
+                    />
+                </GridItem>}
             </Grid>
         </Box>
     )

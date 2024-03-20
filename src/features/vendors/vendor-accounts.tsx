@@ -91,7 +91,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const watchVoidCheckFile = watch('voidedCheckFile')
   const watchOwnersSignature = watch('ownersSignature')
   const hasOwnerSignature = !!watchOwnersSignature && !watchOwnersSignature?.fileObject // signature has saved s3url and not fileobject
-  const enableSubscriptionField = !!stripePaymentMethods?.paymentMethods?.length;
+  const enableSubscriptionField = !!stripePaymentMethods?.stripeResponse?.data?.length;
 
   const isVoidedCheckChange =
     watchVoidCheckDate !== datePickerFormat(vendorProfileData?.bankVoidedCheckDate) || watchVoidCheckFile
@@ -256,15 +256,15 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </VStack>
           </GridItem>
           <GridItem colSpan={4}>
-            <Divider border="1px solid" />
-          </GridItem>
-          <GridItem colSpan={4}>
-            <FormLabel variant="strong-label" color={'gray.500'}>
-              Subscription Details
-            </FormLabel>
-          </GridItem>
+              <Divider border="1px solid" />
+            </GridItem>
           {/* HN-PSWOA-9944 | The below fields should only be visible on edit only */}
           {vendorProfileData && <>
+            <GridItem colSpan={4}>
+              <FormLabel variant="strong-label" color={'gray.500'}>
+                Subscription Details
+              </FormLabel>
+            </GridItem>
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
@@ -371,7 +371,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </GridItem>}
             <GridItem colSpan={4}>
               <Flex w='full' alignItems={"end"} justifyContent={"end"} pb={4}>
-                <Button colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onNewBtnClick}>
+                <Button data-testid="add-new-payment-method" colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onNewBtnClick}>
                   New
                 </Button>
               </Flex>

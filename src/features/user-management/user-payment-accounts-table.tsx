@@ -30,22 +30,27 @@ const UserPaymentAccountsTable = (props: UserPaymnetAccountsTableProps) => {
     tableColumns
   } = useTableColumnSettings(PAYMENT_COLUMNS, TableNames.vendorPaymentAccountTable)
 
-  const renderCCEditModal = !isLoading && paymentMethods?.paymentMethods?.length && selectedRow?.card;
+  const renderCCEditModal = !isLoading && paymentMethods?.stripeResponse?.data?.length && selectedRow?.card;
 
   return (
     <Box h="calc(100% - 50px)" overflowX={"auto"}>
       {renderCCEditModal && <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onModalClose} vendorProfileData={vendorProfile} creditCardData={selectedRow} />}
       <TableContextProvider
-        data={paymentMethods?.paymentMethods}
+        data={paymentMethods?.stripeResponse?.data}
         columns={tableColumns}
       >
         <Table
           onRowClick={(row: StripePayment) => {
+            if (row?.id === paymentMethods?.customer?.invoice_settings?.default_payment_method?.id) {
+              row.isPaymentMethodDefault = true;
+            } else {
+              row.isPaymentMethodDefault = false;
+            }
             setSelectedRow(row)
             onCCModalOpen()
           }}
           isLoading={isLoading}
-          isEmpty={!isLoading && !paymentMethods?.paymentMethods}
+          isEmpty={!isLoading && !paymentMethods?.stripeResponse?.data?.length}
         />
       </TableContextProvider>
     </Box>

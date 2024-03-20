@@ -30,6 +30,7 @@ export interface CreditCardFormValues {
     firstName: string;
     lastName: string;
     phone: string;
+    isPaymentMethodDefault?: boolean;
 }
 
 const VendorCCAddModal: React.FC<{
@@ -61,7 +62,7 @@ const VendorCCAddModal: React.FC<{
             console.error("Error creating stripe token", stripeTokenData.error);
             return;
         }
-        const payload = mapCCFormValuesToPayload(values, stripeTokenData, vendorProfileData);
+        const payload = mapCCFormValuesToPayload(values, stripeTokenData, vendorProfileData, false);
         createCreditCard(payload, {
             onSuccess: () => {
                 onClose();

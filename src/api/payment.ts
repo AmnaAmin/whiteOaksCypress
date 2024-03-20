@@ -2,7 +2,7 @@ import { useToast } from '@chakra-ui/react'
 import { TokenResult } from '@stripe/stripe-js'
 import { CreditCardFormValues } from 'features/vendors/vendor-payments/vendor-cc-add-modal'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
-import { VendorProfile, StripePayment } from 'types/vendor.types'
+import { VendorProfile, StripePayment, StripePaymentMethodResponse } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
 
 type CreditCardPayload = {
@@ -23,6 +23,7 @@ type CreditCardPayload = {
   expMonth: number | undefined
   expYear: number | undefined
   stripeToken: string | undefined
+  markPaymentMethodAsDefault?: boolean
 }
 
 const paymentServiceUrl = process.env.REACT_APP_PAYMENT_SERVICE_URL ?? null
@@ -43,6 +44,7 @@ export const mapCCToFormValues = (data: StripePayment | null | undefined, stateS
     firstName: data?.billing_details?.name?.split(', ')[1],
     lastName: data?.billing_details?.name?.split(', ')[0],
     phone: data?.billing_details?.phone,
+    isPaymentMethodDefault: data?.isPaymentMethodDefault
   }
 }
 
@@ -50,6 +52,7 @@ export const mapCCFormValuesToPayload = (
   values: CreditCardFormValues,
   stripeData: TokenResult,
   vendorProfileData: VendorProfile,
+  isUpdate?: boolean
 ) => {
   const payload: CreditCardPayload = {
     organizationId: vendorProfileData?.id,
@@ -69,6 +72,9 @@ export const mapCCFormValuesToPayload = (
     expMonth: stripeData?.token?.card?.exp_month,
     expYear: stripeData?.token?.card?.exp_year,
     stripeToken: stripeData?.token?.id,
+  }
+  if (isUpdate) {
+    payload.markPaymentMethodAsDefault = Boolean(values?.isPaymentMethodDefault);
   }
   return payload
 }
@@ -125,7 +131,7 @@ export const useFetchPaymentMethods = (id: string | number | undefined) => {
       if (!id) return;
       const response = await client(`payments/payment-methods/${urlPathVariable}`, {}, paymentServiceUrl)
       if (response) {
-        const jsonResponse = JSON.parse(response.data)
+        const jsonResponse: StripePaymentMethodResponse = JSON.parse(response.data)
         return jsonResponse
       } else {
         return null

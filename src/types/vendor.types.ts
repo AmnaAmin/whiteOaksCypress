@@ -465,7 +465,7 @@ export type StripeUSBankAccount = {
     supported: string[]
   }
   routing_number: string
-  status_details: {}
+  status_details: any
 }
 
 export type StripePayment = {
@@ -478,9 +478,39 @@ export type StripePayment = {
   }
   id: string
   livemode: boolean
-  metadata: {}
+  metadata: any
   object: string
   type: string
+  isPaymentMethodDefault?: boolean
+}
+
+export type StripeCustomer = {
+  balance: number,
+  created: number,
+  delinquent: boolean,
+  email: string,
+  id: string,
+  invoice_prefix: string,
+  invoice_settings: {
+    default_payment_method: {
+      id: string
+    }
+  },
+  livemode: boolean,
+  metadata: any,
+  name: string,
+  next_invoice_sequence: number,
+  object: string,
+  preferred_locales: any[],
+  tax_exempt: string
+}
+
+export type StripePaymentMethodResponse = {
+  stripeResponse: {
+    object: string
+    data: StripePayment[]
+  }
+  customer: StripeCustomer
 }
 
 export const preventNumber = e => {

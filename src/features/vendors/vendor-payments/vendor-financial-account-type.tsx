@@ -111,12 +111,15 @@ export function VendorFinancialAccountType({
                         <FormLabel fontSize="14px" fontWeight={500} color="gray.600">
                             Account Type
                         </FormLabel>
-                        <Select
-                            options={accountTypeOption}
-                            size="md"
-                            value={selectedOption}
-                            onChange={onSelectOptionChange}
-                        />
+                        <div data-testid="account-type">
+                            <Select
+                                options={accountTypeOption}
+                                classNamePrefix="account_type"
+                                size="md"
+                                value={selectedOption}
+                                onChange={onSelectOptionChange}
+                            />
+                        </div>
                         <FormErrorMessage>{error}</FormErrorMessage>
                     </FormControl>
                 </ModalBody>
