@@ -133,6 +133,15 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
     if (selectedVendorSkills) {
       setValue('skill', selectedVendorSkills?.skill)
     }
+    if (selectedVendorSkills?.services === 'YES') {
+      setValue('services', {
+        label: 'Yes',
+      })
+    } else {
+      setValue('services', {
+        label: 'No',
+      })
+    }
   }, [selectedVendorSkills])
 
   return (
@@ -226,10 +235,6 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                           {...field}
                           options={SERVICE_SKILLS_OPTIONS}
                           isDisabled={isReadOnly}
-                          defaultValue={{
-                            value: 0,
-                            label: 'No',
-                          }}
                           value={field.value}
                           size="md"
                           selectProps={{ isBorderLeft: true, menuHeight: '103px' }}

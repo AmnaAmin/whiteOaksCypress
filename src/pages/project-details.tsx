@@ -75,14 +75,14 @@ export const ProjectDetails: React.FC = props => {
   const location = useLocation()
   const navigate = useNavigate()
   const workOrder = (location?.state as any)?.workOrder || {}
-  const [paramWorkorder, setParamWorkorder] = useState<Number | null>(null);
+  const [paramWorkorder, setParamWorkorder] = useState<Number | null>(null)
   const transaction = (location?.state as any)?.transaction || {}
   const { permissions } = useRoleBasedPermissions()
   const isAllowedInvoicing = permissions.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p))
 
   //Extracting workorder id from query params
   const [searchParams, setSearchParams] = useSearchParams()
-  const workorderId = searchParams.get('workorder');
+  const workorderId = searchParams.get('workorder')
 
   useEffect(() => {
     if (workOrder?.id) {
@@ -104,7 +104,6 @@ export const ProjectDetails: React.FC = props => {
       navigate(location.pathname, {})
     }
   }, [transaction])
-
 
   useEffect(() => {
     if (ganttChartData?.length > 0 && projectData) {
@@ -165,7 +164,7 @@ export const ProjectDetails: React.FC = props => {
         >
           <TabList h={'50px'} alignItems="end" border="none">
             <Flex h={'40px'} py={'1px'}>
-              <Tab>{t('projects.projectDetails.transactions')}</Tab>
+              <Tab data-testid="main-tab-transactions-tab">{t('projects.projectDetails.transactions')}</Tab>
               <Tab>{t('projects.projectDetails.projectDetails')}</Tab>
               <Tab>{t('projects.projectDetails.vendorWorkOrders')}</Tab>
               <Tab>{t('projects.projectDetails.schedule')}</Tab>
@@ -247,6 +246,7 @@ export const ProjectDetails: React.FC = props => {
                         onClick={onTransactionModalOpen}
                         isDisabled={preventNewTransaction}
                         leftIcon={<BiAddToQueue />}
+                        data-testid="main-tab-transactions-btn"
                       >
                         {t('projects.projectDetails.newTransaction')}
                       </Button>
@@ -272,11 +272,13 @@ export const ProjectDetails: React.FC = props => {
                   )}
                 </Box>
               </TabPanel>
-              {!isLoading && <TabPanel p="0px">
-                <Card rounded="6px" padding="0" h="100%">
-                  <ProjectDetailsTab projectData={projectData as Project} />
-                </Card>
-              </TabPanel>}
+              {!isLoading && (
+                <TabPanel p="0px">
+                  <Card rounded="6px" padding="0" h="100%">
+                    <ProjectDetailsTab projectData={projectData as Project} />
+                  </Card>
+                </TabPanel>
+              )}
 
               <TabPanel p="0px">
                 {!showNewWO && (
