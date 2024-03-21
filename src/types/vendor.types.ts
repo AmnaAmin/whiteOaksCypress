@@ -327,6 +327,7 @@ export type VendorTradeFormValues = {
 
 export type Market = {
   active: boolean
+  services?: string
   abbreviation?: string
   createdBy: string
   createdDate: string | null

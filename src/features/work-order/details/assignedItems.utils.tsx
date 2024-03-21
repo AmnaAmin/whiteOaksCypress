@@ -16,7 +16,7 @@ import { CreatableSelect } from 'components/form/react-select'
 
 import { STATUS } from 'features/common/status'
 import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
-import { useState, useRef, useCallback, useMemo } from 'react'
+import { useState, useRef, useCallback, useMemo, useEffect } from 'react'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useClient } from 'utils/auth-context'
 import { MdOutlineCancel } from 'react-icons/md'
@@ -96,7 +96,7 @@ export type selectedCell = { id: string; value: string }
 
 export const getRemovedItems = (formValues, workOrderAssignedItems) => {
   if (formValues?.cancel?.value === 35) {
-    return formValues.assignedItems
+    return workOrderAssignedItems
   }
 
   /* checking which  smart work order items existed in workOrder but now are not present in the form. They have to unassigned*/
@@ -840,7 +840,7 @@ export const useGetLineItemsColumn = ({
     (e, index) => {
       const price = Number(controlledAssignedItems?.[index]?.price ?? 0)
       const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
-      const newQuantity = Number(e.target.value)
+      const newQuantity = Math.abs(Number(e.target.value))
       const vendorAmount = calculateVendorAmount(price * newQuantity, profit)
       setValue(`assignedItems.${index}.clientAmount`, price * newQuantity)
       setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
@@ -868,6 +868,15 @@ export const useGetLineItemsColumn = ({
     },
     [controlledAssignedItems],
   )
+
+  useEffect(() => {
+    //  set by default value of profit% 45 line lineitem table with condition that
+    // if item.profit exist then add it otherwise on newly line items added put profit 45% as ask
+    values.assignedItems?.forEach((item, index) => {
+      setValue(`assignedItems.${index}.profit`, item.profit ?? 45)
+      setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(item.clientAmount, item.profit ?? 45))
+    })
+  }, [values.assignedItems])
 
   const handleItemVendorAmountChange = useCallback(
     (e, index) => {
@@ -1191,7 +1200,7 @@ export const useGetLineItemsColumn = ({
                 ml="27px"
                 isInvalid={!!errors.assignedItems?.[index]?.completePercentage}
                 zIndex={9999 + 1}
-                width="100px"            
+                width="100px"
               >
                 <Controller
                   control={control}
@@ -1252,7 +1261,7 @@ export const useGetLineItemsColumn = ({
                 fieldName="quantity"
                 fieldArray="assignedItems"
                 formControl={formControl}
-                inputType="text"
+                inputType="number"
                 allowEdit={allowEdit}
                 onChange={e => {
                   handleItemQtyChange(e, index)
