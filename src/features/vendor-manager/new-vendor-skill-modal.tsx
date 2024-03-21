@@ -300,6 +300,7 @@ export const NewVendorSkillsModal: React.FC<newVendorSkillsTypes> = ({ onClose, 
                 }}
                 yesButtonText={!stateForServiceDD ? `Yes` : 'Ok'}
                 showNoButton={!stateForServiceDD ?? true}
+                showCrossButton={!stateForServiceDD ?? false}
               />
             )}
           </ModalContent>
