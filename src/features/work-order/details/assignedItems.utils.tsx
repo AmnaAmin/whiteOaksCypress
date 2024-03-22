@@ -25,7 +25,7 @@ import { BiDownload, BiUpload, BiXCircle } from 'react-icons/bi'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { dateFormat } from 'utils/date-time-utils'
 import autoTable from 'jspdf-autotable'
-import { currencyFormatter } from 'utils/string-formatters'
+import { currencyFormatter, validateAmountDigits } from 'utils/string-formatters'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import round from 'lodash/round'
 import { isValidAndNonEmpty } from 'utils'
@@ -400,10 +400,13 @@ type EditableCellType = {
   updatedItems?: number[]
   setUpdatedItems?: (items) => void
   onChange?: (e, index) => void
+  onValueChange?: (e, index) => void
   selectedCell: selectedCell | null | undefined
   setSelectedCell: (e) => void
   allowEdit?: boolean
   maxLength?: number
+  rules?: any
+  errorSetFunc?: any
 }
 
 export const EditableField = (props: EditableCellType) => {
@@ -420,9 +423,19 @@ export const EditableField = (props: EditableCellType) => {
     selectedCell,
     setSelectedCell,
     allowEdit,
+    rules,
+    errorSetFunc,
     maxLength,
   } = props
-  const { getValues, setValue, control } = formControl
+  const {
+    getValues,
+    setValue,
+    control,
+    clearErrors,
+    setError,
+    trigger,
+    formState: { errors },
+  } = formControl
   const values = getValues()
   const remainingItemsWatch = useWatch({ name: fieldArray, control })
 
@@ -453,10 +466,11 @@ export const EditableField = (props: EditableCellType) => {
                 : '- - -'}
             </Box>
           ) : (
-            <FormControl>
+            <FormControl isInvalid={!!errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`]}>
               <Controller
                 control={control}
                 name={`${fieldArray}.${index}.${fieldName}`}
+                rules={{ ...rules }}
                 render={({ field, fieldState }) => (
                   <Input
                     maxLength={maxLength}
@@ -472,6 +486,11 @@ export const EditableField = (props: EditableCellType) => {
                         setUpdatedItems([...updatedItems, values?.[fieldArray][index]?.id])
                       }
                       onChange?.(e, index)
+                      // Custom validation
+                      errorSetFunc?.(e, setError, clearErrors)
+                      if (!errorSetFunc) {
+                      trigger([`${fieldArray}.${index}.${fieldName}`])
+                      }
                     }}
                     onBlur={e => {
                       setSelectedCell(null)
@@ -483,6 +502,9 @@ export const EditableField = (props: EditableCellType) => {
                   ></Input>
                 )}
               ></Controller>
+              {!!errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`] && (
+                <FormErrorMessage>{errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`]?.message}</FormErrorMessage>
+              )}
             </FormControl>
           )}
         </>
@@ -1075,6 +1097,27 @@ export const useGetLineItemsColumn = ({
                 setSelectedCell={setSelectedCell}
                 fieldName="sku"
                 fieldArray="assignedItems"
+                maxLength={256}
+                rules={{ maxLength: { value: 256, message: 'Please use 255 characters only.' } }}
+                errorSetFunc={(e, setError, clearErrors) => {
+                  const inputValue = e.target.value
+                  console.log('inputvaluelength', inputValue.length)
+                  if (inputValue.length === 256) {
+                    console.log('inputvalue', inputValue)
+                    setError(`${'assignedItems'}.${index}.${'sku'}`, {
+                      type: 'maxLength',
+                      message: (
+                        <div>
+                          <span>Please use 255</span>
+                          <br />
+                          <span>characters only.</span>
+                        </div>
+                      ) as any,
+                    })
+                  } else {
+                    clearErrors(`${'assignedItems'}.${index}.${'sku'}`)
+                  }
+                }}
                 formControl={formControl}
                 inputType="text"
                 allowEdit={allowEdit}
@@ -1102,6 +1145,25 @@ export const useGetLineItemsColumn = ({
                 formControl={formControl}
                 inputType="text"
                 allowEdit={allowEdit}
+                maxLength={1025}
+                rules={{ maxLength: { value: 1025, message: 'Please use 1024 characters only.' } }}
+                errorSetFunc={(e, setError, clearErrors) => {
+                  const inputValue = e.target.value
+                  if (inputValue.length === 1025) {
+                    setError(`${'assignedItems'}.${index}.${'productName'}`, {
+                      type: 'maxLength',
+                      message: (
+                        <div>
+                          <span>Please use 1024</span>
+                          <br />
+                          <span>characters only.</span>
+                        </div>
+                      ) as any,
+                    })
+                  } else {
+                    clearErrors(`${'assignedItems'}.${index}.${'productName'}`)
+                  }
+                }}
               />
             </Box>
           )
@@ -1138,6 +1200,25 @@ export const useGetLineItemsColumn = ({
                 formControl={formControl}
                 inputType="text"
                 allowEdit={allowEdit}
+                maxLength={1025}
+                rules={{ maxLength: { value: 1025, message: 'Please use 1024 characters only.' } }}
+                errorSetFunc={(e, setError, clearErrors) => {
+                  const inputValue = e.target.value
+                  if (inputValue.length === 1025) {
+                    setError(`${'assignedItems'}.${index}.${'description'}`, {
+                      type: 'maxLength',
+                      message: (
+                        <div>
+                          <span>Please use 1024</span>
+                          <br />
+                          <span>characters only.</span>
+                        </div>
+                      ) as any,
+                    })
+                  } else {
+                    clearErrors(`${'assignedItems'}.${index}.${'description'}`)
+                  }
+                }}
               />
             </Box>
           )
@@ -1254,6 +1335,14 @@ export const useGetLineItemsColumn = ({
                 formControl={formControl}
                 inputType="number"
                 allowEdit={allowEdit}
+                rules={{
+                  validate: {
+                    matchPattern: (v: any) => {
+                      return validateAmountDigits(v)
+                    
+                    },
+                  },
+                }}
                 onChange={e => {
                   handleItemQtyChange(e, index)
                 }}
@@ -1297,6 +1386,14 @@ export const useGetLineItemsColumn = ({
                 allowEdit={allowEdit}
                 onChange={e => {
                   handleItemPriceChange(e, index)
+                }}
+                rules={{
+                  validate: {
+                    matchPattern: (v: any) => {
+                      return validateAmountDigits(v)
+                    
+                    },
+                  },
                 }}
               />
             </Box>
