@@ -31,6 +31,7 @@ import moment from 'moment'
 import { capitalize } from 'utils/string-formatters'
 import { useGetProjectFinancialOverview } from 'api/projects'
 import { ConfirmationBox } from 'components/Confirmation'
+import { usePaymentUserOptions } from 'api/pc-projects'
 
 type ProjectManagerProps = {
   projectStatusSelectOptions: SelectOption[]
@@ -47,6 +48,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   projectData,
   isReadOnly,
 }) => {
+
+  const paymentOptions = usePaymentUserOptions()
   const [remainingArCheck, setRemainingArCheck] = useState<boolean>(false)
   const dateToday = new Date().toISOString().split('T')[0]
   const { t } = useTranslation()
@@ -500,6 +503,29 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               </FormLabel>
               <Input type="date" isDisabled={!isAdmin ?? true} {...register('projectClosedDueDate')} />
               <FormErrorMessage>{errors?.projectClosedDueDate?.message}</FormErrorMessage>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl w="215px" isInvalid={!!errors.paymentSource}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.paymentSource`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="paymentSource"
+                rules={{ required: 'This is required' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <ReactSelect
+                      {...field}
+                      options={paymentOptions}
+                      selectProps={{ isBorderLeft: true }}
+                      isMulti={true}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
+              />
             </FormControl>
           </GridItem>
         </Grid>

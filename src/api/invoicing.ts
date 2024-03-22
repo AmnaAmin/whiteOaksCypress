@@ -420,16 +420,16 @@ export const createInvoicePdf = async ({
     y2 = y2 + 5
   })
 
-  doc.setFont(summaryFont, 'bold')
-  doc.text('To:', x2 + 5, y2 + 20)
-  doc.setFont(summaryFont, 'normal')
-
-  doc.setFont(summaryFont, 'normal')
-  doc.text('Accounts Payable', x2 + 30, y2 + 20)
-
-  doc.setFont(summaryFont, 'normal')
-  doc.text(projectData?.clientName ?? '', x2 + 30, y2 + 24)
-
+  doc.setFont(summaryFont, 'bold');
+  doc.text('Payment Source:',startx, 90);
+  doc.setFont(summaryFont, 'normal');
+  // doc.text(paymentSource, x2 + 30, y2 + 20);
+  doc.setFont(summaryFont, 'bold');
+  doc.text('To:', x2 + 5, y2 + 25);
+  doc.setFont(summaryFont, 'normal');
+  doc.text('Accounts Payable', x2 + 30, y2 + 25);
+  doc.setFont(summaryFont, 'normal');
+  doc.text(projectData?.clientName ?? '', x2 + 30, y2 + 29);
   autoTable(doc, {
     startY: y2 + 35,
     headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
