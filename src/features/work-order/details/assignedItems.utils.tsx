@@ -503,7 +503,7 @@ export const EditableField = (props: EditableCellType) => {
                 )}
               ></Controller>
               {!!errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`] && (
-                <FormErrorMessage>{errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`]?.message}</FormErrorMessage>
+                <FormErrorMessage data-testid={`${fieldArray}-${index}-${fieldName}`} >{errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`]?.message}</FormErrorMessage>
               )}
             </FormControl>
           )}
@@ -1101,9 +1101,7 @@ export const useGetLineItemsColumn = ({
                 rules={{ maxLength: { value: 256, message: 'Please use 255 characters only.' } }}
                 errorSetFunc={(e, setError, clearErrors) => {
                   const inputValue = e.target.value
-                  console.log('inputvaluelength', inputValue.length)
                   if (inputValue.length === 256) {
-                    console.log('inputvalue', inputValue)
                     setError(`${'assignedItems'}.${index}.${'sku'}`, {
                       type: 'maxLength',
                       message: (
