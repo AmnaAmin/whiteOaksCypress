@@ -587,7 +587,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           </GridItem>
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.paymentSource}>
-              <FormLabel  size="md">
+              <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.paymentSource`)}
               </FormLabel>
               <Controller
