@@ -50,6 +50,7 @@ type ProjectManagementValues = {
   claimNumber: string | null
   reoNumber: string | null
   preInvoiced: boolean | false
+  paymentSource: any
 }
 
 type ProjectInvoicingAndPaymentFormValues = {

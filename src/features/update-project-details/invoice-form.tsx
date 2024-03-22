@@ -65,6 +65,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { useNavigate } from 'react-router-dom'
 import { Document } from 'types/vendor.types'
+import { usePaymentUserOptions } from 'api/pc-projects'
 //COMMENTING OUT FOR A TEST IF NOT APPROVED BY CLIENT THEN WE CAN REDO THIS
 // const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
 //   const { t } = useTranslation()
@@ -251,6 +252,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     clearErrors,
     watch,
   } = formReturn
+  const paymentOptions = usePaymentUserOptions()
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'finalSowLineItems',
@@ -580,6 +582,29 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     </div>
                   )
                 }}
+              />
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl w="215px" isInvalid={!!errors.paymentSource}>
+              <FormLabel variant="strong-label" size="md">
+                {t(`project.projectDetails.paymentSource`)}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="paymentSource"
+                // rules={{ required: 'This is required' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <ReactSelect
+                      {...field}
+                      options={paymentOptions}
+                      selectProps={{ isBorderLeft: true }}
+                      isMulti={true}
+                    />
+                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                  </>
+                )}
               />
             </FormControl>
           </GridItem>
