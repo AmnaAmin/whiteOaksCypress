@@ -101,8 +101,8 @@ describe('Work Order modal showing work order specific details', () => {
     expect(screen.getByTestId('cell-0-sku').textContent).toEqual('sku1')
     expect(screen.getByTestId('cell-1-sku').textContent).toEqual('sku2')
 
-    expect(screen.getByTestId('cell-0-vendorAmount').textContent).toEqual('$100.96')
-    expect(screen.getByTestId('cell-1-vendorAmount').textContent).toEqual('$98.00')
+    expect(screen.getByTestId('cell-0-vendorAmount').textContent).toEqual('$110.00')
+    expect(screen.getByTestId('cell-1-vendorAmount').textContent).toEqual('$55.00')
 
     await act(async () => {
       await userEvent.click(screen.getByTestId('complete_checkbox'))

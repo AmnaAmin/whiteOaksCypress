@@ -24,6 +24,7 @@ interface ConfirmationBoxProps {
   contentMsg?: string
   idValues?: Array<string>
   extraContent?: string
+  showCrossButton?: boolean
 }
 
 export function ConfirmationBox({
@@ -38,6 +39,7 @@ export function ConfirmationBox({
   contentMsg,
   idValues,
   extraContent,
+  showCrossButton,
 }: ConfirmationBoxProps) {
   const modalSize = useBreakpointValue({
     base: 'xs',
@@ -64,8 +66,7 @@ export function ConfirmationBox({
         >
           {title}
         </ModalHeader>
-        <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />
-
+        {showCrossButton && <ModalCloseButton _focus={{ border: 'none' }} _hover={{ bg: 'blue.50' }} color="#4A5568" />}
         <ModalBody>
           <Text
             data-testid="confirmation-message"
@@ -76,13 +77,13 @@ export function ConfirmationBox({
             mb="2"
           >
             {content}
-            <Text color='#345EA6'>{extraContent}</Text>
+            <Text color="#345EA6">{extraContent}</Text>
           </Text>
           {idValues?.map(e => (
             <Text>{`${contentMsg} WorkorderID: ${e}`}</Text>
           ))}
         </ModalBody>
-        <Flex flexFlow="row-reverse" borderTop= "2px solid #E2E8F0">
+        <Flex flexFlow="row-reverse" borderTop="2px solid #E2E8F0">
           <ModalFooter>
             {showNoButton && (
               <Button colorScheme="brand" data-testid="confirmation-no" variant="outline" mr={3} onClick={onClose}>

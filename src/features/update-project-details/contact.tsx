@@ -317,7 +317,7 @@ const contactFormValue = watch()
               size="md"
               id="superPhoneNumberExtension"
               {...register('superPhoneNumberExtension', {
-                maxLength: { value: 20, message: 'Character limit reached (maximum 2 characters)' },
+                maxLength: { value: 20, message: 'Character limit reached (maximum 20 characters)' },
               })}
               w="124px"
               autoComplete="off"
