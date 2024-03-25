@@ -112,6 +112,10 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     meta: { format: 'date' },
   },
   {
+    header: 'projectManager',
+    accessorKey: 'projectManager',
+  },
+  {
     header: 'onHold',
     accessorKey: 'onHold',
   },
