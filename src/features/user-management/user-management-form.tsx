@@ -434,6 +434,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             render={({ field: { onChange, ...rest } }) => (
               <ReactSelect
                 {...rest}
+                classNamePrefix={'accountTypeDropdown'}
                 isDisabled={(userInfo && userInfo.userTypeLabel === 'Vendor') || isReadOnly}
                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                 options={roles}
@@ -455,6 +456,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             name="langKey"
             render={({ field }) => (
               <ReactSelect
+              classNamePrefix={'languageDropdown'}
                 selectProps={{ isBorderLeft: true }}
                 {...field}
                 options={languageOptions}
@@ -545,6 +547,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             name={'directMarkets' as any}
             render={({ field }) => (
               <ReactSelect
+              classNamePrefix={'directMarketDropdown'}
                 placeholder="Select or Search"
                 selectProps={{ isBorderLeft: false }}
                 closeMenuOnSelect={false}
@@ -626,6 +629,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             name={'directStates' as any}
             render={({ field }) => (
               <ReactSelect
+              classNamePrefix={'directStatesDropdown'}
                 placeholder="Select or Search"
                 isDisabled={isReadOnly}
                 selectProps={{ isBorderLeft: false }}
@@ -707,6 +711,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
             name={'directRegions' as any}
             render={({ field }) => (
               <ReactSelect
+              classNamePrefix={'directRegions'}
                 placeholder="Select or Search"
                 selectProps={{ isBorderLeft: false }}
                 closeMenuOnSelect={false}
@@ -732,6 +737,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
               name={'directReports' as any}
               render={({ field }) => (
                 <ReactSelect
+                classNamePrefix={'directReportss'}
                   placeholder="Select or Search"
                   selectProps={{ isBorderLeft: false }}
                   closeMenuOnSelect={false}
@@ -790,6 +796,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
                 name="vendorId"
                 render={({ field }) => (
                   <ReactSelect
+                  classNamePrefix={'vendorId'}
                     selectProps={{ isBorderLeft: true }}
                     {...field}
                     options={vendorTypes}
@@ -882,6 +889,7 @@ export const UserManagementForm: React.FC<UserManagement> = ({ user, onClose, ta
               <ReactSelect
                 id="state"
                 {...field}
+                classNamePrefix={'stateDropdown'}
                 isDisabled={isReadOnly}
                 options={stateOptions}
                 selectProps={{ isBorderLeft: true, menuHeight: '180px' }}

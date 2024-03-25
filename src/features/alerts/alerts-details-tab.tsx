@@ -50,6 +50,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
               render={({ field, fieldState }) => (
                 <>
                   <Select
+                   classNamePrefix={'categoryDropdown'}
                     isDisabled={isReadOnly}
                     {...field}
                     selectProps={{ isBorderLeft: true }}
@@ -69,7 +70,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
               name="notify"
               control={control}
               render={({ field }) => {
-                return <Select isDisabled={isReadOnly} {...field} options={NOTIFY_OPTIONS} />
+                return <Select  classNamePrefix={'statusDropdown'} isDisabled={isReadOnly} {...field} options={NOTIFY_OPTIONS} />
               }}
             />
           </Box>
@@ -101,6 +102,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                 return (
                   <>
                     <Select
+                     classNamePrefix={'typeSelectionOption'}
                       isDisabled={isReadOnly}
                       {...field}
                       //menuPlacement={'top'}
@@ -135,6 +137,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                   <>
                     <Select
                       {...field}
+                      classNamePrefix={'attributeSelection'}
                       options={getAttributeOptions(watchTypeSelection?.label)}
                       size="md"
                       isDisabled={isReadOnly}
@@ -166,6 +169,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                 return (
                   <>
                     <Select
+                     classNamePrefix={'behaviourSelectionDropdown'}
                       isDisabled={isReadOnly}
                       {...field}
                       //menuPlacement={'top'}
@@ -197,6 +201,7 @@ export const AlertsDetailsTab: React.FC<{ setNextTab; selectedAlert; onClose }> 
                   return (
                     <>
                       <Select
+                       classNamePrefix={'customAttributeSelection'}
                         isDisabled={isReadOnly}
                         {...field}
                         options={getCustomOptions({

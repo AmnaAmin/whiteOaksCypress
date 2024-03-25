@@ -256,6 +256,7 @@ export const NewMarketModal: React.FC<newVendorSkillsTypes> = ({ onClose, isOpen
                       <>
                         <Select
                           {...field}
+                          classNamePrefix={'stateSelectOptions'}
                           options={stateSelectOptions}
                           isDisabled={isReadOnly}
                           // size="md"

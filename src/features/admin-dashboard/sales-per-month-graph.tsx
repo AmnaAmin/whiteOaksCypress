@@ -110,6 +110,7 @@ export const SalesPerMonth = ({ data, bar, line }) => {
           <FormLabel>{t(`${ADMIN_DASHBOARD}.filterByMonth`)}</FormLabel>
           <Box width="25%">
             <ReactSelect
+            classNamePrefix={'filterByMonthSalesPerMonth'}
               defaultValue={{ label: 'All', value: 'All' }}
               options={filterByMonthOptions}
               onChange={handleFilter}
