@@ -181,6 +181,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                     <div data-testid="proj-status">
                       <ReactSelect
                         {...field}
+                        classNamePrefix={'projectStatus'}
                         isDisabled={isReadOnly}
                         options={projectStatusSelectOptions}
                         isOptionDisabled={option => option.disabled}
@@ -211,6 +212,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                   <>
                     <ReactSelect
                       {...field}
+                      classNamePrefix={'projectType'}
                       options={projectTypeSelectOptions}
                       selectProps={{ isBorderLeft: true }}
                       isDisabled={isReadOnly}
@@ -321,6 +323,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                   <>
                     <ReactSelect
                       {...field}
+                      classNamePrefix={'overrideStatusProject'}
                       options={overrideProjectStatusOptionsLowercase} // {overrideProjectStatusOptions}
                       isDisabled={!isAdmin}
                       isOptionDisabled={option => option.disabled}

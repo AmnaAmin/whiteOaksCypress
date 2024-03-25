@@ -260,7 +260,7 @@ const Settings = React.forwardRef(() => {
                 control={control}
                 name="state"
                 render={({ field }) => (
-                  <ReactSelect id="state" {...field} options={stateOptions} selectProps={{ isBorderLeft: true }} />
+                  <ReactSelect   classNamePrefix={'settingsState'} id="state" {...field} options={stateOptions} selectProps={{ isBorderLeft: true }} />
                 )}
               />
             </FormControl>

@@ -154,6 +154,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                           return (
                             <>
                               <ReactSelect
+                              classNamePrefix={'documentType'}
                                 options={docTypes}
                                 selectProps={{ isBorderLeft: true, menuHeight: '200px' }}
                                 value={documentType}
@@ -184,6 +185,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                             return (
                               <>
                                 <ReactSelect
+                                classNamePrefix={'documentAgainst'}
                                   options={workOderState}
                                   selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
                                   value={documentType}

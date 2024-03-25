@@ -13,7 +13,6 @@ import {
   FormErrorMessage,
   Checkbox,
   Image,
-  Text,
   IconButton,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -22,7 +21,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form'
 import NumberFormat from 'react-number-format'
 import { useTranslation } from 'react-i18next'
 import { CustomInput, CustomRequiredInput } from 'components/input/input'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { AccountingType, DOCUMENTS_TYPES, PaymentMethods, createACHForm } from 'api/vendor-details'
 import ReactSelect from 'components/form/react-select'
 import { useStates } from 'api/pc-projects'
@@ -50,15 +49,15 @@ type UserProps = {
 export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive }) => {
   const formReturn = useFormContext<VendorAccountsFormValues>()
   const {
-    formState: { errors },
     control,
     setValue,
     register,
+    formState: { errors },
+    setError,
     watch,
     clearErrors,
     trigger,
   } = formReturn
-  const contactFormValue = watch()
   const { t } = useTranslation()
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
@@ -66,6 +65,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const validatePayment = PaymentMethods?.filter(payment => formValues[payment.value])
   const validateAccountType = AccountingType?.filter(acct => formValues[acct.key])
   const { isAdmin, isVendor, isVendorManager } = useUserRolesSelector()
+  const isReadOnly = !useRoleBasedPermissions().permissions.some(e => ['VENDOR.EDIT', 'ALL'].includes(e))
   const adminRole = isAdmin || isVendorManager
   const isVendorRequired = isActive && isVendor
   const watchVoidCheckDate = watch('bankVoidedCheckDate')
@@ -101,7 +101,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
       <Box maxH={'632px'} overflowY={'scroll'}>
         <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px">
           <GridItem>
-            <FormControl isInvalid={!!errors.einNumber}>
+            <FormControl isInvalid={!!errors.einNumber} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('ein')}
               </FormLabel>
@@ -146,7 +146,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.ssnNumber}>
+            <FormControl isInvalid={!!errors.ssnNumber} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('sin')}
               </FormLabel>
@@ -185,7 +185,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <FormLabel variant="strong-label" size="md">
                 {t('paymentMethods')}
               </FormLabel>
-              <FormControl isInvalid={!!errors.check?.message && !validatePayment?.length}>
+              <FormControl isInvalid={!!errors.check?.message && !validatePayment?.length} isDisabled={isReadOnly}>
                 <HStack spacing="16px">
                   {PaymentMethods.map(payment => {
                     return (
@@ -227,34 +227,42 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormLabel>
           </GridItem>
           <GridItem>
-            <FormControl w="215px" isInvalid={!!errors.companyName}>
+            <FormControl w="215px" isInvalid={!!errors.companyName} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('businessName')}
               </FormLabel>
               <Input
-              type="text"
-              data-testId="companyName"
-              variant="required-field"
-              {...register('companyName', {
-                required: isActive && 'This is required',
-                maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                onChange: e => {
-                  setValue('companyName', e.target.value)
-                },
-              })}
-              size="md"
-              maxLength={255}
-            />
-            {contactFormValue.companyName !== undefined && contactFormValue.companyName?.length === 255 && (
-              <Text color="red" fontSize="xs" w="215px">
-                Please use 255 characters only.
-              </Text>
-            )}
-              <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
+                type="text"
+                data-testId="companyName"
+                variant="required-field"
+                {...register('companyName', {
+                  required: isActive && 'This is required',
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
+                 
+                })}
+                size="md"
+               
+                onChange={e => {
+                  const title = e?.target.value;
+                  setValue('companyName', title);
+                  if (title?.length > 255) {
+                    setError('companyName', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    });
+                  } else {
+                    clearErrors('companyName');
+                  }
+                }}
+              />
+              {!!errors?.companyName && (
+                <FormErrorMessage data-testid='businessEmailAddress' >{errors?.companyName?.message}</FormErrorMessage>
+              )}
+             
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl w="215px" isInvalid={!!errors.ownerName}>
+            <FormControl w="215px" isInvalid={!!errors.ownerName} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('ownersName')}
               </FormLabel>
@@ -263,51 +271,69 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant="required-field"
                 {...register('ownerName', {
                   required: isActive && 'This is required',
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 20 characters)' },
-                  onChange: e => {
-                    setValue('ownerName', e.target.value)
-                  },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
+                 
                 })}
-                size="md"
-                maxLength={255}
-                />
-                {contactFormValue.ownerName !== undefined && contactFormValue.ownerName?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos="absolute">{errors.ownerName && errors.ownerName?.message}</FormErrorMessage>
+                onChange={e => {
+                  const title = e?.target.value;
+                  setValue('ownerName', title);
+                  if (title?.length > 255) {
+                    setError('ownerName', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    });
+                  } else {
+                    clearErrors('ownerName');
+                  }
+                }}
+                size="md" 
+              />
+              {!!errors?.ownerName && (
+                <FormErrorMessage data-testid='businessEmailAddress' >{errors?.ownerName?.message}</FormErrorMessage>
+              )}
+             
+             
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
           <GridItem></GridItem>
           <GridItem>
-            <FormControl w="215px" isInvalid={!!errors.businessEmailAddress}>
+            <FormControl w="215px" isInvalid={!!errors.businessEmailAddress} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 Business Email
               </FormLabel>
               <Input
                 type="email"
                 {...register('businessEmailAddress', {
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                  onChange: e => {
-                    setValue('businessEmailAddress', e.target.value)
-                  },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
+                 
                 })}
+                onChange={ e => {
+                  const title = e?.target.value;
+                  setValue('businessEmailAddress', title)
+                  if (title?.length > 255) {
+                    setError('businessEmailAddress', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('businessEmailAddress')
+                  }
+                
+                  
+                }}
                 variant="required-field"
-                size="md"       
-                maxLength={255}
-                />
-                {contactFormValue.businessEmailAddress !== undefined && contactFormValue.businessEmailAddress?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
+                size="md"
+               
+              />
+ {!!errors?.businessEmailAddress && (
+                <FormErrorMessage data-testid='businessEmailAddress' >{errors?.businessEmailAddress?.message}</FormErrorMessage>
+              )}
+             
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.businessPhoneNumber} h="70px">
+            <FormControl isInvalid={!!errors.businessPhoneNumber} h="70px" isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('businessPhoneNo')}
               </FormLabel>
@@ -338,7 +364,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormControl>
           </GridItem>
           <GridItem>
-          <FormControl h="70px" isInvalid={!!errors.businessPhoneNumberExtension}>
+            <FormControl h="70px" isInvalid={!!errors.businessPhoneNumberExtension} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('ext')}
               </FormLabel>
@@ -355,7 +381,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="121px"
                 variant="outline"
                 size="md"
-               
                 type="number"
               />
               {!!errors.businessPhoneNumberExtension && (
@@ -365,7 +390,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
           </GridItem>
           <GridItem></GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.streetAddress}>
+            <FormControl isInvalid={!!errors.streetAddress} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('streetAddress')}
               </FormLabel>
@@ -373,54 +398,67 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 type="text"
                 {...register('streetAddress', {
                   required: isActive && 'This is required',
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                  onChange: e => {
-                    setValue('streetAddress', e.target.value)
-                  },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                 })}
+                onChange={ e => {
+                  const title = e?.target.value;
+                  setValue('streetAddress', title)
+                  if (title?.length > 255) {
+                    setError('streetAddress', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('streetAddress')
+                  }
+                }}
+
                 w="215px"
                 variant="required-field"
                 size="md"
-                maxLength={255}
-                />
-                {contactFormValue.streetAddress !== undefined && contactFormValue.streetAddress?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
+               
+              />
+                {!!errors.streetAddress && (
+                <FormErrorMessage> {errors?.streetAddress?.message} </FormErrorMessage>
+              )}
+              
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.city}>
+            <FormControl isInvalid={!!errors.city} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('city')}
               </FormLabel>
               <Input
                 type="text"
                 {...register('city', {
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   required: isActive && 'This is required',
                   onChange: e => {
                     setValue('city', e.target.value)
+                    if (e.target.value?.length > 255) {
+                      setError('city', {
+                        type: 'maxLength',
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('city')
+                    }
                   },
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
                 onKeyPress={preventNumber}
-                maxLength={255}
-                />
-                {contactFormValue.city !== undefined && contactFormValue.city?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
+               
+              />
+              {!!errors.city && (
+                <FormErrorMessage> {errors?.city?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.state}>
+            <FormControl isInvalid={!!errors.state} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('state')}
               </FormLabel>
@@ -431,6 +469,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                     classNamePrefix={'stateSelectOptions'}
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}
@@ -443,7 +482,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.zipCode}>
+            <FormControl isInvalid={!!errors.zipCode} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('zip')}
               </FormLabel>
@@ -451,22 +490,27 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 type="number"
                 {...register('zipCode', {
                   required: isActive && 'This is required',
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   onChange: e => {
                     setValue('zipCode', e.target.value)
+                    if (e.target.value?.length > 255) {
+                      setError('zipCode', {
+                        type: 'maxLength',
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('zipCode')
+                    }
                   },
                 })}
                 w="215px"
                 variant="required-field"
                 size="md"
-                maxLength={255}
-                />
-                {contactFormValue.zipCode !== undefined && contactFormValue.zipCode?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
+               
+              />
+               {!!errors.zipCode && (
+                <FormErrorMessage> {errors?.zipCode?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem colSpan={4}>
@@ -475,7 +519,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormLabel>
           </GridItem>
           <GridItem>
-            <FormControl w="215px" isInvalid={!!errors.bankName}>
+            <FormControl w="215px" isInvalid={!!errors.bankName} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('bankName')}
               </FormLabel>
@@ -484,23 +528,31 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 id="bankName"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 {...register('bankName', {
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 size="md"
-                maxLength={255}
+                onChange={e => {
+                  const title = e?.target.value;
+                  setValue('bankName', title);
+                  if (title?.length > 255) {
+                    setError('bankName', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    });
+                  } else {
+                    clearErrors('bankName');
+                  }
+                }}
               />
-              {contactFormValue.bankName !== undefined && contactFormValue.bankName?.length === 255 && (
-                <Text color="red" fontSize="xs" w="215px">
-                  Please use 255 characters only.
-                </Text>
+               {!!errors.bankName && (
+                <FormErrorMessage> {errors?.bankName?.message} </FormErrorMessage>
               )}
-              <FormErrorMessage pos="absolute">{errors.bankName && errors.bankName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
 
           <GridItem>
-            <FormControl w="215px" isInvalid={!!errors.bankPrimaryContact}>
+            <FormControl w="215px" isInvalid={!!errors.bankPrimaryContact} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('bankPrimaryContact')}
               </FormLabel>
@@ -509,49 +561,63 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 id="bankPrimaryContact"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 {...register('bankPrimaryContact', {
-                  maxLength: { value: 45, message: 'Character limit reached (maximum 45 characters)' },
+                  maxLength: { value: 46, message: 'Character limit reached (maximum 45 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 size="md"
-                maxLength={45}
-                />
-                {contactFormValue.bankPrimaryContact !== undefined && contactFormValue.bankPrimaryContact?.length === 45 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 45 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos="absolute">
-                {errors.bankPrimaryContact && errors.bankPrimaryContact?.message}
-              </FormErrorMessage>
+                onChange={e => {
+                  const title = e?.target.value;
+                  setValue('bankPrimaryContact', title);
+                  if (title?.length > 255) {
+                    setError('bankPrimaryContact', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    });
+                  } else {
+                    clearErrors('bankPrimaryContact');
+                  }
+                }}
+              />
+             {!!errors.bankPrimaryContact && (
+                <FormErrorMessage> {errors?.bankPrimaryContact?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
           <GridItem></GridItem>
           <GridItem>
-            <FormControl w="215px" isInvalid={!!errors.bankEmail}>
+            <FormControl w="215px" isInvalid={!!errors.bankEmail} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('bankEmail')}
               </FormLabel>
               <Input
                 type="email"
                 {...register('bankEmail', {
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                maxLength={255}
-                />
-                {contactFormValue.bankEmail !== undefined && contactFormValue.bankEmail?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos={'absolute'}>{errors.bankEmail?.message}</FormErrorMessage>
+                onChange={e => {
+                  const title = e?.target.value;
+                  setValue('bankEmail', title);
+                  if (title?.length > 255) {
+                    setError('bankEmail', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    });
+                  } else {
+                    clearErrors('bankEmail');
+                  }
+                }}
+              />
+              {!!errors.bankEmail && (
+                <FormErrorMessage> {errors?.bankEmail?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.bankPhoneNumber} h="70px">
+            <FormControl isInvalid={!!errors.bankPhoneNumber} h="70px" isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md" noOfLines={1}>
                 {t('bankPhoneNumber')}
               </FormLabel>
@@ -585,56 +651,73 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
           <GridItem></GridItem>
           <GridItem></GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.bankAddress}>
+            <FormControl isInvalid={!!errors.bankAddress} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('bankAddress')}
               </FormLabel>
               <Input
                 type="text"
                 {...register('bankAddress', {
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                maxLength={255}
-                />
-                {contactFormValue.bankAddress !== undefined && contactFormValue.bankAddress?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos="absolute">{errors.bankAddress?.message}</FormErrorMessage>
+                onChange={e => {
+                  const title = e?.target.value;
+                  setValue('bankAddress', title);
+                  if (title?.length > 255) {
+                    setError('bankAddress', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    });
+                  } else {
+                    clearErrors('bankAddress');
+                  }
+                }}
+              />
+             {!!errors.bankAddress && (
+                <FormErrorMessage> {errors?.bankAddress?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.bankCity}>
+            <FormControl isInvalid={!!errors.bankCity} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('city')}
               </FormLabel>
               <Input
                 type="text"
                 {...register('bankCity', {
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 onKeyPress={preventNumber}
-                maxLength={255}
-                />
-                {contactFormValue.bankCity !== undefined && contactFormValue.bankCity?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos="absolute">{errors.bankCity?.message}</FormErrorMessage>
+                onChange={e => {
+                  const title = e?.target.value;
+                  setValue('bankCity', title);
+                  if (title?.length > 255) {
+                    setError('bankCity', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    });
+                  } else {
+                    clearErrors('bankCity');
+                  }
+                }}
+               
+              />
+              {!!errors.bankCity && (
+                <FormErrorMessage> {errors?.bankCity?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.bankState}>
+            <FormControl isInvalid={!!errors.bankState} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('state')}
               </FormLabel>
@@ -645,6 +728,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                     classNamePrefix={'bankState'}
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}
@@ -657,75 +741,101 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.bankZipCode}>
+            <FormControl isInvalid={!!errors.bankZipCode} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('zip')}
               </FormLabel>
               <Input
                 type="number"
                 {...register('bankZipCode', {
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                maxLength={255}
-                />
-                {contactFormValue.bankZipCode !== undefined && contactFormValue.bankZipCode?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos="absolute">{errors.bankZipCode?.message}</FormErrorMessage>
+                onChange={e => {
+                  const title = e?.target.value;
+                  setValue('bankZipCode', title);
+                  if (title?.length > 255) {
+                    setError('bankZipCode', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    });
+                  } else {
+                    clearErrors('bankZipCode');
+                  }
+                }}
+              />
+               {!!errors.bankZipCode && (
+                <FormErrorMessage> {errors?.bankZipCode?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.bankRoutingNo}>
+            <FormControl isInvalid={!!errors.bankRoutingNo} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('bankRoutingNo')}
               </FormLabel>
               <Input
                 type="number"
                 {...register('bankRoutingNo', {
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                maxLength={255}
-                />
-                {contactFormValue.bankRoutingNo !== undefined && contactFormValue.bankRoutingNo?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos="absolute">{errors.bankRoutingNo?.message}</FormErrorMessage>
+               
+              
+                onChange={e => {
+                  const title = e?.target.value;
+                  setValue('bankRoutingNo', title);
+                  if (title?.length > 255) {
+                    setError('bankRoutingNo', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    });
+                  } else {
+                    clearErrors('bankRoutingNo');
+                  }
+                }}
+              />
+               {!!errors.bankRoutingNo && (
+                <FormErrorMessage> {errors?.bankRoutingNo?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.bankAccountingNo}>
+            <FormControl isInvalid={!!errors.bankAccountingNo} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('bankAccountingNo')}
               </FormLabel>
               <Input
                 type="number"
                 {...register('bankAccountingNo', {
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   required: isVendorRequired && 'This is required',
                 })}
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-                maxLength={255}
-                />
-                {contactFormValue.bankAccountingNo !== undefined && contactFormValue.bankAccountingNo?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos="absolute">{errors.bankAccountingNo?.message}</FormErrorMessage>
+                onChange={e => {
+                  const title = e?.target.value;
+                  setValue('bankAccountingNo', title);
+                  if (title?.length > 255) {
+                    setError('bankAccountingNo', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    });
+                  } else {
+                    clearErrors('bankAccountingNo');
+                  }
+                }}
+              />
+               {!!errors.bankAccountingNo && (
+                <FormErrorMessage> {errors?.bankAccountingNo?.message} </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem />
@@ -735,7 +845,10 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
               <FormLabel variant="strong-label" size="md" w="150px">
                 {t('accountingType')}
               </FormLabel>
-              <FormControl isInvalid={!!errors.bankChecking?.message && !validateAccountType?.length}>
+              <FormControl
+                isInvalid={!!errors.bankChecking?.message && !validateAccountType?.length}
+                isDisabled={isReadOnly}
+              >
                 <HStack h="25px" spacing="16px">
                   {AccountingType.map(account => {
                     return (
@@ -773,6 +886,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
           </GridItem>
           <GridItem colSpan={4}>
             <VoidedCheckFields
+              isReadOnly={isReadOnly}
               formReturn={formReturn}
               vendorProfileData={vendorProfileData}
               isVendor={isVendor}
@@ -782,6 +896,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
           </GridItem>
           <GridItem colSpan={2}>
             <SignatureFields
+              isReadOnly={isReadOnly}
               vendorProfileData={vendorProfileData}
               sigRef={sigRef}
               formReturn={formReturn}
@@ -801,6 +916,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
         <Box>
           {hasOwnerSignature && (
             <Button
+              disabled={isReadOnly}
               onClick={downloadACFForm}
               leftIcon={<BiDownload />}
               data-testid="downloadACHForm"
@@ -834,7 +950,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   )
 }
 
-const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole, isVoidedCheckChange }) => {
+const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole, isVoidedCheckChange, isReadOnly }) => {
   const {
     formState: { errors },
     setValue,
@@ -855,7 +971,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole,
     >
       <Flex w="215px">
         <Box>
-          <FormControl isInvalid={!!errors.bankVoidedCheckDate}>
+          <FormControl isInvalid={!!errors.bankVoidedCheckDate} isDisabled={isReadOnly}>
             <FormLabel variant="strong-label" size="md" color="#2D3748">
               {t('voidedCheckFile')}
             </FormLabel>
@@ -882,7 +998,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole,
           },
         }}
       >
-        <FormControl w="215px" isInvalid={!!errors.voidedCheckFile?.message}>
+        <FormControl w="215px" isInvalid={!!errors.voidedCheckFile?.message} isDisabled={isReadOnly}>
           <FormLabel variant="strong-label" size="md" color="#2D3748">
             {t('fileUpload')}
           </FormLabel>
@@ -894,6 +1010,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole,
                 <VStack alignItems="baseline">
                   <Box>
                     <ChooseFileField
+                      disabled={isReadOnly}
                       testId="voidedCheckFile"
                       name={field.name}
                       value={field.value?.name ? field.value?.name : t('chooseFile')}
@@ -943,7 +1060,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole,
   )
 }
 
-const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef }) => {
+const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef, isReadOnly }) => {
   const {
     formState: { errors },
     setValue,
@@ -1001,11 +1118,12 @@ const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef }) =
 
   return (
     <HStack gap="20px" alignItems={'start'}>
-      <FormControl isInvalid={!ownersSignature}>
+      <FormControl isInvalid={!ownersSignature} isDisabled={isReadOnly}>
         <FormLabel fontWeight={500} fontSize="14px" color="gray.700">
           {t('ownersSignature')}
         </FormLabel>
         <Button
+          disabled={isReadOnly}
           pos="relative"
           border={'1px solid'}
           borderColor="gray.200"
@@ -1075,8 +1193,9 @@ const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef }) =
         </Button>
         {errors?.ownersSignature?.message && <FormErrorMessage>This is required field</FormErrorMessage>}
       </FormControl>
-      <FormControl>
+      <FormControl isDisabled={isReadOnly}>
         <FormInput
+          disabled={isReadOnly}
           errorMessage={errors?.bankDateSignature?.message}
           label={t('bankDateSignature')}
           testId="signature-date"

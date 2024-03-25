@@ -41,7 +41,6 @@ import {
   useAllowLineItemsAssignment,
   mapToLineItems,
   calculateVendorAmount,
-  calculateProfit,
   SWOProject,
   createInvoicePdf,
 } from './details/assignedItems.utils'
@@ -185,11 +184,11 @@ export const NewWorkOrder: React.FC<{
             let clientOriginalApprovedAmount = 0
             values?.assignedItems?.forEach((e: any) => {
               clientOriginalApprovedAmount += e.clientAmount
-            });
-  
+            })
+
             const payload = await parseNewWoValuesToPayload(values, projectData.id)
             payload['clientOriginalApprovedAmount'] = clientOriginalApprovedAmount
-  
+
             createWorkOrder(payload as any, {
               onSuccess: async data => {
                 const workOrder = data?.data
@@ -215,15 +214,19 @@ export const NewWorkOrder: React.FC<{
                 ])
                 setState?.(false)
               },
-              onError: async (err) => {
-                console.error("An exception has occurred. Performing rollback on line items, exception:", err);
-                assignLineItems(
-                  [
-                    ...values?.assignedItems?.map(a => {
-                      return { ...a, isAssigned: false, location: a?.location?.label, paymentGroup: a?.paymentGroup?.label }
-                    }),
-                  ]);
-              }
+              onError: async err => {
+                console.error('An exception has occurred. Performing rollback on line items, exception:', err)
+                assignLineItems([
+                  ...values?.assignedItems?.map(a => {
+                    return {
+                      ...a,
+                      isAssigned: false,
+                      location: a?.location?.label,
+                      paymentGroup: a?.paymentGroup?.label,
+                    }
+                  }),
+                ])
+              },
             })
           },
         },
@@ -376,7 +379,7 @@ export const NewWorkOrderForm: React.FC<{
       )
       setValue('clientApprovedAmount', round(clientAmount, 2))
       setValue('invoiceAmount', round(vendorAmount, 2))
-      setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+      setValue('percentage', watchPercentage)
     }
   }, [watchLineItems])
 
@@ -537,6 +540,7 @@ export const NewWorkOrderForm: React.FC<{
                         <>
                           <Select
                             {...field}
+                            classNamePrefix={'tradeOptionsVendor'}
                             options={tradeOptions}
                             size="md"
                             value={field.value}
@@ -574,6 +578,7 @@ export const NewWorkOrderForm: React.FC<{
                         <>
                           <Select
                             {...field}
+                            classNamePrefix={'vendorOptions'}
                             loadingCheck={vendorsLoading}
                             options={vendorOptions}
                             size="md"

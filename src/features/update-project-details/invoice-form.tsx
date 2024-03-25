@@ -540,6 +540,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                    classNamePrefix={'paymentTerms'}
                       {...field}
                       id="paymentTermDD"
                       isDisabled={isPaid || !canCreateInvoice || isCancelled || !isAdmin}
@@ -687,6 +688,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     render={({ field, fieldState }) => (
                       <>
                         <ReactSelect
+                        classNamePrefix={'invoiceStatus'}
                           {...field}
                           id="status"
                           isDisabled={isStatusDisabled || !canCreateInvoice}

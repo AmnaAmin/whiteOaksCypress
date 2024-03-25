@@ -247,6 +247,7 @@ const PaymentInfoTab = props => {
                       <div data-testid="paymentTerms">
                         <Select
                           {...field}
+                          classNamePrefix={'paymentTermTab'}
                           options={paymentsTerms}
                           isDisabled={!paymentTermEnabled || isWOCancelled}
                           size="md"
