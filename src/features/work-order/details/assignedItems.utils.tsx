@@ -107,7 +107,7 @@ export const getRemovedItems = (formValues, workOrderAssignedItems) => {
 
 export const getUnAssignedItems = (formValues, workOrderAssignedItems) => {
   /* check if work order is being cancelled we should unassign all line items */
-  if (formValues?.cancel?.value === 35) {
+  if (formValues?.cancel?.value === 35 && formValues.assignedItems?.length > 0) {
     return formValues.assignedItems?.map(a => {
       return { ...a, location: a?.location?.label }
     })
