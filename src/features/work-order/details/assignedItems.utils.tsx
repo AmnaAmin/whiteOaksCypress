@@ -1009,6 +1009,7 @@ export const useGetLineItemsColumn = ({
                     return (
                       <>
                         <CreatableSelectForTable
+                        classNamePrefix={'locationAssignedItems'}
                           index={index}
                           field={field}
                           key={'assignedItems.' + [index]}
@@ -1049,6 +1050,7 @@ export const useGetLineItemsColumn = ({
                     return (
                       <>
                         <CreatableSelectForTable
+                        classNamePrefix={'paymentGroupAssignedItems'}
                           index={index}
                           field={field}
                           key={'assignedItems.' + [index]}
@@ -1210,6 +1212,7 @@ export const useGetLineItemsColumn = ({
                     return (
                       <>
                         <CreatableSelectForTable
+                        classNamePrefix={'completePercentageAssignedItems'}
                           index={index}
                           options={completePercentageValues}
                           field={field}
@@ -1575,6 +1578,7 @@ type CreatebleSelectType = {
   style?: any
   index: number
   onChangeFn?: any
+  classNamePrefix? : any
 }
 
 export const CreatableSelectForTable = ({
@@ -1588,6 +1592,8 @@ export const CreatableSelectForTable = ({
   style,
   index,
   onChangeFn,
+  classNamePrefix,
+  
 }: CreatebleSelectType) => {
   const defaultOption = { label: 'Select', value: 'select', isDisabled: true }
   return (

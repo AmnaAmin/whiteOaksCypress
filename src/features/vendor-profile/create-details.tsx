@@ -143,6 +143,7 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
+                   classNamePrefix={'statusOptions'}
                     options={statusOptions}
                     {...field}
                     selectProps={{ isBorderLeft: true }}
@@ -164,6 +165,7 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
+                   classNamePrefix={'documentScore'}
                     options={documentScore}
                     {...field}
                     selectProps={{ isBorderLeft: true }}
@@ -185,6 +187,7 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
+                   classNamePrefix={'portalAccess'}
                     options={portalAccess}
                     {...field}
                     isDisabled={isReadOnly}
@@ -288,6 +291,7 @@ const CreateVendorDetail: React.FC<{
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                     classNamePrefix={'stateDropdown'}
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}

@@ -469,6 +469,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                     classNamePrefix={'stateSelectOptions'}
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}
@@ -727,6 +728,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                     classNamePrefix={'bankState'}
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}

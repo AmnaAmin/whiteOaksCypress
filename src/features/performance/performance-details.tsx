@@ -104,6 +104,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                   <>
                     <Select
                       {...field}
+                      classNamePrefix={'newBonusDropdown'}
                       options={bonus}
                       selected={field.value}
                       selectProps={{ isBorderLeft: true }}
@@ -129,6 +130,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                   <>
                     <Select
                       {...field}
+                      classNamePrefix={'badgeDropdown'}
                       options={badges}
                       selected={field.value}
                       selectProps={{ isBorderLeft: true }}
@@ -154,6 +156,7 @@ export const PerformanceDetail = React.forwardRef((props: performanceDetailsProp
                   <>
                     <Select
                       {...field}
+                      classNamePrefix={'ignoreQuotaDropdown'}
                       options={ignorePerformance}
                       selected={field.value}
                       selectProps={{ isBorderLeft: true }}
