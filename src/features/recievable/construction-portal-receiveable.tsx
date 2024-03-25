@@ -154,6 +154,7 @@ export const ConstructionPortalReceiveable: React.FC = () => {
               <Spacer />
               <FormControl w="215px" mr={'10px'}>
                 <ReactSelect
+                classNamePrefix={'recievableUsers'}
                   formatGroupLabel={formatGroupLabel}
                   onChange={user => {
                     user.value === 'ALL' ? setSelectedUserIds([]) : setSelectedUserIds([user.value])

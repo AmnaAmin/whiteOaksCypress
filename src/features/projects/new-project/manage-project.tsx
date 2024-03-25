@@ -74,6 +74,7 @@ export const ManageProject: React.FC<{
                 render={({ field, fieldState }) => (
                   <>
                     <Select
+                     classNamePrefix={'pmOptions'}
                       id="project-manager"
                       {...field}
                       options={fieldProjectManagerByMarketOptions}
@@ -101,6 +102,7 @@ export const ManageProject: React.FC<{
                   <>
                     <div data-testid="project_Cordinator">
                       <ReactSelect
+                      classNamePrefix={'projectCoordinator'}
                         id="projectCoordinator"
                         options={projectCoordinatorSelectOptions}
                         selected={value}
@@ -126,6 +128,7 @@ export const ManageProject: React.FC<{
                 render={({ field: { value }, fieldState }) => (
                   <>
                     <ReactSelect
+                    classNamePrefix={'clientOptions'}
                       id="client"
                       options={clientSelectOptions}
                       selected={value}
@@ -267,6 +270,7 @@ export const ManageProject: React.FC<{
                   <>
                     <div data-testid="client_type">
                       <ReactSelect
+                      classNamePrefix={'clientType'}
                         id="clientType"
                         // options={projectTypeSelectOptions}
                         options={clientTypesSelectOptions}
@@ -294,6 +298,7 @@ export const ManageProject: React.FC<{
                 render={({ field, fieldState }) => (
                   <>
                     <Select
+                     classNamePrefix={'carrierOptions'}
                       menuPlacement="top"
                       selectProps={{ menuHeight: '180px' }}
                       options={carrierOption}
