@@ -24,7 +24,7 @@ import { ProjectDetailsFormValues, ProjectStatus } from 'types/project-details.t
 import { Project } from 'types/project.type'
 import { SelectOption } from 'types/transaction.type'
 import { datePickerFormat, dateFormat, dateISOFormatWithZeroTime } from 'utils/date-time-utils'
-import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { useCurrentDate, useFieldsDisabled, useFieldsRequired, useMinMaxDateSelector } from './hooks'
 import { addDays } from 'date-fns'
 import moment from 'moment'
@@ -57,7 +57,8 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const isAdmin = permissions?.includes('ALL')
   const canPreInvoice = permissions.some(p => ['PREINVOICED.EDIT', 'ALL'].includes(p))
   const projectStatusId: number = (projectData?.projectStatusId || -1);
-
+  const { isAccounting } = useUserRolesSelector()
+  const isAdminOrAccount = isAdmin || isAccounting
   useEffect(() => {
     if (isReadOnly) {
       Array.from(document.querySelectorAll('input')).forEach(input => {
@@ -500,7 +501,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
           </GridItem>
 
           <GridItem>
-            <FormControl isInvalid={!!errors?.projectClosedDueDate}>
+            <FormControl w="215px" isInvalid={!!errors?.projectClosedDueDate}>
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.closedDueDate`)}
               </FormLabel>
@@ -509,20 +510,20 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl w="215px" isInvalid={!!errors.paymentSource}>
+            <FormControl w="350px" isInvalid={!!errors.paymentSource}>
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.paymentSource`)}
               </FormLabel>
               <Controller
                 control={control}
                 name="paymentSource"
-                rules={{ required: 'This is required' }}
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
                       {...field}
-                      options={paymentOptions}
-                      selectProps={{ isBorderLeft: true }}
+                      options={paymentOptions || []}
+                      isDisabled={!isAdminOrAccount}
+                      
                       isMulti={true}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>

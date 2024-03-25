@@ -48,10 +48,11 @@ type tabProps = {
   style?: { backgroundColor: string; marginLeft: string; marginRight: string; height: string; pt: string }
   tabVariant?: string
   isRecievable?: boolean
+  paymentSourceOptions?: any
 }
 
 const ProjectDetailsTab = (props: tabProps) => {
-  const { style, onClose, tabVariant, projectData, isRecievable } = props
+  const { style, onClose, tabVariant, projectData, isRecievable,paymentSourceOptions } = props
   const isRecievableRead = useRoleBasedPermissions()?.permissions?.includes('RECEIVABLE.READ') && isRecievable
   const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
   const isReadOnly = isRecievableRead || isProjRead
@@ -89,6 +90,7 @@ const ProjectDetailsTab = (props: tabProps) => {
   const watchClient = watch('client')
 
   const carrierSelected = watchClient?.carrier?.filter(e => e.id === projectData?.carrierId)
+ 
   useEffect(() => {
     const formValues = parseFormValuesFromAPIData({
       project: projectData,
@@ -102,9 +104,11 @@ const ProjectDetailsTab = (props: tabProps) => {
       marketSelectOptions,
       propertySelectOptions,
       clientTypesSelectOptions,
+      paymentSourceOptions,
     })
     formReturn.reset(formValues)
   }, [
+    paymentSourceOptions,
     projectData,
     projectExtraAttributes,
     fpmSelectOptions?.length,

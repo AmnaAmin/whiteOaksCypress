@@ -8,7 +8,7 @@ import { currencyFormatter } from 'utils/string-formatters'
 import autoTable from 'jspdf-autotable'
 import { addImages } from 'utils/file-utils'
 import numeral from 'numeral'
-import { TransactionTypeValues } from 'types/transaction.type'
+import { SelectOption, TransactionTypeValues } from 'types/transaction.type'
 import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { readFileContent } from './vendor-details'
@@ -227,6 +227,9 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
     paymentReceived: values.paymentReceivedDate,
     changeOrderId: invoice ? invoice?.changeOrderId : null,
     documents: attachmentDTO ? [attachmentDTO] : [],
+    paymentSource:values?.paymentSource?.map(e => {
+      return {lookupValueId:e.value,lookupValueValue:e.title}
+    }) ,
     //only save sowAmount once invoice is going for PAID (Remaining Payment 0), else it will be same as current projects sowAmount.
     sowAmount: parseFloat(values.remainingPayment) === 0 ? projectData?.sowNewAmount : null,
     remainingPayment: !invoice ? invoiceAmount : values.remainingPayment,
@@ -293,6 +296,7 @@ export const invoiceDefaultValues = ({
   clientSelected,
   transactions,
   invoiceNumber,
+  paymentSource,
 }) => {
   const invoicedDate = new Date()
   const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
@@ -353,8 +357,10 @@ export const invoiceDefaultValues = ({
     sowAmount: invoice?.sowAmount,
     remainingPayment: invoice ? Number(invoice?.remainingPayment)?.toFixed(2) ?? 0 : null,
     payment: Number(0)?.toFixed(2),
-  }
-}
+    paymentSource:invoice?.paymentSource?.map(e => {
+      return {value:e.lookupValueId,label:e.lookupValueValue}
+  })
+}}
 
 export const createInvoicePdf = async ({
   doc,
@@ -364,9 +370,10 @@ export const createInvoicePdf = async ({
   sowAmt,
   received,
   receivedLineItems,
+  paymentSourceOptions = [],
 }) => {
   let sowAmount = sowAmt ?? (projectData?.sowNewAmount?.toString() as string)
-
+console.log('paymentSource', projectData?.paymentSource)
   let finalSowLineItems = invoiceVals?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems')
 
   finalSowLineItems = finalSowLineItems?.length > 0 ? finalSowLineItems : [{ type: '', description: '', amount: 0 }]
@@ -419,11 +426,13 @@ export const createInvoicePdf = async ({
     )
     y2 = y2 + 5
   })
-
+const paymentSourceLables = paymentSourceOptions?.map((option: SelectOption) => option.label).join(', ');
+console.log('paymentSourceLables', paymentSourceLables)
+console.log('paymentSourceOptions', paymentSourceOptions)
   doc.setFont(summaryFont, 'bold');
-  doc.text('Payment Source:',startx, 90);
+  doc.text('Payment Source:',startx, 85);
   doc.setFont(summaryFont, 'normal');
-  // doc.text(paymentSource, x2 + 30, y2 + 20);
+  doc.text(paymentSourceLables ?? '',  startx + 5, y2 + 5);
   doc.setFont(summaryFont, 'bold');
   doc.text('To:', x2 + 5, y2 + 25);
   doc.setFont(summaryFont, 'normal');
@@ -703,6 +712,9 @@ export const useGenerateInvoicePDF = () => {
       sowAmt: invoice?.sowAmount,
       received: totalReceived,
       receivedLineItems: received,
+      paymentSourceOptions: invoice?.paymentSource?.map(e => {
+        return {value:e.lookupValueId,label:e.lookupValueValue}
+    })
     })
     const pdfUri = form.output('datauristring')
     return {

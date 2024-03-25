@@ -33,6 +33,7 @@ export const transaction = {
         confirmationTitle: 'Are you sure?',
         confirmationMessageMaterialAttachment:
           'Do you really want to upload a new attachment? Current line item(s) will be replaced with the scanned items from the new receipt, as you Save the transaction.',
+          paymentSource: 'Payment Source',
 
         // Transaction Modal
         addNewRow: 'Add New Row',

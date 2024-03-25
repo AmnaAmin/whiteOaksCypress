@@ -219,7 +219,7 @@ export const usePaymentUserOptions = () => {
         ?.map((type, i) => {
           return {
             label: type.value,
-            id: type.id,      
+            value: type.id,      
           }
         })
         

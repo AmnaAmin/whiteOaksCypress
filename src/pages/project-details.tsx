@@ -27,7 +27,7 @@ import { STATUS } from 'features/common/status'
 import { TransactionDetails } from 'features/project-details/transaction-details/transaction-details'
 import ScheduleTab from 'features/project-details/project-schedule/schedule-tab'
 import { AuditLogsTable } from 'features/project-details/audit-logs/audit-logs-table'
-import { useProjectAuditLogs } from 'api/project-details'
+import { usePaymentSourceOptions, useProjectAuditLogs } from 'api/project-details'
 import { boxShadow } from 'theme/common-style'
 import { useRoleBasedPermissions } from 'utils/redux-common-selectors'
 import InvoiceModal from 'features/update-project-details/add-invoice-modal'
@@ -79,6 +79,7 @@ export const ProjectDetails: React.FC = props => {
   const transaction = (location?.state as any)?.transaction || {}
   const { permissions } = useRoleBasedPermissions()
   const isAllowedInvoicing = permissions.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p))
+  const paymentSourceOptions =usePaymentSourceOptions(projectData?.id)
 
   //Extracting workorder id from query params
   const [searchParams, setSearchParams] = useSearchParams()
@@ -272,13 +273,11 @@ export const ProjectDetails: React.FC = props => {
                   )}
                 </Box>
               </TabPanel>
-              {!isLoading && (
-                <TabPanel p="0px">
-                  <Card rounded="6px" padding="0" h="100%">
-                    <ProjectDetailsTab projectData={projectData as Project} />
-                  </Card>
-                </TabPanel>
-              )}
+              {!isLoading && <TabPanel p="0px">
+                <Card rounded="6px" padding="0" h="100%">
+                  <ProjectDetailsTab projectData={projectData as Project} paymentSourceOptions={paymentSourceOptions}/>
+                </Card>
+              </TabPanel>}
 
               <TabPanel p="0px">
                 {!showNewWO && (

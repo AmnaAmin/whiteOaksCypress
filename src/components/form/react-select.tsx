@@ -114,6 +114,7 @@ export const chakraStyles = {
       _focus: inputFocusStateStyle,
       _disabled: {
         opacity: 0.7,
+        pointerEvents: 'none',
         cursor: 'not-allowed',
         bg: 'gray.100',
       },
