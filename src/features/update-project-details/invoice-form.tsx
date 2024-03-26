@@ -575,7 +575,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
         </Grid>
         <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pb="4">
           <GridItem>
-            <FormControl isInvalid={!!errors.woaExpectedPayDate} data-testid="woaExpectedPayDate">
+            <FormControl  w="230px"  isInvalid={!!errors.woaExpectedPayDate} data-testid="woaExpectedPayDate">
               <FormLabel variant="strong-label" size="md" htmlFor="woaExpectedPayDate">
                 {t(`project.projectDetails.woaExpectedPay`)}
               </FormLabel>
@@ -632,7 +632,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           {invoice && (
             <>
               <GridItem>
-                <FormControl data-testid="remainingPayment" w="215px" isInvalid={!!errors.remainingPayment}>
+                <FormControl data-testid="remainingPayment"  w="230px" isInvalid={!!errors.remainingPayment}>
                   <FormLabel variant="strong-label" size="md">
                     {t(`project.projectDetails.remainingPayment`)}
                   </FormLabel>
@@ -697,7 +697,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                 </FormControl>
               </GridItem>
               <GridItem>
-                <FormControl data-testid="status" w="215px" isInvalid={!!errors.status}>
+                <FormControl data-testid="status"  w="230px" isInvalid={!!errors.status}>
                   <FormLabel variant="strong-label" size="md">
                     {t(`project.projectDetails.status`)}
                   </FormLabel>
