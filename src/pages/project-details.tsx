@@ -364,7 +364,7 @@ export const ProjectDetails: React.FC = props => {
       {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
       <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
 
-      <InvoiceModal
+      {isOpenInvoiceModal && <InvoiceModal
         isOpen={isOpenInvoiceModal}
         onClose={() => {
           setSelectedInvoice(null)
@@ -372,7 +372,7 @@ export const ProjectDetails: React.FC = props => {
         }}
         projectId={projectData?.id}
         selectedInvoice={selectedInvoice}
-      />
+      />}
     </Stack>
   )
 }
