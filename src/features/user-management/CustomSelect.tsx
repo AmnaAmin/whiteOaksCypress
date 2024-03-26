@@ -186,8 +186,10 @@ const Select = forwardRef((props: any, ref: any) => {
   return (
     <ReactSelect
       ref={ref}
+      
       chakraStyles={chakraStyles}
       {...props}
+      classNamePrefix={props?.classNamePrefix || 'react-select'}
       loadingMessage={() => 'Loading'}
       isLoading={props?.loadingCheck}
       components={{

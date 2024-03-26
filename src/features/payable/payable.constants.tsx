@@ -6,6 +6,7 @@ import { dateFormat } from 'utils/date-time-utils'
 
 export const PAYABLE_TABLE_QUERY_KEYS = {
   projectId: 'projectId.equals',
+  projectManager: 'projectManager.contains',
   woDisplayId: 'woDisplayId.contains',
   claimantName: 'claimantName.contains',
   propertyAddress: 'propertyAddress.contains',
@@ -110,6 +111,10 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
       return dateFormat(cellInfo.workOrderStartDate)
     },
     meta: { format: 'date' },
+  },
+  {
+    header: 'projectManager',
+    accessorKey: 'projectManager',
   },
   {
     header: 'onHold',

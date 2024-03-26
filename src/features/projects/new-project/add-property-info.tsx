@@ -192,6 +192,7 @@ export const AddPropertyInfo: React.FC<{
                   render={({ field, fieldState }) => (
                     <>
                       <CreatableSelect
+                       classNamePrefix={'streetAddressProject'}
                         id="streetAddress"
                         options={propertySelectOptions}
                         selected={field.value}
@@ -248,6 +249,7 @@ export const AddPropertyInfo: React.FC<{
                   render={({ field, fieldState }) => (
                     <>
                       <Select
+                       classNamePrefix={'stateOptions'}
                         id="addressState"
                         {...field}
                         options={stateSelectOptions}
@@ -310,6 +312,7 @@ export const AddPropertyInfo: React.FC<{
                   render={({ field, fieldState }) => (
                     <>
                       <Select
+                       classNamePrefix={'marketSelectOptions'}
                         id="addressMarket"
                         {...field}
                         options={marketSelectOptionsStateWise}

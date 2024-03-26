@@ -146,6 +146,7 @@ const Select = forwardRef((props: SelectProps, ref: any) => {
       ref={ref}
       chakraStyles={chakraStyles}
       {...props}
+      classNamePrefix={props?.classNamePrefix || 'react-select'}
       loadingMessage={() => 'Loading'}
       isLoading={props?.loadingCheck}
       components={{
@@ -213,6 +214,7 @@ export const CreatableSelect = forwardRef((props: SelectProps, ref: any) => (
   <RSCreatableSelect
     {...props}
     ref={ref}
+    classNamePrefix={props?.classNamePrefix || 'react-select'}
     chakraStyles={chakraStyles}
     placeholder="Select"
     components={{
