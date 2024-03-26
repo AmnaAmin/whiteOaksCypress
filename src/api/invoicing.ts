@@ -426,9 +426,7 @@ console.log('paymentSource', projectData?.paymentSource)
     )
     y2 = y2 + 5
   })
-const paymentSourceLables = paymentSourceOptions?.map((option: SelectOption) => option.label).join(', ');
-console.log('paymentSourceLables', paymentSourceLables)
-console.log('paymentSourceOptions', paymentSourceOptions)
+const paymentSourceLables = paymentSourceOptions?.map((option: SelectOption) => option.label).join(', ')
   doc.setFont(summaryFont, 'bold');
   doc.text('Payment Source:',startx, 85);
   doc.setFont(summaryFont, 'normal');
