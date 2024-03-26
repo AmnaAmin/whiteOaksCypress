@@ -212,23 +212,14 @@ export const usePaymentUserOptions = () => {
     const response = await client(`lk_value/lookupType/25`, {})
     return response?.data
   })
-
- 
-    
    return paymentSource
         ?.map((type, i) => {
           return {
             label: type.value,
             value: type.id,      
           }
-        })
-        
-    
+        })  
   }
-
- 
-
-
 const parseXmlResponse = async (response: any) => {
   const parser = new xml2js.Parser()
 

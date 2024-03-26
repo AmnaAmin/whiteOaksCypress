@@ -373,7 +373,6 @@ export const createInvoicePdf = async ({
   paymentSourceOptions = [],
 }) => {
   let sowAmount = sowAmt ?? (projectData?.sowNewAmount?.toString() as string)
-console.log('paymentSource', projectData?.paymentSource)
   let finalSowLineItems = invoiceVals?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems')
 
   finalSowLineItems = finalSowLineItems?.length > 0 ? finalSowLineItems : [{ type: '', description: '', amount: 0 }]

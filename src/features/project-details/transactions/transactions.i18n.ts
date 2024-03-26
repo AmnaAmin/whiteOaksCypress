@@ -150,6 +150,7 @@ export const transaction = {
         confirmationTitle: 'Estas segura?',
         confirmationMessageMaterialAttachment:
           'Realmente desea cargar un nuevo archivo adjunto? Los elementos de línea actuales se reemplazarán con los elementos escaneados del nuevo recibo, a medida que guarde la transacción.',
+          paymentSource: 'Fuente de pago',
 
         // Transaction Modal
 
