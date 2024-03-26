@@ -80,6 +80,7 @@ export const TRANSACTION_TABLE_QUERIES_KEY = {
   modifiedDateStart: 'modifiedDate.greaterThanOrEqual',
   modifiedDateEnd: 'modifiedDate.lessThanOrEqual',
   approvedBy: 'approvedBy.contains',
+  paymentSource: 'paymentSource.contains',
 }
 
 export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
@@ -218,6 +219,13 @@ export const TRANSACTION_TABLE_COLUMNS: ColumnDef<any>[] = [
     accessorKey: 'approvedBy',
     accessorFn: cellInfo => {
       return cellInfo.approvedBy ? cellInfo?.approvedBy : '- - -'
+    },
+  },
+  {
+    header: `${TRANSACTION}.paymentSource`,
+    accessorKey: 'paymentSource',
+    accessorFn: cellInfo => {
+      return cellInfo.paymentSource ? cellInfo?.paymentSource : '- - -'
     },
   },
 ]
