@@ -432,7 +432,7 @@ console.log('paymentSourceOptions', paymentSourceOptions)
   doc.setFont(summaryFont, 'bold');
   doc.text('Payment Source:',startx, 85);
   doc.setFont(summaryFont, 'normal');
-  doc.text(paymentSourceLables ?? '',  startx + 5, y2 + 5);
+  doc.text(paymentSourceLables ?? '',  startx + 30, 85);
   doc.setFont(summaryFont, 'bold');
   doc.text('To:', x2 + 5, y2 + 25);
   doc.setFont(summaryFont, 'normal');
