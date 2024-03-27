@@ -57,7 +57,7 @@ export function VendorFinancialAccountType({
 
     const accountTypeOption: AccountTypeDropdown[] = [
         { label: "Credit Card", value: AccountType.CREDIT_CARD },
-        // { label: "ACH", value: AccountType.ACH_BANK }
+        { label: "ACH", value: AccountType.ACH_BANK }
     ];
 
     const onSelectOptionChange = (val) => {

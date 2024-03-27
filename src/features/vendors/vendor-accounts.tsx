@@ -54,6 +54,7 @@ import { Elements } from '@stripe/react-stripe-js'
 import getStripe from 'utils/stripe'
 import VendorCCUpdateModal from './vendor-payments/vendor-cc-update-modal'
 import { useFetchPaymentMethods } from 'api/payment'
+import VendorACHAddModal from './vendor-payments/vendor-ach-add-modal'
 
 type UserProps = {
   onClose?: () => void
@@ -67,6 +68,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const { isOpen: isAccountTypeOpen, onOpen: onAccountTypeOpen, onClose: onAccountTypeClose } = useDisclosure();
   const { isOpen: isCCModalOpen, onOpen: onCCModalOpen, onClose: onCCModalClose } = useDisclosure();
   // const { isOpen: isACHModalOpen, onOpen: onACHModalOpen, onClose: onACHModalClose } = useDisclosure();
+  const { isOpen: isACHModalOpen, onOpen: onACHModalOpen, onClose: onACHModalClose } = useDisclosure();
   const {
     formState: { errors },
     control,
@@ -122,11 +124,13 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     onAccountTypeClose();
     if (selectedValue === AccountType.CREDIT_CARD) onCCModalOpen();
     // else if (selectedValue === AccountType.ACH_BANK) onACHModalOpen();
+    else if (selectedValue === AccountType.ACH_BANK) onACHModalOpen();
   };
 
   return (
     <>
       <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onCCModalClose} vendorProfileData={vendorProfileData} />
+      <VendorACHAddModal isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfileData} isActive={isActive} />
       <Box maxH={'632px'} overflowY={'scroll'}>
         <Grid templateColumns="repeat(4,265px)" rowGap="30px" columnGap="16px">
           <GridItem colSpan={4}>
