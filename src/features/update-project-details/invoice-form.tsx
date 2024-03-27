@@ -604,7 +604,8 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
          
             {!invoice && canCreateInvoice && (
                <GridItem>
-              <FormControl w="350px" isInvalid={!!errors.paymentSource}>
+               
+              <FormControl minW='230px' w='max-content' isInvalid={!!errors.paymentSource}>
                 <FormLabel variant="strong-label" size="md">
                   {t(`project.projectDetails.paymentSource`)}
                 </FormLabel>
@@ -626,6 +627,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                   )}
                 />
               </FormControl>
+              
               </GridItem>
             )}
          
