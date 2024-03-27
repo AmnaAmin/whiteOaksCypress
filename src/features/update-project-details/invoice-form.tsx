@@ -615,6 +615,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect
+                       classNamePrefix={'paymentSource'}
                         {...field}
                         options={paymentOptions}
                         isMulti

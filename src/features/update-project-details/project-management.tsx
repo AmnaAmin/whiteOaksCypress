@@ -520,6 +520,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                     classNamePrefix={'paymentSource'}
                       {...field}
                       options={paymentOptions || []}
                       isDisabled={!isAdminOrAccount}
