@@ -492,9 +492,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                             setError('invoiceNumber', {
                               type: 'maxLength',
                               message: 'Please use 100 characters only.',
-                            });
+                            })
                           } else {
-                            clearErrors('invoiceNumber');
+                            clearErrors('invoiceNumber')
                           }
                         }}
                       />
@@ -604,7 +604,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
 
           {!invoice && canCreateInvoice && (
             <GridItem>
-              <FormControl w="350px" isInvalid={!!errors.paymentSource}>
+              <FormControl minW="230px" w="max-content" isInvalid={!!errors.paymentSource}>
                 <FormLabel variant="strong-label" size="md">
                   {t(`project.projectDetails.paymentSource`)}
                 </FormLabel>
@@ -614,6 +614,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect
+                        classNamePrefix={'paymentSource'}
                         {...field}
                         options={paymentOptions}
                         isMulti
@@ -955,7 +956,12 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           )}
         </HStack>
         <HStack>
-          <Button onClick={() => onClose?.(false)} variant={'outline'} colorScheme="darkPrimary" data-testid="close-transaction-form">
+          <Button
+            onClick={() => onClose?.(false)}
+            variant={'outline'}
+            colorScheme="darkPrimary"
+            data-testid="close-transaction-form"
+          >
             {t(`project.projectDetails.cancel`)}
           </Button>
           <Button
