@@ -227,9 +227,9 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
     paymentReceived: values.paymentReceivedDate,
     changeOrderId: invoice ? invoice?.changeOrderId : null,
     documents: attachmentDTO ? [attachmentDTO] : [],
-    paymentSource:values?.paymentSource?.map(e => {
-      return {lookupValueId:e.value,lookupValueValue:e.title}
-    }) ,
+    paymentSource: values?.paymentSource?.map(e => {
+      return { lookupValueId: e.value, lookupValueValue: e.title }
+    }),
     //only save sowAmount once invoice is going for PAID (Remaining Payment 0), else it will be same as current projects sowAmount.
     sowAmount: parseFloat(values.remainingPayment) === 0 ? projectData?.sowNewAmount : null,
     remainingPayment: !invoice ? invoiceAmount : values.remainingPayment,
@@ -357,10 +357,11 @@ export const invoiceDefaultValues = ({
     sowAmount: invoice?.sowAmount,
     remainingPayment: invoice ? Number(invoice?.remainingPayment)?.toFixed(2) ?? 0 : null,
     payment: Number(0)?.toFixed(2),
-    paymentSource:invoice?.paymentSource?.map(e => {
-      return {value:e.lookupValueId,label:e.lookupValueValue}
-  })
-}}
+    paymentSource: invoice?.paymentSource?.map(e => {
+      return { value: e.lookupValueId, label: e.lookupValueValue }
+    })
+  }
+}
 
 export const createInvoicePdf = async ({
   doc,
@@ -425,11 +426,11 @@ export const createInvoicePdf = async ({
     )
     y2 = y2 + 5
   })
-const paymentSourceLables = paymentSourceOptions?.map((option: SelectOption) => option.label).join(', ')
+  const paymentSourceLables = paymentSourceOptions?.map((option: SelectOption) => option.label).join(', ')
   doc.setFont(summaryFont, 'bold');
-  doc.text('Payment Source:',startx, 85);
+  doc.text('Payment Source:', startx, 85);
   doc.setFont(summaryFont, 'normal');
-  doc.text(paymentSourceLables ?? '',  startx + 30, 85);
+  doc.text(paymentSourceLables ?? '', startx + 30, 85);
   doc.setFont(summaryFont, 'bold');
   doc.text('To:', x2 + 5, y2 + 25);
   doc.setFont(summaryFont, 'normal');
@@ -642,7 +643,27 @@ export const useUpdateInvoicingDocument = () => {
   })
 }
 
-export const useFetchInvoiceDetail = (projectId: string) => {
+export const useInvoiceModalClossed = () => {
+  const client = useClient()
+  const toast = useToast()
+  return useMutation(async (invoiceNumber: string) => {
+    return await client('invoice-cancelled/' + invoiceNumber, { method: 'PUT' })
+  }, {
+    onError(error: any) {
+      let description = error.title ?? 'Unable to Invalidate Invoice Number.'
+
+      toast({
+        title: 'Invoice',
+        description,
+        position: 'top-left',
+        status: 'error',
+        isClosable: true,
+      })
+    }
+  })
+}
+
+export const useFetchInvoiceDetail = (projectId: string, selectedInvoice: string | number | null | undefined) => {
   const client = useClient()
   const { data: invoiceDetail, ...rest } = useQuery(
     ['invoicesDetail', projectId],
@@ -651,7 +672,7 @@ export const useFetchInvoiceDetail = (projectId: string) => {
       return response
     },
     {
-      enabled: !!projectId && projectId !== 'undefined',
+      enabled: !!projectId && projectId !== 'undefined' && !selectedInvoice,
     },
   )
   return {
@@ -710,8 +731,8 @@ export const useGenerateInvoicePDF = () => {
       received: totalReceived,
       receivedLineItems: received,
       paymentSourceOptions: invoice?.paymentSource?.map(e => {
-        return {value:e.lookupValueId,label:e.lookupValueValue}
-    })
+        return { value: e.lookupValueId, label: e.lookupValueValue }
+      })
     })
     const pdfUri = form.output('datauristring')
     return {
@@ -721,7 +742,7 @@ export const useGenerateInvoicePDF = () => {
       fileObjectContentType: 'application/pdf',
       fileType: 'Invoice.pdf',
       projectInvoiceId: invoice?.id,
-   
+
     }
   }, [])
 }
