@@ -36,6 +36,7 @@ import { Messages } from 'features/messages/messages'
 import WorkOrderDetailsPage from 'features/work-order/work-order-edit-page'
 import NewWorkOrder from 'features/work-order/new-work-order'
 import { useSearchParams } from 'react-router-dom'
+import { useInvoiceModalClossed } from 'api/invoicing'
 
 export const ProjectDetails: React.FC = props => {
   const { t } = useTranslation()
@@ -50,7 +51,7 @@ export const ProjectDetails: React.FC = props => {
   const [selectedInvoice, setSelectedInvoice] = useState<any>(null)
   const { ganttChartData, isLoading: isGanttChartLoading, refetch: refetchGantt } = useGanttChart(projectId)
   const [formattedGanttData, setFormattedGanttData] = useState<any[]>([])
-
+  const { mutate: invalidateInvoiceNumber } = useInvoiceModalClossed()
   const {
     isOpen: isOpenTransactionModal,
     onClose: onTransactionModalClose,
@@ -79,7 +80,7 @@ export const ProjectDetails: React.FC = props => {
   const transaction = (location?.state as any)?.transaction || {}
   const { permissions } = useRoleBasedPermissions()
   const isAllowedInvoicing = permissions.some(p => [ADV_PERMISSIONS.invoiceEdit, 'ALL'].includes(p))
-  const paymentSourceOptions =usePaymentSourceOptions(projectData?.id)
+  const paymentSourceOptions = usePaymentSourceOptions(projectData?.id)
 
   //Extracting workorder id from query params
   const [searchParams, setSearchParams] = useSearchParams()
@@ -275,7 +276,7 @@ export const ProjectDetails: React.FC = props => {
               </TabPanel>
               {!isLoading && <TabPanel p="0px">
                 <Card rounded="6px" padding="0" h="100%">
-                  <ProjectDetailsTab projectData={projectData as Project} paymentSourceOptions={paymentSourceOptions}/>
+                  <ProjectDetailsTab projectData={projectData as Project} paymentSourceOptions={paymentSourceOptions} />
                 </Card>
               </TabPanel>}
 
@@ -365,7 +366,10 @@ export const ProjectDetails: React.FC = props => {
 
       {isOpenInvoiceModal && <InvoiceModal
         isOpen={isOpenInvoiceModal}
-        onClose={() => {
+        onClose={(invoiceNumber: string | null | undefined, created: boolean) => {
+          if (!selectedInvoice && !!invoiceNumber && !created) {
+            invalidateInvoiceNumber(invoiceNumber);
+          }
           setSelectedInvoice(null)
           onInvoiceModalClose()
         }}
