@@ -13,6 +13,7 @@ import { readFileContent } from './vendor-details'
 import { sortBy } from 'lodash'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
+
 type UpdateWorkOrderProps = {
   hideToast?: boolean
   swoProjectId?: string | number | null
@@ -327,12 +328,12 @@ export const useFieldEnableDecisionDetailsTab = ({ workOrder, formValues }) => {
   }
 }
 
-export const parseWODetailValuesToPayload = (formValues, workOrder) => {
+export const parseWODetailValuesToPayload = (formValues, workOrder, isSkillService?: boolean) => {
   /*- id will be set when line item is saved in workorder
     - smartLineItem id is id of line item in swo */
   const cancelWorkOrder = formValues?.cancel.value === 35
 
-  const assignedItems = !cancelWorkOrder
+  let assignedItems = !cancelWorkOrder
     ? [
         ...formValues?.assignedItems?.map((a, index) => {
           const isNewSmartLineItem = !a.smartLineItemId
@@ -359,7 +360,14 @@ export const parseWODetailValuesToPayload = (formValues, workOrder) => {
       ]
     : []
 
-  return {
+    if ( isSkillService  ) {
+      assignedItems = assignedItems.map( a => {
+        a.profit = 0;
+        return a;
+      } )
+    }
+
+    return {
     cancel: formValues?.cancel?.value,
     ...(cancelWorkOrder && { status: 35, cancelledDate: new Date() }),
     workOrderStartDate: formValues?.workOrderStartDate,
@@ -522,3 +530,12 @@ export const parseNewWoValuesToPayload = async (formValues, projectId) => {
     projectId: projectId,
   }
 }
+
+
+export const isVendorSkillServices = (skills: any, skillId: number) => {
+  const skill =  skills?.find(s => s.id === skillId );
+  if ( ! skill ) return false;
+  if ( skill.services === 'YES' ) return true;
+
+  return false;
+} 
