@@ -65,7 +65,7 @@ const RemainingItemsModal: React.FC<{
   const formControl = useForm<{
     remainingItems: LineItems[]
   }>()
-  const { handleSubmit, control, reset, clearErrors, setValue } = formControl
+  const { handleSubmit, control, reset, clearErrors, setValue, formState } = formControl
   const remainingFieldArray = useFieldArray({
     control,
     name: 'remainingItems',
@@ -262,7 +262,13 @@ const RemainingItemsModal: React.FC<{
                 >
                   {t('cancel')}
                 </Button>
-                <Button variant="solid" colorScheme="brand" type="submit" data-testid="saveListItems">
+                <Button
+                  variant="solid"
+                  colorScheme="brand"
+                  type="submit"
+                  data-testid="saveListItems"
+                  disabled={Object.keys(formState.errors).length >= 1}
+                >
                   {t('save')}
                 </Button>
               </HStack>
