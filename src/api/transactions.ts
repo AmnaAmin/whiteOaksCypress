@@ -823,7 +823,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['audit-logs', projectId])
         queryClient.invalidateQueries(['changeOrders'])
         queryClient.invalidateQueries(['WorkOrderDetails'])
-        queryClient.invalidateQueries([`${AP_CARDS}`])
+        queryClient.invalidateQueries([AP_CARDS])
 
         toast({
           title: 'Update Transaction.',
