@@ -72,18 +72,17 @@ const CreateVendorDetail: React.FC<{
       setStatusOptions(documentStatus)
     }
   })
-  const handleInputChange = (event) => {
+  const handleInputChange = event => {
     const { key } = event
 
     // Check if the pressed key is a digit (0-9)
-    const isDigit = /^\d$/.test(key);
+    const isDigit = /^\d$/.test(key)
 
     // Allow backspace and delete keys
     const isSpecialKey = key === 'Backspace' || key === 'Delete'
 
     // Allow navigation keys (arrows, home, end, etc.)
-    const isNavigationKey =
-      ['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(key) !== -1
+    const isNavigationKey = ['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(key) !== -1
 
     // Allow only if the key is a digit, a special key, or a navigation key
     if (!(isDigit || isSpecialKey || isNavigationKey) || key === '-') {
@@ -109,28 +108,25 @@ const CreateVendorDetail: React.FC<{
                 validate: {
                   whitespace: validateWhitespace,
                 },
-               
               })}
               size="md"
               isDisabled={isReadOnly}
-             
               onChange={e => {
-                const title = e?.target.value;
-                setValue('companyName', title);
+                const title = e?.target.value
+                setValue('companyName', title)
                 if (title?.length > 255) {
                   setError('companyName', {
                     type: 'maxLength',
                     message: 'Please use 255 characters only.',
-                  });
+                  })
                 } else {
-                  clearErrors('companyName');
+                  clearErrors('companyName')
                 }
               }}
             />
             {!!errors?.companyName && (
-              <FormErrorMessage data-testid='businessEmailAddress' >{errors?.companyName?.message}</FormErrorMessage>
+              <FormErrorMessage data-testid="businessEmailAddress">{errors?.companyName?.message}</FormErrorMessage>
             )}
-           
           </FormControl>
           <FormControl w="215px" isInvalid={!!errors.status}>
             <FormLabel variant="strong-label" size="md">
@@ -143,7 +139,7 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
-                   classNamePrefix={'statusOptions'}
+                    classNamePrefix={'statusOptions'}
                     options={statusOptions}
                     {...field}
                     selectProps={{ isBorderLeft: true }}
@@ -165,7 +161,7 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
-                   classNamePrefix={'documentScore'}
+                    classNamePrefix={'documentScore'}
                     options={documentScore}
                     {...field}
                     selectProps={{ isBorderLeft: true }}
@@ -187,7 +183,7 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
-                   classNamePrefix={'portalAccess'}
+                    classNamePrefix={'portalAccess'}
                     options={portalAccess}
                     {...field}
                     isDisabled={isReadOnly}
@@ -216,8 +212,8 @@ const CreateVendorDetail: React.FC<{
                     whitespace: validateWhitespace,
                   },
                 })}
-                onChange={ e => {
-                  const title = e?.target.value;
+                onChange={e => {
+                  const title = e?.target.value
                   setValue('streetAddress', title)
                   if (title?.length > 255) {
                     setError('streetAddress', {
@@ -228,17 +224,12 @@ const CreateVendorDetail: React.FC<{
                     clearErrors('streetAddress')
                   }
                 }}
-
                 w="215px"
                 variant="required-field"
                 size="md"
                 isDisabled={isReadOnly}
-              
               />
-             {!!errors.streetAddress && (
-                <FormErrorMessage> {errors?.streetAddress?.message} </FormErrorMessage>
-              )}
-              
+              {!!errors.streetAddress && <FormErrorMessage> {errors?.streetAddress?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -272,11 +263,8 @@ const CreateVendorDetail: React.FC<{
                 data-testid="vendorCity"
                 isDisabled={isReadOnly}
                 onKeyPress={preventNumber}
-               
               />
-              {!!errors.city && (
-                <FormErrorMessage> {errors?.city?.message} </FormErrorMessage>
-              )}
+              {!!errors.city && <FormErrorMessage> {errors?.city?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -291,7 +279,7 @@ const CreateVendorDetail: React.FC<{
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
-                     classNamePrefix={'stateDropdown'}
+                      classNamePrefix={'stateDropdown'}
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}
@@ -331,11 +319,8 @@ const CreateVendorDetail: React.FC<{
                 size="md"
                 data-testid="vendorZipCode"
                 isDisabled={isReadOnly}
-              
               />
-               {!!errors.zipCode && (
-                <FormErrorMessage> {errors?.zipCode?.message} </FormErrorMessage>
-              )}
+              {!!errors.zipCode && <FormErrorMessage> {errors?.zipCode?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
         </Grid>
@@ -351,10 +336,9 @@ const CreateVendorDetail: React.FC<{
                 data-testid="businessEmailAddress"
                 {...register('businessEmailAddress', {
                   maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                 
                 })}
-                onChange={ e => {
-                  const title = e?.target.value;
+                onChange={e => {
+                  const title = e?.target.value
                   setValue('businessEmailAddress', title)
                   if (title?.length > 255) {
                     setError('businessEmailAddress', {
@@ -364,16 +348,15 @@ const CreateVendorDetail: React.FC<{
                   } else {
                     clearErrors('businessEmailAddress')
                   }
-                
-                  
                 }}
                 variant="required-field"
                 size="md"
                 isDisabled={isReadOnly}
-               
               />
-             {!!errors?.businessEmailAddress && (
-                <FormErrorMessage data-testid='businessEmailAddress' >{errors?.businessEmailAddress?.message}</FormErrorMessage>
+              {!!errors?.businessEmailAddress && (
+                <FormErrorMessage data-testid="businessEmailAddress">
+                  {errors?.businessEmailAddress?.message}
+                </FormErrorMessage>
               )}
             </FormControl>
           </GridItem>
@@ -421,7 +404,7 @@ const CreateVendorDetail: React.FC<{
                   maxLength: { value: 21, message: 'Character limit reached (maximum 20 characters)' },
                   onChange: e => {
                     setValue('businessPhoneNumberExtension', e.target.value)
-                    const title = e?.target.value;
+                    const title = e?.target.value
                     if (title?.length > 20) {
                       setError('businessPhoneNumberExtension', {
                         type: 'maxLength',
@@ -430,8 +413,8 @@ const CreateVendorDetail: React.FC<{
                     } else {
                       clearErrors('businessPhoneNumberExtension')
                     }
-                  
-                }})}
+                  },
+                })}
                 w="121px"
                 variant="outline"
                 data-testid="ext"
@@ -510,25 +493,25 @@ const CreateVendorDetail: React.FC<{
                   validate: {
                     whitespace: validateWhitespace,
                   },
-                 
                 })}
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('ownerName', title);
+                  const title = e?.target.value
+                  setValue('ownerName', title)
                   if (title?.length > 255) {
                     setError('ownerName', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('ownerName');
+                    clearErrors('ownerName')
                   }
                 }}
-                size="md" 
+                size="md"
                 isDisabled={isReadOnly}
               />
               {!!errors?.ownerName && (
-                <FormErrorMessage data-testid='businessEmailAddress' >{errors?.ownerName?.message}</FormErrorMessage>)}
+                <FormErrorMessage data-testid="businessEmailAddress">{errors?.ownerName?.message}</FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -564,7 +547,14 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input type="text" {...register('secondName')} data-testid="secondName" variant="outline" size="md" isDisabled={isReadOnly} />
+            <Input
+              type="text"
+              {...register('secondName')}
+              data-testid="secondName"
+              variant="outline"
+              size="md"
+              isDisabled={isReadOnly}
+            />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -602,7 +592,7 @@ const CreateVendorDetail: React.FC<{
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect
-                        options={PAYMENT_TERMS_OPTIONS}
+                        options={PAYMENT_TERMS_OPTIONS.filter(option => option.value !== 60)}
                         menuPosition="fixed"
                         maxMenuHeight="100%"
                         {...field}
