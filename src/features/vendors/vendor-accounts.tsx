@@ -66,7 +66,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const validateAccountType = AccountingType?.filter(acct => formValues[acct.key])
   const { isAdmin, isVendor, isVendorManager } = useUserRolesSelector()
   const isReadOnly = !useRoleBasedPermissions().permissions.some(e =>
-    ['VENDOR.EDIT', 'ALL'].includes(e),
+    ['VENDOR.EDIT', 'VENDORPROFILE.EDIT', 'ALL'].includes(e),
   )
   const adminRole = isAdmin || isVendorManager
   const isVendorRequired = isActive && isVendor
