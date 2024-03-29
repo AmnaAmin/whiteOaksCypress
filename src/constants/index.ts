@@ -19,6 +19,10 @@ export const PAYMENT_TERMS_OPTIONS = [
     value: 30,
     label: '30',
   },
+  {
+    value: 60,
+    label: '60',
+  },
 ]
 
 export const CLIENT_STATUS_OPTIONS = [
