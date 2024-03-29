@@ -29,10 +29,11 @@ const getPayableQueryString = (filterQueryString: string) => {
 export type PayableResponse = Array<any>
 export const usePaginatedAccountPayable = (queryString: string, pageSize: number) => {
   const apiQueryString = getPayableQueryString(queryString)
+  const onHoldQuerryFilter = apiQueryString.includes('durationCategory.equals=8')
 
   const { data, ...rest } = usePaginationQuery<PayableResponse>(
     [ACCONT_PAYABLE_API_KEY, apiQueryString],
-    `all-payables?${apiQueryString}`,
+    `all-payables?onHold.contains=${onHoldQuerryFilter}&${apiQueryString}`,
     pageSize,
     { enabled: pageSize > 0 },
   )
@@ -50,11 +51,11 @@ const GET_ALL_WORKORDERS_QUERY_KEY = 'all_payable_api_key'
 export const useGetAllWorkOrders = (queryString: string) => {
   const client = useClient()
   const apiQueryString = getPayableQueryString(queryString)
-
+  const onHoldQuerryFilter = apiQueryString.includes('durationCategory.equals=8')
   return useQuery(
     [GET_ALL_WORKORDERS_QUERY_KEY, apiQueryString],
     async () => {
-      const response = await client(`all-payables?${apiQueryString}`, {})
+      const response = await client(`all-payables?onHold.contains=${onHoldQuerryFilter}&${apiQueryString}`, {})
       return response?.data
     },
     {

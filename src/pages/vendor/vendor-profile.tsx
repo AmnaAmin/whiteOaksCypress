@@ -72,9 +72,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const VendorType = props.vendorModalType
   const { isVendor } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
-  const allowVendorAccounts = permissions.some(p => ['VENDOR.VENDORACCOUNTS.EDIT', 'ALL'].includes(p))
-  const allowVendorAccountsEdit = permissions.some(p => ['VENDOR.ACCOUNTS.EDIT','ALL'].includes(p))
-  const allowVendorAccountsTabView = allowVendorAccounts || allowVendorAccountsEdit
+  const enableVendorAccounts = permissions.some(p => ['VENDOR.ACCOUNTS.EDIT','ALL'].includes(p))
   const { t } = useTranslation()
   const toast = useToast()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
@@ -174,7 +172,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           case 4:
             //create vendor: market tab
             if (validateMarket(formData?.markets)) {
-              if (allowVendorAccounts) {
+              if (enableVendorAccounts) {
                 setTabIndex(i => i + 1)
               } else {
                 const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
@@ -257,7 +255,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
               {VendorType === 'detail' ? <Tab>{t('auditLogs')}</Tab> : null}
               {!isVendor && vendorProfileData?.id && <Tab>{t('prjt')}</Tab>}
               {!!vendorProfileData?.id && <Tab>Users</Tab>}
-              {(allowVendorAccountsTabView) && (
+              {(enableVendorAccounts) && (
                 <TabCustom isError={isAccountFormErrors} isDisabled={reachTabIndex <= 4 && !vendorProfileData?.id} >
                   {t('vendorProfileAccount')}
                 </TabCustom>
@@ -367,7 +365,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                   </TabPanel>
                 )}
 
-                {(allowVendorAccountsTabView) && (
+                {(enableVendorAccounts) && (
                   <TabPanel p="0px">
                     <Box h="710" w="100%" overflow="auto">
                       <VendorAccounts
