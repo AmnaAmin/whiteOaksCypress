@@ -6,6 +6,7 @@ export type VendorSkill = {
   modifiedBy: string
   modifiedDate: string
   workOrders: null
+  services?: string
 }
 
 export type VendorMarket = {
