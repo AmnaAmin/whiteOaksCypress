@@ -29,7 +29,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projects'
 import { currencyFormatter, removeCurrencyFormat, removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
-import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
+import { isVendorSkillServices, parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import AssignedItems from './details/assigned-items'
 import round from 'lodash/round'
@@ -251,6 +251,7 @@ export const NewWorkOrder: React.FC<{
       vendorsLoading={vendorsLoading}
       setVendorSkillId={setVendorSkillId}
       setState={setState}
+      vendorSkillId={vendorSkillId as unknown as number}
     />
   )
 }
@@ -268,6 +269,7 @@ export const NewWorkOrderForm: React.FC<{
   setVendorSkillId: (val) => void
   isWorkOrderCreating
   setState?: (v) => void
+  vendorSkillId?: number
 }> = props => {
   const {
     projectData,
@@ -281,6 +283,7 @@ export const NewWorkOrderForm: React.FC<{
     setVendorSkillId,
     isWorkOrderCreating,
     setState,
+    vendorSkillId
   } = props
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
@@ -358,6 +361,8 @@ export const NewWorkOrderForm: React.FC<{
     }
   })
 
+  const isSkillService = isVendorSkillServices(trades, vendorSkillId || 0)
+
   useEffect(() => {
     if (watchPercentage === 0) {
       resetLineItemsProfit(0)
@@ -365,6 +370,7 @@ export const NewWorkOrderForm: React.FC<{
   }, [watchPercentage])
 
   useEffect(() => {
+    
     if (watchLineItems?.length > 0) {
       const clientAmount = watchLineItems?.reduce(
         (partialSum, a) =>
@@ -381,7 +387,7 @@ export const NewWorkOrderForm: React.FC<{
       setValue('invoiceAmount', round(vendorAmount, 2))
       setValue('percentage', watchPercentage)
     }
-  }, [watchLineItems])
+  }, [watchLineItems, isSkillService])
 
   const resetLineItemsProfit = profit => {
     formValues.assignedItems?.forEach((item, index) => {
