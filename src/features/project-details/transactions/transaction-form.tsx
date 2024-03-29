@@ -792,7 +792,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           <>
                             <div data-testid="change-order-select">
                               <Select
-                               classNamePrefix={'coSelect'}
+                                classNamePrefix={'coSelect'}
                                 isDisabled={isUpdateForm}
                                 options={changeOrderSelectOptions.filter((op: any) => op?.status !== 'CANCELLED')}
                                 selectProps={{ isBorderLeft: true }}
@@ -884,7 +884,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                           <>
                             <div data-testid="reason">
                               <Select
-                               classNamePrefix={'reasonSelectOptions'}
+                                classNamePrefix={'reasonSelectOptions'}
                                 options={REASON_STATUS_OPTIONS}
                                 //  options={reasonTypes.map(reason => ({
                                 //   label: reason.value,
@@ -966,7 +966,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
                                   {...field}
                                   classNamePrefix={'payTermSelect'}
                                   selectProps={{ isBorderLeft: isPaymentTermRequired }}
-                                  options={PAYMENT_TERMS_OPTIONS}
+                                  options={PAYMENT_TERMS_OPTIONS.filter(option => option.value !== 60)}
                                   isDisabled={isPaymentTermDisabled}
                                   onChange={option => {
                                     const dateInvSubmitted = getValues('invoicedDate')
