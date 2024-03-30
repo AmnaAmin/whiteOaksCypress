@@ -489,7 +489,7 @@ export const EditableField = (props: EditableCellType) => {
                       // Custom validation
                       errorSetFunc?.(e, setError, clearErrors)
                       if (!errorSetFunc) {
-                      trigger([`${fieldArray}.${index}.${fieldName}`])
+                        trigger([`${fieldArray}.${index}.${fieldName}`])
                       }
                     }}
                     onBlur={e => {
@@ -503,7 +503,9 @@ export const EditableField = (props: EditableCellType) => {
                 )}
               ></Controller>
               {!!errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`] && (
-                <FormErrorMessage data-testid={`${fieldArray}-${index}-${fieldName}`} >{errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`]?.message}</FormErrorMessage>
+                <FormErrorMessage data-testid={`${fieldArray}-${index}-${fieldName}`}>
+                  {errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`]?.message}
+                </FormErrorMessage>
               )}
             </FormControl>
           )}
@@ -615,6 +617,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
           ml={1}
           minW={'auto'}
           size="sm"
+          height={'25px'}
           data-testid={testId}
           onClick={() => inputRef?.current?.click()}
           colorScheme="darkPrimary"
@@ -626,7 +629,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
         </Button>
       ) : (
         <Box color="brand.300" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
-          <HStack spacing="5px" h="31px" padding="10px" align="center">
+          <HStack spacing="5px" h="25px" padding="10px" align="center">
             <Text as="span" maxW="70px" isTruncated title="something">
               {value}
             </Text>
@@ -1031,7 +1034,7 @@ export const useGetLineItemsColumn = ({
                     return (
                       <>
                         <CreatableSelectForTable
-                        classNamePrefix={'locationAssignedItems'}
+                          classNamePrefix={'locationAssignedItems'}
                           index={index}
                           field={field}
                           key={'assignedItems.' + [index]}
@@ -1072,7 +1075,7 @@ export const useGetLineItemsColumn = ({
                     return (
                       <>
                         <CreatableSelectForTable
-                        classNamePrefix={'paymentGroupAssignedItems'}
+                          classNamePrefix={'paymentGroupAssignedItems'}
                           index={index}
                           field={field}
                           key={'assignedItems.' + [index]}
@@ -1291,7 +1294,7 @@ export const useGetLineItemsColumn = ({
                     return (
                       <>
                         <CreatableSelectForTable
-                        classNamePrefix={'completePercentageAssignedItems'}
+                          classNamePrefix={'completePercentageAssignedItems'}
                           index={index}
                           options={completePercentageValues}
                           field={field}
@@ -1349,7 +1352,6 @@ export const useGetLineItemsColumn = ({
                   validate: {
                     matchPattern: (v: any) => {
                       return validateAmountDigits(v)
-                    
                     },
                   },
                 }}
@@ -1401,7 +1403,6 @@ export const useGetLineItemsColumn = ({
                   validate: {
                     matchPattern: (v: any) => {
                       return validateAmountDigits(v)
-                    
                     },
                   },
                 }}
@@ -1654,6 +1655,7 @@ export const useGetLineItemsColumn = ({
     statusEnabled,
     markAllCompleted,
     allVerified,
+    values.assignedItems,
     controlledAssignedItems?.length,
     locationSelectOptions?.length,
     paymentGroupValsOptions?.length,
@@ -1673,7 +1675,7 @@ type CreatebleSelectType = {
   style?: any
   index: number
   onChangeFn?: any
-  classNamePrefix? : any
+  classNamePrefix?: any
 }
 
 export const CreatableSelectForTable = ({
@@ -1688,7 +1690,6 @@ export const CreatableSelectForTable = ({
   index,
   onChangeFn,
   classNamePrefix,
-  
 }: CreatebleSelectType) => {
   const defaultOption = { label: 'Select', value: 'select', isDisabled: true }
   return (

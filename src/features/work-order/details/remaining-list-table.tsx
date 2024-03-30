@@ -187,7 +187,7 @@ const RemainingListTable = (props: RemainingListType) => {
                     return (
                       <>
                         <CreatableSelectForTable
-                        classNamePrefix={'locationRemainingItems'}
+                          classNamePrefix={'locationRemainingItems'}
                           index={index}
                           field={field}
                           valueFormatter={null}
@@ -227,7 +227,7 @@ const RemainingListTable = (props: RemainingListType) => {
                     return (
                       <>
                         <CreatableSelectForTable
-                        classNamePrefix={'paymentGroupItems'}
+                          classNamePrefix={'paymentGroupItems'}
                           index={index}
                           field={field}
                           valueFormatter={null}
