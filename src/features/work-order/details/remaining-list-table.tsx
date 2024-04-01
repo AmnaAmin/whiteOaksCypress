@@ -356,6 +356,7 @@ const RemainingListTable = (props: RemainingListType) => {
     locationSelectOptions?.length,
     paymentGroupValsOptions?.length,
     draggedHistory?.length,
+    values.remainingItems?.length,
   ])
 
   const handleOnDragEnd = useCallback(
