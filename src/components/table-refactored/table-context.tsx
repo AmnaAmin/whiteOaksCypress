@@ -158,4 +158,3 @@ export const useTableInstance = (): TableInstance => {
   }
   return tableInstance
 }
-
