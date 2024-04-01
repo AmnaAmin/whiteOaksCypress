@@ -343,7 +343,7 @@ export const calculateVendorAmount = (amount, percentage) => {
 }
 
 export const calculateProfit = (clientAmount, vendorAmount) => {
-  if (clientAmount === 0 || isNaN(clientAmount)) return 0;
+  if (clientAmount === 0 || isNaN(clientAmount)) return 0
   if (clientAmount === 0 && vendorAmount === 0) return 0
   return round(((clientAmount - vendorAmount) / clientAmount) * 100, WORK_ORDER_AMOUNT_ROUND)
 }
@@ -628,6 +628,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
           ml={1}
           minW={'auto'}
           size="sm"
+          height={'25px'}
           data-testid={testId}
           onClick={() => inputRef?.current?.click()}
           colorScheme="darkPrimary"
@@ -639,7 +640,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
         </Button>
       ) : (
         <Box color="brand.300" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
-          <HStack spacing="5px" h="31px" padding="10px" align="center">
+          <HStack spacing="5px" h="25px" padding="10px" align="center">
             <Text as="span" maxW="70px" isTruncated title="something">
               {value}
             </Text>
@@ -841,8 +842,8 @@ export const useGetLineItemsColumn = ({
   assignedItemsArray,
   workOrder,
   clientName,
-  isServiceSkill = false
-
+  draggedHistory,
+  isServiceSkill = false,
 }) => {
   const [selectedCell, setSelectedCell] = useState<selectedCell | null>(null)
   const [clrState, setClrState] = useState<boolean>(false)
@@ -886,14 +887,10 @@ export const useGetLineItemsColumn = ({
   )
   const handleItemPriceChange = useCallback(
     (e, index) => {
-      
       const newPrice = Number(e.target.value ?? 0)
-      console.log("🚀 ~ newPrice:", newPrice)
       const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
-      console.log("🚀 ~ profit:", profit)
       const quantity = Number(controlledAssignedItems?.[index]?.quantity ?? 0)
       const vendorAmount = calculateVendorAmount(newPrice * quantity, profit)
-      console.log("🚀 ~ vendorAmount:", vendorAmount)
       setValue(`assignedItems.${index}.clientAmount`, newPrice * quantity)
       setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
     },
@@ -902,18 +899,17 @@ export const useGetLineItemsColumn = ({
 
   const handleItemProfitChange = useCallback(
     (e, index) => {
-     
       const newProfit = e.target.value ?? 0
       const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
       const vendorAmount = calculateVendorAmount(clientAmount, newProfit)
-      setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
+      if (!isServiceSkill) setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
     },
     [controlledAssignedItems],
   )
 
   useEffect(() => {
     //if the service skill is yes don't calculate the profit or vendor amount https://devtek.atlassian.net/browse/PSWOA-10564
-    if ( isServiceSkill ) return;
+    if (isServiceSkill) return
     //  set by default value of profit% 45 line lineitem table with condition that
     // if item.profit exist then add it otherwise on newly line items added put profit 45% as ask
     values.assignedItems?.forEach((item, index) => {
@@ -925,11 +921,8 @@ export const useGetLineItemsColumn = ({
   const handleItemVendorAmountChange = useCallback(
     (e, index) => {
       const vendorAmount = e.target.value ?? 0
-      console.log("🚀 ~ vendorAmount:", vendorAmount)
       const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
-      console.log("🚀 ~ clientAmount:", clientAmount)
       const profit = calculateProfit(clientAmount, Number(vendorAmount))
-      console.log("🚀 ~ profit:", profit)
       setValue(`assignedItems.${index}.profit`, profit)
     },
     [controlledAssignedItems],
@@ -1473,28 +1466,30 @@ export const useGetLineItemsColumn = ({
           const index = cellInfo?.row?.index
           return (
             <Box>
-             
-              { ! isServiceSkill ? <EditableField
-                index={index}
-                fieldName="profit"
-                formControl={formControl}
-                inputType="number"
-                fieldArray="assignedItems"
-                valueFormatter={val => {
-                  if (val !== null && val !== '') return val + '%'
-                  else return val
-                }}
-                onChange={e => {
-                  handleItemProfitChange(e, index)
-                }}
-                selectedCell={selectedCell}
-                setSelectedCell={setSelectedCell}
-                allowEdit={allowEdit}
-              /> : '---' }
+              {!isServiceSkill ? (
+                <EditableField
+                  index={index}
+                  fieldName="profit"
+                  formControl={formControl}
+                  inputType="number"
+                  fieldArray="assignedItems"
+                  valueFormatter={val => {
+                    if (val !== null && val !== '') return val + '%'
+                    else return val
+                  }}
+                  onChange={e => {
+                    handleItemProfitChange(e, index)
+                  }}
+                  selectedCell={selectedCell}
+                  setSelectedCell={setSelectedCell}
+                  allowEdit={allowEdit}
+                />
+              ) : (
+                '---'
+              )}
             </Box>
           )
         },
-             
       },
       {
         header: () => {
@@ -1522,7 +1517,7 @@ export const useGetLineItemsColumn = ({
                 fieldArray="assignedItems"
                 valueFormatter={currencyFormatter}
                 onChange={e => {
-                  ! isServiceSkill && handleItemVendorAmountChange(e, index)
+                  !isServiceSkill && handleItemVendorAmountChange(e, index)
                 }}
                 selectedCell={selectedCell}
                 setSelectedCell={setSelectedCell}
@@ -1683,10 +1678,11 @@ export const useGetLineItemsColumn = ({
     statusEnabled,
     markAllCompleted,
     allVerified,
+    draggedHistory?.length,
     controlledAssignedItems?.length,
     locationSelectOptions?.length,
     paymentGroupValsOptions?.length,
-    isServiceSkill
+    isServiceSkill,
   ])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns

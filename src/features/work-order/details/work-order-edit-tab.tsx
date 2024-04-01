@@ -308,7 +308,7 @@ const WorkOrderDetailTab = props => {
   const { data: trades } = useTrades()
  
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
-  const isSkillService = isVendorSkillServices(trades, vendorSkillId)
+  const isSkillService = isVendorSkillServices(trades, vendorSkillId) && workOrder?.status === 1035
 
   const { vendors, isLoading: loadingVendors } = useFilteredVendors({
     vendorSkillId,
@@ -414,7 +414,7 @@ const WorkOrderDetailTab = props => {
 
     if ( isSkillService && workOrder?.assignedItems ) {
       assignedItems = assignedItems.map( a => {
-        a.profit = 0;
+        a.profit = null;
         return a;
       } )
     }
@@ -583,6 +583,15 @@ const WorkOrderDetailTab = props => {
               </Alert>
             )}
           </Box>
+          {isSkillService && (
+            <Box  marginTop="-15px !important" data-testid="skill-service-message">
+<Alert status="info" variant="custom" size="sm">
+            <AlertIcon />
+            <AlertDescription>Skill of type services is selected, a 0% profit will be allowed for this skill.</AlertDescription>
+          </Alert>
+            </Box>
+          
+          )}
           {!isAdmin && workOrder?.visibleToVendor ? (
             <SimpleGrid columns={5}>
               <>
