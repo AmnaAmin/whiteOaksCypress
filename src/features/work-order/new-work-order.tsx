@@ -364,14 +364,32 @@ export const NewWorkOrderForm: React.FC<{
   const isSkillService = isVendorSkillServices(trades, vendorSkillId || 0)
 
   useEffect(() => {
+    if ( isSkillService ) return;
     if (watchPercentage === 0) {
       resetLineItemsProfit(0)
     }
-  }, [watchPercentage])
+  }, [watchPercentage, isSkillService])
 
   useEffect(() => {
-    
-    if (watchLineItems?.length > 0) {
+
+    if ( isSkillService && watchLineItems?.length > 0 ) {
+   
+      const clientAmount = watchLineItems?.reduce(
+        (partialSum, a) =>
+          partialSum +
+          Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) *
+            Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
+        0,
+      )
+      const vendorAmount = watchLineItems?.reduce(
+        (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
+        0,
+      )
+     
+      setValue('clientApprovedAmount', round(clientAmount, 2))
+      setValue('invoiceAmount', round(vendorAmount, 2))
+      setValue('percentage', 0)
+    } else if (watchLineItems?.length > 0) {
       const clientAmount = watchLineItems?.reduce(
         (partialSum, a) =>
           partialSum +
@@ -652,7 +670,7 @@ export const NewWorkOrderForm: React.FC<{
                   </FormLabel>
                   <Controller
                     control={control}
-                    rules={{ required: 'This field is required' }}
+                    rules={{ required: isSkillService ? false : 'This field is required' }}
                     name="percentage"
                     render={({ field, fieldState }) => {
                       return (
@@ -814,6 +832,7 @@ export const NewWorkOrderForm: React.FC<{
                 workOrder={null}
                 documentsData={null}
                 clientName={projectData?.clientName}
+                isServiceSkill={isSkillService}
               />
             </Box>
           </Box>
