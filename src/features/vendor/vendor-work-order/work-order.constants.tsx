@@ -109,10 +109,13 @@ export const WORK_ORDER_TABLE_COLUMNS: ColumnDef<ProjectWorkOrderType>[] = [
   {
     header: 'Profit Percentage',
     accessorKey: 'profitPercentage',
-    accessorFn: (row: any) => `${(row?.profitPercentage)?.toString()}%`,
+    accessorFn: (row: any) =>  row?.profitPercentage ? row?.profitPercentage + '%' : '---',
     filterFn: 'includesString',
     cell: (row: any) => {
-      return `${row?.row.original?.profitPercentage}%`
+      return row?.row.original?.profitPercentage ? row?.row.original?.profitPercentage + '%' : '---'
     }
   },
 ]
+
+
+export const WORK_ORDER_AMOUNT_ROUND = 2;

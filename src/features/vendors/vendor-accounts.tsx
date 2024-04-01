@@ -65,7 +65,9 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const validatePayment = PaymentMethods?.filter(payment => formValues[payment.value])
   const validateAccountType = AccountingType?.filter(acct => formValues[acct.key])
   const { isAdmin, isVendor, isVendorManager } = useUserRolesSelector()
-  const isReadOnly = !useRoleBasedPermissions().permissions.some(e => ['VENDOR.EDIT', 'ALL'].includes(e))
+  const isReadOnly = !useRoleBasedPermissions().permissions.some(e =>
+    ['VENDOR.EDIT', 'VENDORPROFILE.EDIT', 'ALL'].includes(e),
+  )
   const adminRole = isAdmin || isVendorManager
   const isVendorRequired = isActive && isVendor
   const watchVoidCheckDate = watch('bankVoidedCheckDate')
@@ -238,27 +240,24 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 {...register('companyName', {
                   required: isActive && 'This is required',
                   maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                 
                 })}
                 size="md"
-               
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('companyName', title);
+                  const title = e?.target.value
+                  setValue('companyName', title)
                   if (title?.length > 255) {
                     setError('companyName', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('companyName');
+                    clearErrors('companyName')
                   }
                 }}
               />
               {!!errors?.companyName && (
-                <FormErrorMessage data-testid='businessEmailAddress' >{errors?.companyName?.message}</FormErrorMessage>
+                <FormErrorMessage data-testid="businessEmailAddress">{errors?.companyName?.message}</FormErrorMessage>
               )}
-             
             </FormControl>
           </GridItem>
           <GridItem>
@@ -272,27 +271,24 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 {...register('ownerName', {
                   required: isActive && 'This is required',
                   maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                 
                 })}
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('ownerName', title);
+                  const title = e?.target.value
+                  setValue('ownerName', title)
                   if (title?.length > 255) {
                     setError('ownerName', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('ownerName');
+                    clearErrors('ownerName')
                   }
                 }}
-                size="md" 
+                size="md"
               />
               {!!errors?.ownerName && (
-                <FormErrorMessage data-testid='businessEmailAddress' >{errors?.ownerName?.message}</FormErrorMessage>
+                <FormErrorMessage data-testid="businessEmailAddress">{errors?.ownerName?.message}</FormErrorMessage>
               )}
-             
-             
             </FormControl>
           </GridItem>
           <GridItem></GridItem>
@@ -306,10 +302,9 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 type="email"
                 {...register('businessEmailAddress', {
                   maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                 
                 })}
-                onChange={ e => {
-                  const title = e?.target.value;
+                onChange={e => {
+                  const title = e?.target.value
                   setValue('businessEmailAddress', title)
                   if (title?.length > 255) {
                     setError('businessEmailAddress', {
@@ -319,17 +314,15 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   } else {
                     clearErrors('businessEmailAddress')
                   }
-                
-                  
                 }}
                 variant="required-field"
                 size="md"
-               
               />
- {!!errors?.businessEmailAddress && (
-                <FormErrorMessage data-testid='businessEmailAddress' >{errors?.businessEmailAddress?.message}</FormErrorMessage>
+              {!!errors?.businessEmailAddress && (
+                <FormErrorMessage data-testid="businessEmailAddress">
+                  {errors?.businessEmailAddress?.message}
+                </FormErrorMessage>
               )}
-             
             </FormControl>
           </GridItem>
           <GridItem>
@@ -400,8 +393,8 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   required: isActive && 'This is required',
                   maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                 })}
-                onChange={ e => {
-                  const title = e?.target.value;
+                onChange={e => {
+                  const title = e?.target.value
                   setValue('streetAddress', title)
                   if (title?.length > 255) {
                     setError('streetAddress', {
@@ -412,16 +405,11 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                     clearErrors('streetAddress')
                   }
                 }}
-
                 w="215px"
                 variant="required-field"
                 size="md"
-               
               />
-                {!!errors.streetAddress && (
-                <FormErrorMessage> {errors?.streetAddress?.message} </FormErrorMessage>
-              )}
-              
+              {!!errors.streetAddress && <FormErrorMessage> {errors?.streetAddress?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -450,11 +438,8 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant="required-field"
                 size="md"
                 onKeyPress={preventNumber}
-               
               />
-              {!!errors.city && (
-                <FormErrorMessage> {errors?.city?.message} </FormErrorMessage>
-              )}
+              {!!errors.city && <FormErrorMessage> {errors?.city?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -469,7 +454,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
-                     classNamePrefix={'stateSelectOptions'}
+                      classNamePrefix={'stateSelectOptions'}
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}
@@ -506,11 +491,8 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant="required-field"
                 size="md"
-               
               />
-               {!!errors.zipCode && (
-                <FormErrorMessage> {errors?.zipCode?.message} </FormErrorMessage>
-              )}
+              {!!errors.zipCode && <FormErrorMessage> {errors?.zipCode?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem colSpan={4}>
@@ -533,21 +515,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 })}
                 size="md"
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('bankName', title);
+                  const title = e?.target.value
+                  setValue('bankName', title)
                   if (title?.length > 255) {
                     setError('bankName', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('bankName');
+                    clearErrors('bankName')
                   }
                 }}
               />
-               {!!errors.bankName && (
-                <FormErrorMessage> {errors?.bankName?.message} </FormErrorMessage>
-              )}
+              {!!errors.bankName && <FormErrorMessage> {errors?.bankName?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
 
@@ -566,19 +546,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 })}
                 size="md"
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('bankPrimaryContact', title);
+                  const title = e?.target.value
+                  setValue('bankPrimaryContact', title)
                   if (title?.length > 255) {
                     setError('bankPrimaryContact', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('bankPrimaryContact');
+                    clearErrors('bankPrimaryContact')
                   }
                 }}
               />
-             {!!errors.bankPrimaryContact && (
+              {!!errors.bankPrimaryContact && (
                 <FormErrorMessage> {errors?.bankPrimaryContact?.message} </FormErrorMessage>
               )}
             </FormControl>
@@ -599,21 +579,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('bankEmail', title);
+                  const title = e?.target.value
+                  setValue('bankEmail', title)
                   if (title?.length > 255) {
                     setError('bankEmail', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('bankEmail');
+                    clearErrors('bankEmail')
                   }
                 }}
               />
-              {!!errors.bankEmail && (
-                <FormErrorMessage> {errors?.bankEmail?.message} </FormErrorMessage>
-              )}
+              {!!errors.bankEmail && <FormErrorMessage> {errors?.bankEmail?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -665,21 +643,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('bankAddress', title);
+                  const title = e?.target.value
+                  setValue('bankAddress', title)
                   if (title?.length > 255) {
                     setError('bankAddress', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('bankAddress');
+                    clearErrors('bankAddress')
                   }
                 }}
               />
-             {!!errors.bankAddress && (
-                <FormErrorMessage> {errors?.bankAddress?.message} </FormErrorMessage>
-              )}
+              {!!errors.bankAddress && <FormErrorMessage> {errors?.bankAddress?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -698,22 +674,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 size="md"
                 onKeyPress={preventNumber}
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('bankCity', title);
+                  const title = e?.target.value
+                  setValue('bankCity', title)
                   if (title?.length > 255) {
                     setError('bankCity', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('bankCity');
+                    clearErrors('bankCity')
                   }
                 }}
-               
               />
-              {!!errors.bankCity && (
-                <FormErrorMessage> {errors?.bankCity?.message} </FormErrorMessage>
-              )}
+              {!!errors.bankCity && <FormErrorMessage> {errors?.bankCity?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -728,7 +701,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
-                     classNamePrefix={'bankState'}
+                      classNamePrefix={'bankState'}
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}
@@ -755,21 +728,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('bankZipCode', title);
+                  const title = e?.target.value
+                  setValue('bankZipCode', title)
                   if (title?.length > 255) {
                     setError('bankZipCode', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('bankZipCode');
+                    clearErrors('bankZipCode')
                   }
                 }}
               />
-               {!!errors.bankZipCode && (
-                <FormErrorMessage> {errors?.bankZipCode?.message} </FormErrorMessage>
-              )}
+              {!!errors.bankZipCode && <FormErrorMessage> {errors?.bankZipCode?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -786,24 +757,20 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 w="215px"
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
-               
-              
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('bankRoutingNo', title);
+                  const title = e?.target.value
+                  setValue('bankRoutingNo', title)
                   if (title?.length > 255) {
                     setError('bankRoutingNo', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('bankRoutingNo');
+                    clearErrors('bankRoutingNo')
                   }
                 }}
               />
-               {!!errors.bankRoutingNo && (
-                <FormErrorMessage> {errors?.bankRoutingNo?.message} </FormErrorMessage>
-              )}
+              {!!errors.bankRoutingNo && <FormErrorMessage> {errors?.bankRoutingNo?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -821,21 +788,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 variant={isVendorRequired ? 'required-field' : 'outline'}
                 size="md"
                 onChange={e => {
-                  const title = e?.target.value;
-                  setValue('bankAccountingNo', title);
+                  const title = e?.target.value
+                  setValue('bankAccountingNo', title)
                   if (title?.length > 255) {
                     setError('bankAccountingNo', {
                       type: 'maxLength',
                       message: 'Please use 255 characters only.',
-                    });
+                    })
                   } else {
-                    clearErrors('bankAccountingNo');
+                    clearErrors('bankAccountingNo')
                   }
                 }}
               />
-               {!!errors.bankAccountingNo && (
-                <FormErrorMessage> {errors?.bankAccountingNo?.message} </FormErrorMessage>
-              )}
+              {!!errors.bankAccountingNo && <FormErrorMessage> {errors?.bankAccountingNo?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem />

@@ -78,6 +78,7 @@ type AssignedItemType = {
   workOrder: ProjectWorkOrderType | null
   documentsData
   clientName?: string | null
+  isServiceSkill?: boolean
 }
 
 const AssignedItems = (props: AssignedItemType) => {
@@ -94,6 +95,7 @@ const AssignedItems = (props: AssignedItemType) => {
     downloadPdf,
     documentsData,
     clientName,
+    isServiceSkill,
   } = props
   const { control, register, getValues, setValue, watch } = formControl
   const { t } = useTranslation()
@@ -144,6 +146,7 @@ const AssignedItems = (props: AssignedItemType) => {
 
   const isVendorAssign = workOrder?.visibleToVendor
 
+  // const allowEdit = (!isVendor && !workOrder) || !isVendorAssign || ((!isVendor && isServiceSkill) || !isVendorAssign)
   const allowEdit = (!isVendor && !workOrder) || !isVendorAssign
 
   const ASSIGNED_ITEMS_COLUMNS = useGetLineItemsColumn({
@@ -155,6 +158,7 @@ const AssignedItems = (props: AssignedItemType) => {
     workOrder,
     clientName,
     draggedHistory,
+    isServiceSkill,
   })
 
   const handleOnDragEnd = useCallback(
