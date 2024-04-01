@@ -306,7 +306,7 @@ const RemainingListTable = (props: RemainingListType) => {
             fieldName: 'productName',
             selectedCell,
             setSelectedCell,
-            rules: { maxLength: { value: 1025, message: 'Please use 1024 characters only.' }, required: 'Required' },
+            rules: { maxLength: { value: 1025, message: 'Please use 1024 characters only.' }, required: '*Required' },
             errorSetFunc: (e, setError, clearErrors) => {
               const inputValue = e.target.value
               console.log('inputValue', inputValue.length)
@@ -335,7 +335,7 @@ const RemainingListTable = (props: RemainingListType) => {
             fieldName: 'description',
             selectedCell,
             setSelectedCell,
-            rules: { maxLength: { value: 1025, message: 'Please use 1024 characters only.' }, required: 'Required' },
+            rules: { maxLength: { value: 1025, message: 'Please use 1024 characters only.' }, required: '*Required' },
             errorSetFunc: (e, setError, clearErrors) => {
               const inputValue = e.target.value
               console.log('inputValue', inputValue.length)
