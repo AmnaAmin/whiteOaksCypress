@@ -37,6 +37,7 @@ import { completePercentageValues, newObjectFormatting } from 'api/work-order'
 import { useLocation, usePaymentGroupVals } from 'api/location'
 import { addImages } from 'utils/file-utils'
 import { onChangeCheckbox, onChangeHeaderCheckbox } from './utils'
+import { WORK_ORDER_AMOUNT_ROUND } from 'features/vendor/vendor-work-order/work-order.constants'
 
 const swoPrefix = '/smartwo/api'
 
@@ -338,12 +339,13 @@ export const useAllowLineItemsAssignment = ({ workOrder, swoProject }) => {
 export const calculateVendorAmount = (amount, percentage) => {
   amount = Number(amount)
   percentage = Number(!percentage || percentage === '' ? 0 : percentage)
-  return round(amount - amount * (percentage / 100), 2)
+  return round(amount - amount * (percentage / 100), WORK_ORDER_AMOUNT_ROUND)
 }
 
 export const calculateProfit = (clientAmount, vendorAmount) => {
+  if (clientAmount === 0 || isNaN(clientAmount)) return 0;
   if (clientAmount === 0 && vendorAmount === 0) return 0
-  return round(((clientAmount - vendorAmount) / clientAmount) * 100, 2)
+  return round(((clientAmount - vendorAmount) / clientAmount) * 100, WORK_ORDER_AMOUNT_ROUND)
 }
 /* map to remaining when user unassigns using Unassign Line Item action */
 
@@ -831,6 +833,8 @@ export const useGetLineItemsColumn = ({
   assignedItemsArray,
   workOrder,
   clientName,
+  isServiceSkill = false
+
 }) => {
   const [selectedCell, setSelectedCell] = useState<selectedCell | null>(null)
   const [clrState, setClrState] = useState<boolean>(false)
@@ -874,10 +878,14 @@ export const useGetLineItemsColumn = ({
   )
   const handleItemPriceChange = useCallback(
     (e, index) => {
+      
       const newPrice = Number(e.target.value ?? 0)
+      console.log("🚀 ~ newPrice:", newPrice)
       const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
+      console.log("🚀 ~ profit:", profit)
       const quantity = Number(controlledAssignedItems?.[index]?.quantity ?? 0)
       const vendorAmount = calculateVendorAmount(newPrice * quantity, profit)
+      console.log("🚀 ~ vendorAmount:", vendorAmount)
       setValue(`assignedItems.${index}.clientAmount`, newPrice * quantity)
       setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
     },
@@ -886,15 +894,19 @@ export const useGetLineItemsColumn = ({
 
   const handleItemProfitChange = useCallback(
     (e, index) => {
+     
       const newProfit = e.target.value ?? 0
       const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
       const vendorAmount = calculateVendorAmount(clientAmount, newProfit)
-      setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
+      if ( ! isServiceSkill )
+        setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
     },
     [controlledAssignedItems],
   )
 
   useEffect(() => {
+    //if the service skill is yes don't calculate the profit or vendor amount https://devtek.atlassian.net/browse/PSWOA-10564
+    if ( isServiceSkill ) return;
     //  set by default value of profit% 45 line lineitem table with condition that
     // if item.profit exist then add it otherwise on newly line items added put profit 45% as ask
     values.assignedItems?.forEach((item, index) => {
@@ -906,8 +918,11 @@ export const useGetLineItemsColumn = ({
   const handleItemVendorAmountChange = useCallback(
     (e, index) => {
       const vendorAmount = e.target.value ?? 0
+      console.log("🚀 ~ vendorAmount:", vendorAmount)
       const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
-      const profit = calculateProfit(clientAmount, vendorAmount)
+      console.log("🚀 ~ clientAmount:", clientAmount)
+      const profit = calculateProfit(clientAmount, Number(vendorAmount))
+      console.log("🚀 ~ profit:", profit)
       setValue(`assignedItems.${index}.profit`, profit)
     },
     [controlledAssignedItems],
@@ -1447,7 +1462,8 @@ export const useGetLineItemsColumn = ({
           const index = cellInfo?.row?.index
           return (
             <Box>
-              <EditableField
+             
+              { ! isServiceSkill ? <EditableField
                 index={index}
                 fieldName="profit"
                 formControl={formControl}
@@ -1463,10 +1479,11 @@ export const useGetLineItemsColumn = ({
                 selectedCell={selectedCell}
                 setSelectedCell={setSelectedCell}
                 allowEdit={allowEdit}
-              />
+              /> : '---' }
             </Box>
           )
         },
+             
       },
       {
         header: () => {
@@ -1494,7 +1511,7 @@ export const useGetLineItemsColumn = ({
                 fieldArray="assignedItems"
                 valueFormatter={currencyFormatter}
                 onChange={e => {
-                  handleItemVendorAmountChange(e, index)
+                  ! isServiceSkill && handleItemVendorAmountChange(e, index)
                 }}
                 selectedCell={selectedCell}
                 setSelectedCell={setSelectedCell}
@@ -1659,6 +1676,7 @@ export const useGetLineItemsColumn = ({
     controlledAssignedItems?.length,
     locationSelectOptions?.length,
     paymentGroupValsOptions?.length,
+    isServiceSkill
   ])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns

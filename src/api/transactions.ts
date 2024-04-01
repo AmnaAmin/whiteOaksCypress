@@ -43,7 +43,7 @@ import {
   TRANSACTION_MARK_AS_OPTIONS,
   TRANSACTION_STATUS_OPTIONS,
 } from 'features/project-details/transactions/transaction.constants'
-import { ACCONT_PAYABLE_API_KEY } from './account-payable'
+import { ACCONT_PAYABLE_API_KEY, AP_CARDS } from './account-payable'
 import { STATUS } from 'features/common/status'
 import { InvoiceStatusValues, InvoicingType } from 'types/invoice.types'
 
@@ -823,6 +823,7 @@ export const useChangeOrderUpdateMutation = (projectId?: string) => {
         queryClient.invalidateQueries(['audit-logs', projectId])
         queryClient.invalidateQueries(['changeOrders'])
         queryClient.invalidateQueries(['WorkOrderDetails'])
+        queryClient.invalidateQueries([AP_CARDS])
 
         toast({
           title: 'Update Transaction.',

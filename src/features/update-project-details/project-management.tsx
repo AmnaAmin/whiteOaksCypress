@@ -48,7 +48,6 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   projectData,
   isReadOnly,
 }) => {
-
   const paymentOptions = usePaymentUserOptions()
   const [remainingArCheck, setRemainingArCheck] = useState<boolean>(false)
   const dateToday = new Date().toISOString().split('T')[0]
@@ -56,7 +55,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   const { permissions } = useRoleBasedPermissions()
   const isAdmin = permissions?.includes('ALL')
   const canPreInvoice = permissions.some(p => ['PREINVOICED.EDIT', 'ALL'].includes(p))
-  const projectStatusId: number = (projectData?.projectStatusId || -1);
+  const projectStatusId: number = projectData?.projectStatusId || -1
   const { isAccounting } = useUserRolesSelector()
   const isAdminOrAccount = isAdmin || isAccounting
   useEffect(() => {
@@ -112,7 +111,13 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
   } = useFieldsRequired(control)
 
   //invoiced, cancelled, client paid, paid, disputed
-  const disabledPreIvoiceStatusIds = [ProjectStatus.Invoiced, ProjectStatus.Cancelled, ProjectStatus.ClientPaid, ProjectStatus.Paid, ProjectStatus.Disputed]
+  const disabledPreIvoiceStatusIds = [
+    ProjectStatus.Invoiced,
+    ProjectStatus.Cancelled,
+    ProjectStatus.ClientPaid,
+    ProjectStatus.Paid,
+    ProjectStatus.Disputed,
+  ]
 
   const sentenceCaseActive = STATUS.Active.charAt(0).toUpperCase() + STATUS.Active.slice(1).toLowerCase()
 
@@ -407,6 +412,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
               </FormLabel>
               <Input
                 type="date"
+                data-testid="woaStartDate"
                 isDisabled={isWOAStartDisabled}
                 min={woaStartMin}
                 {...register('woaStartDate', {
@@ -510,7 +516,7 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl w="350px" isInvalid={!!errors.paymentSource}>
+            <FormControl minW="215px" w="max-content" isInvalid={!!errors.paymentSource}>
               <FormLabel variant="strong-label" size="md">
                 {t(`project.projectDetails.paymentSource`)}
               </FormLabel>
@@ -520,10 +526,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                      classNamePrefix={'paymentSource'}
                       {...field}
                       options={paymentOptions || []}
                       isDisabled={!isAdminOrAccount}
-                      
                       isMulti={true}
                     />
                     <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -587,11 +593,10 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
                 variant={'normal'}
                 isChecked={watchPreInvoiced === null ? false : watchPreInvoiced}
                 data-testid="preInvoiceCheckbox"
-                disabled={disabledPreIvoiceStatusIds.includes(projectStatusId) || (!canPreInvoice)}
+                disabled={disabledPreIvoiceStatusIds.includes(projectStatusId) || !canPreInvoice}
                 size="md"
                 {...register('preInvoiced')}
-              >
-              </Checkbox>
+              ></Checkbox>
             </FormControl>
           </GridItem>
 
