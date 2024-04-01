@@ -831,6 +831,7 @@ export const useGetLineItemsColumn = ({
   assignedItemsArray,
   workOrder,
   clientName,
+  draggedHistory,
 }) => {
   const [selectedCell, setSelectedCell] = useState<selectedCell | null>(null)
   const [clrState, setClrState] = useState<boolean>(false)
@@ -1655,7 +1656,7 @@ export const useGetLineItemsColumn = ({
     statusEnabled,
     markAllCompleted,
     allVerified,
-    values.assignedItems,
+    draggedHistory?.length,
     controlledAssignedItems?.length,
     locationSelectOptions?.length,
     paymentGroupValsOptions?.length,

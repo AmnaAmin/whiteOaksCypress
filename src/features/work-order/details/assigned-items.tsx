@@ -154,6 +154,7 @@ const AssignedItems = (props: AssignedItemType) => {
     assignedItemsArray,
     workOrder,
     clientName,
+    draggedHistory,
   })
 
   const handleOnDragEnd = useCallback(
