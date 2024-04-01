@@ -718,10 +718,6 @@ const DragDropEnabledRows = ({
   handleOnDragStart,
   style,
 }) => {
-  const handleScroll = event => {
-    console.log('handle scroll', event.target.scrollTop)
-  }
-
   return (
     <DragDropContext
       onDragEnd={result => {
@@ -741,7 +737,6 @@ const DragDropEnabledRows = ({
             }}
             {...provided.droppableProps}
             ref={provided.innerRef}
-            onScroll={handleScroll}
           >
             <AutoSizer>
               {({ width, height }) => {

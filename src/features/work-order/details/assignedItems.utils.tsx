@@ -879,12 +879,9 @@ export const useGetLineItemsColumn = ({
   const handleItemPriceChange = useCallback(
     (e, index) => {
       const newPrice = Number(e.target.value ?? 0)
-      console.log('🚀 ~ newPrice:', newPrice)
       const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
-      console.log('🚀 ~ profit:', profit)
       const quantity = Number(controlledAssignedItems?.[index]?.quantity ?? 0)
       const vendorAmount = calculateVendorAmount(newPrice * quantity, profit)
-      console.log('🚀 ~ vendorAmount:', vendorAmount)
       setValue(`assignedItems.${index}.clientAmount`, newPrice * quantity)
       setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
     },
@@ -915,11 +912,8 @@ export const useGetLineItemsColumn = ({
   const handleItemVendorAmountChange = useCallback(
     (e, index) => {
       const vendorAmount = e.target.value ?? 0
-      console.log('🚀 ~ vendorAmount:', vendorAmount)
       const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
-      console.log('🚀 ~ clientAmount:', clientAmount)
       const profit = calculateProfit(clientAmount, Number(vendorAmount))
-      console.log('🚀 ~ profit:', profit)
       setValue(`assignedItems.${index}.profit`, profit)
     },
     [controlledAssignedItems],
