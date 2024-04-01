@@ -583,6 +583,15 @@ const WorkOrderDetailTab = props => {
               </Alert>
             )}
           </Box>
+          {isSkillService && (
+            <Box  marginTop="-15px !important" data-testid="skill-service-message">
+<Alert status="info" variant="custom" size="sm">
+            <AlertIcon />
+            <AlertDescription>Skill of type services is selected, a 0% profit will be allowed for this skill.</AlertDescription>
+          </Alert>
+            </Box>
+          
+          )}
           {!isAdmin && workOrder?.visibleToVendor ? (
             <SimpleGrid columns={5}>
               <>

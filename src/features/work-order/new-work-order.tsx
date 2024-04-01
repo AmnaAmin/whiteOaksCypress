@@ -362,7 +362,7 @@ export const NewWorkOrderForm: React.FC<{
   })
 
   const isSkillService = isVendorSkillServices(trades, vendorSkillId || 0)
-
+  
   useEffect(() => {
     if ( isSkillService ) return;
     if (watchPercentage === 0) {
@@ -501,6 +501,12 @@ export const NewWorkOrderForm: React.FC<{
           <Alert status="info" variant="custom" size="sm">
             <AlertIcon />
             <AlertDescription>{t(`${WORK_ORDER}.swoParsingFailure`)}</AlertDescription>
+          </Alert>
+        )}
+        {isSkillService && (
+          <Alert status="info" variant="custom" size="sm">
+            <AlertIcon />
+            <AlertDescription>Skill of type services is selected, a 0% profit will be allowed for this skill.</AlertDescription>
           </Alert>
         )}
         <HStack>
