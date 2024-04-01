@@ -17,7 +17,6 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   expectedPaymentDateEnd: 'expectedPaymentDate.lessThanOrEqual',
   finalInvoiceAmount: 'displayFinalInvoiceAmount.contains',
   marketName: 'marketName.contains',
-  onHold: 'onHold.contains',
   projectStatus: 'projectStatus.contains',
   workOrderStartDateStart: 'workOrderStartDate.greaterThanOrEqual',
   workOrderStartDateEnd: 'workOrderStartDate.lessThanOrEqual',
@@ -115,10 +114,6 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
   {
     header: 'projectManager',
     accessorKey: 'projectManager',
-  },
-  {
-    header: 'onHold',
-    accessorKey: 'onHold',
   },
   {
     header: 'wOCompletedDate',
