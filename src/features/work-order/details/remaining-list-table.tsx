@@ -275,7 +275,6 @@ const RemainingListTable = (props: RemainingListType) => {
             },
             errorSetFunc: (e, setError, clearErrors) => {
               const inputValue = e.target.value
-              console.log('inputValue', inputValue.length)
               if (inputValue.length >= 255) {
                 setError(`${'remainingItems'}.${row.index}.${'sku'}`, {
                   type: 'maxLength',
