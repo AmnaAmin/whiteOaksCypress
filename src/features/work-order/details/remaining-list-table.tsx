@@ -99,6 +99,9 @@ const RemainingListTable = (props: RemainingListType) => {
   const [selectedCell, setSelectedCell] = useState<selectedCell | null | undefined>(null)
   const { locationSelectOptions } = useLocation()
   const { paymentGroupValsOptions } = usePaymentGroupVals()
+  const [draggedHistory, setDraggedHistory] = useState<
+    { source: { index: number }; destination: { index: number } }[] | []
+  >([])
 
   useEffect(() => {
     setValue(`remainingItems.${total.index}.totalPrice`, total.value)
@@ -350,9 +353,9 @@ const RemainingListTable = (props: RemainingListType) => {
     setSelectedCell,
     selectedItems,
     setSelectedItems,
-    values.remainingItems,
     locationSelectOptions?.length,
     paymentGroupValsOptions?.length,
+    draggedHistory?.length,
   ])
 
   const handleOnDragEnd = useCallback(
@@ -367,7 +370,7 @@ const RemainingListTable = (props: RemainingListType) => {
 
       const [reorderedItem] = items.splice(sourceIndex, 1)
       items.splice(destinationIndex, 0, reorderedItem)
-
+      setDraggedHistory([...draggedHistory, result])
       setValue('remainingItems', items)
     },
     [values?.remainingItems],

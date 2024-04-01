@@ -54,6 +54,7 @@ const RemainingItemsModal: React.FC<{
   const { mutate: deleteLineItem, isLoading: isDeleteLoading } = useDeleteLineItems(swoProject?.id)
   const { refetch: refetchRemainingItems } = useRemainingLineItems(swoProject?.id)
   const { data: locations } = useLocation()
+  const [isSubmitting, setSubmitting] = useState<boolean>(false)
   const toast = useToast()
 
   const {
@@ -113,6 +114,7 @@ const RemainingItemsModal: React.FC<{
   }, [swoProject])
 
   const onSubmit = async values => {
+    setSubmitting(true)
     const allItems = values.remainingItems?.map((item, index) => {
       return { ...item, sortOrder: index, location: item?.location?.label, paymentGroup: item?.paymentGroup?.label }
     })
@@ -166,6 +168,7 @@ const RemainingItemsModal: React.FC<{
   const assignAndReset = () => {
     setAssignedItems(selectedItems)
     setSelectedItems([])
+    setSubmitting(false)
     onClose()
   }
   const checkKeyDown = e => {
@@ -262,7 +265,14 @@ const RemainingItemsModal: React.FC<{
                 >
                   {t('cancel')}
                 </Button>
-                <Button variant="solid" colorScheme="brand" type="submit" data-testid="saveListItems">
+                <Button
+                  isLoading={isSubmitting}
+                  loadingText="Processing..."
+                  variant="solid"
+                  colorScheme="brand"
+                  type="submit"
+                  data-testid="saveListItems"
+                >
                   {t('save')}
                 </Button>
               </HStack>

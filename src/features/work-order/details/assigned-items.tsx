@@ -98,6 +98,9 @@ const AssignedItems = (props: AssignedItemType) => {
   const { control, register, getValues, setValue, watch } = formControl
   const { t } = useTranslation()
   const [recentLineItems, setRecentLineItems] = useState<any>(null)
+  const [draggedHistory, setDraggedHistory] = useState<
+    { source: { index: number }; destination: { index: number } }[] | []
+  >([])
   const [overflowXVal, setOverflowXVal] = useState<ResponsiveValue<any> | undefined>('auto')
   const values = getValues()
 
@@ -165,7 +168,7 @@ const AssignedItems = (props: AssignedItemType) => {
 
       const [reorderedItem] = items.splice(sourceIndex, 1)
       items.splice(destinationIndex, 0, reorderedItem)
-
+      setDraggedHistory([...draggedHistory, result])
       setValue('assignedItems', items)
       setOverflowXVal('auto')
     },
