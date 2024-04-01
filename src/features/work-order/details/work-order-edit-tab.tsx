@@ -308,7 +308,7 @@ const WorkOrderDetailTab = props => {
   const { data: trades } = useTrades()
  
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
-  const isSkillService = isVendorSkillServices(trades, vendorSkillId)
+  const isSkillService = isVendorSkillServices(trades, vendorSkillId) && workOrder?.status === 1035
 
   const { vendors, isLoading: loadingVendors } = useFilteredVendors({
     vendorSkillId,
@@ -414,7 +414,7 @@ const WorkOrderDetailTab = props => {
 
     if ( isSkillService && workOrder?.assignedItems ) {
       assignedItems = assignedItems.map( a => {
-        a.profit = 0;
+        a.profit = null;
         return a;
       } )
     }
