@@ -34,6 +34,7 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
   const [documentType] = useState<SelectOption | undefined>()
+  const [againstValue, setAgainstValue] = useState<SelectOption | null>()
   const { mutate: saveDocument, isLoading } = useUploadDocument()
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
   const { data: workOrders } = useProjectWorkOrders(projectId)
@@ -68,6 +69,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     reset,
     watch,
     setValue,
+    register
   } = useForm()
   const values = watch('against')
 
@@ -104,6 +106,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       onSuccess() {
         onClose()
         reset()
+        setAgainstValue(null)
       },
     })
   }
@@ -112,6 +115,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     control,
     name: 'documentTypes',
   })
+
   const watchPermitOption = watchField?.label === 'Permit'
 
   const [modalSize, setModalSize] = useState<string>('3xl')
@@ -134,6 +138,12 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     }
   }, [workOrders])
 
+
+  const onModalCloseButton = () => {
+    reset()
+    setAgainstValue(null)
+  }
+
   return (
     <Modal
       isCentered
@@ -141,6 +151,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       onClose={() => {
         onClose()
         reset()
+        setAgainstValue(null)
       }}
       size={modalSize}
       variant="custom"
@@ -148,7 +159,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       <ModalOverlay />
       <ModalContent minH="317px">
         <ModalHeader>{t('uploadDocument')}</ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} onClick={() => reset()} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} onClick={onModalCloseButton} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
           <form onSubmit={handleSubmit(onSubmit)} id="ReactHookFrom">
@@ -177,6 +188,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                                 onChange={(file: any) => {
                                   field.onChange(file)
                                   setValue('against', null)
+                                  setAgainstValue(null)
                                 }}
                               />
 
@@ -196,15 +208,19 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         control={control}
                         name="against"
                         rules={watchPermitOption || isVendor ? { required: 'Against type is required' } : { required: false }}
-                        render={({ field: { onChange, onBlur, value, name, ref }, fieldState }) => {
+                        render={({ field: { onChange }, fieldState }) => {
                           return (
                             <>
                               <ReactSelect
                                 classNamePrefix={'documentAgainst'}
                                 options={watchPermitOption ? workOderState : workOrderAndSOW}
                                 selectProps={{ isBorderLeft: isVendor || watchPermitOption, menuHeight: '110px' }}
-                                value={documentType}
-                                onChange={onChange}
+                                value={againstValue}
+                                onChange={(val) => {
+                                  onChange(val)
+                                  setAgainstValue(val)
+                                }}
+
                               />
 
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -256,6 +272,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               onClick={() => {
                 onClose()
                 reset()
+                setAgainstValue(null)
               }}
               colorScheme="brand"
             >
