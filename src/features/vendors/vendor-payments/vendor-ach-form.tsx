@@ -6,7 +6,7 @@ import NumberFormat from 'react-number-format'
 import { preventNumber, VendorAccountsFormValues, VendorProfile } from 'types/vendor.types'
 import { validateTelePhoneNumber } from 'utils/form-validation';
 import ReactSelect from 'components/form/react-select';
-import { useUserRolesSelector } from 'utils/redux-common-selectors';
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors';
 import { AccountingType, DOCUMENTS_TYPES } from 'api/vendor-details';
 import { dateFormatNew, datePickerFormat } from 'utils/date-time-utils';
 import ChooseFileField from 'components/choose-file/choose-file';
@@ -23,7 +23,7 @@ import { ConfirmationBox } from 'components/Confirmation';
 
 
 
-const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: UseFormReturn<VendorAccountsFormValues>, isActive, stateSelectOptions: any }> = ({ vendorProfileData, formReturn, isActive, stateSelectOptions }) => {
+const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: UseFormReturn<VendorAccountsFormValues>, isActive, stateSelectOptions: any }> = ({ vendorProfileData, formReturn, stateSelectOptions }) => {
     const { t } = useTranslation();
     const {
         register,
@@ -41,10 +41,13 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
     const watchVoidCheckFile = watch('voidedCheckFile')
 
     const { isAdmin, isVendor, isVendorManager } = useUserRolesSelector();
-    const isVendorRequired = isActive && isVendor;
     const adminRole = isAdmin || isVendorManager;
     const validateAccountType = AccountingType?.filter(acct => formValues[acct.key]);
     const isVoidedCheckChange = watchVoidCheckDate !== datePickerFormat(vendorProfileData?.bankVoidedCheckDate) || watchVoidCheckFile
+
+    const isReadOnly = !useRoleBasedPermissions().permissions.some(e =>
+        ['VENDOR.EDIT', 'VENDORPROFILE.EDIT', 'ALL'].includes(e),
+    )
 
     return (
         <Box>
@@ -55,7 +58,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                     </FormLabel>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.bankName}>
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankName}>
                         <FormLabel variant="strong-label" size="md">
                             {t('bankName')}
                         </FormLabel>
@@ -87,7 +90,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.bankPrimaryContact}>
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankPrimaryContact}>
                         <FormLabel variant="strong-label" size="md">
                             {t('bankPrimaryContact')}
                         </FormLabel>
@@ -120,7 +123,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                 </GridItem>
                 <GridItem></GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.bankEmail}>
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankEmail}>
                         <FormLabel variant="strong-label" size="md">
                             {t('bankEmail')}
                         </FormLabel>
@@ -151,7 +154,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.bankPhoneNumber} h="70px">
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankPhoneNumber} h="70px">
                         <FormLabel variant="strong-label" size="md" noOfLines={1}>
                             {t('bankPhoneNumber')}
                         </FormLabel>
@@ -184,7 +187,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                 </GridItem>
                 <GridItem></GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.bankAddress}>
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankAddress}>
                         <FormLabel variant="strong-label" size="md">
                             {t('bankAddress')}
                         </FormLabel>
@@ -216,7 +219,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.bankCity}>
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankCity}>
                         <FormLabel variant="strong-label" size="md">
                             {t('city')}
                         </FormLabel>
@@ -250,7 +253,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.bankState}>
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankState}>
                         <FormLabel variant="strong-label" size="md">
                             {t('state')}
                         </FormLabel>
@@ -274,7 +277,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.bankZipCode}>
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankZipCode}>
                         <FormLabel variant="strong-label" size="md">
                             {t('zip')}
                         </FormLabel>
@@ -308,7 +311,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                 <GridItem></GridItem>
                 <GridItem></GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.bankRoutingNo}>
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankRoutingNo}>
                         <FormLabel variant="strong-label" size="md">
                             {t('bankRoutingNo')}
                         </FormLabel>
@@ -342,7 +345,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl isInvalid={!!errors.bankAccountingNo}>
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankAccountingNo}>
                         <FormLabel variant="strong-label" size="md">
                             {t('bankAccountingNo')}
                         </FormLabel>
@@ -379,7 +382,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                         <FormLabel variant="strong-label" size="md" w="150px">
                             {t('accountingType')}
                         </FormLabel>
-                        <FormControl isInvalid={!!errors.bankChecking?.message && !validateAccountType?.length}>
+                        <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankChecking?.message && !validateAccountType?.length}>
                             <HStack h="25px" spacing="16px">
                                 {AccountingType.map(account => {
                                     return (
@@ -388,7 +391,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                                             // @ts-ignore
                                             name={account.key as string}
                                             rules={{
-                                                required: !validateAccountType?.length && isVendorRequired && 'This is required',
+                                                required: !validateAccountType?.length && 'This is required',
                                             }}
                                             render={({ field, fieldState }) => (
                                                 <>
@@ -400,6 +403,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                                                                 const isChecked = event.target.checked
                                                                 field.onChange(isChecked)
                                                             }}
+                                                            data-testid={account?.value?.toLowerCase() + "-checkbox"}
                                                             mr="2px"
                                                         >
                                                             {t(account?.value)}
@@ -422,6 +426,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                         isVendor={isVendor}
                         adminRole={adminRole}
                         isVoidedCheckChange={isVoidedCheckChange}
+                        isReadOnly={isReadOnly}
                     />
                 </GridItem>
                 <GridItem colSpan={2}>
@@ -430,6 +435,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                         sigRef={sigRef}
                         formReturn={formReturn}
                         adminRole={adminRole}
+                        isReadOnly={isReadOnly}
                     />
                 </GridItem>
             </Grid>
@@ -437,7 +443,8 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
     )
 }
 
-const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole, isVoidedCheckChange }) => {
+const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole, isVoidedCheckChange, isReadOnly }) => {
+    const voidedCheck = vendorProfileData?.voidedDocumentLink;
     const {
         formState: { errors },
         setValue,
@@ -456,15 +463,17 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole,
             alignItems="flex-start"
             marginTop={{ base: '20px', md: '0' }}
         >
-            <Flex >
+            <Flex w="215px">
                 <Box>
-                    <FormControl isInvalid={!!errors.bankVoidedCheckDate}>
+                    <FormControl isDisabled={isReadOnly} isInvalid={!!errors.bankVoidedCheckDate}>
                         <FormLabel variant="strong-label" size="md" color="#2D3748">
                             {t('voidedCheckFile')}
                         </FormLabel>
                         <Input
-
+                            variant={'required-field'}
+                            w="215px"
                             {...register('bankVoidedCheckDate', {
+                                required: 'This is required',
                                 onChange: e => {
                                     setValue('bankVoidedCheckDate', e.target.value)
                                     setValue('bankVoidedCheckStatus', null)
@@ -485,18 +494,23 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole,
                     },
                 }}
             >
-                <FormControl w={"225px"} isInvalid={!!errors.voidedCheckFile?.message}>
+                <FormControl w="215px" isDisabled={isReadOnly} isInvalid={!!errors.voidedCheckFile?.message}>
                     <FormLabel variant="strong-label" size="md" color="#2D3748">
                         {t('fileUpload')}
                     </FormLabel>
                     <Controller
                         name="voidedCheckFile"
                         control={control}
+                        rules={{
+                            required: voidedCheck ? false : 'This is required',
+                        }}
                         render={({ field, fieldState }) => {
                             return (
                                 <VStack alignItems="baseline">
                                     <Box>
                                         <ChooseFileField
+                                            isRequired={voidedCheck ? false : true}
+                                            disabled={isReadOnly}
                                             testId="voidedCheckFile"
                                             name={field.name}
                                             value={field.value?.name ? field.value?.name : t('chooseFile')}
@@ -546,7 +560,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole,
     )
 }
 
-const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef }) => {
+const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef, isReadOnly }) => {
     const {
         formState: { errors },
         setValue,
@@ -604,11 +618,12 @@ const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef }) =
 
     return (
         <HStack gap="20px" alignItems={'start'}>
-            <FormControl isInvalid={!ownersSignature}>
+            <FormControl isDisabled={isReadOnly} isInvalid={!ownersSignature}>
                 <FormLabel fontWeight={500} fontSize="14px" color="gray.700">
                     {t('ownersSignature')}
                 </FormLabel>
                 <Button
+                    disabled={isReadOnly}
                     pos="relative"
                     border={'1px solid'}
                     borderColor="gray.200"
@@ -640,7 +655,10 @@ const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef }) =
                         hidden={!ownersSignature}
                         maxW={'100%'}
                         src={ownersSignature}
-                        {...register('ownersSignature')}
+                        {...register('ownersSignature', {
+                            required: 'This is required',
+                        })}
+                        variant={'required-field'}
                         ref={sigRef}
                     />
                     {!adminRole && (
@@ -678,8 +696,9 @@ const SignatureFields = ({ vendorProfileData, formReturn, adminRole, sigRef }) =
                 </Button>
                 {errors?.ownersSignature?.message && <FormErrorMessage>This is required field</FormErrorMessage>}
             </FormControl>
-            <FormControl>
+            <FormControl isDisabled={isReadOnly}>
                 <FormInput
+                    disabled={isReadOnly}
                     errorMessage={errors?.bankDateSignature?.message}
                     label={t('bankDateSignature')}
                     testId="signature-date"

@@ -16,14 +16,12 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  Icon,
 } from '@chakra-ui/react'
 import { VendorAccountsFormValues, VendorProfile, StripePayment } from 'types/vendor.types'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { datePickerFormat } from 'utils/date-time-utils'
-import { BiBookAdd } from 'react-icons/bi'
 import { VENDORPROFILE } from 'features/vendor-profile/vendor-profile.i18n'
 import { getNextMonthFirstDate } from 'components/table/util'
 import { NumberInput } from 'components/input/input'
@@ -199,12 +197,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </VStack>
           </GridItem>
           <GridItem colSpan={4}>
-            <Flex w='full' alignItems={"end"} justifyContent={"end"} pb={4}>
-              <Button data-testid="add-new-payment-method" colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onNewBtnClick}>
-                New
-              </Button>
-            </Flex>
-            <UserPaymentAccountsTable vendorProfile={vendorProfileData} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} achPaymentMethod={achPaymentMethod} />
+            <UserPaymentAccountsTable vendorProfile={vendorProfileData} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} achPaymentMethod={achPaymentMethod} onNewBtnClick={onNewBtnClick} />
           </GridItem>
         </Grid>
       </Box>

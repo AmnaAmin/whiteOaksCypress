@@ -87,6 +87,7 @@ export type VendorProfile = Override<
     vendorSkills: Trade[]
     bankName?: string
     bankAccountingNo?: number | string | null
+    voidedDocumentLink?: string | null
   }
 >
 
