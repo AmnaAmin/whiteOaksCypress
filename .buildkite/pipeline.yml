@@ -154,6 +154,9 @@ steps:
       REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
       REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
       REACT_APP_CRM_URL: 'https://preprod-crm.woaharvest.com'
+      REACT_APP_STRIPE_PUBLIC_KEY: 'pk_test_51Oog5xDu4VLkOX9Cm12JMF6RMXctqUyM2w8D8csa8C73JSN3amfJlW2x5RmU04Ej25aStOvJBfpbSCE9h7zKVzXc00vuZtdw6u'
+      REACT_APP_PAYMENT_SERVICE_URL: 'https://preprod.woaharvest.com'
+      REACT_APP_PAYMENT_SERVICE_WOA_PLATFORM_ID: 'WOA'
 
   - wait
 
