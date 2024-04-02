@@ -903,7 +903,13 @@ export const useGetLineItemsColumn = ({
 
   useEffect(() => {
     //if the service skill is yes don't calculate the profit or vendor amount https://devtek.atlassian.net/browse/PSWOA-10564
-    if ( isServiceSkill ) return;
+    if ( isServiceSkill ) {
+      values.assignedItems?.forEach((item, index) => {
+        setValue(`assignedItems.${index}.vendorAmount`, item.vendorAmount)
+      })
+      return;
+    }
+    
     //  set by default value of profit% 45 line lineitem table with condition that
     // if item.profit exist then add it otherwise on newly line items added put profit 45% as ask
     values.assignedItems?.forEach((item, index) => {
