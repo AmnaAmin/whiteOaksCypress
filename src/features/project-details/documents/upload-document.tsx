@@ -68,8 +68,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     formState: { errors },
     reset,
     watch,
-    setValue,
-    register
+    setValue
   } = useForm()
   const values = watch('against')
 
