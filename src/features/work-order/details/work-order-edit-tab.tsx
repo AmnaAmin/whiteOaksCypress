@@ -308,7 +308,7 @@ const WorkOrderDetailTab = props => {
   const { data: trades } = useTrades()
  
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
-  const isSkillService = isVendorSkillServices(trades, vendorSkillId) && workOrder?.status === 1035
+  const isSkillService = (isVendorSkillServices(trades, vendorSkillId) && workOrder?.status === 1035 ) || workOrder?.isServiceSkill
 
   const { vendors, isLoading: loadingVendors } = useFilteredVendors({
     vendorSkillId,
