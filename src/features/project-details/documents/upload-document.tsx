@@ -20,7 +20,6 @@ import {
 import { useDocumentTypes, useUploadDocument } from 'api/vendor-projects'
 import { useTranslation } from 'react-i18next'
 import ReactSelect from 'components/form/react-select'
-import { SelectOption } from 'types/transaction.type'
 import { Button } from 'components/button/button'
 import { ViewLoader } from 'components/page-level-loader'
 import { Controller, useForm, useWatch } from 'react-hook-form'
@@ -33,8 +32,6 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
-  const [documentType] = useState<SelectOption | undefined>()
-  const [againstValue, setAgainstValue] = useState<SelectOption | null>()
   const { mutate: saveDocument, isLoading } = useUploadDocument()
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
   const { data: workOrders } = useProjectWorkOrders(projectId)
@@ -105,7 +102,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       onSuccess() {
         onClose()
         reset()
-        setAgainstValue(null)
       },
     })
   }
@@ -114,6 +110,10 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     control,
     name: 'documentTypes',
   })
+
+  useEffect(() => {
+    setValue('against', '')
+  }, [watchField])
 
   const watchPermitOption = watchField?.label === 'Permit'
 
@@ -140,7 +140,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
 
   const onModalCloseButton = () => {
     reset()
-    setAgainstValue(null)
   }
 
   return (
@@ -150,7 +149,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       onClose={() => {
         onClose()
         reset()
-        setAgainstValue(null)
       }}
       size={modalSize}
       variant="custom"
@@ -183,12 +181,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                                 classNamePrefix={'documentType'}
                                 options={docTypes}
                                 selectProps={{ isBorderLeft: true, menuHeight: '200px' }}
-                                value={documentType}
-                                onChange={(file: any) => {
-                                  field.onChange(file)
-                                  setValue('against', null)
-                                  setAgainstValue(null)
-                                }}
+                                {...field}
                               />
 
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -207,19 +200,14 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         control={control}
                         name="against"
                         rules={watchPermitOption || isVendor ? { required: 'Against type is required' } : { required: false }}
-                        render={({ field: { onChange }, fieldState }) => {
+                        render={({ field, fieldState }) => {
                           return (
                             <>
                               <ReactSelect
                                 classNamePrefix={'documentAgainst'}
                                 options={watchPermitOption ? workOderState : workOrderAndSOW}
                                 selectProps={{ isBorderLeft: isVendor || watchPermitOption, menuHeight: '110px' }}
-                                value={againstValue}
-                                onChange={(val) => {
-                                  onChange(val)
-                                  setAgainstValue(val)
-                                }}
-
+                                {...field}
                               />
 
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -271,7 +259,6 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
               onClick={() => {
                 onClose()
                 reset()
-                setAgainstValue(null)
               }}
               colorScheme="brand"
             >

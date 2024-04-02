@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo, useReducer, useContext } from 'react'
 import { Column, Table as TableType, TableOptions, flexRender } from '@tanstack/react-table'
-import ReactDOM from 'react-dom'
 import {
   Table as ChakraTable,
   Thead,
@@ -32,7 +31,7 @@ import 'react-date-range/dist/styles.css' // main css file
 import 'react-date-range/dist/theme/default.css' // theme css file
 import { DateRange } from 'react-date-range'
 import moment from 'moment'
-import { List, AutoSizer } from 'react-virtualized'
+
 import { tableContextReducer, TableDatePickerContext, TableReducerActionType } from './TableContext'
 import { columnsCannotFilter } from 'features/work-order/details/assignedItems.utils'
 export interface TableProperties<T extends Record<string, unknown>> extends TableOptions<T> {
@@ -408,7 +407,6 @@ type TableProps = {
   handleMouseEnter?: (row) => void
   handleMouseLeave?: (row) => void
   isFilteredByApi?: boolean
-  style?: any
 }
 
 export const Table: React.FC<TableProps> = ({
@@ -425,7 +423,6 @@ export const Table: React.FC<TableProps> = ({
   handleMouseEnter,
   handleMouseLeave,
   isFilteredByApi,
-  style,
   ...restProps
 }) => {
   const { t } = useTranslation()
@@ -678,7 +675,6 @@ export const Table: React.FC<TableProps> = ({
                   onRowClick={onRowClick}
                   onRightClick={onRightClick}
                   getColumnMaxMinWidths={getColumnMaxMinWidths}
-                  style={style}
                 />
               )}
               {isShowFooter && (
@@ -716,7 +712,6 @@ const DragDropEnabledRows = ({
   onRightClick,
   getColumnMaxMinWidths,
   handleOnDragStart,
-  style,
 }) => {
   return (
     <DragDropContext
@@ -727,46 +722,59 @@ const DragDropEnabledRows = ({
         handleOnDragStart?.(result)
       }}
     >
-      <Droppable droppableId="droppable" direction="vertical">
+      <Droppable droppableId="droppable">
         {provided => (
-          <Tbody
-            style={{
-              height: style?.tbody?.height ?? '400px',
-              maxHeight: style?.tbody?.maxHeight ?? '400px',
-              overflowY: 'auto',
-            }}
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-          >
-            <AutoSizer>
-              {({ width, height }) => {
-                return (
-                  <List
-                    height={height}
-                    rowCount={getRowModel().rows.length}
-                    rowHeight={55}
-                    rowRenderer={getRowRender({
-                      onRightClick,
-                      onRowClick,
-                      getColumnMaxMinWidths,
-                      rows: getRowModel().rows,
-                    })}
-                    ref={ref => {
-                      // react-virtualized has no way to get the list's ref
-                      // So we use the `ReactDOM.findDOMNode(ref)` escape hatch to get the ref
-                      if (ref) {
-                        // eslint-disable-next-line react/no-find-dom-node
-                        const innerRef = ReactDOM.findDOMNode(ref)
-                        if (innerRef instanceof HTMLElement) {
-                          provided.innerRef(innerRef)
-                        }
-                      }
-                    }}
-                    width={width}
-                  />
-                )
-              }}
-            </AutoSizer>
+          <Tbody {...provided.droppableProps} ref={provided.innerRef}>
+            {getRowModel().rows.map?.(row => (
+              <Draggable key={`${row.id}`} draggableId={row.id} index={row.index}>
+                {(provided, snapshot) => (
+                  <>
+                    <Tr
+                      h={'40px !important'}
+                      key={row.id}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      ref={provided.innerRef}
+                      onClick={() => onRowClick?.(row.original)}
+                      cursor={onRowClick ? 'pointer' : 'default'}
+                      onContextMenu={() => onRightClick?.(row.original)}
+                      backgroundColor={snapshot.isDragging ? '#f0fff4' : 'transparent'}
+                      boxShadow={snapshot.isDragging ? '0px 3px 5px 3px rgb(112 144 176 / 12%)' : 'none'}
+                      _hover={{
+                        bg: '#F3F8FF',
+                      }}
+                    >
+                      {row.getVisibleCells().map(cell => {
+                        const value = flexRender(cell.column.columnDef.cell, cell.getContext())
+                        const metaData: any = cell.column.columnDef?.meta as any
+                        const title =
+                          typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
+                        const isDate = metaData?.format === 'date'
+                        return (
+                          <Td
+                            py={0}
+                            pr={'50px'}
+                            key={cell.id}
+                            isTruncated
+                            title={
+                              !metaData?.hideTitle && title
+                                ? isDate
+                                  ? dateFormat(title as string)
+                                  : (title as string)
+                                : ''
+                            }
+                            {...getColumnMaxMinWidths(cell.column)}
+                            data-testid={`table-cell-${row.id}-${cell.id}`}
+                          >
+                            {value}
+                          </Td>
+                        )
+                      })}
+                    </Tr>
+                  </>
+                )}
+              </Draggable>
+            ))}
             {provided.placeholder}
           </Tbody>
         )}
@@ -774,72 +782,3 @@ const DragDropEnabledRows = ({
     </DragDropContext>
   )
 }
-
-type RowProps = {
-  index: number
-  style: Object
-}
-
-const getRowRender =
-  ({ onRightClick, onRowClick, getColumnMaxMinWidths, rows }) =>
-  ({ index, style }: RowProps) => {
-    const row = rows[index]
-
-    return (
-      <>
-        <Draggable key={`${row.id}`} draggableId={row.id} index={row.index}>
-          {(provided, snapshot) => {
-            return (
-              <div style={style}>
-                <Tr
-                  width={'100% !important'}
-                  h={snapshot.isDragging ? '45px' : '40px'}
-                  zIndex={snapshot.isDragging ? 100 : 1}
-                  key={row.id}
-                  {...provided.draggableProps}
-                  {...provided.dragHandleProps}
-                  ref={provided.innerRef}
-                  onClick={() => onRowClick?.(row.original)}
-                  cursor={onRowClick ? 'pointer' : 'default'}
-                  onContextMenu={() => onRightClick?.(row.original)}
-                  backgroundColor={snapshot.isDragging ? '#f0fff4 !important' : 'transparent'}
-                  boxShadow={snapshot.isDragging ? '0px 3px 5px 3px rgb(112 144 176 / 12%)' : 'none'}
-                  style={{ ...provided.draggableProps.style, left: 'auto !important', top: 'auto !important' }}
-                  _hover={{
-                    bg: '#F3F8FF',
-                  }}
-                >
-                  {row.getVisibleCells().map(cell => {
-                    const value = flexRender(cell.column.columnDef.cell, cell.getContext())
-                    const metaData: any = cell.column.columnDef?.meta as any
-                    const title =
-                      typeof cell.getContext()?.getValue() === 'string' ? cell.getContext()?.getValue() : null
-                    const isDate = metaData?.format === 'date'
-                    return (
-                      <Td
-                        py={0}
-                        pr={'50px'}
-                        key={cell.id}
-                        isTruncated
-                        title={
-                          !metaData?.hideTitle && title
-                            ? isDate
-                              ? dateFormat(title as string)
-                              : (title as string)
-                            : ''
-                        }
-                        {...getColumnMaxMinWidths(cell.column)}
-                        data-testid={`table-cell-${row.id}-${cell.id}`}
-                      >
-                        {value}
-                      </Td>
-                    )
-                  })}
-                </Tr>
-              </div>
-            )
-          }}
-        </Draggable>
-      </>
-    )
-  }

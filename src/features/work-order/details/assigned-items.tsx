@@ -2,6 +2,7 @@ import { AddIcon, CheckIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
+  chakra,
   Checkbox,
   Divider,
   HStack,
@@ -9,22 +10,21 @@ import {
   ResponsiveValue,
   Stack,
   Text,
-  chakra,
   useCheckbox,
 } from '@chakra-ui/react'
-import Table from 'components/table-refactored/table'
-import { TableContextProvider } from 'components/table-refactored/table-context'
-import { orderBy } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
 import { FieldValues, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { BiDownload } from 'react-icons/bi'
-import { ProjectWorkOrderType } from 'types/project.type'
-import { datePickerFormat } from 'utils/date-time-utils'
-import { downloadFile } from 'utils/file-utils'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
 import { WORK_ORDER } from '../workOrder.i18n'
 import { LineItems, SWOProject, useActionsShowDecision, useGetLineItemsColumn } from './assignedItems.utils'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { ProjectWorkOrderType } from 'types/project.type'
+import { datePickerFormat } from 'utils/date-time-utils'
+import { TableContextProvider } from 'components/table-refactored/table-context'
+import Table from 'components/table-refactored/table'
+import { orderBy } from 'lodash'
+import { downloadFile } from 'utils/file-utils'
 export const CustomCheckBox = props => {
   const { state, getCheckboxProps, getInputProps, getLabelProps, htmlProps } = useCheckbox(props)
 
@@ -95,15 +95,13 @@ const AssignedItems = (props: AssignedItemType) => {
     downloadPdf,
     documentsData,
     clientName,
-    isServiceSkill,
+    isServiceSkill
   } = props
   const { control, register, getValues, setValue, watch } = formControl
   const { t } = useTranslation()
   const [recentLineItems, setRecentLineItems] = useState<any>(null)
-  const [draggedHistory, setDraggedHistory] = useState<
-    { source: { index: number }; destination: { index: number } }[] | []
-  >([])
   const [overflowXVal, setOverflowXVal] = useState<ResponsiveValue<any> | undefined>('auto')
+
   const values = getValues()
 
   const lineItems = useWatch({ name: 'assignedItems', control })
@@ -157,8 +155,7 @@ const AssignedItems = (props: AssignedItemType) => {
     assignedItemsArray,
     workOrder,
     clientName,
-    draggedHistory,
-    isServiceSkill,
+    isServiceSkill
   })
 
   const handleOnDragEnd = useCallback(
@@ -173,7 +170,7 @@ const AssignedItems = (props: AssignedItemType) => {
 
       const [reorderedItem] = items.splice(sourceIndex, 1)
       items.splice(destinationIndex, 0, reorderedItem)
-      setDraggedHistory([...draggedHistory, result])
+
       setValue('assignedItems', items)
       setOverflowXVal('auto')
     },
@@ -337,7 +334,6 @@ const AssignedItems = (props: AssignedItemType) => {
               isLoading={isLoadingLineItems}
               isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
               isHideFilters={false}
-              style={{ tbody: { height: 'calc(100vh - 600px)', maxHeight: '250px' } }}
             />
           </TableContextProvider>
         </Box>
