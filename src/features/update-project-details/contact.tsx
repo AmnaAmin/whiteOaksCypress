@@ -140,6 +140,7 @@ const contactFormValue = watch()
                 <>
                   <ReactSelect
                     {...field}
+                    classNamePrefix={'projectCordinator'}
                     selectProps={{ isBorderLeft: !isProjectCoordinatorDisabled, menuHeight: '180px' }}
                     options={projectCoordinatorSelectOptions}
                     isDisabled={isProjectCoordinatorDisabled}
@@ -204,6 +205,7 @@ const contactFormValue = watch()
                 <>
                   <ReactSelect
                     {...field}
+                    classNamePrefix={'fieldProjectManager'}
                     selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                     options={fieldProjectManagerByMarketOptions}
                     isDisabled={isFieldProjectManagerDisabled}
@@ -369,6 +371,7 @@ const contactFormValue = watch()
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
+                  classNamePrefix={'clientsContact'}
                     menuPlacement="top"
                     {...field}
                     options={clientSelectOptions}
@@ -407,6 +410,7 @@ const contactFormValue = watch()
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
+                  classNamePrefix={'clientType'}
                     menuPlacement="top"
                     id="clientType"
                     {...field}
@@ -436,6 +440,7 @@ const contactFormValue = watch()
                 <>
                   <Select
                     {...field}
+                    classNamePrefix={'carrierOptions'}
                     value={selectedOption}
                     isDisabled={isFieldProjectManagerDisabled}
                     options={carrierOption}

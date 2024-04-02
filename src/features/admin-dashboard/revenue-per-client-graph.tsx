@@ -81,7 +81,7 @@ export const RevenuePerClient = () => {
         <HStack mb={5}>
           <FormLabel>Filter By Month:</FormLabel>
           <Box width="25%">
-            <ReactSelect defaultValue={defaultFilterByMonth} options={filterByMonthOptions} onChange={handleFilter} />
+            <ReactSelect   classNamePrefix={'filterByMonth'} defaultValue={defaultFilterByMonth} options={filterByMonthOptions} onChange={handleFilter} />
           </Box>
         </HStack>
       </Box>

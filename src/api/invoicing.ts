@@ -8,7 +8,7 @@ import { currencyFormatter } from 'utils/string-formatters'
 import autoTable from 'jspdf-autotable'
 import { addImages } from 'utils/file-utils'
 import numeral from 'numeral'
-import { TransactionTypeValues } from 'types/transaction.type'
+import { SelectOption, TransactionTypeValues } from 'types/transaction.type'
 import { addDays } from 'date-fns'
 import { PAYMENT_TERMS_OPTIONS } from 'constants/index'
 import { readFileContent } from './vendor-details'
@@ -227,6 +227,9 @@ export const mapFormValuesToPayload = async ({ projectData, invoice, values, acc
     paymentReceived: values.paymentReceivedDate,
     changeOrderId: invoice ? invoice?.changeOrderId : null,
     documents: attachmentDTO ? [attachmentDTO] : [],
+    paymentSource: values?.paymentSource?.map(e => {
+      return { lookupValueId: e.value, lookupValueValue: e.title }
+    }),
     //only save sowAmount once invoice is going for PAID (Remaining Payment 0), else it will be same as current projects sowAmount.
     sowAmount: parseFloat(values.remainingPayment) === 0 ? projectData?.sowNewAmount : null,
     remainingPayment: !invoice ? invoiceAmount : values.remainingPayment,
@@ -293,6 +296,7 @@ export const invoiceDefaultValues = ({
   clientSelected,
   transactions,
   invoiceNumber,
+  paymentSource,
 }) => {
   const invoicedDate = new Date()
   const utcDate = new Date(invoicedDate.getUTCFullYear(), invoicedDate.getUTCMonth(), invoicedDate.getUTCDate())
@@ -353,6 +357,9 @@ export const invoiceDefaultValues = ({
     sowAmount: invoice?.sowAmount,
     remainingPayment: invoice ? Number(invoice?.remainingPayment)?.toFixed(2) ?? 0 : null,
     payment: Number(0)?.toFixed(2),
+    paymentSource: invoice?.paymentSource?.map(e => {
+      return { value: e.lookupValueId, label: e.lookupValueValue }
+    })
   }
 }
 
@@ -364,9 +371,9 @@ export const createInvoicePdf = async ({
   sowAmt,
   received,
   receivedLineItems,
+  paymentSourceOptions = [],
 }) => {
   let sowAmount = sowAmt ?? (projectData?.sowNewAmount?.toString() as string)
-
   let finalSowLineItems = invoiceVals?.invoiceLineItems?.filter(t => t.type === 'finalSowLineItems')
 
   finalSowLineItems = finalSowLineItems?.length > 0 ? finalSowLineItems : [{ type: '', description: '', amount: 0 }]
@@ -419,17 +426,17 @@ export const createInvoicePdf = async ({
     )
     y2 = y2 + 5
   })
-
-  doc.setFont(summaryFont, 'bold')
-  doc.text('To:', x2 + 5, y2 + 20)
-  doc.setFont(summaryFont, 'normal')
-
-  doc.setFont(summaryFont, 'normal')
-  doc.text('Accounts Payable', x2 + 30, y2 + 20)
-
-  doc.setFont(summaryFont, 'normal')
-  doc.text(projectData?.clientName ?? '', x2 + 30, y2 + 24)
-
+  const paymentSourceLables = paymentSourceOptions?.map((option: SelectOption) => option.label).join(', ')
+  doc.setFont(summaryFont, 'bold');
+  doc.text('Payment Source:', startx, 85);
+  doc.setFont(summaryFont, 'normal');
+  doc.text(paymentSourceLables ?? '', startx + 30, 85);
+  doc.setFont(summaryFont, 'bold');
+  doc.text('To:', x2 + 5, y2 + 25);
+  doc.setFont(summaryFont, 'normal');
+  doc.text('Accounts Payable', x2 + 30, y2 + 25);
+  doc.setFont(summaryFont, 'normal');
+  doc.text(projectData?.clientName ?? '', x2 + 30, y2 + 29);
   autoTable(doc, {
     startY: y2 + 35,
     headStyles: { fillColor: '#FFFFFF', textColor: '#000000', lineColor: '#000000', lineWidth: 0.1 },
@@ -636,7 +643,27 @@ export const useUpdateInvoicingDocument = () => {
   })
 }
 
-export const useFetchInvoiceDetail = (projectId: string) => {
+export const useInvoiceModalClossed = () => {
+  const client = useClient()
+  const toast = useToast()
+  return useMutation(async (invoiceNumber: string) => {
+    return await client('invoice-cancelled/' + invoiceNumber, { method: 'PUT' })
+  }, {
+    onError(error: any) {
+      let description = error.title ?? 'Unable to Invalidate Invoice Number.'
+
+      toast({
+        title: 'Invoice',
+        description,
+        position: 'top-left',
+        status: 'error',
+        isClosable: true,
+      })
+    }
+  })
+}
+
+export const useFetchInvoiceDetail = (projectId: string, selectedInvoice: string | number | null | undefined) => {
   const client = useClient()
   const { data: invoiceDetail, ...rest } = useQuery(
     ['invoicesDetail', projectId],
@@ -645,7 +672,7 @@ export const useFetchInvoiceDetail = (projectId: string) => {
       return response
     },
     {
-      enabled: !!projectId && projectId !== 'undefined',
+      enabled: !!projectId && projectId !== 'undefined' && !selectedInvoice,
     },
   )
   return {
@@ -703,6 +730,9 @@ export const useGenerateInvoicePDF = () => {
       sowAmt: invoice?.sowAmount,
       received: totalReceived,
       receivedLineItems: received,
+      paymentSourceOptions: invoice?.paymentSource?.map(e => {
+        return { value: e.lookupValueId, label: e.lookupValueValue }
+      })
     })
     const pdfUri = form.output('datauristring')
     return {
@@ -712,7 +742,7 @@ export const useGenerateInvoicePDF = () => {
       fileObjectContentType: 'application/pdf',
       fileType: 'Invoice.pdf',
       projectInvoiceId: invoice?.id,
-   
+
     }
   }, [])
 }

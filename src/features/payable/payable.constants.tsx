@@ -6,6 +6,7 @@ import { dateFormat } from 'utils/date-time-utils'
 
 export const PAYABLE_TABLE_QUERY_KEYS = {
   projectId: 'projectId.equals',
+  projectManager: 'projectManager.contains',
   woDisplayId: 'woDisplayId.contains',
   claimantName: 'claimantName.contains',
   propertyAddress: 'propertyAddress.contains',
@@ -16,7 +17,6 @@ export const PAYABLE_TABLE_QUERY_KEYS = {
   expectedPaymentDateEnd: 'expectedPaymentDate.lessThanOrEqual',
   finalInvoiceAmount: 'displayFinalInvoiceAmount.contains',
   marketName: 'marketName.contains',
-  onHold: 'onHold.contains',
   projectStatus: 'projectStatus.contains',
   workOrderStartDateStart: 'workOrderStartDate.greaterThanOrEqual',
   workOrderStartDateEnd: 'workOrderStartDate.lessThanOrEqual',
@@ -112,8 +112,8 @@ export const PAYABLE_TABLE_COLUMNS: ColumnDef<any>[] = [
     meta: { format: 'date' },
   },
   {
-    header: 'onHold',
-    accessorKey: 'onHold',
+    header: 'projectManager',
+    accessorKey: 'projectManager',
   },
   {
     header: 'wOCompletedDate',

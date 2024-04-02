@@ -178,6 +178,7 @@ const Location: React.FC<LocationProps> = ({
                 render={({ field, fieldState }) => (
                   <>
                     <CreatableSelect
+                     classNamePrefix={'addressDetails'}
                       color="#2D3748 !important"
                       id="address"
                       isDisabled={isAddressDisabled}
@@ -236,6 +237,7 @@ const Location: React.FC<LocationProps> = ({
                   <>
                     <Select
                       {...field}
+                      classNamePrefix={'stateDropdown'}
                       options={stateSelectOptions}
                       size="md"
                       value={field.value}
@@ -300,6 +302,7 @@ const Location: React.FC<LocationProps> = ({
                   <>
                     <Select
                       {...field}
+                      classNamePrefix={'marketSelectOptions'}
                       options={marketSelectOptionsStateWise}
                       size="md"
                       value={field.value}

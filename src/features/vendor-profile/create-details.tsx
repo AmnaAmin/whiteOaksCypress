@@ -55,12 +55,12 @@ const CreateVendorDetail: React.FC<{
     formState: { errors },
     control,
     register,
-    watch,
-    trigger,
     clearErrors,
     setValue,
+    setError,
   } = useFormContext<VendorProfileDetailsFormData>()
   const contactFormValue = watch()
+  const { disableDetailsNext } = useVendorNext({ control })
   const capacityError = useWatch({ name: 'capacity', control })
   const formValues = useWatch({ control })
 
@@ -82,18 +82,17 @@ const CreateVendorDetail: React.FC<{
       setStatusOptions(documentStatus)
     }
   })
-  const handleInputChange = (event) => {
+  const handleInputChange = event => {
     const { key } = event
 
     // Check if the pressed key is a digit (0-9)
-    const isDigit = /^\d$/.test(key);
+    const isDigit = /^\d$/.test(key)
 
     // Allow backspace and delete keys
     const isSpecialKey = key === 'Backspace' || key === 'Delete'
 
     // Allow navigation keys (arrows, home, end, etc.)
-    const isNavigationKey =
-      ['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(key) !== -1
+    const isNavigationKey = ['ArrowLeft', 'ArrowRight', 'Home', 'End'].indexOf(key) !== -1
 
     // Allow only if the key is a digit, a special key, or a navigation key
     if (!(isDigit || isSpecialKey || isNavigationKey) || key === '-') {
@@ -115,24 +114,29 @@ const CreateVendorDetail: React.FC<{
               data-testid="companyName"
               {...register('companyName', {
                 required: isActive && 'This is required',
-                maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                 validate: {
                   whitespace: validateWhitespace,
-                },
-                onChange: e => {
-                  setValue('companyName', e.target.value)
                 },
               })}
               size="md"
               isDisabled={isReadOnly}
-              maxLength={255}
+              onChange={e => {
+                const title = e?.target.value
+                setValue('companyName', title)
+                if (title?.length > 255) {
+                  setError('companyName', {
+                    type: 'maxLength',
+                    message: 'Please use 255 characters only.',
+                  })
+                } else {
+                  clearErrors('companyName')
+                }
+              }}
             />
-            {contactFormValue.companyName !== undefined && contactFormValue.companyName?.length === 255 && (
-              <Text color="red" fontSize="xs" w="215px">
-                Please use 255 characters only.
-              </Text>
+            {!!errors?.companyName && (
+              <FormErrorMessage data-testid="businessEmailAddress">{errors?.companyName?.message}</FormErrorMessage>
             )}
-            <FormErrorMessage pos="absolute">{errors.companyName && errors.companyName?.message}</FormErrorMessage>
           </FormControl>
           <FormControl w="215px" isInvalid={!!errors.status}>
             <FormLabel variant="strong-label" size="md">
@@ -145,6 +149,7 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
+                    classNamePrefix={'statusOptions'}
                     options={statusOptions}
                     {...field}
                     selectProps={{ isBorderLeft: true }}
@@ -166,6 +171,7 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
+                    classNamePrefix={'documentScore'}
                     options={documentScore}
                     {...field}
                     selectProps={{ isBorderLeft: true }}
@@ -187,6 +193,7 @@ const CreateVendorDetail: React.FC<{
               render={({ field, fieldState }) => (
                 <>
                   <ReactSelect
+                    classNamePrefix={'portalAccess'}
                     options={portalAccess}
                     {...field}
                     isDisabled={isReadOnly}
@@ -210,26 +217,29 @@ const CreateVendorDetail: React.FC<{
                 data-testid="streetAddress"
                 {...register('streetAddress', {
                   required: isActive && 'This is required',
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   validate: {
                     whitespace: validateWhitespace,
                   },
-                  onChange: e => {
-                    setValue('streetAddress', e.target.value)
-                  },
                 })}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('streetAddress', title)
+                  if (title?.length > 255) {
+                    setError('streetAddress', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('streetAddress')
+                  }
+                }}
                 w="215px"
                 variant="required-field"
                 size="md"
                 isDisabled={isReadOnly}
-                maxLength={255}
               />
-              {contactFormValue.streetAddress !== undefined && contactFormValue.streetAddress?.length === 255 && (
-                <Text color="red" fontSize="xs" w="215px">
-                  Please use 255 characters only.
-                </Text>
-              )}
-              <FormErrorMessage pos="absolute">{errors.streetAddress?.message}</FormErrorMessage>
+              {!!errors.streetAddress && <FormErrorMessage> {errors?.streetAddress?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -241,12 +251,20 @@ const CreateVendorDetail: React.FC<{
                 type="text"
                 {...register('city', {
                   required: isActive && 'This is required',
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   validate: {
                     whitespace: validateWhitespace,
                   },
                   onChange: e => {
                     setValue('city', e.target.value)
+                    if (e.target.value?.length > 255) {
+                      setError('city', {
+                        type: 'maxLength',
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('city')
+                    }
                   },
                 })}
                 w="215px"
@@ -255,14 +273,8 @@ const CreateVendorDetail: React.FC<{
                 data-testid="vendorCity"
                 isDisabled={isReadOnly}
                 onKeyPress={preventNumber}
-                maxLength={255}
               />
-              {contactFormValue.city !== undefined && contactFormValue.city?.length === 255 && (
-                <Text color="red" fontSize="xs" w="215px">
-                  Please use 255 characters only.
-                </Text>
-              )}
-              <FormErrorMessage pos="absolute">{errors.city?.message}</FormErrorMessage>
+              {!!errors.city && <FormErrorMessage> {errors?.city?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -277,6 +289,7 @@ const CreateVendorDetail: React.FC<{
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                      classNamePrefix={'stateDropdown'}
                       menuPosition="fixed"
                       options={stateSelectOptions}
                       {...field}
@@ -298,11 +311,17 @@ const CreateVendorDetail: React.FC<{
                 type="number"
                 {...register('zipCode', {
                   required: isActive && 'This is required',
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   onChange: e => {
                     setValue('zipCode', e.target.value)
-                    if (e?.target?.value?.length > 255) trigger('zipCode')
-                    else clearErrors('zipCode')
+                    if (e.target.value?.length > 255) {
+                      setError('zipCode', {
+                        type: 'maxLength',
+                        message: 'Please use 255 characters only.',
+                      })
+                    } else {
+                      clearErrors('zipCode')
+                    }
                   },
                 })}
                 w="215px"
@@ -310,14 +329,8 @@ const CreateVendorDetail: React.FC<{
                 size="md"
                 data-testid="vendorZipCode"
                 isDisabled={isReadOnly}
-                maxLength={255}
               />
-              {contactFormValue.zipCode !== undefined && contactFormValue.zipCode?.length === 255 && (
-                <Text color="red" fontSize="xs" w="215px">
-                  Please use 255 characters only.
-                </Text>
-              )}
-              <FormErrorMessage pos="absolute">{errors.zipCode?.message}</FormErrorMessage>
+              {!!errors.zipCode && <FormErrorMessage> {errors?.zipCode?.message} </FormErrorMessage>}
             </FormControl>
           </GridItem>
         </Grid>
@@ -331,23 +344,29 @@ const CreateVendorDetail: React.FC<{
                 type="email"
                 data-testid="businessEmailAddress"
                 {...register('businessEmailAddress', {
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 255 characters)' },
-                  onChange: e => {
-                    setValue('businessEmailAddress', e.target.value)
-                  },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                 })}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('businessEmailAddress', title)
+                  if (title?.length > 255) {
+                    setError('businessEmailAddress', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('businessEmailAddress')
+                  }
+                }}
                 variant="required-field"
                 size="md"
                 isDisabled={isReadOnly}
-                maxLength={255}
               />
-              {contactFormValue.businessEmailAddress !== undefined &&
-                contactFormValue.businessEmailAddress?.length === 255 && (
-                  <Text color="red" fontSize="xs" w="215px">
-                    Please use 255 characters only.
-                  </Text>
-                )}
-              <FormErrorMessage pos={'absolute'}>{errors.businessEmailAddress?.message}</FormErrorMessage>
+              {!!errors?.businessEmailAddress && (
+                <FormErrorMessage data-testid="businessEmailAddress">
+                  {errors?.businessEmailAddress?.message}
+                </FormErrorMessage>
+              )}
             </FormControl>
           </GridItem>
           <GridItem>
@@ -391,11 +410,18 @@ const CreateVendorDetail: React.FC<{
 
               <Input
                 {...register('businessPhoneNumberExtension', {
-                  maxLength: { value: 20, message: 'Character limit reached (maximum 20 characters)' },
+                  maxLength: { value: 21, message: 'Character limit reached (maximum 20 characters)' },
                   onChange: e => {
                     setValue('businessPhoneNumberExtension', e.target.value)
-                    if (e?.target?.value?.length > 20) trigger('businessPhoneNumberExtension')
-                    else clearErrors('businessPhoneNumberExtension')
+                    const title = e?.target.value
+                    if (title?.length > 20) {
+                      setError('businessPhoneNumberExtension', {
+                        type: 'maxLength',
+                        message: 'Please use 20 characters only.',
+                      })
+                    } else {
+                      clearErrors('businessPhoneNumberExtension')
+                    }
                   },
                 })}
                 w="121px"
@@ -472,24 +498,29 @@ const CreateVendorDetail: React.FC<{
                 variant="required-field"
                 {...register('ownerName', {
                   required: isActive && 'This is required',
-                  maxLength: { value: 255, message: 'Character limit reached (maximum 20 characters)' },
+                  maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
                   validate: {
                     whitespace: validateWhitespace,
                   },
-                  onChange: e => {
-                    setValue('ownerName', e.target.value)
-                  },
                 })}
+                onChange={e => {
+                  const title = e?.target.value
+                  setValue('ownerName', title)
+                  if (title?.length > 255) {
+                    setError('ownerName', {
+                      type: 'maxLength',
+                      message: 'Please use 255 characters only.',
+                    })
+                  } else {
+                    clearErrors('ownerName')
+                  }
+                }}
                 size="md"
                 isDisabled={isReadOnly}
-                maxLength={255}
               />
-              {contactFormValue.ownerName !== undefined && contactFormValue.ownerName?.length === 255 && (
-                <Text color="red" fontSize="xs" w="215px">
-                  Please use 255 characters only.
-                </Text>
+              {!!errors?.ownerName && (
+                <FormErrorMessage data-testid="businessEmailAddress">{errors?.ownerName?.message}</FormErrorMessage>
               )}
-              <FormErrorMessage pos="absolute">{errors.ownerName && errors.ownerName?.message}</FormErrorMessage>
             </FormControl>
           </GridItem>
           <GridItem>
@@ -660,7 +691,14 @@ const CreateVendorDetail: React.FC<{
               {t('secondaryContact')}
             </FormLabel>
 
-            <Input type="text" {...register('secondName')} data-testid="secondName" variant="outline" size="md" isDisabled={isReadOnly} />
+            <Input
+              type="text"
+              {...register('secondName')}
+              data-testid="secondName"
+              variant="outline"
+              size="md"
+              isDisabled={isReadOnly}
+            />
           </FormControl>
           <FormControl w="215px">
             <FormLabel variant="strong-label" size="md">
@@ -698,7 +736,7 @@ const CreateVendorDetail: React.FC<{
                   render={({ field, fieldState }) => (
                     <>
                       <ReactSelect
-                        options={PAYMENT_TERMS_OPTIONS}
+                        options={PAYMENT_TERMS_OPTIONS.filter(option => option.value !== 60)}
                         menuPosition="fixed"
                         maxMenuHeight="100%"
                         {...field}

@@ -134,6 +134,7 @@ export const Projects = () => {
 
             <FormControl w="215px" mr={'10px'}>
               <ReactSelect
+               classNamePrefix={'allUsers'}
                 formatGroupLabel={formatGroupLabel}
                 onChange={user => {
                   user.value === 'ALL' ? setSelectedUserIds([]) : setSelectedUserIds([user.value])

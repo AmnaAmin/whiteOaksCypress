@@ -297,9 +297,10 @@ const InvoiceAndPayments: React.FC<invoiceAndPaymentProps> = ({ projectData, isR
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                      classNamePrefix={'paymentTermsInvoice'}
                       {...field}
                       isDisabled={isPaymentTermsDisabled || isReadOnly}
-                      options={PAYMENT_TERMS_OPTIONS}
+                      options={PAYMENT_TERMS_OPTIONS.filter(option => option.value !== 60)}
                       selectProps={{ isBorderLeft: !isPaymentTermsDisabled, menuHeight: '100px' }}
                       onChange={(option: SelectOption) => {
                         onPaymentTermChange(option)
@@ -604,7 +605,8 @@ const RevisedAmounts = ({ formControl, project, isReadOnly }) => {
                       <>
                         <ReactSelect
                           {...field}
-                          options={PAYMENT_TERMS_OPTIONS}
+                          classNamePrefix={'paymentTermsResubmitted'}
+                          options={PAYMENT_TERMS_OPTIONS.filter(option => option.value !== 60)}
                           selectProps={{ isBorderLeft: true, menuHeight: '105px' }}
                           isDisabled={!!watchResubmissions?.[index]?.id || isReadOnly}
                           onChange={(option: SelectOption) => {

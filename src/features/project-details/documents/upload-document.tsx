@@ -29,6 +29,7 @@ import { useProjectWorkOrders } from 'api/projects'
 import { STATUS } from 'features/common/status'
 import { DOCUMENT_TYPES } from 'constants/documents.constants'
 import { readFileContent } from 'api/vendor-details'
+import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
@@ -37,26 +38,27 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
   const { data: workOrders } = useProjectWorkOrders(projectId)
   const [isMobile] = useMediaQuery('(max-width: 480px)')
+  const [workOrderAndSOW, setworkOrderAndSOW] = useState<any[]>([])
+  const { isVendor } = useUserRolesSelector()
 
   //Permit document against vendor dropdown should not show Cancelled WO vendors list.
   const permitWorkOrders = workOrders?.filter(wo => !STATUS.Cancelled.includes(wo?.statusLabel?.toLowerCase()))
 
-  const workOderState =
-    permitWorkOrders && permitWorkOrders?.length > 0
-      ? permitWorkOrders?.map(state => ({
-          label: `${state?.companyName}(${state?.skillName})`,
+  const workOderState = permitWorkOrders && permitWorkOrders?.length > 0
+    ? permitWorkOrders?.map(state => ({
+      label: `${state?.companyName}(${state?.skillName})`,
 
-          value: state,
-        }))
-      : null
+      value: state,
+    }))
+    : null
 
   const docTypes = documentTypes
     ? documentTypes
-        ?.filter(doc => ![DOCUMENT_TYPES.ORIGINAL_SOW].includes(doc.id))
-        ?.map(state => ({
-          label: state?.value,
-          value: state?.id,
-        }))
+      ?.filter(doc => ![DOCUMENT_TYPES.ORIGINAL_SOW].includes(doc.id))
+      ?.map(state => ({
+        label: state?.value,
+        value: state?.id,
+      }))
     : null
 
   const {
@@ -118,6 +120,20 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     isMobile ? setModalSize('sm') : setModalSize('3xl')
   }, [isMobile])
 
+  useEffect(() => {
+    if (permitWorkOrders && permitWorkOrders?.length > 0) {
+      const structuredWOs = permitWorkOrders?.map(state => ({
+        label: `WO ${state.id} (${state?.companyName})`,
+        value: state,
+      }))
+      if (isVendor) {
+        setworkOrderAndSOW([...structuredWOs])
+      } else {
+        setworkOrderAndSOW([{ label: 'Project SOW', value: null }, ...structuredWOs])
+      }
+    }
+  }, [workOrders])
+
   return (
     <Modal
       isCentered
@@ -154,6 +170,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                           return (
                             <>
                               <ReactSelect
+                                classNamePrefix={'documentType'}
                                 options={docTypes}
                                 selectProps={{ isBorderLeft: true, menuHeight: '200px' }}
                                 value={documentType}
@@ -170,34 +187,33 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                       />
                     </FormControl>
                   </GridItem>
-                  {watchPermitOption && (
-                    <GridItem>
-                      <FormControl isInvalid={!!errors?.against} data-testid="document-type-against">
-                        <FormLabel htmlFor="documentType" variant="strong-label" size="md">
-                          {t('against')}
-                        </FormLabel>
-                        <Controller
-                          control={control}
-                          name="against"
-                          rules={{ required: 'Against type is required' }}
-                          render={({ field: { onChange, onBlur, value, name, ref }, fieldState }) => {
-                            return (
-                              <>
-                                <ReactSelect
-                                  options={workOderState}
-                                  selectProps={{ isBorderLeft: true, menuHeight: '110px' }}
-                                  value={documentType}
-                                  onChange={onChange}
-                                />
+                  <GridItem>
+                    <FormControl isInvalid={!!errors?.against} data-testid="document-type-against">
+                      <FormLabel htmlFor="documentType" variant="strong-label" size="md">
+                        {t('against')}
+                      </FormLabel>
+                      <Controller
+                        control={control}
+                        name="against"
+                        rules={watchPermitOption || isVendor ? { required: 'Against type is required' } : { required: false }}
+                        render={({ field: { onChange, onBlur, value, name, ref }, fieldState }) => {
+                          return (
+                            <>
+                              <ReactSelect
+                                classNamePrefix={'documentAgainst'}
+                                options={watchPermitOption ? workOderState : workOrderAndSOW}
+                                selectProps={{ isBorderLeft: isVendor || watchPermitOption, menuHeight: '110px' }}
+                                value={documentType}
+                                onChange={onChange}
+                              />
 
-                                <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                              </>
-                            )
-                          }}
-                        />
-                      </FormControl>
-                    </GridItem>
-                  )}
+                              <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                            </>
+                          )
+                        }}
+                      />
+                    </FormControl>
+                  </GridItem>
                 </Grid>
               </HStack>
             )}

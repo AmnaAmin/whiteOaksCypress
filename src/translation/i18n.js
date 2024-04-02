@@ -338,7 +338,7 @@ i18n.use(initReactI18next).init({
         documentType: 'Document Type',
         fileType: 'File Type',
         vendorGL: 'Vendor',
-        fileName:'File Name',
+        fileName: 'File Name',
         transactionDoc: 'Transaction',
         createdDate: 'Created Date',
         createdBy: 'Created By',
@@ -805,6 +805,7 @@ i18n.use(initReactI18next).init({
         wOIssueDate: 'Fecha de emisión de OT',
         id: 'IDENTIFICACIÓN',
         woStartDate: 'DOS Fecha de inicio',
+        onHold: 'Sostener',
 
         //  Projects - Table Setting Columns
         ProjectLabel: 'Escribe',

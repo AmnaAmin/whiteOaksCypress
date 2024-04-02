@@ -65,6 +65,7 @@ import { ConfirmationBox } from 'components/Confirmation'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import { useNavigate } from 'react-router-dom'
 import { Document } from 'types/vendor.types'
+import { usePaymentUserOptions } from 'api/pc-projects'
 //COMMENTING OUT FOR A TEST IF NOT APPROVED BY CLIENT THEN WE CAN REDO THIS
 // const InvoicingReadOnlyInfo: React.FC<any> = ({ invoice, account }) => {
 //   const { t } = useTranslation()
@@ -192,7 +193,7 @@ const InvoicingSummary: React.FC<any> = ({
 
 export type InvoicingFormProps = {
   invoice?: InvoicingType | undefined
-  onClose?: () => void
+  onClose?: (created: boolean) => void
   clientSelected?: SelectOption | undefined | null
   invoiceCount?: number
   projectData?: Project | undefined
@@ -200,6 +201,7 @@ export type InvoicingFormProps = {
   isLoading?: boolean
   isReceivable?: boolean
   invoiceNumber?: string
+  paymentSource?: any
 }
 
 export const InvoiceForm: React.FC<InvoicingFormProps> = ({
@@ -212,6 +214,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
   isLoading,
   isReceivable,
   invoiceNumber,
+  paymentSource,
 }) => {
   const { t } = useTranslation()
   const { mutate: createInvoiceMutate, isLoading: isLoadingCreate } = useCreateInvoiceMutation({
@@ -234,7 +237,15 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       return
     }
     formReturn.reset({
-      ...invoiceDefaultValues({ invoice, invoiceCount, projectData, clientSelected, transactions, invoiceNumber }),
+      ...invoiceDefaultValues({
+        invoice,
+        invoiceCount,
+        projectData,
+        clientSelected,
+        transactions,
+        invoiceNumber,
+        paymentSource,
+      }),
     })
   }, [invoice, transactions?.length, clientSelected])
 
@@ -251,6 +262,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     clearErrors,
     watch,
   } = formReturn
+  const paymentOptions = usePaymentUserOptions()
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'finalSowLineItems',
@@ -356,6 +368,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
         sowAmt: null,
         received,
         receivedLineItems: watchReceivedArray,
+        paymentSourceOptions: values?.paymentSource,
       })
       const pdfUri = form.output('datauristring')
       payload['documents']?.push({
@@ -367,7 +380,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
       })
       createInvoiceMutate(payload, {
         onSuccess: data => {
-          onClose?.()
+          onClose?.(true)
         },
         onError: error => {
           console.log(error)
@@ -376,9 +389,9 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
     } else {
       updateInvoiceMutate(payload, {
         onSuccess: data => {
-          onClose?.()
-          generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then((documentObj : Document)=> {
-            documentObj.invoiceName= invoice?.invoiceNumber ?? null
+          onClose?.(true)
+          generatePDFInvoiceDoc(invoice?.id, woAddress, data?.data).then((documentObj: Document) => {
+            documentObj.invoiceName = invoice?.invoiceNumber ?? null
             updateInvoiceDocument(documentObj as Document)
           })
         },
@@ -471,7 +484,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                         id="invoiceNumber"
                         size="md"
                         variant="required-field"
-                        disabled={!canCreateInvoice || isPaid || isCancelled}               
+                        disabled={!canCreateInvoice || isPaid || isCancelled}
                         onChange={e => {
                           const value = e?.target?.value
                           field.onChange(value)
@@ -479,19 +492,23 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                             setError('invoiceNumber', {
                               type: 'maxLength',
                               message: 'Please use 100 characters only.',
-                            });
+                            })
                           } else {
-                            clearErrors('invoiceNumber');
+                            clearErrors('invoiceNumber')
                           }
                         }}
                       />
-{/* 
+                      {/* 
                       {contactFormValue.invoiceNumber !== undefined && contactFormValue.invoiceNumber?.length === 101 && (
                         <Text color="red" fontSize="xs" w="215px">
                           Please use 100 characters only.
                         </Text>
                       )} */}
-                      {!!errors.invoiceNumber && <FormErrorMessage data-testid="invoice-number-error">{errors?.invoiceNumber?.message}</FormErrorMessage>}
+                      {!!errors.invoiceNumber && (
+                        <FormErrorMessage data-testid="invoice-number-error">
+                          {errors?.invoiceNumber?.message}
+                        </FormErrorMessage>
+                      )}
                     </div>
                   )
                 }}
@@ -538,6 +555,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                 render={({ field, fieldState }) => (
                   <>
                     <ReactSelect
+                      classNamePrefix={'paymentTerms'}
                       {...field}
                       id="paymentTermDD"
                       isDisabled={isPaid || !canCreateInvoice || isCancelled || !isAdmin}
@@ -557,7 +575,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
         </Grid>
         <Grid templateColumns={{ base: 'repeat(1, 1fr)', sm: 'repeat(3, 1fr)' }} gap={'1.5rem 1rem'} pb="4">
           <GridItem>
-            <FormControl isInvalid={!!errors.woaExpectedPayDate} data-testid="woaExpectedPayDate">
+            <FormControl w="230px" isInvalid={!!errors.woaExpectedPayDate} data-testid="woaExpectedPayDate">
               <FormLabel variant="strong-label" size="md" htmlFor="woaExpectedPayDate">
                 {t(`project.projectDetails.woaExpectedPay`)}
               </FormLabel>
@@ -583,10 +601,39 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
               />
             </FormControl>
           </GridItem>
+
+          {!invoice && canCreateInvoice && (
+            <GridItem>
+              <FormControl minW="230px" w="max-content" isInvalid={!!errors.paymentSource}>
+                <FormLabel variant="strong-label" size="md">
+                  {t(`project.projectDetails.paymentSource`)}
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="paymentSource"
+                  render={({ field, fieldState }) => (
+                    <>
+                      <ReactSelect
+                        classNamePrefix={'paymentSource'}
+                        {...field}
+                        options={paymentOptions}
+                        isMulti
+                        onChange={(option: any) => {
+                          field.onChange(option)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )}
+                />
+              </FormControl>
+            </GridItem>
+          )}
+
           {invoice && (
             <>
               <GridItem>
-                <FormControl data-testid="remainingPayment" w="215px" isInvalid={!!errors.remainingPayment}>
+                <FormControl data-testid="remainingPayment" w="230px" isInvalid={!!errors.remainingPayment}>
                   <FormLabel variant="strong-label" size="md">
                     {t(`project.projectDetails.remainingPayment`)}
                   </FormLabel>
@@ -651,7 +698,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                 </FormControl>
               </GridItem>
               <GridItem>
-                <FormControl data-testid="status" w="215px" isInvalid={!!errors.status}>
+                <FormControl data-testid="status" w="230px" isInvalid={!!errors.status}>
                   <FormLabel variant="strong-label" size="md">
                     {t(`project.projectDetails.status`)}
                   </FormLabel>
@@ -662,6 +709,7 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
                     render={({ field, fieldState }) => (
                       <>
                         <ReactSelect
+                          classNamePrefix={'invoiceStatus'}
                           {...field}
                           id="status"
                           isDisabled={isStatusDisabled || !canCreateInvoice}
@@ -908,7 +956,12 @@ export const InvoiceForm: React.FC<InvoicingFormProps> = ({
           )}
         </HStack>
         <HStack>
-          <Button onClick={onClose} variant={'outline'} colorScheme="darkPrimary" data-testid="close-transaction-form">
+          <Button
+            onClick={() => onClose?.(false)}
+            variant={'outline'}
+            colorScheme="darkPrimary"
+            data-testid="close-transaction-form"
+          >
             {t(`project.projectDetails.cancel`)}
           </Button>
           <Button

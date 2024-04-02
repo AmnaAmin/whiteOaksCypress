@@ -355,7 +355,7 @@ const VendorUserModal = ({
                             control={control}
                             name="langKey"
                             render={({ field }) => (
-                              <ReactSelect selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} isDisabled={isReadOnly} />
+                              <ReactSelect  classNamePrefix={'languageKey'} selectProps={{ isBorderLeft: true }} {...field} options={languageOptions} isDisabled={isReadOnly} />
                             )}
                           />
                         </FormControl>
@@ -458,6 +458,7 @@ const VendorUserModal = ({
                             data-testid="userState"
                             render={({ field }) => (
                               <ReactSelect
+                              classNamePrefix={'userState'}
                                 menuPlacement="top"
                                 id="state"
                                 isDisabled={isReadOnly}

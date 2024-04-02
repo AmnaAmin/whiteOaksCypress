@@ -29,7 +29,7 @@ import { dateFormat } from 'utils/date-time-utils'
 import { useFilteredVendors, usePercentageAndInoviceChange } from 'api/pc-projects'
 import { currencyFormatter, removeCurrencyFormat, removePercentageFormat } from 'utils/string-formatters'
 import { useTrades } from 'api/vendor-details'
-import { parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
+import { isVendorSkillServices, parseNewWoValuesToPayload, useCreateWorkOrderMutation } from 'api/work-order'
 import { CustomRequiredInput, NumberInput } from 'components/input/input'
 import AssignedItems from './details/assigned-items'
 import round from 'lodash/round'
@@ -251,6 +251,7 @@ export const NewWorkOrder: React.FC<{
       vendorsLoading={vendorsLoading}
       setVendorSkillId={setVendorSkillId}
       setState={setState}
+      vendorSkillId={vendorSkillId as unknown as number}
     />
   )
 }
@@ -268,6 +269,7 @@ export const NewWorkOrderForm: React.FC<{
   setVendorSkillId: (val) => void
   isWorkOrderCreating
   setState?: (v) => void
+  vendorSkillId?: number
 }> = props => {
   const {
     projectData,
@@ -281,6 +283,7 @@ export const NewWorkOrderForm: React.FC<{
     setVendorSkillId,
     isWorkOrderCreating,
     setState,
+    vendorSkillId
   } = props
   const [tradeOptions, setTradeOptions] = useState([])
   const [vendorOptions, setVendorOptions] = useState([])
@@ -358,14 +361,35 @@ export const NewWorkOrderForm: React.FC<{
     }
   })
 
+  const isSkillService = isVendorSkillServices(trades, vendorSkillId || 0)
+  
   useEffect(() => {
+    if ( isSkillService ) return;
     if (watchPercentage === 0) {
       resetLineItemsProfit(0)
     }
-  }, [watchPercentage])
+  }, [watchPercentage, isSkillService])
 
   useEffect(() => {
-    if (watchLineItems?.length > 0) {
+
+    if ( isSkillService && watchLineItems?.length > 0 ) {
+   
+      const clientAmount = watchLineItems?.reduce(
+        (partialSum, a) =>
+          partialSum +
+          Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) *
+            Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
+        0,
+      )
+      const vendorAmount = watchLineItems?.reduce(
+        (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
+        0,
+      )
+     
+      setValue('clientApprovedAmount', round(clientAmount, 2))
+      setValue('invoiceAmount', round(vendorAmount, 2))
+      setValue('percentage', 0)
+    } else if (watchLineItems?.length > 0) {
       const clientAmount = watchLineItems?.reduce(
         (partialSum, a) =>
           partialSum +
@@ -381,7 +405,7 @@ export const NewWorkOrderForm: React.FC<{
       setValue('invoiceAmount', round(vendorAmount, 2))
       setValue('percentage', watchPercentage)
     }
-  }, [watchLineItems])
+  }, [watchLineItems, isSkillService])
 
   const resetLineItemsProfit = profit => {
     formValues.assignedItems?.forEach((item, index) => {
@@ -479,6 +503,12 @@ export const NewWorkOrderForm: React.FC<{
             <AlertDescription>{t(`${WORK_ORDER}.swoParsingFailure`)}</AlertDescription>
           </Alert>
         )}
+        {isSkillService && (
+          <Alert status="info" variant="custom" size="sm">
+            <AlertIcon />
+            <AlertDescription>Skill of type services is selected, a 0% profit will be allowed for this skill.</AlertDescription>
+          </Alert>
+        )}
         <HStack>
           <Button
             color={'#345EA6'}
@@ -540,6 +570,7 @@ export const NewWorkOrderForm: React.FC<{
                         <>
                           <Select
                             {...field}
+                            classNamePrefix={'tradeOptionsVendor'}
                             options={tradeOptions}
                             size="md"
                             value={field.value}
@@ -577,6 +608,7 @@ export const NewWorkOrderForm: React.FC<{
                         <>
                           <Select
                             {...field}
+                            classNamePrefix={'vendorOptions'}
                             loadingCheck={vendorsLoading}
                             options={vendorOptions}
                             size="md"
@@ -644,7 +676,7 @@ export const NewWorkOrderForm: React.FC<{
                   </FormLabel>
                   <Controller
                     control={control}
-                    rules={{ required: 'This field is required' }}
+                    rules={{ required: isSkillService ? false : 'This field is required' }}
                     name="percentage"
                     render={({ field, fieldState }) => {
                       return (
@@ -806,6 +838,7 @@ export const NewWorkOrderForm: React.FC<{
                 workOrder={null}
                 documentsData={null}
                 clientName={projectData?.clientName}
+                isServiceSkill={isSkillService}
               />
             </Box>
           </Box>

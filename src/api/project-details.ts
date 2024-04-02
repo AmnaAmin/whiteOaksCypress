@@ -161,7 +161,7 @@ export const useProjectDetailsUpdateMutation = () => {
         queryClient.invalidateQueries(['audit-logs', projectId])
         queryClient.invalidateQueries(['invoicesDetail', projectId])
         queryClient.invalidateQueries(['properties'])
-
+        queryClient.invalidateQueries('paymentSourcesUpdate')
         receiveableFormReturn?.resetField('id')
         receiveableFormReturn?.setValue('selected', [])
         receiveableFormReturn?.resetField('selected')
@@ -566,8 +566,10 @@ export const parseFormValuesFromAPIData = ({
   marketSelectOptions,
   propertySelectOptions,
   clientTypesSelectOptions,
+  paymentSourceOptions,
 }: {
   project?: Project
+  paymentSourceOptions?: any
   projectExtraAttributes?: ProjectExtraAttributesType
   overPayment?: OverPaymentType
   projectTypeSelectOptions?: SelectOption[]
@@ -635,6 +637,7 @@ export const parseFormValuesFromAPIData = ({
     projectClosedDueDate: datePickerFormat(project.projectClosedDueDate),
     lienFiled: datePickerFormat(project.lienRightFileDate),
     lienExpiryDate: datePickerFormat(project?.lienRightExpireDate),
+    paymentSource: paymentSourceOptions,
 
     // Project Invoice and Payment form values
     originalSOWAmount: project.sowOriginalContractAmount,
@@ -718,6 +721,28 @@ export const parseFormValuesFromAPIData = ({
     payVariance: project.woaPayVariance,
   }
 }
+export const usePaymentSourceOptions = (projectId) => {
+  const client = useClient()
+
+  const { data: paymentSource} = useQuery(
+    'paymentSourcesUpdate',
+    async () => {
+     
+        const response = await client(`projects/${projectId}/paymentSources`, {})
+        return response?.data
+     
+    },
+    { enabled: !!projectId } 
+  )
+
+  // Map paymentSource data to required format
+  const options = paymentSource?.map((type) => ({
+    label: type.lookupValueValue,
+    value: type.lookupValueId,
+  }))
+
+  return  options 
+}
 
 const removePropertiesFromObject = (obj: Project, properties: string[]): Project => {
   const newObj = { ...obj }
@@ -795,6 +820,9 @@ export const parseProjectDetailsPayloadFromFormData = async (
     projectClosedDueDate: dateISOFormat(formValues.projectClosedDueDate),
     lienRightExpireDate: dateISOFormat(formValues.lienExpiryDate),
     preInvoiced:formValues.preInvoiced ?? false,
+    paymentSource:formValues?.paymentSource?.map(e => {
+      return {lookupValueId:e.value,lookupValueValue:e.title}
+    }) ,
 
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,

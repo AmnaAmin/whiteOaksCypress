@@ -21,7 +21,7 @@ const VendorDetails = props => {
             <FormLabel variant="strong-label" size="md">
               Score
             </FormLabel>
-            <ReactSelect selectProps={{ isBorderLeft: true }} options={documentScore} isRequired />
+            <ReactSelect  classNamePrefix={'scoreOptions'} selectProps={{ isBorderLeft: true }} options={documentScore} isRequired />
           </FormControl>
         </Box>
         <Box w="215px">
@@ -29,7 +29,7 @@ const VendorDetails = props => {
             <FormLabel variant="strong-label" size="md">
               Status
             </FormLabel>
-            <ReactSelect selectProps={{ isBorderLeft: true }} options={documentStatus}  variant="required-field"  isRequired />
+            <ReactSelect  classNamePrefix={'statusProject'} selectProps={{ isBorderLeft: true }} options={documentStatus}  variant="required-field"  isRequired />
           </FormControl>
         </Box>
       </Flex>
@@ -132,7 +132,7 @@ const VendorDetails = props => {
               <FormLabel variant="strong-label" size="md">
                 State
               </FormLabel>
-              <ReactSelect selectProps={{ isBorderLeft: true }} />
+              <ReactSelect  classNamePrefix={'StateOptions'} selectProps={{ isBorderLeft: true }} />
             </FormControl>
           </Box>
           <Box w="215px">
@@ -188,7 +188,7 @@ const VendorDetails = props => {
               <FormLabel variant="strong-label" size="md">
                 Payment Terms
               </FormLabel>
-              <ReactSelect selectProps={{ isBorderLeft: true }} options={documentTerm} />
+              <ReactSelect  classNamePrefix={'paymentTermOptions'} selectProps={{ isBorderLeft: true }} options={documentTerm} />
             </FormControl>
           </Box>
         </Flex>

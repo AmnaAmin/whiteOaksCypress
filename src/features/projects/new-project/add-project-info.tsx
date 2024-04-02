@@ -102,6 +102,7 @@ export const AddProjectInfo = React.forwardRef((props: InfoProps, ref) => {
                 render={({ field: { value, onChange }, fieldState }) => (
                   <>
                     <ReactSelect
+                    classNamePrefix={'projectType'}
                       id="projectType"
                       options={projectTypeSelectOptions}
                       selected={value}

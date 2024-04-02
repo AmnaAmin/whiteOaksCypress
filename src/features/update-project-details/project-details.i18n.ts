@@ -18,6 +18,7 @@ export const project = {
           woaCompletion: 'WOA Finish',
           clientWalkthrough: 'Client Walkthrough',
           clientSignOff: 'Client Sign Off',
+          paymentSource: 'Payment Source',
           overrideStatus: 'Override Status',
           closedDueDate: 'Closed Due Date',
           lienRightsExpires: 'Lien Rights Expires',

@@ -32,6 +32,7 @@ import Select, { CreatableSelect } from 'components/form/react-select'
 import {
   completePercentageValues,
   defaultValuesWODetails,
+  isVendorSkillServices,
   newObjectFormatting,
   parseWODetailValuesToPayload,
   useFieldEnableDecisionDetailsTab,
@@ -66,6 +67,7 @@ import { isValidAndNonEmpty } from 'utils'
 import { useUploadDocument } from 'api/vendor-projects'
 import { useGetProjectFinancialOverview } from 'api/projects'
 import { removeCurrencyFormat, currencyFormatter, truncateWithEllipsis } from 'utils/string-formatters'
+import { WORK_ORDER_AMOUNT_ROUND } from 'features/vendor/vendor-work-order/work-order.constants'
 
 export type SelectVendorOption = {
   label: string
@@ -73,18 +75,23 @@ export type SelectVendorOption = {
   title: any
 }
 
-
 const InformationCard = props => {
   return (
     <Flex>
       <Box lineHeight="20px">
-      <Tooltip label={props.title} placement="top">
-     
-        <Text color="gray.700" fontWeight={500} whiteSpace={'nowrap'} textOverflow={'ellipsis'} overflow={'hidden'}fontSize="14px" fontStyle="normal" mb="1">
-        {truncateWithEllipsis(props.title.trim(), 30)}
-        
-        </Text>
-       
+        <Tooltip label={props.title} placement="top">
+          <Text
+            color="gray.700"
+            fontWeight={500}
+            whiteSpace={'nowrap'}
+            textOverflow={'ellipsis'}
+            overflow={'hidden'}
+            fontSize="14px"
+            fontStyle="normal"
+            mb="1"
+          >
+            {truncateWithEllipsis(props.title.trim(), 30)}
+          </Text>
         </Tooltip>
         <Text
           data-testid={props.testId}
@@ -154,9 +161,10 @@ const WorkOrderDetailTab = props => {
   const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
 
   const defaultValues: FormValues = useMemo(() => {
+ 
     return defaultValuesWODetails(workOrder, defaultSkill, locations, paymentGroupValsOptions)
   }, [workOrder, locations])
-
+   
   const formReturn = useForm<FormValues>({
     defaultValues: {
       ...defaultValues,
@@ -298,7 +306,9 @@ const WorkOrderDetailTab = props => {
   const [selectedVendorId, setSelectedVendorId] = useState<SelectVendorOption[]>([])
 
   const { data: trades } = useTrades()
+ 
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
+  const isSkillService = isVendorSkillServices(trades, vendorSkillId) && workOrder?.status === 1035
 
   const { vendors, isLoading: loadingVendors } = useFilteredVendors({
     vendorSkillId,
@@ -313,6 +323,7 @@ const WorkOrderDetailTab = props => {
   const isPayable = pathname?.includes('payable')
   const isPayableRead = useRoleBasedPermissions()?.permissions?.includes('PAYABLE.READ') && isPayable
   const isProjRead = useRoleBasedPermissions()?.permissions?.includes('PROJECT.READ')
+  const syncDataOfPaymentWithLineItems = workOrder.statusLabel?.toLowerCase() === STATUS.Draft
   const isReadOnly = isPayableRead || isProjRead
   useEffect(() => {
     const option = [] as any
@@ -371,6 +382,7 @@ const WorkOrderDetailTab = props => {
      -Save workorder will be called in all cases in the end. It will trigger refreshing workorder items and other necessary calls.
   */
   const processLineItems = lineItems => {
+   
     const { assignments, deleted, savePayload } = lineItems
     const { assignedItems, unAssignedItems } = assignments
 
@@ -398,20 +410,30 @@ const WorkOrderDetailTab = props => {
 
   const onSubmit = values => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
-    const assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
+    let assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
+
+    if ( isSkillService && workOrder?.assignedItems ) {
+      assignedItems = assignedItems.map( a => {
+        a.profit = null;
+        return a;
+      } )
+    }
 
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrder?.assignedItems)
     const removedItems = getRemovedItems(formValues, workOrder?.assignedItems)
     const updatedWorkOrderDetails = { ...workOrder, isWorkOrderDetailsEdit: true }
-
-    const payload = parseWODetailValuesToPayload(values, updatedWorkOrderDetails)
-
-    let clientOriginalApprovedAmount = 0
-    assignedItemsWatch?.forEach((e: any) => {
-      clientOriginalApprovedAmount += e.clientAmount
-    })
-    payload['clientOriginalApprovedAmount'] = clientOriginalApprovedAmount
+  
+    const payload = parseWODetailValuesToPayload(values, updatedWorkOrderDetails, isSkillService)
+    
+   
+    if (syncDataOfPaymentWithLineItems) {
+      let clientOriginalApprovedAmount = 0
+      assignedItemsWatch?.forEach((e: any) => {
+        clientOriginalApprovedAmount += e.clientAmount
+      })
+      payload['clientOriginalApprovedAmount'] = clientOriginalApprovedAmount
+    }
     processLineItems({ assignments: { assignedItems, unAssignedItems }, deleted: removedItems, savePayload: payload })
   }
   const checkKeyDown = e => {
@@ -419,9 +441,7 @@ const WorkOrderDetailTab = props => {
   }
 
   useEffect(() => {
-    // ignoring the below line for avoiding clientApprovedAmount to set 0 in case of zero lineItems
-    // @ts-ignore
-    if (assignedItemsWatch?.length > 0) {
+    if (assignedItemsWatch && assignedItemsWatch?.length > 0) {
       const clientAmount = assignedItemsWatch?.reduce(
         (partialSum, a) =>
           partialSum +
@@ -433,9 +453,11 @@ const WorkOrderDetailTab = props => {
         (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
         0,
       )
-      setValue('clientApprovedAmount', round(clientAmount ?? 0, 2))
-      setValue('invoiceAmount', round(vendorAmount ?? 0, 2))
-      setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+      if (syncDataOfPaymentWithLineItems) {
+        setValue('clientApprovedAmount', round(clientAmount ?? 0, WORK_ORDER_AMOUNT_ROUND))
+        setValue('invoiceAmount', round(vendorAmount ?? 0, WORK_ORDER_AMOUNT_ROUND))
+      }
+      setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), WORK_ORDER_AMOUNT_ROUND))
     }
   }, [assignedItemsWatch])
 
@@ -463,13 +485,27 @@ const WorkOrderDetailTab = props => {
   const watchPercentage = useWatch({ name: 'percentage', control })
   const watchLineItems = useWatch({ name: 'assignedItems', control })
 
+
   useEffect(() => {
+    if (isSkillService) {
+      formValues.assignedItems?.forEach((item, index) => {
+        setValue(`assignedItems.${index}.profit`, 0)
+        setValue(`isSkillService` as any, true);
+      }) 
+    }else {
+      setValue(`isSkillService` as any, false);
+    }
+  }, [isSkillService])
+
+  useEffect(() => {
+    if ( isSkillService ) return;
     if (watchPercentage === 0) {
       resetLineItemsProfit(0)
     }
-  }, [watchPercentage])
+  }, [watchPercentage, isSkillService])
 
   useEffect(() => {
+    if ( ! isSkillService ) return;
     if (watchLineItems && watchLineItems?.length > 0) {
       const clientAmount = watchLineItems?.reduce(
         (partialSum, a) =>
@@ -482,20 +518,46 @@ const WorkOrderDetailTab = props => {
         (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
         0,
       )
-      setValue('clientApprovedAmount', round(clientAmount, 2))
-      setValue('clientOriginalApprovedAmount' as any, round(clientAmount, 2))
-     
-      setValue('invoiceAmount', round(vendorAmount, 2))
-      setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), 2))
+
+    
+      setValue('clientApprovedAmount', round(clientAmount, WORK_ORDER_AMOUNT_ROUND))
+      setValue('clientOriginalApprovedAmount' as any, round(clientAmount, WORK_ORDER_AMOUNT_ROUND))
+      setValue('invoiceAmount', round(vendorAmount, WORK_ORDER_AMOUNT_ROUND))
+      setValue('percentage', 0.0)
+    
+  }
+  }, [watchLineItems, isSkillService])
+
+  useEffect(() => {
+    if ( isSkillService ) return;
+    if (watchLineItems && watchLineItems?.length > 0) {
+      const clientAmount = watchLineItems?.reduce(
+        (partialSum, a) =>
+          partialSum +
+          Number(isValidAndNonEmpty(a?.price) ? a?.price : 0) *
+            Number(isValidAndNonEmpty(a?.quantity) ? a?.quantity : 0),
+        0,
+      )
+      const vendorAmount = watchLineItems?.reduce(
+        (partialSum, a) => partialSum + Number(isValidAndNonEmpty(a?.vendorAmount) ? a?.vendorAmount : 0),
+        0,
+      )
+      if (syncDataOfPaymentWithLineItems) {
+        setValue('clientApprovedAmount', round(clientAmount, WORK_ORDER_AMOUNT_ROUND))
+        setValue('clientOriginalApprovedAmount' as any, round(clientAmount, WORK_ORDER_AMOUNT_ROUND))
+        setValue('invoiceAmount', round(vendorAmount, WORK_ORDER_AMOUNT_ROUND))
+      }
+      setValue('percentage', round(calculateProfit(clientAmount, vendorAmount), WORK_ORDER_AMOUNT_ROUND))
     } else {
       setValue('clientApprovedAmount', 0.0)
-      setValue('clientOriginalApprovedAmount' as any, 0.0);
+      setValue('clientOriginalApprovedAmount' as any, 0.0)
       setValue('invoiceAmount', 0.0)
       setValue('percentage', 0.0)
     }
-  }, [watchLineItems])
+  }, [watchLineItems, isSkillService])
 
   const resetLineItemsProfit = profit => {
+    
     formValues.assignedItems?.forEach((item, index) => {
       const clientAmount =
         Number(isValidAndNonEmpty(watchLineItems?.[index]?.price) ? watchLineItems?.[index]?.price : 0) *
@@ -504,6 +566,8 @@ const WorkOrderDetailTab = props => {
       setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(clientAmount, profit))
     })
   }
+  
+  const profitPercentage = workOrder?.profitPercentage && !isSkillService ? workOrder?.profitPercentage + '%' : '---';
 
   return (
     <Box>
@@ -519,6 +583,15 @@ const WorkOrderDetailTab = props => {
               </Alert>
             )}
           </Box>
+          {isSkillService && (
+            <Box  marginTop="-15px !important" data-testid="skill-service-message">
+<Alert status="info" variant="custom" size="sm">
+            <AlertIcon />
+            <AlertDescription>Skill of type services is selected, a 0% profit will be allowed for this skill.</AlertDescription>
+          </Alert>
+            </Box>
+          
+          )}
           {!isAdmin && workOrder?.visibleToVendor ? (
             <SimpleGrid columns={5}>
               <>
@@ -547,6 +620,7 @@ const WorkOrderDetailTab = props => {
                             <>
                               <Select
                                 {...field}
+                                classNamePrefix={'tradeOptionsDropdown'}
                                 options={tradeOptions}
                                 size="md"
                                 value={field.value}
@@ -583,6 +657,7 @@ const WorkOrderDetailTab = props => {
                             <>
                               <Select
                                 {...field}
+                                classNamePrefix={'vendorOptionsDropdown'}
                                 options={vendorOptions}
                                 size="md"
                                 loadingCheck={loadingVendors}
@@ -605,20 +680,20 @@ const WorkOrderDetailTab = props => {
                 )}
                 {businessPhoneNumber && businessEmailAddress && (
                   <>
-                  <SimpleGrid columns={3} spacing='55px' >
-                    <InformationCard
-                      testId="email"
-                      title={t(`${WORK_ORDER}.email`)}
-                      date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
-                      customStyle={{ width: '150px', height: '20px' }}
-                    />
-                    <InformationCard
-                      testId="phone"
-                      title={t(`${WORK_ORDER}.phone`)}
-                      date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
-                      customStyle={{ width: '150px', height: '20px' }}
-                    />
-                    <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
+                    <SimpleGrid columns={3} spacing="55px">
+                      <InformationCard
+                        testId="email"
+                        title={t(`${WORK_ORDER}.email`)}
+                        date={selectedVendor ? selectedVendor?.businessEmailAddress : businessEmailAddress}
+                        customStyle={{ width: '150px', height: '20px' }}
+                      />
+                      <InformationCard
+                        testId="phone"
+                        title={t(`${WORK_ORDER}.phone`)}
+                        date={selectedVendor ? selectedVendor?.businessPhoneNumber : businessPhoneNumber}
+                        customStyle={{ width: '150px', height: '20px' }}
+                      />
+                      <InformationCard title="Balance SOW" testId="balanceSOWAmount" date={balanceSOWAmount} />
                     </SimpleGrid>
                   </>
                 )}
@@ -628,47 +703,51 @@ const WorkOrderDetailTab = props => {
           <Box>
             <Divider borderColor="#CBD5E0" />
           </Box>
-          <Box maxWidth='1600px'>
-          <SimpleGrid columns={6} gap={6}>
-            <InformationCard
-              title={t(`${WORK_ORDER}.profitPercentage`)}
-              testId="profitPercentage"
-              date={workOrder?.profitPercentage ? workOrder?.profitPercentage +'%' :'---' }
-              customStyle={{ width: '100%', height: '20px' }}
-            />
-            <InformationCard
-              testId="vendorAmount"
-              title={t(`${WORK_ORDER}.vendorWoAmount`)}
-              date={'$'+workOrder?.invoiceAmount}
-              customStyle={{ width: '100%', height: '20px' }}
-            />
+          <Box maxWidth="1600px">
+            <SimpleGrid columns={6} gap={6}>
+              <InformationCard
+                title={t(`${WORK_ORDER}.profitPercentage`)}
+                testId="profitPercentage"
+                date={profitPercentage}
+                customStyle={{ width: '100%', height: '20px' }}
+              />
+              <InformationCard
+                testId="vendorAmount"
+                title={t(`${WORK_ORDER}.vendorWoAmount`)}
+                date={'$' + workOrder?.invoiceAmount}
+                customStyle={{ width: '100%', height: '20px' }}
+              />
 
-            <InformationCard
-              testId="clientFinalAmount"
-              title={isTruncate ? truncateWithEllipsis(t(`${WORK_ORDER}.clientFinalAmount`),20) :t(`${WORK_ORDER}.clientFinalAmount`) }
-              date={'$'+workOrder?.clientApprovedAmount}
-              customStyle={{ width: '100%', height: '20px' }}
-            /> 
-            <InformationCard
-              testId={'woIssued'}
-              title={t(`${WORK_ORDER}.woIssued`)}
-              date={dateFormatNew(workOrderIssueDate)}
-               customStyle={{ width: '100%', height: '20px' }}
-            />
-            <InformationCard
-              testId={'lwSubmitted'}
-              title={t(`${WORK_ORDER}.lwSubmitted`)}
-              date={dateLeanWaiverSubmitted ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
-              customStyle={{ width: '100%', height: '20px' }}
-            />
-            {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
-            <InformationCard
-              testId={'completionVariance'}
-              title={t(`${WORK_ORDER}.completionVariance`)}
-              date={workOrderCompletionDateVariance ?? '0'}
-              customStyle={{ width: '100%', height: '20px' }}
-            />
-          </SimpleGrid>
+              <InformationCard
+                testId="clientFinalAmount"
+                title={
+                  isTruncate
+                    ? truncateWithEllipsis(t(`${WORK_ORDER}.clientFinalAmount`), 20)
+                    : t(`${WORK_ORDER}.clientFinalAmount`)
+                }
+                date={'$' + workOrder?.clientApprovedAmount}
+                customStyle={{ width: '100%', height: '20px' }}
+              />
+              <InformationCard
+                testId={'woIssued'}
+                title={t(`${WORK_ORDER}.woIssued`)}
+                date={dateFormatNew(workOrderIssueDate)}
+                customStyle={{ width: '100%', height: '20px' }}
+              />
+              <InformationCard
+                testId={'lwSubmitted'}
+                title={t(`${WORK_ORDER}.lwSubmitted`)}
+                date={dateLeanWaiverSubmitted ? dateFormatNew(dateLeanWaiverSubmitted) : 'mm/dd/yyyy'}
+                customStyle={{ width: '100%', height: '20px' }}
+              />
+              {/*<CalenderCard title="Permit Pulled" date={dateFormat(datePermitsPulled)} />*/}
+              <InformationCard
+                testId={'completionVariance'}
+                title={t(`${WORK_ORDER}.completionVariance`)}
+                date={workOrderCompletionDateVariance ?? '0'}
+                customStyle={{ width: '100%', height: '20px' }}
+              />
+            </SimpleGrid>
           </Box>
           <Box>
             <Divider borderColor="#CBD5E0" />
@@ -688,6 +767,7 @@ const WorkOrderDetailTab = props => {
                     render={({ field }) => (
                       <div data-testid="cancel_Work_Order">
                         <ReactSelect
+                         classNamePrefix={'cancelWorkOrder'}
                           options={CANCEL_WO_OPTIONS}
                           onChange={option => field.onChange(option)}
                           isDisabled={
@@ -771,6 +851,7 @@ const WorkOrderDetailTab = props => {
                     render={({ field }) => {
                       return (
                         <CreatableSelect
+                        classNamePrefix={'complete%'}
                           {...field}
                           isDisabled={isWOCancelled}
                           id={`completePercentage`}
@@ -849,6 +930,7 @@ const WorkOrderDetailTab = props => {
                 workOrder={workOrder}
                 documentsData={documentsData}
                 clientName={projectData?.clientName}
+                isServiceSkill={isSkillService}
               />
             )}
           </Box>

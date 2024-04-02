@@ -48,11 +48,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const { isOpen: isCCModalOpen, onOpen: onCCModalOpen, onClose: onCCModalClose } = useDisclosure();
   const { isOpen: isACHModalOpen, onOpen: onACHModalOpen, onClose: onACHModalClose } = useDisclosure();
   const {
-    formState: { errors },
     control,
     setValue,
     getValues,
     register,
+    formState: { errors },
+    setError,
     watch,
   } = formReturn
   const { t } = useTranslation()

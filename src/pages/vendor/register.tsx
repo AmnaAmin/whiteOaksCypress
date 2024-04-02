@@ -1267,6 +1267,7 @@ export const VendorRegister = () => {
                                   render={({ field, fieldState }) => (
                                     <>
                                       <Select
+                                       classNamePrefix={'vendorState'}
                                         data-testid="state_vendor"
                                         selectProps={{ isBorderLeft: true }}
                                         {...field}

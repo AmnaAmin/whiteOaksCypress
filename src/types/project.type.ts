@@ -141,6 +141,7 @@ export type Project = {
   carrier?: SelectOption | null
   carrierName: SelectOption | null
   preInvoiced: boolean
+  paymentSource: any
 }
 
 export type ProjectExtraAttributesType = {

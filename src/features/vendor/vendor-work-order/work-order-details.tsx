@@ -83,9 +83,6 @@ export const WorkOrderDetails = ({
 
   const [modalSize, setModalSize] = useState<string>('flexible')
   // Show tab on preprod only
-  const showForPreProd = window.location.href.includes('preprod')
-  const showForPreProdAndLocal =
-    showForPreProd || window.location.href.includes('localhost:') || window.location.href.includes('dev')
 
   useEffect(() => {
     if (isMobile) {
@@ -183,7 +180,7 @@ export const WorkOrderDetails = ({
                   <Tab data-testid="invoice">{t('invoice')}</Tab>
                   <Tab data-testid="payments">{t('payments')}</Tab>
                   <Tab data-testid="notes">{t('notes')}</Tab>
-                  {showForPreProdAndLocal && <Tab data-testid="wo_messages">{t('messages')}</Tab>}
+                  <Tab data-testid="wo_messages">{t('messages')}</Tab>
                 </TabList>
               </Card>
               <Card mb={3} p="0px !important" roundedTop={0} roundedRight={{ base: 0, md: 12 }}>
@@ -318,19 +315,22 @@ export const WorkOrderDetails = ({
                       <WorkOrderNotes workOrder={workOrderDetails} onClose={onClose} />
                     )}
                   </TabPanel>
-                  {showForPreProdAndLocal && (
-                    <TabPanel p={0}>
-                      {isLoadingWorkOrder ? (
-                        <Center h={'600px'}>
-                          <Spinner size="xl" />
-                        </Center>
-                      ) : (
-                        <Box w="100%" h="680px">
-                          <Messages id={workOrder?.id} entity="projectWorkOrder" projectId={projectId} value={workOrder} />
-                        </Box>
-                      )}
-                    </TabPanel>
-                  )}
+                  <TabPanel p={0}>
+                    {isLoadingWorkOrder ? (
+                      <Center h={'600px'}>
+                        <Spinner size="xl" />
+                      </Center>
+                    ) : (
+                      <Box w="100%" h="680px">
+                        <Messages
+                          id={workOrder?.id}
+                          entity="projectWorkOrder"
+                          projectId={projectId}
+                          value={workOrder}
+                        />
+                      </Box>
+                    )}
+                  </TabPanel>
                 </TabPanels>
               </Card>
             </Tabs>

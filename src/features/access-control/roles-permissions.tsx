@@ -164,6 +164,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                     <>
                       <div data-testid="assignment">
                         <Select
+                         classNamePrefix={'assignmentDropDown'}
                           //isDisabled={!!permissions}
                           options={ASSIGNMENTS}
                           selectProps={{ isBorderLeft: true }}
@@ -193,6 +194,7 @@ export const RolesPermissions = ({ permissions, setNewRole, setSelectedRole, all
                     <>
                       <div data-testid="locations">
                         <Select
+                         classNamePrefix={'locationDropdown'}
                           options={LOCATIONS}
                           //isDisabled={!!permissions}
                           selectProps={{ isBorderLeft: true }}

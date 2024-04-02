@@ -23,6 +23,7 @@ export const vendor_manager = {
         modifiedDate: 'Modified Date',
         deleteSkill: 'Delete Skill',
         delConfirmText: 'Delete Vendor Skill',
+        profitPercentageText: 'In the Work Order, a 0% profit will be allowed for this skill',
         delConfirmContent: 'Are you sure you want to delete this vendor skill ?',
         deleteToastTitle: 'Delete Vendor Skill',
         deleteSuccessMessage: 'Vendor skill has been deleted successfully.',
@@ -30,6 +31,7 @@ export const vendor_manager = {
 
         //Markets
         state: 'State',
+        services: 'Services',
         deleteMarket: 'Delete Market',
         deleteMarketAlertTitle: 'Do you really want to delete this Market?',
         deleteMarketAlertMessage:
@@ -65,12 +67,14 @@ export const vendor_manager = {
         modifiedDate: 'Fecha de modificación',
         deleteSkill: 'Eliminar habilidad',
         delConfirmText: 'Eliminar habilidad de proveedor',
+        profitPercentageText: 'En la Orden de Trabajo se permitirá un 0% de ganancia para esta habilidad',
         delConfirmContent: '¿Está seguro de que desea eliminar esta habilidad de proveedor?',
         deleteToastTitle: 'Habilidad de vendedor',
         deleteSuccessMessage: 'Habilidad de proveedor eliminada con éxito.',
         deleteFailureMessage: 'No se puede eliminar la habilidad del proveedor.',
         //Market
         state: 'Estado',
+        services: 'Servicios',
         deleteMarket: 'Eliminar mercado',
         deleteMarketAlertTitle: '¿Realmente desea eliminar este mercado?',
         deleteMarketAlertMessage:

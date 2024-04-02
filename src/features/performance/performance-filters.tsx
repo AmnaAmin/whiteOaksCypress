@@ -121,6 +121,7 @@ export const PerformanceFilters: React.FC<{
             <Box width={'80%'}>
             <div data-testid="filter_by_time">
               <ReactSelect
+              classNamePrefix={'filterByTime'}
                   name={`monthsDropdown`}
                   options={MonthOption.filter(m => m.value !== 'all')}
                   onChange={getMonthValue}
@@ -140,6 +141,7 @@ export const PerformanceFilters: React.FC<{
             <Box width={'80%'}>
               <div data-testid="filter_by_month">
                 <ReactSelect
+                classNamePrefix={'filterByMonth'}
                   name={`monthsNamesDropdown`}
                   options={monthNamesOptions}
                   isDisabled={disableMonthNamesDropdown || isRevenuePerformanceLoading || isUsePerformanceLoading}
@@ -162,6 +164,7 @@ export const PerformanceFilters: React.FC<{
             <Box width={'90%'} pr={8} minHeight={'40px'}>
               <div data-testid="filter_by_fpm">
                 <ReactSelect
+                classNamePrefix={'filterByFpm'}
                   name={`fpmDropdown`}
                   value={fpmOption}
                   options={fieldProjectManagerOptions}

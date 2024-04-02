@@ -24,6 +24,7 @@ export interface InvoicingType {
   payment?: number | string | null
   projectId?: string | null | number
   invoiceName?: string | null
+  paymentSource?: any
 }
 type InvoiceDocumentType = {
   documentType: number

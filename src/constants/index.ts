@@ -19,6 +19,10 @@ export const PAYMENT_TERMS_OPTIONS = [
     value: 30,
     label: '30',
   },
+  {
+    value: 60,
+    label: '60',
+  },
 ]
 
 export const CLIENT_STATUS_OPTIONS = [
@@ -41,6 +45,17 @@ export const CANCEL_WO_OPTIONS = [
   },
   {
     value: '',
+    label: 'No',
+  },
+]
+
+export const SERVICE_SKILLS_OPTIONS = [
+  {
+    value: 1,
+    label: 'Yes',
+  },
+  {
+    value: 0,
     label: 'No',
   },
 ]

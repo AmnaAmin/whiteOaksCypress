@@ -61,7 +61,7 @@ export const RevenueVsProfit = () => {
         <HStack mb={5}>
           <FormLabel>{t(`${ADMIN_DASHBOARD}.filterByMonth`)}</FormLabel>
           <Box width="25%">
-            <ReactSelect defaultValue={defaultFilterByMonth} options={filterByMonthOptions} onChange={handleFilter} />
+            <ReactSelect classNamePrefix={'filterByMonthrevenueProfit'} defaultValue={defaultFilterByMonth} options={filterByMonthOptions} onChange={handleFilter} />
           </Box>
         </HStack>
       </Box>

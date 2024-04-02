@@ -11,10 +11,11 @@ import { useTransactionsV1 } from 'api/transactions'
 import { useGetClientSelectOptions } from 'api/project-details'
 import { usePCProject } from 'api/pc-projects'
 
-type Props = Pick<ModalProps, 'isOpen' | 'onClose'> & {
+type Props = Pick<ModalProps, 'isOpen'> & {
   selectedInvoice?: string | number | null
   projectId?: number | string | null | undefined
   isReceivable?: boolean
+  onClose: (invoiceNumber: string | null | undefined, created: boolean) => void
 }
 
 const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, projectId, isReceivable }) => {
@@ -29,7 +30,7 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, proje
   const { projectData, isLoading: isLoadingProject } = usePCProject(`${invoice?.projectId ?? projectId}`)
   const { transactions, isLoading: isLoadingTransactions } = useTransactionsV1(`${projectData?.id}`)
 
-  const invoices = useFetchInvoiceDetail(`${projectData?.id}`)
+  const invoices = useFetchInvoiceDetail(`${projectData?.id}`, selectedInvoice)
   const invoiceObj = invoices?.invoiceDetail?.data
 
   // const invoiceNumber = getInvoiceInitials(
@@ -50,7 +51,7 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, proje
   }, [isMobile])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={modalSize} variant="custom">
+    <Modal isOpen={isOpen} onClose={() => onClose(invoiceObj?.invoiceNumber,false)} size={modalSize} variant="custom">
       <ModalOverlay />
       <ModalContent minH="700px">
         <ModalHeader data-testid="new_transaction">
@@ -74,7 +75,7 @@ const InvoiceModal: React.FC<Props> = ({ isOpen, onClose, selectedInvoice, proje
             ) : (
               <InvoiceForm
                 transactions={transactions}
-                onClose={onClose}
+                onClose={(created: boolean) => onClose(invoiceObj?.invoiceNumber, created)}
                 invoice={invoice}
                 clientSelected={clientSelected}
                 projectData={projectData}

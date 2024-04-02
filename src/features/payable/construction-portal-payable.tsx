@@ -152,6 +152,7 @@ const[isDrawForBatch, setIsDrawForBatch] = useState(false)
             <Spacer />
             <FormControl w="215px" mr={'10px'}>
               <ReactSelect
+              classNamePrefix={'userIds'}
                 formatGroupLabel={formatGroupLabel}
                 onChange={user => {
                   user.value === 'ALL' ? setSelectedUserIds([]) : setSelectedUserIds([user.value])

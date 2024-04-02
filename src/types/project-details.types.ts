@@ -50,6 +50,7 @@ type ProjectManagementValues = {
   claimNumber: string | null
   reoNumber: string | null
   preInvoiced: boolean | false
+  paymentSource: any
 }
 
 type ProjectInvoicingAndPaymentFormValues = {
@@ -182,6 +183,7 @@ export type ProjectDetailsAPIPayload = {
   lienRightFileDate: string | null
   lienRightExpireDate: string | null
   preInvoiced: boolean | false
+  paymentSource: any
 
   // invoicing and payment payload
   sowOriginalContractAmount: number | null
