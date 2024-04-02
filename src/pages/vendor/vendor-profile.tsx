@@ -74,7 +74,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { permissions } = useRoleBasedPermissions()
   const allowVendorAccounts = permissions.some(p => ['VENDOR.VENDORACCOUNTS.EDIT', 'ALL'].includes(p))
   const allowVendorAccountsEdit = permissions.some(p => ['VENDOR.ACCOUNTS.EDIT','ALL'].includes(p))
-  const allowVendorAccountsTabView = allowVendorAccounts || allowVendorAccountsEdit
+  const allowVendorAccountsTabView = (allowVendorAccounts || allowVendorAccountsEdit) && vendorProfileData?.id;
   const { t } = useTranslation()
   const toast = useToast()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
@@ -82,7 +82,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveProfile } = useSaveVendorDetails('Profile')
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
-  const { mutate: saveAccounts } = useSaveVendorDetails('Accounts')
+  const { mutate: saveAccounts, isLoading: isSaveAccountLoading } = useSaveVendorDetails('Accounts')
   const { mutate: createVendor } = useCreateVendorMutation()
 
   const { data: paymentsMethods } = usePaymentMethods()
@@ -174,16 +174,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           case 4:
             //create vendor: market tab
             if (validateMarket(formData?.markets)) {
-              if (allowVendorAccounts) {
-                setTabIndex(i => i + 1)
-              } else {
-                const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
+              const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
                 createVendor(createPayload, {
                   onSuccess() {
                     props.onClose?.()
                   },
                 })
-              }
             } else {
               showError('Market')
             }
@@ -375,6 +371,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                         vendorProfileData={vendorProfileData as VendorProfile}
                         onClose={props.onClose}
                         isUserVendorAdmin={false}
+                        isVendorAccountSaveLoading={isSaveAccountLoading}
                       />
                     </Box>
                   </TabPanel>

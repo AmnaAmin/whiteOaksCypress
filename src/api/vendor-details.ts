@@ -753,7 +753,7 @@ export const useSaveLanguage = () => {
 export const useVendorNext = ({ control, documents }: { control: any; documents?: any }) => {
   const [...detailfields] = useWatch({
     control,
-    name: ['city', 'companyName', 'state', 'streetAddress', 'zipCode', 'businessEmailAddress', 'ownerName', 'capacity'],
+    name: ['city', 'companyName', 'state', 'streetAddress', 'zipCode', 'businessEmailAddress', 'ownerName', 'capacity', 'einNumber', 'ssnNumber', 'ach', 'creditCard', 'check'],
   })
 
   // Check if any field in detailfields array has only whitespace
@@ -772,10 +772,20 @@ export const useVendorNext = ({ control, documents }: { control: any; documents?
   const licensesArray = licenseField?.length > 0 ? licenseField[0] : []
   const isBusinessPhNo = businessPhoneNumber?.replace(/\D+/g, '').length! === 10
 
+  const ein = useWatch({ name: 'einNumber', control });
+  const ssn = useWatch({ name: 'ssnNumber', control });
+
+  const ach = useWatch({ name: 'ach', control })
+  const creditCard = useWatch({ name: 'creditCard', control })
+  const check = useWatch({ name: 'check', control })
+
   const isCapacity = capacity <= 500
 
+  const isEinOrSSN = ein || ssn;
+  const isAchOrCheckOrCC = ach || check || creditCard;
+
   return {
-    disableDetailsNext: hasWhitespaceOnly || !isBusinessPhNo || !isCapacity,
+    disableDetailsNext: hasWhitespaceOnly || !isBusinessPhNo || !isCapacity || !isEinOrSSN || !isAchOrCheckOrCC,
 
     disableDocumentsNext: !(documentFields[0] || documents?.w9DocumentUrl),
 

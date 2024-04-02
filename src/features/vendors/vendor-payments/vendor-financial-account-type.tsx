@@ -17,30 +17,33 @@ import { useState } from 'react';
 import Select from 'components/form/react-select'
 import { t } from 'i18next';
 import { PAYMENT_MANAGEMENT } from 'features/user-management/payment-management.i8n';
+import { StripePayment } from 'types/vendor.types'
 
 
 interface VendorFinancialAccountTypeProps {
     isOpen: boolean
     isLoading?: boolean
     onClose: any
-    onConfirm: (selectedValue: AccountType | null) => void
+    onConfirm: (selectedValue: string | null) => void
+    achPaymentMethod: StripePayment | undefined
 }
 
 export enum AccountType {
-    CREDIT_CARD = 1,
-    ACH_BANK = 2,
+    CREDIT_CARD = "Credit Card",
+    ACH_BANK = "ACH",
 }
 
 type AccountTypeDropdown = {
     label: string
-    value: number
+    value: string
 }
 
 export function VendorFinancialAccountType({
     isOpen,
     isLoading = false,
     onClose,
-    onConfirm
+    onConfirm,
+    achPaymentMethod
 }: VendorFinancialAccountTypeProps) {
     const modalSize = useBreakpointValue({
         base: 'xs',
@@ -55,10 +58,16 @@ export function VendorFinancialAccountType({
     const [selectedOption, setSelectedOption] = useState<AccountTypeDropdown | null>(null);
     const [error, setError] = useState<string>("");
 
-    const accountTypeOption: AccountTypeDropdown[] = [
+    let accountTypeOption: AccountTypeDropdown[] = [
         { label: "Credit Card", value: AccountType.CREDIT_CARD },
-        { label: "ACH", value: AccountType.ACH_BANK }
     ];
+
+    if (!achPaymentMethod) {
+        accountTypeOption = [
+            { label: "Credit Card", value: AccountType.CREDIT_CARD },
+            { label: "ACH", value: AccountType.ACH_BANK }
+        ];
+    }
 
     const onSelectOptionChange = (val) => {
         setSelectedOption(val);
@@ -116,6 +125,7 @@ export function VendorFinancialAccountType({
                                 options={accountTypeOption}
                                 classNamePrefix="account_type"
                                 size="md"
+                                id="account_type"
                                 value={selectedOption}
                                 onChange={onSelectOptionChange}
                             />

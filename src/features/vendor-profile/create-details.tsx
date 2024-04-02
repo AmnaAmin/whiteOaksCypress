@@ -11,6 +11,9 @@ import {
   Button,
   Flex,
   FormErrorMessage,
+  VStack,
+  Divider,
+  Checkbox,
 } from '@chakra-ui/react'
 import ReactSelect from 'components/form/react-select'
 import React, { useEffect, useState } from 'react'
@@ -57,9 +60,14 @@ const CreateVendorDetail: React.FC<{
     clearErrors,
     setValue,
   } = useFormContext<VendorProfileDetailsFormData>()
-  const { disableDetailsNext } = useVendorNext({ control })
   const contactFormValue = watch()
   const capacityError = useWatch({ name: 'capacity', control })
+  const formValues = useWatch({ control })
+
+  const { disableDetailsNext } = useVendorNext({ control })
+  const validatePayment = PaymentMethods?.filter(payment => formValues[payment.value])
+  const einNumber = useWatch({ name: 'einNumber', control })
+  const ssnNumber = useWatch({ name: 'ssnNumber', control })
 
   // Set Document Status dropdown if Status is Expired
   const [statusOptions, setStatusOptions] = useState<any>([])
@@ -313,7 +321,6 @@ const CreateVendorDetail: React.FC<{
             </FormControl>
           </GridItem>
         </Grid>
-
         <Grid templateColumns="repeat(3,215px)" rowGap="30px" columnGap="16px" mt="30px">
           <GridItem>
             <FormControl w="215px" isInvalid={!!errors.businessEmailAddress}>
@@ -510,6 +517,141 @@ const CreateVendorDetail: React.FC<{
           </GridItem>
           <GridItem></GridItem>
           <GridItem></GridItem>
+        </Grid>
+
+        <Grid templateColumns="repeat(4,215px)" rowGap="30px" columnGap="16px" mt="28px">
+          <GridItem colSpan={4}>
+            <Divider border="1px solid" />
+          </GridItem>
+          <GridItem colSpan={4}>
+            <FormLabel variant="strong-label" color={'gray.500'}>
+              Work Order Payment
+            </FormLabel>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.einNumber}>
+              <FormLabel variant="strong-label" size="md">
+                {t('ein')}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="einNumber"
+                rules={{
+                  required: ssnNumber ? '' : isActive && 'This is required',
+                  validate: value => {
+                    if (!value) {
+                      return true
+                    }
+
+                    // Regular expression pattern to match EIN format: ##-#######
+                    const einPattern = /^\d{2}-?\d{7}$/
+
+                    if (!einPattern.test(value)) {
+                      return 'Invalid EIN format. Please use the format ##-#######'
+                    }
+
+                    return true // Validation passed
+                  },
+                }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        data-testid="einnum"
+                        value={field.value}
+                        isDisabled={isReadOnly}
+                        customInput={ssnNumber ? CustomInput : CustomRequiredInput}
+                        format="##-#######"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              ></Controller>
+            </FormControl>
+          </GridItem>
+          <GridItem>
+            <FormControl isInvalid={!!errors.ssnNumber}>
+              <FormLabel variant="strong-label" size="md">
+                {t('sin')}
+              </FormLabel>
+              <Controller
+                control={control}
+                name="ssnNumber"
+                rules={{
+                  required: einNumber ? '' : isActive && 'This is required',
+                  pattern: {
+                    value: /^$|^\d{9}$/,
+                    message: 'Invalid SSN number format',
+                  },
+                }}
+                render={({ field, fieldState }) => {
+                  return (
+                    <>
+                      <NumberFormat
+                        data-testid="ssnnum"
+                        value={field.value}
+                        isDisabled={isReadOnly}
+                        customInput={einNumber ? CustomInput : CustomRequiredInput}
+                        format="###-##-####"
+                        mask="_"
+                        onValueChange={e => {
+                          field.onChange(e.value)
+                        }}
+                      />
+                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                    </>
+                  )
+                }}
+              ></Controller>
+            </FormControl>
+          </GridItem>
+          <GridItem colSpan={2}>
+            <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600">
+              <FormLabel variant="strong-label" size="md">
+                {t('paymentMethods')}
+              </FormLabel>
+              <FormControl isInvalid={!!errors.check?.message && !validatePayment?.length}>
+                <HStack spacing="16px">
+                  {PaymentMethods.map(payment => {
+                    return (
+                      <Controller
+                        control={control}
+                        // @ts-ignore
+                        name={payment.value as string}
+                        rules={{
+                          required: !validatePayment?.length && isActive && 'This is required',
+                        }}
+                        render={({ field, fieldState }) => (
+                          <>
+                            <div data-testid="payment_checkbox_check">
+                              <Checkbox
+                                colorScheme="brand"
+                                isDisabled={isReadOnly}
+                                isChecked={field.value as boolean}
+                                onChange={event => {
+                                  const isChecked = event.target.checked
+                                  field.onChange(isChecked)
+                                }}
+                                mr="2px"
+                              >
+                                {t(payment.value)}
+                              </Checkbox>
+                            </div>
+                          </>
+                        )}
+                      />
+                    )
+                  })}
+                </HStack>
+                <FormErrorMessage pos="absolute">{errors.check?.message}</FormErrorMessage>
+              </FormControl>
+            </VStack>
+          </GridItem>
         </Grid>
 
         <HStack spacing="16px" mt="30px" display="none">

@@ -8,35 +8,45 @@ import { useFetchPaymentMethods } from 'api/payment'
 import { StripeCreditCardModalForm } from 'features/vendors/vendor-accounts'
 import { VendorProfile, StripePayment } from 'types/vendor.types'
 import { useState } from 'react'
+import VendorACHUpdateModal from 'features/vendors/vendor-payments/vendor-ach-modal'
+import { AccountType } from 'features/vendors/vendor-payments/vendor-financial-account-type'
 
 
 type UserPaymnetAccountsTableProps = {
   vendorProfile: VendorProfile
+  isActive: any
+  isVendorAccountSaveLoading?: boolean
+  achPaymentMethod: StripePayment | undefined
 }
 
 const UserPaymentAccountsTable = (props: UserPaymnetAccountsTableProps) => {
   const [selectedRow, setSelectedRow] = useState<StripePayment | null>(null);
-  const { vendorProfile } = props;
+  const { vendorProfile, isActive, isVendorAccountSaveLoading, achPaymentMethod } = props;
 
   const { data: paymentMethods, isLoading } = useFetchPaymentMethods(vendorProfile?.id);
   const { isOpen: isCCModalOpen, onOpen: onCCModalOpen, onClose: onCCModalClose } = useDisclosure();
+  const { isOpen: isACHModalOpen, onOpen: onACHModalOpen, onClose: onACHModalClose } = useDisclosure();
+  const {
+    tableColumns
+  } = useTableColumnSettings(PAYMENT_COLUMNS, TableNames.vendorPaymentAccountTable)
 
   const onModalClose = () => {
     onCCModalClose();
     setSelectedRow(null);
   }
 
-  const {
-    tableColumns
-  } = useTableColumnSettings(PAYMENT_COLUMNS, TableNames.vendorPaymentAccountTable)
-
+  let tableData: StripePayment[] | [] = paymentMethods?.stripeResponse?.data &&  Array.isArray(paymentMethods?.stripeResponse?.data) ? paymentMethods?.stripeResponse?.data : [];
+  if (achPaymentMethod) tableData = [...tableData, achPaymentMethod as StripePayment]
+  
   const renderCCEditModal = !isLoading && paymentMethods?.stripeResponse?.data?.length && selectedRow?.card;
-
+  const renderACHModal = !isLoading && Boolean(achPaymentMethod);
+  
   return (
-    <Box h="calc(100% - 50px)" overflowX={"auto"}>
+    <Box h="350px" overflowX={"auto"}>
       {renderCCEditModal && <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onModalClose} vendorProfileData={vendorProfile} creditCardData={selectedRow} />}
+      {renderACHModal && <VendorACHUpdateModal isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfile} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} />}
       <TableContextProvider
-        data={paymentMethods?.stripeResponse?.data}
+        data={tableData}
         columns={tableColumns}
       >
         <Table
@@ -47,10 +57,11 @@ const UserPaymentAccountsTable = (props: UserPaymnetAccountsTableProps) => {
               row.isPaymentMethodDefault = false;
             }
             setSelectedRow(row)
-            onCCModalOpen()
+            if (row?.card) onCCModalOpen()
+            if (row?.type === AccountType.ACH_BANK) onACHModalOpen();
           }}
           isLoading={isLoading}
-          isEmpty={!isLoading && !paymentMethods?.stripeResponse?.data?.length}
+          isEmpty={!isLoading && !tableData?.length}
         />
       </TableContextProvider>
     </Box>

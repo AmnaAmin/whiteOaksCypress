@@ -1,5 +1,5 @@
 import { Box, FormErrorMessage, Grid, GridItem, FormLabel, FormControl, Input, HStack, Checkbox, Flex, VStack, useDisclosure, Button, Image, IconButton } from '@chakra-ui/react';
-import { CustomInput, CustomRequiredInput } from 'components/input/input';
+import { CustomRequiredInput } from 'components/input/input';
 import { Controller, UseFormReturn, useWatch } from 'react-hook-form'
 import { useTranslation } from 'react-i18next';
 import NumberFormat from 'react-number-format'
@@ -32,7 +32,6 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
         setValue,
         setError,
         clearErrors,
-        trigger,
         watch
     } = formReturn;
     const formValues = useWatch({ control })
@@ -52,293 +51,21 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
             <Grid templateColumns="repeat(3,250px)" rowGap="30px" columnGap="16px">
                 <GridItem colSpan={3}>
                     <FormLabel variant="strong-label" color={'gray.500'}>
-                        Vendor ACH Authorization Form
-                    </FormLabel>
-                </GridItem>
-                <GridItem>
-                    <FormControl  isInvalid={!!errors.companyName}>
-                        <FormLabel variant="strong-label" size="md">
-                            {t('businessName')}
-                        </FormLabel>
-                        <Input
-                            type="text"
-                            data-testId="companyName"
-                            variant="required-field"
-                            {...register('companyName', {
-                                required: isActive && 'This is required',
-                                maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                            })}
-                            size="md"
-                            onChange={e => {
-                                const title = e?.target.value;
-                                setValue('companyName', title);
-                                if (title?.length > 255) {
-                                    setError('companyName', {
-                                        type: 'maxLength',
-                                        message: 'Please use 255 characters only.',
-                                    });
-                                } else {
-                                    clearErrors('companyName');
-                                }
-                            }}
-                        />
-                    </FormControl>
-                </GridItem>
-                <GridItem>
-                    <FormControl  isInvalid={!!errors.ownerName}>
-                        <FormLabel variant="strong-label" size="md">
-                            {t('ownersName')}
-                        </FormLabel>
-                        <Input
-                            type="text"
-                            variant="required-field"
-                            {...register('ownerName', {
-                                required: isActive && 'This is required',
-                                maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-
-                            })}
-                            onChange={e => {
-                                const title = e?.target.value;
-                                setValue('ownerName', title);
-                                if (title?.length > 255) {
-                                    setError('ownerName', {
-                                        type: 'maxLength',
-                                        message: 'Please use 255 characters only.',
-                                    });
-                                } else {
-                                    clearErrors('ownerName');
-                                }
-                            }}
-                            size="md"
-                        />
-                        {!!errors?.ownerName && (
-                            <FormErrorMessage data-testid='businessEmailAddress' >{errors?.ownerName?.message}</FormErrorMessage>
-                        )}
-                    </FormControl>
-                </GridItem>
-                <GridItem></GridItem>
-                <GridItem>
-                    <FormControl  isInvalid={!!errors.businessEmailAddress}>
-                        <FormLabel variant="strong-label" size="md">
-                            Business Email
-                        </FormLabel>
-                        <Input
-                            type="email"
-                            {...register('businessEmailAddress', {
-                                maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                            })}
-                            onChange={e => {
-                                const title = e?.target.value;
-                                setValue('businessEmailAddress', title)
-                                if (title?.length > 255) {
-                                    setError('businessEmailAddress', {
-                                        type: 'maxLength',
-                                        message: 'Please use 255 characters only.',
-                                    })
-                                } else {
-                                    clearErrors('businessEmailAddress')
-                                }
-                            }}
-                            variant="required-field"
-                            size="md"
-                        />
-                        {!!errors?.businessEmailAddress && (
-                            <FormErrorMessage data-testid='businessEmailAddress' >{errors?.businessEmailAddress?.message}</FormErrorMessage>
-                        )}
-                    </FormControl>
-                </GridItem>
-                <GridItem>
-                    <FormControl isInvalid={!!errors.businessPhoneNumber} h="70px">
-                        <FormLabel variant="strong-label" size="md" noOfLines={1}>
-                            {t('businessPhoneNo')}
-                        </FormLabel>
-                        <Controller
-                            control={control}
-                            rules={{
-                                required: isActive && 'This is required',
-                                validate: (number: string) => validateTelePhoneNumber(number),
-                            }}
-                            name="businessPhoneNumber"
-                            render={({ field, fieldState }) => {
-                                return (
-                                    <>
-                                        <NumberFormat
-                                            value={field.value}
-                                            customInput={CustomRequiredInput}
-                                            format="(###)-###-####"
-                                            mask="_"
-                                            onValueChange={e => {
-                                                field.onChange(e.value)
-                                            }}
-                                        />
-                                        <FormErrorMessage>{fieldState.error && 'Valid Phone Number Is Required'}</FormErrorMessage>
-                                    </>
-                                )
-                            }} />
-                    </FormControl>
-                </GridItem>
-                <GridItem>
-                    <FormControl h="70px" isInvalid={!!errors.businessPhoneNumberExtension}>
-                        <FormLabel variant="strong-label" size="md">
-                            {t('ext')}
-                        </FormLabel>
-
-                        <Input
-                            {...register('businessPhoneNumberExtension', {
-                                maxLength: { value: 20, message: 'Character limit reached (maximum 20 characters)' },
-                                onChange: e => {
-                                    setValue('businessPhoneNumberExtension', e.target.value)
-                                    if (e?.target?.value?.length > 20) trigger('businessPhoneNumberExtension')
-                                    else clearErrors('businessPhoneNumberExtension')
-                                },
-                            })}
-                            w="121px"
-                            variant="outline"
-                            size="md"
-                            type="number"
-                        />
-                        {!!errors.businessPhoneNumberExtension && (
-                            <FormErrorMessage> {errors?.businessPhoneNumberExtension?.message} </FormErrorMessage>
-                        )}
-                    </FormControl>
-                </GridItem>
-                <GridItem>
-                    <FormControl isInvalid={!!errors.streetAddress}>
-                        <FormLabel variant="strong-label" size="md">
-                            {t('streetAddress')}
-                        </FormLabel>
-                        <Input
-                            type="text"
-                            {...register('streetAddress', {
-                                required: isActive && 'This is required',
-                                maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                            })}
-                            onChange={e => {
-                                const title = e?.target.value;
-                                setValue('streetAddress', title)
-                                if (title?.length > 255) {
-                                    setError('streetAddress', {
-                                        type: 'maxLength',
-                                        message: 'Please use 255 characters only.',
-                                    })
-                                } else {
-                                    clearErrors('streetAddress')
-                                }
-                            }}
-
-                            
-                            variant="required-field"
-                            size="md"
-                        />
-                        {!!errors.streetAddress && (
-                            <FormErrorMessage> {errors?.streetAddress?.message} </FormErrorMessage>
-                        )}
-                    </FormControl>
-                </GridItem>
-                <GridItem>
-                    <FormControl isInvalid={!!errors.city}>
-                        <FormLabel variant="strong-label" size="md">
-                            {t('city')}
-                        </FormLabel>
-                        <Input
-                            type="text"
-                            {...register('city', {
-                                maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                                required: isActive && 'This is required',
-                                onChange: e => {
-                                    setValue('city', e.target.value)
-                                    if (e.target.value?.length > 255) {
-                                        setError('city', {
-                                            type: 'maxLength',
-                                            message: 'Please use 255 characters only.',
-                                        })
-                                    } else {
-                                        clearErrors('city')
-                                    }
-                                },
-                            })}
-                            
-                            variant="required-field"
-                            size="md"
-                            onKeyPress={preventNumber}
-
-                        />
-                        {!!errors.city && (
-                            <FormErrorMessage> {errors?.city?.message} </FormErrorMessage>
-                        )}
-                    </FormControl>
-                </GridItem>
-                <GridItem>
-                    <FormControl isInvalid={!!errors.state}>
-                        <FormLabel variant="strong-label" size="md">
-                            {t('state')}
-                        </FormLabel>
-                        <Controller
-                            control={control}
-                            name="state"
-                            rules={{ required: isActive && 'This is required' }}
-                            render={({ field, fieldState }) => (
-                                <>
-                                    <ReactSelect
-                                        classNamePrefix={'stateSelectOptions'}
-                                        menuPosition="fixed"
-                                        options={stateSelectOptions}
-                                        {...field}
-                                        selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
-                                    />
-                                    <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
-                                </>
-                            )}
-                        />
-                    </FormControl>
-                </GridItem>
-                <GridItem>
-                    <FormControl isInvalid={!!errors.zipCode}>
-                        <FormLabel variant="strong-label" size="md">
-                            {t('zip')}
-                        </FormLabel>
-                        <Input
-                            type="number"
-                            {...register('zipCode', {
-                                required: isActive && 'This is required',
-                                maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                                onChange: e => {
-                                    setValue('zipCode', e.target.value)
-                                    if (e.target.value?.length > 255) {
-                                        setError('zipCode', {
-                                            type: 'maxLength',
-                                            message: 'Please use 255 characters only.',
-                                        })
-                                    } else {
-                                        clearErrors('zipCode')
-                                    }
-                                },
-                            })}
-                            variant="required-field"
-                            size="md"
-                        />
-                        {!!errors.zipCode && (
-                            <FormErrorMessage> {errors?.zipCode?.message} </FormErrorMessage>
-                        )}
-                    </FormControl>
-                </GridItem>
-                <GridItem colSpan={3}>
-                    <FormLabel variant="strong-label" color={'gray.500'}>
                         Bank Details
                     </FormLabel>
                 </GridItem>
                 <GridItem>
-                    <FormControl  isInvalid={!!errors.bankName}>
+                    <FormControl isInvalid={!!errors.bankName}>
                         <FormLabel variant="strong-label" size="md">
                             {t('bankName')}
                         </FormLabel>
                         <Input
                             type="text"
                             id="bankName"
-                            variant={isVendorRequired ? 'required-field' : 'outline'}
+                            variant={'required-field'}
                             {...register('bankName', {
                                 maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                                required: isVendorRequired && 'This is required',
+                                required: 'This is required',
                             })}
                             size="md"
                             onChange={e => {
@@ -360,17 +87,17 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                     </FormControl>
                 </GridItem>
                 <GridItem>
-                    <FormControl  isInvalid={!!errors.bankPrimaryContact}>
+                    <FormControl isInvalid={!!errors.bankPrimaryContact}>
                         <FormLabel variant="strong-label" size="md">
                             {t('bankPrimaryContact')}
                         </FormLabel>
                         <Input
                             type="text"
                             id="bankPrimaryContact"
-                            variant={isVendorRequired ? 'required-field' : 'outline'}
+                            variant={'required-field'}
                             {...register('bankPrimaryContact', {
                                 maxLength: { value: 46, message: 'Character limit reached (maximum 45 characters)' },
-                                required: isVendorRequired && 'This is required',
+                                required: 'This is required',
                             })}
                             size="md"
                             onChange={e => {
@@ -393,7 +120,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                 </GridItem>
                 <GridItem></GridItem>
                 <GridItem>
-                    <FormControl  isInvalid={!!errors.bankEmail}>
+                    <FormControl isInvalid={!!errors.bankEmail}>
                         <FormLabel variant="strong-label" size="md">
                             {t('bankEmail')}
                         </FormLabel>
@@ -401,9 +128,9 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                             type="email"
                             {...register('bankEmail', {
                                 maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                                required: isVendorRequired && 'This is required',
+                                required: 'This is required',
                             })}
-                            variant={isVendorRequired ? 'required-field' : 'outline'}
+                            variant={'required-field'}
                             size="md"
                             onChange={e => {
                                 const title = e?.target.value;
@@ -431,8 +158,8 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                         <Controller
                             control={control}
                             rules={{
-                                required: isVendorRequired && 'This is required',
-                                validate: (number: string) => !isVendorRequired || validateTelePhoneNumber(number),
+                                required: 'This is required',
+                                validate: (number: string) => validateTelePhoneNumber(number),
                             }}
                             name="bankPhoneNumber"
                             render={({ field, fieldState }) => {
@@ -441,7 +168,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                                         <NumberFormat
                                             data-testid="bankPhoneNumber"
                                             value={field.value}
-                                            customInput={isVendorRequired ? CustomRequiredInput : CustomInput}
+                                            customInput={CustomRequiredInput}
                                             format="(###)-###-####"
                                             mask="_"
                                             onValueChange={e => {
@@ -465,10 +192,10 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                             type="text"
                             {...register('bankAddress', {
                                 maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                                required: isVendorRequired && 'This is required',
+                                required: 'This is required',
                             })}
-                            
-                            variant={isVendorRequired ? 'required-field' : 'outline'}
+
+                            variant={'required-field'}
                             size="md"
                             onChange={e => {
                                 const title = e?.target.value;
@@ -497,10 +224,10 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                             type="text"
                             {...register('bankCity', {
                                 maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                                required: isVendorRequired && 'This is required',
+                                required: 'This is required',
                             })}
-                            
-                            variant={isVendorRequired ? 'required-field' : 'outline'}
+
+                            variant={'required-field'}
                             size="md"
                             onKeyPress={preventNumber}
                             onChange={e => {
@@ -530,7 +257,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                         <Controller
                             control={control}
                             name="bankState"
-                            rules={{ required: isVendorRequired && 'This is required' }}
+                            rules={{ required: 'This is required' }}
                             render={({ field, fieldState }) => (
                                 <>
                                     <ReactSelect
@@ -538,7 +265,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                                         menuPosition="fixed"
                                         options={stateSelectOptions}
                                         {...field}
-                                        selectProps={{ isBorderLeft: isVendorRequired, menuHeight: '180px' }}
+                                        selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                                     />
                                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
                                 </>
@@ -555,10 +282,10 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                             type="number"
                             {...register('bankZipCode', {
                                 maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                                required: isVendorRequired && 'This is required',
+                                required: 'This is required',
                             })}
-                            
-                            variant={isVendorRequired ? 'required-field' : 'outline'}
+
+                            variant={'required-field'}
                             size="md"
                             onChange={e => {
                                 const title = e?.target.value;
@@ -589,10 +316,10 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                             type="number"
                             {...register('bankRoutingNo', {
                                 maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                                required: isVendorRequired && 'This is required',
+                                required: 'This is required',
                             })}
-                            
-                            variant={isVendorRequired ? 'required-field' : 'outline'}
+
+                            variant={'required-field'}
                             size="md"
 
 
@@ -623,10 +350,9 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                             type="number"
                             {...register('bankAccountingNo', {
                                 maxLength: { value: 256, message: 'Character limit reached (maximum 255 characters)' },
-                                required: isVendorRequired && 'This is required',
+                                required: 'This is required',
                             })}
-                            
-                            variant={isVendorRequired ? 'required-field' : 'outline'}
+                            variant={'required-field'}
                             size="md"
                             onChange={e => {
                                 const title = e?.target.value;
@@ -737,7 +463,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole,
                             {t('voidedCheckFile')}
                         </FormLabel>
                         <Input
-                            
+
                             {...register('bankVoidedCheckDate', {
                                 onChange: e => {
                                     setValue('bankVoidedCheckDate', e.target.value)
@@ -759,7 +485,7 @@ const VoidedCheckFields = ({ formReturn, vendorProfileData, isVendor, adminRole,
                     },
                 }}
             >
-                <FormControl  isInvalid={!!errors.voidedCheckFile?.message}>
+                <FormControl w={"225px"} isInvalid={!!errors.voidedCheckFile?.message}>
                     <FormLabel variant="strong-label" size="md" color="#2D3748">
                         {t('fileUpload')}
                     </FormLabel>

@@ -178,13 +178,13 @@ export const PAYMENT_COLUMNS: ColumnDef<any>[] = [
     id: "firstName",
     cell: (row: any) => {
       const name = row?.row.original?.billing_details?.name;
-      let value = '---'
+      let value = "_ _ _"
       if (name.includes(",")) {
         value = name?.split(",")[1];
       } else {
         value = name?.split(" ")[0];
       }
-      return value;
+      return value ?? "_ _ _";
     }
   },
   {
@@ -193,13 +193,13 @@ export const PAYMENT_COLUMNS: ColumnDef<any>[] = [
     id: "lastName",
     cell: (row: any) => {
       const name = row?.row.original?.billing_details?.name;
-      let value = '---'
+      let value = "_ _ _"
       if (name.includes(",")) {
         value = name?.split(",")[0];
       } else {
         value = name?.split(" ")[1];
       }
-      return value;
+      return value ?? "_ _ _";
     }
   },
   {
@@ -214,9 +214,9 @@ export const PAYMENT_COLUMNS: ColumnDef<any>[] = [
       const card = row?.card;
       const bank = row?.us_bank_account;
       if (card) {
-        return card?.brand?.toUpperCase();
+        return card?.brand?.toUpperCase() ?? "_ _ _";
       } else {
-        return bank?.bank_name?.toUpperCase();
+        return bank?.bank_name?.toUpperCase() ?? "_ _ _";
       }
     },
   },
@@ -227,9 +227,9 @@ export const PAYMENT_COLUMNS: ColumnDef<any>[] = [
       const card = row?.card;
       const bank = row?.us_bank_account;
       if (card) {
-        return card?.last4;
+        return card?.last4 ?? "_ _ _";
       } else {
-        return bank?.last4;
+        return bank?.last4 ?? "_ _ _";
       }
     }
   },
@@ -240,9 +240,9 @@ export const PAYMENT_COLUMNS: ColumnDef<any>[] = [
       const card = row?.card;
       if (card) {
         const date = convertDateTimeToServerISO(new Date(card?.exp_year, card?.exp_month - 1))?.substring(0, 10);
-        return date;
+        return date ?? "_ _ _";
       } else {
-        return "---";
+        return "_ _ _";
       }
     }
   },

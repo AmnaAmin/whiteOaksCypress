@@ -85,6 +85,8 @@ export type VendorProfile = Override<
     licenseDocuments: LicenseDocument[]
     markets: Market[]
     vendorSkills: Trade[]
+    bankName?: string
+    bankAccountingNo?: number | string | null
   }
 >
 
@@ -226,6 +228,11 @@ type Select = {
 }
 
 export type VendorProfileDetailsFormData = {
+  einNumber?: string
+  ssnNumber?: string
+  creditCard?: boolean
+  ach?: boolean
+  check?: boolean
   primaryContact: string
   secondaryContact: string
   businessPhoneNumber: string
@@ -286,11 +293,6 @@ export type Trade = {
   active: boolean
 }
 export type VendorAccountsFormValues = {
-  einNumber?: string
-  ssnNumber?: string
-  creditCard?: boolean
-  ach?: boolean
-  check?: boolean
   businessPhoneNumber: string
   businessNumberExtention: string
   businessPhoneNumberExtension?: string

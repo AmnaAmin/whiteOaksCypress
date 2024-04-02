@@ -1,6 +1,7 @@
 import { useToast } from '@chakra-ui/react'
 import { TokenResult } from '@stripe/stripe-js'
 import { CreditCardFormValues } from 'features/vendors/vendor-payments/vendor-cc-add-modal'
+import { AccountType } from 'features/vendors/vendor-payments/vendor-financial-account-type'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { VendorProfile, StripePayment, StripePaymentMethodResponse } from 'types/vendor.types'
 import { useClient } from 'utils/auth-context'
@@ -77,6 +78,25 @@ export const mapCCFormValuesToPayload = (
     payload.markPaymentMethodAsDefault = Boolean(values?.isPaymentMethodDefault);
   }
   return payload
+}
+
+export const createTableDataForAch = (vendorProfileData: VendorProfile) => {
+  const achFields = ['bankName', 'bankPrimaryContact', 'bankEmail', 'bankPhoneNumber', 'bankAddress', 'bankCity', 'bankState', 'bankZipCode', 'bankRoutingNo', 'bankAccountingNo', 'bankSaving', 'bankChecking', 'bankVoidedCheckDate', 'bankVoidedCheckStatus', 'voidedDocumentLink', 'ownerSignatureLink', 'ownerSignatureName', 'bankDateSignature'];
+  if (achFields.some(a => Boolean(vendorProfileData[a]?.length))) {
+    const bankAccount = vendorProfileData?.bankAccountingNo?.toString();
+    return {
+      billing_details: {
+        email: vendorProfileData?.businessEmailAddress,
+        name: vendorProfileData?.ownerName,
+        phone: vendorProfileData?.businessPhoneNumber
+      },
+      us_bank_account: {
+        bank_name: vendorProfileData?.bankName,
+        last4: bankAccount?.substring(bankAccount?.length - 4),
+      },
+      type: AccountType.ACH_BANK
+    }
+  } 
 }
 
 export const useCreateNewCreditCard = (id: string | number) => {
