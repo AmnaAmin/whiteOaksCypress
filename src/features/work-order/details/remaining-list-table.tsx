@@ -1,4 +1,4 @@
-import { Box, Checkbox, FormControl, Icon } from '@chakra-ui/react'
+import { Box, Checkbox, FormControl, Icon, ResponsiveValue } from '@chakra-ui/react'
 import Table from 'components/table-refactored/table'
 import { TableContextProvider } from 'components/table-refactored/table-context'
 import { difference } from 'lodash'
@@ -99,6 +99,10 @@ const RemainingListTable = (props: RemainingListType) => {
   const [selectedCell, setSelectedCell] = useState<selectedCell | null | undefined>(null)
   const { locationSelectOptions } = useLocation()
   const { paymentGroupValsOptions } = usePaymentGroupVals()
+  const [overflowXVal, setOverflowXVal] = useState<ResponsiveValue<any> | undefined>('auto')
+  const [draggedHistory, setDraggedHistory] = useState<
+    { source: { index: number }; destination: { index: number } }[] | []
+  >([])
 
   useEffect(() => {
     setValue(`remainingItems.${total.index}.totalPrice`, total.value)
@@ -187,7 +191,7 @@ const RemainingListTable = (props: RemainingListType) => {
                     return (
                       <>
                         <CreatableSelectForTable
-                        classNamePrefix={'locationRemainingItems'}
+                          classNamePrefix={'locationRemainingItems'}
                           index={index}
                           field={field}
                           valueFormatter={null}
@@ -227,7 +231,7 @@ const RemainingListTable = (props: RemainingListType) => {
                     return (
                       <>
                         <CreatableSelectForTable
-                        classNamePrefix={'paymentGroupItems'}
+                          classNamePrefix={'paymentGroupItems'}
                           index={index}
                           field={field}
                           valueFormatter={null}
@@ -350,7 +354,8 @@ const RemainingListTable = (props: RemainingListType) => {
     setSelectedCell,
     selectedItems,
     setSelectedItems,
-    values.remainingItems,
+    values.remainingItems?.length,
+    draggedHistory?.length,
     locationSelectOptions?.length,
     paymentGroupValsOptions?.length,
   ])
@@ -367,19 +372,26 @@ const RemainingListTable = (props: RemainingListType) => {
 
       const [reorderedItem] = items.splice(sourceIndex, 1)
       items.splice(destinationIndex, 0, reorderedItem)
-
+      setDraggedHistory([...draggedHistory, result])
       setValue('remainingItems', items)
+      setOverflowXVal('auto')
     },
     [values?.remainingItems],
   )
 
+  const handleOnDragStart = useCallback(result => {
+    setOverflowXVal('hidden')
+  }, [])
+
   return (
-    <Box height="calc(100vh - 300px)" overflow="auto">
+    <Box overflowY="hidden" overflowX={overflowXVal}>
       <TableContextProvider data={values.remainingItems} columns={REMAINING_ITEMS_COLUMNS}>
         <Table
           handleOnDrag={handleOnDragEnd}
+          handleOnDragStart={handleOnDragStart}
           isLoading={isLoading}
           isEmpty={!isLoading && !values.remainingItems?.length}
+          style={{ tbody: { height: 'calc(100vh - 500px)' } }}
         />
       </TableContextProvider>
     </Box>
