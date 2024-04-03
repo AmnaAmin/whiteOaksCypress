@@ -293,7 +293,7 @@ export const mapFormValuestoPayload = (values, allPermissions) => {
 
 export const permissionsDefaultValues = ({ permissions, sections }) => {
   const permission = permissions?.[0]
-  const permissionSet = permission?.name === 'ROLE_ADMIN' ? ['ALL'] : permission?.permissions?.map(p => p.key)
+  const permissionSet = permission?.name === 'SYSTEM_ROLE' ? ['ALL'] : permission?.permissions?.map(p => p.key)
   let advancedPermissionsCons = []
   let advancedPermissionsEst = []
   advancedPermissions.advancedPermissionsCons.forEach(p => {
