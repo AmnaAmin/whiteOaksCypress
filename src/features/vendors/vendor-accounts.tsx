@@ -906,9 +906,9 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </Button>
           )}
 
-          <Button type="submit" data-testid="saveVendorAccounts" variant="solid" colorScheme="brand">
+          {!isReadOnly && <Button type="submit" data-testid="saveVendorAccounts" variant="solid" colorScheme="brand">
             {t('save')}
-          </Button>
+          </Button>}
         </HStack>
       </Flex>
     </>
