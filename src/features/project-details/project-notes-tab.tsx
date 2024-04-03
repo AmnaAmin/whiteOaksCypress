@@ -23,7 +23,7 @@ export const ProjectNotes: React.FC<any> = props => {
 
   useEffect(() => {
     if (notes?.length > 0 && setNotesCount) {
-      setNotesCount(notes.filter((note: any) => note.createdBy !== account.login)?.length)
+      setNotesCount(notes.filter((note: any) => note.createdBy !== account?.login)?.length)
     }
   }, [notes])
 
