@@ -20,7 +20,6 @@ import {
 import { useDocumentTypes, useUploadDocument } from 'api/vendor-projects'
 import { useTranslation } from 'react-i18next'
 import ReactSelect from 'components/form/react-select'
-import { SelectOption } from 'types/transaction.type'
 import { Button } from 'components/button/button'
 import { ViewLoader } from 'components/page-level-loader'
 import { Controller, useForm, useWatch } from 'react-hook-form'
@@ -33,7 +32,6 @@ import { useUserRolesSelector } from 'utils/redux-common-selectors'
 
 export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId }) => {
   const { t } = useTranslation()
-  const [documentType] = useState<SelectOption | undefined>()
   const { mutate: saveDocument, isLoading } = useUploadDocument()
   const { data: documentTypes, isLoading: isDocumentTypesLoading } = useDocumentTypes()
   const { data: workOrders } = useProjectWorkOrders(projectId)
@@ -67,7 +65,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     formState: { errors },
     reset,
     watch,
-    setValue,
+    setValue
   } = useForm()
   const values = watch('against')
 
@@ -112,6 +110,11 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
     control,
     name: 'documentTypes',
   })
+
+  useEffect(() => {
+    setValue('against', '')
+  }, [watchField])
+
   const watchPermitOption = watchField?.label === 'Permit'
 
   const [modalSize, setModalSize] = useState<string>('3xl')
@@ -148,7 +151,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
       <ModalOverlay />
       <ModalContent minH="317px">
         <ModalHeader>{t('uploadDocument')}</ModalHeader>
-        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} onClick={() => reset()} />
+        <ModalCloseButton _focus={{ outline: 'none' }} _hover={{ bg: 'blue.50' }} onClick={() => {reset()}} />
         {isLoading && <Progress isIndeterminate colorScheme="blue" aria-label="loading" size="xs" />}
         <ModalBody>
           <form onSubmit={handleSubmit(onSubmit)} id="ReactHookFrom">
@@ -173,11 +176,7 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                                 classNamePrefix={'documentType'}
                                 options={docTypes}
                                 selectProps={{ isBorderLeft: true, menuHeight: '200px' }}
-                                value={documentType}
-                                onChange={(file: any) => {
-                                  field.onChange(file)
-                                  setValue('against', null)
-                                }}
+                                {...field}
                               />
 
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
@@ -196,15 +195,14 @@ export const UploadDocumentModal: React.FC<any> = ({ isOpen, onClose, projectId 
                         control={control}
                         name="against"
                         rules={watchPermitOption || isVendor ? { required: 'Against type is required' } : { required: false }}
-                        render={({ field: { onChange, onBlur, value, name, ref }, fieldState }) => {
+                        render={({ field, fieldState }) => {
                           return (
                             <>
                               <ReactSelect
                                 classNamePrefix={'documentAgainst'}
                                 options={watchPermitOption ? workOderState : workOrderAndSOW}
                                 selectProps={{ isBorderLeft: isVendor || watchPermitOption, menuHeight: '110px' }}
-                                value={documentType}
-                                onChange={onChange}
+                                {...field}
                               />
 
                               <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
