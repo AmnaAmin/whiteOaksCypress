@@ -65,7 +65,7 @@ const RemainingItemsModal: React.FC<{
   const formControl = useForm<{
     remainingItems: LineItems[]
   }>()
-  const { handleSubmit, control, reset, clearErrors, setValue, formState } = formControl
+  const { handleSubmit, control, reset, clearErrors, setValue } = formControl
   const remainingFieldArray = useFieldArray({
     control,
     name: 'remainingItems',
