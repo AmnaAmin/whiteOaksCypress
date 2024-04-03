@@ -630,7 +630,7 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
         </Button>
       ) : (
         <Box color="brand.300" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
-          <HStack spacing="5px" h="24px" padding="10px" align="center">
+          <HStack spacing="5px" h="30px" padding="10px" align="center">
             <Text as="span" maxW="70px" isTruncated title="something">
               {value}
             </Text>

@@ -744,7 +744,7 @@ const DragDropEnabledRows = ({
                   <List
                     height={height}
                     rowCount={getRowModel().rows.length}
-                    rowHeight={55}
+                    rowHeight={68}
                     rowRenderer={getRowRender({
                       onRightClick,
                       onRowClick,
