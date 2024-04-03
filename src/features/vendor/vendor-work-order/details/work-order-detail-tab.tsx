@@ -186,6 +186,8 @@ const WorkOrderDetailTab = ({
   const checkKeyDown = e => {
     if (e.code === 'Enter') e.preventDefault()
   }
+  const isSkillService = !!workOrder?.isServiceSkill
+ 
 
   useEffect(() => {
     if (!documentsData?.length) return
@@ -274,6 +276,7 @@ const WorkOrderDetailTab = ({
                     downloadPdf={downloadPdf}
                     workOrder={workOrder}
                     documentsData={documentsData}
+                    isServiceSkill={isSkillService}
                   />
                 )}
               </>
