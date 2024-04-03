@@ -526,6 +526,7 @@ type InputFieldType = {
   onChange?: (e, index) => void
   rules?: any
   maxLength?: number
+  errorSetFunc?: any
 }
 export const InputField = (props: InputFieldType) => {
   const {
@@ -537,9 +538,13 @@ export const InputField = (props: InputFieldType) => {
     inputType = 'text',
     rules,
     maxLength,
+    errorSetFunc,
   } = props
   const {
     formState: { errors },
+    setError,
+    clearErrors,
+    trigger,
     control,
   } = formControl
   return (
@@ -560,6 +565,10 @@ export const InputField = (props: InputFieldType) => {
               onChange={e => {
                 field.onChange(e.target.value)
                 handleChange?.(e, index)
+                errorSetFunc?.(e, setError, clearErrors)
+                if (!errorSetFunc) {
+                  trigger([`${fieldArray}.${index}.${fieldName}`])
+                }
               }}
             ></Input>
           )}
@@ -1132,16 +1141,20 @@ export const useGetLineItemsColumn = ({
                 errorSetFunc={(e, setError, clearErrors) => {
                   const inputValue = e.target.value
                   if (inputValue.length === 256) {
-                    setError(`${'assignedItems'}.${index}.${'sku'}`, {
-                      type: 'maxLength',
-                      message: (
-                        <div>
-                          <span>Please use 255</span>
-                          <br />
-                          <span>characters only.</span>
-                        </div>
-                      ) as any,
-                    })
+                    setError(
+                      `${'assignedItems'}.${index}.${'sku'}
+                    `,
+                      {
+                        type: 'maxLength',
+                        message: (
+                          <div>
+                            <span>Please use 255</span>
+                            <br />
+                            <span>characters only.</span>
+                          </div>
+                        ) as any,
+                      },
+                    )
                   } else {
                     clearErrors(`${'assignedItems'}.${index}.${'sku'}`)
                   }
@@ -1713,6 +1726,7 @@ export const CreatableSelectForTable = ({
   classNamePrefix,
 }: CreatebleSelectType) => {
   const defaultOption = { label: 'Select', value: 'select', isDisabled: true }
+
   return (
     <CreatableSelect
       {...field}
