@@ -825,6 +825,7 @@ const getRowRender =
                         pr={'50px'}
                         key={cell.id}
                         isTruncated
+                        {...(snapshot.isDragging && { border: 'none' })}
                         title={
                           !metaData?.hideTitle && title
                             ? isDate
