@@ -59,12 +59,10 @@ const CreateVendorDetail: React.FC<{
     setValue,
     setError,
   } = useFormContext<VendorProfileDetailsFormData>()
-  const contactFormValue = watch()
   const { disableDetailsNext } = useVendorNext({ control })
   const capacityError = useWatch({ name: 'capacity', control })
   const formValues = useWatch({ control })
 
-  const { disableDetailsNext } = useVendorNext({ control })
   const validatePayment = PaymentMethods?.filter(payment => formValues[payment.value])
   const einNumber = useWatch({ name: 'einNumber', control })
   const ssnNumber = useWatch({ name: 'ssnNumber', control })
@@ -560,7 +558,7 @@ const CreateVendorDetail: React.FC<{
             </FormLabel>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.einNumber}>
+            <FormControl isInvalid={!!errors.einNumber} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('ein')}
               </FormLabel>
@@ -606,7 +604,7 @@ const CreateVendorDetail: React.FC<{
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl isInvalid={!!errors.ssnNumber}>
+            <FormControl isInvalid={!!errors.ssnNumber} isDisabled={isReadOnly}>
               <FormLabel variant="strong-label" size="md">
                 {t('sin')}
               </FormLabel>
@@ -646,7 +644,7 @@ const CreateVendorDetail: React.FC<{
               <FormLabel variant="strong-label" size="md">
                 {t('paymentMethods')}
               </FormLabel>
-              <FormControl isInvalid={!!errors.check?.message && !validatePayment?.length}>
+              <FormControl isInvalid={!!errors.check?.message && !validatePayment?.length} isDisabled={isReadOnly}>
                 <HStack spacing="16px">
                   {PaymentMethods.map(payment => {
                     return (

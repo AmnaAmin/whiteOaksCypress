@@ -22,6 +22,7 @@ import { VENDORPROFILE } from 'features/vendor-profile/vendor-profile.i18n';
 import { convertImageToDataURL } from 'components/table/util';
 import jsPDF from 'jspdf';
 import { createACHForm } from 'api/vendor-details';
+import { useRoleBasedPermissions } from 'utils/redux-common-selectors';
 
 const VendorACHModal: React.FC<{
     isOpen: boolean
@@ -39,6 +40,10 @@ const VendorACHModal: React.FC<{
     const isSubmitSuccessful = formState.isSubmitSuccessful;
     const watchOwnersSignature = watch('ownersSignature')
     const hasOwnerSignature = !!watchOwnersSignature && !watchOwnersSignature?.fileObject && vendorProfileData // signature has saved s3url and not fileobject
+
+    const isReadOnly = !useRoleBasedPermissions().permissions.some(e =>
+        ['VENDOR.EDIT', 'VENDORPROFILE.EDIT', 'ALL'].includes(e),
+    )
 
     const downloadACFForm = () => {
         let form = new jsPDF()
@@ -84,7 +89,7 @@ const VendorACHModal: React.FC<{
                     <ModalCloseButton _hover={{ bg: 'blue.50' }} />
                     <ModalBody justifyContent="center">
                         <Box>
-                            <VendorACHForm vendorProfileData={vendorProfileData} formReturn={formReturn} isActive={isActive} stateSelectOptions={stateSelectOptions} />
+                            <VendorACHForm vendorProfileData={vendorProfileData} formReturn={formReturn} isActive={isActive} stateSelectOptions={stateSelectOptions} isReadOnly={isReadOnly} />
                         </Box>
                     </ModalBody>
                     <ModalFooter>
@@ -103,7 +108,7 @@ const VendorACHModal: React.FC<{
                                     </Button>
                                 )}
                                 <Flex flexFlow="row-reverse">
-                                    <Button
+                                    {!isReadOnly && <Button
                                         size="md"
                                         type="submit"
                                         isLoading={Boolean(isSubmitting) || isVendorAccountSaveLoading}
@@ -115,7 +120,7 @@ const VendorACHModal: React.FC<{
                                         w="6px"
                                         mr={3}>
                                         {t(`${PAYMENT_MANAGEMENT}.modal.save`)}
-                                    </Button>
+                                    </Button>}
                                     <Button colorScheme="brand" variant="outline" mr={3} data-testid="cancel" onClick={() => {
                                         onClose();
                                     }}>

@@ -6,7 +6,7 @@ import NumberFormat from 'react-number-format'
 import { preventNumber, VendorAccountsFormValues, VendorProfile } from 'types/vendor.types'
 import { validateTelePhoneNumber } from 'utils/form-validation';
 import ReactSelect from 'components/form/react-select';
-import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors';
+import { useUserRolesSelector } from 'utils/redux-common-selectors';
 import { AccountingType, DOCUMENTS_TYPES } from 'api/vendor-details';
 import { dateFormatNew, datePickerFormat } from 'utils/date-time-utils';
 import ChooseFileField from 'components/choose-file/choose-file';
@@ -23,7 +23,7 @@ import { ConfirmationBox } from 'components/Confirmation';
 
 
 
-const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: UseFormReturn<VendorAccountsFormValues>, isActive, stateSelectOptions: any }> = ({ vendorProfileData, formReturn, stateSelectOptions }) => {
+const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: UseFormReturn<VendorAccountsFormValues>, isActive, stateSelectOptions: any, isReadOnly: boolean }> = ({ vendorProfileData, formReturn, stateSelectOptions, isReadOnly }) => {
     const { t } = useTranslation();
     const {
         register,
@@ -44,10 +44,6 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
     const adminRole = isAdmin || isVendorManager;
     const validateAccountType = AccountingType?.filter(acct => formValues[acct.key]);
     const isVoidedCheckChange = watchVoidCheckDate !== datePickerFormat(vendorProfileData?.bankVoidedCheckDate) || watchVoidCheckFile
-
-    const isReadOnly = !useRoleBasedPermissions().permissions.some(e =>
-        ['VENDOR.EDIT', 'VENDORPROFILE.EDIT', 'ALL'].includes(e),
-    )
 
     return (
         <Box>
@@ -264,7 +260,7 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                             render={({ field, fieldState }) => (
                                 <>
                                     <ReactSelect
-                                        classNamePrefix={'bankState'}
+                                        classNamePrefix={'stateSelectOptions'}
                                         menuPosition="fixed"
                                         options={stateSelectOptions}
                                         {...field}
