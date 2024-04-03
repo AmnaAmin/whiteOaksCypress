@@ -5,7 +5,7 @@ import { difference } from 'lodash'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Controller, FieldValue, UseFormReturn, useWatch } from 'react-hook-form'
 import { BiXCircle } from 'react-icons/bi'
-import { currencyFormatter } from 'utils/string-formatters'
+import { currencyFormatter, validateAmountDigits } from 'utils/string-formatters'
 import { WORK_ORDER } from '../workOrder.i18n'
 import {
   CreatableSelectForTable,
@@ -40,6 +40,7 @@ type CellInputType = {
   setSelectedCell: (val) => void
   rules?: any
   maxLength?: number
+  errorSetFunc?: any
 }
 const renderInput = (props: CellInputType) => {
   const {
@@ -54,6 +55,7 @@ const renderInput = (props: CellInputType) => {
     setSelectedCell,
     rules,
     maxLength,
+    errorSetFunc,
   } = props
 
   const isNew = values?.remainingItems?.[row?.index]?.action === 'new'
@@ -69,6 +71,7 @@ const renderInput = (props: CellInputType) => {
           fieldArray="remainingItems"
           onChange={handleChange}
           rules={rules}
+          errorSetFunc={errorSetFunc}
         ></InputField>
       ) : (
         <EditableField
@@ -83,6 +86,7 @@ const renderInput = (props: CellInputType) => {
           selectedCell={selectedCell}
           setSelectedCell={setSelectedCell}
           allowEdit={true}
+          rules={rules}
         />
       )}
     </Box>
@@ -249,37 +253,80 @@ const RemainingListTable = (props: RemainingListType) => {
       {
         header: `${WORK_ORDER}.sku`,
         accessorKey: 'sku',
-        cell: ({ row }) =>
-          renderInput({
+        cell: ({ row }) => {
+          return renderInput({
             row: row,
             values,
             formControl,
             fieldName: 'sku',
             selectedCell,
             setSelectedCell,
-          }),
+            rules: {
+              maxLength: {
+                value: 256,
+                message: (
+                  <div>
+                    <span>Please use 255</span>
+                    <br />
+                    <span>characters only.</span>
+                  </div>
+                ) as any,
+              },
+            },
+            errorSetFunc: (e, setError, clearErrors) => {
+              const inputValue = e.target.value
+              if (inputValue.length >= 255) {
+                setError(`${'remainingItems'}.${row.index}.${'sku'}`, {
+                  type: 'maxLength',
+                  message: (
+                    <div>
+                      <span>Please use 255</span>
+                      <br />
+                      <span>characters only.</span>
+                    </div>
+                  ) as any,
+                })
+              } else {
+                clearErrors(`${'remainingItems'}.${row.index}.${'sku'}`)
+              }
+            },
+          })
+        },
         size: 100,
       },
       {
         header: `${WORK_ORDER}.productName`,
         accessorKey: 'productName',
-        cell: ({ row }) =>
-          renderInput({
+        cell: ({ row }) => {
+          return renderInput({
             row,
             values,
             formControl,
             fieldName: 'productName',
             selectedCell,
             setSelectedCell,
-            rules: { required: '*Required' },
-          }),
+            rules: { maxLength: { value: 1025, message: 'Please use 1024 characters only.' }, required: '*Required' },
+            errorSetFunc: (e, setError, clearErrors) => {
+              const inputValue = e.target.value
+              console.log('inputValue', inputValue.length)
+              if (inputValue.length >= 1025) {
+                setError(`${'remainingItems'}.${row.index}.${'productName'}`, {
+                  type: 'maxLength',
+                  message: 'Please use 1024 characters only.',
+                })
+              } else {
+                clearErrors(`${'remainingItems'}.${row.index}.${'productName'}`)
+              }
+            },
+          })
+        },
         size: 200,
       },
       {
         header: `${WORK_ORDER}.details`,
         accessorKey: 'description',
-        cell: ({ row }) =>
-          renderInput({
+        cell: ({ row }) => {
+          return renderInput({
             maxLength: 2000,
             row,
             values,
@@ -287,15 +334,29 @@ const RemainingListTable = (props: RemainingListType) => {
             fieldName: 'description',
             selectedCell,
             setSelectedCell,
-            rules: { required: '*Required' },
-          }),
+            rules: { maxLength: { value: 1025, message: 'Please use 1024 characters only.' }, required: '*Required' },
+            errorSetFunc: (e, setError, clearErrors) => {
+              const inputValue = e.target.value
+              console.log('inputValue', inputValue.length)
+              if (inputValue.length >= 1025) {
+                setError(`${'remainingItems'}.${row.index}.${'description'}`, {
+                  type: 'maxLength',
+                  message: 'Please use 1024 characters only.',
+                })
+              } else {
+                clearErrors(`${'remainingItems'}.${row.index}.${'description'}`)
+              }
+            },
+          })
+        },
+
         size: 300,
       },
       {
         header: `${WORK_ORDER}.quantity`,
         accessorKey: 'quantity',
-        cell: ({ row }) =>
-          renderInput({
+        cell: ({ row }) => {
+          return renderInput({
             row,
             values,
             formControl,
@@ -306,15 +367,23 @@ const RemainingListTable = (props: RemainingListType) => {
             handleChange: (e, index) => {
               handleQuantityChange(e, index)
             },
-            rules: { required: '*Required' },
-          }),
+            rules: {
+              validate: {
+                matchPattern: v => {
+                  return validateAmountDigits(v)
+                },
+              },
+              required: '*Required',
+            },
+          })
+        },
         size: 120,
       },
       {
         header: `${WORK_ORDER}.unitPrice`,
         accessorKey: 'unitPrice',
-        cell: ({ row }) =>
-          renderInput({
+        cell: ({ row }) => {
+          return renderInput({
             row,
             values,
             formControl,
@@ -326,8 +395,16 @@ const RemainingListTable = (props: RemainingListType) => {
             handleChange: (e, index) => {
               handleUnitPriceChange(e, index)
             },
-            rules: { required: '*Required' },
-          }),
+            rules: {
+              validate: {
+                matchPattern: v => {
+                  return validateAmountDigits(v)
+                },
+              },
+              required: '*Required',
+            },
+          })
+        },
         size: 120,
       },
       {
