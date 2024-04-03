@@ -29,9 +29,6 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
   const isStatusCancelled = projectStatus === STATUS.Cancelled
   const isStatusAwaitingPunch = projectStatus === STATUS.Awaitingpunch
   const isStatusReconciled = projectStatus === STATUS.Reconcile
-  // Enabled field status on location tab
-  const newActivePunchEnabledFieldStatus =
-    isStatusNew || isStatusActive || isStatusPunch || isStatusClientPaid || isStatusPaid
 
   return {
     isStatusNew,
@@ -80,7 +77,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isClientWalkthroughDisabled:
       isStatusNew ||
       isStatusActive ||
-      isStatusAwaitingPunch||
+      isStatusAwaitingPunch ||
       isStatusInvoiced ||
       (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
@@ -88,7 +85,7 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isClientSignOffDisabled:
       isStatusNew ||
       isStatusActive ||
-      isStatusAwaitingPunch||
+      isStatusAwaitingPunch ||
       (isStatusClientPaid && !isAdmin) ||
       isStatusPaid ||
       isStatusOverPayment ||
@@ -124,12 +121,8 @@ export const useFieldsDisabled = (control: Control<ProjectDetailsFormValues>, pr
     isStateDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.ADDRESS.EDIT', 'ALL'].includes(p)),
     isZipDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.ADDRESS.EDIT', 'ALL'].includes(p)),
     isMarketDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.MARKET.EDIT', 'ALL'].includes(p)),
-    isGateCodeDisabled: permissions.some(p => ['PROJECTDETAIL.CONTACT.GATECODE.EDIT', 'ALL'].includes(p))
-      ? !newActivePunchEnabledFieldStatus
-      : isAllTimeDisabled,
-    isLockBoxCodeDisabled: permissions.some(p => ['PROJECTDETAIL.CONTACT.LOCKBOX.EDIT', 'ALL'].includes(p))
-      ? !newActivePunchEnabledFieldStatus
-      : isAllTimeDisabled,
+    isGateCodeDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.GATECODE.EDIT', 'ALL'].includes(p)),
+    isLockBoxCodeDisabled: !permissions.some(p => ['PROJECTDETAIL.CONTACT.LOCKBOX.EDIT', 'ALL'].includes(p)),
   }
 }
 
@@ -165,7 +158,11 @@ export const useSubFormErrors = (errors: FieldErrors<ProjectDetailsFormValues>) 
     isInvoiceAndPaymentFormErrors:
       !!errors.invoiceAttachment?.message || !!errors.paymentTerms || !!errors.invoiceBackDate,
     isProjectManagementFormErrors:
-      !!errors.woaCompletionDate || !!errors.clientWalkthroughDate || !!errors.clientSignOffDate || !!errors.type || !!errors.woaStartDate,
+      !!errors.woaCompletionDate ||
+      !!errors.clientWalkthroughDate ||
+      !!errors.clientSignOffDate ||
+      !!errors.type ||
+      !!errors.woaStartDate,
     isContactsFormErrors:
       !!errors.projectCoordinator || !!errors.fieldProjectManager || !!errors.client || !!errors.clientType,
     isLocationFormErrors: !!errors.zip || !!errors.city || !!errors.market || !!errors.address || !!errors.state,
