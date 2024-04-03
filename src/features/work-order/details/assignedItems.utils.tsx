@@ -625,16 +625,17 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
           variant="outline"
           leftIcon={<BiUpload color="brand.300" />}
           display="flex"
+          height={'28px'}
         >
           {t(`${WORK_ORDER}.${label}`)}
         </Button>
       ) : (
-        <Box color="brand.300" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
-          <HStack spacing="5px" h="30px" padding="10px" align="center">
+        <Box color="brand.300" border="1px solid #345EA6" borderRadius="0.375rem" fontSize="12px">
+          <HStack spacing="5px" h="28px" padding="10px" align="center">
             <Text as="span" maxW="70px" isTruncated title="something">
               {value}
             </Text>
-            <MdOutlineCancel color="brand.300" cursor="pointer" onClick={onFileClear} />
+            <MdOutlineCancel color="brand.300" size="14px" cursor="pointer" onClick={onFileClear} />
           </HStack>
         </Box>
       )}
