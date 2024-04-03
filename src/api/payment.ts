@@ -80,7 +80,8 @@ export const mapCCFormValuesToPayload = (
   return payload
 }
 
-export const createTableDataForAch = (vendorProfileData: VendorProfile) => {
+export const createTableDataForAch = (vendorProfileData: VendorProfile | undefined) => {
+  if (!vendorProfileData) return undefined;
   const achFields = ['bankName', 'bankPrimaryContact', 'bankEmail', 'bankPhoneNumber', 'bankAddress', 'bankCity', 'bankState', 'bankZipCode', 'bankRoutingNo', 'bankAccountingNo', 'bankSaving', 'bankChecking', 'bankVoidedCheckDate', 'bankVoidedCheckStatus', 'voidedDocumentLink', 'ownerSignatureLink', 'ownerSignatureName', 'bankDateSignature'];
   if (achFields.some(a => Boolean(vendorProfileData[a]?.length))) {
     const bankAccount = vendorProfileData?.bankAccountingNo?.toString();

@@ -20,7 +20,7 @@ import {
 import { VendorAccountsFormValues, VendorProfile, StripePayment } from 'types/vendor.types'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useUserRolesSelector } from 'utils/redux-common-selectors'
+import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { datePickerFormat } from 'utils/date-time-utils'
 import { VENDORPROFILE } from 'features/vendor-profile/vendor-profile.i18n'
 import { getNextMonthFirstDate } from 'components/table/util'
@@ -53,10 +53,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     getValues,
     register,
     formState: { errors },
-    setError,
     watch,
   } = formReturn
   const { t } = useTranslation()
+  const isReadOnly = !useRoleBasedPermissions().permissions.some(e =>
+    ['VENDOR.EDIT', 'VENDORPROFILE.EDIT', 'ALL'].includes(e),
+  )
   const { isAdmin, isVendorManager } = useUserRolesSelector()
   const adminRole = isAdmin || isVendorManager
   const watchVoidCheckDate = watch('bankVoidedCheckDate')
