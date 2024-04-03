@@ -877,12 +877,12 @@ export const useGetLineItemsColumn = ({
     (e, index) => {
       
       const newPrice = Number(e.target.value ?? 0)
-      console.log("🚀 ~ newPrice:", newPrice)
+      
       const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
-      console.log("🚀 ~ profit:", profit)
+      
       const quantity = Number(controlledAssignedItems?.[index]?.quantity ?? 0)
       const vendorAmount = calculateVendorAmount(newPrice * quantity, profit)
-      console.log("🚀 ~ vendorAmount:", vendorAmount)
+     
       setValue(`assignedItems.${index}.clientAmount`, newPrice * quantity)
       setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
     },
@@ -902,24 +902,35 @@ export const useGetLineItemsColumn = ({
   )
 
   useEffect(() => {
+    
+    
     //if the service skill is yes don't calculate the profit or vendor amount https://devtek.atlassian.net/browse/PSWOA-10564
-    if ( isServiceSkill ) return;
-    //  set by default value of profit% 45 line lineitem table with condition that
+    if ( isServiceSkill ) {
+      values.assignedItems?.forEach((item, index) => {
+        setValue(`assignedItems.${index}.vendorAmount`, item.vendorAmount)
+      })
+      
+    } else {
+       //  set by default value of profit% 45 line lineitem table with condition that
     // if item.profit exist then add it otherwise on newly line items added put profit 45% as ask
     values.assignedItems?.forEach((item, index) => {
       setValue(`assignedItems.${index}.profit`, item.profit ?? 45)
       setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(item.clientAmount, item.profit ?? 45))
     })
-  }, [values.assignedItems])
+    }
+    
+   
+  }, [values.assignedItems,  isServiceSkill])
+  
 
   const handleItemVendorAmountChange = useCallback(
     (e, index) => {
       const vendorAmount = e.target.value ?? 0
-      console.log("🚀 ~ vendorAmount:", vendorAmount)
+      
       const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
-      console.log("🚀 ~ clientAmount:", clientAmount)
+     
       const profit = calculateProfit(clientAmount, Number(vendorAmount))
-      console.log("🚀 ~ profit:", profit)
+     
       setValue(`assignedItems.${index}.profit`, profit)
     },
     [controlledAssignedItems],
