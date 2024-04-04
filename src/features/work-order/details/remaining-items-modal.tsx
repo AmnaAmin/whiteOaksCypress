@@ -45,6 +45,7 @@ const RemainingItemsModal: React.FC<{
   const [selectedItems, setSelectedItems] = useState<LineItems[]>([])
   const { mutateAsync: updateLineItemsAsync } = useAssignLineItems({ swoProjectId: swoProject?.id })
   const { mutateAsync: createLineItemsAsync } = useCreateLineItem({ swoProject })
+  const [isSubmitting, setSubmitting] = useState<boolean>(false)
   const { mutate: updateLineItems } = useAssignLineItems({
     swoProjectId: swoProject?.id,
     showToast: true,
@@ -113,6 +114,7 @@ const RemainingItemsModal: React.FC<{
   }, [swoProject])
 
   const onSubmit = async values => {
+    setSubmitting(true)
     const allItems = values.remainingItems?.map((item, index) => {
       return { ...item, sortOrder: index, location: item?.location?.label, paymentGroup: item?.paymentGroup?.label }
     })
@@ -166,6 +168,7 @@ const RemainingItemsModal: React.FC<{
   const assignAndReset = () => {
     setAssignedItems(selectedItems)
     setSelectedItems([])
+    setSubmitting(false)
     onClose()
   }
   const checkKeyDown = e => {
@@ -262,7 +265,14 @@ const RemainingItemsModal: React.FC<{
                 >
                   {t('cancel')}
                 </Button>
-                <Button variant="solid" colorScheme="brand" type="submit" data-testid="saveListItems">
+                <Button
+                  isLoading={isSubmitting}
+                  loadingText="Processing..."
+                  variant="solid"
+                  colorScheme="brand"
+                  type="submit"
+                  data-testid="saveListItems"
+                >
                   {t('save')}
                 </Button>
               </HStack>
