@@ -484,7 +484,7 @@ export const TransactionForm: React.FC<TransactionFormProps> = ({
 
       // In case of id exists in transaction object it will be update call to save transaction.
       if (transaction?.id) {
-        const payload = await parseChangeOrderUpdateAPIPayload(values, transaction, projectId)
+        const payload = await parseChangeOrderUpdateAPIPayload(values, transaction, projectId, isShowDM)
         updateChangeOrder({ ...payload, id: transaction.id }, queryOptions)
       } else {
         const payload = await parseChangeOrderAPIPayload(values, projectId)
