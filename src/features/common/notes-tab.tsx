@@ -176,7 +176,7 @@ export const NotesTab = (props: NotesProps) => {
             {notes && notes.length > 0 && (
               <Box>
                 {notes.map(note => {
-                  return note.createdBy === account.login ? (
+                  return note.createdBy === account?.login ? (
                     <MessagesTypes userNote={note} />
                   ) : (
                     <MessagesTypes otherNote={note} />
@@ -203,7 +203,6 @@ export const NotesTab = (props: NotesProps) => {
                 const title = e.target.value
                 setValue('message', title)
                 if (title.length > 65535) {
-                 
                   setError('message', {
                     type: 'maxLength',
                     message: 'Please Use 65535 characters Only.',

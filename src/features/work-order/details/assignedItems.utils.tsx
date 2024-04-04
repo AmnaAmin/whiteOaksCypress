@@ -343,7 +343,7 @@ export const calculateVendorAmount = (amount, percentage) => {
 }
 
 export const calculateProfit = (clientAmount, vendorAmount) => {
-  if (clientAmount === 0 || isNaN(clientAmount)) return 0;
+  if (clientAmount === 0 || isNaN(clientAmount)) return 0
   if (clientAmount === 0 && vendorAmount === 0) return 0
   return round(((clientAmount - vendorAmount) / clientAmount) * 100, WORK_ORDER_AMOUNT_ROUND)
 }
@@ -491,7 +491,7 @@ export const EditableField = (props: EditableCellType) => {
                       // Custom validation
                       errorSetFunc?.(e, setError, clearErrors)
                       if (!errorSetFunc) {
-                      trigger([`${fieldArray}.${index}.${fieldName}`])
+                        trigger([`${fieldArray}.${index}.${fieldName}`])
                       }
                     }}
                     onBlur={e => {
@@ -505,7 +505,9 @@ export const EditableField = (props: EditableCellType) => {
                 )}
               ></Controller>
               {!!errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`] && (
-                <FormErrorMessage data-testid={`${fieldArray}-${index}-${fieldName}`} >{errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`]?.message}</FormErrorMessage>
+                <FormErrorMessage data-testid={`${fieldArray}-${index}-${fieldName}`}>
+                  {errors?.[`${fieldArray}`]?.[index]?.[`${fieldName}`]?.message}
+                </FormErrorMessage>
               )}
             </FormControl>
           )}
@@ -524,6 +526,7 @@ type InputFieldType = {
   onChange?: (e, index) => void
   rules?: any
   maxLength?: number
+  errorSetFunc?: any
 }
 export const InputField = (props: InputFieldType) => {
   const {
@@ -535,9 +538,13 @@ export const InputField = (props: InputFieldType) => {
     inputType = 'text',
     rules,
     maxLength,
+    errorSetFunc,
   } = props
   const {
     formState: { errors },
+    setError,
+    clearErrors,
+    trigger,
     control,
   } = formControl
   return (
@@ -558,6 +565,10 @@ export const InputField = (props: InputFieldType) => {
               onChange={e => {
                 field.onChange(e.target.value)
                 handleChange?.(e, index)
+                errorSetFunc?.(e, setError, clearErrors)
+                if (!errorSetFunc) {
+                  trigger([`${fieldArray}.${index}.${fieldName}`])
+                }
               }}
             ></Input>
           )}
@@ -623,16 +634,17 @@ export const UploadImage: React.FC<{ label; onClear; onChange; value; testId }> 
           variant="outline"
           leftIcon={<BiUpload color="brand.300" />}
           display="flex"
+          height={'28px'}
         >
           {t(`${WORK_ORDER}.${label}`)}
         </Button>
       ) : (
-        <Box color="brand.300" border="1px solid #345EA6" borderRadius="4px" fontSize="14px">
-          <HStack spacing="5px" h="31px" padding="10px" align="center">
-            <Text as="span" maxW="70px" isTruncated title="something">
+        <Box color="brand.300" border="1px solid #345EA6" borderRadius="0.375rem" fontSize="12px">
+          <HStack spacing="5px" h="28px" padding="10px" align="center">
+            <Text as="span" maxW="70px" isTruncated title={value}>
               {value}
             </Text>
-            <MdOutlineCancel color="brand.300" cursor="pointer" onClick={onFileClear} />
+            <MdOutlineCancel color="brand.300" size="14px" cursor="pointer" onClick={onFileClear} />
           </HStack>
         </Box>
       )}
@@ -830,8 +842,8 @@ export const useGetLineItemsColumn = ({
   assignedItemsArray,
   workOrder,
   clientName,
-  isServiceSkill = false
-
+  isServiceSkill = false,
+  draggedHistory,
 }) => {
   const [selectedCell, setSelectedCell] = useState<selectedCell | null>(null)
   const [clrState, setClrState] = useState<boolean>(false)
@@ -875,14 +887,13 @@ export const useGetLineItemsColumn = ({
   )
   const handleItemPriceChange = useCallback(
     (e, index) => {
-      
       const newPrice = Number(e.target.value ?? 0)
-      
+
       const profit = Number(controlledAssignedItems?.[index]?.profit ?? 0)
-      
+
       const quantity = Number(controlledAssignedItems?.[index]?.quantity ?? 0)
       const vendorAmount = calculateVendorAmount(newPrice * quantity, profit)
-     
+
       setValue(`assignedItems.${index}.clientAmount`, newPrice * quantity)
       setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
     },
@@ -891,46 +902,38 @@ export const useGetLineItemsColumn = ({
 
   const handleItemProfitChange = useCallback(
     (e, index) => {
-     
       const newProfit = e.target.value ?? 0
       const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
       const vendorAmount = calculateVendorAmount(clientAmount, newProfit)
-      if ( ! isServiceSkill )
-        setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
+      if (!isServiceSkill) setValue(`assignedItems.${index}.vendorAmount`, vendorAmount)
     },
     [controlledAssignedItems],
   )
 
   useEffect(() => {
-    
-    
     //if the service skill is yes don't calculate the profit or vendor amount https://devtek.atlassian.net/browse/PSWOA-10564
-    if ( isServiceSkill ) {
+    if (isServiceSkill) {
       values.assignedItems?.forEach((item, index) => {
         setValue(`assignedItems.${index}.vendorAmount`, item.vendorAmount)
       })
-      
     } else {
-       //  set by default value of profit% 45 line lineitem table with condition that
-    // if item.profit exist then add it otherwise on newly line items added put profit 45% as ask
-    values.assignedItems?.forEach((item, index) => {
-      setValue(`assignedItems.${index}.profit`, item.profit ?? 45)
-      setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(item.clientAmount, item.profit ?? 45))
-    })
+      //  set by default value of profit% 45 line lineitem table with condition that
+      // if item.profit exist then add it otherwise on newly line items added put profit 45% as ask
+      values.assignedItems?.forEach((item, index) => {
+        setValue(`assignedItems.${index}.profit`, item.profit ?? 45)
+        setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(item.clientAmount, item.profit ?? 45))
+      })
     }
-    
-   
-  }, [values.assignedItems,  isServiceSkill])
-  
+  }, [values.assignedItems, isServiceSkill])
 
   const handleItemVendorAmountChange = useCallback(
     (e, index) => {
       const vendorAmount = e.target.value ?? 0
-      
+
       const clientAmount = Number(controlledAssignedItems?.[index]?.clientAmount ?? 0)
-     
+
       const profit = calculateProfit(clientAmount, Number(vendorAmount))
-     
+
       setValue(`assignedItems.${index}.profit`, profit)
     },
     [controlledAssignedItems],
@@ -1057,7 +1060,7 @@ export const useGetLineItemsColumn = ({
                     return (
                       <>
                         <CreatableSelectForTable
-                        classNamePrefix={'locationAssignedItems'}
+                          classNamePrefix={'locationAssignedItems'}
                           index={index}
                           field={field}
                           key={'assignedItems.' + [index]}
@@ -1098,7 +1101,7 @@ export const useGetLineItemsColumn = ({
                     return (
                       <>
                         <CreatableSelectForTable
-                        classNamePrefix={'paymentGroupAssignedItems'}
+                          classNamePrefix={'paymentGroupAssignedItems'}
                           index={index}
                           field={field}
                           key={'assignedItems.' + [index]}
@@ -1139,16 +1142,20 @@ export const useGetLineItemsColumn = ({
                 errorSetFunc={(e, setError, clearErrors) => {
                   const inputValue = e.target.value
                   if (inputValue.length === 256) {
-                    setError(`${'assignedItems'}.${index}.${'sku'}`, {
-                      type: 'maxLength',
-                      message: (
-                        <div>
-                          <span>Please use 255</span>
-                          <br />
-                          <span>characters only.</span>
-                        </div>
-                      ) as any,
-                    })
+                    setError(
+                      `${'assignedItems'}.${index}.${'sku'}
+                    `,
+                      {
+                        type: 'maxLength',
+                        message: (
+                          <div>
+                            <span>Please use 255</span>
+                            <br />
+                            <span>characters only.</span>
+                          </div>
+                        ) as any,
+                      },
+                    )
                   } else {
                     clearErrors(`${'assignedItems'}.${index}.${'sku'}`)
                   }
@@ -1317,7 +1324,7 @@ export const useGetLineItemsColumn = ({
                     return (
                       <>
                         <CreatableSelectForTable
-                        classNamePrefix={'completePercentageAssignedItems'}
+                          classNamePrefix={'completePercentageAssignedItems'}
                           index={index}
                           options={completePercentageValues}
                           field={field}
@@ -1375,7 +1382,6 @@ export const useGetLineItemsColumn = ({
                   validate: {
                     matchPattern: (v: any) => {
                       return validateAmountDigits(v)
-                    
                     },
                   },
                 }}
@@ -1427,7 +1433,6 @@ export const useGetLineItemsColumn = ({
                   validate: {
                     matchPattern: (v: any) => {
                       return validateAmountDigits(v)
-                    
                     },
                   },
                 }}
@@ -1472,28 +1477,30 @@ export const useGetLineItemsColumn = ({
           const index = cellInfo?.row?.index
           return (
             <Box>
-             
-              { ! isServiceSkill ? <EditableField
-                index={index}
-                fieldName="profit"
-                formControl={formControl}
-                inputType="number"
-                fieldArray="assignedItems"
-                valueFormatter={val => {
-                  if (val !== null && val !== '') return val + '%'
-                  else return val
-                }}
-                onChange={e => {
-                  handleItemProfitChange(e, index)
-                }}
-                selectedCell={selectedCell}
-                setSelectedCell={setSelectedCell}
-                allowEdit={allowEdit}
-              /> : '---' }
+              {!isServiceSkill ? (
+                <EditableField
+                  index={index}
+                  fieldName="profit"
+                  formControl={formControl}
+                  inputType="number"
+                  fieldArray="assignedItems"
+                  valueFormatter={val => {
+                    if (val !== null && val !== '') return val + '%'
+                    else return val
+                  }}
+                  onChange={e => {
+                    handleItemProfitChange(e, index)
+                  }}
+                  selectedCell={selectedCell}
+                  setSelectedCell={setSelectedCell}
+                  allowEdit={allowEdit}
+                />
+              ) : (
+                '---'
+              )}
             </Box>
           )
         },
-             
       },
       {
         header: () => {
@@ -1521,7 +1528,7 @@ export const useGetLineItemsColumn = ({
                 fieldArray="assignedItems"
                 valueFormatter={currencyFormatter}
                 onChange={e => {
-                  ! isServiceSkill && handleItemVendorAmountChange(e, index)
+                  !isServiceSkill && handleItemVendorAmountChange(e, index)
                 }}
                 selectedCell={selectedCell}
                 setSelectedCell={setSelectedCell}
@@ -1642,7 +1649,7 @@ export const useGetLineItemsColumn = ({
               render={({ field, fieldState }) => {
                 return (
                   <VStack alignItems="start">
-                    <Box py="12px">
+                    <Box>
                       <UploadImage
                         testId={'upload-' + index}
                         label={`upload`}
@@ -1685,7 +1692,8 @@ export const useGetLineItemsColumn = ({
     controlledAssignedItems?.length,
     locationSelectOptions?.length,
     paymentGroupValsOptions?.length,
-    isServiceSkill
+    isServiceSkill,
+    draggedHistory?.length,
   ])
   columns = setColumnsByConditions(columns, workOrder, isVendor)
   return columns
@@ -1702,7 +1710,7 @@ type CreatebleSelectType = {
   style?: any
   index: number
   onChangeFn?: any
-  classNamePrefix? : any
+  classNamePrefix?: any
 }
 
 export const CreatableSelectForTable = ({
@@ -1717,9 +1725,9 @@ export const CreatableSelectForTable = ({
   index,
   onChangeFn,
   classNamePrefix,
-  
 }: CreatebleSelectType) => {
   const defaultOption = { label: 'Select', value: 'select', isDisabled: true }
+
   return (
     <CreatableSelect
       {...field}
