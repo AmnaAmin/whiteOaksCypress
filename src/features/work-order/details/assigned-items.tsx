@@ -95,13 +95,15 @@ const AssignedItems = (props: AssignedItemType) => {
     downloadPdf,
     documentsData,
     clientName,
-    isServiceSkill
+    isServiceSkill,
   } = props
   const { control, register, getValues, setValue, watch } = formControl
   const { t } = useTranslation()
   const [recentLineItems, setRecentLineItems] = useState<any>(null)
   const [overflowXVal, setOverflowXVal] = useState<ResponsiveValue<any> | undefined>('auto')
-
+  const [draggedHistory, setDraggedHistory] = useState<
+    { source: { index: number }; destination: { index: number } }[] | []
+  >([])
   const values = getValues()
 
   const lineItems = useWatch({ name: 'assignedItems', control })
@@ -155,7 +157,8 @@ const AssignedItems = (props: AssignedItemType) => {
     assignedItemsArray,
     workOrder,
     clientName,
-    isServiceSkill
+    isServiceSkill,
+    draggedHistory,
   })
 
   const handleOnDragEnd = useCallback(
@@ -170,6 +173,7 @@ const AssignedItems = (props: AssignedItemType) => {
 
       const [reorderedItem] = items.splice(sourceIndex, 1)
       items.splice(destinationIndex, 0, reorderedItem)
+      setDraggedHistory([...draggedHistory, result])
 
       setValue('assignedItems', items)
       setOverflowXVal('auto')
@@ -319,9 +323,9 @@ const AssignedItems = (props: AssignedItemType) => {
           </HStack>
         </Stack>
         <Box
-          width="100%"
           overflowX={overflowXVal}
           overflowY={'hidden'}
+          id="assignedItemsTable"
           borderRadius={5}
           borderTop="1px solid #CBD5E0"
           borderRight="1px solid #CBD5E0"
@@ -334,6 +338,7 @@ const AssignedItems = (props: AssignedItemType) => {
               isLoading={isLoadingLineItems}
               isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
               isHideFilters={false}
+              style={{ tbody: { height: 'calc(100vh - 600px)' } }}
             />
           </TableContextProvider>
         </Box>
