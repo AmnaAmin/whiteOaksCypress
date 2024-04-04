@@ -138,7 +138,7 @@ export const ACCOUNT_ADMIN = {
   createdDate: '2021-09-12T12:47:35Z',
   lastModifiedBy: 'admin@devtek.ai',
   lastModifiedDate: '2023-09-21T18:40:31Z',
-  authorities: ['ROLE_ADMIN'],
+  authorities: ['SYSTEM_ROLE'],
   streetAddress: 'DevTek Inc',
   city: '',
   stateId: null,
