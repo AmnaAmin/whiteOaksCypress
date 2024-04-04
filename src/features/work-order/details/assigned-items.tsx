@@ -325,6 +325,7 @@ const AssignedItems = (props: AssignedItemType) => {
         <Box
           overflowX={overflowXVal}
           overflowY={'hidden'}
+          id="assignedItemsTable"
           borderRadius={5}
           borderTop="1px solid #CBD5E0"
           borderRight="1px solid #CBD5E0"
