@@ -45,6 +45,7 @@ export const REASON_STATUS_OPTIONS = [
   {  value: 'Incorrect Scoping/Scoping', label:'Incorrect Scoping/Scoping' },
   {  value: 'Client Request', label:'Client Request' },
   {  value:'Additional Punch Work Requested', label:'Additional Punch Work Requested' },
+  {  value:'Accounting Adjustment', label:'Accounting Adjustment' },
 ]
 
 
