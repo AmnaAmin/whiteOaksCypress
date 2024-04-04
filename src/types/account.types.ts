@@ -1,4 +1,4 @@
-export type Authorities = ['ROLE_USER', 'ROLE_ADMIN']
+export type Authorities = ['ROLE_USER', 'SYSTEM_ROLE']
 
 export enum UserTypes {
   vendor = 'Vendor',

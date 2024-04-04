@@ -36,7 +36,7 @@ export const useUserRolesSelector = (): UserRoles => {
   const { authorities, userType, authorityList } = (data?.user as Account) ?? ''
 
   return {
-    isAdmin: authorities?.includes('ROLE_ADMIN'),
+    isAdmin: authorities?.includes('SYSTEM_ROLE'),
     isVendor: authorityList?.[0]?.assignment === 'VENDOR',
     isProjectCoordinator: userType === UserTypes.projectCoordinator,
     isVendorManager: userType === UserTypes.vendorManager,
@@ -58,7 +58,7 @@ export const useUserProfile = (): Account | undefined => {
 export const useRoleBasedPermissions = (): { permissions: Array<string> } => {
   const { data } = useAuth()
   const { permissions, authorities } = data?.user as Account
-  const isAdmin = authorities.includes('ROLE_ADMIN')
+  const isAdmin = authorities.includes('SYSTEM_ROLE')
   return {
     permissions: isAdmin ? ['ALL'] : permissions,
   }
