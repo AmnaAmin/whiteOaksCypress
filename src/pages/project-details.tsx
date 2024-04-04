@@ -142,12 +142,6 @@ export const ProjectDetails: React.FC = props => {
     }
   }
 
-  // useEffect(() => {
-  //   if (tabIndex === 6) {
-  //     refetchAudits()
-  //   }
-  // }, [tabIndex])
-
   return (
     <Stack w={{ base: '971px', xl: '100%' }} spacing={'16px'} ref={tabsContainerRef} h="calc(100vh - 160px)">
       <ProjectSummaryCard projectData={projectData as Project} isLoading={isLoading} />
@@ -237,7 +231,13 @@ export const ProjectDetails: React.FC = props => {
                     <>
                       <Box>
                         {isAllowedInvoicing && (
-                          <Button colorScheme="brand" onClick={onInvoiceModalOpen} leftIcon={<BiBookAdd />} mb="15px">
+                          <Button
+                            disabled={STATUS.Cancelled.includes(projectStatus as STATUS)}
+                            colorScheme="brand"
+                            onClick={onInvoiceModalOpen}
+                            leftIcon={<BiBookAdd />}
+                            mb="15px"
+                          >
                             {t('project.projectDetails.newInvoice')}
                           </Button>
                         )}
@@ -274,11 +274,16 @@ export const ProjectDetails: React.FC = props => {
                   )}
                 </Box>
               </TabPanel>
-              {!isLoading && <TabPanel p="0px">
-                <Card rounded="6px" padding="0" h="100%">
-                  <ProjectDetailsTab projectData={projectData as Project} paymentSourceOptions={paymentSourceOptions} />
-                </Card>
-              </TabPanel>}
+              {!isLoading && (
+                <TabPanel p="0px">
+                  <Card rounded="6px" padding="0" h="100%">
+                    <ProjectDetailsTab
+                      projectData={projectData as Project}
+                      paymentSourceOptions={paymentSourceOptions}
+                    />
+                  </Card>
+                </TabPanel>
+              )}
 
               <TabPanel p="0px">
                 {!showNewWO && (
@@ -364,18 +369,20 @@ export const ProjectDetails: React.FC = props => {
       {/* <AlertStatusModal isOpen={isOpenAlertModal} onClose={onAlertModalClose} alert={alertRow} /> */}
       <UploadDocumentModal isOpen={isOpenDocumentModal} onClose={onDocumentModalClose} projectId={projectId} />
 
-      {isOpenInvoiceModal && <InvoiceModal
-        isOpen={isOpenInvoiceModal}
-        onClose={(invoiceNumber: string | null | undefined, created: boolean) => {
-          if (!selectedInvoice && !!invoiceNumber && !created) {
-            invalidateInvoiceNumber(invoiceNumber);
-          }
-          setSelectedInvoice(null)
-          onInvoiceModalClose()
-        }}
-        projectId={projectData?.id}
-        selectedInvoice={selectedInvoice}
-      />}
+      {isOpenInvoiceModal && (
+        <InvoiceModal
+          isOpen={isOpenInvoiceModal}
+          onClose={(invoiceNumber: string | null | undefined, created: boolean) => {
+            if (!selectedInvoice && !!invoiceNumber && !created) {
+              invalidateInvoiceNumber(invoiceNumber)
+            }
+            setSelectedInvoice(null)
+            onInvoiceModalClose()
+          }}
+          projectId={projectData?.id}
+          selectedInvoice={selectedInvoice}
+        />
+      )}
     </Stack>
   )
 }

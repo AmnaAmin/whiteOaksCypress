@@ -549,6 +549,7 @@ export const parseChangeOrderUpdateAPIPayload = async (
   formValues: FormValues,
   transaction: ChangeOrderType,
   projectId?: string,
+  isShowDM=true
 ): Promise<ChangeOrderUpdatePayload> => {
   const payload = await parseChangeOrderAPIPayload(formValues, projectId)
 
@@ -565,7 +566,7 @@ export const parseChangeOrderUpdateAPIPayload = async (
     // systemGenerated: transaction?.systemGenerated,
     ...payload,
     verifiedByFpm: formValues.verifiedByFpm?.value,
-    verifiedByManager: formValues.verifiedByManager?.value,
+    verifiedByManager: isShowDM ? formValues.verifiedByManager?.value : null,
     invoiceId: transaction?.invoiceId,
     invoiceNumber: transaction?.invoiceNumber,
     reason: formValues?.reason?.value,

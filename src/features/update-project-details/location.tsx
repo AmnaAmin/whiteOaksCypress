@@ -178,7 +178,7 @@ const Location: React.FC<LocationProps> = ({
                 render={({ field, fieldState }) => (
                   <>
                     <CreatableSelect
-                     classNamePrefix={'addressDetails'}
+                      classNamePrefix={'addressDetails'}
                       color="#2D3748 !important"
                       id="address"
                       isDisabled={isAddressDisabled}
@@ -411,11 +411,12 @@ const Location: React.FC<LocationProps> = ({
                 autoComplete="off"
                 maxLength={20}
               />
-              {contactFormValue.hoaContactExtension !== undefined && contactFormValue.hoaContactExtension?.length === 20 && (
-                <Text color="red" fontSize="xs" w="215px">
-                  Please use 20 characters only.
-                </Text>
-              )}
+              {contactFormValue.hoaContactExtension !== undefined &&
+                contactFormValue.hoaContactExtension?.length === 20 && (
+                  <Text color="red" fontSize="xs" w="215px">
+                    Please use 20 characters only.
+                  </Text>
+                )}
 
               <FormErrorMessage>{errors?.hoaContactExtension?.message}</FormErrorMessage>
             </FormControl>
