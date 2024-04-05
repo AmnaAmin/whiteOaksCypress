@@ -267,7 +267,7 @@ const RemainingListTable = (props: RemainingListType) => {
             setSelectedCell,
             rules: {
               maxLength: {
-                value: 256,
+                value: 2,
                 message: (
                   <div>
                     <span>Please use 255</span>
@@ -279,7 +279,7 @@ const RemainingListTable = (props: RemainingListType) => {
             },
             errorSetFunc: (e, setError, clearErrors) => {
               const inputValue = e.target.value
-              if (inputValue.length >= 255) {
+              if (inputValue.length >= 2) {
                 setError(`${'remainingItems'}.${row.index}.${'sku'}`, {
                   type: 'maxLength',
                   message: (
@@ -468,7 +468,7 @@ const RemainingListTable = (props: RemainingListType) => {
           handleOnDragStart={handleOnDragStart}
           isLoading={isLoading}
           isEmpty={!isLoading && !values.remainingItems?.length}
-          style={{ tbody: { height: 'calc(100vh - 500px)' } }}
+          style={{ tbody: { height: '450px' } }}
         />
       </TableContextProvider>
     </Box>
