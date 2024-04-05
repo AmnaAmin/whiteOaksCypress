@@ -732,7 +732,6 @@ const DragDropEnabledRows = ({
           <Tbody
             style={{
               height: style?.tbody?.height ?? '400px',
-              maxHeight: style?.tbody?.maxHeight ?? '400px',
               overflowY: 'auto',
               minHeight: '400px',
             }}
