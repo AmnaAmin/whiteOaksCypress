@@ -300,7 +300,6 @@ const RemainingListTable = (props: RemainingListType) => {
             rules: { maxLength: { value: 1025, message: 'Please use 1024 characters only.' }, required: '*Required' },
             errorSetFunc: (e, setError, clearErrors) => {
               const inputValue = e.target.value
-              console.log('inputValue', inputValue.length)
               if (inputValue.length > 1024) {
                 setError(`${'remainingItems'}.${row.index}.${'productName'}`, {
                   type: 'maxLength',
@@ -329,7 +328,6 @@ const RemainingListTable = (props: RemainingListType) => {
             rules: { maxLength: { value: 1025, message: 'Please use 1024 characters only.' }, required: '*Required' },
             errorSetFunc: (e, setError, clearErrors) => {
               const inputValue = e.target.value
-              console.log('inputValue', inputValue.length)
               if (inputValue.length > 1024) {
                 setError(`${'remainingItems'}.${row.index}.${'description'}`, {
                   type: 'maxLength',
