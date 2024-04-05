@@ -338,7 +338,7 @@ const AssignedItems = (props: AssignedItemType) => {
               isLoading={isLoadingLineItems}
               isEmpty={!isLoadingLineItems && !values.assignedItems?.length}
               isHideFilters={false}
-              style={{ tbody: { height: 'calc(100vh - 600px)' } }}
+              style={{ tbody: { height: '450px' } }}
             />
           </TableContextProvider>
         </Box>

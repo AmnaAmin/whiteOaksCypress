@@ -454,7 +454,7 @@ const RemainingListTable = (props: RemainingListType) => {
           handleOnDragStart={handleOnDragStart}
           isLoading={isLoading}
           isEmpty={!isLoading && !values.remainingItems?.length}
-          style={{ tbody: { height: 'calc(100vh - 500px)' } }}
+          style={{ tbody: { height: '450px' } }}
         />
       </TableContextProvider>
     </Box>
