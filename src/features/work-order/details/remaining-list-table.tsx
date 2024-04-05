@@ -267,28 +267,16 @@ const RemainingListTable = (props: RemainingListType) => {
             setSelectedCell,
             rules: {
               maxLength: {
-                value: 2,
-                message: (
-                  <div>
-                    <span>Please use 255</span>
-                    <br />
-                    <span>characters only.</span>
-                  </div>
-                ) as any,
+                value: 256,
+                message: 'Max char 255.',
               },
             },
             errorSetFunc: (e, setError, clearErrors) => {
               const inputValue = e.target.value
-              if (inputValue.length >= 2) {
+              if (inputValue.length > 255) {
                 setError(`${'remainingItems'}.${row.index}.${'sku'}`, {
                   type: 'maxLength',
-                  message: (
-                    <div>
-                      <span>Please use 255</span>
-                      <br />
-                      <span>characters only.</span>
-                    </div>
-                  ) as any,
+                  message: 'Max char 255.',
                 })
               } else {
                 clearErrors(`${'remainingItems'}.${row.index}.${'sku'}`)
@@ -312,8 +300,7 @@ const RemainingListTable = (props: RemainingListType) => {
             rules: { maxLength: { value: 1025, message: 'Please use 1024 characters only.' }, required: '*Required' },
             errorSetFunc: (e, setError, clearErrors) => {
               const inputValue = e.target.value
-              console.log('inputValue', inputValue.length)
-              if (inputValue.length >= 1025) {
+              if (inputValue.length > 1024) {
                 setError(`${'remainingItems'}.${row.index}.${'productName'}`, {
                   type: 'maxLength',
                   message: 'Please use 1024 characters only.',
@@ -341,8 +328,7 @@ const RemainingListTable = (props: RemainingListType) => {
             rules: { maxLength: { value: 1025, message: 'Please use 1024 characters only.' }, required: '*Required' },
             errorSetFunc: (e, setError, clearErrors) => {
               const inputValue = e.target.value
-              console.log('inputValue', inputValue.length)
-              if (inputValue.length >= 1025) {
+              if (inputValue.length > 1024) {
                 setError(`${'remainingItems'}.${row.index}.${'description'}`, {
                   type: 'maxLength',
                   message: 'Please use 1024 characters only.',
