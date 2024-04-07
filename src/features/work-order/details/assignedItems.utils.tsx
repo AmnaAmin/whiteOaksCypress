@@ -1137,23 +1137,16 @@ export const useGetLineItemsColumn = ({
                 setSelectedCell={setSelectedCell}
                 fieldName="sku"
                 fieldArray="assignedItems"
-                maxLength={256}
-                rules={{ maxLength: { value: 256, message: 'Please use 255 characters only.' } }}
+                maxLength={257}
+                rules={{ maxLength: { value: 257, message: 'Please use 255 characters only.' } }}
                 errorSetFunc={(e, setError, clearErrors) => {
                   const inputValue = e.target.value
-                  if (inputValue.length === 256) {
+                  if (inputValue.length >= 256) {
                     setError(
-                      `${'assignedItems'}.${index}.${'sku'}
-                    `,
+                      `${'assignedItems'}.${index}.${'sku'}`,
                       {
                         type: 'maxLength',
-                        message: (
-                          <div>
-                            <span>Please use 255</span>
-                            <br />
-                            <span>characters only.</span>
-                          </div>
-                        ) as any,
+                        message: 'Max char 255',
                       },
                     )
                   } else {
@@ -1191,16 +1184,10 @@ export const useGetLineItemsColumn = ({
                 rules={{ maxLength: { value: 1025, message: 'Please use 1024 characters only.' } }}
                 errorSetFunc={(e, setError, clearErrors) => {
                   const inputValue = e.target.value
-                  if (inputValue.length === 1025) {
+                  if (inputValue.length > 1024) {
                     setError(`${'assignedItems'}.${index}.${'productName'}`, {
                       type: 'maxLength',
-                      message: (
-                        <div>
-                          <span>Please use 1024</span>
-                          <br />
-                          <span>characters only.</span>
-                        </div>
-                      ) as any,
+                      message: 'Max char 1024',
                     })
                   } else {
                     clearErrors(`${'assignedItems'}.${index}.${'productName'}`)
@@ -1246,16 +1233,10 @@ export const useGetLineItemsColumn = ({
                 rules={{ maxLength: { value: 1025, message: 'Please use 1024 characters only.' } }}
                 errorSetFunc={(e, setError, clearErrors) => {
                   const inputValue = e.target.value
-                  if (inputValue.length === 1025) {
+                  if (inputValue.length > 1024) {
                     setError(`${'assignedItems'}.${index}.${'description'}`, {
                       type: 'maxLength',
-                      message: (
-                        <div>
-                          <span>Please use 1024</span>
-                          <br />
-                          <span>characters only.</span>
-                        </div>
-                      ) as any,
+                      message: 'Max char 1024',
                     })
                   } else {
                     clearErrors(`${'assignedItems'}.${index}.${'description'}`)
