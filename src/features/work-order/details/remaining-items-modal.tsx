@@ -66,7 +66,7 @@ const RemainingItemsModal: React.FC<{
   const formControl = useForm<{
     remainingItems: LineItems[]
   }>()
-  const { handleSubmit, control, reset, clearErrors, setValue } = formControl
+  const { handleSubmit, control, reset, clearErrors, setValue, formState: {errors} } = formControl
   const remainingFieldArray = useFieldArray({
     control,
     name: 'remainingItems',
@@ -270,6 +270,7 @@ const RemainingItemsModal: React.FC<{
                   loadingText="Processing..."
                   variant="solid"
                   colorScheme="brand"
+                  isDisabled={!!Object.keys(errors).length}
                   type="submit"
                   data-testid="saveListItems"
                 >
