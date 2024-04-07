@@ -96,16 +96,11 @@ const VendorCCUpdateModal: React.FC<{
                     <ModalFooter>
                         <Flex flexFlow="row-reverse" w="full">
                             <Button
-                                size="md"
                                 type="submit"
                                 isLoading={isUpdateCreditCardLoading}
                                 onClick={handleSubmit(onSubmit)}
                                 colorScheme="brand"
-                                rounded="6px"
-                                fontSize="14px"
                                 data-testid="update"
-                                fontWeight={500}
-                                w="6px"
                                 mr={3}>
                                 {t(`${PAYMENT_MANAGEMENT}.modal.update`)}
                             </Button>

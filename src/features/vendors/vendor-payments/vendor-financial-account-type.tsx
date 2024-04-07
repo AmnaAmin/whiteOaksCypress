@@ -139,15 +139,10 @@ export function VendorFinancialAccountType({
                             {t(`${PAYMENT_MANAGEMENT}.modal.cancel`)}
                         </Button>
                         <Button
-                            size="md"
                             onClick={onSaveClick}
                             isLoading={isLoading}
                             colorScheme="brand"
-                            rounded="6px"
-                            fontSize="14px"
                             data-testid="vendor-finance-account-save"
-                            fontWeight={500}
-                            w="6px"
                         >
                             {t(`${PAYMENT_MANAGEMENT}.modal.save`)}
                         </Button>

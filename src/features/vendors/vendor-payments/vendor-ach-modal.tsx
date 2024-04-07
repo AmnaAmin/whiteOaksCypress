@@ -101,7 +101,6 @@ const VendorACHModal: React.FC<{
                                         leftIcon={<BiDownload />}
                                         data-testid="downloadACHForm"
                                         variant="outline"
-                                        size="md"
                                         colorScheme="brand"
                                     >
                                         {t(`${VENDORPROFILE}.downloadACFForm`)}
@@ -109,15 +108,10 @@ const VendorACHModal: React.FC<{
                                 )}
                                 <Flex flexFlow="row-reverse">
                                     {!isReadOnly && <Button
-                                        size="md"
                                         type="submit"
                                         isLoading={Boolean(isSubmitting) || isVendorAccountSaveLoading}
                                         colorScheme="brand"
-                                        rounded="6px"
-                                        fontSize="14px"
                                         data-testid="save-ach-form"
-                                        fontWeight={500}
-                                        w="6px"
                                         mr={3}>
                                         {t(`${PAYMENT_MANAGEMENT}.modal.save`)}
                                     </Button>}
