@@ -367,6 +367,7 @@ i18n.use(initReactI18next).init({
         permitDate: 'Permit Date',
         paymentProcessed: 'Payment Processed',
         expectedPaymentProcessed: 'Expected Payment Processed',
+        paymentProcessdDate: 'Payment Processed',
         invoiceSubmitted: 'Invoice Submitted',
         expectedPay: 'Expected Pay Date',
         // Project - Notes
@@ -1021,6 +1022,7 @@ i18n.use(initReactI18next).init({
         permitDate: 'Fecha del permiso',
         paymentProcessed: 'Pago procesado',
         expectedPaymentProcessed: 'Pago esperado procesado',
+        paymentProcessdDate: 'Pago Procesado',
         invoiceSubmitted: 'Factura enviada',
         expectedPay: 'Fecha de pago esperada',
         // Project - Notes

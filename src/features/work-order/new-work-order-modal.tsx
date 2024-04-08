@@ -872,7 +872,7 @@ export const NewWorkOrderForm: React.FC<{
                 type="submit"
                 data-testid="saveWorkOrder"
                 colorScheme="brand"
-                disabled={!(getValues()?.assignedItems?.length > 0 || !!watchUploadWO) || isWorkOrderCreating}
+                disabled={!(getValues()?.assignedItems?.length > 0 || !!watchUploadWO) || isWorkOrderCreating || !!Object.keys(errors).length}
               >
                 {t(`${WORK_ORDER}.save`)}
               </Button>
