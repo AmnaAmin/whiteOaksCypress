@@ -516,27 +516,44 @@ const ProjectManagement: React.FC<ProjectManagerProps> = ({
             </FormControl>
           </GridItem>
           <GridItem>
-            <FormControl minW="215px" w="max-content" isInvalid={!!errors.paymentSource}>
+            <VStack alignItems="start" fontSize="12px" fontWeight={400}>
               <FormLabel variant="strong-label" size="md">
-                {t(`project.projectDetails.paymentSource`)}
+              {t(`project.projectDetails.paymentSource`)}
               </FormLabel>
-              <Controller
-                control={control}
-                name="paymentSource"
-                render={({ field, fieldState }) => (
-                  <>
-                    <ReactSelect
-                      classNamePrefix={'paymentSource'}
-                      {...field}
-                      options={paymentOptions || []}
-                      isDisabled={!isAdminOrAccount}
-                      isMulti={true}
-                    />
-                    <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                  </>
-                )}
-              />
-            </FormControl>
+              <FormControl >
+                <HStack spacing="16px">
+                  {paymentOptions?.map(payment => {
+                    return (
+                      <Controller
+                        control={control}
+                        name={`${payment.label}` as any}
+               
+                        render={({ field, fieldState }) => (
+                          <>
+                            <div data-testid={payment.label}>
+                              <Checkbox
+                              size='md'
+                                colorScheme="brand"
+                                isChecked={field.value as boolean}
+                                onChange={event => {
+                                  const isChecked = event.target.checked
+                                  field.onChange(isChecked)
+                                  
+                                }}
+                                isDisabled={!isAdminOrAccount}
+                                mr="2px"
+                              >
+                                {t(payment.label)}
+                              </Checkbox>
+                            </div>
+                          </>
+                        )}
+                      />
+                    )
+                  })}
+                </HStack>
+              </FormControl>
+            </VStack>
           </GridItem>
         </Grid>
         <Grid templateColumns="repeat(4,1fr)" rowGap="32px" columnGap="32px" w="908px">
