@@ -1,6 +1,6 @@
 import * as authApi from './auth-api'
 
-async function client(endpoint: string, httpConfig: any | undefined = {}, toast?) {
+async function client(endpoint: string, httpConfig: any | undefined = {}, customURL="") {
   const { data, token, headers: customHeaders, ...customConfig } = httpConfig
   const config = {
     method: data ? 'POST' : 'GET',
@@ -13,7 +13,7 @@ async function client(endpoint: string, httpConfig: any | undefined = {}, toast?
     ...customConfig,
   }
 
-  return window.fetch(endpoint, config).then(async response => {
+  return window.fetch(customURL+endpoint, config).then(async response => {
     const contentType = response.headers.get(`content-type`)
 
     if (response.status === 401) {
@@ -42,7 +42,7 @@ async function client(endpoint: string, httpConfig: any | undefined = {}, toast?
       } else {
         return Promise.reject(data)
       }
-    } else if (contentType && contentType.includes('text/xml')) {
+    } else if (contentType && (contentType.includes('text/xml') || contentType.includes('text'))) {
       const data = await response.text()
       if (response.ok) {
         return { data, headers: response.headers }

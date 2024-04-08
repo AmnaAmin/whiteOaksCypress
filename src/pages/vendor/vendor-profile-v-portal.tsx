@@ -77,7 +77,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveProfile } = useSaveVendorDetails('Profile')
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
-  const { mutate: saveAccounts } = useSaveVendorDetails('Accounts')
+  const { mutate: saveAccounts, isLoading: isSaveAccountLoading } = useSaveVendorDetails('Accounts')
   const { mutate: createVendor } = useCreateVendorMutation()
   const { data: paymentsMethods } = usePaymentMethods()
   const [tabIndex, setTabIndex] = useState<any>(0)
@@ -404,6 +404,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                           isActive={tabIndex === 6}
                           vendorProfileData={vendorProfileData as VendorProfile}
                           onClose={props.onClose}
+                          isUserVendorAdmin={true}
+                          isVendorAccountSaveLoading={isSaveAccountLoading}
                         />
                       </TabPanel>
                     )}

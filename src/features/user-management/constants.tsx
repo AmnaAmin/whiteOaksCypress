@@ -2,7 +2,10 @@ import { ColumnDef } from '@tanstack/react-table'
 import { dateFormat, datePickerFormat } from 'utils/date-time-utils'
 import { StatusUserMgt } from './status-user-mgt'
 import { USER_MANAGEMENT } from './user-management.i8n'
+import { PAYMENT_MANAGEMENT } from './payment-management.i8n'
 import { capitalize } from 'utils/string-formatters'
+import { convertDateTimeToServerISO } from 'components/table/util'
+
 
 //TODO - Move to constants file
 export const BONUS = [
@@ -159,5 +162,96 @@ export const USER_MGT_COLUMNS: ColumnDef<any>[] = [
       return dateFormat(value)
     },
     meta: { format: 'date' },
+  },
+]
+
+// 
+
+export const PAYMENT_COLUMNS: ColumnDef<any>[] = [
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.email`,
+    accessorKey: 'billing_details.email',
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.firstName`,
+    accessorKey: 'billing_details.name',
+    id: "firstName",
+    cell: (row: any) => {
+      const name = row?.row.original?.billing_details?.name;
+      let value = "_ _ _"
+      if (name.includes(",")) {
+        value = name?.split(",")[1];
+      } else {
+        value = name?.split(" ")[0];
+      }
+      return value ?? "_ _ _";
+    }
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.lastName`,
+    accessorKey: 'billing_details.name',
+    id: "lastName",
+    cell: (row: any) => {
+      const name = row?.row.original?.billing_details?.name;
+      let value = "_ _ _"
+      if (name.includes(",")) {
+        value = name?.split(",")[0];
+      } else {
+        value = name?.split(" ")[1];
+      }
+      return value ?? "_ _ _";
+    }
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.type`,
+    accessorKey: 'type',
+    accessorFn: (row) => row?.type?.toUpperCase()
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.bankNameOrCardBrand`,
+    id: 'bankNameOrCardBrand',
+    accessorFn: (row) => {
+      const card = row?.card;
+      const bank = row?.us_bank_account;
+      if (card) {
+        return card?.brand?.toUpperCase() ?? "_ _ _";
+      } else {
+        return bank?.bank_name?.toUpperCase() ?? "_ _ _";
+      }
+    },
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.last4Digits`,
+    id: 'last4Digits',
+    accessorFn: (row: any) => {
+      const card = row?.card;
+      const bank = row?.us_bank_account;
+      if (card) {
+        return card?.last4 ?? "_ _ _";
+      } else {
+        return bank?.last4 ?? "_ _ _";
+      }
+    }
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.expiration`,
+    id: 'expirationDate',
+    accessorFn: (row: any) => {
+      const card = row?.card;
+      if (card) {
+        const date = convertDateTimeToServerISO(new Date(card?.exp_year, card?.exp_month - 1))?.substring(0, 10);
+        return date ?? "_ _ _";
+      } else {
+        return "_ _ _";
+      }
+    }
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.contact`,
+    accessorKey: 'billing_details.phone',
+  },
+  {
+    header: `${PAYMENT_MANAGEMENT}.table.state`,
+    accessorKey: 'billing_details.address.state'
   },
 ]

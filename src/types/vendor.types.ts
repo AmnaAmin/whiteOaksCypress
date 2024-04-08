@@ -86,6 +86,9 @@ export type VendorProfile = Override<
     licenseDocuments: LicenseDocument[]
     markets: Market[]
     vendorSkills: Trade[]
+    bankName?: string
+    bankAccountingNo?: number | string | null
+    voidedDocumentLink?: string | null
   }
 >
 
@@ -166,6 +169,10 @@ export type VendorProfilePayload = {
   bankDateSignature?: string | null | Date
   bankRoutingNo?: number | string | null
   bankAccountingNo?: number | string | null
+  monthlySubscriptionFee?: number | null
+  oneTimeSetupFee?: number | null
+  billingDate?: string | null
+  isSubscriptionOn?: boolean
 }
 
 export type LicenseDocument = {
@@ -223,6 +230,11 @@ type Select = {
 }
 
 export type VendorProfileDetailsFormData = {
+  einNumber?: string
+  ssnNumber?: string
+  creditCard?: boolean
+  ach?: boolean
+  check?: boolean
   primaryContact: string
   secondaryContact: string
   businessPhoneNumber: string
@@ -283,11 +295,6 @@ export type Trade = {
   active: boolean
 }
 export type VendorAccountsFormValues = {
-  einNumber?: string
-  ssnNumber?: string
-  creditCard?: boolean
-  ach?: boolean
-  check?: boolean
   businessPhoneNumber: string
   businessNumberExtention: string
   businessPhoneNumberExtension?: string
@@ -315,6 +322,10 @@ export type VendorAccountsFormValues = {
   bankVoidedCheckStatus?: boolean | string | null
   ownersSignature: any
   bankDateSignature: string | Date | null
+  monthlySubscriptionFee?: number | null
+  oneTimeSetupFee?: number | null
+  billingDate?: string | null
+  isSubscriptionOn?: boolean
 }
 type TradeFormValues = {
   trade: Trade
@@ -413,6 +424,98 @@ export type Vendors = {
   market: string
   businessEmailAddress: string
   businessPhoneNumber: string
+}
+
+export type StripeBillingDetails = {
+  address?: {
+    city: string
+    country: string
+    line1: string
+    line2?: string
+    postal_code: string
+    state: string
+  }
+  email?: string
+  name: string
+  phone?: string
+}
+
+export type StripeCreditCard = {
+  brand: string
+  checks: {
+    cvc_check: string
+  }
+  country: string
+  exp_month: number
+  exp_year: number
+  fingerprint: string
+  funding: string
+  last4: string
+  networks: {
+    available: string[]
+  }
+  three_d_secure_usage: {
+    supported: boolean
+  }
+}
+
+export type StripeUSBankAccount = {
+  account_holder_type: string
+  account_type: string
+  bank_name: string
+  fingerprint: string
+  last4: string
+  networks: {
+    preferred: string
+    supported: string[]
+  }
+  routing_number: string
+  status_details: any
+}
+
+export type StripePayment = {
+  billing_details: StripeBillingDetails
+  card?: StripeCreditCard
+  us_bank_account?: StripeUSBankAccount
+  created: number
+  customer: {
+    id: string
+  }
+  id: string
+  livemode: boolean
+  metadata: any
+  object: string
+  type: string
+  isPaymentMethodDefault?: boolean
+}
+
+export type StripeCustomer = {
+  balance: number,
+  created: number,
+  delinquent: boolean,
+  email: string,
+  id: string,
+  invoice_prefix: string,
+  invoice_settings: {
+    default_payment_method: {
+      id: string
+    }
+  },
+  livemode: boolean,
+  metadata: any,
+  name: string,
+  next_invoice_sequence: number,
+  object: string,
+  preferred_locales: any[],
+  tax_exempt: string
+}
+
+export type StripePaymentMethodResponse = {
+  stripeResponse: {
+    object: string
+    data: StripePayment[]
+  }
+  customer: StripeCustomer
 }
 
 export const preventNumber = e => {

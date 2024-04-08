@@ -10,7 +10,7 @@ export const useVendorSubFormErrors = (errors: FieldErrors<VendorAccountsFormVal
     const validations = {
         isAccountFormErrors: false
     }
-    if (errors?.einNumber || errors?.ssnNumber || errors?.businessEmailAddress || errors?.companyName || errors?.ownerName || errors?.businessPhoneNumber || errors?.streetAddress || errors?.city || errors?.state || errors?.zipCode) validations.isAccountFormErrors = true;
+    if (errors?.businessEmailAddress || errors?.companyName || errors?.ownerName || errors?.businessPhoneNumber || errors?.streetAddress || errors?.city || errors?.state || errors?.zipCode) validations.isAccountFormErrors = true;
     
     return validations;
   }

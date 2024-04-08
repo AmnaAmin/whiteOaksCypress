@@ -24,6 +24,7 @@ import { globalErrors } from './errors.i18n'
 import { performance } from 'features/performance/performance.i18n'
 import { accessControl } from 'features/access-control/access-control.i18n'
 import { location } from 'features/location/location.i18n'
+import { paymentManagementTranslation } from 'features/user-management/payment-management.i8n'
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -39,6 +40,7 @@ i18n.use(initReactI18next).init({
         ...transaction.en.translation,
         ...projects.en.translation,
         ...userManagementTranslation.en.translation,
+        ...paymentManagementTranslation.en.translation,
         ...project.en.translation,
         ...fpmCards.en.translation,
         ...clients.en.translation,
@@ -406,6 +408,10 @@ i18n.use(initReactI18next).init({
         city: 'City',
         sin: 'SSN',
         ein: 'EIN',
+        monthlySubscriptionFee: 'Monthly Fee',
+        setupFee: 'Setup Fee',
+        billingDate: 'Billing Date',
+        subscription: 'Subscription',
         zip: 'Zip Code',
         primaryContact: 'Primary Contact',
         secondaryContact: 'Secondary Contact',
@@ -631,6 +637,7 @@ i18n.use(initReactI18next).init({
         ...transaction.es.translation,
         ...projects.es.translation,
         ...userManagementTranslation.es.translation,
+        ...paymentManagementTranslation.es.translation,
         ...project.es.translation,
         ...fpmCards.es.translation,
         ...clients.es.translation,
@@ -1058,6 +1065,10 @@ i18n.use(initReactI18next).init({
         streetAddress: 'Dirección',
         state: 'Expresar',
         secondaryPhoneNo: 'Número de teléfono secundario',
+        monthlySubscriptionFee: 'Cuota mensual',
+        setupFee: 'Tarifa de instalación',
+        billingDate: 'Fecha de facturación',
+        subscription: 'Suscripción',
         city: 'Ciudad',
         sin: 'PECADO',
         ein: 'EIN',

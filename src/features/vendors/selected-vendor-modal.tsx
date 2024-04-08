@@ -43,7 +43,7 @@ const Vendor = ({ vendorId, onClose: close }: { vendorId: number; onClose: () =>
     <div>
       <Modal size="none" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent w="1137px" rounded="6px" borderTop="2px solid #4E87F8" bg="#F2F3F4">
+        <ModalContent w="1237px" rounded="6px" borderTop="2px solid #4E87F8" bg="#F2F3F4">
           <ModalHeader
             h="63px"
             borderBottom="1px solid #E2E8F0"

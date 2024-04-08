@@ -131,3 +131,16 @@ export const convertImageUrltoDataURL = url =>
           reader.readAsDataURL(blob)
         }),
     )
+
+export function getNextMonthFirstDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+
+  const nextMonthYear = month === 11 ? year + 1 : year;
+  const nextMonth = (month + 1) % 12;
+
+  const nextMonthFirstDate = new Date(nextMonthYear, nextMonth, 2);
+
+  return nextMonthFirstDate.toISOString().substring(0, 10);
+}

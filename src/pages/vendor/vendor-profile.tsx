@@ -80,7 +80,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const { mutate: saveProfile } = useSaveVendorDetails('Profile')
   const { mutate: saveTrades } = useSaveVendorDetails('Trades')
   const { mutate: saveMarkets } = useSaveVendorDetails('Markets')
-  const { mutate: saveAccounts } = useSaveVendorDetails('Accounts')
+  const { mutate: saveAccounts, isLoading: isSaveAccountLoading } = useSaveVendorDetails('Accounts')
   const { mutate: createVendor } = useCreateVendorMutation()
 
   const { data: paymentsMethods } = usePaymentMethods()
@@ -172,16 +172,12 @@ export const VendorProfileTabs: React.FC<Props> = props => {
           case 4:
             //create vendor: market tab
             if (validateMarket(formData?.markets)) {
-              if (enableVendorAccounts) {
-                setTabIndex(i => i + 1)
-              } else {
-                const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
+              const createPayload = await parseCreateVendorFormToAPIData(formData, paymentsMethods, vendorProfileData)
                 createVendor(createPayload, {
                   onSuccess() {
                     props.onClose?.()
                   },
                 })
-              }
             } else {
               showError('Market')
             }
@@ -372,6 +368,8 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                         isActive={vendorProfileData?.id ? tabIndex === 7 : tabIndex === 5}
                         vendorProfileData={vendorProfileData as VendorProfile}
                         onClose={props.onClose}
+                        isUserVendorAdmin={false}
+                        isVendorAccountSaveLoading={isSaveAccountLoading}
                       />
                     </Box>
                   </TabPanel>
