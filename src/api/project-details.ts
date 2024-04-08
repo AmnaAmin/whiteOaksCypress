@@ -593,7 +593,19 @@ export const parseFormValuesFromAPIData = ({
   ) {
     return {}
   }
-
+  let clientCheckBox=false
+  let InsuredCheckBox=false
+  let carrierCheckBox=false
+ 
+  if(paymentSourceOptions?.find(option => option.value === 1043)){
+    clientCheckBox=true
+  }
+  if(paymentSourceOptions?.find(option => option.value === 1045)){
+    carrierCheckBox=true
+  }
+  if(paymentSourceOptions?.find(option => option.value === 1044)){
+    InsuredCheckBox=true
+  }
   const findOptionByValue = (options: SelectOption[], value: string | number | null): SelectOption | null =>
     options.find(option => option.value === value) || null
 
@@ -637,7 +649,10 @@ export const parseFormValuesFromAPIData = ({
     projectClosedDueDate: datePickerFormat(project.projectClosedDueDate),
     lienFiled: datePickerFormat(project.lienRightFileDate),
     lienExpiryDate: datePickerFormat(project?.lienRightExpireDate),
-    paymentSource: paymentSourceOptions,
+    Client:clientCheckBox,
+    Carrier: carrierCheckBox,
+    Insured: InsuredCheckBox,
+
 
     // Project Invoice and Payment form values
     originalSOWAmount: project.sowOriginalContractAmount,
@@ -770,6 +785,26 @@ export const parseProjectDetailsPayloadFromFormData = async (
     zipCode: formValues?.zip,
   }
 
+const paymentSource=[] as any
+if(formValues?.Client){
+  paymentSource.push({
+    lookupValueId: 1043,
+    lookupValueValue: 'Client',
+  })
+  
+}
+if(formValues?.Carrier){
+  paymentSource.push({
+    lookupValueId: 1045,
+    lookupValueValue: 'Carrier',
+  })
+}
+if(formValues?.Insured){
+  paymentSource.push({
+    lookupValueId: 1044,
+    lookupValueValue: 'Insured',
+  })
+}
   const resubmissionList = await Promise.all(
     formValues?.resubmittedInvoice?.map(async r => {
       let documentDTO
@@ -820,9 +855,7 @@ export const parseProjectDetailsPayloadFromFormData = async (
     projectClosedDueDate: dateISOFormat(formValues.projectClosedDueDate),
     lienRightExpireDate: dateISOFormat(formValues.lienExpiryDate),
     preInvoiced:formValues.preInvoiced ?? false,
-    paymentSource:formValues?.paymentSource?.map(e => {
-      return {lookupValueId:e.value,lookupValueValue:e.title}
-    }) ,
+    paymentSource:paymentSource,
 
     // Invoicing and payment payload
     sowOriginalContractAmount: formValues?.originalSOWAmount,
