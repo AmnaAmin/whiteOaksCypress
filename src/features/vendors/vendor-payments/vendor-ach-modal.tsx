@@ -94,18 +94,18 @@ const VendorACHModal: React.FC<{
                     </ModalBody>
                     <ModalFooter>
                         <Box w="full">
-                            <Flex w="full" justifyContent="space-between">
-                                {hasOwnerSignature && (
-                                    <Button
-                                        onClick={downloadACFForm}
-                                        leftIcon={<BiDownload />}
-                                        data-testid="downloadACHForm"
-                                        variant="outline"
-                                        colorScheme="brand"
-                                    >
-                                        {t(`${VENDORPROFILE}.downloadACFForm`)}
-                                    </Button>
-                                )}
+                            {hasOwnerSignature && (
+                                <Button
+                                    onClick={downloadACFForm}
+                                    leftIcon={<BiDownload />}
+                                    data-testid="downloadACHForm"
+                                    variant="outline"
+                                    colorScheme="brand"
+                                >
+                                    {t(`${VENDORPROFILE}.downloadACFForm`)}
+                                </Button>
+                            )}
+                            <Flex w="full" justifyContent="flex-end">
                                 <Flex flexFlow="row-reverse">
                                     {!isReadOnly && <Button
                                         type="submit"

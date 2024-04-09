@@ -406,6 +406,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
                           onClose={props.onClose}
                           isUserVendorAdmin={true}
                           isVendorAccountSaveLoading={isSaveAccountLoading}
+                          isModal={false}
                         />
                       </TabPanel>
                     )}
