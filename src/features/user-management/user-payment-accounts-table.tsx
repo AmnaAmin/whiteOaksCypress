@@ -49,7 +49,7 @@ const UserPaymentAccountsTable = (props: UserPaymnetAccountsTableProps) => {
           New
         </Button>
       </Flex>
-      <Box h="350px" overflowX={"auto"}>
+      <Box h="570px" overflowX={"auto"}>
         {renderCCEditModal && <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onModalClose} vendorProfileData={vendorProfile} creditCardData={selectedRow} />}
         {renderACHModal && <VendorACHUpdateModal isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfile} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} />}
         <TableContextProvider

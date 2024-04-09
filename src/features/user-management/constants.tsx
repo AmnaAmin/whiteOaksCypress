@@ -245,13 +245,5 @@ export const PAYMENT_COLUMNS: ColumnDef<any>[] = [
         return "_ _ _";
       }
     }
-  },
-  {
-    header: `${PAYMENT_MANAGEMENT}.table.contact`,
-    accessorKey: 'billing_details.phone',
-  },
-  {
-    header: `${PAYMENT_MANAGEMENT}.table.state`,
-    accessorKey: 'billing_details.address.state'
-  },
+  }
 ]

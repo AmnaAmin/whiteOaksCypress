@@ -88,117 +88,119 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
       {isPaymentServiceEnabled && <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onCCModalClose} vendorProfileData={vendorProfileData} />}
       <VendorACHModal isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfileData} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} />
       <VendorFinancialAccountType isOpen={isAccountTypeOpen} onClose={onAccountTypeClose} onConfirm={onAccountTypeConfirm} achPaymentMethod={achPaymentMethod} />
-      <Box maxH={'632px'} overflowY={'scroll'}>
+      <Box maxH={'632px'} overflowY={'auto'}>
         <Grid templateColumns="repeat(4,265px)" rowGap="30px" columnGap="16px">
-          <GridItem colSpan={4}>
-            <FormLabel variant="strong-label" color={'gray.500'}>
-              Subscription Details
-            </FormLabel>
-          </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                {t('monthlySubscriptionFee')}
+          {isPaymentServiceEnabled && <>
+            <GridItem colSpan={4}>
+              <FormLabel variant="strong-label" color={'gray.500'}>
+                Subscription Details
               </FormLabel>
-              <Controller
-                control={control}
-                name="monthlySubscriptionFee"
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberInput
-                        datatest-id="monthlySubscriptionFee"
-                        value={field.value}
-                        disabled={isUserVendorAdmin}
-                        onValueChange={values => {
-                          const { floatValue } = values
-                          field.onChange(floatValue)
-                        }}
-                        customInput={Input}
-                        thousandSeparator={true}
-                        prefix={'$'}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }} />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                {t('setupFee')}
-              </FormLabel>
-              <Controller
-                control={control}
-                name="oneTimeSetupFee"
-                render={({ field, fieldState }) => {
-                  return (
-                    <>
-                      <NumberInput
-                        datatest-id="setupFee"
-                        value={field.value}
-                        disabled={isUserVendorAdmin}
-                        onValueChange={values => {
-                          const { floatValue } = values
-                          field.onChange(floatValue)
-                        }}
-                        customInput={Input}
-                        thousandSeparator={true}
-                        prefix={'$'}
-                      />
-                      <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
-                    </>
-                  )
-                }}
-              ></Controller>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl>
-              <FormLabel variant="strong-label" size="md">
-                {t('billingDate')}
-              </FormLabel>
-              <Input
-                type="date"
-                {...register('billingDate')}
-                data-testid="billingDate"
-                value={getNextMonthFirstDate()}
-                disabled={true}
-              />
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600" w="full">
-              <FormLabel variant="strong-label" size="md">
-                <Flex w='full' alignItems={"start"} justifyContent={"center"} direction="column">
-                  <Box>
-                    {t('subscription')}
-                  </Box>
-                  {!enableSubscriptionField && <Box>
-                    <Text fontSize={"12px"}>
-                      (Add a Credit Card first to enable subscription)
-                    </Text>
-                  </Box>}
-                </Flex>
-              </FormLabel>
+            </GridItem>
+            <GridItem>
               <FormControl>
-                <HStack spacing="16px">
-                  <RadioGroup w="100%" justifyContent={'flex-start'} value={!!getValues("isSubscriptionOn") ? "true" : "false"} isDisabled={!enableSubscriptionField} onChange={() => {
-                    const isSubscription = Boolean(getValues("isSubscriptionOn"));
-                    setValue("isSubscriptionOn", !isSubscription);
-                  }}
-                  >
-                    <Stack direction="row">
-                      <Radio value={"true"} pr={4}>ON</Radio>
-                      <Radio value={"false"}>OFF</Radio>
-                    </Stack>
-                  </RadioGroup>
-                </HStack>
-                <FormErrorMessage pos="absolute">{errors.isSubscriptionOn?.message}</FormErrorMessage>
+                <FormLabel variant="strong-label" size="md">
+                  {t('monthlySubscriptionFee')}
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="monthlySubscriptionFee"
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <NumberInput
+                          datatest-id="monthlySubscriptionFee"
+                          value={field.value}
+                          disabled={isUserVendorAdmin}
+                          onValueChange={values => {
+                            const { floatValue } = values
+                            field.onChange(floatValue)
+                          }}
+                          customInput={Input}
+                          thousandSeparator={true}
+                          prefix={'$'}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </>
+                    )
+                  }} />
               </FormControl>
-            </VStack>
-          </GridItem>
+            </GridItem>
+            <GridItem>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  {t('setupFee')}
+                </FormLabel>
+                <Controller
+                  control={control}
+                  name="oneTimeSetupFee"
+                  render={({ field, fieldState }) => {
+                    return (
+                      <>
+                        <NumberInput
+                          datatest-id="setupFee"
+                          value={field.value}
+                          disabled={isUserVendorAdmin}
+                          onValueChange={values => {
+                            const { floatValue } = values
+                            field.onChange(floatValue)
+                          }}
+                          customInput={Input}
+                          thousandSeparator={true}
+                          prefix={'$'}
+                        />
+                        <FormErrorMessage>{fieldState.error?.message}</FormErrorMessage>
+                      </>
+                    )
+                  }}
+                ></Controller>
+              </FormControl>
+            </GridItem>
+            <GridItem>
+              <FormControl>
+                <FormLabel variant="strong-label" size="md">
+                  {t('billingDate')}
+                </FormLabel>
+                <Input
+                  type="date"
+                  {...register('billingDate')}
+                  data-testid="billingDate"
+                  value={getNextMonthFirstDate()}
+                  disabled={true}
+                />
+              </FormControl>
+            </GridItem>
+            <GridItem>
+              <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600" w="full">
+                <FormLabel variant="strong-label" size="md">
+                  <Flex w='full' alignItems={"start"} justifyContent={"center"} direction="column">
+                    <Box>
+                      {t('subscription')}
+                    </Box>
+                    {!enableSubscriptionField && <Box>
+                      <Text fontSize={"12px"}>
+                        (Add a Credit Card first to enable subscription)
+                      </Text>
+                    </Box>}
+                  </Flex>
+                </FormLabel>
+                <FormControl>
+                  <HStack spacing="16px">
+                    <RadioGroup w="100%" justifyContent={'flex-start'} value={!!getValues("isSubscriptionOn") ? "true" : "false"} isDisabled={!enableSubscriptionField} onChange={() => {
+                      const isSubscription = Boolean(getValues("isSubscriptionOn"));
+                      setValue("isSubscriptionOn", !isSubscription);
+                    }}
+                    >
+                      <Stack direction="row">
+                        <Radio value={"true"} pr={4}>ON</Radio>
+                        <Radio value={"false"}>OFF</Radio>
+                      </Stack>
+                    </RadioGroup>
+                  </HStack>
+                  <FormErrorMessage pos="absolute">{errors.isSubscriptionOn?.message}</FormErrorMessage>
+                </FormControl>
+              </VStack>
+            </GridItem>
+          </>}
           <GridItem colSpan={4}>
             <UserPaymentAccountsTable vendorProfile={vendorProfileData} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} achPaymentMethod={achPaymentMethod} onNewBtnClick={onNewBtnClick} />
           </GridItem>
