@@ -14,7 +14,7 @@ import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
 import VendorCCForm from './vendor-cc-form'
 import { useStripe, useElements, CardNumberElement } from '@stripe/react-stripe-js';
-import { mapCCFormValuesToPayload, mapCCToFormValues, useUpdateCredtCard } from 'api/payment';
+import { mapCCFormValuesToPayload, mapCCToFormValues, useUpdateCredtCard, isPaymentServiceEnabled } from 'api/payment';
 import { StripePayment, VendorProfile } from 'types/vendor.types'
 import { PAYMENT_MANAGEMENT } from 'features/user-management/payment-management.i8n';
 import { useStates } from 'api/pc-projects';
@@ -55,7 +55,7 @@ const VendorCCUpdateModal: React.FC<{
             return;
         }
         const payload = mapCCFormValuesToPayload(values, stripeTokenData, vendorProfileData, true);
-        updateCreditCard(payload, {
+        if (isPaymentServiceEnabled) updateCreditCard(payload, {
             onSuccess: () => {
                 onClose();
             }

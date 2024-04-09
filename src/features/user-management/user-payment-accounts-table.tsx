@@ -4,7 +4,7 @@ import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import { Box, useDisclosure, Flex, Button, Icon } from '@chakra-ui/react'
 import { PAYMENT_COLUMNS } from './constants'
-import { useFetchPaymentMethods } from 'api/payment'
+import { isPaymentServiceEnabled, useFetchPaymentMethods } from 'api/payment'
 import { StripeCreditCardModalForm } from 'features/vendors/vendor-accounts'
 import { VendorProfile, StripePayment } from 'types/vendor.types'
 import { useState } from 'react'
@@ -42,14 +42,16 @@ const UserPaymentAccountsTable = (props: UserPaymnetAccountsTableProps) => {
   const renderCCEditModal = !isLoading && paymentMethods?.stripeResponse?.data?.length && selectedRow?.card;
   const renderACHModal = !isLoading && Boolean(achPaymentMethod);
 
+  const hideNewBtn = achPaymentMethod?.type || isPaymentServiceEnabled;
+
   return (
     <>
-      <Flex w='full' alignItems={"end"} justifyContent={"end"} pb={4}>
+      {!hideNewBtn && <Flex w='full' alignItems={"end"} justifyContent={"end"} pb={4}>
         <Button disabled={isLoading} data-testid="add-new-payment-method" colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onNewBtnClick}>
           New
         </Button>
-      </Flex>
-      <Box h="350px" overflowX={"auto"}>
+      </Flex>}
+      <Box h={hideNewBtn ? "625px" : "570px"} overflowX={"auto"}>
         {renderCCEditModal && <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onModalClose} vendorProfileData={vendorProfile} creditCardData={selectedRow} />}
         {renderACHModal && <VendorACHUpdateModal isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfile} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} />}
         <TableContextProvider

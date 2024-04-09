@@ -56,6 +56,10 @@ steps:
       REACT_APP_SUPERSET_URL: 'https://bi-preprod.woaharvest.com'
       REACT_APP_ESTIMATES_URL: 'https://estimates-dev.woaharvest.com'
       REACT_APP_CRM_URL: 'https://crm-dev.woaharvest.com'
+      REACT_APP_STRIPE_PUBLIC_KEY: 'pk_test_51Oog5xDu4VLkOX9Cm12JMF6RMXctqUyM2w8D8csa8C73JSN3amfJlW2x5RmU04Ej25aStOvJBfpbSCE9h7zKVzXc00vuZtdw6u'
+      REACT_APP_PAYMENT_SERVICE_URL: 'https://d25uptamkxpsjp.cloudfront.net'
+      REACT_APP_PAYMENT_SERVICE_WOA_PLATFORM_ID: 'WHITEOAKS'
+      REACT_APP_ENABLE_PAYMENT: 'false'
 
   # - command:
   #     - chmod 755 auto/build.sh
@@ -126,6 +130,10 @@ steps:
       REACT_APP_ESTIMATES_URL: 'https://estimates-preprod.woaharvest.com'
       REACT_APP_MAINTENANCE_URL: 'https://maintenance-preprod.woaharvest.com'
       REACT_APP_CRM_URL: 'https://preprod-crm.woaharvest.com'
+      REACT_APP_STRIPE_PUBLIC_KEY: 'pk_test_51Oog5xDu4VLkOX9Cm12JMF6RMXctqUyM2w8D8csa8C73JSN3amfJlW2x5RmU04Ej25aStOvJBfpbSCE9h7zKVzXc00vuZtdw6u'
+      REACT_APP_PAYMENT_SERVICE_URL: 'https://d25uptamkxpsjp.cloudfront.net'
+      REACT_APP_PAYMENT_SERVICE_WOA_PLATFORM_ID: 'WHITEOAKS'
+      REACT_APP_ENABLE_PAYMENT: 'false'
 
   - wait
 
@@ -157,6 +165,7 @@ steps:
       REACT_APP_STRIPE_PUBLIC_KEY: 'pk_test_51Oog5xDu4VLkOX9Cm12JMF6RMXctqUyM2w8D8csa8C73JSN3amfJlW2x5RmU04Ej25aStOvJBfpbSCE9h7zKVzXc00vuZtdw6u'
       REACT_APP_PAYMENT_SERVICE_URL: 'https://d25uptamkxpsjp.cloudfront.net'
       REACT_APP_PAYMENT_SERVICE_WOA_PLATFORM_ID: 'WHITEOAKS'
+      REACT_APP_ENABLE_PAYMENT: 'false'
 
   - wait
 
@@ -185,3 +194,7 @@ steps:
       REACT_APP_ESTIMATES_URL: 'https://estimates.woaharvest.com'
       REACT_APP_MAINTENANCE_URL: 'https://mm.woaharvest.com'
       REACT_APP_CRM_URL: 'https://crm.woaharvest.com'
+      REACT_APP_STRIPE_PUBLIC_KEY: 'pk_test_51Oog5xDu4VLkOX9Cm12JMF6RMXctqUyM2w8D8csa8C73JSN3amfJlW2x5RmU04Ej25aStOvJBfpbSCE9h7zKVzXc00vuZtdw6u'
+      REACT_APP_PAYMENT_SERVICE_URL: 'https://d25uptamkxpsjp.cloudfront.net'
+      REACT_APP_PAYMENT_SERVICE_WOA_PLATFORM_ID: 'WHITEOAKS'
+      REACT_APP_ENABLE_PAYMENT: 'false'
