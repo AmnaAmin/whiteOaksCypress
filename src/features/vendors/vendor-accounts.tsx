@@ -31,7 +31,7 @@ import VendorCCAddModal from './vendor-payments/vendor-cc-add-modal'
 import { Elements } from '@stripe/react-stripe-js'
 import getStripe from 'utils/stripe'
 import VendorCCUpdateModal from './vendor-payments/vendor-cc-update-modal'
-import { createTableDataForAch, useFetchPaymentMethods } from 'api/payment'
+import { createTableDataForAch, useFetchPaymentMethods, isPaymentServiceEnabled } from 'api/payment'
 import VendorACHModal from './vendor-payments/vendor-ach-modal'
 
 type UserProps = {
@@ -85,7 +85,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
 
   return (
     <>
-      <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onCCModalClose} vendorProfileData={vendorProfileData} />
+      {isPaymentServiceEnabled && <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onCCModalClose} vendorProfileData={vendorProfileData} />}
       <VendorACHModal isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfileData} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} />
       <VendorFinancialAccountType isOpen={isAccountTypeOpen} onClose={onAccountTypeClose} onConfirm={onAccountTypeConfirm} achPaymentMethod={achPaymentMethod} />
       <Box maxH={'632px'} overflowY={'scroll'}>
