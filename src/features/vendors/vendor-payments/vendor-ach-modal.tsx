@@ -101,6 +101,7 @@ const VendorACHModal: React.FC<{
                                     data-testid="downloadACHForm"
                                     variant="outline"
                                     colorScheme="brand"
+                                    position={"absolute"}
                                 >
                                     {t(`${VENDORPROFILE}.downloadACFForm`)}
                                 </Button>
