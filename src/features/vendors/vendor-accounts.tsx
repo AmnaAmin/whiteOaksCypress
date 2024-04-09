@@ -40,8 +40,9 @@ type UserProps = {
   isActive
   isUserVendorAdmin?: boolean
   isVendorAccountSaveLoading?: boolean
+  isModal?: boolean
 }
-export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive, isUserVendorAdmin = false, isVendorAccountSaveLoading }) => {
+export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive, isUserVendorAdmin = false, isVendorAccountSaveLoading, isModal=true }) => {
   const formReturn = useFormContext<VendorAccountsFormValues>()
   const { data: stripePaymentMethods } = useFetchPaymentMethods(vendorProfileData?.id);
   const { isOpen: isAccountTypeOpen, onOpen: onAccountTypeOpen, onClose: onAccountTypeClose } = useDisclosure();
@@ -89,7 +90,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
       <VendorACHModal isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfileData} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} />
       <VendorFinancialAccountType isOpen={isAccountTypeOpen} onClose={onAccountTypeClose} onConfirm={onAccountTypeConfirm} achPaymentMethod={achPaymentMethod} />
       <Box maxH={'632px'} overflowY={'auto'}>
-        <Grid templateColumns="repeat(4,265px)" rowGap="30px" columnGap="16px">
+        <Grid templateColumns={isModal ? "repeat(4,265px)" : "repeat(4, 1fr)"} rowGap="30px" columnGap="16px">
           {isPaymentServiceEnabled && <>
             <GridItem colSpan={4}>
               <FormLabel variant="strong-label" color={'gray.500'}>
