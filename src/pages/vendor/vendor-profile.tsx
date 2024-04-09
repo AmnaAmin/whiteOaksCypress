@@ -72,7 +72,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const VendorType = props.vendorModalType
   const { isVendor } = useUserRolesSelector()
   const { permissions } = useRoleBasedPermissions()
-  const enableVendorAccounts = permissions.some(p => ['VENDOR.ACCOUNTS.EDIT','ALL'].includes(p))
+  const enableVendorAccounts = (permissions.some(p => ['VENDOR.ACCOUNTS.EDIT','ALL'].includes(p)) && vendorProfileData?.id)
   const { t } = useTranslation()
   const toast = useToast()
   const { mutate: saveLicenses } = useSaveVendorDetails('LicenseDetails')
