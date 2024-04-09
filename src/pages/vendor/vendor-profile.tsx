@@ -109,7 +109,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
         switch (tabIndex) {
           case 0:
             //detail
-            const profilePayload = parseVendorFormDataToAPIData(formData, vendorProfileData)
+            const profilePayload = parseVendorFormDataToAPIData(formData, vendorProfileData, paymentsMethods)
             saveProfile(profilePayload)
             break
 

@@ -154,6 +154,7 @@ export const AccountingType = [
 export const parseVendorFormDataToAPIData = (
   formValues: VendorProfileDetailsFormData,
   vendorProfileData?: VendorProfile,
+  paymentMethods?: any
 ): VendorProfilePayload => {
   let selectedPaymentMethods = [] as any
   PaymentMethods?.forEach(pm => {
@@ -174,6 +175,7 @@ export const parseVendorFormDataToAPIData = (
     companyName: formValues.companyName!,
     streetAddress: formValues.streetAddress!,
     city: formValues.city!,
+    paymentOptions: paymentMethods.filter(payment => selectedPaymentMethods.includes(payment?.lookupValueId)),
     zipCode: formValues.zipCode!,
     capacity: formValues.capacity!,
     //secondEmailAddress: formValues.secondEmailAddress!,
@@ -257,7 +259,7 @@ export const parseCreateVendorFormToAPIData = async (
   paymentsMethods,
   vendorProfileData?: VendorProfile,
 ) => {
-  const profilePayload = parseVendorFormDataToAPIData(formValues, vendorProfileData)
+  const profilePayload = parseVendorFormDataToAPIData(formValues, vendorProfileData, paymentsMethods)
   const documentsPayload = await parseDocumentCardsValues(formValues)
   const updatedObject = await prepareVendorDocumentObject(documentsPayload, formValues)
   const licensePayload = await parseLicenseValues(formValues, vendorProfileData?.licenseDocuments)
