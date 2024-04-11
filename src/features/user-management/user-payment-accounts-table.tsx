@@ -42,7 +42,7 @@ const UserPaymentAccountsTable = (props: UserPaymnetAccountsTableProps) => {
   const renderCCEditModal = !isLoading && paymentMethods?.stripeResponse?.data?.length && selectedRow?.card;
   const renderACHModal = !isLoading && Boolean(achPaymentMethod);
 
-  const hideNewBtn = achPaymentMethod?.type || isPaymentServiceEnabled;
+  const hideNewBtn = Boolean(achPaymentMethod?.type) && !isPaymentServiceEnabled;
 
   return (
     <>
