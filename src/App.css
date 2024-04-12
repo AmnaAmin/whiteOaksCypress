@@ -48,3 +48,13 @@
 ::-webkit-datetime-edit {
   text-align: left;
 }
+
+#assignedItemsTable table tbody {
+  
+  min-height: 400px !important;
+}
+
+#assignedItemsTable table  {
+  
+  min-height: 400px !important;
+}
