@@ -62,8 +62,7 @@ export const useVendorProfile = (vendorId: number) => {
       const response = await client(`vendors/${vendorId}`, {})
       // The below piece of code work is to convert boolean to string "on" and "off" to accomodate the radio buttons on vendor modal
       const data = response?.data;
-      const convertSubscriptionToString = data?.isSubscriptionOn ? "on" : "off";
-      data.isSubscriptionOn = convertSubscriptionToString;
+      data.isSubscriptionOn = data?.isSubscriptionOn ? "on" : "off";
       return data;
     },
     { enabled: !!vendorId },
