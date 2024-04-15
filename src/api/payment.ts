@@ -31,7 +31,6 @@ const paymentServiceUrl = process.env.REACT_APP_PAYMENT_SERVICE_URL ?? null;
 const woaPlatformId = process.env.REACT_APP_PAYMENT_SERVICE_WOA_PLATFORM_ID ?? null;
 export const isPaymentServiceEnabled = process.env.REACT_APP_ENABLE_PAYMENT === "false" ? false : true;
 console.log("Payment Service Enabled:", isPaymentServiceEnabled);
-console.log("Trigger unit");
 
 export const mapCCToFormValues = (data: StripePayment | null | undefined, stateSelectOptions: any) => {
   if (!data) return {}

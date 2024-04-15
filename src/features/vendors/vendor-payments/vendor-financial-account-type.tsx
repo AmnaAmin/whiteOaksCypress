@@ -59,18 +59,8 @@ export function VendorFinancialAccountType({
     const [selectedOption, setSelectedOption] = useState<AccountTypeDropdown | null>(null);
     const [error, setError] = useState<string>("");
 
-    let accountTypeOption: AccountTypeDropdown[] | [] = [];
+    let accountTypeOption: AccountTypeDropdown[] | [] = getFinancialOptions(achPaymentMethod);
 
-    if (!achPaymentMethod && isPaymentServiceEnabled) {
-        accountTypeOption = [
-            { label: "Credit Card", value: AccountType.CREDIT_CARD },
-            { label: "ACH", value: AccountType.ACH_BANK }
-        ];
-    } else if (!isPaymentServiceEnabled && !achPaymentMethod) {
-        accountTypeOption = [
-            { label: "ACH", value: AccountType.ACH_BANK }
-        ];
-    }
 
     const onSelectOptionChange = (val) => {
         setSelectedOption(val);
@@ -156,3 +146,17 @@ export function VendorFinancialAccountType({
     )
 }
 
+const getFinancialOptions = (achPaymentMethod: StripePayment | undefined) => {
+    if (isPaymentServiceEnabled) {
+        if (achPaymentMethod) return [{ label: "Credit Card", value: AccountType.CREDIT_CARD }]
+        else {
+            return [
+                { label: "Credit Card", value: AccountType.CREDIT_CARD },
+                { label: "ACH", value: AccountType.ACH_BANK }
+            ];
+        }
+    } else {
+        if (!achPaymentMethod) return [{ label: "ACH", value: AccountType.ACH_BANK }];
+        else return [];
+    }
+}

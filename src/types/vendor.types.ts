@@ -76,6 +76,7 @@ export type Vendor = {
   markets: VendorMarket[]
   projects: any[]
   paymentTerm: number
+  isSubscriptionOn?: boolean | string
 }
 
 type Override<T1, T2> = Omit<T1, keyof T2> & T2
@@ -172,7 +173,7 @@ export type VendorProfilePayload = {
   monthlySubscriptionFee?: number | null
   oneTimeSetupFee?: number | null
   billingDate?: string | null
-  isSubscriptionOn?: boolean
+  isSubscriptionOn?: boolean | string
 }
 
 export type LicenseDocument = {
@@ -325,7 +326,7 @@ export type VendorAccountsFormValues = {
   monthlySubscriptionFee?: number | null
   oneTimeSetupFee?: number | null
   billingDate?: string | null
-  isSubscriptionOn?: boolean
+  isSubscriptionOn?: boolean | string
 }
 type TradeFormValues = {
   trade: Trade

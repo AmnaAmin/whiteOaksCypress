@@ -42,7 +42,7 @@ type UserProps = {
   isVendorAccountSaveLoading?: boolean
   isModal?: boolean
 }
-export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive, isUserVendorAdmin = false, isVendorAccountSaveLoading, isModal=true }) => {
+export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive, isUserVendorAdmin = false, isVendorAccountSaveLoading, isModal = true }) => {
   const formReturn = useFormContext<VendorAccountsFormValues>()
   const { data: stripePaymentMethods } = useFetchPaymentMethods(vendorProfileData?.id);
   const { isOpen: isAccountTypeOpen, onOpen: onAccountTypeOpen, onClose: onAccountTypeClose } = useDisclosure();
@@ -51,7 +51,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const {
     control,
     setValue,
-    getValues,
     register,
     formState: { errors },
     watch,
@@ -186,14 +185,12 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 </FormLabel>
                 <FormControl>
                   <HStack spacing="16px">
-                    <RadioGroup w="100%" justifyContent={'flex-start'} value={!!getValues("isSubscriptionOn") ? "true" : "false"} isDisabled={!enableSubscriptionField} onChange={() => {
-                      const isSubscription = Boolean(getValues("isSubscriptionOn"));
-                      setValue("isSubscriptionOn", !isSubscription);
-                    }}
-                    >
+                    <RadioGroup w="100%" justifyContent={'flex-start'} defaultValue={vendorProfileData?.isSubscriptionOn?.toString() ?? "off"}>
                       <Stack direction="row">
-                        <Radio value={"true"} pr={4}>ON</Radio>
-                        <Radio value={"false"}>OFF</Radio>
+                        <FormControl>
+                          <Radio {...register("isSubscriptionOn")} value={"on"} pr={4}>ON</Radio>
+                          <Radio {...register("isSubscriptionOn")} value={"off"}>OFF</Radio>
+                        </FormControl>
                       </Stack>
                     </RadioGroup>
                   </HStack>
@@ -228,7 +225,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </Button>
           )}
 
-          {!isReadOnly && <Button type="submit" data-testid="saveVendorAccounts" variant="solid" colorScheme="brand">
+          {!isReadOnly && <Button type="submit" data-testid="saveVendorAccounts" variant="solid" colorScheme="brand" isLoading={isVendorAccountSaveLoading}>
             {t('save')}
           </Button>}
         </HStack>

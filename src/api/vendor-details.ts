@@ -60,7 +60,11 @@ export const useVendorProfile = (vendorId: number) => {
     'vendorProfile',
     async () => {
       const response = await client(`vendors/${vendorId}`, {})
-      return response?.data
+      // The below piece of code work is to convert boolean to string "on" and "off" to accomodate the radio buttons on vendor modal
+      const data = response?.data;
+      const convertSubscriptionToString = data?.isSubscriptionOn ? "on" : "off";
+      data.isSubscriptionOn = convertSubscriptionToString;
+      return data;
     },
     { enabled: !!vendorId },
   )
@@ -250,7 +254,7 @@ export const parseAccountsFormDataToAPIData = async (
     monthlySubscriptionFee: formValues?.monthlySubscriptionFee,
     oneTimeSetupFee: formValues?.oneTimeSetupFee,
     billingDate: dateISOFormatWithZeroTime(formValues?.billingDate),
-    isSubscriptionOn: Boolean(formValues?.isSubscriptionOn),
+    isSubscriptionOn: formValues?.isSubscriptionOn === "on" ? true : false,
   }
 }
 
