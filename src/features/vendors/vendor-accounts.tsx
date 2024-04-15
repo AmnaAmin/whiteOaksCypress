@@ -57,7 +57,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const isReadOnly = !useRoleBasedPermissions().permissions.some(e =>
     ['VENDOR.EDIT', 'VENDORPROFILE.EDIT', 'ALL'].includes(e),
   )
-  const { isAdmin, isVendorManager } = useUserRolesSelector()
+  const { isAdmin, isVendorManager, isVendor } = useUserRolesSelector()
   const adminRole = isAdmin || isVendorManager
   const watchVoidCheckDate = watch('bankVoidedCheckDate')
   const watchVoidCheckFile = watch('voidedCheckFile')
@@ -181,7 +181,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                     </Box>}
                   </Flex>
                 </FormLabel>
-                <SubscriptionRadioGroup formReturn={formReturn} vendorProfileData={vendorProfileData} />
+                <SubscriptionRadioGroup formReturn={formReturn} vendorProfileData={vendorProfileData} enableSubscriptionField={enableSubscriptionField && !isVendor} />
               </VStack>
             </GridItem>
           </>}
