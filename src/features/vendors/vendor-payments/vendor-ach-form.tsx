@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import NumberFormat from 'react-number-format'
 import { preventNumber, VendorAccountsFormValues, VendorProfile } from 'types/vendor.types'
 import { validateTelePhoneNumber } from 'utils/form-validation';
-import ReactSelect from 'components/form/react-select';
+import Select from 'components/form/react-select'
 import { useUserRolesSelector } from 'utils/redux-common-selectors';
 import { AccountingType, DOCUMENTS_TYPES } from 'api/vendor-details';
 import { dateFormatNew, datePickerFormat } from 'utils/date-time-utils';
@@ -259,11 +259,14 @@ const VendorACHForm: React.FC<{ vendorProfileData: VendorProfile, formReturn: Us
                             rules={{ required: 'This is required' }}
                             render={({ field, fieldState }) => (
                                 <>
-                                    <ReactSelect
+                                    <Select
                                         classNamePrefix={'stateSelectOptions'}
                                         menuPosition="fixed"
                                         options={stateSelectOptions}
                                         {...field}
+                                        onChange={state => {
+                                            field.onChange(state)
+                                        }}
                                         selectProps={{ isBorderLeft: true, menuHeight: '180px' }}
                                     />
                                     <FormErrorMessage pos="absolute">{fieldState.error?.message}</FormErrorMessage>
