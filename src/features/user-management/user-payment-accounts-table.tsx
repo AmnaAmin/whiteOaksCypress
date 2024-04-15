@@ -4,7 +4,7 @@ import { useTableColumnSettings } from 'api/table-column-settings-refactored'
 import { TableNames } from 'types/table-column.types'
 import { Box, useDisclosure, Flex, Button, Icon } from '@chakra-ui/react'
 import { PAYMENT_COLUMNS } from './constants'
-import { isPaymentServiceEnabled, useFetchPaymentMethods } from 'api/payment'
+import { getIsPaymentServiceEnabled, useFetchPaymentMethods } from 'api/payment'
 import { StripeCreditCardModalForm } from 'features/vendors/vendor-accounts'
 import { VendorProfile, StripePayment } from 'types/vendor.types'
 import { useState } from 'react'
@@ -21,6 +21,7 @@ type UserPaymnetAccountsTableProps = {
 }
 
 const UserPaymentAccountsTable = (props: UserPaymnetAccountsTableProps) => {
+  const isPaymentServiceEnabled = getIsPaymentServiceEnabled();
   const [selectedRow, setSelectedRow] = useState<StripePayment | null>(null);
   const { vendorProfile, isActive, isVendorAccountSaveLoading, achPaymentMethod, onNewBtnClick } = props;
 

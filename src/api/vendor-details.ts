@@ -60,7 +60,7 @@ export const useVendorProfile = (vendorId: number) => {
     'vendorProfile',
     async () => {
       const response = await client(`vendors/${vendorId}`, {})
-      return response?.data
+      return response?.data;
     },
     { enabled: !!vendorId },
   )
@@ -250,7 +250,7 @@ export const parseAccountsFormDataToAPIData = async (
     monthlySubscriptionFee: formValues?.monthlySubscriptionFee,
     oneTimeSetupFee: formValues?.oneTimeSetupFee,
     billingDate: dateISOFormatWithZeroTime(formValues?.billingDate),
-    isSubscriptionOn: Boolean(formValues?.isSubscriptionOn),
+    isSubscriptionOn: formValues?.isSubscriptionOn === "on" ? true : false,
   }
 }
 

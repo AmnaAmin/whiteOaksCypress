@@ -18,7 +18,7 @@ import Select from 'components/form/react-select'
 import { t } from 'i18next';
 import { PAYMENT_MANAGEMENT } from 'features/user-management/payment-management.i8n';
 import { StripePayment } from 'types/vendor.types'
-import { isPaymentServiceEnabled } from 'api/payment';
+import { getIsPaymentServiceEnabled } from 'api/payment';
 
 
 interface VendorFinancialAccountTypeProps {
@@ -59,18 +59,8 @@ export function VendorFinancialAccountType({
     const [selectedOption, setSelectedOption] = useState<AccountTypeDropdown | null>(null);
     const [error, setError] = useState<string>("");
 
-    let accountTypeOption: AccountTypeDropdown[] | [] = [];
+    let accountTypeOption: AccountTypeDropdown[] | [] = getFinancialOptions(Boolean(achPaymentMethod?.id));
 
-    if (!achPaymentMethod && isPaymentServiceEnabled) {
-        accountTypeOption = [
-            { label: "Credit Card", value: AccountType.CREDIT_CARD },
-            { label: "ACH", value: AccountType.ACH_BANK }
-        ];
-    } else if (!isPaymentServiceEnabled && !achPaymentMethod) {
-        accountTypeOption = [
-            { label: "ACH", value: AccountType.ACH_BANK }
-        ];
-    }
 
     const onSelectOptionChange = (val) => {
         setSelectedOption(val);
@@ -156,3 +146,18 @@ export function VendorFinancialAccountType({
     )
 }
 
+const getFinancialOptions = (achPaymentMethod: boolean) => {
+    // Improve nested if
+    if (getIsPaymentServiceEnabled()) {
+        if (achPaymentMethod) return [{ label: "Credit Card", value: AccountType.CREDIT_CARD }]
+        else {
+            return [
+                { label: "Credit Card", value: AccountType.CREDIT_CARD },
+                { label: "ACH", value: AccountType.ACH_BANK }
+            ];
+        }
+    } else {
+        if (!achPaymentMethod) return [{ label: "ACH", value: AccountType.ACH_BANK }];
+        else return [];
+    }
+}

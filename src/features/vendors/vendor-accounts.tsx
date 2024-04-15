@@ -12,10 +12,7 @@ import {
   Input,
   FormErrorMessage,
   Text,
-  useDisclosure,
-  Radio,
-  RadioGroup,
-  Stack,
+  useDisclosure
 } from '@chakra-ui/react'
 import { VendorAccountsFormValues, VendorProfile, StripePayment } from 'types/vendor.types'
 import { Controller, useFormContext } from 'react-hook-form'
@@ -31,8 +28,9 @@ import VendorCCAddModal from './vendor-payments/vendor-cc-add-modal'
 import { Elements } from '@stripe/react-stripe-js'
 import getStripe from 'utils/stripe'
 import VendorCCUpdateModal from './vendor-payments/vendor-cc-update-modal'
-import { createTableDataForAch, useFetchPaymentMethods, isPaymentServiceEnabled } from 'api/payment'
+import { createTableDataForAch, useFetchPaymentMethods, getIsPaymentServiceEnabled } from 'api/payment'
 import VendorACHModal from './vendor-payments/vendor-ach-modal'
+import SubscriptionRadioGroup from 'components/radio/subscription-radio-group'
 
 type UserProps = {
   onClose?: () => void
@@ -42,7 +40,8 @@ type UserProps = {
   isVendorAccountSaveLoading?: boolean
   isModal?: boolean
 }
-export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive, isUserVendorAdmin = false, isVendorAccountSaveLoading, isModal=true }) => {
+export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive, isUserVendorAdmin = false, isVendorAccountSaveLoading, isModal = true }) => {
+  const isPaymentServiceEnabled = getIsPaymentServiceEnabled();
   const formReturn = useFormContext<VendorAccountsFormValues>()
   const { data: stripePaymentMethods } = useFetchPaymentMethods(vendorProfileData?.id);
   const { isOpen: isAccountTypeOpen, onOpen: onAccountTypeOpen, onClose: onAccountTypeClose } = useDisclosure();
@@ -51,9 +50,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const {
     control,
     setValue,
-    getValues,
     register,
-    formState: { errors },
     watch,
   } = formReturn
   const { t } = useTranslation()
@@ -184,21 +181,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                     </Box>}
                   </Flex>
                 </FormLabel>
-                <FormControl>
-                  <HStack spacing="16px">
-                    <RadioGroup w="100%" justifyContent={'flex-start'} value={!!getValues("isSubscriptionOn") ? "true" : "false"} isDisabled={!enableSubscriptionField} onChange={() => {
-                      const isSubscription = Boolean(getValues("isSubscriptionOn"));
-                      setValue("isSubscriptionOn", !isSubscription);
-                    }}
-                    >
-                      <Stack direction="row">
-                        <Radio value={"true"} pr={4}>ON</Radio>
-                        <Radio value={"false"}>OFF</Radio>
-                      </Stack>
-                    </RadioGroup>
-                  </HStack>
-                  <FormErrorMessage pos="absolute">{errors.isSubscriptionOn?.message}</FormErrorMessage>
-                </FormControl>
+                <SubscriptionRadioGroup formReturn={formReturn} vendorProfileData={vendorProfileData} />
               </VStack>
             </GridItem>
           </>}
@@ -228,7 +211,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </Button>
           )}
 
-          {!isReadOnly && <Button type="submit" data-testid="saveVendorAccounts" variant="solid" colorScheme="brand">
+          {!isReadOnly && <Button type="submit" data-testid="saveVendorAccounts" variant="solid" colorScheme="brand" isLoading={isVendorAccountSaveLoading}>
             {t('save')}
           </Button>}
         </HStack>
