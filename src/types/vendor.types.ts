@@ -438,6 +438,8 @@ export type StripeBillingDetails = {
   }
   email?: string
   name: string
+  firstName?: string
+  lastName?: string
   phone?: string
 }
 

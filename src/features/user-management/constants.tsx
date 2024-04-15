@@ -174,33 +174,13 @@ export const PAYMENT_COLUMNS: ColumnDef<any>[] = [
   },
   {
     header: `${PAYMENT_MANAGEMENT}.table.firstName`,
-    accessorKey: 'billing_details.name',
+    accessorKey: 'billing_details.firstName',
     id: "firstName",
-    cell: (row: any) => {
-      const name = row?.row.original?.billing_details?.name;
-      let value = "_ _ _"
-      if (name.includes(",")) {
-        value = name?.split(",")[1];
-      } else {
-        value = name?.split(" ")[0];
-      }
-      return value ?? "_ _ _";
-    }
   },
   {
     header: `${PAYMENT_MANAGEMENT}.table.lastName`,
-    accessorKey: 'billing_details.name',
+    accessorKey: 'billing_details.lastName',
     id: "lastName",
-    cell: (row: any) => {
-      const name = row?.row.original?.billing_details?.name;
-      let value = "_ _ _"
-      if (name.includes(",")) {
-        value = name?.split(",")[0];
-      } else {
-        value = name?.split(" ")[1];
-      }
-      return value ?? "_ _ _";
-    }
   },
   {
     header: `${PAYMENT_MANAGEMENT}.table.type`,

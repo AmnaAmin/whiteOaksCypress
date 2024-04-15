@@ -93,6 +93,8 @@ export const createTableDataForAch = (vendorProfileData: VendorProfile | undefin
       billing_details: {
         email: vendorProfileData?.businessEmailAddress,
         name: vendorProfileData?.ownerName,
+        firstName: vendorProfileData?.ownerName.split(" ")[0],
+        lastName: vendorProfileData?.ownerName.split(" ")[1],
         phone: vendorProfileData?.businessPhoneNumber
       },
       us_bank_account: {
@@ -157,6 +159,16 @@ export const useFetchPaymentMethods = (id: string | number | undefined) => {
       const response = await client(`payments/payment-methods/${urlPathVariable}`, {}, paymentServiceUrl)
       if (response) {
         const jsonResponse: StripePaymentMethodResponse = JSON.parse(response.data)
+        jsonResponse?.stripeResponse?.data?.forEach((val, i) => {
+          const name = val.billing_details.name;
+          if (name.includes(",")) {
+            jsonResponse.stripeResponse.data[i].billing_details.firstName =  name?.split(",")[1];
+            jsonResponse.stripeResponse.data[i].billing_details.lastName =  name?.split(",")[0];
+          } else {
+            jsonResponse.stripeResponse.data[i].billing_details.firstName =  name?.split(" ")[0];
+            jsonResponse.stripeResponse.data[i].billing_details.lastName =  name?.split(" ")[1];
+          }
+        })
         return jsonResponse
       } else {
         return null
