@@ -26,7 +26,8 @@ const VendorCCUpdateModal: React.FC<{
     onClose: () => void
     vendorProfileData: VendorProfile
     creditCardData: StripePayment
-}> = ({ isOpen, onClose, vendorProfileData, creditCardData }) => {
+    isReadOnly: boolean
+}> = ({ isOpen, onClose, vendorProfileData, creditCardData, isReadOnly }) => {
     const isPaymentServiceEnabled = getIsPaymentServiceEnabled();
     const stripe = useStripe();
     const elements = useElements();
@@ -96,7 +97,7 @@ const VendorCCUpdateModal: React.FC<{
                     </ModalBody>
                     <ModalFooter>
                         <Flex flexFlow="row-reverse" w="full">
-                            <Button
+                            {!isReadOnly && <Button
                                 type="submit"
                                 isLoading={isUpdateCreditCardLoading}
                                 onClick={handleSubmit(onSubmit)}
@@ -104,7 +105,7 @@ const VendorCCUpdateModal: React.FC<{
                                 data-testid="update"
                                 mr={3}>
                                 {t(`${PAYMENT_MANAGEMENT}.modal.update`)}
-                            </Button>
+                            </Button>}
                             <Button colorScheme="brand" variant="outline" mr={3} data-testid="cancel" onClick={() => {
                                 reset();
                                 onClose();

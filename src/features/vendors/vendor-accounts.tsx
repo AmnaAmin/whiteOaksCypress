@@ -83,8 +83,8 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
 
   return (
     <>
-      {isPaymentServiceEnabled && <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onCCModalClose} vendorProfileData={vendorProfileData} />}
-      <VendorACHModal isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfileData} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} />
+      {isPaymentServiceEnabled && <StripeCreditCardModalForm isReadOnly={isReadOnly} isCCModalOpen={isCCModalOpen} onCCModalClose={onCCModalClose} vendorProfileData={vendorProfileData} />}
+      <VendorACHModal isReadOnly={isReadOnly} isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfileData} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} />
       <VendorFinancialAccountType isOpen={isAccountTypeOpen} onClose={onAccountTypeClose} onConfirm={onAccountTypeConfirm} achPaymentMethod={achPaymentMethod} />
       <Box maxH={'632px'} overflowY={'auto'}>
         <Grid templateColumns={isModal ? "repeat(4,265px)" : "repeat(4, 1fr)"} rowGap="30px" columnGap="16px">
@@ -186,7 +186,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
             </GridItem>
           </>}
           <GridItem colSpan={4}>
-            <UserPaymentAccountsTable vendorProfile={vendorProfileData} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} achPaymentMethod={achPaymentMethod} onNewBtnClick={onNewBtnClick} />
+            <UserPaymentAccountsTable vendorProfile={vendorProfileData} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} achPaymentMethod={achPaymentMethod} onNewBtnClick={onNewBtnClick} isReadOnly={isReadOnly} />
           </GridItem>
         </Grid>
       </Box>
@@ -220,17 +220,17 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   )
 }
 
-export const StripeCreditCardModalForm = ({ isCCModalOpen, onCCModalClose, vendorProfileData, creditCardData }: { isCCModalOpen: boolean, onCCModalClose: () => void, vendorProfileData: VendorProfile, creditCardData?: StripePayment | null }) => {
+export const StripeCreditCardModalForm = ({ isCCModalOpen, onCCModalClose, vendorProfileData, creditCardData, isReadOnly }: { isCCModalOpen: boolean, onCCModalClose: () => void, vendorProfileData: VendorProfile, creditCardData?: StripePayment | null, isReadOnly: boolean }) => {
   if (!creditCardData) {
     return (
       <Elements stripe={getStripe()}>
-        <VendorCCAddModal isOpen={isCCModalOpen} onClose={onCCModalClose} vendorProfileData={vendorProfileData} />
+        <VendorCCAddModal isReadOnly={isReadOnly} isOpen={isCCModalOpen} onClose={onCCModalClose} vendorProfileData={vendorProfileData} />
       </Elements>
     )
   } else {
     return (
       <Elements stripe={getStripe()}>
-        <VendorCCUpdateModal isOpen={isCCModalOpen} onClose={onCCModalClose} vendorProfileData={vendorProfileData} creditCardData={creditCardData} />
+        <VendorCCUpdateModal isReadOnly={isReadOnly} isOpen={isCCModalOpen} onClose={onCCModalClose} vendorProfileData={vendorProfileData} creditCardData={creditCardData} />
       </Elements>
     )
   }

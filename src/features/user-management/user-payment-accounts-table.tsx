@@ -18,12 +18,13 @@ type UserPaymnetAccountsTableProps = {
   isVendorAccountSaveLoading?: boolean
   achPaymentMethod: StripePayment | undefined
   onNewBtnClick: () => void
+  isReadOnly: boolean
 }
 
 const UserPaymentAccountsTable = (props: UserPaymnetAccountsTableProps) => {
   const isPaymentServiceEnabled = getIsPaymentServiceEnabled();
   const [selectedRow, setSelectedRow] = useState<StripePayment | null>(null);
-  const { vendorProfile, isActive, isVendorAccountSaveLoading, achPaymentMethod, onNewBtnClick } = props;
+  const { vendorProfile, isActive, isVendorAccountSaveLoading, achPaymentMethod, onNewBtnClick, isReadOnly } = props;
 
   const { data: paymentMethods, isLoading } = useFetchPaymentMethods(vendorProfile?.id);
   const { isOpen: isCCModalOpen, onOpen: onCCModalOpen, onClose: onCCModalClose } = useDisclosure();
@@ -47,14 +48,14 @@ const UserPaymentAccountsTable = (props: UserPaymnetAccountsTableProps) => {
 
   return (
     <>
-      {!hideNewBtn && <Flex w='full' alignItems={"end"} justifyContent={"end"} pb={4}>
+      {!hideNewBtn && !isReadOnly && <Flex w='full' alignItems={"end"} justifyContent={"end"} pb={4}>
         <Button disabled={isLoading} data-testid="add-new-payment-method" colorScheme="brand" leftIcon={<Icon boxSize={4} as={BiBookAdd} />} onClick={onNewBtnClick}>
           New
         </Button>
       </Flex>}
       <Box h={hideNewBtn ? "625px" : "570px"} overflowX={"auto"}>
-        {renderCCEditModal && <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onModalClose} vendorProfileData={vendorProfile} creditCardData={selectedRow} />}
-        {renderACHModal && <VendorACHUpdateModal isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfile} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} />}
+        {renderCCEditModal && <StripeCreditCardModalForm isCCModalOpen={isCCModalOpen} onCCModalClose={onModalClose} vendorProfileData={vendorProfile} creditCardData={selectedRow} isReadOnly={isReadOnly} />}
+        {renderACHModal && <VendorACHUpdateModal isOpen={isACHModalOpen} onClose={onACHModalClose} vendorProfileData={vendorProfile} isActive={isActive} isVendorAccountSaveLoading={isVendorAccountSaveLoading} isReadOnly={isReadOnly} />}
         <TableContextProvider
           data={tableData}
           columns={tableColumns}

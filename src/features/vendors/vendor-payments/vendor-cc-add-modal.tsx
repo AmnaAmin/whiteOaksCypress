@@ -37,7 +37,8 @@ const VendorCCAddModal: React.FC<{
     isOpen: boolean
     onClose: () => void
     vendorProfileData: VendorProfile
-}> = ({ isOpen, onClose, vendorProfileData }) => {
+    isReadOnly: boolean
+}> = ({ isOpen, onClose, vendorProfileData, isReadOnly }) => {
     const isPaymentServiceEnabled = getIsPaymentServiceEnabled();
     const stripe = useStripe();
     const elements = useElements();
@@ -105,7 +106,7 @@ const VendorCCAddModal: React.FC<{
                     </ModalBody>
                     <ModalFooter>
                         <Flex flexFlow="row-reverse" w="full">
-                            <Button
+                            {!isReadOnly && <Button
                                 size="md"
                                 type="submit"
                                 isLoading={isCreateCreditCardLoading}
@@ -118,7 +119,7 @@ const VendorCCAddModal: React.FC<{
                                 w="6px"
                                 mr={3}>
                                 {t(`${PAYMENT_MANAGEMENT}.modal.save`)}
-                            </Button>
+                            </Button>}
                             <Button colorScheme="brand" variant="outline" mr={3} data-testid="cancel" onClick={() => {
                                 reset();
                                 onClose();
