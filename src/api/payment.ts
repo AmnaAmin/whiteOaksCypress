@@ -29,8 +29,10 @@ type CreditCardPayload = {
 
 const paymentServiceUrl = process.env.REACT_APP_PAYMENT_SERVICE_URL ?? null;
 const woaPlatformId = process.env.REACT_APP_PAYMENT_SERVICE_WOA_PLATFORM_ID ?? null;
-export const isPaymentServiceEnabled = process.env.REACT_APP_ENABLE_PAYMENT === "false" ? false : true;
-console.log("Payment Service Enabled:", isPaymentServiceEnabled);
+export const getIsPaymentServiceEnabled = () => {
+  return process.env.REACT_APP_ENABLE_PAYMENT !== "false";
+};
+console.log("Payment Service Enabled:", getIsPaymentServiceEnabled());
 
 export const mapCCToFormValues = (data: StripePayment | null | undefined, stateSelectOptions: any) => {
   if (!data) return {}
@@ -151,7 +153,7 @@ export const useFetchPaymentMethods = (id: string | number | undefined) => {
   return useQuery(
     ['payment-methods', id],
     async () => {
-      if (!id || !isPaymentServiceEnabled) return;
+      if (!id || !getIsPaymentServiceEnabled()) return;
       const response = await client(`payments/payment-methods/${urlPathVariable}`, {}, paymentServiceUrl)
       if (response) {
         const jsonResponse: StripePaymentMethodResponse = JSON.parse(response.data)

@@ -12,10 +12,7 @@ import {
   Input,
   FormErrorMessage,
   Text,
-  useDisclosure,
-  Radio,
-  RadioGroup,
-  Stack,
+  useDisclosure
 } from '@chakra-ui/react'
 import { VendorAccountsFormValues, VendorProfile, StripePayment } from 'types/vendor.types'
 import { Controller, useFormContext } from 'react-hook-form'
@@ -31,8 +28,9 @@ import VendorCCAddModal from './vendor-payments/vendor-cc-add-modal'
 import { Elements } from '@stripe/react-stripe-js'
 import getStripe from 'utils/stripe'
 import VendorCCUpdateModal from './vendor-payments/vendor-cc-update-modal'
-import { createTableDataForAch, useFetchPaymentMethods, isPaymentServiceEnabled } from 'api/payment'
+import { createTableDataForAch, useFetchPaymentMethods, getIsPaymentServiceEnabled } from 'api/payment'
 import VendorACHModal from './vendor-payments/vendor-ach-modal'
+import SubscriptionRadioGroup from 'components/radio/subscription-radio-group'
 
 type UserProps = {
   onClose?: () => void
@@ -43,6 +41,7 @@ type UserProps = {
   isModal?: boolean
 }
 export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose, isActive, isUserVendorAdmin = false, isVendorAccountSaveLoading, isModal = true }) => {
+  const isPaymentServiceEnabled = getIsPaymentServiceEnabled();
   const formReturn = useFormContext<VendorAccountsFormValues>()
   const { data: stripePaymentMethods } = useFetchPaymentMethods(vendorProfileData?.id);
   const { isOpen: isAccountTypeOpen, onOpen: onAccountTypeOpen, onClose: onAccountTypeClose } = useDisclosure();
@@ -52,7 +51,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     control,
     setValue,
     register,
-    formState: { errors },
     watch,
   } = formReturn
   const { t } = useTranslation()
@@ -183,19 +181,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                     </Box>}
                   </Flex>
                 </FormLabel>
-                <FormControl>
-                  <HStack spacing="16px">
-                    <RadioGroup w="100%" justifyContent={'flex-start'} defaultValue={vendorProfileData?.isSubscriptionOn?.toString() ?? "off"}>
-                      <Stack direction="row">
-                        <FormControl>
-                          <Radio {...register("isSubscriptionOn")} value={"on"} pr={4}>ON</Radio>
-                          <Radio {...register("isSubscriptionOn")} value={"off"}>OFF</Radio>
-                        </FormControl>
-                      </Stack>
-                    </RadioGroup>
-                  </HStack>
-                  <FormErrorMessage pos="absolute">{errors.isSubscriptionOn?.message}</FormErrorMessage>
-                </FormControl>
+                <SubscriptionRadioGroup formReturn={formReturn} vendorProfileData={vendorProfileData} />
               </VStack>
             </GridItem>
           </>}
