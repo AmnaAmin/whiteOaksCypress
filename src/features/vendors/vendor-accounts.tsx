@@ -73,7 +73,6 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   const showDiscardChangeBtn = isVoidedCheckChange && adminRole && vendorProfileData?.id;
   const achPaymentMethod = createTableDataForAch(vendorProfileData) as (StripePayment | undefined);
   const isSubscriptionOn = vendorProfileData?.isSubscriptionOn;
-  console.log("🚀 ~ isSubscriptionOn:", isSubscriptionOn)
 
   const onNewBtnClick = () => onAccountTypeOpen();
 
