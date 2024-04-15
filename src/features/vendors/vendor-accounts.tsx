@@ -123,7 +123,8 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   }} />
               </FormControl>
             </GridItem>
-            <GridItem>
+            {/* HN | Commenting out the setup fee field for now, eventually it will be use later */}
+            {/* <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
                   {t('setupFee')}
@@ -152,7 +153,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   }}
                 ></Controller>
               </FormControl>
-            </GridItem>
+            </GridItem> */}
             <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
@@ -176,7 +177,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                     </Box>
                     {!enableSubscriptionField && <Box>
                       <Text fontSize={"12px"}>
-                        (Add a Credit Card first to enable subscription)
+                        (Add a Credit Card to enable subscription)
                       </Text>
                     </Box>}
                   </Flex>
