@@ -72,6 +72,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
   }
   const showDiscardChangeBtn = isVoidedCheckChange && adminRole && vendorProfileData?.id;
   const achPaymentMethod = createTableDataForAch(vendorProfileData) as (StripePayment | undefined);
+  const isSubscriptionOn = vendorProfileData?.isSubscriptionOn;
 
   const onNewBtnClick = () => onAccountTypeOpen();
 
@@ -154,7 +155,7 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                 ></Controller>
               </FormControl>
             </GridItem> */}
-            <GridItem>
+            {isSubscriptionOn && <GridItem>
               <FormControl>
                 <FormLabel variant="strong-label" size="md">
                   {t('billingDate')}
@@ -167,8 +168,8 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                   disabled={true}
                 />
               </FormControl>
-            </GridItem>
-            <GridItem>
+            </GridItem>}
+            <GridItem colSpan={2}>
               <VStack alignItems="start" fontSize="14px" fontWeight={500} color="gray.600" w="full">
                 <FormLabel variant="strong-label" size="md">
                   <Flex w='full' alignItems={"start"} justifyContent={"center"} direction="column">
