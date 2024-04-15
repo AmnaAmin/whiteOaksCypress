@@ -813,7 +813,7 @@ export const useVendorDetails = ({ form, vendorProfileData }) => {
       documentStatus.find(s => s.value === vendorProfileData.status),
     )
     setValue('state', { label: state?.name, value: state?.code })
-    setValue('bankState', { label: bankState?.name, value: bankState?.code })
+    setValue('bankState', (bankState?.name ? { label: bankState?.name, value: bankState?.code } : null))
     //setValue('bankVoidedCheckStatus', vendorProfileData?.bankVoidedCheckStatus)
     setValue(
       'paymentTerm',

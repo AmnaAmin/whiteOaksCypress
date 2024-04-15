@@ -22,7 +22,6 @@ import { VENDORPROFILE } from 'features/vendor-profile/vendor-profile.i18n';
 import { convertImageToDataURL } from 'components/table/util';
 import jsPDF from 'jspdf';
 import { createACHForm } from 'api/vendor-details';
-import { useRoleBasedPermissions } from 'utils/redux-common-selectors';
 
 const VendorACHModal: React.FC<{
     isOpen: boolean
@@ -30,7 +29,8 @@ const VendorACHModal: React.FC<{
     vendorProfileData: VendorProfile
     isActive
     isVendorAccountSaveLoading?: boolean
-}> = ({ isOpen, onClose, vendorProfileData, isActive, isVendorAccountSaveLoading }) => {
+    isReadOnly: boolean
+}> = ({ isOpen, onClose, vendorProfileData, isActive, isVendorAccountSaveLoading, isReadOnly }) => {
     const { stateSelectOptions } = useStates();
     const sigRef = useRef<HTMLImageElement>(null);
     const formReturn = useFormContext<VendorAccountsFormValues>();
@@ -40,10 +40,6 @@ const VendorACHModal: React.FC<{
     const isSubmitSuccessful = formState.isSubmitSuccessful;
     const watchOwnersSignature = watch('ownersSignature')
     const hasOwnerSignature = !!watchOwnersSignature && !watchOwnersSignature?.fileObject && vendorProfileData // signature has saved s3url and not fileobject
-
-    const isReadOnly = !useRoleBasedPermissions().permissions.some(e =>
-        ['VENDOR.EDIT', 'VENDORPROFILE.EDIT', 'ALL'].includes(e),
-    )
 
     const downloadACFForm = () => {
         let form = new jsPDF()
