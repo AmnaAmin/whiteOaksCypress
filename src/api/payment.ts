@@ -159,6 +159,7 @@ export const useFetchPaymentMethods = (id: string | number | undefined) => {
       const response = await client(`payments/payment-methods/${urlPathVariable}`, {}, paymentServiceUrl)
       if (response) {
         const jsonResponse: StripePaymentMethodResponse = JSON.parse(response.data)
+        // HN | Need to rework on this
         jsonResponse?.stripeResponse?.data?.forEach((val, i) => {
           const name = val.billing_details.name;
           if (name.includes(",")) {
