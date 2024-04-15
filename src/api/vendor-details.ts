@@ -25,6 +25,7 @@ import {
 import { usePaginationQuery } from 'api'
 import { VENDOR_MANAGER } from 'features/vendor-manager/vendor-manager.i18n'
 import { t } from 'i18next'
+import { getNextMonthFirstDate } from 'components/table/util'
 
 export const licenseTypes = [
   { value: '1', label: 'Electrical' },
@@ -281,6 +282,7 @@ export const parseVendorAPIDataToFormData = (vendorProfileData): VendorProfileDe
     ...vendorProfileData,
     ...documentCardsDefaultValues(vendorProfileData),
     licenses: licenseDefaultFormValues(vendorProfileData),
+    billingDate: getNextMonthFirstDate(),
     trades: [],
     markets: [],
   }
