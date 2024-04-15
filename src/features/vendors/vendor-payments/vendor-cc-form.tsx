@@ -27,10 +27,11 @@ export interface VendorCCFormProps {
     formReturn: UseFormReturn<CreditCardFormValues>
     stateSelectOptions: any
     isUpdate?: boolean
+    disableDefaultBtn?: boolean
 }
 
 const VendorCCForm = (props: VendorCCFormProps) => {
-    const { formReturn, stateSelectOptions, isUpdate } = props;
+    const { formReturn, stateSelectOptions, isUpdate, disableDefaultBtn } = props;
     const [cardError, setCardError] = useState({
         isEmpty: false,
         message: ''
@@ -364,6 +365,7 @@ const VendorCCForm = (props: VendorCCFormProps) => {
                                 <Checkbox
                                     colorScheme="PrimaryCheckBox"
                                     isChecked={field.value}
+                                    isDisabled={disableDefaultBtn}
                                     style={{ background: 'white', border: '#DFDFDF' }}
                                     mr="2px"
                                     size="md"

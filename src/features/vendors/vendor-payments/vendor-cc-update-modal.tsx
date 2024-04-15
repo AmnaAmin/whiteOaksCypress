@@ -91,7 +91,7 @@ const VendorCCUpdateModal: React.FC<{
                     <ModalCloseButton _hover={{ bg: 'blue.50' }} />
                     <ModalBody justifyContent="center">
                         <Box>
-                            <VendorCCForm formReturn={formReturn} stateSelectOptions={stateSelectOptions} isUpdate={!!vendorProfileData} />
+                            <VendorCCForm formReturn={formReturn} stateSelectOptions={stateSelectOptions} isUpdate={!!vendorProfileData} disableDefaultBtn={initialValues.isPaymentMethodDefault} />
                         </Box>
                     </ModalBody>
                     <ModalFooter>

@@ -6,9 +6,10 @@ import { VendorAccountsFormValues, VendorProfile } from "types/vendor.types"
 type SubscriptionRadioGroupProps = {
     vendorProfileData: VendorProfile
     formReturn: UseFormReturn<VendorAccountsFormValues, any>
+    enableSubscriptionField: boolean
 }
 
-const SubscriptionRadioGroup = ({ vendorProfileData, formReturn }: SubscriptionRadioGroupProps) => {
+const SubscriptionRadioGroup = ({ vendorProfileData, formReturn, enableSubscriptionField }: SubscriptionRadioGroupProps) => {
     const {
         register,
         formState: { errors },
@@ -21,7 +22,7 @@ const SubscriptionRadioGroup = ({ vendorProfileData, formReturn }: SubscriptionR
 
     return (<FormControl>
         <HStack spacing="16px">
-            <RadioGroup w="100%" justifyContent={'flex-start'} defaultValue={defaultValue()}>
+            <RadioGroup w="100%" justifyContent={'flex-start'} defaultValue={defaultValue()} isDisabled={!enableSubscriptionField}>
                 <Stack direction="row">
                     <FormControl>
                         <Radio {...register("isSubscriptionOn")} value={"on"} pr={4}>ON</Radio>

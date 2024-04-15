@@ -59,7 +59,7 @@ export function VendorFinancialAccountType({
     const [selectedOption, setSelectedOption] = useState<AccountTypeDropdown | null>(null);
     const [error, setError] = useState<string>("");
 
-    let accountTypeOption: AccountTypeDropdown[] | [] = getFinancialOptions(Boolean(achPaymentMethod?.id));
+    let accountTypeOption: AccountTypeDropdown[] | [] = getFinancialOptions(Boolean(achPaymentMethod?.type));
 
 
     const onSelectOptionChange = (val) => {
@@ -147,17 +147,12 @@ export function VendorFinancialAccountType({
 }
 
 const getFinancialOptions = (achPaymentMethod: boolean) => {
-    // Improve nested if
-    if (getIsPaymentServiceEnabled()) {
-        if (achPaymentMethod) return [{ label: "Credit Card", value: AccountType.CREDIT_CARD }]
-        else {
-            return [
-                { label: "Credit Card", value: AccountType.CREDIT_CARD },
-                { label: "ACH", value: AccountType.ACH_BANK }
-            ];
-        }
-    } else {
-        if (!achPaymentMethod) return [{ label: "ACH", value: AccountType.ACH_BANK }];
-        else return [];
-    }
+    const isPaymentServiceEnabled = getIsPaymentServiceEnabled();
+    if (isPaymentServiceEnabled && achPaymentMethod) return [{ label: AccountType.CREDIT_CARD, value: AccountType.CREDIT_CARD }];
+    else if (isPaymentServiceEnabled && !achPaymentMethod) return [
+        { label: AccountType.CREDIT_CARD, value: AccountType.CREDIT_CARD },
+        { label: AccountType.ACH_BANK, value: AccountType.ACH_BANK }
+    ];
+    else if (!isPaymentServiceEnabled && !achPaymentMethod) return [{ label: AccountType.ACH_BANK, value: AccountType.ACH_BANK }];
+    else return [];
 }
