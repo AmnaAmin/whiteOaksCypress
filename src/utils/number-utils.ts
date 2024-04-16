@@ -4,20 +4,13 @@ export const preventNegativeKeyDownFn = (e: React.KeyboardEvent<HTMLInputElement
   }
 }
 
-export const extractDecimalNumbers = (number: number, decimalPlaces: number) => {
-  if (!number?.toString()?.includes('.')) return number
-  const [int, dec] = number?.toString()?.split('.')
-  if (dec.length <= decimalPlaces) {
-    return number
+export const isDecimalPlacesLimitExceeded = (val?: number) => {
+  if (!val) return true
+  if (!val.toString()?.includes('.')) return true
+  const [, dec] = val?.toString().split('.')
+  if (!dec) {
+    return true
   } else {
-    const decimals = dec.slice(0, decimalPlaces)
-    return Number(int + '.' + decimals)
+    return dec?.toString()?.length <= 2
   }
-}
-
-export const isDecimalPlacesLimitExceeded = (number: number) => {
-  if (!number?.toString()?.includes('.')) return true;
-  const [, dec] = number?.toString().split('.')
-  if (!dec) return true
-  else return dec?.toString()?.length <= 2
 }

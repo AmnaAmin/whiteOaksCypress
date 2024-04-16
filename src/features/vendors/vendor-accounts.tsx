@@ -85,6 +85,9 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
 
   const checkIsAllowed = (values) => {
     const { floatValue } = values;
+    if (floatValue >= 999999.99) {
+      return false
+    }
     return isDecimalPlacesLimitExceeded(floatValue);
   };
 
