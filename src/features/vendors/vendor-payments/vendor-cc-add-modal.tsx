@@ -8,7 +8,8 @@ import {
     ModalOverlay,
     Button,
     Flex,
-    Box
+    Box,
+    useToast
 } from '@chakra-ui/react'
 import { t } from 'i18next'
 import { useForm } from 'react-hook-form'
@@ -41,6 +42,7 @@ const VendorCCAddModal: React.FC<{
 }> = ({ isOpen, onClose, vendorProfileData, isReadOnly }) => {
     const isPaymentServiceEnabled = getIsPaymentServiceEnabled();
     const stripe = useStripe();
+    const toast = useToast();
     const elements = useElements();
     const { stateSelectOptions } = useStates();
 
@@ -62,6 +64,13 @@ const VendorCCAddModal: React.FC<{
         const stripeTokenData = await stripe.createToken(cardElement);
         if (stripeTokenData?.error) {
             console.error("Error creating stripe token", stripeTokenData.error);
+            toast({
+                title: 'Credit Card',
+                position: 'top-left',
+                description: stripeTokenData?.error?.message ?? "Invalid Credit Card",
+                status: 'error',
+                isClosable: true,
+              })
             return;
         }
         const payload = mapCCFormValuesToPayload(values, stripeTokenData, vendorProfileData, false);
