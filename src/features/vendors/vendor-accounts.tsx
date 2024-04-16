@@ -31,7 +31,7 @@ import VendorCCUpdateModal from './vendor-payments/vendor-cc-update-modal'
 import { createTableDataForAch, useFetchPaymentMethods, getIsPaymentServiceEnabled } from 'api/payment'
 import VendorACHModal from './vendor-payments/vendor-ach-modal'
 import SubscriptionRadioGroup from 'components/radio/subscription-radio-group'
-import { preventFurtherDecimalPlaces, preventNegativeKeyDownFn } from 'utils/number-utils'
+import {  isDecimalPlacesLimitExceeded, preventNegativeKeyDownFn } from 'utils/number-utils'
 
 type UserProps = {
   onClose?: () => void
@@ -110,11 +110,14 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                         <NumberInput
                           datatest-id="monthlySubscriptionFee"
                           value={field.value}
+                          isAllowed={(values) => {
+                            const { floatValue } = values;
+                            return isDecimalPlacesLimitExceeded(floatValue);
+                          }}
                           disabled={isUserVendorAdmin}
                           onValueChange={values => {
                             const { floatValue } = values
-                            const val = preventFurtherDecimalPlaces(floatValue, 4)
-                            field.onChange(val)
+                            field.onChange(floatValue)
                           }}
                           onKeyDown={preventNegativeKeyDownFn}
                           customInput={Input}
