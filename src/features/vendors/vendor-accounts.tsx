@@ -114,6 +114,11 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                             const { floatValue } = values
                             field.onChange(floatValue)
                           }}
+                          onKeyDown={e => {
+                            if (e?.code === 'Minus') {
+                              e.preventDefault()
+                            }
+                          }}
                           customInput={Input}
                           thousandSeparator={true}
                           prefix={'$'}
