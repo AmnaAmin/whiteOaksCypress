@@ -43,7 +43,9 @@ const VendorCCUpdateModal: React.FC<{
     const {
         handleSubmit,
         reset,
+        formState
     } = formReturn;
+    const isSubmitting = formState.isSubmitting;
 
     const onSubmit = async (values: CreditCardFormValues) => {
         if (!stripe || !elements) {
@@ -99,7 +101,7 @@ const VendorCCUpdateModal: React.FC<{
                         <Flex flexFlow="row-reverse" w="full">
                             {!isReadOnly && <Button
                                 type="submit"
-                                isLoading={isUpdateCreditCardLoading}
+                                isLoading={isUpdateCreditCardLoading || isSubmitting}
                                 onClick={handleSubmit(onSubmit)}
                                 colorScheme="brand"
                                 data-testid="update"
