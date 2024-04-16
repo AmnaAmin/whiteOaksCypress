@@ -490,13 +490,25 @@ export const useSaveVendorDetails = (name: string) => {
         })
       },
       onError(error: any) {
-        toast({
-          title: t(`update${name}`),
-          description: (error.title as string) ?? 'Unable to update vendor.',
-          status: 'error',
-          isClosable: true,
-          position: 'top-left',
-        })
+        if (error?.violations) {
+          const violations = error?.violations[0];
+          const errorMessage = violations?.field + " " + violations?.message;
+          toast({
+            title: t(`update${name}`),
+            description: (errorMessage as string) ?? 'Unable to update vendor.',
+            status: 'error',
+            isClosable: true,
+            position: 'top-left',
+          })
+        } else {
+          toast({
+            title: t(`update${name}`),
+            description: (error.title as string) ?? 'Unable to update vendor.',
+            status: 'error',
+            isClosable: true,
+            position: 'top-left',
+          })
+        }
       },
     },
   )
