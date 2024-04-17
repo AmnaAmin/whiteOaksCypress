@@ -1,5 +1,5 @@
 import { FormControl, FormErrorMessage, HStack, Radio, RadioGroup, Stack } from "@chakra-ui/react"
-import { useCallback } from "react"
+import { useState } from "react"
 import { UseFormReturn } from "react-hook-form"
 import { VendorAccountsFormValues, VendorProfile } from "types/vendor.types"
 
@@ -10,19 +10,19 @@ type SubscriptionRadioGroupProps = {
 }
 
 const SubscriptionRadioGroup = ({ vendorProfileData, formReturn, enableSubscriptionField }: SubscriptionRadioGroupProps) => {
+    const [selectedBtn, setSelectedBtn] = useState<string>(vendorProfileData?.isSubscriptionOn ? "on" : "off");
     const {
         register,
         formState: { errors },
     } = formReturn;
 
-    const defaultValue: () => string = useCallback(() => {
-        return (vendorProfileData?.isSubscriptionOn ? "on" : "off");
-    }, [vendorProfileData?.isSubscriptionOn])
-
+    const onRadioBtnChange = (value: string) => {
+        setSelectedBtn(value);
+    }
 
     return (<FormControl>
         <HStack spacing="16px">
-            <RadioGroup w="100%" justifyContent={'flex-start'} defaultValue={defaultValue()} isDisabled={!enableSubscriptionField}>
+            <RadioGroup w="100%" justifyContent={'flex-start'} defaultValue={selectedBtn} value={selectedBtn} onChange={onRadioBtnChange} isDisabled={!enableSubscriptionField}>
                 <Stack direction="row">
                     <FormControl>
                         <Radio {...register("isSubscriptionOn")} value={"on"} pr={4}>ON</Radio>
