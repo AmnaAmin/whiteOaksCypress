@@ -112,13 +112,25 @@ export const useCreateVendorMutation = () => {
       })
     },
     onError(error: any) {
-      toast({
-        title: 'Create Vendor',
-        description: (error.title as string) ?? 'Unable to create project.',
-        status: 'error',
-        isClosable: true,
-        position: 'top-left',
-      })
+      if (error?.violations) {
+        const violations = error?.violations[0];
+        const errorMessage = violations?.field + " " + violations?.message;
+        toast({
+          title: 'Create Vendor',
+          description: (errorMessage as string) ?? 'Unable to create vendor.',
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      } else {
+        toast({
+          title: 'Create Vendor',
+          description: (error.title as string) ?? 'Unable to create vendor.',
+          status: 'error',
+          isClosable: true,
+          position: 'top-left',
+        })
+      }
     },
   })
 }
