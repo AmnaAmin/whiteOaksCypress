@@ -1,4 +1,4 @@
-import { FormControl, FormErrorMessage, HStack, Radio, RadioGroup, Stack } from "@chakra-ui/react"
+import { FormErrorMessage, HStack, Radio, RadioGroup, Stack } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { UseFormReturn } from "react-hook-form"
 import { VendorAccountsFormValues, VendorProfile } from "types/vendor.types"
