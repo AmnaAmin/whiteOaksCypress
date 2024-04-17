@@ -53,7 +53,9 @@ const VendorCCAddModal: React.FC<{
     const {
         handleSubmit,
         reset,
+        formState
     } = formReturn;
+    const isSubmitting = formState.isSubmitting;
 
     const onSubmit = async (values: CreditCardFormValues) => {
         if (!stripe || !elements) {
@@ -118,7 +120,7 @@ const VendorCCAddModal: React.FC<{
                             {!isReadOnly && <Button
                                 size="md"
                                 type="submit"
-                                isLoading={isCreateCreditCardLoading}
+                                isLoading={isCreateCreditCardLoading || isSubmitting}
                                 onClick={handleSubmit(onSubmit)}
                                 colorScheme="brand"
                                 rounded="6px"

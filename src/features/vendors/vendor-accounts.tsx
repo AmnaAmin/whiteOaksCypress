@@ -15,7 +15,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { VendorAccountsFormValues, VendorProfile, StripePayment } from 'types/vendor.types'
-import { Controller, useFormContext } from 'react-hook-form'
+import { Controller, ControllerRenderProps, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useRoleBasedPermissions, useUserRolesSelector } from 'utils/redux-common-selectors'
 import { datePickerFormat } from 'utils/date-time-utils'
@@ -31,7 +31,7 @@ import VendorCCUpdateModal from './vendor-payments/vendor-cc-update-modal'
 import { createTableDataForAch, useFetchPaymentMethods, getIsPaymentServiceEnabled } from 'api/payment'
 import VendorACHModal from './vendor-payments/vendor-ach-modal'
 import SubscriptionRadioGroup from 'components/radio/subscription-radio-group'
-import { preventFurtherDecimalPlaces, preventNegativeKeyDownFn } from 'utils/number-utils'
+import { isDecimalPlacesLimitExceeded, preventNegativeKeyDownFn } from 'utils/number-utils'
 
 type UserProps = {
   onClose?: () => void
@@ -83,6 +83,19 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
     else if (selectedValue === AccountType.ACH_BANK) onACHModalOpen();
   };
 
+  const checkIsAllowed = (values) => {
+    const { floatValue } = values;
+    if (floatValue >= 999999.99) {
+      return false
+    }
+    return isDecimalPlacesLimitExceeded(floatValue);
+  };
+
+  const onValChangeHandler = (values, field: ControllerRenderProps<VendorAccountsFormValues, "monthlySubscriptionFee">) => {
+    const { floatValue } = values
+    field.onChange(floatValue)
+  }
+
   return (
     <>
       {isPaymentServiceEnabled && <StripeCreditCardModalForm isReadOnly={isReadOnly} isCCModalOpen={isCCModalOpen} onCCModalClose={onCCModalClose} vendorProfileData={vendorProfileData} />}
@@ -110,12 +123,9 @@ export const VendorAccounts: React.FC<UserProps> = ({ vendorProfileData, onClose
                         <NumberInput
                           datatest-id="monthlySubscriptionFee"
                           value={field.value}
+                          isAllowed={checkIsAllowed}
                           disabled={isUserVendorAdmin}
-                          onValueChange={values => {
-                            const { floatValue } = values
-                            const val = preventFurtherDecimalPlaces(floatValue, 4)
-                            field.onChange(val)
-                          }}
+                          onValueChange={values => onValChangeHandler(values, field)}
                           onKeyDown={preventNegativeKeyDownFn}
                           customInput={Input}
                           thousandSeparator={true}
