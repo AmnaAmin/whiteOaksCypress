@@ -1,5 +1,5 @@
 import { FormControl, FormErrorMessage, HStack, Radio, RadioGroup, Stack } from "@chakra-ui/react"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { UseFormReturn } from "react-hook-form"
 import { VendorAccountsFormValues, VendorProfile } from "types/vendor.types"
 
@@ -19,6 +19,14 @@ const SubscriptionRadioGroup = ({ vendorProfileData, formReturn, enableSubscript
     const onRadioBtnChange = (value: string) => {
         setSelectedBtn(value);
     }
+
+    useEffect(() => {
+        if (vendorProfileData?.isSubscriptionOn) {
+            setSelectedBtn("on")
+        } else {
+            setSelectedBtn("off")
+        }
+    }, [vendorProfileData?.isSubscriptionOn])
 
     return (<FormControl>
         <HStack spacing="16px">
