@@ -263,7 +263,7 @@ export const parseAccountsFormDataToAPIData = async (
     monthlySubscriptionFee: formValues?.monthlySubscriptionFee,
     oneTimeSetupFee: formValues?.oneTimeSetupFee,
     billingDate: dateISOFormatWithZeroTime(formValues?.billingDate),
-    isSubscriptionOn: formValues?.isSubscriptionOn === "on" ? true : false,
+    isSubscriptionOn: formValues?.isSubscriptionOn,
   }
 }
 
