@@ -7,7 +7,6 @@ import UnAuthenticatedApp from 'unauthenticated-app'
 export default function App() {
   const { data } = useAuth()
   const user = data?.user
-  console.log("hello")
 
   return <Router basename={process.env.PUBLIC_URL}>{user ? <AuthenticatedApp /> : <UnAuthenticatedApp />}</Router>
 }

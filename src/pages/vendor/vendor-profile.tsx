@@ -89,6 +89,7 @@ export const VendorProfileTabs: React.FC<Props> = props => {
   const formReturn = useForm<VendorProfileDetailsFormData>()
   const { formState: { errors } } = formReturn;
   const { isAccountFormErrors } = useVendorSubFormErrors(errors);
+  console.log("hello")
 
   useVendorDetails({ form: formReturn, vendorProfileData })
   const showError = name => {
