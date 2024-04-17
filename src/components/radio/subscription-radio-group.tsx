@@ -12,12 +12,13 @@ type SubscriptionRadioGroupProps = {
 const SubscriptionRadioGroup = ({ vendorProfileData, formReturn, enableSubscriptionField }: SubscriptionRadioGroupProps) => {
     const [selectedBtn, setSelectedBtn] = useState<string>(vendorProfileData?.isSubscriptionOn ? "on" : "off");
     const {
-        register,
+        setValue,
         formState: { errors },
     } = formReturn;
 
     const onRadioBtnChange = (value: string) => {
         setSelectedBtn(value);
+        setValue("isSubscriptionOn", value === "on" ? true : false);
     }
 
     useEffect(() => {
@@ -28,19 +29,17 @@ const SubscriptionRadioGroup = ({ vendorProfileData, formReturn, enableSubscript
         }
     }, [vendorProfileData?.isSubscriptionOn])
 
-    return (<FormControl>
+    return (<>
         <HStack spacing="16px">
             <RadioGroup w="100%" justifyContent={'flex-start'} defaultValue={selectedBtn} value={selectedBtn} onChange={onRadioBtnChange} isDisabled={!enableSubscriptionField}>
                 <Stack direction="row">
-                    <FormControl>
-                        <Radio {...register("isSubscriptionOn")} value={"on"} pr={4}>ON</Radio>
-                        <Radio {...register("isSubscriptionOn")} value={"off"}>OFF</Radio>
-                    </FormControl>
+                    <Radio value={"on"} pr={4}>ON</Radio>
+                    <Radio value={"off"}>OFF</Radio>
                 </Stack>
             </RadioGroup>
         </HStack>
         <FormErrorMessage pos="absolute">{errors.isSubscriptionOn?.message}</FormErrorMessage>
-    </FormControl>)
+    </>)
 }
 
 export default SubscriptionRadioGroup
