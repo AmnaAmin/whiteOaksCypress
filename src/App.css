@@ -49,12 +49,9 @@
   text-align: left;
 }
 
-#assignedItemsTable table tbody {
-  
-  min-height: 400px !important;
-}
-
-#assignedItemsTable table  {
-  
-  min-height: 400px !important;
+#assignedItemsTable table,
+#assignedItemsTable table tbody,
+#remaining-ItemsTable table,
+#remaining-ItemsTable table tbody {
+    min-height: 400px !important;
 }
