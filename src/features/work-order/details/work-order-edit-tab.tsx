@@ -943,7 +943,7 @@ const WorkOrderDetailTab = props => {
                 {t('seeProjectDetails')}
               </Button>
             )}
-            {uploadedWO && uploadedWO?.s3Url && watchLineItems && watchLineItems?.length < 1 && (
+            {uploadedWO && uploadedWO?.s3Url && (!watchLineItems || watchLineItems?.length < 1) && (
               <Button
                 variant="outline"
                 colorScheme="brand"
