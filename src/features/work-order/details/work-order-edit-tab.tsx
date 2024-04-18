@@ -161,10 +161,9 @@ const WorkOrderDetailTab = props => {
   const [vendorOptions, setVendorOptions] = useState<SelectVendorOption[]>([])
 
   const defaultValues: FormValues = useMemo(() => {
- 
     return defaultValuesWODetails(workOrder, defaultSkill, locations, paymentGroupValsOptions)
   }, [workOrder, locations])
-   
+
   const formReturn = useForm<FormValues>({
     defaultValues: {
       ...defaultValues,
@@ -306,9 +305,10 @@ const WorkOrderDetailTab = props => {
   const [selectedVendorId, setSelectedVendorId] = useState<SelectVendorOption[]>([])
 
   const { data: trades } = useTrades()
- 
+
   const [vendorSkillId, setVendorSkillId] = useState(workOrder?.vendorSkillId)
-  const isSkillService = (isVendorSkillServices(trades, vendorSkillId) && workOrder?.status === 1035 ) || workOrder?.isServiceSkill
+  const isSkillService =
+    (isVendorSkillServices(trades, vendorSkillId) && workOrder?.status === 1035) || workOrder?.isServiceSkill
 
   const { vendors, isLoading: loadingVendors } = useFilteredVendors({
     vendorSkillId,
@@ -382,7 +382,6 @@ const WorkOrderDetailTab = props => {
      -Save workorder will be called in all cases in the end. It will trigger refreshing workorder items and other necessary calls.
   */
   const processLineItems = lineItems => {
-   
     const { assignments, deleted, savePayload } = lineItems
     const { assignedItems, unAssignedItems } = assignments
 
@@ -412,21 +411,20 @@ const WorkOrderDetailTab = props => {
     /* Finding out newly added items. New items will not have smartLineItem Id. smartLineItemId is present for line items that have been saved*/
     let assignedItems = [...values.assignedItems.filter(a => !a.smartLineItemId)]
 
-    if ( isSkillService && workOrder?.assignedItems ) {
-      assignedItems = assignedItems.map( a => {
-        a.profit = null;
-        return a;
-      } )
+    if (isSkillService && workOrder?.assignedItems) {
+      assignedItems = assignedItems.map(a => {
+        a.profit = null
+        return a
+      })
     }
 
     /* Finding out items that will be unassigned*/
     const unAssignedItems = getUnAssignedItems(formValues, workOrder?.assignedItems)
     const removedItems = getRemovedItems(formValues, workOrder?.assignedItems)
     const updatedWorkOrderDetails = { ...workOrder, isWorkOrderDetailsEdit: true }
-  
+
     const payload = parseWODetailValuesToPayload(values, updatedWorkOrderDetails, isSkillService)
-    
-   
+
     if (syncDataOfPaymentWithLineItems) {
       let clientOriginalApprovedAmount = 0
       assignedItemsWatch?.forEach((e: any) => {
@@ -485,27 +483,26 @@ const WorkOrderDetailTab = props => {
   const watchPercentage = useWatch({ name: 'percentage', control })
   const watchLineItems = useWatch({ name: 'assignedItems', control })
 
-
   useEffect(() => {
     if (isSkillService) {
       formValues.assignedItems?.forEach((item, index) => {
         setValue(`assignedItems.${index}.profit`, 0)
-        setValue(`isSkillService` as any, true);
-      }) 
-    }else {
-      setValue(`isSkillService` as any, false);
+        setValue(`isSkillService` as any, true)
+      })
+    } else {
+      setValue(`isSkillService` as any, false)
     }
   }, [isSkillService])
 
   useEffect(() => {
-    if ( isSkillService ) return;
+    if (isSkillService) return
     if (watchPercentage === 0) {
       resetLineItemsProfit(0)
     }
   }, [watchPercentage, isSkillService])
 
   useEffect(() => {
-    if ( ! isSkillService ) return;
+    if (!isSkillService) return
     if (watchLineItems && watchLineItems?.length > 0) {
       const clientAmount = watchLineItems?.reduce(
         (partialSum, a) =>
@@ -519,17 +516,15 @@ const WorkOrderDetailTab = props => {
         0,
       )
 
-    
       setValue('clientApprovedAmount', round(clientAmount, WORK_ORDER_AMOUNT_ROUND))
       setValue('clientOriginalApprovedAmount' as any, round(clientAmount, WORK_ORDER_AMOUNT_ROUND))
       setValue('invoiceAmount', round(vendorAmount, WORK_ORDER_AMOUNT_ROUND))
       setValue('percentage', 0.0)
-    
-  }
+    }
   }, [watchLineItems, isSkillService])
 
   useEffect(() => {
-    if ( isSkillService ) return;
+    if (isSkillService) return
     if (watchLineItems && watchLineItems?.length > 0) {
       const clientAmount = watchLineItems?.reduce(
         (partialSum, a) =>
@@ -557,7 +552,6 @@ const WorkOrderDetailTab = props => {
   }, [watchLineItems, isSkillService])
 
   const resetLineItemsProfit = profit => {
-    
     formValues.assignedItems?.forEach((item, index) => {
       const clientAmount =
         Number(isValidAndNonEmpty(watchLineItems?.[index]?.price) ? watchLineItems?.[index]?.price : 0) *
@@ -566,8 +560,8 @@ const WorkOrderDetailTab = props => {
       setValue(`assignedItems.${index}.vendorAmount`, calculateVendorAmount(clientAmount, profit))
     })
   }
-  
-  const profitPercentage = workOrder?.profitPercentage && !isSkillService ? workOrder?.profitPercentage + '%' : '---';
+
+  const profitPercentage = workOrder?.profitPercentage && !isSkillService ? workOrder?.profitPercentage + '%' : '---'
 
   return (
     <Box>
@@ -585,12 +579,13 @@ const WorkOrderDetailTab = props => {
           </Box>
           {isSkillService && [STATUS.Draft].includes(workOrder?.statusLabel?.toLocaleLowerCase()) && (
             <Box marginTop="-10px !important" data-testid="skill-service-message">
-<Alert status="info" variant="custom" size="sm">
-            <AlertIcon />
-            <AlertDescription>Skill of type services is selected, a 0% profit will be allowed for this skill.</AlertDescription>
-          </Alert>
+              <Alert status="info" variant="custom" size="sm">
+                <AlertIcon />
+                <AlertDescription>
+                  Skill of type services is selected, a 0% profit will be allowed for this skill.
+                </AlertDescription>
+              </Alert>
             </Box>
-          
           )}
           {!isAdmin && workOrder?.visibleToVendor ? (
             <SimpleGrid columns={5}>
@@ -767,7 +762,7 @@ const WorkOrderDetailTab = props => {
                     render={({ field }) => (
                       <div data-testid="cancel_Work_Order">
                         <ReactSelect
-                         classNamePrefix={'cancelWorkOrder'}
+                          classNamePrefix={'cancelWorkOrder'}
                           options={CANCEL_WO_OPTIONS}
                           onChange={option => field.onChange(option)}
                           isDisabled={
@@ -851,7 +846,7 @@ const WorkOrderDetailTab = props => {
                     render={({ field }) => {
                       return (
                         <CreatableSelect
-                        classNamePrefix={'complete%'}
+                          classNamePrefix={'complete%'}
                           {...field}
                           isDisabled={isWOCancelled}
                           id={`completePercentage`}
@@ -910,31 +905,30 @@ const WorkOrderDetailTab = props => {
           )}
         </Box>
 
-        {!(uploadedWO && uploadedWO?.s3Url) && (
-          <Box mx="32px" mt={10}>
-            {isLoadingLineItems ? (
-              <Center>
-                <Spinner size={'lg'} />
-              </Center>
-            ) : (
-              <AssignedItems
-                isLoadingLineItems={isFetchingLineItems}
-                onOpenRemainingItemsModal={onOpenRemainingItemsModal}
-                unassignedItems={unassignedItems}
-                setUnAssignedItems={setUnAssignedItems}
-                formControl={formReturn as UseFormReturn<any>}
-                assignedItemsArray={assignedItemsArray}
-                isAssignmentAllowed={isAssignmentAllowed}
-                swoProject={swoProject}
-                downloadPdf={downloadPdf}
-                workOrder={workOrder}
-                documentsData={documentsData}
-                clientName={projectData?.clientName}
-                isServiceSkill={isSkillService}
-              />
-            )}
-          </Box>
-        )}
+        <Box mx="32px" mt={10}>
+          {isLoadingLineItems ? (
+            <Center>
+              <Spinner size={'lg'} />
+            </Center>
+          ) : (
+            <AssignedItems
+              isLoadingLineItems={isFetchingLineItems}
+              onOpenRemainingItemsModal={onOpenRemainingItemsModal}
+              unassignedItems={unassignedItems}
+              setUnAssignedItems={setUnAssignedItems}
+              formControl={formReturn as UseFormReturn<any>}
+              assignedItemsArray={assignedItemsArray}
+              isAssignmentAllowed={isAssignmentAllowed}
+              swoProject={swoProject}
+              downloadPdf={downloadPdf}
+              workOrder={workOrder}
+              documentsData={documentsData}
+              clientName={projectData?.clientName}
+              isServiceSkill={isSkillService}
+            />
+          )}
+        </Box>
+
         {/* </ModalBody> */}
         <ModalFooter borderTop="1px solid #CBD5E0" p={5}>
           <HStack justifyContent="start" w="100%">
@@ -949,7 +943,7 @@ const WorkOrderDetailTab = props => {
                 {t('seeProjectDetails')}
               </Button>
             )}
-            {uploadedWO && uploadedWO?.s3Url && (
+            {uploadedWO && uploadedWO?.s3Url && watchLineItems && watchLineItems?.length < 1 && (
               <Button
                 variant="outline"
                 colorScheme="brand"
