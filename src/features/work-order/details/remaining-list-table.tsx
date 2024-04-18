@@ -414,7 +414,7 @@ const RemainingListTable = (props: RemainingListType) => {
   }, [])
 
   return (
-    <Box overflowY="hidden" overflowX={overflowXVal}>
+    <Box overflowY="hidden" overflowX={overflowXVal}  id="remaining-ItemsTable">
       <TableContextProvider data={values.remainingItems} columns={REMAINING_ITEMS_COLUMNS}>
         <Table
           handleOnDrag={handleOnDragEnd}
